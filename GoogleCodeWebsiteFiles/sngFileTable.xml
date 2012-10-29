@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?> 
 <Module>
   <ModulePrefs title="SNG File Spreadsheet" />
-  <Content type="url" href="https://docs.google.com/spreadsheet/pub?key=0AnmqFuIgkNhudEVoYWtJQllzeGJfZllRVGRMaVNrdVE&single=true&gid=0&output=html&widget=true" />
+  <Content type="url" href="https://docs.google.com/spreadsheet/pub?key=0AnmqFuIgkNhudEVoYWtJQllzeGJfZllRVGRMaVNrdVE&amp;single=true&amp;gid=0&amp;output=html&amp;widget=true" />
 </Module>
