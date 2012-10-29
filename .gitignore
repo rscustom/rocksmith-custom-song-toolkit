@@ -1,0 +1,6 @@
+﻿RocksmithCustomSongCreator/bin/*
+RocksmithCustomSongCreator/obj/*
+RocksmithCustomSongCreator/bin/*
+RocksmithCustomSongCreatorTest/bin/
+RocksmithCustomSongCreatorTest/obj/*
+*.suo
