@@ -18,6 +18,14 @@ namespace RocksmithCustomSongCreatorTest
             var song = new SngFile(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\Songs\GRExports\Generic\NumberThirteen_Lead.sng");
         }
 
+        public void KnownVersion(string filePath = null)
+        {
+            var song = new SngFile(filePath);
+
+            Assert.AreEqual(song._version, 49);
+
+        }
+
         [Test]
         public void BeatsInOrder()
         {
@@ -67,6 +75,11 @@ namespace RocksmithCustomSongCreatorTest
                 }
                 Assert.LessOrEqual(pi.StartTime, pi.EndTime);
                 lastPi = pi;
+
+                Assert.Less(pi.StartTime, 2000);
+                Assert.GreaterOrEqual(pi.StartTime, 0);
+                Assert.Less(pi.EndTime, 2000);
+                Assert.GreaterOrEqual(pi.EndTime, 0);
             }
         }
 
@@ -125,6 +138,7 @@ namespace RocksmithCustomSongCreatorTest
         {
             foreach (var file in Directory.EnumerateFiles(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\Songs\GRExports\Generic\", "*.sng"))
             {
+                KnownVersion(file);
                 BeatsInOrder(file);
                 PhraseIterationsInOrder(file);
                 VocalsInOrder(file);
