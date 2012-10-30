@@ -18,6 +18,14 @@ namespace RocksmithCustomSongCreatorTest
             var song = new SngFile(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\Songs\GRExports\Generic\NumberThirteen_Lead.sng");
         }
 
+        public void KnownVersion(string filePath = null)
+        {
+            var song = new SngFile(filePath);
+
+            Assert.AreEqual(song._version, 49);
+
+        }
+
         [Test]
         public void BeatsInOrder()
         {
@@ -48,6 +56,14 @@ namespace RocksmithCustomSongCreatorTest
             }
         }
 
+        public void ValidString(string s)
+        {
+            var bytes = System.Text.ASCIIEncoding.ASCII.GetBytes(s);
+            Assert.False(bytes.Any(x => x > 127));
+            Assert.False(bytes.Any(x => x < 9));
+            Assert.False(bytes.Any(x => x > 9 && x < 32));
+        }
+
         [Test]
         public void PhraseIterationsInOrder()
         {
@@ -67,6 +83,11 @@ namespace RocksmithCustomSongCreatorTest
                 }
                 Assert.LessOrEqual(pi.StartTime, pi.EndTime);
                 lastPi = pi;
+
+                Assert.Less(pi.StartTime, 2000);
+                Assert.GreaterOrEqual(pi.StartTime, 0);
+                Assert.Less(pi.EndTime, 2000);
+                Assert.GreaterOrEqual(pi.EndTime, 0);
             }
         }
 
@@ -92,17 +113,16 @@ namespace RocksmithCustomSongCreatorTest
             SongEvent lastSongEvent = null;
             foreach (var songEvent in song.SongEvents)
             {
-                // These times can jump around (ex: TCAnchorZoneIntro_Lead)
-                /* 
                 if (lastSongEvent != null)
                 {
                     Assert.LessOrEqual(lastSongEvent.Time, songEvent.Time);
                 }
-                 * */
-
+                 
                 //Just make sure the time is sane
                 Assert.Less(songEvent.Time, 2000);
                 Assert.GreaterOrEqual(songEvent.Time, 0);
+
+                ValidString(songEvent.Code);
 
                 lastSongEvent = songEvent;
             }
@@ -120,14 +140,36 @@ namespace RocksmithCustomSongCreatorTest
             }
         }
 
+        public void ControlsValid(string filePath)
+        {
+            var song = new SngFile(filePath);
+
+            foreach (var control in song.Controls)
+            {
+                // These times can jump around (ex: TCAnchorZoneIntro_Lead)
+                /* 
+                if (lastControl != null)
+                {
+                    Assert.LessOrEqual(lastControl.Time, control.Time);
+                }
+                 * */
+
+                ValidString(control.Code);
+                Assert.Less(control.Time, 2000);
+                Assert.GreaterOrEqual(control.Time, 0);
+            }
+        }
+
         [Test]
         public void TestAllSongs()
         {
             foreach (var file in Directory.EnumerateFiles(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\Songs\GRExports\Generic\", "*.sng"))
             {
+                KnownVersion(file);
                 BeatsInOrder(file);
                 PhraseIterationsInOrder(file);
                 VocalsInOrder(file);
+                ControlsValid(file);
                 SongEventsValid(file);
                 SongSectionsInOrder(file);
             }

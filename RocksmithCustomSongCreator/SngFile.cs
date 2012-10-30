@@ -59,15 +59,44 @@ namespace RocksmithSngCreator
         }
     }
 
+    public class Control
+    {
+        public readonly float Time;
+        public readonly Byte[] _code; // len = 256
+
+        public string Code
+        {
+            get
+            {
+                return System.Text.Encoding.ASCII.GetString(_code).Split('\0')[0];
+            }
+        }
+
+
+        public Control(BinaryReader br)
+        {
+            Time = br.ReadSingle();
+            _code = br.ReadBytes(256);
+        }
+    }
+
     public class SongEvent
     {
         public readonly float Time;
-        public readonly Byte[] EventCodes; // len = 256
+        public readonly Byte[] _code; // len = 256
+
+        public string Code
+        {
+            get
+            {
+                return System.Text.Encoding.ASCII.GetString(_code).Split('\0')[0];
+            }
+        }
 
         public SongEvent(BinaryReader br)
         {
             Time = br.ReadSingle();
-            EventCodes = br.ReadBytes(256);
+            _code = br.ReadBytes(256);
         }
     }
 
@@ -326,7 +355,7 @@ namespace RocksmithSngCreator
 
     public class SngFile
     {
-        Int32 _version; // ?
+        public readonly Int32 _version; // ?
         Int32 _beatCount;
         public Ebeat[] _beats;
         Int32 _PhraseCount;
@@ -338,9 +367,12 @@ namespace RocksmithSngCreator
         public Vocal[] _vocals;
         public Int32 _phraseIterationCount;
         public PhraseIteration[] _phraseIterations;
-        Int32 _padding4; //?
-        Int32 _padding5; //?
-        Int32 _padding6; //?
+        Int32 _propertyCount; //?
+        // properties
+        Int32 _linkedDiffCount; //?
+        // linkedDiffs
+        public readonly Int32 ControlCount;
+        public readonly Control[] Controls;
         Int32 _songEventCount;
         public readonly SongEvent[] SongEvents;
         public readonly Int32 SongSectionCount;
@@ -396,7 +428,6 @@ namespace RocksmithSngCreator
                     _phraseIterations[i] = new PhraseIteration(br);
                 }
 
-
                 int propCount = br.ReadInt32();
                 for (int i = 0; i < propCount; ++i)
                 {
@@ -410,20 +441,22 @@ namespace RocksmithSngCreator
                 {
                     br.ReadInt32();
                     br.ReadInt32();
-                    int c = br.ReadInt32();
-                    for (int j = 0; j < c; ++j)
-                    {
-                        br.ReadInt32();
-                    }
+                    br.ReadInt32();
                 }
-                //_padding6 = br.ReadInt32();
+
+                ControlCount = br.ReadInt32();
+                Controls = new Control[ControlCount];
+                for (int i = 0; i < ControlCount; ++i)
+                {
+                    Controls[i] = new Control(br);
+                }
+
                 _songEventCount = br.ReadInt32();
                 SongEvents = new SongEvent[_songEventCount];
                 for (int i = 0; i < _songEventCount; ++i)
                 {
                     SongEvents[i] = new SongEvent(br);
                 }
-
                 SongSectionCount = br.ReadInt32();
                 SongSections = new SongSection[SongSectionCount];
                 for (int i = 0; i < SongSectionCount; ++i)
