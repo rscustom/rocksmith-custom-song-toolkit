@@ -113,14 +113,11 @@ namespace RocksmithCustomSongCreatorTest
             SongEvent lastSongEvent = null;
             foreach (var songEvent in song.SongEvents)
             {
-                // These times can jump around (ex: TCAnchorZoneIntro_Lead)
-                /* 
                 if (lastSongEvent != null)
                 {
                     Assert.LessOrEqual(lastSongEvent.Time, songEvent.Time);
                 }
-                 * */
-
+                 
                 //Just make sure the time is sane
                 Assert.Less(songEvent.Time, 2000);
                 Assert.GreaterOrEqual(songEvent.Time, 0);
@@ -147,9 +144,16 @@ namespace RocksmithCustomSongCreatorTest
         {
             var song = new SngFile(filePath);
 
-            SongSection lastSongSection = null;
             foreach (var control in song.Controls)
             {
+                // These times can jump around (ex: TCAnchorZoneIntro_Lead)
+                /* 
+                if (lastControl != null)
+                {
+                    Assert.LessOrEqual(lastControl.Time, control.Time);
+                }
+                 * */
+
                 ValidString(control.Code);
                 Assert.Less(control.Time, 2000);
                 Assert.GreaterOrEqual(control.Time, 0);
