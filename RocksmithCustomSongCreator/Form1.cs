@@ -69,8 +69,14 @@ namespace RocksmithSngCreator
                     // Phrases example: begins at position 7,208 in NumberThirteen_Lead.sng
                     this.writeRocksmithSngPhrases(w, rocksmithSong.phrases[0], rocksmithSong.phraseIterations[0]);
 
-                    // PLACEHOLDER (?)
-                    w.Write(new byte[12]);
+                    // CHORD TEMPLATES
+                    w.Write(new byte[4]); // placeholder
+
+                    // FRET HAND MUTE TEMPLATE
+                    w.Write(new byte[4]); // placeholder
+
+                    // VOCALS TEMPLATE
+                    w.Write(new byte[4]); // placeholder
 
                     // PHRASE ITERATIONS
                     // Iteration example: begins at position 7,664 in NumberThirteen_Lead.sng
@@ -154,9 +160,9 @@ namespace RocksmithSngCreator
                     w.Write(currentMeasure);
                     w.Write(currentMeasureBeat);
                     w.Write(true);
-                    w.Write(false);
-                    w.Write(false);
-                    w.Write(false);
+                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
+                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
+                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
                 }
                 else if (measure == -1)
                 {
@@ -165,9 +171,9 @@ namespace RocksmithSngCreator
                     w.Write(currentMeasure);
                     w.Write(currentMeasureBeat);
                     w.Write(false);
-                    w.Write(false);
-                    w.Write(false);
-                    w.Write(false);
+                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
+                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
+                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
                 }
             }
         }
