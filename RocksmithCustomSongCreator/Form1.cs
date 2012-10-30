@@ -70,13 +70,14 @@ namespace RocksmithSngCreator
                     this.writeRocksmithSngPhrases(w, rocksmithSong.phrases[0], rocksmithSong.phraseIterations[0]);
 
                     // CHORD TEMPLATES
-                    w.Write(new byte[4]); // placeholder
+                    this.writeRocksmithSngChordTemplates(w, rocksmithSong.chordTemplates[0]);
 
                     // FRET HAND MUTE TEMPLATE
-                    w.Write(new byte[4]); // placeholder
+                    this.writeRocksmithSngFretHandMuteTemplates(w, rocksmithSong.fretHandMuteTemplates[0]);
 
                     // VOCALS TEMPLATE
                     w.Write(new byte[4]); // placeholder
+                    //this.writeRocksmithSngVocals(w, rocksmithSong.vocals[0]);
 
                     // PHRASE ITERATIONS
                     // Iteration example: begins at position 7,664 in NumberThirteen_Lead.sng
@@ -115,6 +116,15 @@ namespace RocksmithSngCreator
 
             if (rocksmithSong.phrases == null || rocksmithSong.phrases.Length != 1)
                 throw new Exception("Missing or unexpected phrases data format encountered.");
+
+            if (rocksmithSong.chordTemplates == null || rocksmithSong.chordTemplates.Length != 1)
+                throw new Exception("Missing or unexpected chord templates data format encountered.");
+
+            if (rocksmithSong.fretHandMuteTemplates == null || rocksmithSong.fretHandMuteTemplates.Length != 1)
+                throw new Exception("Missing or unexpected fret hand mute templates data format encountered.");
+
+            //if (rocksmithSong.vocals == null || rocksmithSong.vocals.Length != 1)
+            //    throw new Exception("Missing or unexpected vocals data format encountered.");
 
             if (rocksmithSong.phraseIterations == null || rocksmithSong.phraseIterations.Length != 1)
                 throw new Exception("Missing or unexpected phrase iterations data format encountered.");
@@ -221,6 +231,62 @@ namespace RocksmithSngCreator
                 // ignore
             }
         }
+
+        // INCOMPLETE (missing mapping for 6 attributes between finger positions and chord name)
+        private void writeRocksmithSngChordTemplates(EndianBinaryWriter w, songChordTemplates chordTemplates)
+        {
+            // output header count
+            w.Write(Convert.ToInt32(chordTemplates.count));
+
+            // output chord templates
+            for (int i = 0; i < chordTemplates.chordTemplate.Length; i++)
+            {
+                // fret numbers
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].fret0));
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].fret1));
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].fret2));
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].fret3));
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].fret4));
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].fret5));
+
+                // finger positions
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].finger0));
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].finger1));
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].finger2));
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].finger3));
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].finger4));
+                w.Write(Convert.ToInt32(chordTemplates.chordTemplate[i].finger5));
+                
+                // unknown
+                w.Write(Convert.ToInt32(-1));
+                w.Write(Convert.ToInt32(-1));
+                w.Write(Convert.ToInt32(-1));
+                w.Write(Convert.ToInt32(-1));
+                w.Write(Convert.ToInt32(-1));
+                w.Write(Convert.ToInt32(-1));
+
+                // chord name
+                string name = chordTemplates.chordTemplate[i].chordName;
+                foreach (char c in name.ToCharArray())
+                {
+                    w.Write(Convert.ToByte(c));
+                }
+                // padding after name
+                w.Write(new byte[32 - name.Length]);                
+            }                             
+        }
+
+        // WIP
+        private void writeRocksmithSngFretHandMuteTemplates(EndianBinaryWriter w, songFretHandMuteTemplates fretHandMuteTemplates)
+        {
+            w.Write(new byte[4]); // placeholder
+        }
+
+        // WIP
+        //private void writeRocksmithSngVocals(EndianBinaryWriter w, songVocals vocals)
+        //{
+        //    w.Write(new byte[4]); // placeholder
+        //}
 
         // COMPLETE
         private void writeRocksmithSngPhraseItersations(EndianBinaryWriter w, songPhraseIterations phraseIteration, Single songLength)
