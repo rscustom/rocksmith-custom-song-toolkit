@@ -491,6 +491,21 @@ namespace RocksmithSngCreator
                 _unknown = br.ReadBytes(32);
 
                 Metadata = new Metadata(br);
+
+                // Not sure what this junk is down here yet
+
+                br.ReadInt32();
+                br.ReadSingle();
+                br.ReadSingle();
+                br.ReadSingle();
+                int testCount = br.ReadInt32(); // just a guess
+                for (int i = 0; i < testCount; ++i)
+                {
+                    br.ReadInt32();
+                    br.ReadInt32();
+                    br.ReadInt32();
+                }
+                // still more down here...
             }
         }
     }
