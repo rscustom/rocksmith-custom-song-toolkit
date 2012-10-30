@@ -56,6 +56,14 @@ namespace RocksmithCustomSongCreatorTest
             }
         }
 
+        public void ValidString(string s)
+        {
+            var bytes = System.Text.ASCIIEncoding.ASCII.GetBytes(s);
+            Assert.False(bytes.Any(x => x > 127));
+            Assert.False(bytes.Any(x => x < 9));
+            Assert.False(bytes.Any(x => x > 9 && x < 32));
+        }
+
         [Test]
         public void PhraseIterationsInOrder()
         {
@@ -117,6 +125,8 @@ namespace RocksmithCustomSongCreatorTest
                 Assert.Less(songEvent.Time, 2000);
                 Assert.GreaterOrEqual(songEvent.Time, 0);
 
+                ValidString(songEvent.Code);
+
                 lastSongEvent = songEvent;
             }
         }
@@ -133,6 +143,19 @@ namespace RocksmithCustomSongCreatorTest
             }
         }
 
+        public void ControlsValid(string filePath)
+        {
+            var song = new SngFile(filePath);
+
+            SongSection lastSongSection = null;
+            foreach (var control in song.Controls)
+            {
+                ValidString(control.Code);
+                Assert.Less(control.Time, 2000);
+                Assert.GreaterOrEqual(control.Time, 0);
+            }
+        }
+
         [Test]
         public void TestAllSongs()
         {
@@ -142,6 +165,7 @@ namespace RocksmithCustomSongCreatorTest
                 BeatsInOrder(file);
                 PhraseIterationsInOrder(file);
                 VocalsInOrder(file);
+                ControlsValid(file);
                 SongEventsValid(file);
                 SongSectionsInOrder(file);
             }

@@ -83,12 +83,20 @@ namespace RocksmithSngCreator
     public class SongEvent
     {
         public readonly float Time;
-        public readonly Byte[] EventCodes; // len = 256
+        public readonly Byte[] _code; // len = 256
+
+        public string Code
+        {
+            get
+            {
+                return System.Text.Encoding.ASCII.GetString(_code).Split('\0')[0];
+            }
+        }
 
         public SongEvent(BinaryReader br)
         {
             Time = br.ReadSingle();
-            EventCodes = br.ReadBytes(256);
+            _code = br.ReadBytes(256);
         }
     }
 
