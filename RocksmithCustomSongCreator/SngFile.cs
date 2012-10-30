@@ -6,6 +6,14 @@ using System.Text;
 
 namespace RocksmithSngCreator
 {
+    public static class ByteArrayExtension
+    {
+        public static string ToNullTerminatedAscii(this Byte[] bytes)
+        {
+            return System.Text.Encoding.ASCII.GetString(bytes).TrimEnd('\0');
+        }
+    }
+
     public class Ebeat
     {
         public readonly float Time;
@@ -28,13 +36,7 @@ namespace RocksmithSngCreator
         public readonly Int32 MaxDifficulty;
         public readonly Int32 PhraseIterationCount;
         Byte[] _name; // len = 32
-        public string Name
-        {
-            get
-            {
-                return System.Text.Encoding.ASCII.GetString(_name).Split('\0')[0];
-            }
-        }
+        public string Name { get { return _name.ToNullTerminatedAscii(); } }
 
         public Phrase(BinaryReader br)
         {
@@ -63,15 +65,7 @@ namespace RocksmithSngCreator
     {
         public readonly float Time;
         public readonly Byte[] _code; // len = 256
-
-        public string Code
-        {
-            get
-            {
-                return System.Text.Encoding.ASCII.GetString(_code).Split('\0')[0];
-            }
-        }
-
+        public string Code { get { return _code.ToNullTerminatedAscii(); } }
 
         public Control(BinaryReader br)
         {
@@ -84,14 +78,7 @@ namespace RocksmithSngCreator
     {
         public readonly float Time;
         public readonly Byte[] _code; // len = 256
-
-        public string Code
-        {
-            get
-            {
-                return System.Text.Encoding.ASCII.GetString(_code).Split('\0')[0];
-            }
-        }
+        public string Code { get { return _code.ToNullTerminatedAscii(); } }
 
         public SongEvent(BinaryReader br)
         {
@@ -114,14 +101,8 @@ namespace RocksmithSngCreator
         public readonly Byte Bit4; // ??
         public readonly Int32 Padding; // ??
 
-        public string Name
-        {
-            get
-            {
-                return System.Text.Encoding.ASCII.GetString(_name).Split('\0')[0];
-            }
+        public string Name { get { return _name.ToNullTerminatedAscii(); } }
 
-        }
         public SongSection(BinaryReader br)
         {
             _name = br.ReadBytes(32);
@@ -216,7 +197,7 @@ namespace RocksmithSngCreator
         }
     }
 
-    public struct Note
+    public class Note
     {
         public readonly float Time;
         public readonly Int32 String;
@@ -302,13 +283,7 @@ namespace RocksmithSngCreator
         public Byte[] Unknown; // len 24;
         Byte[] _name; // len 32
 
-        public string Name
-        {
-            get
-            {
-                return System.Text.Encoding.ASCII.GetString(_name).TrimEnd('\0');
-            }
-        }
+        public string Name { get { return _name.ToNullTerminatedAscii(); } }
 
         public ChordTemplate(BinaryReader br)
         {
@@ -336,13 +311,7 @@ namespace RocksmithSngCreator
         public readonly float Length;
         Byte[] _lyric; // len 32
 
-        public string Lyric
-        {
-            get
-            {
-                return System.Text.Encoding.ASCII.GetString(_lyric).TrimEnd('\0');
-            }
-        }
+        public string Lyric { get { return _lyric.ToNullTerminatedAscii(); } }
 
         public Vocal(BinaryReader br)
         {
@@ -351,6 +320,32 @@ namespace RocksmithSngCreator
             Length = br.ReadSingle();
             _lyric = br.ReadBytes(32);
         }
+    }
+
+    public class Metadata
+    {
+        Byte[] _lastConversion; // len = 32
+        Byte[] _songTitle; // len = 64
+        Byte[] _arrangement; // len = 32
+        Byte[] _artist; // len = 32
+        public readonly Int16 SongPart;
+        public readonly float Length;
+
+        public string LastConversion { get { return _lastConversion.ToNullTerminatedAscii(); } }
+        public string SongTitle { get { return _songTitle.ToNullTerminatedAscii(); } }
+        public string Arrangement { get { return _arrangement.ToNullTerminatedAscii(); } }
+        public string Artist { get { return _artist.ToNullTerminatedAscii(); } }
+
+        public Metadata(BinaryReader br)
+        {
+            _lastConversion = br.ReadBytes(32);
+            _songTitle = br.ReadBytes(64);
+            _arrangement = br.ReadBytes(32);
+            _artist = br.ReadBytes(32);
+            SongPart = br.ReadInt16();
+            Length = br.ReadSingle();
+        }
+
     }
 
     public class SngFile
@@ -377,18 +372,40 @@ namespace RocksmithSngCreator
         public readonly SongEvent[] SongEvents;
         public readonly Int32 SongSectionCount;
         public readonly SongSection[] SongSections;
-        Int32 _padding7; //?
+        /*Int32 _padding7; //?
         Int32 _padding8; //?
         Int32 _padding9; //?
         Int32 _padding10; //?
         Int32 _padding11; //?
-        Int32 _padding12; //?
+        Int32 _padding12; //?*/
         Int32 _songLevelCount;
-        SongLevel[] SongLevels;
+        public readonly SongLevel[] SongLevels;
+        public Byte[] _unknown; // len 32
+        public readonly Metadata Metadata;
 
+
+        private string _filePath;
+        public override string ToString()
+        {
+            if (Metadata != null)
+            {
+                return Metadata.SongTitle;
+            }
+
+            if (!string.IsNullOrWhiteSpace(_filePath))
+            {
+                return Path.GetFileName(_filePath);
+            }
+            else
+            {
+                return "<Unknown>";
+            }
+        }
 
         public SngFile(string file)
         {
+            _filePath = file;
+
             using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 BinaryReader br = new BinaryReader(stream);
@@ -470,6 +487,10 @@ namespace RocksmithSngCreator
                 {
                     SongLevels[i] = new SongLevel(br);
                 }
+
+                _unknown = br.ReadBytes(32);
+
+                Metadata = new Metadata(br);
             }
         }
     }
