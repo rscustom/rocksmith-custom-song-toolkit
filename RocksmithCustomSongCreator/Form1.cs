@@ -24,6 +24,8 @@ namespace RocksmithSngCreator
         private void browseButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "XML Files|*.xml|All Files (*.*)|*.*";
+            fd.FilterIndex = 1;
             fd.ShowDialog();
             inputXmlTextBox.Text = fd.FileName;
             outputFileTextBox.Text = inputXmlTextBox.Text.Substring(0, inputXmlTextBox.Text.Length - 4) + ".sng";
@@ -31,18 +33,83 @@ namespace RocksmithSngCreator
 
         private void convertBtn_Click(object sender, EventArgs e)
         {
-            song rocksmithSong;
-            XmlSerializer serializer = new XmlSerializer(typeof(song));
-            StreamReader reader = new StreamReader(inputXmlTextBox.Text);
-            rocksmithSong = (song)serializer.Deserialize(reader);
-            reader.Close();
+            if (vocalsRadioButton.Checked)
+            {
+                SongVocals vocals;
+                XmlSerializer serializer = new XmlSerializer(typeof(SongVocals));
+                StreamReader reader = new StreamReader(inputXmlTextBox.Text);
+                vocals = (SongVocals)serializer.Deserialize(reader);
+                reader.Close();
 
-            if (littleEndianRadioBtn.Checked)
-                writeRocksmithSngFile(rocksmithSong, outputFileTextBox.Text, EndianBitConverter.Little);
+                if (littleEndianRadioBtn.Checked)
+                    writeRocksmithVocalsFile(vocals, outputFileTextBox.Text, EndianBitConverter.Little);
+                else
+                    writeRocksmithVocalsFile(vocals, outputFileTextBox.Text, EndianBitConverter.Big);
+            }
             else
-                writeRocksmithSngFile(rocksmithSong, outputFileTextBox.Text, EndianBitConverter.Big);
+            {
+                song rocksmithSong;
+                XmlSerializer serializer = new XmlSerializer(typeof(song));
+                StreamReader reader = new StreamReader(inputXmlTextBox.Text);
+                rocksmithSong = (song)serializer.Deserialize(reader);
+                reader.Close();
 
+                if (littleEndianRadioBtn.Checked)
+                    writeRocksmithSngFile(rocksmithSong, outputFileTextBox.Text, EndianBitConverter.Little);
+                else
+                    writeRocksmithSngFile(rocksmithSong, outputFileTextBox.Text, EndianBitConverter.Big);
+            }
+            
             MessageBox.Show("Process Complete","File Creation Process");
+        }
+
+        // COMPLETE
+        private void writeRocksmithVocalsFile(SongVocals vocals, string outputFile, EndianBitConverter bitConverter)
+        {
+            // WRITE THE .SNG FILE
+            using (FileStream fs = new FileStream(outputFile, FileMode.Create))
+            {
+                using (EndianBinaryWriter w = new EndianBinaryWriter(bitConverter, fs))
+                {
+                    // file header
+                    this.writeRocksmithSngHeader(w);
+
+                    // unused filler
+                    w.Write(new byte[16]);
+
+                    // vocal count
+                    if (vocals.Count != vocals.Vocal.Length)
+                        throw new Exception("XML vocals header count does not match number of vocal items.");
+                    w.Write(vocals.Count);
+
+                    // vocals
+                    for (int i = 0; i < vocals.Vocal.Length; i++)
+                    {
+                        // vocal time
+                        w.Write(vocals.Vocal[i].Time);
+
+                        // vocal note
+                        w.Write(vocals.Vocal[i].Note);
+
+                        // vocal length
+                        w.Write(vocals.Vocal[i].Length);
+
+                        // vocal lyric
+                        string lyric = vocals.Vocal[i].Lyric;
+                        if (lyric.Length > 32)
+                            throw new Exception(string.Format("Vocal lyric '{0}' at position {1} exceeded the maximum width of 32 bytes.", lyric, i.ToString()));
+                        foreach (char c in lyric.ToCharArray())
+                        {
+                            w.Write(Convert.ToByte(c));
+                        }
+                        // padding after name
+                        w.Write(new byte[32 - lyric.Length]);
+                    }
+
+                    // unused
+                    w.Write(new byte[254]);
+                }
+            }
         }
 
         private void writeRocksmithSngFile(song rocksmithSong, string outputFile, EndianBitConverter bitConverter)
@@ -108,7 +175,7 @@ namespace RocksmithSngCreator
                 }
             }
         }
-
+        
         private void validateRocksmithSongXmlImport(song rocksmithSong)
         {
             if (rocksmithSong.ebeats == null || rocksmithSong.ebeats.Length != 1)
@@ -594,17 +661,5 @@ namespace RocksmithSngCreator
             // song length
             w.Write(Convert.ToSingle(s.songLength));
         }
-
-        private void bigEndianRadioBtn_CheckedChanged(object sender, EventArgs e)
-        {
-            littleEndianRadioBtn.Checked = !bigEndianRadioBtn.Checked;
-        }
-
-        private void littleEndianRadioBtn_CheckedChanged(object sender, EventArgs e)
-        {
-            bigEndianRadioBtn.Checked = !littleEndianRadioBtn.Checked;
-        }
-
-
     }
 }

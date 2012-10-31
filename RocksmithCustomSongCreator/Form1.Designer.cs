@@ -37,7 +37,12 @@
             this.convertBtn = new System.Windows.Forms.Button();
             this.littleEndianRadioBtn = new System.Windows.Forms.RadioButton();
             this.bigEndianRadioBtn = new System.Windows.Forms.RadioButton();
-            this.label3 = new System.Windows.Forms.Label();
+            this.instrumentRadioButton = new System.Windows.Forms.RadioButton();
+            this.vocalsRadioButton = new System.Windows.Forms.RadioButton();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // browseButton
@@ -90,7 +95,7 @@
             // 
             // convertBtn
             // 
-            this.convertBtn.Location = new System.Drawing.Point(222, 250);
+            this.convertBtn.Location = new System.Drawing.Point(223, 373);
             this.convertBtn.Name = "convertBtn";
             this.convertBtn.Size = new System.Drawing.Size(75, 23);
             this.convertBtn.TabIndex = 5;
@@ -102,43 +107,75 @@
             // 
             this.littleEndianRadioBtn.AutoSize = true;
             this.littleEndianRadioBtn.Checked = true;
-            this.littleEndianRadioBtn.Location = new System.Drawing.Point(60, 194);
+            this.littleEndianRadioBtn.Location = new System.Drawing.Point(28, 35);
             this.littleEndianRadioBtn.Name = "littleEndianRadioBtn";
             this.littleEndianRadioBtn.Size = new System.Drawing.Size(139, 21);
             this.littleEndianRadioBtn.TabIndex = 6;
             this.littleEndianRadioBtn.TabStop = true;
-            this.littleEndianRadioBtn.Text = "Little Endian (PC)";
-            this.littleEndianRadioBtn.UseVisualStyleBackColor = true;
-            this.littleEndianRadioBtn.CheckedChanged += new System.EventHandler(this.littleEndianRadioBtn_CheckedChanged);
+            this.littleEndianRadioBtn.Text = "PC (Little Endian)";
+            this.littleEndianRadioBtn.UseVisualStyleBackColor = true;           
             // 
             // bigEndianRadioBtn
             // 
             this.bigEndianRadioBtn.AutoSize = true;
-            this.bigEndianRadioBtn.Location = new System.Drawing.Point(248, 194);
+            this.bigEndianRadioBtn.Location = new System.Drawing.Point(216, 35);
             this.bigEndianRadioBtn.Name = "bigEndianRadioBtn";
             this.bigEndianRadioBtn.Size = new System.Drawing.Size(204, 21);
             this.bigEndianRadioBtn.TabIndex = 7;
-            this.bigEndianRadioBtn.Text = "Big Endian (Game Console)";
+            this.bigEndianRadioBtn.Text = "Game Console (Big Endian)";
             this.bigEndianRadioBtn.UseVisualStyleBackColor = true;
-            this.bigEndianRadioBtn.CheckedChanged += new System.EventHandler(this.bigEndianRadioBtn_CheckedChanged);
             // 
-            // label3
+            // instrumentRadioButton
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(26, 163);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(129, 17);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Output File Format:";
+            this.instrumentRadioButton.AutoSize = true;
+            this.instrumentRadioButton.Location = new System.Drawing.Point(219, 35);
+            this.instrumentRadioButton.Name = "instrumentRadioButton";
+            this.instrumentRadioButton.Size = new System.Drawing.Size(177, 21);
+            this.instrumentRadioButton.TabIndex = 10;
+            this.instrumentRadioButton.Text = "Instrument (Incomplete)";
+            this.instrumentRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // vocalsRadioButton
+            // 
+            this.vocalsRadioButton.AutoSize = true;
+            this.vocalsRadioButton.Checked = true;
+            this.vocalsRadioButton.Location = new System.Drawing.Point(31, 35);
+            this.vocalsRadioButton.Name = "vocalsRadioButton";
+            this.vocalsRadioButton.Size = new System.Drawing.Size(71, 21);
+            this.vocalsRadioButton.TabIndex = 9;
+            this.vocalsRadioButton.TabStop = true;
+            this.vocalsRadioButton.Text = "Vocals";
+            this.vocalsRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.vocalsRadioButton);
+            this.groupBox1.Controls.Add(this.instrumentRadioButton);
+            this.groupBox1.Location = new System.Drawing.Point(26, 166);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(464, 79);
+            this.groupBox1.TabIndex = 12;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Input File Type";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.littleEndianRadioBtn);
+            this.groupBox2.Controls.Add(this.bigEndianRadioBtn);
+            this.groupBox2.Location = new System.Drawing.Point(29, 267);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(464, 79);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Target Platform";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(523, 306);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.bigEndianRadioBtn);
-            this.Controls.Add(this.littleEndianRadioBtn);
+            this.ClientSize = new System.Drawing.Size(523, 422);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.convertBtn);
             this.Controls.Add(this.outputFileTextBox);
             this.Controls.Add(this.label2);
@@ -147,6 +184,10 @@
             this.Controls.Add(this.browseButton);
             this.Name = "Form1";
             this.Text = "Rocksmith .SNG File Creator";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -163,7 +204,10 @@
         private System.Windows.Forms.Button convertBtn;
         private System.Windows.Forms.RadioButton littleEndianRadioBtn;
         private System.Windows.Forms.RadioButton bigEndianRadioBtn;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.RadioButton instrumentRadioButton;
+        private System.Windows.Forms.RadioButton vocalsRadioButton;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }
 
