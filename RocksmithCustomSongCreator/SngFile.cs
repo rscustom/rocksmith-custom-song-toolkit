@@ -28,6 +28,14 @@ namespace RocksmithSngCreator
             Beat = br.ReadInt16();
             Unknown = br.ReadInt32();
         }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Time);
+            bw.Write(Measure);
+            bw.Write(Beat);
+            bw.Write(Unknown);
+        }
     }
 
     public class Phrase
@@ -45,6 +53,14 @@ namespace RocksmithSngCreator
             PhraseIterationCount = br.ReadInt32();
             _name = br.ReadBytes(32);
         }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Disparity);
+            bw.Write(MaxDifficulty);
+            bw.Write(PhraseIterationCount);
+            bw.Write(_name);
+        }
     }
 
     public class PhraseIteration
@@ -59,6 +75,13 @@ namespace RocksmithSngCreator
             StartTime = br.ReadSingle();
             EndTime = br.ReadSingle();
         }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Id);
+            bw.Write(StartTime);
+            bw.Write(EndTime);
+        }
     }
 
     public class Control
@@ -72,6 +95,12 @@ namespace RocksmithSngCreator
             Time = br.ReadSingle();
             _code = br.ReadBytes(256);
         }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Time);
+            bw.Write(_code);
+        }
     }
 
     public class SongEvent
@@ -84,6 +113,12 @@ namespace RocksmithSngCreator
         {
             Time = br.ReadSingle();
             _code = br.ReadBytes(256);
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Time);
+            bw.Write(_code);
         }
     }
 
@@ -117,6 +152,21 @@ namespace RocksmithSngCreator
             Bit1 = br.ReadByte();
             Padding = br.ReadInt32();
         }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(_name);
+            bw.Write(Number);
+            bw.Write(StartTime);
+            bw.Write(EndTime);
+            bw.Write(StartNote);
+            bw.Write(EndNote);
+            bw.Write(Bit1);
+            bw.Write(Bit1);
+            bw.Write(Bit1);
+            bw.Write(Bit1);
+            bw.Write(Padding);
+        }
     }
 
     public struct SongLevel
@@ -130,6 +180,11 @@ namespace RocksmithSngCreator
         public readonly HandShape[] HandShapes; //?
         public readonly Int32 NoteCount; // ?
         public readonly Note[] Notes;
+        public readonly Int32 Unknown1Count;
+        public readonly Int32[] Unknown1s; // each is len 1
+        public readonly Int32 Unknown2Count;
+        public readonly Int32[] Unknown2s; // each is len 2
+        public readonly Int32 Unknown3;
 
         public SongLevel(BinaryReader br)
         {
@@ -148,7 +203,6 @@ namespace RocksmithSngCreator
                 Chords[i] = new Chord(br);
             }
 
-
             HandShapeCount = br.ReadInt32();
             HandShapes = new HandShape[HandShapeCount];
             for (int i = 0; i < HandShapeCount; ++i)
@@ -163,19 +217,63 @@ namespace RocksmithSngCreator
                 Notes[i] = new Note(br);
             }
 
-            int testCount = br.ReadInt32();
-            for (int i = 0; i < testCount; ++i)
+            Unknown1Count = br.ReadInt32();
+            Unknown1s = new Int32[Unknown1Count];
+            for(int i = 0; i < Unknown1Count; ++i)
             {
-                br.ReadInt32();
-            }
-            testCount = br.ReadInt32();
-            for (int i = 0; i < testCount; ++i)
-            {
-                br.ReadInt32();
-                br.ReadInt32();
+                Unknown1s[i] = br.ReadInt32();
             }
 
-            br.ReadInt32();
+            Unknown2Count = br.ReadInt32();
+            Unknown2s = new Int32[Unknown2Count * 2]; // each is len 2
+            for (int i = 0; i < Unknown2s.Count(); ++i)
+            {
+                Unknown2s[i] = br.ReadInt32();
+            }
+
+            Unknown3 = br.ReadInt32();
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Difficulty);
+            bw.Write(AnchorCount);
+            for (int i = 0; i < AnchorCount; ++i)
+            {
+                Anchors[i].Write(bw);
+            }
+
+            bw.Write(ChordCount);
+            for (int i = 0; i < ChordCount; ++i)
+            {
+                Chords[i].Write(bw);
+            }
+
+            bw.Write(HandShapeCount);
+            for (int i = 0; i < HandShapeCount; ++i)
+            {
+                HandShapes[i].Write(bw);
+            }
+
+            bw.Write(NoteCount);
+            for (int i = 0; i < NoteCount; ++i)
+            {
+                Notes[i].Write(bw);
+            }
+
+            bw.Write(Unknown1Count);
+            for (int i = 0; i < Unknown1Count; ++i)
+            {
+                bw.Write(Unknown1s[i]);
+            }
+
+            bw.Write(Unknown2Count);
+            for (int i = 0; i < Unknown2s.Count(); ++i)
+            {
+                bw.Write(Unknown2s[i]);
+            }
+
+            bw.Write(Unknown3);
         }
     }
 
@@ -194,6 +292,15 @@ namespace RocksmithSngCreator
             MidTime = br.ReadSingle();
             Fret = br.ReadInt32();
             Unknown = br.ReadInt32();
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(StartTime);
+            bw.Write(EndTime);
+            bw.Write(MidTime);
+            bw.Write(Fret);
+            bw.Write(Unknown);
         }
     }
 
@@ -231,6 +338,24 @@ namespace RocksmithSngCreator
             Index = br.ReadInt32();
             Unknown7 = br.ReadInt32();
         }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Time);
+            bw.Write(String);
+            bw.Write(Fret);
+            bw.Write(Unknown1);
+            bw.Write(Unknown2);
+            bw.Write(SustainTime);
+            bw.Write(Bend);
+            bw.Write(Unknown3);
+            bw.Write(Unknown4);
+            bw.Write(PalmMute);
+            bw.Write(Unknown5);
+            bw.Write(Unknown6);
+            bw.Write(Index);
+            bw.Write(Unknown7);
+        }
     }
 
     public class Chord
@@ -243,6 +368,12 @@ namespace RocksmithSngCreator
             Time = br.ReadSingle();
             Unknown = br.ReadInt32();
         }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Time);
+            bw.Write(Unknown);
+        }
     }
 
     public class HandShape
@@ -252,6 +383,8 @@ namespace RocksmithSngCreator
         public readonly float StartTime2; //?
         public readonly float EndTime2; //?
         public readonly float ChordId;
+        public readonly float Unknown1;
+        public readonly float Unknown2;
 
         public HandShape(BinaryReader br)
         {
@@ -260,8 +393,19 @@ namespace RocksmithSngCreator
             StartTime2 = br.ReadSingle();
             EndTime2 = br.ReadSingle();
             ChordId = br.ReadSingle();
-            br.ReadSingle();
-            br.ReadSingle();
+            Unknown1 = br.ReadSingle();
+            Unknown2 = br.ReadSingle();
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(StartTime);
+            bw.Write(EndTime);
+            bw.Write(StartTime2);
+            bw.Write(EndTime2);
+            bw.Write(ChordId);
+            bw.Write(Unknown1);
+            bw.Write(Unknown2);
         }
     }
 
@@ -302,6 +446,24 @@ namespace RocksmithSngCreator
             Unknown = br.ReadBytes(24);
             _name = br.ReadBytes(32);
         }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Fret0);
+            bw.Write(Fret1);
+            bw.Write(Fret2);
+            bw.Write(Fret3);
+            bw.Write(Fret4);
+            bw.Write(Fret5);
+            bw.Write(Finger0);
+            bw.Write(Finger1);
+            bw.Write(Finger2);
+            bw.Write(Finger3);
+            bw.Write(Finger4);
+            bw.Write(Finger5);
+            bw.Write(Unknown);
+            bw.Write(_name);
+        }
     }
 
     public class Vocal
@@ -319,6 +481,14 @@ namespace RocksmithSngCreator
             Note = br.ReadInt32();
             Length = br.ReadSingle();
             _lyric = br.ReadBytes(32);
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(Time);
+            bw.Write(Note);
+            bw.Write(Length);
+            bw.Write(_lyric);
         }
     }
 
@@ -346,6 +516,64 @@ namespace RocksmithSngCreator
             Length = br.ReadSingle();
         }
 
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(_lastConversion);
+            bw.Write(_songTitle);
+            bw.Write(_arrangement);
+            bw.Write(_artist);
+            bw.Write(SongPart);
+            bw.Write(Length);
+        }
+
+    }
+
+    public class PhraseProperty
+    {
+        Int32 PhraseId;
+        Int32 Difficulty;
+        Int32 Empty; // ?
+        Int16 LevelJump; // ?
+        Int16 Redundant; // ?
+        
+        public PhraseProperty(BinaryReader br)
+        {
+            PhraseId = br.ReadInt32();
+            Difficulty= br.ReadInt32();
+            Empty = br.ReadInt32();
+            LevelJump = br.ReadInt16();
+            Redundant = br.ReadInt16();
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(PhraseId);
+            bw.Write(Difficulty);
+            bw.Write(Empty);
+            bw.Write(LevelJump);
+            bw.Write(Redundant);
+        }
+    }
+
+    public class LinkedDiff
+    {
+        Int32 ParentId;
+        Int32 ChildId;
+        Int32 Unknown; // ?
+        
+        public LinkedDiff(BinaryReader br)
+        {
+            ParentId = br.ReadInt32();
+            ChildId = br.ReadInt32();
+            Unknown = br.ReadInt32();
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(ParentId);
+            bw.Write(ChildId);
+            bw.Write(Unknown);
+        }
     }
 
     public class SngFile
@@ -362,26 +590,21 @@ namespace RocksmithSngCreator
         public Vocal[] _vocals;
         public Int32 _phraseIterationCount;
         public PhraseIteration[] _phraseIterations;
-        Int32 _propertyCount; //?
-        // properties
-        Int32 _linkedDiffCount; //?
-        // linkedDiffs
+        public readonly Int32 PhrasePropertyCount;
+        public readonly PhraseProperty[] PhraseProperties;
+        Int32 LinkedDiffCount;
+        LinkedDiff[] LinkedDiffs;
         public readonly Int32 ControlCount;
         public readonly Control[] Controls;
         Int32 _songEventCount;
         public readonly SongEvent[] SongEvents;
         public readonly Int32 SongSectionCount;
         public readonly SongSection[] SongSections;
-        /*Int32 _padding7; //?
-        Int32 _padding8; //?
-        Int32 _padding9; //?
-        Int32 _padding10; //?
-        Int32 _padding11; //?
-        Int32 _padding12; //?*/
         Int32 _songLevelCount;
         public readonly SongLevel[] SongLevels;
         public Byte[] _unknown; // len 32
         public readonly Metadata Metadata;
+        public readonly Byte[] _unknown2; // len ??
 
 
         private string _filePath;
@@ -445,20 +668,18 @@ namespace RocksmithSngCreator
                     _phraseIterations[i] = new PhraseIteration(br);
                 }
 
-                int propCount = br.ReadInt32();
-                for (int i = 0; i < propCount; ++i)
+                PhrasePropertyCount = br.ReadInt32();
+                PhraseProperties = new PhraseProperty[PhrasePropertyCount];
+                for (int i = 0; i < PhrasePropertyCount; ++i)
                 {
-                    br.ReadInt32();
-                    br.ReadInt32();
-                    br.ReadInt32();
-                    br.ReadInt32();
+                    PhraseProperties[i] = new PhraseProperty(br);
                 }
-                int linkCount = br.ReadInt32();
-                for (int i = 0; i < linkCount; ++i)
+
+                LinkedDiffCount = br.ReadInt32();
+                LinkedDiffs = new LinkedDiff[LinkedDiffCount];
+                for (int i = 0; i < LinkedDiffCount; ++i)
                 {
-                    br.ReadInt32();
-                    br.ReadInt32();
-                    br.ReadInt32();
+                    LinkedDiffs[i] = new LinkedDiff(br);
                 }
 
                 ControlCount = br.ReadInt32();
@@ -494,18 +715,90 @@ namespace RocksmithSngCreator
 
                 // Not sure what this junk is down here yet
 
-                br.ReadInt32();
-                br.ReadSingle();
-                br.ReadSingle();
-                br.ReadSingle();
-                int testCount = br.ReadInt32(); // just a guess
-                for (int i = 0; i < testCount; ++i)
+                int endLength = (int)(br.BaseStream.Length - br.BaseStream.Position);
+                _unknown2 = br.ReadBytes(endLength);
+
+            }
+        }
+
+        public void Write(string file)
+        {
+            using (var stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                BinaryWriter bw = new BinaryWriter(stream);
+                bw.Write(_version);
+                bw.Write(_beatCount);
+                for (int i = 0; i < _beatCount; ++i)
                 {
-                    br.ReadInt32();
-                    br.ReadInt32();
-                    br.ReadInt32();
+                    _beats[i].Write(bw);
                 }
-                // still more down here...
+
+                bw.Write(_PhraseCount);
+                for (int i = 0; i < _PhraseCount; ++i)
+                {
+                    _phrases[i].Write(bw);
+                }
+
+                bw.Write(_chordTemplateCount);
+                for (int i = 0; i < _chordTemplateCount; ++i)
+                {
+                    _chordTemplates[i].Write(bw);
+                }
+                bw.Write(_fretHandMuteTemplateCount); // always 0?
+                bw.Write(_vocalsCount);
+                for (int i = 0; i < _vocalsCount; ++i)
+                {
+                    _vocals[i].Write(bw);
+                }
+
+                bw.Write(_phraseIterationCount);
+                for (int i = 0; i < _phraseIterationCount; ++i)
+                {
+                    _phraseIterations[i].Write(bw);
+                }
+
+                bw.Write(PhrasePropertyCount);
+                for (int i = 0; i < PhrasePropertyCount; ++i)
+                {
+                    PhraseProperties[i].Write(bw);
+                }
+
+                bw.Write(LinkedDiffCount);
+                for (int i = 0; i < LinkedDiffCount; ++i)
+                {
+                    LinkedDiffs[i].Write(bw);
+                }
+
+                bw.Write(ControlCount);
+                for (int i = 0; i < ControlCount; ++i)
+                {
+                    Controls[i].Write(bw);
+                }
+
+                bw.Write(_songEventCount);
+                for (int i = 0; i < _songEventCount; ++i)
+                {
+                    SongEvents[i].Write(bw);
+                }
+                bw.Write(SongSectionCount);
+                for (int i = 0; i < SongSectionCount; ++i)
+                {
+                    SongSections[i].Write(bw);
+                }
+
+                bw.Write(_songLevelCount);
+                for (int i = 0; i < _songLevelCount; ++i)
+                {
+                    SongLevels[i].Write(bw);
+                }
+
+                bw.Write(_unknown);
+
+                Metadata.Write(bw);
+
+                // Not sure what this junk is down here yet
+                bw.Write(_unknown2);
+
             }
         }
     }
