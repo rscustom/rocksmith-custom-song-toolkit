@@ -481,6 +481,7 @@ namespace RocksmithSngCreator.Serialization
 
         [XmlAttribute("chordId")]
         public Int32 ChordId { get; set; }
+
         [XmlAttribute("endTime")]
         public Single EndTime { get; set; }
     }
