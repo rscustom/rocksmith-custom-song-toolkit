@@ -18,24 +18,16 @@ namespace RocksmithCustomSongCreatorTest
             var song = new SngFile(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\Songs\GRExports\Generic\NumberThirteen_Lead.sng");
         }
 
-        public void KnownVersion(string filePath = null)
+        [Test, TestCaseSource("AllSongs")]
+        public void KnownVersion(SngFile song)
         {
-            var song = new SngFile(filePath);
-
             Assert.AreEqual(song._version, 49);
 
         }
 
-        [Test]
-        public void BeatsInOrder()
+        [Test, TestCaseSource("AllSongs")]
+        public void BeatsInOrder(SngFile song)
         {
-            BeatsInOrder(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\Songs\GRExports\Generic\NumberThirteen_Lead.sng");
-        }
-
-        public void BeatsInOrder(string filePath = null)
-        {
-            var song = new SngFile(filePath);
-
             Ebeat lastBeat = null;
             foreach (var beat in song._beats)
             {
@@ -56,24 +48,9 @@ namespace RocksmithCustomSongCreatorTest
             }
         }
 
-        public void ValidString(string s)
+        [Test, TestCaseSource("AllSongs")]
+        public void PhraseIterationsInOrder(SngFile song)
         {
-            var bytes = System.Text.ASCIIEncoding.ASCII.GetBytes(s);
-            Assert.False(bytes.Any(x => x > 127));
-            Assert.False(bytes.Any(x => x < 9));
-            Assert.False(bytes.Any(x => x > 9 && x < 32));
-        }
-
-        [Test]
-        public void PhraseIterationsInOrder()
-        {
-            PhraseIterationsInOrder(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\Songs\GRExports\Generic\NumberThirteen_Lead.sng");
-        }
-
-        public void PhraseIterationsInOrder(string filePath = null)
-        {
-            var song = new SngFile(filePath);
-
             PhraseIteration lastPi = null;
             foreach (var pi in song._phraseIterations)
             {
@@ -91,10 +68,9 @@ namespace RocksmithCustomSongCreatorTest
             }
         }
 
-        public void VocalsInOrder(string filePath)
+        [Test, TestCaseSource("AllSongs")]
+        public void VocalsInOrder(SngFile song)
         {
-            var song = new SngFile(filePath);
-
             Vocal lastVocal = null;
             foreach (var vocal in song._vocals)
             {
@@ -106,10 +82,9 @@ namespace RocksmithCustomSongCreatorTest
             }
         }
 
-        public void SongEventsValid(string filePath)
+        [Test, TestCaseSource("AllSongs")]
+        public void SongEventsValid(SngFile song)
         {
-            var song = new SngFile(filePath);
-
             SongEvent lastSongEvent = null;
             foreach (var songEvent in song.SongEvents)
             {
@@ -128,10 +103,9 @@ namespace RocksmithCustomSongCreatorTest
             }
         }
 
-        public void SongSectionsInOrder(string filePath)
+        [Test, TestCaseSource("AllSongs")]
+        public void SongSectionsInOrder(SngFile song)
         {
-            var song = new SngFile(filePath);
-
             SongSection lastSongSection = null;
             foreach (var songSection in song.SongSections)
             {
@@ -140,10 +114,9 @@ namespace RocksmithCustomSongCreatorTest
             }
         }
 
-        public void ControlsValid(string filePath)
+        [Test, TestCaseSource("AllSongs")]
+        public void ControlsValid(SngFile song)
         {
-            var song = new SngFile(filePath);
-
             foreach (var control in song.Controls)
             {
                 // These times can jump around (ex: TCAnchorZoneIntro_Lead)
@@ -160,19 +133,45 @@ namespace RocksmithCustomSongCreatorTest
             }
         }
 
-        [Test]
-        public void TestAllSongs()
+        [Test, TestCaseSource("AllSongs")]
+        public void NotesInOrder(SngFile song)
         {
-            foreach (var file in Directory.EnumerateFiles(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\Songs\GRExports\Generic\", "*.sng"))
+            foreach (var level in song.SongLevels)
             {
-                KnownVersion(file);
-                BeatsInOrder(file);
-                PhraseIterationsInOrder(file);
-                VocalsInOrder(file);
-                ControlsValid(file);
-                SongEventsValid(file);
-                SongSectionsInOrder(file);
+                Note lastNote = null;
+                foreach (var note in level.Notes)
+                {
+                    if (lastNote != null)
+                    {
+                        Assert.LessOrEqual(lastNote.Time, note.Time);
+                    }
+                    lastNote = note;
+                }
             }
+        }
+
+        private IList<SngFile> _allSongs = null;
+        public IEnumerable<SngFile> AllSongs
+        {
+            get
+            {
+                if ( _allSongs == null )
+                {
+                    _allSongs = Directory.EnumerateFiles(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\Songs\GRExports\Generic\", "*.sng")
+                        .Select(x => new SngFile(x))
+                        .ToList();
+                }
+                return _allSongs;
+            }
+            
+        }
+
+        private void ValidString(string s)
+        {
+            var bytes = System.Text.ASCIIEncoding.ASCII.GetBytes(s);
+            Assert.False(bytes.Any(x => x > 127));
+            Assert.False(bytes.Any(x => x < 9));
+            Assert.False(bytes.Any(x => x > 9 && x < 32));
         }
     }
 }
