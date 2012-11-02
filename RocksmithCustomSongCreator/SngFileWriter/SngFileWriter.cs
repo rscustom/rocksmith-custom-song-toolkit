@@ -529,11 +529,11 @@ namespace RocksmithSngCreator
                 }
 
                 // series of 8 unknown bits? below logic is wrong, just defaulting for now            
-                w.Write(false);
-                w.Write(false);
-                w.Write(false);
-                w.Write(false);
-                w.Write(false);
+                w.Write(true);
+                w.Write(true);
+                w.Write(true);
+                w.Write(true);
+                w.Write(true);
                 w.Write(false);
                 w.Write(false);
                 w.Write(false);
@@ -563,7 +563,7 @@ namespace RocksmithSngCreator
                 w.Write(levels.Level[i].Difficulty);
 
                 // anchors
-                writeRocksmithSngLevelAnchors(w, levels.Level[i].Anchors, songLength);
+                writeRocksmithSngLevelAnchors(w, levels.Level[i].Anchors, phraseIterations, songLength);
 
                 // chords placeholder
                 w.Write(new byte[4]);
@@ -618,7 +618,7 @@ namespace RocksmithSngCreator
         }
 
         // COMPLETE except hardcoded fields
-        private void writeRocksmithSngLevelAnchors(EndianBinaryWriter w, SongAnchors anchors, Single songLength)
+        private void writeRocksmithSngLevelAnchors(EndianBinaryWriter w, SongAnchors anchors, SongPhraseIterations phraseIterations, Single songLength)
         {
             if (anchors == null || anchors.Anchor == null || anchors.Anchor.Length == 0)
             {
@@ -642,17 +642,28 @@ namespace RocksmithSngCreator
                     else
                         w.Write(anchors.Anchor[i + 1].Time);
 
-                    // unknown mid time @ 12,440; fix this:
+                    // unknown time @ 12,440; seems to be 2-5%  less than end value; fix this ballpark later:
                     if (i == anchors.Anchor.Length - 1)
-                        w.Write(songLength - 3);
+                        w.Write(songLength * (float).97);
                     else
-                        w.Write(anchors.Anchor[i + 1].Time - 3);
+                        w.Write(anchors.Anchor[i + 1].Time * (float).97);
 
                     // fret
                     w.Write(anchors.Anchor[i].Fret);
 
-                    // unknown mapped field
-                    w.Write(new byte[4]); // hardcoded to empty for now
+                    // phrase iteration index
+                    bool phraseIterationFound = false;
+                    for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
+                    {
+                        if (anchors.Anchor[i].Time <= phraseIterations.PhraseIteration[p].Time)
+                        {
+                            w.Write(p);
+                            phraseIterationFound = true;
+                            break;
+                        }
+                    }
+                    if (!phraseIterationFound)
+                        throw new Exception(string.Format("No phrase iteration found with matching time for section {0}.", i.ToString()));
                 }
             }
         }
