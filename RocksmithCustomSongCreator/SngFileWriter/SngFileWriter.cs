@@ -109,64 +109,64 @@ namespace RocksmithSngCreator
                     // HEADER
                     this.writeRocksmithSngHeader(w);
 
-                    // EBEATS DATA
-                    // Example: begins at position 4 in NumberThirteen_Lead.sng
+                    // EBEATS DATA                    
                     this.writeRocksmithSngEbeats(w, rocksmithSong.Ebeats);
 
-                    // PHRASES
-                    // Phrases example: begins at position 7,208 in NumberThirteen_Lead.sng
+                    // PHRASES                    
                     this.writeRocksmithSngPhrases(w, rocksmithSong.Phrases, rocksmithSong.PhraseIterations);
 
                     // CHORD TEMPLATES
-                    this.writeRocksmithSngChordTemplates(w, rocksmithSong.ChordTemplates);
-
+                    this.writeRocksmithSngChordTemplates(w, rocksmithSong.ChordTemplates);                    
+                    
                     // FRET HAND MUTE TEMPLATE
                     this.writeRocksmithSngFretHandMuteTemplates(w, rocksmithSong.FretHandMuteTemplates);
 
                     // VOCALS TEMPLATE 
-                    w.Write(new byte[4]); // placeholder
+                    w.Write(new byte[4]); // not used on song file
 
-                    // PHRASE ITERATIONS
-                    // Iteration example: begins at position 7,664 in NumberThirteen_Lead.sng
-                    this.writeRocksmithSngPhraseItersations(w, rocksmithSong.PhraseIterations, rocksmithSong.SongLength);
+                    // PHRASE ITERATIONS                    
+                    this.writeRocksmithSngPhraseIterations(w, rocksmithSong.PhraseIterations, rocksmithSong.SongLength);
 
-                    // PHRASE PROPERTY
-                    w.Write(new byte[4]); // placeholder
+                    // PHRASE PROPERTIES
+                    this.writeRocksmithSngPhraseProperties(w, rocksmithSong.PhraseProperties);
 
                     // LINKED DIFFS
-                    w.Write(new byte[4]); // placeholder
+                    this.writeRocksmithSngLinkedDiffs(w, rocksmithSong.LinkedDiffs);
 
                     // CONTROLS
-                    w.Write(new byte[4]); // placeholder
+                    this.writeRocksmithSngControls(w, rocksmithSong.Controls);
 
-                    // EVENTS DATA
-                    // Events example: begins at position 8,172 in NumberThirteen_Lead.sng
+                    // EVENTS
                     this.writeRocksmithSngEvents(w, rocksmithSong.Events);
 
-                    // SECTIONS DATA
-                    // Sections example: begins at position 9,216 in NumberThirteen_Lead.sng
-                    this.writeRocksmithSngSections(w, rocksmithSong.Sections, rocksmithSong.Levels.Level[0].Notes, rocksmithSong.SongLength);
+                    // SECTIONS
+                    this.writeRocksmithSngSections(w, rocksmithSong.Sections, rocksmithSong.PhraseIterations, rocksmithSong.SongLength);
 
-                    // LEVELS DATA [sample start @ pos 9,820 in NumberThirteen_Lead.sng]
+                    // LEVELS
                     this.writeRocksmithSngLevels(w, rocksmithSong.Levels, rocksmithSong.SongLength, rocksmithSong.Phrases, rocksmithSong.PhraseIterations);
 
-                    // UNKNOWN
-                    w.Write(new byte[28]);
+                    //// UNKNOWN
+                    ////w.Write(new byte[28]);
 
-                    w.Write(rocksmithSong.Ebeats.Ebeat[0].Time); // float with time of first beat; todo: fix this
+                    // UNKNOWN SECTION
+                    // int32 = 6 = anchor count?
+                    // unknown float
+                    // 4 empty bytes
+                    // unknown float
+                    // 4 empty bytes
+                    // unknown float
+                    // unknown float
+
+                    // float with 1st beat time minus 2nd beat time? (or offset)
 
                     // SONG META DATA
                     writeRocksmithSngMetaDetails(w, rocksmithSong);
 
-                    // UNKNOWN
-                    w.Write(new byte[4]); // blank 4 bytes in NumberThirteen_Lead.sng
-                    w.Write(new byte[4]); // float with 10.2927 in NumberThirteen_Lead.sng
-                    w.Write(rocksmithSong.Ebeats.Ebeat[0].Time); // float with time of first beat; todo: fix this
-                    w.Write(rocksmithSong.Ebeats.Ebeat[0].Time); // float with time of first beat; todo: fix this
-                    w.Write(new byte[4]); // float with 1.9618 in NumberThirteen_Lead.sng
+                    // UNKNOWN SECTION
                     w.Write(new byte[4]); // header count for unknown section with repeating float/empty 4 bytes/int pattern
-                    w.Write(new byte[4]); // blank 4 bytes at EOF in NumberThirteen_Lead.sng
 
+                    // UNKNOWN SECTION
+                    w.Write(new byte[4]); // blank 4 bytes at end of all files reviewed so far
                 }
             }
         }
@@ -178,6 +178,7 @@ namespace RocksmithSngCreator
         }
 
         // COMPLETE
+        // Sample: begins at position 4 in NumberThirteen_Lead.sng
         private void writeRocksmithSngEbeats(EndianBinaryWriter w, SongEbeats ebeats)
         {
             // output header
@@ -230,6 +231,7 @@ namespace RocksmithSngCreator
         }
 
         // COMPLETE (need solo example to confirm)
+        // Sample: begins at position 7,208 in NumberThirteen_Lead.sng
         private void writeRocksmithSngPhrases(EndianBinaryWriter w, SongPhrases phrases, SongPhraseIterations phraseIteration)
         {
             // output header
@@ -341,8 +343,9 @@ namespace RocksmithSngCreator
             w.Write(new byte[4]); // placeholder
         }
 
-        // COMPLETE
-        private void writeRocksmithSngPhraseItersations(EndianBinaryWriter w, SongPhraseIterations phraseIterations, Single songLength)
+        // COMPLETE     
+        // Sample: begins at position 7,664 in NumberThirteen_Lead.sng
+        private void writeRocksmithSngPhraseIterations(EndianBinaryWriter w, SongPhraseIterations phraseIterations, Single songLength)
         {
             // output header
             if (phraseIterations.PhraseIteration == null || phraseIterations.PhraseIteration.Length == 0)
@@ -371,7 +374,55 @@ namespace RocksmithSngCreator
             }
         }
 
+        // COMPLETE - might have level jump and empty reversed
+        private void writeRocksmithSngPhraseProperties(EndianBinaryWriter w, SongPhraseProperties phraseProperties)
+        {
+            // output header
+            if (phraseProperties.PhraseProperty == null || phraseProperties.PhraseProperty.Length == 0)
+            {
+                w.Write(new byte[4]); // empty header
+                return;
+            }
+            else
+            {
+                // output header count
+                w.Write(phraseProperties.PhraseProperty.Length);
+            }
+
+            // output phrase properties
+            for (int i = 0; i < phraseProperties.PhraseProperty.Length; i++)
+            {
+                // phrase id
+                w.Write(phraseProperties.PhraseProperty[i].PhraseId);
+                
+                // difficulty
+                w.Write(phraseProperties.PhraseProperty[i].Difficulty);
+
+                // empty?
+                w.Write(phraseProperties.PhraseProperty[i].Empty);
+
+                // level jump?
+                w.Write(phraseProperties.PhraseProperty[i].LevelJump);
+
+                // redundant
+                w.Write(phraseProperties.PhraseProperty[i].Redundant);
+            }
+        }
+
+        // INCOMPLETE
+        private void writeRocksmithSngLinkedDiffs(EndianBinaryWriter w, SongLinkedDiffs phraseProperties)
+        {
+            w.Write(new byte[4]); // placeholder
+        }
+
+        // SKIP FOR NOW - SPECIAL IN GAME SONGS ONLY
+        private void writeRocksmithSngControls(EndianBinaryWriter w, SongControls phraseProperties)
+        {
+            w.Write(new byte[4]); // placeholder
+        }
+
         // COMPLETE
+        // Sample: begins at position 8,172 in NumberThirteen_Lead.sng
         private void writeRocksmithSngEvents(EndianBinaryWriter w, SongEvents events)
         {
             // output header
@@ -403,7 +454,8 @@ namespace RocksmithSngCreator
         }
 
         // COMPLETE except hardcoded fields
-        private void writeRocksmithSngSections(EndianBinaryWriter w, SongSections sections, SongNotes zeroLevelNotes, Single songLength)
+        // Sample: begins at position 9,216 in NumberThirteen_Lead.sng
+        private void writeRocksmithSngSections(EndianBinaryWriter w, SongSections sections, SongPhraseIterations phraseIterations, Single songLength)
         {
             // output header
             if (sections.Section == null || sections.Section.Length == 0)
@@ -441,61 +493,50 @@ namespace RocksmithSngCreator
                 else
                     w.Write(sections.Section[i + 1].StartTime);
 
-                // start note index (level-0) in this section (?)
-                bool startNoteFound = false;
-                for (int n = 0; n < zeroLevelNotes.Note.Length; n++)
+                // phrase iteration start index
+                bool phraseIterationFound = false;
+                for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
                 {
-                    if (sections.Section[i].StartTime <= zeroLevelNotes.Note[n].Time)
+                    if (sections.Section[i].StartTime <= phraseIterations.PhraseIteration[p].Time)
                     {
-                        w.Write(n);
-                        startNoteFound = true;
+                        w.Write(p);
+                        phraseIterationFound = true;
                         break;
                     }
                 }
-                if (!startNoteFound)
-                    throw new Exception(string.Format("No start note found with matching section time for section {0}.", i.ToString()));
+                if (!phraseIterationFound)
+                    throw new Exception(string.Format("No phrase iteration found with matching time for section {0}.", i.ToString()));
 
-                // end note index (level-0) in this section (?)                
-                if (i == sections.Section.Length - 1) // if last section, default to last note
+                // phrase iteration end index           
+                if (i == sections.Section.Length - 1) // if last section, default to last phrase iteration
                 {
-                    w.Write(zeroLevelNotes.Note.Length);
+                    w.Write(phraseIterations.PhraseIteration.Length - 1);
                 }
                 else
                 {
-                    bool endNoteFound = false;
-                    for (int n = 0; n < zeroLevelNotes.Note.Length; n++)
+                    bool endPhraseIterationFound = false;
+                    for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
                     {
-                        if (sections.Section[i + 1].StartTime <= zeroLevelNotes.Note[n].Time)
+                        if (sections.Section[i + 1].StartTime <= phraseIterations.PhraseIteration[p].Time)
                         {
-                            w.Write(Convert.ToInt32(n - 1));
-                            endNoteFound = true;
+                            w.Write(Convert.ToInt32(p - 1));
+                            endPhraseIterationFound = true;
                             break;
                         }
                     }
-                    if (!endNoteFound)
-                        throw new Exception(string.Format("No end note found with matching section time for section {0}.", i.ToString()));
+                    if (!endPhraseIterationFound)
+                        throw new Exception(string.Format("No end phrase iteration found with matching time for section {0}.", i.ToString()));
                 }
 
-                // unknown attribute
-                w.Write(new Byte[] { 1, 1, 1, 1 }); // this is wrong, not all records have this value                
-
-                // unknown attributes @ 9,276
-                w.Write(true); // this is wrong
+                // series of 8 unknown bits? below logic is wrong, just defaulting for now            
                 w.Write(false);
                 w.Write(false);
                 w.Write(false);
-
-                // sample date for last flag
-                //<section name="intro" startTime="11.969" number="1"/>		0, 3	true
-                //<section name="verse" startTime="41.916" number="1"/>		4, 7	true
-                //<section name="chorus" startTime="72.296" number="1"/>		8, 12	true
-                //<section name="verse" startTime="100.615" number="2"/>		13, 16	false
-                //<section name="chorus" startTime="131.157" number="2"/> 	17, 20	false
-                //<section name="transition" startTime="157.094" number="1"/> 	21, 24	false
-                //<section name="bridge" startTime="183.064" number="1"/> 	25, 28	false
-                //<section name="transition" startTime="212.640" number="2"/> 	29, 31	true
-                //<section name="verse" startTime="233.099" number="3"/> 		32, 35	true 
-                //<section name="chorus" startTime="263.861" number="3"/> 	36, 40	false
+                w.Write(false);
+                w.Write(false);
+                w.Write(false);
+                w.Write(false);
+                w.Write(false);
             }
         }
 
@@ -601,8 +642,11 @@ namespace RocksmithSngCreator
                     else
                         w.Write(anchors.Anchor[i + 1].Time);
 
-                    // unknown time @ 12,440
-                    w.Write(Convert.ToSingle(0)); // fix this
+                    // unknown mid time @ 12,440; fix this:
+                    if (i == anchors.Anchor.Length - 1)
+                        w.Write(songLength - 3);
+                    else
+                        w.Write(anchors.Anchor[i + 1].Time - 3);
 
                     // fret
                     w.Write(anchors.Anchor[i].Fret);
@@ -676,7 +720,8 @@ namespace RocksmithSngCreator
         // INCOMPLETE
         private void writeRocksmithSngMetaDetails(EndianBinaryWriter w, Song s)
         {
-            // first beat time (?)
+            // float with time of first phraseId = 1 (found example where 1st phrase matched offset and was skipped over)?
+            w.Write(new byte[4]); 
             
             // song conversion date
             foreach (char c in s.LastConversionDateTime.ToCharArray())
@@ -712,6 +757,13 @@ namespace RocksmithSngCreator
 
             // song length
             w.Write(s.SongLength);
+
+            // unknown meta data
+            w.Write(new byte[4]); // blank 4 bytes in NumberThirteen_Lead.sng
+            w.Write(new byte[4]); // float with 10.2927 in NumberThirteen_Lead.sng
+            w.Write(new byte[4]); // wrong; float with time of first beat; time of phraseid=1 (not 0) in somes examples
+            w.Write(new byte[4]); // wrong; float with time of first beat; time of phraseid=1 (not 0) in somes examples
+            w.Write(new byte[4]); // float with 1.9618 in NumberThirteen_Lead.sng....  number 4?
         }
     }
 }

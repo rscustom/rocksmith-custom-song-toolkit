@@ -19,7 +19,7 @@ namespace RocksmithSngCreator.Serialization
         public string Arrangement { get; set; }
 
         [XmlElement("part")]
-        public Int32 Part { get; set; }
+        public Int16 Part { get; set; }
 
         [XmlElement("offset")]
         public Single Offset { get; set; }
@@ -147,10 +147,10 @@ namespace RocksmithSngCreator.Serialization
         public Int32 PhraseId { get; set; }
 
         [XmlAttribute("redundant")]
-        public Int32 Redundant { get; set; }
+        public Int16 Redundant { get; set; }
 
         [XmlAttribute("levelJump")]
-        public Int32 LevelJump { get; set; }
+        public Int16 LevelJump { get; set; }
 
         [XmlAttribute("empty")]
         public Int32 Empty { get; set; }
