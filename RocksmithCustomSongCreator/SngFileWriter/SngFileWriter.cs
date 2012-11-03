@@ -389,9 +389,36 @@ namespace RocksmithSngCreator
         }
 
         // INCOMPLETE
-        private void writeRocksmithSngLinkedDiffs(EndianBinaryWriter w, SongLinkedDiffs phraseProperties)
+        private void writeRocksmithSngLinkedDiffs(EndianBinaryWriter w, SongLinkedDiffs linkedDiffs)
         {
+            /** TEMPORARILY WRITE EMPTY 4 BYTES AND RETURN UNTIL BELOW CAN BE FULLY MAPPED **/
             w.Write(new byte[4]); // placeholder
+            return;
+
+            ///** BEGIN PERMANENT SECTION **/
+            //// output header
+            //if (linkedDiffs == null || linkedDiffs.Phrase == null || linkedDiffs.Phrase.Length == 0)
+            //{
+            //    w.Write(new byte[4]); // empty header
+            //    return;
+            //}
+            //else
+            //{
+            //    // output header count
+            //    w.Write(linkedDiffs.Phrase.Length);
+            //}
+
+            //for (int i = 0; i < linkedDiffs.Phrase.Length; i++)
+            //{
+            //    // parent id
+            //    w.Write(linkedDiffs.Phrase[i].ParentId);
+
+            //    // child id
+            //    w.Write(linkedDiffs.Phrase[i].ChildId);
+
+            //    // unknown
+            //    w.Write(new byte[4]);
+            //}
         }
 
         // COMPLETE
