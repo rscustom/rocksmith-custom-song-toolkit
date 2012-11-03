@@ -120,7 +120,7 @@ namespace RocksmithSngCreator.Serialization
         public Int32 Count { get; set; }
 
         [XmlElement("linkedDiff")]
-        public SongLinkedDiff[] Phrase { get; set; }
+        public SongLinkedDiff[] LinkedDiff { get; set; }
     }
 
     [XmlType("linkedDiff")]

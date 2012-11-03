@@ -397,7 +397,7 @@ namespace RocksmithSngCreator
 
             ///** BEGIN PERMANENT SECTION **/
             //// output header
-            //if (linkedDiffs == null || linkedDiffs.Phrase == null || linkedDiffs.Phrase.Length == 0)
+            //if (linkedDiffs == null || linkedDiffs.LinkedDiff == null || linkedDiffs.LinkedDiff.Length == 0)
             //{
             //    w.Write(new byte[4]); // empty header
             //    return;
@@ -405,16 +405,16 @@ namespace RocksmithSngCreator
             //else
             //{
             //    // output header count
-            //    w.Write(linkedDiffs.Phrase.Length);
+            //    w.Write(linkedDiffs.LinkedDiff.Length);
             //}
 
-            //for (int i = 0; i < linkedDiffs.Phrase.Length; i++)
+            //for (int i = 0; i < linkedDiffs.LinkedDiff.Length; i++)
             //{
             //    // parent id
-            //    w.Write(linkedDiffs.Phrase[i].ParentId);
+            //    w.Write(linkedDiffs.LinkedDiff[i].ParentId);
 
             //    // child id
-            //    w.Write(linkedDiffs.Phrase[i].ChildId);
+            //    w.Write(linkedDiffs.LinkedDiff[i].ChildId);
 
             //    // unknown
             //    w.Write(new byte[4]);
