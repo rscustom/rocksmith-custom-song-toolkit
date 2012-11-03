@@ -123,11 +123,14 @@ namespace RocksmithSngCreator.Serialization
         public SongLinkedDiff[] Phrase { get; set; }
     }
 
-    //TBD
     [XmlType("linkedDiff")]
     public class SongLinkedDiff
     {
-        //TBD
+        [XmlAttribute("parentId")]
+        public Int32 ParentId { get; set; }
+
+        [XmlAttribute("childId")]
+        public Int32 ChildId { get; set; }
     }
 
     [XmlType("phraseProperties")]
