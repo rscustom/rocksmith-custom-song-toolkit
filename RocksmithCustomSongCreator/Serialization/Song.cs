@@ -338,13 +338,13 @@ namespace RocksmithSngCreator.Serialization
     public class SongNote
     {       
         [XmlAttribute("ignore")]
-        public Int32 Ignore { get; set; }
+        public Byte Ignore { get; set; }
 
         [XmlAttribute("time")]
         public Single Time { get; set; }
 
         [XmlAttribute("tremolo")]
-        public Int32 Tremolo { get; set; }
+        public Byte Tremolo { get; set; }
 
         [XmlAttribute("sustain")]
         public Single Sustain { get; set; }
@@ -356,19 +356,19 @@ namespace RocksmithSngCreator.Serialization
         public Int32 SlideTo { get; set; }
 
         [XmlAttribute("pullOff")]
-        public Int32 PullOff { get; set; }
+        public Byte PullOff { get; set; }
 
         [XmlAttribute("palmMute")]
-        public Int32 PalmMute { get; set; }
+        public Byte PalmMute { get; set; }
 
         [XmlAttribute("hopo")]
-        public Int32 Hopo { get; set; }
+        public Byte Hopo { get; set; }
 
         [XmlAttribute("harmonic")]
-        public Int32 Harmonic { get; set; }
+        public Byte Harmonic { get; set; }
 
         [XmlAttribute("hammerOn")]
-        public Int32 HammerOn { get; set; }
+        public Byte HammerOn { get; set; }
 
         [XmlAttribute("fret")]
         public Int32 Fret { get; set; }

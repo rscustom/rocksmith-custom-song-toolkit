@@ -143,30 +143,10 @@ namespace RocksmithSngCreator
                     this.writeRocksmithSngSections(w, rocksmithSong.Sections, rocksmithSong.PhraseIterations, rocksmithSong.SongLength);
 
                     // LEVELS
-                    this.writeRocksmithSngLevels(w, rocksmithSong.Levels, rocksmithSong.SongLength, rocksmithSong.Phrases, rocksmithSong.PhraseIterations);
-
-                    //// UNKNOWN
-                    ////w.Write(new byte[28]);
-
-                    // UNKNOWN SECTION
-                    // int32 = 6 = anchor count?
-                    // unknown float
-                    // 4 empty bytes
-                    // unknown float
-                    // 4 empty bytes
-                    // unknown float
-                    // unknown float
-
-                    // float with 1st beat time minus 2nd beat time? (or offset)
+                    this.writeRocksmithSngLevels(w, rocksmithSong.Levels, rocksmithSong.SongLength, rocksmithSong.Phrases, rocksmithSong.PhraseIterations);                   
 
                     // SONG META DATA
                     writeRocksmithSngMetaDetails(w, rocksmithSong);
-
-                    // UNKNOWN SECTION
-                    w.Write(new byte[4]); // header count for unknown section with repeating float/empty 4 bytes/int pattern
-
-                    // UNKNOWN SECTION
-                    w.Write(new byte[4]); // blank 4 bytes at end of all files reviewed so far
                 }
             }
         }
@@ -178,7 +158,6 @@ namespace RocksmithSngCreator
         }
 
         // COMPLETE
-        // Sample: begins at position 4 in NumberThirteen_Lead.sng
         private void writeRocksmithSngEbeats(EndianBinaryWriter w, SongEbeats ebeats)
         {
             // output header
@@ -415,10 +394,36 @@ namespace RocksmithSngCreator
             w.Write(new byte[4]); // placeholder
         }
 
-        // SKIP FOR NOW - SPECIAL IN GAME SONGS ONLY
-        private void writeRocksmithSngControls(EndianBinaryWriter w, SongControls phraseProperties)
+        // COMPLETE
+        private void writeRocksmithSngControls(EndianBinaryWriter w, SongControls controls)
         {
-            w.Write(new byte[4]); // placeholder
+            // output header
+            if (controls == null || controls.Control == null || controls.Control.Length == 0)
+            {
+                w.Write(new byte[4]); // empty header
+                return;
+            }
+            else
+            {
+                // output header count
+                w.Write(controls.Control.Length);
+            }
+
+            // output controls
+            for (int i = 0; i < controls.Control.Length; i++)
+            {
+                // control time
+                w.Write(controls.Control[i].Time);
+
+                // control code
+                string code = controls.Control[i].Code;
+                foreach (char c in code.ToCharArray())
+                {
+                    w.Write(Convert.ToByte(c));
+                }
+                // padding after control code
+                w.Write(new byte[256 - code.Length]);
+            }
         }
 
         // COMPLETE
@@ -572,52 +577,32 @@ namespace RocksmithSngCreator
                 w.Write(new byte[4]);
 
                 // notes
-                writeRocksmithSngLevelNotes(w, levels.Level[i].Notes);
+                writeRocksmithSngLevelNotes(w, phraseIterations, levels.Level[i].Notes, songLength);
 
-                // header count for unknown section; total seems to match phrases (alignment stops working around 169,548 though)
-                w.Write(new byte[4]); // send blank header until this gets sorted out
-                //w.Write(phrases.Count);
+                // count of phrases - confirmed
+                w.Write(phrases.Phrase.Length);
+                for (int p = 0; p < phrases.Phrase.Length; p++)
+                {
+                    w.Write(Convert.ToSingle(1)); // unknown float here; hard coded to 1 for now
+                }
+                
+                // count of phrase iterations
+                w.Write(phraseIterations.PhraseIteration.Length);
+                for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
+                {
+                    w.Write(1); // unknown int or flags here?; hard coded to 1 for now
+                }
 
-                //// unknown child section @ 12,048
-                ////32 bit single "1" x 9
-                //for (int p = 0; p < 9; p++)
-                //{
-                //    w.Write(Convert.ToSingle(1));
-                //}
-
-                // fret hand mutes placeholder?
-                w.Write(new byte[4]);
-
-                // header count for unknown section; total seems to match phrase iterations
-                w.Write(new byte[4]); // send blank header until this gets sorted out
-                //w.Write(Convert.ToInt32(phraseIterations.Count));
-
-                //// unknown child section
-                //for (int p = 0; p < phraseIterations.Count; p++)
-                //{
-                //    if (p == (phraseIterations.Count - 1))
-                //        w.Write(Convert.ToInt32(0));
-                //    else
-                //        w.Write(Convert.ToInt32(1));
-                //}
-
-                // header count for unknown section; total seems to match phrase iterations
-                w.Write(new byte[4]); // send blank header until this gets sorted out
-                //w.Write(phraseIterations.Count);
-
-                //// unknown child section
-                //for (int p = 0; p < phraseIterations.Count; p++)
-                //{
-                //    if (p == (phraseIterations.Count - 1))
-                //        w.Write(Convert.ToInt32(0));
-                //    else
-                //        w.Write(Convert.ToInt32(1));
-                //}
-
+                // count of phrase iterations
+                w.Write(phraseIterations.PhraseIteration.Length);
+                for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
+                {
+                    w.Write(1); // unknown int or flags here?; hard coded to 1 for now
+                }
             }
         }
 
-        // COMPLETE except hardcoded fields
+        // COMPLETE except one time field that is not exactly matching
         private void writeRocksmithSngLevelAnchors(EndianBinaryWriter w, SongAnchors anchors, SongPhraseIterations phraseIterations, Single songLength)
         {
             if (anchors == null || anchors.Anchor == null || anchors.Anchor.Length == 0)
@@ -669,7 +654,7 @@ namespace RocksmithSngCreator
         }
 
         // COMPLETE except hardcoded fields
-        private void writeRocksmithSngLevelNotes(EndianBinaryWriter w, SongNotes notes)
+        private void writeRocksmithSngLevelNotes(EndianBinaryWriter w, SongPhraseIterations phraseIterations, SongNotes notes, Single songLength)
         {
             if (notes == null || notes.Note == null || notes.Note.Length == 0)
             {
@@ -693,37 +678,67 @@ namespace RocksmithSngCreator
                     // fret tag
                     w.Write(notes.Note[i].Fret);
 
-                    // TBD
+                    // unknown 1
                     w.Write(Convert.ToInt32(-1));
 
-                    // TBD
+                    // unknown 2
                     w.Write(Convert.ToInt32(-1));
 
-                    // sustain tag
+                    // sustain time
                     w.Write(notes.Note[i].Sustain);
 
-                    // bend tag
+                    // bend
                     w.Write(notes.Note[i].Bend);
 
-                    // TBD
-                    w.Write(Convert.ToInt32(-1));
+                    // slideTo
+                    w.Write(notes.Note[i].SlideTo); //1776   29,076
+
+                    // tremolo
+                    w.Write(notes.Note[i].Tremolo);
+
+                    // harmonic
+                    w.Write(notes.Note[i].Harmonic);
 
                     // palm mute
-                    w.Write(Convert.ToInt16(0)); // padding
-                    w.Write(Convert.ToInt16(notes.Note[i].PalmMute));
+                    w.Write(notes.Note[i].PalmMute);
 
-                    // TBD
-                    w.Write(Convert.ToInt32(0));
+                    // hopo
+                    w.Write(notes.Note[i].Hopo);
 
-                    // TBD
-                    w.Write(Convert.ToInt32(0));
+                    // hammerOn
+                    w.Write(notes.Note[i].HammerOn); //1784
 
-                    // note index
-                    w.Write(i);
+                    // pullOff
+                    w.Write(notes.Note[i].PullOff);
 
-                    // TBD - needs mapping
-                    w.Write(Convert.ToInt32(0));
+                    // ignore
+                    w.Write(notes.Note[i].Ignore);
 
+                    // unknown
+                    w.Write((Byte)0);
+
+                    // unknown
+                    //w.Write(new byte[4]); //unknown int
+                    w.Write(Convert.ToInt16(246));  // wrong
+                    w.Write(Convert.ToInt16(7472)); // wrong
+
+                    // phrase iteration start index and id ????
+                    bool phraseStartIterationFound = false;
+                    for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
+                    {
+                        Single phraseIterationStart = phraseIterations.PhraseIteration[p].Time;
+                        Single phraseIterationEnd = (p == phraseIterations.PhraseIteration.Length) ? songLength : phraseIterations.PhraseIteration[p + 1].Time;
+
+                        if (notes.Note[i].Time >= phraseIterationStart && notes.Note[i].Time < phraseIterationEnd)
+                        {
+                            w.Write(p); // phrase iteration
+                            w.Write(phraseIterations.PhraseIteration[p].PhraseId);
+                            phraseStartIterationFound = true;
+                            break;
+                        }
+                    }
+                    if (!phraseStartIterationFound)
+                        throw new Exception(string.Format("No phrase start iteration found with matching time for note {0}.", i.ToString()));
                 }
             }
         }
@@ -731,8 +746,19 @@ namespace RocksmithSngCreator
         // INCOMPLETE
         private void writeRocksmithSngMetaDetails(EndianBinaryWriter w, Song s)
         {
-            // float with time of first phraseId = 1 (found example where 1st phrase matched offset and was skipped over)?
-            w.Write(new byte[4]); 
+            w.Write(1); // unknown
+            
+            w.Write(new byte[4]); // unknown empty in one example
+            w.Write(1075970048); // unknown 16418 or 2.53125 in one example
+            w.Write(new byte[4]); // unknown empty in one example
+            w.Write(1086698382); // unknown float 6.1782 in one example           
+            w.Write(954437177); // unknown float 0.0001 in one example            
+            w.Write(1056964611); // unknown float 0.5 in one example
+            
+            // not first phraseIteration time
+            // not first section time
+            // is first beat time?
+            w.Write(s.Ebeats.Ebeat[0].Time); 
             
             // song conversion date
             foreach (char c in s.LastConversionDateTime.ToCharArray())
@@ -772,9 +798,14 @@ namespace RocksmithSngCreator
             // unknown meta data
             w.Write(new byte[4]); // blank 4 bytes in NumberThirteen_Lead.sng
             w.Write(new byte[4]); // float with 10.2927 in NumberThirteen_Lead.sng
-            w.Write(new byte[4]); // wrong; float with time of first beat; time of phraseid=1 (not 0) in somes examples
-            w.Write(new byte[4]); // wrong; float with time of first beat; time of phraseid=1 (not 0) in somes examples
+            w.Write(s.Ebeats.Ebeat[0].Time); // wrong; float with time of first beat; time of phraseid=1 (not 0) in somes examples;  float with time of first note where ignore <> 1
+            w.Write(s.Ebeats.Ebeat[0].Time); // wrong; float with time of first beat; time of phraseid=1 (not 0) in somes examples;  float with time of first note where ignore <> 1
             w.Write(new byte[4]); // float with 1.9618 in NumberThirteen_Lead.sng....  number 4?
+
+            // unknown section
+            w.Write(new byte[4]); // header with repeating array; song works in game if array is defaulted to 0 count so will leave this alone for now
+
+            w.Write(new byte[4]); // unknown trailing 4 bytes       
         }
     }
 }

@@ -22,12 +22,18 @@ namespace RocksmithSngCreator
             fd.Filter = "XML Files|*.xml|All Files (*.*)|*.*";
             fd.FilterIndex = 1;
             fd.ShowDialog();
-            inputXmlTextBox.Text = fd.FileName;
-            outputFileTextBox.Text = inputXmlTextBox.Text.Substring(0, inputXmlTextBox.Text.Length - 4) + ".sng";
+            if (!string.IsNullOrEmpty(fd.FileName))
+            {
+                inputXmlTextBox.Text = fd.FileName;
+                outputFileTextBox.Text = inputXmlTextBox.Text.Substring(0, inputXmlTextBox.Text.Length - 4) + ".sng";
+            }
         }
 
         private void convertBtn_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(inputXmlTextBox.Text))
+                return;
+
             SngFileWriter sngFileWriter;
 
             // platform selection

@@ -113,7 +113,7 @@
             this.littleEndianRadioBtn.TabIndex = 6;
             this.littleEndianRadioBtn.TabStop = true;
             this.littleEndianRadioBtn.Text = "PC (Little Endian)";
-            this.littleEndianRadioBtn.UseVisualStyleBackColor = true;           
+            this.littleEndianRadioBtn.UseVisualStyleBackColor = true;
             // 
             // bigEndianRadioBtn
             // 
@@ -130,9 +130,9 @@
             this.instrumentRadioButton.AutoSize = true;
             this.instrumentRadioButton.Location = new System.Drawing.Point(219, 35);
             this.instrumentRadioButton.Name = "instrumentRadioButton";
-            this.instrumentRadioButton.Size = new System.Drawing.Size(177, 21);
+            this.instrumentRadioButton.Size = new System.Drawing.Size(95, 21);
             this.instrumentRadioButton.TabIndex = 10;
-            this.instrumentRadioButton.Text = "Instrument (Incomplete)";
+            this.instrumentRadioButton.Text = "Instrument";
             this.instrumentRadioButton.UseVisualStyleBackColor = true;
             // 
             // vocalsRadioButton
@@ -183,7 +183,7 @@
             this.Controls.Add(this.inputXmlTextBox);
             this.Controls.Add(this.browseButton);
             this.Name = "Form1";
-            this.Text = "Rocksmith .SNG File Creator";
+            this.Text = "Rocksmith .SNG File Creator (v0.1 alpha)";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
