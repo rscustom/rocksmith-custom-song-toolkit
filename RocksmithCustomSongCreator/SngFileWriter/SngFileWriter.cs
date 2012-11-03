@@ -570,11 +570,11 @@ namespace RocksmithSngCreator
                 // anchors
                 writeRocksmithSngLevelAnchors(w, levels.Level[i].Anchors, phraseIterations, songLength);
 
-                // chords placeholder
-                w.Write(new byte[4]);
+                // chords
+                writeRocksmithSngLevelChords(w, levels.Level[i].Chords); 
 
-                // handshape placeholder
-                w.Write(new byte[4]);
+                // handshapes
+                writeRocksmithSngLevelHandShapes(w, levels.Level[i].HandShapes);                
 
                 // notes
                 writeRocksmithSngLevelNotes(w, phraseIterations, levels.Level[i].Notes, songLength);
@@ -651,6 +651,20 @@ namespace RocksmithSngCreator
                         throw new Exception(string.Format("No phrase iteration found with matching time for section {0}.", i.ToString()));
                 }
             }
+        }
+
+        // NOT IMPLEMENTED
+        private void writeRocksmithSngLevelChords(EndianBinaryWriter w, SongChords chords)
+        {
+            // placeholder
+            w.Write(new byte[4]);
+        }
+
+        // NOT IMPLEMENTED
+        private void writeRocksmithSngLevelHandShapes(EndianBinaryWriter w, SongHandShapes handShapes)
+        {
+            // placeholder
+            w.Write(new byte[4]);
         }
 
         // COMPLETE except hardcoded fields
@@ -746,8 +760,8 @@ namespace RocksmithSngCreator
         // INCOMPLETE
         private void writeRocksmithSngMetaDetails(EndianBinaryWriter w, Song s)
         {
-            w.Write(1); // unknown
-            
+            // data below is garbage... just borrowed from a random song to get the charts working.
+            w.Write(1); // unknown           
             w.Write(new byte[4]); // unknown empty in one example
             w.Write(1075970048); // unknown 16418 or 2.53125 in one example
             w.Write(new byte[4]); // unknown empty in one example
