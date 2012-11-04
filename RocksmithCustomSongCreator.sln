@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithCustomSongCreatorT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithEncoder", "RocksmithEncoder\RocksmithEncoder.csproj", "{3515F695-7B40-4B51-A39B-244C1469ABE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithDLCPackager", "RocksmithDLCPackager\RocksmithDLCPackager.csproj", "{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,22 @@ Global
 		{1940BBE3-640F-499C-80BC-2291585406D2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1940BBE3-640F-499C-80BC-2291585406D2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1940BBE3-640F-499C-80BC-2291585406D2}.Release|x86.ActiveCfg = Release|Any CPU
+		{3515F695-7B40-4B51-A39B-244C1469ABE5}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{3515F695-7B40-4B51-A39B-244C1469ABE5}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{3515F695-7B40-4B51-A39B-244C1469ABE5}.Debug|x86.ActiveCfg = Debug|x86
+		{3515F695-7B40-4B51-A39B-244C1469ABE5}.Release|Any CPU.ActiveCfg = Release|x86
+		{3515F695-7B40-4B51-A39B-244C1469ABE5}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{3515F695-7B40-4B51-A39B-244C1469ABE5}.Release|x86.ActiveCfg = Release|x86
+		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Debug|x86.ActiveCfg = Debug|x86
+		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Debug|x86.Build.0 = Debug|x86
+		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|Any CPU.ActiveCfg = Release|x86
+		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|Mixed Platforms.Build.0 = Release|x86
+		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|x86.ActiveCfg = Release|x86
+		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
