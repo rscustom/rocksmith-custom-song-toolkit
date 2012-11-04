@@ -598,18 +598,27 @@ namespace RocksmithSngCreator
                 // anchors
                 writeRocksmithSngLevelAnchors(w, levels.Level[i].Anchors, phraseIterations, songLength);
 
-                // chords
+                // unknown section (doesn't seem to be chords)
                 w.Write(new byte[4]);
-                //writeRocksmithSngLevelChords(w, levels.Level[i].Chords); 
-
-                // handshapes
+                // has format of float (matching some anchor times + integer)
+                // refer to position 171,032 in NumberThirteen_Lead.sng (this section first appears in level 9 of difficulty):
+                //6 count header
+                //12.609 + 5
+                //14.4709 + 5
+                //16.319 + 5
+                //20.0289 + 5
+                //21.91899 + 5
+                //23.78599 + 5
+                                 
+                // something odd going on with position of chords and shapes. positions move??? hard-coding to empty bytes, will support only notes for now
                 w.Write(new byte[4]);
                 //writeRocksmithSngLevelHandShapes(w, levels.Level[i].HandShapes);
+                //writeRocksmithSngLevelChords(w, levels.Level[i].Chords);
 
                 // notes
                 writeRocksmithSngLevelNotes(w, phraseIterations, levels.Level[i].Notes, songLength);
 
-                // count of phrases - confirmed
+                // count of phrases
                 w.Write(phrases.Phrase.Length);
                 for (int p = 0; p < phrases.Phrase.Length; p++)
                 {
