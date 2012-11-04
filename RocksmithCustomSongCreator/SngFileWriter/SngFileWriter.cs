@@ -598,10 +598,9 @@ namespace RocksmithSngCreator
                 // anchors
                 writeRocksmithSngLevelAnchors(w, levels.Level[i].Anchors, phraseIterations, songLength);
 
-                // unknown section (doesn't seem to be chords)
+                // unknown section (doesn't seem to be chords as it appears in NumberThirteen_Lead.sng @ 171,032; this section first appears in level 9 of difficulty)
                 w.Write(new byte[4]);
                 // has format of float (matching some anchor times + integer)
-                // refer to position 171,032 in NumberThirteen_Lead.sng (this section first appears in level 9 of difficulty):
                 //6 count header
                 //12.609 + 5
                 //14.4709 + 5
@@ -609,12 +608,11 @@ namespace RocksmithSngCreator
                 //20.0289 + 5
                 //21.91899 + 5
                 //23.78599 + 5
-                                 
-                // something odd going on with position of chords and shapes. positions move??? hard-coding to empty bytes, will support only notes for now
-                w.Write(new byte[4]);
-                //writeRocksmithSngLevelHandShapes(w, levels.Level[i].HandShapes);
                 //writeRocksmithSngLevelChords(w, levels.Level[i].Chords);
-
+                                 
+                // handshapes
+                writeRocksmithSngLevelHandShapes(w, levels.Level[i].HandShapes);
+                
                 // notes
                 writeRocksmithSngLevelNotes(w, phraseIterations, levels.Level[i].Notes, songLength);
 
@@ -641,7 +639,7 @@ namespace RocksmithSngCreator
             }
         }
 
-        // COMPLETE except one time field that is not exactly matching
+        // COMPLETE except unknown time field which currently has rough estimation logic as placeholder
         private void writeRocksmithSngLevelAnchors(EndianBinaryWriter w, SongAnchors anchors, SongPhraseIterations phraseIterations, Single songLength)
         {
             if (anchors == null || anchors.Anchor == null || anchors.Anchor.Length == 0)
@@ -692,51 +690,12 @@ namespace RocksmithSngCreator
             }
         }
 
-        // NOT IMPLEMENTED  
-        //  sample section begins @ 4,300 in TCPowerChords_Lead.sng   
-        private void writeRocksmithSngLevelChords(EndianBinaryWriter w, SongChords chords)
-        {
-            if (chords == null || chords.Chord == null || chords.Chord.Length == 0)
-            {
-                w.Write(new byte[4]); // empty header
-                return;
-            }
-            else
-            {
-                // output notes header count
-                w.Write(chords.Chord.Length);
-
-                // ouput chords
-                for (int i = 0; i < chords.Chord.Length; i++)
-                {
-                    // chord strum time
-                    w.Write(chords.Chord[i].Time); 
-
-                    // end time from chord shape?
-                    w.Write(new byte[4]);
-
-                    // unknown
-                    w.Write(Convert.ToSingle(-1));
-
-                    // unknown
-                    w.Write(Convert.ToSingle(-1));
-
-                    // unknown
-                    w.Write(0);
-
-                    // chord start time again ???
-                    w.Write(chords.Chord[i].Time);
-
-                    // chord start time again ???
-                    w.Write(chords.Chord[i].Time);
-                }
-            }
-        }
-
-        // NOT IMPLEMENTED
-        // sample section begins @ 4,444 in TCPowerChords_Lead.sng  
+        // COMPLETE
         private void writeRocksmithSngLevelHandShapes(EndianBinaryWriter w, SongHandShapes handShapes)
         {
+            // sample section begins @ 328,356 in NumberThirteen_Combo.sng
+            //  sample section begins @ 4,300 in TCPowerChords_Lead.sng   
+
             if (handShapes == null || handShapes.HandShape == null || handShapes.HandShape.Length == 0)
             {
                 w.Write(new byte[4]); // empty header
@@ -751,44 +710,85 @@ namespace RocksmithSngCreator
                 for (int i = 0; i < handShapes.HandShape.Length; i++)
                 {
                     // hand shape start time
-                    w.Write(handShapes.HandShape[i].StartTime);
+                    w.Write(handShapes.HandShape[i].StartTime); 
+
+                    // hand shape end time
+                    w.Write(handShapes.HandShape[i].EndTime); 
 
                     // unknown
-                    w.Write(-1);
+                    w.Write(Convert.ToSingle(-1));
 
                     // unknown
-                    w.Write(-1);
+                    w.Write(Convert.ToSingle(-1));
 
-                    // unknown
-                    w.Write(new byte[4]);
+                    // chord id
+                    w.Write(handShapes.HandShape[i].ChordId);
 
-                    // unknown
-                    w.Write(-1);
+                    // chord start time again ???
+                    w.Write(handShapes.HandShape[i].StartTime); 
 
-                    // unknown
-                    w.Write(new byte[4]);
-
-                    // unknown
-                    w.Write(new byte[4]);
-
-                    // unknown
-                    w.Write(-1);
-
-                    // unknown
-                    w.Write(new byte[4]);
-
-                    // unknown
-                    w.Write(new byte[4]);
-
-                    //??
-                    w.Write(16129328);
-
-                    w.Write(1);
-
-                    w.Write(1);
+                    // chord start time again ???
+                    w.Write(handShapes.HandShape[i].StartTime); 
                 }
             }
         }
+
+        //// NOT IMPLEMENTED
+        //// sample section begins @ 4,444 in TCPowerChords_Lead.sng  
+        //private void writeRocksmithSngLevelUnknown(EndianBinaryWriter w, SongHandShapes handShapes)
+        //{
+        //    if (handShapes == null || handShapes.HandShape == null || handShapes.HandShape.Length == 0)
+        //    {
+        //        w.Write(new byte[4]); // empty header
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        // output notes header count
+        //        w.Write(handShapes.HandShape.Length);
+
+        //        // ouput chords
+        //        for (int i = 0; i < handShapes.HandShape.Length; i++)
+        //        {
+        //            // hand shape start time
+        //            w.Write(handShapes.HandShape[i].StartTime);
+
+        //            // unknown
+        //            w.Write(-1);
+
+        //            // unknown
+        //            w.Write(-1);
+
+        //            // unknown
+        //            w.Write(new byte[4]);
+
+        //            // unknown
+        //            w.Write(-1);
+
+        //            // unknown
+        //            w.Write(new byte[4]);
+
+        //            // unknown
+        //            w.Write(new byte[4]);
+
+        //            // unknown
+        //            w.Write(-1);
+
+        //            // unknown
+        //            w.Write(new byte[4]);
+
+        //            // unknown
+        //            w.Write(new byte[4]);
+
+        //            //??
+        //            w.Write(16129328);
+
+        //            w.Write(1);
+
+        //            w.Write(1);
+        //        }
+        //    }
+        //}
 
         // COMPLETE except hardcoded fields
         private void writeRocksmithSngLevelNotes(EndianBinaryWriter w, SongPhraseIterations phraseIterations, SongNotes notes, Single songLength)
