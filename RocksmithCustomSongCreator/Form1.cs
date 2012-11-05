@@ -63,7 +63,14 @@ namespace RocksmithSngCreator
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Conversion has failed: {0}", ex.InnerException.Message), "Error");
+                string errorMessage = string.Empty;
+
+                if (string.IsNullOrEmpty(ex.InnerException.Message))
+                    errorMessage = ex.Message;
+                else
+                    errorMessage = ex.InnerException.Message;
+                        
+                MessageBox.Show(string.Format("Conversion has failed: {0}", errorMessage), "Error");
             }            
             
         }
