@@ -12,6 +12,12 @@ using RocksmithSngCreator.Serialization;
 namespace RocksmithSngCreator
 {
     public enum GamePlatform { PC, XBOX, PS3 };
+
+    public struct TimeLinkedEntity
+    {
+        public Single Time { get; set; }
+        public Object Entity { get; set; }
+    }
     
     public class SngFileWriter
     {
@@ -455,9 +461,10 @@ namespace RocksmithSngCreator
         }
 
         // COMPLETE
-        // Sample: begins at position 8,172 in NumberThirteen_Lead.sng
         private void writeRocksmithSngEvents(EndianBinaryWriter w, SongEvents events)
         {
+            // Sample: begins at position 8,172 in NumberThirteen_Lead.sng
+
             // output header
             if (events.Event == null || events.Event.Length == 0)
             {
@@ -598,7 +605,8 @@ namespace RocksmithSngCreator
                 // anchors
                 writeRocksmithSngLevelAnchors(w, levels.Level[i].Anchors, phraseIterations, songLength);
 
-                // unknown section (doesn't seem to be chords as it appears in NumberThirteen_Lead.sng @ 171,032; this section first appears in level 9 of difficulty)
+                // unknown section - appears in NumberThirteen_Lead.sng @ 171,032; this section first appears in level 9 of difficulty
+                // another example @ 328,272 in NumberThirteen_Combo.sng
                 w.Write(new byte[4]);
                 // has format of float (matching some anchor times + integer)
                 //6 count header
@@ -613,8 +621,8 @@ namespace RocksmithSngCreator
                 // handshapes
                 writeRocksmithSngLevelHandShapes(w, levels.Level[i].HandShapes);
                 
-                // notes
-                writeRocksmithSngLevelNotes(w, phraseIterations, levels.Level[i].Notes, songLength);
+                // notes and chords
+                writeRocksmithSngLevelNotes(w, phraseIterations, levels.Level[i].Notes, levels.Level[i].Chords, songLength);
 
                 // count of phrases
                 w.Write(phrases.Phrase.Length);
@@ -690,7 +698,7 @@ namespace RocksmithSngCreator
             }
         }
 
-        // COMPLETE
+        // INCOMPLETE
         private void writeRocksmithSngLevelHandShapes(EndianBinaryWriter w, SongHandShapes handShapes)
         {
             // sample section begins @ 328,356 in NumberThirteen_Combo.sng
@@ -706,7 +714,7 @@ namespace RocksmithSngCreator
                 // output notes header count
                 w.Write(handShapes.HandShape.Length);
 
-                // ouput chords
+                // ouput handshapes
                 for (int i = 0; i < handShapes.HandShape.Length; i++)
                 {
                     // hand shape start time
@@ -733,126 +741,95 @@ namespace RocksmithSngCreator
             }
         }
 
-        //// NOT IMPLEMENTED
-        //// sample section begins @ 4,444 in TCPowerChords_Lead.sng  
-        //private void writeRocksmithSngLevelUnknown(EndianBinaryWriter w, SongHandShapes handShapes)
-        //{
-        //    if (handShapes == null || handShapes.HandShape == null || handShapes.HandShape.Length == 0)
-        //    {
-        //        w.Write(new byte[4]); // empty header
-        //        return;
-        //    }
-        //    else
-        //    {
-        //        // output notes header count
-        //        w.Write(handShapes.HandShape.Length);
-
-        //        // ouput chords
-        //        for (int i = 0; i < handShapes.HandShape.Length; i++)
-        //        {
-        //            // hand shape start time
-        //            w.Write(handShapes.HandShape[i].StartTime);
-
-        //            // unknown
-        //            w.Write(-1);
-
-        //            // unknown
-        //            w.Write(-1);
-
-        //            // unknown
-        //            w.Write(new byte[4]);
-
-        //            // unknown
-        //            w.Write(-1);
-
-        //            // unknown
-        //            w.Write(new byte[4]);
-
-        //            // unknown
-        //            w.Write(new byte[4]);
-
-        //            // unknown
-        //            w.Write(-1);
-
-        //            // unknown
-        //            w.Write(new byte[4]);
-
-        //            // unknown
-        //            w.Write(new byte[4]);
-
-        //            //??
-        //            w.Write(16129328);
-
-        //            w.Write(1);
-
-        //            w.Write(1);
-        //        }
-        //    }
-        //}
-
         // COMPLETE except hardcoded fields
-        private void writeRocksmithSngLevelNotes(EndianBinaryWriter w, SongPhraseIterations phraseIterations, SongNotes notes, Single songLength)
+        private void writeRocksmithSngLevelNotes(EndianBinaryWriter w, SongPhraseIterations phraseIterations, SongNotes notes, SongChords chords, Single songLength)
         {
-            if (notes == null || notes.Note == null || notes.Note.Length == 0)
+            //int notesCount = 0;
+            //int chordsCount = 0;
+            List<TimeLinkedEntity> notesChords = new List<TimeLinkedEntity>();
+
+            // add notes to combined note/chord array
+            if (notes != null && notes.Note != null && notes.Note.Length != 0)
+            {
+                foreach (SongNote note in notes.Note)
+                {
+                    notesChords.Add(new TimeLinkedEntity { Time = note.Time, Entity = note });
+                }
+            }
+
+            // add chords to combined note/chord array
+            if (chords != null && chords.Chord != null && chords.Chord.Length != 0)
+            {
+                foreach (SongChord chord in chords.Chord)
+                {
+                    notesChords.Add(new TimeLinkedEntity { Time = chord.Time, Entity = chord });
+                }
+            }
+
+            // sort the notes and chords by time
+            notesChords.Sort((s1, s2) => s1.Time.CompareTo(s2.Time));
+
+            // write empty header if no notes or chords
+            if (notesChords.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
             else
-            {
-                // output notes header count
-                w.Write(notes.Note.Length);
+            {                
+                // output notes and chords header count
+                w.Write(notesChords.Count);
 
-                // ouput notes
-                for (int i = 0; i < notes.Note.Length; i++)
+                // ouput notes and chords
+                for (int i = 0; i < (notesChords.Count); i++)
                 {
                     // note time tag
-                    w.Write(notes.Note[i].Time);
+                    w.Write(notesChords[i].Time);
 
                     // string tag
-                    w.Write(notes.Note[i].String);
-
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).String : -1);
+                    
                     // fret tag
-                    w.Write(notes.Note[i].Fret);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Fret : -1);
 
-                    // unknown 1
-                    w.Write(Convert.ToInt32(-1));
+                    // chord id
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? -1 : ((SongChord)notesChords[i].Entity).ChordId);
 
-                    // unknown 2
+                    // unknown
                     w.Write(Convert.ToInt32(-1));
 
                     // sustain time
-                    w.Write(notes.Note[i].Sustain);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Sustain : (Single)0);
 
                     // bend
-                    w.Write(notes.Note[i].Bend);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Bend : (Single)0);
 
                     // slideTo
-                    w.Write(notes.Note[i].SlideTo); //1776   29,076
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).SlideTo : -1);
 
                     // tremolo
-                    w.Write(notes.Note[i].Tremolo);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Tremolo : new byte());
 
                     // harmonic
-                    w.Write(notes.Note[i].Harmonic);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Harmonic : new byte());
 
                     // palm mute
-                    w.Write(notes.Note[i].PalmMute);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).PalmMute : new byte());
 
                     // hopo
-                    w.Write(notes.Note[i].Hopo);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Hopo : new byte());
 
                     // hammerOn
-                    w.Write(notes.Note[i].HammerOn); //1784
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).HammerOn : new byte());
 
                     // pullOff
-                    w.Write(notes.Note[i].PullOff);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).PullOff : new byte());
 
                     // ignore
-                    w.Write(notes.Note[i].Ignore);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Ignore : ((SongChord)notesChords[i].Entity).Ignore);
 
-                    // unknown
-                    w.Write((Byte)0);
+                    // high density chord
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? new byte() : ((SongChord)notesChords[i].Entity).HighDensity);
 
                     // unknown
                     //w.Write(new byte[4]); //unknown int
@@ -866,7 +843,7 @@ namespace RocksmithSngCreator
                         Single phraseIterationStart = phraseIterations.PhraseIteration[p].Time;
                         Single phraseIterationEnd = (p == phraseIterations.PhraseIteration.Length) ? songLength : phraseIterations.PhraseIteration[p + 1].Time;
 
-                        if (notes.Note[i].Time >= phraseIterationStart && notes.Note[i].Time < phraseIterationEnd)
+                        if (notesChords[i].Time >= phraseIterationStart && notesChords[i].Time < phraseIterationEnd)
                         {
                             w.Write(p); // phrase iteration
                             w.Write(phraseIterations.PhraseIteration[p].PhraseId);

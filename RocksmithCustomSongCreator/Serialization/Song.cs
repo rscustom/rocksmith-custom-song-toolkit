@@ -394,7 +394,7 @@ namespace RocksmithSngCreator.Serialization
     public class SongChord
     {
         [XmlAttribute("ignore")]
-        public Int32 Ignore { get; set; }
+        public Byte Ignore { get; set; }
 
         [XmlAttribute("time")]
         public Single Time { get; set; }
@@ -403,7 +403,7 @@ namespace RocksmithSngCreator.Serialization
         public string Strum { get; set; }
 
         [XmlAttribute("highDensity")]
-        public Int32 HghDensity { get; set; }
+        public Byte HighDensity { get; set; }
 
         [XmlAttribute("chordId")]
         public Int32 ChordId { get; set; }

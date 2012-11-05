@@ -46,18 +46,26 @@ namespace RocksmithSngCreator
                 sngFileWriter = new SngFileWriter(GamePlatform.XBOX);
             }
 
-            // song or vocal chart output
-            if (vocalsRadioButton.Checked)
+            try
             {
-                sngFileWriter.WriteRocksmithVocalChart(inputXmlTextBox.Text, outputFileTextBox.Text);                
+                // song or vocal chart output
+                if (vocalsRadioButton.Checked)
+                {
+                    sngFileWriter.WriteRocksmithVocalChart(inputXmlTextBox.Text, outputFileTextBox.Text);
+                }
+                else
+                {
+                    sngFileWriter.WriteRocksmithSongChart(inputXmlTextBox.Text, outputFileTextBox.Text);
+                }
+
+                // done
+                MessageBox.Show("Process Complete", "File Creation Process");
             }
-            else
+            catch (Exception ex)
             {
-                sngFileWriter.WriteRocksmithSongChart(inputXmlTextBox.Text, outputFileTextBox.Text);
-            }
+                MessageBox.Show(string.Format("Conversion has failed: {0}", ex.InnerException.Message), "Error");
+            }            
             
-            // done
-            MessageBox.Show("Process Complete","File Creation Process");
         }
     }
 }

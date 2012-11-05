@@ -107,7 +107,7 @@
             // 
             this.littleEndianRadioBtn.AutoSize = true;
             this.littleEndianRadioBtn.Checked = true;
-            this.littleEndianRadioBtn.Location = new System.Drawing.Point(28, 35);
+            this.littleEndianRadioBtn.Location = new System.Drawing.Point(44, 35);
             this.littleEndianRadioBtn.Name = "littleEndianRadioBtn";
             this.littleEndianRadioBtn.Size = new System.Drawing.Size(139, 21);
             this.littleEndianRadioBtn.TabIndex = 6;
@@ -118,7 +118,7 @@
             // bigEndianRadioBtn
             // 
             this.bigEndianRadioBtn.AutoSize = true;
-            this.bigEndianRadioBtn.Location = new System.Drawing.Point(216, 35);
+            this.bigEndianRadioBtn.Location = new System.Drawing.Point(232, 35);
             this.bigEndianRadioBtn.Name = "bigEndianRadioBtn";
             this.bigEndianRadioBtn.Size = new System.Drawing.Size(204, 21);
             this.bigEndianRadioBtn.TabIndex = 7;
@@ -128,23 +128,23 @@
             // instrumentRadioButton
             // 
             this.instrumentRadioButton.AutoSize = true;
-            this.instrumentRadioButton.Location = new System.Drawing.Point(219, 35);
+            this.instrumentRadioButton.Checked = true;
+            this.instrumentRadioButton.Location = new System.Drawing.Point(47, 35);
             this.instrumentRadioButton.Name = "instrumentRadioButton";
             this.instrumentRadioButton.Size = new System.Drawing.Size(95, 21);
             this.instrumentRadioButton.TabIndex = 10;
+            this.instrumentRadioButton.TabStop = true;
             this.instrumentRadioButton.Text = "Instrument";
             this.instrumentRadioButton.UseVisualStyleBackColor = true;
             // 
             // vocalsRadioButton
             // 
             this.vocalsRadioButton.AutoSize = true;
-            this.vocalsRadioButton.Checked = true;
-            this.vocalsRadioButton.Location = new System.Drawing.Point(31, 35);
+            this.vocalsRadioButton.Location = new System.Drawing.Point(235, 35);
             this.vocalsRadioButton.Name = "vocalsRadioButton";
-            this.vocalsRadioButton.Size = new System.Drawing.Size(71, 21);
+            this.vocalsRadioButton.Size = new System.Drawing.Size(120, 21);
             this.vocalsRadioButton.TabIndex = 9;
-            this.vocalsRadioButton.TabStop = true;
-            this.vocalsRadioButton.Text = "Vocals";
+            this.vocalsRadioButton.Text = "Vocals / Lyrics";
             this.vocalsRadioButton.UseVisualStyleBackColor = true;
             // 
             // groupBox1
@@ -183,7 +183,7 @@
             this.Controls.Add(this.inputXmlTextBox);
             this.Controls.Add(this.browseButton);
             this.Name = "Form1";
-            this.Text = "Rocksmith .SNG File Creator (v0.1 alpha)";
+            this.Text = "Rocksmith .SNG File Creator (v0.2 alpha)";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
