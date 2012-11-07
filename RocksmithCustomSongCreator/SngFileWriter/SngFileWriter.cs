@@ -841,7 +841,7 @@ namespace RocksmithSngCreator
                     for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
                     {
                         Single phraseIterationStart = phraseIterations.PhraseIteration[p].Time;
-                        Single phraseIterationEnd = (p == phraseIterations.PhraseIteration.Length) ? songLength : phraseIterations.PhraseIteration[p + 1].Time;
+                        Single phraseIterationEnd = (p + 1 == phraseIterations.PhraseIteration.Length) ? songLength : phraseIterations.PhraseIteration[p + 1].Time;
 
                         if (notesChords[i].Time >= phraseIterationStart && notesChords[i].Time < phraseIterationEnd)
                         {
