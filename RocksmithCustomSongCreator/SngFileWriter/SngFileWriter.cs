@@ -270,7 +270,7 @@ namespace RocksmithSngCreator
             }
         }
 
-        // COMPLETE except hardcoded fields
+        // COMPLETE
         private void writeRocksmithSngChordTemplates(EndianBinaryWriter w, SongChordTemplates chordTemplates)
         {
             // output header
@@ -304,13 +304,13 @@ namespace RocksmithSngCreator
                 w.Write(chordTemplates.ChordTemplate[i].Finger4);
                 w.Write(chordTemplates.ChordTemplate[i].Finger5);
 
-                // unknown
-                w.Write(Convert.ToInt32(-1));
-                w.Write(Convert.ToInt32(-1));
-                w.Write(Convert.ToInt32(-1));
-                w.Write(Convert.ToInt32(-1));
-                w.Write(Convert.ToInt32(-1));
-                w.Write(Convert.ToInt32(-1));
+                // score values
+                w.Write(chordTemplates.ChordTemplate[i].Fret0 == -1 ? -1 : (40 + chordTemplates.ChordTemplate[i].Fret0));
+                w.Write(chordTemplates.ChordTemplate[i].Fret1 == -1 ? -1 : (45 + chordTemplates.ChordTemplate[i].Fret1));
+                w.Write(chordTemplates.ChordTemplate[i].Fret2 == -1 ? -1 : (50 + chordTemplates.ChordTemplate[i].Fret2));
+                w.Write(chordTemplates.ChordTemplate[i].Fret3 == -1 ? -1 : (55 + chordTemplates.ChordTemplate[i].Fret3));
+                w.Write(chordTemplates.ChordTemplate[i].Fret4 == -1 ? -1 : (59 + chordTemplates.ChordTemplate[i].Fret4));
+                w.Write(chordTemplates.ChordTemplate[i].Fret5 == -1 ? -1 : (64 + chordTemplates.ChordTemplate[i].Fret5));
 
                 // chord name
                 string name = chordTemplates.ChordTemplate[i].ChordName;
