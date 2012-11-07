@@ -304,7 +304,7 @@ namespace RocksmithSngCreator
                 w.Write(chordTemplates.ChordTemplate[i].Finger4);
                 w.Write(chordTemplates.ChordTemplate[i].Finger5);
 
-                // score values
+                // note values
                 w.Write(chordTemplates.ChordTemplate[i].Fret0 == -1 ? -1 : (40 + chordTemplates.ChordTemplate[i].Fret0));
                 w.Write(chordTemplates.ChordTemplate[i].Fret1 == -1 ? -1 : (45 + chordTemplates.ChordTemplate[i].Fret1));
                 w.Write(chordTemplates.ChordTemplate[i].Fret2 == -1 ? -1 : (50 + chordTemplates.ChordTemplate[i].Fret2));
@@ -330,9 +330,10 @@ namespace RocksmithSngCreator
         }
 
         // COMPLETE     
-        // Sample: begins at position 7,664 in NumberThirteen_Lead.sng
         private void writeRocksmithSngPhraseIterations(EndianBinaryWriter w, SongPhraseIterations phraseIterations, Single songLength)
         {
+            // Sample: begins at position 7,664 in NumberThirteen_Lead.sng
+
             // output header
             if (phraseIterations.PhraseIteration == null || phraseIterations.PhraseIteration.Length == 0)
             {
@@ -395,37 +396,35 @@ namespace RocksmithSngCreator
             }
         }
 
-        // INCOMPLETE
+        // COMPLETE - except hardcoded field
         private void writeRocksmithSngLinkedDiffs(EndianBinaryWriter w, SongLinkedDiffs linkedDiffs)
         {
-            /** TEMPORARILY WRITE EMPTY 4 BYTES AND RETURN UNTIL BELOW CAN BE FULLY MAPPED **/
-            w.Write(new byte[4]); // placeholder
-            return;
+            // output header
+            if (linkedDiffs == null || linkedDiffs.LinkedDiff == null || linkedDiffs.LinkedDiff.Length == 0)
+            {
+                w.Write(new byte[4]); // empty header
+                return;
+            }
+            else
+            {
+                // output header count
+                w.Write(linkedDiffs.LinkedDiff.Length);
 
-            ///** BEGIN PERMANENT SECTION **/
-            //// output header
-            //if (linkedDiffs == null || linkedDiffs.LinkedDiff == null || linkedDiffs.LinkedDiff.Length == 0)
-            //{
-            //    w.Write(new byte[4]); // empty header
-            //    return;
-            //}
-            //else
-            //{
-            //    // output header count
-            //    w.Write(linkedDiffs.LinkedDiff.Length);
-            //}
+                for (int i = 0; i < linkedDiffs.LinkedDiff.Length; i++)
+                {
+                    // parent id
+                    w.Write(linkedDiffs.LinkedDiff[i].ParentId);
 
-            //for (int i = 0; i < linkedDiffs.LinkedDiff.Length; i++)
-            //{
-            //    // parent id
-            //    w.Write(linkedDiffs.LinkedDiff[i].ParentId);
+                    // child id
+                    w.Write(linkedDiffs.LinkedDiff[i].ChildId);
 
-            //    // child id
-            //    w.Write(linkedDiffs.LinkedDiff[i].ChildId);
-
-            //    // unknown
-            //    w.Write(new byte[4]);
-            //}
+                    // unknown (first byte seems to be a boolean bit with true value in all cases reviewed)
+                    w.Write(true);
+                    w.Write(false);
+                    w.Write(false);
+                    w.Write(false);
+                }
+            }
         }
 
         // COMPLETE
