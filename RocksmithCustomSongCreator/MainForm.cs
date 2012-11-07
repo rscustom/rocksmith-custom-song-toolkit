@@ -5,15 +5,20 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace RocksmithSngCreator
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
+
+            this.Text = String.Format("Rocksmith .SNG File Creator (v{0}.{1} alpha)",
+                Assembly.GetExecutingAssembly().GetName().Version.Major,
+                Assembly.GetExecutingAssembly().GetName().Version.Minor);
         }
 
         private void browseButton_Click(object sender, EventArgs e)
@@ -73,6 +78,23 @@ namespace RocksmithSngCreator
                 MessageBox.Show(string.Format("Conversion has failed: {0}", errorMessage), "Error");
             }            
             
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AboutForm a = new AboutForm();
+            a.ShowDialog();
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HelpForm h = new HelpForm();
+            h.ShowDialog();
         }
     }
 }

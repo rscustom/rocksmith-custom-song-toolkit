@@ -1,6 +1,6 @@
 ﻿namespace RocksmithSngCreator
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.browseButton = new System.Windows.Forms.Button();
             this.inputXmlTextBox = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -41,13 +42,22 @@
             this.vocalsRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // browseButton
             // 
-            this.browseButton.Location = new System.Drawing.Point(415, 53);
+            this.browseButton.Location = new System.Drawing.Point(432, 181);
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(75, 23);
             this.browseButton.TabIndex = 0;
@@ -57,7 +67,7 @@
             // 
             // inputXmlTextBox
             // 
-            this.inputXmlTextBox.Location = new System.Drawing.Point(26, 54);
+            this.inputXmlTextBox.Location = new System.Drawing.Point(43, 182);
             this.inputXmlTextBox.Name = "inputXmlTextBox";
             this.inputXmlTextBox.ReadOnly = true;
             this.inputXmlTextBox.Size = new System.Drawing.Size(383, 22);
@@ -70,7 +80,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(26, 25);
+            this.label1.Location = new System.Drawing.Point(43, 153);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(101, 17);
             this.label1.TabIndex = 2;
@@ -79,7 +89,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(26, 96);
+            this.label2.Location = new System.Drawing.Point(43, 224);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(115, 17);
             this.label2.TabIndex = 3;
@@ -87,7 +97,7 @@
             // 
             // outputFileTextBox
             // 
-            this.outputFileTextBox.Location = new System.Drawing.Point(29, 119);
+            this.outputFileTextBox.Location = new System.Drawing.Point(46, 247);
             this.outputFileTextBox.Name = "outputFileTextBox";
             this.outputFileTextBox.ReadOnly = true;
             this.outputFileTextBox.Size = new System.Drawing.Size(383, 22);
@@ -95,7 +105,7 @@
             // 
             // convertBtn
             // 
-            this.convertBtn.Location = new System.Drawing.Point(223, 373);
+            this.convertBtn.Location = new System.Drawing.Point(240, 501);
             this.convertBtn.Name = "convertBtn";
             this.convertBtn.Size = new System.Drawing.Size(75, 23);
             this.convertBtn.TabIndex = 5;
@@ -151,7 +161,7 @@
             // 
             this.groupBox1.Controls.Add(this.vocalsRadioButton);
             this.groupBox1.Controls.Add(this.instrumentRadioButton);
-            this.groupBox1.Location = new System.Drawing.Point(26, 166);
+            this.groupBox1.Location = new System.Drawing.Point(43, 294);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(464, 79);
             this.groupBox1.TabIndex = 12;
@@ -162,18 +172,77 @@
             // 
             this.groupBox2.Controls.Add(this.littleEndianRadioBtn);
             this.groupBox2.Controls.Add(this.bigEndianRadioBtn);
-            this.groupBox2.Location = new System.Drawing.Point(29, 267);
+            this.groupBox2.Location = new System.Drawing.Point(46, 395);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(464, 79);
             this.groupBox2.TabIndex = 13;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Target Platform";
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(558, 28);
+            this.menuStrip1.TabIndex = 15;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.helpToolStripMenuItem,
+            this.aboutToolStripMenuItem1});
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(62, 24);
+            this.aboutToolStripMenuItem.Text = "About";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem1
+            // 
+            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(152, 24);
+            this.aboutToolStripMenuItem1.Text = "About";
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::RocksmithSngCreator.Properties.Resources.logo_small;
+            this.pictureBox1.Location = new System.Drawing.Point(16, 46);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(530, 88);
+            this.pictureBox1.TabIndex = 14;
+            this.pictureBox1.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(523, 422);
+            this.ClientSize = new System.Drawing.Size(558, 541);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.convertBtn);
@@ -182,12 +251,18 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.inputXmlTextBox);
             this.Controls.Add(this.browseButton);
+            this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Rocksmith .SNG File Creator (v0.2 alpha)";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -208,6 +283,13 @@
         private System.Windows.Forms.RadioButton vocalsRadioButton;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
     }
 }
 
