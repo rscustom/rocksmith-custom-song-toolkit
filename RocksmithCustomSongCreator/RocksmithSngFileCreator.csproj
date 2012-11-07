@@ -38,6 +38,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExternalLibraries\MiscUtil.dll</HintPath>
     </Reference>
+    <Reference Include="PSTaskDialog">
+      <HintPath>ExternalLibraries\PSTaskDialog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

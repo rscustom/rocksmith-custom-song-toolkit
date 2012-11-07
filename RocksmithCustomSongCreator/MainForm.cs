@@ -68,15 +68,14 @@ namespace RocksmithSngCreator
             }
             catch (Exception ex)
             {
-                string errorMessage = string.Empty;
+                var errorMessage = ex.Message;
+                if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
+                    errorMessage += "\n" + ex.InnerException.Message;
 
-                if (string.IsNullOrEmpty(ex.InnerException.Message))
-                    errorMessage = ex.Message;
-                else
-                    errorMessage = ex.InnerException.Message;
-                        
-                MessageBox.Show(string.Format("Conversion has failed: {0}", errorMessage), "Error");
-            }            
+                PSTaskDialog.cTaskDialog.MessageBox("Error", "Conversion has failed.", errorMessage, ex.ToString(),
+                    "Click 'show details' for complete exception information.", "",
+                    PSTaskDialog.eTaskDialogButtons.OK, PSTaskDialog.eSysIcons.Error, PSTaskDialog.eSysIcons.Information);
+            }
             
         }
 
