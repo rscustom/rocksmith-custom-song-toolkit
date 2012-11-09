@@ -15,7 +15,7 @@ namespace RocksmithDLCPackager
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new asd2134tc3());
+            Application.Run(new PackerForm());
         }
     }
 }
