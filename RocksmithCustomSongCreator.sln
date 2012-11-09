@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithEncoder", "Rocksmi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithDLCPackager", "RocksmithDLCPackager\RocksmithDLCPackager.csproj", "{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithDLCCreator", "RocksmithDLCCreator\RocksmithDLCCreator.csproj", "{E93B4D6A-474F-4056-A760-601BDD06D693}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,16 @@ Global
 		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|Mixed Platforms.Build.0 = Release|x86
 		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|x86.ActiveCfg = Release|x86
 		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|x86.Build.0 = Release|x86
+		{E93B4D6A-474F-4056-A760-601BDD06D693}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{E93B4D6A-474F-4056-A760-601BDD06D693}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{E93B4D6A-474F-4056-A760-601BDD06D693}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{E93B4D6A-474F-4056-A760-601BDD06D693}.Debug|x86.ActiveCfg = Debug|x86
+		{E93B4D6A-474F-4056-A760-601BDD06D693}.Debug|x86.Build.0 = Debug|x86
+		{E93B4D6A-474F-4056-A760-601BDD06D693}.Release|Any CPU.ActiveCfg = Release|x86
+		{E93B4D6A-474F-4056-A760-601BDD06D693}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{E93B4D6A-474F-4056-A760-601BDD06D693}.Release|Mixed Platforms.Build.0 = Release|x86
+		{E93B4D6A-474F-4056-A760-601BDD06D693}.Release|x86.ActiveCfg = Release|x86
+		{E93B4D6A-474F-4056-A760-601BDD06D693}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
