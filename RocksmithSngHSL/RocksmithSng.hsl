@@ -203,6 +203,31 @@ struct UNKNOWN1_SECTION
     struct UNKNOWN1 Unknowns[Count];
 };
 
+struct UNKNOWN2
+{
+    blob _unknown1[4];
+    blob _unknown2[4];
+    long _unknown3;
+};
+
+struct UNKNOWN2_SECTION
+{
+    long Count;
+    struct UNKNOWN2 Unknowns[Count];
+};
+
+struct UNKNOWN_FINAL_SECTION
+{
+    long Count;
+    struct UNKNOWN1 Unknowns[Count];
+};
+
+struct UNKNOWN_FINAL
+{
+    char _unknown1[68];
+    long _unknown2;
+};
+
 struct HAND_SHAPE
 {
     float StartTime;
@@ -298,12 +323,21 @@ struct METADATA_SECTION
     float _unknown4;
     blob _unknown5[4];
     float _unknown6;
-    float _unknown7;
+    float BeatTiming;
     float FirstBeatTime;
     char LastConversionDateTime[32];
     char Title[64];
     char Arrangement[32];
-    char _dummy[32];
+    char Artist[32];
+    short Part;
+    float SongLength;
+    blob _unknown7[4];
+    float _unknown8;
+    float _unknown9;
+    float _unknown10;
+    float _unknown10;
+    struct UNKNOWN2_SECTION _unknownSection;
+    struct UNKNOWN_FINAL_SECTION _unknownFinalSection;
 };
 
 function ParseFile
