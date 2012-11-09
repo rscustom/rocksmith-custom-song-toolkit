@@ -859,18 +859,32 @@ namespace RocksmithSngCreator
         // INCOMPLETE
         private void writeRocksmithSngMetaDetails(EndianBinaryWriter w, Song s)
         {
-            // data below is garbage... just borrowed from a random song to get the charts working.
-            w.Write(1); // unknown           
-            w.Write(new byte[4]); // unknown empty in one example
-            w.Write(1075970048); // unknown 16418 or 2.53125 in one example
-            w.Write(new byte[4]); // unknown empty in one example
-            w.Write(1086698382); // unknown float 6.1782 in one example           
-            w.Write(954437177); // unknown float 0.0001 in one example            
-            w.Write(1056964611); // unknown float 0.5 in one example
-            
-            // not first phraseIteration time
-            // not first section time
-            // is first beat time?
+            // unknown
+            w.Write(0); // populated on training charts only (?)    
+
+            // unknown
+            w.Write((Single)7.7629395); // always this value?  related to scoring
+
+            // unknown
+            w.Write(0); // populated on training charts only (?)   
+
+            // unknown
+            w.Write(0); // float value typically around ~4.5
+
+            // unknown
+            w.Write(1086698382); // seems to be related to scoring
+
+            // unknown
+            w.Write(954437177); // seems to be related to scoring; float value typically around ~3.5
+      
+            // song beat timing
+            if (s.Ebeats.Ebeat.Length < 2)
+                throw new Exception("Song must contain at least 2 beats");
+            // this is not 100% accurate unless all beats are evenly spaced in a song;
+            // still trying to determine exactly how Rocksmith is deriving this time value
+            w.Write(s.Ebeats.Ebeat[1].Time - s.Ebeats.Ebeat[0].Time); 
+
+            // first beat time(?); confirmed as not first phraseIteration time and not first section time            
             w.Write(s.Ebeats.Ebeat[0].Time); 
             
             // song conversion date
@@ -908,17 +922,26 @@ namespace RocksmithSngCreator
             // song length
             w.Write(s.SongLength);
 
-            // unknown meta data
+            // unknown
             w.Write(new byte[4]); // blank 4 bytes in NumberThirteen_Lead.sng
+            
+            // unknown
             w.Write(new byte[4]); // float with 10.2927 in NumberThirteen_Lead.sng
+
+            // unknown
             w.Write(s.Ebeats.Ebeat[0].Time); // wrong; float with time of first beat; time of phraseid=1 (not 0) in somes examples;  float with time of first note where ignore <> 1
+            
+            // unknown
             w.Write(s.Ebeats.Ebeat[0].Time); // wrong; float with time of first beat; time of phraseid=1 (not 0) in somes examples;  float with time of first note where ignore <> 1
+            
+            // unknown
             w.Write(new byte[4]); // float with 1.9618 in NumberThirteen_Lead.sng....  number 4?
 
             // unknown section
             w.Write(new byte[4]); // header with repeating array; song works in game if array is defaulted to 0 count so will leave this alone for now
 
-            w.Write(new byte[4]); // unknown trailing 4 bytes - section used in TCPowerChords_Lead.sng, need to look into this
+            // unknown section
+            w.Write(new byte[4]); // header with repeating array - seems to be populated only in training sng files
         }
     }
 }
