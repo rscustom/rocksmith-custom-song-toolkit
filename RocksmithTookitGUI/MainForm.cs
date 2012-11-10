@@ -220,7 +220,7 @@ namespace RocksmithTookitGUI
         private void openOggButton_Click(object sender, EventArgs e)
         {
             var ofd = new OpenFileDialog();
-            ofd.Filter = "Ogg Files|*.ogg";
+            ofd.Filter = "Fixed WWise Files|*.ogg";
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 OggPath = ofd.FileName;
         }
