@@ -157,6 +157,14 @@ namespace RocksmithDLCCreator
                 {
                     var serializer = new XmlSerializer(typeof(RocksmithSngCreator.Serialization.Song));
                     var song = (RocksmithSngCreator.Serialization.Song)serializer.Deserialize(File.OpenRead(x.SongXml.File));
+                    if (song.Phrases.Phrase == null)
+                        song.Phrases.Phrase = new RocksmithSngCreator.Serialization.SongPhrase[0];
+                    if (song.PhraseIterations.PhraseIteration == null)
+                        song.PhraseIterations.PhraseIteration = new RocksmithSngCreator.Serialization.SongPhraseIteration[0];
+                    if (song.Sections.Section == null)
+                        song.Sections.Section = new RocksmithSngCreator.Serialization.SongSection[0];
+                    if (song.ChordTemplates.ChordTemplate == null)
+                        song.ChordTemplates.ChordTemplate = new RocksmithSngCreator.Serialization.SongChordTemplate[0];
                     attribute.AverageTempo = x.AverageTempo;
                     attribute.RepresentativeArrangement = true;
                     attribute.SongPartition = songPartitioncnt++;
