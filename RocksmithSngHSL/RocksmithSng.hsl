@@ -250,8 +250,8 @@ struct NOTE
     float StartTime;
     long String;
     long Fret;
+    long ChordId;
     long _unknown1;
-    long _unknown2;
     float SustainTime;
     long Bend;
     long SlideTo;
@@ -262,10 +262,10 @@ struct NOTE
     bool HammerOn;
     bool PullOff;
     bool Ignore;
-    bool _unknown3;
-    long _unknown4;
-    long _unknown5;
-    long _unknown6;
+    bool HighDensity;
+    blob _unknown2[4];
+    long PhraseIterationStartIndex;
+    long PhraseIterationIndexId;
 };
 
 struct NOTES_SECTION
