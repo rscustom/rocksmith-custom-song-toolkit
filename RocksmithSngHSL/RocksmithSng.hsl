@@ -20,6 +20,11 @@ Usage:
 #pragma displayname("Rocksmith .sng")
 #pragma fileextensions(".sng")
 
+// Uncomment this line if you are editing PC .sng files
+#pragma byteorder(little_endian)
+// Uncomment this line if you are editing console .sng files
+// #pragma byteorder(big_endian)
+
 // Make sure this value is greater than the number of elements in any array
 // Free Bird has up to 1262 notes in a single Notes array!
 #pragma maxarray(2048)
