@@ -76,10 +76,10 @@
             this.SongDisplayNameTB = new System.Windows.Forms.TextBox();
             this.DlcNameTB = new System.Windows.Forms.TextBox();
             this.dlcPackerUnpackerTab = new System.Windows.Forms.TabPage();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.UseCryptographyCheckbox = new System.Windows.Forms.CheckBox();
             this.UnpackButton = new System.Windows.Forms.Button();
             this.PackButton = new System.Windows.Forms.Button();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -587,6 +587,16 @@
             this.dlcPackerUnpackerTab.Text = "DLC Packer/Unpacker";
             this.dlcPackerUnpackerTab.UseVisualStyleBackColor = true;
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(254, 193);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(133, 127);
+            this.pictureBox2.TabIndex = 7;
+            this.pictureBox2.TabStop = false;
+            // 
             // UseCryptographyCheckbox
             // 
             this.UseCryptographyCheckbox.AutoSize = true;
@@ -622,22 +632,13 @@
             this.PackButton.UseVisualStyleBackColor = true;
             this.PackButton.Click += new System.EventHandler(this.PackButton_Click);
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(254, 193);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(133, 127);
-            this.pictureBox2.TabIndex = 7;
-            this.pictureBox2.TabStop = false;
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::RocksmithTookitGUI.Properties.Resources.toolkit_logo;
             this.pictureBox1.Location = new System.Drawing.Point(122, 46);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(530, 95);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
             // 

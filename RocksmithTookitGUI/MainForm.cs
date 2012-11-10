@@ -32,7 +32,7 @@ namespace RocksmithTookitGUI
 
             packer = new Packer();
 
-            this.Text = String.Format("Rocksmith Custom Song Creator Toolkit (v{0}.{1} alpha)",
+            this.Text = String.Format("Custom Song Creator Toolkit (v{0}.{1} alpha)",
                 Assembly.GetExecutingAssembly().GetName().Version.Major,
                 Assembly.GetExecutingAssembly().GetName().Version.Minor);
         }
