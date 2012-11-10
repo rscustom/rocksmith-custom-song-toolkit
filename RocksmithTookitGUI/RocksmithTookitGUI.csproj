@@ -34,16 +34,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\RocksmithDLCCreator\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="PSARC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\RocksmithDLCCreator\PSARC.dll</HintPath>
+    <Reference Include="PSARC">
+      <HintPath>..\lib\PSARC.dll</HintPath>
     </Reference>
     <Reference Include="PSTaskDialog">
-      <HintPath>..\RocksmithCustomSongCreator\ExternalLibraries\PSTaskDialog.dll</HintPath>
+      <HintPath>..\lib\PSTaskDialog\PSTaskDialog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

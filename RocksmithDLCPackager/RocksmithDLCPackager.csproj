@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PSARC">
-      <HintPath>.\PSARC.dll</HintPath>
+      <HintPath>..\lib\PSARC.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,7 +48,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="ZLIB">
-      <HintPath>.\ZLIB.dll</HintPath>
+      <HintPath>..\lib\ZLIB.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
