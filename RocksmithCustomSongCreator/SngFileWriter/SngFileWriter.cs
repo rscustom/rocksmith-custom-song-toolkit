@@ -11,7 +11,7 @@ using RocksmithSngCreator.Serialization;
 
 namespace RocksmithSngCreator
 {
-    public enum GamePlatform { PC, XBOX, PS3 };
+    public enum GamePlatform { Pc, Console };
 
     public struct TimeLinkedEntity
     {
@@ -36,7 +36,7 @@ namespace RocksmithSngCreator
             rocksmithSong = (Song)serializer.Deserialize(reader);
             reader.Close();
 
-            if (_platform == GamePlatform.PC)
+            if (_platform == GamePlatform.Pc)
                 writeRocksmithSngFile(rocksmithSong, outputFile, EndianBitConverter.Little);
             else
                 writeRocksmithSngFile(rocksmithSong, outputFile, EndianBitConverter.Big);
@@ -50,7 +50,7 @@ namespace RocksmithSngCreator
             vocals = (Vocals)serializer.Deserialize(reader);
             reader.Close();
 
-            if (_platform == GamePlatform.PC)
+            if (_platform == GamePlatform.Pc)
                 writeRocksmithVocalsFile(vocals, outputFile, EndianBitConverter.Little);
             else
                 writeRocksmithVocalsFile(vocals, outputFile, EndianBitConverter.Big);

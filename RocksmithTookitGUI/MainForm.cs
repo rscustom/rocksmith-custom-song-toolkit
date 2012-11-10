@@ -58,68 +58,6 @@ namespace RocksmithTookitGUI
 
         #endregion
 
-        #region SNG File Creator Tab
-
-        private void xmlBrowseButton_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog fd = new OpenFileDialog();
-            fd.Filter = "XML Files|*.xml|All Files (*.*)|*.*";
-            fd.FilterIndex = 1;
-            fd.ShowDialog();
-            if (!string.IsNullOrEmpty(fd.FileName))
-            {
-                inputXmlTextBox.Text = fd.FileName;
-                outputFileTextBox.Text = inputXmlTextBox.Text.Substring(0, inputXmlTextBox.Text.Length - 4) + ".sng";
-            }
-        }
-
-        private void sngConvertButton_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(inputXmlTextBox.Text))
-                return;
-
-            SngFileWriter sngFileWriter;
-
-            // platform selection
-            if (littleEndianRadioBtn.Checked)
-            {
-                sngFileWriter = new SngFileWriter(GamePlatform.PC);
-            }
-            else
-            {
-                sngFileWriter = new SngFileWriter(GamePlatform.XBOX);
-            }
-
-            try
-            {
-                // song or vocal chart output
-                if (vocalsRadioButton.Checked)
-                {
-                    sngFileWriter.WriteRocksmithVocalChart(inputXmlTextBox.Text, outputFileTextBox.Text);
-                }
-                else
-                {
-                    sngFileWriter.WriteRocksmithSongChart(inputXmlTextBox.Text, outputFileTextBox.Text);
-                }
-
-                // done
-                MessageBox.Show("Process Complete", "File Creation Process");
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = ex.Message;
-                if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
-                    errorMessage += "\n" + ex.InnerException.Message;
-
-                PSTaskDialog.cTaskDialog.MessageBox("Error", "Conversion has failed.", errorMessage, ex.ToString(),
-                    "Click 'show details' for complete exception information.", "",
-                    PSTaskDialog.eTaskDialogButtons.OK, PSTaskDialog.eSysIcons.Error, PSTaskDialog.eSysIcons.Information);
-            }
-
-        }
-
-        #endregion
-
         #region OGG Converter Tab        
 
         private void oggBrowseButton_Click(object sender, EventArgs e)
@@ -135,7 +73,7 @@ namespace RocksmithTookitGUI
 
                 // Make sure we have a valid file
                 oggFile = new OggFile();
-                if (oggFile.LoadOgg(inputXmlTextBox.Text))
+                if (oggFile.LoadOgg(inputOggTextBox.Text))
                     oggConvertButton.Enabled = true;
                 else
                     oggConvertButton.Enabled = false;

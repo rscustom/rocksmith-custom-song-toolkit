@@ -44,11 +44,11 @@ namespace RocksmithSngCreator
             // platform selection
             if (littleEndianRadioBtn.Checked)
             {
-                sngFileWriter = new SngFileWriter(GamePlatform.PC);
+                sngFileWriter = new SngFileWriter(GamePlatform.Pc);
             }
             else
             {
-                sngFileWriter = new SngFileWriter(GamePlatform.XBOX);
+                sngFileWriter = new SngFileWriter(GamePlatform.Console);
             }
 
             try
