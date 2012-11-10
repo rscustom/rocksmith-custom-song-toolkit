@@ -69,6 +69,7 @@
     <Compile Include="ArrangementForm.Designer.cs">
       <DependentUpon>ArrangementForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ErrorDialog.cs" />
     <Compile Include="HelpForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,6 +81,12 @@
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OggConverter\OggConverter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OggConverter\OggConverter.Designer.cs">
+      <DependentUpon>OggConverter.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +107,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OggConverter\OggConverter.resx">
+      <DependentUpon>OggConverter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

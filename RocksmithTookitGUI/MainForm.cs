@@ -1,27 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Windows.Forms;
-using RocksmithSngCreator;
-using RocksmithEncoder;
 using RocksmithDLCCreator;
 using RocksmithDLCPackager;
-using Newtonsoft.Json;
 using System.IO;
-using Newtonsoft.Json.Serialization;
 using System.Security.Cryptography;
 
 
 namespace RocksmithTookitGUI
 {
     public partial class MainForm : Form
-    {        
-        OggFile oggFile;
+    {
         private readonly Packer packer;
         private RijndaelManaged rij;
 
@@ -54,44 +46,6 @@ namespace RocksmithTookitGUI
         {
             HelpForm h = new HelpForm();
             h.ShowDialog();
-        }
-
-        #endregion
-
-        #region OGG Converter Tab        
-
-        private void oggBrowseButton_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog fd = new OpenFileDialog();
-            fd.Filter = "OGG Files|*.ogg|All Files (*.*)|*.*";
-            fd.FilterIndex = 1;
-            fd.ShowDialog();
-            if (!string.IsNullOrEmpty(fd.FileName))
-            {
-                inputOggTextBox.Text = fd.FileName;
-                outputOggTextBox.Text = inputOggTextBox.Text.Substring(0, inputOggTextBox.Text.LastIndexOf(".")) + "_fixed.ogg";
-
-                // Make sure we have a valid file
-                oggFile = new OggFile();
-                if (oggFile.LoadOgg(inputOggTextBox.Text))
-                    oggConvertButton.Enabled = true;
-                else
-                    oggConvertButton.Enabled = false;
-
-                // Determine endianness right away, this doesn't matter and is purely visual
-                if (oggFile.bigEndian)
-                    oggBigEndianRadioBtn.Checked = true;
-                else
-                    oggLittleEndianRadioBtn.Checked = true;
-            }
-        }
-
-        private void oggConvertButton_Click(object sender, EventArgs e)
-        {
-            oggFile.WriteOgg(outputOggTextBox.Text);
-
-            // done
-            MessageBox.Show("Process Complete", "File Creation Process");
         }
 
         #endregion

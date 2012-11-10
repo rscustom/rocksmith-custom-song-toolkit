@@ -40,15 +40,7 @@
             this.sngFileCreatorTab = new System.Windows.Forms.TabPage();
             this.sngFileCreatorControl = new RocksmithTookitGUI.SngFileCreator.SngFileCreator();
             this.oggConverterTab = new System.Windows.Forms.TabPage();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.oggLittleEndianRadioBtn = new System.Windows.Forms.RadioButton();
-            this.oggBigEndianRadioBtn = new System.Windows.Forms.RadioButton();
-            this.oggConvertButton = new System.Windows.Forms.Button();
-            this.outputOggTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.inputOggTextBox = new System.Windows.Forms.TextBox();
-            this.oggBrowseButton = new System.Windows.Forms.Button();
+            this.oggConverterControl = new RocksmithTookitGUI.OggConverter.OggConverter();
             this.dlcPackageCreatorTab = new System.Windows.Forms.TabPage();
             this.albumArtButton = new System.Windows.Forms.Button();
             this.AlbumArtPathTB = new System.Windows.Forms.TextBox();
@@ -74,7 +66,6 @@
             this.tabControl1.SuspendLayout();
             this.sngFileCreatorTab.SuspendLayout();
             this.oggConverterTab.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.dlcPackageCreatorTab.SuspendLayout();
             this.dlcPackerUnpackerTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -169,13 +160,7 @@
             // 
             // oggConverterTab
             // 
-            this.oggConverterTab.Controls.Add(this.groupBox3);
-            this.oggConverterTab.Controls.Add(this.oggConvertButton);
-            this.oggConverterTab.Controls.Add(this.outputOggTextBox);
-            this.oggConverterTab.Controls.Add(this.label3);
-            this.oggConverterTab.Controls.Add(this.label4);
-            this.oggConverterTab.Controls.Add(this.inputOggTextBox);
-            this.oggConverterTab.Controls.Add(this.oggBrowseButton);
+            this.oggConverterTab.Controls.Add(this.oggConverterControl);
             this.oggConverterTab.Location = new System.Drawing.Point(4, 22);
             this.oggConverterTab.Margin = new System.Windows.Forms.Padding(2);
             this.oggConverterTab.Name = "oggConverterTab";
@@ -185,104 +170,12 @@
             this.oggConverterTab.Text = "OGG Converter";
             this.oggConverterTab.UseVisualStyleBackColor = true;
             // 
-            // groupBox3
+            // oggConverterControl
             // 
-            this.groupBox3.Controls.Add(this.oggLittleEndianRadioBtn);
-            this.groupBox3.Controls.Add(this.oggBigEndianRadioBtn);
-            this.groupBox3.Enabled = false;
-            this.groupBox3.Location = new System.Drawing.Point(68, 209);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Size = new System.Drawing.Size(418, 64);
-            this.groupBox3.TabIndex = 27;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Target Platform";
-            // 
-            // oggLittleEndianRadioBtn
-            // 
-            this.oggLittleEndianRadioBtn.AutoSize = true;
-            this.oggLittleEndianRadioBtn.Checked = true;
-            this.oggLittleEndianRadioBtn.Location = new System.Drawing.Point(67, 28);
-            this.oggLittleEndianRadioBtn.Margin = new System.Windows.Forms.Padding(2);
-            this.oggLittleEndianRadioBtn.Name = "oggLittleEndianRadioBtn";
-            this.oggLittleEndianRadioBtn.Size = new System.Drawing.Size(106, 17);
-            this.oggLittleEndianRadioBtn.TabIndex = 6;
-            this.oggLittleEndianRadioBtn.TabStop = true;
-            this.oggLittleEndianRadioBtn.Text = "PC (Little Endian)";
-            this.oggLittleEndianRadioBtn.UseVisualStyleBackColor = true;
-            // 
-            // oggBigEndianRadioBtn
-            // 
-            this.oggBigEndianRadioBtn.AutoSize = true;
-            this.oggBigEndianRadioBtn.Location = new System.Drawing.Point(208, 28);
-            this.oggBigEndianRadioBtn.Margin = new System.Windows.Forms.Padding(2);
-            this.oggBigEndianRadioBtn.Name = "oggBigEndianRadioBtn";
-            this.oggBigEndianRadioBtn.Size = new System.Drawing.Size(154, 17);
-            this.oggBigEndianRadioBtn.TabIndex = 7;
-            this.oggBigEndianRadioBtn.Text = "Game Console (Big Endian)";
-            this.oggBigEndianRadioBtn.UseVisualStyleBackColor = true;
-            // 
-            // oggConvertButton
-            // 
-            this.oggConvertButton.Enabled = false;
-            this.oggConvertButton.Location = new System.Drawing.Point(253, 324);
-            this.oggConvertButton.Margin = new System.Windows.Forms.Padding(2);
-            this.oggConvertButton.Name = "oggConvertButton";
-            this.oggConvertButton.Size = new System.Drawing.Size(56, 19);
-            this.oggConvertButton.TabIndex = 26;
-            this.oggConvertButton.Text = "Convert";
-            this.oggConvertButton.UseVisualStyleBackColor = true;
-            this.oggConvertButton.Click += new System.EventHandler(this.oggConvertButton_Click);
-            // 
-            // outputOggTextBox
-            // 
-            this.outputOggTextBox.Location = new System.Drawing.Point(68, 142);
-            this.outputOggTextBox.Margin = new System.Windows.Forms.Padding(2);
-            this.outputOggTextBox.Name = "outputOggTextBox";
-            this.outputOggTextBox.ReadOnly = true;
-            this.outputOggTextBox.Size = new System.Drawing.Size(420, 20);
-            this.outputOggTextBox.TabIndex = 25;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(66, 119);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(88, 13);
-            this.label3.TabIndex = 24;
-            this.label3.Text = "Output OGG File:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(66, 55);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(166, 13);
-            this.label4.TabIndex = 23;
-            this.label4.Text = "Input OGG File: (Wwise 2010.3.3)";
-            // 
-            // inputOggTextBox
-            // 
-            this.inputOggTextBox.Location = new System.Drawing.Point(68, 80);
-            this.inputOggTextBox.Margin = new System.Windows.Forms.Padding(2);
-            this.inputOggTextBox.Name = "inputOggTextBox";
-            this.inputOggTextBox.ReadOnly = true;
-            this.inputOggTextBox.Size = new System.Drawing.Size(420, 20);
-            this.inputOggTextBox.TabIndex = 22;
-            // 
-            // oggBrowseButton
-            // 
-            this.oggBrowseButton.Location = new System.Drawing.Point(491, 80);
-            this.oggBrowseButton.Margin = new System.Windows.Forms.Padding(2);
-            this.oggBrowseButton.Name = "oggBrowseButton";
-            this.oggBrowseButton.Size = new System.Drawing.Size(56, 19);
-            this.oggBrowseButton.TabIndex = 21;
-            this.oggBrowseButton.Text = "Browse";
-            this.oggBrowseButton.UseVisualStyleBackColor = true;
-            this.oggBrowseButton.Click += new System.EventHandler(this.oggBrowseButton_Click);
+            this.oggConverterControl.Location = new System.Drawing.Point(56, 66);
+            this.oggConverterControl.Name = "oggConverterControl";
+            this.oggConverterControl.Size = new System.Drawing.Size(487, 112);
+            this.oggConverterControl.TabIndex = 0;
             // 
             // dlcPackageCreatorTab
             // 
@@ -517,9 +410,6 @@
             this.tabControl1.ResumeLayout(false);
             this.sngFileCreatorTab.ResumeLayout(false);
             this.oggConverterTab.ResumeLayout(false);
-            this.oggConverterTab.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.dlcPackageCreatorTab.ResumeLayout(false);
             this.dlcPackageCreatorTab.PerformLayout();
             this.dlcPackerUnpackerTab.ResumeLayout(false);
@@ -545,15 +435,6 @@
         private System.Windows.Forms.TabPage dlcPackageCreatorTab;
         private System.Windows.Forms.TabPage sngFileCreatorTab;
         private System.Windows.Forms.TabPage oggConverterTab;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RadioButton oggLittleEndianRadioBtn;
-        private System.Windows.Forms.RadioButton oggBigEndianRadioBtn;
-        private System.Windows.Forms.Button oggConvertButton;
-        private System.Windows.Forms.TextBox outputOggTextBox;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox inputOggTextBox;
-        private System.Windows.Forms.Button oggBrowseButton;
         private System.Windows.Forms.Button albumArtButton;
         private System.Windows.Forms.TextBox AlbumArtPathTB;
         private System.Windows.Forms.Button dlcGenerateButton;
@@ -574,6 +455,7 @@
         private System.Windows.Forms.Button UnpackButton;
         private System.Windows.Forms.Button PackButton;
         private SngFileCreator.SngFileCreator sngFileCreatorControl;
+        private OggConverter.OggConverter oggConverterControl;
     }
 }
 
