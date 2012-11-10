@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace RocksmithEncoder
 {
-    class OggFile
+    public class OggFile
     {
         string inputOgg;
         string outputOgg;

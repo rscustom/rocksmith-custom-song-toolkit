@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace RocksmithDLCCreator
 {
-    class ToneGenerator
+    public class ToneGenerator
     {
         public static void Generate(string dlcName, Stream outManifest, Stream outXblock, Stream aggregateGraph)
         {
