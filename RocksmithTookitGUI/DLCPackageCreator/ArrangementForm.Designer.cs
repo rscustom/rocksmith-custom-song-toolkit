@@ -1,4 +1,4 @@
-﻿namespace RocksmithToolkitGUI
+﻿namespace RocksmithTookitGUI.DLCPackageCreator
 {
     partial class ArrangementForm
     {
@@ -53,37 +53,33 @@
             // 
             // ArrangementName
             // 
-            this.ArrangementName.Location = new System.Drawing.Point(17, 16);
-            this.ArrangementName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ArrangementName.Location = new System.Drawing.Point(13, 13);
             this.ArrangementName.Name = "ArrangementName";
-            this.ArrangementName.Size = new System.Drawing.Size(132, 22);
+            this.ArrangementName.Size = new System.Drawing.Size(100, 20);
             this.ArrangementName.TabIndex = 0;
             this.ArrangementName.Text = "Name";
             // 
             // SngFilePath
             // 
-            this.SngFilePath.Location = new System.Drawing.Point(17, 82);
-            this.SngFilePath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SngFilePath.Location = new System.Drawing.Point(13, 67);
             this.SngFilePath.Name = "SngFilePath";
-            this.SngFilePath.Size = new System.Drawing.Size(400, 22);
+            this.SngFilePath.Size = new System.Drawing.Size(301, 20);
             this.SngFilePath.TabIndex = 1;
             this.SngFilePath.Text = "SongFile";
             // 
             // XmlFilePath
             // 
-            this.XmlFilePath.Location = new System.Drawing.Point(17, 116);
-            this.XmlFilePath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.XmlFilePath.Location = new System.Drawing.Point(13, 94);
             this.XmlFilePath.Name = "XmlFilePath";
-            this.XmlFilePath.Size = new System.Drawing.Size(400, 22);
+            this.XmlFilePath.Size = new System.Drawing.Size(301, 20);
             this.XmlFilePath.TabIndex = 2;
             this.XmlFilePath.Text = "SongXml";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(427, 82);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Location = new System.Drawing.Point(320, 67);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(83, 28);
+            this.button1.Size = new System.Drawing.Size(62, 23);
             this.button1.TabIndex = 3;
             this.button1.Text = "...";
             this.button1.UseVisualStyleBackColor = true;
@@ -91,10 +87,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(428, 111);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button2.Location = new System.Drawing.Point(321, 90);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(81, 28);
+            this.button2.Size = new System.Drawing.Size(61, 23);
             this.button2.TabIndex = 4;
             this.button2.Text = "...";
             this.button2.UseVisualStyleBackColor = true;
@@ -103,10 +98,9 @@
             // PowerChords
             // 
             this.PowerChords.AutoSize = true;
-            this.PowerChords.Location = new System.Drawing.Point(17, 149);
-            this.PowerChords.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PowerChords.Location = new System.Drawing.Point(13, 121);
             this.PowerChords.Name = "PowerChords";
-            this.PowerChords.Size = new System.Drawing.Size(114, 21);
+            this.PowerChords.Size = new System.Drawing.Size(89, 17);
             this.PowerChords.TabIndex = 5;
             this.PowerChords.Text = "PowerChords";
             this.PowerChords.UseVisualStyleBackColor = true;
@@ -114,10 +108,9 @@
             // BarChords
             // 
             this.BarChords.AutoSize = true;
-            this.BarChords.Location = new System.Drawing.Point(145, 149);
-            this.BarChords.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BarChords.Location = new System.Drawing.Point(109, 121);
             this.BarChords.Name = "BarChords";
-            this.BarChords.Size = new System.Drawing.Size(97, 21);
+            this.BarChords.Size = new System.Drawing.Size(75, 17);
             this.BarChords.TabIndex = 6;
             this.BarChords.Text = "BarChords";
             this.BarChords.UseVisualStyleBackColor = true;
@@ -125,10 +118,9 @@
             // DoubleStops
             // 
             this.DoubleStops.AutoSize = true;
-            this.DoubleStops.Location = new System.Drawing.Point(255, 149);
-            this.DoubleStops.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.DoubleStops.Location = new System.Drawing.Point(191, 121);
             this.DoubleStops.Name = "DoubleStops";
-            this.DoubleStops.Size = new System.Drawing.Size(111, 21);
+            this.DoubleStops.Size = new System.Drawing.Size(87, 17);
             this.DoubleStops.TabIndex = 7;
             this.DoubleStops.Text = "DoubleStops";
             this.DoubleStops.UseVisualStyleBackColor = true;
@@ -136,10 +128,9 @@
             // DropDPowerChords
             // 
             this.DropDPowerChords.AutoSize = true;
-            this.DropDPowerChords.Location = new System.Drawing.Point(16, 177);
-            this.DropDPowerChords.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.DropDPowerChords.Location = new System.Drawing.Point(12, 144);
             this.DropDPowerChords.Name = "DropDPowerChords";
-            this.DropDPowerChords.Size = new System.Drawing.Size(155, 21);
+            this.DropDPowerChords.Size = new System.Drawing.Size(120, 17);
             this.DropDPowerChords.TabIndex = 8;
             this.DropDPowerChords.Text = "DropDPowerChords";
             this.DropDPowerChords.UseVisualStyleBackColor = true;
@@ -147,10 +138,9 @@
             // FifithsAndOctaves
             // 
             this.FifithsAndOctaves.AutoSize = true;
-            this.FifithsAndOctaves.Location = new System.Drawing.Point(380, 149);
-            this.FifithsAndOctaves.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FifithsAndOctaves.Location = new System.Drawing.Point(285, 121);
             this.FifithsAndOctaves.Name = "FifithsAndOctaves";
-            this.FifithsAndOctaves.Size = new System.Drawing.Size(144, 21);
+            this.FifithsAndOctaves.Size = new System.Drawing.Size(112, 17);
             this.FifithsAndOctaves.TabIndex = 9;
             this.FifithsAndOctaves.Text = "FifithsAndOctaves";
             this.FifithsAndOctaves.UseVisualStyleBackColor = true;
@@ -158,10 +148,9 @@
             // FretHandMutes
             // 
             this.FretHandMutes.AutoSize = true;
-            this.FretHandMutes.Location = new System.Drawing.Point(185, 177);
-            this.FretHandMutes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FretHandMutes.Location = new System.Drawing.Point(139, 144);
             this.FretHandMutes.Name = "FretHandMutes";
-            this.FretHandMutes.Size = new System.Drawing.Size(127, 21);
+            this.FretHandMutes.Size = new System.Drawing.Size(99, 17);
             this.FretHandMutes.TabIndex = 10;
             this.FretHandMutes.Text = "FretHandMutes";
             this.FretHandMutes.UseVisualStyleBackColor = true;
@@ -169,10 +158,9 @@
             // OpenChords
             // 
             this.OpenChords.AutoSize = true;
-            this.OpenChords.Location = new System.Drawing.Point(327, 178);
-            this.OpenChords.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OpenChords.Location = new System.Drawing.Point(245, 145);
             this.OpenChords.Name = "OpenChords";
-            this.OpenChords.Size = new System.Drawing.Size(110, 21);
+            this.OpenChords.Size = new System.Drawing.Size(85, 17);
             this.OpenChords.TabIndex = 11;
             this.OpenChords.Text = "OpenChords";
             this.OpenChords.UseVisualStyleBackColor = true;
@@ -180,30 +168,27 @@
             // IsVocal
             // 
             this.IsVocal.AutoSize = true;
-            this.IsVocal.Location = new System.Drawing.Point(159, 18);
-            this.IsVocal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.IsVocal.Location = new System.Drawing.Point(119, 15);
             this.IsVocal.Name = "IsVocal";
-            this.IsVocal.Size = new System.Drawing.Size(75, 21);
+            this.IsVocal.Size = new System.Drawing.Size(61, 17);
             this.IsVocal.TabIndex = 12;
             this.IsVocal.Text = "IsVocal";
             this.IsVocal.UseVisualStyleBackColor = true;
             // 
             // RelativeDifficulty
             // 
-            this.RelativeDifficulty.Location = new System.Drawing.Point(392, 49);
-            this.RelativeDifficulty.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RelativeDifficulty.Location = new System.Drawing.Point(294, 40);
             this.RelativeDifficulty.Name = "RelativeDifficulty";
-            this.RelativeDifficulty.Size = new System.Drawing.Size(116, 22);
+            this.RelativeDifficulty.Size = new System.Drawing.Size(88, 20);
             this.RelativeDifficulty.TabIndex = 13;
             this.RelativeDifficulty.Text = "RelativeDifficulty";
             // 
             // SlapAndPop
             // 
             this.SlapAndPop.AutoSize = true;
-            this.SlapAndPop.Location = new System.Drawing.Point(16, 207);
-            this.SlapAndPop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SlapAndPop.Location = new System.Drawing.Point(12, 168);
             this.SlapAndPop.Name = "SlapAndPop";
-            this.SlapAndPop.Size = new System.Drawing.Size(108, 21);
+            this.SlapAndPop.Size = new System.Drawing.Size(85, 17);
             this.SlapAndPop.TabIndex = 14;
             this.SlapAndPop.Text = "SlapAndPop";
             this.SlapAndPop.UseVisualStyleBackColor = true;
@@ -211,10 +196,9 @@
             // PreBends
             // 
             this.PreBends.AutoSize = true;
-            this.PreBends.Location = new System.Drawing.Point(139, 207);
-            this.PreBends.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PreBends.Location = new System.Drawing.Point(104, 168);
             this.PreBends.Name = "PreBends";
-            this.PreBends.Size = new System.Drawing.Size(92, 21);
+            this.PreBends.Size = new System.Drawing.Size(72, 17);
             this.PreBends.TabIndex = 15;
             this.PreBends.Text = "PreBends";
             this.PreBends.UseVisualStyleBackColor = true;
@@ -222,47 +206,42 @@
             // Vibrato
             // 
             this.Vibrato.AutoSize = true;
-            this.Vibrato.Location = new System.Drawing.Point(237, 207);
-            this.Vibrato.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Vibrato.Location = new System.Drawing.Point(178, 168);
             this.Vibrato.Name = "Vibrato";
-            this.Vibrato.Size = new System.Drawing.Size(75, 21);
+            this.Vibrato.Size = new System.Drawing.Size(59, 17);
             this.Vibrato.TabIndex = 16;
             this.Vibrato.Text = "Vibrato";
             this.Vibrato.UseVisualStyleBackColor = true;
             // 
             // SongDifficulty
             // 
-            this.SongDifficulty.Location = new System.Drawing.Point(287, 49);
-            this.SongDifficulty.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SongDifficulty.Location = new System.Drawing.Point(215, 40);
             this.SongDifficulty.Name = "SongDifficulty";
-            this.SongDifficulty.Size = new System.Drawing.Size(96, 22);
+            this.SongDifficulty.Size = new System.Drawing.Size(73, 20);
             this.SongDifficulty.TabIndex = 17;
             this.SongDifficulty.Text = "SongDifficulty";
             // 
             // AverageTempo
             // 
-            this.AverageTempo.Location = new System.Drawing.Point(167, 49);
-            this.AverageTempo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.AverageTempo.Location = new System.Drawing.Point(125, 40);
             this.AverageTempo.Name = "AverageTempo";
-            this.AverageTempo.Size = new System.Drawing.Size(111, 22);
+            this.AverageTempo.Size = new System.Drawing.Size(84, 20);
             this.AverageTempo.TabIndex = 18;
             this.AverageTempo.Text = "AverageTempo";
             // 
             // Tuning
             // 
-            this.Tuning.Location = new System.Drawing.Point(17, 49);
-            this.Tuning.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Tuning.Location = new System.Drawing.Point(13, 40);
             this.Tuning.Name = "Tuning";
-            this.Tuning.Size = new System.Drawing.Size(132, 22);
+            this.Tuning.Size = new System.Drawing.Size(100, 20);
             this.Tuning.TabIndex = 19;
             this.Tuning.Text = "E Standard";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(217, 235);
-            this.button3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button3.Location = new System.Drawing.Point(163, 191);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(100, 28);
+            this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 20;
             this.button3.Text = "Add";
             this.button3.UseVisualStyleBackColor = true;
@@ -270,9 +249,9 @@
             // 
             // ArrangementForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(525, 271);
+            this.ClientSize = new System.Drawing.Size(394, 220);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.Tuning);
             this.Controls.Add(this.AverageTempo);
@@ -294,7 +273,6 @@
             this.Controls.Add(this.XmlFilePath);
             this.Controls.Add(this.SngFilePath);
             this.Controls.Add(this.ArrangementName);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ArrangementForm";
             this.Text = "ArrangementForm";
             this.ResumeLayout(false);

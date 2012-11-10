@@ -38,27 +38,14 @@
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.sngFileCreatorTab = new System.Windows.Forms.TabPage();
-            this.oggConverterTab = new System.Windows.Forms.TabPage();
-            this.dlcPackageCreatorTab = new System.Windows.Forms.TabPage();
-            this.albumArtButton = new System.Windows.Forms.Button();
-            this.AlbumArtPathTB = new System.Windows.Forms.TextBox();
-            this.dlcGenerateButton = new System.Windows.Forms.Button();
-            this.openOggButton = new System.Windows.Forms.Button();
-            this.OggPathTB = new System.Windows.Forms.TextBox();
-            this.arrangementRemoveButton = new System.Windows.Forms.Button();
-            this.arrangementAddButton = new System.Windows.Forms.Button();
-            this.ArrangementLB = new System.Windows.Forms.ListBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.YearTB = new System.Windows.Forms.TextBox();
-            this.AlbumTB = new System.Windows.Forms.TextBox();
-            this.ArtistTB = new System.Windows.Forms.TextBox();
-            this.SongDisplayNameTB = new System.Windows.Forms.TextBox();
-            this.DlcNameTB = new System.Windows.Forms.TextBox();
-            this.dlcPackerUnpackerTab = new System.Windows.Forms.TabPage();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.sngFileCreatorControl = new RocksmithTookitGUI.SngFileCreator.SngFileCreator();
+            this.oggConverterTab = new System.Windows.Forms.TabPage();
             this.oggConverterControl = new RocksmithTookitGUI.OggConverter.OggConverter();
+            this.dlcPackageCreatorTab = new System.Windows.Forms.TabPage();
+            this.dlcPackageCreatorControl = new RocksmithTookitGUI.DLCPackageCreator.DLCPackageCreator();
+            this.dlcPackerUnpackerTab = new System.Windows.Forms.TabPage();
             this.dlcPackerUnpackerControl = new RocksmithTookitGUI.DLCPackerUnpacker.DLCPackerUnpacker();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.sngFileCreatorTab.SuspendLayout();
@@ -147,6 +134,13 @@
             this.sngFileCreatorTab.Text = "SNG File Creator";
             this.sngFileCreatorTab.UseVisualStyleBackColor = true;
             // 
+            // sngFileCreatorControl
+            // 
+            this.sngFileCreatorControl.Location = new System.Drawing.Point(56, 66);
+            this.sngFileCreatorControl.Name = "sngFileCreatorControl";
+            this.sngFileCreatorControl.Size = new System.Drawing.Size(491, 251);
+            this.sngFileCreatorControl.TabIndex = 0;
+            // 
             // oggConverterTab
             // 
             this.oggConverterTab.Controls.Add(this.oggConverterControl);
@@ -159,22 +153,16 @@
             this.oggConverterTab.Text = "OGG Converter";
             this.oggConverterTab.UseVisualStyleBackColor = true;
             // 
+            // oggConverterControl
+            // 
+            this.oggConverterControl.Location = new System.Drawing.Point(56, 66);
+            this.oggConverterControl.Name = "oggConverterControl";
+            this.oggConverterControl.Size = new System.Drawing.Size(487, 112);
+            this.oggConverterControl.TabIndex = 0;
+            // 
             // dlcPackageCreatorTab
             // 
-            this.dlcPackageCreatorTab.Controls.Add(this.albumArtButton);
-            this.dlcPackageCreatorTab.Controls.Add(this.AlbumArtPathTB);
-            this.dlcPackageCreatorTab.Controls.Add(this.dlcGenerateButton);
-            this.dlcPackageCreatorTab.Controls.Add(this.openOggButton);
-            this.dlcPackageCreatorTab.Controls.Add(this.OggPathTB);
-            this.dlcPackageCreatorTab.Controls.Add(this.arrangementRemoveButton);
-            this.dlcPackageCreatorTab.Controls.Add(this.arrangementAddButton);
-            this.dlcPackageCreatorTab.Controls.Add(this.ArrangementLB);
-            this.dlcPackageCreatorTab.Controls.Add(this.label5);
-            this.dlcPackageCreatorTab.Controls.Add(this.YearTB);
-            this.dlcPackageCreatorTab.Controls.Add(this.AlbumTB);
-            this.dlcPackageCreatorTab.Controls.Add(this.ArtistTB);
-            this.dlcPackageCreatorTab.Controls.Add(this.SongDisplayNameTB);
-            this.dlcPackageCreatorTab.Controls.Add(this.DlcNameTB);
+            this.dlcPackageCreatorTab.Controls.Add(this.dlcPackageCreatorControl);
             this.dlcPackageCreatorTab.Location = new System.Drawing.Point(4, 22);
             this.dlcPackageCreatorTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcPackageCreatorTab.Name = "dlcPackageCreatorTab";
@@ -184,128 +172,12 @@
             this.dlcPackageCreatorTab.Text = "DLC Package Creator";
             this.dlcPackageCreatorTab.UseVisualStyleBackColor = true;
             // 
-            // albumArtButton
+            // dlcPackageCreatorControl
             // 
-            this.albumArtButton.Location = new System.Drawing.Point(472, 65);
-            this.albumArtButton.Name = "albumArtButton";
-            this.albumArtButton.Size = new System.Drawing.Size(75, 23);
-            this.albumArtButton.TabIndex = 27;
-            this.albumArtButton.Text = "...";
-            this.albumArtButton.UseVisualStyleBackColor = true;
-            this.albumArtButton.Click += new System.EventHandler(this.albumArtButton_Click);
-            // 
-            // AlbumArtPathTB
-            // 
-            this.AlbumArtPathTB.Location = new System.Drawing.Point(11, 65);
-            this.AlbumArtPathTB.Name = "AlbumArtPathTB";
-            this.AlbumArtPathTB.Size = new System.Drawing.Size(454, 20);
-            this.AlbumArtPathTB.TabIndex = 26;
-            this.AlbumArtPathTB.Text = "Album Art";
-            // 
-            // dlcGenerateButton
-            // 
-            this.dlcGenerateButton.Location = new System.Drawing.Point(237, 365);
-            this.dlcGenerateButton.Name = "dlcGenerateButton";
-            this.dlcGenerateButton.Size = new System.Drawing.Size(75, 23);
-            this.dlcGenerateButton.TabIndex = 25;
-            this.dlcGenerateButton.Text = "Generate";
-            this.dlcGenerateButton.UseVisualStyleBackColor = true;
-            this.dlcGenerateButton.Click += new System.EventHandler(this.dlcGenerateButton_Click);
-            // 
-            // openOggButton
-            // 
-            this.openOggButton.Location = new System.Drawing.Point(471, 337);
-            this.openOggButton.Name = "openOggButton";
-            this.openOggButton.Size = new System.Drawing.Size(75, 23);
-            this.openOggButton.TabIndex = 24;
-            this.openOggButton.Text = "Open";
-            this.openOggButton.UseVisualStyleBackColor = true;
-            this.openOggButton.Click += new System.EventHandler(this.openOggButton_Click);
-            // 
-            // OggPathTB
-            // 
-            this.OggPathTB.Location = new System.Drawing.Point(14, 339);
-            this.OggPathTB.Name = "OggPathTB";
-            this.OggPathTB.Size = new System.Drawing.Size(451, 20);
-            this.OggPathTB.TabIndex = 23;
-            this.OggPathTB.Text = "Ogg File";
-            // 
-            // arrangementRemoveButton
-            // 
-            this.arrangementRemoveButton.Location = new System.Drawing.Point(472, 137);
-            this.arrangementRemoveButton.Name = "arrangementRemoveButton";
-            this.arrangementRemoveButton.Size = new System.Drawing.Size(75, 23);
-            this.arrangementRemoveButton.TabIndex = 22;
-            this.arrangementRemoveButton.Text = "Remove";
-            this.arrangementRemoveButton.UseVisualStyleBackColor = true;
-            this.arrangementRemoveButton.Click += new System.EventHandler(this.arrangementRemoveButton_Click);
-            // 
-            // arrangementAddButton
-            // 
-            this.arrangementAddButton.Location = new System.Drawing.Point(472, 107);
-            this.arrangementAddButton.Name = "arrangementAddButton";
-            this.arrangementAddButton.Size = new System.Drawing.Size(75, 23);
-            this.arrangementAddButton.TabIndex = 21;
-            this.arrangementAddButton.Text = "Add";
-            this.arrangementAddButton.UseVisualStyleBackColor = true;
-            this.arrangementAddButton.Click += new System.EventHandler(this.arrangementAddButton_Click);
-            // 
-            // ArrangementLB
-            // 
-            this.ArrangementLB.FormattingEnabled = true;
-            this.ArrangementLB.Location = new System.Drawing.Point(14, 107);
-            this.ArrangementLB.Name = "ArrangementLB";
-            this.ArrangementLB.Size = new System.Drawing.Size(451, 225);
-            this.ArrangementLB.TabIndex = 20;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 91);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(72, 13);
-            this.label5.TabIndex = 19;
-            this.label5.Text = "Arrangements";
-            // 
-            // YearTB
-            // 
-            this.YearTB.Location = new System.Drawing.Point(225, 38);
-            this.YearTB.Name = "YearTB";
-            this.YearTB.Size = new System.Drawing.Size(100, 20);
-            this.YearTB.TabIndex = 18;
-            this.YearTB.Text = "1997";
-            // 
-            // AlbumTB
-            // 
-            this.AlbumTB.Location = new System.Drawing.Point(118, 38);
-            this.AlbumTB.Name = "AlbumTB";
-            this.AlbumTB.Size = new System.Drawing.Size(101, 20);
-            this.AlbumTB.TabIndex = 17;
-            this.AlbumTB.Text = "Album";
-            // 
-            // ArtistTB
-            // 
-            this.ArtistTB.Location = new System.Drawing.Point(12, 39);
-            this.ArtistTB.Name = "ArtistTB";
-            this.ArtistTB.Size = new System.Drawing.Size(100, 20);
-            this.ArtistTB.TabIndex = 16;
-            this.ArtistTB.Text = "Artist";
-            // 
-            // SongDisplayNameTB
-            // 
-            this.SongDisplayNameTB.Location = new System.Drawing.Point(118, 13);
-            this.SongDisplayNameTB.Name = "SongDisplayNameTB";
-            this.SongDisplayNameTB.Size = new System.Drawing.Size(428, 20);
-            this.SongDisplayNameTB.TabIndex = 15;
-            this.SongDisplayNameTB.Text = "SongDisplayName";
-            // 
-            // DlcNameTB
-            // 
-            this.DlcNameTB.Location = new System.Drawing.Point(12, 13);
-            this.DlcNameTB.Name = "DlcNameTB";
-            this.DlcNameTB.Size = new System.Drawing.Size(100, 20);
-            this.DlcNameTB.TabIndex = 14;
-            this.DlcNameTB.Text = "DLCName";
+            this.dlcPackageCreatorControl.Location = new System.Drawing.Point(5, 5);
+            this.dlcPackageCreatorControl.Name = "dlcPackageCreatorControl";
+            this.dlcPackageCreatorControl.Size = new System.Drawing.Size(541, 387);
+            this.dlcPackageCreatorControl.TabIndex = 0;
             // 
             // dlcPackerUnpackerTab
             // 
@@ -319,6 +191,13 @@
             this.dlcPackerUnpackerTab.Text = "DLC Packer/Unpacker";
             this.dlcPackerUnpackerTab.UseVisualStyleBackColor = true;
             // 
+            // dlcPackerUnpackerControl
+            // 
+            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(169, 66);
+            this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
+            this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(217, 110);
+            this.dlcPackerUnpackerControl.TabIndex = 0;
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::RocksmithTookitGUI.Properties.Resources.toolkit_logo;
@@ -329,27 +208,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
-            // 
-            // sngFileCreatorControl
-            // 
-            this.sngFileCreatorControl.Location = new System.Drawing.Point(56, 66);
-            this.sngFileCreatorControl.Name = "sngFileCreatorControl";
-            this.sngFileCreatorControl.Size = new System.Drawing.Size(491, 251);
-            this.sngFileCreatorControl.TabIndex = 0;
-            // 
-            // oggConverterControl
-            // 
-            this.oggConverterControl.Location = new System.Drawing.Point(56, 66);
-            this.oggConverterControl.Name = "oggConverterControl";
-            this.oggConverterControl.Size = new System.Drawing.Size(487, 112);
-            this.oggConverterControl.TabIndex = 0;
-            // 
-            // dlcPackerUnpackerControl
-            // 
-            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(169, 66);
-            this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
-            this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(217, 110);
-            this.dlcPackerUnpackerControl.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -372,7 +230,6 @@
             this.sngFileCreatorTab.ResumeLayout(false);
             this.oggConverterTab.ResumeLayout(false);
             this.dlcPackageCreatorTab.ResumeLayout(false);
-            this.dlcPackageCreatorTab.PerformLayout();
             this.dlcPackerUnpackerTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -394,24 +251,11 @@
         private System.Windows.Forms.TabPage dlcPackageCreatorTab;
         private System.Windows.Forms.TabPage sngFileCreatorTab;
         private System.Windows.Forms.TabPage oggConverterTab;
-        private System.Windows.Forms.Button albumArtButton;
-        private System.Windows.Forms.TextBox AlbumArtPathTB;
-        private System.Windows.Forms.Button dlcGenerateButton;
-        private System.Windows.Forms.Button openOggButton;
-        private System.Windows.Forms.TextBox OggPathTB;
-        private System.Windows.Forms.Button arrangementRemoveButton;
-        private System.Windows.Forms.Button arrangementAddButton;
-        private System.Windows.Forms.ListBox ArrangementLB;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox YearTB;
-        private System.Windows.Forms.TextBox AlbumTB;
-        private System.Windows.Forms.TextBox ArtistTB;
-        private System.Windows.Forms.TextBox SongDisplayNameTB;
-        private System.Windows.Forms.TextBox DlcNameTB;
         private SngFileCreator.SngFileCreator sngFileCreatorControl;
         private OggConverter.OggConverter oggConverterControl;
         private System.Windows.Forms.TabPage dlcPackerUnpackerTab;
         private DLCPackerUnpacker.DLCPackerUnpacker dlcPackerUnpackerControl;
+        private DLCPackageCreator.DLCPackageCreator dlcPackageCreatorControl;
     }
 }
 
