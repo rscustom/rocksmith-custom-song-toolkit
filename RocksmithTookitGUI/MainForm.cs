@@ -14,22 +14,16 @@ namespace RocksmithTookitGUI
 {
     public partial class MainForm : Form
     {
-        private readonly Packer packer;
         private RijndaelManaged rij;
 
         public MainForm()
         {
             InitializeComponent();
             InitializeDLCComponent();
-
-            packer = new Packer();
-
             this.Text = String.Format("Custom Song Creator Toolkit (v{0}.{1} alpha)",
                 Assembly.GetExecutingAssembly().GetName().Version.Major,
                 Assembly.GetExecutingAssembly().GetName().Version.Minor);
         }
-
-        #region Common Toolkit
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -47,8 +41,6 @@ namespace RocksmithTookitGUI
             HelpForm h = new HelpForm();
             h.ShowDialog();
         }
-
-        #endregion
 
         #region DLC Package Creator
 
@@ -260,42 +252,6 @@ namespace RocksmithTookitGUI
             ofd.Filter = "dds Files|*.dds";
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 AlbumArtPath = ofd.FileName;
-        }
-
-        #endregion
-
-        #region Pack/Unpack Tool
-
-        private void PackButton_Click(object sender, EventArgs e)
-        {
-            var fbd = new FolderBrowserDialog();
-            if (fbd.ShowDialog() != DialogResult.OK)
-                return;
-            var sfd = new SaveFileDialog();
-            if (sfd.ShowDialog() != DialogResult.OK)
-                return;
-
-            var sourcePath = fbd.SelectedPath;
-            var saveFileName = sfd.FileName;
-            var useCryptography = UseCryptographyCheckbox.Checked;
-
-            packer.Pack(sourcePath, saveFileName, useCryptography);
-        }
-
-        private void UnpackButton_Click(object sender, EventArgs e)
-        {
-            var ofd = new OpenFileDialog();
-            if (ofd.ShowDialog() != DialogResult.OK)
-                return;
-            var fbd = new FolderBrowserDialog();
-            if (fbd.ShowDialog() != DialogResult.OK)
-                return;
-
-            var sourceFileName = ofd.FileName;
-            var savePath = fbd.SelectedPath;
-            var useCryptography = UseCryptographyCheckbox.Checked;
-
-            packer.Unpack(sourceFileName, savePath, useCryptography);
         }
 
         #endregion

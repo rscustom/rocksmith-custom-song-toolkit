@@ -69,6 +69,12 @@
     <Compile Include="ArrangementForm.Designer.cs">
       <DependentUpon>ArrangementForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DLCPackerUnpacker\DLCPackerUnpacker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DLCPackerUnpacker\DLCPackerUnpacker.Designer.cs">
+      <DependentUpon>DLCPackerUnpacker.cs</DependentUpon>
+    </Compile>
     <Compile Include="ErrorDialog.cs" />
     <Compile Include="HelpForm.cs">
       <SubType>Form</SubType>
@@ -101,6 +107,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ArrangementForm.resx">
       <DependentUpon>ArrangementForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLCPackerUnpacker\DLCPackerUnpacker.resx">
+      <DependentUpon>DLCPackerUnpacker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HelpForm.resx">
       <DependentUpon>HelpForm.cs</DependentUpon>

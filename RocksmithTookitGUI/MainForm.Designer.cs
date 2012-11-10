@@ -38,9 +38,7 @@
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.sngFileCreatorTab = new System.Windows.Forms.TabPage();
-            this.sngFileCreatorControl = new RocksmithTookitGUI.SngFileCreator.SngFileCreator();
             this.oggConverterTab = new System.Windows.Forms.TabPage();
-            this.oggConverterControl = new RocksmithTookitGUI.OggConverter.OggConverter();
             this.dlcPackageCreatorTab = new System.Windows.Forms.TabPage();
             this.albumArtButton = new System.Windows.Forms.Button();
             this.AlbumArtPathTB = new System.Windows.Forms.TextBox();
@@ -57,18 +55,16 @@
             this.SongDisplayNameTB = new System.Windows.Forms.TextBox();
             this.DlcNameTB = new System.Windows.Forms.TextBox();
             this.dlcPackerUnpackerTab = new System.Windows.Forms.TabPage();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.UseCryptographyCheckbox = new System.Windows.Forms.CheckBox();
-            this.UnpackButton = new System.Windows.Forms.Button();
-            this.PackButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.sngFileCreatorControl = new RocksmithTookitGUI.SngFileCreator.SngFileCreator();
+            this.oggConverterControl = new RocksmithTookitGUI.OggConverter.OggConverter();
+            this.dlcPackerUnpackerControl = new RocksmithTookitGUI.DLCPackerUnpacker.DLCPackerUnpacker();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.sngFileCreatorTab.SuspendLayout();
             this.oggConverterTab.SuspendLayout();
             this.dlcPackageCreatorTab.SuspendLayout();
             this.dlcPackerUnpackerTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -151,13 +147,6 @@
             this.sngFileCreatorTab.Text = "SNG File Creator";
             this.sngFileCreatorTab.UseVisualStyleBackColor = true;
             // 
-            // sngFileCreatorControl
-            // 
-            this.sngFileCreatorControl.Location = new System.Drawing.Point(56, 66);
-            this.sngFileCreatorControl.Name = "sngFileCreatorControl";
-            this.sngFileCreatorControl.Size = new System.Drawing.Size(491, 251);
-            this.sngFileCreatorControl.TabIndex = 0;
-            // 
             // oggConverterTab
             // 
             this.oggConverterTab.Controls.Add(this.oggConverterControl);
@@ -169,13 +158,6 @@
             this.oggConverterTab.TabIndex = 2;
             this.oggConverterTab.Text = "OGG Converter";
             this.oggConverterTab.UseVisualStyleBackColor = true;
-            // 
-            // oggConverterControl
-            // 
-            this.oggConverterControl.Location = new System.Drawing.Point(56, 66);
-            this.oggConverterControl.Name = "oggConverterControl";
-            this.oggConverterControl.Size = new System.Drawing.Size(487, 112);
-            this.oggConverterControl.TabIndex = 0;
             // 
             // dlcPackageCreatorTab
             // 
@@ -327,10 +309,7 @@
             // 
             // dlcPackerUnpackerTab
             // 
-            this.dlcPackerUnpackerTab.Controls.Add(this.pictureBox2);
-            this.dlcPackerUnpackerTab.Controls.Add(this.UseCryptographyCheckbox);
-            this.dlcPackerUnpackerTab.Controls.Add(this.UnpackButton);
-            this.dlcPackerUnpackerTab.Controls.Add(this.PackButton);
+            this.dlcPackerUnpackerTab.Controls.Add(this.dlcPackerUnpackerControl);
             this.dlcPackerUnpackerTab.Location = new System.Drawing.Point(4, 22);
             this.dlcPackerUnpackerTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcPackerUnpackerTab.Name = "dlcPackerUnpackerTab";
@@ -339,47 +318,6 @@
             this.dlcPackerUnpackerTab.TabIndex = 3;
             this.dlcPackerUnpackerTab.Text = "DLC Packer/Unpacker";
             this.dlcPackerUnpackerTab.UseVisualStyleBackColor = true;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(190, 157);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(100, 103);
-            this.pictureBox2.TabIndex = 7;
-            this.pictureBox2.TabStop = false;
-            // 
-            // UseCryptographyCheckbox
-            // 
-            this.UseCryptographyCheckbox.AutoSize = true;
-            this.UseCryptographyCheckbox.Checked = true;
-            this.UseCryptographyCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UseCryptographyCheckbox.Location = new System.Drawing.Point(190, 134);
-            this.UseCryptographyCheckbox.Name = "UseCryptographyCheckbox";
-            this.UseCryptographyCheckbox.Size = new System.Drawing.Size(109, 17);
-            this.UseCryptographyCheckbox.TabIndex = 6;
-            this.UseCryptographyCheckbox.Text = "Use cryptography";
-            this.UseCryptographyCheckbox.UseVisualStyleBackColor = true;
-            // 
-            // UnpackButton
-            // 
-            this.UnpackButton.Location = new System.Drawing.Point(297, 206);
-            this.UnpackButton.Name = "UnpackButton";
-            this.UnpackButton.Size = new System.Drawing.Size(75, 23);
-            this.UnpackButton.TabIndex = 5;
-            this.UnpackButton.Text = "Unpack";
-            this.UnpackButton.UseVisualStyleBackColor = true;
-            this.UnpackButton.Click += new System.EventHandler(this.UnpackButton_Click);
-            // 
-            // PackButton
-            // 
-            this.PackButton.Location = new System.Drawing.Point(297, 177);
-            this.PackButton.Name = "PackButton";
-            this.PackButton.Size = new System.Drawing.Size(75, 23);
-            this.PackButton.TabIndex = 4;
-            this.PackButton.Text = "Pack";
-            this.PackButton.UseVisualStyleBackColor = true;
-            this.PackButton.Click += new System.EventHandler(this.PackButton_Click);
             // 
             // pictureBox1
             // 
@@ -392,6 +330,27 @@
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
             // 
+            // sngFileCreatorControl
+            // 
+            this.sngFileCreatorControl.Location = new System.Drawing.Point(56, 66);
+            this.sngFileCreatorControl.Name = "sngFileCreatorControl";
+            this.sngFileCreatorControl.Size = new System.Drawing.Size(491, 251);
+            this.sngFileCreatorControl.TabIndex = 0;
+            // 
+            // oggConverterControl
+            // 
+            this.oggConverterControl.Location = new System.Drawing.Point(56, 66);
+            this.oggConverterControl.Name = "oggConverterControl";
+            this.oggConverterControl.Size = new System.Drawing.Size(487, 112);
+            this.oggConverterControl.TabIndex = 0;
+            // 
+            // dlcPackerUnpackerControl
+            // 
+            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(169, 66);
+            this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
+            this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(217, 110);
+            this.dlcPackerUnpackerControl.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -400,9 +359,11 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Custom Song Creator Toolkit";
             this.menuStrip1.ResumeLayout(false);
@@ -413,8 +374,6 @@
             this.dlcPackageCreatorTab.ResumeLayout(false);
             this.dlcPackageCreatorTab.PerformLayout();
             this.dlcPackerUnpackerTab.ResumeLayout(false);
-            this.dlcPackerUnpackerTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -449,13 +408,10 @@
         private System.Windows.Forms.TextBox ArtistTB;
         private System.Windows.Forms.TextBox SongDisplayNameTB;
         private System.Windows.Forms.TextBox DlcNameTB;
-        private System.Windows.Forms.TabPage dlcPackerUnpackerTab;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.CheckBox UseCryptographyCheckbox;
-        private System.Windows.Forms.Button UnpackButton;
-        private System.Windows.Forms.Button PackButton;
         private SngFileCreator.SngFileCreator sngFileCreatorControl;
         private OggConverter.OggConverter oggConverterControl;
+        private System.Windows.Forms.TabPage dlcPackerUnpackerTab;
+        private DLCPackerUnpacker.DLCPackerUnpacker dlcPackerUnpackerControl;
     }
 }
 
