@@ -29,6 +29,14 @@ Usage:
 // Free Bird has up to 1262 notes in a single Notes array!
 #pragma maxarray(2048)
 
+enum TUNING
+{
+    Standard = 0,
+    DropD = 1,
+    EFlat = 2,
+    OpenG = 3
+};
+
 struct HEADER
 {
     unsigned long Signature;
@@ -337,7 +345,7 @@ struct METADATA_SECTION
     char Artist[32];
     short Part;
     float SongLength;
-    long Tuning;
+    enum TUNING Tuning;
     float _unknown8;
     float _unknown9;
     float _unknown10;
