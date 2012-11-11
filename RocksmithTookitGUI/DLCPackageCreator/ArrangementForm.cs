@@ -17,17 +17,22 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         public Arrangement Arrangement { get; private set; }
         private void button1_Click(object sender, EventArgs e)
         {
-            var ofd = new OpenFileDialog { Filter = "sng Files|*.sng" };
-            if (ofd.ShowDialog() == DialogResult.OK)
-                SngFilePath.Text = ofd.FileName;
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "sng Files|*.sng";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    SngFilePath.Text = ofd.FileName;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var ofd = new OpenFileDialog();
-            ofd.Filter = "Xml Files|*.xml";
-            if (ofd.ShowDialog() == DialogResult.OK)
-                XmlFilePath.Text = ofd.FileName;
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Xml Files|*.xml";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    XmlFilePath.Text = ofd.FileName;
+            }
         }
 
         private int readInt(string val)

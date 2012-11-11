@@ -24,14 +24,18 @@ namespace RocksmithTookitGUI
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AboutForm a = new AboutForm();
-            a.ShowDialog();
+            using (var a = new AboutForm())
+            {
+                a.ShowDialog();
+            }
         }
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HelpForm h = new HelpForm();
-            h.ShowDialog();
+            using (var h = new HelpForm())
+            {
+                h.ShowDialog();
+            }
         }
     }
 }

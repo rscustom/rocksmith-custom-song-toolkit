@@ -65,9 +65,12 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private void arrangementAddButton_Click(object sender, EventArgs e)
         {
-            var form = new ArrangementForm();
-            form.ShowDialog();
-            var arrangement = form.Arrangement;
+            Arrangement arrangement;
+            using (var form = new ArrangementForm())
+            {
+                form.ShowDialog();
+                arrangement = form.Arrangement;
+            }
             if (arrangement == null)
                 return;
             arrangement.Artist = ArtistTB.Text;
@@ -84,10 +87,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private void openOggButton_Click(object sender, EventArgs e)
         {
-            var ofd = new OpenFileDialog
-            {
-                Filter = "Fixed WWise Files|*.ogg"
-            };
+            var ofd = new OpenFileDialog();
+            ofd.Filter = "Fixed WWise Files|*.ogg";
             if (ofd.ShowDialog() == DialogResult.OK)
                 OggPath = ofd.FileName;
         }
@@ -106,13 +107,13 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 MessageBox.Show("Error: Multiple Vocals Found");
                 return;
             }
-            var ofd = new SaveFileDialog
+            string dlcSavePath;
+            using (var ofd = new SaveFileDialog())
             {
-                Filter = "Rocksmith DLC|*.dat"
-            };
-            if (ofd.ShowDialog() != DialogResult.OK) return;
-
-            var dlcSavePath = ofd.FileName;
+                ofd.Filter = "Rocksmith DLC|*.dat";
+                if (ofd.ShowDialog() != DialogResult.OK) return;
+                dlcSavePath = ofd.FileName;
+            }
             var dlcName = DlcNameTB.Text.Replace(" ", "_");
             var soundBankName = String.Format("Song_{0}", dlcName);
             var songPsarc = new PSARC.PSARC();
@@ -227,10 +228,12 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private void albumArtButton_Click(object sender, EventArgs e)
         {
-            var ofd = new OpenFileDialog();
-            ofd.Filter = "dds Files|*.dds";
-            if (ofd.ShowDialog() == DialogResult.OK)
-                AlbumArtPath = ofd.FileName;
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "dds Files|*.dds";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    AlbumArtPath = ofd.FileName;
+            }
         }
     }
 }

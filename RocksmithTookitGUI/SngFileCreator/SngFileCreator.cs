@@ -55,16 +55,16 @@ namespace RocksmithTookitGUI.SngFileCreator
 
         private void xmlBrowseButton_Click(object sender, EventArgs e)
         {
-            var fd = new OpenFileDialog
+            using (var fd = new OpenFileDialog())
             {
-                Filter = "XML Files|*.xml|All Files (*.*)|*.*",
-                FilterIndex = 1
-            };
-            fd.ShowDialog();
-            if (string.IsNullOrEmpty(fd.FileName)) return;
-         
-            InputXmlFile = fd.FileName;
-            OutputSngFile = Path.ChangeExtension(fd.FileName, "sng");
+                fd.Filter = "XML Files|*.xml|All Files (*.*)|*.*";
+                fd.FilterIndex = 1;
+                fd.ShowDialog();
+                if (string.IsNullOrEmpty(fd.FileName)) return;
+
+                InputXmlFile = fd.FileName;
+                OutputSngFile = Path.ChangeExtension(fd.FileName, "sng");
+            }
         }
 
         private void sngConvertButton_Click(object sender, EventArgs e)

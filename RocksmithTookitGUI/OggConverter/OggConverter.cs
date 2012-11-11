@@ -29,20 +29,19 @@ namespace RocksmithTookitGUI.OggConverter
 
         private void oggBrowseButton_Click(object sender, EventArgs e)
         {
-            var fd = new OpenFileDialog
+            using (var fd = new OpenFileDialog())
             {
-                Filter = "Wwise 2010.3.3 OGG Files|*.ogg|All Files (*.*)|*.*",
-                FilterIndex = 1
-            };
-            fd.ShowDialog();
-            if (string.IsNullOrEmpty(fd.FileName)) return;
+                fd.Filter = "Wwise 2010.3.3 OGG Files|*.ogg|All Files (*.*)|*.*";
+                fd.FilterIndex = 1;
+                fd.ShowDialog();
+                if (string.IsNullOrEmpty(fd.FileName)) return;
 
-            InputOggFile = fd.FileName;
-
-            var fileName = Path.ChangeExtension(fd.FileName, null);
-            fileName += "_fixed";
-            fileName = Path.ChangeExtension(fileName, "ogg");
-            OutputOggFile = fileName;
+                InputOggFile = fd.FileName;
+                var fileName = Path.ChangeExtension(fd.FileName, null);
+                fileName += "_fixed";
+                fileName = Path.ChangeExtension(fileName, "ogg");
+                OutputOggFile = fileName;
+            }
         }
 
         private void oggConvertButton_Click(object sender, EventArgs e)

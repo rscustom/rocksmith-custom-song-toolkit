@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -22,32 +19,45 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
 
         private void packButton_Click(object sender, EventArgs e)
         {
-            var fbd = new FolderBrowserDialog();
-            if (fbd.ShowDialog() != DialogResult.OK)
-                return;
-            var sfd = new SaveFileDialog();
-            if (sfd.ShowDialog() != DialogResult.OK)
-                return;
-
-            var sourcePath = fbd.SelectedPath;
-            var saveFileName = sfd.FileName;
+            string sourcePath;
+            string saveFileName;
             var useCryptography = useCryptographyCheckbox.Checked;
+
+            using (var fbd = new FolderBrowserDialog())
+            {
+                if (fbd.ShowDialog() != DialogResult.OK)
+                    return;
+                sourcePath = fbd.SelectedPath;
+            }
+
+            using (var sfd = new SaveFileDialog())
+            {
+                if (sfd.ShowDialog() != DialogResult.OK)
+                    return;
+                saveFileName = sfd.FileName;
+            }
 
             packer.Pack(sourcePath, saveFileName, useCryptography);
         }
 
         private void unpackButton_Click(object sender, EventArgs e)
         {
-            var ofd = new OpenFileDialog();
-            if (ofd.ShowDialog() != DialogResult.OK)
-                return;
-            var fbd = new FolderBrowserDialog();
-            if (fbd.ShowDialog() != DialogResult.OK)
-                return;
-
-            var sourceFileName = ofd.FileName;
-            var savePath = fbd.SelectedPath;
+            string sourceFileName;
+            string savePath;
             var useCryptography = useCryptographyCheckbox.Checked;
+
+            using (var ofd = new OpenFileDialog())
+            {
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+                sourceFileName = ofd.FileName;
+            }
+            using (var fbd = new FolderBrowserDialog())
+            {
+                if (fbd.ShowDialog() != DialogResult.OK)
+                    return;
+                savePath = fbd.SelectedPath;
+            }
 
             packer.Unpack(sourceFileName, savePath, useCryptography);
         }
