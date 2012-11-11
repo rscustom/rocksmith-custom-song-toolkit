@@ -151,7 +151,7 @@ struct LINKED_DIFFS_SECTION
 struct CONTROL
 {
     float Time;
-    char Code[32];
+    char Code[256];
 };
 
 struct CONTROLS_SECTION
