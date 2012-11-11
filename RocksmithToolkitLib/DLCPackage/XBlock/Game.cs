@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
 using System.Xml.Linq;
 using System.IO;
 
-namespace RocksmithDLCCreator.XBlock
+namespace RocksmithToolkitLib.DLCPackage.XBlock
 {
     public class Game
     {

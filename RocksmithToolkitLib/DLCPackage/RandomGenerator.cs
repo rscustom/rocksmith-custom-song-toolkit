@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RocksmithDLCCreator
+namespace RocksmithToolkitLib.DLCPackage
 {
     class RandomGenerator
     {
-        private static Random Instance = new Random();
+        private static readonly Random Instance = new Random();
         public static int NextInt()
         {
             return Instance.Next();

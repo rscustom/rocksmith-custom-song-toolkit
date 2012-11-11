@@ -7,7 +7,7 @@ using System.Text;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
-    public class RijndaelEncryptor
+    public static class RijndaelEncryptor
     {
         public static void Encrypt(Stream input, Stream output)
         {

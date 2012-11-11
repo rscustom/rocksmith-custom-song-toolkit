@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisposableCollection.cs" />
     <Compile Include="DLCPackage\AggregateGraph\AggregateGraph.cs" />
     <Compile Include="DLCPackage\AggregateGraph\AlbumArt.cs" />
     <Compile Include="DLCPackage\AggregateGraph\Element.cs" />

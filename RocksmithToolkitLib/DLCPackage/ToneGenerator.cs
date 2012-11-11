@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
+using RocksmithToolkitLib.DLCPackage.XBlock;
 
-namespace RocksmithDLCCreator
+namespace RocksmithToolkitLib.DLCPackage
 {
     public class ToneGenerator
     {
@@ -36,19 +37,19 @@ namespace RocksmithDLCCreator
 
         private static void generateXBlock(string dlcName, Stream outXblock, string id, string key, string name)
         {
-            var game = new XBlock.Game();
-            var entity = new XBlock.Entity()
+            var game = new Game();
+            var entity = new Entity()
             {
                 Name = String.Format("GRTonePreset_{0}", dlcName),
                 Iterations = 1,
                 ModelName = "GRTonePreset",
                 Id = id.ToLower()
             };
-            var properties = entity.Properties = new List<XBlock.Property>();
+            var properties = entity.Properties = new List<Property>();
             var addProperty = new Action<string, object>((a, b) => properties.Add(CreateProperty(a, b.ToString())));
             addProperty("Key", key);
             addProperty("Name", name);
-            game.Entities = new List<XBlock.Entity>();
+            game.Entities = new List<Entity>();
             game.Entities.Add(entity);
             game.Serialize(outXblock);
         }
@@ -70,9 +71,9 @@ namespace RocksmithDLCCreator
             writer.Flush();
             outManifest.Seek(0, SeekOrigin.Begin);
         }
-        private static XBlock.Property CreateProperty(string name, string value)
+        private static Property CreateProperty(string name, string value)
         {
-            return new XBlock.Property() { Name = name, Set = new XBlock.Set() { Value = value } };
+            return new Property() { Name = name, Set = new Set() { Value = value } };
         }
     }
 }
