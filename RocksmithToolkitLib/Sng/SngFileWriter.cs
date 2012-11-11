@@ -332,7 +332,7 @@ namespace RocksmithToolkitLib.Sng
             }
         }
 
-        // COMPLETE - might have level jump and empty reversed
+        // INCOMPLETE - review Angela_Combo.xml for some inconsistencies
         private static void WriteRocksmithSngPhraseProperties(EndianBinaryWriter w, SongPhraseProperties phraseProperties)
         {
             // output header
@@ -493,25 +493,41 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(endTime);
 
                 // phrase iteration start index
-                var phraseIterationStartIndex = phraseIterations.PhraseIteration.IndexOf(pi => pi.Time >= sections.Section[i].StartTime);
-                if (!phraseIterationStartIndex.HasValue)
-                    throw new InvalidDataException(string.Format("No phrase iteration found with matching time for section {0}.", i));
-                w.Write(phraseIterationStartIndex.Value);
+                bool phraseIterationFound = false;
+                for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
+                {
+                    if (sections.Section[i].StartTime <= phraseIterations.PhraseIteration[p].Time)
+                    {
+                        w.Write(p);
+                        phraseIterationFound = true;
+                        break;
+                    }
+                }
+                if (!phraseIterationFound)
+                    throw new Exception(string.Format("No phrase iteration found with matching time for section {0}.", i.ToString()));
 
-                // phrase iteration end index
+                // phrase iteration end index           
                 if (i == sections.Section.Length - 1) // if last section, default to last phrase iteration
                 {
                     w.Write(phraseIterations.PhraseIteration.Length - 1);
                 }
                 else
                 {
-                    var phraseIterationEndIndex = phraseIterations.PhraseIteration.IndexOf(pi => pi.Time >= sections.Section[i + 1].StartTime);
-                    if (!phraseIterationEndIndex.HasValue)
-                        throw new InvalidDataException(string.Format("No end phrase iteration found with matching time for section {0}.", i));
-                    w.Write(phraseIterationEndIndex.Value);
+                    bool endPhraseIterationFound = false;
+                    for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
+                    {
+                        if (sections.Section[i + 1].StartTime <= phraseIterations.PhraseIteration[p].Time)
+                        {
+                            w.Write(Convert.ToInt32(p - 1));
+                            endPhraseIterationFound = true;
+                            break;
+                        }
+                    }
+                    if (!endPhraseIterationFound)
+                        throw new Exception(string.Format("No end phrase iteration found with matching time for section {0}.", i.ToString()));
                 }
 
-                // series of 8 unknown bits? below logic is wrong, just defaulting for now
+                // series of 8 unknown bytes (look like flags)? below logic is wrong, just defaulting for now
                 w.Write(true);
                 w.Write(true);
                 w.Write(true);
