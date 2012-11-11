@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using RocksmithDLCCreator;
+using RocksmithToolkitLib.DLCPackage;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
@@ -86,7 +86,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 OggPath = OggPath,
                 Arrangements = arrangements
             };
-            DLCPackageCreatorLib.GenerateDLCPackage(dlcSavePath, info);
+            RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, info);
         }
 
         private void albumArtButton_Click(object sender, EventArgs e)

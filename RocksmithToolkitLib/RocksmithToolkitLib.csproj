@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RocksmithToolkitLib</RootNamespace>
+    <AssemblyName>RocksmithToolkitLib</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MiscUtil">
+      <HintPath>..\lib\MiscUtil\MiscUtil.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PSARC">
+      <HintPath>..\lib\PSARC.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ZLIB">
+      <HintPath>..\lib\ZLIB.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DLCPackage\AggregateGraph\AggregateGraph.cs" />
+    <Compile Include="DLCPackage\AggregateGraph\AlbumArt.cs" />
+    <Compile Include="DLCPackage\AggregateGraph\Element.cs" />
+    <Compile Include="DLCPackage\AggregateGraph\ElementFile.cs" />
+    <Compile Include="DLCPackage\AggregateGraph\SongFile.cs" />
+    <Compile Include="DLCPackage\AggregateGraph\SongXML.cs" />
+    <Compile Include="DLCPackage\AggregateGraph\SoundBank.cs" />
+    <Compile Include="DLCPackage\AggregateGraph\XBlock.cs" />
+    <Compile Include="DLCPackage\Arrangement.cs" />
+    <Compile Include="DLCPackage\DLCPackageCreator.cs" />
+    <Compile Include="DLCPackage\DLCPackageData.cs" />
+    <Compile Include="DLCPackage\IdGenerator.cs" />
+    <Compile Include="DLCPackage\ManifestBuilder.cs" />
+    <Compile Include="DLCPackage\Manifest\Attributes.cs" />
+    <Compile Include="DLCPackage\Manifest\ChordTemplate.cs" />
+    <Compile Include="DLCPackage\Manifest\Manifest.cs" />
+    <Compile Include="DLCPackage\Manifest\MyContractResolver.cs" />
+    <Compile Include="DLCPackage\Manifest\Phrase.cs" />
+    <Compile Include="DLCPackage\Manifest\PhraseIteration.cs" />
+    <Compile Include="DLCPackage\Manifest\Section.cs" />
+    <Compile Include="DLCPackage\RandomGenerator.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="XML\Vocals.cs" />
+    <Compile Include="XML\Song.cs" />
+    <Compile Include="DLCPackage\SoundBankGenerator.cs" />
+    <Compile Include="DLCPackage\ToneGenerator.cs" />
+    <Compile Include="DLCPackage\Tone\Manifest.cs" />
+    <Compile Include="DLCPackage\Tone\Pedal.cs" />
+    <Compile Include="DLCPackage\Tone\Tone.cs" />
+    <Compile Include="DLCPackage\XBlockGenerator.cs" />
+    <Compile Include="DLCPackage\XBlock\Entity.cs" />
+    <Compile Include="DLCPackage\XBlock\Game.cs" />
+    <Compile Include="DLCPackage\XBlock\ISet.cs" />
+    <Compile Include="DLCPackage\XBlock\MultiItemSet.cs" />
+    <Compile Include="DLCPackage\XBlock\Property.cs" />
+    <Compile Include="DLCPackage\XBlock\Set.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\soundbank.bnk" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
