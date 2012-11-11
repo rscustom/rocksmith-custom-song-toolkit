@@ -198,10 +198,11 @@ namespace RocksmithToolkitLib.Sng
             }
         }
 
-        // COMPLETE (need solo example to confirm)
-        // Sample: begins at position 7,208 in NumberThirteen_Lead.sng
+        // COMPLETE
         private static void WriteRocksmithSngPhrases(EndianBinaryWriter w, SongPhrases phrases, SongPhraseIterations phraseIteration)
         {
+            // Sample: begins at position 7,208 in NumberThirteen_Lead.sng
+
             // output header
             if (phrases.Phrase == null || phrases.Phrase.Length == 0)
             {
@@ -215,8 +216,17 @@ namespace RocksmithToolkitLib.Sng
             // output phrases
             for (int i = 0; i < phrases.Phrase.Length; i++)
             {
+                // solo
+                w.Write(phrases.Phrase[i].Solo == 1 ? true : false);
+
                 // disparity
-                w.Write(phrases.Phrase[i].Disparity == 1 ? Convert.ToInt32(256) : Convert.ToInt32(0));
+                w.Write(phrases.Phrase[i].Disparity == 1 ? true : false);
+
+                // ignore
+                w.Write(phrases.Phrase[i].Ignore == 1 ? true : false);
+
+                // unused padding
+                w.Write(new byte());
 
                 // maxDifficulty tag
                 w.Write(phrases.Phrase[i].MaxDifficulty);
@@ -233,10 +243,6 @@ namespace RocksmithToolkitLib.Sng
                 }
                 // padding after name
                 w.Write(new byte[32 - name.Length]);
-
-                // solo
-
-                // ignore
             }
         }
 
@@ -664,8 +670,6 @@ namespace RocksmithToolkitLib.Sng
         // COMPLETE except hardcoded fields
         private static void WriteRocksmithSngLevelNotes(EndianBinaryWriter w, SongPhraseIterations phraseIterations, SongNotes notes, SongChords chords, Single songLength)
         {
-            //int notesCount = 0;
-            //int chordsCount = 0;
             List<TimeLinkedEntity> notesChords = new List<TimeLinkedEntity>();
 
             // add notes to combined note/chord array
