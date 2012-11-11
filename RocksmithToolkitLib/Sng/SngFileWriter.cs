@@ -232,7 +232,14 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(phrases.Phrase[i].MaxDifficulty);
 
                 // count of usage in iterations
-                int phraseIterationCount = phraseIteration.PhraseIteration.Count(t => t.PhraseId == i);
+                int phraseIterationCount = 0;
+                for (int i2 = 0; i2 < phraseIteration.PhraseIteration.Length; i2++)
+                {
+                    if (phraseIteration.PhraseIteration[i2].PhraseId == i)
+                    {
+                        phraseIterationCount++;
+                    }
+                }
                 w.Write(phraseIterationCount);
 
                 // name tag
@@ -637,9 +644,18 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(anchors.Anchor[i].Fret);
 
                 // phrase iteration index
-                var phraseIterationIndex = phraseIterations.PhraseIteration.IndexOf(pi => startTime < pi.Time)
-                    ?? phraseIterations.PhraseIteration.Length;
-                w.Write(phraseIterationIndex - 1);
+                bool phraseIterationFound = false;
+                for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
+                {
+                    if (anchors.Anchor[i].Time < phraseIterations.PhraseIteration[p].Time)
+                    {
+                        w.Write(p - 1);
+                        phraseIterationFound = true;
+                        break;
+                    }
+                }
+                if (!phraseIterationFound)
+                    w.Write(phraseIterations.PhraseIteration.Length - 1);
             }
         }
 
@@ -779,14 +795,22 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(Convert.ToInt16(7472)); // wrong
 
                 // phrase iteration start index and id ????
-                var phraseIterationStartIndex = phraseIterations.PhraseIteration.IndexOf((item, next) =>
-                        notesChords[i].Time >= item.Time &&
-                        notesChords[i].Time < (next != null ? next.Time : songLength));
-                if (!phraseIterationStartIndex.HasValue)
-                    throw new InvalidDataException(string.Format("No phrase start iteration found with matching time for note {0}.", i));
+                bool phraseStartIterationFound = false;
+                for (int p = 0; p < phraseIterations.PhraseIteration.Length; p++)
+                {
+                    Single phraseIterationStart = phraseIterations.PhraseIteration[p].Time;
+                    Single phraseIterationEnd = (p + 1 == phraseIterations.PhraseIteration.Length) ? songLength : phraseIterations.PhraseIteration[p + 1].Time;
 
-                w.Write(phraseIterationStartIndex.Value); // phrase iteration
-                w.Write(phraseIterations.PhraseIteration[phraseIterationStartIndex.Value].PhraseId);
+                    if (notesChords[i].Time >= phraseIterationStart && notesChords[i].Time < phraseIterationEnd)
+                    {
+                        w.Write(p); // phrase iteration
+                        w.Write(phraseIterations.PhraseIteration[p].PhraseId);
+                        phraseStartIterationFound = true;
+                        break;
+                    }
+                }
+                if (!phraseStartIterationFound)
+                    throw new Exception(string.Format("No phrase start iteration found with matching time for note {0}.", i.ToString()));
             }
         }
 
