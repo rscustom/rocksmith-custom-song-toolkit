@@ -79,6 +79,7 @@
     <Compile Include="DLCPackage\RandomGenerator.cs" />
     <Compile Include="DLCPackage\RijndaelEncryptor.cs" />
     <Compile Include="EnumerableExtension.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Ogg\OggFile.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

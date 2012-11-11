@@ -21,7 +21,7 @@ namespace RocksmithTookitGUI
         {
             if (!IsHandleCreated || string.IsNullOrEmpty(mCue)) return;
             IntPtr mem = Marshal.StringToHGlobalUni(mCue);
-            SendMessage(Handle, 0x1501, (IntPtr)1, mem);
+            NativeMethods.SendMessage(Handle, 0x1501, (IntPtr)1, mem);
             Marshal.FreeHGlobal(mem);
         }
         protected override void OnHandleCreated(EventArgs e)
@@ -29,9 +29,5 @@ namespace RocksmithTookitGUI
             base.OnHandleCreated(e);
             UpdateCue();
         }
-
-        // P/Invoke
-        [DllImport("user32.dll", EntryPoint = "SendMessageW")]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
     }
 }

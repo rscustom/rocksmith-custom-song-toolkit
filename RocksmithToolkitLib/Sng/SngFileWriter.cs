@@ -48,47 +48,45 @@ namespace RocksmithToolkitLib.Sng
         {
             // WRITE THE .SNG FILE
             using (FileStream fs = new FileStream(outputFile, FileMode.Create))
+            using (EndianBinaryWriter w = new EndianBinaryWriter(bitConverter, fs))
             {
-                using (EndianBinaryWriter w = new EndianBinaryWriter(bitConverter, fs))
+                // file header
+                WriteRocksmithSngHeader(w);
+
+                // unused filler
+                w.Write(new byte[16]);
+
+                // vocal count
+                if (vocals.Count != vocals.Vocal.Length)
+                    throw new InvalidDataException("XML vocals header count does not match number of vocal items.");
+                w.Write(vocals.Count);
+
+                // vocals
+                for (int i = 0; i < vocals.Vocal.Length; i++)
                 {
-                    // file header
-                    WriteRocksmithSngHeader(w);
+                    // vocal time
+                    w.Write(vocals.Vocal[i].Time);
 
-                    // unused filler
-                    w.Write(new byte[16]);
+                    // vocal note
+                    w.Write(vocals.Vocal[i].Note);
 
-                    // vocal count
-                    if (vocals.Count != vocals.Vocal.Length)
-                        throw new InvalidDataException("XML vocals header count does not match number of vocal items.");
-                    w.Write(vocals.Count);
+                    // vocal length
+                    w.Write(vocals.Vocal[i].Length);
 
-                    // vocals
-                    for (int i = 0; i < vocals.Vocal.Length; i++)
+                    // vocal lyric
+                    string lyric = vocals.Vocal[i].Lyric;
+                    if (lyric.Length > 32)
+                        throw new InvalidDataException(string.Format("Vocal lyric '{0}' at position {1} exceeded the maximum width of 32 bytes.", lyric, i));
+                    foreach (char c in lyric)
                     {
-                        // vocal time
-                        w.Write(vocals.Vocal[i].Time);
-
-                        // vocal note
-                        w.Write(vocals.Vocal[i].Note);
-
-                        // vocal length
-                        w.Write(vocals.Vocal[i].Length);
-
-                        // vocal lyric
-                        string lyric = vocals.Vocal[i].Lyric;
-                        if (lyric.Length > 32)
-                            throw new InvalidDataException(string.Format("Vocal lyric '{0}' at position {1} exceeded the maximum width of 32 bytes.", lyric, i));
-                        foreach (char c in lyric)
-                        {
-                            w.Write(Convert.ToByte(c));
-                        }
-                        // padding after name
-                        w.Write(new byte[32 - lyric.Length]);
+                        w.Write(Convert.ToByte(c));
                     }
-
-                    // unused
-                    w.Write(new byte[254]);
+                    // padding after name
+                    w.Write(new byte[32 - lyric.Length]);
                 }
+
+                // unused
+                w.Write(new byte[254]);
             }
         }
 
@@ -97,51 +95,49 @@ namespace RocksmithToolkitLib.Sng
         {
             // WRITE THE .SNG FILE
             using (FileStream fs = new FileStream(outputFile, FileMode.Create))
+            using (EndianBinaryWriter w = new EndianBinaryWriter(bitConverter, fs))
             {
-                using (EndianBinaryWriter w = new EndianBinaryWriter(bitConverter, fs))
-                {
-                    // HEADER
-                    WriteRocksmithSngHeader(w);
+                // HEADER
+                WriteRocksmithSngHeader(w);
 
-                    // EBEATS DATA
-                    WriteRocksmithSngEbeats(w, rocksmithSong.Ebeats);
+                // EBEATS DATA
+                WriteRocksmithSngEbeats(w, rocksmithSong.Ebeats);
 
-                    // PHRASES
-                    WriteRocksmithSngPhrases(w, rocksmithSong.Phrases, rocksmithSong.PhraseIterations);
+                // PHRASES
+                WriteRocksmithSngPhrases(w, rocksmithSong.Phrases, rocksmithSong.PhraseIterations);
 
-                    // CHORD TEMPLATES
-                    WriteRocksmithSngChordTemplates(w, rocksmithSong.ChordTemplates);
+                // CHORD TEMPLATES
+                WriteRocksmithSngChordTemplates(w, rocksmithSong.ChordTemplates);
                     
-                    // FRET HAND MUTE TEMPLATE
-                    WriteRocksmithSngFretHandMuteTemplates(w, rocksmithSong.FretHandMuteTemplates);
+                // FRET HAND MUTE TEMPLATE
+                WriteRocksmithSngFretHandMuteTemplates(w, rocksmithSong.FretHandMuteTemplates);
 
-                    // VOCALS TEMPLATE 
-                    w.Write(new byte[4]); // not used on song file
+                // VOCALS TEMPLATE 
+                w.Write(new byte[4]); // not used on song file
 
-                    // PHRASE ITERATIONS
-                    WriteRocksmithSngPhraseIterations(w, rocksmithSong.PhraseIterations, rocksmithSong.SongLength);
+                // PHRASE ITERATIONS
+                WriteRocksmithSngPhraseIterations(w, rocksmithSong.PhraseIterations, rocksmithSong.SongLength);
 
-                    // PHRASE PROPERTIES
-                    WriteRocksmithSngPhraseProperties(w, rocksmithSong.PhraseProperties);
+                // PHRASE PROPERTIES
+                WriteRocksmithSngPhraseProperties(w, rocksmithSong.PhraseProperties);
 
-                    // LINKED DIFFS
-                    WriteRocksmithSngLinkedDiffs(w, rocksmithSong.LinkedDiffs);
+                // LINKED DIFFS
+                WriteRocksmithSngLinkedDiffs(w, rocksmithSong.LinkedDiffs);
 
-                    // CONTROLS
-                    WriteRocksmithSngControls(w, rocksmithSong.Controls);
+                // CONTROLS
+                WriteRocksmithSngControls(w, rocksmithSong.Controls);
 
-                    // EVENTS
-                    WriteRocksmithSngEvents(w, rocksmithSong.Events);
+                // EVENTS
+                WriteRocksmithSngEvents(w, rocksmithSong.Events);
 
-                    // SECTIONS
-                    WriteRocksmithSngSections(w, rocksmithSong.Sections, rocksmithSong.PhraseIterations, rocksmithSong.SongLength);
+                // SECTIONS
+                WriteRocksmithSngSections(w, rocksmithSong.Sections, rocksmithSong.PhraseIterations, rocksmithSong.SongLength);
 
-                    // LEVELS
-                    WriteRocksmithSngLevels(w, rocksmithSong.Levels, rocksmithSong.SongLength, rocksmithSong.Phrases, rocksmithSong.PhraseIterations);                   
+                // LEVELS
+                WriteRocksmithSngLevels(w, rocksmithSong.Levels, rocksmithSong.SongLength, rocksmithSong.Phrases, rocksmithSong.PhraseIterations);                   
 
-                    // SONG META DATA
-                    WriteRocksmithSngMetaDetails(w, rocksmithSong);
-                }
+                // SONG META DATA
+                WriteRocksmithSngMetaDetails(w, rocksmithSong);
             }
         }
 

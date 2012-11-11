@@ -17,26 +17,25 @@ namespace RocksmithToolkitLib.Ogg
             VerifyHeaders();
         }
 
-        public void WriteOgg(string outFile)
+        public void WriteOgg(string outputFileName)
         {
             VerifyHeaders(); // Just in case the file changed
-
-            using (BinaryWriter writer = new BinaryWriter(File.Open(outFile, FileMode.Create)))
+            using (var outputFileStream = File.Open(outputFileName, FileMode.Create))
+            using (var inputFileStream = File.Open(inputOgg, FileMode.Open))
+            using (BinaryWriter writer = new BinaryWriter(outputFileStream))
+            using (BinaryReader reader = new BinaryReader(inputFileStream))
             {
-                using (BinaryReader reader = new BinaryReader(File.Open(inputOgg, FileMode.Open)))
-                {
-                    writer.Write(reader.ReadBytes(4));
-                    UInt32 fileSize = ReadUInt32(reader.ReadBytes(4));
-                    fileSize -= 8; // We're removing data, so update the size in the header
-                    writer.Write(WriteUInt32(fileSize));
-                    writer.Write(reader.ReadBytes(8));
-                    writer.Write(WriteUInt32(66)); reader.ReadUInt32(); // New fmt size is 66
-                    writer.Write(reader.ReadBytes(16));
-                    writer.Write(WriteUInt16(48)); reader.ReadUInt16(); // New cbSize is 48
-                    writer.Write(reader.ReadBytes(6));
-                    reader.BaseStream.Seek(8, SeekOrigin.Current); // Skip ahead 8 bytes, we don't want the vorb chunk
-                    writer.Write(reader.ReadBytes((int)reader.BaseStream.Length - (int)reader.BaseStream.Position));
-                }
+                writer.Write(reader.ReadBytes(4));
+                UInt32 fileSize = ReadUInt32(reader.ReadBytes(4));
+                fileSize -= 8; // We're removing data, so update the size in the header
+                writer.Write(WriteUInt32(fileSize));
+                writer.Write(reader.ReadBytes(8));
+                writer.Write(WriteUInt32(66)); reader.ReadUInt32(); // New fmt size is 66
+                writer.Write(reader.ReadBytes(16));
+                writer.Write(WriteUInt16(48)); reader.ReadUInt16(); // New cbSize is 48
+                writer.Write(reader.ReadBytes(6));
+                reader.BaseStream.Seek(8, SeekOrigin.Current); // Skip ahead 8 bytes, we don't want the vorb chunk
+                writer.Write(reader.ReadBytes((int)reader.BaseStream.Length - (int)reader.BaseStream.Position));
             }
         }
 
@@ -72,8 +71,8 @@ namespace RocksmithToolkitLib.Ogg
 
         private void VerifyHeaders()
         {
-            using (var oggFile = File.Open(inputOgg, FileMode.Open))
-            using (var reader = new BinaryReader(oggFile))
+            using (var inputFileStream = File.Open(inputOgg, FileMode.Open))
+            using (var reader = new BinaryReader(inputFileStream))
             {
                 string fileID = new string(reader.ReadChars(4));
                 if (fileID == "RIFF")

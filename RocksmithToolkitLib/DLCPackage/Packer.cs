@@ -10,53 +10,72 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         public static void Pack(string sourcePath, string saveFileName, bool useCryptography)
         {
-            var psarc = new PSARC.PSARC();
-            foreach (var x in Directory.EnumerateFiles(sourcePath))
+            using (var psarcStream = new MemoryStream())
+            using (var streamCollection = new DisposableCollection<Stream>())
             {
-                var entry = new PSARC.Entry
+                var psarc = new PSARC.PSARC();
+
+                foreach (var x in Directory.EnumerateFiles(sourcePath))
                 {
-                    Name = Path.GetFileName(x),
-                    Data = File.OpenRead(x)
-                };
-                entry.Length = (ulong) entry.Data.Length;
-                psarc.AddEntry(entry);
+                    var fileStream = File.OpenRead(x);
+                    streamCollection.Add(fileStream);
+                    var entry = new PSARC.Entry
+                    {
+                        Name = Path.GetFileName(x),
+                        Data = fileStream,
+                        Length = (ulong)fileStream.Length
+                    };
+                    psarc.AddEntry(entry);
+                }
+
+                foreach (var directory in Directory.EnumerateDirectories(sourcePath))
+                {
+                    var innerPsarcStream = new MemoryStream();
+                    streamCollection.Add(innerPsarcStream);
+                    var directoryName = Path.GetFileName(directory);
+                    PackInner(innerPsarcStream, directory);
+                    psarc.AddEntry(directoryName + ".psarc", innerPsarcStream);
+                }
+
+                psarc.Write(psarcStream);
+                psarcStream.Flush();
+                psarcStream.Seek(0, SeekOrigin.Begin);
+
+                using (var outputFileStream = File.Create(saveFileName))
+                {
+                    if (useCryptography)
+                        RijndaelEncryptor.Encrypt(psarcStream, outputFileStream);
+                    else
+                        psarcStream.CopyTo(outputFileStream);
+                }
             }
-            foreach (var x in Directory.EnumerateDirectories(sourcePath))
+        }
+
+        private static void PackInner(Stream output, string directory)
+        {
+            using (var streamCollection = new DisposableCollection<Stream>())
             {
-                var dName = Path.GetFileName(x);
-                var psarc2 = new PSARC.PSARC();
-                WalkThroughDirectory("", x, (a, b) => psarc2.AddEntry(a, File.OpenRead(b)));
-                var dt = new MemoryStream();
-                psarc2.Write(dt);
-                foreach (var y in psarc2.Entries)
-                    y.Data.Close();
-                psarc.AddEntry(dName + ".psarc", dt);
+                var innerPsarc = new PSARC.PSARC();
+                WalkThroughDirectory("", directory, (a, b) =>
+                {
+                    var fileStream = File.OpenRead(b);
+                    streamCollection.Add(fileStream);
+                    innerPsarc.AddEntry(a, fileStream);
+                });
+                innerPsarc.Write(output);
             }
-            if (useCryptography)
-            {
-                var data = new MemoryStream();
-                psarc.Write(data);
-                data.Seek(0, SeekOrigin.Begin);
-                using (var str = File.Create(saveFileName))
-                    RijndaelEncryptor.Encrypt(data, str);
-            }
-            else
-                using (var str = File.Create(saveFileName))
-                    psarc.Write(str);
         }
 
         public static void Unpack(string sourceFileName, string savePath, bool useCryptography)
         {
-            using (var stream = File.OpenRead(sourceFileName))
+            using (var inputFileStream = File.OpenRead(sourceFileName))
+            using (var inputStream = new MemoryStream())
             {
-                Stream destinationStream = stream;
                 if (useCryptography)
-                {
-                    var ms = new MemoryStream((int) stream.Length);
-                    RijndaelEncryptor.Decrypt(stream, ms);
-                    destinationStream = ms;
-                }
-                ExtractPSARC(sourceFileName, savePath, destinationStream);
+                    RijndaelEncryptor.Decrypt(inputFileStream, inputStream);
+                else
+                    inputFileStream.CopyTo(inputStream);
+                ExtractPSARC(sourceFileName, savePath, inputStream);
             }
         }
 
@@ -68,29 +87,26 @@ namespace RocksmithToolkitLib.DLCPackage
                 WalkThroughDirectory(String.Format("{0}/{1}", baseDir, Path.GetFileName(dr)), dr, action);
         }
 
-        private static void ExtractPSARC(string filename, string path, Stream dt)
+        private static void ExtractPSARC(string filename, string path, Stream inputStream)
         {
             var name = Path.GetFileNameWithoutExtension(filename);
             var psarc = new PSARC.PSARC();
-            psarc.Read(dt);
-            for (int i = 1; i < psarc.Entries.Count; i++)
+            psarc.Read(inputStream);
+            foreach (var entry in psarc.Entries)
             {
-                var x = psarc.Entries[i];
-                var fullfilename = Path.Combine(path, name, x.Name);
-                x.Data.Seek(0, SeekOrigin.Begin);
-                if (Path.GetExtension(x.Name).ToLower() == ".psarc")
+                var fullfilename = Path.Combine(path, name, entry.Name);
+                entry.Data.Seek(0, SeekOrigin.Begin);
+                if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
                 {
-                    ExtractPSARC(fullfilename, path + "\\" + name, x.Data);
+                    ExtractPSARC(fullfilename, path + "\\" + name, entry.Data);
                 }
                 else
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(fullfilename));
-                    using (var str = File.Create(fullfilename))
+                    using (var fileStream = File.Create(fullfilename))
                     {
-                        var buff = new byte[x.Data.Length];
-                        x.Data.Read(buff, 0, buff.Length);
-                        str.Write(buff, 0, buff.Length);
-                        x.Data.Seek(0, SeekOrigin.Begin);
+                        entry.Data.CopyTo(fileStream);
+                        entry.Data.Seek(0, SeekOrigin.Begin);
                     }
                 }
             }

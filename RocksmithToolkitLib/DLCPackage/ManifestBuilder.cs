@@ -129,7 +129,11 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (!x.IsVocal)
                 {
                     var serializer = new XmlSerializer(typeof(Song));
-                    var song = (Song)serializer.Deserialize(File.OpenRead(x.SongXml.File));
+                    Song song;
+                    using (var fileStream = File.OpenRead(x.SongXml.File))
+                    {
+                        song = (Song)serializer.Deserialize(fileStream);
+                    }
                     if (song.Phrases.Phrase == null)
                         song.Phrases.Phrase = new SongPhrase[0];
                     if (song.PhraseIterations.PhraseIteration == null)

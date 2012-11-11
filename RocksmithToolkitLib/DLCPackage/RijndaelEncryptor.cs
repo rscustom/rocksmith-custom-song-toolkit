@@ -11,35 +11,34 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         public static void Encrypt(Stream input, Stream output)
         {
-            using (var rij = CreateRijndael())
+            using (var rij = new RijndaelManaged())
             {
+                InitRijndael(rij);
                 Crypto(input, output, rij.CreateEncryptor());
             }
         }
 
         public static void Decrypt(Stream input, Stream output)
         {
-            using (var rij = CreateRijndael())
+            using (var rij = new RijndaelManaged())
             {
+                InitRijndael(rij);
                 Crypto(input, output, rij.CreateDecryptor());
             }
         }
 
-        private static RijndaelManaged CreateRijndael()
+        private static void InitRijndael(RijndaelManaged rij)
         {
-            return new RijndaelManaged
+            rij.Padding = PaddingMode.None;
+            rij.Mode = CipherMode.ECB;
+            rij.BlockSize = 128;
+            rij.IV = new byte[16];
+            rij.Key = new byte[32]
             {
-                Padding = PaddingMode.None,
-                Mode = CipherMode.ECB,
-                BlockSize = 128,
-                IV = new byte[16],
-                Key = new byte[32]
-                {
-                    0xFA, 0x6F, 0x4F, 0x42, 0x3E, 0x66, 0x9F, 0x9E,
-                    0x6A, 0xD2, 0x3A, 0x2F, 0x8F, 0xE5, 0x81, 0x88,
-                    0x63, 0xD9, 0xB8, 0xFD, 0xED, 0xDF, 0xFE, 0xBD,
-                    0x12, 0xB2, 0x7F, 0x76, 0x80, 0xD1, 0x51, 0x41
-                }
+                0xFA, 0x6F, 0x4F, 0x42, 0x3E, 0x66, 0x9F, 0x9E,
+                0x6A, 0xD2, 0x3A, 0x2F, 0x8F, 0xE5, 0x81, 0x88,
+                0x63, 0xD9, 0xB8, 0xFD, 0xED, 0xDF, 0xFE, 0xBD,
+                0x12, 0xB2, 0x7F, 0x76, 0x80, 0xD1, 0x51, 0x41
             };
         }
 
