@@ -197,10 +197,11 @@ namespace RocksmithToolkitLib.Sng
             }
         }
 
-        // COMPLETE (need solo example to confirm)
-        // Sample: begins at position 7,208 in NumberThirteen_Lead.sng
+        // COMPLETE except SOLO tag
         private static void WriteRocksmithSngPhrases(EndianBinaryWriter w, SongPhrases phrases, SongPhraseIterations phraseIteration)
         {
+            // Sample: begins at position 7,208 in NumberThirteen_Lead.sng
+
             // output header
             if (phrases.Phrase == null || phrases.Phrase.Length == 0)
             {
@@ -214,14 +215,17 @@ namespace RocksmithToolkitLib.Sng
             // output phrases
             for (int i = 0; i < phrases.Phrase.Length; i++)
             {
-                // unusued padding (?)
+                // unused padding (?)
                 w.Write(new byte());
 
                 // disparity
                 w.Write(phrases.Phrase[i].Disparity == 1 ? true : false);
 
-                // unused padding (?)
-                w.Write(new byte[2]);
+                // ignore
+                w.Write(phrases.Phrase[i].Ignore == 1 ? true : false);
+
+                // unused padding
+                w.Write(new byte());
 
                 // maxDifficulty tag
                 w.Write(phrases.Phrase[i].MaxDifficulty);
@@ -238,10 +242,6 @@ namespace RocksmithToolkitLib.Sng
                 }
                 // padding after name
                 w.Write(new byte[32 - name.Length]);
-
-                // solo
-
-                // ignore
             }
         }
 
