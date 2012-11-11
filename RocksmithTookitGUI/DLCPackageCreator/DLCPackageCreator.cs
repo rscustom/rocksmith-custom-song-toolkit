@@ -60,13 +60,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         private void dlcGenerateButton_Click(object sender, EventArgs e)
         {
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
-            int vocalCount = arrangements.Count(x => x.IsVocal);
-            if (vocalCount == 0)
-            {
-                MessageBox.Show("Error: Needs 1(ONE) Vocal");
-                return;
-            }
-            if (vocalCount > 1)
+            if (arrangements.Count(x => x.IsVocal) > 1)
             {
                 MessageBox.Show("Error: Multiple Vocals Found");
                 return;
