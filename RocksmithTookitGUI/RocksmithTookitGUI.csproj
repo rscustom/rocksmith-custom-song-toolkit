@@ -60,6 +60,9 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CueTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DLCPackageCreator\ArrangementForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -16,7 +16,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             InitializeComponent();
         }
         public Arrangement Arrangement { get; private set; }
-        private void button1_Click(object sender, EventArgs e)
+        private void songFileBrowseButton_Click(object sender, EventArgs e)
         {
             using (var ofd = new OpenFileDialog())
             {
@@ -26,7 +26,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void songXmlBrowseButton_Click(object sender, EventArgs e)
         {
             using (var ofd = new OpenFileDialog())
             {
@@ -44,7 +44,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             return v;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void addArrangementButton_Click(object sender, EventArgs e)
         {
             var songfilepath = SngFilePath.Text;
             var xmlfilepath = XmlFilePath.Text;

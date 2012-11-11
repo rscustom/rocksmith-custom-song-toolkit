@@ -29,19 +29,19 @@
         private void InitializeComponent()
         {
             this.albumArtButton = new System.Windows.Forms.Button();
-            this.AlbumArtPathTB = new System.Windows.Forms.TextBox();
+            this.AlbumArtPathTB = new RocksmithTookitGUI.CueTextBox();
             this.dlcGenerateButton = new System.Windows.Forms.Button();
             this.openOggButton = new System.Windows.Forms.Button();
-            this.OggPathTB = new System.Windows.Forms.TextBox();
+            this.OggPathTB = new RocksmithTookitGUI.CueTextBox();
             this.arrangementRemoveButton = new System.Windows.Forms.Button();
             this.arrangementAddButton = new System.Windows.Forms.Button();
             this.ArrangementLB = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.YearTB = new System.Windows.Forms.TextBox();
-            this.AlbumTB = new System.Windows.Forms.TextBox();
-            this.ArtistTB = new System.Windows.Forms.TextBox();
-            this.SongDisplayNameTB = new System.Windows.Forms.TextBox();
-            this.DlcNameTB = new System.Windows.Forms.TextBox();
+            this.YearTB = new RocksmithTookitGUI.CueTextBox();
+            this.AlbumTB = new RocksmithTookitGUI.CueTextBox();
+            this.ArtistTB = new RocksmithTookitGUI.CueTextBox();
+            this.SongDisplayNameTB = new RocksmithTookitGUI.CueTextBox();
+            this.DlcNameTB = new RocksmithTookitGUI.CueTextBox();
             this.SuspendLayout();
             // 
             // albumArtButton
@@ -50,17 +50,17 @@
             this.albumArtButton.Name = "albumArtButton";
             this.albumArtButton.Size = new System.Drawing.Size(75, 23);
             this.albumArtButton.TabIndex = 41;
-            this.albumArtButton.Text = "...";
+            this.albumArtButton.Text = "Browse";
             this.albumArtButton.UseVisualStyleBackColor = true;
             this.albumArtButton.Click += new System.EventHandler(this.albumArtButton_Click);
             // 
             // AlbumArtPathTB
             // 
+            this.AlbumArtPathTB.Cue = "Album Art File";
             this.AlbumArtPathTB.Location = new System.Drawing.Point(2, 55);
             this.AlbumArtPathTB.Name = "AlbumArtPathTB";
             this.AlbumArtPathTB.Size = new System.Drawing.Size(454, 20);
             this.AlbumArtPathTB.TabIndex = 40;
-            this.AlbumArtPathTB.Text = "Album Art";
             // 
             // dlcGenerateButton
             // 
@@ -78,17 +78,17 @@
             this.openOggButton.Name = "openOggButton";
             this.openOggButton.Size = new System.Drawing.Size(75, 23);
             this.openOggButton.TabIndex = 38;
-            this.openOggButton.Text = "Open";
+            this.openOggButton.Text = "Browse";
             this.openOggButton.UseVisualStyleBackColor = true;
             this.openOggButton.Click += new System.EventHandler(this.openOggButton_Click);
             // 
             // OggPathTB
             // 
+            this.OggPathTB.Cue = "Converted WWise 2010 .ogg File";
             this.OggPathTB.Location = new System.Drawing.Point(5, 329);
             this.OggPathTB.Name = "OggPathTB";
             this.OggPathTB.Size = new System.Drawing.Size(451, 20);
             this.OggPathTB.TabIndex = 37;
-            this.OggPathTB.Text = "Ogg File";
             // 
             // arrangementRemoveButton
             // 
@@ -129,43 +129,43 @@
             // 
             // YearTB
             // 
+            this.YearTB.Cue = "Release Year";
             this.YearTB.Location = new System.Drawing.Point(216, 28);
             this.YearTB.Name = "YearTB";
             this.YearTB.Size = new System.Drawing.Size(100, 20);
             this.YearTB.TabIndex = 32;
-            this.YearTB.Text = "1997";
             // 
             // AlbumTB
             // 
+            this.AlbumTB.Cue = "Album";
             this.AlbumTB.Location = new System.Drawing.Point(109, 28);
             this.AlbumTB.Name = "AlbumTB";
             this.AlbumTB.Size = new System.Drawing.Size(101, 20);
             this.AlbumTB.TabIndex = 31;
-            this.AlbumTB.Text = "Album";
             // 
             // ArtistTB
             // 
+            this.ArtistTB.Cue = "Artist";
             this.ArtistTB.Location = new System.Drawing.Point(3, 29);
             this.ArtistTB.Name = "ArtistTB";
             this.ArtistTB.Size = new System.Drawing.Size(100, 20);
             this.ArtistTB.TabIndex = 30;
-            this.ArtistTB.Text = "Artist";
             // 
             // SongDisplayNameTB
             // 
+            this.SongDisplayNameTB.Cue = "Song Title";
             this.SongDisplayNameTB.Location = new System.Drawing.Point(109, 3);
             this.SongDisplayNameTB.Name = "SongDisplayNameTB";
             this.SongDisplayNameTB.Size = new System.Drawing.Size(428, 20);
             this.SongDisplayNameTB.TabIndex = 29;
-            this.SongDisplayNameTB.Text = "SongDisplayName";
             // 
             // DlcNameTB
             // 
+            this.DlcNameTB.Cue = "DLC Name";
             this.DlcNameTB.Location = new System.Drawing.Point(3, 3);
             this.DlcNameTB.Name = "DlcNameTB";
             this.DlcNameTB.Size = new System.Drawing.Size(100, 20);
             this.DlcNameTB.TabIndex = 28;
-            this.DlcNameTB.Text = "DLCName";
             // 
             // DLCPackageCreator
             // 
@@ -195,18 +195,18 @@
         #endregion
 
         private System.Windows.Forms.Button albumArtButton;
-        private System.Windows.Forms.TextBox AlbumArtPathTB;
+        private RocksmithTookitGUI.CueTextBox AlbumArtPathTB;
         private System.Windows.Forms.Button dlcGenerateButton;
         private System.Windows.Forms.Button openOggButton;
-        private System.Windows.Forms.TextBox OggPathTB;
+        private RocksmithTookitGUI.CueTextBox OggPathTB;
         private System.Windows.Forms.Button arrangementRemoveButton;
         private System.Windows.Forms.Button arrangementAddButton;
         private System.Windows.Forms.ListBox ArrangementLB;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox YearTB;
-        private System.Windows.Forms.TextBox AlbumTB;
-        private System.Windows.Forms.TextBox ArtistTB;
-        private System.Windows.Forms.TextBox SongDisplayNameTB;
-        private System.Windows.Forms.TextBox DlcNameTB;
+        private RocksmithTookitGUI.CueTextBox YearTB;
+        private RocksmithTookitGUI.CueTextBox AlbumTB;
+        private RocksmithTookitGUI.CueTextBox ArtistTB;
+        private RocksmithTookitGUI.CueTextBox SongDisplayNameTB;
+        private RocksmithTookitGUI.CueTextBox DlcNameTB;
     }
 }
