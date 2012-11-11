@@ -4,12 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using RocksmithSngCreator;
+using RocksmithToolkitLib.Sng;
 
 namespace RocksmithTookitGUI.SngFileCreator
 {
-    public enum ArrangementType { Instrument, Vocal }
-
     public partial class SngFileCreator : UserControl
     {
         public SngFileCreator()
@@ -74,15 +72,7 @@ namespace RocksmithTookitGUI.SngFileCreator
 
             try
             {
-                var sngFileWriter = new SngFileWriter(Platform);
-                if (ArrangementType == ArrangementType.Instrument)
-                {
-                    sngFileWriter.WriteRocksmithSongChart(InputXmlFile, OutputSngFile);
-                }
-                else
-                {
-                    sngFileWriter.WriteRocksmithVocalChart(InputXmlFile, OutputSngFile);
-                }
+                SngFileWriter.Write(InputXmlFile, OutputSngFile, ArrangementType, Platform);
                 MessageBox.Show("Process Complete", "File Creation Process");
             }
             catch (Exception ex)

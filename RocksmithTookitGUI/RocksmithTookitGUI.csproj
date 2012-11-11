@@ -156,10 +156,6 @@
     <None Include="Resources\pick.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RocksmithCustomSongCreator\RocksmithSngFileCreator.csproj">
-      <Project>{2CDE8634-9FC7-4ED0-8040-8D0A89CDB464}</Project>
-      <Name>RocksmithSngFileCreator</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
       <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
       <Name>RocksmithToolkitLib</Name>

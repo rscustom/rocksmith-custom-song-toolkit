@@ -77,12 +77,15 @@
     <Compile Include="DLCPackage\Packer.cs" />
     <Compile Include="DLCPackage\RandomGenerator.cs" />
     <Compile Include="DLCPackage\RijndaelEncryptor.cs" />
+    <Compile Include="EnumerableExtension.cs" />
     <Compile Include="Ogg\OggFile.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Sng\SngFile.cs" />
+    <Compile Include="Sng\SngFileWriter.cs" />
     <Compile Include="Xml\Vocals.cs" />
     <Compile Include="Xml\Song.cs" />
     <Compile Include="DLCPackage\SoundBankGenerator.cs" />
