@@ -23,7 +23,6 @@ namespace RocksmithToolkitLib.Sng
     {
         public static void Write(string inputFile, string outputFile, ArrangementType arrangementType, GamePlatform platform)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(Song));
             using (var reader = new StreamReader(inputFile))
             {
                 var bitConverter = platform == GamePlatform.Pc
@@ -32,11 +31,13 @@ namespace RocksmithToolkitLib.Sng
 
                 if (arrangementType == ArrangementType.Instrument)
                 {
+                    var serializer = new XmlSerializer(typeof(Song));
                     var song = (Song)serializer.Deserialize(reader);
                     WriteRocksmithSngFile(song, outputFile, bitConverter);
                 }
                 else
                 {
+                    var serializer = new XmlSerializer(typeof(Vocals));
                     var vocals = (Vocals)serializer.Deserialize(reader);
                     WriteRocksmithVocalsFile(vocals, outputFile, bitConverter);
                 }
