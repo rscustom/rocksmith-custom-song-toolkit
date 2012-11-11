@@ -17,7 +17,7 @@ namespace RocksmithDLCCreator
         {
             Manifest = new Manifest.Manifest();
         }
-        public string GenerateManifest(string dlcName, List<Arrangement> arrangements)
+        public string GenerateManifest(string dlcName, IList<Arrangement> arrangements)
         {
             var manifest = Manifest;
             manifest.Entries = new Dictionary<string, Dictionary<string, Manifest.Attributes>>();
