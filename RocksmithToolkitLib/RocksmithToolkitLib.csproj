@@ -74,7 +74,9 @@
     <Compile Include="DLCPackage\Manifest\Phrase.cs" />
     <Compile Include="DLCPackage\Manifest\PhraseIteration.cs" />
     <Compile Include="DLCPackage\Manifest\Section.cs" />
+    <Compile Include="DLCPackage\Packer.cs" />
     <Compile Include="DLCPackage\RandomGenerator.cs" />
+    <Compile Include="DLCPackage\RijndaelEncryptor.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

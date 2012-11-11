@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using RocksmithDLCPackager;
+using RocksmithToolkitLib.DLCPackage;
 
 namespace RocksmithTookitGUI.DLCPackerUnpacker
 {
     public partial class DLCPackerUnpacker : UserControl
     {
-        private readonly Packer packer;
-
         public DLCPackerUnpacker()
         {
             InitializeComponent();
-            packer = new Packer();
         }
 
         private void packButton_Click(object sender, EventArgs e)
@@ -37,7 +34,7 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
                 saveFileName = sfd.FileName;
             }
 
-            packer.Pack(sourcePath, saveFileName, useCryptography);
+            Packer.Pack(sourcePath, saveFileName, useCryptography);
         }
 
         private void unpackButton_Click(object sender, EventArgs e)
@@ -59,7 +56,7 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
                 savePath = fbd.SelectedPath;
             }
 
-            packer.Unpack(sourceFileName, savePath, useCryptography);
+            Packer.Unpack(sourceFileName, savePath, useCryptography);
         }
     }
 }

@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithCustomSongCreatorT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithEncoder", "RocksmithEncoder\RocksmithEncoder.csproj", "{3515F695-7B40-4B51-A39B-244C1469ABE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithDLCPackager", "RocksmithDLCPackager\RocksmithDLCPackager.csproj", "{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithTookitGUI", "RocksmithTookitGUI\RocksmithTookitGUI.csproj", "{1A3DEAD6-14F3-43C3-B15C-A866D48FEF61}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithToolkitLib", "RocksmithToolkitLib\RocksmithToolkitLib.csproj", "{2231C13A-14F6-478A-96D7-D1D3E1094CD6}"
@@ -50,16 +48,6 @@ Global
 		{3515F695-7B40-4B51-A39B-244C1469ABE5}.Release|Any CPU.ActiveCfg = Release|x86
 		{3515F695-7B40-4B51-A39B-244C1469ABE5}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{3515F695-7B40-4B51-A39B-244C1469ABE5}.Release|x86.ActiveCfg = Release|x86
-		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Debug|x86.ActiveCfg = Debug|x86
-		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Debug|x86.Build.0 = Debug|x86
-		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|Any CPU.ActiveCfg = Release|x86
-		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|Mixed Platforms.Build.0 = Release|x86
-		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|x86.ActiveCfg = Release|x86
-		{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}.Release|x86.Build.0 = Release|x86
 		{1A3DEAD6-14F3-43C3-B15C-A866D48FEF61}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{1A3DEAD6-14F3-43C3-B15C-A866D48FEF61}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{1A3DEAD6-14F3-43C3-B15C-A866D48FEF61}.Debug|Mixed Platforms.Build.0 = Debug|x86

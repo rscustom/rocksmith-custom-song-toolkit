@@ -160,10 +160,6 @@
       <Project>{2CDE8634-9FC7-4ED0-8040-8D0A89CDB464}</Project>
       <Name>RocksmithSngFileCreator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RocksmithDLCPackager\RocksmithDLCPackager.csproj">
-      <Project>{81634B2B-1CA3-48A6-B83D-6C7021C4FB7B}</Project>
-      <Name>RocksmithDLCPackager</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RocksmithEncoder\RocksmithEncoder.csproj">
       <Project>{3515F695-7B40-4B51-A39B-244C1469ABE5}</Project>
       <Name>RocksmithEncoder</Name>
