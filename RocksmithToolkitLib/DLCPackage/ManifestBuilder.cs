@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using System.IO;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.XML;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage
 {

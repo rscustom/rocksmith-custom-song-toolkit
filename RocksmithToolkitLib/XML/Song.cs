@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.XML
+namespace RocksmithToolkitLib.Xml
 {
     [XmlRoot("song", Namespace = "", IsNullable = false)]
     public class Song

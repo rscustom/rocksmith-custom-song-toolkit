@@ -1,7 +1,7 @@
 using System;
 using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.XML
+namespace RocksmithToolkitLib.Xml
 {
     [XmlRoot("vocals", Namespace = "", IsNullable = false)]
     public class Vocals

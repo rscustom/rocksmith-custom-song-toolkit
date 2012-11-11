@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using RocksmithEncoder;
+using RocksmithToolkitLib.Ogg;
 
 namespace RocksmithTookitGUI.OggConverter
 {
@@ -49,19 +49,16 @@ namespace RocksmithTookitGUI.OggConverter
             if (string.IsNullOrEmpty(InputOggFile)) return;
             if (string.IsNullOrEmpty(OutputOggFile)) return;
 
+            var oggFile = new OggFile();
             try
             {
-                var oggFile = new OggFile();
-                var isOggFileValid = oggFile.LoadOgg(InputOggFile);
-
-                if (!isOggFileValid)
-                {
-                    MessageBox.Show("The selected input OGG file is not a valid WWise 2010.3.3 OGG file.", "OGG Conversion Process");
-                    return;
-                }
-
+                oggFile.LoadOgg(InputOggFile);
                 oggFile.WriteOgg(OutputOggFile);
                 MessageBox.Show("Conversion complete!", "OGG Conversion Process");
+            }
+            catch (InvalidDataException ex)
+            {
+                MessageBox.Show(ex.Message, "OGG Conversion Process");
             }
             catch (Exception ex)
             {
