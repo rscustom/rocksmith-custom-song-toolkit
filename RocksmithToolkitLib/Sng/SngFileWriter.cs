@@ -214,8 +214,14 @@ namespace RocksmithToolkitLib.Sng
             // output phrases
             for (int i = 0; i < phrases.Phrase.Length; i++)
             {
+                // unusued padding (?)
+                w.Write(new byte());
+
                 // disparity
-                w.Write(phrases.Phrase[i].Disparity == 1 ? Convert.ToInt32(256) : Convert.ToInt32(0));
+                w.Write(phrases.Phrase[i].Disparity == 1 ? true : false);
+
+                // unused padding (?)
+                w.Write(new byte[2]);
 
                 // maxDifficulty tag
                 w.Write(phrases.Phrase[i].MaxDifficulty);
@@ -663,8 +669,6 @@ namespace RocksmithToolkitLib.Sng
         // COMPLETE except hardcoded fields
         private static void WriteRocksmithSngLevelNotes(EndianBinaryWriter w, SongPhraseIterations phraseIterations, SongNotes notes, SongChords chords, Single songLength)
         {
-            //int notesCount = 0;
-            //int chordsCount = 0;
             List<TimeLinkedEntity> notesChords = new List<TimeLinkedEntity>();
 
             // add notes to combined note/chord array
