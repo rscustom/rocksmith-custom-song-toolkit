@@ -221,16 +221,17 @@ struct UNKNOWN2_SECTION
     struct UNKNOWN2 Unknowns[Count];
 };
 
+struct UNKNOWN_FINAL
+{
+    char _unknown1[64];
+    long _unknown2;
+    long _unknown3;
+};
+
 struct UNKNOWN_FINAL_SECTION
 {
     long Count;
-    struct UNKNOWN1 Unknowns[Count];
-};
-
-struct UNKNOWN_FINAL
-{
-    char _unknown1[68];
-    long _unknown2;
+    struct UNKNOWN_FINAL Unknowns[Count];
 };
 
 struct HAND_SHAPE
