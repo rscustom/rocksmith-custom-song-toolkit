@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NDesk.Options</id>
+    <version>0.2.1</version>
+    <title>NDesk.Options</title>
+    <authors>NDesk</authors>
+    <owners>NDesk</owners>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>NDesk.Options is a callback-based program option parser for C#.</description>
+    <summary>NDesk.Options is a callback-based program option parser for C#.</summary>
+  </metadata>
+</package>
