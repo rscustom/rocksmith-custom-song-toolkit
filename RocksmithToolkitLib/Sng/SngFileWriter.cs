@@ -173,7 +173,7 @@ namespace RocksmithToolkitLib.Sng
 
                 // measure
                 Int16 measure = Convert.ToInt16(ebeat.Measure);
-                if (measure > 0)
+                if (measure >= 0)
                 {
                     currentMeasure = measure;
                     currentMeasureBeat = 0;
@@ -903,7 +903,7 @@ namespace RocksmithToolkitLib.Sng
             w.Write(new byte[4]); // header with repeating array; song works in game if array is defaulted to 0 count so will leave this alone for now
 
             // unknown section
-            w.Write(new byte[4]); // header with repeating array - seems to be populated only in training sng files
+            w.Write(new byte[4]); // header with repeating array - only populated in limited songs
         }
     }
 }
