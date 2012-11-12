@@ -15,7 +15,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 GeneratePackagePsarc(packPsarcStream, info.Name, info.Album, info.AlbumArtPath, info.OggPath, info.Arrangements);
                 using (var fl = File.Create(packagePath))
-                    RijndaelEncryptor.Encrypt(packPsarcStream, fl);
+                    RijndaelEncryptor.Encrypt(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
             }
         }
 
