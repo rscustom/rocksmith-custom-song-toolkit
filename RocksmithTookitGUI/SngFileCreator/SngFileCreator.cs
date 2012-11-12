@@ -13,6 +13,7 @@ namespace RocksmithTookitGUI.SngFileCreator
         public SngFileCreator()
         {
             InitializeComponent();
+            tuningComboBox.SelectedIndex = 0;
         }
 
         private string InputXmlFile
@@ -51,6 +52,14 @@ namespace RocksmithTookitGUI.SngFileCreator
             }
         }
 
+        private InstrumentTuning Tuning
+        {
+            get
+            {
+                return (InstrumentTuning)tuningComboBox.SelectedIndex;
+            }
+        }
+
         private void xmlBrowseButton_Click(object sender, EventArgs e)
         {
             using (var fd = new OpenFileDialog())
@@ -72,7 +81,7 @@ namespace RocksmithTookitGUI.SngFileCreator
 
             try
             {
-                SngFileWriter.Write(InputXmlFile, OutputSngFile, ArrangementType, Platform);
+                SngFileWriter.Write(InputXmlFile, OutputSngFile, ArrangementType, Platform, Tuning);
                 MessageBox.Show("Process Complete", "File Creation Process");
             }
             catch (Exception ex)

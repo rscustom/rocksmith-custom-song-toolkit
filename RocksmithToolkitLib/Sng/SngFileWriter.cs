@@ -12,6 +12,7 @@ namespace RocksmithToolkitLib.Sng
 {
     public enum GamePlatform { Pc, Console };
     public enum ArrangementType { Instrument, Vocal }
+    public enum InstrumentTuning {  Standard, DropD, EFlat, OpenG };
 
     public struct TimeLinkedEntity
     {
@@ -21,7 +22,7 @@ namespace RocksmithToolkitLib.Sng
     
     public static class SngFileWriter
     {
-        public static void Write(string inputFile, string outputFile, ArrangementType arrangementType, GamePlatform platform)
+        public static void Write(string inputFile, string outputFile, ArrangementType arrangementType, GamePlatform platform, InstrumentTuning tuning)
         {
             using (var reader = new StreamReader(inputFile))
             {
@@ -33,7 +34,7 @@ namespace RocksmithToolkitLib.Sng
                 {
                     var serializer = new XmlSerializer(typeof(Song));
                     var song = (Song)serializer.Deserialize(reader);
-                    WriteRocksmithSngFile(song, outputFile, bitConverter);
+                    WriteRocksmithSngFile(song, tuning, outputFile, bitConverter);
                 }
                 else
                 {
@@ -92,7 +93,7 @@ namespace RocksmithToolkitLib.Sng
         }
 
         // COMPLETE
-        private static void WriteRocksmithSngFile(Song rocksmithSong, string outputFile, EndianBitConverter bitConverter)
+        private static void WriteRocksmithSngFile(Song rocksmithSong, InstrumentTuning tuning, string outputFile, EndianBitConverter bitConverter)
         {
             // WRITE THE .SNG FILE
             using (FileStream fs = new FileStream(outputFile, FileMode.Create))
@@ -138,7 +139,7 @@ namespace RocksmithToolkitLib.Sng
                 WriteRocksmithSngLevels(w, rocksmithSong.Levels, rocksmithSong.SongLength, rocksmithSong.Phrases, rocksmithSong.PhraseIterations);                   
 
                 // SONG META DATA
-                WriteRocksmithSngMetaDetails(w, rocksmithSong);
+                WriteRocksmithSngMetaDetails(w, rocksmithSong, tuning);
             }
         }
 
@@ -815,7 +816,7 @@ namespace RocksmithToolkitLib.Sng
         }
 
         // INCOMPLETE
-        private static void WriteRocksmithSngMetaDetails(EndianBinaryWriter w, Song s)
+        private static void WriteRocksmithSngMetaDetails(EndianBinaryWriter w, Song s, InstrumentTuning tuning)
         {
             // unknown
             w.Write(0); // populated on training charts only (?)    
@@ -881,20 +882,20 @@ namespace RocksmithToolkitLib.Sng
             // song length
             w.Write(s.SongLength);
 
-            // unknown
-            w.Write(new byte[4]); // blank 4 bytes in NumberThirteen_Lead.sng
+            // tuning
+            w.Write((Int32)tuning);
 
             // unknown
             w.Write(new byte[4]); // float with 10.2927 in NumberThirteen_Lead.sng
 
             // unknown
-            w.Write(s.Ebeats.Ebeat[0].Time); // wrong; float with time of first beat; time of phraseid=1 (not 0) in somes examples;  float with time of first note where ignore <> 1
+            w.Write(s.Ebeats.Ebeat[0].Time); // wrong; time of phraseid=1 (not 0) in somes examples?  float with time of first note where ignore <> 1?
             
             // unknown
-            w.Write(s.Ebeats.Ebeat[0].Time); // wrong; float with time of first beat; time of phraseid=1 (not 0) in somes examples;  float with time of first note where ignore <> 1
+            w.Write(s.Ebeats.Ebeat[0].Time); // wrong; time of phraseid=1 (not 0) in somes examples;  float with time of first note where ignore <> 1??
             
             // unknown
-            w.Write(new byte[4]); // float with 1.9618 in NumberThirteen_Lead.sng....  number 4?
+            w.Write(new byte[4]); // ???
 
             // unknown section
             w.Write(new byte[4]); // header with repeating array; song works in game if array is defaulted to 0 count so will leave this alone for now

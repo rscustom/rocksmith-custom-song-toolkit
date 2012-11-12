@@ -14,6 +14,7 @@ namespace Xml2Sng
         public string OutputFile { get; set; }
         public GamePlatform Platform { get; set; }
         public ArrangementType ArrangementType { get; set; }
+        public InstrumentTuning Tuning { get; set; }
         public bool ShowHelp { get; set; }
     }
 
@@ -32,7 +33,8 @@ namespace Xml2Sng
             _arguments = new Arguments
             {
                 Platform = GamePlatform.Pc,
-                ArrangementType = ArrangementType.Instrument
+                ArrangementType = ArrangementType.Instrument,
+                Tuning = InstrumentTuning.Standard
             };
             _options = new OptionSet
             {
@@ -40,7 +42,8 @@ namespace Xml2Sng
                 { "i|input=", "The input XML file (required)", v => _arguments.InputFile = v },
                 { "o|output=", "The output SNG file", v => _arguments.OutputFile = v },
                 { "console", "Generate a big-endian (console) file instead of little-endian (PC)", v => { if (v != null) _arguments.Platform = GamePlatform.Console; }},
-                { "vocal", "Generate from a vocal XML file instead of a song XML file", v => { if (v != null) _arguments.ArrangementType = ArrangementType.Vocal; }}
+                { "vocal", "Generate from a vocal XML file instead of a song XML file", v => { if (v != null) _arguments.ArrangementType = ArrangementType.Vocal; }}                
+                // TODO: add parameter to pass tuning option
             };
         }
 
@@ -77,7 +80,7 @@ namespace Xml2Sng
                 return;
             }
 
-            SngFileWriter.Write(_arguments.InputFile, _arguments.OutputFile, _arguments.ArrangementType, _arguments.Platform);
+            SngFileWriter.Write(_arguments.InputFile, _arguments.OutputFile, _arguments.ArrangementType, _arguments.Platform, _arguments.Tuning);
             Console.WriteLine(string.Format("Successfully converted XML file to SNG file."));
             Console.WriteLine("\tInput:  " + _arguments.InputFile);
             Console.WriteLine("\tOutput: " + _arguments.OutputFile);
