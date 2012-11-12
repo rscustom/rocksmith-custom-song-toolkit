@@ -352,7 +352,7 @@ struct METADATA_SECTION
     float _unknown8;
     float _unknown9;
     float _unknown10;
-    long _unknown11;
+    long MaxDifficulty;
     struct UNKNOWN2_SECTION _unknownSection;
     struct UNKNOWN_FINAL_SECTION _unknownFinalSection;
 };

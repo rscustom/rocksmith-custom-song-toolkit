@@ -791,9 +791,10 @@ namespace RocksmithToolkitLib.Sng
                 // high density chord
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? new byte() : ((SongChord)notesChords[i].Entity).HighDensity);
 
-                // unknown
-                w.Write(Convert.ToInt16(246));  // wrong
-                w.Write(Convert.ToInt16(7472)); // wrong
+                // this position is sometimes empty bytes, often the values below, or other values as well 
+                w.Write(new byte[4]);
+                //w.Write(Convert.ToInt16(246));
+                //w.Write(Convert.ToInt16(7472));
 
                 // phrase iteration start index and id ????
                 bool phraseStartIterationFound = false;
@@ -894,8 +895,9 @@ namespace RocksmithToolkitLib.Sng
             // unknown
             w.Write(s.Ebeats.Ebeat[0].Time); // wrong; time of phraseid=1 (not 0) in somes examples;  float with time of first note where ignore <> 1??
             
-            // unknown
-            w.Write(new byte[4]); // ???
+            // max difficulty
+            int maxDifficulty = s.Phrases.Phrase.Max(p => p.MaxDifficulty);
+            w.Write(maxDifficulty);
 
             // unknown section
             w.Write(new byte[4]); // header with repeating array; song works in game if array is defaulted to 0 count so will leave this alone for now
