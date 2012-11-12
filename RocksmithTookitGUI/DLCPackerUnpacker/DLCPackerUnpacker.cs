@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage;
 
 namespace RocksmithTookitGUI.DLCPackerUnpacker
@@ -20,7 +21,7 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
             string saveFileName;
             var useCryptography = useCryptographyCheckbox.Checked;
 
-            using (var fbd = new FolderBrowserDialog())
+            using (var fbd = new VistaFolderBrowserDialog())
             {
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
@@ -35,28 +36,37 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
             }
 
             Packer.Pack(sourcePath, saveFileName, useCryptography);
+
+            MessageBox.Show("Packing is complete.", "DLC Packer");
         }
 
         private void unpackButton_Click(object sender, EventArgs e)
         {
-            string sourceFileName;
+            IList<string> sourceFileNames;
             string savePath;
             var useCryptography = useCryptographyCheckbox.Checked;
 
             using (var ofd = new OpenFileDialog())
             {
+                ofd.Multiselect = true;
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
-                sourceFileName = ofd.FileName;
+                sourceFileNames = ofd.FileNames;
             }
-            using (var fbd = new FolderBrowserDialog())
+            using (var fbd = new VistaFolderBrowserDialog())
             {
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
                 savePath = fbd.SelectedPath;
             }
 
-            Packer.Unpack(sourceFileName, savePath, useCryptography);
+            foreach (string sourceFileName in sourceFileNames)
+            {
+                Application.DoEvents();
+                Packer.Unpack(sourceFileName, savePath, useCryptography);
+            }
+
+            MessageBox.Show("Unpacking is complete.", "DLC Packer");
         }
     }
 }

@@ -81,6 +81,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 Arrangements = arrangements
             };
             RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, info);
+
+            MessageBox.Show("Package was generated.", "DLC Package Creator");
         }
 
         private void albumArtButton_Click(object sender, EventArgs e)
