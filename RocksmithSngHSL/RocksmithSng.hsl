@@ -60,7 +60,10 @@ struct EBEATS_SECTION
 
 struct PHRASE
 {
-    long Disparity;
+    bool Solo;
+    bool Disparity;
+    bool Ignore;
+    bool _unusedUnknown;
     long MaxDifficulty;
     long PhraseIterationLinks;
     char Name[32];
