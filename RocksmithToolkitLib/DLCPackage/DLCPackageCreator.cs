@@ -15,7 +15,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 GeneratePackagePsarc(packPsarcStream, info.Name, info.Album, info.AlbumArtPath, info.OggPath, info.Arrangements);
                 using (var fl = File.Create(packagePath))
-                    RijndaelEncryptor.Encrypt(packPsarcStream, fl);
+                    RijndaelEncryptor.Encrypt(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
             }
         }
 
@@ -158,7 +158,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 ToneGenerator.Generate(dlcName, toneManifestStream, toneXblockStream, toneAggregateGraphStream);
                 GenerateTonePackageId(packageIdStream, dlcName);
 
-                tonePsarc.AddEntry(String.Format("Exports/Pedals/DLC_Tone_{0}", dlcName), toneXblockStream);
+                tonePsarc.AddEntry(String.Format("Exports/Pedals/DLC_Tone_{0}.xblock", dlcName), toneXblockStream);
                 tonePsarc.AddEntry("Manifests/tone.manifest.json", toneManifestStream);
                 tonePsarc.AddEntry("AggregateGraph.nt", toneAggregateGraphStream);
                 tonePsarc.AddEntry("PACKAGE_ID", packageIdStream);

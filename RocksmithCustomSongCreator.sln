@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xml2sng", "RocksmithToolkit
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RocksmithToolkitCLI", "RocksmithToolkitCLI", "{7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pcdecrypt", "RocksmithToolkitCLI\pcdecrypt\pcdecrypt.csproj", "{9190164B-E755-4C8D-812E-70BE8FA286DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,11 +63,22 @@ Global
 		{48703F6C-9F98-4534-AB1D-67856A84D806}.Release|Mixed Platforms.Build.0 = Release|x86
 		{48703F6C-9F98-4534-AB1D-67856A84D806}.Release|x86.ActiveCfg = Release|x86
 		{48703F6C-9F98-4534-AB1D-67856A84D806}.Release|x86.Build.0 = Release|x86
+		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Debug|x86.ActiveCfg = Debug|x86
+		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Debug|x86.Build.0 = Debug|x86
+		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Release|Any CPU.ActiveCfg = Release|x86
+		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Release|Mixed Platforms.Build.0 = Release|x86
+		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Release|x86.ActiveCfg = Release|x86
+		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{48703F6C-9F98-4534-AB1D-67856A84D806} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
+		{9190164B-E755-4C8D-812E-70BE8FA286DD} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 	EndGlobalSection
 EndGlobal

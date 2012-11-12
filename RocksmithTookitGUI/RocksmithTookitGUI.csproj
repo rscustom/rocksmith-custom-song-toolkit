@@ -11,7 +11,7 @@
     <RootNamespace>RocksmithTookitGUI</RootNamespace>
     <AssemblyName>RocksmithTookitGUI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ookii.Dialogs">
+      <HintPath>..\lib\OokiiDialogs\Ookii.Dialogs.dll</HintPath>
+    </Reference>
     <Reference Include="PSARC">
       <HintPath>..\lib\PSARC.dll</HintPath>
     </Reference>

@@ -44,7 +44,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 using (var outputFileStream = File.Create(saveFileName))
                 {
                     if (useCryptography)
-                        RijndaelEncryptor.Encrypt(psarcStream, outputFileStream);
+                        RijndaelEncryptor.Encrypt(psarcStream, outputFileStream, RijndaelEncryptor.DLCKey);
                     else
                         psarcStream.CopyTo(outputFileStream);
                 }
@@ -72,7 +72,7 @@ namespace RocksmithToolkitLib.DLCPackage
             using (var inputStream = new MemoryStream())
             {
                 if (useCryptography)
-                    RijndaelEncryptor.Decrypt(inputFileStream, inputStream);
+                    RijndaelEncryptor.Decrypt(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
                 else
                     inputFileStream.CopyTo(inputStream);
                 ExtractPSARC(sourceFileName, savePath, inputStream);
