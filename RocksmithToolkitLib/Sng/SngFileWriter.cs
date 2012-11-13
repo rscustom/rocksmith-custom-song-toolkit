@@ -829,13 +829,13 @@ namespace RocksmithToolkitLib.Sng
             w.Write(0); // populated on training charts only (?)   
 
             // unknown
-            w.Write(0); // float value typically around ~4.5
+            w.Write((Single)4.5); // float value typically around ~4.5
 
             // unknown
-            w.Write(1086698382); // seems to be related to scoring
+            w.Write(0); // seems to be related to scoring
 
             // unknown
-            w.Write(954437177); // seems to be related to scoring; float value typically around ~3.5
+            w.Write((Single)3.5); // seems to be related to scoring; float value typically around ~3.5
       
             // song beat timing
             if (s.Ebeats.Ebeat.Length < 2)
