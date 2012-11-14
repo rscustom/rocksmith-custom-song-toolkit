@@ -915,10 +915,17 @@ namespace RocksmithToolkitLib.Sng
             w.Write(new byte[4]); // float with 10.2927 in NumberThirteen_Lead.sng
 
             // unknown
-            w.Write(s.Ebeats.Ebeat[0].Time); // wrong; time of phraseid=1 (not 0) in somes examples?  float with time of first note where ignore <> 1?
+            // from 6AMSalvation_Combo.xml value = 11.525
+            // which does not match any pharse iteration start time
+            // and does not match first ebeat time
+            // and does not match any section start time
+            // does match first event time of E3 (although this is not a match in other files)
+            // does not match any note times on 1st difficulty level
+            // nor an anchor time on 1st difficulty level
+            w.Write(s.Ebeats.Ebeat[0].Time); // wrong
             
             // unknown
-            w.Write(s.Ebeats.Ebeat[0].Time); // wrong; time of phraseid=1 (not 0) in somes examples;  float with time of first note where ignore <> 1??
+            w.Write(s.Ebeats.Ebeat[0].Time); // wrong
             
             // max difficulty
             int maxDifficulty = s.Phrases.Phrase.Max(p => p.MaxDifficulty);
