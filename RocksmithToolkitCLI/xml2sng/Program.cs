@@ -48,29 +48,7 @@ namespace Xml2Sng
                 int.Parse(match.Groups[6].Value)
             };
 
-            if (tuningValues.All(tv => tv == 0))
-                return InstrumentTuning.Standard;
-
-            if (tuningValues.All(tv => tv == -1))
-                return InstrumentTuning.EFlat;
-
-            if (tuningValues[0] == -2 &&
-                tuningValues[1] == 0 &&
-                tuningValues[2] == 0 &&
-                tuningValues[3] == 0 &&
-                tuningValues[4] == 0 &&
-                tuningValues[5] == 0)
-                return InstrumentTuning.DropD;
-
-            if (tuningValues[0] == -2 &&
-                tuningValues[1] == -2 &&
-                tuningValues[2] == 0 &&
-                tuningValues[3] == 0 &&
-                tuningValues[4] == 0 &&
-                tuningValues[5] == -2)
-                return InstrumentTuning.OpenG;
-
-            throw new OptionException("Unsupported alternate tuning", "tuning");
+            return new InstrumentTuning(tuningValues);
         }
 
         private static OptionSet GetOptions(Arguments outputArguments)
