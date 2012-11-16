@@ -12,52 +12,33 @@ namespace RocksmithToolkitLib.Sng
 {
     public enum GamePlatform { Pc, Console };
     public enum ArrangementType { Instrument, Vocal }
-    public class InstrumentTuning
-    {
-        public static readonly InstrumentTuning Standard = new InstrumentTuning(new[] { 0, 0, 0, 0, 0, 0 });
-        public static readonly InstrumentTuning DropD = new InstrumentTuning(new[] { -2, 0, 0, 0, 0, 0 });
-        public static readonly InstrumentTuning EFlat = new InstrumentTuning(new[] { -1, -1, -1, -1, -1, -1 });
-        public static readonly InstrumentTuning OpenG = new InstrumentTuning(new[] { -2, -2, 0, 0, 0, -2 });
-
-        public static readonly IList<InstrumentTuning> SupportedTunings = new[] { Standard, DropD, EFlat, OpenG };
-
-        // MIDI values for EADGBe
+    public enum InstrumentTuning { Standard, DropD, EFlat, OpenG }
+    public static class InstrumentTuningExtensions {
+        private static readonly int[] StandardOffsets = { 0, 0, 0, 0, 0, 0 };
+        private static readonly int[] DropDOffsets = { -2, 0, 0, 0, 0, 0 };
+        private static readonly int[] EFlatOffsets = { -1, -1, -1, -1, -1, -1 };
+        private static readonly int[] OpenGOffsets = { -2, -2, 0, 0, 0, -2 };
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
-
-        public InstrumentTuning(IList<int> tuningOffsets)
+        public static IList<int> GetOffsets(this InstrumentTuning tuning)
         {
-            Offsets = tuningOffsets;
-        }
-
-        public IList<int> Offsets { get; private set; }
-
-        public int Id
-        {
-            get
+            switch (tuning)
             {
-                var id = SupportedTunings.IndexOf(this);
-                return id == -1 ? 0 : id;
+                case InstrumentTuning.Standard:
+                    return StandardOffsets;
+                case InstrumentTuning.DropD:
+                    return DropDOffsets;
+                case InstrumentTuning.EFlat:
+                    return EFlatOffsets;
+                case InstrumentTuning.OpenG:
+                    return OpenGOffsets;
+                default:
+                    throw new InvalidOperationException("Unexpected tuning value");
             }
         }
-        
-        public int GetMidiNote(int stringNumber, int fret)
+        public static int GetMidiNote(this InstrumentTuning tuning, int stringNumber, int fret)
         {
             if (fret == -1) return -1;
-            return StandardMidiNotes[stringNumber] + Offsets[stringNumber] + fret;
-        }
-
-        public override bool Equals(object obj)
-        {
-            var tuning = obj as InstrumentTuning;
-            return tuning != null
-                && tuning.Offsets
-                    .Zip(Offsets, (x, y) => new { x, y })
-                    .All(pair => pair.x == pair.y);
-        }
-
-        public override int GetHashCode()
-        {
-            return Offsets.Aggregate(0, (hash, next) => hash ^ next.GetHashCode());
+            return StandardMidiNotes[stringNumber] + tuning.GetOffsets()[stringNumber] + fret;
         }
     };
 
@@ -931,7 +912,7 @@ namespace RocksmithToolkitLib.Sng
             w.Write(s.SongLength);
 
             // tuning
-            w.Write(tuning.Id);
+            w.Write((Int32)tuning);
 
             // unknown
             w.Write(new byte[4]); // float with 10.2927 in NumberThirteen_Lead.sng

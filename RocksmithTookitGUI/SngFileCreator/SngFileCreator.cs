@@ -56,7 +56,7 @@ namespace RocksmithTookitGUI.SngFileCreator
         {
             get
             {
-                return InstrumentTuning.SupportedTunings[tuningComboBox.SelectedIndex];
+                return (InstrumentTuning)tuningComboBox.SelectedIndex;
             }
         }
 

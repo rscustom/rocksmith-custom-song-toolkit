@@ -48,7 +48,12 @@ namespace Xml2Sng
                 int.Parse(match.Groups[6].Value)
             };
 
-            return new InstrumentTuning(tuningValues);
+            var supportedTuning = Enum.GetValues(typeof(InstrumentTuning))
+                .Cast<InstrumentTuning?>()
+                .FirstOrDefault(t => t.HasValue && t.Value.GetOffsets().SequenceEqual(tuningValues));
+            if (!supportedTuning.HasValue)
+                throw new OptionException("Unsupported alternate tuning", "tuning");
+            return supportedTuning.Value;
         }
 
         private static OptionSet GetOptions(Arguments outputArguments)
