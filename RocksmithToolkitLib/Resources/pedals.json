@@ -1,0 +1,4518 @@
+[
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_1X12_MegaModern_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 57 Cone"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_1X12_Tenor_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 Tube OffAxis "
+  },
+  {
+    "Name": "Reinier 4X12 Vintage Green",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_4X12_RangerVintageGreen_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Vintage Green Condenser OffAxis"
+  },
+  {
+    "Name": "Reinier 4X12 Vintage Green",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_4X12_RangerVintageGreen_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Vintage Green Tube OffAxis "
+  },
+  {
+    "Name": "Compressor",
+    "Type": "Pedal",
+    "Category": "Dynamics ",
+    "Key": "Pedal_Squasher",
+    "Knobs": [
+      {
+        "Name": "$[24511] Amount",
+        "Key": "Pedal_Squasher_Amount",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Dynamics : Compressor"
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_1X12_MegaModern_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 Tube Cone"
+  },
+  {
+    "Name": "Ichigo 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_4X12_Valencia_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Ichigo 4X12 Condenser OffAxis"
+  },
+  {
+    "Name": "Reinier 65",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_Ranger65",
+    "Knobs": [
+      {
+        "Name": "$[24428] Gain",
+        "Key": "Amp_Ranger65_Gain",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24520] Bass",
+        "Key": "Amp_Ranger65_Bass",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 65.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24431] Mid",
+        "Key": "Amp_Ranger65_Mid",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24548] Treble",
+        "Key": "Amp_Ranger65_Treble",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 76.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 65"
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_1X12_MegaModern_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 57 Edge"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "57 Back",
+    "Key": "Cab_1X12_Tenor_57_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 57 Back"
+  },
+  {
+    "Name": "Ichigo 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_4X12_Valencia_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Ichigo 4X12 Condenser Cone"
+  },
+  {
+    "Name": "Reinier 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_4X12_Ranger_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Condenser Edge"
+  },
+  {
+    "Name": "Hitmacchen 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_4X12_Hitone_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Hitmacchen 4X12 Tube Edge"
+  },
+  {
+    "Name": "Custom Drive",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_CustomDrive",
+    "Knobs": [
+      {
+        "Name": "$[24388] Drive",
+        "Key": "Pedal_CustomDrive_Drive",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_CustomDrive_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Custom Drive"
+  },
+  {
+    "Name": "Auto Filter",
+    "Type": "Pedal",
+    "Category": "Filter ",
+    "Key": "Pedal_AutoFilter",
+    "Knobs": [
+      {
+        "Name": "$[24509] Sensitivity",
+        "Key": "Pedal_AutoFilter_Sensitivity",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 90.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24544] Resonance",
+        "Key": "Pedal_AutoFilter_Resonance",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24502] Attack",
+        "Key": "Pedal_AutoFilter_Attack",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24553] Filter Type",
+        "Key": "Pedal_AutoFilter_FilterType",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 2.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 1.0,
+        "EnumValues": [
+          {
+            "Item1": "Lowpass",
+            "Item2": "0"
+          },
+          {
+            "Item1": "Bandpass",
+            "Item2": "1"
+          },
+          {
+            "Item1": "Highpass",
+            "Item2": "2"
+          }
+        ]
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Filter : Auto Filter"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_2X12_DC58_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 Condenser OffAxis"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Back",
+    "Key": "Cab_1X12_Tenor_Condenser_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 Condenser Back"
+  },
+  {
+    "Name": "Baritone 4X10",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_4X10_Baritone_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Baritone 4X10 Tube OffAxis "
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "57 Back",
+    "Key": "Cab_2X12_DC58_57_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 57 Back"
+  },
+  {
+    "Name": "Ring Mod",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_RingMod",
+    "Knobs": [
+      {
+        "Name": "$[24509] Sensitivity",
+        "Key": "Pedal_RingMod_Sensitivity",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24502] Attack",
+        "Key": "Pedal_RingMod_Attack",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24536] Waveform",
+        "Key": "Pedal_RingMod_Waveform",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 1.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 0.0,
+        "EnumValues": [
+          {
+            "Item1": "1",
+            "Item2": "0"
+          },
+          {
+            "Item1": "2",
+            "Item2": "1"
+          }
+        ]
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_RingMod_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Ring Mod"
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Back",
+    "Key": "Cab_1X12_MegaModern_Condenser_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 Condenser Back"
+  },
+  {
+    "Name": "Auto Pan",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_AutoPan",
+    "Knobs": [
+      {
+        "Name": "$[24509] Sensitivity",
+        "Key": "Pedal_AutoPan_Sensitivity",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24422] Depth",
+        "Key": "Pedal_AutoPan_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24502] Attack",
+        "Key": "Pedal_AutoPan_Attack",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Auto Pan"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_2X12_Fusion_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 57 Cone"
+  },
+  {
+    "Name": "Soprano 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_4X12_Soprano_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Soprano 4X12 Tube Edge"
+  },
+  {
+    "Name": "Reinier 4X12 Vintage Green",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_4X12_RangerVintageGreen_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Vintage Green Condenser Cone"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_1X15_Tweed_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 Condenser OffAxis"
+  },
+  {
+    "Name": "Power Chorder",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_PowerChorder",
+    "Knobs": [
+      {
+        "Name": "$[24610] Octave Select",
+        "Key": "Pedal_PowerChorder_OctaveBlend",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 1.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 1.0,
+        "EnumValues": [
+          {
+            "Item1": "-1",
+            "Item2": "0"
+          },
+          {
+            "Item1": "+1",
+            "Item2": "1"
+          }
+        ]
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_PowerChorder_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 40.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Power Chorder"
+  },
+  {
+    "Name": "Reinier 4X12 Vintage Green",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_4X12_RangerVintageGreen_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Vintage Green Tube Cone"
+  },
+  {
+    "Name": "Reinier 4X12",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_4X12_Ranger_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 57 Edge"
+  },
+  {
+    "Name": "Megan Vintage 1X12",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_1X12_MegaVintage_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan Vintage 1X12 57 Cone"
+  },
+  {
+    "Name": "DC58",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_DC58",
+    "Knobs": [
+      {
+        "Name": "$[24428] Gain",
+        "Key": "Amp_DC58_Gain",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 44.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24522] Lo",
+        "Key": "Amp_DC58_Lo",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 55.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24540] Hi",
+        "Key": "Amp_DC58_Hi",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 60.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Amp_DC58_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58"
+  },
+  {
+    "Name": "Reinier 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_4X12_Ranger_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Tube Cone"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_2X12_Fusion_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 Tube Edge"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_2X12_DC58_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 57 Cone"
+  },
+  {
+    "Name": "Megan Duel",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_MegaDuel",
+    "Knobs": [
+      {
+        "Name": "$[24428] Gain",
+        "Key": "Amp_MegaDuel_Gain",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 80.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24430] Low",
+        "Key": "Amp_MegaDuel_Low",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 70.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24431] Mid",
+        "Key": "Amp_MegaDuel_Mid",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 30.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24540] Hi",
+        "Key": "Amp_MegaDuel_Hi",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 70.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan Duel"
+  },
+  {
+    "Name": "Fasser",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_Fusion",
+    "Knobs": [
+      {
+        "Name": "$[24413] Distortion",
+        "Key": "Amp_Fusion_Distortion",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 0.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24522] Lo",
+        "Key": "Amp_Fusion_Lo",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24431] Mid",
+        "Key": "Amp_Fusion_Mid",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 45.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24540] Hi",
+        "Key": "Amp_Fusion_Hi",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 55.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser"
+  },
+  {
+    "Name": "Baritone",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_Baritone",
+    "Knobs": [
+      {
+        "Name": "$[24428] Gain",
+        "Key": "Amp_Baritone_Volume",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 30.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24520] Bass",
+        "Key": "Amp_Baritone_Bass",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 60.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24548] Treble",
+        "Key": "Amp_Baritone_Treble",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 60.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Baritone"
+  },
+  {
+    "Name": "Vintage Stereo Chorus",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_VintageStereoChorus",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_VintageStereoChorus_Speed",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 5.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24422] Depth",
+        "Key": "Pedal_VintageStereoChorus_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_VintageStereoChorus_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 60.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Vintage Stereo Chorus"
+  },
+  {
+    "Name": "BitCruncher",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_BitCruncher",
+    "Knobs": [
+      {
+        "Name": "$[24514] Bits",
+        "Key": "Pedal_BitCruncher_Crunch",
+        "UnitType": "Enum",
+        "MinValue": 1.0,
+        "MaxValue": 8.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 4.0,
+        "EnumValues": [
+          {
+            "Item1": "12",
+            "Item2": "1"
+          },
+          {
+            "Item1": "10",
+            "Item2": "2"
+          },
+          {
+            "Item1": "8",
+            "Item2": "3"
+          },
+          {
+            "Item1": "6",
+            "Item2": "4"
+          },
+          {
+            "Item1": "4",
+            "Item2": "5"
+          },
+          {
+            "Item1": "3",
+            "Item2": "6"
+          },
+          {
+            "Item1": "2",
+            "Item2": "7"
+          },
+          {
+            "Item1": "1",
+            "Item2": "8"
+          }
+        ]
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_BitCruncher_Filter",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Distortion: BitCruncher"
+  },
+  {
+    "Name": "Baritone 4X10",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_4X10_Baritone_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Baritone 4X10 Tube Edge"
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "57 Back",
+    "Key": "Cab_1X12_MegaModern_57_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 57 Back"
+  },
+  {
+    "Name": "Stereo Phaser",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_StereoPhaser",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_StereoPhaser_Speed",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 10.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24427] Depth",
+        "Key": "Pedal_StereoPhaser_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 78.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Stereo Phaser"
+  },
+  {
+    "Name": "Octangle",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Octangle",
+    "Knobs": [
+      {
+        "Name": "$[24512] Octave Up",
+        "Key": "Pedal_Octangle_OctaveUp",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_Octangle_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 80.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Octangle"
+  },
+  {
+    "Name": "Octave Up",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_HighOctane",
+    "Knobs": [
+      {
+        "Name": "$[24610] Octave Select",
+        "Key": "Pedal_HighOctane_Octave",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 1.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 0.0,
+        "EnumValues": [
+          {
+            "Item1": "+1",
+            "Item2": "0"
+          },
+          {
+            "Item1": "+2",
+            "Item2": "1"
+          }
+        ]
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_HighOctane_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Octave Up"
+  },
+  {
+    "Name": "Soprano 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_4X12_Soprano_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Soprano 4X12 Condenser OffAxis"
+  },
+  {
+    "Name": "Baritone 4X10",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_4X10_Baritone_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Baritone 4X10 57 OffAxis"
+  },
+  {
+    "Name": "Vintage Flanger",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_VintageFlanger",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_VintageFlanger_Speed",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 12.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24422] Depth",
+        "Key": "Pedal_VintageFlanger_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 58.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_VintageFlanger_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 45.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Vintage Flanger"
+  },
+  {
+    "Name": "Ichigo 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_4X12_Valencia_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Ichigo 4X12 Tube Edge"
+  },
+  {
+    "Name": "Hitmacchen 4X12",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_4X12_Hitone_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Hitmacchen 4X12 57 Cone"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_1X12_Tenor_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 Condenser Cone"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_2X12_Fusion_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 Condenser OffAxis"
+  },
+  {
+    "Name": "Reinier 4X12 Vintage Green",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_4X12_RangerVintageGreen_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Vintage Green 57 Edge"
+  },
+  {
+    "Name": "Noise Gate",
+    "Type": "Pedal",
+    "Category": "Dynamics ",
+    "Key": "Pedal_NoiseGate",
+    "Knobs": [
+      {
+        "Name": "$[24534] Threshold",
+        "Key": "Pedal_NoiseGate_Thresh",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 10.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24502] Attack",
+        "Key": "Pedal_NoiseGate_Attack",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 80.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24518] Release",
+        "Key": "Pedal_NoiseGate_Release",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 20.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Dynamics : Noise Gate"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_2X12_DC58_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 Tube OffAxis "
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_1X12_Tenor_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 Tube Edge"
+  },
+  {
+    "Name": "Hitmacchen 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_4X12_Hitone_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Hitmacchen 4X12 Condenser Edge"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "57 Back",
+    "Key": "Cab_1X15_Tweed_57_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 57 Back"
+  },
+  {
+    "Name": "Stereo Choppah",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_ChopterStereo",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_ChopterStereo_Frequency",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 33.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24427] Depth",
+        "Key": "Pedal_ChopterStereo_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24537] Blade Size",
+        "Key": "Pedal_ChopterStereo_BladeSize",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 10.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Stereo Choppah"
+  },
+  {
+    "Name": "Analogue Delay",
+    "Type": "Pedal",
+    "Category": "Delay",
+    "Key": "Pedal_AnalogueDelay",
+    "Knobs": [
+      {
+        "Name": "$[24433] Time",
+        "Key": "Pedal_AnalogueDelay_Time",
+        "UnitType": "ms",
+        "MinValue": 50.0,
+        "MaxValue": 1000.0,
+        "ValueStep": 10.0,
+        "DefaultValue": 250.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24523] Feedback",
+        "Key": "Pedal_AnalogueDelay_Feedback",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 60.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_AnalogueDelay_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_AnalogueDelay_WetDry",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 35.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Delay: Analogue Delay"
+  },
+  {
+    "Name": "Phaser",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Phaser",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_Phaser_Speed",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 15.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24422] Depth",
+        "Key": "Pedal_Phaser_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 60.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_Phaser_WetDry",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 30.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Phaser"
+  },
+  {
+    "Name": "Shred Zone",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_ShredZone",
+    "Knobs": [
+      {
+        "Name": "$[24413] Distortion",
+        "Key": "Pedal_ShredZone_Dist",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24430 Low",
+        "Key": "Pedal_ShredZone_Low",
+        "UnitType": "db",
+        "MinValue": -9.0,
+        "MaxValue": 9.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 3.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24431] Mid",
+        "Key": "Pedal_ShredZone_Mid",
+        "UnitType": "db",
+        "MinValue": -9.0,
+        "MaxValue": 9.0,
+        "ValueStep": 1.0,
+        "DefaultValue": -4.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24551] Mid Freq.",
+        "Key": "Pedal_ShredZone_MidFreq",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24540] Hi",
+        "Key": "Pedal_ShredZone_Hi",
+        "UnitType": "db",
+        "MinValue": -9.0,
+        "MaxValue": 9.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 2.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Shred Zone"
+  },
+  {
+    "Name": "Soprano 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_4X12_Soprano_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Soprano 4X12 Tube Cone"
+  },
+  {
+    "Name": "Digital Verb",
+    "Type": "Pedal",
+    "Category": "Delay",
+    "Key": "Pedal_DigitalVerb",
+    "Knobs": [
+      {
+        "Name": "$[24434] Decay",
+        "Key": "Pedal_DigitalVerb_Time",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_DigitalVerb_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 65.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Delay: Digital Verb"
+  },
+  {
+    "Name": "British Wah",
+    "Type": "Pedal",
+    "Category": "Filter ",
+    "Key": "Pedal_BritishWah",
+    "Knobs": [
+      {
+        "Name": "$[24552] Position",
+        "Key": "Pedal_BritishWah_Pedal",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24509] Sensitivity",
+        "Key": "Pedal_BritishWah_Sensitivity",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24502] Attack",
+        "Key": "Pedal_BritishWah_Attack",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24510] Auto Mode",
+        "Key": "Pedal_BritishWah_AutoToggle",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 1.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 1.0,
+        "EnumValues": [
+          {
+            "Item1": "0",
+            "Item2": "0"
+          },
+          {
+            "Item1": "1",
+            "Item2": "1"
+          }
+        ]
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Filter : British Wah"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube Back",
+    "Key": "Cab_1X12_Tenor_Tube_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 Tube Back"
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_1X12_MegaModern_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 Condenser OffAxis"
+  },
+  {
+    "Name": "Buzz 2",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_BuzzFuzz",
+    "Knobs": [
+      {
+        "Name": "$[24505] Sustain",
+        "Key": "Pedal_BuzzFuzz_Sustain",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_BuzzFuzz_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Buzz 2"
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_1X12_MegaModern_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 Tube Edge"
+  },
+  {
+    "Name": "Hitmacchen 4X12",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_4X12_Hitone_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Hitmacchen 4X12 57 Edge"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_1X15_Tweed_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 Condenser Edge"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_2X12_Fusion_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 Condenser Edge"
+  },
+  {
+    "Name": "Stereo Echo",
+    "Type": "Pedal",
+    "Category": "Delay",
+    "Key": "Pedal_TapeEcho",
+    "Knobs": [
+      {
+        "Name": "$[24504] Left Time",
+        "Key": "Pedal_TapeEcho_LDelayTime",
+        "UnitType": "ms",
+        "MinValue": 50.0,
+        "MaxValue": 1000.0,
+        "ValueStep": 10.0,
+        "DefaultValue": 450.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24542] Left Feedback",
+        "Key": "Pedal_TapeEcho_LFeedback",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 45.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24527] Right Time",
+        "Key": "Pedal_TapeEcho_RDelayTime",
+        "UnitType": "ms",
+        "MinValue": 50.0,
+        "MaxValue": 1000.0,
+        "ValueStep": 10.0,
+        "DefaultValue": 650.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24543] Right Feedback",
+        "Key": "Pedal_TapeEcho_RFeedback",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 45.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_TapeEcho_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 44.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": false,
+    "AllowPost": true,
+    "AllowPre": false,
+    "DisplayName": "Delay: Stereo Echo"
+  },
+  {
+    "Name": "Chorus",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Chorus",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_Chorus_Frequency",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 35.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_Chorus_WetDry",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 65.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Chorus"
+  },
+  {
+    "Name": "Hitmacchen 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_4X12_Hitone_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Hitmacchen 4X12 Tube Cone"
+  },
+  {
+    "Name": "Saw Trem",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_AligatorMono",
+    "Knobs": [
+      {
+        "Name": "$[24422] Depth",
+        "Key": "Pedal_AligatorMono_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_AligatorMono_Frequency",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 70.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24535] Shape",
+        "Key": "Pedal_AligatorMono_Waveform",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 1.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 0.0,
+        "EnumValues": [
+          {
+            "Item1": "1",
+            "Item2": "0"
+          },
+          {
+            "Item1": "2",
+            "Item2": "1"
+          }
+        ]
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Saw Trem"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_2X12_DC58_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 Tube Edge"
+  },
+  {
+    "Name": "Soprano 4X12",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_4X12_Soprano_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Soprano 4X12 57 Edge"
+  },
+  {
+    "Name": "Baritone 4X10",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_4X10_Baritone_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Baritone 4X10 Tube Cone"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "Tube Back",
+    "Key": "Cab_2X12_DC58_Tube_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 Tube Back"
+  },
+  {
+    "Name": "Reinier 4X12 Vintage Green",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_4X12_RangerVintageGreen_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Vintage Green 57 OffAxis"
+  },
+  {
+    "Name": "Screech",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_Screecher",
+    "Knobs": [
+      {
+        "Name": "$[24508] Drive",
+        "Key": "Pedal_Screecher_Drive",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 95.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_Screecher_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 35.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Screech"
+  },
+  {
+    "Name": "Digital Delay",
+    "Type": "Pedal",
+    "Category": "Delay",
+    "Key": "Pedal_DigitalDelay",
+    "Knobs": [
+      {
+        "Name": "$[24433] Time",
+        "Key": "Pedal_DigitalDelay_Time",
+        "UnitType": "ms",
+        "MinValue": 10.0,
+        "MaxValue": 1000.0,
+        "ValueStep": 10.0,
+        "DefaultValue": 500.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24523] Feedback",
+        "Key": "Pedal_DigitalDelay_Feedback",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_DigitalDelay_Blend",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 40.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Delay: Digital Delay"
+  },
+  {
+    "Name": "Hitmacchen 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_4X12_Hitone_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Hitmacchen 4X12 Condenser Cone"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_2X12_DC58_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 Tube Cone"
+  },
+  {
+    "Name": "Reinier 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_4X12_Ranger_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Condenser Cone"
+  },
+  {
+    "Name": "Soprano 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_4X12_Soprano_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Soprano 4X12 Tube OffAxis "
+  },
+  {
+    "Name": "Megan Vintage 1X12",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_1X12_MegaVintage_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan Vintage 1X12 57 Edge"
+  },
+  {
+    "Name": "Super Drive",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_SuperDrive",
+    "Knobs": [
+      {
+        "Name": "$[24508] Drive",
+        "Key": "Pedal_SuperDrive_Drive",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_SuperDrive_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 80.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Super Drive"
+  },
+  {
+    "Name": "Soprano",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_Soprano",
+    "Knobs": [
+      {
+        "Name": "$[24428] Gain",
+        "Key": "Amp_Soprano_Gain",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24522] Lo",
+        "Key": "Amp_Soprano_Lo",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 100.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24431] Mid",
+        "Key": "Amp_Soprano_Mid",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 100.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24540] Hi",
+        "Key": "Amp_Soprano_Hi",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 100.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Soprano"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_2X12_DC58_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 57 Edge"
+  },
+  {
+    "Name": "Compression",
+    "Type": "Pedal",
+    "Category": "Dynamics ",
+    "Key": "Pedal_Compression",
+    "Knobs": [
+      {
+        "Name": "$[24511] Amount",
+        "Key": "Pedal_Compression_Sens",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Dynamics : Compression"
+  },
+  {
+    "Name": "Ichigo 4X12",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_4X12_Valencia_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Ichigo 4X12 57 Cone"
+  },
+  {
+    "Name": "Reinier 4X12",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_4X12_Ranger_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 57 Cone"
+  },
+  {
+    "Name": "Vibrato",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Vibrato",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_Vibrato_Frequency",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24427] Depth",
+        "Key": "Pedal_Vibrato_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 45.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Vibrato"
+  },
+  {
+    "Name": "Solo Megan",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_SoloMega",
+    "Knobs": [
+      {
+        "Name": "$[24388] Drive",
+        "Key": "Amp_SoloMega_Drive",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24522] Lo",
+        "Key": "Amp_SoloMega_Lo",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 65.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24431] Mid",
+        "Key": "Amp_SoloMega_Mid",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 33.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24540] Hi",
+        "Key": "Amp_SoloMega_Hi",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Solo Megan"
+  },
+  {
+    "Name": "Range Booster",
+    "Type": "Pedal",
+    "Category": "Filter ",
+    "Key": "Pedal_RangeBooster",
+    "Knobs": [
+      {
+        "Name": "$[24398] Bright",
+        "Key": "Pedal_RangeBooster_Bright",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Filter : Range Booster"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "Tube Back",
+    "Key": "Cab_2X12_Fusion_Tube_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 Tube Back"
+  },
+  {
+    "Name": "Auto Detune",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_AutoDetune",
+    "Knobs": [
+      {
+        "Name": "$[24509] Sensitivity",
+        "Key": "Pedal_AutoDetune_Sensitivity",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24422] Depth",
+        "Key": "Pedal_AutoDetune_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 30.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Auto Detune"
+  },
+  {
+    "Name": "Reinier 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_4X12_Ranger_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Condenser OffAxis"
+  },
+  {
+    "Name": "Reinier 4X12 Vintage Green",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_4X12_RangerVintageGreen_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Vintage Green 57 Cone"
+  },
+  {
+    "Name": "Chorus 2.0",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_StudioChorus",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_StudioChorus_Frequency",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 12.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24422] Depth",
+        "Key": "Pedal_StudioChorus_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 80.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_StudioChorus_WetDry",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 65.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Chorus 2.0"
+  },
+  {
+    "Name": "Megan Vintage 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_1X12_MegaVintage_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan Vintage 1X12 Condenser Edge"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_1X12_Tenor_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 57 OffAxis"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_1X12_Tenor_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 Condenser OffAxis"
+  },
+  {
+    "Name": "Harmonizer",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Harmonista",
+    "Knobs": [
+      {
+        "Name": "$[24613] Pitch",
+        "Key": "Pedal_Harmonista_Pitch1",
+        "UnitType": "Number",
+        "MinValue": -24.0,
+        "MaxValue": 24.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 4.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_Harmonista_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_Harmonista_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 45.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Harmonizer"
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_1X12_MegaModern_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 Tube OffAxis "
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_1X15_Tweed_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 57 Edge"
+  },
+  {
+    "Name": "Degrader",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_Degrader",
+    "Knobs": [
+      {
+        "Name": "$[24611] Degrade",
+        "Key": "Pedal_Degrader_Degrade",
+        "UnitType": "Number",
+        "MinValue": 1.0,
+        "MaxValue": 16.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 12.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_Degrader_Filter",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Degrader"
+  },
+  {
+    "Name": "Baritone 4X10",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_4X10_Baritone_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Baritone 4X10 Condenser Edge"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Back",
+    "Key": "Cab_2X12_DC58_Condenser_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 Condenser Back"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_1X12_Tenor_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 Condenser Edge"
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_1X12_MegaModern_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 Condenser Edge"
+  },
+  {
+    "Name": "Megan Vintage 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_1X12_MegaVintage_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan Vintage 1X12 Tube Edge"
+  },
+  {
+    "Name": "Baritone 4X10",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_4X10_Baritone_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Baritone 4X10 57 Edge"
+  },
+  {
+    "Name": "Megan Vintage 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_1X12_MegaVintage_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan Vintage 1X12 Condenser Cone"
+  },
+  {
+    "Name": "How Swell",
+    "Type": "Pedal",
+    "Category": "Dynamics ",
+    "Key": "Pedal_Swell",
+    "Knobs": [
+      {
+        "Name": "$[24534] Threshold",
+        "Key": "Pedal_Swell_Threshold",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 25.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24502] Attack",
+        "Key": "Pedal_Swell_Attack",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Dynamics : How Swell"
+  },
+  {
+    "Name": "Hitmacchen 4X12",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_4X12_Hitone_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Hitmacchen 4X12 57 OffAxis"
+  },
+  {
+    "Name": "Stereo Saw Trem",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_AligatorStereo",
+    "Knobs": [
+      {
+        "Name": "$[24422] Depth",
+        "Key": "Pedal_AligatorStereo_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_AligatorStereo_Frequency",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 20.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24535] Shape",
+        "Key": "Pedal_AligatorStereo_Waveform",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 1.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 0.0,
+        "EnumValues": [
+          {
+            "Item1": "1",
+            "Item2": "0"
+          },
+          {
+            "Item1": "2",
+            "Item2": "1"
+          }
+        ]
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Stereo Saw Trem"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_2X12_DC58_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 57 OffAxis"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "Tube Back",
+    "Key": "Cab_1X15_Tweed_Tube_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 Tube Back"
+  },
+  {
+    "Name": "Solo Tenor",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_SoloTenor",
+    "Knobs": [
+      {
+        "Name": "$[24428] Gain",
+        "Key": "Amp_SoloTenor_Volume",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 20.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24520] Bass",
+        "Key": "Amp_SoloTenor_Bass",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 45.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24548] Treble",
+        "Key": "Amp_SoloTenor_Treble",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Solo Tenor"
+  },
+  {
+    "Name": "TeleFilter",
+    "Type": "Pedal",
+    "Category": "Filter ",
+    "Key": "Pedal_TeleFilter",
+    "Knobs": [
+      {
+        "Name": "$[24516] Operator",
+        "Key": "Pedal_TeleFilter_Operator",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Filter : TeleFilter"
+  },
+  {
+    "Name": "Reinier 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_4X12_Ranger_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Tube OffAxis "
+  },
+  {
+    "Name": "Choppah",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_ChopterMono",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_ChopterMono_Frequency",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 33.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24427] Depth",
+        "Key": "Pedal_ChopterMono_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24537] Blade Size",
+        "Key": "Pedal_ChopterMono_BladeSize",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 10.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Choppah"
+  },
+  {
+    "Name": "Baritone 4X10",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_4X10_Baritone_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Baritone 4X10 57 Cone"
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube Back",
+    "Key": "Cab_1X12_MegaModern_Tube_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 Tube Back"
+  },
+  {
+    "Name": "Trem-Ole' ",
+    "Type": "Pedal",
+    "Category": "Delay",
+    "Key": "Pedal_TremOle",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_TremOle_TremSpeed",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 1.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 1.0,
+        "EnumValues": [
+          {
+            "Item1": "$[24652] Slow",
+            "Item2": "0"
+          },
+          {
+            "Item1": "$[24653] Fast",
+            "Item2": "1"
+          }
+        ]
+      },
+      {
+        "Name": "$[24422] Depth",
+        "Key": "Pedal_TremOle_TremDepth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 30.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_TremOle_DelayMix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 35.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Delay: Trem-Ole' "
+  },
+  {
+    "Name": "Digital Chorus",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_DigitalChorus",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_DigitalChorus_Frequency",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 10.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_DigitalChorus_WetDry",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 70.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Digital Chorus"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_1X15_Tweed_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 Tube OffAxis "
+  },
+  {
+    "Name": "Megan Vintage 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_1X12_MegaVintage_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan Vintage 1X12 Tube Cone"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_1X15_Tweed_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 57 Cone"
+  },
+  {
+    "Name": "Reinier 4X12 Vintage Green",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_4X12_RangerVintageGreen_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Vintage Green Condenser Edge"
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_1X12_MegaModern_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 57 OffAxis"
+  },
+  {
+    "Name": "Hitmacchen 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_4X12_Hitone_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Hitmacchen 4X12 Condenser OffAxis"
+  },
+  {
+    "Name": "Tape Delay",
+    "Type": "Pedal",
+    "Category": "Delay",
+    "Key": "Pedal_TapeDelay",
+    "Knobs": [
+      {
+        "Name": "$[24433] Time",
+        "Key": "Pedal_TapeDelay_Time",
+        "UnitType": "ms",
+        "MinValue": 100.0,
+        "MaxValue": 1000.0,
+        "ValueStep": 10.0,
+        "DefaultValue": 550.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24523] Feedback",
+        "Key": "Pedal_TapeDelay_Feedback",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 35.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_TapeDelay_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 30.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Delay: Tape Delay"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "57 Back",
+    "Key": "Cab_2X12_Fusion_57_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 57 Back"
+  },
+  {
+    "Name": "Captain Fuzzle",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_CaptFuzzle",
+    "Knobs": [
+      {
+        "Name": "$[24414] Fuzz",
+        "Key": "Pedal_CaptFuzzle_Fuzz",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 76.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_CaptFuzzle_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_CaptFuzzle_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 60.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Captain Fuzzle"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_2X12_DC58_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 Condenser Cone"
+  },
+  {
+    "Name": "Holy Cow",
+    "Type": "Pedal",
+    "Category": "Delay",
+    "Key": "Pedal_HolyCow",
+    "Knobs": [
+      {
+        "Name": "$[24434] Decay",
+        "Key": "Pedal_HolyCow_Reverb",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_HolyCow_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 65.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Delay: Holy Cow"
+  },
+  {
+    "Name": "Soprano 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_4X12_Soprano_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Soprano 4X12 Condenser Cone"
+  },
+  {
+    "Name": "Muskrat",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_Muskrat",
+    "Knobs": [
+      {
+        "Name": "$[24413] Distortion",
+        "Key": "Pedal_Muskrat_Distortion",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_Muskrat_Filter",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 60.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Muskrat"
+  },
+  {
+    "Name": "Ichigo 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_4X12_Valencia_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Ichigo 4X12 Tube Cone"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_1X12_Tenor_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 Tube Cone"
+  },
+  {
+    "Name": "Hitmacchen",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_Hitone",
+    "Knobs": [
+      {
+        "Name": "$[24428] Gain",
+        "Key": "Amp_Hitone_Volume",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 35.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24522] Lo",
+        "Key": "Amp_Hitone_Lo",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24540] Hi",
+        "Key": "Amp_Hitone_Hi",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 60.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24398] Bright",
+        "Key": "Amp_Hitone_Bright",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 77.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Hitmacchen"
+  },
+  {
+    "Name": "WAAAAH TIME",
+    "Type": "Pedal",
+    "Category": "Filter ",
+    "Key": "Pedal_WahBaby",
+    "Knobs": [
+      {
+        "Name": "$[24552] Position",
+        "Key": "Pedal_WahBaby_Pedal",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24509] Sensitivity",
+        "Key": "Pedal_WahBaby_Sensitivity",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24502] Attack",
+        "Key": "Pedal_WahBaby_Attack",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24510] Auto Mode",
+        "Key": "Pedal_WahBaby_AutoTog",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 1.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 1.0,
+        "EnumValues": [
+          {
+            "Item1": "0",
+            "Item2": "0"
+          },
+          {
+            "Item1": "1",
+            "Item2": "1"
+          }
+        ]
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Filter : WAAAAH TIME"
+  },
+  {
+    "Name": "Reinier 4X12",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_4X12_Ranger_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 57 OffAxis"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "57 Back",
+    "Key": "Cab_2X12_Fusion_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 57 Back"
+  },
+  {
+    "Name": "Pulse Pulse",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Quasar",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_Quasar_Speed",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 18.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24422] Depth",
+        "Key": "Pedal_Quasar_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 65.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24535 Shape",
+        "Key": "Pedal_Quasar_ShapeSwitch",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 3.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 0.0,
+        "EnumValues": [
+          {
+            "Item1": "1",
+            "Item2": "0"
+          },
+          {
+            "Item1": "2",
+            "Item2": "1"
+          },
+          {
+            "Item1": "3",
+            "Item2": "2"
+          },
+          {
+            "Item1": "4",
+            "Item2": "3"
+          }
+        ]
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Pulse Pulse"
+  },
+  {
+    "Name": "Auto Wah",
+    "Type": "Pedal",
+    "Category": "Filter ",
+    "Key": "Pedal_AutoWah",
+    "Knobs": [
+      {
+        "Name": "$[24509] Sensitivity",
+        "Key": "Pedal_AutoWah_Sens",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24502] Attack",
+        "Key": "Pedal_AutoWah_Attack",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 80.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Filter : Auto Wah"
+  },
+  {
+    "Name": "Soprano 4X12",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_4X12_Soprano_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Soprano 4X12 57 OffAxis"
+  },
+  {
+    "Name": "Mod Delay",
+    "Type": "Pedal",
+    "Category": "Delay",
+    "Key": "Pedal_ModDelay",
+    "Knobs": [
+      {
+        "Name": "$[24433] Time",
+        "Key": "Pedal_ModDelay_Time",
+        "UnitType": "ms",
+        "MinValue": 100.0,
+        "MaxValue": 1000.0,
+        "ValueStep": 10.0,
+        "DefaultValue": 310.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24523] Feedback",
+        "Key": "Pedal_ModDelay_Feedback",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 44.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_ModDelay_Frequency",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 11.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24427] Depth",
+        "Key": "Pedal_ModDelay_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 44.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_ModDelay_WetDry",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 65.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Delay: Mod Delay"
+  },
+  {
+    "Name": "Distortion",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_Distortion",
+    "Knobs": [
+      {
+        "Name": "$[24413] Distortion",
+        "Key": "Pedal_Distortion_Distortion",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_Distortion_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 80.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Distortion"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "Condenser Back",
+    "Key": "Cab_1X15_Tweed_Condenser_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 Condenser Back"
+  },
+  {
+    "Name": "Octave",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Octavius",
+    "Knobs": [
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_Octavius_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 66.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_Octavius_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Octave"
+  },
+  {
+    "Name": "Tremolo",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Trem-Mellow",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_TremMellow_Frequency",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 25.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24427] Depth",
+        "Key": "Pedal_TremMellow_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 77.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Tremolo"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_2X12_Fusion_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 Tube Cone"
+  },
+  {
+    "Name": "Megan Vintage 1X12",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_1X12_MegaVintage_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan Vintage 1X12 Tube OffAxis "
+  },
+  {
+    "Name": "Megan 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_1X12_MegaModern_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan 1X12 Condenser Cone"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_2X12_Fusion_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 Condenser Cone"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "Tube Cone",
+    "Key": "Cab_1X15_Tweed_Tube_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 Tube Cone"
+  },
+  {
+    "Name": "Baritone 4X10",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_4X10_Baritone_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Baritone 4X10 Condenser Cone"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "Condenser Cone",
+    "Key": "Cab_1X15_Tweed_Condenser_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 Condenser Cone"
+  },
+  {
+    "Name": "Phaser-363",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Haze72",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_Haze72_Speed",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 15.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Phaser-363"
+  },
+  {
+    "Name": "Robo Crunch",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Laser",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_Laser_Speed",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 1.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 1.0,
+        "EnumValues": [
+          {
+            "Item1": "$[24652] Slow",
+            "Item2": "0"
+          },
+          {
+            "Item1": "$[24653] Fast",
+            "Item2": "1"
+          }
+        ]
+      },
+      {
+        "Name": "$[24514] Bits",
+        "Key": "Pedal_Laser_Depth",
+        "UnitType": "Enum",
+        "MinValue": 1.0,
+        "MaxValue": 4.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 3.0,
+        "EnumValues": [
+          {
+            "Item1": "10",
+            "Item2": "1"
+          },
+          {
+            "Item1": "8",
+            "Item2": "2"
+          },
+          {
+            "Item1": "6",
+            "Item2": "3"
+          },
+          {
+            "Item1": "4",
+            "Item2": "4"
+          }
+        ]
+      },
+      {
+        "Name": "$[24533] Filter",
+        "Key": "Pedal_Laser_Filter",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Robo Crunch"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_2X12_Fusion_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 Tube OffAxis "
+  },
+  {
+    "Name": "Ichigo 4X12",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_4X12_Valencia_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Ichigo 4X12 57 OffAxis"
+  },
+  {
+    "Name": "Fuzzz",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_AceFuzz",
+    "Knobs": [
+      {
+        "Name": "$[24386] Fuzz",
+        "Key": "Pedal_AceFuzz_Fuzz",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 77.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Fuzzz"
+  },
+  {
+    "Name": "Megan Vintage 1X12",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_1X12_MegaVintage_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan Vintage 1X12 Condenser OffAxis"
+  },
+  {
+    "Name": "Baritone 4X10",
+    "Type": "Cabinet",
+    "Category": "Condenser OffAxis",
+    "Key": "Cab_4X10_Baritone_Condenser_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Baritone 4X10 Condenser OffAxis"
+  },
+  {
+    "Name": "Reinier 4X12 Vintage Green",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_4X12_RangerVintageGreen_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Vintage Green Tube Edge"
+  },
+  {
+    "Name": "Swole",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_Swole",
+    "Knobs": [
+      {
+        "Name": "$[24511] Amount",
+        "Key": "Pedal_Swole_Amount",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 78.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Swole"
+  },
+  {
+    "Name": "Rota-Vibe",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_Rota-Vibe",
+    "Knobs": [
+      {
+        "Name": "$[24426] Speed",
+        "Key": "Pedal_RotaVibe_Speed",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 20.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24417] Intensity",
+        "Key": "Pedal_RotaVibe_Intensity",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 65.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24427] Depth",
+        "Key": "Pedal_RotaVibe_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 80.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Rota-Vibe"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_1X12_Tenor_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 57 Cone"
+  },
+  {
+    "Name": "Conjurer",
+    "Type": "Pedal",
+    "Category": "Delay",
+    "Key": "Pedal_Alchemist",
+    "Knobs": [
+      {
+        "Name": "$[24614] Offset",
+        "Key": "Pedal_Alchemist_OffSet",
+        "UnitType": "Number",
+        "MinValue": -100.0,
+        "MaxValue": 100.0,
+        "ValueStep": 5.0,
+        "DefaultValue": 35.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Delay: Conjurer"
+  },
+  {
+    "Name": "Line Drive",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_LineDrive",
+    "Knobs": [
+      {
+        "Name": "$[24413] Distortion",
+        "Key": "Pedal_LineDrive_Distortion",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24415] Tone",
+        "Key": "Pedal_LineDrive_Tone",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Line Drive"
+  },
+  {
+    "Name": "Soprano 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_4X12_Soprano_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Soprano 4X12 Condenser Edge"
+  },
+  {
+    "Name": "Ichigo",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_Valencia",
+    "Knobs": [
+      {
+        "Name": "$[24428] Gain",
+        "Key": "Amp_Valencia_Gain",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 20.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24522] Lo",
+        "Key": "Amp_Valencia_Lo",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 65.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24540] Hi",
+        "Key": "Amp_Valencia_Hi",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 80.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24549] FAX",
+        "Key": "Amp_Valencia_FAX",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 4.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 3.0,
+        "EnumValues": [
+          {
+            "Item1": "0 dB",
+            "Item2": "0"
+          },
+          {
+            "Item1": "-3 dB",
+            "Item2": "1"
+          },
+          {
+            "Item1": "-6 dB",
+            "Item2": "2"
+          },
+          {
+            "Item1": "-9 dB",
+            "Item2": "3"
+          },
+          {
+            "Item1": "-12 db",
+            "Item2": "4"
+          }
+        ]
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Ichigo"
+  },
+  {
+    "Name": "Ichigo 4X12",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_4X12_Valencia_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Ichigo 4X12 57 Edge"
+  },
+  {
+    "Name": "EQ6",
+    "Type": "Pedal",
+    "Category": "Filter ",
+    "Key": "Pedal_EQ6",
+    "Knobs": [
+      {
+        "Name": "$[24524] 100 Hz",
+        "Key": "Pedal_EQ6_100",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 0.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24525] 200 Hz",
+        "Key": "Pedal_EQ6_200",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": -2.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24541] 400 Hz",
+        "Key": "Pedal_EQ6_400",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 1.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24550] 800 Hz",
+        "Key": "Pedal_EQ6_800",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 6.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24556] 1600 Hz",
+        "Key": "Pedal_EQ6_1600",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": -3.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24558] 3200 Hz",
+        "Key": "Pedal_EQ6_3200",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": -6.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Filter : EQ6"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Back",
+    "Key": "Cab_2X12_Fusion_Condenser_Back",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 Condenser Back"
+  },
+  {
+    "Name": "Reinier 81",
+    "Type": "Amp",
+    "Category": "Distortion",
+    "Key": "Amp_Ranger81",
+    "Knobs": [
+      {
+        "Name": "$[24428] Gain",
+        "Key": "Amp_Ranger81_Gain",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 100.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24520] Bass",
+        "Key": "Amp_Ranger81_Bass",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 100.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24431] Mid",
+        "Key": "Amp_Ranger81_Mid",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 100.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24548] Treble",
+        "Key": "Amp_Ranger81_Treble",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 100.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 81"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_1X15_Tweed_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 Tube Edge"
+  },
+  {
+    "Name": "Fasser 2X12",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_2X12_Fusion_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Fasser 2X12 57 OffAxis"
+  },
+  {
+    "Name": "Spring Reverb",
+    "Type": "Pedal",
+    "Category": "Delay",
+    "Key": "Pedal_SpringReverb",
+    "Knobs": [
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_SpringReverb_Mix",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 58.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Delay: Spring Reverb"
+  },
+  {
+    "Name": "Buzz 1",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_CustomFuzz",
+    "Knobs": [
+      {
+        "Name": "$[24386] Fuzz",
+        "Key": "Pedal_CustomFuzz_Fuzz",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 88.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24540] Hi",
+        "Key": "Pedal_CustomFuzz_Hi",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24522] Lo",
+        "Key": "Pedal_CustomFuzz_Lo",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24555] BreakUp",
+        "Key": "Pedal_CustomFuzz_Rectify",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 5.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 0.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Buzz 1"
+  },
+  {
+    "Name": "Tenor 1X12",
+    "Type": "Cabinet",
+    "Category": "57 Edge",
+    "Key": "Cab_1X12_Tenor_57_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Tenor 1X12 57 Edge"
+  },
+  {
+    "Name": "Ichigo 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_4X12_Valencia_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Ichigo 4X12 Tube OffAxis "
+  },
+  {
+    "Name": "Ichigo 4X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_4X12_Valencia_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Ichigo 4X12 Condenser Edge"
+  },
+  {
+    "Name": "Megan Vintage 1X12",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_1X12_MegaVintage_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Megan Vintage 1X12 57 OffAxis"
+  },
+  {
+    "Name": "Soprano 4X12",
+    "Type": "Cabinet",
+    "Category": "57 Cone",
+    "Key": "Cab_4X12_Soprano_57_Cone",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Soprano 4X12 57 Cone"
+  },
+  {
+    "Name": "Hitmacchen 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube OffAxis ",
+    "Key": "Cab_4X12_Hitone_Tube_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Hitmacchen 4X12 Tube OffAxis "
+  },
+  {
+    "Name": "EQ7",
+    "Type": "Pedal",
+    "Category": "Filter ",
+    "Key": "Pedal_EQ7",
+    "Knobs": [
+      {
+        "Name": "$[24524] 100 Hz",
+        "Key": "Pedal_EQ7_100",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 2.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24525] 200 Hz",
+        "Key": "Pedal_EQ7_200",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": -2.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24541] 400 Hz",
+        "Key": "Pedal_EQ7_400",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": -7.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24550] 800 Hz",
+        "Key": "Pedal_EQ7_800",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": -5.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24556] 1600 Hz",
+        "Key": "Pedal_EQ7_1600",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 2.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24558] 3200 Hz",
+        "Key": "Pedal_EQ7_3200",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 7.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24560] 6400 Hz",
+        "Key": "Pedal_EQ7_6400",
+        "UnitType": "db",
+        "MinValue": -15.0,
+        "MaxValue": 15.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 8.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Filter : EQ7"
+  },
+  {
+    "Name": "Reed 1X15",
+    "Type": "Cabinet",
+    "Category": "57 OffAxis",
+    "Key": "Cab_1X15_Tweed_57_OffAxis",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reed 1X15 57 OffAxis"
+  },
+  {
+    "Name": "DC58 2X12",
+    "Type": "Cabinet",
+    "Category": "Condenser Edge",
+    "Key": "Cab_2X12_DC58_Condenser_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "DC58 2X12 Condenser Edge"
+  },
+  {
+    "Name": "Reinier 4X12",
+    "Type": "Cabinet",
+    "Category": "Tube Edge",
+    "Key": "Cab_4X12_Ranger_Tube_Edge",
+    "Knobs": [],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Reinier 4X12 Tube Edge"
+  },
+  {
+    "Name": "Metal Distortion",
+    "Type": "Pedal",
+    "Category": "Distortion",
+    "Key": "Pedal_VandenBos",
+    "Knobs": [
+      {
+        "Name": "$[24612] Scoop",
+        "Key": "Pedal_VandenBos_Mids",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 10.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": false,
+    "AllowPre": true,
+    "DisplayName": "Distortion: Metal Distortion"
+  },
+  {
+    "Name": "Square Mod",
+    "Type": "Pedal",
+    "Category": "Modulation",
+    "Key": "Pedal_SquareMod",
+    "Knobs": [
+      {
+        "Name": "$[24509] Sensitivity",
+        "Key": "Pedal_SquareMod_Sensitivity",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 50.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24502] Attack",
+        "Key": "Pedal_SquareMod_Attack",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      },
+      {
+        "Name": "$[24528] Width",
+        "Key": "Pedal_SquareMod_Width",
+        "UnitType": "Enum",
+        "MinValue": 0.0,
+        "MaxValue": 2.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 1.0,
+        "EnumValues": [
+          {
+            "Item1": "1",
+            "Item2": "0"
+          },
+          {
+            "Item1": "2",
+            "Item2": "1"
+          },
+          {
+            "Item1": "3",
+            "Item2": "2"
+          }
+        ]
+      },
+      {
+        "Name": "$[24506] Mix",
+        "Key": "Pedal_SquareMod_Depth",
+        "UnitType": "Number",
+        "MinValue": 0.0,
+        "MaxValue": 100.0,
+        "ValueStep": 1.0,
+        "DefaultValue": 75.0,
+        "EnumValues": []
+      }
+    ],
+    "AllowLoop": true,
+    "AllowPost": true,
+    "AllowPre": true,
+    "DisplayName": "Modulation: Square Mod"
+  }
+]

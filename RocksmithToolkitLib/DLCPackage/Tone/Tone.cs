@@ -18,32 +18,43 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
         public string PersistentID { get; set; }
         public string UnlockKey { get; set; }
         public float Volume { get; set; }
+
         public Tone()
         {
             PedalList = new Dictionary<string, Pedal>();
-            var pedal = new Pedal() { PedalKey = "Pedal_EQ7" };
-            pedal.KnobValues.Add("Pedal_EQ7_1600", -1);
-            pedal.KnobValues.Add("Pedal_EQ7_800", 1);
-            pedal.KnobValues.Add("Pedal_EQ7_200", 2);
-            pedal.KnobValues.Add("Pedal_EQ7_3200", -3);
-            pedal.KnobValues.Add("Pedal_EQ7_100", 1);
-            pedal.KnobValues.Add("Pedal_EQ7_400", 1);
-            pedal.KnobValues.Add("Pedal_EQ7_6400", 1);
-            PedalList.Add("PostPedal3", pedal);
-            pedal = new Pedal() { PedalKey = "Cab_4X12_Ranger_Tube_Cone" };
-            PedalList.Add("Cabinet", pedal);
-            pedal = new Pedal() { PedalKey = "Amp_MegaDuel" };
-            pedal.KnobValues.Add("Amp_MegaDuel_Low", 70);
-            pedal.KnobValues.Add("Amp_MegaDuel_Mid", 40);
-            pedal.KnobValues.Add("Amp_MegaDuel_Hi", 65);
-            pedal.KnobValues.Add("Amp_MegaDuel_Gain", 88);
-            PedalList.Add("Amp", pedal);
-            Volume = -21;
-            Description = "$[-1] ";
+            ExclusiveBuild = new List<object>();
+            UnlockKey = "";
             IsDLC = true;
             IsPreviewOnlyItem = false;
-            UnlockKey = "";
-            ExclusiveBuild = new List<object>();
+            Volume = -21;
+            Description = "$[-1] ";
+        }
+
+        public static Tone CreateDefaultTone()
+        {
+            var tone = new Tone();
+
+            var postPedal3 = new Pedal { PedalKey = "Pedal_EQ7" };
+            postPedal3.KnobValues.Add("Pedal_EQ7_1600", -1);
+            postPedal3.KnobValues.Add("Pedal_EQ7_800", 1);
+            postPedal3.KnobValues.Add("Pedal_EQ7_200", 2);
+            postPedal3.KnobValues.Add("Pedal_EQ7_3200", -3);
+            postPedal3.KnobValues.Add("Pedal_EQ7_100", 1);
+            postPedal3.KnobValues.Add("Pedal_EQ7_400", 1);
+            postPedal3.KnobValues.Add("Pedal_EQ7_6400", 1);
+            tone.PedalList.Add("PostPedal3", postPedal3);
+
+            var cabinet = new Pedal() { PedalKey = "Cab_4X12_Ranger_Tube_Cone" };
+            tone.PedalList.Add("Cabinet", cabinet);
+
+            var amp = new Pedal() { PedalKey = "Amp_MegaDuel" };
+            amp.KnobValues.Add("Amp_MegaDuel_Low", 70);
+            amp.KnobValues.Add("Amp_MegaDuel_Mid", 40);
+            amp.KnobValues.Add("Amp_MegaDuel_Hi", 65);
+            amp.KnobValues.Add("Amp_MegaDuel_Gain", 88);
+            tone.PedalList.Add("Amp", amp);
+
+            return tone;
         }
     }
 }
