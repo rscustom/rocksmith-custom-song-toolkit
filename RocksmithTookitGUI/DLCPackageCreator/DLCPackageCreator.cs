@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using RocksmithToolkitLib.DLCPackage;
+using RocksmithToolkitLib.DLCPackage.Tone;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
@@ -72,13 +73,16 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
             }
+
+            var dlcName = DlcNameTB.Text.Replace(" ", "_");
             var info = new DLCPackageData
             {
-                Name = DlcNameTB.Text.Replace(" ", "_"),
+                Name = dlcName,
                 Album = AlbumTB.Text,
                 AlbumArtPath = AlbumArtPath,
                 OggPath = OggPath,
-                Arrangements = arrangements
+                Arrangements = arrangements,
+                Tone = toneControl.Tone
             };
             RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, info);
 

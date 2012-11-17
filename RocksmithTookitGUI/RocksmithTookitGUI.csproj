@@ -11,7 +11,8 @@
     <RootNamespace>RocksmithTookitGUI</RootNamespace>
     <AssemblyName>RocksmithTookitGUI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -78,6 +79,18 @@
     <Compile Include="DLCPackageCreator\DLCPackageCreator.Designer.cs">
       <DependentUpon>DLCPackageCreator.cs</DependentUpon>
     </Compile>
+    <Compile Include="DLCPackageCreator\ToneControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DLCPackageCreator\ToneControl.Designer.cs">
+      <DependentUpon>ToneControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DLCPackageCreator\ToneKnobForm.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DLCPackageCreator\ToneKnobForm.Designer.cs">
+      <DependentUpon>ToneKnobForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DLCPackerUnpacker\DLCPackerUnpacker.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -120,6 +133,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\DLCPackageCreator.resx">
       <DependentUpon>DLCPackageCreator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLCPackageCreator\ToneControl.resx">
+      <DependentUpon>ToneControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLCPackageCreator\ToneKnobForm.resx">
+      <DependentUpon>ToneKnobForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackerUnpacker\DLCPackerUnpacker.resx">
       <DependentUpon>DLCPackerUnpacker.cs</DependentUpon>

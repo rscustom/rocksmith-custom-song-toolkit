@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using RocksmithToolkitLib.Tone;
+using Pedal = RocksmithToolkitLib.DLCPackage.Tone.Pedal;
+
+namespace RocksmithTookitGUI.DLCPackageCreator
+{
+    public class NumericUpDownFixed : NumericUpDown
+    {
+        protected override void OnValidating(CancelEventArgs e)
+        {
+            // Prevent bug where typing a value bypasses min/max validation
+            var fixValidation = Value;
+            base.OnValidating(e);
+        }
+    }
+
+    public partial class ToneKnobForm : Form
+    {
+        public ToneKnobForm()
+        {
+            InitializeComponent();
+        }
+
+        public void Init(Pedal pedal, IList<Knob> knobs)
+        {
+            tableLayoutPanel.RowCount = knobs.Count;
+            for (var i = 0; i < knobs.Count; i++)
+            {
+                var knob = knobs[i];
+                var label = new Label();
+                tableLayoutPanel.Controls.Add(label, 0, i);
+                label.Text = knob.Name;
+
+                var numericControl = new NumericUpDownFixed();
+                tableLayoutPanel.Controls.Add(numericControl, 1, i);
+                numericControl.Minimum = knob.MinValue;
+                numericControl.Maximum = knob.MaxValue;
+                numericControl.Increment = knob.ValueStep;
+                numericControl.DecimalPlaces = 1;
+                numericControl.Value = pedal.KnobValues[knob.Key];
+                numericControl.ValueChanged += (obj, args) =>
+                    pedal.KnobValues[knob.Key] = numericControl.Value;
+            }
+        }
+    }
+}

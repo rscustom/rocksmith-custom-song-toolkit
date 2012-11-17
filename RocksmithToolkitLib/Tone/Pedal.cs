@@ -3,6 +3,13 @@ using System.Linq;
 
 namespace RocksmithToolkitLib.Tone
 {
+    public enum PedalType
+    {
+        Amp,
+        Cabinet,
+        Pedal
+    }
+
     public class Pedal
     {
         public string Name { get; set; }
@@ -14,15 +21,31 @@ namespace RocksmithToolkitLib.Tone
         public bool AllowPost { get; set; }
         public bool AllowPre { get; set; }
 
-        public string DisplayName
+        public PedalType TypeEnum
         {
             get
             {
                 switch (Type.ToLower())
                 {
                     case "amp":
-                        return Name;
+                        return PedalType.Amp;
                     case "cabinet":
+                        return PedalType.Cabinet;
+                    default:
+                        return PedalType.Pedal;
+                }
+            }
+        }
+
+        public string DisplayName
+        {
+            get
+            {
+                switch (TypeEnum)
+                {
+                    case PedalType.Amp:
+                        return Name;
+                    case PedalType.Cabinet:
                         return string.Format("{0} {1}", Name, Category);
                     default:
                         return string.Format("{0}: {1}", Category, Name);

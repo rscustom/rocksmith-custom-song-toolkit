@@ -13,6 +13,8 @@ namespace RocksmithToolkitLib.DLCPackage
         public static void Generate(string dlcName, Tone.Tone tone, Stream outManifest, Stream outXblock, Stream aggregateGraph)
         {
             var id = IdGenerator.Guid().ToString().Replace("-", "").ToUpper();
+            if (string.IsNullOrEmpty(tone.Name))
+                tone.Name = dlcName + " Tone";
             tone.Key = dlcName;
             tone.PersistentID = id;
             tone.BlockAsset = String.Format("urn:emergent-world:DLC_Tone_{0}", dlcName);
