@@ -12,5 +12,6 @@ namespace RocksmithToolkitLib.DLCPackage
         public string AlbumArtPath { get; set; }
         public string OggPath { get; set; }
         public IList<Arrangement> Arrangements { get; set; }
+        public Tone.Tone Tone { get; set; }
     }
 }

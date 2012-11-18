@@ -12,7 +12,35 @@ namespace RocksmithToolkitLib.Sng
 {
     public enum GamePlatform { Pc, Console };
     public enum ArrangementType { Instrument, Vocal }
-    public enum InstrumentTuning {  Standard, DropD, EFlat, OpenG };
+    public enum InstrumentTuning { Standard, DropD, EFlat, OpenG }
+    public static class InstrumentTuningExtensions {
+        private static readonly int[] StandardOffsets = { 0, 0, 0, 0, 0, 0 };
+        private static readonly int[] DropDOffsets = { -2, 0, 0, 0, 0, 0 };
+        private static readonly int[] EFlatOffsets = { -1, -1, -1, -1, -1, -1 };
+        private static readonly int[] OpenGOffsets = { -2, -2, 0, 0, 0, -2 };
+        private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
+        public static IList<int> GetOffsets(this InstrumentTuning tuning)
+        {
+            switch (tuning)
+            {
+                case InstrumentTuning.Standard:
+                    return StandardOffsets;
+                case InstrumentTuning.DropD:
+                    return DropDOffsets;
+                case InstrumentTuning.EFlat:
+                    return EFlatOffsets;
+                case InstrumentTuning.OpenG:
+                    return OpenGOffsets;
+                default:
+                    throw new InvalidOperationException("Unexpected tuning value");
+            }
+        }
+        public static int GetMidiNote(this InstrumentTuning tuning, int stringNumber, int fret)
+        {
+            if (fret == -1) return -1;
+            return StandardMidiNotes[stringNumber] + tuning.GetOffsets()[stringNumber] + fret;
+        }
+    };
 
     public struct TimeLinkedEntity
     {
@@ -287,12 +315,12 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(chordTemplate.Finger5);
 
                 // note values
-                w.Write(GetMidiNote(tuning, 0, chordTemplate.Fret0));
-                w.Write(GetMidiNote(tuning, 1, chordTemplate.Fret1));
-                w.Write(GetMidiNote(tuning, 2, chordTemplate.Fret2));
-                w.Write(GetMidiNote(tuning, 3, chordTemplate.Fret3));
-                w.Write(GetMidiNote(tuning, 4, chordTemplate.Fret4));
-                w.Write(GetMidiNote(tuning, 5, chordTemplate.Fret5));
+                w.Write(tuning.GetMidiNote(0, chordTemplate.Fret0));
+                w.Write(tuning.GetMidiNote(1, chordTemplate.Fret1));
+                w.Write(tuning.GetMidiNote(2, chordTemplate.Fret2));
+                w.Write(tuning.GetMidiNote(3, chordTemplate.Fret3));
+                w.Write(tuning.GetMidiNote(4, chordTemplate.Fret4));
+                w.Write(tuning.GetMidiNote(5, chordTemplate.Fret5));
 
                 // chord name
                 string name = chordTemplate.ChordName;
@@ -304,32 +332,7 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(new byte[32 - name.Length]);
             }
         }
-
-        // MIDI values for the open strings for each tuning, in EADGBe order
-        private static readonly int[] StandardOpenNotes = { 40, 45, 50, 55, 59, 64 };
-        private static readonly int[] DropDOpenNotes = { 38, 45, 50, 55, 59, 64 };
-        private static readonly int[] EFlatOpenNotes = { 39, 44, 49, 54, 58, 63 };
-        private static readonly int[] OpenGOpenNotes = { 38, 43, 50, 55, 59, 62 };
-
-        private static int GetMidiNote(InstrumentTuning tuning, int stringg, int fret)
-        {
-            if (fret == -1)
-                return -1;
-            switch (tuning)
-            {
-                case InstrumentTuning.Standard:
-                    return StandardOpenNotes[stringg] + fret;
-                case InstrumentTuning.DropD:
-                    return DropDOpenNotes[stringg] + fret;
-                case InstrumentTuning.EFlat:
-                    return EFlatOpenNotes[stringg] + fret;
-                case InstrumentTuning.OpenG:
-                    return OpenGOpenNotes[stringg] + fret;
-                default:
-                    throw new InvalidOperationException("Unexpected tuning value");
-            }
-        }
-
+        
         // NO EXAMPLES IN ROCKSMITH?
         private static void WriteRocksmithSngFretHandMuteTemplates(EndianBinaryWriter w, SongFretHandMuteTemplates fretHandMuteTemplates)
         {
@@ -939,3 +942,4 @@ namespace RocksmithToolkitLib.Sng
         }
     }
 }
+
