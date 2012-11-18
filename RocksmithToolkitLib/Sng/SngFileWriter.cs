@@ -181,9 +181,9 @@ namespace RocksmithToolkitLib.Sng
                     w.Write(currentMeasure);
                     w.Write(currentMeasureBeat);
                     w.Write(true);
-                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
-                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
-                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
+                    w.Write(false);
+                    w.Write(false);
+                    w.Write(false);
                 }
                 else if (measure == -1)
                 {
@@ -192,9 +192,9 @@ namespace RocksmithToolkitLib.Sng
                     w.Write(currentMeasure);
                     w.Write(currentMeasureBeat);
                     w.Write(false);
-                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
-                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
-                    w.Write(false); // TODO: confirm why populated with 00 on some examples and FF on others.
+                    w.Write(false);
+                    w.Write(false);
+                    w.Write(false);
                 }
             }
         }
