@@ -18,6 +18,37 @@ namespace RocksmithToolkitLib.DLCPackage
         public ManifestBuilder()
         {
             Manifest = new Manifest.Manifest();
+            SectionUINames = new Dictionary<string, string>();
+            SectionUINames.Add("intro", "$[6005] Intro [1]");
+            SectionUINames.Add("outro", "$[6006] Outro [1]");
+            SectionUINames.Add("verse", "$[6007] Verse [1]");
+            SectionUINames.Add("chorus", "$[6008] Chorus [1]");
+            SectionUINames.Add("bridge", "$[6009] Bridge [1]");
+            SectionUINames.Add("solo", "$[6010] Solo [1]");
+            SectionUINames.Add("ambient", "$[6011] Ambient [1]");
+            SectionUINames.Add("breakdown", "$[6012] Breakdown [1]");
+            SectionUINames.Add("interlude", "$[6013] Interlude [1]");
+            SectionUINames.Add("prechorus", "$[6014] Pre Chorus [1]");
+            SectionUINames.Add("transition", "$[6015] Transition [1]");
+            SectionUINames.Add("postchorus", "$[6016] Post Chorus [1]");
+            SectionUINames.Add("hook", "$[6017] Hook [1]");
+            SectionUINames.Add("riff", "$[6018] Riff [1]");
+            SectionUINames.Add("fadein", "$[6077] Fade In [1]");
+            SectionUINames.Add("fadeout", "$[6078] Fade Out [1]");
+            SectionUINames.Add("buildup", "$[6079] Buildup [1]");
+            SectionUINames.Add("preverse", "$[6080] Pre Verse [1]");
+            SectionUINames.Add("modverse", "$[6081] Modulated Verse [1]");
+            SectionUINames.Add("postvs", "$[6082] Post Verse [1]");
+            SectionUINames.Add("variation", "$[6083] Variation [1]");
+            SectionUINames.Add("modchorus", "$[6084] Modulated Chorus [1]");
+            SectionUINames.Add("head", "$[6085] Head [1]");
+            SectionUINames.Add("modbridge", "$[6086] Modulated Bridge [1]");
+            SectionUINames.Add("melody", "$[6087] Melody [1]");
+            SectionUINames.Add("postbrdg", "$[6088] Post Bridge [1]");
+            SectionUINames.Add("prebrdg", "$[6089] Pre Bridge [1]");
+            SectionUINames.Add("vamp", "$[6090] Vamp [1]");
+            SectionUINames.Add("noguitar", "$[6091] No Guitar [1]");
+            SectionUINames.Add("silence", "$[6092] Silence [1]");
         }
         public string GenerateManifest(string dlcName, IList<Arrangement> arrangements)
         {
@@ -214,8 +245,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
         }
-
-        private static void GenerateSectionData(Attributes attribute, Song song)
+        private Dictionary<string, string> SectionUINames { get; set; }
+        private void GenerateSectionData(Attributes attribute, Song song)
         {
             for (int i = 0; i < song.Sections.Section.Length; i++)
             {
@@ -229,6 +260,27 @@ namespace RocksmithToolkitLib.DLCPackage
                     UIName = String.Format("$[6007] {0} [1]", section.Name)
 
                 };
+                var sep = sect.Name.Split(new string[1] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                if (sep.Length == 1)
+                {
+                    string uiName;
+                    if (SectionUINames.TryGetValue(sep[0], out uiName))
+                        sect.UIName = uiName;
+                }
+                else
+                {
+                    string uiName;
+                    if (SectionUINames.TryGetValue(sep[0], out uiName))
+                    {
+                        try
+                        {
+                            if (Convert.ToInt32(sep[1]) != 0 || Convert.ToInt32(sep[1]) != 1)
+                                uiName += String.Format("|{0}", sep[1]);
+                        }
+                        catch { }
+                        sect.UIName = uiName;
+                    }
+                }
                 var phraseIterStart = -1;
                 var phraseIterEnd = 0;
                 var isSolo = false;
