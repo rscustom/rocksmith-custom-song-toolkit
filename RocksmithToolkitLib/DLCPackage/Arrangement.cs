@@ -29,14 +29,9 @@ namespace RocksmithToolkitLib.DLCPackage
         public bool PreBends { get; set; }
         public string Tuning { get; set; }
         public bool Vibrato { get; set; }
-        public int SongDifficulty { get; set; }
-        public string Artist { get; set; }
-        public int AverageTempo { get; set; }
-        public string SongDisplayName { get; set; }
-        public int SongYear { get; set; }
         public override string ToString()
         {
-            return String.Format("{0} - {1}", Name, Artist);
+            return String.Format("{0}", Name);
         }
     }
 }

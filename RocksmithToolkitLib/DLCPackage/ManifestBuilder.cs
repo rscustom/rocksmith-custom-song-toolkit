@@ -13,7 +13,6 @@ namespace RocksmithToolkitLib.DLCPackage
     public class ManifestBuilder
     {
         public AggregateGraph.AggregateGraph AggregateGraph { get; set; }
-        public string AlbumName { get; set; }
         public Manifest.Manifest Manifest { get; private set; }
         public ManifestBuilder()
         {
@@ -50,7 +49,7 @@ namespace RocksmithToolkitLib.DLCPackage
             SectionUINames.Add("noguitar", "$[6091] No Guitar [1]");
             SectionUINames.Add("silence", "$[6092] Silence [1]");
         }
-        public string GenerateManifest(string dlcName, IList<Arrangement> arrangements)
+        public string GenerateManifest(string dlcName, IList<Arrangement> arrangements, SongInfo songInfo)
         {
             var manifest = Manifest;
             manifest.Entries = new Dictionary<string, Dictionary<string, Attributes>>();
@@ -68,9 +67,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 var attribute = new Attributes();
                 Guid id = x.Id;
                 attribute.AlbumArt = String.Format("urn:llid:{0}", AggregateGraph.AlbumArt.LLID);
-                attribute.AlbumNameSort = attribute.AlbumName = AlbumName;
+                attribute.AlbumNameSort = attribute.AlbumName = songInfo.Album;
                 attribute.ArrangementName = x.Name;
-                attribute.ArtistName = attribute.ArtistNameSort = x.Artist;
+                attribute.ArtistName = attribute.ArtistNameSort = songInfo.Artist;
                 attribute.AssociatedTechniques = new List<string>();//
                 attribute.BarChords = x.BarChords;
                 attribute.Bends = false;//
@@ -78,7 +77,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.BlockAsset = String.Format("urn:emergent-world:{0}", AggregateGraph.XBlock.Name);
                 attribute.ChordTemplates = null;//
                 attribute.DISC_DLC_OTHER = "Disc";
-                attribute.DisplayName = x.SongDisplayName;
+                attribute.DisplayName = songInfo.SongDisplayName;
                 attribute.DLCPreview = false;
                 attribute.DoubleStops = x.DoubleStops;
                 attribute.DropDPowerChords = x.DropDPowerChords;
@@ -141,10 +140,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.SongEvent = String.Format("Play_{0}", "DammitClean");
                 attribute.SongKey = dlcName;
                 attribute.SongLength = 0;
-                attribute.SongNameSort = attribute.SongName = dlcName;
+                attribute.SongNameSort = attribute.SongName = songInfo.SongDisplayName;
                 attribute.SongPartition = 0;
                 attribute.SongXml = String.Format("urn:llid:{0}", x.SongXml.LLID);
-                attribute.SongYear = x.SongYear;
+                attribute.SongYear = songInfo.SongYear;
                 attribute.Sustain = false;
                 attribute.Syncopation = false;
                 attribute.TargetScore = 0;
@@ -173,7 +172,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         song.Sections.Section = new SongSection[0];
                     if (song.ChordTemplates.ChordTemplate == null)
                         song.ChordTemplates.ChordTemplate = new SongChordTemplate[0];
-                    attribute.AverageTempo = x.AverageTempo;
+                    attribute.AverageTempo = songInfo.AverageTempo;
                     attribute.RepresentativeArrangement = true;
                     attribute.SongPartition = songPartitioncnt++;
                     attribute.SongLength = song.SongLength;
@@ -187,7 +186,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     attribute.Tremolo = song.HasTremolo();
                     attribute.TargetScore = 100000;
                     attribute.ToneUnlockScore = 70000;
-                    attribute.SongDifficulty = x.SongDifficulty;
+                    attribute.SongDifficulty = songInfo.SongDifficulty;
                     GenerateChordTemplateData(attribute, song);
                     GeneratePhraseData(attribute, song);
                     GenerateSectionData(attribute, song);

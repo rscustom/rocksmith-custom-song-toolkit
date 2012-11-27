@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -81,6 +82,7 @@
     <Compile Include="DLCPackage\Packer.cs" />
     <Compile Include="DLCPackage\RandomGenerator.cs" />
     <Compile Include="DLCPackage\RijndaelEncryptor.cs" />
+    <Compile Include="DLCPackage\SongInfo.cs" />
     <Compile Include="EnumerableExtension.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Ogg\OggFile.cs" />

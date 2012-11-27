@@ -25,6 +25,32 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
             InitializeTextBoxes();
             InitializeComboBoxes(allPedals);
+            RefreshControls();
+        }
+
+        public void RefreshControls()
+        {
+            UpdateComboSelection(ampBox, "Amp");
+            UpdateComboSelection(cabinetBox, "Cabinet");
+
+            UpdateComboSelection(prePedal1Box, "PrePedal1");
+            UpdateComboSelection(prePedal2Box, "PrePedal2");
+            UpdateComboSelection(prePedal3Box, "PrePedal3");
+
+            UpdateComboSelection(loopPedal1Box, "LoopPedal1");
+            UpdateComboSelection(loopPedal2Box, "LoopPedal2");
+            UpdateComboSelection(loopPedal3Box, "LoopPedal3");
+
+            UpdateComboSelection(postPedal1Box, "PostPedal1");
+            UpdateComboSelection(postPedal2Box, "PostPedal2");
+            UpdateComboSelection(postPedal3Box, "PostPedal3");
+        }
+
+        private void UpdateComboSelection(ComboBox box, string pedalSlot)
+        {
+            box.SelectedItem = Tone.PedalList.ContainsKey(pedalSlot)
+                ? box.Items.OfType<Pedal>().First(p => p.Key == Tone.PedalList[pedalSlot].PedalKey)
+                : null;
         }
 
         private void InitializeTextBoxes()
@@ -107,9 +133,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                     knobSelectButton.Enabled = pedalSetting.KnobValues.Any();
                 }
             };
-            box.SelectedItem = Tone.PedalList.ContainsKey(pedalSlot)
-                ? box.Items.OfType<Pedal>().First(p => p.Key == Tone.PedalList[pedalSlot].PedalKey)
-                : null;
+            UpdateComboSelection(box, pedalSlot);
         }
     }
 }

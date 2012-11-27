@@ -48,8 +48,21 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         {
             var songfilepath = SngFilePath.Text;
             var xmlfilepath = XmlFilePath.Text;
-            if (!File.Exists(songfilepath) || !File.Exists(xmlfilepath))
+            if (!File.Exists(xmlfilepath))
+            {
+                XmlFilePath.Focus();
                 return;
+            }
+            if (!File.Exists(songfilepath))
+            {
+                SngFilePath.Focus();
+                return;
+            }
+            if (!IsVocal.Checked && string.IsNullOrEmpty(ArrangementName.Text))
+            {
+                ArrangementName.Focus();
+                return;
+            }
 
             var arrangement = new Arrangement
             {
@@ -63,21 +76,18 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 OpenChords = OpenChords.Checked,
                 PowerChords = PowerChords.Checked,
                 PreBends = PreBends.Checked,
-                AverageTempo = readInt(AverageTempo.Text),
                 RelativeDifficulty = readInt(RelativeDifficulty.Text),
                 SlapAndPop = SlapAndPop.Checked,
-                SongDifficulty = readInt(SongDifficulty.Text),
                 Tuning = Tuning.Text,
                 Vibrato = Vibrato.Checked,
                 SongFile = new SongFile {File = songfilepath},
                 SongXml = new SongXML {File = xmlfilepath}
             };
-            if (arrangement.AverageTempo == -1)
-                return;
             if (arrangement.RelativeDifficulty == -1)
+            {
+                RelativeDifficulty.Focus();
                 return;
-            if (arrangement.SongDifficulty == -1)
-                return;
+            }
             Arrangement = arrangement;
             Close();
         }

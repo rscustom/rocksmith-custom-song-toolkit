@@ -13,13 +13,13 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             using (var packPsarcStream = new MemoryStream())
             {
-                GeneratePackagePsarc(packPsarcStream, info.Name, info.Album, info.AlbumArtPath, info.OggPath, info.Arrangements, info.Tone);
+                GeneratePackagePsarc(packPsarcStream, info.Name, info.SongInfo, info.AlbumArtPath, info.OggPath, info.Arrangements, info.Tone);
                 using (var fl = File.Create(packagePath))
                     RijndaelEncryptor.Encrypt(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
             }
         }
 
-        private static void GeneratePackagePsarc(Stream output, string dlcName, string album, string albumArtPath, string oggPath, IList<Arrangement> arrangements, Tone.Tone tone)
+        private static void GeneratePackagePsarc(Stream output, string dlcName, SongInfo songInfo, string albumArtPath, string oggPath, IList<Arrangement> arrangements, Tone.Tone tone)
         {
             using (var appIdStream = new MemoryStream())
             using (var packageListStream = new MemoryStream())
@@ -34,7 +34,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 GeneratePackageList(packageListStream, dlcName);
                 packPsarc.AddEntry("PackageList.txt", packageListStream);
 
-                GenerateSongPsarc(songPsarcStream, dlcName, album, albumArtPath, oggPath, arrangements);
+                GenerateSongPsarc(songPsarcStream, dlcName, songInfo, albumArtPath, oggPath, arrangements);
                 packPsarc.AddEntry(String.Format("{0}.psarc", dlcName), songPsarcStream);
 
                 GenerateTonePsarc(tonePsarcStream, dlcName, tone);
@@ -63,7 +63,7 @@ namespace RocksmithToolkitLib.DLCPackage
             output.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void GenerateSongPsarc(Stream output, string dlcName, string album, string albumArtPath, string oggPath, IList<Arrangement> arrangements)
+        private static void GenerateSongPsarc(Stream output, string dlcName, SongInfo songInfo, string albumArtPath, string oggPath, IList<Arrangement> arrangements)
         {
             var soundBankName = String.Format("Song_{0}", dlcName);
             
@@ -78,7 +78,6 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 var manifestBuilder = new ManifestBuilder
                 {
-                    AlbumName = album,
                     AggregateGraph = new AggregateGraph.AggregateGraph
                     {
                         SoundBank = new SoundBank { File = soundBankName + ".bnk" },
@@ -97,7 +96,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 aggregateGraphStream.Seek(0, SeekOrigin.Begin);
 
                 {
-                    var manifestData = manifestBuilder.GenerateManifest(dlcName, arrangements);
+                    var manifestData = manifestBuilder.GenerateManifest(dlcName, arrangements, songInfo);
                     var writer = new StreamWriter(manifestStream);
                     writer.Write(manifestData);
                     writer.Flush();
