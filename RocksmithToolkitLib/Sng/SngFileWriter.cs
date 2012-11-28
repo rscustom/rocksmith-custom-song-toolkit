@@ -723,8 +723,8 @@ namespace RocksmithToolkitLib.Sng
                 // chord start time again ???
                 w.Write(handShape.StartTime); 
 
-                // chord start time again ???
-                w.Write(handShape.StartTime);
+                // This should actually be the time of the last chord before the end time.
+                w.Write(handShape.EndTime);
             }
         }
 
@@ -847,23 +847,15 @@ namespace RocksmithToolkitLib.Sng
         // INCOMPLETE
         private static void WriteRocksmithSngMetaDetails(EndianBinaryWriter w, Song s, InstrumentTuning tuning)
         {
-            // unknown
-            w.Write(0); // populated on training charts only (?)    
+            // Max score when fully leveled (minus bonuses - always 100000).  Or possible Master mode unlock score
+            w.Write((Double)100000);
+
+            double totalNotes = s.Levels.Level.OrderByDescending(l => l.Difficulty).First().Notes.Count;
+            // Total notes when fully leveled
+            w.Write(totalNotes);
 
             // unknown
-            w.Write((Single)7.7629395); // always this value?  related to scoring
-
-            // unknown
-            w.Write(0); // populated on training charts only (?)   
-
-            // unknown
-            w.Write((Single)4.5); // float value typically around ~4.5
-
-            // unknown
-            w.Write(0); // seems to be related to scoring
-
-            // unknown
-            w.Write((Single)3.5); // seems to be related to scoring; float value typically around ~3.5
+            w.Write(100000d / totalNotes);
       
             // song beat timing
             if (s.Ebeats.Ebeat.Length < 2)

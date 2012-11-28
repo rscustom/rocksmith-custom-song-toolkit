@@ -252,8 +252,8 @@ struct HAND_SHAPE
     float _unknown1;
     float _unknown2;
     long ChordId;
-    float _unknown_StartTimeAgain;
-    float _unknown_JustBeforeEndTime;
+    float FirstChordInHandShapeTime;
+    float LastChordInHandShapeTime;
 };
 
 struct HAND_SHAPES_SECTION
@@ -334,12 +334,9 @@ struct LEVELS_SECTION
 
 struct METADATA_SECTION
 {
-    long _unknown1;
-    float _unknown2;
-    long _unknown3;
-    float _unknown4;
-    blob _unknown5[4];
-    float _unknown6;
+    double MaxScore;
+    double NotesAtMaxDifficulty;
+    double PointsPerNote;
     float BeatTiming;
     float FirstBeatTime;
     char LastConversionDateTime[32];
