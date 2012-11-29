@@ -31,6 +31,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             AddSongMetadata(rsSong, zigSong);
             AddEbeats(rsSong, zigSong);
             AddNotes(rsSong, zigSong);
+            rsSong.PhraseProperties = new SongPhraseProperties { Count = 0 };
 
             rsSong.Events = new SongEvents { Count = 0 };
 
