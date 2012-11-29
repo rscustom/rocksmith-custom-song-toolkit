@@ -338,10 +338,19 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             note.Hopo = note.HammerOn;
             note.Ignore = 0;
             note.PalmMute = (zNote.IsXNote || chord.IsMute) ? (byte)1 : (byte)0;
-            note.SlideTo = -1;
             note.Sustain = (chord.EndTime - chord.StartTime > .5) ? chord.EndTime - chord.StartTime : 0;
             note.Time = (float)chord.StartTime;
             note.Tremolo = 0;
+            if (chord.IsSlide && nextChord != null)
+            {
+                note.SlideTo = Math.Max(nextChord.Notes[0].Fret, 1);
+                note.Sustain = chord.EndTime - chord.StartTime;
+                note.HammerOn = note.Hopo = note.PalmMute = 0;
+            }
+            else
+            {
+                note.SlideTo = -1;
+            }
             return note;
         }
 
