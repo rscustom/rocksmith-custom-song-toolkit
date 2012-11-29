@@ -126,6 +126,12 @@
     <Compile Include="SngFileCreator\SngFileCreator.Designer.cs">
       <DependentUpon>SngFileCreator.cs</DependentUpon>
     </Compile>
+    <Compile Include="ZiggyProEditorConverter\ConverterInput.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ZiggyProEditorConverter\ConverterInput.Designer.cs">
+      <DependentUpon>ConverterInput.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -165,6 +171,9 @@
     </Compile>
     <EmbeddedResource Include="SngFileCreator\SngFileCreator.resx">
       <DependentUpon>SngFileCreator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ZiggyProEditorConverter\ConverterInput.resx">
+      <DependentUpon>ConverterInput.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
