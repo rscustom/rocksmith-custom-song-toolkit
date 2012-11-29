@@ -850,7 +850,8 @@ namespace RocksmithToolkitLib.Sng
             // Max score when fully leveled (minus bonuses - always 100000).  Or possible Master mode unlock score
             w.Write((Double)100000);
 
-            double totalNotes = s.Levels.Level.OrderByDescending(l => l.Difficulty).First().Notes.Count;
+            var level = s.Levels.Level.OrderByDescending(l => l.Difficulty).First();
+            double totalNotes = level.Notes.Count + level.Chords.Count;
             // Total notes when fully leveled
             w.Write(totalNotes);
 
