@@ -622,21 +622,21 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(phrases.Phrase.Length);
                 foreach (var phrase in phrases.Phrase)
                 {
-                    w.Write(Convert.ToSingle(1)); // unknown float here; hard coded to 1 for now
+                    w.Write(Convert.ToSingle(1)); // This is the number of notes + chords in all iterations of this phrase for this level, divided by number of iterations of this phrase
                 }
 
                 // count of phrase iterations
                 w.Write(phraseIterations.PhraseIteration.Length);
                 foreach (var phraseIteration in phraseIterations.PhraseIteration)
                 {
-                    w.Write(1); // unknown int or flags here?; hard coded to 1 for now
+                    w.Write(1); // This appears to be the number of notes + chords in each iteration for this level
                 }
 
                 // count of phrase iterations
                 w.Write(phraseIterations.PhraseIteration.Length);
                 foreach (var phraseIteration in phraseIterations.PhraseIteration)
                 {
-                    w.Write(1); // unknown int or flags here?; hard coded to 1 for now
+                    w.Write(1); // This appears to be the number of notes + chords in each iteration for this level
                 }
             }
         }

@@ -291,27 +291,22 @@ struct NOTES_SECTION
     struct NOTE Notes[NoteCount];
 };
 
-struct LEVEL_PHRASE
-{
-    float _unknown;
-};
-
 struct LEVEL_PHRASES_SECTION
 {
     long PhraseCount;
-    struct LEVEL_PHRASE Phrases[PhraseCount];
+    float AverageNotesPerIteration[PhraseCount];
 };
 
 struct LEVEL_PHRASE_ITERATIONS_1_SECTION
 {
     long PhraseIterationCount;
-    long _unknown[PhraseIterationCount];
+    long NotesInThisIteration[PhraseIterationCount];
 };
 
 struct LEVEL_PHRASE_ITERATIONS_2_SECTION
 {
     long PhraseIterationCount;
-    long _unknown[PhraseIterationCount];
+    long NotesInThisIteration[PhraseIterationCount];
 };
 
 struct LEVEL
