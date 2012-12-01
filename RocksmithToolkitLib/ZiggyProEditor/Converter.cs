@@ -45,8 +45,8 @@ namespace RocksmithToolkitLib.ZiggyProEditor
         private void AddSongMetadata(RsSong rsSong, Song zigSong)
         {
             rsSong.Arrangement = "Combo";
-            rsSong.Artist = "Dream Theater";
-            rsSong.Title = "Constant Motion";
+            rsSong.Artist = "";
+            rsSong.Title = zigSong.Name;
             rsSong.Offset = 0;
             rsSong.Part = 1;
             rsSong.LastConversionDateTime = DateTime.Now.ToString();
@@ -228,7 +228,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                     }
                     else
                     {
-                        var note = GetNote(zChord);
+                        var note = GetNote(zChord, i == zChords.Count - 1 ? null : zChords[i+1]);
                         if (note.Fret > 0)
                         {
                             if (curAnchor == null)
@@ -326,7 +326,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             return val;
         }
 
-        private SongNote GetNote(Chord chord)
+        private SongNote GetNote(Chord chord, Chord nextChord)
         {
             SongNote note = new SongNote();
             Note zNote = chord.Notes[0];
