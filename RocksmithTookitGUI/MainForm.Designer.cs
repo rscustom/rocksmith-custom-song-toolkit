@@ -201,7 +201,8 @@
             // 
             // sngFileCreatorControl
             // 
-            this.sngFileCreatorControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.sngFileCreatorControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.sngFileCreatorControl.Location = new System.Drawing.Point(25, 47);
             this.sngFileCreatorControl.Margin = new System.Windows.Forms.Padding(5);
             this.sngFileCreatorControl.Name = "sngFileCreatorControl";
@@ -210,7 +211,8 @@
             // 
             // oggConverterControl
             // 
-            this.oggConverterControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.oggConverterControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.oggConverterControl.Location = new System.Drawing.Point(25, 47);
             this.oggConverterControl.Margin = new System.Windows.Forms.Padding(5);
             this.oggConverterControl.Name = "oggConverterControl";
@@ -241,7 +243,7 @@
             // 
             this.convertInput1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.convertInput1.Location = new System.Drawing.Point(4, 4);
+            this.convertInput1.Location = new System.Drawing.Point(4, 0);
             this.convertInput1.Margin = new System.Windows.Forms.Padding(4);
             this.convertInput1.Name = "convertInput1";
             this.convertInput1.Size = new System.Drawing.Size(688, 137);
@@ -255,7 +257,6 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
