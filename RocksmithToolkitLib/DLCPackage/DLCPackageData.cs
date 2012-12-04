@@ -7,6 +7,7 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public class DLCPackageData
     {
+        public string AppId { get; set; }
         public string Name { get; set; }
         public SongInfo SongInfo { get; set; }
         public string AlbumArtPath { get; set; }

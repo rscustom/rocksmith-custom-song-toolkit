@@ -13,13 +13,13 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             using (var packPsarcStream = new MemoryStream())
             {
-                GeneratePackagePsarc(packPsarcStream, info.Name, info.SongInfo, info.AlbumArtPath, info.OggPath, info.Arrangements, info.Tone);
+                GeneratePackagePsarc(packPsarcStream, info.AppId, info.Name, info.SongInfo, info.AlbumArtPath, info.OggPath, info.Arrangements, info.Tone);
                 using (var fl = File.Create(packagePath))
                     RijndaelEncryptor.Encrypt(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
             }
         }
 
-        private static void GeneratePackagePsarc(Stream output, string dlcName, SongInfo songInfo, string albumArtPath, string oggPath, IList<Arrangement> arrangements, Tone.Tone tone)
+        private static void GeneratePackagePsarc(Stream output, string appId, string dlcName, SongInfo songInfo, string albumArtPath, string oggPath, IList<Arrangement> arrangements, Tone.Tone tone)
         {
             using (var appIdStream = new MemoryStream())
             using (var packageListStream = new MemoryStream())
@@ -28,7 +28,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 var packPsarc = new PSARC.PSARC();
 
-                GenerateAppId(appIdStream);
+                GenerateAppId(appIdStream, appId);
                 packPsarc.AddEntry("APP_ID", appIdStream);
 
                 GeneratePackageList(packageListStream, dlcName);
@@ -46,10 +46,10 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void GenerateAppId(Stream output)
+        private static void GenerateAppId(Stream output, string appId)
         {
             var writer = new StreamWriter(output);
-            writer.Write("206113");
+            writer.Write(appId??"206113");
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
         }

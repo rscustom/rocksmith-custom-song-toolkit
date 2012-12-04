@@ -17,6 +17,13 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         public DLCPackageCreator()
         {
             InitializeComponent();
+            var dammit = new SongAppId { Name = "Blink 182 - Dammit", AppId = "206113" };
+            cmbAppIds.Items.Add(new SongAppId { Name = "Avenged Sevenfold - Afterlife", AppId = "206175" });
+            cmbAppIds.Items.Add(new SongAppId { Name = "Avenged Sevenfold - Beast and the Harlot", AppId = "206174" });
+            cmbAppIds.Items.Add(new SongAppId { Name = "Avenged Sevenfold - Nightmare", AppId = "206176" });
+            cmbAppIds.Items.Add(dammit);
+            cmbAppIds.Items.Add(new SongAppId { Name = "Blue Oyster Cult - Godzilla", AppId = "206149" });
+            cmbAppIds.SelectedItem = dammit;
         }
 
         private string OggPath
@@ -155,6 +162,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             var path = new Uri(Path.GetDirectoryName(dlcSavePath) + Path.DirectorySeparatorChar);
 
             DlcNameTB.Text = info.Name;
+            AppIdTB.Text = info.AppId;
             AlbumTB.Text = info.SongInfo.Album;
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
             YearTB.Text = info.SongInfo.SongYear.ToString();
@@ -221,6 +229,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 SongDifficulty.Focus();
                 return null;
             }
+            if (string.IsNullOrEmpty(AppIdTB.Text))
+            {
+                AppIdTB.Focus();
+                return null;
+            }
             if (!File.Exists(OggPath))
             {
                 OggPathTB.Focus();
@@ -235,6 +248,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             var data = new DLCPackageData
             {
                 Name = DlcNameTB.Text.Replace(" ", "_"),
+                AppId = AppIdTB.Text,
                 SongInfo = new SongInfo
                 {
                     SongDisplayName = SongDisplayNameTB.Text,
@@ -251,6 +265,24 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             };
 
             return data;
+        }
+
+        public class SongAppId
+        {
+            public string Name;
+            public string AppId;
+            public override string ToString()
+            {
+                return string.Format("{0} - {1}", Name, AppId);
+            }
+        }
+
+        private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (cmbAppIds.SelectedItem != null)
+            {
+                AppIdTB.Text = ((SongAppId)cmbAppIds.SelectedItem).AppId;
+            }
         }
     }
 }

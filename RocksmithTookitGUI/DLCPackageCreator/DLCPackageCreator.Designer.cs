@@ -36,9 +36,13 @@
             this.ArrangementLB = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
             this.toneGroupBox = new System.Windows.Forms.GroupBox();
-            this.toneControl = new RocksmithTookitGUI.DLCPackageCreator.ToneControl();
             this.dlcSaveButton = new System.Windows.Forms.Button();
             this.dlcLoadButton = new System.Windows.Forms.Button();
+            this.cmbAppIds = new System.Windows.Forms.ComboBox();
+            this.AppIdTB = new RocksmithTookitGUI.CueTextBox();
+            this.AverageTempo = new RocksmithTookitGUI.CueTextBox();
+            this.SongDifficulty = new RocksmithTookitGUI.CueTextBox();
+            this.toneControl = new RocksmithTookitGUI.DLCPackageCreator.ToneControl();
             this.AlbumArtPathTB = new RocksmithTookitGUI.CueTextBox();
             this.OggPathTB = new RocksmithTookitGUI.CueTextBox();
             this.YearTB = new RocksmithTookitGUI.CueTextBox();
@@ -46,14 +50,12 @@
             this.ArtistTB = new RocksmithTookitGUI.CueTextBox();
             this.SongDisplayNameTB = new RocksmithTookitGUI.CueTextBox();
             this.DlcNameTB = new RocksmithTookitGUI.CueTextBox();
-            this.SongDifficulty = new RocksmithTookitGUI.CueTextBox();
-            this.AverageTempo = new RocksmithTookitGUI.CueTextBox();
             this.toneGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // albumArtButton
             // 
-            this.albumArtButton.Location = new System.Drawing.Point(571, 225);
+            this.albumArtButton.Location = new System.Drawing.Point(569, 247);
             this.albumArtButton.Margin = new System.Windows.Forms.Padding(4);
             this.albumArtButton.Name = "albumArtButton";
             this.albumArtButton.Size = new System.Drawing.Size(100, 28);
@@ -64,7 +66,7 @@
             // 
             // dlcGenerateButton
             // 
-            this.dlcGenerateButton.Location = new System.Drawing.Point(292, 592);
+            this.dlcGenerateButton.Location = new System.Drawing.Point(560, 615);
             this.dlcGenerateButton.Margin = new System.Windows.Forms.Padding(4);
             this.dlcGenerateButton.Name = "dlcGenerateButton";
             this.dlcGenerateButton.Size = new System.Drawing.Size(100, 36);
@@ -75,7 +77,7 @@
             // 
             // openOggButton
             // 
-            this.openOggButton.Location = new System.Drawing.Point(571, 257);
+            this.openOggButton.Location = new System.Drawing.Point(569, 279);
             this.openOggButton.Margin = new System.Windows.Forms.Padding(4);
             this.openOggButton.Name = "openOggButton";
             this.openOggButton.Size = new System.Drawing.Size(100, 28);
@@ -86,7 +88,7 @@
             // 
             // arrangementRemoveButton
             // 
-            this.arrangementRemoveButton.Location = new System.Drawing.Point(571, 123);
+            this.arrangementRemoveButton.Location = new System.Drawing.Point(571, 162);
             this.arrangementRemoveButton.Margin = new System.Windows.Forms.Padding(4);
             this.arrangementRemoveButton.Name = "arrangementRemoveButton";
             this.arrangementRemoveButton.Size = new System.Drawing.Size(100, 28);
@@ -97,7 +99,7 @@
             // 
             // arrangementAddButton
             // 
-            this.arrangementAddButton.Location = new System.Drawing.Point(571, 87);
+            this.arrangementAddButton.Location = new System.Drawing.Point(571, 126);
             this.arrangementAddButton.Margin = new System.Windows.Forms.Padding(4);
             this.arrangementAddButton.Name = "arrangementAddButton";
             this.arrangementAddButton.Size = new System.Drawing.Size(100, 28);
@@ -110,7 +112,7 @@
             // 
             this.ArrangementLB.FormattingEnabled = true;
             this.ArrangementLB.ItemHeight = 16;
-            this.ArrangementLB.Location = new System.Drawing.Point(7, 87);
+            this.ArrangementLB.Location = new System.Drawing.Point(5, 109);
             this.ArrangementLB.Margin = new System.Windows.Forms.Padding(4);
             this.ArrangementLB.Name = "ArrangementLB";
             this.ArrangementLB.Size = new System.Drawing.Size(555, 132);
@@ -119,7 +121,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 68);
+            this.label5.Location = new System.Drawing.Point(1, 90);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(97, 17);
@@ -129,7 +131,7 @@
             // toneGroupBox
             // 
             this.toneGroupBox.Controls.Add(this.toneControl);
-            this.toneGroupBox.Location = new System.Drawing.Point(7, 292);
+            this.toneGroupBox.Location = new System.Drawing.Point(5, 314);
             this.toneGroupBox.Margin = new System.Windows.Forms.Padding(4);
             this.toneGroupBox.Name = "toneGroupBox";
             this.toneGroupBox.Padding = new System.Windows.Forms.Padding(4);
@@ -138,20 +140,9 @@
             this.toneGroupBox.TabStop = false;
             this.toneGroupBox.Text = "Tone Settings";
             // 
-            // toneControl
-            // 
-            this.toneControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.toneControl.Location = new System.Drawing.Point(9, 25);
-            this.toneControl.Margin = new System.Windows.Forms.Padding(5);
-            this.toneControl.Name = "toneControl";
-            this.toneControl.Size = new System.Drawing.Size(647, 261);
-            this.toneControl.TabIndex = 0;
-            // 
             // dlcSaveButton
             // 
-            this.dlcSaveButton.Location = new System.Drawing.Point(400, 592);
+            this.dlcSaveButton.Location = new System.Drawing.Point(121, 615);
             this.dlcSaveButton.Margin = new System.Windows.Forms.Padding(4);
             this.dlcSaveButton.Name = "dlcSaveButton";
             this.dlcSaveButton.Size = new System.Drawing.Size(100, 36);
@@ -162,7 +153,7 @@
             // 
             // dlcLoadButton
             // 
-            this.dlcLoadButton.Location = new System.Drawing.Point(508, 592);
+            this.dlcLoadButton.Location = new System.Drawing.Point(13, 615);
             this.dlcLoadButton.Margin = new System.Windows.Forms.Padding(4);
             this.dlcLoadButton.Name = "dlcLoadButton";
             this.dlcLoadButton.Size = new System.Drawing.Size(100, 36);
@@ -171,10 +162,57 @@
             this.dlcLoadButton.UseVisualStyleBackColor = true;
             this.dlcLoadButton.Click += new System.EventHandler(this.dlcLoadButton_Click);
             // 
+            // cmbAppIds
+            // 
+            this.cmbAppIds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAppIds.Location = new System.Drawing.Point(349, 62);
+            this.cmbAppIds.Name = "cmbAppIds";
+            this.cmbAppIds.Size = new System.Drawing.Size(210, 24);
+            this.cmbAppIds.TabIndex = 48;
+            this.cmbAppIds.SelectedIndexChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
+            // 
+            // AppIdTB
+            // 
+            this.AppIdTB.Cue = "DLC App ID";
+            this.AppIdTB.Location = new System.Drawing.Point(208, 64);
+            this.AppIdTB.Margin = new System.Windows.Forms.Padding(4);
+            this.AppIdTB.Name = "AppIdTB";
+            this.AppIdTB.Size = new System.Drawing.Size(134, 22);
+            this.AppIdTB.TabIndex = 47;
+            // 
+            // AverageTempo
+            // 
+            this.AverageTempo.Cue = "Avg Tempo";
+            this.AverageTempo.Location = new System.Drawing.Point(106, 64);
+            this.AverageTempo.Margin = new System.Windows.Forms.Padding(4);
+            this.AverageTempo.Name = "AverageTempo";
+            this.AverageTempo.Size = new System.Drawing.Size(94, 22);
+            this.AverageTempo.TabIndex = 46;
+            // 
+            // SongDifficulty
+            // 
+            this.SongDifficulty.Cue = "Song Difficulty";
+            this.SongDifficulty.Location = new System.Drawing.Point(4, 64);
+            this.SongDifficulty.Margin = new System.Windows.Forms.Padding(4);
+            this.SongDifficulty.Name = "SongDifficulty";
+            this.SongDifficulty.Size = new System.Drawing.Size(94, 22);
+            this.SongDifficulty.TabIndex = 45;
+            // 
+            // toneControl
+            // 
+            this.toneControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toneControl.Location = new System.Drawing.Point(8, 23);
+            this.toneControl.Margin = new System.Windows.Forms.Padding(5);
+            this.toneControl.Name = "toneControl";
+            this.toneControl.Size = new System.Drawing.Size(647, 261);
+            this.toneControl.TabIndex = 0;
+            // 
             // AlbumArtPathTB
             // 
             this.AlbumArtPathTB.Cue = "Album Art File";
-            this.AlbumArtPathTB.Location = new System.Drawing.Point(7, 228);
+            this.AlbumArtPathTB.Location = new System.Drawing.Point(5, 250);
             this.AlbumArtPathTB.Margin = new System.Windows.Forms.Padding(4);
             this.AlbumArtPathTB.Name = "AlbumArtPathTB";
             this.AlbumArtPathTB.Size = new System.Drawing.Size(555, 22);
@@ -183,7 +221,7 @@
             // OggPathTB
             // 
             this.OggPathTB.Cue = "Converted WWise 2010 .ogg File";
-            this.OggPathTB.Location = new System.Drawing.Point(7, 260);
+            this.OggPathTB.Location = new System.Drawing.Point(5, 282);
             this.OggPathTB.Margin = new System.Windows.Forms.Padding(4);
             this.OggPathTB.Name = "OggPathTB";
             this.OggPathTB.Size = new System.Drawing.Size(555, 22);
@@ -192,7 +230,7 @@
             // YearTB
             // 
             this.YearTB.Cue = "Release Year";
-            this.YearTB.Location = new System.Drawing.Point(416, 34);
+            this.YearTB.Location = new System.Drawing.Point(414, 34);
             this.YearTB.Margin = new System.Windows.Forms.Padding(4);
             this.YearTB.Name = "YearTB";
             this.YearTB.Size = new System.Drawing.Size(145, 22);
@@ -201,7 +239,7 @@
             // AlbumTB
             // 
             this.AlbumTB.Cue = "Album";
-            this.AlbumTB.Location = new System.Drawing.Point(168, 34);
+            this.AlbumTB.Location = new System.Drawing.Point(167, 34);
             this.AlbumTB.Margin = new System.Windows.Forms.Padding(4);
             this.AlbumTB.Name = "AlbumTB";
             this.AlbumTB.Size = new System.Drawing.Size(239, 22);
@@ -210,7 +248,7 @@
             // ArtistTB
             // 
             this.ArtistTB.Cue = "Artist";
-            this.ArtistTB.Location = new System.Drawing.Point(4, 36);
+            this.ArtistTB.Location = new System.Drawing.Point(4, 34);
             this.ArtistTB.Margin = new System.Windows.Forms.Padding(4);
             this.ArtistTB.Name = "ArtistTB";
             this.ArtistTB.Size = new System.Drawing.Size(155, 22);
@@ -219,7 +257,7 @@
             // SongDisplayNameTB
             // 
             this.SongDisplayNameTB.Cue = "Song Title";
-            this.SongDisplayNameTB.Location = new System.Drawing.Point(168, 4);
+            this.SongDisplayNameTB.Location = new System.Drawing.Point(167, 4);
             this.SongDisplayNameTB.Margin = new System.Windows.Forms.Padding(4);
             this.SongDisplayNameTB.Name = "SongDisplayNameTB";
             this.SongDisplayNameTB.Size = new System.Drawing.Size(393, 22);
@@ -234,28 +272,12 @@
             this.DlcNameTB.Size = new System.Drawing.Size(155, 22);
             this.DlcNameTB.TabIndex = 28;
             // 
-            // SongDifficulty
-            // 
-            this.SongDifficulty.Cue = "Song Difficulty";
-            this.SongDifficulty.Location = new System.Drawing.Point(569, 4);
-            this.SongDifficulty.Margin = new System.Windows.Forms.Padding(4);
-            this.SongDifficulty.Name = "SongDifficulty";
-            this.SongDifficulty.Size = new System.Drawing.Size(94, 22);
-            this.SongDifficulty.TabIndex = 45;
-            // 
-            // AverageTempo
-            // 
-            this.AverageTempo.Cue = "Avg Tempo";
-            this.AverageTempo.Location = new System.Drawing.Point(569, 34);
-            this.AverageTempo.Margin = new System.Windows.Forms.Padding(4);
-            this.AverageTempo.Name = "AverageTempo";
-            this.AverageTempo.Size = new System.Drawing.Size(94, 22);
-            this.AverageTempo.TabIndex = 46;
-            // 
             // DLCPackageCreator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cmbAppIds);
+            this.Controls.Add(this.AppIdTB);
             this.Controls.Add(this.AverageTempo);
             this.Controls.Add(this.SongDifficulty);
             this.Controls.Add(this.dlcLoadButton);
@@ -277,7 +299,7 @@
             this.Controls.Add(this.DlcNameTB);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "DLCPackageCreator";
-            this.Size = new System.Drawing.Size(679, 636);
+            this.Size = new System.Drawing.Size(679, 659);
             this.toneGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -306,5 +328,7 @@
         private System.Windows.Forms.Button dlcLoadButton;
         private CueTextBox SongDifficulty;
         private CueTextBox AverageTempo;
+        private CueTextBox AppIdTB;
+        private System.Windows.Forms.ComboBox cmbAppIds;
     }
 }
