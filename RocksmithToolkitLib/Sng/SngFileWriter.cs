@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -593,6 +593,22 @@ namespace RocksmithToolkitLib.Sng
             // output
             foreach (var level in levels.Level)
             {
+                int[,] notesInPhrase; //Used for average notes per iteration of phrase: first index is phraseID, second determines if notes or iterations are counted.
+                notesInPhrase = new int[phraseIterations.PhraseIteration.Length,2];
+                for (int i = 0; i < phrases.Phrase.Length; i++)
+                {
+                    notesInPhrase[i,0] = 0;
+                    notesInPhrase[i,1] = 0;
+                }
+
+                int[] notesInIteration; //For counting the notes in each phrase iteration.
+                notesInIteration = new int[phraseIterations.PhraseIteration.Length];
+                for (int i = 0; i < phraseIterations.PhraseIteration.Length; i++)
+                {
+                    notesInIteration[i] = 0;
+                    notesInPhrase[phraseIterations.PhraseIteration[i].PhraseId,1] +=1; //Count iterations of each phraseID.
+                }
+                
                 // level difficulty tag
                 w.Write(level.Difficulty);
 
@@ -615,28 +631,46 @@ namespace RocksmithToolkitLib.Sng
                 // handshapes
                 WriteRocksmithSngLevelHandShapes(w, level.HandShapes);
 
-                // notes and chords
-                WriteRocksmithSngLevelNotes(w, phraseIterations, level.Notes, level.Chords, songLength);
+                // writing notes and chords, and counting their appearance in phrases and phraseiterations
+                WriteRocksmithSngLevelNotes(w, phraseIterations, level.Notes, level.Chords, songLength, notesInIteration, notesInPhrase);
 
                 // count of phrases
                 w.Write(phrases.Phrase.Length);
+                int j = 0; //Is it possible to get a counter directly from a Phrase without this? Sorry, not much of an Ooper!
                 foreach (var phrase in phrases.Phrase)
                 {
-                    w.Write(Convert.ToSingle(1)); // This is the number of notes + chords in all iterations of this phrase for this level, divided by number of iterations of this phrase
+                    if (level.Difficulty > phrase.MaxDifficulty) //Should be zero if we are beyond maxDifficulty
+                        w.Write(Convert.ToSingle(0));
+                    else
+                    {
+                        Single averageNotes=Convert.ToSingle(notesInPhrase[j,0])/Convert.ToSingle(notesInPhrase[j,1]);
+                        w.Write(averageNotes); 
+                    }
+                    j++;
                 }
 
                 // count of phrase iterations
                 w.Write(phraseIterations.PhraseIteration.Length);
+                j = 0; //Is it possible to get a counter without this?
                 foreach (var phraseIteration in phraseIterations.PhraseIteration)
                 {
-                    w.Write(1); // This appears to be the number of notes + chords in each iteration for this level
+                    if (level.Difficulty > phrases.Phrase[phraseIteration.PhraseId].MaxDifficulty) //Should be zero if we are beyond maxDifficulty
+                        w.Write(0);
+                    else
+                        w.Write(notesInIteration[j]);
+                    j++;
                 }
 
                 // count of phrase iterations
                 w.Write(phraseIterations.PhraseIteration.Length);
+                j = 0; //Is it possible to get a counter without this?
                 foreach (var phraseIteration in phraseIterations.PhraseIteration)
                 {
-                    w.Write(1); // This appears to be the number of notes + chords in each iteration for this level
+                    if (level.Difficulty > phrases.Phrase[phraseIteration.PhraseId].MaxDifficulty) //Should be zero if we are beyond maxDifficulty
+                        w.Write(0);
+                    else
+                        w.Write(notesInIteration[j]);
+                    j++;
                 }
             }
         }
@@ -729,7 +763,7 @@ namespace RocksmithToolkitLib.Sng
         }
 
         // COMPLETE except hardcoded fields
-        private static void WriteRocksmithSngLevelNotes(EndianBinaryWriter w, SongPhraseIterations phraseIterations, SongNotes notes, SongChords chords, Single songLength)
+        private static void WriteRocksmithSngLevelNotes(EndianBinaryWriter w, SongPhraseIterations phraseIterations, SongNotes notes, SongChords chords, Single songLength, int[] notesInIteration, int[,] notesInPhrase)
         {
             List<TimeLinkedEntity> notesChords = new List<TimeLinkedEntity>();
 
@@ -835,6 +869,8 @@ namespace RocksmithToolkitLib.Sng
                     {
                         w.Write(p); // phrase iteration
                         w.Write(phraseIterations.PhraseIteration[p].PhraseId);
+                        notesInIteration[p] += 1;
+                        notesInPhrase[phraseIterations.PhraseIteration[p].PhraseId,0] +=1;
                         phraseStartIterationFound = true;
                         break;
                     }
