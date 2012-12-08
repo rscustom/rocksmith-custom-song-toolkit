@@ -636,41 +636,35 @@ namespace RocksmithToolkitLib.Sng
 
                 // count of phrases
                 w.Write(phrases.Phrase.Length);
-                int j = 0; //Is it possible to get a counter directly from a Phrase without this? Sorry, not much of an Ooper!
-                foreach (var phrase in phrases.Phrase)
+                for (int i = 0; i < phrases.Phrase.Length; i++)
                 {
-                    if (level.Difficulty > phrase.MaxDifficulty) //Should be zero if we are beyond maxDifficulty
+                    if (level.Difficulty > phrases.Phrase[i].MaxDifficulty) //Should be zero if we are beyond maxDifficulty
                         w.Write(Convert.ToSingle(0));
                     else
                     {
-                        Single averageNotes=Convert.ToSingle(notesInPhrase[j,0])/Convert.ToSingle(notesInPhrase[j,1]);
-                        w.Write(averageNotes); 
+                        Single averageNotes = Convert.ToSingle(notesInPhrase[i, 0]) / Convert.ToSingle(notesInPhrase[i, 1]);
+                        w.Write(averageNotes);
                     }
-                    j++;
                 }
 
-                // count of phrase iterations
+                // write notes in each phrase iteration
                 w.Write(phraseIterations.PhraseIteration.Length);
-                j = 0; //Is it possible to get a counter without this?
-                foreach (var phraseIteration in phraseIterations.PhraseIteration)
+                for (int i = 0; i < phraseIterations.PhraseIteration.Length; i++)
                 {
-                    if (level.Difficulty > phrases.Phrase[phraseIteration.PhraseId].MaxDifficulty) //Should be zero if we are beyond maxDifficulty
+                    if (level.Difficulty > phrases.Phrase[phraseIterations.PhraseIteration[i].PhraseId].MaxDifficulty) //Should be zero if we are beyond maxDifficulty
                         w.Write(0);
                     else
-                        w.Write(notesInIteration[j]);
-                    j++;
+                        w.Write(notesInIteration[i]);
                 }
 
-                // count of phrase iterations
+                // write notes in each phrase iteration (not sure how this section is different from previous one)
                 w.Write(phraseIterations.PhraseIteration.Length);
-                j = 0; //Is it possible to get a counter without this?
-                foreach (var phraseIteration in phraseIterations.PhraseIteration)
+                for (int i = 0; i < phraseIterations.PhraseIteration.Length; i++)
                 {
-                    if (level.Difficulty > phrases.Phrase[phraseIteration.PhraseId].MaxDifficulty) //Should be zero if we are beyond maxDifficulty
+                    if (level.Difficulty > phrases.Phrase[phraseIterations.PhraseIteration[i].PhraseId].MaxDifficulty) //Should be zero if we are beyond maxDifficulty
                         w.Write(0);
                     else
-                        w.Write(notesInIteration[j]);
-                    j++;
+                        w.Write(notesInIteration[i]);
                 }
             }
         }
@@ -891,7 +885,7 @@ namespace RocksmithToolkitLib.Sng
             // Total notes when fully leveled
             w.Write(totalNotes);
 
-            // unknown
+            // points per note
             w.Write(100000d / totalNotes);
       
             // song beat timing
