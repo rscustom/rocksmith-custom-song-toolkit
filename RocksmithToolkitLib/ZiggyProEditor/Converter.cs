@@ -45,7 +45,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
         private void AddSongMetadata(RsSong rsSong, Song zigSong)
         {
             rsSong.Arrangement = "Combo";
-            rsSong.Artist = "";
+            rsSong.Artist = "Unknown Artist";
             rsSong.Title = zigSong.Name;
             rsSong.Offset = 0;
             rsSong.Part = 1;

@@ -79,7 +79,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public bool Vibrato { get; set; }
         public string VocalsAssetId { get; set; }
         public bool FirstArrangementInSong { get; set; }
-        public int SongDifficulty { get; set; }
+        public float SongDifficulty { get; set; }
         public int AverageTempo { get; set; }
     }
 }

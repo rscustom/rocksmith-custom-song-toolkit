@@ -36,13 +36,12 @@
             this.ArrangementLB = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
             this.toneGroupBox = new System.Windows.Forms.GroupBox();
+            this.toneControl = new RocksmithTookitGUI.DLCPackageCreator.ToneControl();
             this.dlcSaveButton = new System.Windows.Forms.Button();
             this.dlcLoadButton = new System.Windows.Forms.Button();
             this.cmbAppIds = new System.Windows.Forms.ComboBox();
             this.AppIdTB = new RocksmithTookitGUI.CueTextBox();
             this.AverageTempo = new RocksmithTookitGUI.CueTextBox();
-            this.SongDifficulty = new RocksmithTookitGUI.CueTextBox();
-            this.toneControl = new RocksmithTookitGUI.DLCPackageCreator.ToneControl();
             this.AlbumArtPathTB = new RocksmithTookitGUI.CueTextBox();
             this.OggPathTB = new RocksmithTookitGUI.CueTextBox();
             this.YearTB = new RocksmithTookitGUI.CueTextBox();
@@ -140,6 +139,17 @@
             this.toneGroupBox.TabStop = false;
             this.toneGroupBox.Text = "Tone Settings";
             // 
+            // toneControl
+            // 
+            this.toneControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toneControl.Location = new System.Drawing.Point(8, 23);
+            this.toneControl.Margin = new System.Windows.Forms.Padding(5);
+            this.toneControl.Name = "toneControl";
+            this.toneControl.Size = new System.Drawing.Size(647, 261);
+            this.toneControl.TabIndex = 0;
+            // 
             // dlcSaveButton
             // 
             this.dlcSaveButton.Location = new System.Drawing.Point(121, 615);
@@ -165,16 +175,16 @@
             // cmbAppIds
             // 
             this.cmbAppIds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAppIds.Location = new System.Drawing.Point(349, 62);
+            this.cmbAppIds.Location = new System.Drawing.Point(308, 62);
             this.cmbAppIds.Name = "cmbAppIds";
-            this.cmbAppIds.Size = new System.Drawing.Size(210, 24);
+            this.cmbAppIds.Size = new System.Drawing.Size(251, 24);
             this.cmbAppIds.TabIndex = 48;
             this.cmbAppIds.SelectedIndexChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
             // AppIdTB
             // 
             this.AppIdTB.Cue = "DLC App ID";
-            this.AppIdTB.Location = new System.Drawing.Point(208, 64);
+            this.AppIdTB.Location = new System.Drawing.Point(167, 64);
             this.AppIdTB.Margin = new System.Windows.Forms.Padding(4);
             this.AppIdTB.Name = "AppIdTB";
             this.AppIdTB.Size = new System.Drawing.Size(134, 22);
@@ -183,31 +193,11 @@
             // AverageTempo
             // 
             this.AverageTempo.Cue = "Avg Tempo";
-            this.AverageTempo.Location = new System.Drawing.Point(106, 64);
+            this.AverageTempo.Location = new System.Drawing.Point(4, 62);
             this.AverageTempo.Margin = new System.Windows.Forms.Padding(4);
             this.AverageTempo.Name = "AverageTempo";
-            this.AverageTempo.Size = new System.Drawing.Size(94, 22);
+            this.AverageTempo.Size = new System.Drawing.Size(155, 22);
             this.AverageTempo.TabIndex = 46;
-            // 
-            // SongDifficulty
-            // 
-            this.SongDifficulty.Cue = "Song Difficulty";
-            this.SongDifficulty.Location = new System.Drawing.Point(4, 64);
-            this.SongDifficulty.Margin = new System.Windows.Forms.Padding(4);
-            this.SongDifficulty.Name = "SongDifficulty";
-            this.SongDifficulty.Size = new System.Drawing.Size(94, 22);
-            this.SongDifficulty.TabIndex = 45;
-            // 
-            // toneControl
-            // 
-            this.toneControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.toneControl.Location = new System.Drawing.Point(8, 23);
-            this.toneControl.Margin = new System.Windows.Forms.Padding(5);
-            this.toneControl.Name = "toneControl";
-            this.toneControl.Size = new System.Drawing.Size(647, 261);
-            this.toneControl.TabIndex = 0;
             // 
             // AlbumArtPathTB
             // 
@@ -279,7 +269,6 @@
             this.Controls.Add(this.cmbAppIds);
             this.Controls.Add(this.AppIdTB);
             this.Controls.Add(this.AverageTempo);
-            this.Controls.Add(this.SongDifficulty);
             this.Controls.Add(this.dlcLoadButton);
             this.Controls.Add(this.dlcSaveButton);
             this.Controls.Add(this.toneGroupBox);
@@ -326,7 +315,6 @@
         private ToneControl toneControl;
         private System.Windows.Forms.Button dlcSaveButton;
         private System.Windows.Forms.Button dlcLoadButton;
-        private CueTextBox SongDifficulty;
         private CueTextBox AverageTempo;
         private CueTextBox AppIdTB;
         private System.Windows.Forms.ComboBox cmbAppIds;

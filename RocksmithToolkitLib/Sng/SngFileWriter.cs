@@ -618,25 +618,49 @@ namespace RocksmithToolkitLib.Sng
                 // notes and chords
                 WriteRocksmithSngLevelNotes(w, phraseIterations, level.Notes, level.Chords, songLength);
 
+                var iterations = new List<dynamic>();
+                for (var it = 0; it < phraseIterations.Count; )
+                {
+                    var phraseId = phraseIterations.PhraseIteration[it].PhraseId;
+                    var start = phraseIterations.PhraseIteration[it].Time;
+                    var end = songLength;
+                    if (++it < phraseIterations.Count)
+                    {
+                        end = phraseIterations.PhraseIteration[it].Time;
+                    }
+                    int num = 0;
+                    if (level.Notes != null)
+                    {
+                        num += level.Notes.Note.Where(n => n.Time >= start && n.Time < end).Count();
+                    }
+                    if (level.Chords != null)
+                    {
+                        num += level.Chords.Chord.Where(n => n.Time >= start && n.Time < end).Count();
+                    }
+                    iterations.Add(new { PhraseId = phraseId, Notes = num });
+                }
+
                 // count of phrases
                 w.Write(phrases.Phrase.Length);
-                foreach (var phrase in phrases.Phrase)
+                for(var phrase = 0; phrase < phrases.Count; phrase++)
                 {
-                    w.Write(Convert.ToSingle(1)); // This is the number of notes + chords in all iterations of this phrase for this level, divided by number of iterations of this phrase
+                    var its = iterations.Where(it => it.PhraseId == phrase);
+
+                    w.Write(Convert.ToSingle((float)its.Sum(it => it.Notes) / (float)its.Count())); // This is the number of notes + chords in all iterations of this phrase for this level, divided by number of iterations of this phrase
                 }
 
                 // count of phrase iterations
                 w.Write(phraseIterations.PhraseIteration.Length);
-                foreach (var phraseIteration in phraseIterations.PhraseIteration)
+                foreach(var phraseIteration in iterations)
                 {
-                    w.Write(1); // This appears to be the number of notes + chords in each iteration for this level
+                    w.Write(phraseIteration.Notes);// This appears to be the number of notes + chords in each iteration for this level
                 }
 
                 // count of phrase iterations
                 w.Write(phraseIterations.PhraseIteration.Length);
-                foreach (var phraseIteration in phraseIterations.PhraseIteration)
+                foreach(var phraseIteration in iterations)
                 {
-                    w.Write(1); // This appears to be the number of notes + chords in each iteration for this level
+                    w.Write(phraseIteration.Notes); // This appears to be the number of notes + chords in each iteration for this level
                 }
             }
         }

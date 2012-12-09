@@ -30,6 +30,9 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         public void RefreshControls()
         {
+            toneNameBox.Text = Tone.Name ?? "";
+            volumeBox.Value = Tone.Volume;
+
             UpdateComboSelection(ampBox, "Amp");
             UpdateComboSelection(cabinetBox, "Cabinet");
 
@@ -59,7 +62,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 Tone.Name = toneNameBox.Text;
             volumeBox.ValueChanged += (sender, e) =>
                 Tone.Volume = volumeBox.Value;
-            volumeBox.Value = Tone.Volume;
         }
 
         private void InitializeComboBoxes(IList<Pedal> allPedals)

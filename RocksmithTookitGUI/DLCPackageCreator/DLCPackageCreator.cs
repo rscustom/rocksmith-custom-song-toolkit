@@ -23,7 +23,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             cmbAppIds.Items.Add(new SongAppId { Name = "Avenged Sevenfold - Nightmare", AppId = "206176" });
             cmbAppIds.Items.Add(dammit);
             cmbAppIds.Items.Add(new SongAppId { Name = "Blue Oyster Cult - Godzilla", AppId = "206149" });
+            cmbAppIds.Items.Add(new SongAppId { Name = "Pantera - Cowboys From Hell", AppId = "222054" });
+            cmbAppIds.Items.Add(new SongAppId { Name = "Pantera - Domination", AppId = "222055" });
+            cmbAppIds.Items.Add(new SongAppId { Name = "Pantera - Walk", AppId = "222056" });
             cmbAppIds.SelectedItem = dammit;
+            AppIdTB.Text = dammit.AppId;
         }
 
         private string OggPath
@@ -167,7 +171,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
             YearTB.Text = info.SongInfo.SongYear.ToString();
             ArtistTB.Text = info.SongInfo.Artist;
-            SongDifficulty.Text = info.SongInfo.SongDifficulty.ToString();
             AverageTempo.Text = info.SongInfo.AverageTempo.ToString();
 
             AlbumArtPath = MakeAbsolute(path, info.AlbumArtPath);
@@ -183,6 +186,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             {
                 toneControl.Tone.PedalList[pedal.Key] = pedal.Value;
             }
+            toneControl.Tone.Name = info.Tone.Name;
+            toneControl.Tone.Volume = info.Tone.Volume;
             toneControl.RefreshControls();
 
             MessageBox.Show("DLC Package template was loaded.", "DLC Package Creator");
@@ -194,7 +199,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private DLCPackageData GetPackageData()
         {
-            int year, tempo, difficulty;
+            int year, tempo;
             if(string.IsNullOrEmpty(DlcNameTB.Text)) {
                 DlcNameTB.Focus();
                 return null;
@@ -224,11 +229,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 AverageTempo.Focus();
                 return null;
             }
-            if (!int.TryParse(SongDifficulty.Text, out difficulty))
-            {
-                SongDifficulty.Focus();
-                return null;
-            }
             if (string.IsNullOrEmpty(AppIdTB.Text))
             {
                 AppIdTB.Focus();
@@ -255,8 +255,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                     Album = AlbumTB.Text,
                     SongYear = year,
                     Artist = ArtistTB.Text,
-                    AverageTempo = tempo,
-                    SongDifficulty = difficulty                    
+                    AverageTempo = tempo                    
                 },
                 AlbumArtPath = AlbumArtPath,
                 OggPath = OggPath,

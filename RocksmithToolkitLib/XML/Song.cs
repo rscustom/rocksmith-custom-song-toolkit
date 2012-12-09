@@ -64,37 +64,37 @@ namespace RocksmithToolkitLib.Xml
         public SongLevels Levels { get; set; }
         public bool HasBends()
         {
-            return Levels.Level.SelectMany(x => x.Notes.Note).Any(y => y.Bend > 0);
+            return Levels.Level.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes.Note).Any(y => y.Bend > 0);
         }
 
         public bool HasHarmonics()
         {
-            return Levels.Level.SelectMany(x => x.Notes.Note).Any(y => y.Harmonic > 0);
+            return Levels.Level.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes.Note).Any(y => y.Harmonic > 0);
         }
 
         public bool HasHOPOs()
         {
-            return Levels.Level.SelectMany(x => x.Notes.Note).Any(y => y.Hopo > 0);
+            return Levels.Level.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes.Note).Any(y => y.Hopo > 0);
         }
 
         public bool HasPalmMutes()
         {
-            return Levels.Level.SelectMany(x => x.Notes.Note).Any(y => y.PalmMute > 0);
+            return Levels.Level.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes.Note).Any(y => y.PalmMute > 0);
         }
 
         public bool HasSlides()
         {
-            return Levels.Level.SelectMany(x => x.Notes.Note).Any(y => y.SlideTo >= 0);
+            return Levels.Level.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes.Note).Any(y => y.SlideTo >= 0);
         }
 
         public bool HasSustain()
         {
-            return Levels.Level.SelectMany(x => x.Notes.Note).Any(y => y.Tremolo > 0);
+            return Levels.Level.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes.Note).Any(y => y.Sustain > 0);
         }
 
         public bool HasTremolo()
         {
-            return Levels.Level.SelectMany(x => x.Notes.Note).Any(y => y.Tremolo > 0);
+            return Levels.Level.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes.Note).Any(y => y.Tremolo > 0);
         }
     }
 

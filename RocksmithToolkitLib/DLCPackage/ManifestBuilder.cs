@@ -186,7 +186,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     attribute.Tremolo = song.HasTremolo();
                     attribute.TargetScore = 100000;
                     attribute.ToneUnlockScore = 70000;
-                    attribute.SongDifficulty = songInfo.SongDifficulty;
+                    attribute.SongDifficulty = (float)song.PhraseIterations.PhraseIteration.Sum(it => song.Phrases.Phrase[it.PhraseId].MaxDifficulty)/(float)song.PhraseIterations.Count;
                     GenerateChordTemplateData(attribute, song);
                     GeneratePhraseData(attribute, song);
                     GenerateSectionData(attribute, song);
