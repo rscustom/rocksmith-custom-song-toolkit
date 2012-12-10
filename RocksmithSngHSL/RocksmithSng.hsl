@@ -27,7 +27,7 @@ Usage:
 
 // Make sure this value is greater than the number of elements in any array
 // Free Bird has up to 1262 notes in a single Notes array!
-#pragma maxarray(2048)
+#pragma maxarray(4096)
 
 enum TUNING
 {
@@ -341,7 +341,7 @@ struct METADATA_SECTION
     short Part;
     float SongLength;
     enum TUNING Tuning;
-    float _unknown8;
+    float SongDifficulty;
     float _unknown9;
     float _unknown10;
     long MaxDifficulty;

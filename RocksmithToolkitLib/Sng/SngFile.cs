@@ -794,4 +794,13 @@ namespace RocksmithToolkitLib.Sng
             }
         }
     }
+
+    public class PhraseIterationInfo
+    {
+        public int PhraseId { get; set; }
+        public int IterationId { get; set; }
+        public float StartTime { get; set; }
+        public float EndTime { get; set; }
+        public int MaxDifficulty { get; set; }
+    }
 }
