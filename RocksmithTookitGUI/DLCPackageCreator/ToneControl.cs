@@ -12,6 +12,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 {
     public partial class ToneControl : UserControl
     {
+        private bool _RefreshingCombos = false;
+
         public Tone Tone { get; private set; }
 
         public ToneControl()
@@ -30,6 +32,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         public void RefreshControls()
         {
+            _RefreshingCombos = true;
             toneNameBox.Text = Tone.Name ?? "";
             volumeBox.Value = Tone.Volume;
 
@@ -47,6 +50,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             UpdateComboSelection(postPedal1Box, "PostPedal1");
             UpdateComboSelection(postPedal2Box, "PostPedal2");
             UpdateComboSelection(postPedal3Box, "PostPedal3");
+            _RefreshingCombos = false;
         }
 
         private void UpdateComboSelection(ComboBox box, string pedalSlot)
@@ -122,6 +126,10 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             box.Items.AddRange(pedals);
             box.SelectedValueChanged += (sender, e) =>
             {
+                if (_RefreshingCombos)
+                {
+                    return;
+                }
                 var pedal = box.SelectedItem as Pedal;
                 if (pedal == null)
                 {

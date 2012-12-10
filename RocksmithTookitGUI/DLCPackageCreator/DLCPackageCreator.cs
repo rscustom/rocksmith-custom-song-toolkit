@@ -175,6 +175,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
             AlbumArtPath = MakeAbsolute(path, info.AlbumArtPath);
             OggPath = MakeAbsolute(path, info.OggPath);
+            ArrangementLB.Items.Clear();
             foreach (var arrangement in info.Arrangements)
             {
                 arrangement.SongFile.File = MakeAbsolute(path, arrangement.SongFile.File);
