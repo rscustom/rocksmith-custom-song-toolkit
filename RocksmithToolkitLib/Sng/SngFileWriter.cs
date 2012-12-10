@@ -273,6 +273,8 @@ namespace RocksmithToolkitLib.Sng
 
                 // name tag
                 string name = phrases.Phrase[i].Name;
+				if (name.Length > 32) //catch overly long phrase names.
+					name = name.Substring(0, 32);
                 foreach (char c in name)
                 {
                     w.Write(Convert.ToByte(c));
@@ -324,6 +326,8 @@ namespace RocksmithToolkitLib.Sng
 
                 // chord name
                 string name = chordTemplate.ChordName;
+				if (name.Length > 32)
+					name = name.Substring(0, 32);
                 foreach (char c in name)
                 {
                     w.Write(Convert.ToByte(c));
@@ -510,6 +514,8 @@ namespace RocksmithToolkitLib.Sng
             {
                 // section name
                 string name = sections.Section[i].Name;
+				if (name.Length > 32) //catch overly long section names
+					name = name.Substring(0, 32);
                 foreach (char c in name)
                 {
                     w.Write(Convert.ToByte(c));
@@ -594,7 +600,7 @@ namespace RocksmithToolkitLib.Sng
             foreach (var level in levels.Level)
             {
                 int[,] notesInPhrase; //Used for average notes per iteration of phrase: first index is phraseID, second determines if notes or iterations are counted.
-                notesInPhrase = new int[phraseIterations.PhraseIteration.Length,2];
+                notesInPhrase = new int[phrases.Phrase.Length,2]; //nb: one per phrase not per iteration.
                 for (int i = 0; i < phrases.Phrase.Length; i++)
                 {
                     notesInPhrase[i,0] = 0;
