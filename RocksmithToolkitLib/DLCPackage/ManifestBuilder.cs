@@ -223,7 +223,7 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var y in attribute.PhraseIterations)
             {
                 noteCnt += GetNoteCount(y.StartTime, y.EndTime, song.Levels.Level[y.MaxDifficulty].Notes.Note);
-                if (song.Levels.Level[y.MaxDifficulty].Chords.Count > 0)
+                if (song.Levels.Level[y.MaxDifficulty].Chords!=null && song.Levels.Level[y.MaxDifficulty].Chords.Count > 0)
                     noteCnt += GetChordCount(y.StartTime, y.EndTime, song.Levels.Level[y.MaxDifficulty].Chords.Chord);
             }
             attribute.Score_MaxNotes = noteCnt;
@@ -237,7 +237,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     var multiplier = ((float)(o + 1)) / (phrase.MaxDifficulty + 1);
                     var pnv = attribute.Score_PNV;
                     var noteCount = GetNoteCount(y.StartTime, y.EndTime, song.Levels.Level[o].Notes.Note);
-                    if (song.Levels.Level[o].Chords.Count > 0)
+                    if (song.Levels.Level[o].Chords!=null && song.Levels.Level[o].Chords.Count > 0)
                         noteCount += GetChordCount(y.StartTime, y.EndTime, song.Levels.Level[o].Chords.Chord);
                     var score = pnv * noteCount * multiplier;
                     y.MaxScorePerDifficulty.Add(score);
