@@ -485,7 +485,7 @@ namespace RocksmithToolkitLib.Sng
                 string code = songControl.Code;
                 if (code.Length > 256)
                 {
-                    name = code.Substring(0, 256);
+                    code = code.Substring(0, 256);
                 }
                 foreach (char c in code)
                 {
@@ -520,7 +520,7 @@ namespace RocksmithToolkitLib.Sng
                 string eventCode = songEvent.Code;
                 if (eventCode.Length > 256)
                 {
-                    name = eventCode.Substring(0, 256);
+                    eventCode = eventCode.Substring(0, 256);
                 }
                 foreach (char c in eventCode)
                 {
