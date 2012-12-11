@@ -101,8 +101,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("phrases")]
     public class SongPhrases
     {
+        public SongPhrases(): this(new SongPhrase[0]) { }
+        public SongPhrases(IEnumerable<SongPhrase> phrases)
+        {
+            Phrase = phrases.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return Phrase == null ? 0 : Phrase.Length;
+            }
+            set { }
+        }
 
         [XmlElement("phrase")]
         public SongPhrase[] Phrase { get; set; }
@@ -130,8 +143,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("phraseIterations")]
     public class SongPhraseIterations
     {
+        public SongPhraseIterations(): this(new SongPhraseIteration[0]) { }
+        public SongPhraseIterations(IEnumerable<SongPhraseIteration> phraseIterations)
+        {
+            PhraseIteration = phraseIterations.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return PhraseIteration == null ? 0 : PhraseIteration.Length;
+            }
+            set { }
+        }
 
         [XmlElement("phraseIteration")]
         public SongPhraseIteration[] PhraseIteration { get; set; }
@@ -150,8 +176,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("linkedDiffs")]
     public class SongLinkedDiffs
     {
+        public SongLinkedDiffs(): this(new SongLinkedDiff[0]) { }
+        public SongLinkedDiffs(IEnumerable<SongLinkedDiff> linkedDiffs)
+        {
+            LinkedDiff = linkedDiffs.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return LinkedDiff == null ? 0 : LinkedDiff.Length;
+            }
+            set { }
+        }
 
         [XmlElement("linkedDiff")]
         public SongLinkedDiff[] LinkedDiff { get; set; }
@@ -170,8 +209,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("phraseProperties")]
     public class SongPhraseProperties
     {
+        public SongPhraseProperties(): this(new SongPhraseProperty[0]) { }
+        public SongPhraseProperties(IEnumerable<SongPhraseProperty> phraseProperties)
+        {
+            PhraseProperty = phraseProperties.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return PhraseProperty == null ? 0 : PhraseProperty.Length;
+            }
+            set { }
+        }
 
         [XmlElement("phraseProperty")]
         public SongPhraseProperty[] PhraseProperty { get; set; }
@@ -199,8 +251,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("chordTemplates")]
     public class SongChordTemplates
     {
+        public SongChordTemplates(): this(new SongChordTemplate[0]) { }
+        public SongChordTemplates(IEnumerable<SongChordTemplate> chordTemplates)
+        {
+            ChordTemplate = chordTemplates.ToArray();
+        }
+        
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return ChordTemplate == null ? 0 : ChordTemplate.Length;
+            }
+            set { }
+        }
 
         [XmlElement("chordTemplate")]
         public SongChordTemplate[] ChordTemplate { get; set; }
@@ -252,8 +317,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("fretHandMuteTemplates")]
     public class SongFretHandMuteTemplates
     {
+        public SongFretHandMuteTemplates(): this(new SongFretHandMuteTemplate[0]) { }
+        public SongFretHandMuteTemplates(IEnumerable<SongFretHandMuteTemplate> fretHandMuteTemplates)
+        {
+            FretHandMuteTemplate = fretHandMuteTemplates.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return FretHandMuteTemplate == null ? 0 : FretHandMuteTemplate.Length;
+            }
+            set { }
+        }
 
         [XmlElement("fretHandMuteTemplate")]
         public SongFretHandMuteTemplate[] FretHandMuteTemplate { get; set; }
@@ -269,8 +347,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("ebeats")]
     public class SongEbeats
     {
+        public SongEbeats(): this(new SongEbeat[0]) { }
+        public SongEbeats(IEnumerable<SongEbeat> ebeats)
+        {
+            Ebeat = ebeats.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return Ebeat == null ? 0 : Ebeat.Length;
+            }
+            set { }
+        }
 
         [XmlElement("ebeat")]
         public SongEbeat[] Ebeat { get; set; }
@@ -289,8 +380,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("sections")]
     public class SongSections
     {
+        public SongSections(): this(new SongSection[0]) { }
+        public SongSections(IEnumerable<SongSection> sections)
+        {
+            Section = sections.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return Section == null ? 0 : Section.Length;
+            }
+            set { }
+        }
 
         [XmlElement("section")]
         public SongSection[] Section { get; set; }
@@ -312,8 +416,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("events")]
     public class SongEvents
     {
+        public SongEvents(): this(new SongEvent[0]) { }
+        public SongEvents(IEnumerable<SongEvent> events)
+        {
+            Event = events.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return Event == null ? 0 : Event.Length;
+            }
+            set { }
+        }
 
         [XmlElement("event")]
         public SongEvent[] Event { get; set; }
@@ -332,8 +449,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("levels")]
     public class SongLevels
     {
+        public SongLevels(): this(new SongLevel[0]) { }
+        public SongLevels(IEnumerable<SongLevel> levels)
+        {
+            Level = levels.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return Level == null ? 0 : Level.Length;
+            }
+            set { }
+        }
 
         [XmlElement("level")]
         public SongLevel[] Level { get; set; }
@@ -364,8 +494,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("notes")]
     public class SongNotes
     {
+        public SongNotes(): this(new SongNote[0]) { }
+        public SongNotes(IEnumerable<SongNote> notes)
+        {
+            Note = notes.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return Note == null ? 0 : Note.Length;
+            }
+            set { }
+        }
 
         [XmlElement("note")]
         public SongNote[] Note { get; set; }
@@ -417,8 +560,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("chords")]
     public class SongChords
     {
+        public SongChords(): this(new SongChord[0]) { }
+        public SongChords(IEnumerable<SongChord> chords)
+        {
+            Chord = chords.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return Chord == null ? 0 : Chord.Length;
+            }
+            set { }
+        }
 
         [XmlElement("chord")]
         public SongChord[] Chord { get; set; }
@@ -446,8 +602,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("fretHandMutes")]
     public class SongFretHandMutes
     {
+        public SongFretHandMutes(): this(new SongFretHandMute[0]) { }
+        public SongFretHandMutes(IEnumerable<SongFretHandMute> fretHandMutes)
+        {
+            FretHandMute = fretHandMutes.ToArray();
+        }
+       
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return FretHandMute == null ? 0 : FretHandMute.Length;
+            }
+            set { }
+        }
 
         [XmlElement("fretHandMute")]
         public SongFretHandMute[] FretHandMute { get; set; }
@@ -463,8 +632,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("controls")]
     public class SongControls
     {
+        public SongControls(): this(new SongControl[0]) { }
+        public SongControls(IEnumerable<SongControl> controls)
+        {
+            Control = controls.ToArray();
+        }
+        
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return Control == null ? 0 : Control.Length;
+            }
+            set { }
+        }
 
         [XmlElement("control")]
         public SongControl[] Control { get; set; }
@@ -483,8 +665,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("anchors")]
     public class SongAnchors
     {
+        public SongAnchors(): this(new SongAnchor[0]) { }
+        public SongAnchors(IEnumerable<SongAnchor> anchors)
+        {
+            Anchor = anchors.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return Anchor == null ? 0 : Anchor.Length;
+            }
+            set { }
+        }
 
         [XmlElement("anchor")]
         public SongAnchor[] Anchor { get; set; }
@@ -503,8 +698,21 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("handShapes")]
     public class SongHandShapes
     {
+        public SongHandShapes(): this(new SongHandShape[0]) { }
+        public SongHandShapes(IEnumerable<SongHandShape> handShapes)
+        {
+            HandShape = handShapes.ToArray();
+        }
+
         [XmlAttribute("count")]
-        public Int32 Count { get; set; }
+        public Int32 Count
+        {
+            get
+            {
+                return HandShape == null ? 0 : HandShape.Length;
+            }
+            set { }
+        }
 
         [XmlElement("handShape")]
         public SongHandShape[] HandShape { get; set; }

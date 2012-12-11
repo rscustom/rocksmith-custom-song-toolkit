@@ -164,14 +164,14 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         song = (Song)serializer.Deserialize(fileStream);
                     }
-                    if (song.Phrases.Phrase == null)
-                        song.Phrases.Phrase = new SongPhrase[0];
-                    if (song.PhraseIterations.PhraseIteration == null)
-                        song.PhraseIterations.PhraseIteration = new SongPhraseIteration[0];
-                    if (song.Sections.Section == null)
-                        song.Sections.Section = new SongSection[0];
-                    if (song.ChordTemplates.ChordTemplate == null)
-                        song.ChordTemplates.ChordTemplate = new SongChordTemplate[0];
+                    if (song.Phrases == null)
+                        song.Phrases = new SongPhrases();
+                    if (song.PhraseIterations == null)
+                        song.PhraseIterations = new SongPhraseIterations();
+                    if (song.Sections == null)
+                        song.Sections = new SongSections();
+                    if (song.ChordTemplates == null)
+                        song.ChordTemplates = new SongChordTemplates();
                     attribute.AverageTempo = songInfo.AverageTempo;
                     attribute.RepresentativeArrangement = true;
                     attribute.SongPartition = songPartitioncnt++;
@@ -186,7 +186,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     attribute.Tremolo = song.HasTremolo();
                     attribute.TargetScore = 100000;
                     attribute.ToneUnlockScore = 70000;
-                    attribute.SongDifficulty = (float)song.PhraseIterations.PhraseIteration.Sum(it => song.Phrases.Phrase[it.PhraseId].MaxDifficulty)/(float)song.PhraseIterations.Count;
+                    attribute.SongDifficulty = (float)song.PhraseIterations.PhraseIteration.Average(it => song.Phrases.Phrase[it.PhraseId].MaxDifficulty);
                     GenerateChordTemplateData(attribute, song);
                     GeneratePhraseData(attribute, song);
                     GenerateSectionData(attribute, song);

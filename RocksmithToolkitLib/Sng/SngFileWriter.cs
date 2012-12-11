@@ -256,14 +256,14 @@ namespace RocksmithToolkitLib.Sng
             // Sample: begins at position 7,208 in NumberThirteen_Lead.sng
 
             // output header
-            if (phrases.Phrase == null || phrases.Phrase.Length == 0)
+            if (phrases == null || phrases.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
 
             // output header count
-            w.Write(phrases.Phrase.Length);
+            w.Write(phrases.Count);
 
             // output phrases
             for (int i = 0; i < phrases.Phrase.Length; i++)
@@ -313,14 +313,14 @@ namespace RocksmithToolkitLib.Sng
         private static void WriteRocksmithSngChordTemplates(EndianBinaryWriter w, SongChordTemplates chordTemplates, InstrumentTuning tuning)
         {
             // output header
-            if (chordTemplates.ChordTemplate == null || chordTemplates.ChordTemplate.Length == 0)
+            if (chordTemplates == null || chordTemplates.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
 
             // output header count
-            w.Write(chordTemplates.ChordTemplate.Length);
+            w.Write(chordTemplates.Count);
 
             // output chord templates
             foreach (SongChordTemplate chordTemplate in chordTemplates.ChordTemplate)
@@ -376,14 +376,14 @@ namespace RocksmithToolkitLib.Sng
             // Sample: begins at position 7,664 in NumberThirteen_Lead.sng
 
             // output header
-            if (phraseIterations.PhraseIteration == null || phraseIterations.PhraseIteration.Length == 0)
+            if (phraseIterations == null || phraseIterations.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
 
             // output header count
-            w.Write(phraseIterations.PhraseIteration.Length);
+            w.Write(phraseIterations.Count);
 
             // output phrase iterations
             for (int i = 0; i < phraseIterations.PhraseIteration.Length; i++)
@@ -404,14 +404,14 @@ namespace RocksmithToolkitLib.Sng
         private static void WriteRocksmithSngPhraseProperties(EndianBinaryWriter w, SongPhraseProperties phraseProperties)
         {
             // output header
-            if (phraseProperties.PhraseProperty == null || phraseProperties.PhraseProperty.Length == 0)
+            if (phraseProperties == null || phraseProperties.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
 
             // output header count
-            w.Write(phraseProperties.PhraseProperty.Length);
+            w.Write(phraseProperties.Count);
 
             // output phrase properties
             foreach (SongPhraseProperty phraseProperty in phraseProperties.PhraseProperty)
@@ -437,14 +437,14 @@ namespace RocksmithToolkitLib.Sng
         private static void WriteRocksmithSngLinkedDiffs(EndianBinaryWriter w, SongLinkedDiffs linkedDiffs)
         {
             // output header
-            if (linkedDiffs == null || linkedDiffs.LinkedDiff == null || linkedDiffs.LinkedDiff.Length == 0)
+            if (linkedDiffs == null || linkedDiffs.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
 
             // output header count
-            w.Write(linkedDiffs.LinkedDiff.Length);
+            w.Write(linkedDiffs.Count);
 
             foreach (SongLinkedDiff linkedDiff in linkedDiffs.LinkedDiff)
             {
@@ -466,14 +466,14 @@ namespace RocksmithToolkitLib.Sng
         private static void WriteRocksmithSngControls(EndianBinaryWriter w, SongControls controls)
         {
             // output header
-            if (controls == null || controls.Control == null || controls.Control.Length == 0)
+            if (controls == null || controls.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
 
             // output header count
-            w.Write(controls.Control.Length);
+            w.Write(controls.Count);
 
             // output controls
             foreach (var songControl in controls.Control)
@@ -502,14 +502,14 @@ namespace RocksmithToolkitLib.Sng
             // Sample: begins at position 8,172 in NumberThirteen_Lead.sng
 
             // output header
-            if (events.Event == null || events.Event.Length == 0)
+            if (events == null || events.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
 
             // output header count
-            w.Write(events.Event.Length);
+            w.Write(events.Count);
 
             // output events
             foreach (var songEvent in events.Event)
@@ -536,13 +536,13 @@ namespace RocksmithToolkitLib.Sng
         private static void WriteRocksmithSngSections(EndianBinaryWriter w, SongSections sections, SongPhraseIterations phraseIterations, Single songLength)
         {
             // output header
-            if (sections.Section == null || sections.Section.Length == 0)
+            if (sections.Section == null || sections.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
             // output header count
-            w.Write(sections.Section.Length);
+            w.Write(sections.Count);
 
             // output sections
             for (int i = 0; i < sections.Section.Length; i++)
@@ -706,14 +706,14 @@ namespace RocksmithToolkitLib.Sng
         // COMPLETE 
         private static void WriteRocksmithSngLevelAnchors(EndianBinaryWriter w, SongAnchors anchors, Xml.SongLevel level, List<PhraseIterationInfo> iterationInfo, Single songLength)
         {
-            if (anchors == null || anchors.Anchor == null || anchors.Anchor.Length == 0)
+            if (anchors == null || anchors.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
 
             // output anchors header count
-            w.Write(anchors.Anchor.Length);
+            w.Write(anchors.Count);
 
             // output anchors
             for (int i = 0; i < anchors.Anchor.Length; i++)
@@ -770,13 +770,13 @@ namespace RocksmithToolkitLib.Sng
             // sample section begins @ 328,356 in NumberThirteen_Combo.sng
             //  sample section begins @ 4,300 in TCPowerChords_Lead.sng   
 
-            if (handShapes == null || handShapes.HandShape == null || handShapes.HandShape.Length == 0)
+            if (handShapes == null || handShapes.Count == 0)
             {
                 w.Write(new byte[4]); // empty header
                 return;
             }
             // output notes header count
-            w.Write(handShapes.HandShape.Length);
+            w.Write(handShapes.Count);
 
             // ouput handshapes
             for (int i = 0; i < handShapes.HandShape.Length; i++)
@@ -823,7 +823,7 @@ namespace RocksmithToolkitLib.Sng
             List<TimeLinkedEntity> notesChords = new List<TimeLinkedEntity>();
 
             // add notes to combined note/chord array
-            if (notes != null && notes.Note != null && notes.Note.Length != 0)
+            if (notes != null && notes.Count != 0)
             {
                 notesChords.AddRange(notes.Note.Select(note =>
                     new TimeLinkedEntity
@@ -834,7 +834,7 @@ namespace RocksmithToolkitLib.Sng
             }
 
             // add chords to combined note/chord array
-            if (chords != null && chords.Chord != null && chords.Chord.Length != 0)
+            if (chords != null && chords.Count != 0)
             {
                 notesChords.AddRange(chords.Chord.Select(chord =>
                     new TimeLinkedEntity
