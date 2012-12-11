@@ -26,7 +26,7 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
             UnlockKey = "";
             IsDLC = true;
             IsPreviewOnlyItem = false;
-            Volume = -21;
+            Volume = -12;
             Description = "$[-1] ";
         }
     }
