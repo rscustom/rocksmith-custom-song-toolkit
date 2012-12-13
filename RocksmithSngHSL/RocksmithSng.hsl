@@ -207,16 +207,16 @@ struct ANCHORS_SECTION
     struct ANCHOR Anchors[AnchorCount];
 };
 
-struct UNKNOWN1
+struct SLIDE_PROPERTY
 {
-    float _unknown_Time;
-    long _unknown_Fret;
+    float SlideEndTime;
+    long SlideEndFret;
 };
 
-struct UNKNOWN1_SECTION
+struct SLIDE_PROPERTIES_SECTION
 {
     long Count;
-    struct UNKNOWN1 Unknowns[Count];
+    struct SLIDE_PROPERTY SlideProperties[Count];
 };
 
 struct UNKNOWN2
@@ -313,7 +313,7 @@ struct LEVEL
 {
     long Difficulty;
     struct ANCHORS_SECTION AnchorsSection;
-    struct UNKNOWN1_SECTION UnknownSection;
+    struct SLIDE_PROPERTIES_SECTION SlideProperties;
     struct HAND_SHAPES_SECTION HandShapesSection;
     struct NOTES_SECTION NotesSection;
     struct LEVEL_PHRASES_SECTION PhrasesSection;

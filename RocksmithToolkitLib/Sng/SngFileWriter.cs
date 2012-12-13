@@ -642,18 +642,8 @@ namespace RocksmithToolkitLib.Sng
                 // anchors
                 WriteRocksmithSngLevelAnchors(w, level.Anchors, level, iterationInfo, songLength);
 
-                // unknown section - appears in NumberThirteen_Lead.sng @ 171,032; this section first appears in level 9 of difficulty
-                // another example @ 328,272 in NumberThirteen_Combo.sng
-                w.Write(new byte[4]);
-                // has format of float (matching some anchor times + integer)
-                //6 count header
-                //12.609 + 5
-                //14.4709 + 5
-                //16.319 + 5
-                //20.0289 + 5
-                //21.91899 + 5
-                //23.78599 + 5
-                //WriteRocksmithSngLevelChords(w, levels.Level[i].Chords);
+                // slide properties
+                WriteRockmithSngLevelSlideProperties(w, level.Notes);
 
                 // handshapes
                 WriteRocksmithSngLevelHandShapes(w, level.HandShapes, level, songLength);
@@ -760,6 +750,38 @@ namespace RocksmithToolkitLib.Sng
                 if (!phraseIterationFound)
                 {
                     w.Write(iterationInfo.Count - 1);
+                }
+            }
+        }
+
+        // COMPLETE
+        private static void WriteRockmithSngLevelSlideProperties(EndianBinaryWriter w, SongNotes notes)
+        {
+            if (notes == null || notes.Count == 0)
+            {
+                w.Write(new byte[4]);
+                return;
+            }
+
+            // count of number of slides in level
+            w.Write(notes.Note.Count(x => x.SlideTo > -1));
+
+            foreach (SongNote note in notes.Note)
+            {
+                if (note.SlideTo > -1)
+                {
+                    // slide end time
+                    if (note.Sustain > 0)
+                    {
+                        w.Write(note.Time + note.Sustain);
+                    }
+                    else
+                    { // default sustain if user forgets it
+                        w.Write(note.Time + (float)0.125);
+                    }
+
+                    // slide end fret
+                    w.Write(note.SlideTo);
                 }
             }
         }
