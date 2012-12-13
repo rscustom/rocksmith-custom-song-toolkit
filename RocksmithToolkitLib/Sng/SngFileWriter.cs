@@ -942,6 +942,10 @@ namespace RocksmithToolkitLib.Sng
             double totalNotes = 0;
             foreach (var iteration in iterationInfo)
             {
+                if (s.Levels.Count <= iteration.MaxDifficulty)
+                {
+                    throw new Exception("There is a phrase defined with maxDifficulty=" + iteration.MaxDifficulty + ", but the highest difficulty level is " + (s.Levels.Count - 1));
+                }
                 var level = s.Levels.Level[iteration.MaxDifficulty];
                 if (level.Notes != null && level.Notes.Note != null)
                 {
