@@ -17,17 +17,17 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         public DLCPackageCreator()
         {
             InitializeComponent();
-            var dammit = new SongAppId { Name = "Blink 182 - Dammit", AppId = "206113" };
-            cmbAppIds.Items.Add(new SongAppId { Name = "Avenged Sevenfold - Afterlife", AppId = "206175" });
-            cmbAppIds.Items.Add(new SongAppId { Name = "Avenged Sevenfold - Beast and the Harlot", AppId = "206174" });
-            cmbAppIds.Items.Add(new SongAppId { Name = "Avenged Sevenfold - Nightmare", AppId = "206176" });
-            cmbAppIds.Items.Add(dammit);
-            cmbAppIds.Items.Add(new SongAppId { Name = "Blue Oyster Cult - Godzilla", AppId = "206149" });
-            cmbAppIds.Items.Add(new SongAppId { Name = "Pantera - Cowboys From Hell", AppId = "222054" });
-            cmbAppIds.Items.Add(new SongAppId { Name = "Pantera - Domination", AppId = "222055" });
-            cmbAppIds.Items.Add(new SongAppId { Name = "Pantera - Walk", AppId = "222056" });
-            cmbAppIds.SelectedItem = dammit;
-            AppIdTB.Text = dammit.AppId;
+            SongAppId firstSong = null;
+            foreach (var song in SongAppId.GetSongAppIds())
+            {
+                cmbAppIds.Items.Add(song);
+                if (firstSong == null)
+                {
+                    firstSong = song;
+                }
+            }
+            cmbAppIds.SelectedItem = firstSong;
+            AppIdTB.Text = firstSong.AppId;
         }
 
         private string OggPath
@@ -265,16 +265,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             };
 
             return data;
-        }
-
-        public class SongAppId
-        {
-            public string Name;
-            public string AppId;
-            public override string ToString()
-            {
-                return string.Format("{0} - {1}", Name, AppId);
-            }
         }
 
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)

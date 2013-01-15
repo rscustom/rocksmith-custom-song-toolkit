@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage;
+using System.IO;
 
 namespace RocksmithTookitGUI.DLCPackerUnpacker
 {
@@ -13,6 +14,18 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
         public DLCPackerUnpacker()
         {
             InitializeComponent();
+
+            SongAppId firstSong = null;
+            foreach (var song in SongAppId.GetSongAppIds())
+            {
+                appIdCombo.Items.Add(song);
+                if (firstSong == null)
+                {
+                    firstSong = song;
+                }
+            }
+            appIdCombo.SelectedItem = firstSong;
+            AppIdTB.Text = firstSong.AppId;
         }
 
         private void packButton_Click(object sender, EventArgs e)
@@ -67,6 +80,48 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
             }
 
             MessageBox.Show("Unpacking is complete.", "DLC Packer");
+        }
+
+        private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (appIdCombo.SelectedItem != null)
+            {
+                AppIdTB.Text = ((SongAppId)appIdCombo.SelectedItem).AppId;
+            }
+        }
+
+        private void repackButton_Click(object sender, EventArgs e)
+        {
+            IList<string> sourceFileNames;
+            string savePath;
+            var useCryptography = useCryptographyCheckbox.Checked;
+
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Multiselect = true;
+                ofd.Filter = "Custom DLC|*.dat";
+                ofd.Title = "Select one or more DLC files to update";
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+                sourceFileNames = ofd.FileNames;
+            }
+
+            var tmpDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
+            var appId = AppIdTB.Text;
+
+            foreach (string sourceFileName in sourceFileNames)
+            {
+                Application.DoEvents();
+                Packer.Unpack(sourceFileName, tmpDir, useCryptography);
+
+                var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName);
+                var appIdFile = unpackedDir + Path.DirectorySeparatorChar + "APP_ID";
+                File.WriteAllText(appIdFile, appId);
+
+                Packer.Pack(unpackedDir, sourceFileName, useCryptography);
+            }
+
+            MessageBox.Show("APP ID update is complete.", "DLC Packer");
         }
     }
 }

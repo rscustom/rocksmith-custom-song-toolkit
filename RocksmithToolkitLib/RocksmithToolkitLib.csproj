@@ -82,6 +82,7 @@
     <Compile Include="DLCPackage\Packer.cs" />
     <Compile Include="DLCPackage\RandomGenerator.cs" />
     <Compile Include="DLCPackage\RijndaelEncryptor.cs" />
+    <Compile Include="DLCPackage\SongAppId.cs" />
     <Compile Include="DLCPackage\SongInfo.cs" />
     <Compile Include="EnumerableExtension.cs" />
     <Compile Include="GlobalSuppressions.cs" />
