@@ -164,14 +164,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         song = (Song)serializer.Deserialize(fileStream);
                     }
-                    if (song.Phrases == null)
-                        song.Phrases = new SongPhrases();
-                    if (song.PhraseIterations == null)
-                        song.PhraseIterations = new SongPhraseIterations();
-                    if (song.Sections == null)
-                        song.Sections = new SongSections();
-                    if (song.ChordTemplates == null)
-                        song.ChordTemplates = new SongChordTemplates();
                     attribute.AverageTempo = songInfo.AverageTempo;
                     attribute.RepresentativeArrangement = true;
                     attribute.SongPartition = songPartitioncnt++;
@@ -186,7 +178,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     attribute.Tremolo = song.HasTremolo();
                     attribute.TargetScore = 100000;
                     attribute.ToneUnlockScore = 70000;
-                    attribute.SongDifficulty = (float)song.PhraseIterations.PhraseIteration.Average(it => song.Phrases.Phrase[it.PhraseId].MaxDifficulty);
+                    attribute.SongDifficulty = (float)song.PhraseIterations.Average(it => song.Phrases[it.PhraseId].MaxDifficulty);
                     GenerateChordTemplateData(attribute, song);
                     GeneratePhraseData(attribute, song);
                     GenerateSectionData(attribute, song);
@@ -202,12 +194,16 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private void GeneratePhraseIterationsData(Attributes attribute, Song song)
         {
-            for (int i = 0; i < song.PhraseIterations.PhraseIteration.Length; i++)
+            if (song.PhraseIterations == null)
+            {
+                return;
+            }
+            for (int i = 0; i < song.PhraseIterations.Length; i++)
             {
 
-                var phraseIteration = song.PhraseIterations.PhraseIteration[i];
-                var phrase = song.Phrases.Phrase[phraseIteration.PhraseId];
-                var endTime = i >= song.PhraseIterations.Count - 1 ? song.SongLength : song.PhraseIterations.PhraseIteration[i + 1].Time;
+                var phraseIteration = song.PhraseIterations[i];
+                var phrase = song.Phrases[phraseIteration.PhraseId];
+                var endTime = i >= song.PhraseIterations.Length - 1 ? song.SongLength : song.PhraseIterations[i + 1].Time;
                 var phraseIt = new PhraseIteration
                 {
                     StartTime = phraseIteration.Time,
@@ -222,23 +218,34 @@ namespace RocksmithToolkitLib.DLCPackage
             var noteCnt = 0;
             foreach (var y in attribute.PhraseIterations)
             {
-                noteCnt += GetNoteCount(y.StartTime, y.EndTime, song.Levels.Level[y.MaxDifficulty].Notes.Note);
-                if (song.Levels.Level[y.MaxDifficulty].Chords!=null && song.Levels.Level[y.MaxDifficulty].Chords.Count > 0)
-                    noteCnt += GetChordCount(y.StartTime, y.EndTime, song.Levels.Level[y.MaxDifficulty].Chords.Chord);
+                if (song.Levels[y.MaxDifficulty].Notes != null)
+                {
+                    noteCnt += GetNoteCount(y.StartTime, y.EndTime, song.Levels[y.MaxDifficulty].Notes);
+                }
+                if (song.Levels[y.MaxDifficulty].Chords != null )
+                {
+                    noteCnt += GetChordCount(y.StartTime, y.EndTime, song.Levels[y.MaxDifficulty].Chords);
+                }
             }
             attribute.Score_MaxNotes = noteCnt;
             attribute.Score_PNV = ((float)attribute.TargetScore) / noteCnt;
 
             foreach (var y in attribute.PhraseIterations)
             {
-                var phrase = song.Phrases.Phrase[y.PhraseIndex];
+                var phrase = song.Phrases[y.PhraseIndex];
                 for (int o = 0; o <= phrase.MaxDifficulty; o++)
                 {
                     var multiplier = ((float)(o + 1)) / (phrase.MaxDifficulty + 1);
                     var pnv = attribute.Score_PNV;
-                    var noteCount = GetNoteCount(y.StartTime, y.EndTime, song.Levels.Level[o].Notes.Note);
-                    if (song.Levels.Level[o].Chords!=null && song.Levels.Level[o].Chords.Count > 0)
-                        noteCount += GetChordCount(y.StartTime, y.EndTime, song.Levels.Level[o].Chords.Chord);
+                    var noteCount = 0;
+                    if (song.Levels[o].Chords != null)
+                    {
+                        noteCount += GetNoteCount(y.StartTime, y.EndTime, song.Levels[o].Notes);
+                    }
+                    if (song.Levels[o].Chords != null)
+                    {
+                        noteCount += GetChordCount(y.StartTime, y.EndTime, song.Levels[o].Chords);
+                    }
                     var score = pnv * noteCount * multiplier;
                     y.MaxScorePerDifficulty.Add(score);
                 }
@@ -247,15 +254,19 @@ namespace RocksmithToolkitLib.DLCPackage
         private Dictionary<string, string> SectionUINames { get; set; }
         private void GenerateSectionData(Attributes attribute, Song song)
         {
-            for (int i = 0; i < song.Sections.Section.Length; i++)
+            if (song.Sections == null)
             {
-                var section = song.Sections.Section[i];
+                return;
+            }
+            for (int i = 0; i < song.Sections.Length; i++)
+            {
+                var section = song.Sections[i];
                 var sect = new Section
                 {
                     Name = section.Name,
                     Number = section.Number,
                     StartTime = section.StartTime,
-                    EndTime = (i >= song.Sections.Section.Length - 1) ? song.SongLength : song.Sections.Section[i + 1].StartTime,
+                    EndTime = (i >= song.Sections.Length - 1) ? song.SongLength : song.Sections[i + 1].StartTime,
                     UIName = String.Format("$[6007] {0} [1]", section.Name)
 
                 };
@@ -283,16 +294,19 @@ namespace RocksmithToolkitLib.DLCPackage
                 var phraseIterStart = -1;
                 var phraseIterEnd = 0;
                 var isSolo = false;
-                for (int o = 0; o < song.PhraseIterations.Count; o++)
+                if (song.PhraseIterations != null)
                 {
-                    var phraseIter = song.PhraseIterations.PhraseIteration[o];
-                    if (phraseIterStart == -1 && phraseIter.Time >= sect.StartTime)
-                        phraseIterStart = o;
-                    if (phraseIter.Time >= sect.EndTime)
-                        break;
-                    phraseIterEnd = o;
-                    if (song.Phrases.Phrase[phraseIter.PhraseId].Solo > 0)
-                        isSolo = true;
+                    for (int o = 0; o < song.PhraseIterations.Length; o++)
+                    {
+                        var phraseIter = song.PhraseIterations[o];
+                        if (phraseIterStart == -1 && phraseIter.Time >= sect.StartTime)
+                            phraseIterStart = o;
+                        if (phraseIter.Time >= sect.EndTime)
+                            break;
+                        phraseIterEnd = o;
+                        if (song.Phrases[phraseIter.PhraseId].Solo > 0)
+                            isSolo = true;
+                    }
                 }
                 sect.StartPhraseIterationIndex = phraseIterStart;
                 sect.EndPhraseIterationIndex = phraseIterEnd;
@@ -303,10 +317,14 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void GeneratePhraseData(Attributes attribute, Song song)
         {
-            var ind = 0;
-            foreach (var y in song.Phrases.Phrase)
+            if (song.Phrases == null)
             {
-                int itcount = song.PhraseIterations.PhraseIteration.Count(z => z.PhraseId == ind);
+                return;
+            }
+            var ind = 0;
+            foreach (var y in song.Phrases)
+            {
+                int itcount = song.PhraseIterations.Count(z => z.PhraseId == ind);
                 attribute.Phrases.Add(new Phrase
                 {
                     IterationCount = itcount,
@@ -320,7 +338,11 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void GenerateChordTemplateData(Attributes attribute, Song song)
         {
             var ind = 0;
-            foreach (var y in song.ChordTemplates.ChordTemplate)
+            if (song.ChordTemplates == null)
+            {
+                return;
+            }
+            foreach (var y in song.ChordTemplates)
                 attribute.ChordTemplates.Add(new ChordTemplate
                 {
                     ChordId = ind++,

@@ -32,8 +32,10 @@ namespace RocksmithTookitGUI.SngFileCreator
         {
             get
             {
-                if (instrumentRadioButton.Checked)
-                    return ArrangementType.Instrument;
+                if (guitarRadioButton.Checked)
+                    return ArrangementType.Guitar;
+                if (bassRadioButton.Checked)
+                    return ArrangementType.Bass;
                 if (vocalsRadioButton.Checked)
                     return ArrangementType.Vocal;
                 throw new InvalidOperationException("No arrangement type selected");

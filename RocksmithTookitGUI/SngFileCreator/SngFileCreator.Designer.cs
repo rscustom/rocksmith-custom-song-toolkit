@@ -33,8 +33,10 @@
             this.littleEndianRadioBtn = new System.Windows.Forms.RadioButton();
             this.bigEndianRadioBtn = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tuningLabel = new System.Windows.Forms.Label();
+            this.tuningComboBox = new System.Windows.Forms.ComboBox();
             this.vocalsRadioButton = new System.Windows.Forms.RadioButton();
-            this.instrumentRadioButton = new System.Windows.Forms.RadioButton();
+            this.guitarRadioButton = new System.Windows.Forms.RadioButton();
             this.sngConvertButton = new System.Windows.Forms.Button();
             this.outputFileTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -42,8 +44,7 @@
             this.inputXmlTextBox = new System.Windows.Forms.TextBox();
             this.sngFileCreatorModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.xmlBrowseButton = new System.Windows.Forms.Button();
-            this.tuningComboBox = new System.Windows.Forms.ComboBox();
-            this.tuningLabel = new System.Windows.Forms.Label();
+            this.bassRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sngFileCreatorModelBindingSource)).BeginInit();
@@ -88,10 +89,11 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.bassRadioButton);
             this.groupBox1.Controls.Add(this.tuningLabel);
             this.groupBox1.Controls.Add(this.tuningComboBox);
             this.groupBox1.Controls.Add(this.vocalsRadioButton);
-            this.groupBox1.Controls.Add(this.instrumentRadioButton);
+            this.groupBox1.Controls.Add(this.guitarRadioButton);
             this.groupBox1.Location = new System.Drawing.Point(3, 94);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
@@ -100,6 +102,28 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Input File Type";
+            // 
+            // tuningLabel
+            // 
+            this.tuningLabel.AutoSize = true;
+            this.tuningLabel.Location = new System.Drawing.Point(45, 81);
+            this.tuningLabel.Name = "tuningLabel";
+            this.tuningLabel.Size = new System.Drawing.Size(126, 17);
+            this.tuningLabel.TabIndex = 6;
+            this.tuningLabel.Text = "Instrument Tuning:";
+            // 
+            // tuningComboBox
+            // 
+            this.tuningComboBox.FormattingEnabled = true;
+            this.tuningComboBox.Items.AddRange(new object[] {
+            "Standard (default)",
+            "Drop D",
+            "E Flat",
+            "Open G"});
+            this.tuningComboBox.Location = new System.Drawing.Point(182, 78);
+            this.tuningComboBox.Name = "tuningComboBox";
+            this.tuningComboBox.Size = new System.Drawing.Size(176, 24);
+            this.tuningComboBox.TabIndex = 0;
             // 
             // vocalsRadioButton
             // 
@@ -112,18 +136,17 @@
             this.vocalsRadioButton.Text = "Vocals / Lyrics";
             this.vocalsRadioButton.UseVisualStyleBackColor = true;
             // 
-            // instrumentRadioButton
+            // guitarRadioButton
             // 
-            this.instrumentRadioButton.AutoSize = true;
-            this.instrumentRadioButton.Checked = true;
-            this.instrumentRadioButton.Location = new System.Drawing.Point(45, 34);
-            this.instrumentRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.instrumentRadioButton.Name = "instrumentRadioButton";
-            this.instrumentRadioButton.Size = new System.Drawing.Size(95, 21);
-            this.instrumentRadioButton.TabIndex = 4;
-            this.instrumentRadioButton.TabStop = true;
-            this.instrumentRadioButton.Text = "Instrument";
-            this.instrumentRadioButton.UseVisualStyleBackColor = true;
+            this.guitarRadioButton.AutoSize = true;
+            this.guitarRadioButton.Checked = true;
+            this.guitarRadioButton.Location = new System.Drawing.Point(45, 34);
+            this.guitarRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.guitarRadioButton.Name = "guitarRadioButton";
+            this.guitarRadioButton.Size = new System.Drawing.Size(68, 21);
+            this.guitarRadioButton.TabIndex = 4;
+            this.guitarRadioButton.Text = "Guitar";
+            this.guitarRadioButton.UseVisualStyleBackColor = true;
             // 
             // sngConvertButton
             // 
@@ -183,27 +206,16 @@
             this.xmlBrowseButton.UseVisualStyleBackColor = true;
             this.xmlBrowseButton.Click += new System.EventHandler(this.xmlBrowseButton_Click);
             // 
-            // tuningComboBox
+            // bassRadioButton
             // 
-            this.tuningComboBox.FormattingEnabled = true;
-            this.tuningComboBox.Items.AddRange(new object[] {
-            "Standard (default)",
-            "Drop D",
-            "E Flat",
-            "Open G"});
-            this.tuningComboBox.Location = new System.Drawing.Point(182, 78);
-            this.tuningComboBox.Name = "tuningComboBox";
-            this.tuningComboBox.Size = new System.Drawing.Size(176, 24);
-            this.tuningComboBox.TabIndex = 0;
-            // 
-            // tuningLabel
-            // 
-            this.tuningLabel.AutoSize = true;
-            this.tuningLabel.Location = new System.Drawing.Point(45, 81);
-            this.tuningLabel.Name = "tuningLabel";
-            this.tuningLabel.Size = new System.Drawing.Size(126, 17);
-            this.tuningLabel.TabIndex = 6;
-            this.tuningLabel.Text = "Instrument Tuning:";
+            this.bassRadioButton.AutoSize = true;
+            this.bassRadioButton.Location = new System.Drawing.Point(144, 34);
+            this.bassRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.bassRadioButton.Name = "bassRadioButton";
+            this.bassRadioButton.Size = new System.Drawing.Size(60, 21);
+            this.bassRadioButton.TabIndex = 7;
+            this.bassRadioButton.Text = "Bass";
+            this.bassRadioButton.UseVisualStyleBackColor = true;
             // 
             // SngFileCreator
             // 
@@ -217,7 +229,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.inputXmlTextBox);
             this.Controls.Add(this.xmlBrowseButton);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SngFileCreator";
             this.Size = new System.Drawing.Size(655, 383);
             this.groupBox2.ResumeLayout(false);
@@ -237,7 +249,7 @@
         private System.Windows.Forms.RadioButton bigEndianRadioBtn;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton vocalsRadioButton;
-        private System.Windows.Forms.RadioButton instrumentRadioButton;
+        private System.Windows.Forms.RadioButton guitarRadioButton;
         private System.Windows.Forms.Button sngConvertButton;
         private System.Windows.Forms.TextBox outputFileTextBox;
         private System.Windows.Forms.Label label2;
@@ -247,5 +259,6 @@
         private System.Windows.Forms.BindingSource sngFileCreatorModelBindingSource;
         private System.Windows.Forms.Label tuningLabel;
         private System.Windows.Forms.ComboBox tuningComboBox;
+        private System.Windows.Forms.RadioButton bassRadioButton;
     }
 }

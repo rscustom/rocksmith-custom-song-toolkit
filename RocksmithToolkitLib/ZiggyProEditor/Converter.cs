@@ -31,9 +31,6 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             AddSongMetadata(rsSong, zigSong);
             AddEbeats(rsSong, zigSong);
             AddNotes(rsSong, zigSong);
-            rsSong.PhraseProperties = new SongPhraseProperties();
-
-            rsSong.Events = new SongEvents();
 
             deser = new XmlSerializer(typeof(RsSong));
             using (FileStream stream = new FileStream(outputFileName, FileMode.Create))
@@ -93,8 +90,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                     ++measure;
                 }
             }
-            rsSong.Ebeats = new SongEbeats();
-            rsSong.Ebeats.Ebeat = ebeats.ToArray();
+            rsSong.Ebeats = ebeats.ToArray();
 
 
             var guitarTrack = GetTrack(zigSong);
@@ -117,19 +113,13 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             }
             //end
             phrases.Add(new SongPhraseIteration { PhraseId = phraseId++, Time = lastNote + .001f });
-            rsSong.PhraseIterations = new SongPhraseIterations { PhraseIteration = phrases.ToArray() };
-            rsSong.Phrases = new SongPhrases
-            {
-                Phrase = phrases.Select(it =>
-                    new SongPhrase { MaxDifficulty = it.PhraseId == 0 || it.PhraseId == phrases.Count - 1 ? 0:3, Name = it.PhraseId == 0 ? "COUNT" : it.PhraseId == phrases.Count - 1 ? "END" : it.PhraseId.ToString() }).ToArray()
-            };
+            rsSong.PhraseIterations = phrases.ToArray();
+            rsSong.Phrases = phrases.Select(it =>
+                    new SongPhrase { MaxDifficulty = it.PhraseId == 0 || it.PhraseId == phrases.Count - 1 ? 0:3, Name = it.PhraseId == 0 ? "COUNT" : it.PhraseId == phrases.Count - 1 ? "END" : it.PhraseId.ToString() }).ToArray();
             phrases.RemoveAt(0);
             phrases.RemoveAt(phrases.Count - 1);
-            rsSong.Sections = new SongSections
-            {
-                Section = phrases.Select(it =>
-                    new SongSection { Name = "verse", Number = 1, StartTime = it.Time }).ToArray()
-            };
+            rsSong.Sections = phrases.Select(it =>
+                    new SongSection { Name = "verse", Number = 1, StartTime = it.Time }).ToArray();
         }
 
         private void AddNotes(RsSong rsSong, Song zigSong)
@@ -196,7 +186,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                             chord.Time = zChord.StartTime;
                             chord.ChordId = val.Item1;
 
-                            var measure = rsSong.Ebeats.Ebeat.FirstOrDefault(ebeat => ebeat.Time >= chord.Time);
+                            var measure = rsSong.Ebeats.FirstOrDefault(ebeat => ebeat.Time >= chord.Time);
                             if (measure == null || measure.Measure > lastMeasure)
                             {
                                 lastMeasure = measure == null ? lastMeasure : measure.Measure;
@@ -225,7 +215,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                     }
                     else
                     {
-                        var note = GetNote(zChord, i == zChords.Count - 1 ? null : zChords[i+1]);
+                        var note = GetNote(zChord, i == zChords.Count - 1 ? null : zChords[i + 1]);
                         if (note.Fret > 0)
                         {
                             if (curAnchor == null)
@@ -269,32 +259,30 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                 }
             }
 
-            rsSong.Levels = new SongLevels()
+            rsSong.Levels = new SongLevel[]
             {
-                Level = new SongLevel[] {
                     new SongLevel { Difficulty=0,
-                        Notes = new SongNotes { Note = notes["Easy"].ToArray() },
-                        Chords = new SongChords { Chord = chords["Easy"].ToArray() },
-                        Anchors = new SongAnchors { Anchor = anchors["Easy"].ToArray() },
-                        HandShapes = new SongHandShapes { HandShape = handShapes["Easy"].ToArray() } },
+                        Notes = notes["Easy"].ToArray() ,
+                        Chords =  chords["Easy"].ToArray() ,
+                        Anchors = anchors["Easy"].ToArray() ,
+                        HandShapes = handShapes["Easy"].ToArray()  },
                     new SongLevel { Difficulty=1,
-                        Notes = new SongNotes { Note = notes["Medium"].ToArray() },
-                        Chords = new SongChords { Chord = chords["Medium"].ToArray() },
-                        Anchors = new SongAnchors { Anchor = anchors["Medium"].ToArray() },
-                        HandShapes = new SongHandShapes { HandShape = handShapes["Medium"].ToArray() } },
+                        Notes = notes["Medium"].ToArray() ,
+                        Chords = chords["Medium"].ToArray() ,
+                        Anchors = anchors["Medium"].ToArray() ,
+                        HandShapes = handShapes["Medium"].ToArray()  },
                     new SongLevel { Difficulty=2,
-                        Notes = new SongNotes { Note = notes["Hard"].ToArray() },
-                        Chords = new SongChords { Chord = chords["Hard"].ToArray() },
-                        Anchors = new SongAnchors { Anchor = anchors["Hard"].ToArray() },
-                        HandShapes = new SongHandShapes { HandShape = handShapes["Hard"].ToArray() } },
+                        Notes = notes["Hard"].ToArray(),
+                        Chords = chords["Hard"].ToArray(),
+                        Anchors = anchors["Hard"].ToArray() ,
+                        HandShapes = handShapes["Hard"].ToArray() },
                     new SongLevel { Difficulty=3,
-                        Notes = new SongNotes { Note = notes["Expert"].ToArray() },
-                        Chords = new SongChords { Chord = chords["Expert"].ToArray() },
-                        Anchors = new SongAnchors { Anchor = anchors["Expert"].ToArray() },
-                        HandShapes = new SongHandShapes { HandShape = handShapes["Expert"].ToArray() } }
-                }
+                        Notes = notes["Expert"].ToArray() ,
+                        Chords = chords["Expert"].ToArray() ,
+                        Anchors = anchors["Expert"].ToArray() ,
+                        HandShapes = handShapes["Expert"].ToArray()  }
             };
-            rsSong.ChordTemplates = new SongChordTemplates { ChordTemplate = chordTemps.Values.OrderBy(v => v.Item1).Select(v => v.Item2).ToArray() };
+            rsSong.ChordTemplates = chordTemps.Values.OrderBy(v => v.Item1).Select(v => v.Item2).ToArray();
         }
 
         private int DeZero(int val)

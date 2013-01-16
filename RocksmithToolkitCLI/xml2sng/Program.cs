@@ -26,7 +26,7 @@ namespace Xml2Sng
             return new Arguments
             {
                 Platform = GamePlatform.Pc,
-                ArrangementType = ArrangementType.Instrument,
+                ArrangementType = ArrangementType.Guitar,
                 Tuning = InstrumentTuning.Standard
             };
         }
@@ -73,8 +73,11 @@ namespace Xml2Sng
                     "Generate a big-endian (console) file instead of little-endian (PC)",
                     v => { if (v != null) outputArguments.Platform = GamePlatform.Console; }},
                 { "vocal",
-                    "Generate from a vocal XML file instead of a song XML file",
+                    "Generate from a vocal XML file instead of a guitar XML file",
                     v => { if (v != null) outputArguments.ArrangementType = ArrangementType.Vocal; }},
+                { "bass",
+                    "Generate from a bass XML file instead of a guitar XML file",
+                    v => { if (v != null) outputArguments.ArrangementType = ArrangementType.Bass; }},
                 { "tuning=",
                     "Use an alternate tuning for this song file."
                     + " Tuning parameter should be comma-separated offsets from standard EADGBe tuning."
