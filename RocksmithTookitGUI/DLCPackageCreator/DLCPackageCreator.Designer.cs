@@ -35,8 +35,6 @@
             this.arrangementAddButton = new System.Windows.Forms.Button();
             this.ArrangementLB = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.toneGroupBox = new System.Windows.Forms.GroupBox();
-            this.toneControl = new RocksmithTookitGUI.DLCPackageCreator.ToneControl();
             this.dlcSaveButton = new System.Windows.Forms.Button();
             this.dlcLoadButton = new System.Windows.Forms.Button();
             this.cmbAppIds = new System.Windows.Forms.ComboBox();
@@ -49,7 +47,10 @@
             this.ArtistTB = new RocksmithTookitGUI.CueTextBox();
             this.SongDisplayNameTB = new RocksmithTookitGUI.CueTextBox();
             this.DlcNameTB = new RocksmithTookitGUI.CueTextBox();
-            this.toneGroupBox.SuspendLayout();
+            this.toneRemoveButton = new System.Windows.Forms.Button();
+            this.toneAddButton = new System.Windows.Forms.Button();
+            this.TonesLB = new System.Windows.Forms.ListBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // albumArtButton
@@ -65,7 +66,8 @@
             // 
             // dlcGenerateButton
             // 
-            this.dlcGenerateButton.Location = new System.Drawing.Point(560, 615);
+            this.dlcGenerateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.dlcGenerateButton.Location = new System.Drawing.Point(569, 471);
             this.dlcGenerateButton.Margin = new System.Windows.Forms.Padding(4);
             this.dlcGenerateButton.Name = "dlcGenerateButton";
             this.dlcGenerateButton.Size = new System.Drawing.Size(100, 36);
@@ -87,7 +89,7 @@
             // 
             // arrangementRemoveButton
             // 
-            this.arrangementRemoveButton.Location = new System.Drawing.Point(571, 162);
+            this.arrangementRemoveButton.Location = new System.Drawing.Point(569, 162);
             this.arrangementRemoveButton.Margin = new System.Windows.Forms.Padding(4);
             this.arrangementRemoveButton.Name = "arrangementRemoveButton";
             this.arrangementRemoveButton.Size = new System.Drawing.Size(100, 28);
@@ -98,7 +100,7 @@
             // 
             // arrangementAddButton
             // 
-            this.arrangementAddButton.Location = new System.Drawing.Point(571, 126);
+            this.arrangementAddButton.Location = new System.Drawing.Point(569, 126);
             this.arrangementAddButton.Margin = new System.Windows.Forms.Padding(4);
             this.arrangementAddButton.Name = "arrangementAddButton";
             this.arrangementAddButton.Size = new System.Drawing.Size(100, 28);
@@ -116,6 +118,7 @@
             this.ArrangementLB.Name = "ArrangementLB";
             this.ArrangementLB.Size = new System.Drawing.Size(555, 132);
             this.ArrangementLB.TabIndex = 34;
+            this.ArrangementLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ArrangementLB_MouseDoubleClick);
             // 
             // label5
             // 
@@ -127,32 +130,10 @@
             this.label5.TabIndex = 33;
             this.label5.Text = "Arrangements";
             // 
-            // toneGroupBox
-            // 
-            this.toneGroupBox.Controls.Add(this.toneControl);
-            this.toneGroupBox.Location = new System.Drawing.Point(5, 314);
-            this.toneGroupBox.Margin = new System.Windows.Forms.Padding(4);
-            this.toneGroupBox.Name = "toneGroupBox";
-            this.toneGroupBox.Padding = new System.Windows.Forms.Padding(4);
-            this.toneGroupBox.Size = new System.Drawing.Size(664, 293);
-            this.toneGroupBox.TabIndex = 42;
-            this.toneGroupBox.TabStop = false;
-            this.toneGroupBox.Text = "Tone Settings";
-            // 
-            // toneControl
-            // 
-            this.toneControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.toneControl.Location = new System.Drawing.Point(8, 23);
-            this.toneControl.Margin = new System.Windows.Forms.Padding(5);
-            this.toneControl.Name = "toneControl";
-            this.toneControl.Size = new System.Drawing.Size(647, 261);
-            this.toneControl.TabIndex = 0;
-            // 
             // dlcSaveButton
             // 
-            this.dlcSaveButton.Location = new System.Drawing.Point(121, 615);
+            this.dlcSaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dlcSaveButton.Location = new System.Drawing.Point(121, 471);
             this.dlcSaveButton.Margin = new System.Windows.Forms.Padding(4);
             this.dlcSaveButton.Name = "dlcSaveButton";
             this.dlcSaveButton.Size = new System.Drawing.Size(100, 36);
@@ -163,7 +144,8 @@
             // 
             // dlcLoadButton
             // 
-            this.dlcLoadButton.Location = new System.Drawing.Point(13, 615);
+            this.dlcLoadButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dlcLoadButton.Location = new System.Drawing.Point(13, 471);
             this.dlcLoadButton.Margin = new System.Windows.Forms.Padding(4);
             this.dlcLoadButton.Name = "dlcLoadButton";
             this.dlcLoadButton.Size = new System.Drawing.Size(100, 36);
@@ -262,16 +244,62 @@
             this.DlcNameTB.Size = new System.Drawing.Size(155, 22);
             this.DlcNameTB.TabIndex = 28;
             // 
+            // toneRemoveButton
+            // 
+            this.toneRemoveButton.Location = new System.Drawing.Point(569, 380);
+            this.toneRemoveButton.Margin = new System.Windows.Forms.Padding(4);
+            this.toneRemoveButton.Name = "toneRemoveButton";
+            this.toneRemoveButton.Size = new System.Drawing.Size(100, 28);
+            this.toneRemoveButton.TabIndex = 52;
+            this.toneRemoveButton.Text = "Remove";
+            this.toneRemoveButton.UseVisualStyleBackColor = true;
+            this.toneRemoveButton.Click += new System.EventHandler(this.toneRemoveButton_Click);
+            // 
+            // toneAddButton
+            // 
+            this.toneAddButton.Location = new System.Drawing.Point(569, 344);
+            this.toneAddButton.Margin = new System.Windows.Forms.Padding(4);
+            this.toneAddButton.Name = "toneAddButton";
+            this.toneAddButton.Size = new System.Drawing.Size(100, 28);
+            this.toneAddButton.TabIndex = 51;
+            this.toneAddButton.Text = "Add";
+            this.toneAddButton.UseVisualStyleBackColor = true;
+            this.toneAddButton.Click += new System.EventHandler(this.toneAddButton_Click);
+            // 
+            // TonesLB
+            // 
+            this.TonesLB.FormattingEnabled = true;
+            this.TonesLB.ItemHeight = 16;
+            this.TonesLB.Location = new System.Drawing.Point(5, 327);
+            this.TonesLB.Margin = new System.Windows.Forms.Padding(4);
+            this.TonesLB.Name = "TonesLB";
+            this.TonesLB.Size = new System.Drawing.Size(555, 132);
+            this.TonesLB.TabIndex = 50;
+            this.TonesLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ToneLB_MouseDoubleClick);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(1, 308);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(48, 17);
+            this.label1.TabIndex = 49;
+            this.label1.Text = "Tones";
+            // 
             // DLCPackageCreator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.toneRemoveButton);
+            this.Controls.Add(this.toneAddButton);
+            this.Controls.Add(this.TonesLB);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.cmbAppIds);
             this.Controls.Add(this.AppIdTB);
             this.Controls.Add(this.AverageTempo);
             this.Controls.Add(this.dlcLoadButton);
             this.Controls.Add(this.dlcSaveButton);
-            this.Controls.Add(this.toneGroupBox);
             this.Controls.Add(this.albumArtButton);
             this.Controls.Add(this.AlbumArtPathTB);
             this.Controls.Add(this.dlcGenerateButton);
@@ -288,8 +316,7 @@
             this.Controls.Add(this.DlcNameTB);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "DLCPackageCreator";
-            this.Size = new System.Drawing.Size(679, 659);
-            this.toneGroupBox.ResumeLayout(false);
+            this.Size = new System.Drawing.Size(679, 515);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -311,12 +338,14 @@
         private RocksmithTookitGUI.CueTextBox ArtistTB;
         private RocksmithTookitGUI.CueTextBox SongDisplayNameTB;
         private RocksmithTookitGUI.CueTextBox DlcNameTB;
-        private System.Windows.Forms.GroupBox toneGroupBox;
-        private ToneControl toneControl;
         private System.Windows.Forms.Button dlcSaveButton;
         private System.Windows.Forms.Button dlcLoadButton;
         private CueTextBox AverageTempo;
         private CueTextBox AppIdTB;
         private System.Windows.Forms.ComboBox cmbAppIds;
+        private System.Windows.Forms.Button toneRemoveButton;
+        private System.Windows.Forms.Button toneAddButton;
+        private System.Windows.Forms.ListBox TonesLB;
+        private System.Windows.Forms.Label label1;
     }
 }

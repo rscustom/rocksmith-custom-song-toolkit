@@ -14,27 +14,30 @@ namespace RocksmithTookitGUI.DLCPackageCreator
     {
         private bool _RefreshingCombos = false;
 
-        public Tone Tone { get; private set; }
+        private Tone tone;
+
+        public Tone Tone
+        {
+            set
+            {
+                tone = value;
+
+                InitializeTextBoxes();
+                InitializeComboBoxes(GameData.GetPedalData());
+                RefreshControls();
+            }
+        }
 
         public ToneControl()
         {
             InitializeComponent();
-            var allPedals = GameData.GetPedalData();
-
-            Tone = new Tone();
-            Tone.PedalList.Add("Amp", allPedals.First(p => p.Key == "Amp_Fusion").MakePedalSetting());
-            Tone.PedalList.Add("Cabinet", allPedals.First(p => p.Key == "Cab_2X12_Fusion_57_Cone").MakePedalSetting());
-
-            InitializeTextBoxes();
-            InitializeComboBoxes(allPedals);
-            RefreshControls();
         }
 
         public void RefreshControls()
         {
             _RefreshingCombos = true;
-            toneNameBox.Text = Tone.Name ?? "";
-            volumeBox.Value = Tone.Volume;
+            toneNameBox.Text = tone.Name ?? "";
+            volumeBox.Value = tone.Volume;
 
             UpdateComboSelection(ampBox, "Amp");
             UpdateComboSelection(cabinetBox, "Cabinet");
@@ -55,17 +58,17 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private void UpdateComboSelection(ComboBox box, string pedalSlot)
         {
-            box.SelectedItem = Tone.PedalList.ContainsKey(pedalSlot)
-                ? box.Items.OfType<Pedal>().First(p => p.Key == Tone.PedalList[pedalSlot].PedalKey)
+            box.SelectedItem = tone.PedalList.ContainsKey(pedalSlot)
+                ? box.Items.OfType<Pedal>().First(p => p.Key == tone.PedalList[pedalSlot].PedalKey)
                 : null;
         }
 
         private void InitializeTextBoxes()
         {
             toneNameBox.TextChanged += (sender, e) =>
-                Tone.Name = toneNameBox.Text;
+                tone.Name = toneNameBox.Text;
             volumeBox.ValueChanged += (sender, e) =>
-                Tone.Volume = volumeBox.Value;
+                tone.Volume = volumeBox.Value;
         }
 
         private void InitializeComboBoxes(IList<Pedal> allPedals)
@@ -112,7 +115,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             knobSelectButton.Enabled = false;
             knobSelectButton.Click += (sender, e) =>
             {
-                var pedal = Tone.PedalList[pedalSlot];
+                var pedal = tone.PedalList[pedalSlot];
                 using (var form = new ToneKnobForm())
                 {
                     form.Init(pedal, pedals.Single(p => p.Key == pedal.PedalKey).Knobs);
@@ -133,13 +136,13 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 var pedal = box.SelectedItem as Pedal;
                 if (pedal == null)
                 {
-                    Tone.PedalList.Remove(pedalSlot);
+                    tone.PedalList.Remove(pedalSlot);
                     knobSelectButton.Enabled = false;
                 }
                 else
                 {
                     var pedalSetting = pedal.MakePedalSetting();
-                    Tone.PedalList[pedalSlot] = pedalSetting;
+                    tone.PedalList[pedalSlot] = pedalSetting;
                     knobSelectButton.Enabled = pedalSetting.KnobValues.Any();
                 }
             };

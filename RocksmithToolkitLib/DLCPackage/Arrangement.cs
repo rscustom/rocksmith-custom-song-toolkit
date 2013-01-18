@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
+using RocksmithToolkitLib.Sng;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -23,15 +24,16 @@ namespace RocksmithToolkitLib.DLCPackage
         public bool FifthsAndOctaves { get; set; }
         public bool FretHandMutes { get; set; }
         public bool OpenChords { get; set; }
-        public bool IsVocal { get; set; }
+        public ArrangementType ArrangementType { get; set; }
         public int RelativeDifficulty { get; set; }
         public bool SlapAndPop { get; set; }
         public bool PreBends { get; set; }
         public string Tuning { get; set; }
         public bool Vibrato { get; set; }
+        public string ToneName { get; set; }
         public override string ToString()
         {
-            return String.Format("{0}", Name);
+            return String.Format("{0} - {1}", Name, ToneName);
         }
     }
 }

@@ -9,6 +9,8 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
+using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
@@ -28,6 +30,34 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
             cmbAppIds.SelectedItem = firstSong;
             AppIdTB.Text = firstSong.AppId;
+
+            TonesLB.Items.Add(CreateNewTone());
+        }
+
+        private Tone CreateNewTone()
+        {
+            Tone tone = new Tone();
+            var allPedals = GameData.GetPedalData();
+            tone.Name = "Default";
+            bool uniqueToneName = false;
+            int ind = 0;
+            do
+            {
+                uniqueToneName = null == TonesLB.Items.OfType<Tone>().FirstOrDefault(t => tone.Name.Equals(t.Name));
+                if (!uniqueToneName)
+                {
+                    tone.Name = "Default " + (++ind);
+                }
+            } while (!uniqueToneName);
+
+            tone.PedalList.Add("Amp", allPedals.First(p => p.Key == "Amp_Fusion").MakePedalSetting());
+            tone.PedalList.Add("Cabinet", allPedals.First(p => p.Key == "Cab_2X12_Fusion_57_Cone").MakePedalSetting());
+            return tone;
+        }
+
+        private IEnumerable<string> GetToneNames()
+        {
+            return TonesLB.Items.OfType<Tone>().Select(t => t.Name);
         }
 
         private string OggPath
@@ -44,9 +74,12 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         private void arrangementAddButton_Click(object sender, EventArgs e)
         {
             Arrangement arrangement;
-            using (var form = new ArrangementForm())
+            using (var form = new ArrangementForm(GetToneNames()))
             {
-                form.ShowDialog();
+                if (DialogResult.OK != form.ShowDialog())
+                {
+                    return;
+                }
                 arrangement = form.Arrangement;
             }
             if (arrangement == null)
@@ -180,28 +213,32 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             {
                 arrangement.SongFile.File = MakeAbsolute(path, arrangement.SongFile.File);
                 arrangement.SongXml.File = MakeAbsolute(path, arrangement.SongXml.File);
+                if (arrangement.ToneName == null && info.Tones.Count > 0)
+                {
+                    arrangement.ToneName = info.Tones[0].Name;
+                }
                 ArrangementLB.Items.Add(arrangement);
             }
-            toneControl.Tone.PedalList.Clear();
-            foreach (var pedal in info.Tone.PedalList)
+
+            TonesLB.Items.Clear();
+            foreach (var tone in info.Tones)
             {
-                toneControl.Tone.PedalList[pedal.Key] = pedal.Value;
+                TonesLB.Items.Add(tone);
             }
-            toneControl.Tone.Name = info.Tone.Name;
-            toneControl.Tone.Volume = info.Tone.Volume;
-            toneControl.RefreshControls();
 
             MessageBox.Show("DLC Package template was loaded.", "DLC Package Creator");
         }
 
-        private string MakeAbsolute(Uri baseUri, string path) {
+        private string MakeAbsolute(Uri baseUri, string path)
+        {
             return new Uri(baseUri, path).AbsolutePath.Replace("%25", "%").Replace("%20", " ");
         }
 
         private DLCPackageData GetPackageData()
         {
             int year, tempo;
-            if(string.IsNullOrEmpty(DlcNameTB.Text)) {
+            if (string.IsNullOrEmpty(DlcNameTB.Text))
+            {
                 DlcNameTB.Focus();
                 return null;
             }
@@ -241,11 +278,12 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 return null;
             }
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
-            if (arrangements.Count(x => x.IsVocal) > 1)
+            if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal) > 1)
             {
                 MessageBox.Show("Error: Multiple Vocals Found");
                 return null;
             }
+            var tones = TonesLB.Items.OfType<Tone>().ToList();
             var data = new DLCPackageData
             {
                 Name = DlcNameTB.Text.Replace(" ", "_"),
@@ -256,12 +294,12 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                     Album = AlbumTB.Text,
                     SongYear = year,
                     Artist = ArtistTB.Text,
-                    AverageTempo = tempo                    
+                    AverageTempo = tempo
                 },
                 AlbumArtPath = AlbumArtPath,
                 OggPath = OggPath,
                 Arrangements = arrangements,
-                Tone = toneControl.Tone
+                Tones = tones
             };
 
             return data;
@@ -272,6 +310,77 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             if (cmbAppIds.SelectedItem != null)
             {
                 AppIdTB.Text = ((SongAppId)cmbAppIds.SelectedItem).AppId;
+            }
+        }
+
+        private void ArrangementLB_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (ArrangementLB.SelectedItem != null)
+            {
+                var arrangement = (Arrangement)ArrangementLB.SelectedItem;
+                using (var form = new ArrangementForm(arrangement, GetToneNames()) { Text = "Edit Arrangement" })
+                {
+                    if (DialogResult.OK != form.ShowDialog())
+                    {
+                        return;
+                    }
+                }
+                TonesLB.Items[ArrangementLB.SelectedIndex] = arrangement;
+            }
+        }
+
+
+        private void toneAddButton_Click(object sender, EventArgs e)
+        {
+            Tone tone = CreateNewTone();
+            using (var form = new ToneForm(tone))
+            {
+                form.ShowDialog();
+                TonesLB.Items.Add(tone);
+            }
+        }
+
+        private void toneRemoveButton_Click(object sender, EventArgs e)
+        {
+            if (TonesLB.SelectedItem != null && TonesLB.Items.Count > 1)
+            {
+                var tone = (Tone)TonesLB.SelectedItem;
+                TonesLB.Items.Remove(TonesLB.SelectedItem);
+
+                var firstTone = (Tone)TonesLB.Items[0];
+                foreach (var item in ArrangementLB.Items.OfType<Arrangement>())
+                {
+                    if (tone.Name.Equals(item.ToneName))
+                    {
+                        item.ToneName = firstTone.Name;
+                    }
+                }
+                ArrangementLB.Refresh();
+            }
+        }
+
+        private void ToneLB_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (TonesLB.SelectedItem != null)
+            {
+                var tone = (Tone)TonesLB.SelectedItem;
+                var toneName = tone.Name;
+                using (var form = new ToneForm(tone))
+                {
+                    form.ShowDialog();
+                }
+                if (toneName != tone.Name)
+                {
+                    for(int i = 0; i <ArrangementLB.Items.Count; i++) {
+                        var arrangement = (Arrangement)ArrangementLB.Items[i];
+                        if (toneName.Equals(arrangement.ToneName))
+                        {
+                            arrangement.ToneName = tone.Name;
+                            ArrangementLB.Items[i] = arrangement;
+                        }
+                    }
+                    TonesLB.Items[TonesLB.SelectedIndex] = tone;
+                }
             }
         }
     }

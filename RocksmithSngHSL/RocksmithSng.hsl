@@ -142,6 +142,7 @@ struct LINKED_DIFF
 {
     long ParentId;
     long ChildId;
+    //This might be the Ratio that is in the newLinkedDiffs tag, although that looks like a float and this looks like an int.
     blob _unknown[4];
 };
 

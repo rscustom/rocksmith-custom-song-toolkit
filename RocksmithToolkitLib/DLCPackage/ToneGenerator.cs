@@ -10,18 +10,18 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public class ToneGenerator
     {
-        public static void Generate(string dlcName, Tone.Tone tone, Stream outManifest, Stream outXblock, Stream aggregateGraph)
+        public static void Generate(string toneKey, Tone.Tone tone, Stream outManifest, Stream outXblock, Stream aggregateGraph)
         {
             var id = IdGenerator.Guid().ToString().Replace("-", "").ToUpper();
             if (string.IsNullOrEmpty(tone.Name))
-                tone.Name = dlcName + " Tone";
-            tone.Key = dlcName;
+                tone.Name = toneKey;
+            tone.Key = toneKey;
             tone.PersistentID = id;
-            tone.BlockAsset = String.Format("urn:emergent-world:DLC_Tone_{0}", dlcName);
+            tone.BlockAsset = String.Format("urn:emergent-world:DLC_Tone_{0}", toneKey);
 
             generateManifest(outManifest, tone);
-            generateXBlock(dlcName, outXblock, tone);
-            generateAggregateGraph(dlcName, aggregateGraph);
+            generateXBlock(toneKey, outXblock, tone);
+            generateAggregateGraph(toneKey, aggregateGraph);
         }
 
         private static void generateManifest(Stream outManifest, Tone.Tone tone)
@@ -35,12 +35,12 @@ namespace RocksmithToolkitLib.DLCPackage
             outManifest.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void generateXBlock(string dlcName, Stream outXblock, Tone.Tone tone)
+        private static void generateXBlock(string toneKey, Stream outXblock, Tone.Tone tone)
         {
             var game = new Game();
             var entity = new Entity
             {
-                Name = String.Format("GRTonePreset_{0}", dlcName),
+                Name = String.Format("GRTonePreset_{0}", toneKey),
                 Iterations = 1,
                 ModelName = "GRTonePreset",
                 Id = tone.PersistentID.ToLower()
@@ -53,15 +53,15 @@ namespace RocksmithToolkitLib.DLCPackage
             game.Serialize(outXblock);
         }
 
-        private static void generateAggregateGraph(string dlcName, Stream aggregateGraph)
+        private static void generateAggregateGraph(string toneKey, Stream aggregateGraph)
         {
             var writer = new StreamWriter(aggregateGraph);
             var guid = IdGenerator.Guid();
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"x-world\".", guid);
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"emergent-world\".", guid);
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"/Exports/Pedals\".", guid);
-            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/name> \"DLC_Tone_{1}\".", guid, dlcName);
-            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/DLC_Tone_{1}/Exports/Pedals/DLC_Tone_{1}.xblock\".", guid, dlcName);
+            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/name> \"DLC_Tone_{1}\".", guid, toneKey);
+            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/DLC_Tone_{1}/Exports/Pedals/DLC_Tone_{1}.xblock\".", guid, toneKey);
             writer.Flush();
             aggregateGraph.Seek(0, SeekOrigin.Begin);
         }

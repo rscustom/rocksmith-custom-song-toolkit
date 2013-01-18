@@ -6,16 +6,74 @@ using System.Windows.Forms;
 using System.IO;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
+using RocksmithToolkitLib.Sng;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
     public partial class ArrangementForm : Form
     {
-        public ArrangementForm()
+        private Arrangement arrangement;
+
+        public ArrangementForm(IEnumerable<string> toneNames)
+            : this(new Arrangement
+            {
+                SongFile = new SongFile { File = "" },
+                SongXml = new SongXML { File = "" },
+                ArrangementType = ArrangementType.Guitar,
+                RelativeDifficulty = 1
+            }, toneNames)
+        {
+        }
+
+        public ArrangementForm(Arrangement arrangement, IEnumerable<string> toneNames)
         {
             InitializeComponent();
+            foreach (var val in Enum.GetValues(typeof(ArrangementType)))
+            {
+                arrangementTypeCombo.Items.Add(val);
+            }
+            foreach (var tone in toneNames)
+            {
+                tonesCombo.Items.Add(tone);
+            }
+            Arrangement = arrangement;
         }
-        public Arrangement Arrangement { get; private set; }
+
+        public Arrangement Arrangement
+        {
+            get
+            {
+                return arrangement;
+            }
+            private set
+            {
+                arrangement = value;
+                ArrangementName.Text = arrangement.Name;
+                arrangementTypeCombo.SelectedItem = arrangement.ArrangementType;
+                BarChords.Checked = arrangement.BarChords;
+                DoubleStops.Checked = arrangement.DoubleStops;
+                DropDPowerChords.Checked = arrangement.DropDPowerChords;
+                FifthsAndOctaves.Checked = arrangement.FifthsAndOctaves;
+                FretHandMutes.Checked = arrangement.FretHandMutes;
+                OpenChords.Checked = arrangement.OpenChords;
+                PowerChords.Checked = arrangement.PowerChords;
+                PreBends.Checked = arrangement.PreBends;
+                RelativeDifficulty.Text = arrangement.RelativeDifficulty.ToString();
+                SlapAndPop.Checked = arrangement.SlapAndPop;
+                PreBends.Checked = arrangement.PreBends;
+                Tuning.Text = arrangement.Tuning;
+                Vibrato.Checked = arrangement.Vibrato;
+
+                SngFilePath.Text = arrangement.SongFile.File;
+                XmlFilePath.Text = arrangement.SongXml.File;
+                tonesCombo.SelectedItem = arrangement.ToneName;
+                if (tonesCombo.SelectedItem == null && tonesCombo.Items.Count > 0)
+                {
+                    tonesCombo.SelectedItem = tonesCombo.Items[0];
+                }
+            }
+        }
+
         private void songFileBrowseButton_Click(object sender, EventArgs e)
         {
             using (var ofd = new OpenFileDialog())
@@ -58,37 +116,43 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 SngFilePath.Focus();
                 return;
             }
-            if (!IsVocal.Checked && string.IsNullOrEmpty(ArrangementName.Text))
+            if (string.IsNullOrEmpty(ArrangementName.Text))
             {
                 ArrangementName.Focus();
                 return;
             }
 
-            var arrangement = new Arrangement
-            {
-                Name = IsVocal.Checked ? "Vocals" : ArrangementName.Text,
-                IsVocal = IsVocal.Checked,
-                BarChords = BarChords.Checked,
-                DoubleStops = DoubleStops.Checked,
-                DropDPowerChords = DropDPowerChords.Checked,
-                FifthsAndOctaves = FifithsAndOctaves.Checked,
-                FretHandMutes = FretHandMutes.Checked,
-                OpenChords = OpenChords.Checked,
-                PowerChords = PowerChords.Checked,
-                PreBends = PreBends.Checked,
-                RelativeDifficulty = readInt(RelativeDifficulty.Text),
-                SlapAndPop = SlapAndPop.Checked,
-                Tuning = Tuning.Text,
-                Vibrato = Vibrato.Checked,
-                SongFile = new SongFile {File = songfilepath},
-                SongXml = new SongXML {File = xmlfilepath}
-            };
+            arrangement.ArrangementType = (ArrangementType)arrangementTypeCombo.SelectedItem;
+            arrangement.Name = arrangement.ArrangementType == ArrangementType.Vocal ? "Vocals" : ArrangementName.Text;
+            arrangement.BarChords = BarChords.Checked;
+            arrangement.DoubleStops = DoubleStops.Checked;
+            arrangement.DropDPowerChords = DropDPowerChords.Checked;
+            arrangement.FifthsAndOctaves = FifthsAndOctaves.Checked;
+            arrangement.FretHandMutes = FretHandMutes.Checked;
+            arrangement.OpenChords = OpenChords.Checked;
+            arrangement.PowerChords = PowerChords.Checked;
+            arrangement.PreBends = PreBends.Checked;
+            arrangement.RelativeDifficulty = readInt(RelativeDifficulty.Text);
+            arrangement.SlapAndPop = SlapAndPop.Checked;
+            arrangement.Tuning = Tuning.Text;
+            arrangement.Vibrato = Vibrato.Checked;
+            arrangement.SongFile.File = songfilepath;
+            arrangement.SongXml.File = xmlfilepath;
+            arrangement.ToneName = tonesCombo.SelectedItem.ToString();
+
             if (arrangement.RelativeDifficulty == -1)
             {
                 RelativeDifficulty.Focus();
                 return;
             }
-            Arrangement = arrangement;
+
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
             Close();
         }
     }

@@ -13,36 +13,58 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             using (var packPsarcStream = new MemoryStream())
             {
-                GeneratePackagePsarc(packPsarcStream, info.AppId, info.Name, info.SongInfo, info.AlbumArtPath, info.OggPath, info.Arrangements, info.Tone);
+                GeneratePackagePsarc(packPsarcStream, info.AppId, info.Name, info.SongInfo, info.AlbumArtPath, info.OggPath, info.Arrangements, info.Tones);
                 using (var fl = File.Create(packagePath))
                     RijndaelEncryptor.Encrypt(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
             }
         }
 
-        private static void GeneratePackagePsarc(Stream output, string appId, string dlcName, SongInfo songInfo, string albumArtPath, string oggPath, IList<Arrangement> arrangements, Tone.Tone tone)
+        private static void GeneratePackagePsarc(Stream output, string appId, string dlcName, SongInfo songInfo, string albumArtPath, string oggPath, IList<Arrangement> arrangements, IList<Tone.Tone> tones)
         {
+            IList<Stream> toneStreams = new List<Stream>();
             using (var appIdStream = new MemoryStream())
             using (var packageListStream = new MemoryStream())
             using (var songPsarcStream = new MemoryStream())
-            using (var tonePsarcStream = new MemoryStream())
             {
-                var packPsarc = new PSARC.PSARC();
+                try
+                {
+                    var packPsarc = new PSARC.PSARC();
 
-                GenerateAppId(appIdStream, appId);
-                packPsarc.AddEntry("APP_ID", appIdStream);
+                    GenerateAppId(appIdStream, appId);
+                    packPsarc.AddEntry("APP_ID", appIdStream);
 
-                GeneratePackageList(packageListStream, dlcName);
-                packPsarc.AddEntry("PackageList.txt", packageListStream);
+                    GeneratePackageList(packageListStream, dlcName);
+                    packPsarc.AddEntry("PackageList.txt", packageListStream);
 
-                GenerateSongPsarc(songPsarcStream, dlcName, songInfo, albumArtPath, oggPath, arrangements);
-                packPsarc.AddEntry(String.Format("{0}.psarc", dlcName), songPsarcStream);
+                    GenerateSongPsarc(songPsarcStream, dlcName, songInfo, albumArtPath, oggPath, arrangements);
+                    packPsarc.AddEntry(String.Format("{0}.psarc", dlcName), songPsarcStream);
 
-                GenerateTonePsarc(tonePsarcStream, dlcName, tone);
-                packPsarc.AddEntry(String.Format("DLC_Tone_{0}.psarc", dlcName), tonePsarcStream);
+                    foreach (var tone in tones)
+                    {
+                        var tonePsarcStream = new MemoryStream();
+                        toneStreams.Add(tonePsarcStream);
 
-                packPsarc.Write(output);
-                output.Flush();
-                output.Seek(0, SeekOrigin.Begin);
+                        var toneKey = dlcName + "_" + tone.Name == null ? "Default" : tone.Name.Replace(' ', '_');
+
+                        GenerateTonePsarc(tonePsarcStream, toneKey, tone);
+                        packPsarc.AddEntry(String.Format("DLC_Tone_{0}.psarc", toneKey), tonePsarcStream);
+                    }
+
+                    packPsarc.Write(output);
+                    output.Flush();
+                    output.Seek(0, SeekOrigin.Begin);
+                }
+                finally
+                {
+                    foreach (var stream in toneStreams)
+                    {
+                        try
+                        {
+                            stream.Dispose();
+                        }
+                        catch { }
+                    }
+                }
             }
         }
 
@@ -145,7 +167,7 @@ namespace RocksmithToolkitLib.DLCPackage
             output.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void GenerateTonePsarc(Stream output, string dlcName, Tone.Tone tone)
+        private static void GenerateTonePsarc(Stream output, string toneKey, Tone.Tone tone)
         {
             var tonePsarc = new PSARC.PSARC();
 
@@ -154,10 +176,10 @@ namespace RocksmithToolkitLib.DLCPackage
             using (var toneXblockStream = new MemoryStream())
             using (var toneAggregateGraphStream = new MemoryStream())
             {
-                ToneGenerator.Generate(dlcName, tone, toneManifestStream, toneXblockStream, toneAggregateGraphStream);
-                GenerateTonePackageId(packageIdStream, dlcName);
+                ToneGenerator.Generate(toneKey, tone, toneManifestStream, toneXblockStream, toneAggregateGraphStream);
+                GenerateTonePackageId(packageIdStream, toneKey);
 
-                tonePsarc.AddEntry(String.Format("Exports/Pedals/DLC_Tone_{0}.xblock", dlcName), toneXblockStream);
+                tonePsarc.AddEntry(String.Format("Exports/Pedals/DLC_Tone_{0}.xblock", toneKey), toneXblockStream);
                 tonePsarc.AddEntry("Manifests/tone.manifest.json", toneManifestStream);
                 tonePsarc.AddEntry("AggregateGraph.nt", toneAggregateGraphStream);
                 tonePsarc.AddEntry("PACKAGE_ID", packageIdStream);
@@ -165,10 +187,10 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void GenerateTonePackageId(Stream output, string dlcName)
+        private static void GenerateTonePackageId(Stream output, string toneKey)
         {
             var writer = new StreamWriter(output);
-            writer.WriteLine("DLC_Tone_{0}", dlcName);
+            writer.WriteLine("DLC_Tone_{0}", toneKey);
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
         }

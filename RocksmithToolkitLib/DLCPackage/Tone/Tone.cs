@@ -29,5 +29,10 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
             Volume = -12;
             Description = "$[-1] ";
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

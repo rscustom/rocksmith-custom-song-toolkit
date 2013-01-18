@@ -73,7 +73,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.AssociatedTechniques = new List<string>();//
                 attribute.BarChords = x.BarChords;
                 attribute.Bends = false;//
-                attribute.BinaryVersion = 49;
+                //Should be 51 for bass, 49 for vocal and guitar
+                attribute.BinaryVersion = x.ArrangementType == Sng.ArrangementType.Bass ? 51 : 49;
                 attribute.BlockAsset = String.Format("urn:emergent-world:{0}", AggregateGraph.XBlock.Name);
                 attribute.ChordTemplates = null;//
                 attribute.DISC_DLC_OTHER = "Disc";
@@ -81,7 +82,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.DLCPreview = false;
                 attribute.DoubleStops = x.DoubleStops;
                 attribute.DropDPowerChords = x.DropDPowerChords;
-                if (x.IsVocal)
+                if (x.ArrangementType == Sng.ArrangementType.Vocal)
                     attribute.DynamicVisualDensity = new List<float>{
                         4.5f, 4.3000001907348633f, 4.0999999046325684f, 3.9000000953674316f, 3.7000000476837158f,
                         3.5f, 3.2999999523162842f, 3.0999999046325684f, 2.9000000953674316f, 2.7000000476837158f,
@@ -98,12 +99,12 @@ namespace RocksmithToolkitLib.DLCPackage
                         1.0f, 1.0f, 1.0f, 1.0f, 1.0f
                     };
                 attribute.EffectChainMultiplayerName = string.Empty;
-                attribute.EffectChainName = dlcName;
+                attribute.EffectChainName = dlcName + "_" + x.ToneName == null ? "Default" : x.ToneName.Replace(' ', '_');
                 attribute.EventFirstTimeSortOrder = 9999;
                 attribute.ExclusiveBuild = new List<object>();
                 attribute.FifthsAndOctaves = x.FifthsAndOctaves;
                 attribute.FirstArrangementInSong = false;
-                if (x.IsVocal && !firstarrangset)
+                if (x.ArrangementType == Sng.ArrangementType.Vocal && !firstarrangset)
                 {
                     firstarrangset = true;
                     attribute.FirstArrangementInSong = true;
@@ -113,7 +114,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.Genre = "PLACEHOLDER Genre";
                 attribute.Harmonics = false;
                 attribute.HOPOs = false;
-                attribute.InputEvent = x.IsVocal ? "Play_Tone_Standard_Mic" : "Play_Tone_";
+                attribute.InputEvent = x.ArrangementType == Sng.ArrangementType.Vocal ? "Play_Tone_Standard_Mic" : "Play_Tone_";
                 attribute.IsDemoSong = false;
                 attribute.IsDLC = true;
                 attribute.LastConversionDateTime = "";
@@ -154,9 +155,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.TwoHandTapping = false;
                 attribute.UnlockKey = "";
                 attribute.Vibrato = x.Vibrato;
-                attribute.VocalsAssetId = x.IsVocal ? "" : String.Format("{1}|GRSong_{0}", vocalName, vocalGuid.ToString());
+                attribute.VocalsAssetId = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : String.Format("{1}|GRSong_{0}", vocalName, vocalGuid.ToString());
                 attribute.ChordTemplates = new List<ChordTemplate>();
-                if (!x.IsVocal)
+                if (x.ArrangementType != Sng.ArrangementType.Vocal)
                 {
                     var serializer = new XmlSerializer(typeof(Song));
                     Song song;

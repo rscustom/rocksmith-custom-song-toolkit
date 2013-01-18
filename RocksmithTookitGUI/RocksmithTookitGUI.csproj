@@ -86,6 +86,12 @@
     <Compile Include="DLCPackageCreator\ToneControl.Designer.cs">
       <DependentUpon>ToneControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="DLCPackageCreator\ToneForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DLCPackageCreator\ToneForm.Designer.cs">
+      <DependentUpon>ToneForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DLCPackageCreator\ToneKnobForm.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -143,6 +149,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\ToneControl.resx">
       <DependentUpon>ToneControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLCPackageCreator\ToneForm.resx">
+      <DependentUpon>ToneForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\ToneKnobForm.resx">
       <DependentUpon>ToneKnobForm.cs</DependentUpon>
