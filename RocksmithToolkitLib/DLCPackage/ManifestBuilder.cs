@@ -82,22 +82,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.DLCPreview = false;
                 attribute.DoubleStops = x.DoubleStops;
                 attribute.DropDPowerChords = x.DropDPowerChords;
-                if (x.ArrangementType == Sng.ArrangementType.Vocal)
-                    attribute.DynamicVisualDensity = new List<float>{
-                        4.5f, 4.3000001907348633f, 4.0999999046325684f, 3.9000000953674316f, 3.7000000476837158f,
-                        3.5f, 3.2999999523162842f, 3.0999999046325684f, 2.9000000953674316f, 2.7000000476837158f,
-                        2.5f, 2.2999999523162842f, 2.0999999046325684f,
-                        2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f};
-                else
-                    attribute.DynamicVisualDensity = new List<float>
-                    {
-                        4.5f, 4.0f,
-                        3.5999999046325684f, 3.2000000476837158f, 2.9000000953674316f, 2.5999999046325684f,
-                        2.2999999523162842f, 2.0999999046325684f, 1.8999999761581421f, 1.7000000476837158f,
-                        1.5f,
-                        1.3999999761581421f, 1.2999999523162842f, 1.2000000476837158f, 1.1000000238418579f,
-                        1.0f, 1.0f, 1.0f, 1.0f, 1.0f
-                    };
                 attribute.EffectChainMultiplayerName = string.Empty;
                 attribute.EffectChainName = dlcName + "_" + x.ToneName == null ? "Default" : x.ToneName.Replace(' ', '_');
                 attribute.EventFirstTimeSortOrder = 9999;
@@ -157,13 +141,48 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.Vibrato = x.Vibrato;
                 attribute.VocalsAssetId = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : String.Format("{1}|GRSong_{0}", vocalName, vocalGuid.ToString());
                 attribute.ChordTemplates = new List<ChordTemplate>();
-                if (x.ArrangementType != Sng.ArrangementType.Vocal)
+                if (x.ArrangementType == Sng.ArrangementType.Vocal)
+                {
+                    attribute.DynamicVisualDensity = new List<float>{
+                        4.5f, 4.3000001907348633f, 4.0999999046325684f, 3.9000000953674316f, 3.7000000476837158f,
+                        3.5f, 3.2999999523162842f, 3.0999999046325684f, 2.9000000953674316f, 2.7000000476837158f,
+                        2.5f, 2.2999999523162842f, 2.0999999046325684f,
+                        2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f};
+                }
+                else
                 {
                     var serializer = new XmlSerializer(typeof(Song));
                     Song song;
                     using (var fileStream = File.OpenRead(x.SongXml.File))
                     {
                         song = (Song)serializer.Deserialize(fileStream);
+                    }
+
+                    attribute.DynamicVisualDensity = new List<float>(20);
+                    float endSpeed = Math.Min(45f, Math.Max(10f, x.ScrollSpeed))/10f;
+                    if (song.Levels.Length == 1)
+                    {
+                        for (int i = 0; i < 20; i++)
+                        {
+                            attribute.DynamicVisualDensity.Add(endSpeed);
+                        }
+                    }
+                    else
+                    {
+                        double beginSpeed = 4.5d;
+                        double maxLevel = Math.Min(song.Levels.Length, 16d) - 1;
+                        double factor = maxLevel == 0 ? 1d : Math.Pow(endSpeed / beginSpeed, 1d / maxLevel);
+                        for (int i = 0; i < 20; i++)
+                        {
+                            if (i >= maxLevel)
+                            {
+                                attribute.DynamicVisualDensity.Add(endSpeed);
+                            }
+                            else
+                            {
+                                attribute.DynamicVisualDensity.Add((float)(beginSpeed * Math.Pow(factor, i)));
+                            }
+                        }
                     }
                     attribute.AverageTempo = songInfo.AverageTempo;
                     attribute.RepresentativeArrangement = true;
@@ -185,7 +204,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     GenerateSectionData(attribute, song);
                     GeneratePhraseIterationsData(attribute, song);
                 }
-                var attrDict = new Dictionary<string, Attributes> {{"Attributes", attribute}};
+                var attrDict = new Dictionary<string, Attributes> { { "Attributes", attribute } };
                 manifest.Entries.Add(attribute.PersistentID, attrDict);
             }
             manifest.ModelName = "GRSong_Asset";

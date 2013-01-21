@@ -29,12 +29,12 @@ namespace RocksmithToolkitLib.DLCPackage
                 try
                 {
                     var packPsarc = new PSARC.PSARC();
+                    var packageListWriter = new StreamWriter(packageListStream);
 
                     GenerateAppId(appIdStream, appId);
                     packPsarc.AddEntry("APP_ID", appIdStream);
 
-                    GeneratePackageList(packageListStream, dlcName);
-                    packPsarc.AddEntry("PackageList.txt", packageListStream);
+                    packageListWriter.WriteLine(dlcName);
 
                     GenerateSongPsarc(songPsarcStream, dlcName, songInfo, albumArtPath, oggPath, arrangements);
                     packPsarc.AddEntry(String.Format("{0}.psarc", dlcName), songPsarcStream);
@@ -48,7 +48,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         GenerateTonePsarc(tonePsarcStream, toneKey, tone);
                         packPsarc.AddEntry(String.Format("DLC_Tone_{0}.psarc", toneKey), tonePsarcStream);
+                        packageListWriter.WriteLine("DLC_Tone_{0}", toneKey);
                     }
+
+                    packageListWriter.Flush();
+                    packageListStream.Seek(0, SeekOrigin.Begin);
+                    packPsarc.AddEntry("PackageList.txt", packageListStream);
 
                     packPsarc.Write(output);
                     output.Flush();

@@ -196,6 +196,18 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 info = (DLCPackageData)serializer.ReadObject(stm);
             }
 
+            TonesLB.Items.Clear();
+            ArrangementLB.Items.Clear();
+
+            if (info.Tones == null)
+            {
+                info.Tones = new List<Tone>();
+            }
+            if (info.Tones.Count == 0)
+            {
+                info.Tones.Add(CreateNewTone());
+            }
+
             var path = new Uri(Path.GetDirectoryName(dlcSavePath) + Path.DirectorySeparatorChar);
 
             DlcNameTB.Text = info.Name;
@@ -208,19 +220,17 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
             AlbumArtPath = MakeAbsolute(path, info.AlbumArtPath);
             OggPath = MakeAbsolute(path, info.OggPath);
-            ArrangementLB.Items.Clear();
             foreach (var arrangement in info.Arrangements)
             {
                 arrangement.SongFile.File = MakeAbsolute(path, arrangement.SongFile.File);
                 arrangement.SongXml.File = MakeAbsolute(path, arrangement.SongXml.File);
-                if (arrangement.ToneName == null && info.Tones.Count > 0)
+                if (arrangement.ToneName == null)
                 {
                     arrangement.ToneName = info.Tones[0].Name;
                 }
                 ArrangementLB.Items.Add(arrangement);
             }
 
-            TonesLB.Items.Clear();
             foreach (var tone in info.Tones)
             {
                 TonesLB.Items.Add(tone);
@@ -325,7 +335,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                         return;
                     }
                 }
-                TonesLB.Items[ArrangementLB.SelectedIndex] = arrangement;
+                ArrangementLB.Items[ArrangementLB.SelectedIndex] = arrangement;
             }
         }
 

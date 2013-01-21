@@ -31,6 +31,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public string Tuning { get; set; }
         public bool Vibrato { get; set; }
         public string ToneName { get; set; }
+        public int ScrollSpeed { get; set; }
         public override string ToString()
         {
             return String.Format("{0} - {1}", Name, ToneName);

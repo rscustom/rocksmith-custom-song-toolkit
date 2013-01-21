@@ -51,6 +51,10 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.tonesCombo = new System.Windows.Forms.ComboBox();
+            this.scrollSpeedTrackBar = new System.Windows.Forms.TrackBar();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // songFileBrowseButton
@@ -188,7 +192,7 @@
             // addArrangementButton
             // 
             this.addArrangementButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addArrangementButton.Location = new System.Drawing.Point(312, 236);
+            this.addArrangementButton.Location = new System.Drawing.Point(312, 274);
             this.addArrangementButton.Margin = new System.Windows.Forms.Padding(4);
             this.addArrangementButton.Name = "addArrangementButton";
             this.addArrangementButton.Size = new System.Drawing.Size(96, 36);
@@ -264,7 +268,7 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(416, 236);
+            this.cancelButton.Location = new System.Drawing.Point(416, 274);
             this.cancelButton.Margin = new System.Windows.Forms.Padding(4);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(96, 36);
@@ -291,11 +295,45 @@
             this.tonesCombo.Size = new System.Drawing.Size(178, 24);
             this.tonesCombo.TabIndex = 27;
             // 
+            // scrollSpeedTrackBar
+            // 
+            this.scrollSpeedTrackBar.AutoSize = false;
+            this.scrollSpeedTrackBar.Location = new System.Drawing.Point(76, 234);
+            this.scrollSpeedTrackBar.Maximum = 45;
+            this.scrollSpeedTrackBar.Minimum = 10;
+            this.scrollSpeedTrackBar.Name = "scrollSpeedTrackBar";
+            this.scrollSpeedTrackBar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.scrollSpeedTrackBar.Size = new System.Drawing.Size(174, 28);
+            this.scrollSpeedTrackBar.TabIndex = 29;
+            this.scrollSpeedTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.scrollSpeedTrackBar.Value = 10;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(14, 234);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(56, 17);
+            this.label3.TabIndex = 30;
+            this.label3.Text = "Slowest";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(256, 234);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(54, 17);
+            this.label5.TabIndex = 32;
+            this.label5.Text = "Fastest";
+            // 
             // ArrangementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(525, 285);
+            this.ClientSize = new System.Drawing.Size(525, 323);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.scrollSpeedTrackBar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tonesCombo);
             this.Controls.Add(this.cancelButton);
@@ -325,6 +363,7 @@
             this.MinimizeBox = false;
             this.Name = "ArrangementForm";
             this.Text = "Add Arrangement";
+            ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -355,5 +394,8 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox tonesCombo;
+        private System.Windows.Forms.TrackBar scrollSpeedTrackBar;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label5;
     }
 }

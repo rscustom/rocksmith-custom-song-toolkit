@@ -20,7 +20,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 SongFile = new SongFile { File = "" },
                 SongXml = new SongXML { File = "" },
                 ArrangementType = ArrangementType.Guitar,
-                RelativeDifficulty = 1
+                RelativeDifficulty = 1,
+                ScrollSpeed = 20
             }, toneNames)
         {
         }
@@ -63,6 +64,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 PreBends.Checked = arrangement.PreBends;
                 Tuning.Text = arrangement.Tuning;
                 Vibrato.Checked = arrangement.Vibrato;
+                scrollSpeedTrackBar.Value = Math.Min(scrollSpeedTrackBar.Maximum, Math.Max(scrollSpeedTrackBar.Minimum, arrangement.ScrollSpeed));
 
                 SngFilePath.Text = arrangement.SongFile.File;
                 XmlFilePath.Text = arrangement.SongXml.File;
@@ -136,6 +138,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             arrangement.SlapAndPop = SlapAndPop.Checked;
             arrangement.Tuning = Tuning.Text;
             arrangement.Vibrato = Vibrato.Checked;
+            arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
             arrangement.SongFile.File = songfilepath;
             arrangement.SongXml.File = xmlfilepath;
             arrangement.ToneName = tonesCombo.SelectedItem.ToString();
