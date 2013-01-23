@@ -20,7 +20,7 @@ namespace RocksmithToolkitLibTest
         [Test, TestCaseSource("AllSongs")]
         public void KnownVersion(SngFile song)
         {
-            Assert.AreEqual(song._version, 49);
+            Assert.IsTrue(song.Version == 49 || song.Version == 51);
 
         }
 
@@ -140,13 +140,149 @@ namespace RocksmithToolkitLibTest
             }
         }
 
+        private void TestSngGeneration(SngFile rsSng, Action<SngFile, StringBuilder> func)
+        {
+            var songKey = rsSng.Metadata.SongTitle + rsSng.Metadata.Arrangement + rsSng.Metadata.SongPart;
+            if (songKey == "0")
+            {
+                return;
+            }
+            string xmlName = null, xmlLocation = null;
+            if (rsXmlMappings.ContainsKey(songKey))
+            {
+                xmlName = rsXmlMappings[songKey];
+                if (xmlName == null)
+                {
+                    return;
+                }
+                xmlLocation = Path.Combine(@"C:\Projects\RS\RS XML Clean", Path.ChangeExtension(xmlName, "xml"));
+            }
+            if (!File.Exists(xmlLocation))
+            {
+                xmlName = rsSng.Metadata.SongTitle + " - " + rsSng.Metadata.Arrangement;
+                xmlLocation = Path.Combine(@"C:\Projects\RS\RS XML Clean", Path.ChangeExtension(xmlName, "xml"));
+            }
+            if (!File.Exists(xmlLocation))
+            {
+                Assert.Fail("Couldn't find XML file for SNG: {0}", songKey);
+            }
+            var tmpSngLocation = Path.GetTempFileName();
+            var arrangement = rsSng.Metadata.Arrangement == "Bass" ? ArrangementType.Bass : ArrangementType.Guitar;
+            SngFileWriter.Write(xmlLocation, tmpSngLocation, arrangement, GamePlatform.Pc, (InstrumentTuning)rsSng.Metadata.Tuning);
+            SngFile toolkitSng = new SngFile(tmpSngLocation);
+            StringBuilder sb = new StringBuilder();
+            func(toolkitSng, sb);
+            try
+            {
+                File.Delete(tmpSngLocation);
+            }
+            catch { }
+            if (sb.Length > 0)
+            {
+                Assert.Fail(sb.ToString());
+            }
+        }
+
+        [Test, TestCaseSource("AllSongs"), Explicit("All facets are tested individually below - this saves time and localizes problems")]
+        public void SngGenerationFilesMatch(SngFile rsSng)
+        {
+            TestSngGeneration(rsSng, (toolkitSng, sb) =>
+                AssertEx.PropertyValuesAreEqual("SngFile", toolkitSng, rsSng, sb)
+            );
+        }
+
+        [Test, TestCaseSource("AllSongs")]
+        public void SngGenerationEbeatsMatch(SngFile rsSng)
+        {
+            TestSngGeneration(rsSng, (toolkitSng, sb) =>
+                AssertEx.PropertyValuesAreEqual("Ebeats", toolkitSng._beats, rsSng._beats, sb)
+            );
+        }
+
+        [Test, TestCaseSource("AllSongs")]
+        public void SngGenerationPhraseIterationsMatch(SngFile rsSng)
+        {
+            TestSngGeneration(rsSng, (toolkitSng, sb) =>
+                AssertEx.PropertyValuesAreEqual("PhraseIterations", toolkitSng._phraseIterations, rsSng._phraseIterations, sb)
+            );
+        }
+
+        [Test, TestCaseSource("AllSongs")]
+        public void SngGenerationPhrasesMatch(SngFile rsSng)
+        {
+            TestSngGeneration(rsSng, (toolkitSng, sb) =>
+                AssertEx.PropertyValuesAreEqual("Phrases", toolkitSng._phrases, rsSng._phrases, sb)
+            );
+        }
+
+        [Test, TestCaseSource("AllSongs")]
+        public void SngGenerationControlsMatch(SngFile rsSng)
+        {
+            TestSngGeneration(rsSng, (toolkitSng, sb) =>
+                AssertEx.PropertyValuesAreEqual("Controls", toolkitSng.Controls, rsSng.Controls, sb)
+            );
+        }
+
+        [Test, TestCaseSource("AllSongs")]
+        public void SngGenerationMetadataMatch(SngFile rsSng)
+        {
+            TestSngGeneration(rsSng, (toolkitSng, sb) =>
+                AssertEx.PropertyValuesAreEqual("Metadata", toolkitSng.Metadata, rsSng.Metadata, sb)
+            );
+        }
+
+        [Test, TestCaseSource("AllSongs")]
+        public void SngGenerationPhrasePropertiesMatch(SngFile rsSng)
+        {
+            TestSngGeneration(rsSng, (toolkitSng, sb) =>
+                AssertEx.PropertyValuesAreEqual("PhraseProperties", toolkitSng.PhraseProperties, rsSng.PhraseProperties, sb)
+            );
+        }
+
+        [Test, TestCaseSource("AllSongs")]
+        public void SngGenerationSongEventsMatch(SngFile rsSng)
+        {
+            TestSngGeneration(rsSng, (toolkitSng, sb) =>
+                AssertEx.PropertyValuesAreEqual("SongEvents", toolkitSng.SongEvents, rsSng.SongEvents, sb)
+            );
+        }
+
+        [Test, TestCaseSource("AllSongs")]
+        public void SngGenerationSongLevelsMatch(SngFile rsSng)
+        {
+            TestSngGeneration(rsSng, (toolkitSng, sb) =>
+                AssertEx.PropertyValuesAreEqual("SongLevels", toolkitSng.SongLevels, rsSng.SongLevels, sb)
+            );
+        }
+
+        [Test, TestCaseSource("AllSongs")]
+        public void SngGenerationSongSectionsMatch(SngFile rsSng)
+        {
+            TestSngGeneration(rsSng, (toolkitSng, sb) =>
+                AssertEx.PropertyValuesAreEqual("SongSections", toolkitSng.SongSections, rsSng.SongSections, sb)
+            );
+        }
+
+        private Dictionary<string, string> rsXmlMappings = new Dictionary<string, string> {
+            //These have different XML names due to special characters, extra spaces, etc.
+            { "More Than Feeling BassBass1", "More Than  Feeling Bass - Bass.xml" },
+            { "What's My Age Again? - BassBass1", "What's My Age Again  - Bass - Bass.xml" },
+            
+            //These are problem files - the XML just doesn't match what's in the SNG
+            { "First_Encounter_LeadLead1", null },
+            { "Technique Challenge - Bends ExampleLead1", null },
+            { "TEST - TunerLead1", null },
+        };
+
         private IList<SngFile> _allSongs;
+
         public IEnumerable<SngFile> AllSongs
         {
             get
             {
                 return _allSongs ??
                     (_allSongs = Directory.EnumerateFiles(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\Songs\GRExports\Generic\", "*.sng")
+                        .Union(Directory.EnumerateFiles(@"C:\Program Files (x86)\Steam\steamapps\common\Rocksmith\BassPack\GRExports\Generic\", "*.sng"))
                         .Select(x => new SngFile(x))
                         .ToList());
             }
@@ -159,5 +295,6 @@ namespace RocksmithToolkitLibTest
             Assert.False(bytes.Any(x => x < 9));
             Assert.False(bytes.Any(x => x > 9 && x < 32));
         }
+
     }
 }

@@ -16,17 +16,17 @@ namespace RocksmithToolkitLib.Sng
 
     public class Ebeat
     {
-        public readonly float Time;
-        public readonly Int16 Measure;
-        public readonly Int16 Beat; // 0 base
-        public readonly Int32 Unknown; //?
+        public  float Time { get; set; }
+        public  Int16 Measure { get; set; }
+        public  Int16 Beat { get; set; }
+        public  Int32 IsFirstBeatInMeasure { get; set; } //?
 
         public Ebeat(BinaryReader br)
         {
             Time = br.ReadSingle();
             Measure = br.ReadInt16();
             Beat = br.ReadInt16();
-            Unknown = br.ReadInt32();
+            IsFirstBeatInMeasure = br.ReadInt32();
         }
 
         public void Write(BinaryWriter bw)
@@ -34,21 +34,27 @@ namespace RocksmithToolkitLib.Sng
             bw.Write(Time);
             bw.Write(Measure);
             bw.Write(Beat);
-            bw.Write(Unknown);
+            bw.Write(IsFirstBeatInMeasure);
         }
     }
 
     public class Phrase
     {
-        public readonly Int32 Disparity;
-        public readonly Int32 MaxDifficulty;
-        public readonly Int32 PhraseIterationCount;
-        private readonly Byte[] _name; // len = 32
+        public byte Solo { get; set; }
+        public byte Disparity { get; set; }
+        public byte Ignore { get; set; }
+        public byte Unknown { get; set; }
+        public  Int32 MaxDifficulty { get; set; }
+        public  Int32 PhraseIterationCount { get; set; }
+        private  Byte[] _name; // len = 32
         public string Name { get { return _name.ToNullTerminatedAscii(); } }
 
         public Phrase(BinaryReader br)
         {
-            Disparity = br.ReadInt32();
+            Solo = br.ReadByte();
+            Disparity = br.ReadByte();
+            Ignore = br.ReadByte();
+            Unknown = br.ReadByte();
             MaxDifficulty = br.ReadInt32();
             PhraseIterationCount = br.ReadInt32();
             _name = br.ReadBytes(32);
@@ -65,9 +71,9 @@ namespace RocksmithToolkitLib.Sng
 
     public class PhraseIteration
     {
-        public readonly Int32 Id;
-        public readonly float StartTime;
-        public readonly float EndTime;
+        public  Int32 Id { get; set; }
+        public  float StartTime { get; set; }
+        public  float EndTime { get; set; }
 
         public PhraseIteration(BinaryReader br)
         {
@@ -86,8 +92,8 @@ namespace RocksmithToolkitLib.Sng
 
     public class Control
     {
-        public readonly float Time;
-        public readonly Byte[] _code; // len = 256
+        public  float Time { get; set; }
+        public  Byte[] _code; // len = 256
         public string Code { get { return _code.ToNullTerminatedAscii(); } }
 
         public Control(BinaryReader br)
@@ -105,8 +111,8 @@ namespace RocksmithToolkitLib.Sng
 
     public class SongEvent
     {
-        public readonly float Time;
-        public readonly Byte[] _code; // len = 256
+        public  float Time { get; set; }
+        public  Byte[] _code; // len = 256
         public string Code { get { return _code.ToNullTerminatedAscii(); } }
 
         public SongEvent(BinaryReader br)
@@ -124,17 +130,20 @@ namespace RocksmithToolkitLib.Sng
 
     public class SongSection
     {
-        public readonly Byte[] _name; // len = 32
-        public readonly Int32 Number;
-        public readonly float StartTime;
-        public readonly float EndTime;
-        public readonly Int32 StartNote; //??
-        public readonly Int32 EndNote; // ??
-        public readonly Byte Bit1; // ??
-        public readonly Byte Bit2; // ??
-        public readonly Byte Bit3; // ??
-        public readonly Byte Bit4; // ??
-        public readonly Int32 Padding; // ??
+        public  Byte[] _name; // len = 32
+        public  Int32 Number { get; set; }
+        public  float StartTime { get; set; }
+        public  float EndTime { get; set; }
+        public  Int32 StartPhraseIteration { get; set; } //??
+        public Int32 EndPhraseIteration { get; set; } // ??
+        public Byte Bit1 { get; set; } // ??
+        public Byte Bit2 { get; set; } // ??
+        public Byte Bit3 { get; set; } // ??
+        public Byte Bit4 { get; set; } // ??
+        public Byte Bit5 { get; set; } // ??
+        public Byte Bit6 { get; set; } // ??
+        public Byte Bit7 { get; set; } // ??
+        public Byte Bit8 { get; set; } // ??
 
         public string Name { get { return _name.ToNullTerminatedAscii(); } }
 
@@ -144,13 +153,16 @@ namespace RocksmithToolkitLib.Sng
             Number = br.ReadInt32();
             StartTime = br.ReadSingle();
             EndTime = br.ReadSingle();
-            StartNote = br.ReadInt32();
-            EndNote = br.ReadInt32();
+            StartPhraseIteration = br.ReadInt32();
+            EndPhraseIteration = br.ReadInt32();
             Bit1 = br.ReadByte();
             Bit2 = br.ReadByte();
             Bit3 = br.ReadByte();
             Bit4 = br.ReadByte();
-            Padding = br.ReadInt32();
+            Bit5 = br.ReadByte();
+            Bit6 = br.ReadByte();
+            Bit7 = br.ReadByte();
+            Bit8 = br.ReadByte();
         }
 
         public void Write(BinaryWriter bw)
@@ -159,34 +171,37 @@ namespace RocksmithToolkitLib.Sng
             bw.Write(Number);
             bw.Write(StartTime);
             bw.Write(EndTime);
-            bw.Write(StartNote);
-            bw.Write(EndNote);
+            bw.Write(StartPhraseIteration);
+            bw.Write(EndPhraseIteration);
             bw.Write(Bit1);
-            bw.Write(Bit1);
-            bw.Write(Bit1);
-            bw.Write(Bit1);
-            bw.Write(Padding);
+            bw.Write(Bit2);
+            bw.Write(Bit3);
+            bw.Write(Bit4);
+            bw.Write(Bit5);
+            bw.Write(Bit6);
+            bw.Write(Bit7);
+            bw.Write(Bit8);
         }
     }
 
-    public struct SongLevel
+    public class SongLevel
     {
-        public readonly Int32 Difficulty;
-        public readonly Int32 AnchorCount; //?
-        public readonly Anchor[] Anchors;
-        public readonly Int32 ChordCount;
-        public readonly Chord[] Chords;
-        public readonly Int32 HandShapeCount; //?
-        public readonly HandShape[] HandShapes; //?
-        public readonly Int32 NoteCount; // ?
-        public readonly Note[] Notes;
-        public readonly Int32 Unknown1Count;
-        public readonly Int32[] Unknown1s; // each is len 1
-        public readonly Int32 Unknown2Count;
-        public readonly Int32[] Unknown2s; // each is len 2
-        public readonly Int32 Unknown3;
+        public  Int32 Difficulty { get; set; }
+        public  Int32 AnchorCount; 
+        public  Anchor[] Anchors { get; set; }
+        public  Int32 SlideCount;
+        public  Slide[] Slides { get; set; }
+        public  Int32 HandShapeCount;
+        public  HandShape[] HandShapes { get; set; }
+        public  Int32 NoteCount;
+        public  Note[] Notes { get; set; }
+        public  Int32 PhraseCount;
+        public  float[] AverageNotesPerPhrase { get; set; }
+        public  Int32 PhraseIterationCount;
+        public  Int32[] NotesPerIteration1 { get; set; }
+        public Int32[] NotesPerIteration2 { get; set; }
 
-        public SongLevel(BinaryReader br)
+        public SongLevel(BinaryReader br, int version)
         {
             Difficulty = br.ReadInt32();
             AnchorCount = br.ReadInt32();
@@ -196,11 +211,11 @@ namespace RocksmithToolkitLib.Sng
                 Anchors[i] = new Anchor(br);
             }
 
-            ChordCount = br.ReadInt32();
-            Chords = new Chord[ChordCount];
-            for (int i = 0; i < ChordCount; ++i)
+            SlideCount = br.ReadInt32();
+            Slides = new Slide[SlideCount];
+            for (int i = 0; i < SlideCount; ++i)
             {
-                Chords[i] = new Chord(br);
+                Slides[i] = new Slide(br);
             }
 
             HandShapeCount = br.ReadInt32();
@@ -214,24 +229,29 @@ namespace RocksmithToolkitLib.Sng
             Notes = new Note[NoteCount];
             for (int i = 0; i < NoteCount; ++i)
             {
-                Notes[i] = new Note(br);
+                Notes[i] = new Note(br, version);
             }
 
-            Unknown1Count = br.ReadInt32();
-            Unknown1s = new Int32[Unknown1Count];
-            for(int i = 0; i < Unknown1Count; ++i)
+            PhraseCount = br.ReadInt32();
+            AverageNotesPerPhrase = new float[PhraseCount];
+            for (int i = 0; i < PhraseCount; ++i)
             {
-                Unknown1s[i] = br.ReadInt32();
+                AverageNotesPerPhrase[i] = br.ReadSingle();
             }
 
-            Unknown2Count = br.ReadInt32();
-            Unknown2s = new Int32[Unknown2Count * 2]; // each is len 2
-            for (int i = 0; i < Unknown2s.Count(); ++i)
+            PhraseIterationCount = br.ReadInt32();
+            NotesPerIteration1 = new Int32[PhraseIterationCount];
+            for (int i = 0; i < NotesPerIteration1.Count(); ++i)
             {
-                Unknown2s[i] = br.ReadInt32();
+                NotesPerIteration1[i] = br.ReadInt32();
             }
 
-            Unknown3 = br.ReadInt32();
+            PhraseIterationCount = br.ReadInt32();
+            NotesPerIteration2 = new Int32[PhraseIterationCount];
+            for (int i = 0; i < NotesPerIteration2.Count(); ++i)
+            {
+                NotesPerIteration2[i] = br.ReadInt32();
+            }
         }
 
         public void Write(BinaryWriter bw)
@@ -243,10 +263,10 @@ namespace RocksmithToolkitLib.Sng
                 Anchors[i].Write(bw);
             }
 
-            bw.Write(ChordCount);
-            for (int i = 0; i < ChordCount; ++i)
+            bw.Write(SlideCount);
+            for (int i = 0; i < SlideCount; ++i)
             {
-                Chords[i].Write(bw);
+                Slides[i].Write(bw);
             }
 
             bw.Write(HandShapeCount);
@@ -261,29 +281,33 @@ namespace RocksmithToolkitLib.Sng
                 Notes[i].Write(bw);
             }
 
-            bw.Write(Unknown1Count);
-            for (int i = 0; i < Unknown1Count; ++i)
+            bw.Write(PhraseCount);
+            for (int i = 0; i < PhraseCount; ++i)
             {
-                bw.Write(Unknown1s[i]);
+                bw.Write(AverageNotesPerPhrase[i]);
             }
 
-            bw.Write(Unknown2Count);
-            for (int i = 0; i < Unknown2s.Count(); ++i)
+            bw.Write(PhraseIterationCount);
+            for (int i = 0; i < NotesPerIteration1.Count(); ++i)
             {
-                bw.Write(Unknown2s[i]);
+                bw.Write(NotesPerIteration1[i]);
             }
 
-            bw.Write(Unknown3);
+            bw.Write(PhraseIterationCount);
+            for (int i = 0; i < NotesPerIteration2.Count(); ++i)
+            {
+                bw.Write(NotesPerIteration2[i]);
+            }
         }
     }
 
-    public struct Anchor
+    public class Anchor
     {
-        public readonly float StartTime;
-        public readonly float EndTime;
-        public readonly float MidTime; // ?
-        public readonly Int32 Fret;
-        public readonly Int32 Unknown; // ?
+        public  float StartTime { get; set; }
+        public  float EndTime { get; set; }
+        public  float MidTime { get; set; } // ?
+        public  Int32 Fret { get; set; }
+        public  Int32 PhraseIteration { get; set; }
 
         public Anchor(BinaryReader br)
         {
@@ -291,7 +315,7 @@ namespace RocksmithToolkitLib.Sng
             EndTime = br.ReadSingle();
             MidTime = br.ReadSingle();
             Fret = br.ReadInt32();
-            Unknown = br.ReadInt32();
+            PhraseIteration = br.ReadInt32();
         }
 
         public void Write(BinaryWriter bw)
@@ -300,47 +324,65 @@ namespace RocksmithToolkitLib.Sng
             bw.Write(EndTime);
             bw.Write(MidTime);
             bw.Write(Fret);
-            bw.Write(Unknown);
+            bw.Write(PhraseIteration);
         }
     }
 
     public class Note
     {
-        public readonly float Time;
-        public readonly Int32 String;
-        public readonly Int32 Fret;
-        public readonly Int32 Unknown1; //?
-        public readonly Int32 Unknown2; //?
-        public readonly float SustainTime;
-        public readonly Int32 Bend; //?
-        public readonly Int32 Unknown3; //?
-        public readonly Int16 Unknown4; //?  \
-        public readonly Int16 PalmMute; //? /
-        public readonly Int32 Unknown5; //?
-        public readonly Int32 Unknown6; //?
-        public readonly Int32 Index;
-        public readonly Int32 Unknown7;
+        public  float Time { get; set; }
+        public  Int32 String { get; set; }
+        public  Int32 Fret { get; set; }
+        public  Int32 ChordId { get; set; }
+        public  Int32 Unknown1 { get; set; }
+        public  float SustainTime { get; set; }
+        public  Int32 Bend { get; set; }
+        public  Int32 SlideTo { get; set; }
+        public  byte Tremolo { get; set; }
+        public  byte Harmonic { get; set; }
+        public  byte PalmMute { get; set; }
+        public  byte Hopo { get; set; }
+        public  Int32 Slap { get; set; }
+        public  Int32 Pluck { get; set; }
+        public  byte HammerOn { get; set; }
+        public  byte PullOff { get; set; }
+        public  byte Ignore { get; set; }
+        public  byte HighDensity { get; set; }
+        public  Int32 Unknown2 { get; set; } //?
+        public  Int32 IterationId { get; set; }
+        public  Int32 PhraseId { get; set; }
 
-        public Note(BinaryReader br)
+        public Note(BinaryReader br, int version)
         {
             Time = br.ReadSingle();
             String = br.ReadInt32();
             Fret = br.ReadInt32();
-            Unknown1 = br.ReadInt32();
+            ChordId = br.ReadInt32();
             Unknown2 = br.ReadInt32();
             SustainTime = br.ReadSingle();
             Bend = br.ReadInt32();
-            Unknown3 = br.ReadInt32();
-            Unknown4 = br.ReadInt16();
-            PalmMute = br.ReadInt16();
-            Unknown5 = br.ReadInt32();
-            Unknown6 = br.ReadInt32();
-            Index = br.ReadInt32();
-            Unknown7 = br.ReadInt32();
+            SlideTo = br.ReadInt32();
+            Tremolo = br.ReadByte();
+            Harmonic = br.ReadByte();
+            PalmMute = br.ReadByte();
+            Hopo = br.ReadByte();
+            if (version == 51)
+            {
+                Slap = br.ReadInt32();
+                Pluck = br.ReadInt32();
+            }
+            HammerOn = br.ReadByte();
+            PullOff = br.ReadByte();
+            Ignore = br.ReadByte();
+            HighDensity = br.ReadByte();
+            Unknown2 = br.ReadInt32();
+            IterationId = br.ReadInt32();
+            PhraseId = br.ReadInt32();
         }
 
         public void Write(BinaryWriter bw)
         {
+            /*
             bw.Write(Time);
             bw.Write(String);
             bw.Write(Fret);
@@ -355,77 +397,83 @@ namespace RocksmithToolkitLib.Sng
             bw.Write(Unknown6);
             bw.Write(Index);
             bw.Write(Unknown7);
+             */
         }
     }
 
-    public class Chord
+    public class Slide
     {
-        public readonly float Time;
-        public readonly Int32 Unknown; // Almost definitely a bitfield combining chord Id, "highDensity", "ignore", and "strum="down"
+        public  float Time { get; set; }
+        public  Int32 EndingFret { get; set; }
 
-        public Chord(BinaryReader br)
+        public Slide(BinaryReader br)
         {
             Time = br.ReadSingle();
-            Unknown = br.ReadInt32();
+            EndingFret = br.ReadInt32();
         }
 
         public void Write(BinaryWriter bw)
         {
             bw.Write(Time);
-            bw.Write(Unknown);
+            bw.Write(EndingFret);
         }
     }
 
     public class HandShape
     {
-        public readonly float StartTime; //?
-        public readonly float EndTime; //?
-        public readonly float StartTime2; //?
-        public readonly float EndTime2; //?
-        public readonly float ChordId;
-        public readonly float Unknown1;
-        public readonly float Unknown2;
+        public  float StartTime { get; set; } //?
+        public  float EndTime { get; set; } //?
+        public  float Unknown1 { get; set; } //?
+        public float Unknown2 { get; set; } //?
+        public  float ChordId { get; set; }
+        public  float FirstChordInHandShapeTime { get; set; }
+        public float LastChordInHandShapeTime { get; set; }
 
         public HandShape(BinaryReader br)
         {
             StartTime = br.ReadSingle();
             EndTime = br.ReadSingle();
-            StartTime2 = br.ReadSingle();
-            EndTime2 = br.ReadSingle();
-            ChordId = br.ReadSingle();
             Unknown1 = br.ReadSingle();
             Unknown2 = br.ReadSingle();
+            ChordId = br.ReadSingle();
+            FirstChordInHandShapeTime = br.ReadSingle();
+            LastChordInHandShapeTime = br.ReadSingle();
         }
 
         public void Write(BinaryWriter bw)
         {
             bw.Write(StartTime);
             bw.Write(EndTime);
-            bw.Write(StartTime2);
-            bw.Write(EndTime2);
-            bw.Write(ChordId);
             bw.Write(Unknown1);
             bw.Write(Unknown2);
+            bw.Write(ChordId);
+            bw.Write(FirstChordInHandShapeTime);
+            bw.Write(LastChordInHandShapeTime);
         }
     }
 
 
     public class ChordTemplate
     {
-        public readonly Int32 Fret0;
-        public readonly Int32 Fret1;
-        public readonly Int32 Fret2;
-        public readonly Int32 Fret3;
-        public readonly Int32 Fret4;
-        public readonly Int32 Fret5;
-        public readonly Int32 Finger0;
-        public readonly Int32 Finger1;
-        public readonly Int32 Finger2;
-        public readonly Int32 Finger3;
-        public readonly Int32 Finger4;
-        public readonly Int32 Finger5;
-        public Byte[] Unknown; // len 24;
-        private readonly Byte[] _name; // len 32
+        public  Int32 Fret0 { get; set; }
+        public  Int32 Fret1 { get; set; }
+        public  Int32 Fret2 { get; set; }
+        public  Int32 Fret3 { get; set; }
+        public  Int32 Fret4 { get; set; }
+        public Int32 Fret5 { get; set; }
+        public Int32 Finger0 { get; set; }
+        public Int32 Finger1 { get; set; }
+        public Int32 Finger2 { get; set; }
+        public Int32 Finger3 { get; set; }
+        public Int32 Finger4 { get; set; }
+        public Int32 Finger5 { get; set; }
+        public Int32 Note0 { get; set; }
+        public Int32 Note1 { get; set; }
+        public Int32 Note2 { get; set; }
+        public Int32 Note3 { get; set; }
+        public Int32 Note4 { get; set; }
+        public Int32 Note5 { get; set; }
+        private  Byte[] _name; // len 32
         public string Name { get { return _name.ToNullTerminatedAscii(); } }
 
         public ChordTemplate(BinaryReader br)
@@ -442,7 +490,12 @@ namespace RocksmithToolkitLib.Sng
             Finger3 = br.ReadInt32();
             Finger4 = br.ReadInt32();
             Finger5 = br.ReadInt32();
-            Unknown = br.ReadBytes(24);
+            Note0 = br.ReadInt32();
+            Note1 = br.ReadInt32();
+            Note2 = br.ReadInt32();
+            Note3 = br.ReadInt32();
+            Note4 = br.ReadInt32();
+            Note5 = br.ReadInt32();
             _name = br.ReadBytes(32);
         }
 
@@ -460,17 +513,22 @@ namespace RocksmithToolkitLib.Sng
             bw.Write(Finger3);
             bw.Write(Finger4);
             bw.Write(Finger5);
-            bw.Write(Unknown);
+            bw.Write(Note0);
+            bw.Write(Note1);
+            bw.Write(Note2);
+            bw.Write(Note3);
+            bw.Write(Note4);
+            bw.Write(Note5);
             bw.Write(_name);
         }
     }
 
     public class Vocal
     {
-        public readonly float Time;
-        public readonly Int32 Note;
-        public readonly float Length;
-        private readonly Byte[] _lyric; // len 32
+        public  float Time { get; set; }
+        public  Int32 Note { get; set; }
+        public  float Length { get; set; }
+        private  Byte[] _lyric; // len 32
         public string Lyric { get { return _lyric.ToNullTerminatedAscii(); } }
 
         public Vocal(BinaryReader br)
@@ -492,26 +550,64 @@ namespace RocksmithToolkitLib.Sng
 
     public class Metadata
     {
-        private readonly Byte[] _lastConversion; // len = 32
-        private readonly Byte[] _songTitle; // len = 64
-        private readonly Byte[] _arrangement; // len = 32
-        private readonly Byte[] _artist; // len = 32
-        public readonly Int16 SongPart;
-        public readonly float Length;
+        public  double MaxScore { get; set; }
+        public  double TotalNotes { get; set; }
+        public  double PointsPerNote { get; set; }
+        public  float BeatTiming { get; set; }
+        public  float FirstBeat { get; set; }
+
+        private  Byte[] _lastConversion; // len = 32
+        private  Byte[] _songTitle; // len = 64
+        private  Byte[] _arrangement; // len = 32
+        private  Byte[] _artist; // len = 32
+        public  Int16 SongPart { get; set; }
+        public  float Length { get; set; }
 
         public string LastConversion { get { return _lastConversion.ToNullTerminatedAscii(); } }
         public string SongTitle { get { return _songTitle.ToNullTerminatedAscii(); } }
         public string Arrangement { get { return _arrangement.ToNullTerminatedAscii(); } }
         public string Artist { get { return _artist.ToNullTerminatedAscii(); } }
 
+        public int Tuning { get; set; }
+        public float Difficulty { get; set; }
+        public float Unknown1 { get; set; }
+        public float Unknown2 { get; set; }
+        public int MaxDifficulty { get; set; }
+        public UnknownSection1[] UnknownSection1 { get; set; }
+        public UnknownSection2[] UnknownSection2 { get; set; }
+
         public Metadata(BinaryReader br)
         {
+            MaxScore = br.ReadDouble();
+            TotalNotes = br.ReadDouble();
+            PointsPerNote = br.ReadDouble();
+            BeatTiming = br.ReadSingle();
+            FirstBeat = br.ReadSingle();
             _lastConversion = br.ReadBytes(32);
             _songTitle = br.ReadBytes(64);
             _arrangement = br.ReadBytes(32);
             _artist = br.ReadBytes(32);
             SongPart = br.ReadInt16();
             Length = br.ReadSingle();
+            Tuning = br.ReadInt32();
+            Difficulty = br.ReadSingle();
+            Unknown1 = br.ReadSingle();
+            Unknown2 = br.ReadSingle();
+            MaxDifficulty = br.ReadInt32();
+
+            int len = br.ReadInt32();
+            UnknownSection1 = new UnknownSection1[len];
+            for (int i = 0; i < UnknownSection1.Count(); ++i)
+            {
+                UnknownSection1[i] = new UnknownSection1(br);
+            }
+
+            len = br.ReadInt32();
+            UnknownSection2 = new UnknownSection2[len];
+            for (int i = 0; i < UnknownSection2.Count(); ++i)
+            {
+                UnknownSection2[i] = new UnknownSection2(br);
+            }
         }
 
         public void Write(BinaryWriter bw)
@@ -526,18 +622,47 @@ namespace RocksmithToolkitLib.Sng
 
     }
 
+    public class UnknownSection1
+    {
+        public byte[] Unknown1 { get; set; }
+        public byte[] Unknown2 { get; set; }
+        public int Unknown3 { get; set; }
+
+        public UnknownSection1(BinaryReader br)
+        {
+            Unknown1 = br.ReadBytes(4);
+            Unknown2 = br.ReadBytes(4);
+            Unknown3 = br.ReadInt32();
+        }
+    }
+
+    public class UnknownSection2
+    {
+        private byte[] _unknown1 {get; set;}
+        public string Unknown1 { get { return _unknown1.ToNullTerminatedAscii(); } }
+        public int Unknown2 { get; set; }
+        public int Unknown3 { get; set; }
+
+        public UnknownSection2(BinaryReader br)
+        {
+            _unknown1 = br.ReadBytes(64);
+            Unknown2 = br.ReadInt32();
+            Unknown3 = br.ReadInt32();
+        }
+    }
+
     public class PhraseProperty
     {
-        public readonly Int32 PhraseId;
-        public readonly Int32 Difficulty;
-        public readonly Int32 Empty; // ?
-        public readonly Int16 LevelJump; // ?
-        public readonly Int16 Redundant; // ?
-        
+        public  Int32 PhraseId { get; set; }
+        public  Int32 Difficulty { get; set; }
+        public  Int32 Empty { get; set; } // ?
+        public  Int16 LevelJump { get; set; } // ?
+        public  Int16 Redundant { get; set; } // ?
+
         public PhraseProperty(BinaryReader br)
         {
             PhraseId = br.ReadInt32();
-            Difficulty= br.ReadInt32();
+            Difficulty = br.ReadInt32();
             Empty = br.ReadInt32();
             LevelJump = br.ReadInt16();
             Redundant = br.ReadInt16();
@@ -555,10 +680,10 @@ namespace RocksmithToolkitLib.Sng
 
     public class LinkedDiff
     {
-        public readonly Int32 ParentId;
-        public readonly Int32 ChildId;
-        public readonly Int32 Unknown; // ?
-        
+        public  Int32 ParentId { get; set; }
+        public  Int32 ChildId { get; set; }
+        public  Int32 Unknown { get; set; } // ?
+
         public LinkedDiff(BinaryReader br)
         {
             ParentId = br.ReadInt32();
@@ -576,36 +701,35 @@ namespace RocksmithToolkitLib.Sng
 
     public class SngFile
     {
-        public readonly Int32 _version; // ?
-        private readonly Int32 _beatCount;
-        public Ebeat[] _beats;
-        private readonly Int32 _PhraseCount;
-        public Phrase[] _phrases;
-        private readonly Int32 _chordTemplateCount;
-        private readonly ChordTemplate[] _chordTemplates;
-        private readonly Int32 _fretHandMuteTemplateCount;
-        private readonly Int32 _vocalsCount;
-        public Vocal[] _vocals;
+        public  Int32 Version { get; set; } // ?
+        private  Int32 _beatCount;
+        public Ebeat[] _beats { get; set; }
+        private  Int32 _PhraseCount;
+        public Phrase[] _phrases { get; set; }
+        private  Int32 _chordTemplateCount;
+        private  ChordTemplate[] _chordTemplates;
+        private  Int32 _fretHandMuteTemplateCount;
+        private  Int32 _vocalsCount;
+        public Vocal[] _vocals { get; set; }
         public Int32 _phraseIterationCount;
-        public PhraseIteration[] _phraseIterations;
-        public readonly Int32 PhrasePropertyCount;
-        public readonly PhraseProperty[] PhraseProperties;
-        private readonly Int32 LinkedDiffCount;
-        private readonly LinkedDiff[] LinkedDiffs;
-        public readonly Int32 ControlCount;
-        public readonly Control[] Controls;
-        private readonly Int32 _songEventCount;
-        public readonly SongEvent[] SongEvents;
-        public readonly Int32 SongSectionCount;
-        public readonly SongSection[] SongSections;
-        private readonly Int32 _songLevelCount;
-        public readonly SongLevel[] SongLevels;
-        public Byte[] _unknown; // len 32
-        public readonly Metadata Metadata;
-        public readonly Byte[] _unknown2; // len ??
+        public PhraseIteration[] _phraseIterations { get; set; }
+        public  Int32 PhrasePropertyCount;
+        public  PhraseProperty[] PhraseProperties { get; set; }
+        private  Int32 LinkedDiffCount;
+        private  LinkedDiff[] LinkedDiffs { get; set; }
+        public  Int32 ControlCount;
+        public  Control[] Controls { get; set; }
+        private  Int32 _songEventCount;
+        public  SongEvent[] SongEvents { get; set; }
+        public  Int32 SongSectionCount;
+        public  SongSection[] SongSections { get; set; }
+        private  Int32 _songLevelCount;
+        public  SongLevel[] SongLevels { get; set; }
+        public  Metadata Metadata { get; set; }
+        public  Byte[] _unknown2 { get; set; } // len ??
 
 
-        private readonly string _filePath;
+        private  string _filePath;
         public override string ToString()
         {
             if (Metadata != null)
@@ -613,7 +737,7 @@ namespace RocksmithToolkitLib.Sng
 
             if (!string.IsNullOrWhiteSpace(_filePath))
                 return Path.GetFileName(_filePath);
-            
+
             return "<Unknown>";
         }
 
@@ -624,7 +748,7 @@ namespace RocksmithToolkitLib.Sng
             using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 BinaryReader br = new BinaryReader(stream);
-                _version = br.ReadInt32();
+                Version = br.ReadInt32();
                 _beatCount = br.ReadInt32();
                 _beats = new Ebeat[_beatCount];
                 for (int i = 0; i < _beatCount; ++i)
@@ -694,14 +818,12 @@ namespace RocksmithToolkitLib.Sng
                     SongSections[i] = new SongSection(br);
                 }
 
-                _songLevelCount =  br.ReadInt32();
+                _songLevelCount = br.ReadInt32();
                 SongLevels = new SongLevel[_songLevelCount];
                 for (int i = 0; i < _songLevelCount; ++i)
                 {
-                    SongLevels[i] = new SongLevel(br);
+                    SongLevels[i] = new SongLevel(br, Version);
                 }
-
-                _unknown = br.ReadBytes(32);
 
                 Metadata = new Metadata(br);
 
@@ -718,7 +840,7 @@ namespace RocksmithToolkitLib.Sng
             using (var stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 BinaryWriter bw = new BinaryWriter(stream);
-                bw.Write(_version);
+                bw.Write(Version);
                 bw.Write(_beatCount);
                 for (int i = 0; i < _beatCount; ++i)
                 {
@@ -783,8 +905,6 @@ namespace RocksmithToolkitLib.Sng
                 {
                     SongLevels[i].Write(bw);
                 }
-
-                bw.Write(_unknown);
 
                 Metadata.Write(bw);
 

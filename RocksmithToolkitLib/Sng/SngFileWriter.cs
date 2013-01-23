@@ -428,6 +428,7 @@ namespace RocksmithToolkitLib.Sng
                 // empty?
                 w.Write(phraseProperty.Empty);
 
+                // These seem to be 1 in many RS SNGs where the XML shows 0.
                 // level jump?
                 w.Write(phraseProperty.LevelJump);
 
@@ -725,15 +726,16 @@ namespace RocksmithToolkitLib.Sng
                 var notes = (level.Notes == null) ? null : level.Notes.Where(note => note.Time >= startTime && note.Time < endTime);
                 if (notes != null && notes.Count() > 0)
                 {
-                    lastNote = notes.Max(note => note.Time);
-                }
+                    var note = notes.OrderByDescending(n => n.Time).First();
+                    lastNote = note.Time + note.Sustain + .1f;
+                 }
                 var chords = (level.Chords == null) ? null : level.Chords.Where(chord => chord.Time >= startTime && chord.Time < endTime);
                 if (chords != null && chords.Count() > 0)
                 {
-                    lastChord = chords.Max(chord => chord.Time);
+                    lastChord = chords.Max(chord => chord.Time) + .1f;
                 }
-                float lastTime = Math.Min(lastNote ?? endTime, lastChord ?? endTime);
-                w.Write(lastTime);
+                float lastTime = lastNote == null && lastChord == null ? endTime : Math.Max(lastNote ?? startTime, lastChord ?? startTime);
+                w.Write(Math.Min(lastTime, endTime));
 
                 // fret
                 w.Write(anchors[i].Fret);
@@ -826,14 +828,20 @@ namespace RocksmithToolkitLib.Sng
                 // Probably the first chord in the shape.
                 w.Write(handShape.StartTime);
 
-                var endTime = i == handShapes.Length - 1
-                    ? songLength
-                    : handShapes[i + 1].StartTime;
+                var endTime = handShape.EndTime;
+                //var endTime = i == handShapes.Length - 1
+                //     ? songLength
+                //     : handShapes[i + 1].StartTime;
 
                 // This should actually be the time of the last chord before the end time.
                 float? lastChord = null;
                 var chords = level.Chords == null ? null : level.Chords.Where(chord => chord.Time >= handShape.StartTime && chord.Time < endTime);
-                if (chords != null && chords.Count() > 0)
+                var note = level.Notes == null ? null : level.Notes.FirstOrDefault(n => n.Time == endTime);
+                if (note != null)
+                {
+                    lastChord = endTime;
+                }
+                else if (chords != null && chords.Count() > 0)
                 {
                     lastChord = chords.Max(chord => chord.Time);
                 }
@@ -994,7 +1002,7 @@ namespace RocksmithToolkitLib.Sng
             w.Write(totalNotes);
 
             // points per note
-            w.Write(100000d / totalNotes);
+            w.Write((double)((float)(100000f / (float)totalNotes)));
       
             // song beat timing
             if (s.Ebeats.Length < 2)
@@ -1002,7 +1010,7 @@ namespace RocksmithToolkitLib.Sng
 
             // this is not 100% accurate unless all beats are evenly spaced in a song;
             // still trying to determine exactly how Rocksmith is deriving this time value
-            w.Write(s.Ebeats[1].Time - s.Ebeats[0].Time); 
+            w.Write(s.Ebeats[1].Time - s.Ebeats[0].Time);
 
             // first beat time(?); confirmed as not first phraseIteration time and not first section time
             w.Write(s.Ebeats[0].Time);
@@ -1078,10 +1086,12 @@ namespace RocksmithToolkitLib.Sng
             // nor an anchor time on 1st difficulty level
 
             //It appears to be the time of the first note.
-            w.Write(s.Ebeats[0].Time); // wrong
+            float firstNote = s.Levels.Min(level => level.Notes == null || level.Notes.Length == 0 ? float.MaxValue : level.Notes.Min(note => note.Time));
+            float firstChord = s.Levels.Min(level => level.Chords == null || level.Chords.Length == 0 ? float.MaxValue : level.Chords.Min(chord => chord.Time));
+            float first = Math.Min(firstChord, firstNote);
+            w.Write(first);
             
-            // unknown
-            w.Write(s.Ebeats[0].Time); // wrong
+            w.Write(first);
             
             // max difficulty
             int maxDifficulty = s.Levels.Length-1;
@@ -1091,6 +1101,7 @@ namespace RocksmithToolkitLib.Sng
             w.Write(new byte[4]); // header with repeating array; song works in game if array is defaulted to 0 count so will leave this alone for now
 
             // unknown section
+            // There seems to be 1 entry per letter in the chord templates, although there are songs with chord templates that don't have this section.
             w.Write(new byte[4]); // header with repeating array - only populated in limited songs
         }
     }
