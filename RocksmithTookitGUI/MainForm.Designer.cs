@@ -147,8 +147,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.sngFileCreatorControl.Location = new System.Drawing.Point(24, 30);
             this.sngFileCreatorControl.Margin = new System.Windows.Forms.Padding(5);
+            this.sngFileCreatorControl.MinimumSize = new System.Drawing.Size(644, 378);
             this.sngFileCreatorControl.Name = "sngFileCreatorControl";
-            this.sngFileCreatorControl.Size = new System.Drawing.Size(644, 378);
+            this.sngFileCreatorControl.Size = new System.Drawing.Size(1148, 378);
             this.sngFileCreatorControl.TabIndex = 0;
             // 
             // oggConverterTab
@@ -169,8 +170,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.oggConverterControl.Location = new System.Drawing.Point(24, 30);
             this.oggConverterControl.Margin = new System.Windows.Forms.Padding(5);
+            this.oggConverterControl.MinimumSize = new System.Drawing.Size(664, 150);
             this.oggConverterControl.Name = "oggConverterControl";
-            this.oggConverterControl.Size = new System.Drawing.Size(143, 142);
+            this.oggConverterControl.Size = new System.Drawing.Size(664, 150);
             this.oggConverterControl.TabIndex = 0;
             // 
             // dlcPackageCreatorTab
@@ -192,8 +194,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dlcPackageCreatorControl.Location = new System.Drawing.Point(8, 7);
             this.dlcPackageCreatorControl.Margin = new System.Windows.Forms.Padding(5);
+            this.dlcPackageCreatorControl.MinimumSize = new System.Drawing.Size(680, 524);
             this.dlcPackageCreatorControl.Name = "dlcPackageCreatorControl";
-            this.dlcPackageCreatorControl.Size = new System.Drawing.Size(176, 57);
+            this.dlcPackageCreatorControl.Size = new System.Drawing.Size(680, 524);
             this.dlcPackageCreatorControl.TabIndex = 0;
             // 
             // dlcPackerUnpackerTab
@@ -211,7 +214,7 @@
             // dlcPackerUnpackerControl
             // 
             this.dlcPackerUnpackerControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(-68, 33);
+            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(188, 60);
             this.dlcPackerUnpackerControl.Margin = new System.Windows.Forms.Padding(5);
             this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
             this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(292, 251);
@@ -233,8 +236,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.convertInput1.Location = new System.Drawing.Point(24, 30);
             this.convertInput1.Margin = new System.Windows.Forms.Padding(4);
+            this.convertInput1.MinimumSize = new System.Drawing.Size(644, 137);
             this.convertInput1.Name = "convertInput1";
-            this.convertInput1.Size = new System.Drawing.Size(133, 137);
+            this.convertInput1.Size = new System.Drawing.Size(644, 137);
             this.convertInput1.TabIndex = 0;
             // 
             // pictureBox1

@@ -6,21 +6,15 @@ using System.Text;
 using System.Windows.Forms;
 using RocksmithToolkitLib.Tone;
 using Pedal = RocksmithToolkitLib.DLCPackage.Tone.Pedal;
+using System.Text.RegularExpressions;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
-    public class NumericUpDownFixed : NumericUpDown
-    {
-        protected override void OnValidating(CancelEventArgs e)
-        {
-            // Prevent bug where typing a value bypasses min/max validation
-            var fixValidation = Value;
-            base.OnValidating(e);
-        }
-    }
-
     public partial class ToneKnobForm : Form
     {
+
+        Regex nameParser = new Regex(@"\$\[\d+\] (.+)");
+
         public ToneKnobForm()
         {
             InitializeComponent();
@@ -28,13 +22,19 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         public void Init(Pedal pedal, IList<Knob> knobs)
         {
-            tableLayoutPanel.RowCount = knobs.Count;
+            tableLayoutPanel.RowCount = knobs.Count + 1;
             for (var i = 0; i < knobs.Count; i++)
             {
                 var knob = knobs[i];
                 var label = new Label();
                 tableLayoutPanel.Controls.Add(label, 0, i);
-                label.Text = knob.Name;
+                var name = knob.Name;
+                var niceName = nameParser.Match(name);
+                if(niceName != null && niceName.Groups.Count > 1) {
+                    name = niceName.Groups[1].Value;
+                }
+                label.Text = name;
+                label.Anchor = AnchorStyles.Left;
 
                 var numericControl = new NumericUpDownFixed();
                 tableLayoutPanel.Controls.Add(numericControl, 1, i);
@@ -45,7 +45,26 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 numericControl.Value = pedal.KnobValues[knob.Key];
                 numericControl.ValueChanged += (obj, args) =>
                     pedal.KnobValues[knob.Key] = numericControl.Value;
+
             }
+            tableLayoutPanel.RowStyles[tableLayoutPanel.RowCount - 1].SizeType = SizeType.Percent;
+            tableLayoutPanel.RowStyles[tableLayoutPanel.RowCount - 1].Height = 100;
+        }
+
+        private void okButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+    }
+
+    public class NumericUpDownFixed : NumericUpDown
+    {
+        protected override void OnValidating(CancelEventArgs e)
+        {
+            // Prevent bug where typing a value bypasses min/max validation
+            var fixValidation = Value;
+            base.OnValidating(e);
         }
     }
 }

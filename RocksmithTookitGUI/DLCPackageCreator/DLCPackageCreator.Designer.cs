@@ -66,7 +66,6 @@
             // 
             // dlcGenerateButton
             // 
-            this.dlcGenerateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.dlcGenerateButton.Location = new System.Drawing.Point(569, 471);
             this.dlcGenerateButton.Margin = new System.Windows.Forms.Padding(4);
             this.dlcGenerateButton.Name = "dlcGenerateButton";
@@ -132,7 +131,6 @@
             // 
             // dlcSaveButton
             // 
-            this.dlcSaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dlcSaveButton.Location = new System.Drawing.Point(121, 471);
             this.dlcSaveButton.Margin = new System.Windows.Forms.Padding(4);
             this.dlcSaveButton.Name = "dlcSaveButton";
@@ -144,7 +142,6 @@
             // 
             // dlcLoadButton
             // 
-            this.dlcLoadButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dlcLoadButton.Location = new System.Drawing.Point(13, 471);
             this.dlcLoadButton.Margin = new System.Windows.Forms.Padding(4);
             this.dlcLoadButton.Name = "dlcLoadButton";
