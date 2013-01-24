@@ -60,6 +60,13 @@ namespace RocksmithToolkitLib.Properties {
             }
         }
         
+        internal static byte[] albumart {
+            get {
+                object obj = ResourceManager.GetObject("albumart", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
         internal static byte[] pedals {
             get {
                 object obj = ResourceManager.GetObject("pedals", resourceCulture);

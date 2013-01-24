@@ -122,6 +122,7 @@
     <Compile Include="ZiggyProEditor\Track.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\albumart.dds" />
     <None Include="Resources\soundbank.bnk" />
   </ItemGroup>
   <ItemGroup>
