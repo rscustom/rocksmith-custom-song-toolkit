@@ -29,14 +29,48 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         public ArrangementForm(Arrangement arrangement, IEnumerable<string> toneNames)
         {
             InitializeComponent();
+            
+            foreach (var val in Enum.GetValues(typeof(InstrumentTuning))) {
+                tuningComboBox.Items.Add(val);
+            }
             foreach (var val in Enum.GetValues(typeof(ArrangementType)))
             {
                 arrangementTypeCombo.Items.Add(val);
             }
+            arrangementTypeCombo.SelectedValueChanged += (sender, e) => {
+                // Selecting defaults
+                ArrangementType selectedType = ((ArrangementType)((ComboBox)sender).SelectedItem);
+                
+                switch (selectedType) {
+                    case ArrangementType.Bass:
+                        arrangementNameCombo.Items.Clear();
+                        arrangementNameCombo.Items.Add(ArrangementName.Bass);
+                        arrangementNameCombo.SelectedItem = ArrangementName.Bass;
+                        break;
+                    case ArrangementType.Vocal:
+                        arrangementNameCombo.Items.Clear();
+                        arrangementNameCombo.Items.Add(ArrangementName.Vocals);
+                        arrangementNameCombo.SelectedItem = ArrangementName.Vocals;
+                        break;
+                    default:
+                        arrangementNameCombo.Items.Clear();
+                        arrangementNameCombo.Items.Add(ArrangementName.Combo);
+                        arrangementNameCombo.Items.Add(ArrangementName.Lead);
+                        arrangementNameCombo.SelectedItem = ArrangementName.Combo;
+                        break;
+                }
+                arrangementNameCombo.Enabled = selectedType == ArrangementType.Guitar;
+
+                Picked.Checked = selectedType == ArrangementType.Bass ? false : true;
+            };
             foreach (var tone in toneNames)
             {
                 tonesCombo.Items.Add(tone);
             }
+            scrollSpeedTrackBar.Scroll += (sender, e) =>
+            {
+                scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeedTrackBar.Value) / 10);
+            };
             Arrangement = arrangement;
         }
 
@@ -49,22 +83,30 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             private set
             {
                 arrangement = value;
-                ArrangementName.Text = arrangement.Name;
+                arrangementNameCombo.SelectedItem = arrangement.Name;
                 arrangementTypeCombo.SelectedItem = arrangement.ArrangementType;
+                
+                InstrumentTuning tuning = InstrumentTuning.Standard;
+                Enum.TryParse<InstrumentTuning>(arrangement.Tuning, true, out tuning);
+                tuningComboBox.SelectedItem = tuning;
+                
                 BarChords.Checked = arrangement.BarChords;
                 DoubleStops.Checked = arrangement.DoubleStops;
                 DropDPowerChords.Checked = arrangement.DropDPowerChords;
                 FifthsAndOctaves.Checked = arrangement.FifthsAndOctaves;
+                TwoFingerPlucking.Checked = arrangement.TwoFingerPlucking;
+                Syncopation.Checked = arrangement.Syncopation;
                 FretHandMutes.Checked = arrangement.FretHandMutes;
                 OpenChords.Checked = arrangement.OpenChords;
                 PowerChords.Checked = arrangement.PowerChords;
-                PreBends.Checked = arrangement.PreBends;
+                Prebends.Checked = arrangement.Prebends;
                 RelativeDifficulty.Text = arrangement.RelativeDifficulty.ToString();
-                SlapAndPop.Checked = arrangement.SlapAndPop;
-                PreBends.Checked = arrangement.PreBends;
-                Tuning.Text = arrangement.Tuning;
+                Picked.Checked = arrangement.PluckedType == PluckedType.Picked ? true : false;
+                Prebends.Checked = arrangement.Prebends;
                 Vibrato.Checked = arrangement.Vibrato;
-                scrollSpeedTrackBar.Value = Math.Min(scrollSpeedTrackBar.Maximum, Math.Max(scrollSpeedTrackBar.Minimum, arrangement.ScrollSpeed));
+                int scrollSpeed = Math.Min(scrollSpeedTrackBar.Maximum, Math.Max(scrollSpeedTrackBar.Minimum, arrangement.ScrollSpeed));
+                scrollSpeedTrackBar.Value = scrollSpeed;
+                scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeed) / 10);
 
                 SngFilePath.Text = arrangement.SongFile.File;
                 XmlFilePath.Text = arrangement.SongXml.File;
@@ -118,25 +160,21 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 SngFilePath.Focus();
                 return;
             }
-            if (string.IsNullOrEmpty(ArrangementName.Text))
-            {
-                ArrangementName.Focus();
-                return;
-            }
 
             arrangement.ArrangementType = (ArrangementType)arrangementTypeCombo.SelectedItem;
-            arrangement.Name = arrangement.ArrangementType == ArrangementType.Vocal ? "Vocals" : ArrangementName.Text;
+            arrangement.Name = (ArrangementName)arrangementNameCombo.SelectedItem;
             arrangement.BarChords = BarChords.Checked;
             arrangement.DoubleStops = DoubleStops.Checked;
             arrangement.DropDPowerChords = DropDPowerChords.Checked;
             arrangement.FifthsAndOctaves = FifthsAndOctaves.Checked;
+            arrangement.TwoFingerPlucking = TwoFingerPlucking.Checked;
+            arrangement.Syncopation = Syncopation.Checked;
             arrangement.FretHandMutes = FretHandMutes.Checked;
             arrangement.OpenChords = OpenChords.Checked;
             arrangement.PowerChords = PowerChords.Checked;
-            arrangement.PreBends = PreBends.Checked;
+            arrangement.Prebends = Prebends.Checked;
             arrangement.RelativeDifficulty = readInt(RelativeDifficulty.Text);
-            arrangement.SlapAndPop = SlapAndPop.Checked;
-            arrangement.Tuning = Tuning.Text;
+            arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
             arrangement.Vibrato = Vibrato.Checked;
             arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
             arrangement.SongFile.File = songfilepath;

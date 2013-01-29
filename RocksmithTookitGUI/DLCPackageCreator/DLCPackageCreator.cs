@@ -108,7 +108,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             var packageData = GetPackageData();
             if (packageData == null)
             {
-                MessageBox.Show("One or more fields are missing information.", "DLC Package Creator");
+                MessageBox.Show("One or more fields are missing information.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             string dlcSavePath;
@@ -120,7 +120,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
             RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData);
 
-            MessageBox.Show("Package was generated.", "DLC Package Creator");
+            MessageBox.Show("Package was generated.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void albumArtButton_Click(object sender, EventArgs e)
@@ -148,7 +148,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             var packageData = GetPackageData();
             if (packageData == null)
             {
-                MessageBox.Show("One or more fields are missing information.", "DLC Package Creator");
+                MessageBox.Show("One or more fields are missing information.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -174,7 +174,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 arr.SongFile.File = MakeAbsolute(path, arr.SongFile.File);
                 arr.SongXml.File = MakeAbsolute(path, arr.SongXml.File);
             }
-            MessageBox.Show("DLC Package template was saved.", "DLC Package Creator");
+            MessageBox.Show("DLC Package template was saved.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void dlcLoadButton_Click(object sender, EventArgs e)
@@ -236,7 +236,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 TonesLB.Items.Add(tone);
             }
 
-            MessageBox.Show("DLC Package template was loaded.", "DLC Package Creator");
+            MessageBox.Show("DLC Package template was loaded.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private string MakeAbsolute(Uri baseUri, string path)
@@ -249,6 +249,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             int year, tempo;
             if (string.IsNullOrEmpty(DlcNameTB.Text))
             {
+                DlcNameTB.Focus();
+                return null;
+            }
+            if (DlcNameTB.Text == SongDisplayNameTB.Text) {
+                MessageBox.Show("Error: DLC name can't be the same of song name", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DlcNameTB.Focus();
                 return null;
             }
@@ -290,7 +295,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal) > 1)
             {
-                MessageBox.Show("Error: Multiple Vocals Found");
+                MessageBox.Show("Error: Multiple Vocals Found", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
             var tones = TonesLB.Items.OfType<Tone>().ToList();

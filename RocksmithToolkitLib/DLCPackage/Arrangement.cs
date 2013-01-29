@@ -13,7 +13,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             Id = IdGenerator.Guid();
         }
-        public string Name { get; set; }
+        public ArrangementName Name { get; set; }
         public Guid Id { get; private set; }
         public SongFile SongFile { get; set; }
         public SongXML SongXml { get; set; }
@@ -26,12 +26,14 @@ namespace RocksmithToolkitLib.DLCPackage
         public bool OpenChords { get; set; }
         public ArrangementType ArrangementType { get; set; }
         public int RelativeDifficulty { get; set; }
-        public bool SlapAndPop { get; set; }
-        public bool PreBends { get; set; }
+        public bool TwoFingerPlucking { get; set; }
+        public bool Syncopation { get; set; }
+        public bool Prebends { get; set; }
         public string Tuning { get; set; }
         public bool Vibrato { get; set; }
         public string ToneName { get; set; }
         public int ScrollSpeed { get; set; }
+        public PluckedType PluckedType { get; set; }
         public override string ToString()
         {
             return String.Format("{0} - {1}", Name, ToneName);

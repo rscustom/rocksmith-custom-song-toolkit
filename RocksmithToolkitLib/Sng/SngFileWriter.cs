@@ -7,12 +7,16 @@ using System.IO;
 using MiscUtil.Conversion;
 using MiscUtil.IO;
 using RocksmithToolkitLib.Xml;
+using System.ComponentModel;
 
 namespace RocksmithToolkitLib.Sng
 {
+    public enum ArrangementName { Combo, Lead, Bass, Vocals };
     public enum GamePlatform { Pc, Console };
-    public enum ArrangementType { Guitar, Bass, Vocal }
-    public enum InstrumentTuning { Standard, DropD, EFlat, OpenG }
+    public enum ArrangementType { Guitar, Bass, Vocal };
+    public enum InstrumentTuning { [Description("E Standard")] Standard, [Description("Drop D")] DropD, [Description("Eb")] EFlat, [Description("Open G")] OpenG };
+    public enum PluckedType { Picked, NotPicked };
+    
     public static class InstrumentTuningExtensions {
         private static readonly int[] StandardOffsets = { 0, 0, 0, 0, 0, 0 };
         private static readonly int[] DropDOffsets = { -2, 0, 0, 0, 0, 0 };

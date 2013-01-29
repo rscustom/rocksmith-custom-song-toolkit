@@ -141,9 +141,15 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 }
                 else
                 {
-                    var pedalSetting = pedal.MakePedalSetting();
-                    tone.PedalList[pedalSlot] = pedalSetting;
-                    knobSelectButton.Enabled = pedalSetting.KnobValues.Any();
+                    if (pedal.Key != (tone.PedalList.ContainsKey(pedalSlot) ? tone.PedalList[pedalSlot].PedalKey : ""))
+                    {
+                        var pedalSetting = pedal.MakePedalSetting();
+                        tone.PedalList[pedalSlot] = pedalSetting;
+                        knobSelectButton.Enabled = pedalSetting.KnobValues.Any();
+                    }
+                    else {
+                        knobSelectButton.Enabled = tone.PedalList[pedalSlot].KnobValues.Any();
+                    }
                 }
             };
             UpdateComboSelection(box, pedalSlot);

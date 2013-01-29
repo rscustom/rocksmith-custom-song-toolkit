@@ -7,6 +7,8 @@ using System.IO;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Xml;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -55,7 +57,7 @@ namespace RocksmithToolkitLib.DLCPackage
             manifest.Entries = new Dictionary<string, Dictionary<string, Attributes>>();
             bool firstarrangset = false;
             int songPartitioncnt = 1;
-            string vocalName = arrangements[0].Name;
+            string vocalName = arrangements[0].Name.ToString();
             Guid vocalGuid = arrangements[0].Id;
             foreach (var x in arrangements)
             {
@@ -68,11 +70,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 Guid id = x.Id;
                 attribute.AlbumArt = String.Format("urn:llid:{0}", AggregateGraph.AlbumArt.LLID);
                 attribute.AlbumNameSort = attribute.AlbumName = songInfo.Album;
-                attribute.ArrangementName = x.Name;
+                attribute.ArrangementName = x.Name.ToString();
                 attribute.ArtistName = attribute.ArtistNameSort = songInfo.Artist;
                 attribute.AssociatedTechniques = new List<string>();//
-                attribute.BarChords = x.BarChords;
-                attribute.Bends = false;//
                 //Should be 51 for bass, 49 for vocal and guitar
                 attribute.BinaryVersion = x.ArrangementType == Sng.ArrangementType.Bass ? 51 : 49;
                 attribute.BlockAsset = String.Format("urn:emergent-world:{0}", AggregateGraph.XBlock.Name);
@@ -80,13 +80,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.DISC_DLC_OTHER = "Disc";
                 attribute.DisplayName = songInfo.SongDisplayName;
                 attribute.DLCPreview = false;
-                attribute.DoubleStops = x.DoubleStops;
-                attribute.DropDPowerChords = x.DropDPowerChords;
                 attribute.EffectChainMultiplayerName = string.Empty;
                 attribute.EffectChainName = dlcName + "_" + x.ToneName == null ? "Default" : x.ToneName.Replace(' ', '_');
                 attribute.EventFirstTimeSortOrder = 9999;
                 attribute.ExclusiveBuild = new List<object>();
-                attribute.FifthsAndOctaves = x.FifthsAndOctaves;
                 attribute.FirstArrangementInSong = false;
                 if (x.ArrangementType == Sng.ArrangementType.Vocal && !firstarrangset)
                 {
@@ -94,10 +91,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     attribute.FirstArrangementInSong = true;
                 }
                 attribute.ForceUseXML = true;
-                attribute.FretHandMutes = x.FretHandMutes;
                 attribute.Genre = "PLACEHOLDER Genre";
-                attribute.Harmonics = false;
-                attribute.HOPOs = false;
                 attribute.InputEvent = x.ArrangementType == Sng.ArrangementType.Vocal ? "Play_Tone_Standard_Mic" : "Play_Tone_";
                 attribute.IsDemoSong = false;
                 attribute.IsDLC = true;
@@ -105,22 +99,16 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.MasterID_PS3 = 0;
                 attribute.MasterID_Xbox360 = 504;
                 attribute.MaxPhraseDifficulty = 0;
-                attribute.OpenChords = x.OpenChords;
-                attribute.PalmMutes = false;
                 attribute.PersistentID = id.ToString().Replace("-", "").ToUpper();
                 attribute.PhraseIterations = new List<PhraseIteration>();
                 attribute.Phrases = new List<Phrase>();
-                attribute.PluckedType = "Picked";
-                attribute.PowerChords = x.PowerChords;
-                attribute.Prebends = x.PreBends;
+                attribute.PluckedType = x.PluckedType == Sng.PluckedType.Picked ? "Picked" : "Not Picked";
                 attribute.RelativeDifficulty = x.RelativeDifficulty;
                 attribute.RepresentativeArrangement = false;
                 attribute.Score_MaxNotes = 0;
                 attribute.Score_PNV = 0;
                 attribute.Sections = new List<Section>();
                 attribute.Shipping = true;
-                attribute.SlapAndPop = x.SlapAndPop;
-                attribute.Slides = false;
                 attribute.SongAsset = String.Format("urn:llid:{0}", x.SongFile.LLID);
                 attribute.SongEvent = String.Format("Play_{0}", "DammitClean");
                 attribute.SongKey = dlcName;
@@ -129,18 +117,14 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.SongPartition = 0;
                 attribute.SongXml = String.Format("urn:llid:{0}", x.SongXml.LLID);
                 attribute.SongYear = songInfo.SongYear;
-                attribute.Sustain = false;
-                attribute.Syncopation = false;
                 attribute.TargetScore = 0;
                 attribute.ToneUnlockScore = 0;
-                attribute.Tremolo = false;
-                attribute.Tuning = x.Tuning;
-                attribute.TwoFingerPlucking = false;
                 attribute.TwoHandTapping = false;
                 attribute.UnlockKey = "";
-                attribute.Vibrato = x.Vibrato;
+                attribute.Tuning = TunningDescription(Enum.Parse(typeof(Sng.InstrumentTuning), x.Tuning));
                 attribute.VocalsAssetId = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : String.Format("{1}|GRSong_{0}", vocalName, vocalGuid.ToString());
                 attribute.ChordTemplates = new List<ChordTemplate>();
+
                 if (x.ArrangementType == Sng.ArrangementType.Vocal)
                 {
                     attribute.DynamicVisualDensity = new List<float>{
@@ -184,18 +168,57 @@ namespace RocksmithToolkitLib.DLCPackage
                             }
                         }
                     }
+
+                    #region "Associated Techniques"
+
+                    attribute.PowerChords = x.PowerChords;
+                    if (x.PowerChords) AssociateTechniques(x, attribute, "PowerChords");
+                    attribute.BarChords = x.BarChords;
+                    if (x.BarChords) AssociateTechniques(x, attribute, "BarChords");
+                    attribute.OpenChords = x.OpenChords;
+                    if (x.OpenChords) AssociateTechniques(x, attribute, "ChordIntro");
+                    attribute.DoubleStops = x.DoubleStops;
+                    if (x.DoubleStops) AssociateTechniques(x, attribute, "DoubleStops");
+                    attribute.Sustain = song.HasSustain();
+                    if (song.HasSustain()) AssociateTechniques(x, attribute, "Sustain");
+                    attribute.Bends = song.HasBends();
+                    if (song.HasBends()) AssociateTechniques(x, attribute, "Bends");
+                    attribute.Slides = song.HasSlides();
+                    if (song.HasSlides()) AssociateTechniques(x, attribute, "Slides");
+                    attribute.Tremolo = song.HasTremolo();
+                    if (song.HasTremolo()) AssociateTechniques(x, attribute, "Tremolo");
+                    attribute.SlapAndPop = song.HasSlapAndPop();
+                    if (song.HasSlapAndPop()) AssociateTechniques(x, attribute, "Slap");
+                    attribute.Harmonics = song.HasHarmonics();
+                    if (song.HasHarmonics()) AssociateTechniques(x, attribute, "Harmonics");
+                    attribute.PalmMutes = song.HasPalmMutes();
+                    if (song.HasPalmMutes()) AssociateTechniques(x, attribute, "PalmMutes");
+                    attribute.HOPOs = song.HasHOPOs();
+                    if (song.HasHOPOs()) AssociateTechniques(x, attribute, "HOPOs");
+                    attribute.FretHandMutes = x.FretHandMutes;
+                    if (x.FretHandMutes) AssociateTechniques(x, attribute, "FretHandMutes");
+                    attribute.DropDPowerChords = x.DropDPowerChords;
+                    if (x.DropDPowerChords) AssociateTechniques(x, attribute, "DropDPowerChords");
+                    attribute.Prebends = x.Prebends;
+                    if (x.Prebends) AssociateTechniques(x, attribute, "Prebends");
+                    attribute.Vibrato = x.Vibrato;
+                    if (x.Vibrato) AssociateTechniques(x, attribute, "Vibrato");
+                    
+                    //Bass exclusive
+                    attribute.TwoFingerPlucking = x.TwoFingerPlucking;
+                    if (x.TwoFingerPlucking) AssociateTechniques(x, attribute, "Plucking");
+                    attribute.FifthsAndOctaves = x.FifthsAndOctaves;
+                    if (x.FifthsAndOctaves) AssociateTechniques(x, attribute, "Octave");
+                    attribute.Syncopation = x.Syncopation;
+                    if (x.Syncopation) AssociateTechniques(x, attribute, "Syncopation");
+                    
+                    #endregion
+
                     attribute.AverageTempo = songInfo.AverageTempo;
                     attribute.RepresentativeArrangement = true;
                     attribute.SongPartition = songPartitioncnt++;
                     attribute.SongLength = song.SongLength;
                     attribute.LastConversionDateTime = song.LastConversionDateTime;
-                    attribute.Bends = song.HasBends();
-                    attribute.Harmonics = song.HasHarmonics();
-                    attribute.HOPOs = song.HasHOPOs();
-                    attribute.PalmMutes = song.HasPalmMutes();
-                    attribute.Slides = song.HasSlides();
-                    attribute.Sustain = song.HasSustain();
-                    attribute.Tremolo = song.HasTremolo();
                     attribute.TargetScore = 100000;
                     attribute.ToneUnlockScore = 70000;
                     attribute.SongDifficulty = (float)song.PhraseIterations.Average(it => song.Phrases[it.PhraseId].MaxDifficulty);
@@ -210,6 +233,19 @@ namespace RocksmithToolkitLib.DLCPackage
             manifest.ModelName = "GRSong_Asset";
             manifest.IterationVersion = 2;
             return JsonConvert.SerializeObject(manifest, Formatting.Indented);
+        }
+
+        private string TunningDescription(object value)
+        {
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+
+            DescriptionAttribute[] attributes = 
+                (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (attributes != null && attributes.Length > 0)
+                return attributes[0].Description;
+            else
+                return value.ToString();
         }
 
         private void GeneratePhraseIterationsData(Attributes attribute, Song song)
@@ -392,6 +428,10 @@ namespace RocksmithToolkitLib.DLCPackage
                         count++;
             }
             return count;
+        }
+        private void AssociateTechniques(Arrangement x, Attributes att, string technique)
+        {
+            att.AssociatedTechniques.Add(String.Format("{0}{1}", x.ArrangementType == Sng.ArrangementType.Bass ? "Bass" : "", technique));
         }
     }
 }

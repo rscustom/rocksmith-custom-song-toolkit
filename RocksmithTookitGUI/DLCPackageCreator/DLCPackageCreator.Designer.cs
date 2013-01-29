@@ -55,10 +55,9 @@
             // 
             // albumArtButton
             // 
-            this.albumArtButton.Location = new System.Drawing.Point(569, 247);
-            this.albumArtButton.Margin = new System.Windows.Forms.Padding(4);
+            this.albumArtButton.Location = new System.Drawing.Point(427, 203);
             this.albumArtButton.Name = "albumArtButton";
-            this.albumArtButton.Size = new System.Drawing.Size(100, 28);
+            this.albumArtButton.Size = new System.Drawing.Size(75, 23);
             this.albumArtButton.TabIndex = 41;
             this.albumArtButton.Text = "Browse";
             this.albumArtButton.UseVisualStyleBackColor = true;
@@ -66,10 +65,9 @@
             // 
             // dlcGenerateButton
             // 
-            this.dlcGenerateButton.Location = new System.Drawing.Point(569, 471);
-            this.dlcGenerateButton.Margin = new System.Windows.Forms.Padding(4);
+            this.dlcGenerateButton.Location = new System.Drawing.Point(427, 383);
             this.dlcGenerateButton.Name = "dlcGenerateButton";
-            this.dlcGenerateButton.Size = new System.Drawing.Size(100, 36);
+            this.dlcGenerateButton.Size = new System.Drawing.Size(75, 29);
             this.dlcGenerateButton.TabIndex = 39;
             this.dlcGenerateButton.Text = "Generate";
             this.dlcGenerateButton.UseVisualStyleBackColor = true;
@@ -77,10 +75,9 @@
             // 
             // openOggButton
             // 
-            this.openOggButton.Location = new System.Drawing.Point(569, 279);
-            this.openOggButton.Margin = new System.Windows.Forms.Padding(4);
+            this.openOggButton.Location = new System.Drawing.Point(427, 229);
             this.openOggButton.Name = "openOggButton";
-            this.openOggButton.Size = new System.Drawing.Size(100, 28);
+            this.openOggButton.Size = new System.Drawing.Size(75, 23);
             this.openOggButton.TabIndex = 38;
             this.openOggButton.Text = "Browse";
             this.openOggButton.UseVisualStyleBackColor = true;
@@ -88,10 +85,9 @@
             // 
             // arrangementRemoveButton
             // 
-            this.arrangementRemoveButton.Location = new System.Drawing.Point(569, 162);
-            this.arrangementRemoveButton.Margin = new System.Windows.Forms.Padding(4);
+            this.arrangementRemoveButton.Location = new System.Drawing.Point(427, 132);
             this.arrangementRemoveButton.Name = "arrangementRemoveButton";
-            this.arrangementRemoveButton.Size = new System.Drawing.Size(100, 28);
+            this.arrangementRemoveButton.Size = new System.Drawing.Size(75, 23);
             this.arrangementRemoveButton.TabIndex = 36;
             this.arrangementRemoveButton.Text = "Remove";
             this.arrangementRemoveButton.UseVisualStyleBackColor = true;
@@ -99,10 +95,9 @@
             // 
             // arrangementAddButton
             // 
-            this.arrangementAddButton.Location = new System.Drawing.Point(569, 126);
-            this.arrangementAddButton.Margin = new System.Windows.Forms.Padding(4);
+            this.arrangementAddButton.Location = new System.Drawing.Point(427, 102);
             this.arrangementAddButton.Name = "arrangementAddButton";
-            this.arrangementAddButton.Size = new System.Drawing.Size(100, 28);
+            this.arrangementAddButton.Size = new System.Drawing.Size(75, 23);
             this.arrangementAddButton.TabIndex = 35;
             this.arrangementAddButton.Text = "Add";
             this.arrangementAddButton.UseVisualStyleBackColor = true;
@@ -111,30 +106,26 @@
             // ArrangementLB
             // 
             this.ArrangementLB.FormattingEnabled = true;
-            this.ArrangementLB.ItemHeight = 16;
-            this.ArrangementLB.Location = new System.Drawing.Point(5, 109);
-            this.ArrangementLB.Margin = new System.Windows.Forms.Padding(4);
+            this.ArrangementLB.Location = new System.Drawing.Point(4, 91);
             this.ArrangementLB.Name = "ArrangementLB";
-            this.ArrangementLB.Size = new System.Drawing.Size(555, 132);
+            this.ArrangementLB.Size = new System.Drawing.Size(417, 108);
             this.ArrangementLB.TabIndex = 34;
             this.ArrangementLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ArrangementLB_MouseDoubleClick);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1, 90);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(1, 75);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(97, 17);
+            this.label5.Size = new System.Drawing.Size(72, 13);
             this.label5.TabIndex = 33;
             this.label5.Text = "Arrangements";
             // 
             // dlcSaveButton
             // 
-            this.dlcSaveButton.Location = new System.Drawing.Point(121, 471);
-            this.dlcSaveButton.Margin = new System.Windows.Forms.Padding(4);
+            this.dlcSaveButton.Location = new System.Drawing.Point(91, 383);
             this.dlcSaveButton.Name = "dlcSaveButton";
-            this.dlcSaveButton.Size = new System.Drawing.Size(100, 36);
+            this.dlcSaveButton.Size = new System.Drawing.Size(75, 29);
             this.dlcSaveButton.TabIndex = 43;
             this.dlcSaveButton.Text = "Save";
             this.dlcSaveButton.UseVisualStyleBackColor = true;
@@ -142,10 +133,9 @@
             // 
             // dlcLoadButton
             // 
-            this.dlcLoadButton.Location = new System.Drawing.Point(13, 471);
-            this.dlcLoadButton.Margin = new System.Windows.Forms.Padding(4);
+            this.dlcLoadButton.Location = new System.Drawing.Point(10, 383);
             this.dlcLoadButton.Name = "dlcLoadButton";
-            this.dlcLoadButton.Size = new System.Drawing.Size(100, 36);
+            this.dlcLoadButton.Size = new System.Drawing.Size(75, 29);
             this.dlcLoadButton.TabIndex = 44;
             this.dlcLoadButton.Text = "Load";
             this.dlcLoadButton.UseVisualStyleBackColor = true;
@@ -154,99 +144,90 @@
             // cmbAppIds
             // 
             this.cmbAppIds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAppIds.Location = new System.Drawing.Point(308, 62);
+            this.cmbAppIds.Location = new System.Drawing.Point(193, 53);
+            this.cmbAppIds.Margin = new System.Windows.Forms.Padding(2);
             this.cmbAppIds.Name = "cmbAppIds";
-            this.cmbAppIds.Size = new System.Drawing.Size(251, 24);
+            this.cmbAppIds.Size = new System.Drawing.Size(227, 21);
             this.cmbAppIds.TabIndex = 48;
             this.cmbAppIds.SelectedIndexChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
             // AppIdTB
             // 
             this.AppIdTB.Cue = "DLC App ID";
-            this.AppIdTB.Location = new System.Drawing.Point(167, 64);
-            this.AppIdTB.Margin = new System.Windows.Forms.Padding(4);
+            this.AppIdTB.Location = new System.Drawing.Point(125, 53);
             this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(134, 22);
+            this.AppIdTB.Size = new System.Drawing.Size(63, 20);
             this.AppIdTB.TabIndex = 47;
             // 
             // AverageTempo
             // 
             this.AverageTempo.Cue = "Avg Tempo";
-            this.AverageTempo.Location = new System.Drawing.Point(4, 62);
-            this.AverageTempo.Margin = new System.Windows.Forms.Padding(4);
+            this.AverageTempo.Location = new System.Drawing.Point(3, 53);
             this.AverageTempo.Name = "AverageTempo";
-            this.AverageTempo.Size = new System.Drawing.Size(155, 22);
+            this.AverageTempo.Size = new System.Drawing.Size(117, 20);
             this.AverageTempo.TabIndex = 46;
             // 
             // AlbumArtPathTB
             // 
             this.AlbumArtPathTB.Cue = "Album Art File";
-            this.AlbumArtPathTB.Location = new System.Drawing.Point(5, 250);
-            this.AlbumArtPathTB.Margin = new System.Windows.Forms.Padding(4);
+            this.AlbumArtPathTB.Location = new System.Drawing.Point(4, 205);
             this.AlbumArtPathTB.Name = "AlbumArtPathTB";
-            this.AlbumArtPathTB.Size = new System.Drawing.Size(555, 22);
+            this.AlbumArtPathTB.Size = new System.Drawing.Size(417, 20);
             this.AlbumArtPathTB.TabIndex = 40;
             // 
             // OggPathTB
             // 
             this.OggPathTB.Cue = "Converted WWise 2010 .ogg File";
-            this.OggPathTB.Location = new System.Drawing.Point(5, 282);
-            this.OggPathTB.Margin = new System.Windows.Forms.Padding(4);
+            this.OggPathTB.Location = new System.Drawing.Point(4, 231);
             this.OggPathTB.Name = "OggPathTB";
-            this.OggPathTB.Size = new System.Drawing.Size(555, 22);
+            this.OggPathTB.Size = new System.Drawing.Size(417, 20);
             this.OggPathTB.TabIndex = 37;
             // 
             // YearTB
             // 
             this.YearTB.Cue = "Release Year";
-            this.YearTB.Location = new System.Drawing.Point(414, 34);
-            this.YearTB.Margin = new System.Windows.Forms.Padding(4);
+            this.YearTB.Location = new System.Drawing.Point(310, 28);
             this.YearTB.Name = "YearTB";
-            this.YearTB.Size = new System.Drawing.Size(145, 22);
+            this.YearTB.Size = new System.Drawing.Size(110, 20);
             this.YearTB.TabIndex = 32;
             // 
             // AlbumTB
             // 
             this.AlbumTB.Cue = "Album";
-            this.AlbumTB.Location = new System.Drawing.Point(167, 34);
-            this.AlbumTB.Margin = new System.Windows.Forms.Padding(4);
+            this.AlbumTB.Location = new System.Drawing.Point(125, 28);
             this.AlbumTB.Name = "AlbumTB";
-            this.AlbumTB.Size = new System.Drawing.Size(239, 22);
+            this.AlbumTB.Size = new System.Drawing.Size(180, 20);
             this.AlbumTB.TabIndex = 31;
             // 
             // ArtistTB
             // 
             this.ArtistTB.Cue = "Artist";
-            this.ArtistTB.Location = new System.Drawing.Point(4, 34);
-            this.ArtistTB.Margin = new System.Windows.Forms.Padding(4);
+            this.ArtistTB.Location = new System.Drawing.Point(3, 28);
             this.ArtistTB.Name = "ArtistTB";
-            this.ArtistTB.Size = new System.Drawing.Size(155, 22);
+            this.ArtistTB.Size = new System.Drawing.Size(117, 20);
             this.ArtistTB.TabIndex = 30;
             // 
             // SongDisplayNameTB
             // 
             this.SongDisplayNameTB.Cue = "Song Title";
-            this.SongDisplayNameTB.Location = new System.Drawing.Point(167, 4);
-            this.SongDisplayNameTB.Margin = new System.Windows.Forms.Padding(4);
+            this.SongDisplayNameTB.Location = new System.Drawing.Point(125, 3);
             this.SongDisplayNameTB.Name = "SongDisplayNameTB";
-            this.SongDisplayNameTB.Size = new System.Drawing.Size(393, 22);
+            this.SongDisplayNameTB.Size = new System.Drawing.Size(296, 20);
             this.SongDisplayNameTB.TabIndex = 29;
             // 
             // DlcNameTB
             // 
             this.DlcNameTB.Cue = "DLC Name";
-            this.DlcNameTB.Location = new System.Drawing.Point(4, 4);
-            this.DlcNameTB.Margin = new System.Windows.Forms.Padding(4);
+            this.DlcNameTB.Location = new System.Drawing.Point(3, 3);
             this.DlcNameTB.Name = "DlcNameTB";
-            this.DlcNameTB.Size = new System.Drawing.Size(155, 22);
+            this.DlcNameTB.Size = new System.Drawing.Size(117, 20);
             this.DlcNameTB.TabIndex = 28;
             // 
             // toneRemoveButton
             // 
-            this.toneRemoveButton.Location = new System.Drawing.Point(569, 380);
-            this.toneRemoveButton.Margin = new System.Windows.Forms.Padding(4);
+            this.toneRemoveButton.Location = new System.Drawing.Point(427, 309);
             this.toneRemoveButton.Name = "toneRemoveButton";
-            this.toneRemoveButton.Size = new System.Drawing.Size(100, 28);
+            this.toneRemoveButton.Size = new System.Drawing.Size(75, 23);
             this.toneRemoveButton.TabIndex = 52;
             this.toneRemoveButton.Text = "Remove";
             this.toneRemoveButton.UseVisualStyleBackColor = true;
@@ -254,10 +235,9 @@
             // 
             // toneAddButton
             // 
-            this.toneAddButton.Location = new System.Drawing.Point(569, 344);
-            this.toneAddButton.Margin = new System.Windows.Forms.Padding(4);
+            this.toneAddButton.Location = new System.Drawing.Point(427, 280);
             this.toneAddButton.Name = "toneAddButton";
-            this.toneAddButton.Size = new System.Drawing.Size(100, 28);
+            this.toneAddButton.Size = new System.Drawing.Size(75, 23);
             this.toneAddButton.TabIndex = 51;
             this.toneAddButton.Text = "Add";
             this.toneAddButton.UseVisualStyleBackColor = true;
@@ -266,27 +246,24 @@
             // TonesLB
             // 
             this.TonesLB.FormattingEnabled = true;
-            this.TonesLB.ItemHeight = 16;
-            this.TonesLB.Location = new System.Drawing.Point(5, 327);
-            this.TonesLB.Margin = new System.Windows.Forms.Padding(4);
+            this.TonesLB.Location = new System.Drawing.Point(4, 268);
             this.TonesLB.Name = "TonesLB";
-            this.TonesLB.Size = new System.Drawing.Size(555, 132);
+            this.TonesLB.Size = new System.Drawing.Size(417, 108);
             this.TonesLB.TabIndex = 50;
             this.TonesLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ToneLB_MouseDoubleClick);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1, 308);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(1, 252);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 17);
+            this.label1.Size = new System.Drawing.Size(37, 13);
             this.label1.TabIndex = 49;
             this.label1.Text = "Tones";
             // 
             // DLCPackageCreator
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.toneRemoveButton);
             this.Controls.Add(this.toneAddButton);
@@ -311,9 +288,8 @@
             this.Controls.Add(this.ArtistTB);
             this.Controls.Add(this.SongDisplayNameTB);
             this.Controls.Add(this.DlcNameTB);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "DLCPackageCreator";
-            this.Size = new System.Drawing.Size(679, 515);
+            this.Size = new System.Drawing.Size(509, 418);
             this.ResumeLayout(false);
             this.PerformLayout();
 

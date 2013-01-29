@@ -78,6 +78,11 @@ namespace RocksmithToolkitLib.Xml
             return Levels.Any(x => x.Notes == null ? false : x.Notes.Any(y => y.Bend > 0));
         }
 
+        public bool HasSlapAndPop()
+        {
+            return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Pluck > 0 || y.Slap > 0);
+        }
+
         public bool HasHarmonics()
         {
             return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Harmonic > 0);

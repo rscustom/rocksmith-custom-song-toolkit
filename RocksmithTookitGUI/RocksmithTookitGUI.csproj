@@ -36,6 +36,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>rocksmith_32.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ookii.Dialogs">
       <HintPath>..\lib\OokiiDialogs\Ookii.Dialogs.dll</HintPath>
@@ -208,6 +211,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\toolkit_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="rocksmith_32.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
