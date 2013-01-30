@@ -11,6 +11,8 @@ using System.Runtime.Serialization;
 using System.Xml;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib;
+using System.Xml.XPath;
+using System.Xml.Linq;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
@@ -188,12 +190,23 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 dlcSavePath = ofd.FileName;
             }
 
-            DLCPackageData info;
+            DLCPackageData info = null;
 
             var serializer = new DataContractSerializer(typeof(DLCPackageData));
             using (var stm = new XmlTextReader(dlcSavePath))
             {
-                info = (DLCPackageData)serializer.ReadObject(stm);
+                try {
+                    info = (DLCPackageData)serializer.ReadObject(stm);
+                } catch (SerializationException se) {
+                    //Make compatible with previous version DLC saved
+                    if (se.Message.IndexOf("Invalid enum") > -1) {
+                        try {
+                            info = (DLCPackageData)serializer.ReadObject(FixOldDlcPackage(dlcSavePath));
+                        } catch (SerializationException se2) {
+                            MessageBox.Show("Can't load saved DLC because is not compatible with new DLC save format. \n\r" + se2.Message, "DLCPackageCreator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }                    
+                }
             }
 
             TonesLB.Items.Clear();
@@ -237,6 +250,34 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
 
             MessageBox.Show("DLC Package template was loaded.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private XmlTextReader FixOldDlcPackage(string xmlPath) {
+            var doc = XDocument.Load(xmlPath);
+
+            XmlNamespaceManager nsArrangement = new XmlNamespaceManager(new NameTable());
+            nsArrangement.AddNamespace("ns", "http://schemas.datacontract.org/2004/07/RocksmithToolkitLib.DLCPackage");
+            string arrangementXPah = "/ns:DLCPackageData/ns:Arrangements/ns:Arrangement";
+
+            for (int i = 1; i <= ((IEnumerable<XElement>)doc.XPathSelectElements(arrangementXPah, nsArrangement)).Count(); i++) {
+                XElement arrangementName = doc.XPathSelectElement(String.Format(arrangementXPah + "/ns:Arrangement[{0}]/ns:Name", i), nsArrangement);
+                XElement arrangementType = doc.XPathSelectElement(String.Format(arrangementXPah + "/ns:Arrangement[{0}]/ns:ArrangementType", i), nsArrangement);
+                XElement tuning = doc.XPathSelectElement(String.Format(arrangementXPah + "/ns:Arrangement[{0}]/ns:Tuning", i), nsArrangement);
+
+                //Fix arrangement name
+                switch (arrangementType.Value) {
+                    case "Bass":
+                        arrangementName.Value = "Bass";
+                        break;
+                    case "Vocal":
+                        arrangementName.Value = "Vocals";
+                        break;
+                    default:
+                        arrangementName.Value = "Combo";
+                        break;
+                }
+            }
+            return new XmlTextReader(new StringReader(doc.Document.ToString()));
         }
 
         private string MakeAbsolute(Uri baseUri, string path)

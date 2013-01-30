@@ -56,7 +56,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                         arrangementNameCombo.Items.Clear();
                         arrangementNameCombo.Items.Add(ArrangementName.Combo);
                         arrangementNameCombo.Items.Add(ArrangementName.Lead);
-                        arrangementNameCombo.SelectedItem = ArrangementName.Combo;
+                        arrangementNameCombo.SelectedItem = arrangement.Name;
                         break;
                 }
                 arrangementNameCombo.Enabled = selectedType == ArrangementType.Guitar;
