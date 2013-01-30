@@ -29,8 +29,7 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "Blink 182 - Dammit", AppId = "206113" }; ;
             yield return new SongAppId { Name = "Blink 182 - Whats My Age Again", AppId = "206115" };
             yield return new SongAppId { Name = "Blue Oyster Cult - (Don't Fear) The Reaper", AppId = "206108" };
-            yield return new SongAppId { Name = "Blue Oyster Cult - Godzilla", AppId = "206149" };
-            yield return new SongAppId { Name = "Blue Oyster Cult - Godzilla", AppId = "206149" };
+            yield return new SongAppId { Name = "Blue Oyster Cult - Godzilla", AppId = "206149" };\
             yield return new SongAppId { Name = "Boston - More Than A Feeling", AppId = "206093" };
             yield return new SongAppId { Name = "Creedence Clearwater Revival - Born On The Bayou", AppId = "206158" };
             yield return new SongAppId { Name = "David Bowie - Space Oddity", AppId = "206110" };
@@ -44,7 +43,6 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "Gary Clark Jr. - Bright Lights", AppId = "206167" };
             yield return new SongAppId { Name = "Grace Potter and the Nocturnals - Paris (Ooh La La)", AppId = "206168" };
             yield return new SongAppId { Name = "Heart - Barracuda", AppId = "206109" };
-            yield return new SongAppId { Name = "Iron Butterfly - In A Gadda Da Vida", AppId = "206159" };
             yield return new SongAppId { Name = "Iron Butterfly - In-A-Gadda-Da-Vida", AppId = "206159" };
             yield return new SongAppId { Name = "Judas Priest - Breaking The Law", AppId = "206127" };
             yield return new SongAppId { Name = "Judas Priest - Living After Midnight", AppId = "206128" };
@@ -66,7 +64,6 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "Pat Benetar - Hit Me With Your Best Shot", AppId = "206150" };
             yield return new SongAppId { Name = "Pearl Jam - Black", AppId = "206111" };
             yield return new SongAppId { Name = "Queen - Bohemian Rhapsody", AppId = "206143" };
-            yield return new SongAppId { Name = "Queen - Bohemian Rhapsody", AppId = "206143" };
             yield return new SongAppId { Name = "Queen - Fat Bottomed Girls", AppId = "206145" };
             yield return new SongAppId { Name = "Queen - Keep Yourself Alive", AppId = "206146" };
             yield return new SongAppId { Name = "Queen - Killer Queen", AppId = "206147" };
@@ -83,7 +80,6 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "The Black Keys - Just Got To Be", AppId = "206106" };
             yield return new SongAppId { Name = "The Black Keys - Mind Eraser", AppId = "206105" };
             yield return new SongAppId { Name = "The Blues Brothers - Soul Man", AppId = "206122" };
-            yield return new SongAppId { Name = "The Darkness - I Believe In A Thing Called Love", AppId = "206154" };
             yield return new SongAppId { Name = "The Darkness - I Believe In A Thing Called Love", AppId = "206154" };
             yield return new SongAppId { Name = "The Knack - My Sharona", AppId = "206151" };
             yield return new SongAppId { Name = "The Offspring - Come Out And Play", AppId = "206137" };
