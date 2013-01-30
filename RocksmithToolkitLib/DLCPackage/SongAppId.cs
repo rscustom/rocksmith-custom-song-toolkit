@@ -29,7 +29,7 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "Blink 182 - Dammit", AppId = "206113" }; ;
             yield return new SongAppId { Name = "Blink 182 - Whats My Age Again", AppId = "206115" };
             yield return new SongAppId { Name = "Blue Oyster Cult - (Don't Fear) The Reaper", AppId = "206108" };
-            yield return new SongAppId { Name = "Blue Oyster Cult - Godzilla", AppId = "206149" };\
+            yield return new SongAppId { Name = "Blue Oyster Cult - Godzilla", AppId = "206149" };
             yield return new SongAppId { Name = "Boston - More Than A Feeling", AppId = "206093" };
             yield return new SongAppId { Name = "Creedence Clearwater Revival - Born On The Bayou", AppId = "206158" };
             yield return new SongAppId { Name = "David Bowie - Space Oddity", AppId = "206110" };
