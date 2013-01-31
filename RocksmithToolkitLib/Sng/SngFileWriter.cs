@@ -11,7 +11,7 @@ using System.ComponentModel;
 
 namespace RocksmithToolkitLib.Sng
 {
-    public enum ArrangementName { Combo, Lead, Bass, Vocals };
+    public enum ArrangementName { Combo, Lead, Rhythm, Bass, Vocals };
     public enum GamePlatform { Pc, Console };
     public enum ArrangementType { Guitar, Bass, Vocal };
     public enum InstrumentTuning { [Description("E Standard")] Standard, [Description("Drop D")] DropD, [Description("Eb")] EFlat, [Description("Open G")] OpenG };

@@ -55,9 +55,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tuningComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.Syncopation = new System.Windows.Forms.CheckBox();
             this.TwoFingerPlucking = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.RelativeDifficulty = new RocksmithTookitGUI.CueTextBox();
             this.XmlFilePath = new RocksmithTookitGUI.CueTextBox();
             this.SngFilePath = new RocksmithTookitGUI.CueTextBox();
@@ -311,6 +311,7 @@
             this.arrangementNameCombo.Name = "arrangementNameCombo";
             this.arrangementNameCombo.Size = new System.Drawing.Size(142, 21);
             this.arrangementNameCombo.TabIndex = 39;
+            this.arrangementNameCombo.SelectedIndexChanged += new System.EventHandler(this.arrangementNameCombo_SelectedIndexChanged);
             // 
             // label6
             // 
@@ -350,6 +351,18 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Additional associated techniques";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.Syncopation);
+            this.groupBox2.Controls.Add(this.TwoFingerPlucking);
+            this.groupBox2.Controls.Add(this.FifthsAndOctaves);
+            this.groupBox2.Location = new System.Drawing.Point(6, 65);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(360, 44);
+            this.groupBox2.TabIndex = 32;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Bass exclusive";
+            // 
             // Syncopation
             // 
             this.Syncopation.AutoSize = true;
@@ -369,18 +382,6 @@
             this.TwoFingerPlucking.TabIndex = 31;
             this.TwoFingerPlucking.Text = "TwoFingerPlucking";
             this.TwoFingerPlucking.UseVisualStyleBackColor = true;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.Syncopation);
-            this.groupBox2.Controls.Add(this.TwoFingerPlucking);
-            this.groupBox2.Controls.Add(this.FifthsAndOctaves);
-            this.groupBox2.Location = new System.Drawing.Point(6, 65);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(360, 44);
-            this.groupBox2.TabIndex = 32;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Bass exclusive";
             // 
             // RelativeDifficulty
             // 

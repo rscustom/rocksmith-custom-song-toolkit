@@ -56,6 +56,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                         arrangementNameCombo.Items.Clear();
                         arrangementNameCombo.Items.Add(ArrangementName.Combo);
                         arrangementNameCombo.Items.Add(ArrangementName.Lead);
+                        arrangementNameCombo.Items.Add(ArrangementName.Rhythm);
                         arrangementNameCombo.SelectedItem = arrangement.Name;
                         break;
                 }
@@ -195,6 +196,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void arrangementNameCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
