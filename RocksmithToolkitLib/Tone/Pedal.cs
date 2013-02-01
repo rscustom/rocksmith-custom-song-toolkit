@@ -20,6 +20,8 @@ namespace RocksmithToolkitLib.Tone
         public bool AllowLoop { get; set; }
         public bool AllowPost { get; set; }
         public bool AllowPre { get; set; }
+        public bool Bass { get; set; }
+        public bool Metal { get; set; }
 
         public PedalType TypeEnum
         {
@@ -41,14 +43,15 @@ namespace RocksmithToolkitLib.Tone
         {
             get
             {
+                string prefix = Bass ? "(Bass) " : Metal ? "(Metal) " : "";
                 switch (TypeEnum)
                 {
                     case PedalType.Amp:
-                        return Name;
+                        return string.Format("{0}{1}", prefix, Name);
                     case PedalType.Cabinet:
-                        return string.Format("{0} {1}", Name, Category);
+                        return string.Format("{0}{1} {2}", prefix, Name, Category);
                     default:
-                        return string.Format("{0}: {1}", Category, Name);
+                        return string.Format("{0}: {1}{2}", Category, prefix, Name);
                 }
             }
         }

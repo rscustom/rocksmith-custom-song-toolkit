@@ -14,6 +14,6 @@ namespace RocksmithToolkitLib.Tone
         public decimal MaxValue { get; set; }
         public decimal ValueStep { get; set; }
         public decimal DefaultValue { get; set; }
-        public IList<Tuple<string, string>> EnumValues { get; internal set; }
+        public IList<Tuple<string, string>> EnumValues { get; set; }
     }
 }
