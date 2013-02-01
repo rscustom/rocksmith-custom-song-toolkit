@@ -371,6 +371,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private void ArrangementLB_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            arrangementEditButton_Click(sender, e);
+        }
+
+        private void arrangementEditButton_Click(object sender, EventArgs e)
+        {
             if (ArrangementLB.SelectedItem != null)
             {
                 var arrangement = (Arrangement)ArrangementLB.SelectedItem;
@@ -416,6 +421,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         }
 
         private void ToneLB_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            toneEditButton_Click(sender, e);
+        }
+
+        private void toneEditButton_Click(object sender, EventArgs e)
         {
             if (TonesLB.SelectedItem != null)
             {
