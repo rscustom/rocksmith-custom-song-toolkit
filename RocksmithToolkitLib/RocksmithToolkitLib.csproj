@@ -123,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\albumart.dds" />
+    <None Include="Resources\Song_Custom.bnk" />
     <None Include="Resources\soundbank.bnk" />
   </ItemGroup>
   <ItemGroup>

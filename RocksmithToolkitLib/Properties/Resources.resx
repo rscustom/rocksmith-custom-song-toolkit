@@ -125,6 +125,6 @@
     <value>..\resources\pedals.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="soundbank" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\soundbank.bnk;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\Song_Custom.bnk;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
