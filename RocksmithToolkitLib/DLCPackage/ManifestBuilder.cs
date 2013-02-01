@@ -110,7 +110,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.Sections = new List<Section>();
                 attribute.Shipping = true;
                 attribute.SongAsset = String.Format("urn:llid:{0}", x.SongFile.LLID);
-                attribute.SongEvent = String.Format("Play_{0}", "Custom");
+                attribute.SongEvent = String.Format("Play_{0}", "DammitClean");
                 attribute.SongKey = dlcName;
                 attribute.SongLength = 0;
                 attribute.SongNameSort = attribute.SongName = songInfo.SongDisplayName;
