@@ -68,6 +68,7 @@
     <Compile Include="DLCPackage\AggregateGraph\SoundBank.cs" />
     <Compile Include="DLCPackage\AggregateGraph\XBlock.cs" />
     <Compile Include="DLCPackage\Arrangement.cs" />
+    <Compile Include="DLCPackage\ToneReader.cs" />
     <Compile Include="DLCPackage\DLCPackageCreator.cs" />
     <Compile Include="DLCPackage\DLCPackageData.cs" />
     <Compile Include="DLCPackage\IdGenerator.cs" />
