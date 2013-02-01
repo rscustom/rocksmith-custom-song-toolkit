@@ -144,7 +144,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     xblockStream.Flush();
                     xblockStream.Seek(0, SeekOrigin.Begin);
 
-                    var soundFileName = SoundBankGenerator.GenerateSoundBank("Sound_" + dlcName, soundStream, soundbankStream);
+                    var soundFileName = SoundBankGenerator.GenerateSoundBank(dlcName, soundStream, soundbankStream);
                     soundbankStream.Flush();
                     soundbankStream.Seek(0, SeekOrigin.Begin);
 
