@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using RocksmithToolkitLib.DLCPackage.Tone;
+using System.Runtime.Serialization;
+using System.Xml;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
@@ -21,6 +23,59 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         private void okButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void loadButton_Click(object sender, EventArgs e)
+        {
+
+            string toneSavePath;
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Rocksmith Tone|*.tone.xml";
+                if (ofd.ShowDialog() != DialogResult.OK) return;
+                toneSavePath = ofd.FileName;
+            }
+
+            Tone tone = null;
+
+            var serializer = new DataContractSerializer(typeof(Tone));
+            using (var stm = new XmlTextReader(toneSavePath))
+            {
+                try
+                {
+                    tone = (Tone)serializer.ReadObject(stm);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Can't load saved tone. \n\r" + ex.Message, "DLCPackageCreator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            toneControl1.Tone = tone;
+
+            MessageBox.Show("Tone was loaded.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            string toneSavePath;
+            using (var ofd = new SaveFileDialog())
+            {
+                ofd.Filter = "Rocksmith DLC Template|*.tone.xml";
+                if (ofd.ShowDialog() != DialogResult.OK) return;
+                toneSavePath = ofd.FileName;
+            }
+
+            var tone = toneControl1.Tone;
+            var serializer = new DataContractSerializer(typeof(Tone));
+            using (var stm = new XmlTextWriter(toneSavePath, Encoding.Default))
+            {
+                serializer.WriteObject(stm, tone);
+            }
+
+            MessageBox.Show("Tone was saved.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

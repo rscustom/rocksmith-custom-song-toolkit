@@ -22,15 +22,19 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             {
                 tone = value;
 
-                InitializeTextBoxes();
-                InitializeComboBoxes(GameData.GetPedalData());
                 RefreshControls();
+            }
+            get
+            {
+                return tone;
             }
         }
 
         public ToneControl()
         {
             InitializeComponent();
+            InitializeTextBoxes();
+            InitializeComboBoxes(GameData.GetPedalData());
         }
 
         public void RefreshControls()
@@ -152,7 +156,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                     }
                 }
             };
-            UpdateComboSelection(box, pedalSlot);
+            //UpdateComboSelection(box, pedalSlot);
         }
     }
 }
