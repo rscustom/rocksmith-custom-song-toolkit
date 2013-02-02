@@ -456,7 +456,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Title = "Select a package or tone manifest file";
-                ofd.Filter = "Package or Tone manifest|*.dat;*.manifest.json";
+                ofd.Filter = "Package or Tone manifest|*.dat;tone*.manifest.json";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneImportFile = ofd.FileName;
             }
@@ -465,14 +465,14 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             {
                 Application.DoEvents();
                 List<Tone> tones = ToneReader.Read(toneImportFile);
-                foreach(Tone tone in tones)
+                foreach (Tone tone in tones)
                     TonesLB.Items.Add(tone);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Can't import tone(s). \n\r" + ex.Message, "DLCPackageCreator", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-            }            
+            }
 
             MessageBox.Show("Tone(s) was imported.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
