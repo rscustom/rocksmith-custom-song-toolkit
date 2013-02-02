@@ -25,6 +25,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public static string GenerateSoundBank(string dlcName, Stream audioStream, Stream outStream)
         {
             string eventName = "Play_" + dlcName;
+            string previewName = "Play_30Sec_" + dlcName;
             string bankName = "Song_" + dlcName;
             var id = RandomGenerator.NextInt();
             using (var bankStream = new MemoryStream(Resources.soundbank))
@@ -46,9 +47,12 @@ namespace RocksmithToolkitLib.DLCPackage
                 bankWriter.Write(id);
                 bankWriter.Write(id);
                 bankReader.BaseStream.Seek(8, SeekOrigin.Current);
-                bankWriter.Write(bankReader.ReadBytes(0x1E1));
+                bankWriter.Write(bankReader.ReadBytes(0x115));
                 bankReader.ReadInt32();
                 bankWriter.Write(HashString(eventName));
+                bankWriter.Write(bankReader.ReadBytes(0xc8));
+                bankReader.ReadInt32();
+                bankWriter.Write(HashString(previewName));
                 bankWriter.Write(bankReader.ReadBytes(0x14));
                 bankWriter.Write(0xc + bankName.Length + 1);
                 bankReader.ReadInt32();
