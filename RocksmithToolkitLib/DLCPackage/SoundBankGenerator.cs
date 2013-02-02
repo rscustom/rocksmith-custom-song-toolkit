@@ -9,23 +9,8 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public class SoundBankGenerator
     {
-        private static uint HashString(String str)
+        public static string GenerateSoundBank(string bankName, Stream audioStream, Stream outStream)
         {
-            char[] bytes = str.ToLower().ToCharArray();
-            uint hash = 2166136261;
-            for (var i = 0; i < str.Length; i++)
-            {
-                hash *= 16777619;
-                hash = hash ^ bytes[i];
-            }
-
-            return hash;
-        }
-
-        public static string GenerateSoundBank(string dlcName, Stream audioStream, Stream outStream)
-        {
-            string eventName = "Play_" + dlcName;
-            string bankName = "Song_" + dlcName;
             var id = RandomGenerator.NextInt();
             using (var bankStream = new MemoryStream(Resources.soundbank))
             using (var bankReader = new BinaryReader(bankStream))
@@ -46,10 +31,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 bankWriter.Write(id);
                 bankWriter.Write(id);
                 bankReader.BaseStream.Seek(8, SeekOrigin.Current);
-                bankWriter.Write(bankReader.ReadBytes(0x1E1));
-                bankReader.ReadInt32();
-                bankWriter.Write(HashString(eventName));
-                bankWriter.Write(bankReader.ReadBytes(0x14));
+                bankWriter.Write(bankReader.ReadBytes(0x1F9));
                 bankWriter.Write(0xc + bankName.Length + 1);
                 bankReader.ReadInt32();
                 bankWriter.Write(bankReader.ReadBytes(0xc));
