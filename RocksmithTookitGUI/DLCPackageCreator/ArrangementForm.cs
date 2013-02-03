@@ -84,38 +84,45 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             private set
             {
                 arrangement = value;
+                
+                //Arrangement details
                 arrangementNameCombo.SelectedItem = arrangement.Name;
                 arrangementTypeCombo.SelectedItem = arrangement.ArrangementType;
                 
                 InstrumentTuning tuning = InstrumentTuning.Standard;
                 Enum.TryParse<InstrumentTuning>(arrangement.Tuning, true, out tuning);
                 tuningComboBox.SelectedItem = tuning;
-                
-                BarChords.Checked = arrangement.BarChords;
-                DoubleStops.Checked = arrangement.DoubleStops;
-                DropDPowerChords.Checked = arrangement.DropDPowerChords;
-                FifthsAndOctaves.Checked = arrangement.FifthsAndOctaves;
-                TwoFingerPlucking.Checked = arrangement.TwoFingerPlucking;
-                Syncopation.Checked = arrangement.Syncopation;
-                FretHandMutes.Checked = arrangement.FretHandMutes;
-                OpenChords.Checked = arrangement.OpenChords;
-                PowerChords.Checked = arrangement.PowerChords;
-                Prebends.Checked = arrangement.Prebends;
-                RelativeDifficulty.Text = arrangement.RelativeDifficulty.ToString();
-                Picked.Checked = arrangement.PluckedType == PluckedType.Picked ? true : false;
-                Prebends.Checked = arrangement.Prebends;
-                Vibrato.Checked = arrangement.Vibrato;
-                int scrollSpeed = Math.Min(scrollSpeedTrackBar.Maximum, Math.Max(scrollSpeedTrackBar.Minimum, arrangement.ScrollSpeed));
-                scrollSpeedTrackBar.Value = scrollSpeed;
-                scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeed) / 10);
 
-                SngFilePath.Text = arrangement.SongFile.File;
-                XmlFilePath.Text = arrangement.SongXml.File;
                 tonesCombo.SelectedItem = arrangement.ToneName;
                 if (tonesCombo.SelectedItem == null && tonesCombo.Items.Count > 0)
                 {
                     tonesCombo.SelectedItem = tonesCombo.Items[0];
                 }
+
+                Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
+                RelativeDifficulty.Text = arrangement.RelativeDifficulty.ToString();
+
+                int scrollSpeed = Math.Min(scrollSpeedTrackBar.Maximum, Math.Max(scrollSpeedTrackBar.Minimum, arrangement.ScrollSpeed));
+                scrollSpeedTrackBar.Value = scrollSpeed;
+                scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeed) / 10);
+
+                //Song files
+                SngFilePath.Text = arrangement.SongFile.File;
+                XmlFilePath.Text = arrangement.SongXml.File;
+                
+                //Techniques
+                PowerChords.Checked = arrangement.PowerChords;
+                BarChords.Checked = arrangement.BarChords;
+                OpenChords.Checked = arrangement.OpenChords;
+                DoubleStops.Checked = arrangement.DoubleStops;
+                DropDPowerChords.Checked = arrangement.DropDPowerChords;
+                FretHandMutes.Checked = arrangement.FretHandMutes;
+                Prebends.Checked = arrangement.Prebends;
+                Vibrato.Checked = arrangement.Vibrato;
+                //Bass techniques
+                FifthsAndOctaves.Checked = arrangement.FifthsAndOctaves;
+                TwoFingerPlucking.Checked = arrangement.TwoFingerPlucking;
+                Syncopation.Checked = arrangement.Syncopation;
             }
         }
 
@@ -162,26 +169,34 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 return;
             }
 
-            arrangement.ArrangementType = (ArrangementType)arrangementTypeCombo.SelectedItem;
+            //Arrangment details
             arrangement.Name = (ArrangementName)arrangementNameCombo.SelectedItem;
+            arrangement.ArrangementType = (ArrangementType)arrangementTypeCombo.SelectedItem;
+            arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
+            arrangement.ToneName = tonesCombo.SelectedItem.ToString();
+            arrangement.PluckedType = Picked.Checked ? PluckedType.Picked : PluckedType.NotPicked;
+            arrangement.RelativeDifficulty = readInt(RelativeDifficulty.Text);
+            arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
+
+            //Song files
+            arrangement.SongFile.File = songfilepath;
+            arrangement.SongXml.File = xmlfilepath;
+            
+            //Techniques
+            arrangement.PowerChords = PowerChords.Checked;
             arrangement.BarChords = BarChords.Checked;
+            arrangement.OpenChords = OpenChords.Checked;
             arrangement.DoubleStops = DoubleStops.Checked;
             arrangement.DropDPowerChords = DropDPowerChords.Checked;
+            arrangement.FretHandMutes = FretHandMutes.Checked;
+            arrangement.Prebends = Prebends.Checked;
+            arrangement.Vibrato = Vibrato.Checked;
+            //Bas techniques            
             arrangement.FifthsAndOctaves = FifthsAndOctaves.Checked;
             arrangement.TwoFingerPlucking = TwoFingerPlucking.Checked;
             arrangement.Syncopation = Syncopation.Checked;
-            arrangement.FretHandMutes = FretHandMutes.Checked;
-            arrangement.OpenChords = OpenChords.Checked;
-            arrangement.PowerChords = PowerChords.Checked;
-            arrangement.Prebends = Prebends.Checked;
-            arrangement.RelativeDifficulty = readInt(RelativeDifficulty.Text);
-            arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
-            arrangement.Vibrato = Vibrato.Checked;
-            arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
-            arrangement.SongFile.File = songfilepath;
-            arrangement.SongXml.File = xmlfilepath;
-            arrangement.ToneName = tonesCombo.SelectedItem.ToString();
-
+            
+            
             if (arrangement.RelativeDifficulty == -1)
             {
                 RelativeDifficulty.Focus();
