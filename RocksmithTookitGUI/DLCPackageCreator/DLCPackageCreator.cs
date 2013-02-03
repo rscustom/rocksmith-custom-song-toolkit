@@ -199,7 +199,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                     info = (DLCPackageData)serializer.ReadObject(stm);
                 } catch (SerializationException se) {
                     //Make compatible with previous version DLC saved
-                    if (se.Message.IndexOf("Invalid enum") > -1) {
+                    if (se.Message.IndexOf("ArrangementName") > -1 || se.Message.IndexOf("InstrumentTuning") > -1)
+                    {
                         try {
                             info = (DLCPackageData)serializer.ReadObject(FixOldDlcPackage(dlcSavePath));
                         } catch (SerializationException se2) {
@@ -254,15 +255,26 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private XmlTextReader FixOldDlcPackage(string xmlPath) {
             var doc = XDocument.Load(xmlPath);
-
+            XNamespace dlcNamespace = "http://schemas.datacontract.org/2004/07/RocksmithToolkitLib.DLCPackage";
             XmlNamespaceManager nsArrangement = new XmlNamespaceManager(new NameTable());
-            nsArrangement.AddNamespace("ns", "http://schemas.datacontract.org/2004/07/RocksmithToolkitLib.DLCPackage");
-            string arrangementXPah = "/ns:DLCPackageData/ns:Arrangements/ns:Arrangement";
+            nsArrangement.AddNamespace("ns", dlcNamespace.NamespaceName);
+            string arrangementXPah = "/ns:DLCPackageData/ns:Arrangements";
 
-            for (int i = 1; i <= ((IEnumerable<XElement>)doc.XPathSelectElements(arrangementXPah, nsArrangement)).Count(); i++) {
+            bool missingArrangementType = false;
+
+            for (int i = 1; i <= ((IEnumerable<XElement>)doc.XPathSelectElements(arrangementXPah + "/ns:Arrangement", nsArrangement)).Count(); i++)
+            {
                 XElement arrangementName = doc.XPathSelectElement(String.Format(arrangementXPah + "/ns:Arrangement[{0}]/ns:Name", i), nsArrangement);
                 XElement arrangementType = doc.XPathSelectElement(String.Format(arrangementXPah + "/ns:Arrangement[{0}]/ns:ArrangementType", i), nsArrangement);
                 XElement tuning = doc.XPathSelectElement(String.Format(arrangementXPah + "/ns:Arrangement[{0}]/ns:Tuning", i), nsArrangement);
+
+                if (arrangementType == null)
+                {
+                    XElement arrangement = doc.XPathSelectElement(String.Format(arrangementXPah + "/ns:Arrangement[{0}]", i), nsArrangement);
+                    arrangementType = new XElement(dlcNamespace + "ArrangementType", "Guitar");
+                    arrangement.Add(arrangementType);
+                    missingArrangementType = true;
+                }
 
                 //Fix arrangement name
                 switch (arrangementType.Value) {
@@ -277,6 +289,10 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                         break;
                 }
             }
+
+            if (missingArrangementType)
+                MessageBox.Show("Warning: One or more arrangement have no ArrangementType defined. Guitar has added by default, take a look.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
             return new XmlTextReader(new StringReader(doc.Document.ToString()));
         }
 
