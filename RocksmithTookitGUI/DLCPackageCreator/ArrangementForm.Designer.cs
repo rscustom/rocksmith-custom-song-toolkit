@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.songFileBrowseButton = new System.Windows.Forms.Button();
             this.songXmlBrowseButton = new System.Windows.Forms.Button();
             this.PowerChords = new System.Windows.Forms.CheckBox();
             this.BarChords = new System.Windows.Forms.CheckBox();
@@ -60,25 +59,14 @@
             this.TwoFingerPlucking = new System.Windows.Forms.CheckBox();
             this.RelativeDifficulty = new RocksmithTookitGUI.CueTextBox();
             this.XmlFilePath = new RocksmithTookitGUI.CueTextBox();
-            this.SngFilePath = new RocksmithTookitGUI.CueTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // songFileBrowseButton
-            // 
-            this.songFileBrowseButton.Location = new System.Drawing.Point(320, 103);
-            this.songFileBrowseButton.Name = "songFileBrowseButton";
-            this.songFileBrowseButton.Size = new System.Drawing.Size(62, 23);
-            this.songFileBrowseButton.TabIndex = 8;
-            this.songFileBrowseButton.Text = "Browse";
-            this.songFileBrowseButton.UseVisualStyleBackColor = true;
-            this.songFileBrowseButton.Click += new System.EventHandler(this.songFileBrowseButton_Click);
-            // 
             // songXmlBrowseButton
             // 
-            this.songXmlBrowseButton.Location = new System.Drawing.Point(320, 130);
+            this.songXmlBrowseButton.Location = new System.Drawing.Point(320, 111);
             this.songXmlBrowseButton.Name = "songXmlBrowseButton";
             this.songXmlBrowseButton.Size = new System.Drawing.Size(62, 23);
             this.songXmlBrowseButton.TabIndex = 12;
@@ -179,7 +167,7 @@
             // addArrangementButton
             // 
             this.addArrangementButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addArrangementButton.Location = new System.Drawing.Point(234, 285);
+            this.addArrangementButton.Location = new System.Drawing.Point(232, 270);
             this.addArrangementButton.Name = "addArrangementButton";
             this.addArrangementButton.Size = new System.Drawing.Size(72, 29);
             this.addArrangementButton.TabIndex = 23;
@@ -210,7 +198,7 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(312, 285);
+            this.cancelButton.Location = new System.Drawing.Point(310, 270);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(72, 29);
             this.cancelButton.TabIndex = 26;
@@ -311,7 +299,6 @@
             this.arrangementNameCombo.Name = "arrangementNameCombo";
             this.arrangementNameCombo.Size = new System.Drawing.Size(142, 21);
             this.arrangementNameCombo.TabIndex = 39;
-            this.arrangementNameCombo.SelectedIndexChanged += new System.EventHandler(this.arrangementNameCombo_SelectedIndexChanged);
             // 
             // label6
             // 
@@ -344,7 +331,7 @@
             this.groupBox1.Controls.Add(this.OpenChords);
             this.groupBox1.Controls.Add(this.Prebends);
             this.groupBox1.Controls.Add(this.Vibrato);
-            this.groupBox1.Location = new System.Drawing.Point(6, 159);
+            this.groupBox1.Location = new System.Drawing.Point(6, 147);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(376, 117);
             this.groupBox1.TabIndex = 42;
@@ -394,24 +381,16 @@
             // XmlFilePath
             // 
             this.XmlFilePath.Cue = ".xml File";
-            this.XmlFilePath.Location = new System.Drawing.Point(13, 132);
+            this.XmlFilePath.Location = new System.Drawing.Point(6, 112);
             this.XmlFilePath.Name = "XmlFilePath";
-            this.XmlFilePath.Size = new System.Drawing.Size(301, 20);
+            this.XmlFilePath.Size = new System.Drawing.Size(307, 20);
             this.XmlFilePath.TabIndex = 11;
-            // 
-            // SngFilePath
-            // 
-            this.SngFilePath.Cue = ".sng File";
-            this.SngFilePath.Location = new System.Drawing.Point(13, 105);
-            this.SngFilePath.Name = "SngFilePath";
-            this.SngFilePath.Size = new System.Drawing.Size(301, 20);
-            this.SngFilePath.TabIndex = 5;
             // 
             // ArrangementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(394, 324);
+            this.ClientSize = new System.Drawing.Size(394, 309);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.tuningComboBox);
             this.Controls.Add(this.label6);
@@ -430,9 +409,7 @@
             this.Controls.Add(this.arrangementTypeCombo);
             this.Controls.Add(this.addArrangementButton);
             this.Controls.Add(this.songXmlBrowseButton);
-            this.Controls.Add(this.songFileBrowseButton);
             this.Controls.Add(this.XmlFilePath);
-            this.Controls.Add(this.SngFilePath);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -450,9 +427,7 @@
 
         #endregion
 
-        private CueTextBox SngFilePath;
         private CueTextBox XmlFilePath;
-        private System.Windows.Forms.Button songFileBrowseButton;
         private System.Windows.Forms.Button songXmlBrowseButton;
         private System.Windows.Forms.CheckBox PowerChords;
         private System.Windows.Forms.CheckBox BarChords;

@@ -12,6 +12,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public SongInfo SongInfo { get; set; }
         public string AlbumArtPath { get; set; }
         public string OggPath { get; set; }
+        public string OggXBox360Path { get; set; }
         public IList<Arrangement> Arrangements { get; set; }
         public IList<Tone.Tone> Tones { get; set; }
     }

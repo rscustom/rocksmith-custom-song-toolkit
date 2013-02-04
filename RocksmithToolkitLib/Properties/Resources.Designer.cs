@@ -80,5 +80,26 @@ namespace RocksmithToolkitLib.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap XBox360_DLC_image {
+            get {
+                object obj = ResourceManager.GetObject("XBox360_DLC_image", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static byte[] XBox360_KV {
+            get {
+                object obj = ResourceManager.GetObject("XBox360_KV", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        internal static byte[] XBox360_soundbank {
+            get {
+                object obj = ResourceManager.GetObject("XBox360_soundbank", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

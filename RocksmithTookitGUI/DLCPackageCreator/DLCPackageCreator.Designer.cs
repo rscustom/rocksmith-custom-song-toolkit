@@ -38,15 +38,6 @@
             this.dlcSaveButton = new System.Windows.Forms.Button();
             this.dlcLoadButton = new System.Windows.Forms.Button();
             this.cmbAppIds = new System.Windows.Forms.ComboBox();
-            this.AppIdTB = new RocksmithTookitGUI.CueTextBox();
-            this.AverageTempo = new RocksmithTookitGUI.CueTextBox();
-            this.AlbumArtPathTB = new RocksmithTookitGUI.CueTextBox();
-            this.OggPathTB = new RocksmithTookitGUI.CueTextBox();
-            this.YearTB = new RocksmithTookitGUI.CueTextBox();
-            this.AlbumTB = new RocksmithTookitGUI.CueTextBox();
-            this.ArtistTB = new RocksmithTookitGUI.CueTextBox();
-            this.SongDisplayNameTB = new RocksmithTookitGUI.CueTextBox();
-            this.DlcNameTB = new RocksmithTookitGUI.CueTextBox();
             this.toneRemoveButton = new System.Windows.Forms.Button();
             this.toneAddButton = new System.Windows.Forms.Button();
             this.TonesLB = new System.Windows.Forms.ListBox();
@@ -54,15 +45,30 @@
             this.arrangementEditButton = new System.Windows.Forms.Button();
             this.toneEditButton = new System.Windows.Forms.Button();
             this.toneImportButton = new System.Windows.Forms.Button();
+            this.openOggXBox360Button = new System.Windows.Forms.Button();
+            this.platformPC = new System.Windows.Forms.CheckBox();
+            this.platformXBox360 = new System.Windows.Forms.CheckBox();
+            this.platformPS3 = new System.Windows.Forms.CheckBox();
+            this.oggXBox360PathTB = new RocksmithTookitGUI.CueTextBox();
+            this.AppIdTB = new RocksmithTookitGUI.CueTextBox();
+            this.AverageTempo = new RocksmithTookitGUI.CueTextBox();
+            this.AlbumArtPathTB = new RocksmithTookitGUI.CueTextBox();
+            this.oggPathTB = new RocksmithTookitGUI.CueTextBox();
+            this.YearTB = new RocksmithTookitGUI.CueTextBox();
+            this.AlbumTB = new RocksmithTookitGUI.CueTextBox();
+            this.ArtistTB = new RocksmithTookitGUI.CueTextBox();
+            this.SongDisplayNameTB = new RocksmithTookitGUI.CueTextBox();
+            this.DlcNameTB = new RocksmithTookitGUI.CueTextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // albumArtButton
             // 
-            this.albumArtButton.Location = new System.Drawing.Point(427, 203);
+            this.albumArtButton.Location = new System.Drawing.Point(427, 189);
             this.albumArtButton.Name = "albumArtButton";
-            this.albumArtButton.Size = new System.Drawing.Size(75, 23);
+            this.albumArtButton.Size = new System.Drawing.Size(34, 23);
             this.albumArtButton.TabIndex = 41;
-            this.albumArtButton.Text = "Browse";
+            this.albumArtButton.Text = "...";
             this.albumArtButton.UseVisualStyleBackColor = true;
             this.albumArtButton.Click += new System.EventHandler(this.albumArtButton_Click);
             // 
@@ -78,11 +84,11 @@
             // 
             // openOggButton
             // 
-            this.openOggButton.Location = new System.Drawing.Point(427, 229);
+            this.openOggButton.Location = new System.Drawing.Point(427, 215);
             this.openOggButton.Name = "openOggButton";
-            this.openOggButton.Size = new System.Drawing.Size(75, 23);
+            this.openOggButton.Size = new System.Drawing.Size(34, 23);
             this.openOggButton.TabIndex = 38;
-            this.openOggButton.Text = "Browse";
+            this.openOggButton.Text = "...";
             this.openOggButton.UseVisualStyleBackColor = true;
             this.openOggButton.Click += new System.EventHandler(this.openOggButton_Click);
             // 
@@ -111,7 +117,7 @@
             this.ArrangementLB.FormattingEnabled = true;
             this.ArrangementLB.Location = new System.Drawing.Point(4, 91);
             this.ArrangementLB.Name = "ArrangementLB";
-            this.ArrangementLB.Size = new System.Drawing.Size(417, 108);
+            this.ArrangementLB.Size = new System.Drawing.Size(417, 82);
             this.ArrangementLB.TabIndex = 34;
             this.ArrangementLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ArrangementLB_MouseDoubleClick);
             // 
@@ -154,6 +160,129 @@
             this.cmbAppIds.TabIndex = 48;
             this.cmbAppIds.SelectedIndexChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
+            // toneRemoveButton
+            // 
+            this.toneRemoveButton.Location = new System.Drawing.Point(427, 337);
+            this.toneRemoveButton.Name = "toneRemoveButton";
+            this.toneRemoveButton.Size = new System.Drawing.Size(75, 23);
+            this.toneRemoveButton.TabIndex = 52;
+            this.toneRemoveButton.Text = "Remove";
+            this.toneRemoveButton.UseVisualStyleBackColor = true;
+            this.toneRemoveButton.Click += new System.EventHandler(this.toneRemoveButton_Click);
+            // 
+            // toneAddButton
+            // 
+            this.toneAddButton.Location = new System.Drawing.Point(427, 279);
+            this.toneAddButton.Name = "toneAddButton";
+            this.toneAddButton.Size = new System.Drawing.Size(75, 23);
+            this.toneAddButton.TabIndex = 51;
+            this.toneAddButton.Text = "Add";
+            this.toneAddButton.UseVisualStyleBackColor = true;
+            this.toneAddButton.Click += new System.EventHandler(this.toneAddButton_Click);
+            // 
+            // TonesLB
+            // 
+            this.TonesLB.FormattingEnabled = true;
+            this.TonesLB.Location = new System.Drawing.Point(4, 281);
+            this.TonesLB.Name = "TonesLB";
+            this.TonesLB.Size = new System.Drawing.Size(417, 108);
+            this.TonesLB.TabIndex = 50;
+            this.TonesLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ToneLB_MouseDoubleClick);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(0, 265);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(37, 13);
+            this.label1.TabIndex = 49;
+            this.label1.Text = "Tones";
+            // 
+            // arrangementEditButton
+            // 
+            this.arrangementEditButton.Location = new System.Drawing.Point(427, 120);
+            this.arrangementEditButton.Name = "arrangementEditButton";
+            this.arrangementEditButton.Size = new System.Drawing.Size(75, 23);
+            this.arrangementEditButton.TabIndex = 53;
+            this.arrangementEditButton.Text = "Edit";
+            this.arrangementEditButton.UseVisualStyleBackColor = true;
+            this.arrangementEditButton.Click += new System.EventHandler(this.arrangementEditButton_Click);
+            // 
+            // toneEditButton
+            // 
+            this.toneEditButton.Location = new System.Drawing.Point(427, 308);
+            this.toneEditButton.Name = "toneEditButton";
+            this.toneEditButton.Size = new System.Drawing.Size(75, 23);
+            this.toneEditButton.TabIndex = 54;
+            this.toneEditButton.Text = "Edit";
+            this.toneEditButton.UseVisualStyleBackColor = true;
+            this.toneEditButton.Click += new System.EventHandler(this.toneEditButton_Click);
+            // 
+            // toneImportButton
+            // 
+            this.toneImportButton.Location = new System.Drawing.Point(427, 366);
+            this.toneImportButton.Name = "toneImportButton";
+            this.toneImportButton.Size = new System.Drawing.Size(75, 23);
+            this.toneImportButton.TabIndex = 55;
+            this.toneImportButton.Text = "Import";
+            this.toneImportButton.UseVisualStyleBackColor = true;
+            this.toneImportButton.Click += new System.EventHandler(this.toneImportButton_Click);
+            // 
+            // openOggXBox360Button
+            // 
+            this.openOggXBox360Button.Location = new System.Drawing.Point(427, 242);
+            this.openOggXBox360Button.Name = "openOggXBox360Button";
+            this.openOggXBox360Button.Size = new System.Drawing.Size(34, 23);
+            this.openOggXBox360Button.TabIndex = 57;
+            this.openOggXBox360Button.Text = "...";
+            this.openOggXBox360Button.UseVisualStyleBackColor = true;
+            this.openOggXBox360Button.Visible = false;
+            this.openOggXBox360Button.Click += new System.EventHandler(this.openOggXBox360Button_Click);
+            // 
+            // platformPC
+            // 
+            this.platformPC.AutoSize = true;
+            this.platformPC.Checked = true;
+            this.platformPC.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.platformPC.Location = new System.Drawing.Point(205, 402);
+            this.platformPC.Name = "platformPC";
+            this.platformPC.Size = new System.Drawing.Size(40, 17);
+            this.platformPC.TabIndex = 58;
+            this.platformPC.Text = "PC";
+            this.platformPC.UseVisualStyleBackColor = true;
+            this.platformPC.CheckedChanged += new System.EventHandler(this.plataform_CheckedChanged);
+            // 
+            // platformXBox360
+            // 
+            this.platformXBox360.AutoSize = true;
+            this.platformXBox360.Location = new System.Drawing.Point(251, 402);
+            this.platformXBox360.Name = "platformXBox360";
+            this.platformXBox360.Size = new System.Drawing.Size(69, 17);
+            this.platformXBox360.TabIndex = 59;
+            this.platformXBox360.Text = "XBox360";
+            this.platformXBox360.UseVisualStyleBackColor = true;
+            this.platformXBox360.CheckedChanged += new System.EventHandler(this.plataform_CheckedChanged);
+            // 
+            // platformPS3
+            // 
+            this.platformPS3.AutoSize = true;
+            this.platformPS3.Enabled = false;
+            this.platformPS3.Location = new System.Drawing.Point(326, 402);
+            this.platformPS3.Name = "platformPS3";
+            this.platformPS3.Size = new System.Drawing.Size(46, 17);
+            this.platformPS3.TabIndex = 60;
+            this.platformPS3.Text = "PS3";
+            this.platformPS3.UseVisualStyleBackColor = true;
+            // 
+            // oggXBox360PathTB
+            // 
+            this.oggXBox360PathTB.Cue = "Converted audio for XBox360 on WWise 2010 (.ogg)";
+            this.oggXBox360PathTB.Location = new System.Drawing.Point(4, 243);
+            this.oggXBox360PathTB.Name = "oggXBox360PathTB";
+            this.oggXBox360PathTB.Size = new System.Drawing.Size(417, 20);
+            this.oggXBox360PathTB.TabIndex = 56;
+            this.oggXBox360PathTB.Visible = false;
+            // 
             // AppIdTB
             // 
             this.AppIdTB.Cue = "DLC App ID";
@@ -172,19 +301,19 @@
             // 
             // AlbumArtPathTB
             // 
-            this.AlbumArtPathTB.Cue = "Album Art File";
-            this.AlbumArtPathTB.Location = new System.Drawing.Point(4, 205);
+            this.AlbumArtPathTB.Cue = "Album Art (.dds)";
+            this.AlbumArtPathTB.Location = new System.Drawing.Point(4, 191);
             this.AlbumArtPathTB.Name = "AlbumArtPathTB";
             this.AlbumArtPathTB.Size = new System.Drawing.Size(417, 20);
             this.AlbumArtPathTB.TabIndex = 40;
             // 
-            // OggPathTB
+            // oggPathTB
             // 
-            this.OggPathTB.Cue = "Converted WWise 2010 .ogg File";
-            this.OggPathTB.Location = new System.Drawing.Point(4, 231);
-            this.OggPathTB.Name = "OggPathTB";
-            this.OggPathTB.Size = new System.Drawing.Size(417, 20);
-            this.OggPathTB.TabIndex = 37;
+            this.oggPathTB.Cue = "Converted audio for Windows on WWise 2010 (.ogg)";
+            this.oggPathTB.Location = new System.Drawing.Point(4, 217);
+            this.oggPathTB.Name = "oggPathTB";
+            this.oggPathTB.Size = new System.Drawing.Size(417, 20);
+            this.oggPathTB.TabIndex = 37;
             // 
             // YearTB
             // 
@@ -226,78 +355,25 @@
             this.DlcNameTB.Size = new System.Drawing.Size(117, 20);
             this.DlcNameTB.TabIndex = 28;
             // 
-            // toneRemoveButton
+            // label2
             // 
-            this.toneRemoveButton.Location = new System.Drawing.Point(427, 327);
-            this.toneRemoveButton.Name = "toneRemoveButton";
-            this.toneRemoveButton.Size = new System.Drawing.Size(75, 23);
-            this.toneRemoveButton.TabIndex = 52;
-            this.toneRemoveButton.Text = "Remove";
-            this.toneRemoveButton.UseVisualStyleBackColor = true;
-            this.toneRemoveButton.Click += new System.EventHandler(this.toneRemoveButton_Click);
-            // 
-            // toneAddButton
-            // 
-            this.toneAddButton.Location = new System.Drawing.Point(427, 268);
-            this.toneAddButton.Name = "toneAddButton";
-            this.toneAddButton.Size = new System.Drawing.Size(75, 23);
-            this.toneAddButton.TabIndex = 51;
-            this.toneAddButton.Text = "Add";
-            this.toneAddButton.UseVisualStyleBackColor = true;
-            this.toneAddButton.Click += new System.EventHandler(this.toneAddButton_Click);
-            // 
-            // TonesLB
-            // 
-            this.TonesLB.FormattingEnabled = true;
-            this.TonesLB.Location = new System.Drawing.Point(4, 268);
-            this.TonesLB.Name = "TonesLB";
-            this.TonesLB.Size = new System.Drawing.Size(417, 121);
-            this.TonesLB.TabIndex = 50;
-            this.TonesLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ToneLB_MouseDoubleClick);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1, 252);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 13);
-            this.label1.TabIndex = 49;
-            this.label1.Text = "Tones";
-            // 
-            // arrangementEditButton
-            // 
-            this.arrangementEditButton.Location = new System.Drawing.Point(427, 120);
-            this.arrangementEditButton.Name = "arrangementEditButton";
-            this.arrangementEditButton.Size = new System.Drawing.Size(75, 23);
-            this.arrangementEditButton.TabIndex = 53;
-            this.arrangementEditButton.Text = "Edit";
-            this.arrangementEditButton.UseVisualStyleBackColor = true;
-            this.arrangementEditButton.Click += new System.EventHandler(this.arrangementEditButton_Click);
-            // 
-            // toneEditButton
-            // 
-            this.toneEditButton.Location = new System.Drawing.Point(427, 297);
-            this.toneEditButton.Name = "toneEditButton";
-            this.toneEditButton.Size = new System.Drawing.Size(75, 23);
-            this.toneEditButton.TabIndex = 54;
-            this.toneEditButton.Text = "Edit";
-            this.toneEditButton.UseVisualStyleBackColor = true;
-            this.toneEditButton.Click += new System.EventHandler(this.toneEditButton_Click);
-            // 
-            // toneImportButton
-            // 
-            this.toneImportButton.Location = new System.Drawing.Point(427, 356);
-            this.toneImportButton.Name = "toneImportButton";
-            this.toneImportButton.Size = new System.Drawing.Size(75, 23);
-            this.toneImportButton.TabIndex = 55;
-            this.toneImportButton.Text = "Import";
-            this.toneImportButton.UseVisualStyleBackColor = true;
-            this.toneImportButton.Click += new System.EventHandler(this.toneImportButton_Click);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 176);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(28, 13);
+            this.label2.TabIndex = 61;
+            this.label2.Text = "Files";
             // 
             // DLCPackageCreator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.platformPS3);
+            this.Controls.Add(this.platformXBox360);
+            this.Controls.Add(this.platformPC);
+            this.Controls.Add(this.openOggXBox360Button);
+            this.Controls.Add(this.oggXBox360PathTB);
             this.Controls.Add(this.toneImportButton);
             this.Controls.Add(this.toneEditButton);
             this.Controls.Add(this.arrangementEditButton);
@@ -314,7 +390,7 @@
             this.Controls.Add(this.AlbumArtPathTB);
             this.Controls.Add(this.dlcGenerateButton);
             this.Controls.Add(this.openOggButton);
-            this.Controls.Add(this.OggPathTB);
+            this.Controls.Add(this.oggPathTB);
             this.Controls.Add(this.arrangementRemoveButton);
             this.Controls.Add(this.arrangementAddButton);
             this.Controls.Add(this.ArrangementLB);
@@ -337,7 +413,7 @@
         private RocksmithTookitGUI.CueTextBox AlbumArtPathTB;
         private System.Windows.Forms.Button dlcGenerateButton;
         private System.Windows.Forms.Button openOggButton;
-        private RocksmithTookitGUI.CueTextBox OggPathTB;
+        private RocksmithTookitGUI.CueTextBox oggPathTB;
         private System.Windows.Forms.Button arrangementRemoveButton;
         private System.Windows.Forms.Button arrangementAddButton;
         private System.Windows.Forms.ListBox ArrangementLB;
@@ -359,5 +435,11 @@
         private System.Windows.Forms.Button arrangementEditButton;
         private System.Windows.Forms.Button toneEditButton;
         private System.Windows.Forms.Button toneImportButton;
+        private CueTextBox oggXBox360PathTB;
+        private System.Windows.Forms.Button openOggXBox360Button;
+        private System.Windows.Forms.CheckBox platformPC;
+        private System.Windows.Forms.CheckBox platformXBox360;
+        private System.Windows.Forms.CheckBox platformPS3;
+        private System.Windows.Forms.Label label2;
     }
 }

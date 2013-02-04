@@ -71,7 +71,7 @@ namespace Xml2Sng
                     v => outputArguments.OutputFile = v },
                 { "console",
                     "Generate a big-endian (console) file instead of little-endian (PC)",
-                    v => { if (v != null) outputArguments.Platform = GamePlatform.Console; }},
+                    v => { if (v != null) outputArguments.Platform = GamePlatform.XBox360; /*Same as PS3*/ }},
                 { "vocal",
                     "Generate from a vocal XML file instead of a guitar XML file",
                     v => { if (v != null) outputArguments.ArrangementType = ArrangementType.Vocal; }},

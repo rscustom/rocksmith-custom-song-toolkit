@@ -61,11 +61,14 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         {
             return TonesLB.Items.OfType<Tone>().Select(t => t.Name);
         }
-
         private string OggPath
         {
-            get { return OggPathTB.Text; }
-            set { OggPathTB.Text = value; }
+            get { return oggPathTB.Text; }
+            set { oggPathTB.Text = value; }
+        }
+        private string OggXBox360Path {
+            get { return oggXBox360PathTB.Text; }
+            set { oggXBox360PathTB.Text = value; }
         }
         private string AlbumArtPath
         {
@@ -105,6 +108,14 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
         }
 
+        private void openOggXBox360Button_Click(object sender, EventArgs e) {
+            using (var ofd = new OpenFileDialog()) {
+                ofd.Filter = "Fixed WWise Files|*.ogg";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    OggXBox360Path = ofd.FileName;
+            }
+        }
+
         private void dlcGenerateButton_Click(object sender, EventArgs e)
         {
             var packageData = GetPackageData();
@@ -120,7 +131,10 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
             }
-            RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData);
+            if (platformPC.Checked)
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, GamePlatform.Pc);
+            if (platformXBox360.Checked)
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, GamePlatform.XBox360);
 
             MessageBox.Show("Package was generated.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -181,7 +195,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private void dlcLoadButton_Click(object sender, EventArgs e)
         {
-
             string dlcSavePath;
             using (var ofd = new OpenFileDialog())
             {
@@ -234,6 +247,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
             AlbumArtPath = MakeAbsolute(path, info.AlbumArtPath);
             OggPath = MakeAbsolute(path, info.OggPath);
+            OggXBox360Path = MakeAbsolute(path, info.OggXBox360Path);
             foreach (var arrangement in info.Arrangements)
             {
                 arrangement.SongFile.File = MakeAbsolute(path, arrangement.SongFile.File);
@@ -344,9 +358,18 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 AppIdTB.Focus();
                 return null;
             }
-            if (!File.Exists(OggPath))
+            if (!platformPC.Checked && !platformXBox360.Checked && !platformPS3.Checked)
             {
-                OggPathTB.Focus();
+                MessageBox.Show("Error: No game platform selected", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            if (platformPC.Checked && !File.Exists(OggPath))
+            {
+                oggPathTB.Focus();
+                return null;
+            }
+            if (platformXBox360.Checked && !File.Exists(OggXBox360Path)) {
+                oggXBox360PathTB.Focus();
                 return null;
             }
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
@@ -370,6 +393,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 },
                 AlbumArtPath = AlbumArtPath,
                 OggPath = OggPath,
+                OggXBox360Path = OggXBox360Path,
                 Arrangements = arrangements,
                 Tones = tones
             };
@@ -491,6 +515,24 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
 
             MessageBox.Show("Tone(s) was imported.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void plataform_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox platformCkb = ((CheckBox)sender);
+            bool pChecked = platformCkb.Checked;
+            if (platformCkb.Name.IndexOf("XBox360") > 0)
+            {
+                oggXBox360PathTB.Visible = pChecked;
+                openOggXBox360Button.Visible = pChecked;
+            }
+            else
+            {
+                oggPathTB.Visible = pChecked;
+                openOggButton.Visible = pChecked;
+                AppIdTB.Visible = pChecked;
+                cmbAppIds.Visible = pChecked;
+            }
         }
     }
 }

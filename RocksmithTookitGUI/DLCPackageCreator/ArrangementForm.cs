@@ -17,7 +17,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         public ArrangementForm(IEnumerable<string> toneNames)
             : this(new Arrangement
             {
-                SongFile = new SongFile { File = "" },
                 SongXml = new SongXML { File = "" },
                 ArrangementType = ArrangementType.Guitar,
                 RelativeDifficulty = 1,
@@ -106,8 +105,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 scrollSpeedTrackBar.Value = scrollSpeed;
                 scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeed) / 10);
 
-                //Song files
-                SngFilePath.Text = arrangement.SongFile.File;
+                //Song xml file
                 XmlFilePath.Text = arrangement.SongXml.File;
                 
                 //Techniques
@@ -123,16 +121,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 FifthsAndOctaves.Checked = arrangement.FifthsAndOctaves;
                 TwoFingerPlucking.Checked = arrangement.TwoFingerPlucking;
                 Syncopation.Checked = arrangement.Syncopation;
-            }
-        }
-
-        private void songFileBrowseButton_Click(object sender, EventArgs e)
-        {
-            using (var ofd = new OpenFileDialog())
-            {
-                ofd.Filter = "sng Files|*.sng";
-                if (ofd.ShowDialog() == DialogResult.OK)
-                    SngFilePath.Text = ofd.FileName;
             }
         }
 
@@ -156,16 +144,10 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private void addArrangementButton_Click(object sender, EventArgs e)
         {
-            var songfilepath = SngFilePath.Text;
             var xmlfilepath = XmlFilePath.Text;
             if (!File.Exists(xmlfilepath))
             {
                 XmlFilePath.Focus();
-                return;
-            }
-            if (!File.Exists(songfilepath))
-            {
-                SngFilePath.Focus();
                 return;
             }
 
@@ -178,8 +160,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             arrangement.RelativeDifficulty = readInt(RelativeDifficulty.Text);
             arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
 
-            //Song files
-            arrangement.SongFile.File = songfilepath;
+            //Song xml file
             arrangement.SongXml.File = xmlfilepath;
             
             //Techniques
@@ -191,7 +172,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             arrangement.FretHandMutes = FretHandMutes.Checked;
             arrangement.Prebends = Prebends.Checked;
             arrangement.Vibrato = Vibrato.Checked;
-            //Bas techniques            
+            //Bass techniques            
             arrangement.FifthsAndOctaves = FifthsAndOctaves.Checked;
             arrangement.TwoFingerPlucking = TwoFingerPlucking.Checked;
             arrangement.Syncopation = Syncopation.Checked;
@@ -211,11 +192,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         {
             DialogResult = DialogResult.Cancel;
             Close();
-        }
-
-        private void arrangementNameCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

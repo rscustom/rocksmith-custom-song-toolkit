@@ -49,7 +49,7 @@ namespace RocksmithTookitGUI.SngFileCreator
                 if (littleEndianRadioBtn.Checked)
                     return GamePlatform.Pc;
                 if (bigEndianRadioBtn.Checked)
-                    return GamePlatform.Console;
+                    return GamePlatform.XBox360; /*Same as PS3*/
                 throw new InvalidOperationException("No game platform selected");
             }
         }
