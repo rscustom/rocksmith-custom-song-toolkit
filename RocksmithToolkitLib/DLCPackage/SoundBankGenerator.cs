@@ -16,7 +16,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private const string PLAY30SEC = "Play_30Sec_";
         private const string SONG = "Song_";
         private static readonly int[] bnkPCOffsets = { 0x2c, 0x1d, 0x115, 0xc8, 0x14, 0xc };
-        private static readonly int[] bnkXBox360Offsets = { 0x2c, 0x1d, 0x115, 0xc8, 0x14, 0xc }; //Need to get correct values (analyzing Resources.XBox360_soundbank).
+        private static readonly int[] bnkXBox360Offsets = { 0x7ec, 0x1d, 0x115, 0xc8, 0x14, 0xc };
         
         public static IList<int> GetOffsets(this GamePlatform platform) {
             switch (platform) {
@@ -91,7 +91,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 bankReader.ReadInt32();
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[5]));
                 bankWriter.Write((byte)bankName.Length);
-                bankWriter.Write(Encoding.ASCII.GetBytes(bankName));
                 bankWriter.Write(Encoding.ASCII.GetBytes(bankName));
                 bankWriter.Flush();
             }

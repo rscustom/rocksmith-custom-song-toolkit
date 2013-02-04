@@ -42,6 +42,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (platform == GamePlatform.XBox360) {
                 if (!Directory.Exists(xboxWorkDir))
                     Directory.CreateDirectory(xboxWorkDir);
+                info.OggPath = info.OggXBox360Path;
             }
 
             using (var packPsarcStream = new MemoryStream())

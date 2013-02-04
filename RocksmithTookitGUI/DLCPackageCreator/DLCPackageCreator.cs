@@ -116,6 +116,20 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
         }
 
+        private GamePlatform getOggPlatform(String inputFile)
+        {
+            using (var inputFileStream = File.Open(inputFile, FileMode.Open))
+            using (var reader = new BinaryReader(inputFileStream))
+            {
+                string fileID = new string(reader.ReadChars(4));
+                if (fileID == "RIFF")
+                    return GamePlatform.Pc;
+                else if (fileID == "RIFX")
+                    return GamePlatform.XBox360;
+            }
+            return GamePlatform.None;
+        }
+
         private void dlcGenerateButton_Click(object sender, EventArgs e)
         {
             var packageData = GetPackageData();
@@ -124,6 +138,20 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 MessageBox.Show("One or more fields are missing information.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            var oggPCPlatform = getOggPlatform(OggPath);
+            var ogg360Platform = getOggPlatform(OggXBox360Path);
+            if (platformPC.Checked && oggPCPlatform != GamePlatform.Pc)
+            {
+                MessageBox.Show("The Windows OGG is either invalid or for the wrong platform.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (platformXBox360.Checked && ogg360Platform != GamePlatform.XBox360)
+            {
+                MessageBox.Show("The Xbox 360 OGG is either invalid or for the wrong platform.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             string dlcSavePath;
             using (var ofd = new SaveFileDialog())
             {
