@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Properties;
+using RocksmithToolkitLib.Sng;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -124,6 +125,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     foreach (var x in arrangements)
                     {
+                        //Generate sng file in execution time
+                        string sngFile = Path.Combine(Path.GetDirectoryName(x.SongXml.File), x.SongXml.Name + ".sng");
+                        InstrumentTuning tuning = InstrumentTuning.Standard;
+                        Enum.TryParse<InstrumentTuning>(x.Tuning, true, out tuning);
+                        SngFileWriter.Write(x.SongXml.File, sngFile, x.ArrangementType, GamePlatform.Pc, tuning);
+                        x.SongFile.File = sngFile;
+                        //end
                         manifestBuilder.AggregateGraph.SongFiles.Add(x.SongFile);
                         manifestBuilder.AggregateGraph.SongXMLs.Add(x.SongXml);
                     }
