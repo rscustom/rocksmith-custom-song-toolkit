@@ -31,16 +31,14 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static uint HashString(String str, GamePlatform platform)
+        private static uint HashString(String str)
         {
             char[] bytes = str.ToLower().ToCharArray();
             uint hash = 2166136261;
 
-            if (platform == GamePlatform.Pc) {
-                for (var i = 0; i < str.Length; i++) {
-                    hash *= 16777619;
-                    hash = hash ^ bytes[i];
-                }
+            for (var i = 0; i < str.Length; i++) {
+                hash *= 16777619;
+                hash = hash ^ bytes[i];
             }
 
             return hash;
@@ -82,10 +80,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 bankReader.BaseStream.Seek(8, SeekOrigin.Current);
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[2]));
                 bankReader.ReadInt32();
-                bankWriter.Write(HashString(eventName, platform));
+                bankWriter.Write(HashString(eventName));
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[3]));
                 bankReader.ReadInt32();
-                bankWriter.Write(HashString(previewName, platform));
+                bankWriter.Write(HashString(previewName));
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[4]));
                 bankWriter.Write(platform.GetOffsets()[5] + bankName.Length + 1);
                 bankReader.ReadInt32();
