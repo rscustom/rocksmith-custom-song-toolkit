@@ -126,6 +126,18 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 return;
             }
 
+            try
+            {
+                if (platformPC.Checked)
+                    OggFile.VerifyHeaders(OggPath);
+                if (platformXBox360.Checked)
+                    OggFile.VerifyHeaders(OggXBox360Path);
+            }
+            catch (InvalidDataException ex)
+            {
+                MessageBox.Show(ex.Message, "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             if (platformPC.Checked && OggFile.getPlatform(OggPath) != GamePlatform.Pc)
             {
                 MessageBox.Show("The Windows OGG is either invalid or for the wrong platform.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
