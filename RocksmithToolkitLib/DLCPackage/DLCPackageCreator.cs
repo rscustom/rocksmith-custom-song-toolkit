@@ -13,6 +13,7 @@ using RocksmithToolkitLib.Sng;
 using X360.Other;
 using X360.STFS;
 using X360.IO;
+using RocksmithToolkitLib.Ogg;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -225,7 +226,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 using (var xblockStream = new MemoryStream())
                 using (var soundbankStream = new MemoryStream())
                 using (var packageIdStream = new MemoryStream())
-                using (var soundStream = File.OpenRead(oggPath))
+                using (var soundStream = OggFile.ConvertOgg(oggPath))
                 using (var arrangementFiles = new DisposableCollection<Stream>())
                 {
                     var manifestBuilder = new ManifestBuilder

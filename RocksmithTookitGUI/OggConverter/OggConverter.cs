@@ -49,11 +49,9 @@ namespace RocksmithTookitGUI.OggConverter
             if (string.IsNullOrEmpty(InputOggFile)) return;
             if (string.IsNullOrEmpty(OutputOggFile)) return;
 
-            var oggFile = new OggFile();
             try
             {
-                oggFile.LoadOgg(InputOggFile);
-                oggFile.WriteOgg(OutputOggFile);
+                OggFile.ConvertOgg(InputOggFile, OutputOggFile);
                 MessageBox.Show("Conversion complete!", "OGG Conversion Process");
             }
             catch (InvalidDataException ex)
