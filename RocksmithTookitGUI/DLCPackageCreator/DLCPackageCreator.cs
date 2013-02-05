@@ -155,33 +155,38 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
 
             //Make the paths relative
-            if (!string.IsNullOrEmpty(packageData.AlbumArtPath))
-            {
-                packageData.AlbumArtPath = path.MakeRelativeUri(new Uri(packageData.AlbumArtPath)).ToString();
+            string albumPath = packageData.AlbumArtPath;
+            if (!string.IsNullOrEmpty(albumPath) && Uri.IsWellFormedUriString(albumPath, UriKind.Absolute))
+                packageData.AlbumArtPath = path.MakeRelativeUri(new Uri(albumPath)).ToString();
+
+            string oggPath = packageData.OggPath;
+            if (!String.IsNullOrEmpty(oggPath) && Uri.IsWellFormedUriString(oggPath, UriKind.Absolute))
+                packageData.OggPath = path.MakeRelativeUri(new Uri(oggPath)).ToString();
+
+            foreach (var arr in packageData.Arrangements) {
+                string songXmlFile = arr.SongXml.File;
+                if (!String.IsNullOrEmpty(songXmlFile) && Uri.IsWellFormedUriString(songXmlFile, UriKind.Absolute))
+                    arr.SongXml.File = path.MakeRelativeUri(new Uri(songXmlFile)).ToString();
             }
-            packageData.OggPath = path.MakeRelativeUri(new Uri(packageData.OggPath)).ToString();
-            foreach (var arr in packageData.Arrangements)
-            {
-                arr.SongFile.File = path.MakeRelativeUri(new Uri(arr.SongFile.File)).ToString();
-                arr.SongXml.File = path.MakeRelativeUri(new Uri(arr.SongXml.File)).ToString();
-            }
+
             var serializer = new DataContractSerializer(typeof(DLCPackageData));
             using (var stm = new XmlTextWriter(dlcSavePath, Encoding.Default))
             {
                 serializer.WriteObject(stm, packageData);
             }
+
             //Re-absolutize the paths
-            foreach (var arr in packageData.Arrangements)
-            {
-                arr.SongFile.File = MakeAbsolute(path, arr.SongFile.File);
-                arr.SongXml.File = MakeAbsolute(path, arr.SongXml.File);
+            foreach (var arr in packageData.Arrangements) {
+                string songXmlFile = arr.SongXml.File;
+                if (!String.IsNullOrEmpty(songXmlFile) && Uri.IsWellFormedUriString(songXmlFile, UriKind.Relative))
+                    arr.SongXml.File = MakeAbsolute(path, arr.SongXml.File);
             }
+
             MessageBox.Show("DLC Package template was saved.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void dlcLoadButton_Click(object sender, EventArgs e)
         {
-
             string dlcSavePath;
             using (var ofd = new OpenFileDialog())
             {
@@ -232,11 +237,15 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             ArtistTB.Text = info.SongInfo.Artist;
             AverageTempo.Text = info.SongInfo.AverageTempo.ToString();
 
+            // Album art
             AlbumArtPath = MakeAbsolute(path, info.AlbumArtPath);
-            OggPath = MakeAbsolute(path, info.OggPath);
+
+            // Ogg Windows file
+            if (!String.IsNullOrEmpty(info.OggPath))
+                OggPath = MakeAbsolute(path, info.OggPath);
+
             foreach (var arrangement in info.Arrangements)
             {
-                arrangement.SongFile.File = MakeAbsolute(path, arrangement.SongFile.File);
                 arrangement.SongXml.File = MakeAbsolute(path, arrangement.SongXml.File);
                 if (arrangement.ToneName == null)
                 {

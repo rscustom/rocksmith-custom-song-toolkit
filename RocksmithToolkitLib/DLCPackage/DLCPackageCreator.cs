@@ -130,6 +130,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         InstrumentTuning tuning = InstrumentTuning.Standard;
                         Enum.TryParse<InstrumentTuning>(x.Tuning, true, out tuning);
                         SngFileWriter.Write(x.SongXml.File, sngFile, x.ArrangementType, GamePlatform.Pc, tuning);
+                        if (x.SongFile == null)
+                            x.SongFile = new SongFile();
                         x.SongFile.File = sngFile;
                         //end
                         manifestBuilder.AggregateGraph.SongFiles.Add(x.SongFile);
