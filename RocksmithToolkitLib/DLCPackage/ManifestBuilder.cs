@@ -57,22 +57,17 @@ namespace RocksmithToolkitLib.DLCPackage
             manifest.Entries = new Dictionary<string, Dictionary<string, Attributes>>();
             bool firstarrangset = false;
             int songPartitioncnt = 1;
-            string vocalName = arrangements[0].Name.ToString();
-            Guid vocalGuid = arrangements[0].Id;
-            foreach (var x in arrangements)
-            {
-                vocalName = x.SongFile.Name;
-                vocalGuid = x.Id;
-            }
+
+            Arrangement vocal = arrangements.Single<Arrangement>(a => a.ArrangementType == Sng.ArrangementType.Vocal);
+            
             foreach (var x in arrangements)
             {
                 var attribute = new Attributes();
-                Guid id = x.Id;
                 attribute.AlbumArt = String.Format("urn:llid:{0}", AggregateGraph.AlbumArt.LLID);
                 attribute.AlbumNameSort = attribute.AlbumName = songInfo.Album;
                 attribute.ArrangementName = x.Name.ToString();
                 attribute.ArtistName = attribute.ArtistNameSort = songInfo.Artist;
-                attribute.AssociatedTechniques = new List<string>();//
+                attribute.AssociatedTechniques = new List<string>();
                 //Should be 51 for bass, 49 for vocal and guitar
                 attribute.BinaryVersion = x.ArrangementType == Sng.ArrangementType.Bass ? 51 : 49;
                 attribute.BlockAsset = String.Format("urn:emergent-world:{0}", AggregateGraph.XBlock.Name);
@@ -99,7 +94,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.MasterID_PS3 = 0;
                 attribute.MasterID_Xbox360 = 504;
                 attribute.MaxPhraseDifficulty = 0;
-                attribute.PersistentID = id.ToString().Replace("-", "").ToUpper();
+                attribute.PersistentID = x.Id.ToString().Replace("-", "").ToUpper();
                 attribute.PhraseIterations = new List<PhraseIteration>();
                 attribute.Phrases = new List<Phrase>();
                 attribute.PluckedType = x.PluckedType == Sng.PluckedType.Picked ? "Picked" : "Not Picked";
@@ -122,7 +117,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.TwoHandTapping = false;
                 attribute.UnlockKey = "";
                 attribute.Tuning = TunningDescription(Enum.Parse(typeof(Sng.InstrumentTuning), x.Tuning));
-                attribute.VocalsAssetId = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : String.Format("{1}|GRSong_{0}", vocalName, vocalGuid.ToString());
+                attribute.VocalsAssetId = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : String.Format("{0}|GRSong_{1}", vocal.Id, vocal.Name);
                 attribute.ChordTemplates = new List<ChordTemplate>();
 
                 if (x.ArrangementType == Sng.ArrangementType.Vocal)
