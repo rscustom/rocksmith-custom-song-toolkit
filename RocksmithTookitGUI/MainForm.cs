@@ -12,7 +12,7 @@ namespace RocksmithTookitGUI
         public MainForm()
         {
             InitializeComponent();
-            this.Text = String.Format("Custom Song Creator Toolkit (v{0}.{1}.{2} beta)",
+            this.Text = String.Format("Custom Song Creator Toolkit (v{0}.{1}.{2} alpha)",
                 Assembly.GetExecutingAssembly().GetName().Version.Major,
                 Assembly.GetExecutingAssembly().GetName().Version.Minor,
                 Assembly.GetExecutingAssembly().GetName().Version.Build);
