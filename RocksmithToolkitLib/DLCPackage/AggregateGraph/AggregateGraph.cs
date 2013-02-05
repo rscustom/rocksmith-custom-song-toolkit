@@ -18,7 +18,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             SongFiles = new List<SongFile>();
             SongXMLs = new List<SongXML>();
         }
-        public void Write(string dlcName, Stream str)
+        public void Write(string dlcName, string[] platformPathNames, Stream str)
         {
             StreamWriter writer = new StreamWriter(str);
             foreach (var x in SongFiles)
@@ -43,12 +43,12 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/llid> \"{1}\".", AlbumArt.UUID, AlbumArt.LLID);
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/llid> \"{1}\".", SoundBank.UUID, SoundBank.LLID);
             foreach (var x in SongFiles)
-                writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"{1}\".", x.UUID, "/GRExports/Generic");
+                writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"/GRExports/{1}\".", x.UUID, platformPathNames[1]);
             foreach (var x in SongXMLs)
-                writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"{1}\".", x.UUID, "/GR/Behaviors/Songs");
-            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"{1}\".", AlbumArt.UUID, "/GRAssets/AlbumArt");
-            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"{1}\".", SoundBank.UUID, "/Audio/Windows");
-            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"{1}\".", XBlock.UUID, "/Exports/Songs");
+                writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"/GR/Behaviors/Songs\".", x.UUID);
+            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"/GRAssets/AlbumArt\".", AlbumArt.UUID);
+            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"/Audio/{1}\".", SoundBank.UUID, platformPathNames[0]);
+            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/canonical> \"/Exports/Songs\".", XBlock.UUID);
             foreach (var x in SongFiles)
                 writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/name> \"{1}\".", x.UUID, x.Name);
             foreach (var x in SongXMLs)
@@ -57,18 +57,18 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/name> \"{1}\".", SoundBank.UUID, SoundBank.Name);
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/name> \"{1}\".", XBlock.UUID, XBlock.Name);
             foreach (var x in SongFiles)
-                writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/{2}/GRExports/Generic/{1}.sng\".", x.UUID, x.Name, dlcName);
+                writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/{1}/GRExports/{2}/{3}.sng\".", x.UUID, dlcName, platformPathNames[1], x.Name);
             foreach (var x in SongXMLs)
-                writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/{2}/GR/Behaviors/Songs/{1}.xml\".", x.UUID, x.Name, dlcName);
-            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/{2}/GRAssets/AlbumArt/{1}.dds\".", AlbumArt.UUID, AlbumArt.Name, dlcName);
-            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/{2}/Audio/Windows/{1}.bnk\".", SoundBank.UUID, SoundBank.Name, dlcName);
-            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/{2}/Exports/Songs/{1}.xblock\".", XBlock.UUID, XBlock.Name, dlcName);
+                writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/{1}/GR/Behaviors/Songs/{2}.xml\".", x.UUID, dlcName, x.Name);
+            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/{1}/GRAssets/AlbumArt/{2}.dds\".", AlbumArt.UUID, dlcName, AlbumArt.Name);
+            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/{1}/Audio/{2}/{3}.bnk\".", SoundBank.UUID, dlcName, platformPathNames[0], SoundBank.Name);
+            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/relpath> \"/ContentMounts/{1}/Exports/Songs/{2}.xblock\".", XBlock.UUID, dlcName, XBlock.Name);
             foreach (var x in SongFiles)
                 writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/logpath> \"/grexports/{1}.sng\".", x.UUID, x.Name.ToLower());
             foreach (var x in SongXMLs)
                 writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/logpath> \"/gr/behaviors/songs/{1}.xml\".", x.UUID, x.Name.ToLower());
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/logpath> \"/grassets/albumart/{1}.dds\".", AlbumArt.UUID, AlbumArt.Name.ToLower());
-            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/logpath> \"/audio/windows/{1}.bnk\".", SoundBank.UUID, SoundBank.Name.ToLower());
+            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/logpath> \"/audio/{1}/{2}.bnk\".", SoundBank.UUID, platformPathNames[0].ToLower(), SoundBank.Name.ToLower());
             writer.Flush();
         }
     }

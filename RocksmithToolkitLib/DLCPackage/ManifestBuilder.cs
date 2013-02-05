@@ -58,7 +58,10 @@ namespace RocksmithToolkitLib.DLCPackage
             bool firstarrangset = false;
             int songPartitioncnt = 1;
 
-            Arrangement vocal = arrangements.Single<Arrangement>(a => a.ArrangementType == Sng.ArrangementType.Vocal);
+            Arrangement vocal = null;
+            try {
+                vocal = arrangements.Single<Arrangement>(a => a.ArrangementType == Sng.ArrangementType.Vocal);
+            } catch { /* Has no vocal arrangement */ }
             
             foreach (var x in arrangements)
             {
@@ -117,7 +120,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.TwoHandTapping = false;
                 attribute.UnlockKey = "";
                 attribute.Tuning = TunningDescription(Enum.Parse(typeof(Sng.InstrumentTuning), x.Tuning));
-                attribute.VocalsAssetId = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : String.Format("{0}|GRSong_{1}", vocal.Id, vocal.Name);
+                attribute.VocalsAssetId = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : (vocal != null) ? String.Format("{0}|GRSong_{1}", vocal.Id, vocal.Name) : "";
                 attribute.ChordTemplates = new List<ChordTemplate>();
 
                 if (x.ArrangementType == Sng.ArrangementType.Vocal)
