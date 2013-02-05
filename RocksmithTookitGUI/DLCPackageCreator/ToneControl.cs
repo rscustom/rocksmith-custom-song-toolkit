@@ -21,7 +21,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             set
             {
                 tone = value;
-
                 RefreshControls();
             }
             get
@@ -43,28 +42,29 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             toneNameBox.Text = tone.Name ?? "";
             volumeBox.Value = tone.Volume;
 
-            UpdateComboSelection(ampBox, "Amp");
-            UpdateComboSelection(cabinetBox, "Cabinet");
+            UpdateComboSelection(ampBox, ampKnobButton, "Amp");
+            UpdateComboSelection(cabinetBox, cabinetKnobButton, "Cabinet");
 
-            UpdateComboSelection(prePedal1Box, "PrePedal1");
-            UpdateComboSelection(prePedal2Box, "PrePedal2");
-            UpdateComboSelection(prePedal3Box, "PrePedal3");
+            UpdateComboSelection(prePedal1Box, prePedal1KnobButton, "PrePedal1");
+            UpdateComboSelection(prePedal2Box, prePedal2KnobButton, "PrePedal2");
+            UpdateComboSelection(prePedal3Box, prePedal3KnobButton, "PrePedal3");
 
-            UpdateComboSelection(loopPedal1Box, "LoopPedal1");
-            UpdateComboSelection(loopPedal2Box, "LoopPedal2");
-            UpdateComboSelection(loopPedal3Box, "LoopPedal3");
+            UpdateComboSelection(loopPedal1Box, loopPedal1KnobButton, "LoopPedal1");
+            UpdateComboSelection(loopPedal2Box, loopPedal2KnobButton, "LoopPedal2");
+            UpdateComboSelection(loopPedal3Box, loopPedal3KnobButton, "LoopPedal3");
 
-            UpdateComboSelection(postPedal1Box, "PostPedal1");
-            UpdateComboSelection(postPedal2Box, "PostPedal2");
-            UpdateComboSelection(postPedal3Box, "PostPedal3");
+            UpdateComboSelection(postPedal1Box, postPedal1KnobButton, "PostPedal1");
+            UpdateComboSelection(postPedal2Box, postPedal2KnobButton, "PostPedal2");
+            UpdateComboSelection(postPedal3Box, postPedal3KnobButton, "PostPedal3");
             _RefreshingCombos = false;
         }
 
-        private void UpdateComboSelection(ComboBox box, string pedalSlot)
+        private void UpdateComboSelection(ComboBox box, Control knobSelectButton, string pedalSlot)
         {
             box.SelectedItem = tone.PedalList.ContainsKey(pedalSlot)
                 ? box.Items.OfType<Pedal>().First(p => p.Key == tone.PedalList[pedalSlot].PedalKey)
                 : null;
+            knobSelectButton.Enabled = tone.PedalList.ContainsKey(pedalSlot) ? tone.PedalList[pedalSlot].KnobValues.Any() : false;
         }
 
         private void InitializeTextBoxes()
@@ -156,7 +156,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                     }
                 }
             };
-            //UpdateComboSelection(box, pedalSlot);
         }
     }
 }
