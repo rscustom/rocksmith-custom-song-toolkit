@@ -17,6 +17,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         public ArrangementForm(IEnumerable<string> toneNames)
             : this(new Arrangement
             {
+                SongFile = new SongFile { File = "" },
                 SongXml = new SongXML { File = "" },
                 ArrangementType = ArrangementType.Guitar,
                 RelativeDifficulty = 1,

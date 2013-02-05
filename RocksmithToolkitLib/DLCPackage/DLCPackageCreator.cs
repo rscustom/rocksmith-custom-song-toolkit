@@ -20,6 +20,7 @@ namespace RocksmithToolkitLib.DLCPackage
     public static class DLCPackageCreator
     {
         private static readonly string xboxWorkDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "xboxpackage");
+
         private static readonly string[] PCPaths = { "Windows", "Generic" };
         private static readonly string[] XBox360Paths = { "XBox360", "XBox360" };
         private static string[] GetPathName(this GamePlatform platform)
@@ -36,6 +37,20 @@ namespace RocksmithToolkitLib.DLCPackage
                     throw new InvalidOperationException("Unexpected game platform value");
             }
         }
+
+        private static string GetOgg(this GamePlatform platform, DLCPackageData info) {
+            switch (platform) {
+                case GamePlatform.Pc:
+                    return info.OggPath;
+                case GamePlatform.XBox360:
+                    return info.OggXBox360Path;
+                case GamePlatform.PS3:
+                    throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+                default:
+                    throw new InvalidOperationException("Unexpected game platform value");
+            }
+        }
+
         private static List<string> XBox360Files = new List<string>();
 
         public static void Generate(string packagePath, DLCPackageData info, GamePlatform platform)
@@ -43,12 +58,11 @@ namespace RocksmithToolkitLib.DLCPackage
             if (platform == GamePlatform.XBox360) {
                 if (!Directory.Exists(xboxWorkDir))
                     Directory.CreateDirectory(xboxWorkDir);
-                info.OggPath = info.OggXBox360Path;
             }
 
             using (var packPsarcStream = new MemoryStream())
             {
-                GeneratePackagePsarc(packPsarcStream, info.AppId, info.Name, info.SongInfo, info.AlbumArtPath, info.OggPath, info.Arrangements, info.Tones, platform);
+                GeneratePackagePsarc(packPsarcStream, info.AppId, info.Name, info.SongInfo, info.AlbumArtPath, platform.GetOgg(info), info.Arrangements, info.Tones, platform);
                 switch (platform) {
                     case GamePlatform.Pc:
                         using (var fl = File.Create(packagePath))
@@ -245,6 +259,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         InstrumentTuning tuning = InstrumentTuning.Standard;
                         Enum.TryParse<InstrumentTuning>(x.Tuning, true, out tuning);
                         SngFileWriter.Write(x.SongXml.File, sngFile, x.ArrangementType, platform, tuning);
+                        if (x.SongFile == null)
+                            x.SongFile = new SongFile();
                         x.SongFile.File = sngFile;
                         //end
                         manifestBuilder.AggregateGraph.SongFiles.Add(x.SongFile);
