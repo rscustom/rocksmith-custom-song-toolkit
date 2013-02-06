@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using RocksmithToolkitLib.Sng;
 
 namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
 {
@@ -18,9 +19,17 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             SongFiles = new List<SongFile>();
             SongXMLs = new List<SongXML>();
         }
-        public void Write(string dlcName, string[] platformPathNames, Stream str)
+        public void Write(string dlcName, string[] platformPathNames, GamePlatform platform, Stream str)
         {
             StreamWriter writer = new StreamWriter(str);
+
+            if (platform == GamePlatform.XBox360)
+            {
+                foreach (var x in SongFiles)
+                    writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"Xbox360\".", x.UUID);
+                writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"Xbox360\".", SoundBank.UUID);
+            }
+
             foreach (var x in SongFiles)
                 writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"application\".", x.UUID);
             foreach (var x in SongXMLs)
@@ -33,7 +42,10 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"dds\".", AlbumArt.UUID);
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"audio\".", SoundBank.UUID);
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"wwise-sound-bank\".", SoundBank.UUID);
-            writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"DX9\".", SoundBank.UUID);
+            
+            if (platform == GamePlatform.Pc)
+                writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"DX9\".", SoundBank.UUID);
+
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"x-world\".", XBlock.UUID);
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"emergent-world\".", XBlock.UUID);
             foreach (var x in SongFiles)

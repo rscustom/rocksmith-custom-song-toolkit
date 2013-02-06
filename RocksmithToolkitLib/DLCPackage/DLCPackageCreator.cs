@@ -267,7 +267,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifestBuilder.AggregateGraph.SongXMLs.Add(x.SongXml);
                     }
                     manifestBuilder.AggregateGraph.XBlock = new XBlockFile { File = dlcName + ".xblock" };
-                    manifestBuilder.AggregateGraph.Write(dlcName, platform.GetPathName(), aggregateGraphStream);
+                    manifestBuilder.AggregateGraph.Write(dlcName, platform.GetPathName(), platform, aggregateGraphStream);
                     aggregateGraphStream.Flush();
                     aggregateGraphStream.Seek(0, SeekOrigin.Begin);
 
