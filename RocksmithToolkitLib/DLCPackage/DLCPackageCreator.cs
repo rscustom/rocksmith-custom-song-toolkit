@@ -97,6 +97,9 @@ namespace RocksmithToolkitLib.DLCPackage
             var generated = xboxPackage.RebuildPackage(xboxRSA);
             if (!generated)
                 throw new InvalidOperationException("Error on create XBox360 package, details: \n\r" + x.Log);
+
+            xboxPackage.FlushPackage(xboxRSA);
+            xboxPackage.CloseIO();
         }
 
         private static HeaderData GetSTFSHeader(this DLCPackageData dlcData) {
