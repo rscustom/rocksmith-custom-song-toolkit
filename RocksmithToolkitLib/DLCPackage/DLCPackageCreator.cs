@@ -77,9 +77,9 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             try {
-                if (!Directory.Exists(xboxWorkDir))
-                    Directory.Delete(xboxWorkDir);
-            } catch {}
+                if (Directory.Exists(xboxWorkDir))
+                    Directory.Delete(xboxWorkDir, true);
+            } catch { /*Have no problem if don't delete*/ }
         }
 
         #region XBox360
@@ -92,8 +92,10 @@ namespace RocksmithToolkitLib.DLCPackage
             xboxSTFS.HeaderData = info.GetSTFSHeader();
             foreach (string file in XBox360Files)
                 xboxSTFS.AddFile(file, Path.GetFileName(file));
+
             STFSPackage xboxPackage = new STFSPackage(xboxSTFS, xboxRSA, packagePath, x);
-            if (!xboxPackage.RebuildPackage(xboxRSA))
+            var generated = xboxPackage.RebuildPackage(xboxRSA);
+            if (!generated)
                 throw new InvalidOperationException("Error on create XBox360 package, details: \n\r" + x.Log);
         }
 
