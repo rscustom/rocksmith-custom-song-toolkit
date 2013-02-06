@@ -126,7 +126,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(11, 10, 11, 10);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(704, 567);
+            this.tabControl1.Size = new System.Drawing.Size(738, 567); //<<--
             this.tabControl1.TabIndex = 16;
             // 
             // sngFileCreatorTab
@@ -257,7 +257,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(749, 742);
+            this.ClientSize = new System.Drawing.Size(780, 742);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
