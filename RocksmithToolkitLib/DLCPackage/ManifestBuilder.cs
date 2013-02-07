@@ -59,9 +59,8 @@ namespace RocksmithToolkitLib.DLCPackage
             int songPartitioncnt = 1;
 
             Arrangement vocal = null;
-            try {
+            if (arrangements.Any<Arrangement>(a => a.ArrangementType == Sng.ArrangementType.Vocal))
                 vocal = arrangements.Single<Arrangement>(a => a.ArrangementType == Sng.ArrangementType.Vocal);
-            } catch { /* Has no vocal arrangement */ }
             
             foreach (var x in arrangements)
             {
