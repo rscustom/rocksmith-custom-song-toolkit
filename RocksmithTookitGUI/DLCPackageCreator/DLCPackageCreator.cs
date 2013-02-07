@@ -247,7 +247,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 try {
                     info = (DLCPackageData)serializer.ReadObject(stm);
                 } catch (SerializationException se) {
-                    //Make compatible with previous version DLC saved
+                    //Make compatible with previous version saved DLC
                     if (se.Message.IndexOf("ArrangementName") > -1 || se.Message.IndexOf("InstrumentTuning") > -1)
                     {
                         try {
@@ -276,6 +276,9 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             // Song INFO
             DlcNameTB.Text = info.Name;
             AppIdTB.Text = info.AppId;
+            if (SongAppId.GetSongAppIds().Any<SongAppId>(a => a.AppId == info.AppId))
+                cmbAppIds.SelectedIndex = SongAppId.GetSongAppIds().TakeWhile(a => a.AppId != info.AppId).Count();
+
             AlbumTB.Text = info.SongInfo.Album;
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
             YearTB.Text = info.SongInfo.SongYear.ToString();
@@ -583,6 +586,12 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 AppIdTB.Visible = pChecked;
                 cmbAppIds.Visible = pChecked;
             }
+        }
+
+        private void AppIdTB_TextChanged(object sender, EventArgs e) {
+            var appId = ((TextBox)sender).Text.Trim();
+            if (SongAppId.GetSongAppIds().Any<SongAppId>(a => a.AppId == appId))
+                cmbAppIds.SelectedIndex = SongAppId.GetSongAppIds().TakeWhile(a => a.AppId != appId).Count();
         }
     }
 }

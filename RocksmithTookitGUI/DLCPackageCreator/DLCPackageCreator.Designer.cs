@@ -277,6 +277,8 @@
             // oggXBox360PathTB
             // 
             this.oggXBox360PathTB.Cue = "Converted audio for XBox360 on WWise 2010 (.ogg)";
+            this.oggXBox360PathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.oggXBox360PathTB.ForeColor = System.Drawing.Color.Gray;
             this.oggXBox360PathTB.Location = new System.Drawing.Point(4, 243);
             this.oggXBox360PathTB.Name = "oggXBox360PathTB";
             this.oggXBox360PathTB.Size = new System.Drawing.Size(417, 20);
@@ -286,14 +288,19 @@
             // AppIdTB
             // 
             this.AppIdTB.Cue = "DLC App ID";
+            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
             this.AppIdTB.Location = new System.Drawing.Point(125, 53);
             this.AppIdTB.Name = "AppIdTB";
             this.AppIdTB.Size = new System.Drawing.Size(63, 20);
             this.AppIdTB.TabIndex = 47;
+            this.AppIdTB.TextChanged += new System.EventHandler(this.AppIdTB_TextChanged);
             // 
             // AverageTempo
             // 
             this.AverageTempo.Cue = "Avg Tempo";
+            this.AverageTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AverageTempo.ForeColor = System.Drawing.Color.Gray;
             this.AverageTempo.Location = new System.Drawing.Point(3, 53);
             this.AverageTempo.Name = "AverageTempo";
             this.AverageTempo.Size = new System.Drawing.Size(117, 20);
@@ -302,6 +309,8 @@
             // AlbumArtPathTB
             // 
             this.AlbumArtPathTB.Cue = "Album Art (.dds)";
+            this.AlbumArtPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AlbumArtPathTB.ForeColor = System.Drawing.Color.Gray;
             this.AlbumArtPathTB.Location = new System.Drawing.Point(4, 191);
             this.AlbumArtPathTB.Name = "AlbumArtPathTB";
             this.AlbumArtPathTB.Size = new System.Drawing.Size(417, 20);
@@ -310,6 +319,8 @@
             // oggPathTB
             // 
             this.oggPathTB.Cue = "Converted audio for Windows on WWise 2010 (.ogg)";
+            this.oggPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.oggPathTB.ForeColor = System.Drawing.Color.Gray;
             this.oggPathTB.Location = new System.Drawing.Point(4, 217);
             this.oggPathTB.Name = "oggPathTB";
             this.oggPathTB.Size = new System.Drawing.Size(417, 20);
@@ -318,6 +329,8 @@
             // YearTB
             // 
             this.YearTB.Cue = "Release Year";
+            this.YearTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.YearTB.ForeColor = System.Drawing.Color.Gray;
             this.YearTB.Location = new System.Drawing.Point(310, 28);
             this.YearTB.Name = "YearTB";
             this.YearTB.Size = new System.Drawing.Size(110, 20);
@@ -326,6 +339,8 @@
             // AlbumTB
             // 
             this.AlbumTB.Cue = "Album";
+            this.AlbumTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AlbumTB.ForeColor = System.Drawing.Color.Gray;
             this.AlbumTB.Location = new System.Drawing.Point(125, 28);
             this.AlbumTB.Name = "AlbumTB";
             this.AlbumTB.Size = new System.Drawing.Size(180, 20);
@@ -334,6 +349,8 @@
             // ArtistTB
             // 
             this.ArtistTB.Cue = "Artist";
+            this.ArtistTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.ArtistTB.ForeColor = System.Drawing.Color.Gray;
             this.ArtistTB.Location = new System.Drawing.Point(3, 28);
             this.ArtistTB.Name = "ArtistTB";
             this.ArtistTB.Size = new System.Drawing.Size(117, 20);
@@ -342,6 +359,8 @@
             // SongDisplayNameTB
             // 
             this.SongDisplayNameTB.Cue = "Song Title";
+            this.SongDisplayNameTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.SongDisplayNameTB.ForeColor = System.Drawing.Color.Gray;
             this.SongDisplayNameTB.Location = new System.Drawing.Point(125, 3);
             this.SongDisplayNameTB.Name = "SongDisplayNameTB";
             this.SongDisplayNameTB.Size = new System.Drawing.Size(296, 20);
@@ -350,6 +369,8 @@
             // DlcNameTB
             // 
             this.DlcNameTB.Cue = "DLC Name";
+            this.DlcNameTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.DlcNameTB.ForeColor = System.Drawing.Color.Gray;
             this.DlcNameTB.Location = new System.Drawing.Point(3, 3);
             this.DlcNameTB.Name = "DlcNameTB";
             this.DlcNameTB.Size = new System.Drawing.Size(117, 20);
