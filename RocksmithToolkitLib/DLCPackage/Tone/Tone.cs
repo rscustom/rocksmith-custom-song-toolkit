@@ -5,6 +5,7 @@ using System.Text;
 
 namespace RocksmithToolkitLib.DLCPackage.Tone
 {
+    [Serializable]
     public class Tone
     {
         public string BlockAsset { get; set; }

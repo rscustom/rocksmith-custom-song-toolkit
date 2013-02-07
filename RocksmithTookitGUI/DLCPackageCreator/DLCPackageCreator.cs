@@ -14,6 +14,7 @@ using RocksmithToolkitLib;
 using System.Xml.XPath;
 using System.Xml.Linq;
 using RocksmithToolkitLib.Ogg;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
@@ -523,10 +524,13 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             if (TonesLB.SelectedItem != null)
             {
                 var tone = (Tone)TonesLB.SelectedItem;
-                var toneName = tone.Name;
-                using (var form = new ToneForm(tone))
+                var newTone = Copy(tone);
+                var toneName = newTone.Name;
+                using (var form = new ToneForm(newTone))
                 {
                     form.ShowDialog();
+                    if (form.Saved)
+                        tone = newTone;
                 }
                 if (toneName != tone.Name)
                 {
@@ -592,6 +596,17 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             var appId = ((TextBox)sender).Text.Trim();
             if (SongAppId.GetSongAppIds().Any<SongAppId>(a => a.AppId == appId))
                 cmbAppIds.SelectedIndex = SongAppId.GetSongAppIds().TakeWhile(a => a.AppId != appId).Count();
+        }
+
+        private dynamic Copy(dynamic value)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(ms, value);
+                ms.Position = 0;
+                return (dynamic)formatter.Deserialize(ms);
+            }
         }
     }
 }

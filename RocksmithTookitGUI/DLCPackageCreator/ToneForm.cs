@@ -14,6 +14,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 {
     public partial class ToneForm : Form
     {
+        public bool Saved = false;
+
         public ToneForm(Tone tone)
         {
             InitializeComponent();
@@ -22,6 +24,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private void okButton_Click(object sender, EventArgs e)
         {
+            Saved = true;
             Close();
         }
 

@@ -15,13 +15,13 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         private bool _RefreshingCombos = false;
 
         private Tone tone;
-
         public Tone Tone
         {
             set
             {
                 tone = value;
-                RefreshControls();
+                if (value != null)
+                    RefreshControls();
             }
             get
             {
