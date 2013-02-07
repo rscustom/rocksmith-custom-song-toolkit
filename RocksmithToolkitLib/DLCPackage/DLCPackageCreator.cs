@@ -277,7 +277,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     aggregateGraphStream.Seek(0, SeekOrigin.Begin);
 
                     {
-                        var manifestData = manifestBuilder.GenerateManifest(dlcName, arrangements, songInfo);
+                        var manifestData = manifestBuilder.GenerateManifest(dlcName, arrangements, songInfo, platform);
                         var writer = new StreamWriter(manifestStream);
                         writer.Write(manifestData);
                         writer.Flush();

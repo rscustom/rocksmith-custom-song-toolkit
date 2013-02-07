@@ -51,7 +51,7 @@ namespace RocksmithToolkitLib.DLCPackage
             SectionUINames.Add("noguitar", "$[6091] No Guitar [1]");
             SectionUINames.Add("silence", "$[6092] Silence [1]");
         }
-        public string GenerateManifest(string dlcName, IList<Arrangement> arrangements, SongInfo songInfo)
+        public string GenerateManifest(string dlcName, IList<Arrangement> arrangements, SongInfo songInfo, RocksmithToolkitLib.Sng.GamePlatform platform)
         {
             var manifest = Manifest;
             manifest.Entries = new Dictionary<string, Dictionary<string, Attributes>>();
@@ -80,6 +80,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.DLCPreview = false;
                 attribute.EffectChainMultiplayerName = string.Empty;
                 attribute.EffectChainName = dlcName + "_" + x.ToneName == null ? "Default" : x.ToneName.Replace(' ', '_');
+                if (platform == RocksmithToolkitLib.Sng.GamePlatform.XBox360)
+                    attribute.EffectChainName = "DefaultTone"; // temporary, until we can get tones working
                 attribute.EventFirstTimeSortOrder = 9999;
                 attribute.ExclusiveBuild = new List<object>();
                 attribute.FirstArrangementInSong = false;
