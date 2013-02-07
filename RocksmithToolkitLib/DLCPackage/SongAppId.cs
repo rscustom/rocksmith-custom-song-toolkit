@@ -7,10 +7,9 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public class SongAppId
     {
-        private SongAppId() { }
-
         public string Name;
         public string AppId;
+
         public override string ToString()
         {
             return string.Format("{0} - {1}", Name, AppId);
@@ -26,7 +25,7 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "Avenged Sevenfold - Nightmare", AppId = "206176" };
             yield return new SongAppId { Name = "B.B. King - The Thrill Is Gone", AppId = "206121" };
             yield return new SongAppId { Name = "Blink 182 - All The Small Things", AppId = "206114" };
-            yield return new SongAppId { Name = "Blink 182 - Dammit", AppId = "206113" }; ;
+            yield return new SongAppId { Name = "Blink 182 - Dammit", AppId = "206113" };
             yield return new SongAppId { Name = "Blink 182 - Whats My Age Again", AppId = "206115" };
             yield return new SongAppId { Name = "Blue Oyster Cult - (Don't Fear) The Reaper", AppId = "206108" };
             yield return new SongAppId { Name = "Blue Oyster Cult - Godzilla", AppId = "206149" };
@@ -68,10 +67,10 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "Queen - Keep Yourself Alive", AppId = "206146" };
             yield return new SongAppId { Name = "Queen - Killer Queen", AppId = "206147" };
             yield return new SongAppId { Name = "Queen - Stone Cold Crazy", AppId = "206144" };
-            yield return new SongAppId { Name = "Rush - Headlong Flight", AppId = "" };
+            yield return new SongAppId { Name = "Rush - Headlong Flight", AppId = "" }; //Wrong AppId
             yield return new SongAppId { Name = "Rush - Limelight", AppId = "206179" };
             yield return new SongAppId { Name = "Rush - Red Barchetta", AppId = "222042" };
-            yield return new SongAppId { Name = "Rush - Subdivisions", AppId = "206113" };
+            yield return new SongAppId { Name = "Rush - Subdivisions", AppId = "" }; //Wrong AppId
             yield return new SongAppId { Name = "Rush - Tom Sawyer", AppId = "206178" };
             yield return new SongAppId { Name = "Rush - YYZ", AppId = "222041" };
             yield return new SongAppId { Name = "T Rex - 20th Century Boy", AppId = "206096" };
@@ -96,7 +95,6 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "Twisted Sister - Were Not Gonna take It", AppId = "206164" };
             yield return new SongAppId { Name = "Vampire Weekend - Cousins", AppId = "206098" };
             yield return new SongAppId { Name = "Whitesnake - Is This Love", AppId = "206165" };
-
         }
     }
 }
