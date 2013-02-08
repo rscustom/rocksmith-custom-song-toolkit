@@ -33,6 +33,12 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 var manifest = new Tone.Manifest();
                 manifest = JsonConvert.DeserializeObject<Tone.Manifest>(reader.ReadToEnd());
+                // Remove unecessary information
+                manifest.Entries[0].BlockAsset = null;
+                manifest.Entries[0].ExclusiveBuild = null;
+                manifest.Entries[0].Key = null;
+                manifest.Entries[0].PersistentID = null;
+                manifest.Entries[0].UnlockKey = null;
                 return manifest.Entries[0];
             }
         }
