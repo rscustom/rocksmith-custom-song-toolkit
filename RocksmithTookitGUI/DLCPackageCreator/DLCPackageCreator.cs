@@ -15,6 +15,7 @@ using System.Xml.XPath;
 using System.Xml.Linq;
 using RocksmithToolkitLib.Ogg;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.RegularExpressions;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
@@ -437,7 +438,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             var tones = TonesLB.Items.OfType<Tone>().ToList();
             var data = new DLCPackageData
             {
-                Name = DlcNameTB.Text.Replace(" ", "_"),
+                Name = DlcNameTB.Text,
                 AppId = AppIdTB.Text,
                 SongInfo = new SongInfo
                 {
@@ -611,6 +612,13 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 stream.Position = 0;
                 return (T)dcs.ReadObject(stream);
             }
+        }
+
+        private void DlcNameTB_Leave(object sender, EventArgs e)
+        {
+            TextBox dlcName = ((TextBox)sender);
+            Regex rgx = new Regex("[^a-zA-Z0-9\\-]");
+            dlcName.Text = rgx.Replace(dlcName.Text.Trim(), "");
         }
     }
 }

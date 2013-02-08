@@ -406,6 +406,7 @@
             this.DlcNameTB.Name = "DlcNameTB";
             this.DlcNameTB.Size = new System.Drawing.Size(117, 20);
             this.DlcNameTB.TabIndex = 0;
+            this.DlcNameTB.Leave += new System.EventHandler(this.DlcNameTB_Leave);
             // 
             // DLCPackageCreator
             // 
