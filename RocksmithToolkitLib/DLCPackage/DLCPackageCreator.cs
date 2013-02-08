@@ -106,7 +106,7 @@ namespace RocksmithToolkitLib.DLCPackage
             HeaderData hd = new HeaderData();
             string displayName = String.Format("{0} by {1}", dlcData.SongInfo.SongDisplayName, dlcData.SongInfo.Artist);
             hd.Title_Package = "Rocksmith";
-            hd.TitleID = 55530873;
+            hd.TitleID = 1431505011; //55530873 in HEXA
             hd.Publisher = String.Format("Custom Song Creator Toolkit (v{0}.{1}.{2}.{3} beta)",
                                         Assembly.GetExecutingAssembly().GetName().Version.Major,
                                         Assembly.GetExecutingAssembly().GetName().Version.Minor,
