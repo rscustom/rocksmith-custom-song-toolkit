@@ -14,6 +14,7 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public class ManifestBuilder
     {
+        int[] songPartitionCount = { 0 /* Combo count */, 0 /* Lead count */, 0 /* Rhythm count */ }; 
         public AggregateGraph.AggregateGraph AggregateGraph { get; set; }
         public Manifest.Manifest Manifest { get; private set; }
         public ManifestBuilder()
@@ -56,8 +57,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var manifest = Manifest;
             manifest.Entries = new Dictionary<string, Dictionary<string, Attributes>>();
             bool firstarrangset = false;
-            int songPartitioncnt = 1;
-
+            
             Arrangement vocal = null;
             if (arrangements.Any<Arrangement>(a => a.ArrangementType == Sng.ArrangementType.Vocal))
                 vocal = arrangements.Single<Arrangement>(a => a.ArrangementType == Sng.ArrangementType.Vocal);
@@ -115,7 +115,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.SongLength = 0;
                 attribute.SongName = songInfo.SongDisplayName;
                 attribute.SongNameSort = songInfo.SongDisplayNameSort;
-                attribute.SongPartition = 0;
                 attribute.SongXml = String.Format("urn:llid:{0}", x.SongXml.LLID);
                 attribute.SongYear = songInfo.SongYear;
                 attribute.TargetScore = 0;
@@ -217,7 +216,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     attribute.AverageTempo = songInfo.AverageTempo;
                     attribute.RepresentativeArrangement = true;
-                    attribute.SongPartition = songPartitioncnt++;
+                    if (x.ArrangementType != Sng.ArrangementType.Vocal)
+                        attribute.SongPartition = GetSongPartition(x.Name, x.ArrangementType);
                     attribute.SongLength = song.SongLength;
                     attribute.LastConversionDateTime = song.LastConversionDateTime;
                     attribute.TargetScore = 100000;
@@ -234,6 +234,25 @@ namespace RocksmithToolkitLib.DLCPackage
             manifest.ModelName = "GRSong_Asset";
             manifest.IterationVersion = 2;
             return JsonConvert.SerializeObject(manifest, Formatting.Indented);
+        }
+
+        private int GetSongPartition(Sng.ArrangementName arrangementName, Sng.ArrangementType arrangementType) {
+            switch (arrangementType) {
+                case Sng.ArrangementType.Bass:
+                    return 1;
+                default:
+                    switch (arrangementName) {
+                        case RocksmithToolkitLib.Sng.ArrangementName.Lead:
+                            songPartitionCount[1]++;
+                            return songPartitionCount[1];
+                        case RocksmithToolkitLib.Sng.ArrangementName.Rhythm:
+                            songPartitionCount[2]++;
+                            return songPartitionCount[2];
+                        default:
+                            songPartitionCount[0]++;
+                            return songPartitionCount[0];
+                    }
+            };
         }
 
         private string TunningDescription(object value)
