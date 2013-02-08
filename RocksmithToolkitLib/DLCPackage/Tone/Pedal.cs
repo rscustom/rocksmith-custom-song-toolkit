@@ -5,7 +5,6 @@ using System.Text;
 
 namespace RocksmithToolkitLib.DLCPackage.Tone
 {
-    [Serializable]
     public class Pedal
     {
         public string PedalKey { get; set; }

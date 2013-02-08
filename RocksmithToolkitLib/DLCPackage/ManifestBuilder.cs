@@ -68,7 +68,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.AlbumArt = String.Format("urn:llid:{0}", AggregateGraph.AlbumArt.LLID);
                 attribute.AlbumNameSort = attribute.AlbumName = songInfo.Album;
                 attribute.ArrangementName = x.Name.ToString();
-                attribute.ArtistName = attribute.ArtistNameSort = songInfo.Artist;
+                attribute.ArtistName = songInfo.Artist;
+                attribute.ArtistNameSort = songInfo.ArtistSort;
                 attribute.AssociatedTechniques = new List<string>();
                 //Should be 51 for bass, 49 for vocal and guitar
                 attribute.BinaryVersion = x.ArrangementType == Sng.ArrangementType.Bass ? 51 : 49;
@@ -80,7 +81,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.EffectChainMultiplayerName = string.Empty;
                 attribute.EffectChainName = dlcName + "_" + x.ToneName == null ? "Default" : x.ToneName.Replace(' ', '_');
                 if (platform == RocksmithToolkitLib.Sng.GamePlatform.XBox360)
-                    attribute.EffectChainName = "DefaultTone"; // temporary, until we can get tones working
+                    attribute.EffectChainName = "DefaultTone"; // temporary, until we can get tones working on XBox360
                 attribute.EventFirstTimeSortOrder = 9999;
                 attribute.ExclusiveBuild = new List<object>();
                 attribute.FirstArrangementInSong = false;
@@ -112,7 +113,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.SongEvent = String.Format("Play_{0}", dlcName);
                 attribute.SongKey = dlcName;
                 attribute.SongLength = 0;
-                attribute.SongNameSort = attribute.SongName = songInfo.SongDisplayName;
+                attribute.SongName = songInfo.SongDisplayName;
+                attribute.SongNameSort = songInfo.SongDisplayNameSort;
                 attribute.SongPartition = 0;
                 attribute.SongXml = String.Format("urn:llid:{0}", x.SongXml.LLID);
                 attribute.SongYear = songInfo.SongYear;

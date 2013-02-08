@@ -282,8 +282,10 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
             AlbumTB.Text = info.SongInfo.Album;
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
+            SongDisplayNameSortTB.Text = info.SongInfo.SongDisplayNameSort;
             YearTB.Text = info.SongInfo.SongYear.ToString();
             ArtistTB.Text = info.SongInfo.Artist;
+            ArtistSortTB.Text = info.SongInfo.ArtistSort;
             AverageTempo.Text = info.SongInfo.AverageTempo.ToString();
 
             // Album art
@@ -440,9 +442,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 SongInfo = new SongInfo
                 {
                     SongDisplayName = SongDisplayNameTB.Text,
+                    SongDisplayNameSort = String.IsNullOrEmpty(SongDisplayNameSortTB.Text.Trim()) ? SongDisplayNameTB.Text : SongDisplayNameSortTB.Text,
                     Album = AlbumTB.Text,
                     SongYear = year,
                     Artist = ArtistTB.Text,
+                    ArtistSort = String.IsNullOrEmpty(ArtistSortTB.Text.Trim()) ? ArtistTB.Text : ArtistSortTB.Text,
                     AverageTempo = tempo
                 },
                 AlbumArtPath = AlbumArtPath,
@@ -553,7 +557,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Title = "Select a package or tone manifest file";
-                ofd.Filter = "Package or Tone manifest|*.dat;tone*.manifest.json";
+                ofd.Filter = "PC package or Tone manifest|*.dat;tone*.manifest.json";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneImportFile = ofd.FileName;
             }
@@ -598,14 +602,14 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 cmbAppIds.SelectedIndex = SongAppId.GetSongAppIds().TakeWhile(a => a.AppId != appId).Count();
         }
 
-        private dynamic Copy(dynamic value)
+        private T Copy<T>(T value)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream stream = new MemoryStream())
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(ms, value);
-                ms.Position = 0;
-                return (dynamic)formatter.Deserialize(ms);
+                DataContractSerializer dcs = new DataContractSerializer(typeof(T));
+                dcs.WriteObject(stream, value);
+                stream.Position = 0;
+                return (T)dcs.ReadObject(stream);
             }
         }
     }
