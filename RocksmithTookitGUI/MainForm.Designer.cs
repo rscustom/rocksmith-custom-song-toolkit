@@ -214,7 +214,7 @@
             // dlcPackerUnpackerControl
             // 
             this.dlcPackerUnpackerControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(-48, 49);
+            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(170, 60);
             this.dlcPackerUnpackerControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
             this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(219, 204);
