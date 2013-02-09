@@ -120,7 +120,6 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="NativeMethods.cs" />
     <Compile Include="OggConverter\OggConverter.cs">
       <SubType>UserControl</SubType>
     </Compile>
