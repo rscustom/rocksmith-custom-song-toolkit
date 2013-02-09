@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
@@ -80,6 +81,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public string VocalsAssetId { get; set; }
         public bool FirstArrangementInSong { get; set; }
         public float SongDifficulty { get; set; }
+        [JsonIgnore]
         public int AverageTempo { get; set; }
+        [JsonIgnore]
+        public string CrowdTempo { get; set; }
     }
 }
