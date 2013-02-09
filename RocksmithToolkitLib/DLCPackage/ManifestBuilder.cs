@@ -80,8 +80,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.DLCPreview = false;
                 attribute.EffectChainMultiplayerName = string.Empty;
                 attribute.EffectChainName = dlcName + "_" + x.ToneName == null ? "Default" : x.ToneName.Replace(' ', '_');
-                if (platform == RocksmithToolkitLib.Sng.GamePlatform.XBox360)
-                    attribute.EffectChainName = "DefaultTone"; // temporary, until we can get tones working on XBox360
+                //if (platform == RocksmithToolkitLib.Sng.GamePlatform.XBox360)
+                //    attribute.EffectChainName = "DefaultTone"; // temporary, until we can get tones working on XBox360
                 attribute.EventFirstTimeSortOrder = 9999;
                 attribute.ExclusiveBuild = new List<object>();
                 attribute.FirstArrangementInSong = false;
