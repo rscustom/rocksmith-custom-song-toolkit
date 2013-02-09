@@ -24,7 +24,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 game.Entities.Add(entity);
                 var properties = new List<Property>();
                 var addProperty = new Action<string, object>((a, b) => properties.Add(CreateProperty(a, b.ToString())));
-                addProperty("BinaryVersion", "51");
+                if (entry.ArrangementName == "Bass" || entry.ArrangementName == "Vocals")
+                    addProperty("BinaryVersion", entry.BinaryVersion);
                 addProperty("SongKey", entry.SongKey);
                 addProperty("SongAsset", entry.SongAsset);
                 addProperty("SongXml", entry.SongXml);
