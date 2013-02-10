@@ -12,7 +12,7 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         public static void Generate(string toneKey, Tone.Tone tone, Stream outManifest, Stream outXblock, Stream aggregateGraph)
         {
-            var id = IdGenerator.Guid().ToString().Replace("-", "").ToUpper();
+            var id = IdGenerator.Guid().ToString().Replace("-", "");
             if (string.IsNullOrEmpty(tone.Name))
                 tone.Name = toneKey;
             tone.Key = toneKey;
