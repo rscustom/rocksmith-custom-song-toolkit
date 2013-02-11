@@ -36,7 +36,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public PluckedType PluckedType { get; set; }
         public override string ToString()
         {
-            return String.Format("{0} - {1}", Name, ToneName);
+            return ArrangementType == Sng.ArrangementType.Vocal ? Name.ToString() : String.Format("{0} - {1}", Name, ToneName);
         }
     }
 }
