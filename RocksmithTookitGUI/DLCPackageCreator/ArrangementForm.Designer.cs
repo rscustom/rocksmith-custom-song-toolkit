@@ -59,6 +59,7 @@
             this.TwoFingerPlucking = new System.Windows.Forms.CheckBox();
             this.RelativeDifficulty = new RocksmithTookitGUI.CueTextBox();
             this.XmlFilePath = new RocksmithTookitGUI.CueTextBox();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -273,11 +274,11 @@
             // Picked
             // 
             this.Picked.AutoSize = true;
-            this.Picked.Location = new System.Drawing.Point(13, 67);
+            this.Picked.Location = new System.Drawing.Point(15, 88);
             this.Picked.Name = "Picked";
-            this.Picked.Size = new System.Drawing.Size(59, 17);
+            this.Picked.Size = new System.Drawing.Size(85, 17);
             this.Picked.TabIndex = 37;
-            this.Picked.Text = "Picked";
+            this.Picked.Text = "Bass Picked";
             this.Picked.UseVisualStyleBackColor = true;
             // 
             // label4
@@ -372,25 +373,39 @@
             // 
             // RelativeDifficulty
             // 
-            this.RelativeDifficulty.Cue = "Relative Difficulty";
-            this.RelativeDifficulty.Location = new System.Drawing.Point(81, 65);
+            this.RelativeDifficulty.Cue = "Difficulty";
+            this.RelativeDifficulty.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.RelativeDifficulty.ForeColor = System.Drawing.Color.Gray;
+            this.RelativeDifficulty.Location = new System.Drawing.Point(103, 63);
             this.RelativeDifficulty.Name = "RelativeDifficulty";
-            this.RelativeDifficulty.Size = new System.Drawing.Size(90, 20);
+            this.RelativeDifficulty.Size = new System.Drawing.Size(50, 20);
             this.RelativeDifficulty.TabIndex = 4;
             // 
             // XmlFilePath
             // 
             this.XmlFilePath.Cue = ".xml File";
+            this.XmlFilePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.XmlFilePath.ForeColor = System.Drawing.Color.Gray;
             this.XmlFilePath.Location = new System.Drawing.Point(6, 112);
             this.XmlFilePath.Name = "XmlFilePath";
             this.XmlFilePath.Size = new System.Drawing.Size(307, 20);
             this.XmlFilePath.TabIndex = 11;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(11, 66);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(92, 13);
+            this.label7.TabIndex = 43;
+            this.label7.Text = "Relative Difficulty:";
             // 
             // ArrangementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(394, 309);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.tuningComboBox);
             this.Controls.Add(this.label6);
@@ -458,5 +473,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox Syncopation;
         private System.Windows.Forms.CheckBox TwoFingerPlucking;
+        private System.Windows.Forms.Label label7;
     }
 }

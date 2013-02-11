@@ -60,8 +60,13 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                         arrangementNameCombo.SelectedItem = arrangement.Name;
                         break;
                 }
+                // Disabling options that are not meant for Arrangement Types
                 arrangementNameCombo.Enabled = selectedType == ArrangementType.Guitar;
-
+                groupBox1.Enabled = selectedType != ArrangementType.Vocal;
+                groupBox2.Enabled = selectedType != ArrangementType.Guitar;
+                Picked.Visible = selectedType == ArrangementType.Bass;
+                tonesCombo.Enabled = selectedType != ArrangementType.Vocal;
+                tuningComboBox.Enabled = selectedType != ArrangementType.Vocal;
                 Picked.Checked = selectedType == ArrangementType.Bass ? false : true;
             };
             foreach (var tone in toneNames)
