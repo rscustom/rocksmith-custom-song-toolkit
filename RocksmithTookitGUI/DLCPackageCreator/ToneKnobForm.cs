@@ -22,7 +22,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         public void Init(Pedal pedal, IList<Knob> knobs)
         {
-            tableLayoutPanel.RowCount = knobs.Count + 1;
+            tableLayoutPanel.RowCount = knobs.Count;
             for (var i = 0; i < knobs.Count; i++)
             {
                 var knob = knobs[i];
@@ -47,8 +47,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                     pedal.KnobValues[knob.Key] = numericControl.Value;
 
             }
-            tableLayoutPanel.RowStyles[tableLayoutPanel.RowCount - 1].SizeType = SizeType.Percent;
-            tableLayoutPanel.RowStyles[tableLayoutPanel.RowCount - 1].Height = 100;
+            
+            
         }
 
         private void okButton_Click(object sender, EventArgs e)

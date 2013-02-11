@@ -373,7 +373,7 @@
         "MinValue": 30.0,
         "MaxValue": 300.0,
         "ValueStep": 2.5,
-        "DefaultValue": 310.0,
+        "DefaultValue": 300.0,
         "EnumValues": []
       },
       {
