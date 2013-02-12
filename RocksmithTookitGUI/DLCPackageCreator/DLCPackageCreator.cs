@@ -535,7 +535,10 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 {
                     form.ShowDialog();
                     if (form.Saved)
+                    {
                         tone = newTone;
+                        TonesLB.Items[TonesLB.SelectedIndex] = tone;
+                    }
                 }
                 if (toneName != tone.Name)
                 {
@@ -546,8 +549,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                             arrangement.ToneName = tone.Name;
                             ArrangementLB.Items[i] = arrangement;
                         }
-                    }
-                    TonesLB.Items[TonesLB.SelectedIndex] = tone;
+                    }                    
                 }
             }
         }
