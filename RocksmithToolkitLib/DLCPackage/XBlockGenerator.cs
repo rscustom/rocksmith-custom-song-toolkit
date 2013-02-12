@@ -48,7 +48,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 addProperty("ArrangementName", entry.ArrangementName);
                 addProperty("RepresentativeArrangement", entry.RepresentativeArrangement);
 
-                if (!isVocal) {
+                if (!isVocal && !String.IsNullOrEmpty(entry.VocalsAssetId))
+                {
                     addProperty("VocalsAssetId", entry.VocalsAssetId.Split(new string[1] { "|" }, StringSplitOptions.RemoveEmptyEntries)[0]);
 
                     var dynVisDen = new List<object>();
