@@ -426,10 +426,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 return null;
             }
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
-            if (arrangements.Count(x => x.ArrangementType == ArrangementType.Bass) > 1) {
-                MessageBox.Show("Error: Multiple Bass arrangement found", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal) > 1)
             {
                 MessageBox.Show("Error: Multiple Vocals arrangement found", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
