@@ -14,7 +14,7 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public class ManifestBuilder
     {
-        int[] songPartitionCount = { 0 /* Combo count */, 0 /* Lead count */, 0 /* Rhythm count */ }; 
+        int[] songPartitionCount = { 0 /* Combo count */, 0 /* Lead count */, 0 /* Rhythm count */, 0 /* Bass Count */ }; 
         public AggregateGraph.AggregateGraph AggregateGraph { get; set; }
         public Manifest.Manifest Manifest { get; private set; }
         public ManifestBuilder()
@@ -239,7 +239,8 @@ namespace RocksmithToolkitLib.DLCPackage
         private int GetSongPartition(Sng.ArrangementName arrangementName, Sng.ArrangementType arrangementType) {
             switch (arrangementType) {
                 case Sng.ArrangementType.Bass:
-                    return 1;
+                    songPartitionCount[3]++;
+                    return songPartitionCount[3];
                 default:
                     switch (arrangementName) {
                         case RocksmithToolkitLib.Sng.ArrangementName.Lead:
