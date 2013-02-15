@@ -54,7 +54,7 @@
             this.SongDisplayNameSortTB = new RocksmithTookitGUI.CueTextBox();
             this.oggXBox360PathTB = new RocksmithTookitGUI.CueTextBox();
             this.AppIdTB = new RocksmithTookitGUI.CueTextBox();
-            this.AverageTempo = new RocksmithTookitGUI.CueTextBox();
+            this.AverageTempoTB = new RocksmithTookitGUI.CueTextBox();
             this.AlbumArtPathTB = new RocksmithTookitGUI.CueTextBox();
             this.oggPathTB = new RocksmithTookitGUI.CueTextBox();
             this.YearTB = new RocksmithTookitGUI.CueTextBox();
@@ -327,15 +327,15 @@
             this.AppIdTB.TabIndex = 8;
             this.AppIdTB.TextChanged += new System.EventHandler(this.AppIdTB_TextChanged);
             // 
-            // AverageTempo
+            // AverageTempoTB
             // 
-            this.AverageTempo.Cue = "Avg Tempo";
-            this.AverageTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.AverageTempo.ForeColor = System.Drawing.Color.Gray;
-            this.AverageTempo.Location = new System.Drawing.Point(3, 53);
-            this.AverageTempo.Name = "AverageTempo";
-            this.AverageTempo.Size = new System.Drawing.Size(117, 20);
-            this.AverageTempo.TabIndex = 7;
+            this.AverageTempoTB.Cue = "Avg Tempo";
+            this.AverageTempoTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AverageTempoTB.ForeColor = System.Drawing.Color.Gray;
+            this.AverageTempoTB.Location = new System.Drawing.Point(3, 53);
+            this.AverageTempoTB.Name = "AverageTempoTB";
+            this.AverageTempoTB.Size = new System.Drawing.Size(117, 20);
+            this.AverageTempoTB.TabIndex = 7;
             // 
             // AlbumArtPathTB
             // 
@@ -429,7 +429,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmbAppIds);
             this.Controls.Add(this.AppIdTB);
-            this.Controls.Add(this.AverageTempo);
+            this.Controls.Add(this.AverageTempoTB);
             this.Controls.Add(this.dlcLoadButton);
             this.Controls.Add(this.dlcSaveButton);
             this.Controls.Add(this.albumArtButton);
@@ -471,7 +471,7 @@
         private RocksmithTookitGUI.CueTextBox DlcNameTB;
         private System.Windows.Forms.Button dlcSaveButton;
         private System.Windows.Forms.Button dlcLoadButton;
-        private CueTextBox AverageTempo;
+        private CueTextBox AverageTempoTB;
         private CueTextBox AppIdTB;
         private System.Windows.Forms.ComboBox cmbAppIds;
         private System.Windows.Forms.Button toneRemoveButton;

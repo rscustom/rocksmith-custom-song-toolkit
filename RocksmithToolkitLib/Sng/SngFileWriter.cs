@@ -18,11 +18,13 @@ namespace RocksmithToolkitLib.Sng
     public enum PluckedType { Picked, NotPicked };
     
     public static class InstrumentTuningExtensions {
+
         private static readonly int[] StandardOffsets = { 0, 0, 0, 0, 0, 0 };
         private static readonly int[] DropDOffsets = { -2, 0, 0, 0, 0, 0 };
         private static readonly int[] EFlatOffsets = { -1, -1, -1, -1, -1, -1 };
         private static readonly int[] OpenGOffsets = { -2, -2, 0, 0, 0, -2 };
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
+
         public static IList<int> GetOffsets(this InstrumentTuning tuning)
         {
             switch (tuning)
@@ -39,6 +41,19 @@ namespace RocksmithToolkitLib.Sng
                     throw new InvalidOperationException("Unexpected tuning value");
             }
         }
+
+        public static InstrumentTuning GetTuningByOffsets(int[] strings)
+        {
+            if (Enumerable.SequenceEqual(strings, DropDOffsets))
+                return InstrumentTuning.DropD;
+            if (Enumerable.SequenceEqual(strings, EFlatOffsets))
+                return InstrumentTuning.EFlat;
+            if (Enumerable.SequenceEqual(strings, OpenGOffsets))
+                return InstrumentTuning.OpenG;
+            else
+                return InstrumentTuning.Standard;
+        }
+
         public static int GetMidiNote(this InstrumentTuning tuning, ArrangementType arrangementType, int stringNumber, int fret)
         {
             if (fret == -1) return -1;

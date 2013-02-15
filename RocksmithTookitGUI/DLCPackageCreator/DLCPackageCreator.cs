@@ -79,10 +79,59 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             set { AlbumArtPathTB.Text = value; }
         }
 
+        public string DLCName
+        {
+            get { return DlcNameTB.Text; }
+            set { DlcNameTB.Text = GetValidDLCName(value); }
+        }
+
+        public string SongTitle {
+            get { return SongDisplayNameTB.Text; }
+            set { SongDisplayNameTB.Text = value; }
+        }
+
+        public string SongTitleSort {
+            get { return SongDisplayNameSortTB.Text; }
+            set { SongDisplayNameSortTB.Text = value; }
+        }
+
+        public string Album {
+            get { return AlbumTB.Text; }
+            set { AlbumTB.Text = value; }
+        }
+
+        public string Artist {
+            get { return ArtistTB.Text; }
+            set { ArtistTB.Text = value; }
+        }
+
+        public string ArtistSort {
+            get { return ArtistSortTB.Text; }
+            set { ArtistSortTB.Text = value; }
+        }
+
+        public string AlbumYear {
+            get { return YearTB.Text; }
+            set { YearTB.Text = value; }
+        }
+
+        public string AverageTempo {
+            get { return AverageTempoTB.Text; }
+            set {
+                int tempo = 0;
+                string stringTempo = value;
+                int pointIndex = value.IndexOf(".");
+                if (pointIndex > -1)
+                    stringTempo = stringTempo.Substring(0, pointIndex);
+                if (int.TryParse(stringTempo, out tempo))
+                    AverageTempoTB.Text = tempo.ToString();
+            }
+        }
+
         private void arrangementAddButton_Click(object sender, EventArgs e)
         {
             Arrangement arrangement;
-            using (var form = new ArrangementForm(GetToneNames()))
+            using (var form = new ArrangementForm(GetToneNames(), (DLCPackageCreator)this))
             {
                 if (DialogResult.OK != form.ShowDialog())
                 {
@@ -287,7 +336,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             YearTB.Text = info.SongInfo.SongYear.ToString();
             ArtistTB.Text = info.SongInfo.Artist;
             ArtistSortTB.Text = info.SongInfo.ArtistSort;
-            AverageTempo.Text = info.SongInfo.AverageTempo.ToString();
+            AverageTempoTB.Text = info.SongInfo.AverageTempo.ToString();
 
             // Album art
             AlbumArtPath = MakeAbsolute(path, info.AlbumArtPath);
@@ -401,9 +450,9 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 YearTB.Focus();
                 return null;
             }
-            if (!int.TryParse(AverageTempo.Text, out tempo))
+            if (!int.TryParse(AverageTempoTB.Text, out tempo))
             {
-                AverageTempo.Focus();
+                AverageTempoTB.Focus();
                 return null;
             }
             if (string.IsNullOrEmpty(AppIdTB.Text))
@@ -615,8 +664,15 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         private void DlcNameTB_Leave(object sender, EventArgs e)
         {
             TextBox dlcName = ((TextBox)sender);
+            dlcName.Text = GetValidDLCName(dlcName.Text.Trim());
+        }
+
+        private string GetValidDLCName(string packageName) {
             Regex rgx = new Regex("[^a-zA-Z0-9\\-]");
-            dlcName.Text = rgx.Replace(dlcName.Text.Trim(), "");
+            string name = rgx.Replace(packageName, "");
+            if (name == SongTitle)
+                name = name + "Song";
+            return name;
         }
     }
 }

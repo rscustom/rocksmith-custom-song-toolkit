@@ -93,7 +93,6 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
         private void repackButton_Click(object sender, EventArgs e)
         {
             IList<string> sourceFileNames;
-            string savePath;
             var useCryptography = useCryptographyCheckbox.Checked;
 
             using (var ofd = new OpenFileDialog())
