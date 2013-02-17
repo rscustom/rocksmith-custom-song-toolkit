@@ -172,7 +172,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                         if (arr.ToLower().IndexOf("guitar 22") > -1 || arr.ToLower().IndexOf("rhythm") > -1)
                             arrangementNameCombo.SelectedItem = ArrangementName.Rhythm;
                     }
-                    if (arr.ToLower().IndexOf("guitar") > -1)
+                    if (arr.ToLower().IndexOf("bass") > -1)
                         arrangementTypeCombo.SelectedItem = ArrangementType.Bass;
 
                     XElement arrangementProperties = doc.XPathSelectElement("/song/arrangementProperties");
