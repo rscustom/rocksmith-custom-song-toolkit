@@ -15,6 +15,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
     public partial class ToneForm : Form
     {
         public bool Saved = false;
+        public Tone LoadedTone = null;
 
         public ToneForm(Tone tone)
         {
@@ -56,6 +57,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
 
             toneControl1.Tone = tone;
+            LoadedTone = toneControl1.Tone;
 
             MessageBox.Show("Tone was loaded.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
