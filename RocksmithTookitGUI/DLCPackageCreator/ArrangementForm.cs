@@ -25,12 +25,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 ArrangementType = ArrangementType.Guitar,
                 RelativeDifficulty = 1,
                 ScrollSpeed = 20
-            }, toneNames)
+            }, toneNames, control)
         {
-            parentControl = control;
         }
 
-        public ArrangementForm(Arrangement arrangement, IEnumerable<string> toneNames)
+        public ArrangementForm(Arrangement arrangement, IEnumerable<string> toneNames, DLCPackageCreator control)
         {
             InitializeComponent();
             
@@ -82,6 +81,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeedTrackBar.Value) / 10);
             };
             Arrangement = arrangement;
+            parentControl = control;
         }
 
         public Arrangement Arrangement

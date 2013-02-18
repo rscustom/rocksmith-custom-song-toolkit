@@ -313,6 +313,12 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             TonesLB.Items.Clear();
             ArrangementLB.Items.Clear();
 
+            if (info == null)
+            {
+                MessageBox.Show("Can't load saved DLC. An error ocurred.", "DLCPackageCreator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (info.Tones == null)
             {
                 info.Tones = new List<Tone>();
@@ -523,7 +529,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             if (ArrangementLB.SelectedItem != null)
             {
                 var arrangement = (Arrangement)ArrangementLB.SelectedItem;
-                using (var form = new ArrangementForm(arrangement, GetToneNames()) { Text = "Edit Arrangement" })
+                using (var form = new ArrangementForm(arrangement, GetToneNames(), (DLCPackageCreator)this) { Text = "Edit Arrangement" })
                 {
                     if (DialogResult.OK != form.ShowDialog())
                     {
