@@ -156,14 +156,14 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 } else {
                     Form parentForm = (this.Parent as Form);
 
-                    if (String.IsNullOrEmpty(parentControl.SongTitle)) parentControl.SongTitle = doc.XPathSelectElement("/song/title").Value;
+                    if (String.IsNullOrEmpty(parentControl.SongTitle)) parentControl.SongTitle = doc.XPathSelectElement("/song/title") != null ? doc.XPathSelectElement("/song/title").Value : String.Empty;
                     if (String.IsNullOrEmpty(parentControl.SongTitleSort)) parentControl.SongTitleSort = parentControl.SongTitle;
                     if (String.IsNullOrEmpty(parentControl.DLCName)) parentControl.DLCName = parentControl.SongTitleSort;
-                    if (String.IsNullOrEmpty(parentControl.AverageTempo)) parentControl.AverageTempo = doc.XPathSelectElement("/song/averageTempo").Value;
-                    if (String.IsNullOrEmpty(parentControl.Artist)) parentControl.Artist = doc.XPathSelectElement("/song/artistName").Value;
+                    if (String.IsNullOrEmpty(parentControl.AverageTempo)) parentControl.AverageTempo = doc.XPathSelectElement("/song/averageTempo") != null ? doc.XPathSelectElement("/song/averageTempo").Value : String.Empty;
+                    if (String.IsNullOrEmpty(parentControl.Artist)) parentControl.Artist = doc.XPathSelectElement("/song/artistName") != null ? doc.XPathSelectElement("/song/artistName").Value : String.Empty;
                     if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = parentControl.Artist;
-                    if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = doc.XPathSelectElement("/song/albumName").Value;
-                    if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = doc.XPathSelectElement("/song/albumYear").Value;
+                    if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = doc.XPathSelectElement("/song/albumName") != null ? doc.XPathSelectElement("/song/albumName").Value : String.Empty;
+                    if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = doc.XPathSelectElement("/song/albumYear") != null ? doc.XPathSelectElement("/song/albumYear").Value : String.Empty;
 
                     string arr = doc.XPathSelectElement("/song/arrangement").Value;
                     if (arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("lead") > -1 || arr.ToLower().IndexOf("rhythm") > -1 || arr.ToLower().IndexOf("combo") > -1)
@@ -172,7 +172,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                         if (arr.ToLower().IndexOf("guitar 22") > -1 || arr.ToLower().IndexOf("rhythm") > -1)
                             arrangementNameCombo.SelectedItem = ArrangementName.Rhythm;
                     }
-                    if (arr.ToLower().IndexOf("guitar") > -1)
+                    if (arr.ToLower().IndexOf("bass") > -1)
                         arrangementTypeCombo.SelectedItem = ArrangementType.Bass;
 
                     XElement arrangementProperties = doc.XPathSelectElement("/song/arrangementProperties");
@@ -207,7 +207,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                     }
                 }
             } catch (Exception ex) {
-                MessageBox.Show("Unable to get information from the arrangement XML . \r\n" + ex.Message, "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Unable to get information from the arrangement XML. \r\nYour version of the EoF is up to date? \r\n" + ex.Message, "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

@@ -541,7 +541,14 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             using (var form = new ToneForm(tone))
             {
                 form.ShowDialog();
-                TonesLB.Items.Add(tone);
+
+                if (form.Saved)
+                {
+                    if (form.LoadedTone != null)
+                        tone = form.LoadedTone;
+
+                    TonesLB.Items.Add(tone);
+                }
             }
         }
 
@@ -579,8 +586,12 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 using (var form = new ToneForm(newTone))
                 {
                     form.ShowDialog();
-                    if (form.Saved)
+                    
+					if (form.Saved)
                     {
+                        if (form.LoadedTone != null)
+                            tone = form.LoadedTone;
+                        
                         tone = newTone;
                         TonesLB.Items[TonesLB.SelectedIndex] = tone;
                     }
