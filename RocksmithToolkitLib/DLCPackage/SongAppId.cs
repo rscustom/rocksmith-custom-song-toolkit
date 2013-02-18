@@ -67,6 +67,7 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "Queen - Keep Yourself Alive", AppId = "206146" };
             yield return new SongAppId { Name = "Queen - Killer Queen", AppId = "206147" };
             yield return new SongAppId { Name = "Queen - Stone Cold Crazy", AppId = "206144" };
+            yield return new SongAppId { Name = "Rocksmith Preorder Bonus", AppId = "206085" };
             yield return new SongAppId { Name = "Rush - Headlong Flight", AppId = "" }; //Wrong AppId
             yield return new SongAppId { Name = "Rush - Limelight", AppId = "206179" };
             yield return new SongAppId { Name = "Rush - Red Barchetta", AppId = "222042" };
