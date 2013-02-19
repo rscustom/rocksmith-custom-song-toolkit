@@ -52,11 +52,11 @@ namespace RocksmithTookitGUI.OggConverter
             try
             {
                 OggFile.ConvertOgg(InputOggFile, OutputOggFile);
-                MessageBox.Show("Conversion complete!", "OGG Conversion Process");
+                MessageBox.Show("Conversion complete!", "OGG Conversion Process", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (InvalidDataException ex)
             {
-                MessageBox.Show(ex.Message, "OGG Conversion Process");
+                MessageBox.Show(ex.Message, "OGG Conversion Process", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {

@@ -52,6 +52,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private static List<string> XBox360Files = new List<string>();
+        private static List<string> SNGTmpFiles = new List<string>();
 
         public static void Generate(string packagePath, DLCPackageData info, GamePlatform platform)
         {
@@ -79,6 +80,14 @@ namespace RocksmithToolkitLib.DLCPackage
             try {
                 if (Directory.Exists(xboxWorkDir))
                     Directory.Delete(xboxWorkDir, true);
+            } catch { /*Have no problem if don't delete*/ }
+
+            try {
+                foreach (var sngTmpFile in SNGTmpFiles)
+                {
+                    if (File.Exists(sngTmpFile))
+                        File.Delete(sngTmpFile);
+                }
             } catch { /*Have no problem if don't delete*/ }
         }
 
@@ -269,6 +278,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         if (x.SongFile == null)
                             x.SongFile = new SongFile();
                         x.SongFile.File = sngFile;
+                        SNGTmpFiles.Add(sngFile);
                         //end
                         manifestBuilder.AggregateGraph.SongFiles.Add(x.SongFile);
                         manifestBuilder.AggregateGraph.SongXMLs.Add(x.SongXml);
