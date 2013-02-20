@@ -945,17 +945,19 @@ namespace RocksmithToolkitLib.Sng
                 // palm mute
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).PalmMute : new byte());
 
-                // hopo
-                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Hopo : new byte());
-
                 if (arrangementType == ArrangementType.Bass)
                 {
+                    w.Write(new byte());//unknownB
+
                     //Bass only - Slap
-                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Slap : new int());
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Slap : -1);
 
                     //Bass only - Pluck
-                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Pluck : new int());
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Pluck : -1);
                 }
+
+                // hopo
+                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Hopo : new byte());
 
                 // hammerOn
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).HammerOn : new byte());
@@ -967,10 +969,19 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Ignore : ((SongChord)notesChords[i].Entity).Ignore);
 
                 // high density chord
-                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? new byte() : ((SongChord)notesChords[i].Entity).HighDensity);
+                if (arrangementType == ArrangementType.Bass)
+                {
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? new byte() : ((SongChord)notesChords[i].Entity).HighDensity);
+                    w.Write(new byte());
+                    w.Write((byte)140);
+                    w.Write(new byte());
+                }
+                else
+                {
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? new byte() : ((SongChord)notesChords[i].Entity).HighDensity);
+                    w.Write(new byte[4]);
+                }
 
-                // this position is sometimes empty bytes, often the values below, or other values as well 
-                w.Write(new byte[4]);
                 //w.Write(Convert.ToInt16(246));
                 //w.Write(Convert.ToInt16(7472));
 
