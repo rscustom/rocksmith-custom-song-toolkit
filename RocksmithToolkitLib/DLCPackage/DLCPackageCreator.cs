@@ -182,8 +182,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     packPsarc.AddEntry(songFileName, songPsarcStream);
                     if (platform == GamePlatform.XBox360) songPsarcStream.WriteTmpFile(songFileName);
 
-                    foreach (var tone in tones)
-                    {
+                    for (int i = 0; i < tones.Count; i++ ) {
+                        var tone = tones[i];
                         var tonePsarcStream = new MemoryStream();
                         toneStreams.Add(tonePsarcStream);
 
@@ -193,7 +193,10 @@ namespace RocksmithToolkitLib.DLCPackage
                         string toneEntry = String.Format("DLC_Tone_{0}.psarc", toneKey);
                         packPsarc.AddEntry(toneEntry, tonePsarcStream);
                         if (platform == GamePlatform.XBox360) tonePsarcStream.WriteTmpFile(toneEntry);
-                        packageListWriter.WriteLine("DLC_Tone_{0}", toneKey);
+                        if (i + 1 != tones.Count)
+                            packageListWriter.WriteLine("DLC_Tone_{0}", toneKey);
+                        else
+                            packageListWriter.Write("DLC_Tone_{0}", toneKey);
                     }
 
                     packageListWriter.Flush();
@@ -371,7 +374,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void GenerateTonePackageId(Stream output, string toneKey)
         {
             var writer = new StreamWriter(output);
-            writer.WriteLine("DLC_Tone_{0}", toneKey);
+            writer.Write("DLC_Tone_{0}", toneKey);
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
         }
