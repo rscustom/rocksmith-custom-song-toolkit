@@ -79,9 +79,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.DisplayName = songInfo.SongDisplayName;
                 attribute.DLCPreview = false;
                 attribute.EffectChainMultiplayerName = string.Empty;
-                attribute.EffectChainName = dlcName + "_" + x.ToneName == null ? "Default" : x.ToneName.Replace(' ', '_');
-                if (platform == Sng.GamePlatform.XBox360)
-                    attribute.EffectChainName = "DefaultTone"; // temporary, until we can get tones working on XBox360
+                attribute.EffectChainName = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : (dlcName + "_" + x.ToneName == null ? "Default" : x.ToneName.Replace(' ', '_'));
                 attribute.EventFirstTimeSortOrder = 9999;
                 attribute.ExclusiveBuild = new List<object>();
                 attribute.FirstArrangementInSong = false;
@@ -96,8 +94,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.IsDemoSong = false;
                 attribute.IsDLC = true;
                 attribute.LastConversionDateTime = "";
-                attribute.MasterID_PS3 = 0;
-                attribute.MasterID_Xbox360 = 504;
+                int masterId = x.ArrangementType == Sng.ArrangementType.Vocal ? 1 : RandomGenerator.NextInt();
+                attribute.MasterID_PS3 = masterId;
+                attribute.MasterID_Xbox360 = masterId;
                 attribute.MaxPhraseDifficulty = 0;
                 attribute.PersistentID = x.Id.ToString().Replace("-", "").ToUpper();
                 attribute.PhraseIterations = new List<PhraseIteration>();
