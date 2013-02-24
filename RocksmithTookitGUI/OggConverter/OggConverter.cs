@@ -10,57 +10,66 @@ namespace RocksmithTookitGUI.OggConverter
 {
     public partial class OggConverter : UserControl
     {
+        private const string MESSAGEBOX_CAPTION = "OGG Conversion Process";
+
         public OggConverter()
         {
             InitializeComponent();
         }
 
-        private string InputOggFile
+        private string[] InputOggFiles;
+
+        private string InputOggFolder
         {
             get { return inputOggTextBox.Text; }
             set { inputOggTextBox.Text = value; }
-        }
-
-        private string OutputOggFile
-        {
-            get { return outputOggTextBox.Text; }
-            set { outputOggTextBox.Text = value; }
         }
 
         private void oggBrowseButton_Click(object sender, EventArgs e)
         {
             using (var fd = new OpenFileDialog())
             {
-                fd.Filter = "Wwise 2010.3.3 OGG Files|*.ogg|All Files (*.*)|*.*";
-                fd.FilterIndex = 1;
+                fd.Filter = "Wwise 2010.3.3 OGG Files|*.ogg";
+                fd.Multiselect = true;
                 fd.ShowDialog();
-                if (string.IsNullOrEmpty(fd.FileName)) return;
+                if (fd.FileNames.Count() <= 0) {
+                    MessageBox.Show("The selected directory has no .ogg file inside!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-                InputOggFile = fd.FileName;
-                var fileName = Path.ChangeExtension(fd.FileName, null);
-                fileName += "_fixed";
-                fileName = Path.ChangeExtension(fileName, "ogg");
-                OutputOggFile = fileName;
-            }
-        }
+                InputOggFolder = Path.GetDirectoryName(fd.FileName);
+                InputOggFiles = fd.FileNames;
+                Dictionary<string, string> errorFiles = new Dictionary<string, string>();
+                List<string> successFiles = new List<string>();
 
-        private void oggConvertButton_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(InputOggFile)) return;
-            if (string.IsNullOrEmpty(OutputOggFile)) return;
+                foreach (var file in InputOggFiles) {
+                    try
+                    {
+                        var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
+                        OggFile.ConvertOgg(file, outputFileName);
+                        successFiles.Add(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        errorFiles.Add(file, ex.Message);
+                    }
+                }
 
-            try
-            {
-                OggFile.ConvertOgg(InputOggFile, OutputOggFile);
-                MessageBox.Show("Conversion complete!", "OGG Conversion Process", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (InvalidDataException ex)
-            {
-                MessageBox.Show(ex.Message, "OGG Conversion Process", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                ErrorDialog.Show("Conversion has failed.", ex);
+                if (errorFiles.Count <= 0 && successFiles.Count > 0)
+                    MessageBox.Show("Conversion complete!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else if (errorFiles.Count > 0 && successFiles.Count > 0)
+                {
+                    StringBuilder alertMessage = new StringBuilder("Conversion complete with errors!");
+                    alertMessage.AppendLine("Files converted with success:");
+                    foreach (var sFile in successFiles)
+                        alertMessage.AppendLine(String.Format("File: {0}", sFile));
+                    foreach (var eFile in errorFiles)
+                        alertMessage.AppendLine(String.Format("File: {0}; error: {1}", eFile.Key, eFile.Value));
+
+                    MessageBox.Show(alertMessage.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                    MessageBox.Show("Problem ocurred! Check if file(s) is valid!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
