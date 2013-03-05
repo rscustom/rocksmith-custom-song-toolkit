@@ -505,7 +505,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 OggPath = OggPath,
                 OggXBox360Path = OggXBox360Path,
                 Arrangements = arrangements,
-                Tones = tones
+                Tones = tones,
+                Volume = volumeBox.Value
             };
 
             return data;

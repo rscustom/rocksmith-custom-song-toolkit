@@ -63,7 +63,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             using (var packPsarcStream = new MemoryStream())
             {
-                GeneratePackagePsarc(packPsarcStream, info.AppId, info.Name, info.SongInfo, info.AlbumArtPath, platform.GetOgg(info), info.Arrangements, info.Tones, platform);
+                GeneratePackagePsarc(packPsarcStream, info, platform);
                 switch (platform) {
                     case GamePlatform.Pc:
                         using (var fl = File.Create(packagePath))
@@ -157,7 +157,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #endregion
 
-        private static void GeneratePackagePsarc(Stream output, string appId, string dlcName, SongInfo songInfo, string albumArtPath, string oggPath, IList<Arrangement> arrangements, IList<Tone.Tone> tones, GamePlatform platform)
+        private static void GeneratePackagePsarc(Stream output, DLCPackageData info, GamePlatform platform)
         {
             IList<Stream> toneStreams = new List<Stream>();
             using (var appIdStream = new MemoryStream())
@@ -171,29 +171,30 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     if (platform == GamePlatform.Pc)
                     {
-                        GenerateAppId(appIdStream, appId);
+                        GenerateAppId(appIdStream, info.AppId);
                         packPsarc.AddEntry("APP_ID", appIdStream);
                     }
 
-                    packageListWriter.WriteLine(dlcName);
+                    packageListWriter.WriteLine(info.Name);
 
-                    GenerateSongPsarc(songPsarcStream, dlcName, songInfo, albumArtPath, oggPath, arrangements, platform);
-                    string songFileName = String.Format("{0}.psarc", dlcName);
+                    GenerateSongPsarc(songPsarcStream, info, platform);
+                    string songFileName = String.Format("{0}.psarc", info.Name);
                     packPsarc.AddEntry(songFileName, songPsarcStream);
                     if (platform == GamePlatform.XBox360) songPsarcStream.WriteTmpFile(songFileName);
 
-                    for (int i = 0; i < tones.Count; i++ ) {
-                        var tone = tones[i];
+                    for (int i = 0; i < info.Tones.Count; i++)
+                    {
+                        var tone = info.Tones[i];
                         var tonePsarcStream = new MemoryStream();
                         toneStreams.Add(tonePsarcStream);
 
-                        var toneKey = dlcName + "_" + tone.Name == null ? "Default" : tone.Name.Replace(' ', '_');
+                        var toneKey = info.Name + "_" + tone.Name == null ? "Default" : tone.Name.Replace(' ', '_');
 
                         GenerateTonePsarc(tonePsarcStream, toneKey, tone);
                         string toneEntry = String.Format("DLC_Tone_{0}.psarc", toneKey);
                         packPsarc.AddEntry(toneEntry, tonePsarcStream);
                         if (platform == GamePlatform.XBox360) tonePsarcStream.WriteTmpFile(toneEntry);
-                        if (i + 1 != tones.Count)
+                        if (i + 1 != info.Tones.Count)
                             packageListWriter.WriteLine("DLC_Tone_{0}", toneKey);
                         else
                             packageListWriter.Write("DLC_Tone_{0}", toneKey);
@@ -240,15 +241,15 @@ namespace RocksmithToolkitLib.DLCPackage
             output.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void GenerateSongPsarc(Stream output, string dlcName, SongInfo songInfo, string albumArtPath, string oggPath, IList<Arrangement> arrangements, GamePlatform platform)
+        private static void GenerateSongPsarc(Stream output, DLCPackageData info, GamePlatform platform)
         {
-            var soundBankName = String.Format("Song_{0}", dlcName);
+            var soundBankName = String.Format("Song_{0}", info.Name);
             Stream albumArtStream = null;
             try
             {
-                if (File.Exists(albumArtPath))
+                if (File.Exists(info.AlbumArtPath))
                 {
-                    albumArtStream = File.OpenRead(albumArtPath);
+                    albumArtStream = File.OpenRead(info.AlbumArtPath);
                 }
                 else
                 {
@@ -259,7 +260,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 using (var xblockStream = new MemoryStream())
                 using (var soundbankStream = new MemoryStream())
                 using (var packageIdStream = new MemoryStream())
-                using (var soundStream = OggFile.ConvertOgg(oggPath))
+                using (var soundStream = OggFile.ConvertOgg(platform.GetOgg(info)))
                 using (var arrangementFiles = new DisposableCollection<Stream>())
                 {
                     var manifestBuilder = new ManifestBuilder
@@ -267,11 +268,11 @@ namespace RocksmithToolkitLib.DLCPackage
                         AggregateGraph = new AggregateGraph.AggregateGraph
                         {
                             SoundBank = new SoundBank { File = soundBankName + ".bnk" },
-                            AlbumArt = new AlbumArt { File = albumArtPath }
+                            AlbumArt = new AlbumArt { File = info.AlbumArtPath }
                         }
                     };
 
-                    foreach (var x in arrangements)
+                    foreach (var x in info.Arrangements)
                     {
                         //Generate sng file in execution time
                         string sngFile = Path.Combine(Path.GetDirectoryName(x.SongXml.File), x.SongXml.Name + ".sng");
@@ -286,39 +287,39 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifestBuilder.AggregateGraph.SongFiles.Add(x.SongFile);
                         manifestBuilder.AggregateGraph.SongXMLs.Add(x.SongXml);
                     }
-                    manifestBuilder.AggregateGraph.XBlock = new XBlockFile { File = dlcName + ".xblock" };
-                    manifestBuilder.AggregateGraph.Write(dlcName, platform.GetPathName(), platform, aggregateGraphStream);
+                    manifestBuilder.AggregateGraph.XBlock = new XBlockFile { File = info.Name + ".xblock" };
+                    manifestBuilder.AggregateGraph.Write(info.Name, platform.GetPathName(), platform, aggregateGraphStream);
                     aggregateGraphStream.Flush();
                     aggregateGraphStream.Seek(0, SeekOrigin.Begin);
 
                     {
-                        var manifestData = manifestBuilder.GenerateManifest(dlcName, arrangements, songInfo, platform);
+                        var manifestData = manifestBuilder.GenerateManifest(info.Name, info.Arrangements, info.SongInfo, platform);
                         var writer = new StreamWriter(manifestStream);
                         writer.Write(manifestData);
                         writer.Flush();
                         manifestStream.Seek(0, SeekOrigin.Begin);
                     }
 
-                    XBlockGenerator.Generate(dlcName, manifestBuilder.Manifest, manifestBuilder.AggregateGraph, xblockStream);
+                    XBlockGenerator.Generate(info.Name, manifestBuilder.Manifest, manifestBuilder.AggregateGraph, xblockStream);
                     xblockStream.Flush();
                     xblockStream.Seek(0, SeekOrigin.Begin);
 
-                    var soundFileName = SoundBankGenerator.GenerateSoundBank(dlcName, soundStream, soundbankStream, platform);
+                    var soundFileName = SoundBankGenerator.GenerateSoundBank(info.Name, soundStream, soundbankStream, info.Volume, platform);
                     soundbankStream.Flush();
                     soundbankStream.Seek(0, SeekOrigin.Begin);
 
-                    GenerateSongPackageId(packageIdStream, dlcName);
+                    GenerateSongPackageId(packageIdStream, info.Name);
 
                     var songPsarc = new PSARC.PSARC();
                     songPsarc.AddEntry("PACKAGE_ID", packageIdStream);
                     songPsarc.AddEntry("AggregateGraph.nt", aggregateGraphStream);
                     songPsarc.AddEntry("Manifests/songs.manifest.json", manifestStream);
-                    songPsarc.AddEntry(String.Format("Exports/Songs/{0}.xblock", dlcName), xblockStream);
+                    songPsarc.AddEntry(String.Format("Exports/Songs/{0}.xblock", info.Name), xblockStream);
                     songPsarc.AddEntry(String.Format("Audio/{0}/{1}.bnk", platform.GetPathName()[0], soundBankName), soundbankStream);
                     songPsarc.AddEntry(String.Format("Audio/{0}/{1}.ogg", platform.GetPathName()[0], soundFileName), soundStream);
                     songPsarc.AddEntry(String.Format("GRAssets/AlbumArt/{0}.dds", manifestBuilder.AggregateGraph.AlbumArt.Name), albumArtStream);
 
-                    foreach (var x in arrangements)
+                    foreach (var x in info.Arrangements)
                     {
                         var xmlFile = File.OpenRead(x.SongXml.File);
                         arrangementFiles.Add(xmlFile);

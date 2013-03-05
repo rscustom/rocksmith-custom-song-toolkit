@@ -15,5 +15,6 @@ namespace RocksmithToolkitLib.DLCPackage
         public string OggXBox360Path { get; set; }
         public IList<Arrangement> Arrangements { get; set; }
         public IList<Tone.Tone> Tones { get; set; }
+        public decimal Volume { get; set; }
     }
 }

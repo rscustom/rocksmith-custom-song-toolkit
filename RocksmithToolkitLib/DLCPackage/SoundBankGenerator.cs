@@ -15,8 +15,8 @@ namespace RocksmithToolkitLib.DLCPackage
         private const string PLAY = "Play_";
         private const string PLAY30SEC = "Play_30Sec_";
         private const string SONG = "Song_";
-        private static readonly int[] bnkPCOffsets = { 0x2c, 0x1d, 0x115, 0xc8, 0x14, 0xc };
-        private static readonly int[] bnkXBox360Offsets = { 0x7ec, 0x1d, 0x115, 0xc8, 0x14, 0xc };
+        private static readonly int[] bnkPCOffsets = { 0x2c, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
+        private static readonly int[] bnkXBox360Offsets = { 0x7ec, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
         
         public static IList<int> GetOffsets(this GamePlatform platform) {
             switch (platform) {
@@ -44,7 +44,7 @@ namespace RocksmithToolkitLib.DLCPackage
             return hash;
         }
 
-        public static string GenerateSoundBank(string dlcName, Stream audioStream, Stream outStream, GamePlatform platform)
+        public static string GenerateSoundBank(string dlcName, Stream audioStream, Stream outStream, decimal volume, GamePlatform platform)
         {
             string eventName = PLAY + dlcName;
             string previewName = PLAY30SEC + dlcName;
@@ -79,15 +79,18 @@ namespace RocksmithToolkitLib.DLCPackage
                 bankWriter.Write(id);
                 bankReader.BaseStream.Seek(8, SeekOrigin.Current);
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[2]));
+                bankWriter.Write((float)volume);
                 bankReader.ReadInt32();
-                bankWriter.Write(HashString(eventName));
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[3]));
                 bankReader.ReadInt32();
-                bankWriter.Write(HashString(previewName));
+                bankWriter.Write(HashString(eventName));
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[4]));
-                bankWriter.Write(platform.GetOffsets()[5] + bankName.Length + 1);
                 bankReader.ReadInt32();
+                bankWriter.Write(HashString(previewName));
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[5]));
+                bankWriter.Write(12 + bankName.Length + 1);
+                bankReader.ReadInt32();
+                bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[6]));
                 bankWriter.Write((byte)bankName.Length);
                 bankWriter.Write(Encoding.ASCII.GetBytes(bankName));
                 bankWriter.Flush();

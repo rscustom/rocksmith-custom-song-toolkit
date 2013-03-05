@@ -50,6 +50,9 @@
             this.platformXBox360 = new System.Windows.Forms.CheckBox();
             this.platformPS3 = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.volumeBox = new RocksmithTookitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.ArtistSortTB = new RocksmithTookitGUI.CueTextBox();
             this.SongDisplayNameSortTB = new RocksmithTookitGUI.CueTextBox();
             this.oggXBox360PathTB = new RocksmithTookitGUI.CueTextBox();
@@ -62,6 +65,7 @@
             this.ArtistTB = new RocksmithTookitGUI.CueTextBox();
             this.SongDisplayNameTB = new RocksmithTookitGUI.CueTextBox();
             this.DlcNameTB = new RocksmithTookitGUI.CueTextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).BeginInit();
             this.SuspendLayout();
             // 
             // albumArtButton
@@ -158,7 +162,7 @@
             this.cmbAppIds.Location = new System.Drawing.Point(193, 53);
             this.cmbAppIds.Margin = new System.Windows.Forms.Padding(2);
             this.cmbAppIds.Name = "cmbAppIds";
-            this.cmbAppIds.Size = new System.Drawing.Size(309, 21);
+            this.cmbAppIds.Size = new System.Drawing.Size(198, 21);
             this.cmbAppIds.TabIndex = 9;
             this.cmbAppIds.SelectedIndexChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
@@ -284,6 +288,46 @@
             this.label2.Size = new System.Drawing.Size(31, 13);
             this.label2.TabIndex = 61;
             this.label2.Text = "Files:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(485, 55);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(20, 13);
+            this.label3.TabIndex = 63;
+            this.label3.Text = "dB";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(396, 55);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(42, 13);
+            this.label4.TabIndex = 62;
+            this.label4.Text = "Volume";
+            // 
+            // volumeBox
+            // 
+            this.volumeBox.Location = new System.Drawing.Point(440, 53);
+            this.volumeBox.Maximum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.volumeBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.volumeBox.Name = "volumeBox";
+            this.volumeBox.Size = new System.Drawing.Size(43, 20);
+            this.volumeBox.TabIndex = 64;
+            this.volumeBox.Value = new decimal(new int[] {
+            15,
+            0,
+            0,
+            -2147483648});
             // 
             // ArtistSortTB
             // 
@@ -412,6 +456,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.volumeBox);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.ArtistSortTB);
             this.Controls.Add(this.SongDisplayNameSortTB);
             this.Controls.Add(this.label2);
@@ -448,6 +495,7 @@
             this.Controls.Add(this.DlcNameTB);
             this.Name = "DLCPackageCreator";
             this.Size = new System.Drawing.Size(509, 453);
+            ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -489,5 +537,8 @@
         private System.Windows.Forms.Label label2;
         private CueTextBox SongDisplayNameSortTB;
         private CueTextBox ArtistSortTB;
+        private NumericUpDownFixed volumeBox;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }
