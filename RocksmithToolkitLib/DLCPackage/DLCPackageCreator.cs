@@ -70,7 +70,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             RijndaelEncryptor.Encrypt(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
                         break;
                     case GamePlatform.XBox360:
-                        BuildXBox360Package(packagePath, info);
+                        BuildXBox360Package(packagePath, info, XBox360Files);
                         break;
                     case GamePlatform.PS3:
                         throw new InvalidOperationException("PS3 platform is not supported at this time :(");
@@ -93,13 +93,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region XBox360
 
-        private static void BuildXBox360Package(string packagePath, DLCPackageData info)
+        public static void BuildXBox360Package(string packagePath, DLCPackageData info, IEnumerable<string> xboxFiles)
         {
             LogRecord x = new LogRecord();
             RSAParams xboxRSA = new RSAParams(new DJsIO(Resources.XBox360_KV, true));
             CreateSTFS xboxSTFS = new CreateSTFS();
             xboxSTFS.HeaderData = info.GetSTFSHeader();
-            foreach (string file in XBox360Files)
+            foreach (string file in xboxFiles)
                 xboxSTFS.AddFile(file, Path.GetFileName(file));
 
             STFSPackage xboxPackage = new STFSPackage(xboxSTFS, xboxRSA, packagePath, x);

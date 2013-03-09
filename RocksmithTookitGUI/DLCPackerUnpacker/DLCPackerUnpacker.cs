@@ -11,6 +11,8 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
 {
     public partial class DLCPackerUnpacker : UserControl
     {
+        private const string MESSAGEBOX_CAPTION = "DLC Packer";
+
         public DLCPackerUnpacker()
         {
             InitializeComponent();
@@ -48,9 +50,15 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
                 saveFileName = sfd.FileName;
             }
 
-            Packer.Pack(sourcePath, saveFileName, useCryptography);
-
-            MessageBox.Show("Packing is complete.", "DLC Packer");
+            try
+            {
+                Packer.Pack(sourcePath, saveFileName, useCryptography);
+                MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Format("{0}\n\r{1}\n\r{2}", "Packing error!", ex.Message, ex.InnerException), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void unpackButton_Click(object sender, EventArgs e)
@@ -79,7 +87,7 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
                 Packer.Unpack(sourceFileName, savePath, useCryptography);
             }
 
-            MessageBox.Show("Unpacking is complete.", "DLC Packer");
+            MessageBox.Show("Unpacking is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
@@ -120,7 +128,7 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
                 Packer.Pack(unpackedDir, sourceFileName, useCryptography);
             }
 
-            MessageBox.Show("APP ID update is complete.", "DLC Packer");
+            MessageBox.Show("APP ID update is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
