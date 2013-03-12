@@ -121,7 +121,7 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
                 Application.DoEvents();
                 Packer.Unpack(sourceFileName, tmpDir, useCryptography);
 
-                var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName);
+                var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + "_PC";
                 var appIdFile = unpackedDir + Path.DirectorySeparatorChar + "APP_ID";
                 File.WriteAllText(appIdFile, appId);
 
