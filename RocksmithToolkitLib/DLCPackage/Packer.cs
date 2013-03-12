@@ -14,6 +14,8 @@ namespace RocksmithToolkitLib.DLCPackage
         private const string ROOT_XBox360 = "Root";
         private const string ROOT_PS3 = "USRDIR";
 
+        public const string ADD_PC = "_PC";
+
         public static void Pack(string sourcePath, string saveFileName, bool useCryptography)
         {
             GamePlatform platform = sourcePath.GetPlatform();
@@ -212,18 +214,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     File.Delete(fileName);
             }
 
-            //Directory.CreateDirectory(rootDir);
-            //foreach (var file in xboxPackage.RootDirectory.GetSubFiles()) {
-            //    string fileName = Path.Combine(rootDir, file.Name);
-            //    file.Extract(fileName);
-            //    using (var outputFileStream = File.OpenRead(fileName)) {
-            //        ExtractPSARC(fileName, Path.GetDirectoryName(fileName), outputFileStream, GamePlatform.XBox360);
-            //    }
-                
-            //    if (File.Exists(fileName) && Path.GetExtension(fileName) == ".psarc")
-            //        File.Delete(fileName);
-            //}
-
             xboxPackage.CloseIO();
         }
 
@@ -256,7 +246,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             var name = Path.GetFileNameWithoutExtension(filename);
             if (Path.GetExtension(filename) == ".dat")
-                name += "_PC";
+                name += Packer.ADD_PC;
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream);
             foreach (var entry in psarc.Entries)

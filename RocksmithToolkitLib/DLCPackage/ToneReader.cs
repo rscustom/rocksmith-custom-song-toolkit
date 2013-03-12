@@ -49,7 +49,7 @@ namespace RocksmithToolkitLib.DLCPackage
             string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Packer.Unpack(packagePath, appDir, true);
             FileInfo file = new FileInfo(packagePath);
-            DirectoryInfo unpackedDir = new DirectoryInfo(Path.Combine(appDir, Path.GetFileNameWithoutExtension(file.Name)));
+            DirectoryInfo unpackedDir = new DirectoryInfo(Path.Combine(appDir, Path.GetFileNameWithoutExtension(file.Name) + Packer.ADD_PC));
             IEnumerable<FileInfo> fileList = unpackedDir.GetFiles("tone*.manifest.json", SearchOption.AllDirectories);
             foreach (FileInfo fi in fileList)
             {
