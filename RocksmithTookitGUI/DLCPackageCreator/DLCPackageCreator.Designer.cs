@@ -292,7 +292,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(485, 55);
+            this.label3.Location = new System.Drawing.Point(485, 57);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(20, 13);
             this.label3.TabIndex = 63;
@@ -301,7 +301,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(396, 55);
+            this.label4.Location = new System.Drawing.Point(396, 57);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(42, 13);
             this.label4.TabIndex = 62;
@@ -309,7 +309,7 @@
             // 
             // volumeBox
             // 
-            this.volumeBox.Location = new System.Drawing.Point(440, 53);
+            this.volumeBox.Location = new System.Drawing.Point(440, 54);
             this.volumeBox.Maximum = new decimal(new int[] {
             0,
             0,

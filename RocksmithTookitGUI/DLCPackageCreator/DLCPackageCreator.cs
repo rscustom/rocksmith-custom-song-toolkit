@@ -357,6 +357,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 OggXBox360Path = MakeAbsolute(path, info.OggXBox360Path);
             platformXBox360.Checked = !String.IsNullOrEmpty(OggXBox360Path);
 
+            volumeBox.Value = info.Volume;
+
             foreach (var arrangement in info.Arrangements)
             {
                 arrangement.SongXml.File = MakeAbsolute(path, arrangement.SongXml.File);
