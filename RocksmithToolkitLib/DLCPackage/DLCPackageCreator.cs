@@ -81,7 +81,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (Directory.Exists(xboxWorkDir))
                     Directory.Delete(xboxWorkDir, true);
             } catch { /*Have no problem if don't delete*/ }
-
             try {
                 foreach (var sngTmpFile in SNGTmpFiles)
                 {
@@ -89,6 +88,9 @@ namespace RocksmithToolkitLib.DLCPackage
                         File.Delete(sngTmpFile);
                 }
             } catch { /*Have no problem if don't delete*/ }
+
+            XBox360Files.Clear();
+            SNGTmpFiles.Clear();
         }
 
         #region XBox360
