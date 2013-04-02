@@ -119,8 +119,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.dlcPackageCreatorTab);
             this.tabControl1.Controls.Add(this.dlcPackerUnpackerTab);
-            this.tabControl1.Controls.Add(this.sngFileCreatorTab);
             this.tabControl1.Controls.Add(this.oggConverterTab);
+            this.tabControl1.Controls.Add(this.sngFileCreatorTab);
             this.tabControl1.Controls.Add(this.zigProConverterTab);
             this.tabControl1.Location = new System.Drawing.Point(17, 125);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
