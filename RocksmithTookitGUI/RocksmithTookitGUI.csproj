@@ -186,9 +186,7 @@
     <EmbeddedResource Include="ZiggyProEditorConverter\ConverterInput.resx">
       <DependentUpon>ConverterInput.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="OggConverter\Third-party Apps\packed_codebooks.bin">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="OggConverter\Third-party Apps\packed_codebooks.bin" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -215,13 +213,9 @@
     <None Include="Resources\toolkit_logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="OggConverter\Third-party Apps\revorb.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="OggConverter\Third-party Apps\revorb.exe" />
     <Content Include="songcreator.ico" />
-    <Content Include="OggConverter\Third-party Apps\ww2ogg.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="OggConverter\Third-party Apps\ww2ogg.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
