@@ -14,8 +14,6 @@ namespace RocksmithToolkitLib.DLCPackage
         private const string ROOT_XBox360 = "Root";
         private const string ROOT_PS3 = "USRDIR";
 
-        public const string ADD_PC = "_PC";
-
         public static void Pack(string sourcePath, string saveFileName, bool useCryptography)
         {
             GamePlatform platform = sourcePath.GetPlatform();
@@ -111,14 +109,16 @@ namespace RocksmithToolkitLib.DLCPackage
                         if (xboxHeader != null && xboxHeader.Length > 73)
                         {
                             string songInfo = xboxHeader[74];
+                            
                             int index = songInfo.IndexOf(" by ");
-                            string songTitle = songInfo.Substring(0, index);
-                            string songArtist = songInfo.Substring(index + 4);
+                            string songTitle = (index > 0) ? songInfo.Substring(0, index) : songInfo;
+                            string songArtist = (index > 0) ? songInfo.Substring(index + 4) : songInfo;
+                                                        
                             if (!String.IsNullOrEmpty(songInfo))
                             {
                                 songData.SongInfo = new SongInfo();
-                                songData.SongInfo.SongDisplayName = songTitle;
-                                songData.SongInfo.Artist = songArtist;
+                                songData.SongInfo.SongDisplayName = songInfo;
+                                songData.SongInfo.Artist = songInfo;
                             }
                         }
                     }
@@ -186,7 +186,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
                     return;
                 case GamePlatform.XBox360:
-                    UnpackXBox360Package(sourceFileName, savePath);
+                    UnpackXBox360Package(sourceFileName, savePath, GamePlatform.XBox360);
                     return;
                 case GamePlatform.PS3:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
@@ -194,13 +194,13 @@ namespace RocksmithToolkitLib.DLCPackage
             
         }
 
-        private static void UnpackXBox360Package(string sourceFileName, string savePath) {
+        private static void UnpackXBox360Package(string sourceFileName, string savePath, GamePlatform platform) {
             LogRecord x = new LogRecord();            
             STFSPackage xboxPackage = new STFSPackage(sourceFileName, x);
             if (!xboxPackage.ParseSuccess)
                 throw new InvalidDataException("Invalid XBox360 Rocksmith package!\n\r" + x.Log);
 
-            var rootDir = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourceFileName)) + "_XBox360";
+            var rootDir = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourceFileName)) + String.Format("_{0}", platform.ToString());
             xboxPackage.ExtractPayload(rootDir, true, true);
 
             foreach (var fileName in Directory.EnumerateFiles(Path.Combine(rootDir, "Root"))) {
@@ -217,7 +217,7 @@ namespace RocksmithToolkitLib.DLCPackage
             xboxPackage.CloseIO();
         }
 
-        private static GamePlatform GetPlatform(this string fileExtension) {
+        public static GamePlatform GetPlatform(this string fileExtension) {
             if (File.Exists(fileExtension)) {
                 switch (Path.GetExtension(fileExtension)) {
                     case ".dat":
@@ -246,7 +246,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             var name = Path.GetFileNameWithoutExtension(filename);
             if (Path.GetExtension(filename) == ".dat")
-                name += Packer.ADD_PC;
+                name += String.Format("_{0}", platform.ToString());
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream);
             foreach (var entry in psarc.Entries)
