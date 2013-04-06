@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace RocksmithTookitGUI
 {
@@ -17,6 +18,12 @@ namespace RocksmithTookitGUI
                 Assembly.GetExecutingAssembly().GetName().Version.Minor,
                 Assembly.GetExecutingAssembly().GetName().Version.Build,
                 Assembly.GetExecutingAssembly().GetName().Version.Revision);
+        }
+
+        private void restartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Controls.Clear();
+            InitializeComponent();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

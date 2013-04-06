@@ -35,7 +35,6 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
             cmbAppIds.SelectedItem = firstSong;
             AppIdTB.Text = firstSong.AppId;
-
             TonesLB.Items.Add(CreateNewTone());
         }
 
@@ -688,10 +687,14 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         }
 
         private string GetValidDLCName(string packageName) {
-            Regex rgx = new Regex("[^a-zA-Z0-9\\-]");
-            string name = rgx.Replace(packageName, "");
-            if (name == SongTitle)
-                name = name + "Song";
+            string name = String.Empty;
+            if (!String.IsNullOrEmpty(packageName))
+            {
+                Regex rgx = new Regex("[^a-zA-Z0-9\\-]");
+                name = rgx.Replace(packageName, "");
+                if (name == SongTitle)
+                    name = name + "Song";
+            }
             return name;
         }
     }

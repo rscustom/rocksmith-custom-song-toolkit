@@ -44,12 +44,12 @@
             this.inputOggTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.inputOggTextBox.Name = "inputOggTextBox";
             this.inputOggTextBox.ReadOnly = true;
-            this.inputOggTextBox.Size = new System.Drawing.Size(404, 20);
+            this.inputOggTextBox.Size = new System.Drawing.Size(407, 20);
             this.inputOggTextBox.TabIndex = 1;
             // 
             // oggBrowseButton
             // 
-            this.oggBrowseButton.Location = new System.Drawing.Point(413, 17);
+            this.oggBrowseButton.Location = new System.Drawing.Point(416, 18);
             this.oggBrowseButton.Margin = new System.Windows.Forms.Padding(2);
             this.oggBrowseButton.Name = "oggBrowseButton";
             this.oggBrowseButton.Size = new System.Drawing.Size(56, 20);
@@ -73,17 +73,17 @@
             // 
             this.groupBox2.Controls.Add(this.oggRocksmithBrowseButton);
             this.groupBox2.Controls.Add(this.inputOggRocksmithTextBox);
-            this.groupBox2.Location = new System.Drawing.Point(5, 78);
+            this.groupBox2.Location = new System.Drawing.Point(5, 66);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(477, 47);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Input OGG Wwise (2010.3.3)/Rocksmith file or directory to convert to Vorbis defau" +
-                "lt:";
+    "lt:";
             // 
             // oggRocksmithBrowseButton
             // 
-            this.oggRocksmithBrowseButton.Location = new System.Drawing.Point(413, 18);
+            this.oggRocksmithBrowseButton.Location = new System.Drawing.Point(416, 18);
             this.oggRocksmithBrowseButton.Margin = new System.Windows.Forms.Padding(2);
             this.oggRocksmithBrowseButton.Name = "oggRocksmithBrowseButton";
             this.oggRocksmithBrowseButton.Size = new System.Drawing.Size(56, 20);
@@ -98,7 +98,7 @@
             this.inputOggRocksmithTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.inputOggRocksmithTextBox.Name = "inputOggRocksmithTextBox";
             this.inputOggRocksmithTextBox.ReadOnly = true;
-            this.inputOggRocksmithTextBox.Size = new System.Drawing.Size(404, 20);
+            this.inputOggRocksmithTextBox.Size = new System.Drawing.Size(407, 20);
             this.inputOggRocksmithTextBox.TabIndex = 3;
             // 
             // OggConverter
@@ -108,7 +108,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "OggConverter";
-            this.Size = new System.Drawing.Size(487, 134);
+            this.Size = new System.Drawing.Size(487, 148);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
