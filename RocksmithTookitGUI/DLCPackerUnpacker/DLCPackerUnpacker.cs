@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage;
 using System.IO;
+using RocksmithToolkitLib.Sng;
 
 namespace RocksmithTookitGUI.DLCPackerUnpacker
 {
@@ -52,6 +53,9 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
 
             try
             {
+                string[] decodedOGGFiles = Directory.GetFiles(sourcePath, "*_fixed.ogg", SearchOption.AllDirectories);
+                foreach (var file in decodedOGGFiles)
+                    File.Delete(file);
                 Packer.Pack(sourcePath, saveFileName, useCryptography);
                 MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -66,6 +70,7 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
             IList<string> sourceFileNames;
             string savePath;
             var useCryptography = useCryptographyCheckbox.Checked;
+            var decodeOGG = decodeOGGCheckbox.Checked;
 
             using (var ofd = new OpenFileDialog())
             {
@@ -85,6 +90,18 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
             {
                 Application.DoEvents();
                 Packer.Unpack(sourceFileName, savePath, useCryptography);
+
+                if (decodeOGG) {
+                    GamePlatform platform = Packer.GetPlatform(sourceFileName);
+                    var name = Path.GetFileNameWithoutExtension(sourceFileName);
+                    name += String.Format("_{0}", platform.ToString());
+                    string[] oggFiles = Directory.GetFiles(Path.Combine(savePath, name), "*.ogg", SearchOption.AllDirectories);
+                    foreach (var file in oggFiles)
+                    {
+                        var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
+                        OggConverter.OggConverter.Revorb(file, outputFileName);
+                    }
+                }
             }
 
             MessageBox.Show("Unpacking is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -107,7 +124,7 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
             {
                 ofd.Multiselect = true;
                 ofd.Filter = "Custom DLC|*.dat";
-                ofd.Title = "Select one or more DLC files to update";
+                ofd.Title = "Select one or more PC DLC files to update";
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
                 sourceFileNames = ofd.FileNames;
@@ -121,7 +138,7 @@ namespace RocksmithTookitGUI.DLCPackerUnpacker
                 Application.DoEvents();
                 Packer.Unpack(sourceFileName, tmpDir, useCryptography);
 
-                var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + Packer.ADD_PC;
+                var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + String.Format("_{0}", GamePlatform.Pc);
                 var appIdFile = unpackedDir + Path.DirectorySeparatorChar + "APP_ID";
                 File.WriteAllText(appIdFile, appId);
 

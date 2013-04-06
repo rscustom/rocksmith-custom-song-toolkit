@@ -35,8 +35,9 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.AppIdTB = new RocksmithTookitGUI.CueTextBox();
+            this.appIdCombo = new System.Windows.Forms.ComboBox();
+            this.decodeOGGCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -46,20 +47,18 @@
             this.useCryptographyCheckbox.AutoSize = true;
             this.useCryptographyCheckbox.Checked = true;
             this.useCryptographyCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.useCryptographyCheckbox.Location = new System.Drawing.Point(145, 20);
-            this.useCryptographyCheckbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.useCryptographyCheckbox.Location = new System.Drawing.Point(109, 3);
             this.useCryptographyCheckbox.Name = "useCryptographyCheckbox";
-            this.useCryptographyCheckbox.Size = new System.Drawing.Size(142, 21);
+            this.useCryptographyCheckbox.Size = new System.Drawing.Size(109, 17);
             this.useCryptographyCheckbox.TabIndex = 10;
             this.useCryptographyCheckbox.Text = "Use cryptography";
             this.useCryptographyCheckbox.UseVisualStyleBackColor = true;
             // 
             // unpackButton
             // 
-            this.unpackButton.Location = new System.Drawing.Point(145, 84);
-            this.unpackButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.unpackButton.Location = new System.Drawing.Point(109, 83);
             this.unpackButton.Name = "unpackButton";
-            this.unpackButton.Size = new System.Drawing.Size(119, 28);
+            this.unpackButton.Size = new System.Drawing.Size(89, 23);
             this.unpackButton.TabIndex = 9;
             this.unpackButton.Text = "Unpack";
             this.unpackButton.UseVisualStyleBackColor = true;
@@ -67,10 +66,9 @@
             // 
             // packButton
             // 
-            this.packButton.Location = new System.Drawing.Point(145, 48);
-            this.packButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.packButton.Location = new System.Drawing.Point(109, 54);
             this.packButton.Name = "packButton";
-            this.packButton.Size = new System.Drawing.Size(119, 28);
+            this.packButton.Size = new System.Drawing.Size(89, 23);
             this.packButton.TabIndex = 8;
             this.packButton.Text = "Pack";
             this.packButton.UseVisualStyleBackColor = true;
@@ -79,20 +77,18 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(4, 4);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox2.Location = new System.Drawing.Point(3, 3);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(133, 127);
+            this.pictureBox2.Size = new System.Drawing.Size(100, 103);
             this.pictureBox2.TabIndex = 11;
             this.pictureBox2.TabStop = false;
             // 
             // repackButton
             // 
             this.repackButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.repackButton.Location = new System.Drawing.Point(141, 52);
-            this.repackButton.Margin = new System.Windows.Forms.Padding(4);
+            this.repackButton.Location = new System.Drawing.Point(106, 42);
             this.repackButton.Name = "repackButton";
-            this.repackButton.Size = new System.Drawing.Size(119, 28);
+            this.repackButton.Size = new System.Drawing.Size(89, 23);
             this.repackButton.TabIndex = 12;
             this.repackButton.Text = "Choose DLC";
             this.repackButton.UseVisualStyleBackColor = true;
@@ -103,12 +99,24 @@
             this.groupBox1.Controls.Add(this.AppIdTB);
             this.groupBox1.Controls.Add(this.appIdCombo);
             this.groupBox1.Controls.Add(this.repackButton);
-            this.groupBox1.Location = new System.Drawing.Point(4, 138);
+            this.groupBox1.Location = new System.Drawing.Point(3, 112);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(267, 87);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Size = new System.Drawing.Size(200, 71);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Update App ID";
+            // 
+            // AppIdTB
+            // 
+            this.AppIdTB.Cue = "APP ID";
+            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
+            this.AppIdTB.Location = new System.Drawing.Point(5, 45);
+            this.AppIdTB.Name = "AppIdTB";
+            this.AppIdTB.Size = new System.Drawing.Size(96, 20);
+            this.AppIdTB.TabIndex = 41;
             // 
             // appIdCombo
             // 
@@ -116,33 +124,37 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.appIdCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.appIdCombo.FormattingEnabled = true;
-            this.appIdCombo.Location = new System.Drawing.Point(6, 21);
+            this.appIdCombo.Location = new System.Drawing.Point(4, 17);
+            this.appIdCombo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.appIdCombo.Name = "appIdCombo";
-            this.appIdCombo.Size = new System.Drawing.Size(255, 24);
+            this.appIdCombo.Size = new System.Drawing.Size(192, 21);
             this.appIdCombo.TabIndex = 13;
             this.appIdCombo.SelectedValueChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
-            // AppIdTB
+            // decodeOGGCheckbox
             // 
-            this.AppIdTB.Cue = "APP ID";
-            this.AppIdTB.Location = new System.Drawing.Point(7, 55);
-            this.AppIdTB.Margin = new System.Windows.Forms.Padding(4);
-            this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(126, 22);
-            this.AppIdTB.TabIndex = 41;
+            this.decodeOGGCheckbox.AutoSize = true;
+            this.decodeOGGCheckbox.Checked = true;
+            this.decodeOGGCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.decodeOGGCheckbox.Location = new System.Drawing.Point(109, 26);
+            this.decodeOGGCheckbox.Name = "decodeOGGCheckbox";
+            this.decodeOGGCheckbox.Size = new System.Drawing.Size(91, 17);
+            this.decodeOGGCheckbox.TabIndex = 14;
+            this.decodeOGGCheckbox.Text = "Decode OGG";
+            this.decodeOGGCheckbox.UseVisualStyleBackColor = true;
             // 
             // DLCPackerUnpacker
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.decodeOGGCheckbox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.useCryptographyCheckbox);
             this.Controls.Add(this.unpackButton);
             this.Controls.Add(this.packButton);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "DLCPackerUnpacker";
-            this.Size = new System.Drawing.Size(281, 236);
+            this.Size = new System.Drawing.Size(211, 192);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -161,5 +173,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox appIdCombo;
         private CueTextBox AppIdTB;
+        private System.Windows.Forms.CheckBox decodeOGGCheckbox;
     }
 }
