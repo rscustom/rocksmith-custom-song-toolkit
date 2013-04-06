@@ -625,7 +625,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Title = "Select a package or tone manifest file";
-                ofd.Filter = "PC package or Tone manifest|*.dat;tone*.manifest.json";
+                ofd.Filter = "Song package or Tone manifest|*.dat;*.*;tone*.manifest.json";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneImportFile = ofd.FileName;
             }
