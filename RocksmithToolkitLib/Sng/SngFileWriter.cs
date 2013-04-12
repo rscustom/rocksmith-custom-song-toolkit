@@ -616,18 +616,18 @@ namespace RocksmithToolkitLib.Sng
                 }
                 else
                 {
-                    bool endPhraseIterationFound = false;
+                    //bool endPhraseIterationFound = false;
                     for (int p = 0; p < phraseIterations.Length; p++)
                     {
                         if (sections[i + 1].StartTime <= phraseIterations[p].Time)
                         {
                             w.Write(Convert.ToInt32(p - 1));
-                            endPhraseIterationFound = true;
+                            //endPhraseIterationFound = true;
                             break;
                         }
                     }
-                    if (!endPhraseIterationFound)
-                        throw new Exception(string.Format("No end phrase iteration found with matching time for section {0}.", i.ToString()));
+                    //if (!endPhraseIterationFound)
+                    //    throw new Exception(string.Format("No end phrase iteration found with matching time for section {0}.", i.ToString()));
                 }
 
                 // series of 8 unknown bytes (look like flags)? below logic is wrong, just defaulting for now
