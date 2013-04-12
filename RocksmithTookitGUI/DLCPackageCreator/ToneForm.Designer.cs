@@ -51,7 +51,7 @@
             // 
             this.toneControl1.Location = new System.Drawing.Point(10, 11);
             this.toneControl1.Name = "toneControl1";
-            this.toneControl1.Size = new System.Drawing.Size(582, 217);
+            this.toneControl1.Size = new System.Drawing.Size(488, 217);
             this.toneControl1.TabIndex = 0;
             this.toneControl1.Tone = null;
             // 

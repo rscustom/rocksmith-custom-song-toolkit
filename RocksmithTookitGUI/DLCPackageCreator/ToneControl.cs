@@ -7,6 +7,7 @@ using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.Tone;
 using RocksmithToolkitLib.Tone;
 using Pedal = RocksmithToolkitLib.Tone.Pedal;
+using System.Text.RegularExpressions;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
@@ -156,6 +157,20 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                     }
                 }
             };
+        }
+
+        private void toneNameBox_Leave(object sender, EventArgs e) {
+            TextBox control = (TextBox)sender;
+            control.Text = GetValidName(control.Text.Trim());
+        }
+
+        private string GetValidName(string value) {
+            string name = String.Empty;
+            if (!String.IsNullOrEmpty(value)) {
+                Regex rgx = new Regex("[^a-zA-Z0-9\\- _]");
+                name = rgx.Replace(value, "");
+            }
+            return name;
         }
     }
 }

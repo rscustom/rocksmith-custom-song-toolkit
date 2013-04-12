@@ -343,10 +343,13 @@
             // toneNameBox
             // 
             this.toneNameBox.Cue = "Tone Name";
+            this.toneNameBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.toneNameBox.ForeColor = System.Drawing.Color.Gray;
             this.toneNameBox.Location = new System.Drawing.Point(3, 3);
             this.toneNameBox.Name = "toneNameBox";
             this.toneNameBox.Size = new System.Drawing.Size(206, 20);
             this.toneNameBox.TabIndex = 3;
+            this.toneNameBox.Leave += new System.EventHandler(this.toneNameBox_Leave);
             // 
             // ToneControl
             // 
