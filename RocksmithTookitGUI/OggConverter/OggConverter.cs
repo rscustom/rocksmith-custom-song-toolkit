@@ -120,6 +120,7 @@ namespace RocksmithTookitGUI.OggConverter
             // Processing with ww2ogg
             Process ww2oggProcess = new Process();
             ww2oggProcess.StartInfo.FileName = ww2oggPath;
+            ww2oggProcess.StartInfo.WorkingDirectory = appPath;
             ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\"", file, outputFileName);
             ww2oggProcess.StartInfo.UseShellExecute = false;
             ww2oggProcess.StartInfo.CreateNoWindow = true;
@@ -135,6 +136,7 @@ namespace RocksmithTookitGUI.OggConverter
             // Processing with revorb
             Process revorbProcess = new Process();
             revorbProcess.StartInfo.FileName = revorbPath;
+            revorbProcess.StartInfo.WorkingDirectory = appPath;
             revorbProcess.StartInfo.Arguments = String.Format("\"{0}\"", outputFileName);
             revorbProcess.StartInfo.UseShellExecute = false;
             revorbProcess.StartInfo.CreateNoWindow = true;
