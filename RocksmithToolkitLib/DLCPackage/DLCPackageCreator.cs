@@ -54,7 +54,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static List<string> XBox360Files = new List<string>();
         private static List<string> SNGTmpFiles = new List<string>();
 
-        public static void Generate(string packagePath, DLCPackageData info, GamePlatform platform)
+        public static void Generate(string packagePath, DLCPackageData info, GamePlatform platform, PackageMagic? xboxPackageType)
         {
             if (platform == GamePlatform.XBox360) {
                 if (!Directory.Exists(xboxWorkDir))
@@ -70,7 +70,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             RijndaelEncryptor.Encrypt(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
                         break;
                     case GamePlatform.XBox360:
-                        BuildXBox360Package(packagePath, info, XBox360Files);
+                        BuildXBox360Package(packagePath, info, XBox360Files, xboxPackageType);
                         break;
                     case GamePlatform.PS3:
                         throw new InvalidOperationException("PS3 platform is not supported at this time :(");
@@ -95,10 +95,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region XBox360
 
-        public static void BuildXBox360Package(string packagePath, DLCPackageData info, IEnumerable<string> xboxFiles)
+        public static void BuildXBox360Package(string packagePath, DLCPackageData info, IEnumerable<string> xboxFiles, PackageMagic? xboxPackageType)
         {
             LogRecord x = new LogRecord();
-            RSAParams xboxRSA = new RSAParams(new DJsIO(Resources.XBox360_KV, true));
+            RSAParams xboxRSA = xboxPackageType == PackageMagic.CON ? new RSAParams(new DJsIO(Resources.XBox360_KV, true)) : new RSAParams(StrongSigned.LIVE);
             CreateSTFS xboxSTFS = new CreateSTFS();
             xboxSTFS.HeaderData = info.GetSTFSHeader();
             foreach (string file in xboxFiles)
@@ -129,6 +129,10 @@ namespace RocksmithToolkitLib.DLCPackage
             hd.PackageImageBinary = Resources.XBox360_DLC_image.ImageToBytes(ImageFormat.Png);;
             hd.ContentImageBinary = hd.PackageImageBinary;
             hd.IDTransfer = TransferLock.AllowTransfer;
+            if (dlcData.SignatureType == PackageMagic.LIVE)
+                foreach (var license in dlcData.XBox360Licenses)
+                    hd.AddLicense(license.ID, license.Bit, license.Flag);
+
             return hd;
         }
 

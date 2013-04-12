@@ -100,6 +100,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             IEnumerable<string> xboxHeaderFiles = Directory.EnumerateFiles(sourcePath, "*.txt");
             DLCPackageData songData = new DLCPackageData();
+            PackageMagic packageType = PackageMagic.CON;
             foreach (var file in xboxHeaderFiles) {
                 if (xboxHeaderFiles.Count() == 1)
                 {
@@ -108,11 +109,26 @@ namespace RocksmithToolkitLib.DLCPackage
                         string[] xboxHeader = File.ReadAllLines(file);
                         if (xboxHeader != null && xboxHeader.Length > 73)
                         {
+                            if (xboxHeader[0].IndexOf("LIVE") > 0)
+                            {
+                                songData.SignatureType = PackageMagic.LIVE;
+
+                                for (int i = 2; i <= 48; i = i + 3)
+                                {
+                                    long id = Convert.ToInt64(xboxHeader[i].GetHeaderValue(), 16);
+                                    int bit = Convert.ToInt32(xboxHeader[i + 1].GetHeaderValue());
+                                    int flag = Convert.ToInt32(xboxHeader[i + 2].GetHeaderValue());
+
+                                    if (id != 0)
+                                        songData.XBox360Licenses.Add(new XBox360License() { ID = id, Bit = bit, Flag = flag });
+                                }
+                            }
+                            
                             string songInfo = xboxHeader[74];
                             
                             int index = songInfo.IndexOf(" by ");
                             string songTitle = (index > 0) ? songInfo.Substring(0, index) : songInfo;
-                            string songArtist = (index > 0) ? songInfo.Substring(index + 4) : songInfo;
+                            string songArtist = (index > 4) ? songInfo.Substring(index + 4) : songInfo;
                                                         
                             if (!String.IsNullOrEmpty(songInfo))
                             {
@@ -134,11 +150,15 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             IEnumerable<string> xboxFiles = Directory.EnumerateFiles(Path.Combine(sourcePath, ROOT_XBox360));
-            DLCPackageCreator.BuildXBox360Package(saveFileName, songData, xboxFiles);
+            DLCPackageCreator.BuildXBox360Package(saveFileName, songData, xboxFiles, packageType);
 
             foreach (var file in xboxFiles)
                 if (Path.GetExtension(file) == ".psarc" && File.Exists(file))
                     File.Delete(file);
+        }
+
+        private static string GetHeaderValue(this string value) {
+            return value.Substring(value.IndexOf(":") + 2);
         }
 
         private static void PackInnerXBox360(string sourcePath, string directory) {

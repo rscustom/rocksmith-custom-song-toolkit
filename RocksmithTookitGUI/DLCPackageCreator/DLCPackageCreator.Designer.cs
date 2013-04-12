@@ -52,6 +52,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.rbuttonSignatureCON = new System.Windows.Forms.RadioButton();
+            this.rbuttonSignatureLIVE = new System.Windows.Forms.RadioButton();
+            this.panelXBox360SignatureType = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.xboxLicense0IDTB = new RocksmithTookitGUI.CueTextBox();
             this.volumeBox = new RocksmithTookitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.ArtistSortTB = new RocksmithTookitGUI.CueTextBox();
             this.SongDisplayNameSortTB = new RocksmithTookitGUI.CueTextBox();
@@ -65,6 +70,7 @@
             this.ArtistTB = new RocksmithTookitGUI.CueTextBox();
             this.SongDisplayNameTB = new RocksmithTookitGUI.CueTextBox();
             this.DlcNameTB = new RocksmithTookitGUI.CueTextBox();
+            this.panelXBox360SignatureType.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -125,6 +131,7 @@
             this.ArrangementLB.Name = "ArrangementLB";
             this.ArrangementLB.Size = new System.Drawing.Size(417, 82);
             this.ArrangementLB.TabIndex = 34;
+            this.ArrangementLB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBox_KeyDown);
             this.ArrangementLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ArrangementLB_MouseDoubleClick);
             // 
             // label5
@@ -193,6 +200,7 @@
             this.TonesLB.Name = "TonesLB";
             this.TonesLB.Size = new System.Drawing.Size(417, 108);
             this.TonesLB.TabIndex = 50;
+            this.TonesLB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBox_KeyDown);
             this.TonesLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ToneLB_MouseDoubleClick);
             // 
             // label1
@@ -306,6 +314,62 @@
             this.label4.Size = new System.Drawing.Size(42, 13);
             this.label4.TabIndex = 62;
             this.label4.Text = "Volume";
+            // 
+            // rbuttonSignatureCON
+            // 
+            this.rbuttonSignatureCON.AutoSize = true;
+            this.rbuttonSignatureCON.Checked = true;
+            this.rbuttonSignatureCON.Location = new System.Drawing.Point(85, 0);
+            this.rbuttonSignatureCON.Name = "rbuttonSignatureCON";
+            this.rbuttonSignatureCON.Size = new System.Drawing.Size(48, 17);
+            this.rbuttonSignatureCON.TabIndex = 65;
+            this.rbuttonSignatureCON.TabStop = true;
+            this.rbuttonSignatureCON.Text = "CON";
+            this.rbuttonSignatureCON.UseVisualStyleBackColor = true;
+            this.rbuttonSignatureCON.CheckedChanged += new System.EventHandler(this.rbuttonSignature_CheckedChanged);
+            // 
+            // rbuttonSignatureLIVE
+            // 
+            this.rbuttonSignatureLIVE.AutoSize = true;
+            this.rbuttonSignatureLIVE.Enabled = false;
+            this.rbuttonSignatureLIVE.Location = new System.Drawing.Point(139, 0);
+            this.rbuttonSignatureLIVE.Name = "rbuttonSignatureLIVE";
+            this.rbuttonSignatureLIVE.Size = new System.Drawing.Size(48, 17);
+            this.rbuttonSignatureLIVE.TabIndex = 67;
+            this.rbuttonSignatureLIVE.Text = "LIVE";
+            this.rbuttonSignatureLIVE.UseVisualStyleBackColor = true;
+            this.rbuttonSignatureLIVE.CheckedChanged += new System.EventHandler(this.rbuttonSignature_CheckedChanged);
+            // 
+            // panelXBox360SignatureType
+            // 
+            this.panelXBox360SignatureType.Controls.Add(this.label6);
+            this.panelXBox360SignatureType.Controls.Add(this.rbuttonSignatureCON);
+            this.panelXBox360SignatureType.Controls.Add(this.rbuttonSignatureLIVE);
+            this.panelXBox360SignatureType.Location = new System.Drawing.Point(166, 421);
+            this.panelXBox360SignatureType.Name = "panelXBox360SignatureType";
+            this.panelXBox360SignatureType.Size = new System.Drawing.Size(195, 18);
+            this.panelXBox360SignatureType.TabIndex = 68;
+            this.panelXBox360SignatureType.Visible = false;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(-3, 2);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(82, 13);
+            this.label6.TabIndex = 68;
+            this.label6.Text = "Signature Type:";
+            // 
+            // xboxLicense0IDTB
+            // 
+            this.xboxLicense0IDTB.Cue = "License 0 ID (HEX)";
+            this.xboxLicense0IDTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.xboxLicense0IDTB.ForeColor = System.Drawing.Color.Gray;
+            this.xboxLicense0IDTB.Location = new System.Drawing.Point(304, 439);
+            this.xboxLicense0IDTB.Name = "xboxLicense0IDTB";
+            this.xboxLicense0IDTB.Size = new System.Drawing.Size(103, 20);
+            this.xboxLicense0IDTB.TabIndex = 69;
+            this.xboxLicense0IDTB.Visible = false;
             // 
             // volumeBox
             // 
@@ -456,6 +520,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.xboxLicense0IDTB);
+            this.Controls.Add(this.panelXBox360SignatureType);
             this.Controls.Add(this.volumeBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label4);
@@ -494,7 +560,9 @@
             this.Controls.Add(this.SongDisplayNameTB);
             this.Controls.Add(this.DlcNameTB);
             this.Name = "DLCPackageCreator";
-            this.Size = new System.Drawing.Size(509, 453);
+            this.Size = new System.Drawing.Size(509, 468);
+            this.panelXBox360SignatureType.ResumeLayout(false);
+            this.panelXBox360SignatureType.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -540,5 +608,10 @@
         private NumericUpDownFixed volumeBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.RadioButton rbuttonSignatureCON;
+        private System.Windows.Forms.RadioButton rbuttonSignatureLIVE;
+        private System.Windows.Forms.Panel panelXBox360SignatureType;
+        private System.Windows.Forms.Label label6;
+        private CueTextBox xboxLicense0IDTB;
     }
 }

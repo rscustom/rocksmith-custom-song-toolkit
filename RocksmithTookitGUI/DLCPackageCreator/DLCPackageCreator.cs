@@ -16,11 +16,14 @@ using System.Xml.Linq;
 using RocksmithToolkitLib.Ogg;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
+using X360.STFS;
 
 namespace RocksmithTookitGUI.DLCPackageCreator
 {
     public partial class DLCPackageCreator : UserControl
     {
+        private const string MESSAGEBOX_CAPTION =  "DLC Package Creator";
+
         public DLCPackageCreator()
         {
             InitializeComponent();
@@ -81,7 +84,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
         public string DLCName
         {
             get { return DlcNameTB.Text; }
-            set { DlcNameTB.Text = GetValidDLCName(value); }
+            set { DlcNameTB.Text = GetValidName(value); }
         }
 
         public string SongTitle {
@@ -172,7 +175,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             var packageData = GetPackageData();
             if (packageData == null)
             {
-                MessageBox.Show("One or more fields are missing information.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("One or more fields are missing information.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -190,12 +193,12 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
             if (platformPC.Checked && OggFile.getPlatform(OggPath) != GamePlatform.Pc)
             {
-                MessageBox.Show("The Windows OGG is either invalid or for the wrong platform.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("The Windows OGG is either invalid or for the wrong platform.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (platformXBox360.Checked && OggFile.getPlatform(OggXBox360Path) != GamePlatform.XBox360)
             {
-                MessageBox.Show("The Xbox 360 OGG is either invalid or for the wrong platform.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("The Xbox 360 OGG is either invalid or for the wrong platform.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -207,11 +210,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 dlcSavePath = ofd.FileName;
             }
             if (platformPC.Checked)
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, GamePlatform.Pc);
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, GamePlatform.Pc, null);
             if (platformXBox360.Checked)
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, GamePlatform.XBox360);
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, GamePlatform.XBox360, rbuttonSignatureCON.Checked ? PackageMagic.CON : PackageMagic.LIVE);
 
-            MessageBox.Show("Package was generated.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Package was generated.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void albumArtButton_Click(object sender, EventArgs e)
@@ -239,7 +242,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             var packageData = GetPackageData();
             if (packageData == null)
             {
-                MessageBox.Show("One or more fields are missing information.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("One or more fields are missing information.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -275,8 +278,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 if (!String.IsNullOrEmpty(songXmlFile) && Uri.IsWellFormedUriString(songXmlFile, UriKind.Relative))
                     arr.SongXml.File = MakeAbsolute(path, arr.SongXml.File);
             }
-            
-            MessageBox.Show("DLC Package template was saved.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            MessageBox.Show("DLC Package template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void dlcLoadButton_Click(object sender, EventArgs e)
@@ -303,7 +306,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                         try {
                             info = (DLCPackageData)serializer.ReadObject(FixOldDlcPackage(dlcSavePath));
                         } catch (SerializationException se2) {
-                            MessageBox.Show("Can't load saved DLC because is not compatible with new DLC save format. \n\r" + se2.Message, "DLCPackageCreator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Can't load saved DLC because is not compatible with new DLC save format. \n\r" + se2.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }                    
                 }
@@ -314,7 +317,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
             if (info == null)
             {
-                MessageBox.Show("Can't load saved DLC. An error ocurred.", "DLCPackageCreator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Can't load saved DLC. An error ocurred.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -358,6 +361,9 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
             volumeBox.Value = info.Volume;
 
+            if (platformXBox360.Checked)
+                rbuttonSignatureLIVE.Checked = info.SignatureType == PackageMagic.LIVE;
+
             foreach (var arrangement in info.Arrangements)
             {
                 arrangement.SongXml.File = MakeAbsolute(path, arrangement.SongXml.File);
@@ -373,7 +379,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 TonesLB.Items.Add(tone);
             }
 
-            MessageBox.Show("DLC Package template was loaded.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("DLC Package template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private XmlTextReader FixOldDlcPackage(string xmlPath) {
@@ -414,7 +420,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
 
             if (missingArrangementType)
-                MessageBox.Show("Warning: One or more arrangement have no ArrangementType defined. Guitar has added by default, take a look.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Warning: One or more arrangement have no ArrangementType defined. Guitar has added by default, take a look.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             return new XmlTextReader(new StringReader(doc.Document.ToString()));
         }
@@ -433,7 +439,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 return null;
             }
             if (DlcNameTB.Text == SongDisplayNameTB.Text) {
-                MessageBox.Show("Error: DLC name can't be the same of song name", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: DLC name can't be the same of song name", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DlcNameTB.Focus();
                 return null;
             }
@@ -469,7 +475,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
             if (!platformPC.Checked && !platformXBox360.Checked && !platformPS3.Checked)
             {
-                MessageBox.Show("Error: No game platform selected", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: No game platform selected", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
             if (platformPC.Checked && !File.Exists(OggPath))
@@ -484,14 +490,35 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal) > 1)
             {
-                MessageBox.Show("Error: Multiple Vocals arrangement found", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: Multiple Vocals arrangement found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
             var tones = TonesLB.Items.OfType<Tone>().ToList();
+            string liveSignatureID = xboxLicense0IDTB.Text.Trim();
+            if (rbuttonSignatureLIVE.Checked && String.IsNullOrEmpty(liveSignatureID))
+            {
+                MessageBox.Show("Error: If LIVE signature is selected, your LIVE signature ID is required (in HEX format)", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                xboxLicense0IDTB.Focus();
+                return null;
+            }
+            if (rbuttonSignatureLIVE.Checked && !new Regex("([A-Fa-f0-9]{2})+$").IsMatch(liveSignatureID))
+            {
+                MessageBox.Show("Error: LIVE signature ID seems to be not valid, need a HEX value", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                xboxLicense0IDTB.Focus();
+                return null;
+            }
+
+            List<XBox360License> licenses = new List<XBox360License>();
+            if (rbuttonSignatureLIVE.Checked)
+            {
+                licenses.Add(new XBox360License() { ID = Convert.ToInt64(xboxLicense0IDTB.Text.Trim(), 16), Bit = 1, Flag = 1 });
+            }
+            
             var data = new DLCPackageData
             {
                 Name = DlcNameTB.Text,
                 AppId = AppIdTB.Text,
+
                 SongInfo = new SongInfo
                 {
                     SongDisplayName = SongDisplayNameTB.Text,
@@ -507,7 +534,9 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 OggXBox360Path = OggXBox360Path,
                 Arrangements = arrangements,
                 Tones = tones,
-                Volume = volumeBox.Value
+                Volume = volumeBox.Value,
+                SignatureType = rbuttonSignatureCON.Checked ? PackageMagic.CON : PackageMagic.LIVE,
+                XBox360Licenses = licenses
             };
 
             return data;
@@ -638,7 +667,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can't import tone(s). \n\r" + ex.Message, "DLCPackageCreator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Can't import tone(s). \n\r" + ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -653,6 +682,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             {
                 oggXBox360PathTB.Visible = pChecked;
                 openOggXBox360Button.Visible = pChecked;
+                panelXBox360SignatureType.Visible = pChecked;
             }
             else
             {
@@ -682,20 +712,58 @@ namespace RocksmithTookitGUI.DLCPackageCreator
 
         private void DlcNameTB_Leave(object sender, EventArgs e)
         {
-            TextBox dlcName = ((TextBox)sender);
-            dlcName.Text = GetValidDLCName(dlcName.Text.Trim());
+            TextBox dlcName = (TextBox)sender;
+            dlcName.Text = GetValidName(dlcName.Text.Trim());
         }
 
-        private string GetValidDLCName(string packageName) {
+        private string GetValidName(string value) {
             string name = String.Empty;
-            if (!String.IsNullOrEmpty(packageName))
+            if (!String.IsNullOrEmpty(value))
             {
                 Regex rgx = new Regex("[^a-zA-Z0-9\\-]");
-                name = rgx.Replace(packageName, "");
+                name = rgx.Replace(value, "");
                 if (name == SongTitle)
                     name = name + "Song";
             }
             return name;
+        }
+
+        private void rbuttonSignature_CheckedChanged(object sender, EventArgs e)
+        {
+            xboxLicense0IDTB.Visible = rbuttonSignatureLIVE.Checked;
+        }
+
+        private void ListBox_KeyDown(object sender, KeyEventArgs e) {
+            var control = (ListBox)sender;
+
+            object item = control.SelectedItem;
+            int index = control.SelectedIndex;
+            int newIndex = index;
+
+            control.Items.RemoveAt(index);
+            
+            switch ((Keys)e.KeyValue) {
+                case Keys.Up:
+                case Keys.PageUp:
+                case Keys.Add:
+                    newIndex--;
+                    break;
+                case Keys.Down:
+                case Keys.PageDown:
+                case Keys.Subtract:
+                    newIndex++;
+                    break;
+            }
+
+            if (newIndex >= 0 && newIndex <= control.Items.Count) {
+                control.Items.Insert(newIndex, item);
+                control.SelectedIndex = index;
+            } else {
+                control.Items.Insert(index, item);
+                control.SelectedIndex = index;
+            }
+
+            control.Refresh();
         }
     }
 }
