@@ -14,15 +14,19 @@ using X360.Other;
 using X360.STFS;
 using X360.IO;
 using RocksmithToolkitLib.Ogg;
+using System.Diagnostics;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
     public static class DLCPackageCreator
     {
         private static readonly string xboxWorkDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "xboxpackage");
+        private static readonly string ps3WorkDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ps3package");
 
         private static readonly string[] PCPaths = { "Windows", "Generic" };
         private static readonly string[] XBox360Paths = { "XBox360", "XBox360" };
+        private static readonly string[] PS3Paths = { "PS3", "PS3" };
+
         private static string[] GetPathName(this GamePlatform platform)
         {
             switch (platform)
@@ -32,7 +36,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 case GamePlatform.XBox360:
                     return XBox360Paths;
                 case GamePlatform.PS3:
-                    throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+                    return PS3Paths;
                 default:
                     throw new InvalidOperationException("Unexpected game platform value");
             }
@@ -45,21 +49,29 @@ namespace RocksmithToolkitLib.DLCPackage
                 case GamePlatform.XBox360:
                     return info.OggXBox360Path;
                 case GamePlatform.PS3:
-                    throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+                    return info.OggPS3Path;
                 default:
                     throw new InvalidOperationException("Unexpected game platform value");
             }
         }
 
         private static List<string> XBox360Files = new List<string>();
+        private static List<string> PS3Files = new List<string>();
         private static List<string> SNGTmpFiles = new List<string>();
 
         public static void Generate(string packagePath, DLCPackageData info, GamePlatform platform, PackageMagic? xboxPackageType)
         {
-            if (platform == GamePlatform.XBox360) {
-                if (!Directory.Exists(xboxWorkDir))
-                    Directory.CreateDirectory(xboxWorkDir);
-            }
+            switch (platform)
+            {
+                case GamePlatform.XBox360:
+                    if (!Directory.Exists(xboxWorkDir))
+                        Directory.CreateDirectory(xboxWorkDir);
+                    break;
+                case GamePlatform.PS3:
+                    if (!Directory.Exists(ps3WorkDir))
+                        Directory.CreateDirectory(ps3WorkDir);
+                    break;
+                }
 
             using (var packPsarcStream = new MemoryStream())
             {
@@ -73,14 +85,24 @@ namespace RocksmithToolkitLib.DLCPackage
                         BuildXBox360Package(packagePath, info, XBox360Files, xboxPackageType);
                         break;
                     case GamePlatform.PS3:
-                        throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+                        MessageBox.Show("At this time, PS3 packing is not working with toolkit." + Environment.NewLine + Environment.NewLine + "Encrypt .psarc files to make .edat files and pack it manually with 'TrueAncestor EDAT Rebuilder'", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Processing with ww2ogg
+                        Process PS3FolderProcess = new Process();
+                        PS3FolderProcess.StartInfo.FileName = "explorer.exe";
+                        PS3FolderProcess.StartInfo.Arguments = Path.GetDirectoryName(PS3Files[0]);
+                        PS3FolderProcess.Start();
+                        break;
                 }                
             }
 
-            try {
+            try
+            {
                 if (Directory.Exists(xboxWorkDir))
                     Directory.Delete(xboxWorkDir, true);
-            } catch { /*Have no problem if don't delete*/ }
+            }
+            catch { /*Have no problem if don't delete*/ }
+
             try {
                 foreach (var sngTmpFile in SNGTmpFiles)
                 {
@@ -90,6 +112,7 @@ namespace RocksmithToolkitLib.DLCPackage
             } catch { /*Have no problem if don't delete*/ }
 
             XBox360Files.Clear();
+            PS3Files.Clear();
             SNGTmpFiles.Clear();
         }
 
@@ -148,17 +171,29 @@ namespace RocksmithToolkitLib.DLCPackage
             return xReturn;
         }
 
-        private static void WriteTmpFile(this Stream ms, string fileName)
+        private static void WriteTmpFile(this Stream ms, string fileName, GamePlatform platform)
         {
-            string filePath = Path.Combine(xboxWorkDir, fileName);
+            if (platform == GamePlatform.XBox360 || platform == GamePlatform.PS3)
+            {
+                string workDir = platform == GamePlatform.XBox360 ? xboxWorkDir : ps3WorkDir;
+                string filePath = Path.Combine(workDir, fileName);
 
-            FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            byte[] bytes = new byte[ms.Length];
-            ms.Read(bytes, 0, (int)ms.Length);
-            file.Write(bytes, 0, bytes.Length);
-            file.Close();
-            
-            XBox360Files.Add(filePath);
+                FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                byte[] bytes = new byte[ms.Length];
+                ms.Read(bytes, 0, (int)ms.Length);
+                file.Write(bytes, 0, bytes.Length);
+                file.Close();
+
+                switch (platform)
+                {
+                    case GamePlatform.XBox360:
+                        XBox360Files.Add(filePath);
+                        break;
+                    case GamePlatform.PS3:
+                        PS3Files.Add(filePath);
+                        break;
+                }
+            }
         }
 
         #endregion
@@ -186,7 +221,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     GenerateSongPsarc(songPsarcStream, info, platform);
                     string songFileName = String.Format("{0}.psarc", info.Name);
                     packPsarc.AddEntry(songFileName, songPsarcStream);
-                    if (platform == GamePlatform.XBox360) songPsarcStream.WriteTmpFile(songFileName);
+                    songPsarcStream.WriteTmpFile(songFileName, platform);
 
                     for (int i = 0; i < info.Tones.Count; i++)
                     {
@@ -199,7 +234,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         GenerateTonePsarc(tonePsarcStream, toneKey, tone);
                         string toneEntry = String.Format("DLC_Tone_{0}.psarc", toneKey);
                         packPsarc.AddEntry(toneEntry, tonePsarcStream);
-                        if (platform == GamePlatform.XBox360) tonePsarcStream.WriteTmpFile(toneEntry);
+                        tonePsarcStream.WriteTmpFile(toneEntry, platform);
                         if (i + 1 != info.Tones.Count)
                             packageListWriter.WriteLine("DLC_Tone_{0}", toneKey);
                         else
@@ -210,7 +245,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     packageListStream.Seek(0, SeekOrigin.Begin);
                     string packageList = "PackageList.txt";
                     packPsarc.AddEntry(packageList, packageListStream);
-                    if (platform == GamePlatform.XBox360) packageListStream.WriteTmpFile(packageList);
+                    packageListStream.WriteTmpFile(packageList, platform);
 
                     packPsarc.Write(output);
                     output.Flush();
