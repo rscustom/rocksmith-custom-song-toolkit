@@ -20,6 +20,7 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "FREE Holiday Song Pack (US)", AppId = "206175" };
             yield return new SongAppId { Name = "FREE Holiday Song Pack (EU)", AppId = "206103" };
             yield return new SongAppId { Name = "Albert King with Stevie Ray Vaughan - Born Under A Bad Sign", AppId = "206123" };
+            yield return new SongAppId { Name = "Allman Brothers - Jessica", AppId = "206094" };
             yield return new SongAppId { Name = "Avenged Sevenfold - Afterlife", AppId = "206175" };
             yield return new SongAppId { Name = "Avenged Sevenfold - Beast and the Harlot", AppId = "206174" };
             yield return new SongAppId { Name = "Avenged Sevenfold - Nightmare", AppId = "206176" };
@@ -34,8 +35,7 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "David Bowie - Space Oddity", AppId = "206110" };
             yield return new SongAppId { Name = "David Bowie - The Man Who Sold World", AppId = "206162" };
             yield return new SongAppId { Name = "Deep Purple - Smoke On The Water", AppId = "206095" };
-            yield return new SongAppId { Name = "Europe - Final Countdown", AppId = "206166" };
-            yield return new SongAppId { Name = "Europe - The Final Countdown", AppId = "222056" };
+            yield return new SongAppId { Name = "Europe - The Final Countdown", AppId = "206166" };
             yield return new SongAppId { Name = "Evanescence - Bring Me To Life", AppId = "206125" };
             yield return new SongAppId { Name = "Finger Eleven - Paralyzer", AppId = "206152" };
             yield return new SongAppId { Name = "Foster The People - Pumped Up Kicks", AppId = "206124" };
@@ -47,6 +47,7 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "Judas Priest - Living After Midnight", AppId = "206128" };
             yield return new SongAppId { Name = "Judas Priest - Painkiller", AppId = "206129" };
             yield return new SongAppId { Name = "Lamb Of God - Redneck", AppId = "206153" };
+            yield return new SongAppId { Name = "Lynyrd Skynyrd - Free Bird", AppId = "206092" };
             yield return new SongAppId { Name = "Maroon 5 - This Love", AppId = "206126" };
             yield return new SongAppId { Name = "Marvin Gaye - What's Going On", AppId = "206156" };
             yield return new SongAppId { Name = "Megadeth - Hangar 18", AppId = "206100" };
@@ -61,17 +62,19 @@ namespace RocksmithToolkitLib.DLCPackage
             yield return new SongAppId { Name = "Pantera - Domination", AppId = "222055" };
             yield return new SongAppId { Name = "Pantera - Walk", AppId = "222056" };
             yield return new SongAppId { Name = "Pat Benetar - Hit Me With Your Best Shot", AppId = "206150" };
+            yield return new SongAppId { Name = "Pearl Jam - Alive", AppId = "222074" };
             yield return new SongAppId { Name = "Pearl Jam - Black", AppId = "206111" };
+            yield return new SongAppId { Name = "Pearl Jam - Jeremy", AppId = "206112" };
             yield return new SongAppId { Name = "Queen - Bohemian Rhapsody", AppId = "206143" };
             yield return new SongAppId { Name = "Queen - Fat Bottomed Girls", AppId = "206145" };
             yield return new SongAppId { Name = "Queen - Keep Yourself Alive", AppId = "206146" };
             yield return new SongAppId { Name = "Queen - Killer Queen", AppId = "206147" };
             yield return new SongAppId { Name = "Queen - Stone Cold Crazy", AppId = "206144" };
             yield return new SongAppId { Name = "Rocksmith Preorder Bonus", AppId = "206085" };
-            yield return new SongAppId { Name = "Rush - Headlong Flight", AppId = "" }; //Wrong AppId
+            yield return new SongAppId { Name = "Rush - Headlong Flight", AppId = "222053" }; 
             yield return new SongAppId { Name = "Rush - Limelight", AppId = "206179" };
             yield return new SongAppId { Name = "Rush - Red Barchetta", AppId = "222042" };
-            yield return new SongAppId { Name = "Rush - Subdivisions", AppId = "" }; //Wrong AppId
+            yield return new SongAppId { Name = "Rush - Subdivisions", AppId = "222043" };
             yield return new SongAppId { Name = "Rush - Tom Sawyer", AppId = "206178" };
             yield return new SongAppId { Name = "Rush - YYZ", AppId = "222041" };
             yield return new SongAppId { Name = "T Rex - 20th Century Boy", AppId = "206096" };
