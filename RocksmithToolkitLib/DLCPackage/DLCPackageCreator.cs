@@ -367,9 +367,11 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 ToneGenerator.Generate(toneKey, tone, toneManifestStream, toneXblockStream, toneAggregateGraphStream);
                 GenerateTonePackageId(packageIdStream, toneKey);
-
                 tonePsarc.AddEntry(String.Format("Exports/Pedals/DLC_Tone_{0}.xblock", toneKey), toneXblockStream);
-                tonePsarc.AddEntry("Manifests/tone.manifest.json", toneManifestStream);
+                var x = (from pedal in tone.PedalList
+                         where pedal.Value.PedalKey.ToLower().Contains("bass")
+                         select pedal).Count();
+                tonePsarc.AddEntry(x > 0 ? "Manifests/tone_bass.manifest.json" : "Manifests/tone.manifest.json", toneManifestStream);
                 tonePsarc.AddEntry("AggregateGraph.nt", toneAggregateGraphStream);
                 tonePsarc.AddEntry("PACKAGE_ID", packageIdStream);
                 tonePsarc.Write(output);
