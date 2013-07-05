@@ -375,7 +375,7 @@
             // 
             // oggPS3PathTB
             // 
-            this.oggPS3PathTB.Cue = "Converted audio for XBox360 on WWise 2010 (.ogg)";
+            this.oggPS3PathTB.Cue = "Converted audio for PS3 on WWise 2010 (.ogg)";
             this.oggPS3PathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.oggPS3PathTB.ForeColor = System.Drawing.Color.Gray;
             this.oggPS3PathTB.Location = new System.Drawing.Point(4, 269);

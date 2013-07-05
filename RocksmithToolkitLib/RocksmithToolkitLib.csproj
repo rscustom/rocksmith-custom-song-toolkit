@@ -130,7 +130,6 @@
     <Compile Include="ZiggyProEditor\Track.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Console_soundbank.bnk" />
     <None Include="Resources\albumart.dds" />
     <None Include="Resources\Console_soundbank.bnk" />
     <None Include="Resources\PC_soundbank.bnk" />
