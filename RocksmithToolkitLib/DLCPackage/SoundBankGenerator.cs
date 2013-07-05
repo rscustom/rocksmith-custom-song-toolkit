@@ -16,16 +16,16 @@ namespace RocksmithToolkitLib.DLCPackage
         private const string PLAY30SEC = "Play_30Sec_";
         private const string SONG = "Song_";
         private static readonly int[] bnkPCOffsets = { 0x2c, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
-        private static readonly int[] bnkXBox360Offsets = { 0x7ec, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
+        private static readonly int[] bnkConsoleOffsets = { 0x7ec, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
         
         public static IList<int> GetOffsets(this GamePlatform platform) {
             switch (platform) {
                 case GamePlatform.Pc:
                     return bnkPCOffsets;
                 case GamePlatform.XBox360:
-                    return bnkXBox360Offsets;
+                    return bnkConsoleOffsets;
                 case GamePlatform.PS3:
-                    throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+                    return bnkConsoleOffsets;
                 default:
                     throw new InvalidOperationException("Unexpected game platform value");
             }
@@ -51,9 +51,19 @@ namespace RocksmithToolkitLib.DLCPackage
             string bankName = SONG + dlcName;
             var id = RandomGenerator.NextInt();
 
-            byte[] soundbank = Resources.soundbank;
-            if (platform == GamePlatform.XBox360)
-                soundbank = Resources.XBox360_soundbank;
+            byte[] soundbank = null;
+            switch (platform)
+            {
+                case GamePlatform.Pc:
+                    soundbank = Resources.PC_soundbank;
+                    break;
+                case GamePlatform.XBox360:
+                case GamePlatform.PS3:
+                    soundbank = Resources.Console_soundbank;
+                    break;
+                default:
+                    throw new InvalidOperationException("Unexpected game platform value");
+            }
 
             var bitConverter = platform == GamePlatform.Pc
                     ? (EndianBitConverter)EndianBitConverter.Little

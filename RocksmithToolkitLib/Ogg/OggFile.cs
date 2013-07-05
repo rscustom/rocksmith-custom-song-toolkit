@@ -9,7 +9,7 @@ using MiscUtil.IO;
 
 namespace RocksmithToolkitLib.Ogg
 {
-    public class OggFile
+    public static class OggFile
     {
         public static GamePlatform getPlatform(String inputFile)
         {
@@ -28,9 +28,7 @@ namespace RocksmithToolkitLib.Ogg
         public static bool needsConversion(String inputFile)
         {
             var platform = getPlatform(inputFile);
-            EndianBitConverter bitConverter = EndianBitConverter.Big;
-            if (platform == GamePlatform.Pc)
-                bitConverter = EndianBitConverter.Little;
+            EndianBitConverter bitConverter = platform.GetBitConverter();
 
             using (var inputFileStream = File.Open(inputFile, FileMode.Open))
             using (var reader = new EndianBinaryReader(bitConverter, inputFileStream))
@@ -42,16 +40,12 @@ namespace RocksmithToolkitLib.Ogg
             return false;
         }
 
-        // to be removed, can remove the converter tab on the GUI
+        [Obsolete("To be removed, can remove the converter tab on the GUI")]
         public static void ConvertOgg(string inputFile, string outputFileName)
         {
             VerifyHeaders(inputFile);
             var platform = getPlatform(inputFile);
-            EndianBitConverter bitConverter = EndianBitConverter.Big;
-            if (platform == GamePlatform.Pc)
-                bitConverter = EndianBitConverter.Little;
-            else if (platform == GamePlatform.XBox360)
-                bitConverter = EndianBitConverter.Big;
+            EndianBitConverter bitConverter = platform.GetBitConverter();
 
             using (var outputFileStream = File.Open(outputFileName, FileMode.Create))
             using (var inputFileStream = File.Open(inputFile, FileMode.Open))
@@ -75,13 +69,7 @@ namespace RocksmithToolkitLib.Ogg
         public static void VerifyHeaders(string inputFile)
         {
             var platform = getPlatform(inputFile);
-            EndianBitConverter bitConverter = EndianBitConverter.Big;
-            if (platform == GamePlatform.Pc)
-                bitConverter = EndianBitConverter.Little;
-            else if (platform == GamePlatform.XBox360)
-                bitConverter = EndianBitConverter.Big;
-            else
-                throw new InvalidDataException("The input OGG file doesn't appear to be a valid Wwise 2010 OGG file.");
+            EndianBitConverter bitConverter = platform.GetBitConverter();
 
             using (var inputFileStream = File.Open(inputFile, FileMode.Open))
             using (var reader = new EndianBinaryReader(bitConverter, inputFileStream))
@@ -126,11 +114,7 @@ namespace RocksmithToolkitLib.Ogg
             if (needsConversion(inputFile))
             {
                 var platform = getPlatform(inputFile);
-                EndianBitConverter bitConverter = EndianBitConverter.Big;
-                if (platform == GamePlatform.Pc)
-                    bitConverter = EndianBitConverter.Little;
-                else if (platform == GamePlatform.XBox360)
-                    bitConverter = EndianBitConverter.Big;
+                EndianBitConverter bitConverter = platform.GetBitConverter();
 
                 using (var outputFileStream = new MemoryStream())
                 using (var inputFileStream = File.Open(inputFile, FileMode.Open))
@@ -154,6 +138,20 @@ namespace RocksmithToolkitLib.Ogg
             }
 
             return File.OpenRead(inputFile);
+        }
+
+        private static EndianBitConverter GetBitConverter(this GamePlatform platform)
+        {
+            switch (platform)
+            {
+                case GamePlatform.Pc:
+                    return EndianBitConverter.Little;
+                case GamePlatform.XBox360:
+                case GamePlatform.PS3:
+                    return EndianBitConverter.Big;
+                default:
+                    throw new InvalidDataException("The input OGG file doesn't appear to be a valid Wwise 2010 OGG file.");
+            }
         }
     }
 }

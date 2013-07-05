@@ -56,6 +56,8 @@
             this.rbuttonSignatureLIVE = new System.Windows.Forms.RadioButton();
             this.panelXBox360SignatureType = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
+            this.openOggPS3Button = new System.Windows.Forms.Button();
+            this.oggPS3PathTB = new RocksmithTookitGUI.CueTextBox();
             this.xboxLicense0IDTB = new RocksmithTookitGUI.CueTextBox();
             this.volumeBox = new RocksmithTookitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.ArtistSortTB = new RocksmithTookitGUI.CueTextBox();
@@ -86,7 +88,7 @@
             // 
             // dlcGenerateButton
             // 
-            this.dlcGenerateButton.Location = new System.Drawing.Point(427, 395);
+            this.dlcGenerateButton.Location = new System.Drawing.Point(427, 422);
             this.dlcGenerateButton.Name = "dlcGenerateButton";
             this.dlcGenerateButton.Size = new System.Drawing.Size(75, 29);
             this.dlcGenerateButton.TabIndex = 27;
@@ -145,7 +147,7 @@
             // 
             // dlcSaveButton
             // 
-            this.dlcSaveButton.Location = new System.Drawing.Point(85, 395);
+            this.dlcSaveButton.Location = new System.Drawing.Point(85, 422);
             this.dlcSaveButton.Name = "dlcSaveButton";
             this.dlcSaveButton.Size = new System.Drawing.Size(75, 29);
             this.dlcSaveButton.TabIndex = 24;
@@ -155,7 +157,7 @@
             // 
             // dlcLoadButton
             // 
-            this.dlcLoadButton.Location = new System.Drawing.Point(4, 395);
+            this.dlcLoadButton.Location = new System.Drawing.Point(4, 422);
             this.dlcLoadButton.Name = "dlcLoadButton";
             this.dlcLoadButton.Size = new System.Drawing.Size(75, 29);
             this.dlcLoadButton.TabIndex = 23;
@@ -175,7 +177,7 @@
             // 
             // toneRemoveButton
             // 
-            this.toneRemoveButton.Location = new System.Drawing.Point(427, 337);
+            this.toneRemoveButton.Location = new System.Drawing.Point(427, 364);
             this.toneRemoveButton.Name = "toneRemoveButton";
             this.toneRemoveButton.Size = new System.Drawing.Size(75, 23);
             this.toneRemoveButton.TabIndex = 21;
@@ -185,7 +187,7 @@
             // 
             // toneAddButton
             // 
-            this.toneAddButton.Location = new System.Drawing.Point(427, 279);
+            this.toneAddButton.Location = new System.Drawing.Point(427, 306);
             this.toneAddButton.Name = "toneAddButton";
             this.toneAddButton.Size = new System.Drawing.Size(75, 23);
             this.toneAddButton.TabIndex = 19;
@@ -196,7 +198,7 @@
             // TonesLB
             // 
             this.TonesLB.FormattingEnabled = true;
-            this.TonesLB.Location = new System.Drawing.Point(4, 281);
+            this.TonesLB.Location = new System.Drawing.Point(4, 308);
             this.TonesLB.Name = "TonesLB";
             this.TonesLB.Size = new System.Drawing.Size(417, 108);
             this.TonesLB.TabIndex = 50;
@@ -206,7 +208,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(0, 265);
+            this.label1.Location = new System.Drawing.Point(0, 292);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(40, 13);
             this.label1.TabIndex = 49;
@@ -224,7 +226,7 @@
             // 
             // toneEditButton
             // 
-            this.toneEditButton.Location = new System.Drawing.Point(427, 308);
+            this.toneEditButton.Location = new System.Drawing.Point(427, 335);
             this.toneEditButton.Name = "toneEditButton";
             this.toneEditButton.Size = new System.Drawing.Size(75, 23);
             this.toneEditButton.TabIndex = 20;
@@ -234,7 +236,7 @@
             // 
             // toneImportButton
             // 
-            this.toneImportButton.Location = new System.Drawing.Point(427, 366);
+            this.toneImportButton.Location = new System.Drawing.Point(427, 393);
             this.toneImportButton.Name = "toneImportButton";
             this.toneImportButton.Size = new System.Drawing.Size(75, 23);
             this.toneImportButton.TabIndex = 22;
@@ -258,7 +260,7 @@
             this.platformPC.AutoSize = true;
             this.platformPC.Checked = true;
             this.platformPC.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.platformPC.Location = new System.Drawing.Point(205, 402);
+            this.platformPC.Location = new System.Drawing.Point(205, 429);
             this.platformPC.Name = "platformPC";
             this.platformPC.Size = new System.Drawing.Size(40, 17);
             this.platformPC.TabIndex = 25;
@@ -269,7 +271,7 @@
             // platformXBox360
             // 
             this.platformXBox360.AutoSize = true;
-            this.platformXBox360.Location = new System.Drawing.Point(251, 402);
+            this.platformXBox360.Location = new System.Drawing.Point(251, 429);
             this.platformXBox360.Name = "platformXBox360";
             this.platformXBox360.Size = new System.Drawing.Size(69, 17);
             this.platformXBox360.TabIndex = 26;
@@ -280,13 +282,13 @@
             // platformPS3
             // 
             this.platformPS3.AutoSize = true;
-            this.platformPS3.Enabled = false;
-            this.platformPS3.Location = new System.Drawing.Point(326, 402);
+            this.platformPS3.Location = new System.Drawing.Point(326, 429);
             this.platformPS3.Name = "platformPS3";
             this.platformPS3.Size = new System.Drawing.Size(46, 17);
             this.platformPS3.TabIndex = 60;
             this.platformPS3.Text = "PS3";
             this.platformPS3.UseVisualStyleBackColor = true;
+            this.platformPS3.CheckedChanged += new System.EventHandler(this.plataform_CheckedChanged);
             // 
             // label2
             // 
@@ -345,7 +347,7 @@
             this.panelXBox360SignatureType.Controls.Add(this.label6);
             this.panelXBox360SignatureType.Controls.Add(this.rbuttonSignatureCON);
             this.panelXBox360SignatureType.Controls.Add(this.rbuttonSignatureLIVE);
-            this.panelXBox360SignatureType.Location = new System.Drawing.Point(166, 421);
+            this.panelXBox360SignatureType.Location = new System.Drawing.Point(166, 448);
             this.panelXBox360SignatureType.Name = "panelXBox360SignatureType";
             this.panelXBox360SignatureType.Size = new System.Drawing.Size(195, 18);
             this.panelXBox360SignatureType.TabIndex = 68;
@@ -360,12 +362,34 @@
             this.label6.TabIndex = 68;
             this.label6.Text = "Signature Type:";
             // 
+            // openOggPS3Button
+            // 
+            this.openOggPS3Button.Location = new System.Drawing.Point(427, 268);
+            this.openOggPS3Button.Name = "openOggPS3Button";
+            this.openOggPS3Button.Size = new System.Drawing.Size(34, 23);
+            this.openOggPS3Button.TabIndex = 71;
+            this.openOggPS3Button.Text = "...";
+            this.openOggPS3Button.UseVisualStyleBackColor = true;
+            this.openOggPS3Button.Visible = false;
+            this.openOggPS3Button.Click += new System.EventHandler(this.openOggPS3Button_Click);
+            // 
+            // oggPS3PathTB
+            // 
+            this.oggPS3PathTB.Cue = "Converted audio for XBox360 on WWise 2010 (.ogg)";
+            this.oggPS3PathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.oggPS3PathTB.ForeColor = System.Drawing.Color.Gray;
+            this.oggPS3PathTB.Location = new System.Drawing.Point(4, 269);
+            this.oggPS3PathTB.Name = "oggPS3PathTB";
+            this.oggPS3PathTB.Size = new System.Drawing.Size(417, 20);
+            this.oggPS3PathTB.TabIndex = 70;
+            this.oggPS3PathTB.Visible = false;
+            // 
             // xboxLicense0IDTB
             // 
             this.xboxLicense0IDTB.Cue = "License 0 ID (HEX)";
             this.xboxLicense0IDTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.xboxLicense0IDTB.ForeColor = System.Drawing.Color.Gray;
-            this.xboxLicense0IDTB.Location = new System.Drawing.Point(304, 439);
+            this.xboxLicense0IDTB.Location = new System.Drawing.Point(304, 466);
             this.xboxLicense0IDTB.Name = "xboxLicense0IDTB";
             this.xboxLicense0IDTB.Size = new System.Drawing.Size(103, 20);
             this.xboxLicense0IDTB.TabIndex = 69;
@@ -520,6 +544,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.openOggPS3Button);
+            this.Controls.Add(this.oggPS3PathTB);
             this.Controls.Add(this.xboxLicense0IDTB);
             this.Controls.Add(this.panelXBox360SignatureType);
             this.Controls.Add(this.volumeBox);
@@ -560,7 +586,7 @@
             this.Controls.Add(this.SongDisplayNameTB);
             this.Controls.Add(this.DlcNameTB);
             this.Name = "DLCPackageCreator";
-            this.Size = new System.Drawing.Size(509, 468);
+            this.Size = new System.Drawing.Size(509, 512);
             this.panelXBox360SignatureType.ResumeLayout(false);
             this.panelXBox360SignatureType.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).EndInit();
@@ -613,5 +639,7 @@
         private System.Windows.Forms.Panel panelXBox360SignatureType;
         private System.Windows.Forms.Label label6;
         private CueTextBox xboxLicense0IDTB;
+        private System.Windows.Forms.Button openOggPS3Button;
+        private CueTextBox oggPS3PathTB;
     }
 }

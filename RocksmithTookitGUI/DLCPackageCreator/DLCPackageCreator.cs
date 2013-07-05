@@ -75,6 +75,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             get { return oggXBox360PathTB.Text; }
             set { oggXBox360PathTB.Text = value; }
         }
+        private string OggPS3Path
+        {
+            get { return oggPS3PathTB.Text; }
+            set { oggPS3PathTB.Text = value; }
+        }
         private string AlbumArtPath
         {
             get { return AlbumArtPathTB.Text; }
@@ -162,11 +167,23 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             }
         }
 
-        private void openOggXBox360Button_Click(object sender, EventArgs e) {
-            using (var ofd = new OpenFileDialog()) {
+        private void openOggXBox360Button_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog())
+            {
                 ofd.Filter = "Fixed WWise Files|*.ogg";
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggXBox360Path = ofd.FileName;
+            }
+        }
+
+        private void openOggPS3Button_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Fixed WWise Files|*.ogg";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    OggPS3Path = ofd.FileName;
             }
         }
 
@@ -185,10 +202,12 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                     OggFile.VerifyHeaders(OggPath);
                 if (platformXBox360.Checked)
                     OggFile.VerifyHeaders(OggXBox360Path);
+                if (platformPS3.Checked)
+                    OggFile.VerifyHeaders(OggPS3Path);
             }
             catch (InvalidDataException ex)
             {
-                MessageBox.Show(ex.Message, "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (platformPC.Checked && OggFile.getPlatform(OggPath) != GamePlatform.Pc)
@@ -213,6 +232,8 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, GamePlatform.Pc, null);
             if (platformXBox360.Checked)
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, GamePlatform.XBox360, rbuttonSignatureCON.Checked ? PackageMagic.CON : PackageMagic.LIVE);
+            if (platformPS3.Checked)
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, GamePlatform.PS3, null);
 
             MessageBox.Show("Package was generated.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -258,6 +279,10 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             string oggXBox360Path = packageData.OggXBox360Path;
             if (!String.IsNullOrEmpty(oggXBox360Path) && Uri.IsWellFormedUriString(oggXBox360Path, UriKind.Absolute))
                 packageData.OggXBox360Path = path.MakeRelativeUri(new Uri(oggXBox360Path)).ToString();
+
+            string oggPS3Path = packageData.OggPS3Path;
+            if (!String.IsNullOrEmpty(oggPS3Path) && Uri.IsWellFormedUriString(oggPS3Path, UriKind.Absolute))
+                packageData.OggPS3Path = path.MakeRelativeUri(new Uri(oggPS3Path)).ToString();
             
             foreach (var arr in packageData.Arrangements)
             {
@@ -349,15 +374,20 @@ namespace RocksmithTookitGUI.DLCPackageCreator
             // Album art
             AlbumArtPath = MakeAbsolute(path, info.AlbumArtPath);
 
-            // Ogg Windows file
+            // Windows ogg file
             if (!String.IsNullOrEmpty(info.OggPath))
                 OggPath = MakeAbsolute(path, info.OggPath);
             platformPC.Checked = !String.IsNullOrEmpty(OggPath);
 
-            // Ogg XBox360 file
+            // XBox360 ogg file
             if (!String.IsNullOrEmpty(info.OggXBox360Path))
                 OggXBox360Path = MakeAbsolute(path, info.OggXBox360Path);
             platformXBox360.Checked = !String.IsNullOrEmpty(OggXBox360Path);
+
+            // PS3 ogg file
+            if (!String.IsNullOrEmpty(info.OggPS3Path))
+                OggPS3Path = MakeAbsolute(path, info.OggPS3Path);
+            platformPS3.Checked = !String.IsNullOrEmpty(OggPS3Path);
 
             volumeBox.Value = info.Volume;
 
@@ -487,6 +517,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 oggXBox360PathTB.Focus();
                 return null;
             }
+            if (platformPS3.Checked && !File.Exists(OggPS3Path))
+            {
+                oggPS3PathTB.Focus();
+                return null;
+            }
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal) > 1)
             {
@@ -532,6 +567,7 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 AlbumArtPath = AlbumArtPath,
                 OggPath = OggPath,
                 OggXBox360Path = OggXBox360Path,
+                OggPS3Path = OggPS3Path,
                 Arrangements = arrangements,
                 Tones = tones,
                 Volume = volumeBox.Value,
@@ -683,6 +719,11 @@ namespace RocksmithTookitGUI.DLCPackageCreator
                 oggXBox360PathTB.Visible = pChecked;
                 openOggXBox360Button.Visible = pChecked;
                 panelXBox360SignatureType.Visible = pChecked;
+            }
+            else if (platformCkb.Name.IndexOf("PS3") > 0)
+            {
+                oggPS3PathTB.Visible = pChecked;
+                openOggPS3Button.Visible = pChecked;
             }
             else
             {

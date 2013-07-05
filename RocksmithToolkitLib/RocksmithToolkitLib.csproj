@@ -130,8 +130,10 @@
     <Compile Include="ZiggyProEditor\Track.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Console_soundbank.bnk" />
     <None Include="Resources\albumart.dds" />
-    <None Include="Resources\soundbank.bnk" />
+    <None Include="Resources\Console_soundbank.bnk" />
+    <None Include="Resources\PC_soundbank.bnk" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -143,7 +145,6 @@
     <Content Include="Resources\pedals.json" />
     <None Include="Resources\XBox360_DLC_image.png" />
     <None Include="Resources\XBox360_KV.bin" />
-    <None Include="Resources\XBox360_soundbank.bnk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
