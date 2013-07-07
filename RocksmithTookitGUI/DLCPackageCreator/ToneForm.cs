@@ -10,7 +10,7 @@ using RocksmithToolkitLib.DLCPackage.Tone;
 using System.Runtime.Serialization;
 using System.Xml;
 
-namespace RocksmithTookitGUI.DLCPackageCreator
+namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class ToneForm : Form
     {

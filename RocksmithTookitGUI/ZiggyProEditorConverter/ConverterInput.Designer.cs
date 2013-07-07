@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI.ZiggyProEditorConverter
+﻿namespace RocksmithToolkitGUI.ZiggyProEditorConverter
 {
     partial class ConvertInput
     {

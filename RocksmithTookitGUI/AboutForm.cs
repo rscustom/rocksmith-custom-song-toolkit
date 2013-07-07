@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace RocksmithTookitGUI
+namespace RocksmithToolkitGUI
 {
     partial class AboutForm : Form
     {

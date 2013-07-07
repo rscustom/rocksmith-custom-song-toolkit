@@ -8,8 +8,8 @@
     <ProjectGuid>{1A3DEAD6-14F3-43C3-B15C-A866D48FEF61}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RocksmithTookitGUI</RootNamespace>
-    <AssemblyName>RocksmithTookitGUI</AssemblyName>
+    <RootNamespace>RocksmithToolkitGUI</RootNamespace>
+    <AssemblyName>RocksmithToolkitGUI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

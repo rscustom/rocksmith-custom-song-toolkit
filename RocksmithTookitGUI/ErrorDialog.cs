@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RocksmithTookitGUI
+namespace RocksmithToolkitGUI
 {
     internal static class ErrorDialog
     {

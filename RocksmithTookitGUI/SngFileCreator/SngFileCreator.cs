@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using RocksmithToolkitLib.Sng;
 
-namespace RocksmithTookitGUI.SngFileCreator
+namespace RocksmithToolkitGUI.SngFileCreator
 {
     public partial class SngFileCreator : UserControl
     {

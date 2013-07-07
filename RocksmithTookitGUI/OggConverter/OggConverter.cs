@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using RocksmithToolkitLib.Ogg;
 using System.Diagnostics;
 
-namespace RocksmithTookitGUI.OggConverter
+namespace RocksmithToolkitGUI.OggConverter
 {
     public partial class OggConverter : UserControl
     {

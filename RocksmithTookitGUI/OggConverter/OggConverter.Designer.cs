@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI.OggConverter
+﻿namespace RocksmithToolkitGUI.OggConverter
 {
     partial class OggConverter
     {

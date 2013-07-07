@@ -18,7 +18,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using X360.STFS;
 
-namespace RocksmithTookitGUI.DLCPackageCreator
+namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class DLCPackageCreator : UserControl
     {

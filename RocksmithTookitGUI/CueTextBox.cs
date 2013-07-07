@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Drawing;
 
-namespace RocksmithTookitGUI
+namespace RocksmithToolkitGUI
 {
     public class CueTextBox : TextBox
     {

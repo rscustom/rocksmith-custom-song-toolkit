@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-namespace RocksmithTookitGUI
+namespace RocksmithToolkitGUI
 {
     partial class HelpForm : Form
     {

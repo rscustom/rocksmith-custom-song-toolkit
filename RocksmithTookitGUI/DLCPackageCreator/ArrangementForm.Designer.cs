@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI.DLCPackageCreator
+﻿namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     partial class ArrangementForm
     {
@@ -57,8 +57,8 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.Syncopation = new System.Windows.Forms.CheckBox();
             this.TwoFingerPlucking = new System.Windows.Forms.CheckBox();
-            this.RelativeDifficulty = new RocksmithTookitGUI.CueTextBox();
-            this.XmlFilePath = new RocksmithTookitGUI.CueTextBox();
+            this.RelativeDifficulty = new RocksmithToolkitGUI.CueTextBox();
+            this.XmlFilePath = new RocksmithToolkitGUI.CueTextBox();
             this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).BeginInit();
             this.groupBox1.SuspendLayout();

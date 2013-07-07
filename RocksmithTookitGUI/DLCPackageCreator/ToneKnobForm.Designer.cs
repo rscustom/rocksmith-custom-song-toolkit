@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI.DLCPackageCreator
+﻿namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     partial class ToneKnobForm
     {

@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI
+﻿namespace RocksmithToolkitGUI
 {
     partial class HelpForm
     {

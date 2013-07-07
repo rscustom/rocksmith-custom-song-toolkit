@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI.DLCPackageCreator
+﻿namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     partial class ToneControl
     {
@@ -57,8 +57,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.volumeBox = new RocksmithTookitGUI.DLCPackageCreator.NumericUpDownFixed();
-            this.toneNameBox = new RocksmithTookitGUI.CueTextBox();
+            this.volumeBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
+            this.toneNameBox = new RocksmithToolkitGUI.CueTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).BeginInit();
             this.SuspendLayout();
             // 

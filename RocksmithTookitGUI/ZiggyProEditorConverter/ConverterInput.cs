@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.ZiggyProEditor;
 
-namespace RocksmithTookitGUI.ZiggyProEditorConverter
+namespace RocksmithToolkitGUI.ZiggyProEditorConverter
 {
     public partial class ConvertInput : UserControl
     {

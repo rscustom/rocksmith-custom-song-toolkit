@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI.DLCPackerUnpacker
+﻿namespace RocksmithToolkitGUI.DLCPackerUnpacker
 {
     partial class DLCPackerUnpacker
     {
@@ -35,7 +35,7 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.AppIdTB = new RocksmithTookitGUI.CueTextBox();
+            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.decodeOGGCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();

@@ -8,7 +8,7 @@ using RocksmithToolkitLib.DLCPackage;
 using System.IO;
 using RocksmithToolkitLib.Sng;
 
-namespace RocksmithTookitGUI.DLCPackerUnpacker
+namespace RocksmithToolkitGUI.DLCPackerUnpacker
 {
     public partial class DLCPackerUnpacker : UserControl
     {

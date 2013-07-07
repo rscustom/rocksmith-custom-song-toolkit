@@ -9,7 +9,7 @@ using RocksmithToolkitLib.Tone;
 using Pedal = RocksmithToolkitLib.Tone.Pedal;
 using System.Text.RegularExpressions;
 
-namespace RocksmithTookitGUI.DLCPackageCreator
+namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class ToneControl : UserControl
     {

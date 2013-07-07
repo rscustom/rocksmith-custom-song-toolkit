@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI
+﻿namespace RocksmithToolkitGUI
 {
     partial class AboutForm
     {
@@ -67,7 +67,7 @@
             // 
             // logoPictureBox
             // 
-            this.logoPictureBox.Image = global::RocksmithTookitGUI.Properties.Resources.pick;
+            this.logoPictureBox.Image = global::RocksmithToolkitGUI.Properties.Resources.pick;
             this.logoPictureBox.Location = new System.Drawing.Point(4, 4);
             this.logoPictureBox.Margin = new System.Windows.Forms.Padding(4);
             this.logoPictureBox.Name = "logoPictureBox";

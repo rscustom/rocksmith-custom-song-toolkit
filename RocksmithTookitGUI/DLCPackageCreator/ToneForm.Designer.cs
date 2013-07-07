@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI.DLCPackageCreator
+﻿namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     partial class ToneForm
     {
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.okButton = new System.Windows.Forms.Button();
-            this.toneControl1 = new RocksmithTookitGUI.DLCPackageCreator.ToneControl();
+            this.toneControl1 = new RocksmithToolkitGUI.DLCPackageCreator.ToneControl();
             this.loadButton = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
             this.SuspendLayout();

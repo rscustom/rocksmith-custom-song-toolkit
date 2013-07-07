@@ -10,7 +10,7 @@ using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Sng;
 
-namespace RocksmithTookitGUI.DLCPackageCreator
+namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class ArrangementForm : Form
     {

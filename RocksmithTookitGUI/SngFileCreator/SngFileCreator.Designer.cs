@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI.SngFileCreator
+﻿namespace RocksmithToolkitGUI.SngFileCreator
 {
     partial class SngFileCreator
     {

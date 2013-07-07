@@ -1,4 +1,4 @@
-﻿namespace RocksmithTookitGUI.DLCPackageCreator
+﻿namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     partial class DLCPackageCreator
     {
@@ -57,21 +57,21 @@
             this.panelXBox360SignatureType = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
             this.openOggPS3Button = new System.Windows.Forms.Button();
-            this.oggPS3PathTB = new RocksmithTookitGUI.CueTextBox();
-            this.xboxLicense0IDTB = new RocksmithTookitGUI.CueTextBox();
-            this.volumeBox = new RocksmithTookitGUI.DLCPackageCreator.NumericUpDownFixed();
-            this.ArtistSortTB = new RocksmithTookitGUI.CueTextBox();
-            this.SongDisplayNameSortTB = new RocksmithTookitGUI.CueTextBox();
-            this.oggXBox360PathTB = new RocksmithTookitGUI.CueTextBox();
-            this.AppIdTB = new RocksmithTookitGUI.CueTextBox();
-            this.AverageTempoTB = new RocksmithTookitGUI.CueTextBox();
-            this.AlbumArtPathTB = new RocksmithTookitGUI.CueTextBox();
-            this.oggPathTB = new RocksmithTookitGUI.CueTextBox();
-            this.YearTB = new RocksmithTookitGUI.CueTextBox();
-            this.AlbumTB = new RocksmithTookitGUI.CueTextBox();
-            this.ArtistTB = new RocksmithTookitGUI.CueTextBox();
-            this.SongDisplayNameTB = new RocksmithTookitGUI.CueTextBox();
-            this.DlcNameTB = new RocksmithTookitGUI.CueTextBox();
+            this.oggPS3PathTB = new RocksmithToolkitGUI.CueTextBox();
+            this.xboxLicense0IDTB = new RocksmithToolkitGUI.CueTextBox();
+            this.volumeBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
+            this.ArtistSortTB = new RocksmithToolkitGUI.CueTextBox();
+            this.SongDisplayNameSortTB = new RocksmithToolkitGUI.CueTextBox();
+            this.oggXBox360PathTB = new RocksmithToolkitGUI.CueTextBox();
+            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
+            this.AverageTempoTB = new RocksmithToolkitGUI.CueTextBox();
+            this.AlbumArtPathTB = new RocksmithToolkitGUI.CueTextBox();
+            this.oggPathTB = new RocksmithToolkitGUI.CueTextBox();
+            this.YearTB = new RocksmithToolkitGUI.CueTextBox();
+            this.AlbumTB = new RocksmithToolkitGUI.CueTextBox();
+            this.ArtistTB = new RocksmithToolkitGUI.CueTextBox();
+            this.SongDisplayNameTB = new RocksmithToolkitGUI.CueTextBox();
+            this.DlcNameTB = new RocksmithToolkitGUI.CueTextBox();
             this.panelXBox360SignatureType.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).BeginInit();
             this.SuspendLayout();
@@ -598,19 +598,19 @@
         #endregion
 
         private System.Windows.Forms.Button albumArtButton;
-        private RocksmithTookitGUI.CueTextBox AlbumArtPathTB;
+        private RocksmithToolkitGUI.CueTextBox AlbumArtPathTB;
         private System.Windows.Forms.Button dlcGenerateButton;
         private System.Windows.Forms.Button openOggButton;
-        private RocksmithTookitGUI.CueTextBox oggPathTB;
+        private RocksmithToolkitGUI.CueTextBox oggPathTB;
         private System.Windows.Forms.Button arrangementRemoveButton;
         private System.Windows.Forms.Button arrangementAddButton;
         private System.Windows.Forms.ListBox ArrangementLB;
         private System.Windows.Forms.Label label5;
-        private RocksmithTookitGUI.CueTextBox YearTB;
-        private RocksmithTookitGUI.CueTextBox AlbumTB;
-        private RocksmithTookitGUI.CueTextBox ArtistTB;
-        private RocksmithTookitGUI.CueTextBox SongDisplayNameTB;
-        private RocksmithTookitGUI.CueTextBox DlcNameTB;
+        private RocksmithToolkitGUI.CueTextBox YearTB;
+        private RocksmithToolkitGUI.CueTextBox AlbumTB;
+        private RocksmithToolkitGUI.CueTextBox ArtistTB;
+        private RocksmithToolkitGUI.CueTextBox SongDisplayNameTB;
+        private RocksmithToolkitGUI.CueTextBox DlcNameTB;
         private System.Windows.Forms.Button dlcSaveButton;
         private System.Windows.Forms.Button dlcLoadButton;
         private CueTextBox AverageTempoTB;
