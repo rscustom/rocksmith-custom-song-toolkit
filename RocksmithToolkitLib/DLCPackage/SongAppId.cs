@@ -17,7 +17,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static IEnumerable<SongAppId> GetSongAppIds()
         {
-            yield return new SongAppId { Name = "FREE Holiday Song Pack (US)", AppId = "206175" };
+            yield return new SongAppId { Name = "FREE Holiday Song Pack (US)", AppId = "206102" };
             yield return new SongAppId { Name = "FREE Holiday Song Pack (EU)", AppId = "206103" };
             yield return new SongAppId { Name = "Albert King with Stevie Ray Vaughan - Born Under A Bad Sign", AppId = "206123" };
             yield return new SongAppId { Name = "Allman Brothers - Jessica", AppId = "206094" };
