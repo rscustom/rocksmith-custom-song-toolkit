@@ -21,7 +21,7 @@ namespace RocksmithToolkitLib.DLCPackage
     public static class DLCPackageCreator
     {
         private static readonly string xboxWorkDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "xboxpackage");
-        private static readonly string ps3WorkDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ps3package");
+        private static readonly string ps3WorkDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "edat");
 
         private static readonly string[] PCPaths = { "Windows", "Generic" };
         private static readonly string[] XBox360Paths = { "XBox360", "XBox360" };
@@ -85,13 +85,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         BuildXBox360Package(packagePath, info, XBox360Files, xboxPackageType);
                         break;
                     case GamePlatform.PS3:
-                        MessageBox.Show("At this time, PS3 packing is not working with toolkit." + Environment.NewLine + Environment.NewLine + "Encrypt .psarc files to make .edat files and pack it manually with 'TrueAncestor EDAT Rebuilder'", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // Processing with ww2ogg
-                        Process PS3FolderProcess = new Process();
-                        PS3FolderProcess.StartInfo.FileName = "explorer.exe";
-                        PS3FolderProcess.StartInfo.Arguments = Path.GetDirectoryName(PS3Files[0]);
-                        PS3FolderProcess.Start();
+                        BuildPS3Package(packagePath);
                         break;
                 }                
             }
@@ -100,6 +94,8 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 if (Directory.Exists(xboxWorkDir))
                     Directory.Delete(xboxWorkDir, true);
+                if (Directory.Exists(ps3WorkDir))
+                    Directory.Delete(ps3WorkDir, true);
             }
             catch { /*Have no problem if don't delete*/ }
 
@@ -194,6 +190,28 @@ namespace RocksmithToolkitLib.DLCPackage
                         break;
                 }
             }
+        }
+
+        #endregion
+
+        #region PS3
+
+        public static void BuildPS3Package(string packagesPath) {
+            // Packing using TruAncestor Edat
+            Process PS3Process = new Process();
+            PS3Process.StartInfo.FileName = Path.Combine(packagesPath, "rebuilder.exe");
+            PS3Process.StartInfo.WorkingDirectory = packagesPath;
+            PS3Process.StartInfo.Arguments = " <rebuilder.config";
+            PS3Process.StartInfo.UseShellExecute = false;
+            PS3Process.StartInfo.CreateNoWindow = true;
+            PS3Process.StartInfo.RedirectStandardOutput = true;
+
+            PS3Process.Start();
+            PS3Process.WaitForExit();
+            string PS3ProcessResult = PS3Process.StandardOutput.ReadToEnd();
+
+            if (PS3ProcessResult.ToLower().IndexOf("error") > -1)
+                throw new Exception("Edat Rebuilder process error:" + Environment.NewLine + PS3ProcessResult);
         }
 
         #endregion

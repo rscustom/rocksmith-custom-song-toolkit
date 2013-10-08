@@ -17,6 +17,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pedalgen", "pedalgen\pedalg
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "devtools", "devtools\devtools.csproj", "{63FB3334-1E7E-42D7-A025-744BC387AAD6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-party Apps", "{17ADB8C7-17DF-4BE3-8460-3E342F334B53}"
+	ProjectSection(SolutionItems) = preProject
+		Third-party Apps\packed_codebooks.bin = Third-party Apps\packed_codebooks.bin
+		Third-party Apps\readme.txt = Third-party Apps\readme.txt
+		Third-party Apps\rebuilder.config = Third-party Apps\rebuilder.config
+		Third-party Apps\rebuilder.exe = Third-party Apps\rebuilder.exe
+		Third-party Apps\revorb.exe = Third-party Apps\revorb.exe
+		Third-party Apps\ww2ogg.exe = Third-party Apps\ww2ogg.exe
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
