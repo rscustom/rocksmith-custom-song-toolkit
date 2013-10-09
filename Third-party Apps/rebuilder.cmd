@@ -1,0 +1,1 @@
+rebuilder.exe <rebuilder.config

@@ -85,19 +85,10 @@ namespace RocksmithToolkitLib.DLCPackage
                         BuildXBox360Package(packagePath, info, XBox360Files, xboxPackageType);
                         break;
                     case GamePlatform.PS3:
-                        BuildPS3Package(packagePath);
+                        EncryptPS3EdatFiles(packagePath);
                         break;
                 }                
             }
-
-            try
-            {
-                if (Directory.Exists(xboxWorkDir))
-                    Directory.Delete(xboxWorkDir, true);
-                if (Directory.Exists(ps3WorkDir))
-                    Directory.Delete(ps3WorkDir, true);
-            }
-            catch { /*Have no problem if don't delete*/ }
 
             try {
                 foreach (var sngTmpFile in SNGTmpFiles)
@@ -130,6 +121,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
             xboxPackage.FlushPackage(xboxRSA);
             xboxPackage.CloseIO();
+
+            try
+            {
+                if (Directory.Exists(xboxWorkDir))
+                    Directory.Delete(xboxWorkDir, true);
+            }
+            catch { /*Have no problem if don't delete*/ }
         }
 
         private static HeaderData GetSTFSHeader(this DLCPackageData dlcData) {
@@ -196,22 +194,37 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PS3
 
-        public static void BuildPS3Package(string packagesPath) {
+        public static void EncryptPS3EdatFiles(string packagesPath)
+        {
             // Packing using TruAncestor Edat
+            string toolkitPath = Path.GetDirectoryName(Application.ExecutablePath);
+            string rebuilderApp = Path.Combine(toolkitPath, "rebuilder.cmd");
+            
             Process PS3Process = new Process();
-            PS3Process.StartInfo.FileName = Path.Combine(packagesPath, "rebuilder.exe");
-            PS3Process.StartInfo.WorkingDirectory = packagesPath;
-            PS3Process.StartInfo.Arguments = " <rebuilder.config";
+            PS3Process.StartInfo.FileName = rebuilderApp;
+            PS3Process.StartInfo.WorkingDirectory = toolkitPath;
             PS3Process.StartInfo.UseShellExecute = false;
             PS3Process.StartInfo.CreateNoWindow = true;
             PS3Process.StartInfo.RedirectStandardOutput = true;
 
             PS3Process.Start();
             PS3Process.WaitForExit();
-            string PS3ProcessResult = PS3Process.StandardOutput.ReadToEnd();
 
-            if (PS3ProcessResult.ToLower().IndexOf("error") > -1)
-                throw new Exception("Edat Rebuilder process error:" + Environment.NewLine + PS3ProcessResult);
+            string rebuilderResult = PS3Process.StandardOutput.ReadToEnd();
+
+            // Delete .psarc files
+            foreach (var ps3File in PS3Files)
+            {
+                if (File.Exists(ps3File))
+                    File.Delete(ps3File);
+            }
+
+            // Move directory to user selected path
+            if (Directory.Exists(ps3WorkDir))
+                Directory.Move(ps3WorkDir, packagesPath);
+
+            if (rebuilderResult.IndexOf("Encrypt all EDAT files successfully") < 0)
+                throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output bellow:" + Environment.NewLine + Environment.NewLine + rebuilderResult);
         }
 
         #endregion
@@ -261,10 +274,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     packageListWriter.Flush();
                     packageListStream.Seek(0, SeekOrigin.Begin);
-                    string packageList = "PackageList.txt";
-                    packPsarc.AddEntry(packageList, packageListStream);
-                    packageListStream.WriteTmpFile(packageList, platform);
-
+                    if (platform != GamePlatform.PS3)
+                    {
+                        string packageList = "PackageList.txt";
+                        packPsarc.AddEntry(packageList, packageListStream);
+                        packageListStream.WriteTmpFile(packageList, platform);
+                    }
                     packPsarc.Write(output);
                     output.Flush();
                     output.Seek(0, SeekOrigin.Begin);
