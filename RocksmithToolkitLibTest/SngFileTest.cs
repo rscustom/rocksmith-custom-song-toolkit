@@ -28,7 +28,7 @@ namespace RocksmithToolkitLibTest
         public void BeatsInOrder(SngFile song)
         {
             Ebeat lastBeat = null;
-            foreach (var beat in song._beats)
+            foreach (var beat in song.Beats)
             {
                 if (lastBeat != null)
                 {
@@ -50,7 +50,7 @@ namespace RocksmithToolkitLibTest
         [Test, TestCaseSource("AllSongs")]
         public void PhraseIterationsInOrder(SngFile song)
         {
-            foreach (var pi in song._phraseIterations)
+            foreach (var pi in song.PhraseIterations)
             {
                 Assert.LessOrEqual(pi.StartTime, pi.EndTime);
                 Assert.Less(pi.StartTime, 2000);
@@ -195,7 +195,7 @@ namespace RocksmithToolkitLibTest
         public void SngGenerationEbeatsMatch(SngFile rsSng)
         {
             TestSngGeneration(rsSng, (toolkitSng, sb) =>
-                AssertEx.PropertyValuesAreEqual("Ebeats", toolkitSng._beats, rsSng._beats, sb)
+                AssertEx.PropertyValuesAreEqual("Ebeats", toolkitSng.Beats, rsSng.Beats, sb)
             );
         }
 
@@ -203,7 +203,7 @@ namespace RocksmithToolkitLibTest
         public void SngGenerationPhraseIterationsMatch(SngFile rsSng)
         {
             TestSngGeneration(rsSng, (toolkitSng, sb) =>
-                AssertEx.PropertyValuesAreEqual("PhraseIterations", toolkitSng._phraseIterations, rsSng._phraseIterations, sb)
+                AssertEx.PropertyValuesAreEqual("PhraseIterations", toolkitSng.PhraseIterations, rsSng.PhraseIterations, sb)
             );
         }
 
@@ -211,7 +211,7 @@ namespace RocksmithToolkitLibTest
         public void SngGenerationPhrasesMatch(SngFile rsSng)
         {
             TestSngGeneration(rsSng, (toolkitSng, sb) =>
-                AssertEx.PropertyValuesAreEqual("Phrases", toolkitSng._phrases, rsSng._phrases, sb)
+                AssertEx.PropertyValuesAreEqual("Phrases", toolkitSng.Phrases, rsSng.Phrases, sb)
             );
         }
 

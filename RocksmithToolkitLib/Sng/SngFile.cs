@@ -703,16 +703,16 @@ namespace RocksmithToolkitLib.Sng
     {
         public  Int32 Version { get; set; } // ?
         private  Int32 _beatCount;
-        public Ebeat[] _beats { get; set; }
+        public Ebeat[] Beats { get; set; }
         private  Int32 _PhraseCount;
-        public Phrase[] _phrases { get; set; }
+        public Phrase[] Phrases { get; set; }
         private  Int32 _chordTemplateCount;
-        private  ChordTemplate[] _chordTemplates;
+        public ChordTemplate[] ChordTemplates;
         private  Int32 _fretHandMuteTemplateCount;
         private  Int32 _vocalsCount;
         public Vocal[] _vocals { get; set; }
         public Int32 _phraseIterationCount;
-        public PhraseIteration[] _phraseIterations { get; set; }
+        public PhraseIteration[] PhraseIterations { get; set; }
         public  Int32 PhrasePropertyCount;
         public  PhraseProperty[] PhraseProperties { get; set; }
         private  Int32 LinkedDiffCount;
@@ -750,24 +750,24 @@ namespace RocksmithToolkitLib.Sng
                 BinaryReader br = new BinaryReader(stream);
                 Version = br.ReadInt32();
                 _beatCount = br.ReadInt32();
-                _beats = new Ebeat[_beatCount];
+                Beats = new Ebeat[_beatCount];
                 for (int i = 0; i < _beatCount; ++i)
                 {
-                    _beats[i] = new Ebeat(br);
+                    Beats[i] = new Ebeat(br);
                 }
 
                 _PhraseCount = br.ReadInt32();
-                _phrases = new Phrase[_PhraseCount];
+                Phrases = new Phrase[_PhraseCount];
                 for (int i = 0; i < _PhraseCount; ++i)
                 {
-                    _phrases[i] = new Phrase(br);
+                    Phrases[i] = new Phrase(br);
                 }
 
                 _chordTemplateCount = br.ReadInt32();
-                _chordTemplates = new ChordTemplate[_chordTemplateCount];
+                ChordTemplates = new ChordTemplate[_chordTemplateCount];
                 for (int i = 0; i < _chordTemplateCount; ++i)
                 {
-                    _chordTemplates[i] = new ChordTemplate(br);
+                    ChordTemplates[i] = new ChordTemplate(br);
                 }
                 _fretHandMuteTemplateCount = br.ReadInt32(); // always 0?
                 _vocalsCount = br.ReadInt32();
@@ -778,10 +778,10 @@ namespace RocksmithToolkitLib.Sng
                 }
 
                 _phraseIterationCount = br.ReadInt32();
-                _phraseIterations = new PhraseIteration[_phraseIterationCount];
+                PhraseIterations = new PhraseIteration[_phraseIterationCount];
                 for (int i = 0; i < _phraseIterationCount; ++i)
                 {
-                    _phraseIterations[i] = new PhraseIteration(br);
+                    PhraseIterations[i] = new PhraseIteration(br);
                 }
 
                 PhrasePropertyCount = br.ReadInt32();
@@ -844,19 +844,19 @@ namespace RocksmithToolkitLib.Sng
                 bw.Write(_beatCount);
                 for (int i = 0; i < _beatCount; ++i)
                 {
-                    _beats[i].Write(bw);
+                    Beats[i].Write(bw);
                 }
 
                 bw.Write(_PhraseCount);
                 for (int i = 0; i < _PhraseCount; ++i)
                 {
-                    _phrases[i].Write(bw);
+                    Phrases[i].Write(bw);
                 }
 
                 bw.Write(_chordTemplateCount);
                 for (int i = 0; i < _chordTemplateCount; ++i)
                 {
-                    _chordTemplates[i].Write(bw);
+                    ChordTemplates[i].Write(bw);
                 }
                 bw.Write(_fretHandMuteTemplateCount); // always 0?
                 bw.Write(_vocalsCount);
@@ -868,7 +868,7 @@ namespace RocksmithToolkitLib.Sng
                 bw.Write(_phraseIterationCount);
                 for (int i = 0; i < _phraseIterationCount; ++i)
                 {
-                    _phraseIterations[i].Write(bw);
+                    PhraseIterations[i].Write(bw);
                 }
 
                 bw.Write(PhrasePropertyCount);

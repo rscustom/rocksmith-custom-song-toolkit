@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-p
 		Third-party Apps\ww2ogg.exe = Third-party Apps\ww2ogg.exe
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SngToTab", "SngToTab\SngToTab.csproj", "{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,16 @@ Global
 		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|Mixed Platforms.Build.0 = Release|x86
 		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|x86.ActiveCfg = Release|x86
 		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|x86.Build.0 = Release|x86
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,5 +131,6 @@ Global
 		{9190164B-E755-4C8D-812E-70BE8FA286DD} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{54637C43-E331-443B-B30F-C181A5CA60A4} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{63FB3334-1E7E-42D7-A025-744BC387AAD6} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
+		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 	EndGlobalSection
 EndGlobal

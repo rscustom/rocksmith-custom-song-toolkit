@@ -48,6 +48,8 @@
             this.sngFileCreatorControl = new RocksmithToolkitGUI.SngFileCreator.SngFileCreator();
             this.zigProConverterTab = new System.Windows.Forms.TabPage();
             this.convertInput1 = new RocksmithToolkitGUI.ZiggyProEditorConverter.ConvertInput();
+            this.sngToTabConverterTab = new System.Windows.Forms.TabPage();
+            this.sngToTabConverter1 = new RocksmithToolkitGUI.SngToTabConverter.SngToTabConverter();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -56,6 +58,7 @@
             this.oggConverterTab.SuspendLayout();
             this.sngFileCreatorTab.SuspendLayout();
             this.zigProConverterTab.SuspendLayout();
+			this.sngToTabConverterTab.SuspendLayout();            
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -131,6 +134,7 @@
             this.tabControl1.Controls.Add(this.oggConverterTab);
             this.tabControl1.Controls.Add(this.sngFileCreatorTab);
             this.tabControl1.Controls.Add(this.zigProConverterTab);
+            this.tabControl1.Controls.Add(this.sngToTabConverterTab);
             this.tabControl1.Location = new System.Drawing.Point(17, 125);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(8);
             this.tabControl1.Name = "tabControl1";
@@ -258,6 +262,26 @@
             this.convertInput1.Size = new System.Drawing.Size(483, 111);
             this.convertInput1.TabIndex = 0;
             // 
+            // sngToTabConverterTab
+            // 
+            this.sngToTabConverterTab.Controls.Add(this.sngToTabConverter1);
+            this.sngToTabConverterTab.Location = new System.Drawing.Point(4, 22);
+            this.sngToTabConverterTab.Name = "sngToTabConverterTab";
+            this.sngToTabConverterTab.Padding = new System.Windows.Forms.Padding(3);
+            this.sngToTabConverterTab.Size = new System.Drawing.Size(520, 435);
+            this.sngToTabConverterTab.TabIndex = 5;
+            this.sngToTabConverterTab.Text = "Sng To Tab Converter";
+            this.sngToTabConverterTab.UseVisualStyleBackColor = true;
+            // 
+            // sngToTabConverter1
+            // 
+            this.sngToTabConverter1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.sngToTabConverter1.Location = new System.Drawing.Point(14, 14);
+            this.sngToTabConverter1.Name = "sngToTabConverter1";
+            this.sngToTabConverter1.Size = new System.Drawing.Size(500, 282);
+            this.sngToTabConverter1.TabIndex = 0;
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -292,6 +316,7 @@
             this.oggConverterTab.ResumeLayout(false);
             this.sngFileCreatorTab.ResumeLayout(false);
             this.zigProConverterTab.ResumeLayout(false);
+			this.sngToTabConverterTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -320,6 +345,8 @@
         private System.Windows.Forms.TabPage zigProConverterTab;
         private ZiggyProEditorConverter.ConvertInput convertInput1;
         private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
+		private System.Windows.Forms.TabPage sngToTabConverterTab;
+        private SngToTabConverter.SngToTabConverter sngToTabConverter1;
     }
 }
 

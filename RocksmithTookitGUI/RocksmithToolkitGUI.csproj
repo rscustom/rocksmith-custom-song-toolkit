@@ -138,6 +138,18 @@
     <Compile Include="SngFileCreator\SngFileCreator.Designer.cs">
       <DependentUpon>SngFileCreator.cs</DependentUpon>
     </Compile>
+    <Compile Include="SngToTabConverter\ReplaceDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SngToTabConverter\ReplaceDialog.Designer.cs">
+      <DependentUpon>ReplaceDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SngToTabConverter\SngToTabConverter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SngToTabConverter\SngToTabConverter.Designer.cs">
+      <DependentUpon>SngToTabConverter.cs</DependentUpon>
+    </Compile>
     <Compile Include="ZiggyProEditorConverter\ConverterInput.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -187,6 +199,12 @@
     <EmbeddedResource Include="SngFileCreator\SngFileCreator.resx">
       <DependentUpon>SngFileCreator.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SngToTabConverter\ReplaceDialog.resx">
+      <DependentUpon>ReplaceDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SngToTabConverter\SngToTabConverter.resx">
+      <DependentUpon>SngToTabConverter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ZiggyProEditorConverter\ConverterInput.resx">
       <DependentUpon>ConverterInput.cs</DependentUpon>
     </EmbeddedResource>
@@ -210,6 +228,10 @@
     <ProjectReference Include="..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
       <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
       <Name>RocksmithToolkitLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SngToTab\SngToTab.csproj">
+      <Project>{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}</Project>
+      <Name>SngToTab</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
