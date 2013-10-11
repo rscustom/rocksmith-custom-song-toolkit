@@ -6,6 +6,7 @@ using System.Text;
 using RocksmithToolkitLib.Sng;
 using X360.STFS;
 using X360.Other;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -14,13 +15,13 @@ namespace RocksmithToolkitLib.DLCPackage
         private const string ROOT_XBox360 = "Root";
         private const string ROOT_PS3 = "USRDIR";
 
-        public static void Pack(string sourcePath, string saveFileName, bool useCryptography)
+        public static void Pack(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
         {
             GamePlatform platform = sourcePath.GetPlatform();
 
             switch (platform) {
                 case GamePlatform.Pc:
-                    PackPC(sourcePath, saveFileName, useCryptography);
+                    PackPC(sourcePath, saveFileName, useCryptography, updateSng);
                     break;
                 case GamePlatform.XBox360:
                     PackXBox360(sourcePath, saveFileName);
@@ -32,7 +33,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void PackPC(string sourcePath, string saveFileName, bool useCryptography)
+        private static void PackPC(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
         {
             using (var psarcStream = new MemoryStream())
             using (var streamCollection = new DisposableCollection<Stream>())
@@ -57,6 +58,12 @@ namespace RocksmithToolkitLib.DLCPackage
                     var innerPsarcStream = new MemoryStream();
                     streamCollection.Add(innerPsarcStream);
                     var directoryName = Path.GetFileName(directory);
+
+                    // Recreate SNG
+                    if (updateSng)
+                        if (directory.ToLower().IndexOf("dlc_tone_") < 0)
+                            UpdateSng(directory, GamePlatform.Pc);
+
                     PackInnerPC(innerPsarcStream, directory);
                     psarc.AddEntry(directoryName + ".psarc", innerPsarcStream);
                 }
@@ -245,6 +252,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     case "":
                         return GamePlatform.XBox360;
                     case ".pkg":
+                    case ".edat":
                         return GamePlatform.PS3;
                     default:
                         return GamePlatform.None;
@@ -285,6 +293,35 @@ namespace RocksmithToolkitLib.DLCPackage
                         entry.Data.CopyTo(fileStream);
                         entry.Data.Seek(0, SeekOrigin.Begin);
                     }
+                }
+            }
+        }
+
+        private static void UpdateSng(string songDirectory, GamePlatform platform) {
+            var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, @"GR\Behaviors\Songs"));
+
+            foreach (var xmlFile in xmlFiles) {
+                if (File.Exists(xmlFile) && Path.GetExtension(xmlFile) == ".xml") {
+                    var sngFile = Path.Combine(songDirectory, "GRExports", platform.GetPathName()[1], Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
+                    var arrType = ArrangementType.Guitar;
+                    var tuning = InstrumentTuning.Standard;
+
+                    if (Path.GetFileName(xmlFile).ToLower().IndexOf("vocal") >= 0) {
+                        arrType = ArrangementType.Vocal;
+                        SngFileWriter.Write(xmlFile, sngFile, arrType, platform, tuning);
+                    } else {
+                        Song song = Song.LoadSongFromXmlFile(xmlFile);
+
+                        if (!Enum.TryParse<ArrangementType>(song.Arrangement, out arrType))
+                            if (song.Arrangement.ToLower().IndexOf("bass") >= 0)
+                                arrType = ArrangementType.Bass;
+
+                        tuning = InstrumentTuningExtensions.GetTuningByOffsets(song.Tuning.ToArray());                        
+                    }
+
+                    SngFileWriter.Write(xmlFile, sngFile, arrType, platform, tuning);
+                } else {
+                    throw new ArgumentException(String.Format("'{0}' is not a valid XML file.", xmlFile));
                 }
             }
         }

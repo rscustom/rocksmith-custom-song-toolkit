@@ -27,7 +27,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static readonly string[] XBox360Paths = { "XBox360", "XBox360" };
         private static readonly string[] PS3Paths = { "PS3", "PS3" };
 
-        private static string[] GetPathName(this GamePlatform platform)
+        public static string[] GetPathName(this GamePlatform platform)
         {
             switch (platform)
             {
@@ -349,15 +349,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     foreach (var x in info.Arrangements)
                     {
                         //Generate sng file in execution time
-                        string sngFile = Path.Combine(Path.GetDirectoryName(x.SongXml.File), x.SongXml.Name + ".sng");
-                        InstrumentTuning tuning = InstrumentTuning.Standard;
-                        Enum.TryParse<InstrumentTuning>(x.Tuning, true, out tuning);
-                        SngFileWriter.Write(x.SongXml.File, sngFile, x.ArrangementType, platform, tuning);
-                        if (x.SongFile == null)
-                            x.SongFile = new SongFile();
-                        x.SongFile.File = sngFile;
-                        SNGTmpFiles.Add(sngFile);
-                        //end
+                        GenerateSNG(x, platform);
+                        
                         manifestBuilder.AggregateGraph.SongFiles.Add(x.SongFile);
                         manifestBuilder.AggregateGraph.SongXMLs.Add(x.SongXml);
                     }
@@ -454,6 +447,17 @@ namespace RocksmithToolkitLib.DLCPackage
             writer.Write("DLC_Tone_{0}", toneKey);
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
+        }
+
+        public static void GenerateSNG(Arrangement arrangement, GamePlatform platform) {
+            string sngFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File), arrangement.SongXml.Name + ".sng");
+            InstrumentTuning tuning = InstrumentTuning.Standard;
+            Enum.TryParse<InstrumentTuning>(arrangement.Tuning, true, out tuning);
+            SngFileWriter.Write(arrangement.SongXml.File, sngFile, arrangement.ArrangementType, platform, tuning);
+            if (arrangement.SongFile == null)
+                arrangement.SongFile = new SongFile();
+            arrangement.SongFile.File = sngFile;
+            SNGTmpFiles.Add(sngFile);
         }
     }
 }

@@ -38,6 +38,7 @@
             this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.decodeOGGCheckbox = new System.Windows.Forms.CheckBox();
+            this.updateSngCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -56,7 +57,7 @@
             // 
             // unpackButton
             // 
-            this.unpackButton.Location = new System.Drawing.Point(109, 83);
+            this.unpackButton.Location = new System.Drawing.Point(109, 85);
             this.unpackButton.Name = "unpackButton";
             this.unpackButton.Size = new System.Drawing.Size(89, 23);
             this.unpackButton.TabIndex = 9;
@@ -66,7 +67,7 @@
             // 
             // packButton
             // 
-            this.packButton.Location = new System.Drawing.Point(109, 54);
+            this.packButton.Location = new System.Drawing.Point(109, 61);
             this.packButton.Name = "packButton";
             this.packButton.Size = new System.Drawing.Size(89, 23);
             this.packButton.TabIndex = 8;
@@ -100,9 +101,9 @@
             this.groupBox1.Controls.Add(this.appIdCombo);
             this.groupBox1.Controls.Add(this.repackButton);
             this.groupBox1.Location = new System.Drawing.Point(3, 112);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(200, 71);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
@@ -125,7 +126,7 @@
             this.appIdCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.appIdCombo.FormattingEnabled = true;
             this.appIdCombo.Location = new System.Drawing.Point(4, 17);
-            this.appIdCombo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.appIdCombo.Margin = new System.Windows.Forms.Padding(2);
             this.appIdCombo.Name = "appIdCombo";
             this.appIdCombo.Size = new System.Drawing.Size(192, 21);
             this.appIdCombo.TabIndex = 13;
@@ -136,17 +137,28 @@
             this.decodeOGGCheckbox.AutoSize = true;
             this.decodeOGGCheckbox.Checked = true;
             this.decodeOGGCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.decodeOGGCheckbox.Location = new System.Drawing.Point(109, 26);
+            this.decodeOGGCheckbox.Location = new System.Drawing.Point(109, 20);
             this.decodeOGGCheckbox.Name = "decodeOGGCheckbox";
             this.decodeOGGCheckbox.Size = new System.Drawing.Size(91, 17);
             this.decodeOGGCheckbox.TabIndex = 14;
             this.decodeOGGCheckbox.Text = "Decode OGG";
             this.decodeOGGCheckbox.UseVisualStyleBackColor = true;
             // 
+            // updateSngCheckBox
+            // 
+            this.updateSngCheckBox.AutoSize = true;
+            this.updateSngCheckBox.Location = new System.Drawing.Point(109, 38);
+            this.updateSngCheckBox.Name = "updateSngCheckBox";
+            this.updateSngCheckBox.Size = new System.Drawing.Size(87, 17);
+            this.updateSngCheckBox.TabIndex = 15;
+            this.updateSngCheckBox.Text = "Update SNG";
+            this.updateSngCheckBox.UseVisualStyleBackColor = true;
+            // 
             // DLCPackerUnpacker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.updateSngCheckBox);
             this.Controls.Add(this.decodeOGGCheckbox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox2);
@@ -174,5 +186,6 @@
         private System.Windows.Forms.ComboBox appIdCombo;
         private CueTextBox AppIdTB;
         private System.Windows.Forms.CheckBox decodeOGGCheckbox;
+        private System.Windows.Forms.CheckBox updateSngCheckBox;
     }
 }
