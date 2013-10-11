@@ -19,7 +19,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             InitializeComponent();
 
             SongAppId firstSong = null;
-            foreach (var song in SongAppId.GetSongAppIds())
+            foreach (var song in SongAppIdRepository.Instance().List)
             {
                 appIdCombo.Items.Add(song);
                 if (firstSong == null)
@@ -36,6 +36,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             string sourcePath;
             string saveFileName;
             var useCryptography = useCryptographyCheckbox.Checked;
+            var updateSng = updateSngCheckBox.Checked;
 
             using (var fbd = new VistaFolderBrowserDialog())
             {
@@ -56,7 +57,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 string[] decodedOGGFiles = Directory.GetFiles(sourcePath, "*_fixed.ogg", SearchOption.AllDirectories);
                 foreach (var file in decodedOGGFiles)
                     File.Delete(file);
-                Packer.Pack(sourcePath, saveFileName, useCryptography);
+                Packer.Pack(sourcePath, saveFileName, useCryptography, updateSng);
                 MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -119,6 +120,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         {
             IList<string> sourceFileNames;
             var useCryptography = useCryptographyCheckbox.Checked;
+            var updateSng = updateSngCheckBox.Checked;
 
             using (var ofd = new OpenFileDialog())
             {
@@ -142,7 +144,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 var appIdFile = unpackedDir + Path.DirectorySeparatorChar + "APP_ID";
                 File.WriteAllText(appIdFile, appId);
 
-                Packer.Pack(unpackedDir, sourceFileName, useCryptography);
+                Packer.Pack(unpackedDir, sourceFileName, useCryptography, updateSng);
             }
 
             MessageBox.Show("APP ID update is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);

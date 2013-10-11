@@ -1,5 +1,6 @@
 using System;
 using System.Xml.Serialization;
+using System.IO;
 
 namespace RocksmithToolkitLib.Xml
 {
@@ -11,6 +12,17 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlElement("vocal")]
         public Vocal[] Vocal { get; set; }
+
+        public static Vocals LoadVocalsFromXmlFile(string xmlVocalFile) {
+            Vocals XmlVocal = null;
+
+            using (var reader = new StreamReader(xmlVocalFile)) {
+                var serializer = new XmlSerializer(typeof(Vocals));
+                XmlVocal = (Vocals)serializer.Deserialize(reader);
+            }
+
+            return XmlVocal;
+        }
     }
 
     [XmlType("vocal")]

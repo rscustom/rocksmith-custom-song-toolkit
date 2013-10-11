@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using System.Runtime.Serialization;
+using System.Windows.Forms;
+using System.Xml;
+using System.IO;
 
 namespace RocksmithToolkitLib.Xml
 {
@@ -29,6 +33,24 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlElement("lastConversionDateTime")]
         public string LastConversionDateTime { get; set; }
+
+        [XmlElement("startBeat")]
+        public Single StartBeat { get; set; }
+
+        [XmlElement("averageTempo")]
+        public Single AverageTempo { get; set; }
+
+        [XmlElement("tuning")]
+        public TuningStrings Tuning { get; set; }
+
+        [XmlElement("artistName")]
+        public string ArtistName { get; set; }
+
+        [XmlElement("albumName")]
+        public string AlbumName { get; set; }
+
+        [XmlElement("albumYear")]
+        public string AlbumYear { get; set; }
 
         [XmlArray("phrases")]
         [XmlArrayItem("phrase")]
@@ -111,6 +133,43 @@ namespace RocksmithToolkitLib.Xml
         public bool HasTremolo()
         {
             return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Tremolo > 0);
+        }
+
+        public static Song LoadSongFromXmlFile(string xmlSongFile) {
+            Song XmlSong = null;
+
+            using (var reader = new StreamReader(xmlSongFile)) {
+                var serializer = new XmlSerializer(typeof(Song));
+                XmlSong = (Song)serializer.Deserialize(reader);
+            }
+
+            return XmlSong;
+        }
+    }
+
+    [XmlType("tuning")]
+    public class TuningStrings {
+        [XmlAttribute("string0")]
+        public Int32 String0 { get; set; }
+
+        [XmlAttribute("string1")]
+        public Int32 String1 { get; set; }
+
+        [XmlAttribute("string2")]
+        public Int32 String2 { get; set; }
+
+        [XmlAttribute("string3")]
+        public Int32 String3 { get; set; }
+
+        [XmlAttribute("string4")]
+        public Int32 String4 { get; set; }
+
+        [XmlAttribute("string5")]
+        public Int32 String5 { get; set; }
+
+        public int[] ToArray() {
+            Int32[] strings = { String0, String1, String2, String3, String4, String5 };
+            return strings;
         }
     }
 
@@ -389,5 +448,4 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("endTime")]
         public Single EndTime { get; set; }
     }
-
 }

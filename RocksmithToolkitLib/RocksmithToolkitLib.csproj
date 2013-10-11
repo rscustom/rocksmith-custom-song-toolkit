@@ -89,7 +89,6 @@
     <Compile Include="DLCPackage\Packer.cs" />
     <Compile Include="DLCPackage\RandomGenerator.cs" />
     <Compile Include="DLCPackage\RijndaelEncryptor.cs" />
-    <Compile Include="DLCPackage\SongAppId.cs" />
     <Compile Include="DLCPackage\SongInfo.cs" />
     <Compile Include="DLCPackage\XBox360License.cs" />
     <Compile Include="EnumerableExtension.cs" />
@@ -105,6 +104,9 @@
     </Compile>
     <Compile Include="Sng\SngFile.cs" />
     <Compile Include="Sng\SngFileWriter.cs" />
+    <Compile Include="XmlRepository\SongAppId.cs" />
+    <Compile Include="XmlRepository\SongAppIdRepository.cs" />
+    <Compile Include="XmlRepository\XmlRepository.cs" />
     <Compile Include="Xml\Vocals.cs" />
     <Compile Include="Xml\Song.cs" />
     <Compile Include="DLCPackage\SoundBankGenerator.cs" />
@@ -142,6 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\pedals.json" />
+    <Content Include="RocksmithToolkitLib.DLCPackage.SongAppId.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\XBox360_DLC_image.png" />
     <None Include="Resources\XBox360_KV.bin" />
   </ItemGroup>

@@ -28,7 +28,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             InitializeComponent();
             SongAppId firstSong = null;
-            foreach (var song in SongAppId.GetSongAppIds())
+            foreach (var song in SongAppIdRepository.Instance().List)
             {
                 cmbAppIds.Items.Add(song);
                 if (firstSong == null)
@@ -360,8 +360,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Song INFO
             DlcNameTB.Text = info.Name;
             AppIdTB.Text = info.AppId;
-            if (SongAppId.GetSongAppIds().Any<SongAppId>(a => a.AppId == info.AppId))
-                cmbAppIds.SelectedIndex = SongAppId.GetSongAppIds().TakeWhile(a => a.AppId != info.AppId).Count();
+            if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == info.AppId))
+                cmbAppIds.SelectedIndex = SongAppIdRepository.Instance().List.TakeWhile(a => a.AppId != info.AppId).Count();
 
             AlbumTB.Text = info.SongInfo.Album;
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
@@ -736,8 +736,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void AppIdTB_TextChanged(object sender, EventArgs e) {
             var appId = ((TextBox)sender).Text.Trim();
-            if (SongAppId.GetSongAppIds().Any<SongAppId>(a => a.AppId == appId))
-                cmbAppIds.SelectedIndex = SongAppId.GetSongAppIds().TakeWhile(a => a.AppId != appId).Count();
+            if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
+                cmbAppIds.SelectedIndex = SongAppIdRepository.Instance().List.TakeWhile(a => a.AppId != appId).Count();
         }
 
         private T Copy<T>(T value)
