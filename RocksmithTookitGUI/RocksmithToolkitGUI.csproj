@@ -40,11 +40,14 @@
     <ApplicationIcon>songcreator.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NDesk.Options">
+      <HintPath>..\lib\NDesk\NDesk.Options.dll</HintPath>
+    </Reference>
     <Reference Include="Ookii.Dialogs">
       <HintPath>..\lib\OokiiDialogs\Ookii.Dialogs.dll</HintPath>
     </Reference>
     <Reference Include="PSARC">
-      <HintPath>..\lib\PSARC.dll</HintPath>
+      <HintPath>..\lib\PSARC\PSARC.dll</HintPath>
     </Reference>
     <Reference Include="PSTaskDialog">
       <HintPath>..\lib\PSTaskDialog\PSTaskDialog.dll</HintPath>
@@ -130,6 +133,7 @@
     <Compile Include="OggConverter\OggConverter.Designer.cs">
       <DependentUpon>OggConverter.cs</DependentUpon>
     </Compile>
+    <Compile Include="OptionSet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SngFileCreator\SngFileCreator.cs">
