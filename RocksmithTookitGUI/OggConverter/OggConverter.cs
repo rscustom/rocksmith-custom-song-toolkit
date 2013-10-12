@@ -69,7 +69,7 @@ namespace RocksmithToolkitGUI.OggConverter
                                 OggFile.ConvertOgg(file, outputFileName);
                                 break;
                             case ConverterType.Revorb:
-                                Revorb(file, outputFileName);
+                                OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath));
                                 break;
                         }
                         successFiles.Add(file);
@@ -98,59 +98,6 @@ namespace RocksmithToolkitGUI.OggConverter
 
                     MessageBox.Show(alertMessage.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
-        }
-
-        public static void Revorb(string file, string outputFileName) {
-            string appPath = Path.GetDirectoryName(Application.ExecutablePath);
-            string ww2oggPath = Path.Combine(appPath, "ww2ogg.exe");
-            string revorbPath = Path.Combine(appPath, "revorb.exe");
-            string codebooksPath = Path.Combine(appPath, "packed_codebooks.bin");
-
-            // Verifying if third part apps is in root application directory
-            if (!File.Exists(ww2oggPath))
-                throw new FileNotFoundException("ww2ogg executable not found!");
-
-            if (!File.Exists(revorbPath))
-                throw new FileNotFoundException("revorb executable not found!");
-
-            if (!File.Exists(codebooksPath))
-                throw new FileNotFoundException("packed_codebooks.bin not found!");
-
-            // Processing with ww2ogg
-            Process ww2oggProcess = new Process();
-            ww2oggProcess.StartInfo.FileName = ww2oggPath;
-            ww2oggProcess.StartInfo.WorkingDirectory = appPath;
-            ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\"", file, outputFileName);
-            ww2oggProcess.StartInfo.UseShellExecute = false;
-            ww2oggProcess.StartInfo.CreateNoWindow = true;
-            ww2oggProcess.StartInfo.RedirectStandardOutput = true;
-
-            ww2oggProcess.Start();
-            ww2oggProcess.WaitForExit();
-            string ww2oggResult = ww2oggProcess.StandardOutput.ReadToEnd();
-
-            if (ww2oggResult.IndexOf("error") > -1)
-                throw new Exception("ww2ogg process error." + Environment.NewLine + ww2oggResult);
-
-            // Processing with revorb
-            Process revorbProcess = new Process();
-            revorbProcess.StartInfo.FileName = revorbPath;
-            revorbProcess.StartInfo.WorkingDirectory = appPath;
-            revorbProcess.StartInfo.Arguments = String.Format("\"{0}\"", outputFileName);
-            revorbProcess.StartInfo.UseShellExecute = false;
-            revorbProcess.StartInfo.CreateNoWindow = true;
-            revorbProcess.StartInfo.RedirectStandardOutput = true;
-
-            revorbProcess.Start();
-            revorbProcess.WaitForExit();
-            string revorbResult = revorbProcess.StandardOutput.ReadToEnd();
-
-            if (ww2oggResult.IndexOf("error") > -1) {
-                if (File.Exists(outputFileName))
-                    File.Delete(outputFileName);
-                
-                throw new Exception("revorb process error." + Environment.NewLine + revorbResult);
             }
         }
     }

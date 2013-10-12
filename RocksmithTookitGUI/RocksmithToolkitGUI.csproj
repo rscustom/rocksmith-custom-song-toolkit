@@ -67,6 +67,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\X360\X360.dll</HintPath>
     </Reference>
+    <Reference Include="ZLIB">
+      <HintPath>..\lib\ZLib\ZLIB.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutForm.cs">
@@ -133,7 +136,6 @@
     <Compile Include="OggConverter\OggConverter.Designer.cs">
       <DependentUpon>OggConverter.cs</DependentUpon>
     </Compile>
-    <Compile Include="OptionSet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SngFileCreator\SngFileCreator.cs">
@@ -229,6 +231,18 @@
     <None Include="Resources\pick.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\pedalgen\pedalgen.csproj">
+      <Project>{54637C43-E331-443B-B30F-C181A5CA60A4}</Project>
+      <Name>pedalgen</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RocksmithToolkitCLI\packer\packer.csproj">
+      <Project>{822D185A-28A3-4AE0-A811-800E968AA2E7}</Project>
+      <Name>packer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RocksmithToolkitCLI\pcdecrypt\pcdecrypt.csproj">
+      <Project>{9190164B-E755-4C8D-812E-70BE8FA286DD}</Project>
+      <Name>pcdecrypt</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
       <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
       <Name>RocksmithToolkitLib</Name>

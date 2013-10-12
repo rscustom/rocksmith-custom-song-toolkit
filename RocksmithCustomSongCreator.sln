@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-p
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SngToTab", "SngToTab\SngToTab.csproj", "{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "packer", "RocksmithToolkitCLI\packer\packer.csproj", "{822D185A-28A3-4AE0-A811-800E968AA2E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -122,6 +124,16 @@ Global
 		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|x86.ActiveCfg = Release|Any CPU
+		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Debug|x86.ActiveCfg = Debug|x86
+		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Debug|x86.Build.0 = Debug|x86
+		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Release|Any CPU.ActiveCfg = Release|x86
+		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Release|Mixed Platforms.Build.0 = Release|x86
+		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Release|x86.ActiveCfg = Release|x86
+		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,5 +144,6 @@ Global
 		{54637C43-E331-443B-B30F-C181A5CA60A4} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{63FB3334-1E7E-42D7-A025-744BC387AAD6} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
+		{822D185A-28A3-4AE0-A811-800E968AA2E7} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 	EndGlobalSection
 EndGlobal

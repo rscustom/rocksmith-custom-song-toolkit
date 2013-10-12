@@ -7,6 +7,7 @@ using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage;
 using System.IO;
 using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.Ogg;
 
 namespace RocksmithToolkitGUI.DLCPackerUnpacker
 {
@@ -100,7 +101,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     foreach (var file in oggFiles)
                     {
                         var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                        OggConverter.OggConverter.Revorb(file, outputFileName);
+                        OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath));
                     }
                 }
             }
