@@ -12,9 +12,11 @@ namespace RocksmithToolkitLib.DLCPackage
         public Arrangement()
         {
             Id = IdGenerator.Guid();
+            MasterId = ArrangementType == Sng.ArrangementType.Vocal ? 1 : RandomGenerator.NextInt();
         }
         public ArrangementName Name { get; set; }
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
+        public int MasterId { get; set; }
         public SongFile SongFile { get; set; }
         public SongXML SongXml { get; set; }
         public bool PowerChords { get; set; }

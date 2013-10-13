@@ -94,7 +94,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.IsDemoSong = false;
                 attribute.IsDLC = true;
                 attribute.LastConversionDateTime = "";
-                int masterId = x.ArrangementType == Sng.ArrangementType.Vocal ? 1 : RandomGenerator.NextInt();
+                int masterId = x.ArrangementType == Sng.ArrangementType.Vocal ? 1 : x.MasterId;
                 attribute.MasterID_PS3 = masterId;
                 attribute.MasterID_Xbox360 = masterId;
                 attribute.MaxPhraseDifficulty = 0;

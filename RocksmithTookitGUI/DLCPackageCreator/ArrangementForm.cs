@@ -71,6 +71,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 tonesCombo.Enabled = selectedType != ArrangementType.Vocal;
                 tuningComboBox.Enabled = selectedType != ArrangementType.Vocal;
                 Picked.Checked = selectedType == ArrangementType.Bass ? false : true;
+                
+                MasterId.Enabled = selectedType != ArrangementType.Vocal;
+                PersistentId.Enabled = selectedType != ArrangementType.Vocal;
             };
             foreach (var tone in toneNames)
             {
@@ -131,6 +134,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 FifthsAndOctaves.Checked = arrangement.FifthsAndOctaves;
                 TwoFingerPlucking.Checked = arrangement.TwoFingerPlucking;
                 Syncopation.Checked = arrangement.Syncopation;
+                
+                PersistentId.Text = arrangement.Id.ToString().Replace("-", "").ToUpper();
+                MasterId.Text = arrangement.MasterId.ToString();
             }
         }
 
@@ -228,6 +234,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
+            //Arrangement IDs
+            Guid guid;
+            if (Guid.TryParse(PersistentId.Text, out guid) == false) {
+            	PersistentId.Focus();
+            } else {
+            	arrangement.Id = guid;
+            }
+            int masterId;
+            if (int.TryParse(MasterId.Text, out masterId) == false) {
+			    MasterId.Focus();        	
+            } else {
+            	arrangement.MasterId = masterId;
+            }
+            
             //Arrangment details
             arrangement.Name = (ArrangementName)arrangementNameCombo.SelectedItem;
             arrangement.ArrangementType = (ArrangementType)arrangementTypeCombo.SelectedItem;
