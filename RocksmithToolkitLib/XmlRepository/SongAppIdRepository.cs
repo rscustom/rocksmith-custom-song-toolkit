@@ -10,7 +10,7 @@ namespace RocksmithToolkitLib.DLCPackage {
     public class SongAppIdRepository : XmlRepository<SongAppId> {
         private static readonly Lazy<SongAppIdRepository> instance = new Lazy<SongAppIdRepository>(() => new SongAppIdRepository());
 
-        private const string FILENAME = "RocksmithToolkitLib.DLCPackage.SongAppId.xml";
+        private const string FILENAME = "RocksmithToolkitLib.SongAppId.xml";
 
         public static SongAppIdRepository Instance() { return instance.Value; }
 

@@ -18,7 +18,7 @@ namespace RocksmithToolkitLib.DLCPackage {
         
         #endregion
         /// <summary>
-        /// Repository file name i.e.: RocksmithToolkitLib.DLCPackage.SongAppId.xml
+        /// Repository file name i.e.: RocksmithToolkitLib.SongAppId.xml
         /// </summary>
         protected string FileName;
 

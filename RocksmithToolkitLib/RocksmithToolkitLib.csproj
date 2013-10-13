@@ -148,7 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\pedals.json" />
-    <Content Include="RocksmithToolkitLib.DLCPackage.SongAppId.xml">
+    <Content Include="RocksmithToolkitLib.SongAppId.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\XBox360_DLC_image.png" />
