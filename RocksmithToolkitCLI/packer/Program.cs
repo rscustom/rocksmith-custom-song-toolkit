@@ -9,6 +9,7 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib;
 using System.Reflection;
+using X360.STFS;
 
 namespace PackerConsole
 {
@@ -40,14 +41,14 @@ namespace PackerConsole
             return new OptionSet
             {
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
-                { "i|input=", "The encrypted input file or directory (required, multiple allowed)", v => outputArguments.Input = v },
-                { "o|output=", "The output directory (defaults to the input directory)", v => outputArguments.Output = v },
+                { "i|input=", "The input file or directory (multiple allowed)", v => outputArguments.Input = v },
+                { "o|output=", "The output file or directory", v => outputArguments.Output = v },
                 { "t|template=", "The template file for building package", v => outputArguments.Template = v },
-                { "pack", "Generate a song package", v => {if (v != null) outputArguments.Pack = true; }},
+                { "pack", "Pack a song", v => {if (v != null) outputArguments.Pack = true; }},
                 { "unpack", "Unpack a song", v => {if (v != null) outputArguments.Unpack = true; }},
-                { "build", "Build a song package", v => {if (v != null) outputArguments.Build = true; }},
-                { "ogg|decodeogg", "Decode ogg file when unpack a song", v => {if (v != null) outputArguments.DecodeOGG = true; }},
-                { "sng|updatesng", "Recreate SNG files when pack a song", v => {if (v != null) outputArguments.UpdateSng = true; }}
+                { "build", "Build a song package from 'Rocksmith DLC template' (*.dlc.xml)", v => {if (v != null) outputArguments.Build = true; }},
+                { "ogg|decodeogg", "Decode ogg file when unpack a song (default is true)", v => {if (v != null) outputArguments.DecodeOGG = true; }},
+                { "sng|updatesng", "Recreate SNG files when pack a song (default is false)", v => {if (v != null) outputArguments.UpdateSng = true; }}
             };
         }
 
@@ -68,16 +69,18 @@ namespace PackerConsole
                     options.WriteOptionDescriptions(Console.Out);
                     return 0;
                 }
+
                 if (!arguments.Pack && !arguments.Unpack && !arguments.Build)
                 {
                     ShowHelpfulError("Must especify a primary command as 'pack', 'unpack', 'build'.");
                     return 1;
                 }
-                if (arguments.Build) {
-                    if (string.IsNullOrEmpty(arguments.Template) && string.IsNullOrEmpty(arguments.Output)) {
-                        ShowHelpfulError("Missing 'template' file and/or 'output' file.");
-                        return 1;
-                    }
+                if (arguments.Build && arguments.Pack ||
+                    arguments.Build && arguments.Unpack ||
+                    arguments.Pack && arguments.Unpack)
+                {
+                    ShowHelpfulError("The primary command 'build', 'pack' and 'unpack' can't be used at same time.");
+                    return 1;
                 }
                 if (arguments.Pack || arguments.Unpack)
                 {
@@ -92,16 +95,27 @@ namespace PackerConsole
                         return 1;
                     }
                 }
+
                 if (arguments.Build)
                 {
+                    if (string.IsNullOrEmpty(arguments.Template)) {
+                        ShowHelpfulError("Must specify an 'template' argument with path of the Rocksmith DLC template (*.dlc.xml).");
+                        return 1;
+                    }
+                    if (string.IsNullOrEmpty(arguments.Output))
+                    {
+                        ShowHelpfulError("Must specified an 'output' file.");
+                        return 1;
+                    }
                     if (arguments.Output.IsDirectory())
                     {
                         ShowHelpfulError("The 'output' argument in 'build' command must be a file.");
                         return 1;
                     }
+
                     try
                     {
-                        Console.WriteLine("Warning: You should load and save XML after toolkit upgrade to make sure it is still valid!");
+                        Console.WriteLine("Warning: You should load and save XML with 'RocksmithToolkitGUI 1.4.0.0' or above to make sure it is still valid and compatible with this feature!");
 
                         DLCPackageData info = null;
                         var serializer = new DataContractSerializer(typeof(DLCPackageData));
@@ -109,12 +123,21 @@ namespace PackerConsole
                         {
                             info = (DLCPackageData)serializer.ReadObject(stm);
                         }
-                        RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(arguments.Output, info, GamePlatform.Pc, null);
+
+                        if (!String.IsNullOrEmpty(info.OggPath))
+                            DLCPackageCreator.Generate(arguments.Output, info, GamePlatform.Pc, null);
+                        if (!String.IsNullOrEmpty(info.OggXBox360Path))
+                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, GamePlatform.XBox360, PackageMagic.CON);
+                        if (!String.IsNullOrEmpty(info.OggPS3Path))
+                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, GamePlatform.PS3, null);
+
                         Console.WriteLine("Package was generated.");
+                        return 0;
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(String.Format("{0}\n\r{1}\n\r{2}", "Build error!", ex.Message, ex.InnerException));
+                        return 1;
                     }
                 }
                 if (arguments.Pack)
@@ -133,10 +156,12 @@ namespace PackerConsole
 
                         Packer.Pack(arguments.Input, arguments.Output, true, arguments.UpdateSng);
                         Console.WriteLine("Packing is complete.");
+                        return 0;
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(String.Format("{0}\n\r{1}\n\r{2}", "Packing error!", ex.Message, ex.InnerException));
+                        return 1;
                     }
                 }
                 if (arguments.Unpack)
@@ -158,21 +183,30 @@ namespace PackerConsole
                             return 1;
                         }
 
-                        Packer.Unpack(sourceFileName, arguments.Output, true);
-
-                        if (arguments.DecodeOGG)
+                        try
                         {
-                            var name = Path.GetFileNameWithoutExtension(sourceFileName);
-                            name += String.Format("_{0}", platform.ToString());
-                            string[] oggFiles = Directory.GetFiles(Path.Combine(arguments.Output, name), "*.ogg", SearchOption.AllDirectories);
-                            foreach (var file in oggFiles)
+                            Packer.Unpack(sourceFileName, arguments.Output, true);
+
+                            if (arguments.DecodeOGG)
                             {
-                                var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                                OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                                var name = Path.GetFileNameWithoutExtension(sourceFileName);
+                                name += String.Format("_{0}", platform.ToString());
+                                string[] oggFiles = Directory.GetFiles(Path.Combine(arguments.Output, name), "*.ogg", SearchOption.AllDirectories);
+                                foreach (var file in oggFiles)
+                                {
+                                    var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
+                                    OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                                }
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(String.Format("{0}\n\r{1}\n\r{2}", "Unpacking error!", ex.Message, ex.InnerException));
+                            return 1;
                         }
                     }
                     Console.WriteLine("Unpacking is complete.");
+                    return 0;
                 }
 
             }
