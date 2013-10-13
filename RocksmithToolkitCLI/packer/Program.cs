@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Xml;
 using NDesk.Options;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Ogg;
+using RocksmithToolkitLib;
 using System.Reflection;
 
 namespace PackerConsole
@@ -14,8 +17,10 @@ namespace PackerConsole
         public bool ShowHelp;
         public string Input;
         public string Output;
+        public string Template;
         public bool Pack;
         public bool Unpack;
+        public bool Build;
         public bool DecodeOGG;
         public bool UpdateSng;
     }
@@ -37,8 +42,10 @@ namespace PackerConsole
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
                 { "i|input=", "The encrypted input file or directory (required, multiple allowed)", v => outputArguments.Input = v },
                 { "o|output=", "The output directory (defaults to the input directory)", v => outputArguments.Output = v },
+                { "t|template=", "The template file for building package", v => outputArguments.Template = v },
                 { "pack", "Generate a song package", v => {if (v != null) outputArguments.Pack = true; }},
                 { "unpack", "Unpack a song", v => {if (v != null) outputArguments.Unpack = true; }},
+                { "build", "Build a song package", v => {if (v != null) outputArguments.Build = true; }},
                 { "ogg|decodeogg", "Decode ogg file when unpack a song", v => {if (v != null) outputArguments.DecodeOGG = true; }},
                 { "sng|updatesng", "Recreate SNG files when pack a song", v => {if (v != null) outputArguments.UpdateSng = true; }}
             };
@@ -61,10 +68,16 @@ namespace PackerConsole
                     options.WriteOptionDescriptions(Console.Out);
                     return 0;
                 }
-                if (!arguments.Pack && !arguments.Unpack)
+                if (!arguments.Pack && !arguments.Unpack && !arguments.Build)
                 {
-                    ShowHelpfulError("Must especify a primary command as 'pack', 'unpack'.");
+                    ShowHelpfulError("Must especify a primary command as 'pack', 'unpack', 'build'.");
                     return 1;
+                }
+                if (arguments.Build) {
+                    if (string.IsNullOrEmpty(arguments.Template) && string.IsNullOrEmpty(arguments.Output)) {
+                        ShowHelpfulError("Missing 'template' file and/or 'output' file.");
+                        return 1;
+                    }
                 }
                 if (arguments.Pack || arguments.Unpack)
                 {
@@ -77,6 +90,31 @@ namespace PackerConsole
                     {
                         ShowHelpfulError("Must specified an 'output' file or directory.");
                         return 1;
+                    }
+                }
+                if (arguments.Build)
+                {
+                    if (arguments.Output.IsDirectory())
+                    {
+                        ShowHelpfulError("The 'output' argument in 'build' command must be a file.");
+                        return 1;
+                    }
+                    try
+                    {
+                        Console.WriteLine("Warning: You should load and save XML after toolkit upgrade to make sure it is still valid!");
+
+                        DLCPackageData info = null;
+                        var serializer = new DataContractSerializer(typeof(DLCPackageData));
+                        using (var stm = new XmlTextReader(arguments.Template))
+                        {
+                            info = (DLCPackageData)serializer.ReadObject(stm);
+                        }
+                        RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(arguments.Output, info, GamePlatform.Pc, null);
+                        Console.WriteLine("Package was generated.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(String.Format("{0}\n\r{1}\n\r{2}", "Build error!", ex.Message, ex.InnerException));
                     }
                 }
                 if (arguments.Pack)
