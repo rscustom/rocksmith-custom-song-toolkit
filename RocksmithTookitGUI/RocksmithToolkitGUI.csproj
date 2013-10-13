@@ -144,12 +144,6 @@
     <Compile Include="SngFileCreator\SngFileCreator.Designer.cs">
       <DependentUpon>SngFileCreator.cs</DependentUpon>
     </Compile>
-    <Compile Include="SngToTabConverter\ReplaceDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SngToTabConverter\ReplaceDialog.Designer.cs">
-      <DependentUpon>ReplaceDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="SngToTabConverter\SngToTabConverter.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -204,9 +198,6 @@
     </Compile>
     <EmbeddedResource Include="SngFileCreator\SngFileCreator.resx">
       <DependentUpon>SngFileCreator.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SngToTabConverter\ReplaceDialog.resx">
-      <DependentUpon>ReplaceDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SngToTabConverter\SngToTabConverter.resx">
       <DependentUpon>SngToTabConverter.cs</DependentUpon>

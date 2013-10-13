@@ -9,212 +9,103 @@ using System.Windows.Forms;
 using System.IO;
 using RocksmithToolkitLib.Sng;
 using SngToTab;
+using Ookii.Dialogs;
+using RocksmithToolkitLib.DLCPackage;
+using System.Reflection;
 
 namespace RocksmithToolkitGUI.SngToTabConverter
 {
     public partial class SngToTabConverter : UserControl
     {
-        private enum PathType
-        {
-            INVALID,
-            FILE,
-            FOLDER
-        }
-
-        private string InputPath
-        {
-            get { return inputTextBox.Text; }
-            set { inputTextBox.Text = value; }
-        }
-
-        private string OutputPath
-        {
-            get { return outputTextBox.Text; }
-            set { outputTextBox.Text = value; }
-        }
+        private const string MESSAGEBOX_CAPTION = "SNG 2 Tab Converter";
 
         public SngToTabConverter()
         {
             InitializeComponent();
         }
 
-        private PathType getPathType(string path)
+        private void convertButton_Click(object sender, EventArgs e)
         {
-            if (Directory.Exists(path))
-                return PathType.FOLDER;
-            else if (File.Exists(path))
-                return PathType.FILE;
-            else
-                return PathType.INVALID;
-        }
+            IList<string> sourceFileNames;
+            string savePath;
+            bool max = difficultyMax.Checked;
+            bool all = difficultyAll.Checked;
 
-        private void inputFileBrowseButton_Click(object sender, EventArgs e)
-        {
-            using (var fd = new OpenFileDialog())
+            // Input file(s)
+            using (var ofd = new OpenFileDialog())
             {
-                fd.Filter = "SNG File|*.sng|All Files (*.*)|*.*";
-                fd.Multiselect = false;
-                fd.FilterIndex = 1;
-                fd.ShowDialog();
-
-                if (string.IsNullOrEmpty(fd.FileName))
+                ofd.Multiselect = true;
+                if (ofd.ShowDialog() != DialogResult.OK)
                     return;
-
-                InputPath = fd.FileName;
-                
-                string outputExtension = Path.GetExtension(OutputPath);
-                if (string.IsNullOrEmpty(outputExtension))
-                    outputExtension = ".txt";
-                OutputPath = Path.ChangeExtension(fd.FileName, outputExtension);
+                sourceFileNames = ofd.FileNames;
             }
-        }
 
-        private void inputFolderBrowseButton_Click(object sender, EventArgs e)
-        {
-            using (var fd = new FolderBrowserDialog())
+            // Output path
+            using (var fbd = new VistaFolderBrowserDialog())
             {
-                if (!string.IsNullOrEmpty(InputPath) && getPathType(InputPath) != PathType.FOLDER)
-                    fd.SelectedPath = Path.GetDirectoryName(InputPath);
+                if (fbd.ShowDialog() != DialogResult.OK)
+                    return;
+                savePath = fbd.SelectedPath;
+            }
+
+            foreach (string inputFile in sourceFileNames)
+            {
+                if (Path.GetExtension(inputFile) == ".sng")
+                    Convert(inputFile, savePath, all);
                 else
-                    fd.SelectedPath = InputPath;
-
-                fd.ShowDialog();
-
-                if (string.IsNullOrEmpty(fd.SelectedPath))
-                    return;
-
-                InputPath = fd.SelectedPath;
-
-                if (string.IsNullOrEmpty(OutputPath))
-                    OutputPath = InputPath;
-                else if (getPathType(OutputPath) != PathType.FOLDER)
-                    OutputPath = Path.GetDirectoryName(OutputPath);
+                    ExtractBeforeConvert(inputFile, savePath, all);
             }
+
+            MessageBox.Show("The conversion is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void outputFileBrowseButton_Click(object sender, EventArgs e)
+        private void Convert(string inputFile, string savePath, bool all)
         {
-            PathType inputPathType = getPathType(InputPath);
+            SngFile sngFile = new SngFile(inputFile);
 
-            if (inputPathType == PathType.INVALID)
-                MessageBox.Show("A valid input file or folder must be specified.", "Input Path Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (inputPathType == PathType.FILE)
+            if (String.IsNullOrEmpty(sngFile.Metadata.Arrangement))
+                return; // Vocal
+
+            int maxDifficulty = Common.getMaxDifficulty(sngFile);
+
+            int[] difficulties;
+            if (all)
+                difficulties = Enumerable.Range(0, maxDifficulty + 1).ToArray();
+            else // if (max)
+                difficulties = new int[] { maxDifficulty };
+
+            foreach (int d in difficulties)
             {
-                using (var fd = new SaveFileDialog())
+                TabFile tabFile = new TabFile(sngFile, d);
+
+                var outputFileName = (sngFile != null && sngFile.Metadata != null) ? String.Format("{0} - ", sngFile.Metadata.SongTitle) : "";
+                outputFileName += Path.GetFileNameWithoutExtension(inputFile);
+                outputFileName += (difficulties.Length != 1) ? String.Format(" (level {0:00}).txt", d) : ".txt";
+                var outputFilePath = Path.Combine(savePath, outputFileName);
+
+                using (TextWriter tw = new StreamWriter(outputFilePath))
                 {
-                    fd.Filter = "Text File|*.txt|Tab File|*.tab|All Files (*.*)|*.*";
-                    fd.FilterIndex = 1;
-                    fd.ShowDialog();
-
-                    if (string.IsNullOrEmpty(fd.FileName))
-                        return;
-
-                    OutputPath = fd.FileName;
-                }
-            }
-            else if (inputPathType == PathType.FOLDER)
-            {
-                using (var fd = new FolderBrowserDialog())
-                {
-                    if (!string.IsNullOrEmpty(OutputPath) && (getPathType(OutputPath) != PathType.FOLDER))
-                        fd.SelectedPath = Path.GetDirectoryName(OutputPath);
-                    else
-                        fd.SelectedPath = InputPath;
-
-                    fd.ShowDialog();
-
-                    if (string.IsNullOrEmpty(fd.SelectedPath))
-                        return;
-
-                    OutputPath = fd.SelectedPath;
-                }
-            }
-        }
-
-        private void convertFileButton_Click(object sender, EventArgs e)
-        {
-            PathType inputPathType = getPathType(InputPath);
-            PathType outputPathType = getPathType(OutputPath);
-            
-            if (inputPathType == PathType.INVALID)
-            {
-                MessageBox.Show("A valid input file or folder must be specified.", "Input Path Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            else if (inputPathType == PathType.FOLDER && inputPathType != outputPathType)
-            {
-                MessageBox.Show("If the input path is a folder, the output path must be a folder too.",
-                    "Input / Output Path Type Mismatch", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            string[] inputFiles;
-            if (inputPathType == PathType.FILE)
-                inputFiles = new string[] { InputPath };
-            else
-            {
-                inputFiles = Directory.GetFiles(InputPath, "*.sng");
-                if (inputFiles.Length == 0)
-                {
-                    MessageBox.Show("Input folder does not contain any *.sng files.",
-                        "Input Folder Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
-
-            ReplaceDialog.ResultType replaceAction = ReplaceDialog.ResultType.CANCEL;
-
-            foreach (string inputFile in inputFiles)
-            {
-                SngFile sngFile = new SngFile(inputFile);
-                int maxDifficulty = Common.getMaxDifficulty(sngFile);
-
-                int[] difficulties;
-                if (difficultyAll.Checked)
-                    difficulties = Enumerable.Range(0, maxDifficulty + 1).ToArray();
-                else // if (difficultyMax.Checked)
-                    difficulties = new int[] { maxDifficulty };
- 
-                foreach (int d in difficulties)
-                {
-                    TabFile tabFile = new TabFile(sngFile, d);
-                    
-                    string outputFilePath;
-                    if (outputPathType == PathType.FOLDER)
-                        outputFilePath = Path.ChangeExtension(OutputPath + '\\' + Path.GetFileName(inputFile), ".txt");
-                    else
-                        outputFilePath = OutputPath;
-                    
-                    if (difficulties.Length != 1)
-                        outputFilePath = Path.ChangeExtension(outputFilePath, "Level " + d + Path.GetExtension(outputFilePath));
-                    
-                    if (File.Exists(outputFilePath))
-                    {
-                        if (replaceAction == ReplaceDialog.ResultType.NO_TO_ALL)
-                            continue;
-
-                        if (replaceAction != ReplaceDialog.ResultType.YES_TO_ALL)
-                        {
-                            ReplaceDialog rd = new ReplaceDialog(outputFilePath);
-                            rd.ShowDialog();
-
-                            replaceAction = rd.Result;
-
-                            if (replaceAction == ReplaceDialog.ResultType.CANCEL)
-                                return;
-                            if (replaceAction == ReplaceDialog.ResultType.NO || replaceAction == ReplaceDialog.ResultType.NO_TO_ALL)
-                                continue;
-                        }
-                    }
-
-                   
-                    TextWriter tw = new StreamWriter(outputFilePath);
                     tw.Write(tabFile.ToString());
-                    tw.Close();
                 }
             }
+        }
+
+        private void ExtractBeforeConvert(string inputFile, string savePath, bool all) {
+            string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Packer.Unpack(inputFile, appDir, true);
+            string unpackedDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(inputFile) + String.Format("_{0}", Packer.GetPlatform(inputFile).ToString()));
+            string[] sngFiles = Directory.GetFiles(unpackedDir, "*.sng", SearchOption.AllDirectories);
+
+            foreach (var sng in sngFiles) {
+                Convert(sng, savePath, all);
+            }
+
+            try
+            {
+                if (Directory.Exists(unpackedDir))
+                    Directory.Delete(unpackedDir, true);
+            }
+            catch { /*Have no problem if don't delete*/ }
         }
     }
 }
