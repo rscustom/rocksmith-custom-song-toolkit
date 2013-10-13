@@ -293,6 +293,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var serializer = new DataContractSerializer(typeof(DLCPackageData));
             using (var stm = new XmlTextWriter(dlcSavePath, Encoding.Default))
             {
+                stm.Formatting = Formatting.Indented;
                 serializer.WriteObject(stm, packageData);
             }
 

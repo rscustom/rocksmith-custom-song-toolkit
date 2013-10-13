@@ -77,6 +77,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var serializer = new DataContractSerializer(typeof(Tone));
             using (var stm = new XmlTextWriter(toneSavePath, Encoding.Default))
             {
+                stm.Formatting = Formatting.Indented;
                 serializer.WriteObject(stm, tone);
             }
 
