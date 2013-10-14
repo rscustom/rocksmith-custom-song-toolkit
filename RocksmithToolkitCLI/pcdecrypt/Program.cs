@@ -11,6 +11,7 @@ namespace PcDecrypt
     internal class Arguments
     {
         public bool ShowHelp;
+        public bool Encrypt;
         public List<string> InputFiles = new List<string>();
         public string OutputDirectory;
     }
@@ -21,7 +22,8 @@ namespace PcDecrypt
         {
             return new OptionSet
             {
-                { "h|?|help", "Show this help message and exit.", v => outputArguments.ShowHelp = v != null },
+                { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
+                { "e|encrypt", "Encrypt the files instead decrypt", v => outputArguments.Encrypt = v != null },
                 { "i|input=", "The encrypted input file or directory (required, multiple allowed)", v => outputArguments.InputFiles.Add(v) },
                 { "o|output=", "The output directory (defaults to the input directory)", v => outputArguments.OutputDirectory = v }
             };
@@ -71,16 +73,30 @@ namespace PcDecrypt
 
             foreach (var inputPath in arguments.InputFiles)
             {
-                var outputDirectory = arguments.OutputDirectory ?? Path.GetDirectoryName(inputPath);
-                var outputFilename = Path.GetFileName(inputPath) + ".decrypted";
+                var inputFile = inputPath;
+                if (arguments.Encrypt)
+                    if (Path.GetExtension(inputFile) != ".decrypted")
+                        Console.WriteLine(String.Format("Warning: The file '{0}' has no '.decrypted' extension. Probably it's already a encrypted file.", inputFile));
+
+                var outputDirectory = arguments.OutputDirectory ?? Path.GetDirectoryName(inputFile);
+                var outputFilename = Path.GetFileName(inputFile);
+
+                if (arguments.Encrypt) {
+                    outputFilename += Path.GetFileNameWithoutExtension(inputFile);
+                } else {
+                    outputFilename += ".decrypted";
+                }
                 var outputPath = Path.Combine(outputDirectory, outputFilename);
 
                 Directory.CreateDirectory(outputDirectory);
 
-                using (var inputStream = File.OpenRead(inputPath))
+                using (var inputStream = File.OpenRead(inputFile))
                 using (var outputStream = File.Create(outputPath))
                 {
-                    RijndaelEncryptor.Decrypt(inputStream, outputStream, RijndaelEncryptor.PcKey);
+                    if (arguments.Encrypt)
+                        RijndaelEncryptor.Encrypt(inputStream, outputStream, RijndaelEncryptor.PcKey);
+                    else
+                        RijndaelEncryptor.Decrypt(inputStream, outputStream, RijndaelEncryptor.PcKey);
                 }
             }
         }
@@ -89,7 +105,7 @@ namespace PcDecrypt
         {
             Console.Write("pcdecrypt: ");
             Console.WriteLine(message);
-            Console.WriteLine("Try `pcdecrypt --help` for more information.");
+            Console.WriteLine("Try 'pcdecrypt --help' for more information.");
         }
     }
 }

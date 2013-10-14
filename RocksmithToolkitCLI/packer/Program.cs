@@ -223,7 +223,7 @@ namespace PackerConsole
         {
             Console.Write("packer: ");
             Console.WriteLine(message);
-            Console.WriteLine("Try 'packer /help' for more information.");
+            Console.WriteLine("Try 'packer --help' for more information.");
         }
 
         public static bool IsDirectory(this string path)
