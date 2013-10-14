@@ -35,6 +35,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void PackPC(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
         {
+            string[] namesBlock = Directory.GetFiles(sourcePath, "NamesBlock.bin", SearchOption.AllDirectories);
+            foreach (var nb in namesBlock) {
+                if (File.Exists(nb))
+                    File.Delete(nb);
+            }
+
             using (var psarcStream = new MemoryStream())
             using (var streamCollection = new DisposableCollection<Stream>())
             {
