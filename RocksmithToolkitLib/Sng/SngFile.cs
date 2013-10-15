@@ -421,12 +421,12 @@ namespace RocksmithToolkitLib.Sng
 
     public class HandShape
     {
-        public  float StartTime { get; set; } //?
-        public  float EndTime { get; set; } //?
-        public  float Unknown1 { get; set; } //?
+        public float StartTime { get; set; }
+        public float EndTime { get; set; }
+        public float Unknown1 { get; set; } //?
         public float Unknown2 { get; set; } //?
-        public  float ChordId { get; set; }
-        public  float FirstChordInHandShapeTime { get; set; }
+        public Int32 ChordId { get; set; }
+        public float FirstChordInHandShapeTime { get; set; }
         public float LastChordInHandShapeTime { get; set; }
 
         public HandShape(BinaryReader br)
@@ -435,7 +435,7 @@ namespace RocksmithToolkitLib.Sng
             EndTime = br.ReadSingle();
             Unknown1 = br.ReadSingle();
             Unknown2 = br.ReadSingle();
-            ChordId = br.ReadSingle();
+            ChordId = br.ReadInt32();
             FirstChordInHandShapeTime = br.ReadSingle();
             LastChordInHandShapeTime = br.ReadSingle();
         }
