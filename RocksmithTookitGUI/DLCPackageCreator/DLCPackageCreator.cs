@@ -291,9 +291,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     arr.SongXml.File = path.MakeRelativeUri(new Uri(songXmlFile)).ToString();
             }
             var serializer = new DataContractSerializer(typeof(DLCPackageData));
-            using (var stm = new XmlTextWriter(dlcSavePath, Encoding.Default))
+            using (var stm = XmlWriter.Create(dlcSavePath, new XmlWriterSettings() { CheckCharacters = true, Indent = true }))
             {
-                stm.Formatting = Formatting.Indented;
                 serializer.WriteObject(stm, packageData);
             }
 
