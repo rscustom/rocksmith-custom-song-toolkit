@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RocksmithToolkitCLI", "Rock
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pcdecrypt", "RocksmithToolkitCLI\pcdecrypt\pcdecrypt.csproj", "{9190164B-E755-4C8D-812E-70BE8FA286DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "devtools", "devtools\devtools.csproj", "{63FB3334-1E7E-42D7-A025-744BC387AAD6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-party Apps", "{17ADB8C7-17DF-4BE3-8460-3E342F334B53}"
 	ProjectSection(SolutionItems) = preProject
 		Third-party Apps\tool\core.jar = Third-party Apps\tool\core.jar
@@ -33,6 +31,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pedalgen", "RocksmithToolkitCLI\pedalgen\pedalgen.csproj", "{54637C43-E331-443B-B30F-C181A5CA60A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sngtotab", "RocksmithToolkitCLI\sngtotab\sngtotab.csproj", "{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "devtools", "RocksmithToolkitCLI\devtools\devtools.csproj", "{63FB3334-1E7E-42D7-A025-744BC387AAD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,16 +94,6 @@ Global
 		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Release|Mixed Platforms.Build.0 = Release|x86
 		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Release|x86.ActiveCfg = Release|x86
 		{9190164B-E755-4C8D-812E-70BE8FA286DD}.Release|x86.Build.0 = Release|x86
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Debug|x86.ActiveCfg = Debug|x86
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Debug|x86.Build.0 = Debug|x86
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|Any CPU.ActiveCfg = Release|x86
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|Mixed Platforms.Build.0 = Release|x86
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|x86.ActiveCfg = Release|x86
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|x86.Build.0 = Release|x86
 		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{822D185A-28A3-4AE0-A811-800E968AA2E7}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -136,6 +126,16 @@ Global
 		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|Mixed Platforms.Build.0 = Release|x86
 		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|x86.ActiveCfg = Release|x86
 		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}.Release|x86.Build.0 = Release|x86
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Debug|x86.ActiveCfg = Debug|x86
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Debug|x86.Build.0 = Debug|x86
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|Any CPU.ActiveCfg = Release|x86
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|Mixed Platforms.Build.0 = Release|x86
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|x86.ActiveCfg = Release|x86
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,9 +143,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{48703F6C-9F98-4534-AB1D-67856A84D806} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{9190164B-E755-4C8D-812E-70BE8FA286DD} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
-		{63FB3334-1E7E-42D7-A025-744BC387AAD6} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{822D185A-28A3-4AE0-A811-800E968AA2E7} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{54637C43-E331-443B-B30F-C181A5CA60A4} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
+		{63FB3334-1E7E-42D7-A025-744BC387AAD6} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 	EndGlobalSection
 EndGlobal
