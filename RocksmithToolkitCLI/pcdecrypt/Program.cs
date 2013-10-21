@@ -33,6 +33,11 @@ namespace PcDecrypt
         {
             var arguments = new Arguments();
             var options = GetOptions(arguments);
+            if (args.Length == 0)
+	        {
+                    options.WriteOptionDescriptions(Console.Out);
+                    return;
+	       	}
             try
             {
                 options.Parse(args);
@@ -42,19 +47,22 @@ namespace PcDecrypt
                     options.WriteOptionDescriptions(Console.Out);
                     return;
                 }
-                
-                if (!arguments.InputFiles.Any())
-                {
-                    ShowHelpfulError("Must specify at least one input file or directory.");
-                    return;
-                }
 
                 var inputDirectories = arguments.InputFiles.Where(Directory.Exists).ToList();
+                	
+                if (!arguments.InputFiles.Any())
+                {
+                	if (args.Length > 0){
+                		inputDirectories.Add(args[0]);}
+                }
                 foreach (var inputDirectory in inputDirectories)
                 {
+                	if (Directory.Exists(inputDirectory)){
                     var filesInDirectory = Directory.EnumerateFiles(inputDirectory);
                     arguments.InputFiles.Remove(inputDirectory);
-                    arguments.InputFiles.AddRange(filesInDirectory);
+                    arguments.InputFiles.AddRange(filesInDirectory);}
+                	if (File.Exists(inputDirectory))
+                		arguments.InputFiles.Add(inputDirectory);
                 }
 
                 var missingFiles = arguments.InputFiles.Where(i => !File.Exists(i)).ToList();
@@ -73,30 +81,32 @@ namespace PcDecrypt
 
             foreach (var inputPath in arguments.InputFiles)
             {
-                var inputFile = inputPath;
-                if (arguments.Encrypt)
-                    if (Path.GetExtension(inputFile) != ".decrypted")
-                        Console.WriteLine(String.Format("Warning: The file '{0}' has no '.decrypted' extension. Probably it's already a encrypted file.", inputFile));
-
-                var outputDirectory = arguments.OutputDirectory ?? Path.GetDirectoryName(inputFile);
-                var outputFilename = Path.GetFileName(inputFile);
-
-                if (arguments.Encrypt) {
-                    outputFilename += Path.GetFileNameWithoutExtension(inputFile);
-                } else {
-                    outputFilename += ".decrypted";
-                }
-                var outputPath = Path.Combine(outputDirectory, outputFilename);
-
-                Directory.CreateDirectory(outputDirectory);
-
-                using (var inputStream = File.OpenRead(inputFile))
-                using (var outputStream = File.Create(outputPath))
+                var outputDirectory = arguments.OutputDirectory ?? Path.GetDirectoryName(inputPath);
+                if (!arguments.Encrypt)
                 {
-                    if (arguments.Encrypt)
-                        RijndaelEncryptor.Encrypt(inputStream, outputStream, RijndaelEncryptor.PcKey);
-                    else
+                    var outputFilename = Path.GetFileName(inputPath) + ".decrypted";
+                    var outputPath = Path.Combine(outputDirectory, outputFilename);
+
+                    Directory.CreateDirectory(outputDirectory);
+
+                    using (var inputStream = File.OpenRead(inputPath))
+                    using (var outputStream = File.Create(outputPath))
+                    {
                         RijndaelEncryptor.Decrypt(inputStream, outputStream, RijndaelEncryptor.PcKey);
+                    }
+                }
+                if(arguments.Encrypt)
+                {
+                    var outputFilename = Path.GetFileName(inputPath) + ".encrypted";
+                    var outputPath = Path.Combine(outputDirectory, outputFilename);
+
+                    Directory.CreateDirectory(outputDirectory);
+
+                    using (var inputStream = File.OpenRead(inputPath))
+                    using (var outputStream = File.Create(outputPath))
+                    {
+                        RijndaelEncryptor.Encrypt(inputStream, outputStream, RijndaelEncryptor.PcKey);
+                    }
                 }
             }
         }
