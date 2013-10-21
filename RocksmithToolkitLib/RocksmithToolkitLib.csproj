@@ -95,7 +95,9 @@
     <Compile Include="DLCPackage\RijndaelEncryptor.cs" />
     <Compile Include="DLCPackage\SongInfo.cs" />
     <Compile Include="DLCPackage\XBox360License.cs" />
-    <Compile Include="EnumerableExtension.cs" />
+    <Compile Include="Extensions\DirectoryExtension.cs" />
+    <Compile Include="Extensions\EnumerableExtension.cs" />
+    <Compile Include="Extensions\StringExtention.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Ogg\OggFile.cs" />
     <Compile Include="GameData.cs" />

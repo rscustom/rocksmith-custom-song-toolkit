@@ -15,6 +15,7 @@ using X360.STFS;
 using X360.IO;
 using RocksmithToolkitLib.Ogg;
 using System.Diagnostics;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -221,7 +222,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // Move directory to user selected path
             if (Directory.Exists(ps3WorkDir))
-                Directory.Move(ps3WorkDir, packagesPath);
+                DirectoryExtension.Move(ps3WorkDir, packagesPath);
 
             if (rebuilderResult.IndexOf("Encrypt all EDAT files successfully") < 0)
                 throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output bellow:" + Environment.NewLine + Environment.NewLine + rebuilderResult);
