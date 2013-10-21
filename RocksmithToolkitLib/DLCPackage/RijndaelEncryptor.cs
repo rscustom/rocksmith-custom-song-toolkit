@@ -47,14 +47,14 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             rij.Padding = PaddingMode.None;
             rij.Mode = CipherMode.ECB;
-            rij.BlockSize = 128;
+            rij.BlockSize = 128;	// byte[16]
             rij.IV = new byte[16];
-            rij.Key = key;
+            rij.Key = key;			// byte[32]
         }
 
         private static void Crypto(Stream input, Stream output, ICryptoTransform transform)
         {
-            var buffer = new byte[1024];
+            var buffer = new byte[512];
             var cs = new CryptoStream(output, transform, CryptoStreamMode.Write);
             for (long i = 0; i < input.Length; i += buffer.Length)
             {
