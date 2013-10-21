@@ -40,29 +40,26 @@ namespace PcDecrypt
 	       	}
             try
             {
-                options.Parse(args);
-                
+                options.Parse(args);                
                 if (arguments.ShowHelp)
                 {
                     options.WriteOptionDescriptions(Console.Out);
                     return;
                 }
 
-                var inputDirectories = arguments.InputFiles.Where(Directory.Exists).ToList();
-                	
-                if (!arguments.InputFiles.Any())
+                var inputFiles = arguments.InputFiles.ToList();
+                if (!arguments.InputFiles.Any()&& args.Length > 0)
                 {
-                	if (args.Length > 0){
-                		inputDirectories.Add(args[0]);}
+                	inputFiles.Add(args.First());
                 }
-                foreach (var inputDirectory in inputDirectories)
+                foreach (var file in inputFiles)
                 {
-                	if (Directory.Exists(inputDirectory)){
-                    var filesInDirectory = Directory.EnumerateFiles(inputDirectory);
-                    arguments.InputFiles.Remove(inputDirectory);
-                    arguments.InputFiles.AddRange(filesInDirectory);}
-                	if (File.Exists(inputDirectory))
-                		arguments.InputFiles.Add(inputDirectory);
+                	FileAttributes attr = File.GetAttributes(Path.GetFullPath(file));
+                	if((attr & FileAttributes.Directory) == FileAttributes.Directory && Directory.Exists(file)){
+                	foreach (var file1 in Directory.EnumerateFiles(file, "*.*", SearchOption.AllDirectories))
+                		if (File.Exists(file1)) arguments.InputFiles.Add(file1);}
+                	else arguments.InputFiles.Add(file);
+
                 }
 
                 var missingFiles = arguments.InputFiles.Where(i => !File.Exists(i)).ToList();
@@ -81,33 +78,28 @@ namespace PcDecrypt
 
             foreach (var inputPath in arguments.InputFiles)
             {
-                var outputDirectory = arguments.OutputDirectory ?? Path.GetDirectoryName(inputPath);
-                if (!arguments.Encrypt)
-                {
-                    var outputFilename = Path.GetFileName(inputPath) + ".decrypted";
-                    var outputPath = Path.Combine(outputDirectory, outputFilename);
+                var outputDirectory = Path.GetDirectoryName(inputPath);
+				using (var inputStream = File.OpenRead(inputPath))
+				{
+					if (!arguments.Encrypt)
+					{
+						var outputFilename = Path.GetFileName(inputPath) + ".decrypted";
+						var outputPath = Path.Combine(outputDirectory, outputFilename);
 
-                    Directory.CreateDirectory(outputDirectory);
+						Directory.CreateDirectory(outputDirectory);
+						using (var outputStream = File.Create(outputPath))
+						RijndaelEncryptor.Decrypt(inputStream, outputStream, RijndaelEncryptor.PcKey);
+					}
+					if(arguments.Encrypt)
+					{
+						var outputFilename = Path.GetFileName(inputPath) + ".encrypted";
+						var outputPath = Path.Combine(outputDirectory, outputFilename);
 
-                    using (var inputStream = File.OpenRead(inputPath))
-                    using (var outputStream = File.Create(outputPath))
-                    {
-                        RijndaelEncryptor.Decrypt(inputStream, outputStream, RijndaelEncryptor.PcKey);
-                    }
-                }
-                if(arguments.Encrypt)
-                {
-                    var outputFilename = Path.GetFileName(inputPath) + ".encrypted";
-                    var outputPath = Path.Combine(outputDirectory, outputFilename);
-
-                    Directory.CreateDirectory(outputDirectory);
-
-                    using (var inputStream = File.OpenRead(inputPath))
-                    using (var outputStream = File.Create(outputPath))
-                    {
-                        RijndaelEncryptor.Encrypt(inputStream, outputStream, RijndaelEncryptor.PcKey);
-                    }
-                }
+						Directory.CreateDirectory(outputDirectory);
+						using (var outputStream = File.Create(outputPath))
+						RijndaelEncryptor.Encrypt(inputStream, outputStream, RijndaelEncryptor.PcKey);
+					}
+				}
             }
         }
 
