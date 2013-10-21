@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 using RocksmithToolkitLib.Sng;
 
-namespace SngToTab
+namespace RocksmithToolkitLib.SngToTab
 {
-    public class TabBeat : TabEntity
+    abstract public class TabLinesEntity : TabEntity
     {
-        public TabBeat(TabFile tabFile, Single time)
+        public TabLinesEntity(TabFile tabFile, Single time)
             : base(tabFile, time)
         {
         }
 
-        public override void Apply(TabFile tabFile)
-        {
-        }
+        public abstract string[] GetLines();
     }
 }

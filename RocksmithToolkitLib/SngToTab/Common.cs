@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SngToTab
+namespace RocksmithToolkitLib.SngToTab
 {
     public class Common
     {

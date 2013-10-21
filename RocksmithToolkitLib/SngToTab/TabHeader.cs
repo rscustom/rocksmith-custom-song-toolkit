@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using RocksmithToolkitLib.Sng;
 
-namespace SngToTab
+namespace RocksmithToolkitLib.SngToTab
 {
     // Contains basic tab information
     public class TabHeader

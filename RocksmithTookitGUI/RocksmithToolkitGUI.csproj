@@ -222,10 +222,6 @@
     <None Include="Resources\pick.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\pedalgen\pedalgen.csproj">
-      <Project>{54637C43-E331-443B-B30F-C181A5CA60A4}</Project>
-      <Name>pedalgen</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitCLI\packer\packer.csproj">
       <Project>{822D185A-28A3-4AE0-A811-800E968AA2E7}</Project>
       <Name>packer</Name>
@@ -234,13 +230,17 @@
       <Project>{9190164B-E755-4C8D-812E-70BE8FA286DD}</Project>
       <Name>pcdecrypt</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RocksmithToolkitCLI\pedalgen\pedalgen.csproj">
+      <Project>{54637C43-E331-443B-B30F-C181A5CA60A4}</Project>
+      <Name>pedalgen</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RocksmithToolkitCLI\sngtotab\sngtotab.csproj">
+      <Project>{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}</Project>
+      <Name>sngtotab</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
       <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
       <Name>RocksmithToolkitLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SngToTab\SngToTab.csproj">
-      <Project>{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}</Project>
-      <Name>SngToTab</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

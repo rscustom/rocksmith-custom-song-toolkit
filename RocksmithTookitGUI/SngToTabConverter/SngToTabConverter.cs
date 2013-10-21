@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using RocksmithToolkitLib.Sng;
-using SngToTab;
+using RocksmithToolkitLib.SngToTab;
 using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage;
 using System.Reflection;

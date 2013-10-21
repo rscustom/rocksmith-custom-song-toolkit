@@ -12,10 +12,11 @@ namespace pedalgen
     {
         static void Main(string[] args)
         {
-
-            var dir = args[0];
+        	var dirs = new List<string>();
+        	for (int i=0; i < args.Length; i++)
+        	{dirs.Add(args[i]);}
             var pedals = new List<RsTone>();
-            foreach (string file in Directory.EnumerateFiles(dir))
+            foreach (string file in dirs)
             {
                 try
                 {
@@ -45,7 +46,8 @@ namespace pedalgen
             var bad = pedals.Where(p => p.Type == null);
             var goodPedals = pedals.Where(p => p.Type != null);
             var toolkitPedals = goodPedals.Select(pedal => pedal.ToPedal());
-            File.WriteAllText(Path.Combine(dir, "pedals.json"), JsonConvert.SerializeObject(toolkitPedals, Formatting.Indented));
+            foreach (var i in dirs)
+            File.WriteAllText(Path.Combine(i, "pedals.json"), JsonConvert.SerializeObject(toolkitPedals, Formatting.Indented));
         }
 
 

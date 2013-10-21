@@ -99,6 +99,17 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Ogg\OggFile.cs" />
     <Compile Include="GameData.cs" />
+    <Compile Include="SngToTab\Common.cs" />
+    <Compile Include="SngToTab\TabBeat.cs" />
+    <Compile Include="SngToTab\TabChord.cs" />
+    <Compile Include="SngToTab\TabEntity.cs" />
+    <Compile Include="SngToTab\TabFile.cs" />
+    <Compile Include="SngToTab\TabHeader.cs" />
+    <Compile Include="SngToTab\TabLinesEntity.cs" />
+    <Compile Include="SngToTab\TabMeasure.cs" />
+    <Compile Include="SngToTab\TabNote.cs" />
+    <Compile Include="SngToTab\TabSection.cs" />
+    <Compile Include="SngToTab\TuningInfo.cs" />
     <Compile Include="Tone\Pedal.cs" />
     <Compile Include="Tone\Knob.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
