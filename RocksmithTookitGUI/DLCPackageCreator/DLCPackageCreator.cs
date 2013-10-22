@@ -161,7 +161,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Fixed WWise Files|*.ogg";
+                ofd.Filter = "WWise OGG Files (*.ogg)|*.ogg";
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggPath = ofd.FileName;
             }
@@ -171,7 +171,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Fixed WWise Files|*.ogg";
+                ofd.Filter = "XBOX 360 WWise OGG Files (*.ogg)|*.ogg";
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggXBox360Path = ofd.FileName;
             }
@@ -181,7 +181,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Fixed WWise Files|*.ogg";
+                ofd.Filter = "PS3 WWise OGG Files (*.ogg)|*.ogg";
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggPS3Path = ofd.FileName;
             }
@@ -528,6 +528,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show("Error: Multiple Vocals arrangement found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
+            foreach (var arr in arrangements)
+            {
+                if (!File.Exists(arr.SongXml.File))
+                {
+                    MessageBox.Show("Error: XML file doesn't exist: ".Insert(31, arr.SongXml.File), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+
+            }
             var tones = TonesLB.Items.OfType<Tone>().ToList();
             string liveSignatureID = xboxLicense0IDTB.Text.Trim();
             if (rbuttonSignatureLIVE.Checked && String.IsNullOrEmpty(liveSignatureID))
@@ -689,7 +698,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Title = "Select a package or tone manifest file";
-                ofd.Filter = "Song package or Tone manifest|*.dat;*.*;tone*.manifest.json";
+                ofd.Filter = "Song package, Tone manifest or Rocksmith Tone Xml (*.xml,*.dat,*.,*.manifest.json)|*.xml;*.dat;*.*;tone*.manifest.json";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneImportFile = ofd.FileName;
             }

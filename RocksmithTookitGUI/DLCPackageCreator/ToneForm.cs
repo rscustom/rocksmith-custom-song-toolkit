@@ -35,7 +35,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneSavePath;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Rocksmith Tone|*.tone.xml";
+                ofd.Filter = "Rocksmith Tone (*.tone.xml)|*.tone.xml";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneSavePath = ofd.FileName;
             }
@@ -68,7 +68,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneSavePath;
             using (var ofd = new SaveFileDialog())
             {
-                ofd.Filter = "Rocksmith DLC Template|*.tone.xml";
+                ofd.Filter = "Rocksmith DLC Template (*.tone.xml)|*.tone.xml";
+                ofd.AddExtension = true;
+                ofd.DefaultExt = "tone.xml";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneSavePath = ofd.FileName;
             }
