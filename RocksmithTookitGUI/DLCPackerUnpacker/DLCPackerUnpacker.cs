@@ -94,15 +94,20 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Packer.Unpack(sourceFileName, savePath, useCryptography);
 
                 if (decodeOGG) {
-                    GamePlatform platform = Packer.GetPlatform(sourceFileName);
-                    var name = Path.GetFileNameWithoutExtension(sourceFileName);
-                    name += String.Format("_{0}", platform.ToString());
-                    string[] oggFiles = Directory.GetFiles(Path.Combine(savePath, name), "*.ogg", SearchOption.AllDirectories);
-                    foreach (var file in oggFiles)
+                    try
                     {
-                        var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                        OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath));
+                        GamePlatform platform = Packer.GetPlatform(sourceFileName);
+                        var name = Path.GetFileNameWithoutExtension(sourceFileName);
+                        name += String.Format("_{0}", platform.ToString());
+                        string[] oggFiles = Directory.GetFiles(Path.Combine(savePath, name), "*.ogg", SearchOption.AllDirectories);
+                        foreach (var file in oggFiles)
+                        {
+                            var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
+                            OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath));
+                        }
                     }
+                    catch (FileNotFoundException ex) { }
+                    catch (DirectoryNotFoundException ex) { }
                 }
             }
 

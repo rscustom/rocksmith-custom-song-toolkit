@@ -12,7 +12,7 @@ using System.ComponentModel;
 namespace RocksmithToolkitLib.Sng
 {
     public enum ArrangementName { Combo /* Combo */, Lead /* Single notes */, Rhythm /* Chords */, Bass, Vocals };
-    public enum GamePlatform { Pc, XBox360, PS3, None };
+    public enum GamePlatform { Pc, XBox360, PS3, Pc2014, None };
     public enum ArrangementType { Guitar, Bass, Vocal };
     public enum InstrumentTuning { [Description("E Standard")] Standard, [Description("Drop D")] DropD, [Description("Eb")] EFlat, [Description("Open G")] OpenG };
     public enum PluckedType { Picked, NotPicked };

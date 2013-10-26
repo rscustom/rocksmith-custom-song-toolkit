@@ -74,7 +74,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     psarc.AddEntry(directoryName + ".psarc", innerPsarcStream);
                 }
 
-                psarc.Write(psarcStream);
+                psarc.Write(psarcStream, false);
                 psarcStream.Flush();
                 psarcStream.Seek(0, SeekOrigin.Begin);
 
@@ -84,7 +84,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 using (var outputFileStream = File.Create(saveFileName))
                 {
                     if (useCryptography)
-                        RijndaelEncryptor.Encrypt(psarcStream, outputFileStream, RijndaelEncryptor.DLCKey);
+                        RijndaelEncryptor.EncryptFile(psarcStream, outputFileStream, RijndaelEncryptor.DLCKey);
                     else
                         psarcStream.CopyTo(outputFileStream);
                 }
@@ -102,7 +102,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     streamCollection.Add(fileStream);
                     innerPsarc.AddEntry(a, fileStream);
                 });
-                innerPsarc.Write(output);
+                innerPsarc.Write(output, false);
             }
         }
 
@@ -184,7 +184,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     innerPsarc.AddEntry(a, fileStream);
                 });
 
-                innerPsarc.Write(psarcStream);
+                innerPsarc.Write(psarcStream, false);
                 psarcStream.Flush();
                 psarcStream.Seek(0, SeekOrigin.Begin);
 
@@ -211,7 +211,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     using (var inputStream = new MemoryStream()) {
 
                         if (useCryptography) {
-                            RijndaelEncryptor.Decrypt(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
+                            RijndaelEncryptor.DecryptFile(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
                         } else {
                             inputFileStream.CopyTo(inputStream);
                         }
@@ -223,6 +223,11 @@ namespace RocksmithToolkitLib.DLCPackage
                     return;
                 case GamePlatform.PS3:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+                    break;
+                case GamePlatform.Pc2014:
+                    using (var inputStream = File.OpenRead(sourceFileName))
+                        ExtractPSARC(sourceFileName, savePath, inputStream, GamePlatform.Pc);
+                    break;
             }
             
         }
@@ -260,6 +265,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     case ".pkg":
                     case ".edat":
                         return GamePlatform.PS3;
+                    case ".psarc":
+                        return GamePlatform.Pc2014;
                     default:
                         return GamePlatform.None;
                 }

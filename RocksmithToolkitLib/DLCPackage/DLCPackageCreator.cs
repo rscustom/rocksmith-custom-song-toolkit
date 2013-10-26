@@ -80,7 +80,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 switch (platform) {
                     case GamePlatform.Pc:
                         using (var fl = File.Create(packagePath))
-                            RijndaelEncryptor.Encrypt(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
+                            RijndaelEncryptor.EncryptFile(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
                         break;
                     case GamePlatform.XBox360:
                         BuildXBox360Package(packagePath, info, XBox360Files, xboxPackageType);
@@ -281,7 +281,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry(packageList, packageListStream);
                         packageListStream.WriteTmpFile(packageList, platform);
                     }
-                    packPsarc.Write(output);
+                    packPsarc.Write(output, false);
                     output.Flush();
                     output.Seek(0, SeekOrigin.Begin);
                 }
@@ -396,7 +396,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         songPsarc.AddEntry(String.Format("GR/Behaviors/Songs/{0}.xml", Path.GetFileNameWithoutExtension(x.SongXml.File)), xmlFile);
                         songPsarc.AddEntry(String.Format("GRExports/{0}/{1}.sng", platform.GetPathName()[1], Path.GetFileNameWithoutExtension(x.SongFile.File)), sngFile);
                     }
-                    songPsarc.Write(output);
+                    songPsarc.Write(output, false);
                     output.Flush();
                     output.Seek(0, SeekOrigin.Begin);
                 }
@@ -436,7 +436,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 tonePsarc.AddEntry(x > 0 ? "Manifests/tone_bass.manifest.json" : "Manifests/tone.manifest.json", toneManifestStream);
                 tonePsarc.AddEntry("AggregateGraph.nt", toneAggregateGraphStream);
                 tonePsarc.AddEntry("PACKAGE_ID", packageIdStream);
-                tonePsarc.Write(output);
+                tonePsarc.Write(output, false);
                 output.Flush();
                 output.Seek(0, SeekOrigin.Begin);
             }

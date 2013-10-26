@@ -44,10 +44,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="PSARC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\PSARC\PSARC.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -101,6 +97,10 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Ogg\OggFile.cs" />
     <Compile Include="GameData.cs" />
+    <Compile Include="PSARC\BigEndianBinaryReader.cs" />
+    <Compile Include="PSARC\BigEndianBinaryWriter.cs" />
+    <Compile Include="PSARC\Entry.cs" />
+    <Compile Include="PSARC\PSARC.cs" />
     <Compile Include="SngToTab\Common.cs" />
     <Compile Include="SngToTab\TabBeat.cs" />
     <Compile Include="SngToTab\TabChord.cs" />

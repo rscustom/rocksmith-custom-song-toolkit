@@ -46,9 +46,6 @@
     <Reference Include="Ookii.Dialogs">
       <HintPath>..\lib\OokiiDialogs\Ookii.Dialogs.dll</HintPath>
     </Reference>
-    <Reference Include="PSARC">
-      <HintPath>..\lib\PSARC\PSARC.dll</HintPath>
-    </Reference>
     <Reference Include="PSTaskDialog">
       <HintPath>..\lib\PSTaskDialog\PSTaskDialog.dll</HintPath>
     </Reference>
