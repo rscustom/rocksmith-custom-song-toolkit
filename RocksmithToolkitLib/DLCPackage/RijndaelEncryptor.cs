@@ -51,6 +51,15 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
+        public static void EncryptPSARC(Stream input, Stream output, long len)
+        {
+            using (var rij = new RijndaelManaged())
+            {
+                InitRijndael(rij, PsarcKey, CipherMode.CFB);
+                Crypto(input, output, rij.CreateEncryptor(), len);
+            }
+        }
+
         public static void DecryptPSARC(Stream input, Stream output, long len)
         {
             using (var rij = new RijndaelManaged())

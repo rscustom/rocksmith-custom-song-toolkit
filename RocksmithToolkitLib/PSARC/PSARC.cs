@@ -85,7 +85,7 @@ namespace RocksmithToolkitLib.PSARC
 		{
 			this.Entries[0].Name = "NamesBlock.bin";
 			Stream data = this.Entries[0].Data;
-			BinaryReader binaryReader = new BinaryReader(data, Encoding.ASCII);
+			BinaryReader binaryReader = new BinaryReader(data);
 			StringBuilder stringBuilder = new StringBuilder(100);
 			string empty = string.Empty;
 			int index = 1;
@@ -287,9 +287,7 @@ namespace RocksmithToolkitLib.PSARC
 			{
 				binaryWriter.Write(Encoding.ASCII.GetBytes(this.Entries[i].Name));
 				if (i != this.Entries.Count - 1)
-				{
-					binaryWriter.Write(10);
-				}
+					binaryWriter.Write('\n');
 			}
 			this.Entries[0].Data.Seek(0L, SeekOrigin.Begin);
 		}
@@ -352,6 +350,38 @@ namespace RocksmithToolkitLib.PSARC
 			{
 				bigEndianBinaryWriter.Write(dictionary[current]);
 			}
+
+            if (encrypt)
+            {
+                var encStream = new MemoryStream();
+                using (var outputStream = new MemoryStream())
+                {
+                    str.Seek(0x20, SeekOrigin.Begin);
+                    RijndaelEncryptor.EncryptPSARC(str, outputStream, this.header.TotalTOCSize);
+
+                    int bytesRead;
+                    byte[] buffer = new byte[30000];
+
+                    str.Seek(0, SeekOrigin.Begin);
+                    while ((bytesRead = str.Read(buffer, 0, buffer.Length)) > 0)
+                        encStream.Write(buffer, 0, bytesRead);
+                    int decMax = (int)this.header.TotalTOCSize - 0x20;
+                    int decSize = 0;
+                    outputStream.Seek(0, SeekOrigin.Begin);
+                    encStream.Seek(0x20, SeekOrigin.Begin);
+                    while ((bytesRead = outputStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        decSize += bytesRead;
+                        if (decSize > decMax) bytesRead = decMax - (decSize - bytesRead);
+                        encStream.Write(buffer, 0, bytesRead);
+                    }
+                }
+
+                str.Seek(0, SeekOrigin.Begin);
+                encStream.Seek(0, SeekOrigin.Begin);
+                encStream.CopyTo(str);
+            }
+
 			str.Flush();
 		}
 	}
