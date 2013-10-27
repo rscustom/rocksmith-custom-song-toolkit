@@ -28,6 +28,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     break;
                 case GamePlatform.PS3:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+                    break;
+                case GamePlatform.Pc2014:
+                    PackPC2014(sourcePath, saveFileName);
+                    break;
                 case GamePlatform.None:
                     throw new InvalidOperationException("Invalid directory structure of package. \n\rDirectory: " + sourcePath);
             }
@@ -103,6 +107,30 @@ namespace RocksmithToolkitLib.DLCPackage
                     innerPsarc.AddEntry(a, fileStream);
                 });
                 innerPsarc.Write(output, false);
+            }
+        }
+
+        private static void PackPC2014(string sourcePath, string saveFileName)
+        {
+            using (var psarcStream = new MemoryStream())
+            {
+                var psarc = new PSARC.PSARC();
+
+                WalkThroughDirectory("", sourcePath, (a, b) =>
+                {
+                    var fileStream = File.OpenRead(b);
+                    psarc.AddEntry(a, fileStream);
+                });
+
+                psarc.Write(psarcStream, true);
+                psarcStream.Flush();
+                psarcStream.Seek(0, SeekOrigin.Begin);
+
+                if (Path.GetExtension(saveFileName) != ".psarc")
+                    saveFileName += ".psarc";
+
+                using (var outputFileStream = File.Create(saveFileName))
+                    psarcStream.CopyTo(outputFileStream);
             }
         }
 
@@ -273,6 +301,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 //TODO: Need to refactor this code in near future, works, but is not the best way.
                 if (File.Exists(Path.Combine(fileExtension, "APP_ID"))) {
                     return GamePlatform.Pc;
+                } else if (File.Exists(Path.Combine(fileExtension, "appid.appid"))) {
+                    return GamePlatform.Pc2014;
                 } else if (Directory.Exists(Path.Combine(fileExtension, ROOT_XBox360))) {
                     return GamePlatform.XBox360;
                 } else if (Directory.Exists(Path.Combine(fileExtension, ROOT_PS3))) {
