@@ -161,7 +161,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     var useCryptography = (platform == GamePlatform.Pc) ? true : false;
                     Packer.Unpack(sourceFileName, tmpDir, useCryptography);
 
-                    var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + String.Format("_{0}", GamePlatform.Pc);
+                    var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + String.Format("_{0}", platform);
 
                     var appIdFile = Path.Combine(unpackedDir, (platform == GamePlatform.Pc) ? "APP_ID" : "appid.appid");
 
