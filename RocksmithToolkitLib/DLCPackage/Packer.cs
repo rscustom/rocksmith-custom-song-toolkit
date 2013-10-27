@@ -215,18 +215,17 @@ namespace RocksmithToolkitLib.DLCPackage
                         } else {
                             inputFileStream.CopyTo(inputStream);
                         }
-                        ExtractPSARC(sourceFileName, savePath, inputStream, GamePlatform.Pc);
+                        ExtractPSARC(sourceFileName, savePath, inputStream, platform);
                     }
                     return;
                 case GamePlatform.XBox360:
-                    UnpackXBox360Package(sourceFileName, savePath, GamePlatform.XBox360);
+                    UnpackXBox360Package(sourceFileName, savePath, platform);
                     return;
                 case GamePlatform.PS3:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
-                    break;
                 case GamePlatform.Pc2014:
                     using (var inputStream = File.OpenRead(sourceFileName))
-                        ExtractPSARC(sourceFileName, savePath, inputStream, GamePlatform.Pc);
+                        ExtractPSARC(sourceFileName, savePath, inputStream, platform);
                     break;
             }
             
@@ -286,8 +285,11 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void ExtractPSARC(string filename, string path, Stream inputStream, GamePlatform platform)
         {
             var name = Path.GetFileNameWithoutExtension(filename);
-            if (Path.GetExtension(filename) == ".dat")
+            if (platform == GamePlatform.Pc && Path.GetExtension(filename) == ".dat" ||
+                platform == GamePlatform.Pc2014 && Path.GetExtension(filename) == ".psarc")
+            {
                 name += String.Format("_{0}", platform.ToString());
+            }
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream);
             foreach (var entry in psarc.Entries)

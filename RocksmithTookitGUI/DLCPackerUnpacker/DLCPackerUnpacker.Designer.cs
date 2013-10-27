@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DLCPackerUnpacker));
-            this.useCryptographyCheckbox = new System.Windows.Forms.CheckBox();
             this.unpackButton = new System.Windows.Forms.Button();
             this.packButton = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -37,23 +36,11 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
-            this.decodeOGGCheckbox = new System.Windows.Forms.CheckBox();
+            this.decodeAudioCheckbox = new System.Windows.Forms.CheckBox();
             this.updateSngCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // useCryptographyCheckbox
-            // 
-            this.useCryptographyCheckbox.AutoSize = true;
-            this.useCryptographyCheckbox.Checked = true;
-            this.useCryptographyCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.useCryptographyCheckbox.Location = new System.Drawing.Point(109, 3);
-            this.useCryptographyCheckbox.Name = "useCryptographyCheckbox";
-            this.useCryptographyCheckbox.Size = new System.Drawing.Size(109, 17);
-            this.useCryptographyCheckbox.TabIndex = 10;
-            this.useCryptographyCheckbox.Text = "Use cryptography";
-            this.useCryptographyCheckbox.UseVisualStyleBackColor = true;
             // 
             // unpackButton
             // 
@@ -132,17 +119,17 @@
             this.appIdCombo.TabIndex = 13;
             this.appIdCombo.SelectedValueChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
-            // decodeOGGCheckbox
+            // decodeAudioCheckbox
             // 
-            this.decodeOGGCheckbox.AutoSize = true;
-            this.decodeOGGCheckbox.Checked = true;
-            this.decodeOGGCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.decodeOGGCheckbox.Location = new System.Drawing.Point(109, 20);
-            this.decodeOGGCheckbox.Name = "decodeOGGCheckbox";
-            this.decodeOGGCheckbox.Size = new System.Drawing.Size(91, 17);
-            this.decodeOGGCheckbox.TabIndex = 14;
-            this.decodeOGGCheckbox.Text = "Decode OGG";
-            this.decodeOGGCheckbox.UseVisualStyleBackColor = true;
+            this.decodeAudioCheckbox.AutoSize = true;
+            this.decodeAudioCheckbox.Checked = true;
+            this.decodeAudioCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.decodeAudioCheckbox.Location = new System.Drawing.Point(109, 20);
+            this.decodeAudioCheckbox.Name = "decodeAudioCheckbox";
+            this.decodeAudioCheckbox.Size = new System.Drawing.Size(94, 17);
+            this.decodeAudioCheckbox.TabIndex = 14;
+            this.decodeAudioCheckbox.Text = "Decode Audio";
+            this.decodeAudioCheckbox.UseVisualStyleBackColor = true;
             // 
             // updateSngCheckBox
             // 
@@ -159,10 +146,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.updateSngCheckBox);
-            this.Controls.Add(this.decodeOGGCheckbox);
+            this.Controls.Add(this.decodeAudioCheckbox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.useCryptographyCheckbox);
             this.Controls.Add(this.unpackButton);
             this.Controls.Add(this.packButton);
             this.Name = "DLCPackerUnpacker";
@@ -177,7 +163,6 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox useCryptographyCheckbox;
         private System.Windows.Forms.Button unpackButton;
         private System.Windows.Forms.Button packButton;
         private System.Windows.Forms.PictureBox pictureBox2;
@@ -185,7 +170,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox appIdCombo;
         private CueTextBox AppIdTB;
-        private System.Windows.Forms.CheckBox decodeOGGCheckbox;
+        private System.Windows.Forms.CheckBox decodeAudioCheckbox;
         private System.Windows.Forms.CheckBox updateSngCheckBox;
     }
 }

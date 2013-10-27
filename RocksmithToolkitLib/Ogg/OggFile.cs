@@ -12,6 +12,8 @@ namespace RocksmithToolkitLib.Ogg
 {
     public static class OggFile
     {
+        public enum WwiseVersion { Wwise2010, Wwise2013, None };
+
         public static GamePlatform getPlatform(String inputFile)
         {
             using (var inputFileStream = File.Open(inputFile, FileMode.Open))
@@ -155,11 +157,12 @@ namespace RocksmithToolkitLib.Ogg
             }
         }
 
-        public static void Revorb(string file, string outputFileName, string appPath)
+        public static void Revorb(string file, string outputFileName, string appPath, WwiseVersion wwiseVersion)
         {
             string ww2oggPath = Path.Combine(appPath, "ww2ogg.exe");
             string revorbPath = Path.Combine(appPath, "revorb.exe");
-            string codebooksPath = Path.Combine(appPath, "packed_codebooks.bin");
+            string codebooksPath = Path.Combine(appPath, "packed_codebooks.bin"); // Default
+            string codebooks603Path = Path.Combine(appPath, "packed_codebooks_aoTuV_603.bin");
 
             // Verifying if third part apps is in root application directory
             if (!File.Exists(ww2oggPath))
@@ -171,11 +174,26 @@ namespace RocksmithToolkitLib.Ogg
             if (!File.Exists(codebooksPath))
                 throw new FileNotFoundException("packed_codebooks.bin not found!");
 
+            if (!File.Exists(codebooks603Path))
+                throw new FileNotFoundException("packed_codebooks_aoTuV_603.bin not found!");
+
             // Processing with ww2ogg
             Process ww2oggProcess = new Process();
             ww2oggProcess.StartInfo.FileName = ww2oggPath;
             ww2oggProcess.StartInfo.WorkingDirectory = appPath;
-            ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\"", file, outputFileName);
+
+            switch (wwiseVersion)
+            {
+                case WwiseVersion.Wwise2010:
+                    ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\"", file, outputFileName);
+                    break;
+                case WwiseVersion.Wwise2013:
+                    ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\" --pcb {2}", file, outputFileName, codebooks603Path);
+                    break;
+                default:
+                    throw new InvalidOperationException("Wwise version not supported or invalid input file.");
+            }
+            
             ww2oggProcess.StartInfo.UseShellExecute = false;
             ww2oggProcess.StartInfo.CreateNoWindow = true;
             ww2oggProcess.StartInfo.RedirectStandardOutput = true;
@@ -206,6 +224,21 @@ namespace RocksmithToolkitLib.Ogg
                     File.Delete(outputFileName);
 
                 throw new Exception("revorb process error." + Environment.NewLine + revorbResult);
+            }
+        }
+
+        public static WwiseVersion GetWwiseVersion(this GamePlatform platform)
+        {
+            switch (platform)
+            {
+                case GamePlatform.Pc:
+                case GamePlatform.XBox360:
+                case GamePlatform.PS3:
+                    return WwiseVersion.Wwise2010;
+                case GamePlatform.Pc2014:
+                    return WwiseVersion.Wwise2013;
+                default:
+                    throw new InvalidOperationException("Platform not found.");
             }
         }
     }

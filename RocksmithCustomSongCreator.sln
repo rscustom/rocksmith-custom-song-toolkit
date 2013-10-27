@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-p
 	ProjectSection(SolutionItems) = preProject
 		Third-party Apps\tool\core.jar = Third-party Apps\tool\core.jar
 		Third-party Apps\packed_codebooks.bin = Third-party Apps\packed_codebooks.bin
+		Third-party Apps\packed_codebooks_aoTuV_603.bin = Third-party Apps\packed_codebooks_aoTuV_603.bin
 		Third-party Apps\readme.txt = Third-party Apps\readme.txt
 		Third-party Apps\rebuilder.cmd = Third-party Apps\rebuilder.cmd
 		Third-party Apps\rebuilder.config = Third-party Apps\rebuilder.config
