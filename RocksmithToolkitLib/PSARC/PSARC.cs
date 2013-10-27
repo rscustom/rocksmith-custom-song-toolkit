@@ -127,6 +127,7 @@ namespace RocksmithToolkitLib.PSARC
 			this.header.blockSize = bigEndianBinaryReader.ReadUInt32();
 			this.header.archiveFlags = bigEndianBinaryReader.ReadUInt32();
 
+            var tocStream = str;
             if (this.header.archiveFlags == 4)
             {
                 var decStream = new MemoryStream();
@@ -137,13 +138,9 @@ namespace RocksmithToolkitLib.PSARC
                     int bytesRead;
                     byte[] buffer = new byte[30000];
 
-                    str.Seek(0, SeekOrigin.Begin);
-                    while ((bytesRead = str.Read(buffer, 0, buffer.Length)) > 0)
-                        decStream.Write(buffer, 0, bytesRead);
                     int decMax = (int)this.header.TotalTOCSize - 0x20;
                     int decSize = 0;
                     outputStream.Seek(0, SeekOrigin.Begin);
-                    decStream.Seek(0x20, SeekOrigin.Begin);
                     while ((bytesRead = outputStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
                         decSize += bytesRead;
@@ -151,10 +148,13 @@ namespace RocksmithToolkitLib.PSARC
                         decStream.Write(buffer, 0, bytesRead);
                     }
                 }
-                str = decStream;
-                bigEndianBinaryReader = new BigEndianBinaryReader(decStream);
-                str.Seek(0x20, SeekOrigin.Begin);
+
+                decStream.Seek(0, SeekOrigin.Begin);
+                str.Seek(this.header.TotalTOCSize, SeekOrigin.Begin);
+                tocStream = decStream;
             }
+
+            BigEndianBinaryReader bigEndianBinaryReaderTOC = new BigEndianBinaryReader(tocStream);
 
 			if (this.header.MagicNumber == 1347633490u)
 			{
@@ -174,14 +174,14 @@ namespace RocksmithToolkitLib.PSARC
 						this.Entries.Add(new Entry
 						{
 							id = num2,
-							MD5 = bigEndianBinaryReader.ReadBytes(16),
-							zIndex = bigEndianBinaryReader.ReadUInt32(),
-							Length = bigEndianBinaryReader.ReadUInt40(),
-							Offset = bigEndianBinaryReader.ReadUInt40()
+                            MD5 = bigEndianBinaryReaderTOC.ReadBytes(16),
+                            zIndex = bigEndianBinaryReaderTOC.ReadUInt32(),
+                            Length = bigEndianBinaryReaderTOC.ReadUInt40(),
+                            Offset = bigEndianBinaryReaderTOC.ReadUInt40()
 						});
 						num2++;
 					}
-					uint num3 = (this.header.TotalTOCSize - (uint)str.Position) / (uint)b;
+					uint num3 = (this.header.TotalTOCSize - (uint)(tocStream.Position+0x20)) / (uint)b;
 					uint[] array = new uint[num3];
 					num2 = 0;
 					while ((long)num2 < (long)((ulong)num3))
@@ -189,13 +189,13 @@ namespace RocksmithToolkitLib.PSARC
 						switch (b)
 						{
 						case 2:
-							array[num2] = (uint)bigEndianBinaryReader.ReadUInt16();
+                                array[num2] = (uint)bigEndianBinaryReaderTOC.ReadUInt16();
 							break;
 						case 3:
-							array[num2] = bigEndianBinaryReader.ReadUInt24();
+                            array[num2] = bigEndianBinaryReaderTOC.ReadUInt24();
 							break;
 						case 4:
-							array[num2] = bigEndianBinaryReader.ReadUInt32();
+                            array[num2] = bigEndianBinaryReaderTOC.ReadUInt32();
 							break;
 						}
 						num2++;
