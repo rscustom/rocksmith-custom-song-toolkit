@@ -181,7 +181,7 @@
             this.dlcPackerUnpackerTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcPackerUnpackerTab.Name = "dlcPackerUnpackerTab";
             this.dlcPackerUnpackerTab.Padding = new System.Windows.Forms.Padding(2);
-            this.dlcPackerUnpackerTab.Size = new System.Drawing.Size(546, 469);
+            this.dlcPackerUnpackerTab.Size = new System.Drawing.Size(696, 469);
             this.dlcPackerUnpackerTab.TabIndex = 3;
             this.dlcPackerUnpackerTab.Text = "DLC Packer/Unpacker";
             this.dlcPackerUnpackerTab.UseVisualStyleBackColor = true;
@@ -192,7 +192,7 @@
             this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(160, 60);
             this.dlcPackerUnpackerControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
-            this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(219, 204);
+            this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(419, 204);
             this.dlcPackerUnpackerControl.TabIndex = 0;
             // 
             // oggConverterTab

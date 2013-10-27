@@ -19,17 +19,11 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         {
             InitializeComponent();
 
-            SongAppId firstSong = null;
-            foreach (var song in SongAppIdRepository.Instance().List)
-            {
-                appIdCombo.Items.Add(song);
-                if (firstSong == null)
-                {
-                    firstSong = song;
-                }
-            }
-            appIdCombo.SelectedItem = firstSong;
-            AppIdTB.Text = firstSong.AppId;
+            rsversionCombo.DataSource = Enum.GetNames(typeof(SongAppId.RSVersion));
+            rsversionCombo.SelectedItem = SongAppId.RSVersion.RS2012;
+
+            SongAppId.RSVersion rsVersion = (SongAppId.RSVersion)Enum.Parse(typeof(SongAppId.RSVersion), rsversionCombo.SelectedItem.ToString());
+            PopulateAppIdCombo(rsVersion);
         }
 
         private void packButton_Click(object sender, EventArgs e)
@@ -187,6 +181,28 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 MessageBox.Show("APP ID update is complete with errors. See below: " + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             
+        }
+
+        private void rsversionCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SongAppId.RSVersion rsVersion = (SongAppId.RSVersion)Enum.Parse(typeof(SongAppId.RSVersion), rsversionCombo.SelectedItem.ToString());
+            PopulateAppIdCombo(rsVersion); ;
+        }
+
+        private void PopulateAppIdCombo(SongAppId.RSVersion rsVersion)
+        {
+            SongAppId firstSong = null;
+            appIdCombo.Items.Clear();
+            foreach (var song in SongAppIdRepository.Instance().Select(rsVersion))
+            {
+                appIdCombo.Items.Add(song);
+                if (firstSong == null)
+                {
+                    firstSong = song;
+                }
+            }
+            appIdCombo.SelectedItem = firstSong;
+            AppIdTB.Text = firstSong.AppId;
         }
     }
 }

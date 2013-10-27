@@ -19,5 +19,10 @@ namespace RocksmithToolkitLib.DLCPackage {
         public SongAppId Select(string appId) {
             return List.Single<SongAppId>(s => s.AppId == appId);
         }
+
+        public IEnumerable<SongAppId> Select(SongAppId.RSVersion rsVersion)
+        {
+            return List.OfType<SongAppId>().Where(s => s.Version == rsVersion);
+        }
     }
 }

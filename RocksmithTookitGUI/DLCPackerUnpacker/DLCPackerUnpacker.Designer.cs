@@ -34,6 +34,7 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rsversionCombo = new System.Windows.Forms.ComboBox();
             this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.decodeAudioCheckbox = new System.Windows.Forms.CheckBox();
@@ -44,7 +45,7 @@
             // 
             // unpackButton
             // 
-            this.unpackButton.Location = new System.Drawing.Point(109, 85);
+            this.unpackButton.Location = new System.Drawing.Point(215, 81);
             this.unpackButton.Name = "unpackButton";
             this.unpackButton.Size = new System.Drawing.Size(89, 23);
             this.unpackButton.TabIndex = 9;
@@ -54,7 +55,7 @@
             // 
             // packButton
             // 
-            this.packButton.Location = new System.Drawing.Point(109, 61);
+            this.packButton.Location = new System.Drawing.Point(215, 57);
             this.packButton.Name = "packButton";
             this.packButton.Size = new System.Drawing.Size(89, 23);
             this.packButton.TabIndex = 8;
@@ -65,7 +66,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox2.Location = new System.Drawing.Point(98, 5);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(100, 103);
             this.pictureBox2.TabIndex = 11;
@@ -74,9 +75,9 @@
             // repackButton
             // 
             this.repackButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.repackButton.Location = new System.Drawing.Point(106, 42);
+            this.repackButton.Location = new System.Drawing.Point(83, 43);
             this.repackButton.Name = "repackButton";
-            this.repackButton.Size = new System.Drawing.Size(89, 23);
+            this.repackButton.Size = new System.Drawing.Size(306, 23);
             this.repackButton.TabIndex = 12;
             this.repackButton.Text = "Choose DLC";
             this.repackButton.UseVisualStyleBackColor = true;
@@ -84,26 +85,40 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.rsversionCombo);
             this.groupBox1.Controls.Add(this.AppIdTB);
             this.groupBox1.Controls.Add(this.appIdCombo);
             this.groupBox1.Controls.Add(this.repackButton);
-            this.groupBox1.Location = new System.Drawing.Point(3, 112);
+            this.groupBox1.Location = new System.Drawing.Point(3, 113);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(200, 71);
+            this.groupBox1.Size = new System.Drawing.Size(395, 71);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Update App ID";
+            // 
+            // rsversionCombo
+            // 
+            this.rsversionCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rsversionCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.rsversionCombo.FormattingEnabled = true;
+            this.rsversionCombo.Location = new System.Drawing.Point(5, 17);
+            this.rsversionCombo.Margin = new System.Windows.Forms.Padding(2);
+            this.rsversionCombo.Name = "rsversionCombo";
+            this.rsversionCombo.Size = new System.Drawing.Size(74, 21);
+            this.rsversionCombo.TabIndex = 42;
+            this.rsversionCombo.SelectedIndexChanged += new System.EventHandler(this.rsversionCombo_SelectedIndexChanged);
             // 
             // AppIdTB
             // 
             this.AppIdTB.Cue = "APP ID";
             this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
-            this.AppIdTB.Location = new System.Drawing.Point(5, 45);
+            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
             this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(96, 20);
+            this.AppIdTB.Size = new System.Drawing.Size(74, 20);
             this.AppIdTB.TabIndex = 41;
             // 
             // appIdCombo
@@ -112,10 +127,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.appIdCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.appIdCombo.FormattingEnabled = true;
-            this.appIdCombo.Location = new System.Drawing.Point(4, 17);
+            this.appIdCombo.Location = new System.Drawing.Point(83, 17);
             this.appIdCombo.Margin = new System.Windows.Forms.Padding(2);
             this.appIdCombo.Name = "appIdCombo";
-            this.appIdCombo.Size = new System.Drawing.Size(192, 21);
+            this.appIdCombo.Size = new System.Drawing.Size(306, 21);
             this.appIdCombo.TabIndex = 13;
             this.appIdCombo.SelectedValueChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
@@ -124,7 +139,7 @@
             this.decodeAudioCheckbox.AutoSize = true;
             this.decodeAudioCheckbox.Checked = true;
             this.decodeAudioCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.decodeAudioCheckbox.Location = new System.Drawing.Point(109, 20);
+            this.decodeAudioCheckbox.Location = new System.Drawing.Point(215, 16);
             this.decodeAudioCheckbox.Name = "decodeAudioCheckbox";
             this.decodeAudioCheckbox.Size = new System.Drawing.Size(94, 17);
             this.decodeAudioCheckbox.TabIndex = 14;
@@ -134,7 +149,7 @@
             // updateSngCheckBox
             // 
             this.updateSngCheckBox.AutoSize = true;
-            this.updateSngCheckBox.Location = new System.Drawing.Point(109, 38);
+            this.updateSngCheckBox.Location = new System.Drawing.Point(215, 34);
             this.updateSngCheckBox.Name = "updateSngCheckBox";
             this.updateSngCheckBox.Size = new System.Drawing.Size(87, 17);
             this.updateSngCheckBox.TabIndex = 15;
@@ -152,7 +167,7 @@
             this.Controls.Add(this.unpackButton);
             this.Controls.Add(this.packButton);
             this.Name = "DLCPackerUnpacker";
-            this.Size = new System.Drawing.Size(211, 192);
+            this.Size = new System.Drawing.Size(400, 191);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -172,5 +187,6 @@
         private CueTextBox AppIdTB;
         private System.Windows.Forms.CheckBox decodeAudioCheckbox;
         private System.Windows.Forms.CheckBox updateSngCheckBox;
+        private System.Windows.Forms.ComboBox rsversionCombo;
     }
 }

@@ -6,6 +6,11 @@ using System.Xml.Serialization;
 
 namespace RocksmithToolkitLib.DLCPackage {
     public class SongAppId {
+        public enum RSVersion { RS2012, RS2014 }
+
+        [XmlAttribute]
+        public RSVersion Version { get; set; }
+        
         [XmlAttribute]
         public string Name { get; set; }
         
