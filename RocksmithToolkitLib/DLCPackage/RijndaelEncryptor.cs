@@ -33,6 +33,14 @@ namespace RocksmithToolkitLib.DLCPackage
             0xBF, 0xDF, 0x25, 0x09, 0x0D, 0xF2, 0x57, 0x2C
         };
 
+        public static byte[] SngKey = new byte[32]
+        {
+            0x98, 0x21, 0x33, 0x0E, 0x34, 0xB9, 0x1F, 0x70,
+            0xD0, 0xA4, 0x8C, 0xBD, 0x62, 0x59, 0x93, 0x12,
+            0x69, 0x70, 0xCE, 0xA0, 0x91, 0x92, 0xC0, 0xE6,
+            0xCD, 0xA6, 0x76, 0xCC, 0x98, 0x38, 0x28, 0x9D
+        };
+
         public static void EncryptFile(Stream input, Stream output, byte[] key)
         {
             using (var rij = new RijndaelManaged())
@@ -49,6 +57,45 @@ namespace RocksmithToolkitLib.DLCPackage
                 InitRijndael(rij, key, CipherMode.ECB);
                 Crypto(input, output, rij.CreateDecryptor(), input.Length);
             }
+        }
+
+        public static void DecryptSng(Stream input, Stream output)
+        {
+            var writer = new BinaryWriter(output);
+            var reader = new BinaryReader(input);
+            writer.Write(reader.ReadBytes(8)); // 4A 00 00 00 03 00 00 00
+            byte[] iv = reader.ReadBytes(16);
+            using (var rij = new RijndaelManaged())
+            {
+                InitRijndael(rij, SngKey, CipherMode.CFB);
+                rij.IV = iv;
+
+                var buffer = new byte[16];
+                long len = input.Length - input.Position;
+                for (long i = 0; i < len; i += buffer.Length)
+                {
+                    using (ICryptoTransform transform = rij.CreateDecryptor())
+                    {
+                        var cs = new CryptoStream(output, transform, CryptoStreamMode.Write);
+                        int bytesread = input.Read(buffer, 0, buffer.Length);
+                        cs.Write(buffer, 0, bytesread);
+
+                        int pad = buffer.Length - bytesread;
+                        if (pad > 0)
+                            cs.Write(new byte[pad], 0, pad);
+
+                        cs.Flush();
+                    }
+
+                    int j;
+                    bool carry;
+                    for (j = (rij.IV.Length) - 1, carry = true; j >= 0 && carry; j--)
+                        carry = ((iv[j] = (byte)(rij.IV[j] + 1)) == 0);
+                    rij.IV = iv;
+                }
+                output.SetLength(input.Length - iv.Length);
+            }
+            output.SetLength(input.Length);
         }
 
         public static void EncryptPSARC(Stream input, Stream output, long len)
