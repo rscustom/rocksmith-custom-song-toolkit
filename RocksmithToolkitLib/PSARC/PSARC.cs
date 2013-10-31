@@ -106,14 +106,21 @@ namespace RocksmithToolkitLib.PSARC
 			data.Seek(0L, SeekOrigin.Begin);
             this.Entries.Remove(this.Entries[0]);
 		}
-		private void inflateEntries(BigEndianBinaryReader reader, uint[] zLenghts, uint blockSize)
-		{
-			foreach (Entry current in this.Entries)
-			{
-				current.Data = new MemoryStream();
-				this.InflateEntry(current, reader, zLenghts, blockSize, current.Data);
-			}
-		}
+        private void inflateEntries(BigEndianBinaryReader reader, uint[] zLenghts, uint blockSize)
+        {
+            foreach (Entry current in this.Entries)
+            {
+                var tmpFile = Path.GetTempFileName();
+                current.Data = new FileStream(tmpFile, FileMode.Create);
+                this.InflateEntry(current, reader, zLenghts, blockSize, current.Data);
+                try
+                {
+                    if (File.Exists(tmpFile))
+                        File.Delete(tmpFile);
+                }
+                catch { }
+            }
+        }
 		public void Read(Stream str)
 		{
 			this.Entries.Clear();
