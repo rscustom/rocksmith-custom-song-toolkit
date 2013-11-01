@@ -33,12 +33,20 @@ namespace RocksmithToolkitLib.DLCPackage
             0xBF, 0xDF, 0x25, 0x09, 0x0D, 0xF2, 0x57, 0x2C
         };
 
-        public static byte[] SngKey = new byte[32]
+        public static byte[] SngKeyMac = new byte[32]
         {
             0x98, 0x21, 0x33, 0x0E, 0x34, 0xB9, 0x1F, 0x70,
             0xD0, 0xA4, 0x8C, 0xBD, 0x62, 0x59, 0x93, 0x12,
             0x69, 0x70, 0xCE, 0xA0, 0x91, 0x92, 0xC0, 0xE6,
             0xCD, 0xA6, 0x76, 0xCC, 0x98, 0x38, 0x28, 0x9D
+        };
+
+        public static byte[] SngKeyPC = new byte[32]
+        {
+            0xCB, 0x64, 0x8D, 0xF3, 0xD1, 0x2A, 0x16, 0xBF,
+            0x71, 0x70, 0x14, 0x14, 0xE6, 0x96, 0x19, 0xEC,
+            0x17, 0x1C, 0xCA, 0x5D, 0x2A, 0x14, 0x2E, 0x3E,
+            0x59, 0xDE, 0x7A, 0xDD, 0xA1, 0x8A, 0x3A, 0x30
         };
 
         public static void EncryptFile(Stream input, Stream output, byte[] key)
@@ -59,15 +67,14 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        public static void DecryptSng(Stream input, Stream output)
+        public static void DecryptSng(Stream input, Stream output, byte[] key)
         {
-            var writer = new BinaryWriter(output);
             var reader = new BinaryReader(input);
-            writer.Write(reader.ReadBytes(8)); // 4A 00 00 00 03 00 00 00
+            reader.ReadBytes(8); // 4A 00 00 00 03 00 00 00
             byte[] iv = reader.ReadBytes(16);
             using (var rij = new RijndaelManaged())
             {
-                InitRijndael(rij, SngKey, CipherMode.CFB);
+                InitRijndael(rij, key, CipherMode.CFB);
                 rij.IV = iv;
 
                 var buffer = new byte[16];
@@ -93,9 +100,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         carry = ((iv[j] = (byte)(rij.IV[j] + 1)) == 0);
                     rij.IV = iv;
                 }
-                output.SetLength(input.Length - iv.Length);
+                output.SetLength(input.Length - (iv.Length + 8));
             }
-            output.SetLength(input.Length);
         }
 
         public static void EncryptPSARC(Stream input, Stream output, long len)
