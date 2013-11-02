@@ -135,6 +135,7 @@ namespace RocksmithToolkitLib.PSARC
 			this.header.archiveFlags = bigEndianBinaryReader.ReadUInt32();
 
             var tocStream = str;
+            BigEndianBinaryReader bigEndianBinaryReaderTOC = bigEndianBinaryReader;
             if (this.header.archiveFlags == 4)
             {
                 var decStream = new MemoryStream();
@@ -159,9 +160,8 @@ namespace RocksmithToolkitLib.PSARC
                 decStream.Seek(0, SeekOrigin.Begin);
                 str.Seek(this.header.TotalTOCSize, SeekOrigin.Begin);
                 tocStream = decStream;
+                bigEndianBinaryReaderTOC = new BigEndianBinaryReader(tocStream);
             }
-
-            BigEndianBinaryReader bigEndianBinaryReaderTOC = new BigEndianBinaryReader(tocStream);
 
 			if (this.header.MagicNumber == 1347633490u)
 			{
@@ -188,7 +188,9 @@ namespace RocksmithToolkitLib.PSARC
 						});
 						num2++;
 					}
-					uint num3 = (this.header.TotalTOCSize - (uint)(tocStream.Position+0x20)) / (uint)b;
+
+                    long decMax = (this.header.archiveFlags == 4) ? 32 : 0;
+                    uint num3 = (this.header.TotalTOCSize - (uint)(tocStream.Position + decMax)) / (uint)b;
 					uint[] array = new uint[num3];
 					num2 = 0;
 					while ((long)num2 < (long)((ulong)num3))
