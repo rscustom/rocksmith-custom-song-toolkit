@@ -1,4 +1,4 @@
-using ComponentAce.Compression.Libs.zlib;
+using zlib;
 using System;
 using System.Collections.Generic;
 using System.IO;
