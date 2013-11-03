@@ -24,20 +24,33 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     {
         private const string MESSAGEBOX_CAPTION =  "DLC Package Creator";
 
+        private SongAppId.RSVersion CurrentRSVersion {
+            get {
+                if (RS2014.Checked)
+                    return SongAppId.RSVersion.RS2014;
+                else
+                    return SongAppId.RSVersion.RS2012; //Default
+            }
+        }
+
+        private string CurrentOFDFilter
+        {
+            get
+            {
+                switch (CurrentRSVersion)
+                {
+                    case SongAppId.RSVersion.RS2014:
+                        return "Wwise 2013 audio files (*.wem)|*.wem";
+                    default:
+                        return "Wwise 2010 audio files (*.ogg)|*.ogg"; 
+                }
+            }
+        }
+
         public DLCPackageCreator()
         {
             InitializeComponent();
-            SongAppId firstSong = null;
-            foreach (var song in SongAppIdRepository.Instance().List)
-            {
-                cmbAppIds.Items.Add(song);
-                if (firstSong == null)
-                {
-                    firstSong = song;
-                }
-            }
-            cmbAppIds.SelectedItem = firstSong;
-            AppIdTB.Text = firstSong.AppId;
+            PopulateAppIdCombo(CurrentRSVersion);
             TonesLB.Items.Add(CreateNewTone());
         }
 
@@ -161,7 +174,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "WWise OGG Files (*.ogg)|*.ogg";
+                ofd.Filter = "PC " + CurrentOFDFilter;
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    OggPath = ofd.FileName;
+            }
+        }
+
+        private void openOggMacButton_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "MAC " + CurrentOFDFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggPath = ofd.FileName;
             }
@@ -171,7 +194,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "XBOX 360 WWise OGG Files (*.ogg)|*.ogg";
+                ofd.Filter = "XBOX 360 " + CurrentOFDFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggXBox360Path = ofd.FileName;
             }
@@ -181,7 +204,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "PS3 WWise OGG Files (*.ogg)|*.ogg";
+                ofd.Filter = "PS3 " + CurrentOFDFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggPS3Path = ofd.FileName;
             }
@@ -231,7 +254,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (platformPC.Checked)
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, GamePlatform.Pc, null);
             if (platformXBox360.Checked)
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, GamePlatform.XBox360, rbuttonSignatureCON.Checked ? PackageMagic.CON : PackageMagic.LIVE);
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, GamePlatform.XBox360, PackageMagic.CON);
             if (platformPS3.Checked)
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, GamePlatform.PS3, null);
 
@@ -374,25 +397,25 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Album art
             AlbumArtPath = MakeAbsolute(path, info.AlbumArtPath);
 
-            // Windows ogg file
+            // Windows audio file
             if (!String.IsNullOrEmpty(info.OggPath))
                 OggPath = MakeAbsolute(path, info.OggPath);
             platformPC.Checked = !String.IsNullOrEmpty(OggPath);
 
-            // XBox360 ogg file
+            // XBox360 audio file
             if (!String.IsNullOrEmpty(info.OggXBox360Path))
                 OggXBox360Path = MakeAbsolute(path, info.OggXBox360Path);
             platformXBox360.Checked = !String.IsNullOrEmpty(OggXBox360Path);
 
-            // PS3 ogg file
+            // PS3 audio file
             if (!String.IsNullOrEmpty(info.OggPS3Path))
                 OggPS3Path = MakeAbsolute(path, info.OggPS3Path);
             platformPS3.Checked = !String.IsNullOrEmpty(OggPS3Path);
 
             volumeBox.Value = info.Volume;
 
-            if (platformXBox360.Checked)
-                rbuttonSignatureLIVE.Checked = info.SignatureType == PackageMagic.LIVE;
+            //if (platformXBox360.Checked)
+            //    rbuttonSignatureLIVE.Checked = info.SignatureType == PackageMagic.LIVE;
 
             foreach (var arrangement in info.Arrangements)
             {
@@ -538,25 +561,25 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             }
             var tones = TonesLB.Items.OfType<Tone>().ToList();
-            string liveSignatureID = xboxLicense0IDTB.Text.Trim();
-            if (rbuttonSignatureLIVE.Checked && String.IsNullOrEmpty(liveSignatureID))
-            {
-                MessageBox.Show("Error: If LIVE signature is selected, your LIVE signature ID is required (in HEX format)", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                xboxLicense0IDTB.Focus();
-                return null;
-            }
-            if (rbuttonSignatureLIVE.Checked && !new Regex("([A-Fa-f0-9]{2})+$").IsMatch(liveSignatureID))
-            {
-                MessageBox.Show("Error: LIVE signature ID seems to be not valid, need a HEX value", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                xboxLicense0IDTB.Focus();
-                return null;
-            }
+            //string liveSignatureID = xboxLicense0IDTB.Text.Trim();
+            //if (rbuttonSignatureLIVE.Checked && String.IsNullOrEmpty(liveSignatureID))
+            //{
+            //    MessageBox.Show("Error: If LIVE signature is selected, your LIVE signature ID is required (in HEX format)", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    xboxLicense0IDTB.Focus();
+            //    return null;
+            //}
+            //if (rbuttonSignatureLIVE.Checked && !new Regex("([A-Fa-f0-9]{2})+$").IsMatch(liveSignatureID))
+            //{
+            //    MessageBox.Show("Error: LIVE signature ID seems to be not valid, need a HEX value", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    xboxLicense0IDTB.Focus();
+            //    return null;
+            //}
 
             List<XBox360License> licenses = new List<XBox360License>();
-            if (rbuttonSignatureLIVE.Checked)
-            {
-                licenses.Add(new XBox360License() { ID = Convert.ToInt64(xboxLicense0IDTB.Text.Trim(), 16), Bit = 1, Flag = 1 });
-            }
+            //if (rbuttonSignatureLIVE.Checked)
+            //{
+            //    licenses.Add(new XBox360License() { ID = Convert.ToInt64(xboxLicense0IDTB.Text.Trim(), 16), Bit = 1, Flag = 1 });
+            //}
             
             var data = new DLCPackageData
             {
@@ -580,7 +603,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Arrangements = arrangements,
                 Tones = tones,
                 Volume = volumeBox.Value,
-                SignatureType = rbuttonSignatureCON.Checked ? PackageMagic.CON : PackageMagic.LIVE,
+                SignatureType = PackageMagic.CON,
                 XBox360Licenses = licenses
             };
 
@@ -723,11 +746,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             CheckBox platformCkb = ((CheckBox)sender);
             bool pChecked = platformCkb.Checked;
-            if (platformCkb.Name.IndexOf("XBox360") > 0)
+            if (platformCkb.Name.IndexOf("MAC") > 0)
+            {
+                oggMacPathTB.Visible = pChecked;
+                openOggMacButton.Visible = pChecked;
+            }
+            else if (platformCkb.Name.IndexOf("XBox360") > 0)
             {
                 oggXBox360PathTB.Visible = pChecked;
                 openOggXBox360Button.Visible = pChecked;
-                panelXBox360SignatureType.Visible = pChecked;
+                //panelXBox360SignatureType.Visible = pChecked;
             }
             else if (platformCkb.Name.IndexOf("PS3") > 0)
             {
@@ -745,8 +773,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void AppIdTB_TextChanged(object sender, EventArgs e) {
             var appId = ((TextBox)sender).Text.Trim();
+            SongAppId songAppId = SongAppIdRepository.Instance().Select(appId, CurrentRSVersion);            
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
-                cmbAppIds.SelectedIndex = SongAppIdRepository.Instance().List.TakeWhile(a => a.AppId != appId).Count();
+                cmbAppIds.SelectedItem = songAppId;
         }
 
         private T Copy<T>(T value)
@@ -778,10 +807,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             return name;
         }
 
-        private void rbuttonSignature_CheckedChanged(object sender, EventArgs e)
-        {
-            xboxLicense0IDTB.Visible = rbuttonSignatureLIVE.Checked;
-        }
+        //private void rbuttonSignature_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    xboxLicense0IDTB.Visible = rbuttonSignatureLIVE.Checked;
+        //}
 
         private void ListBox_KeyDown(object sender, KeyEventArgs e) {
             var control = (ListBox)sender;
@@ -814,6 +843,31 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             control.Refresh();
+        }
+
+        private void RSVersion_CheckedChanged(object sender, EventArgs e)
+        {
+            PopulateAppIdCombo(CurrentRSVersion);
+
+            // MAC RS2014 only
+            platformMAC.Enabled = CurrentRSVersion == SongAppId.RSVersion.RS2014;
+            platformMAC.Checked = false;
+        }
+
+        private void PopulateAppIdCombo(SongAppId.RSVersion rsVersion)
+        {
+            SongAppId firstSong = null;
+            cmbAppIds.Items.Clear();
+            foreach (var song in SongAppIdRepository.Instance().Select(rsVersion))
+            {
+                cmbAppIds.Items.Add(song);
+                if (firstSong == null)
+                {
+                    firstSong = song;
+                }
+            }
+            cmbAppIds.SelectedItem = firstSong;
+            AppIdTB.Text = firstSong.AppId;
         }
     }
 }

@@ -16,8 +16,12 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public SongAppIdRepository() : base(FILENAME) { }
 
-        public SongAppId Select(string appId) {
-            return List.Single<SongAppId>(s => s.AppId == appId);
+        public SongAppId Select(string appId, SongAppId.RSVersion rsVersion)
+        {
+            if (List.OfType<SongAppId>().Where(s => s.AppId == appId && s.Version == rsVersion).Count() > 0)
+                return List.Single<SongAppId>(s => s.AppId == appId);
+            else
+                return List[0];
         }
 
         public IEnumerable<SongAppId> Select(SongAppId.RSVersion rsVersion)

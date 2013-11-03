@@ -58,9 +58,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\X360\X360.dll</HintPath>
     </Reference>
-    <Reference Include="ZLIB, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\ZLib\ZLIB.dll</HintPath>
+    <Reference Include="zlib.net">
+      <HintPath>..\lib\ZLib\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

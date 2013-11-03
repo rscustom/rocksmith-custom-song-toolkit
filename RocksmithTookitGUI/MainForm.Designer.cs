@@ -139,7 +139,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(8);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(554, 523);
+            this.tabControl1.Size = new System.Drawing.Size(554, 560);
             this.tabControl1.TabIndex = 16;
             // 
             // dlcPackageCreatorTab
@@ -298,7 +298,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(585, 665);
+            this.ClientSize = new System.Drawing.Size(585, 700);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
