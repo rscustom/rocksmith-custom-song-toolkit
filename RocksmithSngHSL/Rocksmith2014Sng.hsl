@@ -1,0 +1,415 @@
+// Rocksmith 2014 SNG File Format
+// Written by Zephyrix (November 2013) v0.1
+
+#include "standard-types.hsl"
+
+#pragma displayname("RS2014 Sng")
+#pragma fileextensions(".sng")
+
+#pragma byteorder(little_endian)
+
+struct BPM
+{
+    float Time;
+    short Measure;
+    short Beat;
+    long PhraseIteration;
+    long Unk1;  
+};
+
+struct BPM_SECTION
+{
+    long Count;
+    struct BPM BPMs[Count];
+};
+
+struct PHRASE
+{
+    byte Solo;
+    byte Disparity;
+    byte Ignore;
+    byte Padding;
+    long MaxDifficulty;
+    long PhraseIterationLinks;
+    char Name[32];
+};
+
+struct PHRASE_SECTION
+{
+    long Count;
+    struct PHRASE Phrases[Count];  
+};
+
+struct CHORD
+{
+    long Mask;
+    byte Frets[6];
+    byte Fingers[6];
+    long Notes[6];
+    char Name[32];
+};
+
+struct CHORD_SECTION
+{
+    long Count;
+    struct CHORD Chords[Count];
+};
+
+struct BEND_DATA32
+{
+    long Unk1;
+    long Unk2;
+    short Unk3;
+    byte Unk4;
+    byte Unk5;  
+};
+
+struct BEND_DATA
+{
+    struct BEND_DATA32 BendData32[32]; 
+    long Unk; 
+};
+
+struct BEND_DATA_SECTION
+{
+    long Count;
+    struct BEND_DATA32 BendData[Count];
+};
+
+struct CHORD_NOTES
+{
+    long NoteMask[6];
+    struct BEND_DATA BendData[6];
+    byte StartFretId[6];
+    byte EndFretId[6];
+    short Unk[6];
+};
+
+struct CHORD_NOTES_SECTION
+{
+    long Count;
+    struct CHORD_NOTES ChordNotes[Count];
+};
+
+struct VOCAL
+{
+    float Time;
+    long Note;
+    float Length;
+    char Lyric[48];  
+};
+
+struct VOCAL_SECTION
+{
+    long Count;
+    struct VOCAL Vocals[Count];  
+};
+
+struct SYMBOLS_HEADER
+{
+    long Unk1;
+    long Unk2;
+    long Unk3;
+    long Unk4;
+    long Unk5;
+    long Unk6;
+    long Unk7;
+    long Unk8;
+};
+
+struct SYMBOLS_HEADER_SECTION
+{
+    long Count;
+    struct SYMBOLS_HEADER SymbolsHeader[Count];
+};
+
+struct SYMBOLS_TEXTURE
+{
+    byte Unk[144];
+};
+
+struct SYMBOLS_TEXTURE_SECTION
+{
+    long Count;
+    struct SYMBOLS_TEXTURE SymbolsTextures[Count];
+};
+
+struct SYMBOL_DEFINITION
+{
+    byte Unk[44];
+};
+
+struct SYMBOL_DEFINITION_SECTION
+{
+    long Count;
+    struct SYMBOL_DEFINITION SymbolDefinitions[Count];
+};
+
+struct PHRASE_ITERATION
+{
+    long PhraseId;
+    float StartTime;
+    float EndTime;
+    long Unk3;
+    long Unk4;
+    long Unk5; 
+};
+
+struct PHRASE_ITERATION_SECTION
+{
+    long Count;
+    struct PHRASE_ITERATION PhraseIterations[Count];
+};
+
+struct PHRASE_EXTRA_INFO_BY_LEVEL
+{
+    long PhraseId;
+    long Difficulty;
+    long Empty;
+    byte LevelJump;
+    short Redundant;
+    byte Padding;
+};
+
+struct PHRASE_EXTRA_INFO_BY_LEVEL_SECTION
+{
+    long Count;
+    struct PHRASE_EXTRA_INFO_BY_LEVEL PhraseExtraInfoByLevel[Count];
+};
+
+struct N_LINKED_DIFFICULTY
+{
+    long Unk1;
+    long Unk2;
+    long Unk3;
+    long Unk4;
+};
+
+struct N_LINKED_DIFFICULTY_SECTION
+{
+    long Count;
+    struct N_LINKED_DIFFICULTY NLinkedDifficulties[Count];
+};
+
+struct ACTION
+{
+    float Time;
+    char Action[256];
+};
+
+struct ACTION_SECTION
+{
+    long Count;
+    struct ACTION Actions[Count];
+};
+
+struct EVENT
+{
+    float Time;
+    char Event[256];
+};
+
+struct EVENT_SECTION
+{
+    long Count;
+    struct EVENT Events[Count];
+};
+
+struct TONE
+{
+    float Time;
+    long Tone;
+};
+
+struct TONE_SECTION
+{
+    long Count;
+    struct TONE Tones[Count];
+};
+
+struct DNA
+{
+    float Time;
+    long Dna;
+};
+
+struct DNA_SECTION
+{
+    long Count;
+    struct DNA Dnas[Count];
+};
+
+struct SECTION
+{
+    char Name[32];
+    long Number;
+    float StartTime;
+    float EndTime;
+    long StartPhraseIterationId;
+    long EndPhraseIterationId;
+    long Unk12;
+    long Unk13;
+    long Unk14;
+    long Unk15;
+    long Unk16;
+    long Unk17;
+    long Unk18;
+    long Unk19;
+    long Unk20;
+};
+
+struct SECTION_SECTION
+{
+    long Count;
+    struct SECTION Sections[Count];
+};
+
+struct ANCHOR
+{
+    float StartTime;
+    float EndTime;
+    float Unk3;
+    float Unk4;
+    long FretId;
+    long Unk5;
+    long PhraseIterationId;
+};
+
+struct ANCHOR_SECTION
+{
+    long Count;
+    struct ANCHOR Anchors[Count];
+};
+
+struct ANCHOR_EXTENSION
+{
+    long Unk1;
+    byte FretId;
+    long Unk2;
+    short Unk3;
+    byte Unk4;
+};
+
+struct ANCHOR_EXTENSION_SECTION
+{
+    long Count;
+    struct ANCHOR_EXTENSION AnchorExtensions[Count];
+};
+
+struct FINGERPRINT
+{
+    long ChordId;
+    float Unk1;
+    float Unk2;
+    float Unk3;
+    float Unk4;
+};
+
+struct FINGERPRINT_SECTION
+{
+    long Count;
+    struct FINGERPRINT Fingerprints[Count];
+};
+
+struct NOTES
+{
+    long NoteMask[2];
+    long Unk1;
+    float Unk2;
+    byte StringIndex;
+    byte FretId[2];
+    byte Unk3;
+    long ChordId;
+    long ChordNotesId;
+    long PhraseId;
+    long PhraseIterationId;
+    short FingerPrintId[2];
+    short Unk4;
+    short Unk5;
+    short Unk6;
+    byte FingerId[4];
+    byte PickDirection;
+    byte Slap;
+    byte Pluck;
+    short Unk10;
+    long Unk11;
+    long Unk12;
+    struct BEND_DATA_SECTION BendData;
+};
+
+struct NOTES_SECTION
+{
+    long Count;
+    struct NOTES Notes[Count];
+};
+
+struct ARRANGEMENT
+{
+    long Unk1;
+    struct ANCHOR_SECTION Anchors;
+    struct ANCHOR_EXTENSION_SECTION AnchorExtensions;
+    struct FINGERPRINT_SECTION Fingerprints1;
+    struct FINGERPRINT_SECTION Fingerprints2;
+    struct NOTES_SECTION Notes;
+    
+    long PhraseCount;
+    float AverageNotesPerIteration[PhraseCount];
+    long PhraseIterationCount1;
+    long NotesInIteration1[PhraseIterationCount1];
+    long PhraseIterationCount2;
+    long NotesInIteration2[PhraseIterationCount2];
+};
+
+struct ARRANGEMENT_SECTION
+{
+    long Count;
+    struct ARRANGEMENT Arrangements[Count];
+};
+
+struct METADATA
+{
+    double Unk1;
+    double Unk2;
+    double Unk3;
+    double Unk4;
+    long Unk5;
+    long Unk6;
+    byte fretId;
+    char LastConversionDateTime[32];
+    short Unk8;
+    long Unk9;
+    long UnkCount;
+    short Unk10[UnkCount];
+    long Unk11;
+    long Unk12;
+    long Unk13;
+};
+
+function ParseFile
+{
+    UQWord pos = 0;
+    pos += __addStructureAt(pos, "BPM_SECTION", "");
+    pos += __addStructureAt(pos, "PHRASE_SECTION", "");
+    pos += __addStructureAt(pos, "CHORD_SECTION", "");
+    pos += __addStructureAt(pos, "CHORD_NOTES_SECTION", "");
+
+    UDWord hasVocals = __getUDWordAt(pos);
+    pos += __addStructureAt(pos, "VOCAL_SECTION", "");
+
+    if(hasVocals > 0) {
+        pos += __addStructureAt(pos, "SYMBOLS_HEADER_SECTION", "");
+        pos += __addStructureAt(pos, "SYMBOLS_TEXTURE_SECTION", "");
+        pos += __addStructureAt(pos, "SYMBOL_DEFINITION_SECTION", "");
+    };
+
+    pos += __addStructureAt(pos, "PHRASE_ITERATION_SECTION", "");   
+    pos += __addStructureAt(pos, "PHRASE_EXTRA_INFO_BY_LEVEL_SECTION", "");
+    pos += __addStructureAt(pos, "N_LINKED_DIFFICULTY_SECTION", "");
+    pos += __addStructureAt(pos, "ACTION_SECTION", "");
+    pos += __addStructureAt(pos, "EVENT_SECTION", "");
+    pos += __addStructureAt(pos, "TONE_SECTION", "");
+    pos += __addStructureAt(pos, "DNA_SECTION", "");
+    pos += __addStructureAt(pos, "SECTION_SECTION", "");
+    pos += __addStructureAt(pos, "ARRANGEMENT_SECTION", "");
+    pos += __addStructureAt(pos, "METADATA", "");
+}
