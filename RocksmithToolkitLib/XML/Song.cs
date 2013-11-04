@@ -13,6 +13,9 @@ namespace RocksmithToolkitLib.Xml
     [XmlRoot("song", Namespace = "", IsNullable = false)]
     public class Song
     {
+        [XmlAttribute("version")] // RS1 is 4
+        public string Version { get; set; }
+
         [XmlElement("title")]
         public string Title { get; set; }
 
