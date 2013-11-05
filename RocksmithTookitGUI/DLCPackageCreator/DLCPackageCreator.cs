@@ -17,6 +17,8 @@ using RocksmithToolkitLib.Ogg;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using X360.STFS;
+using System.Diagnostics;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -263,11 +265,75 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void albumArtButton_Click(object sender, EventArgs e)
         {
+            if (String.IsNullOrEmpty(DlcNameTB.Text)) {
+                MessageBox.Show("Fill the 'DLC Name' field first.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DlcNameTB.Focus();
+                return;
+            }
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "dds Files|*.dds";
+                ofd.Filter = "Album art file (*.dds)|*.dds";
                 if (ofd.ShowDialog() == DialogResult.OK)
                     AlbumArtPath = ofd.FileName;
+            }
+            if (CurrentRSVersion == SongAppId.RSVersion.RS2014)
+            {
+                GenerateAlbumArtFiles();
+            }
+        }
+
+        private void GenerateAlbumArtFiles()
+        {
+            // Rename file
+            var oldName = Path.GetFileNameWithoutExtension(AlbumArtPath);
+            var newName = String.Format("album_{0}", DlcNameTB.Text);
+
+            var aArtDirBase = Path.GetDirectoryName(AlbumArtPath);
+            var newAlbumArtPath = Path.Combine(aArtDirBase, String.Format("{0}_256.dds", newName));
+            File.Move(AlbumArtPath, newAlbumArtPath);
+            AlbumArtPath = newAlbumArtPath;
+
+            var aArt256JpgTmp = Path.Combine(aArtDirBase, String.Format("{0}_256.jpg", newName));
+            var aArt128JpgTmp = Path.Combine(aArtDirBase, String.Format("{0}_128.jpg", newName));
+            var aArt64JpgTmp = Path.Combine(aArtDirBase, String.Format("{0}_64.jpg", newName));
+
+            // Convert input DDS to JPG
+            ConvertAlbumArtFile("dds2jpg.exe", AlbumArtPath);
+
+            if (!File.Exists(aArt256JpgTmp)) {
+                MessageBox.Show("Can't generate new .dds file. An error ocurred!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            // Generate new rezised images
+            ImageHandler.Save(aArt256JpgTmp, 128, 128, 100, aArt128JpgTmp);
+            ImageHandler.Save(aArt256JpgTmp, 64, 64, 100, aArt64JpgTmp);
+
+            // Convert new sizes JPG to DDS
+            ConvertAlbumArtFile("jpg2dds.exe", aArt128JpgTmp);
+            ConvertAlbumArtFile("jpg2dds.exe", aArt64JpgTmp);
+
+            // Delete jpg tmp files
+            if (File.Exists(aArt256JpgTmp))
+                File.Delete(aArt256JpgTmp);
+            if (File.Exists(aArt128JpgTmp))
+                File.Delete(aArt128JpgTmp);
+            if (File.Exists(aArt64JpgTmp))
+                File.Delete(aArt64JpgTmp);
+        }
+
+        private void ConvertAlbumArtFile(string converter, string imageFilePath) {
+            string workDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ddstool");
+
+            using (Process dds2jpgProcess = new Process())
+            {
+                dds2jpgProcess.StartInfo.FileName = Path.Combine(workDir, converter);
+                dds2jpgProcess.StartInfo.WorkingDirectory = workDir;
+                dds2jpgProcess.StartInfo.Arguments = String.Format("-c \"{0}\" \"{1}\"", imageFilePath, Path.GetDirectoryName(imageFilePath));
+                dds2jpgProcess.StartInfo.UseShellExecute = false;
+                dds2jpgProcess.StartInfo.CreateNoWindow = true;
+
+                dds2jpgProcess.Start();
+                dds2jpgProcess.WaitForExit();
             }
         }
 
@@ -277,7 +343,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string dlcSavePath;
             using (var ofd = new SaveFileDialog())
             {
-                ofd.Filter = "Rocksmith DLC Template|*.dlc.xml";
+                ofd.Filter = "Rocksmith DLC Template (*.dlc.xml)|*.dlc.xml";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
             }
@@ -335,7 +401,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string dlcSavePath;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Rocksmith DLC Template|*.dlc.xml";
+                ofd.Filter = "Rocksmith DLC Template (*.dlc.xml)|*.dlc.xml";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
             }
