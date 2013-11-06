@@ -73,6 +73,10 @@
     <Compile Include="DLCPackage\AggregateGraph\SoundBank.cs" />
     <Compile Include="DLCPackage\AggregateGraph\XBlock.cs" />
     <Compile Include="DLCPackage\Arrangement.cs" />
+    <Compile Include="DLCPackage\XBlockRS2014\EntityRS2014.cs" />
+    <Compile Include="DLCPackage\XBlockRS2014\GameRS2014.cs" />
+    <Compile Include="DLCPackage\XBlockRS2014\PropertyRS2014.cs" />
+    <Compile Include="DLCPackage\XBlockRS2014\SetRS2014.cs" />
     <Compile Include="DLCPackage\ManifestRS2014\AttributesRS2014.cs" />
     <Compile Include="DLCPackage\ManifestRS2014\Header\AttributesHeaderRS2014.cs" />
     <Compile Include="DLCPackage\ManifestRS2014\Header\ManifestHeaderRS2014.cs" />
