@@ -138,7 +138,7 @@ namespace RocksmithToolkitLib.Xml
             return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Tremolo > 0);
         }
 
-        public static Song LoadSongFromXmlFile(string xmlSongFile) {
+        public static Song LoadFromFile(string xmlSongFile) {
             Song XmlSong = null;
 
             using (var reader = new StreamReader(xmlSongFile)) {

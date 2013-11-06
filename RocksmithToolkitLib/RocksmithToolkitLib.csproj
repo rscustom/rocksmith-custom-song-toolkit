@@ -73,6 +73,15 @@
     <Compile Include="DLCPackage\AggregateGraph\SoundBank.cs" />
     <Compile Include="DLCPackage\AggregateGraph\XBlock.cs" />
     <Compile Include="DLCPackage\Arrangement.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\AttributesRS2014.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\Header\AttributesHeaderRS2014.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\Header\ManifestHeaderRS2014.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\Tone\GearRS2014.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\Tone\PedalRS2014.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\Tone\ToneRS2014.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\TunningRS2014.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\PhraseIterationRS2014.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\ManifestRS2014.cs" />
     <Compile Include="DLCPackage\ToneReader.cs" />
     <Compile Include="DLCPackage\DLCPackageCreator.cs" />
     <Compile Include="DLCPackage\DLCPackageData.cs" />

@@ -122,7 +122,7 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArrayItem("level", typeof(SongLevelRS2014))]
         public SongLevelRS2014[] Levels { get; set; }
 
-        public static SongRS2014 LoadSongRS2014FromXmlFile(string xmlSongRS2014File) {
+        public static SongRS2014 LoadFromFile(string xmlSongRS2014File) {
             SongRS2014 xmlSongRS2014 = null;
 
             using (var reader = new StreamReader(xmlSongRS2014File)) {

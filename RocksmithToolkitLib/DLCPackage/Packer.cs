@@ -355,7 +355,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         arrType = ArrangementType.Vocal;
                         SngFileWriter.Write(xmlFile, sngFile, arrType, platform, tuning);
                     } else {
-                        Song song = Song.LoadSongFromXmlFile(xmlFile);
+                        Song song = Song.LoadFromFile(xmlFile);
 
                         if (!Enum.TryParse<ArrangementType>(song.Arrangement, out arrType))
                             if (song.Arrangement.ToLower().IndexOf("bass") >= 0)
