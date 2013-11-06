@@ -1,5 +1,5 @@
 // Rocksmith 2014 SNG File Format
-// Written by Zephyrix (November 2013) v0.1
+// Written by Zephyrix (November 2013)
 
 #include "standard-types.hsl"
 
@@ -8,13 +8,21 @@
 
 #pragma byteorder(little_endian)
 
+struct MeasureMask {
+    long FirstBeat : 1;
+    long EvenMeasure : 1;
+    long Unk_0 : 30;
+};
+
 struct BPM
 {
     float Time;
     short Measure;
     short Beat;
     long PhraseIteration;
-    long Unk1;  
+    // bit 0 = first beat of measure
+    // bit 1 = even measure (starting with 0)
+    struct MeasureMask Mask[1];
 };
 
 struct BPM_SECTION
@@ -57,17 +65,26 @@ struct CHORD_SECTION
 
 struct BEND_DATA32
 {
-    long Unk1;
-    long Unk2;
-    short Unk3;
-    byte Unk4;
-    byte Unk5;  
+    float Time;
+    float Step;
+    short Unk3_0;
+    byte Unk4_0;
+    // FIXME TODO how is Unk5 calculated
+    // not mentioned in XML:
+    // step 1-1-0, unk5 0-45-0
+    // step 2-0,   unk5 0-45
+    // step 1-0,   unk5 0-45
+    // step 1,     unk5 0
+    // step 2-2-0  unk5 0-38-0
+    // weezer chordnote bend:
+    // step 1.5-1-1.5-1.5, unk5 0-0-1-0
+    byte Unk5;
 };
 
 struct BEND_DATA
 {
     struct BEND_DATA32 BendData32[32]; 
-    long Unk; 
+    long UsedCount;
 };
 
 struct BEND_DATA_SECTION
@@ -82,7 +99,8 @@ struct CHORD_NOTES
     struct BEND_DATA BendData[6];
     byte StartFretId[6];
     byte EndFretId[6];
-    short Unk[6];
+    // always zero?
+    short Unk_0[6];
 };
 
 struct CHORD_NOTES_SECTION
@@ -105,6 +123,7 @@ struct VOCAL_SECTION
     struct VOCAL Vocals[Count];  
 };
 
+// TODO only in vocals
 struct SYMBOLS_HEADER
 {
     long Unk1;
@@ -123,6 +142,7 @@ struct SYMBOLS_HEADER_SECTION
     struct SYMBOLS_HEADER SymbolsHeader[Count];
 };
 
+// TODO only in vocals
 struct SYMBOLS_TEXTURE
 {
     byte Unk[144];
@@ -134,6 +154,7 @@ struct SYMBOLS_TEXTURE_SECTION
     struct SYMBOLS_TEXTURE SymbolsTextures[Count];
 };
 
+// TODO only in vocals
 struct SYMBOL_DEFINITION
 {
     byte Unk[44];
@@ -149,7 +170,8 @@ struct PHRASE_ITERATION
 {
     long PhraseId;
     float StartTime;
-    float EndTime;
+    float NextPhraseTime;
+    // FIXME TODO small integer values or zero
     long Unk3;
     long Unk4;
     long Unk5; 
@@ -179,10 +201,9 @@ struct PHRASE_EXTRA_INFO_BY_LEVEL_SECTION
 
 struct N_LINKED_DIFFICULTY
 {
-    long Unk1;
-    long Unk2;
-    long Unk3;
-    long Unk4;
+    long LevelBreak;
+    long PhraseCount;
+    long NLD_Phrase[PhraseCount];
 };
 
 struct N_LINKED_DIFFICULTY_SECTION
@@ -247,15 +268,18 @@ struct SECTION
     float EndTime;
     long StartPhraseIterationId;
     long EndPhraseIterationId;
+    // FIXME TODO 12-13 may be based on section id, 14-15 is used too
+    //            mostly repetitive bytes
     long Unk12;
     long Unk13;
     long Unk14;
     long Unk15;
-    long Unk16;
-    long Unk17;
-    long Unk18;
-    long Unk19;
-    long Unk20;
+    // always zero?
+    long Unk16_0;
+    long Unk17_0;
+    long Unk18_0;
+    long Unk19_0;
+    long Unk20_0;
 };
 
 struct SECTION_SECTION
@@ -266,12 +290,14 @@ struct SECTION_SECTION
 
 struct ANCHOR
 {
-    float StartTime;
-    float EndTime;
-    float Unk3;
-    float Unk4;
+    float StartBeatTime;
+    float EndBeatTime;
+    // sometimes Unk3-4 is garbage, probably unused (many times StartBeatTime)
+    float Unk3_StartBeatTime;
+    // sometimes start time, sometimes later (first?) beat time
+    float Unk4_StartBeatTime;
     long FretId;
-    long Unk5;
+    long Width;
     long PhraseIterationId;
 };
 
@@ -283,8 +309,9 @@ struct ANCHOR_SECTION
 
 struct ANCHOR_EXTENSION
 {
-    long Unk1;
+    long BeatTime;
     byte FretId;
+    // TODO need example SNG with anchor extension section
     long Unk2;
     short Unk3;
     byte Unk4;
@@ -299,10 +326,10 @@ struct ANCHOR_EXTENSION_SECTION
 struct FINGERPRINT
 {
     long ChordId;
-    float Unk1;
-    float Unk2;
-    float Unk3;
-    float Unk4;
+    float StartTime;
+    float EndTime;
+    float Unk3_StartTime;
+    float Unk4_StartTime;
 };
 
 struct FINGERPRINT_SECTION
@@ -311,14 +338,45 @@ struct FINGERPRINT_SECTION
     struct FINGERPRINT Fingerprints[Count];
 };
 
+// NoteMask:
+// NOTE_MASK_UNDEFINED = 0x0
+// NOTE_MASK_CHORD = 0x2
+// NOTE_MASK_OPEN = 0x4
+// NOTE_MASK_FRETHANDMUTE = 0x8
+// NOTE_MASK_TREMOLO = 0x10
+// NOTE_MASK_HARMONIC = 0x20
+// NOTE_MASK_PALMMUTE = 0x40
+// NOTE_MASK_SLAP = 0x80
+// NOTE_MASK_PLUCK = 0x100
+// NOTE_MASK_HAMMERON = 0x200
+// NOTE_MASK_PULLOFF = 0x400
+// NOTE_MASK_SLIDE = 0x800
+// NOTE_MASK_BEND = 0x1000
+// NOTE_MASK_SUSTAIN = 0x2000
+// NOTE_MASK_TAP = 0x4000
+// NOTE_MASK_PINCHHARMONIC = 0x8000
+// NOTE_MASK_VIBRATO = 0x10000
+// NOTE_MASK_MUTE = 0x20000
+// NOTE_MASK_IGNORE = 0x40000
+// NOTE_MASK_HIGHDENSITY = 0x200000
+// NOTE_MASK_SLIDEUNPITCHEDTO = 0x400000
+// NOTE_MASK_DOUBLESTOP = 0x2000000
+// NOTE_MASK_ACCENT = 0x4000000
+// NOTE_MASK_PARENT = 0x8000000
+// NOTE_MASK_CHILD = 0x10000000
+// NOTE_MASK_ARPEGGIO = 0x20000000
+// NOTE_MASK_POP = 0x100
+// NOTE_MASK_STRUM = 0x80000000
+// 
+// FIXME TODO there are unclear and heavily used fields, including NoteMask
 struct NOTES
 {
     long NoteMask[2];
     long Unk1;
-    float Unk2;
+    float Time;
     byte StringIndex;
     byte FretId[2];
-    byte Unk3;
+    byte Unk3_4;
     long ChordId;
     long ChordNotesId;
     long PhraseId;
@@ -331,21 +389,22 @@ struct NOTES
     byte PickDirection;
     byte Slap;
     byte Pluck;
-    short Unk10;
-    long Unk11;
-    long Unk12;
+    short Vibrato;
+    float Sustain;
+    float MaxBend;
     struct BEND_DATA_SECTION BendData;
 };
 
 struct NOTES_SECTION
 {
     long Count;
+    // notes and chords
     struct NOTES Notes[Count];
 };
 
 struct ARRANGEMENT
 {
-    long Unk1;
+    long Difficulty;
     struct ANCHOR_SECTION Anchors;
     struct ANCHOR_EXTENSION_SECTION AnchorExtensions;
     struct FINGERPRINT_SECTION Fingerprints1;
@@ -368,21 +427,28 @@ struct ARRANGEMENT_SECTION
 
 struct METADATA
 {
-    double Unk1;
-    double Unk2;
-    double Unk3;
-    double Unk4;
-    long Unk5;
-    long Unk6;
-    byte fretId;
+    // 100k
+    double MaxScore;
+    double MaxNotesAndChords;
+    // this one is divided by 2 in ge_baccents_lsn50
+    double Unk3_MaxNotesAndChords;
+    // MaxScore / MaxNotesAndChords
+    double PointsPerNote;
+    float FirstBeatLength;
+    // <offset>-10.0</offset> => 10.0
+    float StartTime;
+    // -1 for none (<capo>0</capo>)
+    byte CapoFretId;
     char LastConversionDateTime[32];
-    short Unk8;
-    long Unk9;
-    long UnkCount;
-    short Unk10[UnkCount];
-    long Unk11;
-    long Unk12;
-    long Unk13;
+    // <part>, mostly 1, higher number used only by multipart lessons?
+    short Part;
+    float SongLength;
+    // 6 even for bass
+    long StringCount;
+    short Tuning[StringCount];
+    float Unk11_FirstSectionStartTime;
+    float Unk12_FirstSectionStartTime;
+    long MaxDifficulty;
 };
 
 function ParseFile
