@@ -64,6 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DisposableCollection.cs" />
+    <Compile Include="DLCPackage\AggregateGraphRS2014\AggregateGraphRS2014.cs" />
+    <Compile Include="DLCPackage\AggregateGraphRS2014\GraphPart.cs" />
+    <Compile Include="DLCPackage\AggregateGraphRS2014\GraphItem.cs" />
     <Compile Include="DLCPackage\AggregateGraph\AggregateGraph.cs" />
     <Compile Include="DLCPackage\AggregateGraph\AlbumArt.cs" />
     <Compile Include="DLCPackage\AggregateGraph\Element.cs" />
