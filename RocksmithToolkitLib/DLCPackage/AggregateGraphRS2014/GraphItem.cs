@@ -29,7 +29,13 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraphRS2014 {
         [Description("wwise-sound-bank")]
         WwiseSoundBank,
         [Description("dx9")]
-        DX9,
+        DX9, //Only for Windows
+        [Description("macos")]
+        MacOS, //Only for MAC
+        [Description("xbox360")]
+        Xbox360, //Only for XBox 360
+        [Description("ps3")]
+        PS3, //Only for PS3
         [Description("emergent-world")]
         EmergentWorld,
         [Description("x-world")]
