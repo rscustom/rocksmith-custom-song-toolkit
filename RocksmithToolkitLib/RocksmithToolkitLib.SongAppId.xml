@@ -98,5 +98,13 @@
   <SongAppId Version="RS2014" AppId="258343" Name="The Smashing Pumpkins - Bullet with Butterfly Wings" />
   <SongAppId Version="RS2014" AppId="258344" Name="The Smashing Pumpkins - 1979" />
   <SongAppId Version="RS2014" AppId="258345" Name="The Smashing Pumpkins - Tonight, Tonight" />
-  <SongAppId Version="RS2014" AppId="258346" Name="The Smashing Pumpkins - Disarm" />  
+  <SongAppId Version="RS2014" AppId="258346" Name="The Smashing Pumpkins - Disarm" />
+  <SongAppId Version="RS2014" AppId="258348" Name="Iron Maiden - Fear of the Dark" />
+  <SongAppId Version="RS2014" AppId="258349" Name="Iron Maiden - Run to the Hills" />
+  <SongAppId Version="RS2014" AppId="258350" Name="Iron Maiden - Aces High" />
+  <SongAppId Version="RS2014" AppId="258351" Name="Iron Maiden - The Number of the Beast" />
+  <SongAppId Version="RS2014" AppId="258352" Name="Iron Maiden - 2 Minutes to Midnight" />
+  <SongAppId Version="RS2014" AppId="258354" Name="Hotei - Battle Without Honor or Humanity" />
+  <SongAppId Version="RS2014" AppId="258355" Name="Hotei - Bambina" />
+  <SongAppId Version="RS2014" AppId="258356" Name="Hotei - Thrill" />
 </ArrayOfSongAppId>
