@@ -18,7 +18,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static readonly int[] bnkPCOffsets = { 0x2c, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
         private static readonly int[] bnkConsoleOffsets = { 0x7ec, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
         private static readonly int[] bnkPC2014Offsets = { 0x2c, 0x1d, 0x1a, 0x78, 0x00, 0x12, 0xc };
-        private static readonly int[] bnkConsole2014Offsets = { 0x2c, 0x1d, 0x1a, 0x78, 0x00, 0x12, 0xc };
+        private static readonly int[] bnkConsole2014Offsets = { 0x7ec, 0x1d, 0x1a, 0x78, 0x00, 0x12, 0xc };
         
         public static IList<int> GetOffsets(this Platform platform) {
             switch (platform.version)
@@ -96,7 +96,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             break;
                         case Platform.GamePlatform.XBox360:
                         case Platform.GamePlatform.PS3:
-                            soundbank = Resources.Console_soundbank;
+                            soundbank = Resources.Console2014_soundbank;
                             break;
                         default:
                             throw new InvalidOperationException("Unexpected game platform value");
