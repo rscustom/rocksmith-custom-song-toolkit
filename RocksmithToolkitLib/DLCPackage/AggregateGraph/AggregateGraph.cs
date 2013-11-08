@@ -19,11 +19,11 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             SongFiles = new List<SongFile>();
             SongXMLs = new List<SongXML>();
         }
-        public void Write(string dlcName, string[] platformPathNames, GamePlatform platform, Stream str)
+        public void Write(string dlcName, string[] platformPathNames, Platform platform, Stream str)
         {
             StreamWriter writer = new StreamWriter(str);
 
-            if (platform == GamePlatform.XBox360 || platform == GamePlatform.PS3)
+            if (platform.platform == Platform.GamePlatform.XBox360 || platform.platform == Platform.GamePlatform.PS3)
             {
                 foreach (var x in SongFiles)
                     writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"{1}\".", x.UUID, platformPathNames[0]);
@@ -43,7 +43,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"audio\".", SoundBank.UUID);
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"wwise-sound-bank\".", SoundBank.UUID);
             
-            if (platform == GamePlatform.Pc)
+            if (platform.platform == Platform.GamePlatform.Pc)
                 writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"DX9\".", SoundBank.UUID);
 
             writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"x-world\".", XBlock.UUID);

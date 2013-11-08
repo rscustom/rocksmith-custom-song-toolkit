@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using NDesk.Options;
+using RocksmithToolkitLib;
 using RocksmithToolkitLib.Sng;
 
 namespace Xml2Sng
@@ -14,7 +15,7 @@ namespace Xml2Sng
         public bool ShowHelp;
         public string InputFile;
         public string OutputFile;
-        public GamePlatform Platform;
+        public Platform Platform;
         public ArrangementType ArrangementType;
         public InstrumentTuning Tuning { get; set; }
     }
@@ -25,7 +26,7 @@ namespace Xml2Sng
         {
             return new Arguments
             {
-                Platform = GamePlatform.Pc,
+                Platform = new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.None),
                 ArrangementType = ArrangementType.Guitar,
                 Tuning = InstrumentTuning.Standard
             };
@@ -71,7 +72,7 @@ namespace Xml2Sng
                     v => outputArguments.OutputFile = v },
                 { "console",
                     "Generate a big-endian (console) file instead of little-endian (PC)",
-                    v => { if (v != null) outputArguments.Platform = GamePlatform.XBox360; /*Same as PS3*/ }},
+                    v => { if (v != null) outputArguments.Platform = new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.None); /*Same as PS3*/ }},
                 { "vocal",
                     "Generate from a vocal XML file instead of a guitar XML file",
                     v => { if (v != null) outputArguments.ArrangementType = ArrangementType.Vocal; }},

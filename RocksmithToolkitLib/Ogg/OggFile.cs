@@ -14,18 +14,18 @@ namespace RocksmithToolkitLib.Ogg
     {
         public enum WwiseVersion { Wwise2010, Wwise2013, None };
 
-        public static GamePlatform getPlatform(String inputFile)
+        public static Platform getPlatform(String inputFile)
         {
             using (var inputFileStream = File.Open(inputFile, FileMode.Open))
             using (var reader = new BinaryReader(inputFileStream))
             {
                 string fileID = new string(reader.ReadChars(4));
                 if (fileID == "RIFF")
-                    return GamePlatform.Pc;
+                    return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.None);
                 else if (fileID == "RIFX")
-                    return GamePlatform.XBox360;
+                    return new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.None);
             }
-            return GamePlatform.None;
+            return new Platform(Platform.GamePlatform.None, Platform.GameVersion.None);
         }
 
         public static bool needsConversion(String inputFile)
@@ -143,14 +143,14 @@ namespace RocksmithToolkitLib.Ogg
             return File.OpenRead(inputFile);
         }
 
-        private static EndianBitConverter GetBitConverter(this GamePlatform platform)
+        private static EndianBitConverter GetBitConverter(this Platform platform)
         {
-            switch (platform)
+            switch (platform.platform)
             {
-                case GamePlatform.Pc:
+                case Platform.GamePlatform.Pc:
                     return EndianBitConverter.Little;
-                case GamePlatform.XBox360:
-                case GamePlatform.PS3:
+                case Platform.GamePlatform.XBox360:
+                case Platform.GamePlatform.PS3:
                     return EndianBitConverter.Big;
                 default:
                     throw new InvalidDataException("The input OGG file doesn't appear to be a valid Wwise 2010 OGG file.");
@@ -227,15 +227,13 @@ namespace RocksmithToolkitLib.Ogg
             }
         }
 
-        public static WwiseVersion GetWwiseVersion(this GamePlatform platform)
+        public static WwiseVersion GetWwiseVersion(this Platform platform)
         {
-            switch (platform)
+            switch (platform.version)
             {
-                case GamePlatform.Pc:
-                case GamePlatform.XBox360:
-                case GamePlatform.PS3:
+                case Platform.GameVersion.RS2012:
                     return WwiseVersion.Wwise2010;
-                case GamePlatform.Pc2014:
+                case Platform.GameVersion.RS2014:
                     return WwiseVersion.Wwise2013;
                 default:
                     throw new InvalidOperationException("Platform not found.");

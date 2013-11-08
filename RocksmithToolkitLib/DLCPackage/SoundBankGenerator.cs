@@ -17,17 +17,36 @@ namespace RocksmithToolkitLib.DLCPackage
         private const string SONG = "Song_";
         private static readonly int[] bnkPCOffsets = { 0x2c, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
         private static readonly int[] bnkConsoleOffsets = { 0x7ec, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
+        private static readonly int[] bnkPC2014Offsets = { 0x2c, 0x1d, 0x1a, 0x78, 0x00, 0x12, 0xc };
+        private static readonly int[] bnkConsole2014Offsets = { 0x2c, 0x1d, 0x1a, 0x78, 0x00, 0x12, 0xc };
         
-        public static IList<int> GetOffsets(this GamePlatform platform) {
-            switch (platform) {
-                case GamePlatform.Pc:
-                    return bnkPCOffsets;
-                case GamePlatform.XBox360:
-                    return bnkConsoleOffsets;
-                case GamePlatform.PS3:
-                    return bnkConsoleOffsets;
+        public static IList<int> GetOffsets(this Platform platform) {
+            switch (platform.version)
+            {
+                case Platform.GameVersion.RS2012:
+                    switch (platform.platform)
+                    {
+                        case Platform.GamePlatform.Pc:
+                            return bnkPCOffsets;
+                        case Platform.GamePlatform.XBox360:
+                        case Platform.GamePlatform.PS3:
+                            return bnkConsoleOffsets;
+                        default:
+                            throw new InvalidOperationException("Unexpected game platform value");
+                    }
+                case Platform.GameVersion.RS2014:
+                    switch (platform.platform)
+                    {
+                        case Platform.GamePlatform.Pc:
+                            return bnkPC2014Offsets;
+                        case Platform.GamePlatform.XBox360:
+                        case Platform.GamePlatform.PS3:
+                            return bnkConsole2014Offsets;
+                        default:
+                            throw new InvalidOperationException("Unexpected game platform value");
+                    }
                 default:
-                    throw new InvalidOperationException("Unexpected game platform value");
+                    throw new InvalidOperationException("Unexpected game version value");
             }
         }
 
@@ -44,7 +63,7 @@ namespace RocksmithToolkitLib.DLCPackage
             return hash;
         }
 
-        public static string GenerateSoundBank(string dlcName, Stream audioStream, Stream outStream, decimal volume, GamePlatform platform)
+        public static string GenerateSoundBank(string dlcName, Stream audioStream, Stream outStream, decimal volume, Platform platform)
         {
             string eventName = PLAY + dlcName;
             string previewName = PLAY30SEC + dlcName;
@@ -52,20 +71,42 @@ namespace RocksmithToolkitLib.DLCPackage
             var id = RandomGenerator.NextInt();
 
             byte[] soundbank = null;
-            switch (platform)
+
+            switch (platform.version)
             {
-                case GamePlatform.Pc:
-                    soundbank = Resources.PC_soundbank;
+                case Platform.GameVersion.RS2012:
+                    switch (platform.platform)
+                    {
+                        case Platform.GamePlatform.Pc:
+                            soundbank = Resources.PC_soundbank;
+                            break;
+                        case Platform.GamePlatform.XBox360:
+                        case Platform.GamePlatform.PS3:
+                            soundbank = Resources.Console_soundbank;
+                            break;
+                        default:
+                            throw new InvalidOperationException("Unexpected game platform value");
+                    }
                     break;
-                case GamePlatform.XBox360:
-                case GamePlatform.PS3:
-                    soundbank = Resources.Console_soundbank;
+                case Platform.GameVersion.RS2014:
+                    switch (platform.platform)
+                    {
+                        case Platform.GamePlatform.Pc:
+                            soundbank = Resources.PC2014_soundbank;
+                            break;
+                        case Platform.GamePlatform.XBox360:
+                        case Platform.GamePlatform.PS3:
+                            soundbank = Resources.Console_soundbank;
+                            break;
+                        default:
+                            throw new InvalidOperationException("Unexpected game platform value");
+                    }
                     break;
                 default:
-                    throw new InvalidOperationException("Unexpected game platform value");
+                    throw new InvalidOperationException("Unexpected game version value");
             }
 
-            var bitConverter = platform == GamePlatform.Pc
+            var bitConverter = platform.platform == Platform.GamePlatform.Pc
                     ? (EndianBitConverter)EndianBitConverter.Little
                     : (EndianBitConverter)EndianBitConverter.Big;
 
@@ -94,9 +135,12 @@ namespace RocksmithToolkitLib.DLCPackage
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[3]));
                 bankReader.ReadInt32();
                 bankWriter.Write(HashString(eventName));
-                bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[4]));
-                bankReader.ReadInt32();
-                bankWriter.Write(HashString(previewName));
+                if (platform.version == Platform.GameVersion.RS2012)
+                {
+                    bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[4]));
+                    bankReader.ReadInt32();
+                    bankWriter.Write(HashString(previewName));
+                }
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[5]));
                 bankWriter.Write(12 + bankName.Length + 1);
                 bankReader.ReadInt32();

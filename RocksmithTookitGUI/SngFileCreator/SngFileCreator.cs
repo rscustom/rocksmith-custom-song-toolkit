@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib;
 
 namespace RocksmithToolkitGUI.SngFileCreator
 {
@@ -42,14 +43,14 @@ namespace RocksmithToolkitGUI.SngFileCreator
             }
         }
 
-        private GamePlatform Platform
+        private Platform Platform
         {
             get
             {
                 if (littleEndianRadioBtn.Checked)
-                    return GamePlatform.Pc;
+                    return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.None);
                 if (bigEndianRadioBtn.Checked)
-                    return GamePlatform.XBox360; /*Same as PS3*/
+                    return new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.None); /*Same as PS3*/
                 throw new InvalidOperationException("No game platform selected");
             }
         }

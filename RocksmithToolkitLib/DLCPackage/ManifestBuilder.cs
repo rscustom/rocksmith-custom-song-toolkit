@@ -52,7 +52,7 @@ namespace RocksmithToolkitLib.DLCPackage
             SectionUINames.Add("noguitar", "$[6091] No Guitar [1]");
             SectionUINames.Add("silence", "$[6092] Silence [1]");
         }
-        public string GenerateManifest(string dlcName, IList<Arrangement> arrangements, SongInfo songInfo, RocksmithToolkitLib.Sng.GamePlatform platform)
+        public string GenerateManifest(string dlcName, IList<Arrangement> arrangements, SongInfo songInfo, Platform platform)
         {
             var manifest = Manifest;
             manifest.Entries = new Dictionary<string, Dictionary<string, Attributes>>();

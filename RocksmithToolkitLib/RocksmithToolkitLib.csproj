@@ -115,6 +115,7 @@
     <Compile Include="Extensions\DirectoryExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Extensions\StringExtention.cs" />
+    <Compile Include="Platform.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Ogg\OggFile.cs" />
     <Compile Include="GameData.cs" />
@@ -173,6 +174,7 @@
   <ItemGroup>
     <None Include="Resources\albumart.dds" />
     <None Include="Resources\Console_soundbank.bnk" />
+    <None Include="Resources\PC2014_soundbank.bnk" />
     <None Include="Resources\PC_soundbank.bnk" />
   </ItemGroup>
   <ItemGroup>

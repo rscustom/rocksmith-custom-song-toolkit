@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using RocksmithToolkitLib.Sng;
 using X360.STFS;
 using X360.Other;
+using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage
@@ -17,22 +17,21 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void Pack(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
         {
-            GamePlatform platform = sourcePath.GetPlatform();
+            Platform platform = sourcePath.GetPlatform();
 
-            switch (platform) {
-                case GamePlatform.Pc:
-                    PackPC(sourcePath, saveFileName, useCryptography, updateSng);
+            switch (platform.platform) {
+                case Platform.GamePlatform.Pc:
+                    if (platform.version == Platform.GameVersion.RS2012)
+                        PackPC(sourcePath, saveFileName, useCryptography, updateSng);
+                    else if (platform.version == Platform.GameVersion.RS2014)
+                        PackPC2014(sourcePath, saveFileName);
                     break;
-                case GamePlatform.XBox360:
+                case Platform.GamePlatform.XBox360:
                     PackXBox360(sourcePath, saveFileName);
                     break;
-                case GamePlatform.PS3:
+                case Platform.GamePlatform.PS3:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
-                    break;
-                case GamePlatform.Pc2014:
-                    PackPC2014(sourcePath, saveFileName);
-                    break;
-                case GamePlatform.None:
+                case Platform.GamePlatform.None:
                     throw new InvalidOperationException("Invalid directory structure of package. \n\rDirectory: " + sourcePath);
             }
         }
@@ -72,7 +71,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     // Recreate SNG
                     if (updateSng)
                         if (directory.ToLower().IndexOf("dlc_tone_") < 0)
-                            UpdateSng(directory, GamePlatform.Pc);
+                            UpdateSng(directory, new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.RS2012));
 
                     PackInnerPC(innerPsarcStream, directory);
                     psarc.AddEntry(directoryName + ".psarc", innerPsarcStream);
@@ -231,35 +230,41 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void Unpack(string sourceFileName, string savePath, bool useCryptography)
         {
-            GamePlatform platform = sourceFileName.GetPlatform();
+            Platform platform = sourceFileName.GetPlatform();
 
-            switch (platform) {
-                case GamePlatform.Pc:
-                    using (var inputFileStream = File.OpenRead(sourceFileName))
-                    using (var inputStream = new MemoryStream()) {
+            switch (platform.platform) {
+                case Platform.GamePlatform.Pc:
+                    if (platform.version == Platform.GameVersion.RS2014)
+                        using (var inputStream = File.OpenRead(sourceFileName))
+                            ExtractPSARC(sourceFileName, savePath, inputStream, platform);
+                    else
+                    {
+                        using (var inputFileStream = File.OpenRead(sourceFileName))
+                        using (var inputStream = new MemoryStream())
+                        {
 
-                        if (useCryptography) {
-                            RijndaelEncryptor.DecryptFile(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
-                        } else {
-                            inputFileStream.CopyTo(inputStream);
+                            if (useCryptography)
+                            {
+                                RijndaelEncryptor.DecryptFile(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
+                            }
+                            else
+                            {
+                                inputFileStream.CopyTo(inputStream);
+                            }
+                            ExtractPSARC(sourceFileName, savePath, inputStream, platform);
                         }
-                        ExtractPSARC(sourceFileName, savePath, inputStream, platform);
                     }
                     return;
-                case GamePlatform.XBox360:
+                case Platform.GamePlatform.XBox360:
                     UnpackXBox360Package(sourceFileName, savePath, platform);
                     return;
-                case GamePlatform.PS3:
+                case Platform.GamePlatform.PS3:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
-                case GamePlatform.Pc2014:
-                    using (var inputStream = File.OpenRead(sourceFileName))
-                        ExtractPSARC(sourceFileName, savePath, inputStream, platform);
-                    break;
             }
             
         }
 
-        private static void UnpackXBox360Package(string sourceFileName, string savePath, GamePlatform platform) {
+        private static void UnpackXBox360Package(string sourceFileName, string savePath, Platform platform) {
             LogRecord x = new LogRecord();            
             STFSPackage xboxPackage = new STFSPackage(sourceFileName, x);
             if (!xboxPackage.ParseSuccess)
@@ -271,7 +276,7 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var fileName in Directory.EnumerateFiles(Path.Combine(rootDir, "Root"))) {
                 if (Path.GetExtension(fileName) == ".psarc") {
                     using (var outputFileStream = File.OpenRead(fileName)) {
-                        ExtractPSARC(fileName, Path.GetDirectoryName(fileName), outputFileStream, GamePlatform.XBox360);
+                        ExtractPSARC(fileName, Path.GetDirectoryName(fileName), outputFileStream, new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.None));
                     }
                 }
 
@@ -282,41 +287,41 @@ namespace RocksmithToolkitLib.DLCPackage
             xboxPackage.CloseIO();
         }
 
-        public static GamePlatform GetPlatform(this string fileExtension) {
+        public static Platform GetPlatform(this string fileExtension) {
             if (File.Exists(fileExtension)) {
                 switch (Path.GetExtension(fileExtension)) {
                     case ".dat":
-                        return GamePlatform.Pc;
+                        return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.RS2012);
                     case "":
-                        return GamePlatform.XBox360;
+                        return new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.RS2012);
                     case ".pkg":
                     case ".edat":
-                        return GamePlatform.PS3;
+                        return new Platform(Platform.GamePlatform.PS3, Platform.GameVersion.RS2012);
                     case ".psarc":
-                        return GamePlatform.Pc2014;
+                        return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.RS2014);
                     default:
-                        return GamePlatform.None;
+                        return new Platform(Platform.GamePlatform.None, Platform.GameVersion.None);
                 }
             } else if (Directory.Exists(fileExtension)) {
                 //TODO: Need to refactor this code in near future, works, but is not the best way.
                 if (File.Exists(Path.Combine(fileExtension, "APP_ID"))) {
-                    return GamePlatform.Pc;
+                    return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.RS2012);
                 } else if (File.Exists(Path.Combine(fileExtension, "appid.appid"))) {
-                    return GamePlatform.Pc2014;
+                    return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.RS2014);
                 } else if (Directory.Exists(Path.Combine(fileExtension, ROOT_XBox360))) {
-                    return GamePlatform.XBox360;
+                    return new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.RS2012);
                 } else if (Directory.Exists(Path.Combine(fileExtension, ROOT_PS3))) {
-                    return GamePlatform.PS3;
+                    return new Platform(Platform.GamePlatform.PS3, Platform.GameVersion.RS2012);
                 }
             }
-            return GamePlatform.None;
+            return new Platform(Platform.GamePlatform.None, Platform.GameVersion.None);
         }
 
-        private static void ExtractPSARC(string filename, string path, Stream inputStream, GamePlatform platform)
+        private static void ExtractPSARC(string filename, string path, Stream inputStream, Platform platform)
         {
             var name = Path.GetFileNameWithoutExtension(filename);
-            if (platform == GamePlatform.Pc && Path.GetExtension(filename) == ".dat" ||
-                platform == GamePlatform.Pc2014 && Path.GetExtension(filename) == ".psarc")
+            if (platform.platform == Platform.GamePlatform.Pc && platform.version == Platform.GameVersion.RS2012 && Path.GetExtension(filename) == ".dat" ||
+                platform.platform == Platform.GamePlatform.Pc && platform.version == Platform.GameVersion.RS2014 && Path.GetExtension(filename) == ".psarc")
             {
                 name += String.Format("_{0}", platform.ToString());
             }
@@ -342,7 +347,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void UpdateSng(string songDirectory, GamePlatform platform) {
+        private static void UpdateSng(string songDirectory, Platform platform) {
             var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, @"GR\Behaviors\Songs"));
 
             foreach (var xmlFile in xmlFiles) {

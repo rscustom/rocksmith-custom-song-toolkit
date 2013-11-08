@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage;
 using System.IO;
+using RocksmithToolkitLib;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Ogg;
 
@@ -52,7 +53,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 string[] decodedAudioFiles = Directory.GetFiles(sourcePath, "*_fixed.ogg", SearchOption.AllDirectories);
                 foreach (var file in decodedAudioFiles)
                     File.Delete(file);
-                Packer.Pack(sourcePath, saveFileName, (platform == GamePlatform.Pc) ? true : false, updateSng);
+                Packer.Pack(sourcePath, saveFileName, (platform.platform == Platform.GamePlatform.Pc) ? true : false, updateSng);
                 MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -86,8 +87,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             foreach (string sourceFileName in sourceFileNames)
             {
                 Application.DoEvents();
-                GamePlatform platform = Packer.GetPlatform(sourceFileName);
-                Packer.Unpack(sourceFileName, savePath, (platform == GamePlatform.Pc) ? true : false); // Cryptography way is used only for PC in Rocksmith 1
+                Platform platform = Packer.GetPlatform(sourceFileName);
+                Packer.Unpack(sourceFileName, savePath, (platform.platform == Platform.GamePlatform.Pc) ? true : false); // Cryptography way is used only for PC in Rocksmith 1
 
                 if (decodeAudio) {
                     try
@@ -156,14 +157,14 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Application.DoEvents();
                 var platform = sourceFileName.GetPlatform();
 
-                if (platform == GamePlatform.Pc || platform == GamePlatform.Pc2014)
+                if (platform.platform == Platform.GamePlatform.Pc)
                 {
-                    var useCryptography = (platform == GamePlatform.Pc) ? true : false;
+                    var useCryptography = (platform.version == Platform.GameVersion.RS2012) ? true : false;
                     Packer.Unpack(sourceFileName, tmpDir, useCryptography);
 
                     var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + String.Format("_{0}", platform);
 
-                    var appIdFile = Path.Combine(unpackedDir, (platform == GamePlatform.Pc) ? "APP_ID" : "appid.appid");
+                    var appIdFile = Path.Combine(unpackedDir, (platform.version == Platform.GameVersion.RS2012) ? "APP_ID" : "appid.appid");
 
                     File.WriteAllText(appIdFile, appId);
 
