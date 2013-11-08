@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RocksmithToolkitLib.DLCPackage.ManifestRS2014
+namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
     public class TunningRS2014
     {

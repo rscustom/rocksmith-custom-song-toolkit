@@ -5,9 +5,9 @@ using System.Text;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.DLCPackage.ManifestRS2014.Tone;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 
-namespace RocksmithToolkitLib.DLCPackage.ManifestRS2014.Header
+namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
 {
     public class AttributesHeaderRS2014
     {

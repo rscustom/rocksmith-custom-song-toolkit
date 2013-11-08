@@ -76,6 +76,9 @@
     <Compile Include="DLCPackage\AggregateGraph\SoundBank.cs" />
     <Compile Include="DLCPackage\AggregateGraph\XBlock.cs" />
     <Compile Include="DLCPackage\Arrangement.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\Tone\EffectRS2014.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\Tone\KnobsRS2014.cs" />
+    <Compile Include="DLCPackage\ManifestRS2014\Tone\ToneAttributesRS2014.cs" />
     <Compile Include="DLCPackage\ShowlightRS2014\ShowlightRS2014.cs" />
     <Compile Include="DLCPackage\ShowlightRS2014\ShowlightsRS2014.cs" />
     <Compile Include="DLCPackage\XBlockRS2014\EntityRS2014.cs" />

@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace RocksmithToolkitLib.DLCPackage.ManifestRS2014.Header
+namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
 {
     public class ManifestHeaderRS2014
     {

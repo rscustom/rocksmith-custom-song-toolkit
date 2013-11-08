@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RocksmithToolkitLib.DLCPackage.ManifestRS2014.Tone
+namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {
     public class GearRS2014
     {

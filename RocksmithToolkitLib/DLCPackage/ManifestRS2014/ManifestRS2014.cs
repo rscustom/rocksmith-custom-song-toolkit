@@ -5,11 +5,11 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace RocksmithToolkitLib.DLCPackage.ManifestRS2014
+namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
-    public class ManifestRS2014
+    public class ManifestRS2014<T> //where T : new()
     {
-        public Dictionary<string, Dictionary<string, AttributesRS2014>> Entries { get; set; }
+        public Dictionary<string, Dictionary<string, T>> Entries { get; set; }
         public String ModelName { get; set; }
         public int IterationVersion { get; set; }
         public String InsertRoot { get; set; }
@@ -21,10 +21,11 @@ namespace RocksmithToolkitLib.DLCPackage.ManifestRS2014
             InsertRoot = "Static.Songs.Entries";
         }
 
-        public static ManifestRS2014 LoadFromFile(string manifestRS2014FilePath) {
+        public static ManifestRS2014<T> LoadFromFile(string manifestRS2014FilePath)
+        {
             using (var reader = new StreamReader(manifestRS2014FilePath)) {
-                var manifest = new ManifestRS2014();
-                manifest = JsonConvert.DeserializeObject<ManifestRS2014>(reader.ReadToEnd());
+                var manifest = new ManifestRS2014<T>();
+                manifest = JsonConvert.DeserializeObject<ManifestRS2014<T>>(reader.ReadToEnd());
                 return manifest;
             }
         }

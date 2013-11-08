@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.DLCPackage.ManifestRS2014.Tone;
-using RocksmithToolkitLib.DLCPackage.ManifestRS2014.Header;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
+using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 
-namespace RocksmithToolkitLib.DLCPackage.ManifestRS2014
+namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
     public class AttributesRS2014 : AttributesHeaderRS2014
     {
