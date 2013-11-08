@@ -26,6 +26,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         public List<string> Skins { get; set; }
         public List<string> Skins3D { get; set; }
         public string SoundBank { get; set; }
+        public string SpawnPoint { get; set; }
         public string Type { get; set; }
         public string PersistentID { get; set; }
     }

@@ -4,22 +4,16 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
-    public class ManifestRS2014<T> //where T : new()
+    public class ManifestRS2014<T>
     {
         public Dictionary<string, Dictionary<string, T>> Entries { get; set; }
         public String ModelName { get; set; }
         public int IterationVersion { get; set; }
         public String InsertRoot { get; set; }
-
-        public ManifestRS2014()
-        {
-            ModelName = "RSEnumerable_Song";
-            IterationVersion = 2;
-            InsertRoot = "Static.Songs.Entries";
-        }
 
         public static ManifestRS2014<T> LoadFromFile(string manifestRS2014FilePath)
         {

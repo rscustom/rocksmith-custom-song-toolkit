@@ -5,16 +5,107 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.Tone;
+using NDesk.Options;
+using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 
 namespace pedalgen
 {
-    class Program
+    internal class Arguments
     {
+        public bool ShowHelp;
+        public string Version;
+        public string InputDirectory;
+    }
+
+    internal class Program
+    {
+        private static OptionSet GetOptions(Arguments outputArguments)
+        {
+            return new OptionSet
+            {
+                { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
+                { "v|version", "Version of the Rocksmith Game [RS2012 or RS2014], default is RS2012", v => outputArguments.Version = v },
+                { "i|dir|input=", "The input directory (defaults to the input directory)", v => outputArguments.InputDirectory = v }
+            };
+        }
+
         static void Main(string[] args)
         {
-        	var dirs = new List<string>();
-        	for (int i=0; i < args.Length; i++)
-        	{dirs.Add(args[i]);}
+        	var arguments = new Arguments();
+            var options = GetOptions(arguments);
+
+            if (args.Length == 0)
+	        {
+                    options.WriteOptionDescriptions(Console.Out);
+                    return;
+	       	}
+            try
+            {
+                options.Parse(args);
+                if (arguments.ShowHelp)
+                {
+                    options.WriteOptionDescriptions(Console.Out);
+                    return;
+                }
+
+                if (String.IsNullOrEmpty(arguments.Version))
+                {
+                    ShowHelpfulError("Must especify the Rocksmith version. 'RS2012' for Rocksmith 1 or 'RS2014' for Rocksmith 2014");
+                    return;
+                }
+                if (String.IsNullOrEmpty(arguments.InputDirectory))
+                {
+                    ShowHelpfulError("Must especify the input directory.");
+                    return;
+                }
+                if (!Directory.Exists(arguments.InputDirectory)){
+                    ShowHelpfulError("The input directory doesn't exists.");
+                    return;
+                }
+
+                switch (arguments.Version.ToUpper())
+                {
+                    case "RS2014":
+                        GeneratePedalsRS2014(arguments.InputDirectory);
+                        break;
+                    default:
+                        GeneratePedals(new string[] { arguments.InputDirectory });
+                        break;
+                }
+            }
+            catch (OptionException ex)
+            {
+                ShowHelpfulError(ex.Message);
+                return;
+            }
+            catch (Exception ex)
+            {
+                ShowHelpfulError(ex.Message);
+                return;
+            }
+        }
+
+        private static void GeneratePedalsRS2014(string inputDir) {
+            var gearsJsonFiles = Directory.GetFiles(inputDir);
+            List<ToneAttributesRS2014> gears = new List<ToneAttributesRS2014>();
+            foreach (var file in gearsJsonFiles)
+            {
+                var gearManifest = ManifestRS2014<ToneAttributesRS2014>.LoadFromFile(file);
+                foreach (var g in gearManifest.Entries)
+                {
+                    gears.Add(g.Value["Attributes"]);
+                }
+            }
+            JsonSerializerSettings jss = new JsonSerializerSettings();
+            jss.Formatting = Formatting.Indented;
+            File.WriteAllText("gearsRS2014.json", JsonConvert.SerializeObject(gears, jss)); 
+        }
+
+        private static void GeneratePedals(string[] args) {
+            var dirs = new List<string>();
+            for (int i = 0; i < args.Length; i++)
+            { dirs.Add(args[i]); }
             var pedals = new List<RsTone>();
             foreach (string file in dirs)
             {
@@ -41,15 +132,24 @@ namespace pedalgen
                         pedals.AddRange(filePedals.Entries);
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    ShowHelpfulError(ex.Message);
+                    return;
+                }
             }
             var bad = pedals.Where(p => p.Type == null);
             var goodPedals = pedals.Where(p => p.Type != null);
             var toolkitPedals = goodPedals.Select(pedal => pedal.ToPedal());
             foreach (var i in dirs)
-            File.WriteAllText(Path.Combine(i, "pedals.json"), JsonConvert.SerializeObject(toolkitPedals, Formatting.Indented));
+                File.WriteAllText(Path.Combine(i, "pedals.json"), JsonConvert.SerializeObject(toolkitPedals, Formatting.Indented));
         }
 
-
+        static void ShowHelpfulError(string message)
+        {
+            Console.Write("pedalgen: ");
+            Console.WriteLine(message);
+            Console.WriteLine("Try 'pedalgen --help' for more information.");
+        }
     }
 }
