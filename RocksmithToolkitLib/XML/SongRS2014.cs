@@ -69,7 +69,7 @@ namespace RocksmithToolkitLib.Xml {
         public string CrowdSpeed { get; set; }
 
         [XmlElement("arrangementProperties")]
-        public SongArrangementPropertiesAttributes ArrangementProperties { get; set; }
+        public SongArrangementPropertiesRS2014 ArrangementProperties { get; set; }
 
         [XmlElement("lastConversionDateTime")]
         public string LastConversionDateTime { get; set; }
@@ -134,89 +134,10 @@ namespace RocksmithToolkitLib.Xml {
         }
     }
 
-    [XmlType("arrangementProperties")]
-    public class SongArrangementPropertiesAttributes {
-        [XmlAttribute("represent")]
-        public Int32 Represent { get; set; }
-
+    public class SongArrangementPropertiesRS2014 : SongArrangementProperties {
         [XmlAttribute("bonusArr")]
         public Int32 BonusArr { get; set; }
-
-        [XmlAttribute("standardTuning")]
-        public Int32 StandardTuning { get; set; }
-
-        [XmlAttribute("nonStandardChords")]
-        public Int32 NonStandardChords { get; set; }
-
-        [XmlAttribute("barreChords")]
-        public Int32 BarreChords { get; set; }
-
-        [XmlAttribute("powerChords")]
-        public Int32 PowerChords { get; set; }
-
-        [XmlAttribute("dropDPower")]
-        public Int32 DropDPower { get; set; }
-
-        [XmlAttribute("openChords")]
-        public Int32 OpenChords { get; set; }
-
-        [XmlAttribute("fingerPicking")]
-        public Int32 FingerPicking { get; set; }
-
-        [XmlAttribute("pickDirection")]
-        public Int32 PickDirection { get; set; }
-
-        [XmlAttribute("doubleStops")]
-        public Int32 DoubleStops { get; set; }
-
-        [XmlAttribute("palmMutes")]
-        public Int32 PalmMutes { get; set; }
-
-        [XmlAttribute("harmonics")]
-        public Int32 Harmonics { get; set; }
-
-        [XmlAttribute("pinchHarmonics")]
-        public Int32 PinchHarmonics { get; set; }
-
-        [XmlAttribute("hopo")]
-        public Int32 Hopo { get; set; }
-
-        [XmlAttribute("tremolo")]
-        public Int32 Tremolo { get; set; }
-
-        [XmlAttribute("slides")]
-        public Int32 Slides { get; set; }
-
-        [XmlAttribute("unpitchedSlides")]
-        public Int32 UnpitchedSlides { get; set; }
-
-        [XmlAttribute("bends")]
-        public Int32 Bends { get; set; }
-
-        [XmlAttribute("tapping")]
-        public Int32 Tapping { get; set; }
-
-        [XmlAttribute("vibrato")]
-        public Int32 Vibrato { get; set; }
-
-        [XmlAttribute("fretHandMutes")]
-        public Int32 FretHandMutes { get; set; }
-
-        [XmlAttribute("slapPop")]
-        public Int32 SlapPop { get; set; }
-
-        [XmlAttribute("twoFingerPicking")]
-        public Int32 TwoFingerPicking { get; set; }
-
-        [XmlAttribute("fifthsAndOctaves")]
-        public Int32 FifthsAndOctaves { get; set; }
-
-        [XmlAttribute("syncopation")]
-        public Int32 Syncopation { get; set; }
-
-        [XmlAttribute("bassPick")]
-        public Int32 BassPick { get; set; }
-
+        
         [XmlAttribute("sustain")]
         public Int32 Sustain { get; set; }
 

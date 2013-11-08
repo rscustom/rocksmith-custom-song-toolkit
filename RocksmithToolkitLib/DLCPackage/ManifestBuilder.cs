@@ -134,12 +134,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
                 else
                 {
-                    var serializer = new XmlSerializer(typeof(Song));
-                    Song song;
-                    using (var fileStream = File.OpenRead(x.SongXml.File))
-                    {
-                        song = (Song)serializer.Deserialize(fileStream);
-                    }
+                    var song = x.SongXml.SongXmlContent;
 
                     attribute.DynamicVisualDensity = new List<float>(20);
                     float endSpeed = Math.Min(45f, Math.Max(10f, x.ScrollSpeed))/10f;
@@ -170,14 +165,14 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     #region "Associated Techniques"
 
-                    attribute.PowerChords = x.PowerChords;
-                    if (x.PowerChords) AssociateTechniques(x, attribute, "PowerChords");
-                    attribute.BarChords = x.BarChords;
-                    if (x.BarChords) AssociateTechniques(x, attribute, "BarChords");
-                    attribute.OpenChords = x.OpenChords;
-                    if (x.OpenChords) AssociateTechniques(x, attribute, "ChordIntro");
-                    attribute.DoubleStops = x.DoubleStops;
-                    if (x.DoubleStops) AssociateTechniques(x, attribute, "DoubleStops");
+                    attribute.PowerChords = song.HasPowerChords();
+                    if (song.HasPowerChords()) AssociateTechniques(x, attribute, "PowerChords");
+                    attribute.BarChords = song.HasBarChords();
+                    if (song.HasBarChords()) AssociateTechniques(x, attribute, "BarChords");
+                    attribute.OpenChords = song.HasOpenChords();
+                    if (song.HasOpenChords()) AssociateTechniques(x, attribute, "ChordIntro");
+                    attribute.DoubleStops = song.HasDoubleStops();
+                    if (song.HasDoubleStops()) AssociateTechniques(x, attribute, "DoubleStops");
                     attribute.Sustain = song.HasSustain();
                     if (song.HasSustain()) AssociateTechniques(x, attribute, "Sustain");
                     attribute.Bends = song.HasBends();
@@ -194,22 +189,22 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (song.HasPalmMutes()) AssociateTechniques(x, attribute, "PalmMutes");
                     attribute.HOPOs = song.HasHOPOs();
                     if (song.HasHOPOs()) AssociateTechniques(x, attribute, "HOPOs");
-                    attribute.FretHandMutes = x.FretHandMutes;
-                    if (x.FretHandMutes) AssociateTechniques(x, attribute, "FretHandMutes");
-                    attribute.DropDPowerChords = x.DropDPowerChords;
-                    if (x.DropDPowerChords) AssociateTechniques(x, attribute, "DropDPowerChords");
-                    attribute.Prebends = x.Prebends;
-                    if (x.Prebends) AssociateTechniques(x, attribute, "Prebends");
-                    attribute.Vibrato = x.Vibrato;
-                    if (x.Vibrato) AssociateTechniques(x, attribute, "Vibrato");
+                    attribute.FretHandMutes = song.HasFretHandMutes();
+                    if (song.HasFretHandMutes()) AssociateTechniques(x, attribute, "FretHandMutes");
+                    attribute.DropDPowerChords = song.HasDropDPowerChords();
+                    if (song.HasDropDPowerChords()) AssociateTechniques(x, attribute, "DropDPowerChords");
+                    attribute.Prebends = song.HasPrebends();
+                    if (song.HasPrebends()) AssociateTechniques(x, attribute, "Prebends");
+                    attribute.Vibrato = song.HasVibrato();
+                    if (song.HasVibrato()) AssociateTechniques(x, attribute, "Vibrato");
                     
                     //Bass exclusive
-                    attribute.TwoFingerPlucking = x.TwoFingerPlucking;
-                    if (x.TwoFingerPlucking) AssociateTechniques(x, attribute, "Plucking");
-                    attribute.FifthsAndOctaves = x.FifthsAndOctaves;
-                    if (x.FifthsAndOctaves) AssociateTechniques(x, attribute, "Octave");
-                    attribute.Syncopation = x.Syncopation;
-                    if (x.Syncopation) AssociateTechniques(x, attribute, "Syncopation");
+                    attribute.TwoFingerPlucking = song.HasTwoFingerPlucking();
+                    if (song.HasTwoFingerPlucking()) AssociateTechniques(x, attribute, "Plucking");
+                    attribute.FifthsAndOctaves = song.HasFifthsAndOctaves();
+                    if (song.HasFifthsAndOctaves()) AssociateTechniques(x, attribute, "Octave");
+                    attribute.Syncopation = song.HasSyncopation();
+                    if (song.HasSyncopation()) AssociateTechniques(x, attribute, "Syncopation");
                     
                     #endregion
 

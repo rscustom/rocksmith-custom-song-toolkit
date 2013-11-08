@@ -65,10 +65,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 // Disabling options that are not meant for Arrangement Types
                 arrangementNameCombo.Enabled = selectedType == ArrangementType.Guitar;
-                groupBox1.Enabled = selectedType != ArrangementType.Vocal;
-                groupBox2.Enabled = selectedType != ArrangementType.Guitar;
+                gbTone.Enabled = selectedType != ArrangementType.Vocal;
+                gbScrollSpeed.Enabled = selectedType != ArrangementType.Guitar;
                 Picked.Visible = selectedType == ArrangementType.Bass;
-                tonesCombo.Enabled = selectedType != ArrangementType.Vocal;
+                toneBaseCombo.Enabled = selectedType != ArrangementType.Vocal;
                 tuningComboBox.Enabled = selectedType != ArrangementType.Vocal;
                 Picked.Checked = selectedType == ArrangementType.Bass ? false : true;
                 
@@ -77,7 +77,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             };
             foreach (var tone in toneNames)
             {
-                tonesCombo.Items.Add(tone);
+                toneBaseCombo.Items.Add(tone);
             }
             scrollSpeedTrackBar.Scroll += (sender, e) =>
             {
@@ -105,10 +105,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Enum.TryParse<InstrumentTuning>(arrangement.Tuning, true, out tuning);
                 tuningComboBox.SelectedItem = tuning;
 
-                tonesCombo.SelectedItem = arrangement.ToneName;
-                if (tonesCombo.SelectedItem == null && tonesCombo.Items.Count > 0)
+                toneBaseCombo.SelectedItem = arrangement.ToneName;
+                if (toneBaseCombo.SelectedItem == null && toneBaseCombo.Items.Count > 0)
                 {
-                    tonesCombo.SelectedItem = tonesCombo.Items[0];
+                    toneBaseCombo.SelectedItem = toneBaseCombo.Items[0];
                 }
 
                 Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
@@ -120,20 +120,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 //Song xml file
                 XmlFilePath.Text = arrangement.SongXml.File;
-                
-                //Techniques
-                PowerChords.Checked = arrangement.PowerChords;
-                BarChords.Checked = arrangement.BarChords;
-                OpenChords.Checked = arrangement.OpenChords;
-                DoubleStops.Checked = arrangement.DoubleStops;
-                DropDPowerChords.Checked = arrangement.DropDPowerChords;
-                FretHandMutes.Checked = arrangement.FretHandMutes;
-                Prebends.Checked = arrangement.Prebends;
-                Vibrato.Checked = arrangement.Vibrato;
-                //Bass techniques
-                FifthsAndOctaves.Checked = arrangement.FifthsAndOctaves;
-                TwoFingerPlucking.Checked = arrangement.TwoFingerPlucking;
-                Syncopation.Checked = arrangement.Syncopation;
                 
                 PersistentId.Text = arrangement.Id.ToString().Replace("-", "").ToUpper();
                 MasterId.Text = arrangement.MasterId.ToString();
@@ -183,18 +169,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     XElement arrangementProperties = doc.XPathSelectElement("/song/arrangementProperties");
                     if (arrangementProperties != null && arrangementProperties.Attributes() != null && arrangementProperties.Attributes().Count() > 25) {
-                        //Techniques
-                        BarChords.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("barreChords").Value));
-                        PowerChords.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("powerChords").Value));
-                        DropDPowerChords.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("dropDPower").Value));
-                        OpenChords.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("openChords").Value));
-                        DoubleStops.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("doubleStops").Value));
-                        Vibrato.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("vibrato").Value));
-                        FretHandMutes.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("fretHandMutes").Value));
-                        ////Bass techniques
-                        TwoFingerPlucking.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("twoFingerPicking").Value));
-                        FifthsAndOctaves.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("fifthsAndOctaves").Value));
-                        Syncopation.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("syncopation").Value));
                         Picked.Checked = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("bassPick").Value));
 
                         bool standardTuning = Convert.ToBoolean(Convert.ToInt16(arrangementProperties.Attribute("standardTuning").Value));
@@ -227,6 +201,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void addArrangementButton_Click(object sender, EventArgs e)
         {
+            //Validations
             var xmlfilepath = XmlFilePath.Text;
             if (!File.Exists(xmlfilepath))
             {
@@ -234,13 +209,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
-            //Arrangement IDs
+            if (arrangement.RelativeDifficulty == -1) {
+                RelativeDifficulty.Focus();
+                return;
+            }
+
             Guid guid;
             if (Guid.TryParse(PersistentId.Text, out guid) == false) {
             	PersistentId.Focus();
             } else {
             	arrangement.Id = guid;
             }
+
             int masterId;
             if (int.TryParse(MasterId.Text, out masterId) == false) {
 			    MasterId.Focus();        	
@@ -248,38 +228,19 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             	arrangement.MasterId = masterId;
             }
             
-            //Arrangment details
+            //Arrangment information
             arrangement.Name = (ArrangementName)arrangementNameCombo.SelectedItem;
             arrangement.ArrangementType = (ArrangementType)arrangementTypeCombo.SelectedItem;
             arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
-            arrangement.ToneName = tonesCombo.SelectedItem.ToString();
             arrangement.PluckedType = Picked.Checked ? PluckedType.Picked : PluckedType.NotPicked;
             arrangement.RelativeDifficulty = readInt(RelativeDifficulty.Text);
             arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
 
+            // New tone definition for RS2014
+            arrangement.ToneName = toneBaseCombo.SelectedItem.ToString(); //TODO: SETUP TONE RS2014
+            
             //Song xml file
             arrangement.SongXml.File = xmlfilepath;
-            
-            //Techniques
-            arrangement.PowerChords = PowerChords.Checked;
-            arrangement.BarChords = BarChords.Checked;
-            arrangement.OpenChords = OpenChords.Checked;
-            arrangement.DoubleStops = DoubleStops.Checked;
-            arrangement.DropDPowerChords = DropDPowerChords.Checked;
-            arrangement.FretHandMutes = FretHandMutes.Checked;
-            arrangement.Prebends = Prebends.Checked;
-            arrangement.Vibrato = Vibrato.Checked;
-            //Bass techniques            
-            arrangement.FifthsAndOctaves = FifthsAndOctaves.Checked;
-            arrangement.TwoFingerPlucking = TwoFingerPlucking.Checked;
-            arrangement.Syncopation = Syncopation.Checked;
-            
-            
-            if (arrangement.RelativeDifficulty == -1)
-            {
-                RelativeDifficulty.Focus();
-                return;
-            }
 
             DialogResult = DialogResult.OK;
             Close();

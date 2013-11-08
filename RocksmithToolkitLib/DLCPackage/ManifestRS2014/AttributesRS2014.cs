@@ -11,7 +11,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
     public class AttributesRS2014 : AttributesHeaderRS2014
     {
-        public SongArrangementPropertiesAttributes ArrangementProperties { get; set; }
+        public SongArrangementPropertiesRS2014 ArrangementProperties { get; set; }
         public int ArrangementSort { get; set; }
         public int ArrangementType { get; set; }
         public string BlockAsset { get; set; }
