@@ -323,7 +323,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (platform.platform == Platform.GamePlatform.Pc && platform.version == Platform.GameVersion.RS2012 && Path.GetExtension(filename) == ".dat" ||
                 platform.platform == Platform.GamePlatform.Pc && platform.version == Platform.GameVersion.RS2014 && Path.GetExtension(filename) == ".psarc")
             {
-                name += String.Format("_{0}", platform.ToString());
+                name += String.Format("_{0}", platform.platform.ToString());
             }
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream);

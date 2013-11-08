@@ -155,7 +155,7 @@ namespace RocksmithToolkitLib.DLCPackage
             List<Tone.Tone> tones = new List<Tone.Tone>();
             string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Packer.Unpack(packagePath, appDir, true);
-            string unpackedDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(packagePath) + String.Format("_{0}", platform.ToString()));
+            string unpackedDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(packagePath) + String.Format("_{0}", platform.platform.ToString()));
             string[] toneManifestFiles = Directory.GetFiles(unpackedDir, "tone*.manifest.json", SearchOption.AllDirectories);
             
             foreach (var file in toneManifestFiles)

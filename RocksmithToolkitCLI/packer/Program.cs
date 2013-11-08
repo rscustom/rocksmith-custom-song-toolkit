@@ -190,7 +190,7 @@ namespace PackerConsole
                             if (arguments.DecodeOGG)
                             {
                                 var name = Path.GetFileNameWithoutExtension(sourceFileName);
-                                name += String.Format("_{0}", platform.ToString());
+                                name += String.Format("_{0}", platform.platform.ToString());
 
                                 string[] audioFiles = Directory.GetFiles(Path.Combine(arguments.Output, name), (platform.GetWwiseVersion() == OggFile.WwiseVersion.Wwise2010) ? "*.ogg" : "*.wem", SearchOption.AllDirectories);
 

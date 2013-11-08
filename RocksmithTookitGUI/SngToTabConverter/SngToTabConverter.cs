@@ -93,7 +93,7 @@ namespace RocksmithToolkitGUI.SngToTabConverter
         private void ExtractBeforeConvert(string inputFile, string savePath, bool all) {
             string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Packer.Unpack(inputFile, appDir, true);
-            string unpackedDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(inputFile) + String.Format("_{0}", Packer.GetPlatform(inputFile).ToString()));
+            string unpackedDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(inputFile) + String.Format("_{0}", Packer.GetPlatform(inputFile).platform.ToString()));
             string[] sngFiles = Directory.GetFiles(unpackedDir, "*.sng", SearchOption.AllDirectories);
 
             foreach (var sng in sngFiles) {

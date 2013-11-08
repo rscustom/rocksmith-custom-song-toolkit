@@ -94,7 +94,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     try
                     {
                         var name = Path.GetFileNameWithoutExtension(sourceFileName);
-                        name += String.Format("_{0}", platform.ToString());
+                        name += String.Format("_{0}", platform.platform.ToString());
                         string[] oggFiles = Directory.GetFiles(Path.Combine(savePath, name), (platform.GetWwiseVersion() == OggFile.WwiseVersion.Wwise2010) ? "*.ogg" : "*.wem" , SearchOption.AllDirectories);
 
                         foreach (var file in oggFiles)
@@ -162,7 +162,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     var useCryptography = (platform.version == Platform.GameVersion.RS2012) ? true : false;
                     Packer.Unpack(sourceFileName, tmpDir, useCryptography);
 
-                    var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + String.Format("_{0}", platform);
+                    var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + String.Format("_{0}", platform.platform);
 
                     var appIdFile = Path.Combine(unpackedDir, (platform.version == Platform.GameVersion.RS2012) ? "APP_ID" : "appid.appid");
 
