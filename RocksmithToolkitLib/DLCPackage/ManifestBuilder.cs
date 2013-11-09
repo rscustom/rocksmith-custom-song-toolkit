@@ -79,7 +79,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 attribute.DisplayName = songInfo.SongDisplayName;
                 attribute.DLCPreview = false;
                 attribute.EffectChainMultiplayerName = string.Empty;
-                attribute.EffectChainName = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : (dlcName + "_" + x.ToneName == null ? "Default" : x.ToneName.Replace(' ', '_'));
+                attribute.EffectChainName = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : (dlcName + "_" + x.ToneBase == null ? "Default" : x.ToneBase.Replace(' ', '_'));
                 attribute.EventFirstTimeSortOrder = 9999;
                 attribute.ExclusiveBuild = new List<object>();
                 attribute.FirstArrangementInSong = false;

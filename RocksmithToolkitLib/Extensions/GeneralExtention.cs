@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace RocksmithToolkitLib.Extensions
 {
-    public static class StringExtensions
+    public static class GeneralExtensions
     {
         public static bool Contains(this String obj, char[] chars)
         {
@@ -29,6 +29,14 @@ namespace RocksmithToolkitLib.Extensions
             return (from j in content
                     where j.Contains(value)
                     select j).ToArray<string>();
+        }
+
+        public static int ToInt32(this string value)
+        {
+            int v;
+            if (int.TryParse(value, out v) == false)
+                return -1;
+            return v;
         }
     }
 }

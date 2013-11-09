@@ -114,7 +114,7 @@
     <Compile Include="Extensions\ImageExtention.cs" />
     <Compile Include="Extensions\DirectoryExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
-    <Compile Include="Extensions\StringExtention.cs" />
+    <Compile Include="Extensions\GeneralExtention.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Ogg\OggFile.cs" />

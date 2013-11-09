@@ -34,7 +34,7 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rsversionCombo = new System.Windows.Forms.ComboBox();
+            this.gameVersionCombo = new System.Windows.Forms.ComboBox();
             this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.decodeAudioCheckbox = new System.Windows.Forms.CheckBox();
@@ -85,7 +85,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.rsversionCombo);
+            this.groupBox1.Controls.Add(this.gameVersionCombo);
             this.groupBox1.Controls.Add(this.AppIdTB);
             this.groupBox1.Controls.Add(this.appIdCombo);
             this.groupBox1.Controls.Add(this.repackButton);
@@ -98,18 +98,18 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Update App ID";
             // 
-            // rsversionCombo
+            // gameVersionCombo
             // 
-            this.rsversionCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.gameVersionCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rsversionCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.rsversionCombo.FormattingEnabled = true;
-            this.rsversionCombo.Location = new System.Drawing.Point(5, 17);
-            this.rsversionCombo.Margin = new System.Windows.Forms.Padding(2);
-            this.rsversionCombo.Name = "rsversionCombo";
-            this.rsversionCombo.Size = new System.Drawing.Size(74, 21);
-            this.rsversionCombo.TabIndex = 42;
-            this.rsversionCombo.SelectedIndexChanged += new System.EventHandler(this.rsversionCombo_SelectedIndexChanged);
+            this.gameVersionCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.gameVersionCombo.FormattingEnabled = true;
+            this.gameVersionCombo.Location = new System.Drawing.Point(5, 17);
+            this.gameVersionCombo.Margin = new System.Windows.Forms.Padding(2);
+            this.gameVersionCombo.Name = "gameVersionCombo";
+            this.gameVersionCombo.Size = new System.Drawing.Size(74, 21);
+            this.gameVersionCombo.TabIndex = 42;
+            this.gameVersionCombo.SelectedIndexChanged += new System.EventHandler(this.gameVersionCombo_SelectedIndexChanged);
             // 
             // AppIdTB
             // 
@@ -187,6 +187,6 @@
         private CueTextBox AppIdTB;
         private System.Windows.Forms.CheckBox decodeAudioCheckbox;
         private System.Windows.Forms.CheckBox updateSngCheckBox;
-        private System.Windows.Forms.ComboBox rsversionCombo;
+        private System.Windows.Forms.ComboBox gameVersionCombo;
     }
 }

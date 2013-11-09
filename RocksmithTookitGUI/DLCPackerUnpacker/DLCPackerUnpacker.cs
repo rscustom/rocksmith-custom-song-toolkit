@@ -20,11 +20,13 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         {
             InitializeComponent();
 
-            rsversionCombo.DataSource = Enum.GetNames(typeof(SongAppId.RSVersion));
-            rsversionCombo.SelectedItem = SongAppId.RSVersion.RS2012;
+            var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
+            gameVersionList.Remove("None");
+            gameVersionCombo.DataSource = gameVersionList;
+            gameVersionCombo.SelectedItem = GameVersion.RS2012;
 
-            SongAppId.RSVersion rsVersion = (SongAppId.RSVersion)Enum.Parse(typeof(SongAppId.RSVersion), rsversionCombo.SelectedItem.ToString());
-            PopulateAppIdCombo(rsVersion);
+            GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), gameVersionCombo.SelectedItem.ToString());
+            PopulateAppIdCombo(gameVersion);
         }
 
         private void packButton_Click(object sender, EventArgs e)
@@ -184,17 +186,17 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             
         }
 
-        private void rsversionCombo_SelectedIndexChanged(object sender, EventArgs e)
+        private void gameVersionCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SongAppId.RSVersion rsVersion = (SongAppId.RSVersion)Enum.Parse(typeof(SongAppId.RSVersion), rsversionCombo.SelectedItem.ToString());
-            PopulateAppIdCombo(rsVersion); ;
+            GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), gameVersionCombo.SelectedItem.ToString());
+            PopulateAppIdCombo(gameVersion); ;
         }
 
-        private void PopulateAppIdCombo(SongAppId.RSVersion rsVersion)
+        private void PopulateAppIdCombo(GameVersion gameVersion)
         {
             SongAppId firstSong = null;
             appIdCombo.Items.Clear();
-            foreach (var song in SongAppIdRepository.Instance().Select(rsVersion))
+            foreach (var song in SongAppIdRepository.Instance().Select(gameVersion))
             {
                 appIdCombo.Items.Add(song);
                 if (firstSong == null)

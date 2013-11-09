@@ -55,20 +55,25 @@
             this.label8 = new System.Windows.Forms.Label();
             this.toneACombo = new System.Windows.Forms.ComboBox();
             this.lblToneA = new System.Windows.Forms.Label();
-            this.RelativeDifficulty = new RocksmithToolkitGUI.CueTextBox();
-            this.XmlFilePath = new RocksmithToolkitGUI.CueTextBox();
             this.gbDLCId = new System.Windows.Forms.GroupBox();
             this.PersistentId = new RocksmithToolkitGUI.CueTextBox();
             this.MasterId = new RocksmithToolkitGUI.CueTextBox();
             this.gbXmlDefinition = new System.Windows.Forms.GroupBox();
+            this.XmlFilePath = new RocksmithToolkitGUI.CueTextBox();
             this.gbArrInfo = new System.Windows.Forms.GroupBox();
             this.gbScrollSpeed = new System.Windows.Forms.GroupBox();
+            this.RelativeDifficulty = new RocksmithToolkitGUI.CueTextBox();
+            this.gbGameplayPath = new System.Windows.Forms.GroupBox();
+            this.pathBassCheckbox = new System.Windows.Forms.CheckBox();
+            this.pathRhythmCheckbox = new System.Windows.Forms.CheckBox();
+            this.pathLeadCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).BeginInit();
             this.gbTone.SuspendLayout();
             this.gbDLCId.SuspendLayout();
             this.gbXmlDefinition.SuspendLayout();
             this.gbArrInfo.SuspendLayout();
             this.gbScrollSpeed.SuspendLayout();
+            this.gbGameplayPath.SuspendLayout();
             this.SuspendLayout();
             // 
             // songXmlBrowseButton
@@ -84,12 +89,13 @@
             // addArrangementButton
             // 
             this.addArrangementButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addArrangementButton.Location = new System.Drawing.Point(291, 339);
+            this.addArrangementButton.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.addArrangementButton.Location = new System.Drawing.Point(291, 391);
             this.addArrangementButton.Name = "addArrangementButton";
             this.addArrangementButton.Size = new System.Drawing.Size(72, 29);
             this.addArrangementButton.TabIndex = 15;
             this.addArrangementButton.Text = "Ok";
-            this.addArrangementButton.UseVisualStyleBackColor = true;
+            this.addArrangementButton.UseVisualStyleBackColor = false;
             this.addArrangementButton.Click += new System.EventHandler(this.addArrangementButton_Click);
             // 
             // arrangementTypeCombo
@@ -115,7 +121,7 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(369, 339);
+            this.cancelButton.Location = new System.Drawing.Point(369, 391);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(72, 29);
             this.cancelButton.TabIndex = 16;
@@ -180,7 +186,7 @@
             // Picked
             // 
             this.Picked.AutoSize = true;
-            this.Picked.Location = new System.Drawing.Point(340, 78);
+            this.Picked.Location = new System.Drawing.Point(340, 79);
             this.Picked.Name = "Picked";
             this.Picked.Size = new System.Drawing.Size(85, 17);
             this.Picked.TabIndex = 37;
@@ -190,7 +196,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 49);
+            this.label4.Location = new System.Drawing.Point(7, 50);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(38, 13);
@@ -201,7 +207,7 @@
             // 
             this.arrangementNameCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.arrangementNameCombo.FormattingEnabled = true;
-            this.arrangementNameCombo.Location = new System.Drawing.Point(54, 45);
+            this.arrangementNameCombo.Location = new System.Drawing.Point(54, 47);
             this.arrangementNameCombo.Margin = new System.Windows.Forms.Padding(2);
             this.arrangementNameCombo.Name = "arrangementNameCombo";
             this.arrangementNameCombo.Size = new System.Drawing.Size(134, 21);
@@ -221,7 +227,7 @@
             // 
             this.tuningComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tuningComboBox.FormattingEnabled = true;
-            this.tuningComboBox.Location = new System.Drawing.Point(54, 72);
+            this.tuningComboBox.Location = new System.Drawing.Point(54, 76);
             this.tuningComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.tuningComboBox.Name = "tuningComboBox";
             this.tuningComboBox.Size = new System.Drawing.Size(134, 21);
@@ -241,7 +247,7 @@
             this.gbTone.Controls.Add(this.toneACombo);
             this.gbTone.Controls.Add(this.lblToneA);
             this.gbTone.Controls.Add(this.toneBaseCombo);
-            this.gbTone.Location = new System.Drawing.Point(6, 176);
+            this.gbTone.Location = new System.Drawing.Point(6, 226);
             this.gbTone.Name = "gbTone";
             this.gbTone.Size = new System.Drawing.Size(435, 101);
             this.gbTone.TabIndex = 42;
@@ -295,9 +301,9 @@
             this.label12.Location = new System.Drawing.Point(217, 22);
             this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(71, 13);
+            this.label12.Size = new System.Drawing.Size(60, 13);
             this.label12.TabIndex = 51;
-            this.label12.Text = "Tone Multipl.:";
+            this.label12.Text = "Multiplayer:";
             // 
             // toneMultiplayerCombo
             // 
@@ -356,35 +362,15 @@
             this.lblToneA.Location = new System.Drawing.Point(6, 22);
             this.lblToneA.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblToneA.Name = "lblToneA";
-            this.lblToneA.Size = new System.Drawing.Size(62, 13);
+            this.lblToneA.Size = new System.Drawing.Size(34, 13);
             this.lblToneA.TabIndex = 45;
-            this.lblToneA.Text = "Tone Base:";
-            // 
-            // RelativeDifficulty
-            // 
-            this.RelativeDifficulty.Cue = "Difficulty";
-            this.RelativeDifficulty.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.RelativeDifficulty.ForeColor = System.Drawing.Color.Gray;
-            this.RelativeDifficulty.Location = new System.Drawing.Point(201, 76);
-            this.RelativeDifficulty.Name = "RelativeDifficulty";
-            this.RelativeDifficulty.Size = new System.Drawing.Size(126, 20);
-            this.RelativeDifficulty.TabIndex = 6;
-            // 
-            // XmlFilePath
-            // 
-            this.XmlFilePath.Cue = "Song Xml File (*.xml)";
-            this.XmlFilePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.XmlFilePath.ForeColor = System.Drawing.Color.Gray;
-            this.XmlFilePath.Location = new System.Drawing.Point(10, 17);
-            this.XmlFilePath.Name = "XmlFilePath";
-            this.XmlFilePath.Size = new System.Drawing.Size(347, 20);
-            this.XmlFilePath.TabIndex = 0;
+            this.lblToneA.Text = "Base:";
             // 
             // gbDLCId
             // 
             this.gbDLCId.Controls.Add(this.PersistentId);
             this.gbDLCId.Controls.Add(this.MasterId);
-            this.gbDLCId.Location = new System.Drawing.Point(6, 283);
+            this.gbDLCId.Location = new System.Drawing.Point(6, 333);
             this.gbDLCId.Name = "gbDLCId";
             this.gbDLCId.Size = new System.Drawing.Size(435, 47);
             this.gbDLCId.TabIndex = 33;
@@ -421,7 +407,17 @@
             this.gbXmlDefinition.Size = new System.Drawing.Size(435, 46);
             this.gbXmlDefinition.TabIndex = 44;
             this.gbXmlDefinition.TabStop = false;
-            this.gbXmlDefinition.Text = "Song XML file";
+            this.gbXmlDefinition.Text = "Song XML File";
+            // 
+            // XmlFilePath
+            // 
+            this.XmlFilePath.Cue = "Song Xml File (*.xml)";
+            this.XmlFilePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.XmlFilePath.ForeColor = System.Drawing.Color.Gray;
+            this.XmlFilePath.Location = new System.Drawing.Point(10, 17);
+            this.XmlFilePath.Name = "XmlFilePath";
+            this.XmlFilePath.Size = new System.Drawing.Size(347, 20);
+            this.XmlFilePath.TabIndex = 0;
             // 
             // gbArrInfo
             // 
@@ -447,18 +443,73 @@
             this.gbScrollSpeed.Controls.Add(this.label5);
             this.gbScrollSpeed.Controls.Add(this.label3);
             this.gbScrollSpeed.Controls.Add(this.scrollSpeedDisplay);
-            this.gbScrollSpeed.Location = new System.Drawing.Point(201, 10);
+            this.gbScrollSpeed.Location = new System.Drawing.Point(201, 12);
             this.gbScrollSpeed.Name = "gbScrollSpeed";
             this.gbScrollSpeed.Size = new System.Drawing.Size(224, 60);
             this.gbScrollSpeed.TabIndex = 42;
             this.gbScrollSpeed.TabStop = false;
             this.gbScrollSpeed.Text = "Scroll Speed";
             // 
+            // RelativeDifficulty
+            // 
+            this.RelativeDifficulty.Cue = "Difficulty";
+            this.RelativeDifficulty.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.RelativeDifficulty.ForeColor = System.Drawing.Color.Gray;
+            this.RelativeDifficulty.Location = new System.Drawing.Point(201, 77);
+            this.RelativeDifficulty.Name = "RelativeDifficulty";
+            this.RelativeDifficulty.Size = new System.Drawing.Size(126, 20);
+            this.RelativeDifficulty.TabIndex = 6;
+            // 
+            // gbGameplayPath
+            // 
+            this.gbGameplayPath.Controls.Add(this.pathBassCheckbox);
+            this.gbGameplayPath.Controls.Add(this.pathRhythmCheckbox);
+            this.gbGameplayPath.Controls.Add(this.pathLeadCheckbox);
+            this.gbGameplayPath.Location = new System.Drawing.Point(6, 176);
+            this.gbGameplayPath.Name = "gbGameplayPath";
+            this.gbGameplayPath.Size = new System.Drawing.Size(435, 44);
+            this.gbGameplayPath.TabIndex = 34;
+            this.gbGameplayPath.TabStop = false;
+            this.gbGameplayPath.Text = "Gameplay Path";
+            // 
+            // pathBassCheckbox
+            // 
+            this.pathBassCheckbox.AutoSize = true;
+            this.pathBassCheckbox.Location = new System.Drawing.Point(278, 19);
+            this.pathBassCheckbox.Name = "pathBassCheckbox";
+            this.pathBassCheckbox.Size = new System.Drawing.Size(49, 17);
+            this.pathBassCheckbox.TabIndex = 2;
+            this.pathBassCheckbox.Text = "Bass";
+            this.pathBassCheckbox.UseVisualStyleBackColor = true;
+            // 
+            // pathRhythmCheckbox
+            // 
+            this.pathRhythmCheckbox.AutoSize = true;
+            this.pathRhythmCheckbox.Location = new System.Drawing.Point(187, 19);
+            this.pathRhythmCheckbox.Name = "pathRhythmCheckbox";
+            this.pathRhythmCheckbox.Size = new System.Drawing.Size(62, 17);
+            this.pathRhythmCheckbox.TabIndex = 1;
+            this.pathRhythmCheckbox.Text = "Rhythm";
+            this.pathRhythmCheckbox.UseVisualStyleBackColor = true;
+            // 
+            // pathLeadCheckbox
+            // 
+            this.pathLeadCheckbox.AutoSize = true;
+            this.pathLeadCheckbox.Checked = true;
+            this.pathLeadCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.pathLeadCheckbox.Location = new System.Drawing.Point(100, 19);
+            this.pathLeadCheckbox.Name = "pathLeadCheckbox";
+            this.pathLeadCheckbox.Size = new System.Drawing.Size(50, 17);
+            this.pathLeadCheckbox.TabIndex = 0;
+            this.pathLeadCheckbox.Text = "Lead";
+            this.pathLeadCheckbox.UseVisualStyleBackColor = true;
+            // 
             // ArrangementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(450, 380);
+            this.ClientSize = new System.Drawing.Size(450, 432);
+            this.Controls.Add(this.gbGameplayPath);
             this.Controls.Add(this.gbArrInfo);
             this.Controls.Add(this.gbXmlDefinition);
             this.Controls.Add(this.gbDLCId);
@@ -481,6 +532,8 @@
             this.gbArrInfo.PerformLayout();
             this.gbScrollSpeed.ResumeLayout(false);
             this.gbScrollSpeed.PerformLayout();
+            this.gbGameplayPath.ResumeLayout(false);
+            this.gbGameplayPath.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -528,5 +581,9 @@
         private System.Windows.Forms.GroupBox gbXmlDefinition;
         private System.Windows.Forms.GroupBox gbArrInfo;
         private System.Windows.Forms.GroupBox gbScrollSpeed;
+        private System.Windows.Forms.GroupBox gbGameplayPath;
+        private System.Windows.Forms.CheckBox pathBassCheckbox;
+        private System.Windows.Forms.CheckBox pathRhythmCheckbox;
+        private System.Windows.Forms.CheckBox pathLeadCheckbox;
     }
 }

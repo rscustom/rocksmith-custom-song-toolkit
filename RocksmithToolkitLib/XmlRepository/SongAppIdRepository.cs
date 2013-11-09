@@ -16,17 +16,17 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public SongAppIdRepository() : base(FILENAME) { }
 
-        public SongAppId Select(string appId, SongAppId.RSVersion rsVersion)
+        public SongAppId Select(string appId, GameVersion gameVersion)
         {
-            if (List.OfType<SongAppId>().Where(s => s.AppId == appId && s.Version == rsVersion).Count() > 0)
+            if (List.OfType<SongAppId>().Where(s => s.AppId == appId && s.Version == gameVersion).Count() > 0)
                 return List.Single<SongAppId>(s => s.AppId == appId);
             else
                 return List[0];
         }
 
-        public IEnumerable<SongAppId> Select(SongAppId.RSVersion rsVersion)
+        public IEnumerable<SongAppId> Select(GameVersion gameVersion)
         {
-            return List.OfType<SongAppId>().Where(s => s.Version == rsVersion);
+            return List.OfType<SongAppId>().Where(s => s.Version == gameVersion);
         }
     }
 }

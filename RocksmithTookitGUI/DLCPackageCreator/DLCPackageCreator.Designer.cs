@@ -255,13 +255,13 @@
             // 
             // openOggXBox360Button
             // 
+            this.openOggXBox360Button.Enabled = false;
             this.openOggXBox360Button.Location = new System.Drawing.Point(426, 292);
             this.openOggXBox360Button.Name = "openOggXBox360Button";
             this.openOggXBox360Button.Size = new System.Drawing.Size(34, 23);
             this.openOggXBox360Button.TabIndex = 18;
             this.openOggXBox360Button.Text = "...";
             this.openOggXBox360Button.UseVisualStyleBackColor = true;
-            this.openOggXBox360Button.Visible = false;
             this.openOggXBox360Button.Click += new System.EventHandler(this.openOggXBox360Button_Click);
             // 
             // platformPC
@@ -332,13 +332,13 @@
             // 
             // openOggPS3Button
             // 
+            this.openOggPS3Button.Enabled = false;
             this.openOggPS3Button.Location = new System.Drawing.Point(426, 318);
             this.openOggPS3Button.Name = "openOggPS3Button";
             this.openOggPS3Button.Size = new System.Drawing.Size(34, 23);
             this.openOggPS3Button.TabIndex = 71;
             this.openOggPS3Button.Text = "...";
             this.openOggPS3Button.UseVisualStyleBackColor = true;
-            this.openOggPS3Button.Visible = false;
             this.openOggPS3Button.Click += new System.EventHandler(this.openOggPS3Button_Click);
             // 
             // RSversionPanel
@@ -405,36 +405,36 @@
             // 
             // openOggMacButton
             // 
+            this.openOggMacButton.Enabled = false;
             this.openOggMacButton.Location = new System.Drawing.Point(426, 266);
             this.openOggMacButton.Name = "openOggMacButton";
             this.openOggMacButton.Size = new System.Drawing.Size(34, 23);
             this.openOggMacButton.TabIndex = 77;
             this.openOggMacButton.Text = "...";
             this.openOggMacButton.UseVisualStyleBackColor = true;
-            this.openOggMacButton.Visible = false;
             this.openOggMacButton.Click += new System.EventHandler(this.openOggMacButton_Click);
             // 
             // oggMacPathTB
             // 
             this.oggMacPathTB.Cue = "Converted audio for MAC on Wwise (*.ogg; *.wem)";
+            this.oggMacPathTB.Enabled = false;
             this.oggMacPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.oggMacPathTB.ForeColor = System.Drawing.Color.Gray;
             this.oggMacPathTB.Location = new System.Drawing.Point(3, 267);
             this.oggMacPathTB.Name = "oggMacPathTB";
             this.oggMacPathTB.Size = new System.Drawing.Size(417, 20);
             this.oggMacPathTB.TabIndex = 76;
-            this.oggMacPathTB.Visible = false;
             // 
             // oggPS3PathTB
             // 
             this.oggPS3PathTB.Cue = "Converted audio for PS3 on Wwise (*.ogg; *.wem)";
+            this.oggPS3PathTB.Enabled = false;
             this.oggPS3PathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.oggPS3PathTB.ForeColor = System.Drawing.Color.Gray;
             this.oggPS3PathTB.Location = new System.Drawing.Point(3, 319);
             this.oggPS3PathTB.Name = "oggPS3PathTB";
             this.oggPS3PathTB.Size = new System.Drawing.Size(417, 20);
             this.oggPS3PathTB.TabIndex = 70;
-            this.oggPS3PathTB.Visible = false;
             // 
             // volumeBox
             // 
@@ -481,13 +481,13 @@
             // oggXBox360PathTB
             // 
             this.oggXBox360PathTB.Cue = "Converted audio for XBox360 on Wwise (*.ogg; *.wem)";
+            this.oggXBox360PathTB.Enabled = false;
             this.oggXBox360PathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.oggXBox360PathTB.ForeColor = System.Drawing.Color.Gray;
             this.oggXBox360PathTB.Location = new System.Drawing.Point(3, 293);
             this.oggXBox360PathTB.Name = "oggXBox360PathTB";
             this.oggXBox360PathTB.Size = new System.Drawing.Size(417, 20);
             this.oggXBox360PathTB.TabIndex = 17;
-            this.oggXBox360PathTB.Visible = false;
             // 
             // AppIdTB
             // 
