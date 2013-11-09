@@ -26,12 +26,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     {
         private const string MESSAGEBOX_CAPTION =  "DLC Package Creator";
 
-        private SongAppId.RSVersion CurrentRSVersion {
+        private Platform.GameVersion CurrentGameVersion {
             get {
                 if (RS2014.Checked)
-                    return SongAppId.RSVersion.RS2014;
+                    return Platform.GameVersion.RS2014;
                 else
-                    return SongAppId.RSVersion.RS2012; //Default
+                    return Platform.GameVersion.RS2012; //Default
             }
         }
 
@@ -39,9 +39,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             get
             {
-                switch (CurrentRSVersion)
+                switch (CurrentGameVersion)
                 {
-                    case SongAppId.RSVersion.RS2014:
+                    case Platform.GameVersion.RS2014:
                         return "Wwise 2013 audio files (*.wem)|*.wem";
                     default:
                         return "Wwise 2010 audio files (*.ogg)|*.ogg"; 
@@ -52,7 +52,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public DLCPackageCreator()
         {
             InitializeComponent();
-            PopulateAppIdCombo(CurrentRSVersion);
+            PopulateAppIdCombo(CurrentGameVersion);
             TonesLB.Items.Add(CreateNewTone());
         }
 
@@ -153,7 +153,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void arrangementAddButton_Click(object sender, EventArgs e)
         {
             Arrangement arrangement;
-            using (var form = new ArrangementForm(GetToneNames(), (DLCPackageCreator)this))
+            using (var form = new ArrangementForm(GetToneNames(), (DLCPackageCreator)this, CurrentGameVersion))
             {
                 if (DialogResult.OK != form.ShowDialog())
                 {
@@ -276,7 +276,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (ofd.ShowDialog() == DialogResult.OK)
                     AlbumArtPath = ofd.FileName;
             }
-            if (CurrentRSVersion == SongAppId.RSVersion.RS2014)
+            if (CurrentGameVersion == Platform.GameVersion.RS2014)
             {
                 GenerateAlbumArtFiles();
             }
@@ -486,9 +486,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             foreach (var arrangement in info.Arrangements)
             {
                 arrangement.SongXml.File = MakeAbsolute(path, arrangement.SongXml.File);
-                if (arrangement.ToneName == null)
+                if (arrangement.ToneBase == null)
                 {
-                    arrangement.ToneName = info.Tones[0].Name;
+                    arrangement.ToneBase = info.Tones[0].Name;
                 }
                 ArrangementLB.Items.Add(arrangement);
             }
@@ -694,7 +694,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (ArrangementLB.SelectedItem != null)
             {
                 var arrangement = (Arrangement)ArrangementLB.SelectedItem;
-                using (var form = new ArrangementForm(arrangement, GetToneNames(), (DLCPackageCreator)this) { Text = "Edit Arrangement" })
+                using (var form = new ArrangementForm(arrangement, GetToneNames(), (DLCPackageCreator)this, CurrentGameVersion) { Text = "Edit Arrangement" })
                 {
                     if (DialogResult.OK != form.ShowDialog())
                     {
@@ -733,9 +733,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var firstTone = (Tone)TonesLB.Items[0];
                 foreach (var item in ArrangementLB.Items.OfType<Arrangement>())
                 {
-                    if (tone.Name.Equals(item.ToneName))
+                    if (tone.Name.Equals(item.ToneBase))
                     {
-                        item.ToneName = firstTone.Name;
+                        item.ToneBase = firstTone.Name;
                     }
                 }
                 ArrangementLB.Refresh();
@@ -771,9 +771,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     for(int i = 0; i <ArrangementLB.Items.Count; i++) {
                         var arrangement = (Arrangement)ArrangementLB.Items[i];
-                        if (toneName.Equals(arrangement.ToneName))
+                        if (toneName.Equals(arrangement.ToneBase))
                         {
-                            arrangement.ToneName = tone.Name;
+                            arrangement.ToneBase = tone.Name;
                             ArrangementLB.Items[i] = arrangement;
                         }
                     }                    
@@ -814,24 +814,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             bool pChecked = platformCkb.Checked;
             if (platformCkb.Name.IndexOf("MAC") > 0)
             {
-                oggMacPathTB.Visible = pChecked;
-                openOggMacButton.Visible = pChecked;
+                oggMacPathTB.Enabled = pChecked;
+                openOggMacButton.Enabled = pChecked;
             }
             else if (platformCkb.Name.IndexOf("XBox360") > 0)
             {
-                oggXBox360PathTB.Visible = pChecked;
-                openOggXBox360Button.Visible = pChecked;
+                oggXBox360PathTB.Enabled = pChecked;
+                openOggXBox360Button.Enabled = pChecked;
                 //panelXBox360SignatureType.Visible = pChecked;
             }
             else if (platformCkb.Name.IndexOf("PS3") > 0)
             {
-                oggPS3PathTB.Visible = pChecked;
-                openOggPS3Button.Visible = pChecked;
+                oggPS3PathTB.Enabled = pChecked;
+                openOggPS3Button.Enabled = pChecked;
             }
             else
             {
-                oggPathTB.Visible = pChecked;
-                openOggButton.Visible = pChecked;
+                oggPathTB.Enabled = pChecked;
+                openOggButton.Enabled = pChecked;
                 AppIdTB.Visible = pChecked;
                 cmbAppIds.Visible = pChecked;
             }
@@ -839,7 +839,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void AppIdTB_TextChanged(object sender, EventArgs e) {
             var appId = ((TextBox)sender).Text.Trim();
-            SongAppId songAppId = SongAppIdRepository.Instance().Select(appId, CurrentRSVersion);            
+            SongAppId songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);            
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppIds.SelectedItem = songAppId;
         }
@@ -913,18 +913,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void RSVersion_CheckedChanged(object sender, EventArgs e)
         {
-            PopulateAppIdCombo(CurrentRSVersion);
+            PopulateAppIdCombo(CurrentGameVersion);
 
             // MAC RS2014 only
-            platformMAC.Enabled = CurrentRSVersion == SongAppId.RSVersion.RS2014;
+            platformMAC.Enabled = CurrentGameVersion == Platform.GameVersion.RS2014;
             platformMAC.Checked = false;
         }
 
-        private void PopulateAppIdCombo(SongAppId.RSVersion rsVersion)
+        private void PopulateAppIdCombo(Platform.GameVersion gameVersion)
         {
             SongAppId firstSong = null;
             cmbAppIds.Items.Clear();
-            foreach (var song in SongAppIdRepository.Instance().Select(rsVersion))
+            foreach (var song in SongAppIdRepository.Instance().Select(gameVersion))
             {
                 cmbAppIds.Items.Add(song);
                 if (firstSong == null)
