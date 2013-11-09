@@ -32,11 +32,11 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             switch (platform.platform)
             {
-                case Platform.GamePlatform.Pc:
+                case GamePlatform.Pc:
                     return PCPaths;
-                case Platform.GamePlatform.XBox360:
+                case GamePlatform.XBox360:
                     return XBox360Paths;
-                case Platform.GamePlatform.PS3:
+                case GamePlatform.PS3:
                     return PS3Paths;
                 default:
                     throw new InvalidOperationException("Unexpected game platform value");
@@ -45,11 +45,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static string GetOgg(this Platform platform, DLCPackageData info) {
             switch (platform.platform) {
-                case Platform.GamePlatform.Pc:
+                case GamePlatform.Pc:
                     return info.OggPath;
-                case Platform.GamePlatform.XBox360:
+                case GamePlatform.XBox360:
                     return info.OggXBox360Path;
-                case Platform.GamePlatform.PS3:
+                case GamePlatform.PS3:
                     return info.OggPS3Path;
                 default:
                     throw new InvalidOperationException("Unexpected game platform value");
@@ -64,11 +64,11 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             switch (platform.platform)
             {
-                case Platform.GamePlatform.XBox360:
+                case GamePlatform.XBox360:
                     if (!Directory.Exists(xboxWorkDir))
                         Directory.CreateDirectory(xboxWorkDir);
                     break;
-                case Platform.GamePlatform.PS3:
+                case GamePlatform.PS3:
                     if (!Directory.Exists(ps3WorkDir))
                         Directory.CreateDirectory(ps3WorkDir);
                     break;
@@ -78,14 +78,14 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 GeneratePackagePsarc(packPsarcStream, info, platform);
                 switch (platform.platform) {
-                    case Platform.GamePlatform.Pc:
+                    case GamePlatform.Pc:
                         using (var fl = File.Create(packagePath))
                             RijndaelEncryptor.EncryptFile(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
                         break;
-                    case Platform.GamePlatform.XBox360:
+                    case GamePlatform.XBox360:
                         BuildXBox360Package(packagePath, info, XBox360Files, xboxPackageType);
                         break;
-                    case Platform.GamePlatform.PS3:
+                    case GamePlatform.PS3:
                         EncryptPS3EdatFiles(packagePath);
                         break;
                 }                
@@ -168,9 +168,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void WriteTmpFile(this Stream ms, string fileName, Platform platform)
         {
-            if (platform.platform == Platform.GamePlatform.XBox360 || platform.platform == Platform.GamePlatform.PS3)
+            if (platform.platform == GamePlatform.XBox360 || platform.platform == GamePlatform.PS3)
             {
-                string workDir = platform.platform == Platform.GamePlatform.XBox360 ? xboxWorkDir : ps3WorkDir;
+                string workDir = platform.platform == GamePlatform.XBox360 ? xboxWorkDir : ps3WorkDir;
                 string filePath = Path.Combine(workDir, fileName);
 
                 FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
@@ -181,10 +181,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 switch (platform.platform)
                 {
-                    case Platform.GamePlatform.XBox360:
+                    case GamePlatform.XBox360:
                         XBox360Files.Add(filePath);
                         break;
-                    case Platform.GamePlatform.PS3:
+                    case GamePlatform.PS3:
                         PS3Files.Add(filePath);
                         break;
                 }
@@ -242,7 +242,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     var packPsarc = new PSARC.PSARC();
                     var packageListWriter = new StreamWriter(packageListStream);
 
-                    if (platform.platform == Platform.GamePlatform.Pc)
+                    if (platform.platform == GamePlatform.Pc)
                     {
                         GenerateAppId(appIdStream, info.AppId);
                         packPsarc.AddEntry("APP_ID", appIdStream);
@@ -275,7 +275,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     packageListWriter.Flush();
                     packageListStream.Seek(0, SeekOrigin.Begin);
-                    if (platform.platform != Platform.GamePlatform.PS3)
+                    if (platform.platform != GamePlatform.PS3)
                     {
                         string packageList = "PackageList.txt";
                         packPsarc.AddEntry(packageList, packageListStream);

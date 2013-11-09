@@ -20,18 +20,18 @@ namespace RocksmithToolkitLib.DLCPackage
             Platform platform = sourcePath.GetPlatform();
 
             switch (platform.platform) {
-                case Platform.GamePlatform.Pc:
-                    if (platform.version == Platform.GameVersion.RS2012)
+                case GamePlatform.Pc:
+                    if (platform.version == GameVersion.RS2012)
                         PackPC(sourcePath, saveFileName, useCryptography, updateSng);
-                    else if (platform.version == Platform.GameVersion.RS2014)
+                    else if (platform.version == GameVersion.RS2014)
                         PackPC2014(sourcePath, saveFileName);
                     break;
-                case Platform.GamePlatform.XBox360:
+                case GamePlatform.XBox360:
                     PackXBox360(sourcePath, saveFileName);
                     break;
-                case Platform.GamePlatform.PS3:
+                case GamePlatform.PS3:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
-                case Platform.GamePlatform.None:
+                case GamePlatform.None:
                     throw new InvalidOperationException("Invalid directory structure of package. \n\rDirectory: " + sourcePath);
             }
         }
@@ -71,7 +71,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     // Recreate SNG
                     if (updateSng)
                         if (directory.ToLower().IndexOf("dlc_tone_") < 0)
-                            UpdateSng(directory, new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.RS2012));
+                            UpdateSng(directory, new Platform(GamePlatform.Pc, GameVersion.RS2012));
 
                     PackInnerPC(innerPsarcStream, directory);
                     psarc.AddEntry(directoryName + ".psarc", innerPsarcStream);
@@ -233,8 +233,8 @@ namespace RocksmithToolkitLib.DLCPackage
             Platform platform = sourceFileName.GetPlatform();
 
             switch (platform.platform) {
-                case Platform.GamePlatform.Pc:
-                    if (platform.version == Platform.GameVersion.RS2014)
+                case GamePlatform.Pc:
+                    if (platform.version == GameVersion.RS2014)
                         using (var inputStream = File.OpenRead(sourceFileName))
                             ExtractPSARC(sourceFileName, savePath, inputStream, platform);
                     else
@@ -255,10 +255,10 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
                     }
                     return;
-                case Platform.GamePlatform.XBox360:
+                case GamePlatform.XBox360:
                     UnpackXBox360Package(sourceFileName, savePath, platform);
                     return;
-                case Platform.GamePlatform.PS3:
+                case GamePlatform.PS3:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
             }
             
@@ -276,7 +276,7 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var fileName in Directory.EnumerateFiles(Path.Combine(rootDir, "Root"))) {
                 if (Path.GetExtension(fileName) == ".psarc") {
                     using (var outputFileStream = File.OpenRead(fileName)) {
-                        ExtractPSARC(fileName, Path.GetDirectoryName(fileName), outputFileStream, new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.None));
+                        ExtractPSARC(fileName, Path.GetDirectoryName(fileName), outputFileStream, new Platform(GamePlatform.XBox360, GameVersion.None));
                     }
                 }
 
@@ -291,37 +291,37 @@ namespace RocksmithToolkitLib.DLCPackage
             if (File.Exists(fileExtension)) {
                 switch (Path.GetExtension(fileExtension)) {
                     case ".dat":
-                        return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.RS2012);
+                        return new Platform(GamePlatform.Pc, GameVersion.RS2012);
                     case "":
-                        return new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.RS2012);
+                        return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
                     case ".pkg":
                     case ".edat":
-                        return new Platform(Platform.GamePlatform.PS3, Platform.GameVersion.RS2012);
+                        return new Platform(GamePlatform.PS3, GameVersion.RS2012);
                     case ".psarc":
-                        return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.RS2014);
+                        return new Platform(GamePlatform.Pc, GameVersion.RS2014);
                     default:
-                        return new Platform(Platform.GamePlatform.None, Platform.GameVersion.None);
+                        return new Platform(GamePlatform.None, GameVersion.None);
                 }
             } else if (Directory.Exists(fileExtension)) {
                 //TODO: Need to refactor this code in near future, works, but is not the best way.
                 if (File.Exists(Path.Combine(fileExtension, "APP_ID"))) {
-                    return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.RS2012);
+                    return new Platform(GamePlatform.Pc, GameVersion.RS2012);
                 } else if (File.Exists(Path.Combine(fileExtension, "appid.appid"))) {
-                    return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.RS2014);
+                    return new Platform(GamePlatform.Pc, GameVersion.RS2014);
                 } else if (Directory.Exists(Path.Combine(fileExtension, ROOT_XBox360))) {
-                    return new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.RS2012);
+                    return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
                 } else if (Directory.Exists(Path.Combine(fileExtension, ROOT_PS3))) {
-                    return new Platform(Platform.GamePlatform.PS3, Platform.GameVersion.RS2012);
+                    return new Platform(GamePlatform.PS3, GameVersion.RS2012);
                 }
             }
-            return new Platform(Platform.GamePlatform.None, Platform.GameVersion.None);
+            return new Platform(GamePlatform.None, GameVersion.None);
         }
 
         private static void ExtractPSARC(string filename, string path, Stream inputStream, Platform platform)
         {
             var name = Path.GetFileNameWithoutExtension(filename);
-            if (platform.platform == Platform.GamePlatform.Pc && platform.version == Platform.GameVersion.RS2012 && Path.GetExtension(filename) == ".dat" ||
-                platform.platform == Platform.GamePlatform.Pc && platform.version == Platform.GameVersion.RS2014 && Path.GetExtension(filename) == ".psarc")
+            if (platform.platform == GamePlatform.Pc && platform.version == GameVersion.RS2012 && Path.GetExtension(filename) == ".dat" ||
+                platform.platform == GamePlatform.Pc && platform.version == GameVersion.RS2014 && Path.GetExtension(filename) == ".psarc")
             {
                 name += String.Format("_{0}", platform.platform.ToString());
             }

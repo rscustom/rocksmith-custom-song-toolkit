@@ -48,9 +48,9 @@ namespace RocksmithToolkitGUI.SngFileCreator
             get
             {
                 if (littleEndianRadioBtn.Checked)
-                    return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.None);
+                    return new Platform(GamePlatform.Pc, GameVersion.None);
                 if (bigEndianRadioBtn.Checked)
-                    return new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.None); /*Same as PS3*/
+                    return new Platform(GamePlatform.XBox360, GameVersion.None); /*Same as PS3*/
                 throw new InvalidOperationException("No game platform selected");
             }
         }

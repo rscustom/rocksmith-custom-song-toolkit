@@ -26,12 +26,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     {
         private const string MESSAGEBOX_CAPTION =  "DLC Package Creator";
 
-        private Platform.GameVersion CurrentGameVersion {
+        private GameVersion CurrentGameVersion {
             get {
                 if (RS2014.Checked)
-                    return Platform.GameVersion.RS2014;
+                    return GameVersion.RS2014;
                 else
-                    return Platform.GameVersion.RS2012; //Default
+                    return GameVersion.RS2012; //Default
             }
         }
 
@@ -41,7 +41,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 switch (CurrentGameVersion)
                 {
-                    case Platform.GameVersion.RS2014:
+                    case GameVersion.RS2014:
                         return "Wwise 2013 audio files (*.wem)|*.wem";
                     default:
                         return "Wwise 2010 audio files (*.ogg)|*.ogg"; 
@@ -235,12 +235,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show(ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (platformPC.Checked && OggFile.getPlatform(OggPath).platform != Platform.GamePlatform.Pc)
+            if (platformPC.Checked && OggFile.getPlatform(OggPath).platform != GamePlatform.Pc)
             {
                 MessageBox.Show("The Windows OGG is either invalid or for the wrong platform.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (platformXBox360.Checked && OggFile.getPlatform(OggXBox360Path).platform != Platform.GamePlatform.XBox360)
+            if (platformXBox360.Checked && OggFile.getPlatform(OggXBox360Path).platform != GamePlatform.XBox360)
             {
                 MessageBox.Show("The Xbox 360 OGG is either invalid or for the wrong platform.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -254,11 +254,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dlcSavePath = ofd.FileName;
             }
             if (platformPC.Checked)
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.None), null);
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, GameVersion.None), null);
             if (platformXBox360.Checked)
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.None), PackageMagic.CON);
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.XBox360, GameVersion.None), PackageMagic.CON);
             if (platformPS3.Checked)
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(Platform.GamePlatform.PS3, Platform.GameVersion.None), null);
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.PS3, GameVersion.None), null);
 
             MessageBox.Show("Package was generated.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -276,7 +276,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (ofd.ShowDialog() == DialogResult.OK)
                     AlbumArtPath = ofd.FileName;
             }
-            if (CurrentGameVersion == Platform.GameVersion.RS2014)
+            if (CurrentGameVersion == GameVersion.RS2014)
             {
                 GenerateAlbumArtFiles();
             }
@@ -916,11 +916,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             PopulateAppIdCombo(CurrentGameVersion);
 
             // MAC RS2014 only
-            platformMAC.Enabled = CurrentGameVersion == Platform.GameVersion.RS2014;
+            platformMAC.Enabled = CurrentGameVersion == GameVersion.RS2014;
             platformMAC.Checked = false;
         }
 
-        private void PopulateAppIdCombo(Platform.GameVersion gameVersion)
+        private void PopulateAppIdCombo(GameVersion gameVersion)
         {
             SongAppId firstSong = null;
             cmbAppIds.Items.Clear();

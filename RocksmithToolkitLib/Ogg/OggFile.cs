@@ -21,11 +21,11 @@ namespace RocksmithToolkitLib.Ogg
             {
                 string fileID = new string(reader.ReadChars(4));
                 if (fileID == "RIFF")
-                    return new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.None);
+                    return new Platform(GamePlatform.Pc, GameVersion.None);
                 else if (fileID == "RIFX")
-                    return new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.None);
+                    return new Platform(GamePlatform.XBox360, GameVersion.None);
             }
-            return new Platform(Platform.GamePlatform.None, Platform.GameVersion.None);
+            return new Platform(GamePlatform.None, GameVersion.None);
         }
 
         public static bool needsConversion(String inputFile)
@@ -147,10 +147,10 @@ namespace RocksmithToolkitLib.Ogg
         {
             switch (platform.platform)
             {
-                case Platform.GamePlatform.Pc:
+                case GamePlatform.Pc:
                     return EndianBitConverter.Little;
-                case Platform.GamePlatform.XBox360:
-                case Platform.GamePlatform.PS3:
+                case GamePlatform.XBox360:
+                case GamePlatform.PS3:
                     return EndianBitConverter.Big;
                 default:
                     throw new InvalidDataException("The input OGG file doesn't appear to be a valid Wwise 2010 OGG file.");
@@ -231,9 +231,9 @@ namespace RocksmithToolkitLib.Ogg
         {
             switch (platform.version)
             {
-                case Platform.GameVersion.RS2012:
+                case GameVersion.RS2012:
                     return WwiseVersion.Wwise2010;
-                case Platform.GameVersion.RS2014:
+                case GameVersion.RS2014:
                     return WwiseVersion.Wwise2013;
                 default:
                     throw new InvalidOperationException("Platform not found.");
