@@ -22,7 +22,7 @@ struct BPM
     long PhraseIteration;
     // bit 0 = first beat of measure
     // bit 1 = even measure (starting with 0)
-    struct MeasureMask Mask[1];
+    struct MeasureMask Mask;
 };
 
 struct BPM_SECTION
@@ -382,8 +382,11 @@ struct NOTES
     long PhraseId;
     long PhraseIterationId;
     short FingerPrintId[2];
+    // TODO sometimes looks like Unk4 is next note index, Unk5 previous
+    //      sometimes one of them is set to -1, sometimes all are -1
     short Unk4;
     short Unk5;
+    // TODO always -1?
     short Unk6;
     byte FingerId[4];
     byte PickDirection;
