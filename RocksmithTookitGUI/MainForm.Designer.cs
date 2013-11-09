@@ -139,8 +139,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(8);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            //this.tabControl1.Size = new System.Drawing.Size(554, 560);
-            this.tabControl1.Size = new System.Drawing.Size(6800, 650);
+            this.tabControl1.Size = new System.Drawing.Size(550, 580);
             this.tabControl1.TabIndex = 16;
             // 
             // dlcPackageCreatorTab
@@ -150,8 +149,7 @@
             this.dlcPackageCreatorTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcPackageCreatorTab.Name = "dlcPackageCreatorTab";
             this.dlcPackageCreatorTab.Padding = new System.Windows.Forms.Padding(2);
-            //this.dlcPackageCreatorTab.Size = new System.Drawing.Size(546, 497);
-            this.dlcPackageCreatorTab.Size = new System.Drawing.Size(646, 610);
+            this.dlcPackageCreatorTab.Size = new System.Drawing.Size(530, 580);
             this.dlcPackageCreatorTab.TabIndex = 0;
             this.dlcPackageCreatorTab.Text = "DLC Package Creator";
             this.dlcPackageCreatorTab.UseVisualStyleBackColor = true;
@@ -167,12 +165,11 @@
             this.dlcPackageCreatorControl.ArtistSort = "";
             this.dlcPackageCreatorControl.AverageTempo = "";
             this.dlcPackageCreatorControl.DLCName = "";
-            this.dlcPackageCreatorControl.Location = new System.Drawing.Point(20, 6);
+            this.dlcPackageCreatorControl.Location = new System.Drawing.Point(16, 6);
             this.dlcPackageCreatorControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcPackageCreatorControl.MinimumSize = new System.Drawing.Size(610, 426);
             this.dlcPackageCreatorControl.Name = "dlcPackageCreatorControl";
-            //this.dlcPackageCreatorControl.Size = new System.Drawing.Size(510, 488);
-            this.dlcPackageCreatorControl.Size = new System.Drawing.Size(610, 600);
+            this.dlcPackageCreatorControl.Size = new System.Drawing.Size(630, 600);
             this.dlcPackageCreatorControl.SongTitle = "";
             this.dlcPackageCreatorControl.SongTitleSort = "";
             this.dlcPackageCreatorControl.TabIndex = 0;
@@ -192,7 +189,7 @@
             // dlcPackerUnpackerControl
             // 
             this.dlcPackerUnpackerControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(160, 60);
+            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(150, 60);
             this.dlcPackerUnpackerControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
             this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(419, 204);
@@ -301,8 +298,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            //this.ClientSize = new System.Drawing.Size(585, 700);
-            this.ClientSize = new System.Drawing.Size(720, 675);
+            this.ClientSize = new System.Drawing.Size(582, 680);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
