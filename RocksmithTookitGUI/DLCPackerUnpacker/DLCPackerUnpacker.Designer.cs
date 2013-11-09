@@ -167,7 +167,7 @@
             this.Controls.Add(this.unpackButton);
             this.Controls.Add(this.packButton);
             this.Name = "DLCPackerUnpacker";
-            this.Size = new System.Drawing.Size(400, 191);
+            this.Size = new System.Drawing.Size(511, 300);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

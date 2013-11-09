@@ -184,18 +184,21 @@
             this.dlcPackerUnpackerTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcPackerUnpackerTab.Name = "dlcPackerUnpackerTab";
             this.dlcPackerUnpackerTab.Padding = new System.Windows.Forms.Padding(2);
-            this.dlcPackerUnpackerTab.Size = new System.Drawing.Size(696, 469);
+            this.dlcPackerUnpackerTab.Size = new System.Drawing.Size(310, 326);
             this.dlcPackerUnpackerTab.TabIndex = 3;
             this.dlcPackerUnpackerTab.Text = "DLC Packer/Unpacker";
             this.dlcPackerUnpackerTab.UseVisualStyleBackColor = true;
             // 
             // dlcPackerUnpackerControl
             // 
-            this.dlcPackerUnpackerControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(160, 60);
+            //this.dlcPackerUnpackerControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dlcPackerUnpackerControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(20, 6);
             this.dlcPackerUnpackerControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
-            this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(419, 204);
+            this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(310, 300);
             this.dlcPackerUnpackerControl.TabIndex = 0;
             // 
             // oggConverterTab
@@ -302,7 +305,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             //this.ClientSize = new System.Drawing.Size(585, 700);
-            this.ClientSize = new System.Drawing.Size(720, 675);
+            this.ClientSize = new System.Drawing.Size(820, 675);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
