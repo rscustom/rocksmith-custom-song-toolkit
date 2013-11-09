@@ -75,7 +75,7 @@ namespace RocksmithToolkitLib.Sng
         {
             using (var reader = new StreamReader(inputFile))
             {
-                var bitConverter = platform.platform == Platform.GamePlatform.Pc
+                var bitConverter = platform.platform == GamePlatform.Pc
                     ? (EndianBitConverter)EndianBitConverter.Little
                     : (EndianBitConverter)EndianBitConverter.Big;
 

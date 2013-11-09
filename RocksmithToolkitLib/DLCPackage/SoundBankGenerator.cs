@@ -23,24 +23,24 @@ namespace RocksmithToolkitLib.DLCPackage
         public static IList<int> GetOffsets(this Platform platform) {
             switch (platform.version)
             {
-                case Platform.GameVersion.RS2012:
+                case GameVersion.RS2012:
                     switch (platform.platform)
                     {
-                        case Platform.GamePlatform.Pc:
+                        case GamePlatform.Pc:
                             return bnkPCOffsets;
-                        case Platform.GamePlatform.XBox360:
-                        case Platform.GamePlatform.PS3:
+                        case GamePlatform.XBox360:
+                        case GamePlatform.PS3:
                             return bnkConsoleOffsets;
                         default:
                             throw new InvalidOperationException("Unexpected game platform value");
                     }
-                case Platform.GameVersion.RS2014:
+                case GameVersion.RS2014:
                     switch (platform.platform)
                     {
-                        case Platform.GamePlatform.Pc:
+                        case GamePlatform.Pc:
                             return bnkPC2014Offsets;
-                        case Platform.GamePlatform.XBox360:
-                        case Platform.GamePlatform.PS3:
+                        case GamePlatform.XBox360:
+                        case GamePlatform.PS3:
                             return bnkConsole2014Offsets;
                         default:
                             throw new InvalidOperationException("Unexpected game platform value");
@@ -74,28 +74,28 @@ namespace RocksmithToolkitLib.DLCPackage
 
             switch (platform.version)
             {
-                case Platform.GameVersion.RS2012:
+                case GameVersion.RS2012:
                     switch (platform.platform)
                     {
-                        case Platform.GamePlatform.Pc:
+                        case GamePlatform.Pc:
                             soundbank = Resources.PC_soundbank;
                             break;
-                        case Platform.GamePlatform.XBox360:
-                        case Platform.GamePlatform.PS3:
+                        case GamePlatform.XBox360:
+                        case GamePlatform.PS3:
                             soundbank = Resources.Console_soundbank;
                             break;
                         default:
                             throw new InvalidOperationException("Unexpected game platform value");
                     }
                     break;
-                case Platform.GameVersion.RS2014:
+                case GameVersion.RS2014:
                     switch (platform.platform)
                     {
-                        case Platform.GamePlatform.Pc:
+                        case GamePlatform.Pc:
                             soundbank = Resources.PC2014_soundbank;
                             break;
-                        case Platform.GamePlatform.XBox360:
-                        case Platform.GamePlatform.PS3:
+                        case GamePlatform.XBox360:
+                        case GamePlatform.PS3:
                             soundbank = Resources.Console2014_soundbank;
                             break;
                         default:
@@ -106,7 +106,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     throw new InvalidOperationException("Unexpected game version value");
             }
 
-            var bitConverter = platform.platform == Platform.GamePlatform.Pc
+            var bitConverter = platform.platform == GamePlatform.Pc
                     ? (EndianBitConverter)EndianBitConverter.Little
                     : (EndianBitConverter)EndianBitConverter.Big;
 
@@ -135,7 +135,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[3]));
                 bankReader.ReadInt32();
                 bankWriter.Write(HashString(eventName));
-                if (platform.version == Platform.GameVersion.RS2012)
+                if (platform.version == GameVersion.RS2012)
                 {
                     bankWriter.Write(bankReader.ReadBytes(platform.GetOffsets()[4]));
                     bankReader.ReadInt32();

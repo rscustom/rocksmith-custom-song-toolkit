@@ -53,7 +53,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 string[] decodedAudioFiles = Directory.GetFiles(sourcePath, "*_fixed.ogg", SearchOption.AllDirectories);
                 foreach (var file in decodedAudioFiles)
                     File.Delete(file);
-                Packer.Pack(sourcePath, saveFileName, (platform.platform == Platform.GamePlatform.Pc) ? true : false, updateSng);
+                Packer.Pack(sourcePath, saveFileName, (platform.platform == GamePlatform.Pc) ? true : false, updateSng);
                 MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -88,7 +88,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             {
                 Application.DoEvents();
                 Platform platform = Packer.GetPlatform(sourceFileName);
-                Packer.Unpack(sourceFileName, savePath, (platform.platform == Platform.GamePlatform.Pc) ? true : false); // Cryptography way is used only for PC in Rocksmith 1
+                Packer.Unpack(sourceFileName, savePath, (platform.platform == GamePlatform.Pc) ? true : false); // Cryptography way is used only for PC in Rocksmith 1
 
                 if (decodeAudio) {
                     try
@@ -157,14 +157,14 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Application.DoEvents();
                 var platform = sourceFileName.GetPlatform();
 
-                if (platform.platform == Platform.GamePlatform.Pc)
+                if (platform.platform == GamePlatform.Pc)
                 {
-                    var useCryptography = (platform.version == Platform.GameVersion.RS2012) ? true : false;
+                    var useCryptography = (platform.version == GameVersion.RS2012) ? true : false;
                     Packer.Unpack(sourceFileName, tmpDir, useCryptography);
 
                     var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + String.Format("_{0}", platform.platform);
 
-                    var appIdFile = Path.Combine(unpackedDir, (platform.version == Platform.GameVersion.RS2012) ? "APP_ID" : "appid.appid");
+                    var appIdFile = Path.Combine(unpackedDir, (platform.version == GameVersion.RS2012) ? "APP_ID" : "appid.appid");
 
                     File.WriteAllText(appIdFile, appId);
 

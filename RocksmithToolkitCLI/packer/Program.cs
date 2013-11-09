@@ -125,11 +125,11 @@ namespace PackerConsole
                         }
 
                         if (!String.IsNullOrEmpty(info.OggPath))
-                            DLCPackageCreator.Generate(arguments.Output, info, new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.None), null);
+                            DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Pc, GameVersion.None), null);
                         if (!String.IsNullOrEmpty(info.OggXBox360Path))
-                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(Platform.GamePlatform.XBox360, Platform.GameVersion.None), PackageMagic.CON);
+                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.XBox360, GameVersion.None), PackageMagic.CON);
                         if (!String.IsNullOrEmpty(info.OggPS3Path))
-                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(Platform.GamePlatform.PS3, Platform.GameVersion.None), null);
+                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.PS3, GameVersion.None), null);
 
                         Console.WriteLine("Package was generated.");
                         return 0;
@@ -177,7 +177,7 @@ namespace PackerConsole
                     foreach (string sourceFileName in sourceFiles)
                     {
                         Platform platform = Packer.GetPlatform(sourceFileName);
-                        if (platform.platform == Platform.GamePlatform.None)
+                        if (platform.platform == GamePlatform.None)
                         {
                             Console.WriteLine("Error: Platform not found or invalid 'input' file:" + sourceFileName);
                             continue;

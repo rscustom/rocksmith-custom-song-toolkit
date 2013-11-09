@@ -169,7 +169,7 @@ namespace RocksmithToolkitLibTest
             }
             var tmpSngLocation = Path.GetTempFileName();
             var arrangement = rsSng.Metadata.Arrangement == "Bass" ? ArrangementType.Bass : ArrangementType.Guitar;
-            SngFileWriter.Write(xmlLocation, tmpSngLocation, arrangement, new Platform(Platform.GamePlatform.Pc, Platform.GameVersion.None), (InstrumentTuning)rsSng.Metadata.Tuning);
+            SngFileWriter.Write(xmlLocation, tmpSngLocation, arrangement, new Platform(GamePlatform.Pc, GameVersion.None), (InstrumentTuning)rsSng.Metadata.Tuning);
             SngFile toolkitSng = new SngFile(tmpSngLocation);
             StringBuilder sb = new StringBuilder();
             func(toolkitSng, sb);

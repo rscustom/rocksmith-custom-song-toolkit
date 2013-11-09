@@ -28,12 +28,12 @@ namespace RocksmithToolkitLib.DLCPackage
                 var platform = Packer.GetPlatform(fi.FullName);
                 switch (platform.platform)
                 {
-                    case Platform.GamePlatform.Pc:
-                    case Platform.GamePlatform.XBox360:
+                    case GamePlatform.Pc:
+                    case GamePlatform.XBox360:
                         return extractTones(filePath, platform);
-                    case Platform.GamePlatform.PS3:
+                    case GamePlatform.PS3:
                         throw new InvalidOperationException("PS3 platform is not supported at this time :(");
-                    case Platform.GamePlatform.None:
+                    case GamePlatform.None:
                     default:
                         throw new NotSupportedException(String.Format("Unknown file extension exception '{0}'. File not supported.", fi.Extension));
                 }
