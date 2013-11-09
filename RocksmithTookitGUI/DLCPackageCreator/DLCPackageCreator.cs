@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using X360.STFS;
 using System.Diagnostics;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.ToolkitTone;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -142,7 +143,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private Tone CreateNewTone()
         {
             Tone tone = new Tone();
-            var allPedals = GameData.GetPedalData();
+            var allPedals = ToolkitPedal.LoadFromResource();
             tone.Name = "Default";
             bool uniqueToneName = false;
             int ind = 0;

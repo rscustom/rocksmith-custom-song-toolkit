@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using RocksmithToolkitLib.Tone;
+using RocksmithToolkitLib.ToolkitTone;
 using Pedal = RocksmithToolkitLib.DLCPackage.Tone.Pedal;
 using System.Text.RegularExpressions;
 
@@ -20,7 +20,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             InitializeComponent();
         }
 
-        public void Init(Pedal pedal, IList<Knob> knobs)
+        public void Init(Pedal pedal, IList<ToolkitKnob> knobs)
         {
             tableLayoutPanel.RowCount = knobs.Count;
             for (var i = 0; i < knobs.Count; i++)

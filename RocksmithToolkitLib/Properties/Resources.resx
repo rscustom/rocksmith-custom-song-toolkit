@@ -136,4 +136,16 @@
   <data name="Console_soundbank" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Console_soundbank.bnk;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Console2014_soundbank" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Console2014_soundbank.bnk;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="PC2014_soundbank" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PC2014_soundbank.bnk;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pedals2014" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pedals2014.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="TuningDefintions2014" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TuningDefintions2014.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

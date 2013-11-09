@@ -63,7 +63,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DisposableCollection.cs" />
+    <Compile Include="Extensions\DisposableCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DLCPackage\AggregateGraphRS2014\AggregateGraphRS2014.cs" />
     <Compile Include="DLCPackage\AggregateGraphRS2014\GraphPart.cs" />
     <Compile Include="DLCPackage\AggregateGraphRS2014\GraphItem.cs" />
@@ -76,11 +78,11 @@
     <Compile Include="DLCPackage\AggregateGraph\SoundBank.cs" />
     <Compile Include="DLCPackage\AggregateGraph\XBlock.cs" />
     <Compile Include="DLCPackage\Arrangement.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\Tone\EffectRS2014.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\Tone\KnobsRS2014.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\Tone\ToneAttributesRS2014.cs" />
     <Compile Include="DLCPackage\ShowlightRS2014\ShowlightRS2014.cs" />
     <Compile Include="DLCPackage\ShowlightRS2014\ShowlightsRS2014.cs" />
+    <Compile Include="DLCPackage\Tone\Manifest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DLCPackage\XBlockRS2014\EntityRS2014.cs" />
     <Compile Include="DLCPackage\XBlockRS2014\GameRS2014.cs" />
     <Compile Include="DLCPackage\XBlockRS2014\PropertyRS2014.cs" />
@@ -118,7 +120,6 @@
     <Compile Include="Platform.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Ogg\OggFile.cs" />
-    <Compile Include="GameData.cs" />
     <Compile Include="PSARC\BigEndianBinaryReader.cs" />
     <Compile Include="PSARC\BigEndianBinaryWriter.cs" />
     <Compile Include="PSARC\Entry.cs" />
@@ -134,8 +135,10 @@
     <Compile Include="SngToTab\TabNote.cs" />
     <Compile Include="SngToTab\TabSection.cs" />
     <Compile Include="SngToTab\TuningInfo.cs" />
-    <Compile Include="Tone\Pedal.cs" />
-    <Compile Include="Tone\Knob.cs" />
+    <Compile Include="ToolkitTone\ToolkitPedalRS2014.cs" />
+    <Compile Include="ToolkitTone\IToolkitPedal.cs" />
+    <Compile Include="ToolkitTone\ToolkitPedal.cs" />
+    <Compile Include="ToolkitTone\ToolkitKnob.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -151,7 +154,6 @@
     <Compile Include="Xml\Song.cs" />
     <Compile Include="DLCPackage\SoundBankGenerator.cs" />
     <Compile Include="DLCPackage\ToneGenerator.cs" />
-    <Compile Include="DLCPackage\Tone\Manifest.cs" />
     <Compile Include="DLCPackage\Tone\Pedal.cs" />
     <Compile Include="DLCPackage\Tone\Tone.cs" />
     <Compile Include="DLCPackage\XBlockGenerator.cs" />
@@ -189,6 +191,8 @@
     <Content Include="RocksmithToolkitLib.SongAppId.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\pedals2014.json" />
+    <None Include="Resources\TuningDefintions2014.json" />
     <None Include="Resources\XBox360_DLC_image.png" />
     <None Include="Resources\XBox360_KV.bin" />
   </ItemGroup>

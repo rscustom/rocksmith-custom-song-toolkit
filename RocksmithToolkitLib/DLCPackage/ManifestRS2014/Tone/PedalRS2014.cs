@@ -8,18 +8,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
     public class PedalRS2014
     {
         public string Type { get; set; }
-
-        private Dictionary<string, decimal> _knobValues;
-        public Dictionary<string, decimal> KnobValues {
-            get {
-                if (_knobValues == null)
-                    _knobValues = new Dictionary<string, decimal>();
-
-                return _knobValues;                    
-            }
-            set { _knobValues = value; }
-        }
-
+        public Dictionary<string, decimal> KnobValues { get; set; }
         public string Key { get; set; }
+        public string Category { get; set; }
+
+        public PedalRS2014()
+        {
+            KnobValues = new Dictionary<string, decimal>();
+        }
     }
 }

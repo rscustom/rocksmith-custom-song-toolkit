@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
-namespace RocksmithToolkitLib.Tone
+namespace RocksmithToolkitLib.ToolkitTone
 {
-    public class Knob
+    public class ToolkitKnob
     {
         public string Name { get; set; }
         public string Key { get; set; }
@@ -14,6 +15,11 @@ namespace RocksmithToolkitLib.Tone
         public decimal MaxValue { get; set; }
         public decimal ValueStep { get; set; }
         public decimal DefaultValue { get; set; }
+        public int Index { get; set; }
         public IList<Tuple<string, string>> EnumValues { get; set; }
+
+        public ToolkitKnob() {
+            EnumValues = new List<Tuple<string, string>>();
+        }
     }
 }

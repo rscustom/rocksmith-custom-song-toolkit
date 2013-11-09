@@ -5,8 +5,8 @@ using System.Text;
 using System.Windows.Forms;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.Tone;
-using RocksmithToolkitLib.Tone;
-using Pedal = RocksmithToolkitLib.Tone.Pedal;
+using RocksmithToolkitLib.ToolkitTone;
+using Pedal = RocksmithToolkitLib.ToolkitTone.ToolkitPedal;
 using System.Text.RegularExpressions;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
@@ -34,7 +34,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             InitializeComponent();
             InitializeTextBoxes();
-            InitializeComboBoxes(GameData.GetPedalData());
+            InitializeComboBoxes(ToolkitPedal.LoadFromResource());
         }
 
         public void RefreshControls()

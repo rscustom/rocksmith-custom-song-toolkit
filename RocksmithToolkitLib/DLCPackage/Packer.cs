@@ -7,6 +7,7 @@ using X360.STFS;
 using X360.Other;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage
 {

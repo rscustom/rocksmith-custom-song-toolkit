@@ -1,27 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
+using Newtonsoft.Json;
+using System.Text;
 
-namespace RocksmithToolkitLib.Tone
+namespace RocksmithToolkitLib.ToolkitTone
 {
-    public enum PedalType
-    {
-        Amp,
-        Cabinet,
-        Pedal
-    }
-
-    public class Pedal
+    public class ToolkitPedalRS2014 : IToolkitPedal
     {
         public string Name { get; set; }
         public string Type { get; set; }
         public string Category { get; set; }
         public string Key { get; set; }
-        public IList<Knob> Knobs { get; set; }
-        public bool AllowLoop { get; set; }
-        public bool AllowPost { get; set; }
-        public bool AllowPre { get; set; }
+        public IList<ToolkitKnob> Knobs { get; set; }
         public bool Bass { get; set; }
-        public bool Metal { get; set; }
 
         public PedalType TypeEnum
         {
@@ -29,10 +21,12 @@ namespace RocksmithToolkitLib.Tone
             {
                 switch (Type.ToLower())
                 {
-                    case "amp":
+                    case "amps":
                         return PedalType.Amp;
-                    case "cabinet":
+                    case "cabinets":
                         return PedalType.Cabinet;
+                    case "racks":
+                        return PedalType.Rack;
                     default:
                         return PedalType.Pedal;
                 }
@@ -43,12 +37,13 @@ namespace RocksmithToolkitLib.Tone
         {
             get
             {
-                string prefix = Bass ? "(Bass) " : Metal ? "(Metal) " : "";
+                string prefix = (Bass) ? "(Bass) " : "";
                 switch (TypeEnum)
                 {
                     case PedalType.Amp:
                         return string.Format("{0}{1}", prefix, Name);
                     case PedalType.Cabinet:
+                    case PedalType.Rack:
                         return string.Format("{0}{1} {2}", prefix, Name, Category);
                     default:
                         return string.Format("{0}: {1}{2}", Category, prefix, Name);
@@ -56,13 +51,19 @@ namespace RocksmithToolkitLib.Tone
             }
         }
 
-        public DLCPackage.Tone.Pedal MakePedalSetting()
+        public PedalRS2014 MakePedalSetting()
         {
-            return new DLCPackage.Tone.Pedal
+            return new PedalRS2014
             {
-                PedalKey = Key,
+                Key = Key,
                 KnobValues = Knobs.ToDictionary(k => k.Key, k => k.DefaultValue)
             };
+        }
+
+        public static IList<ToolkitPedalRS2014> LoadFromResource()
+        {
+            var pedalsJson = Encoding.ASCII.GetString(Properties.Resources.pedals2014);
+            return JsonConvert.DeserializeObject<IList<ToolkitPedalRS2014>>(pedalsJson);
         }
     }
 }

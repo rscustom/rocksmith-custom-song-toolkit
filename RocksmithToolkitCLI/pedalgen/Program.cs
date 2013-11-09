@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
-using RocksmithToolkitLib.Tone;
+using RocksmithToolkitLib.ToolkitTone;
 using NDesk.Options;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
@@ -32,7 +32,8 @@ namespace pedalgen
 
         static void Main(string[] args)
         {
-        	var arguments = new Arguments();
+            GeneratePedalsRS2014(@"W:\MUSICA\ROCKSMITH\RS2014_UNPACKED\gears_Pc2014\manifests\gears"); return;
+            var arguments = new Arguments();
             var options = GetOptions(arguments);
 
             if (args.Length == 0)
@@ -87,19 +88,20 @@ namespace pedalgen
         }
 
         private static void GeneratePedalsRS2014(string inputDir) {
-            var gearsJsonFiles = Directory.GetFiles(inputDir);
-            List<ToneAttributesRS2014> gears = new List<ToneAttributesRS2014>();
+            //inputDir like "......\ROCKSMITH\gears_Pc\manifests\gears" (gears_Pc is gears.psarc unpacked)
+            var gearsJsonFiles = Directory.GetFiles(inputDir, "*.json");
+            List<ToolkitPedalRS2014> toolkitPedals = new List<ToolkitPedalRS2014>();
             foreach (var file in gearsJsonFiles)
             {
-                var gearManifest = ManifestRS2014<ToneAttributesRS2014>.LoadFromFile(file);
-                foreach (var g in gearManifest.Entries)
+                var gearManifest = ManifestRS2014<RsToneRS2014>.LoadFromFile(file);
+                foreach (var pedal in gearManifest.Entries)
                 {
-                    gears.Add(g.Value["Attributes"]);
+                    toolkitPedals.Add(pedal.Value["Attributes"].ToPedal());
                 }
             }
             JsonSerializerSettings jss = new JsonSerializerSettings();
             jss.Formatting = Formatting.Indented;
-            File.WriteAllText("gearsRS2014.json", JsonConvert.SerializeObject(gears, jss)); 
+            File.WriteAllText("pedals2014.json", JsonConvert.SerializeObject(toolkitPedals, jss)); 
         }
 
         private static void GeneratePedals(string[] args) {
@@ -112,20 +114,20 @@ namespace pedalgen
                 try
                 {
                     var pedalsJson = File.ReadAllText(file);
-                    var junk = pedalsJson.IndexOf("\n}");
-                    if (junk > -1)
-                    {
-                        var lastCurly = junk + 2;
-                        while (lastCurly < pedalsJson.Length && (pedalsJson[lastCurly] == '}' || pedalsJson[lastCurly] == ' '))
-                        {
-                            ++lastCurly;
-                        }
-                        if (lastCurly < pedalsJson.Length)
-                        {
-                            pedalsJson = pedalsJson.Substring(0, lastCurly);
-                        }
-                    }
-                    pedalsJson.Replace("TonePedalRTPCName", "Key");
+                    //var junk = pedalsJson.IndexOf("\n}");
+                    //if (junk > -1)
+                    //{
+                    //    var lastCurly = junk + 2;
+                    //    while (lastCurly < pedalsJson.Length && (pedalsJson[lastCurly] == '}' || pedalsJson[lastCurly] == ' '))
+                    //    {
+                    //        ++lastCurly;
+                    //    }
+                    //    if (lastCurly < pedalsJson.Length)
+                    //    {
+                    //        pedalsJson = pedalsJson.Substring(0, lastCurly);
+                    //    }
+                    //}
+                    //pedalsJson.Replace("TonePedalRTPCName", "Key");
                     var filePedals = JsonConvert.DeserializeObject<RsJsonFile<RsTone>>(pedalsJson);
                     if ("GRPedal".Equals(filePedals.ModelName))
                     {
