@@ -49,6 +49,89 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
+        //Song Information
+        public string DLCName
+        {
+            get { return DlcNameTB.Text; }
+            set { DlcNameTB.Text = GetValidName(value); }
+        }
+        public string SongTitle
+        {
+            get { return SongDisplayNameTB.Text; }
+            set { SongDisplayNameTB.Text = value; }
+        }
+        public string SongTitleSort
+        {
+            get { return SongDisplayNameSortTB.Text; }
+            set { SongDisplayNameSortTB.Text = value; }
+        }
+        public string Album
+        {
+            get { return AlbumTB.Text; }
+            set { AlbumTB.Text = value; }
+        }
+        public string Artist
+        {
+            get { return ArtistTB.Text; }
+            set { ArtistTB.Text = value; }
+        }
+        public string ArtistSort
+        {
+            get { return ArtistSortTB.Text; }
+            set { ArtistSortTB.Text = value; }
+        }
+        public string AlbumYear
+        {
+            get { return YearTB.Text; }
+            set { YearTB.Text = value; }
+        }
+        public string AverageTempo
+        {
+            get { return AverageTempoTB.Text; }
+            set
+            {
+                int tempo = 0;
+                string stringTempo = value;
+                int pointIndex = value.IndexOf(".");
+                if (pointIndex > -1)
+                    stringTempo = stringTempo.Substring(0, pointIndex);
+                if (int.TryParse(stringTempo, out tempo))
+                    AverageTempoTB.Text = tempo.ToString();
+            }
+        }
+
+        //Tones
+        private IEnumerable<string> GetToneNames()
+        {
+            return TonesLB.Items.OfType<Tone>().Select(t => t.Name);
+        }
+
+        //Files
+        private string AlbumArtPath
+        {
+            get { return AlbumArtPathTB.Text; }
+            set { AlbumArtPathTB.Text = value; }
+        }
+        private string OggPCPath
+        {
+            get { return oggPcPathTB.Text; }
+            set { oggPcPathTB.Text = value; }
+        }
+        private string OggMACPath
+        {
+            get { return oggMacPathTB.Text; }
+            set { oggMacPathTB.Text = value; }
+        }
+        private string OggXBox360Path {
+            get { return oggXBox360PathTB.Text; }
+            set { oggXBox360PathTB.Text = value; }
+        }
+        private string OggPS3Path
+        {
+            get { return oggPS3PathTB.Text; }
+            set { oggPS3PathTB.Text = value; }
+        }
+
         public DLCPackageCreator()
         {
             InitializeComponent();
@@ -75,79 +158,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tone.PedalList.Add("Amp", allPedals.First(p => p.Key == "Amp_Fusion").MakePedalSetting());
             tone.PedalList.Add("Cabinet", allPedals.First(p => p.Key == "Cab_2X12_Fusion_57_Cone").MakePedalSetting());
             return tone;
-        }
-
-        private IEnumerable<string> GetToneNames()
-        {
-            return TonesLB.Items.OfType<Tone>().Select(t => t.Name);
-        }
-        private string OggPath
-        {
-            get { return oggPathTB.Text; }
-            set { oggPathTB.Text = value; }
-        }
-        private string OggXBox360Path {
-            get { return oggXBox360PathTB.Text; }
-            set { oggXBox360PathTB.Text = value; }
-        }
-        private string OggPS3Path
-        {
-            get { return oggPS3PathTB.Text; }
-            set { oggPS3PathTB.Text = value; }
-        }
-        private string AlbumArtPath
-        {
-            get { return AlbumArtPathTB.Text; }
-            set { AlbumArtPathTB.Text = value; }
-        }
-
-        public string DLCName
-        {
-            get { return DlcNameTB.Text; }
-            set { DlcNameTB.Text = GetValidName(value); }
-        }
-
-        public string SongTitle {
-            get { return SongDisplayNameTB.Text; }
-            set { SongDisplayNameTB.Text = value; }
-        }
-
-        public string SongTitleSort {
-            get { return SongDisplayNameSortTB.Text; }
-            set { SongDisplayNameSortTB.Text = value; }
-        }
-
-        public string Album {
-            get { return AlbumTB.Text; }
-            set { AlbumTB.Text = value; }
-        }
-
-        public string Artist {
-            get { return ArtistTB.Text; }
-            set { ArtistTB.Text = value; }
-        }
-
-        public string ArtistSort {
-            get { return ArtistSortTB.Text; }
-            set { ArtistSortTB.Text = value; }
-        }
-
-        public string AlbumYear {
-            get { return YearTB.Text; }
-            set { YearTB.Text = value; }
-        }
-
-        public string AverageTempo {
-            get { return AverageTempoTB.Text; }
-            set {
-                int tempo = 0;
-                string stringTempo = value;
-                int pointIndex = value.IndexOf(".");
-                if (pointIndex > -1)
-                    stringTempo = stringTempo.Substring(0, pointIndex);
-                if (int.TryParse(stringTempo, out tempo))
-                    AverageTempoTB.Text = tempo.ToString();
-            }
         }
 
         private void arrangementAddButton_Click(object sender, EventArgs e)
@@ -178,7 +188,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 ofd.Filter = "PC " + CurrentOFDFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
-                    OggPath = ofd.FileName;
+                    OggPCPath = ofd.FileName;
             }
         }
 
@@ -188,7 +198,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 ofd.Filter = "MAC " + CurrentOFDFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
-                    OggPath = ofd.FileName;
+                    OggMACPath = ofd.FileName;
             }
         }
 
@@ -224,7 +234,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             try
             {
                 if (platformPC.Checked)
-                    OggFile.VerifyHeaders(OggPath);
+                    OggFile.VerifyHeaders(OggPCPath);
+                if (platformMAC.Checked)
+                    OggFile.VerifyHeaders(OggMACPath);
                 if (platformXBox360.Checked)
                     OggFile.VerifyHeaders(OggXBox360Path);
                 if (platformPS3.Checked)
@@ -235,7 +247,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show(ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (platformPC.Checked && OggFile.getPlatform(OggPath).platform != GamePlatform.Pc)
+            if (platformPC.Checked && OggFile.getPlatform(OggPCPath).platform != GamePlatform.Pc)
             {
                 MessageBox.Show("The Windows OGG is either invalid or for the wrong platform.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -465,8 +477,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // Windows audio file
             if (!String.IsNullOrEmpty(info.OggPath))
-                OggPath = MakeAbsolute(path, info.OggPath);
-            platformPC.Checked = !String.IsNullOrEmpty(OggPath);
+                OggPCPath = MakeAbsolute(path, info.OggPath);
+            platformPC.Checked = !String.IsNullOrEmpty(OggPCPath);
 
             // XBox360 audio file
             if (!String.IsNullOrEmpty(info.OggXBox360Path))
@@ -592,15 +604,32 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 AppIdTB.Focus();
                 return null;
             }
-            if (!platformPC.Checked && !platformXBox360.Checked && !platformPS3.Checked)
+            if (CurrentGameVersion == GameVersion.RS2014)
             {
-                MessageBox.Show("Error: No game platform selected", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!platformPC.Checked && !platformMAC.Checked && !platformXBox360.Checked && !platformPS3.Checked)
+                {
+                    MessageBox.Show("Error: No game platform selected", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+            }
+            else {
+                if (!platformPC.Checked && !platformXBox360.Checked && !platformPS3.Checked)
+                {
+                    MessageBox.Show("Error: No game platform selected", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+            }
+            if (platformPC.Checked && !File.Exists(OggPCPath))
+            {
+                oggPcPathTB.Focus();
                 return null;
             }
-            if (platformPC.Checked && !File.Exists(OggPath))
-            {
-                oggPathTB.Focus();
-                return null;
+            if (CurrentGameVersion == GameVersion.RS2014) {
+                if (platformPC.Checked && !File.Exists(OggPCPath))
+                {
+                    oggPcPathTB.Focus();
+                    return null;
+                }
             }
             if (platformXBox360.Checked && !File.Exists(OggXBox360Path)) {
                 oggXBox360PathTB.Focus();
@@ -621,7 +650,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 if (!File.Exists(arr.SongXml.File))
                 {
-                    MessageBox.Show("Error: XML file doesn't exist: ".Insert(31, arr.SongXml.File), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error: Song Xml File doesn't exist: ".Insert(31, arr.SongXml.File), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
 
@@ -663,7 +692,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     AverageTempo = tempo
                 },
                 AlbumArtPath = AlbumArtPath,
-                OggPath = OggPath,
+                OggPath = OggPCPath,
                 OggXBox360Path = OggXBox360Path,
                 OggPS3Path = OggPS3Path,
                 Arrangements = arrangements,
@@ -830,8 +859,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             else
             {
-                oggPathTB.Enabled = pChecked;
-                openOggButton.Enabled = pChecked;
+                oggPcPathTB.Enabled = pChecked;
+                openOggPcButton.Enabled = pChecked;
                 AppIdTB.Visible = pChecked;
                 cmbAppIds.Visible = pChecked;
             }
@@ -911,7 +940,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             control.Refresh();
         }
 
-        private void RSVersion_CheckedChanged(object sender, EventArgs e)
+        private void GameVersion_CheckedChanged(object sender, EventArgs e)
         {
             PopulateAppIdCombo(CurrentGameVersion);
 
