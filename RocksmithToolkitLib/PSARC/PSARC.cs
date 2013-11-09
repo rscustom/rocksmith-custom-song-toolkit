@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using RocksmithToolkitLib.DLCPackage;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.PSARC
 {
@@ -110,15 +111,8 @@ namespace RocksmithToolkitLib.PSARC
         {
             foreach (Entry current in this.Entries)
             {
-                var tmpFile = Path.GetTempFileName();
-                current.Data = new FileStream(tmpFile, FileMode.Create);
+                current.Data = new TempFileStream();
                 this.InflateEntry(current, reader, zLenghts, blockSize, current.Data);
-                try
-                {
-                    if (File.Exists(tmpFile))
-                        File.Delete(tmpFile);
-                }
-                catch { }
             }
         }
 		public void Read(Stream str)
@@ -213,6 +207,7 @@ namespace RocksmithToolkitLib.PSARC
 					this.ReadNames();
 				}
 			}
+            str.Flush();
 		}
 		private void deflateEntries(out Dictionary<Entry, byte[]> entryDeflatedData, out List<uint> zLengths, uint blockSize)
 		{

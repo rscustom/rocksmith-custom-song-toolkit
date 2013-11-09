@@ -342,6 +342,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         entry.Data.CopyTo(fileStream);
                         entry.Data.Seek(0, SeekOrigin.Begin);
+                        entry.Data.Close(); //allow tmp file to be deleted.
                     }
                 }
             }
