@@ -67,10 +67,50 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
+        public static void EncryptSng(Stream input, Stream output, byte[] key)
+        {
+            var header = new byte[8] { 0x4A, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00 };
+            output.Write(header, 0, header.Length);
+
+            var reader = new BinaryReader(input);
+            byte[] iv = new byte[16];
+            using (var rij = new RijndaelManaged())
+            {
+                InitRijndael(rij, key, CipherMode.CFB);
+                rij.GenerateIV();
+                iv = rij.IV;
+                output.Write(iv, 0, iv.Length);
+
+                var buffer = new byte[16];
+                long len = input.Length - input.Position;
+                for (long i = 0; i < len; i += buffer.Length)
+                {
+                    using (ICryptoTransform transform = rij.CreateEncryptor())
+                    {
+                        var cs = new CryptoStream(output, transform, CryptoStreamMode.Write);
+                        int bytesread = input.Read(buffer, 0, buffer.Length);
+                        cs.Write(buffer, 0, bytesread);
+
+                        int pad = buffer.Length - bytesread;
+                        if (pad > 0)
+                            cs.Write(new byte[pad], 0, pad);
+
+                        cs.Flush();
+                    }
+
+                    int j;
+                    bool carry;
+                    for (j = (rij.IV.Length) - 1, carry = true; j >= 0 && carry; j--)
+                        carry = ((iv[j] = (byte)(rij.IV[j] + 1)) == 0);
+                    rij.IV = iv;
+                }
+            }
+        }
+
         public static void DecryptSng(Stream input, Stream output, byte[] key)
         {
             var reader = new BinaryReader(input);
-            reader.ReadBytes(8); // 4A 00 00 00 03 00 00 00
+            reader.ReadBytes(8);
             byte[] iv = reader.ReadBytes(16);
             using (var rij = new RijndaelManaged())
             {
