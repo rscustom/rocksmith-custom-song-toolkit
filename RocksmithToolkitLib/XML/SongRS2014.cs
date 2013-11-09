@@ -106,6 +106,10 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArrayItem("control")]
         public SongControl[] Controls { get; set; }
 
+        [XmlArray("tones")]
+        [XmlArrayItem("tone")]
+        public SongToneRS2014[] Tones { get; set; }
+
         [XmlArray("ebeats")]
         [XmlArrayItem("ebeat")]
         public SongEbeat[] Ebeats { get; set; }
@@ -259,5 +263,17 @@ namespace RocksmithToolkitLib.Xml {
     public class SongAnchorRS2014 : SongAnchor {
         [XmlAttribute("width")]
         public Single Width { get; set; }
+    }
+
+    [XmlType("tone")]
+    public class SongToneRS2014 {
+        [XmlAttribute("time")]
+        public float Time { get; set; }
+
+        [XmlAttribute("key")]
+        public string Key { get; set; }
+
+        [XmlAttribute("name")]
+        public string Name { get; set; }
     }
 }

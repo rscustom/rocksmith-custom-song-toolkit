@@ -100,7 +100,7 @@
             // 
             this.dlcGenerateButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.dlcGenerateButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dlcGenerateButton.Location = new System.Drawing.Point(417, 620);
+            this.dlcGenerateButton.Location = new System.Drawing.Point(424, 620);
             this.dlcGenerateButton.Name = "dlcGenerateButton";
             this.dlcGenerateButton.Size = new System.Drawing.Size(75, 29);
             this.dlcGenerateButton.TabIndex = 27;
@@ -152,7 +152,7 @@
             // 
             this.dlcSaveButton.BackColor = System.Drawing.SystemColors.Control;
             this.dlcSaveButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.dlcSaveButton.Location = new System.Drawing.Point(110, 620);
+            this.dlcSaveButton.Location = new System.Drawing.Point(104, 620);
             this.dlcSaveButton.Name = "dlcSaveButton";
             this.dlcSaveButton.Size = new System.Drawing.Size(105, 29);
             this.dlcSaveButton.TabIndex = 24;
@@ -164,7 +164,7 @@
             // 
             this.dlcLoadButton.BackColor = System.Drawing.SystemColors.Control;
             this.dlcLoadButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.dlcLoadButton.Location = new System.Drawing.Point(7, 620);
+            this.dlcLoadButton.Location = new System.Drawing.Point(1, 620);
             this.dlcLoadButton.Name = "dlcLoadButton";
             this.dlcLoadButton.Size = new System.Drawing.Size(97, 29);
             this.dlcLoadButton.TabIndex = 23;
@@ -684,7 +684,7 @@
             this.Controls.Add(this.dlcSaveButton);
             this.Controls.Add(this.dlcGenerateButton);
             this.Name = "DLCPackageCreator";
-            this.Size = new System.Drawing.Size(1019, 706);
+            this.Size = new System.Drawing.Size(509, 658);
             this.gbPlatofmr.ResumeLayout(false);
             this.gbPlatofmr.PerformLayout();
             this.gbFiles.ResumeLayout(false);

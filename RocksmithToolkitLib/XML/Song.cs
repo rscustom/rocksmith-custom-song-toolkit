@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Xml;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace RocksmithToolkitLib.Xml
 {
@@ -360,21 +361,27 @@ namespace RocksmithToolkitLib.Xml
 
     [XmlType("tuning")]
     public class TuningStrings {
+        [JsonProperty("string0")]
         [XmlAttribute("string0")]
         public Int32 String0 { get; set; }
 
+        [JsonProperty("string1")]
         [XmlAttribute("string1")]
         public Int32 String1 { get; set; }
 
+        [JsonProperty("string2")]
         [XmlAttribute("string2")]
         public Int32 String2 { get; set; }
 
+        [JsonProperty("string3")]
         [XmlAttribute("string3")]
         public Int32 String3 { get; set; }
 
+        [JsonProperty("string4")]
         [XmlAttribute("string4")]
         public Int32 String4 { get; set; }
 
+        [JsonProperty("string5")]
         [XmlAttribute("string5")]
         public Int32 String5 { get; set; }
 

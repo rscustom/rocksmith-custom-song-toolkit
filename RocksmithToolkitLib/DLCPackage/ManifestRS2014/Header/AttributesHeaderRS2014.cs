@@ -17,7 +17,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
         public string ArrangementName { get; set; }
         public string ArtistName { get; set; }
         public string ArtistNameSort { get; set; }
-        public float CentOffset { get; set; } //
+        public float CentOffset { get; set; }
         public bool DLC { get; set; }
         public string DLCKey { get; set; }
         public float DNA_Chords { get; set; }
@@ -45,6 +45,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
         public string SongName { get; set; }
         public string SongNameSort { get; set; }
         public int SongYear { get; set; }
-        public TunningRS2014 Tuning { get; set; }
+        public TuningStrings Tuning { get; set; }
     }
 }
