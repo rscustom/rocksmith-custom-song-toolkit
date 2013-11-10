@@ -90,7 +90,7 @@ namespace pedalgen
         private static void GeneratePedalsRS2014(string inputDir) {
             //inputDir like "......\ROCKSMITH\gears_Pc\manifests\gears" (gears_Pc is gears.psarc unpacked)
             var gearsJsonFiles = Directory.GetFiles(inputDir, "*.json");
-            List<ToolkitPedalRS2014> toolkitPedals = new List<ToolkitPedalRS2014>();
+            List<ToolkitPedal> toolkitPedals = new List<ToolkitPedal>();
             foreach (var file in gearsJsonFiles)
             {
                 var gearManifest = ManifestRS2014<RsToneRS2014>.LoadFromFile(file);

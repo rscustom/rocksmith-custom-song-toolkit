@@ -91,7 +91,7 @@
             this.albumArtButton.Location = new System.Drawing.Point(457, 18);
             this.albumArtButton.Name = "albumArtButton";
             this.albumArtButton.Size = new System.Drawing.Size(34, 23);
-            this.albumArtButton.TabIndex = 14;
+            this.albumArtButton.TabIndex = 21;
             this.albumArtButton.Text = "...";
             this.albumArtButton.UseVisualStyleBackColor = true;
             this.albumArtButton.Click += new System.EventHandler(this.albumArtButton_Click);
@@ -103,7 +103,7 @@
             this.dlcGenerateButton.Location = new System.Drawing.Point(405, 514);
             this.dlcGenerateButton.Name = "dlcGenerateButton";
             this.dlcGenerateButton.Size = new System.Drawing.Size(97, 29);
-            this.dlcGenerateButton.TabIndex = 27;
+            this.dlcGenerateButton.TabIndex = 31;
             this.dlcGenerateButton.Text = "Generate";
             this.dlcGenerateButton.UseVisualStyleBackColor = false;
             this.dlcGenerateButton.Click += new System.EventHandler(this.dlcGenerateButton_Click);
@@ -113,7 +113,7 @@
             this.openOggPcButton.Location = new System.Drawing.Point(210, 43);
             this.openOggPcButton.Name = "openOggPcButton";
             this.openOggPcButton.Size = new System.Drawing.Size(34, 23);
-            this.openOggPcButton.TabIndex = 16;
+            this.openOggPcButton.TabIndex = 22;
             this.openOggPcButton.Text = "...";
             this.openOggPcButton.UseVisualStyleBackColor = true;
             this.openOggPcButton.Click += new System.EventHandler(this.openOggButton_Click);
@@ -123,7 +123,7 @@
             this.arrangementRemoveButton.Location = new System.Drawing.Point(400, 65);
             this.arrangementRemoveButton.Name = "arrangementRemoveButton";
             this.arrangementRemoveButton.Size = new System.Drawing.Size(91, 23);
-            this.arrangementRemoveButton.TabIndex = 12;
+            this.arrangementRemoveButton.TabIndex = 20;
             this.arrangementRemoveButton.Text = "Remove";
             this.arrangementRemoveButton.UseVisualStyleBackColor = true;
             this.arrangementRemoveButton.Click += new System.EventHandler(this.arrangementRemoveButton_Click);
@@ -133,7 +133,7 @@
             this.arrangementAddButton.Location = new System.Drawing.Point(400, 16);
             this.arrangementAddButton.Name = "arrangementAddButton";
             this.arrangementAddButton.Size = new System.Drawing.Size(91, 23);
-            this.arrangementAddButton.TabIndex = 10;
+            this.arrangementAddButton.TabIndex = 18;
             this.arrangementAddButton.Text = "Add";
             this.arrangementAddButton.UseVisualStyleBackColor = true;
             this.arrangementAddButton.Click += new System.EventHandler(this.arrangementAddButton_Click);
@@ -155,7 +155,7 @@
             this.dlcSaveButton.Location = new System.Drawing.Point(105, 514);
             this.dlcSaveButton.Name = "dlcSaveButton";
             this.dlcSaveButton.Size = new System.Drawing.Size(97, 29);
-            this.dlcSaveButton.TabIndex = 24;
+            this.dlcSaveButton.TabIndex = 30;
             this.dlcSaveButton.Text = "Save Package";
             this.dlcSaveButton.UseVisualStyleBackColor = false;
             this.dlcSaveButton.Click += new System.EventHandler(this.dlcSaveButton_Click);
@@ -167,7 +167,7 @@
             this.dlcLoadButton.Location = new System.Drawing.Point(2, 514);
             this.dlcLoadButton.Name = "dlcLoadButton";
             this.dlcLoadButton.Size = new System.Drawing.Size(97, 29);
-            this.dlcLoadButton.TabIndex = 23;
+            this.dlcLoadButton.TabIndex = 0;
             this.dlcLoadButton.Text = "Load Package";
             this.dlcLoadButton.UseVisualStyleBackColor = false;
             this.dlcLoadButton.Click += new System.EventHandler(this.dlcLoadButton_Click);
@@ -180,7 +180,7 @@
             this.cmbAppIds.Margin = new System.Windows.Forms.Padding(2);
             this.cmbAppIds.Name = "cmbAppIds";
             this.cmbAppIds.Size = new System.Drawing.Size(198, 21);
-            this.cmbAppIds.TabIndex = 9;
+            this.cmbAppIds.TabIndex = 16;
             this.cmbAppIds.SelectedIndexChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
             // toneRemoveButton
@@ -188,7 +188,7 @@
             this.toneRemoveButton.Location = new System.Drawing.Point(400, 67);
             this.toneRemoveButton.Name = "toneRemoveButton";
             this.toneRemoveButton.Size = new System.Drawing.Size(91, 23);
-            this.toneRemoveButton.TabIndex = 21;
+            this.toneRemoveButton.TabIndex = 28;
             this.toneRemoveButton.Text = "Remove";
             this.toneRemoveButton.UseVisualStyleBackColor = true;
             this.toneRemoveButton.Click += new System.EventHandler(this.toneRemoveButton_Click);
@@ -198,7 +198,7 @@
             this.toneAddButton.Location = new System.Drawing.Point(400, 18);
             this.toneAddButton.Name = "toneAddButton";
             this.toneAddButton.Size = new System.Drawing.Size(91, 23);
-            this.toneAddButton.TabIndex = 19;
+            this.toneAddButton.TabIndex = 26;
             this.toneAddButton.Text = "Add";
             this.toneAddButton.UseVisualStyleBackColor = true;
             this.toneAddButton.Click += new System.EventHandler(this.toneAddButton_Click);
@@ -218,7 +218,7 @@
             this.arrangementEditButton.Location = new System.Drawing.Point(400, 40);
             this.arrangementEditButton.Name = "arrangementEditButton";
             this.arrangementEditButton.Size = new System.Drawing.Size(91, 23);
-            this.arrangementEditButton.TabIndex = 11;
+            this.arrangementEditButton.TabIndex = 19;
             this.arrangementEditButton.Text = "Edit";
             this.arrangementEditButton.UseVisualStyleBackColor = true;
             this.arrangementEditButton.Click += new System.EventHandler(this.arrangementEditButton_Click);
@@ -228,7 +228,7 @@
             this.toneEditButton.Location = new System.Drawing.Point(400, 42);
             this.toneEditButton.Name = "toneEditButton";
             this.toneEditButton.Size = new System.Drawing.Size(91, 23);
-            this.toneEditButton.TabIndex = 20;
+            this.toneEditButton.TabIndex = 27;
             this.toneEditButton.Text = "Edit";
             this.toneEditButton.UseVisualStyleBackColor = true;
             this.toneEditButton.Click += new System.EventHandler(this.toneEditButton_Click);
@@ -238,7 +238,7 @@
             this.toneImportButton.Location = new System.Drawing.Point(400, 92);
             this.toneImportButton.Name = "toneImportButton";
             this.toneImportButton.Size = new System.Drawing.Size(91, 23);
-            this.toneImportButton.TabIndex = 22;
+            this.toneImportButton.TabIndex = 29;
             this.toneImportButton.Text = "Import";
             this.toneImportButton.UseVisualStyleBackColor = true;
             this.toneImportButton.Click += new System.EventHandler(this.toneImportButton_Click);
@@ -249,7 +249,7 @@
             this.openOggXBox360Button.Location = new System.Drawing.Point(457, 43);
             this.openOggXBox360Button.Name = "openOggXBox360Button";
             this.openOggXBox360Button.Size = new System.Drawing.Size(34, 23);
-            this.openOggXBox360Button.TabIndex = 18;
+            this.openOggXBox360Button.TabIndex = 24;
             this.openOggXBox360Button.Text = "...";
             this.openOggXBox360Button.UseVisualStyleBackColor = true;
             this.openOggXBox360Button.Click += new System.EventHandler(this.openOggXBox360Button_Click);
@@ -264,7 +264,7 @@
             this.platformPC.Location = new System.Drawing.Point(9, 19);
             this.platformPC.Name = "platformPC";
             this.platformPC.Size = new System.Drawing.Size(40, 17);
-            this.platformPC.TabIndex = 25;
+            this.platformPC.TabIndex = 3;
             this.platformPC.Text = "PC";
             this.platformPC.UseVisualStyleBackColor = true;
             this.platformPC.CheckedChanged += new System.EventHandler(this.plataform_CheckedChanged);
@@ -277,7 +277,7 @@
             this.platformXBox360.Location = new System.Drawing.Point(150, 19);
             this.platformXBox360.Name = "platformXBox360";
             this.platformXBox360.Size = new System.Drawing.Size(69, 17);
-            this.platformXBox360.TabIndex = 26;
+            this.platformXBox360.TabIndex = 5;
             this.platformXBox360.Text = "XBox360";
             this.platformXBox360.UseVisualStyleBackColor = true;
             this.platformXBox360.CheckedChanged += new System.EventHandler(this.plataform_CheckedChanged);
@@ -290,7 +290,7 @@
             this.platformPS3.Location = new System.Drawing.Point(248, 19);
             this.platformPS3.Name = "platformPS3";
             this.platformPS3.Size = new System.Drawing.Size(46, 17);
-            this.platformPS3.TabIndex = 60;
+            this.platformPS3.TabIndex = 6;
             this.platformPS3.Text = "PS3";
             this.platformPS3.UseVisualStyleBackColor = true;
             this.platformPS3.CheckedChanged += new System.EventHandler(this.plataform_CheckedChanged);
@@ -321,7 +321,7 @@
             this.openOggPS3Button.Location = new System.Drawing.Point(457, 69);
             this.openOggPS3Button.Name = "openOggPS3Button";
             this.openOggPS3Button.Size = new System.Drawing.Size(34, 23);
-            this.openOggPS3Button.TabIndex = 71;
+            this.openOggPS3Button.TabIndex = 25;
             this.openOggPS3Button.Text = "...";
             this.openOggPS3Button.UseVisualStyleBackColor = true;
             this.openOggPS3Button.Click += new System.EventHandler(this.openOggPS3Button_Click);
@@ -335,7 +335,7 @@
             this.RS2012.Location = new System.Drawing.Point(8, 18);
             this.RS2012.Name = "RS2012";
             this.RS2012.Size = new System.Drawing.Size(75, 17);
-            this.RS2012.TabIndex = 72;
+            this.RS2012.TabIndex = 1;
             this.RS2012.TabStop = true;
             this.RS2012.Text = "Rocksmith";
             this.RS2012.UseVisualStyleBackColor = true;
@@ -349,7 +349,7 @@
             this.RS2014.Location = new System.Drawing.Point(88, 18);
             this.RS2014.Name = "RS2014";
             this.RS2014.Size = new System.Drawing.Size(102, 17);
-            this.RS2014.TabIndex = 73;
+            this.RS2014.TabIndex = 2;
             this.RS2014.Text = "Rocksmith 2014";
             this.RS2014.UseVisualStyleBackColor = true;
             this.RS2014.CheckedChanged += new System.EventHandler(this.GameVersion_CheckedChanged);
@@ -378,7 +378,7 @@
             this.platformMAC.Location = new System.Drawing.Point(74, 19);
             this.platformMAC.Name = "platformMAC";
             this.platformMAC.Size = new System.Drawing.Size(49, 17);
-            this.platformMAC.TabIndex = 61;
+            this.platformMAC.TabIndex = 4;
             this.platformMAC.Text = "MAC";
             this.platformMAC.UseVisualStyleBackColor = true;
             this.platformMAC.CheckedChanged += new System.EventHandler(this.plataform_CheckedChanged);
@@ -389,7 +389,7 @@
             this.openOggMacButton.Location = new System.Drawing.Point(210, 70);
             this.openOggMacButton.Name = "openOggMacButton";
             this.openOggMacButton.Size = new System.Drawing.Size(34, 23);
-            this.openOggMacButton.TabIndex = 77;
+            this.openOggMacButton.TabIndex = 23;
             this.openOggMacButton.Text = "...";
             this.openOggMacButton.UseVisualStyleBackColor = true;
             this.openOggMacButton.Click += new System.EventHandler(this.openOggMacButton_Click);
@@ -550,7 +550,7 @@
             this.DlcNameTB.Location = new System.Drawing.Point(6, 19);
             this.DlcNameTB.Name = "DlcNameTB";
             this.DlcNameTB.Size = new System.Drawing.Size(117, 20);
-            this.DlcNameTB.TabIndex = 0;
+            this.DlcNameTB.TabIndex = 7;
             this.DlcNameTB.Leave += new System.EventHandler(this.DlcNameTB_Leave);
             // 
             // SongDisplayNameTB
@@ -561,7 +561,7 @@
             this.SongDisplayNameTB.Location = new System.Drawing.Point(129, 19);
             this.SongDisplayNameTB.Name = "SongDisplayNameTB";
             this.SongDisplayNameTB.Size = new System.Drawing.Size(195, 20);
-            this.SongDisplayNameTB.TabIndex = 1;
+            this.SongDisplayNameTB.TabIndex = 8;
             // 
             // ArtistTB
             // 
@@ -571,7 +571,7 @@
             this.ArtistTB.Location = new System.Drawing.Point(129, 43);
             this.ArtistTB.Name = "ArtistTB";
             this.ArtistTB.Size = new System.Drawing.Size(160, 20);
-            this.ArtistTB.TabIndex = 4;
+            this.ArtistTB.TabIndex = 11;
             // 
             // AlbumTB
             // 
@@ -581,7 +581,7 @@
             this.AlbumTB.Location = new System.Drawing.Point(6, 43);
             this.AlbumTB.Name = "AlbumTB";
             this.AlbumTB.Size = new System.Drawing.Size(117, 20);
-            this.AlbumTB.TabIndex = 3;
+            this.AlbumTB.TabIndex = 10;
             // 
             // YearTB
             // 
@@ -591,7 +591,7 @@
             this.YearTB.Location = new System.Drawing.Point(431, 43);
             this.YearTB.Name = "YearTB";
             this.YearTB.Size = new System.Drawing.Size(60, 20);
-            this.YearTB.TabIndex = 6;
+            this.YearTB.TabIndex = 13;
             // 
             // AverageTempoTB
             // 
@@ -601,7 +601,7 @@
             this.AverageTempoTB.Location = new System.Drawing.Point(400, 69);
             this.AverageTempoTB.Name = "AverageTempoTB";
             this.AverageTempoTB.Size = new System.Drawing.Size(91, 20);
-            this.AverageTempoTB.TabIndex = 7;
+            this.AverageTempoTB.TabIndex = 17;
             // 
             // volumeBox
             // 
@@ -619,7 +619,7 @@
             -2147483648});
             this.volumeBox.Name = "volumeBox";
             this.volumeBox.Size = new System.Drawing.Size(43, 20);
-            this.volumeBox.TabIndex = 64;
+            this.volumeBox.TabIndex = 14;
             this.volumeBox.Value = new decimal(new int[] {
             15,
             0,
@@ -634,7 +634,7 @@
             this.AppIdTB.Location = new System.Drawing.Point(129, 69);
             this.AppIdTB.Name = "AppIdTB";
             this.AppIdTB.Size = new System.Drawing.Size(63, 20);
-            this.AppIdTB.TabIndex = 8;
+            this.AppIdTB.TabIndex = 15;
             this.AppIdTB.TextChanged += new System.EventHandler(this.AppIdTB_TextChanged);
             // 
             // SongDisplayNameSortTB
@@ -645,7 +645,7 @@
             this.SongDisplayNameSortTB.Location = new System.Drawing.Point(330, 19);
             this.SongDisplayNameSortTB.Name = "SongDisplayNameSortTB";
             this.SongDisplayNameSortTB.Size = new System.Drawing.Size(161, 20);
-            this.SongDisplayNameSortTB.TabIndex = 2;
+            this.SongDisplayNameSortTB.TabIndex = 9;
             // 
             // ArtistSortTB
             // 
@@ -655,7 +655,7 @@
             this.ArtistSortTB.Location = new System.Drawing.Point(295, 43);
             this.ArtistSortTB.Name = "ArtistSortTB";
             this.ArtistSortTB.Size = new System.Drawing.Size(130, 20);
-            this.ArtistSortTB.TabIndex = 5;
+            this.ArtistSortTB.TabIndex = 12;
             // 
             // gbGameVersion
             // 

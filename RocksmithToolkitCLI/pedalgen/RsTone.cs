@@ -5,6 +5,7 @@ using System.Text;
 using RocksmithToolkitLib.ToolkitTone;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using RocksmithToolkitLib;
 
 namespace pedalgen
 {
@@ -37,7 +38,7 @@ namespace pedalgen
 
         public ToolkitPedal ToPedal()
         {
-            return new ToolkitPedal
+            return new ToolkitPedal()
             {
                 AllowLoop = AllowLoop,
                 AllowPost = AllowPost,

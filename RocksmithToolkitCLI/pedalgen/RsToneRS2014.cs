@@ -7,6 +7,7 @@ using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.ToolkitTone;
 using System.Text.RegularExpressions;
+using RocksmithToolkitLib;
 
 public class RsToneRS2014
 {
@@ -35,9 +36,9 @@ public class RsToneRS2014
         Knobs = new List<Rs2014Knob>();
     }
 
-    public ToolkitPedalRS2014 ToPedal()
+    public ToolkitPedal ToPedal()
     {
-        var tkPedal = new ToolkitPedalRS2014();
+        var tkPedal = new ToolkitPedal();
         tkPedal.Category = Category;
         tkPedal.Key = Key;
         if (Knobs != null)

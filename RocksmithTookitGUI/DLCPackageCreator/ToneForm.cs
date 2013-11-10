@@ -9,18 +9,35 @@ using System.Windows.Forms;
 using RocksmithToolkitLib.DLCPackage.Tone;
 using System.Runtime.Serialization;
 using System.Xml;
+using RocksmithToolkitLib;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class ToneForm : Form
     {
-        public bool Saved = false;
-        public Tone LoadedTone = null;
+        private const string MESSAGEBOX_CAPTION = "DLC Package Creator";
 
-        public ToneForm(Tone tone)
+        public bool Saved = false;
+        public dynamic LoadedTone = null;
+        private GameVersion CurrentGameVersion;
+
+        public ToneForm(dynamic tone, GameVersion gameVersion)
         {
+            CurrentGameVersion = gameVersion;
             InitializeComponent();
+            RecreateToneControl(tone);
+        }
+
+        private void RecreateToneControl(dynamic tone) {
+            // Recreate toneControl from CurrentGameVersion
+            Controls.Remove(toneControl1);
+            toneControl1 = new RocksmithToolkitGUI.DLCPackageCreator.ToneControl(CurrentGameVersion);
+            this.toneControl1.Location = new System.Drawing.Point(10, 11);
+            this.toneControl1.Name = "toneControl1";
+            this.toneControl1.Size = new System.Drawing.Size(512, 268);
+            this.toneControl1.TabIndex = 0;
             toneControl1.Tone = tone;
+            Controls.Add(toneControl1); 
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -31,11 +48,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void loadButton_Click(object sender, EventArgs e)
         {
-
             string toneSavePath;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Rocksmith Tone (*.tone.xml)|*.tone.xml";
+                ofd.Filter = "Rocksmith Tone Template (*.tone.xml)|*.tone.xml";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneSavePath = ofd.FileName;
             }
@@ -51,7 +67,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Can't load saved tone. \n\r" + ex.Message, "DLCPackageCreator", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Can't load saved tone. \n\r" + ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -59,7 +75,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             toneControl1.Tone = tone;
             LoadedTone = toneControl1.Tone;
 
-            MessageBox.Show("Tone was loaded.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Tone was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
 
@@ -68,7 +84,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneSavePath;
             using (var ofd = new SaveFileDialog())
             {
-                ofd.Filter = "Rocksmith DLC Template (*.tone.xml)|*.tone.xml";
+                ofd.Filter = "Rocksmith Tone Template (*.tone.xml)|*.tone.xml";
                 ofd.AddExtension = true;
                 ofd.DefaultExt = "tone.xml";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
@@ -82,7 +98,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 serializer.WriteObject(stm, tone);
             }
 
-            MessageBox.Show("Tone was saved.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Tone was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

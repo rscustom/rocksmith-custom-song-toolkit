@@ -135,8 +135,6 @@
     <Compile Include="SngToTab\TabNote.cs" />
     <Compile Include="SngToTab\TabSection.cs" />
     <Compile Include="SngToTab\TuningInfo.cs" />
-    <Compile Include="ToolkitTone\ToolkitPedalRS2014.cs" />
-    <Compile Include="ToolkitTone\IToolkitPedal.cs" />
     <Compile Include="ToolkitTone\ToolkitPedal.cs" />
     <Compile Include="ToolkitTone\ToolkitKnob.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

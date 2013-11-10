@@ -18,7 +18,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     {
         private Arrangement arrangement;
         private DLCPackageCreator parentControl = null;
-        private GameVersion selectedGameVersion;
+        private GameVersion currentGameVersion;
 
         public ArrangementForm(IEnumerable<string> toneNames, DLCPackageCreator control, GameVersion gameVersion)
             : this(new Arrangement
@@ -35,7 +35,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public ArrangementForm(Arrangement arrangement, IEnumerable<string> toneNames, DLCPackageCreator control, GameVersion gameVersion)
         {
             InitializeComponent();
-            selectedGameVersion = gameVersion;
+            currentGameVersion = gameVersion;
             
             foreach (var val in Enum.GetValues(typeof(InstrumentTuning))) {
                 tuningComboBox.Items.Add(val);
@@ -81,7 +81,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Picked.Checked = selectedType == ArrangementType.Bass ? false : true;
 
                 // Gameplay Path
-                gbGameplayPath.Enabled = selectedType != ArrangementType.Vocal && selectedGameVersion == GameVersion.RS2014;
+                gbGameplayPath.Enabled = selectedType != ArrangementType.Vocal && currentGameVersion == GameVersion.RS2014;
                 pathLeadCheckbox.Enabled = selectedType == ArrangementType.Guitar;
                 pathLeadCheckbox.Checked = selectedType == ArrangementType.Guitar;
                 pathRhythmCheckbox.Enabled = selectedType == ArrangementType.Guitar;
@@ -91,11 +91,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 // Tone Selector
                 gbTone.Enabled = selectedType != ArrangementType.Vocal;
-                toneMultiplayerCombo.Enabled = selectedGameVersion == GameVersion.RS2014;
-                toneACombo.Enabled = selectedGameVersion == GameVersion.RS2014;
-                toneBCombo.Enabled = selectedGameVersion == GameVersion.RS2014;
-                toneCCombo.Enabled = selectedGameVersion == GameVersion.RS2014;
-                toneDCombo.Enabled = selectedGameVersion == GameVersion.RS2014;
+                toneMultiplayerCombo.Enabled = currentGameVersion == GameVersion.RS2014;
+                toneACombo.Enabled = currentGameVersion == GameVersion.RS2014;
+                toneBCombo.Enabled = currentGameVersion == GameVersion.RS2014;
+                toneCCombo.Enabled = currentGameVersion == GameVersion.RS2014;
+                toneDCombo.Enabled = currentGameVersion == GameVersion.RS2014;
 
                 // DLC ID
                 MasterId.Enabled = selectedType != ArrangementType.Vocal;

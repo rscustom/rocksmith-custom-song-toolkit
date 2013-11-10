@@ -20,6 +20,7 @@ using X360.STFS;
 using System.Diagnostics;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.ToolkitTone;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -104,7 +105,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         //Tones
         private IEnumerable<string> GetToneNames()
         {
-            return TonesLB.Items.OfType<Tone>().Select(t => t.Name);
+            if (CurrentGameVersion == GameVersion.RS2014)
+                return TonesLB.Items.OfType<ToneRS2014>().Select(t => t.Name);
+            else
+                return TonesLB.Items.OfType<Tone>().Select(t => t.Name);
         }
 
         //Files
@@ -137,28 +141,33 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             InitializeComponent();
             PopulateAppIdCombo(CurrentGameVersion);
+            PopulateTonesLB();
+        }
+
+        private void PopulateTonesLB()
+        {
+            TonesLB.Items.Clear();
             TonesLB.Items.Add(CreateNewTone());
         }
 
-        private Tone CreateNewTone()
+        private dynamic CreateNewTone()
         {
-            Tone tone = new Tone();
-            var allPedals = ToolkitPedal.LoadFromResource();
-            tone.Name = "Default";
+            var name = "Default";
             bool uniqueToneName = false;
             int ind = 0;
             do
             {
-                uniqueToneName = null == TonesLB.Items.OfType<Tone>().FirstOrDefault(t => tone.Name.Equals(t.Name));
+                uniqueToneName = !TonesLB.Items.Contains(name);
                 if (!uniqueToneName)
                 {
-                    tone.Name = "Default " + (++ind);
+                    name = "Default " + (++ind);
                 }
             } while (!uniqueToneName);
 
-            tone.PedalList.Add("Amp", allPedals.First(p => p.Key == "Amp_Fusion").MakePedalSetting());
-            tone.PedalList.Add("Cabinet", allPedals.First(p => p.Key == "Cab_2X12_Fusion_57_Cone").MakePedalSetting());
-            return tone;
+            if (CurrentGameVersion == GameVersion.RS2014)
+                return new ToneRS2014() { Name = name };
+            else
+                return new Tone() { Name = name };
         }
 
         private void arrangementAddButton_Click(object sender, EventArgs e)
@@ -738,8 +747,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void toneAddButton_Click(object sender, EventArgs e)
         {
-            Tone tone = CreateNewTone();
-            using (var form = new ToneForm(tone))
+            var tone = CreateNewTone();
+            using (var form = new ToneForm(tone, CurrentGameVersion))
             {
                 form.ShowDialog();
 
@@ -784,7 +793,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var tone = (Tone)TonesLB.SelectedItem;
                 var newTone = Copy(tone);
                 var toneName = newTone.Name;
-                using (var form = new ToneForm(newTone))
+                using (var form = new ToneForm(newTone, CurrentGameVersion))
                 {
                     form.ShowDialog();
                     
@@ -944,6 +953,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void GameVersion_CheckedChanged(object sender, EventArgs e)
         {
             PopulateAppIdCombo(CurrentGameVersion);
+            PopulateTonesLB();
 
             // MAC RS2014 only
             platformMAC.Enabled = CurrentGameVersion == GameVersion.RS2014;

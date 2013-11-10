@@ -55,11 +55,26 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
     {
         public GearRS2014 GearList { get; set; }
         public bool IsCustom { get; set; }
-        public float Volume { get; set; }
+        public decimal Volume { get; set; }
         public List<string> ToneDescriptors { get; set; }
         public string Key { get; set; }
         public string NameSeparator { get; set; }
         public string Name { get; set; }
-        public float SortOrder { get; set; }
+        public decimal SortOrder { get; set; }
+
+        public ToneRS2014()
+        {
+            GearList = new GearRS2014();
+            IsCustom = true;
+            Volume = -12;
+            ToneDescriptors = new List<string>();
+            NameSeparator = " - ";
+            SortOrder = 0;
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
