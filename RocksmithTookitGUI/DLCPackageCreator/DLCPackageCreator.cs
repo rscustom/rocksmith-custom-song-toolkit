@@ -808,7 +808,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //    return null;
             //}
 
-            List<XBox360License> licenses = new List<XBox360License>();
+            //List<XBox360License> licenses = new List<XBox360License>();
             //if (rbuttonSignatureLIVE.Checked)
             //{
             //    licenses.Add(new XBox360License() { ID = Convert.ToInt64(xboxLicense0IDTB.Text.Trim(), 16), Bit = 1, Flag = 1 });
@@ -832,6 +832,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 },
 
                 AlbumArtPath = AlbumArtPath,
+                AlbumArt256 = AlbumArt256Path,
+                AlbumArt128 = AlbumArt128Path,
+                AlbumArt64 = AlbumArt64Path,
                 OggPath = OggPCPath,
                 OggMACPath = OggMACPath,
                 OggXBox360Path = OggXBox360Path,
@@ -840,8 +843,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Tones = tones,
                 TonesRS2014 = tonesRS2014,
                 Volume = volumeBox.Value,
-                SignatureType = PackageMagic.CON,
-                XBox360Licenses = licenses
+                SignatureType = PackageMagic.CON
             };
 
             return data;
