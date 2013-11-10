@@ -148,4 +148,13 @@
   <data name="TuningDefintions2014" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\TuningDefintions2014.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="albumart2014_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\albumart2014_128.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="albumart2014_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\albumart2014_256.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="albumart2014_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\albumart2014_64.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

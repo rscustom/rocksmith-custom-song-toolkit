@@ -187,6 +187,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\albumart2014_64.dds" />
+    <None Include="Resources\albumart2014_128.dds" />
+    <None Include="Resources\albumart2014_256.dds" />
     <Content Include="RocksmithToolkitLib.TuningDefinition.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

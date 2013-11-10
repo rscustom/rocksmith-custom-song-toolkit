@@ -417,7 +417,7 @@
             // AlbumArtPathTB
             // 
             this.AlbumArtPathTB.BackColor = System.Drawing.SystemColors.Window;
-            this.AlbumArtPathTB.Cue = "Album Art (for RS2014 select only 256x256 size) (*.dds)";
+            this.AlbumArtPathTB.Cue = "Album Art (use 512x512 size only) (*.dds)";
             this.AlbumArtPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.AlbumArtPathTB.ForeColor = System.Drawing.Color.Gray;
             this.AlbumArtPathTB.Location = new System.Drawing.Point(6, 19);

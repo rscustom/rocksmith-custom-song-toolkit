@@ -14,7 +14,8 @@ namespace RocksmithToolkitLib.DLCPackage
         public string AppId { get; set; }
         public string Name { get; set; }
         public SongInfo SongInfo { get; set; }
-        public string AlbumArtPath { get; set; }
+        public string AlbumArtPath { get; set; } //RS1 only
+        public string AlbumArt256 { get; set; } //RS2014 only
         public string AlbumArt128 { get; set; } //RS2014 only
         public string AlbumArt64 { get; set; } //RS2014 only
         public string OggPath { get; set; }
@@ -22,7 +23,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public string OggXBox360Path { get; set; }
         public string OggPS3Path { get; set; }
         public IList<Arrangement> Arrangements { get; set; }
-        public IList<Tone.Tone> Tones { get; set; }
+        public IList<Tone.Tone> Tones { get; set; } //RS1 only
         public IList<ToneRS2014> TonesRS2014 { get; set; } //RS2014 only
         public decimal Volume { get; set; }
         public PackageMagic SignatureType { get; set; }
