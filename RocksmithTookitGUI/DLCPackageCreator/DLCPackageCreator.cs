@@ -316,11 +316,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             else {
                 if (platformPC.Checked)
-                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, GameVersion.RS2012), null);
+                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, GameVersion.RS2012));
                 if (platformXBox360.Checked)
-                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.XBox360, GameVersion.RS2012), PackageMagic.CON);
+                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.XBox360, GameVersion.RS2012));
                 if (platformPS3.Checked)
-                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.PS3, GameVersion.RS2012), null);
+                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.PS3, GameVersion.RS2012));
             }
 
             MessageBox.Show("Package was generated.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);

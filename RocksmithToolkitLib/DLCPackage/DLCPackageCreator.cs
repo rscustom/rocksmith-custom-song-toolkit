@@ -25,6 +25,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static readonly string ps3WorkDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "edat");
 
         private static readonly string[] PCPaths = { "Windows", "Generic" };
+        private static readonly string[] MACPaths = { "Mac", "MacOS" };
         private static readonly string[] XBox360Paths = { "XBox360", "XBox360" };
         private static readonly string[] PS3Paths = { "PS3", "PS3" };
 
@@ -34,6 +35,8 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 case GamePlatform.Pc:
                     return PCPaths;
+                case GamePlatform.Mac:
+                    return MACPaths;
                 case GamePlatform.XBox360:
                     return XBox360Paths;
                 case GamePlatform.PS3:
@@ -47,6 +50,8 @@ namespace RocksmithToolkitLib.DLCPackage
             switch (platform.platform) {
                 case GamePlatform.Pc:
                     return info.OggPath;
+                case GamePlatform.Mac:
+                    return info.OggMACPath;
                 case GamePlatform.XBox360:
                     return info.OggXBox360Path;
                 case GamePlatform.PS3:
@@ -60,7 +65,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static List<string> PS3Files = new List<string>();
         private static List<string> SNGTmpFiles = new List<string>();
 
-        public static void Generate(string packagePath, DLCPackageData info, Platform platform, PackageMagic? xboxPackageType)
+        public static void Generate(string packagePath, DLCPackageData info, Platform platform)
         {
             switch (platform.platform)
             {
@@ -83,7 +88,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             RijndaelEncryptor.EncryptFile(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
                         break;
                     case GamePlatform.XBox360:
-                        BuildXBox360Package(packagePath, info, XBox360Files, xboxPackageType);
+                        BuildXBox360Package(packagePath, info, XBox360Files);
                         break;
                     case GamePlatform.PS3:
                         EncryptPS3EdatFiles(packagePath);
@@ -106,10 +111,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region XBox360
 
-        public static void BuildXBox360Package(string packagePath, DLCPackageData info, IEnumerable<string> xboxFiles, PackageMagic? xboxPackageType)
+        public static void BuildXBox360Package(string packagePath, DLCPackageData info, IEnumerable<string> xboxFiles)
         {
             LogRecord x = new LogRecord();
-            RSAParams xboxRSA = xboxPackageType == PackageMagic.CON ? new RSAParams(new DJsIO(Resources.XBox360_KV, true)) : new RSAParams(StrongSigned.LIVE);
+            RSAParams xboxRSA = info.SignatureType == PackageMagic.CON ? new RSAParams(new DJsIO(Resources.XBox360_KV, true)) : new RSAParams(StrongSigned.LIVE);
             CreateSTFS xboxSTFS = new CreateSTFS();
             xboxSTFS.HeaderData = info.GetSTFSHeader();
             foreach (string file in xboxFiles)

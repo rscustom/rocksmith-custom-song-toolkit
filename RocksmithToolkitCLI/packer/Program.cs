@@ -125,11 +125,11 @@ namespace PackerConsole
                         }
 
                         if (!String.IsNullOrEmpty(info.OggPath))
-                            DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Pc, GameVersion.None), null);
+                            DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Pc, GameVersion.None));
                         if (!String.IsNullOrEmpty(info.OggXBox360Path))
-                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.XBox360, GameVersion.None), PackageMagic.CON);
+                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.XBox360, GameVersion.None));
                         if (!String.IsNullOrEmpty(info.OggPS3Path))
-                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.PS3, GameVersion.None), null);
+                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.PS3, GameVersion.None));
 
                         Console.WriteLine("Package was generated.");
                         return 0;

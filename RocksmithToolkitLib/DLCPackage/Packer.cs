@@ -191,7 +191,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             IEnumerable<string> xboxFiles = Directory.EnumerateFiles(Path.Combine(sourcePath, ROOT_XBox360));
-            DLCPackageCreator.BuildXBox360Package(saveFileName, songData, xboxFiles, packageType);
+            DLCPackageCreator.BuildXBox360Package(saveFileName, songData, xboxFiles);
 
             foreach (var file in xboxFiles)
                 if (Path.GetExtension(file) == ".psarc" && File.Exists(file))
