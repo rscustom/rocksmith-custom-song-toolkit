@@ -18,7 +18,7 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public SongAppId Select(string appId, GameVersion gameVersion)
         {
-            if (List.OfType<SongAppId>().Where(s => s.AppId == appId && s.Version == gameVersion).Count() > 0)
+            if (List.OfType<SongAppId>().Where(s => s.AppId == appId && s.GameVersion == gameVersion).Count() > 0)
                 return List.Single<SongAppId>(s => s.AppId == appId);
             else
                 return List[0];
@@ -26,7 +26,7 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public IEnumerable<SongAppId> Select(GameVersion gameVersion)
         {
-            return List.OfType<SongAppId>().Where(s => s.Version == gameVersion);
+            return List.OfType<SongAppId>().Where(s => s.GameVersion == gameVersion);
         }
     }
 }

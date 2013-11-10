@@ -72,10 +72,10 @@ namespace RocksmithToolkitLib.DLCPackage {
         public void Load() {
             if (File.Exists(FilePath)) {
                 lock (List) {
-                    using (FileStream reader = File.Open(FilePath,
-                             FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
-                                 XmlSerializer serializer = new XmlSerializer(typeof(List<T>));
-                                 List = (List<T>)serializer.Deserialize(reader);
+                    using (var reader = new StreamReader(FilePath))
+                    {
+                        var serializer = new XmlSerializer(typeof(List<T>));
+                        List = (List<T>)serializer.Deserialize(reader);
                     }
                 }
             } else {

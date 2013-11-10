@@ -36,10 +36,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             InitializeComponent();
             currentGameVersion = gameVersion;
-            
-            foreach (var val in Enum.GetValues(typeof(InstrumentTuning))) {
-                tuningComboBox.Items.Add(val);
-            }
+            FillTuningCombo();
 
             foreach (var val in Enum.GetValues(typeof(ArrangementType)))
             {
@@ -116,6 +113,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             Arrangement = arrangement;
             parentControl = control;
+        }
+
+        private void FillTuningCombo()
+        {
+            TuningDefinition firstTuning = null;
+            tuningComboBox.Items.Clear();
+            foreach (var tuning in TuningDefinitionRepository.Instance().Select(currentGameVersion))
+            {
+                tuningComboBox.Items.Add(tuning);
+                if (firstTuning == null)
+                {
+                    firstTuning = tuning;
+                }
+            }
+            tuningComboBox.SelectedItem = firstTuning;
         }
 
         private void FillToneCombo(ComboBox combo, IEnumerable<string> toneNames, bool isBase)
