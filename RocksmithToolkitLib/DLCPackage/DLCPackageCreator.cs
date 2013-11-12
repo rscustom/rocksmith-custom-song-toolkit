@@ -317,7 +317,6 @@ namespace RocksmithToolkitLib.DLCPackage
                             soundStream = File.OpenRead(audioFile);
                         else
                             throw new InvalidOperationException("Audio file not found.");
-                        packPsarc.AddEntry(String.Format("audio/{0}/{1}", platform.GetPathName()[0].ToLower(), Path.GetFileName(audioFile)), soundStream);
                         
                         // AUDIO PREVIEW
                         var previewAudioFile = platform.GetAudioPath(info)[1];
@@ -328,7 +327,6 @@ namespace RocksmithToolkitLib.DLCPackage
                             previewAudioFile = audioFile;
                             soundPreviewStream = File.OpenRead(previewAudioFile);
                         }
-                        packPsarc.AddEntry(String.Format("audio/{0}/{1}", platform.GetPathName()[0].ToLower(), Path.GetFileName(previewAudioFile)), soundPreviewStream);
 
                         // FLAT MODEL
                         rsenumerableRootStream = new MemoryStream(Resources.rsenumerable_root);
@@ -354,18 +352,20 @@ namespace RocksmithToolkitLib.DLCPackage
                             }
                             
                             // SOUNDBANK
-                            SoundBankGenerator.GenerateSoundBank(dlcName, soundStream, soundbankStream, info.Volume, platform);
+                            var soundbankFileName = SoundBankGenerator.GenerateSoundBank(dlcName, soundStream, soundbankStream, info.Volume, platform);
                             soundbankStream.Flush();
                             soundbankStream.Seek(0, SeekOrigin.Begin);
                             //packPsarc.AddEntry(String.Format("audio/{0}/song_{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);
                             packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), dlcName), soundbankStream);
+                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), soundbankFileName), soundStream);
 
                             // SOUNDBANK PREVIEW
-                            SoundBankGenerator.GenerateSoundBank(dlcName + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform);
+                            var soundbankPreviewFileName = SoundBankGenerator.GenerateSoundBank(dlcName + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform);
                             soundbankPreviewStream.Flush();
                             soundbankPreviewStream.Seek(0, SeekOrigin.Begin);
                             //packPsarc.AddEntry(String.Format("audio/{0}/song_{1}_preview.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
                             packPsarc.AddEntry(String.Format("audio/{0}/{1}_preview.bnk", platform.GetPathName()[0].ToLower(), dlcName), soundbankPreviewStream);
+                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundPreviewStream);
 
                             // AGGREGATE GRAPH
                             var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", info.Name.ToLower());
