@@ -369,7 +369,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                             // AGGREGATE GRAPH
                             var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", info.Name.ToLower());
-                            var aggregateGraph = new AggregateGraph2014(info, soundbankFileName, soundbankPreviewFileName, platform);
+                            var aggregateGraph = new AggregateGraph2014(info, platform);
                             aggregateGraph.Serialize(aggregateGraphStream);
                             aggregateGraphStream.Flush();
                             aggregateGraphStream.Seek(0, SeekOrigin.Begin);

@@ -38,7 +38,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
 
         public AggregateGraph2014() {}
 
-        public AggregateGraph2014(DLCPackageData info, string soundBank, string soundbankPreview, Platform platform) {
+        public AggregateGraph2014(DLCPackageData info, Platform platform) {
             currentPlatform = platform;
             var dlcName = info.Name.ToLower();
 
@@ -170,7 +170,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             bnk.UUID = IdGenerator.Guid();
             bnk.LLID = Guid.Parse(IdGenerator.LLID());
             //bnk.Name = String.Format(NAME_SOUNDBANK, dlcName);
-            bnk.Name = soundbankPreview; //TODO: Adjust SoundbankGenerator
+            bnk.Name = dlcName;
             bnk.RelPathFile = String.Format("{0}.bnk", bnk.Name);
             bnk.LogPathFile = bnk.RelPathFile;
             Soundbank.Add(bnk);
@@ -188,7 +188,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 bnkPreview.UUID = IdGenerator.Guid();
                 bnkPreview.LLID = Guid.Parse(IdGenerator.LLID());
                 //bnkPreview.Name = String.Format(NAME_SOUNDBANKPREVIEW, dlcName);
-                bnk.Name = soundBank; //TODO: Adjust SoundbankGenerator
+                bnk.Name = dlcName + "_preview";
                 bnkPreview.RelPathFile = String.Format("{0}.bnk", bnkPreview.Name);
                 bnkPreview.LogPathFile = bnkPreview.RelPathFile;
                 Soundbank.Add(bnkPreview);
