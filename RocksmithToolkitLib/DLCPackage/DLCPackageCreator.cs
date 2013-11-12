@@ -316,7 +316,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         if (File.Exists(audioFile))
                             soundStream = File.OpenRead(audioFile);
                         else
-                            throw new InvalidOperationException("Audio file not found.");
+                            throw new InvalidOperationException(String.Format("Audio file '{0}' not found.", audioFile));
                         
                         // AUDIO PREVIEW
                         var previewAudioFile = platform.GetAudioPath(info)[1];
@@ -352,20 +352,20 @@ namespace RocksmithToolkitLib.DLCPackage
                             }
                             
                             // SOUNDBANK
-                            var soundbankFileName = SoundBankGenerator.GenerateSoundBank(dlcName, soundStream, soundbankStream, info.Volume, platform);
+                            var soundbankFileName = String.Format("song_{0}", dlcName);
+                            var audioFileNameId = SoundBankGenerator.GenerateSoundBank(soundbankFileName, soundStream, soundbankStream, info.Volume, platform);
                             soundbankStream.Flush();
                             soundbankStream.Seek(0, SeekOrigin.Begin);
-                            //packPsarc.AddEntry(String.Format("audio/{0}/song_{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);
-                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), dlcName), soundbankStream);
-                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), soundbankFileName), soundStream);
+                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);
+                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioFileNameId), soundStream);
 
                             // SOUNDBANK PREVIEW
-                            var soundbankPreviewFileName = SoundBankGenerator.GenerateSoundBank(dlcName + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform);
+                            var soundbankPreviewFileName = String.Format("song_{0}_preview", dlcName);
+                            var audioPreviewFileNameId = SoundBankGenerator.GenerateSoundBank(soundbankPreviewFileName, soundPreviewStream, soundbankPreviewStream, info.Volume, platform);
                             soundbankPreviewStream.Flush();
                             soundbankPreviewStream.Seek(0, SeekOrigin.Begin);
-                            //packPsarc.AddEntry(String.Format("audio/{0}/song_{1}_preview.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
-                            packPsarc.AddEntry(String.Format("audio/{0}/{1}_preview.bnk", platform.GetPathName()[0].ToLower(), dlcName), soundbankPreviewStream);
-                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundPreviewStream);
+                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
+                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioPreviewFileNameId), soundPreviewStream);
 
                             // AGGREGATE GRAPH
                             var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", info.Name.ToLower());
@@ -613,18 +613,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        #endregion
-
-        private static void GenerateAppId(Stream output, string appId)
-        {
-            var writer = new StreamWriter(output);
-            writer.Write(appId??"206113");
-            writer.Flush();
-            output.Seek(0, SeekOrigin.Begin);
-        }
-
-        private static void GeneratePackageList(Stream output, string dlcName)
-        {
+        private static void GeneratePackageList(Stream output, string dlcName) {
             var writer = new StreamWriter(output);
             writer.WriteLine(dlcName);
             writer.WriteLine("DLC_Tone_{0}", dlcName);
@@ -632,23 +621,20 @@ namespace RocksmithToolkitLib.DLCPackage
             output.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void GenerateSongPackageId(Stream output, string dlcName)
-        {
+        private static void GenerateSongPackageId(Stream output, string dlcName) {
             var writer = new StreamWriter(output);
             writer.Write(dlcName);
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void GenerateTonePsarc(Stream output, string toneKey, Tone.Tone tone)
-        {
+        private static void GenerateTonePsarc(Stream output, string toneKey, Tone.Tone tone) {
             var tonePsarc = new PSARC.PSARC();
 
             using (var packageIdStream = new MemoryStream())
             using (var toneManifestStream = new MemoryStream())
             using (var toneXblockStream = new MemoryStream())
-            using (var toneAggregateGraphStream = new MemoryStream())
-            {
+            using (var toneAggregateGraphStream = new MemoryStream()) {
                 ToneGenerator.Generate(toneKey, tone, toneManifestStream, toneXblockStream, toneAggregateGraphStream);
                 GenerateTonePackageId(packageIdStream, toneKey);
                 tonePsarc.AddEntry(String.Format("Exports/Pedals/DLC_Tone_{0}.xblock", toneKey), toneXblockStream);
@@ -664,10 +650,19 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void GenerateTonePackageId(Stream output, string toneKey)
-        {
+        private static void GenerateTonePackageId(Stream output, string toneKey) {
             var writer = new StreamWriter(output);
             writer.Write("DLC_Tone_{0}", toneKey);
+            writer.Flush();
+            output.Seek(0, SeekOrigin.Begin);
+        }
+
+        #endregion
+
+        private static void GenerateAppId(Stream output, string appId)
+        {
+            var writer = new StreamWriter(output);
+            writer.Write(appId??"206113");
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
         }

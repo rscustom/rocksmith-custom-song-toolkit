@@ -64,11 +64,11 @@ namespace RocksmithToolkitLib.DLCPackage
             return hash;
         }
 
-        public static string GenerateSoundBank(string dlcName, Stream audioStream, Stream outStream, decimal volume, Platform platform)
+        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, decimal volume, Platform platform)
         {
-            string eventName = PLAY + dlcName;
-            string previewName = PLAY30SEC + dlcName;
-            string bankName = SONG + dlcName;
+            string eventName = PLAY + soundbankName;
+            string previewName = PLAY30SEC + soundbankName;
+            string bankName = SONG + soundbankName;
             var id = RandomGenerator.NextInt();
 
             byte[] soundbank = null;
