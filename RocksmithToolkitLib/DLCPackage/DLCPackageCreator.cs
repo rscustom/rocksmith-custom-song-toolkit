@@ -358,14 +358,14 @@ namespace RocksmithToolkitLib.DLCPackage
                             soundbankStream.Flush();
                             soundbankStream.Seek(0, SeekOrigin.Begin);
                             //packPsarc.AddEntry(String.Format("audio/{0}/song_{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);
-                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);//TODO: Adjust SoundbankGenerator
+                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);
 
                             // SOUNDBANK PREVIEW
-                            var soundbankPreviewFileName = SoundBankGenerator.GenerateSoundBank(dlcName, soundPreviewStream, soundbankPreviewStream, info.Volume, platform);
+                            var soundbankPreviewFileName = SoundBankGenerator.GenerateSoundBank(dlcName + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform);
                             soundbankPreviewStream.Flush();
                             soundbankPreviewStream.Seek(0, SeekOrigin.Begin);
                             //packPsarc.AddEntry(String.Format("audio/{0}/song_{1}_preview.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
-                            packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);//TODO: Adjust SoundbankGenerator
+                            packPsarc.AddEntry(String.Format("audio/{0}/{1}_preview.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
 
                             // AGGREGATE GRAPH
                             var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", info.Name.ToLower());

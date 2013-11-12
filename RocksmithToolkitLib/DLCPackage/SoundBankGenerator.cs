@@ -69,7 +69,7 @@ namespace RocksmithToolkitLib.DLCPackage
             string eventName = PLAY + dlcName;
             string previewName = PLAY30SEC + dlcName;
             string bankName = SONG + dlcName;
-            var id = RandomGenerator.NextInt(); //TODO: Need to adapt for RS2014, the name is (dlcname) and (dlcname_preview) instead Int ID
+            var id = RandomGenerator.NextInt();
 
             byte[] soundbank = null;
 
