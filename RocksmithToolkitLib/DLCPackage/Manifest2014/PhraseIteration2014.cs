@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
-    public class PhraseIterationRS2014
+    public class PhraseIteration2014
     {
         public int PhraseIndex { get; set; }
         public int MaxDifficulty { get; set; }

@@ -163,6 +163,26 @@ namespace RocksmithToolkitLib.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] rsenumerable_root {
+            get {
+                object obj = ResourceManager.GetObject("rsenumerable_root", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] rsenumerable_song {
+            get {
+                object obj = ResourceManager.GetObject("rsenumerable_song", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] TuningDefintions2014 {
             get {
                 object obj = ResourceManager.GetObject("TuningDefintions2014", resourceCulture);

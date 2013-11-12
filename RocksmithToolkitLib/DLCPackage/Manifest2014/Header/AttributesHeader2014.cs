@@ -9,7 +9,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
 {
-    public class AttributesHeaderRS2014
+    public class AttributesHeader2014
     {
         public string AlbumArt { get; set; }
         public string AlbumName { get; set; }

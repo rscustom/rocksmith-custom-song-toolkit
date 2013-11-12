@@ -6,8 +6,18 @@ using System.ComponentModel;
 using RocksmithToolkitLib.Extensions;
 using System.IO;
 
-namespace RocksmithToolkitLib.DLCPackage.AggregateGraphRS2014 {
-    public enum GraphTag {
+namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
+    public enum TagType
+    {
+        tag,
+        llid,
+        canonical,
+        name,
+        relpath,
+        logpath
+    };
+
+    public enum TagValue {
         [Description("database")]
         Database,
         [Description("json-db")]
@@ -43,10 +53,14 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraphRS2014 {
     };
 
     public class GraphItemLLID : GraphItem {
+        [Description("llid")]
         public Guid LLID { get; set; }
+        [Description("logpath")]
         public string LogPath { get { return String.Format("{0}/{1}", LogPathDirectory, LogPathFile); } }
         public string LogPathDirectory { private get; set; }
         public string LogPathFile { private get; set; }
+
+        public GraphItemLLID() {}
 
         public GraphItemLLID(Guid uuid, List<GraphPart> graphPartList)
             : base(uuid, graphPartList) {
@@ -63,16 +77,32 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraphRS2014 {
                 }
             }
         }
+
+        public void Write(StreamWriter writer) {
+            var uuid = UUID.ToString().ToLower();
+
+            base.Write(writer);
+            writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.llid.ToString(), LLID);
+            writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.logpath.ToString(), LogPath);
+        }
     }
 
     public class GraphItem {
+        public static readonly string GRAPHLINETEMPLATE = "<urn:uuid:{0}> <http://" + "emergent.net/aweb/1.0/{1}> \"{2}\".";
+        
         public Guid UUID { get; set; }
+        [Description("tag")]
         public List<string> Tag { get; set; }
+        [Description("canonical")]
         public string Canonical { get; set; }
+        [Description("name")]
         public string Name { get; set; }
+        [Description("relpath")]
         public string RelPath { get { return String.Format("{0}/{1}", RelPathDirectory, RelPathFile); } }
-        public string RelPathDirectory { private get; set; }
-        public string RelPathFile { private get; set; }
+        public string RelPathDirectory { get; set; }
+        public string RelPathFile { get; set; }
+
+        public GraphItem() {}
 
         public GraphItem(Guid uuid, List<GraphPart> graphPartList) {
             UUID = uuid;
@@ -95,6 +125,34 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraphRS2014 {
                         RelPathFile = value.Substring(Canonical.Length + 1);
                         break;
                 }
+            }
+        }
+
+        public void Write(StreamWriter writer) {
+            var uuid = UUID.ToString().ToLower();
+
+            foreach (var tag in Tag)
+                writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.tag.ToString(), tag);
+
+            writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.canonical.ToString(), Canonical);
+            writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.name.ToString(), Name);
+            writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.relpath.ToString(), RelPath);
+        }
+
+        public static string GetAudioTagPlatformDescription(GamePlatform platform)
+        {
+            switch (platform)
+            {
+                case GamePlatform.Pc:
+                    return TagValue.DX9.GetDescription();
+                case GamePlatform.Mac:
+                    return TagValue.MacOS.GetDescription();
+                case GamePlatform.XBox360:
+                    return TagValue.Xbox360.GetDescription();
+                case GamePlatform.PS3:
+                    return TagValue.PS3.GetDescription();
+                default:
+                    throw new InvalidOperationException("Unexpected game platform value");
             }
         }
     }

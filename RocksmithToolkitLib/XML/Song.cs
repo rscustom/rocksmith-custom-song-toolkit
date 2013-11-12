@@ -506,7 +506,7 @@ namespace RocksmithToolkitLib.Xml
         public Single Time { get; set; }
 
         [XmlAttribute("measure")]
-        public Int32 Measure { get; set; }
+        public Int16 Measure { get; set; }
     }
 
     [XmlType("section")]

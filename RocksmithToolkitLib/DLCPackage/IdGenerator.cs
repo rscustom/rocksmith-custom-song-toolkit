@@ -26,6 +26,10 @@ namespace RocksmithToolkitLib.DLCPackage
             while (guid == System.Guid.Empty);
             return guid;
         }
+        public static string IdString()
+        {
+            return IdGenerator.Guid().ToString().Replace("-", "");
+        }
         private static string GetHexRandomByte()
         {
             return RandomGenerator.NextByte().ToString("X").PadLeft(2, '0');

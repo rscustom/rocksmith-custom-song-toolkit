@@ -10,7 +10,7 @@ using System.IO;
 
 namespace RocksmithToolkitLib.Xml {
     [XmlRoot("song", Namespace = "", IsNullable = false)]
-    public class SongRS2014 {
+    public class Song2014 {
         [XmlAttribute("version")] // RS2014 is 7
         public string Version { get; set; }
 
@@ -45,7 +45,7 @@ namespace RocksmithToolkitLib.Xml {
         public TuningStrings Tuning { get; set; }
 
         [XmlElement("capo")]
-        public string Capo { get; set; }
+        public Byte Capo { get; set; }
         
         [XmlElement("artistName")]
         public string ArtistName { get; set; }
@@ -69,7 +69,7 @@ namespace RocksmithToolkitLib.Xml {
         public string CrowdSpeed { get; set; }
 
         [XmlElement("arrangementProperties")]
-        public SongArrangementPropertiesRS2014 ArrangementProperties { get; set; }
+        public SongArrangementProperties2014 ArrangementProperties { get; set; }
 
         [XmlElement("lastConversionDateTime")]
         public string LastConversionDateTime { get; set; }
@@ -79,8 +79,8 @@ namespace RocksmithToolkitLib.Xml {
         public SongPhrase[] Phrases { get; set; }
 
         [XmlArray("phraseIterations")]
-        [XmlArrayItem("phraseIteration", typeof(SongPhraseIteration), Type = typeof(SongPhraseIterationRS2014))]
-        public SongPhraseIterationRS2014[] PhraseIterations { get; set; }
+        [XmlArrayItem("phraseIteration", typeof(SongPhraseIteration), Type = typeof(SongPhraseIteration2014))]
+        public SongPhraseIteration2014[] PhraseIterations { get; set; }
 
         [XmlArray("newLinkedDiffs")]
         [XmlArrayItem("newLinkedDiff")]
@@ -96,7 +96,7 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlArray("chordTemplates")]
         [XmlArrayItem("chordTemplate")]
-        public SongChordTemplateRS2014[] ChordTemplates { get; set; }
+        public SongChordTemplate2014[] ChordTemplates { get; set; }
 
         [XmlArray("fretHandMuteTemplates")]
         [XmlArrayItem("fretHandMuteTemplate")]
@@ -108,7 +108,7 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlArray("tones")]
         [XmlArrayItem("tone")]
-        public SongToneRS2014[] Tones { get; set; }
+        public SongTone2014[] Tones { get; set; }
 
         [XmlArray("ebeats")]
         [XmlArrayItem("ebeat")]
@@ -123,22 +123,22 @@ namespace RocksmithToolkitLib.Xml {
         public SongEvent[] Events { get; set; }
 
         [XmlArray("levels")]
-        [XmlArrayItem("level", typeof(SongLevelRS2014))]
-        public SongLevelRS2014[] Levels { get; set; }
+        [XmlArrayItem("level", typeof(SongLevel2014))]
+        public SongLevel2014[] Levels { get; set; }
 
-        public static SongRS2014 LoadFromFile(string xmlSongRS2014File) {
-            SongRS2014 xmlSongRS2014 = null;
+        public static Song2014 LoadFromFile(string xmlSongRS2014File) {
+            Song2014 xmlSongRS2014 = null;
 
             using (var reader = new StreamReader(xmlSongRS2014File)) {
-                var serializer = new XmlSerializer(typeof(SongRS2014));
-                xmlSongRS2014 = (SongRS2014)serializer.Deserialize(reader);
+                var serializer = new XmlSerializer(typeof(Song2014));
+                xmlSongRS2014 = (Song2014)serializer.Deserialize(reader);
             }
 
             return xmlSongRS2014;
         }
     }
 
-    public class SongArrangementPropertiesRS2014 : SongArrangementProperties {
+    public class SongArrangementProperties2014 : SongArrangementProperties {
         [XmlAttribute("bonusArr")]
         public Int32 BonusArr { get; set; }
         
@@ -155,7 +155,7 @@ namespace RocksmithToolkitLib.Xml {
         public Int32 PathBass { get; set; }
     }
 
-    public class SongPhraseIterationRS2014 : SongPhraseIteration {
+    public class SongPhraseIteration2014 : SongPhraseIteration {
         [XmlAttribute("variation")]
         public string Variation { get; set; }
     }
@@ -181,34 +181,34 @@ namespace RocksmithToolkitLib.Xml {
         public string Id { get; set; }
     }
 
-    public class SongChordTemplateRS2014 : SongChordTemplate {
+    public class SongChordTemplate2014 : SongChordTemplate {
         [XmlAttribute("displayName")]
         public string DisplayName { get; set; }
         
     }
 
-    public class SongLevelRS2014 {
+    public class SongLevel2014 {
         [XmlAttribute("difficulty")]
         public Int32 Difficulty { get; set; }
 
         [XmlArray("notes")]
         [XmlArrayItem("note")]
-        public SongNoteRS2014[] Notes { get; set; }
+        public SongNote2014[] Notes { get; set; }
 
         [XmlArray("chords")]
         [XmlArrayItem("chord")]
-        public SongChordRS2014[] Chords { get; set; }
+        public SongChord2014[] Chords { get; set; }
 
         [XmlArray("anchors")]
         [XmlArrayItem("anchor")]
-        public SongAnchorRS2014[] Anchors { get; set; }
+        public SongAnchor2014[] Anchors { get; set; }
 
         [XmlArray("handShapes")]
         [XmlArrayItem("handShape")]
         public SongHandShape[] HandShapes { get; set; }
     }
 
-    public class SongNoteRS2014 : SongNote {
+    public class SongNote2014 : SongNote {
         [XmlAttribute("linkNext")]
         public Int32 LinkNext { get; set; }
 
@@ -240,7 +240,7 @@ namespace RocksmithToolkitLib.Xml {
         public Int32 Vibrato { get; set; }
     }
 
-    public class SongChordRS2014 : SongChord {
+    public class SongChord2014 : SongChord {
         [XmlAttribute("linkNext")]
         public Int32 LinkNext { get; set; }
 
@@ -257,16 +257,16 @@ namespace RocksmithToolkitLib.Xml {
         public Int32 Hopo { get; set; }
 
         [XmlElement("chordNote")]
-        public SongNoteRS2014[] chordNotes { get; set; }
+        public SongNote2014[] chordNotes { get; set; }
     }
 
-    public class SongAnchorRS2014 : SongAnchor {
+    public class SongAnchor2014 : SongAnchor {
         [XmlAttribute("width")]
         public Single Width { get; set; }
     }
 
     [XmlType("tone")]
-    public class SongToneRS2014 {
+    public class SongTone2014 {
         [XmlAttribute("time")]
         public float Time { get; set; }
 

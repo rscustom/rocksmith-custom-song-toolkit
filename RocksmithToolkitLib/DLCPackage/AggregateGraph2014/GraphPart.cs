@@ -6,13 +6,12 @@ using System.ComponentModel;
 using RocksmithToolkitLib.Extensions;
 using System.IO;
 
-namespace RocksmithToolkitLib.DLCPackage.AggregateGraphRS2014 {
+namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
     public class GraphPart {
         private const string URN_TEMPLATE = "<urn:uuid:{0}>";
         private const string TYPE_TEMPLATE = "<http://" + "emergent.net/aweb/1.0/{0}>";
         private const string VALUE_TEMPLATE = "\"{0}\".";
-        private const string FULL_TEMPLATE = "<urn:uuid:{0}> <http://" + "emergent.net/aweb/1.0/{1}> \"{2}\".";
-
+        
         public string Urn { get; set; }
         public string Type { get; set; }
         public string Value { get; set; }

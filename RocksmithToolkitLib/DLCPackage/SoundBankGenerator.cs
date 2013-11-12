@@ -38,6 +38,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     switch (platform.platform)
                     {
                         case GamePlatform.Pc:
+                        case GamePlatform.Mac:
                             return bnkPC2014Offsets;
                         case GamePlatform.XBox360:
                         case GamePlatform.PS3:
@@ -68,7 +69,7 @@ namespace RocksmithToolkitLib.DLCPackage
             string eventName = PLAY + dlcName;
             string previewName = PLAY30SEC + dlcName;
             string bankName = SONG + dlcName;
-            var id = RandomGenerator.NextInt();
+            var id = RandomGenerator.NextInt(); //TODO: Need to adapt for RS2014, the name is (dlcname) and (dlcname_preview) instead Int ID
 
             byte[] soundbank = null;
 
@@ -92,6 +93,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     switch (platform.platform)
                     {
                         case GamePlatform.Pc:
+                        case GamePlatform.Mac:
                             soundbank = Resources.PC2014_soundbank;
                             break;
                         case GamePlatform.XBox360:
@@ -106,7 +108,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     throw new InvalidOperationException("Unexpected game version value");
             }
 
-            var bitConverter = platform.platform == GamePlatform.Pc
+            var bitConverter = (platform.platform == GamePlatform.Pc || platform.platform == GamePlatform.Mac)
                     ? (EndianBitConverter)EndianBitConverter.Little
                     : (EndianBitConverter)EndianBitConverter.Big;
 
@@ -149,6 +151,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 bankWriter.Write(Encoding.ASCII.GetBytes(bankName));
                 bankWriter.Flush();
             }
+
             return id.ToString();
         }
     }

@@ -27,7 +27,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     public partial class DLCPackageCreator : UserControl
     {
         private const string MESSAGEBOX_CAPTION =  "DLC Package Creator";
-
+        
         private GameVersion CurrentGameVersion {
             get {
                 if (RS2014.Checked)
@@ -163,7 +163,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public DLCPackageCreator()
         {
             InitializeComponent();
-            PopulateAppIdCombo(CurrentGameVersion);
+            PopulateAppIdCombo();
             PopulateTonesLB();
         }
 
@@ -264,8 +264,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
-
-            if (CurrentGameVersion == GameVersion.RS2012) //TODO: Verify only for RS1 OGG file? About the WEM files on RS2014?
+            if (CurrentGameVersion == GameVersion.RS2012)
             {
                 try
                 {
@@ -303,25 +302,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dlcSavePath = ofd.FileName;
             }
 
-            if (CurrentGameVersion == GameVersion.RS2014)
-            {
-                if (platformPC.Checked)
-                    return;
-                if (platformMAC.Checked)
-                    return;
-                if (platformXBox360.Checked)
-                    return;
-                if (platformPS3.Checked)
-                    return;
-            }
-            else {
-                if (platformPC.Checked)
-                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, GameVersion.RS2012));
-                if (platformXBox360.Checked)
-                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.XBox360, GameVersion.RS2012));
-                if (platformPS3.Checked)
-                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.PS3, GameVersion.RS2012));
-            }
+            if (platformPC.Checked)
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, CurrentGameVersion));
+            if (platformMAC.Checked)
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Mac, CurrentGameVersion));
+            if (platformXBox360.Checked)
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.XBox360, CurrentGameVersion));
+            if (platformPS3.Checked)
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.PS3, CurrentGameVersion));
 
             MessageBox.Show("Package was generated.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -375,9 +363,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             ConvertAlbumArtFile("jpg2dds.exe", aArt64JpgTmp);
 
             // Get new DDS files path
-            AlbumArt256Path = Path.GetFileNameWithoutExtension(aArt256JpgTmp) + ".dds";
-            AlbumArt128Path = Path.GetFileNameWithoutExtension(aArt128JpgTmp) + ".dds";
-            AlbumArt64Path = Path.GetFileNameWithoutExtension(aArt64JpgTmp) + ".dds";
+            AlbumArt256Path = Path.Combine(aArtDirBase, Path.GetFileNameWithoutExtension(aArt256JpgTmp) + ".dds");
+            AlbumArt128Path = Path.Combine(aArtDirBase, Path.GetFileNameWithoutExtension(aArt128JpgTmp) + ".dds");
+            AlbumArt64Path = Path.Combine(aArtDirBase, Path.GetFileNameWithoutExtension(aArt64JpgTmp) + ".dds");
 
             // Delete jpg tmp files
             if (File.Exists(aArt512JpgTmp))
@@ -536,6 +524,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
+            RS2012.Checked = info.GameVersion == GameVersion.RS2012;
+            RS2014.Checked = info.GameVersion == GameVersion.RS2014;
+            
             if (CurrentGameVersion == GameVersion.RS2014)
             {
                 if (info.TonesRS2014 == null)
@@ -554,9 +545,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // Song INFO
             DlcNameTB.Text = info.Name;
+
+            PopulateAppIdCombo();
+            Application.DoEvents();
             AppIdTB.Text = info.AppId;
-            if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == info.AppId))
-                cmbAppIds.SelectedIndex = SongAppIdRepository.Instance().List.TakeWhile(a => a.AppId != info.AppId).Count();
+            SelectComboAppId(info.AppId);
 
             AlbumTB.Text = info.SongInfo.Album;
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
@@ -749,27 +742,97 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                                     "Package will generated with default art.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            if (platformPC.Checked && !File.Exists(OggPCPath))
+            string oggPreviewPCPath = null;
+            if (platformPC.Checked)
             {
-                oggPcPathTB.Focus();
-                return null;
-            }
-            if (CurrentGameVersion == GameVersion.RS2014) {
-                if (platformMAC.Checked && !File.Exists(OggMACPath))
+                if (!File.Exists(OggPCPath))
                 {
-                    oggMacPathTB.Focus();
+                    oggPcPathTB.Focus();
                     return null;
                 }
+                oggPreviewPCPath = Path.Combine(Path.GetDirectoryName(OggPCPath), String.Format(Path.GetFileNameWithoutExtension(OggPCPath) + "_preview" + Path.GetExtension(OggPCPath)));
+                if (!File.Exists(oggPreviewPCPath))
+                {
+                    if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
+                                        "File: " + oggPreviewPCPath + Environment.NewLine +
+                                        "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
+                                        "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    {
+                        oggPcPathTB.Focus();
+                        return null;
+                    }
+                }
             }
-            if (platformXBox360.Checked && !File.Exists(OggXBox360Path)) {
-                oggXBox360PathTB.Focus();
-                return null;
+
+            string oggPreviewMACPath = null;
+            if (CurrentGameVersion == GameVersion.RS2014) {
+                
+                if (platformMAC.Checked)
+                {
+                    if (!File.Exists(OggMACPath))
+                    {
+                        oggMacPathTB.Focus();
+                        return null;
+                    }
+                    oggPreviewMACPath = Path.Combine(Path.GetDirectoryName(OggMACPath), String.Format(Path.GetFileNameWithoutExtension(OggMACPath) + "_preview" + Path.GetExtension(OggMACPath)));
+                    if (!File.Exists(oggPreviewMACPath))
+                    {
+                        if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
+                                            "File: " + oggPreviewMACPath + Environment.NewLine +
+                                            "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
+                                            "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        {
+                            oggMacPathTB.Focus();
+                            return null;
+                        }
+                    }
+                }
             }
-            if (platformPS3.Checked && !File.Exists(OggPS3Path))
+
+            string oggPreviewXBox360Path = null;
+            if (platformXBox360.Checked)
             {
-                oggPS3PathTB.Focus();
-                return null;
+                if (!File.Exists(OggXBox360Path))
+                {
+                    oggXBox360PathTB.Focus();
+                    return null;
+                }
+                oggPreviewXBox360Path = Path.Combine(Path.GetDirectoryName(OggXBox360Path), String.Format(Path.GetFileNameWithoutExtension(OggXBox360Path) + "_preview" + Path.GetExtension(OggXBox360Path)));
+                if (!File.Exists(oggPreviewXBox360Path))
+                {
+                    if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
+                                        "File: " + oggPreviewXBox360Path + Environment.NewLine +
+                                        "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
+                                        "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    {
+                        oggXBox360PathTB.Focus();
+                        return null;
+                    }
+                }
             }
+
+            string oggPreviewPS3Path = null;
+            if (platformPS3.Checked)
+            {
+                if (!File.Exists(OggPS3Path))
+                {
+                    oggPS3PathTB.Focus();
+                    return null;
+                }
+                oggPreviewPS3Path = Path.Combine(Path.GetDirectoryName(OggPS3Path), String.Format(Path.GetFileNameWithoutExtension(OggPS3Path) + "_preview" + Path.GetExtension(OggPS3Path)));
+                if (!File.Exists(oggPreviewPS3Path))
+                {
+                    if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
+                                        "File: " + oggPreviewPS3Path + Environment.NewLine +
+                                        "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
+                                        "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    {
+                        oggPS3PathTB.Focus();
+                        return null;
+                    }
+                }
+            }
+
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal) > 1)
             {
@@ -836,9 +899,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 AlbumArt128 = AlbumArt128Path,
                 AlbumArt64 = AlbumArt64Path,
                 OggPath = OggPCPath,
+                OggPreviewPath = oggPreviewPCPath,
                 OggMACPath = OggMACPath,
+                OggPreviewMACPath = oggPreviewMACPath,
                 OggXBox360Path = OggXBox360Path,
+                OggPreviewXBox360Path = oggPreviewXBox360Path,
                 OggPS3Path = OggPS3Path,
+                OggPreviewPS3Path = oggPreviewPS3Path,
                 Arrangements = arrangements,
                 Tones = tones,
                 TonesRS2014 = tonesRS2014,
@@ -1018,7 +1085,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void AppIdTB_TextChanged(object sender, EventArgs e) {
             var appId = ((TextBox)sender).Text.Trim();
-            SongAppId songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);            
+            SelectComboAppId(appId);
+        }
+
+        private void SelectComboAppId(string appId) {
+            SongAppId songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppIds.SelectedItem = songAppId;
         }
@@ -1092,7 +1163,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void GameVersion_CheckedChanged(object sender, EventArgs e)
         {
-            PopulateAppIdCombo(CurrentGameVersion);
+            PopulateAppIdCombo();
             PopulateTonesLB();
 
             // MAC RS2014 only
@@ -1100,11 +1171,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             platformMAC.Checked = false;
         }
 
-        private void PopulateAppIdCombo(GameVersion gameVersion)
+        private void PopulateAppIdCombo()
         {
             SongAppId firstSong = null;
             cmbAppIds.Items.Clear();
-            foreach (var song in SongAppIdRepository.Instance().Select(gameVersion))
+            foreach (var song in SongAppIdRepository.Instance().Select(CurrentGameVersion))
             {
                 cmbAppIds.Items.Add(song);
                 if (firstSong == null)
@@ -1113,7 +1184,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
             cmbAppIds.SelectedItem = firstSong;
+            cmbAppIds.Refresh();
             AppIdTB.Text = firstSong.AppId;
+            AppIdTB.Refresh();
         }
     }
 }

@@ -5,10 +5,10 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.DLCPackage.XBlockRS2014
+namespace RocksmithToolkitLib.DLCPackage.XBlock
 {
     [XmlType("entity")]
-    public class EntityRS2014
+    public class Entity2014 : IEntity
     {
         [XmlAttribute("id")]
         public string Id { get; set; }
@@ -20,6 +20,10 @@ namespace RocksmithToolkitLib.DLCPackage.XBlockRS2014
         public int Iterations { get; set; }
         [XmlArray("properties")]
         [XmlArrayItem("property")]
-        public List<PropertyRS2014> Properties { get; set; }
+        public List<Property2014> Properties { get; set; }
+
+        public void Serialize(XElement element) {
+            throw new NotImplementedException();
+        }
     }
 }

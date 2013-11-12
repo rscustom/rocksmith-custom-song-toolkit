@@ -77,6 +77,7 @@
             this.SongDisplayNameSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.ArtistSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.gbGameVersion = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.gbPlatofmr.SuspendLayout();
             this.gbFiles.SuspendLayout();
             this.gbTones.SuspendLayout();
@@ -100,7 +101,7 @@
             // 
             this.dlcGenerateButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.dlcGenerateButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dlcGenerateButton.Location = new System.Drawing.Point(405, 514);
+            this.dlcGenerateButton.Location = new System.Drawing.Point(405, 519);
             this.dlcGenerateButton.Name = "dlcGenerateButton";
             this.dlcGenerateButton.Size = new System.Drawing.Size(97, 29);
             this.dlcGenerateButton.TabIndex = 31;
@@ -152,7 +153,7 @@
             // 
             this.dlcSaveButton.BackColor = System.Drawing.SystemColors.Control;
             this.dlcSaveButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.dlcSaveButton.Location = new System.Drawing.Point(105, 514);
+            this.dlcSaveButton.Location = new System.Drawing.Point(105, 519);
             this.dlcSaveButton.Name = "dlcSaveButton";
             this.dlcSaveButton.Size = new System.Drawing.Size(97, 29);
             this.dlcSaveButton.TabIndex = 30;
@@ -164,7 +165,7 @@
             // 
             this.dlcLoadButton.BackColor = System.Drawing.SystemColors.Control;
             this.dlcLoadButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.dlcLoadButton.Location = new System.Drawing.Point(2, 514);
+            this.dlcLoadButton.Location = new System.Drawing.Point(2, 519);
             this.dlcLoadButton.Name = "dlcLoadButton";
             this.dlcLoadButton.Size = new System.Drawing.Size(97, 29);
             this.dlcLoadButton.TabIndex = 0;
@@ -396,6 +397,7 @@
             // 
             // gbFiles
             // 
+            this.gbFiles.Controls.Add(this.label2);
             this.gbFiles.Controls.Add(this.AlbumArtPathTB);
             this.gbFiles.Controls.Add(this.openOggMacButton);
             this.gbFiles.Controls.Add(this.oggPcPathTB);
@@ -409,7 +411,7 @@
             this.gbFiles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbFiles.Location = new System.Drawing.Point(3, 264);
             this.gbFiles.Name = "gbFiles";
-            this.gbFiles.Size = new System.Drawing.Size(498, 105);
+            this.gbFiles.Size = new System.Drawing.Size(498, 111);
             this.gbFiles.TabIndex = 78;
             this.gbFiles.TabStop = false;
             this.gbFiles.Text = "Files";
@@ -477,7 +479,7 @@
             this.gbTones.Controls.Add(this.toneEditButton);
             this.gbTones.Controls.Add(this.toneImportButton);
             this.gbTones.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbTones.Location = new System.Drawing.Point(3, 375);
+            this.gbTones.Location = new System.Drawing.Point(3, 381);
             this.gbTones.Name = "gbTones";
             this.gbTones.Size = new System.Drawing.Size(498, 133);
             this.gbTones.TabIndex = 79;
@@ -670,6 +672,17 @@
             this.gbGameVersion.TabStop = false;
             this.gbGameVersion.Text = "Game Version";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label2.Location = new System.Drawing.Point(5, 93);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(487, 13);
+            this.label2.TabIndex = 36;
+            this.label2.Text = "Song preview must have the same file name with \"_preview\" in the end, eg.: \"filen" +
+    "ame_preview.wem\"";
+            // 
             // DLCPackageCreator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -753,5 +766,6 @@
         private System.Windows.Forms.Label keyboardDescArrLabel;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox gbGameVersion;
+        private System.Windows.Forms.Label label2;
     }
 }

@@ -61,13 +61,13 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             var signature = tempoTrack.TimeSignatures[0];
             float time = 0;
             int beat = 1;
-            int measure = 1;
+            short measure = 1;
             float secondsPerQuarter = tempo.SecondsPerBar / signature.Numerator;
             var end = tempoTrack.MetaEvents.Single(ev => "EndOfTrack".Equals(ev.MetaType)).StartTime;
 
             while (time < end)
             {
-                ebeats.Add(new SongEbeat { Measure = beat == 1 ? measure : -1, Time = time });
+                ebeats.Add(new SongEbeat { Measure = (beat == 1) ? measure : (short)-1, Time = time });
                 var delta = secondsPerQuarter * ((float)4 / signature.Denominator);
                 time += delta;
                 var changed = false;
@@ -98,7 +98,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             var lastNote = guitarTrack.Chords.Max(c => c.EndTime);
             int measOffset = ebeats.Where(eb => eb.Measure != -1 && eb.Time <= firstNote).Last().Measure,
                 phraseId = 0;
-            measure = measOffset;
+            measure = (short)measOffset;
             SongEbeat ebeat = null;
             //count in
             phrases.Add(new SongPhraseIteration { PhraseId = phraseId++, Time = 0 });

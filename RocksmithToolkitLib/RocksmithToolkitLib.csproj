@@ -63,12 +63,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DLCPackage\XBlock\IEntity.cs" />
+    <Compile Include="DLCPackage\XBlock\ISet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DLCPackage\XBlock\MultiItemSet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DLCPackage\XBlock\Property2014.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Extensions\DisposableCollection.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DLCPackage\AggregateGraphRS2014\AggregateGraphRS2014.cs" />
-    <Compile Include="DLCPackage\AggregateGraphRS2014\GraphPart.cs" />
-    <Compile Include="DLCPackage\AggregateGraphRS2014\GraphItem.cs" />
+    <Compile Include="DLCPackage\AggregateGraph2014\AggregateGraph2014.cs" />
+    <Compile Include="DLCPackage\AggregateGraph2014\GraphPart.cs" />
+    <Compile Include="DLCPackage\AggregateGraph2014\GraphItem.cs" />
     <Compile Include="DLCPackage\AggregateGraph\AggregateGraph.cs" />
     <Compile Include="DLCPackage\AggregateGraph\AlbumArt.cs" />
     <Compile Include="DLCPackage\AggregateGraph\Element.cs" />
@@ -78,23 +88,20 @@
     <Compile Include="DLCPackage\AggregateGraph\SoundBank.cs" />
     <Compile Include="DLCPackage\AggregateGraph\XBlock.cs" />
     <Compile Include="DLCPackage\Arrangement.cs" />
-    <Compile Include="DLCPackage\ShowlightRS2014\ShowlightRS2014.cs" />
-    <Compile Include="DLCPackage\ShowlightRS2014\ShowlightsRS2014.cs" />
+    <Compile Include="DLCPackage\Showlight\Showlight2014.cs" />
+    <Compile Include="DLCPackage\Showlight\Showlights2014.cs" />
     <Compile Include="DLCPackage\Tone\Manifest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DLCPackage\XBlockRS2014\EntityRS2014.cs" />
-    <Compile Include="DLCPackage\XBlockRS2014\GameRS2014.cs" />
-    <Compile Include="DLCPackage\XBlockRS2014\PropertyRS2014.cs" />
-    <Compile Include="DLCPackage\XBlockRS2014\SetRS2014.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\AttributesRS2014.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\Header\AttributesHeaderRS2014.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\Header\ManifestHeaderRS2014.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\Tone\GearRS2014.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\Tone\PedalRS2014.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\Tone\ToneRS2014.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\PhraseIterationRS2014.cs" />
-    <Compile Include="DLCPackage\ManifestRS2014\ManifestRS2014.cs" />
+    <Compile Include="DLCPackage\XBlock\Entity2014.cs" />
+    <Compile Include="DLCPackage\Manifest2014\Attributes2014.cs" />
+    <Compile Include="DLCPackage\Manifest2014\Header\AttributesHeader2014.cs" />
+    <Compile Include="DLCPackage\Manifest2014\Header\ManifestHeader2014.cs" />
+    <Compile Include="DLCPackage\Manifest2014\Tone\GearRS2014.cs" />
+    <Compile Include="DLCPackage\Manifest2014\Tone\PedalRS2014.cs" />
+    <Compile Include="DLCPackage\Manifest2014\Tone\ToneRS2014.cs" />
+    <Compile Include="DLCPackage\Manifest2014\PhraseIteration2014.cs" />
+    <Compile Include="DLCPackage\Manifest2014\Manifest2014.cs" />
     <Compile Include="DLCPackage\ToneReader.cs" />
     <Compile Include="DLCPackage\DLCPackageCreator.cs" />
     <Compile Include="DLCPackage\DLCPackageData.cs" />
@@ -149,18 +156,15 @@
     <Compile Include="XmlRepository\SongAppId.cs" />
     <Compile Include="XmlRepository\SongAppIdRepository.cs" />
     <Compile Include="XmlRepository\XmlRepository.cs" />
-    <Compile Include="Xml\SongRS2014.cs" />
+    <Compile Include="Xml\Song2014.cs" />
     <Compile Include="Xml\Vocals.cs" />
     <Compile Include="Xml\Song.cs" />
     <Compile Include="DLCPackage\SoundBankGenerator.cs" />
     <Compile Include="DLCPackage\ToneGenerator.cs" />
     <Compile Include="DLCPackage\Tone\Pedal.cs" />
     <Compile Include="DLCPackage\Tone\Tone.cs" />
-    <Compile Include="DLCPackage\XBlockGenerator.cs" />
     <Compile Include="DLCPackage\XBlock\Entity.cs" />
-    <Compile Include="DLCPackage\XBlock\Game.cs" />
-    <Compile Include="DLCPackage\XBlock\ISet.cs" />
-    <Compile Include="DLCPackage\XBlock\MultiItemSet.cs" />
+    <Compile Include="DLCPackage\XBlock\GameXblock.cs" />
     <Compile Include="DLCPackage\XBlock\Property.cs" />
     <Compile Include="DLCPackage\XBlock\Set.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -198,6 +202,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\pedals2014.json" />
+    <None Include="Resources\rsenumerable_root.flat" />
+    <None Include="Resources\rsenumerable_song.flat" />
     <None Include="Resources\TuningDefintions2014.json" />
     <None Include="Resources\XBox360_DLC_image.png" />
     <None Include="Resources\XBox360_KV.bin" />
