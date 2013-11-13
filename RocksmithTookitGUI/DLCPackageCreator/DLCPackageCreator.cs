@@ -967,16 +967,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             if (TonesLB.SelectedItem != null && TonesLB.Items.Count > 1)
             {
-                var tone = (Tone)TonesLB.SelectedItem;
+                dynamic tone = TonesLB.SelectedItem;
                 TonesLB.Items.Remove(TonesLB.SelectedItem);
 
-                var firstTone = (Tone)TonesLB.Items[0];
+                dynamic firstTone = TonesLB.Items[0];
                 foreach (var item in ArrangementLB.Items.OfType<Arrangement>())
                 {
                     if (tone.Name.Equals(item.ToneBase))
-                    {
                         item.ToneBase = firstTone.Name;
-                    }
                 }
                 ArrangementLB.Refresh();
             }
@@ -991,8 +989,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             if (TonesLB.SelectedItem != null)
             {
-                var tone = (Tone)TonesLB.SelectedItem;
-                var newTone = Copy(tone);
+                dynamic tone = TonesLB.SelectedItem;
+                dynamic newTone = Copy(tone);
                 var toneName = newTone.Name;
                 using (var form = new ToneForm(newTone, CurrentGameVersion))
                 {

@@ -32,7 +32,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        public ToneControl() : this(GameVersion.RS2012) { }
+        public ToneControl() { }
 
         public ToneControl(GameVersion gameVersion)
         {
@@ -120,26 +120,93 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 .OrderBy(p => p.DisplayName)
                 .ToArray();
 
-            InitializePedalSelect(ampBox, ampKnobButton, "Amp", amps, false);
-            InitializePedalSelect(cabinetBox, cabinetKnobButton, "Cabinet", cabinets, false);
+            switch (CurrentGameVersion)
+            {
+                case GameVersion.RS2014:
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "Amp", amps, false);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "Cabinet", amps, false);
 
-            InitializePedalSelect(prePedal1Box, prePedal1KnobButton, "PrePedal1", prePedals, true);
-            InitializePedalSelect(prePedal2Box, prePedal2KnobButton, "PrePedal2", prePedals, true);
-            InitializePedalSelect(prePedal3Box, prePedal3KnobButton, "PrePedal3", prePedals, true);
-            InitializePedalSelect(prePedal4Box, prePedal4KnobButton, "PrePedal3", prePedals, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "Rack1", amps, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "Rack2", amps, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "Rack3", amps, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "Rack4", amps, true);
 
-            InitializePedalSelect(loopPedalRack1Box, loopPedalRack1KnobButton, "LoopPedal1", loopRackPedals, true);
-            InitializePedalSelect(loopPedalRack2Box, loopPedalRack2KnobButton, "LoopPedal2", loopRackPedals, true);
-            InitializePedalSelect(loopPedalRack3Box, loopPedalRack3KnobButton, "LoopPedal3", loopRackPedals, true);
-            InitializePedalSelect(loopPedalRack4Box, loopPedalRack4KnobButton, "LoopPedal3", loopRackPedals, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "PrePedal1", amps, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "PrePedal2", amps, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "PrePedal3", amps, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "PrePedal4", amps, true);
 
-            InitializePedalSelect(postPedal1Box, postPedal1KnobButton, "PostPedal1", postPedals, true);
-            InitializePedalSelect(postPedal2Box, postPedal2KnobButton, "PostPedal2", postPedals, true);
-            InitializePedalSelect(postPedal3Box, postPedal3KnobButton, "PostPedal3", postPedals, true);
-            InitializePedalSelect(postPedal4Box, postPedal4KnobButton, "PostPedal3", postPedals, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "PostPedal1", amps, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "PostPedal2", amps, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "PostPedal3", amps, true);
+                    InitializeSelectedPedal2014(ampBox, ampKnobButton, "PostPedal4", amps, true);
+                    break;
+                default:
+                    InitializeSelectedPedal(ampBox, ampKnobButton, "Amp", amps, false);
+                    InitializeSelectedPedal(cabinetBox, cabinetKnobButton, "Cabinet", cabinets, false);
+
+                    InitializeSelectedPedal(prePedal1Box, prePedal1KnobButton, "PrePedal1", prePedals, true);
+                    InitializeSelectedPedal(prePedal2Box, prePedal2KnobButton, "PrePedal2", prePedals, true);
+                    InitializeSelectedPedal(prePedal3Box, prePedal3KnobButton, "PrePedal3", prePedals, true);
+
+                    InitializeSelectedPedal(loopPedalRack1Box, loopPedalRack1KnobButton, "LoopPedal1", loopRackPedals, true);
+                    InitializeSelectedPedal(loopPedalRack2Box, loopPedalRack2KnobButton, "LoopPedal2", loopRackPedals, true);
+                    InitializeSelectedPedal(loopPedalRack3Box, loopPedalRack3KnobButton, "LoopPedal3", loopRackPedals, true);
+
+                    InitializeSelectedPedal(postPedal1Box, postPedal1KnobButton, "PostPedal1", postPedals, true);
+                    InitializeSelectedPedal(postPedal2Box, postPedal2KnobButton, "PostPedal2", postPedals, true);
+                    InitializeSelectedPedal(postPedal3Box, postPedal3KnobButton, "PostPedal3", postPedals, true);
+                    break;
+            }
+            
         }
 
-        private void InitializePedalSelect(ComboBox box, Control knobSelectButton, string pedalSlot, ToolkitPedal[] pedals, bool allowNull)
+        private void InitializeSelectedPedal2014(ComboBox box, Control knobSelectButton, string gearSlot, ToolkitPedal[] pedals, bool allowNull)
+        {
+            knobSelectButton.Enabled = false;
+            knobSelectButton.Click += (sender, e) =>
+            {
+                var tonePedal = tone.SelectPedal(gearSlot);
+                using (var form = new ToneKnobForm())
+                {
+                    form.Init(tonePedal, pedals.Single(p => p.Key == tonePedal.Key).Knobs);
+                    form.ShowDialog();
+                }
+            };
+
+            box.DisplayMember = "DisplayName";
+            if (allowNull)
+                box.Items.Add(string.Empty);
+            box.Items.AddRange(pedals);
+            box.SelectedValueChanged += (sender, e) =>
+            {
+                if (_RefreshingCombos)
+                    return;
+
+                var pedal = box.SelectedItem as ToolkitPedal;
+                Pedal2014 tonePedal = tone.SelectPedal(gearSlot);
+                if (pedal == null)
+                {
+                    tonePedal = null;
+                    knobSelectButton.Enabled = false;
+                }
+                else
+                {
+                    if (pedal.Key != (tonePedal != null ? tonePedal.Key : ""))
+                    {
+                        Pedal2014 pedalSetting = pedal.MakePedalSetting(CurrentGameVersion);
+                        tonePedal = pedalSetting;
+                        knobSelectButton.Enabled = pedal.Knobs.Any();
+                    }
+                    else
+                    {
+                        knobSelectButton.Enabled = tonePedal.KnobValues.Any();
+                    }
+                }
+            };
+        }
+
+        private void InitializeSelectedPedal(ComboBox box, Control knobSelectButton, string pedalSlot, ToolkitPedal[] pedals, bool allowNull)
         {
             knobSelectButton.Enabled = false;
             knobSelectButton.Click += (sender, e) =>
@@ -162,7 +229,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     return;
                 }
-                var pedal = box.SelectedItem as Pedal;
+                var pedal = box.SelectedItem as ToolkitPedal;
+                //dynamic pedal = box.SelectedItem;
                 if (pedal == null)
                 {
                     tone.PedalList.Remove(pedalSlot);

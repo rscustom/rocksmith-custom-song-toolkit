@@ -20,7 +20,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             InitializeComponent();
         }
 
-        public void Init(Pedal pedal, IList<ToolkitKnob> knobs)
+        public void Init(dynamic pedal, IList<ToolkitKnob> knobs)
         {
             tableLayoutPanel.RowCount = knobs.Count;
             for (var i = 0; i < knobs.Count; i++)
@@ -45,10 +45,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 numericControl.Value = pedal.KnobValues[knob.Key];
                 numericControl.ValueChanged += (obj, args) =>
                     pedal.KnobValues[knob.Key] = numericControl.Value;
-
             }
-            
-            
         }
 
         private void okButton_Click(object sender, EventArgs e)

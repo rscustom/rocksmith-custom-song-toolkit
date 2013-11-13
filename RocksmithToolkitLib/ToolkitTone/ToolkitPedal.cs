@@ -68,16 +68,16 @@ namespace RocksmithToolkitLib.ToolkitTone
         {
             if (gameVersion == GameVersion.RS2014)
             {
-                return new DLCPackage.Tone.Pedal
+                return new DLCPackage.Manifest.Tone.Pedal2014
                 {
-					PedalKey = Key,
+                    Key = Key,
                     KnobValues = Knobs.ToDictionary(k => k.Key, k => k.DefaultValue)
                 };
             }
             else {
-                return new DLCPackage.Manifest.Tone.Pedal2014
+                return new DLCPackage.Tone.Pedal
                 {
-                    Key = Key,
+                    PedalKey = Key,
                     KnobValues = Knobs.ToDictionary(k => k.Key, k => k.DefaultValue)
                 };
             }
