@@ -117,7 +117,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             }
             for (int i = 0; i < song.PhraseIterations.Length; i++)
             {
-
                 var phraseIteration = song.PhraseIterations[i];
                 var phrase = song.Phrases[phraseIteration.PhraseId];
                 var endTime = i >= song.PhraseIterations.Length - 1 ? song.SongLength : song.PhraseIterations[i + 1].Time;
@@ -240,15 +239,23 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             var ind = 0;
             foreach (var y in song.Phrases)
             {
-                int itcount = 0;//TODO: song.PhraseIterations.Count(z => z.PhraseId == ind);
                 attribute.Phrases.Add(new Phrase
                 {
-                    IterationCount = itcount,
+                    IterationCount = PhraseIterationCount(song, ind),
                     MaxDifficulty = y.MaxDifficulty,
                     Name = y.Name
                 });
                 ind++;
             }
+        }
+
+        private int PhraseIterationCount(Song2014 song, int ind) {
+            return song.PhraseIterations.Count(z => z.PhraseId == ind);
+        }
+
+        private int PhraseIterationCount(Song song, int ind)
+        {
+            return song.PhraseIterations.Count(z => z.PhraseId == ind);
         }
 
         public void GenerateChordTemplateData(IAttributes attribute, dynamic song)
