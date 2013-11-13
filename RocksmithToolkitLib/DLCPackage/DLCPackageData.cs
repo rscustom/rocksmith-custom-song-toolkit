@@ -54,7 +54,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public string OggPreviewMACPath { get; set; }
         public string OggPreviewXBox360Path { get; set; }
         public string OggPreviewPS3Path { get; set; }
-        public List<ToneRS2014> TonesRS2014 { get; set; }
+        public List<Tone2014> TonesRS2014 { get; set; }
 
         #endregion
     }

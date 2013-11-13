@@ -51,9 +51,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         FUZZ = 35756
     }
 
-    public class ToneRS2014
+    public class Tone2014
     {
-        public GearRS2014 GearList { get; set; }
+        public Gear2014 GearList { get; set; }
         public bool IsCustom { get; set; }
         public decimal Volume { get; set; }
         public List<string> ToneDescriptors { get; set; }
@@ -62,9 +62,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         public string Name { get; set; }
         public decimal SortOrder { get; set; }
 
-        public ToneRS2014()
+        public Tone2014()
         {
-            GearList = new GearRS2014();
+            GearList = new Gear2014();
             IsCustom = true;
             Volume = -12;
             ToneDescriptors = new List<string>();

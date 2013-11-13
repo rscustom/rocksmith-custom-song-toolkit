@@ -125,7 +125,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private IEnumerable<string> GetToneNames()
         {
             if (CurrentGameVersion == GameVersion.RS2014)
-                return TonesLB.Items.OfType<ToneRS2014>().Select(t => t.Name);
+                return TonesLB.Items.OfType<Tone2014>().Select(t => t.Name);
             else
                 return TonesLB.Items.OfType<Tone>().Select(t => t.Name);
         }
@@ -188,7 +188,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             } while (!uniqueToneName);
 
             if (CurrentGameVersion == GameVersion.RS2014)
-                return new ToneRS2014() { Name = name };
+                return new Tone2014() { Name = name };
             else
                 return new Tone() { Name = name };
         }
@@ -530,7 +530,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion == GameVersion.RS2014)
             {
                 if (info.TonesRS2014 == null)
-                    info.TonesRS2014 = new List<ToneRS2014>();
+                    info.TonesRS2014 = new List<Tone2014>();
                 if (info.TonesRS2014.Count == 0)
                     info.TonesRS2014.Add(CreateNewTone());
             }
@@ -853,9 +853,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion == GameVersion.RS2012)
                 TonesLB.Items.OfType<Tone>().ToList();
 
-            List<ToneRS2014> tonesRS2014 = new List<ToneRS2014>();
+            List<Tone2014> tonesRS2014 = new List<Tone2014>();
             if (CurrentGameVersion == GameVersion.RS2014)
-                TonesLB.Items.OfType<ToneRS2014>().ToList();
+                TonesLB.Items.OfType<Tone2014>().ToList();
 
             //string liveSignatureID = xboxLicense0IDTB.Text.Trim();
             //if (rbuttonSignatureLIVE.Checked && String.IsNullOrEmpty(liveSignatureID))

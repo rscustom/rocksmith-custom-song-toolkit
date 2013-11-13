@@ -49,7 +49,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public string Tone_C { get; set; }
         public string Tone_D { get; set; }
         public string Tone_Multiplayer { get; set; }
-        public List<ToneRS2014> Tones { get; set; }
+        public List<Tone2014> Tones { get; set; }
         public string InputEvent { get; set; } //Vocals only
 
         public Attributes2014() {}
