@@ -96,7 +96,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             if (!IsVocal)
             {
                 ArrangementProperties = SongContent.ArrangementProperties;
-                ArrangementType = (int)arrangement.ArrangementTypeEnum;
+                ArrangementType = (int)arrangement.Name;
 
                 //Chords        -- //TODO: MISSING GENERATE
 
