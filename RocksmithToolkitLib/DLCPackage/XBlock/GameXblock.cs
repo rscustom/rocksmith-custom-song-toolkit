@@ -37,7 +37,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
 
         #region RS2014
 
-        public static void Generate2014(DLCPackageData info, Stream outStream) {
+        public static GameXblock<Entity2014> Generate2014(DLCPackageData info) {
             GameXblock<Entity2014> game = new GameXblock<Entity2014>();
             game.EntitySet = new List<Entity2014>();
 
@@ -67,7 +67,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                 game.EntitySet.Add(entity);
             }
 
-            game.SerializeXml(outStream);
+            return game;
         }
 
         public void SerializeXml(Stream outStream) {

@@ -18,6 +18,16 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
             InsertRoot = "Static.Songs.Headers";
         }
 
+        public void Serialize(Stream stream) {
+            var writer = new StreamWriter(stream);
+            JsonSerializerSettings jss = new JsonSerializerSettings();
+            jss.Formatting = Formatting.Indented;
+            jss.NullValueHandling = NullValueHandling.Ignore;
+            string json = JsonConvert.SerializeObject(this, jss);
+            writer.Write(json);
+            writer.Flush();
+        }
+
         public static ManifestHeader2014 LoadFromFile(string manifestHeader2014FilePath) {
             using (var reader = new StreamReader(manifestHeader2014FilePath)) {
                 var manifest = new ManifestHeader2014();

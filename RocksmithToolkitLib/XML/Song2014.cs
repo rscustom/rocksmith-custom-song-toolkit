@@ -181,10 +181,10 @@ namespace RocksmithToolkitLib.Xml {
         public string Id { get; set; }
     }
 
-    public class SongChordTemplate2014 : SongChordTemplate {
+    public class SongChordTemplate2014 : SongChordTemplate
+    {
         [XmlAttribute("displayName")]
-        public string DisplayName { get; set; }
-        
+        public string DisplayName { get; set; }        
     }
 
     public class SongLevel2014 {

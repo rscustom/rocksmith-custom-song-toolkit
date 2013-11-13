@@ -7,6 +7,13 @@ using RocksmithToolkitLib.Sng;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
+    public enum ArrangementTypeEnum : int {
+        Lead = 0,
+        Rhythm,
+        Combo,
+        Bass
+    };
+
     public class Arrangement
     {
         public Arrangement()
@@ -19,6 +26,8 @@ namespace RocksmithToolkitLib.DLCPackage
         public SongXML SongXml { get; set; }
         // Song Information
         public ArrangementType ArrangementType { get; set; }
+        public ArrangementTypeEnum ArrangementTypeEnum { get; set; }
+        public int ArrangementSort { get; set; }
         public ArrangementName Name { get; set; }
         public string Tuning { get; set; }
         public int ScrollSpeed { get; set; }

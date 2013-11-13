@@ -63,6 +63,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DLCPackage\Manifest\IAttributes.cs" />
+    <Compile Include="DLCPackage\Manifest\Functions\ManifestFunctions.cs" />
     <Compile Include="DLCPackage\XBlock\IEntity.cs" />
     <Compile Include="DLCPackage\XBlock\ISet.cs">
       <SubType>Code</SubType>
@@ -100,17 +102,15 @@
     <Compile Include="DLCPackage\Manifest2014\Tone\GearRS2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Tone\PedalRS2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Tone\ToneRS2014.cs" />
-    <Compile Include="DLCPackage\Manifest2014\PhraseIteration2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Manifest2014.cs" />
     <Compile Include="DLCPackage\ToneReader.cs" />
     <Compile Include="DLCPackage\DLCPackageCreator.cs" />
     <Compile Include="DLCPackage\DLCPackageData.cs" />
     <Compile Include="DLCPackage\IdGenerator.cs" />
-    <Compile Include="DLCPackage\ManifestBuilder.cs" />
+    <Compile Include="DLCPackage\Manifest\ManifestBuilder.cs" />
     <Compile Include="DLCPackage\Manifest\Attributes.cs" />
     <Compile Include="DLCPackage\Manifest\ChordTemplate.cs" />
     <Compile Include="DLCPackage\Manifest\Manifest.cs" />
-    <Compile Include="DLCPackage\Manifest\MyContractResolver.cs" />
     <Compile Include="DLCPackage\Manifest\Phrase.cs" />
     <Compile Include="DLCPackage\Manifest\PhraseIteration.cs" />
     <Compile Include="DLCPackage\Manifest\Section.cs" />

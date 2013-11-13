@@ -141,7 +141,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                 var zChords = group.OrderBy(chord => chord.StartTime).ToList();
                 var lastMeasure = 0;
                 int highFret = -1;
-                bool lastWasChord = false;
+                //bool lastWasChord = false;
                 SongAnchor curAnchor = null;
                 for (int i = 0; i < zChords.Count; i++)
                 {
@@ -299,12 +299,12 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                 val = new Tuple<int, SongChordTemplate>(chordTemps.Count == 0 ? 0 : chordTemps.Values.Select(v => v.Item1).Max() + 1, templ);
                 templ.Finger0 = templ.Finger1 = templ.Finger2 = templ.Finger3 = templ.Finger4 = templ.Finger5 = -1;
                 templ.Fret0 = templ.Fret1 = templ.Fret2 = templ.Fret3 = templ.Fret4 = templ.Fret5 = -1;
-                zChord.Notes.Where(n => n.StringNo == 0).ToList().ForEach(note => templ.Fret0 = note.Fret);
-                zChord.Notes.Where(n => n.StringNo == 1).ToList().ForEach(note => templ.Fret1 = note.Fret);
-                zChord.Notes.Where(n => n.StringNo == 2).ToList().ForEach(note => templ.Fret2 = note.Fret);
-                zChord.Notes.Where(n => n.StringNo == 3).ToList().ForEach(note => templ.Fret3 = note.Fret);
-                zChord.Notes.Where(n => n.StringNo == 4).ToList().ForEach(note => templ.Fret4 = note.Fret);
-                zChord.Notes.Where(n => n.StringNo == 5).ToList().ForEach(note => templ.Fret5 = note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 0).ToList().ForEach(note => templ.Fret0 = (sbyte)note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 1).ToList().ForEach(note => templ.Fret1 = (sbyte)note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 2).ToList().ForEach(note => templ.Fret2 = (sbyte)note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 3).ToList().ForEach(note => templ.Fret3 = (sbyte)note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 4).ToList().ForEach(note => templ.Fret4 = (sbyte)note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 5).ToList().ForEach(note => templ.Fret5 = (sbyte)note.Fret);
                 chordTemps[HashChord(zChord)] = val;
             }
             return val;

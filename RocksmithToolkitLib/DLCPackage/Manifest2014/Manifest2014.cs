@@ -23,8 +23,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         }
 
         public void Serialize(Stream stream) {
-            StreamWriter writer = new StreamWriter(stream);
-            //return JsonConvert.SerializeObject(this, Formatting.Indented);
+            var writer = new StreamWriter(stream);
+            JsonSerializerSettings jss = new JsonSerializerSettings();
+            jss.Formatting = Formatting.Indented;
+            jss.NullValueHandling = NullValueHandling.Ignore;
+            string json = JsonConvert.SerializeObject(this, jss);
+            writer.Write(json);
+            writer.Flush();
         }
 
         public static ManifestRS2014<T> LoadFromFile(string manifestRS2014FilePath)

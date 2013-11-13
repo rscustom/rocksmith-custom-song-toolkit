@@ -141,7 +141,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
             IEnumerable<string> xboxHeaderFiles = Directory.EnumerateFiles(sourcePath, "*.txt");
             DLCPackageData songData = new DLCPackageData();
-            PackageMagic packageType = PackageMagic.CON;
             foreach (var file in xboxHeaderFiles) {
                 if (xboxHeaderFiles.Count() == 1)
                 {
