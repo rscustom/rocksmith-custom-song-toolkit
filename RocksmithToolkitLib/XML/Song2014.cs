@@ -163,22 +163,22 @@ namespace RocksmithToolkitLib.Xml {
     [XmlType("newLinkedDiffs")]
     public class SongNewLinkedDiff {
         [XmlAttribute("levelBreak")]
-        public string LevelBreak { get; set; }
+        public Int32 LevelBreak { get; set; }
 
         [XmlAttribute("ratio")]
         public string Ratio { get; set; }
 
         [XmlAttribute("phraseCount")]
-        public string PhraseCount { get; set; }
+        public Int32 PhraseCount { get; set; }
 
         [XmlElement("nld_phrase")]
-        public SongNld_phrase Nld_phrase { get; set; }
+        public List<SongNld_phrase> Nld_phrase { get; set; }
     }
 
     [XmlType("nld_phrase")]
     public class SongNld_phrase {
         [XmlAttribute("id")]
-        public string Id { get; set; }
+        public Int32 Id { get; set; }
     }
 
     public class SongChordTemplate2014 : SongChordTemplate
@@ -237,7 +237,7 @@ namespace RocksmithToolkitLib.Xml {
         public Int32 Tap { get; set; }
 
         [XmlAttribute("vibrato")]
-        public Int32 Vibrato { get; set; }
+        public Int16 Vibrato { get; set; }
     }
 
     public class SongChord2014 : SongChord {

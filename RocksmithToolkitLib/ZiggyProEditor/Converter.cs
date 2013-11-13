@@ -220,7 +220,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                         {
                             if (curAnchor == null)
                             {
-                                curAnchor = new SongAnchor { Fret = Math.Min(19, note.Fret), Time = note.Time };
+                                curAnchor = new SongAnchor { Fret = Math.Min(19, (int)note.Fret), Time = note.Time };
                                 highFret = note.Fret;
                             }
                             else if (note.Fret < curAnchor.Fret)
@@ -232,7 +232,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                                 else
                                 {
                                     gAnchors.Add(curAnchor);
-                                    curAnchor = new SongAnchor { Fret = Math.Min(19, note.Fret), Time = note.Time };
+                                    curAnchor = new SongAnchor { Fret = Math.Min(19, (int)note.Fret), Time = note.Time };
                                     highFret = note.Fret;
                                 }
                             }
@@ -245,7 +245,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                                 else
                                 {
                                     gAnchors.Add(curAnchor);
-                                    curAnchor = new SongAnchor { Fret = Math.Min(19, note.Fret), Time = note.Time };
+                                    curAnchor = new SongAnchor { Fret = Math.Min(19, (int)note.Fret), Time = note.Time };
                                     highFret = note.Fret;
                                 }
                             }
@@ -314,8 +314,8 @@ namespace RocksmithToolkitLib.ZiggyProEditor
         {
             SongNote note = new SongNote();
             Note zNote = chord.Notes[0];
-            note.Fret = zNote.Fret;
-            note.String = zNote.StringNo;
+            note.Fret = (byte)zNote.Fret;
+            note.String = (byte)zNote.StringNo;
             note.Bend = 0;
             note.HammerOn = (zNote.IsTapNote || chord.IsHammerOn) ? (byte)1 : (byte)0;
             note.Harmonic = 0;
@@ -327,7 +327,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             note.Tremolo = 0;
             if (chord.IsSlide && nextChord != null)
             {
-                note.SlideTo = Math.Max(nextChord.Notes[0].Fret, 1);
+                note.SlideTo = (sbyte)Math.Max(nextChord.Notes[0].Fret, 1);
                 note.Sustain = chord.EndTime - chord.StartTime;
                 note.HammerOn = note.Hopo = note.PalmMute = 0;
             }

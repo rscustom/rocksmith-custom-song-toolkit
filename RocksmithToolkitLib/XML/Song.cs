@@ -305,7 +305,7 @@ namespace RocksmithToolkitLib.Xml
         public Int32 FingerPicking { get; set; }
 
         [XmlAttribute("pickDirection")]
-        public Int32 PickDirection { get; set; }
+        public sbyte PickDirection { get; set; }
 
         [XmlAttribute("doubleStops")]
         public Int32 DoubleStops { get; set; }
@@ -338,7 +338,7 @@ namespace RocksmithToolkitLib.Xml
         public Int32 Tapping { get; set; }
 
         [XmlAttribute("vibrato")]
-        public Int32 Vibrato { get; set; }
+        public Int16 Vibrato { get; set; }
 
         [XmlAttribute("fretHandMutes")]
         public Int32 FretHandMutes { get; set; }
@@ -395,7 +395,7 @@ namespace RocksmithToolkitLib.Xml
     public class SongPhrase
     {
         [XmlAttribute("disparity")]
-        public Int32 Disparity { get; set; }
+        public Byte Disparity { get; set; }
 
         [XmlAttribute("maxDifficulty")]
         public Int32 MaxDifficulty { get; set; }
@@ -404,10 +404,10 @@ namespace RocksmithToolkitLib.Xml
         public string Name { get; set; }
 
         [XmlAttribute("ignore")]
-        public Int32 Ignore { get; set; }
+        public Byte Ignore { get; set; }
 
         [XmlAttribute("solo")]
-        public Int32 Solo { get; set; }
+        public Byte Solo { get; set; }
     }
 
     [XmlType("phraseIteration")]
@@ -456,40 +456,40 @@ namespace RocksmithToolkitLib.Xml
         public string ChordName { get; set; }
         
         [XmlAttribute("fret0")]
-        public Int32 Fret0 { get; set; }
+        public sbyte Fret0 { get; set; }
 
         [XmlAttribute("fret1")]
-        public Int32 Fret1 { get; set; }
+        public sbyte Fret1 { get; set; }
 
         [XmlAttribute("fret2")]
-        public Int32 Fret2 { get; set; }
+        public sbyte Fret2 { get; set; }
 
         [XmlAttribute("fret3")]
-        public Int32 Fret3 { get; set; }
+        public sbyte Fret3 { get; set; }
 
         [XmlAttribute("fret4")]
-        public Int32 Fret4 { get; set; }
+        public sbyte Fret4 { get; set; }
 
         [XmlAttribute("fret5")]
-        public Int32 Fret5 { get; set; }
+        public sbyte Fret5 { get; set; }
 
         [XmlAttribute("finger0")]
-        public Int32 Finger0 { get; set; }
+        public sbyte Finger0 { get; set; }
 
         [XmlAttribute("finger1")]
-        public Int32 Finger1 { get; set; }
+        public sbyte Finger1 { get; set; }
 
         [XmlAttribute("finger2")]
-        public Int32 Finger2 { get; set; }
+        public sbyte Finger2 { get; set; }
 
         [XmlAttribute("finger3")]
-        public Int32 Finger3 { get; set; }
+        public sbyte Finger3 { get; set; }
 
         [XmlAttribute("finger4")]
-        public Int32 Finger4 { get; set; }
+        public sbyte Finger4 { get; set; }
 
         [XmlAttribute("finger5")]
-        public Int32 Finger5 { get; set; }
+        public sbyte Finger5 { get; set; }
     }
 
     //TBD
@@ -575,10 +575,10 @@ namespace RocksmithToolkitLib.Xml
         public Single Sustain { get; set; }
 
         [XmlAttribute("string")]
-        public Int32 String { get; set; }
+        public Byte String { get; set; }
 
         [XmlAttribute("slideTo")]
-        public Int32 SlideTo { get; set; }
+        public sbyte SlideTo { get; set; }
 
         [XmlAttribute("pullOff")]
         public Byte PullOff { get; set; }
@@ -596,16 +596,16 @@ namespace RocksmithToolkitLib.Xml
         public Byte HammerOn { get; set; }
 
         [XmlAttribute("fret")]
-        public Int32 Fret { get; set; }
+        public Byte Fret { get; set; }
 
         [XmlAttribute("bend")]
-        public Int32 Bend { get; set; }
+        public Byte Bend { get; set; }
 
         [XmlAttribute("pluck")]
-        public Int32 Pluck { get; set; }
+        public sbyte Pluck { get; set; }
 
         [XmlAttribute("slap")]
-        public Int32 Slap { get; set; }
+        public sbyte Slap { get; set; }
     }
 
     [XmlType("chord")]
