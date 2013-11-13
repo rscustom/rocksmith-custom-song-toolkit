@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {
@@ -79,6 +81,22 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         public override string ToString()
         {
             return Name;
+        }
+
+        public void Serialize(string toneSavePath) {
+            var serializer = new DataContractSerializer(typeof(Tone2014));
+            using (var stm = XmlWriter.Create(toneSavePath, new XmlWriterSettings() { CheckCharacters = true, Indent = true })) {
+                serializer.WriteObject(stm, this);
+            }
+        }
+
+        public static Tone2014 LoadFromFile(string toneTemplateFilePath) {
+            Tone2014 tone = null;
+            var serializer = new DataContractSerializer(typeof(Tone2014));
+            using (var stm = new XmlTextReader(toneTemplateFilePath)) {
+                tone = (Tone2014)serializer.ReadObject(stm);
+            }
+            return tone;
         }
     }
 }
