@@ -22,10 +22,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void Init(dynamic pedal, IList<ToolkitKnob> knobs)
         {
+            var sortedKnobs = knobs.OrderBy(k => k.Index).ToList();
             tableLayoutPanel.RowCount = knobs.Count;
-            for (var i = 0; i < knobs.Count; i++)
+            for (var i = 0; i < sortedKnobs.Count; i++)
             {
-                var knob = knobs[i];
+                var knob = sortedKnobs[i];
                 var label = new Label();
                 tableLayoutPanel.Controls.Add(label, 0, i);
                 var name = knob.Name;

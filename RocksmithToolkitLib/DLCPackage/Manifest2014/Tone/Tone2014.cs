@@ -80,42 +80,5 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         {
             return Name;
         }
-
-        public Pedal2014 SelectPedal(string gearSlot)
-        {
-            switch (gearSlot)
-            {
-                case "Amp":
-                    return GearList.Amp;
-                case "Cabinet":
-                    return GearList.Cabinet;
-                case "Rack1":
-                    return GearList.Rack1;
-                case "Rack2":
-                    return GearList.Rack2;
-                case "Rack3":
-                    return GearList.Rack3;
-                case "Rack4":
-                    return GearList.Rack4;
-                case "PrePedal1":
-                    return GearList.PrePedal1;
-                case "PrePedal2":
-                    return GearList.PrePedal2;
-                case "PrePedal3":
-                    return GearList.PrePedal3;
-                case "PrePedal4":
-                    return GearList.PrePedal4;
-                case "PostPedal1":
-                    return GearList.PostPedal1;
-                case "PostPedal2":
-                    return GearList.PostPedal2;
-                case "PostPedal3":
-                    return GearList.PostPedal3;
-                case "PostPedal4":
-                    return GearList.PostPedal4;
-                default:
-                    throw new InvalidOperationException(String.Format("{0} does not exist in GearList.", gearSlot));
-            }
-        }
     }
 }

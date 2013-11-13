@@ -9,9 +9,14 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
     {
         public string PedalKey { get; set; }
         public Dictionary<string, decimal> KnobValues { get; set; }
+
         public Pedal()
         {
             KnobValues = new Dictionary<string, decimal>();
+        }
+
+        public bool Any() {
+            return KnobValues.Any();
         }
     }
 }

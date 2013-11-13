@@ -70,8 +70,10 @@ namespace RocksmithToolkitLib.ToolkitTone
             {
                 return new DLCPackage.Manifest.Tone.Pedal2014
                 {
-                    Key = Key,
-                    KnobValues = Knobs.ToDictionary(k => k.Key, k => k.DefaultValue)
+                    PedalKey = Key,
+                    KnobValues = Knobs.ToDictionary(k => k.Key, k => k.DefaultValue),
+                    Category = Category,
+                    Type = Type
                 };
             }
             else {

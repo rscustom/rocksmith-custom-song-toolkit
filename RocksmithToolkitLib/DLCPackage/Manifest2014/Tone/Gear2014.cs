@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {
@@ -24,5 +25,18 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         public Pedal2014 PostPedal2 { get; set; }
         public Pedal2014 PostPedal3 { get; set; }
         public Pedal2014 PostPedal4 { get; set; }
+
+        public Pedal2014 this[string propertyName] {
+            get {
+                Type myType = typeof(Gear2014);
+                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+                return (myPropInfo != null) ? (Pedal2014)myPropInfo.GetValue(this, null) : null;
+            }
+            set {
+                Type myType = typeof(Gear2014);
+                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+                myPropInfo.SetValue(this, value, null);
+            }
+        }
     }
 }
