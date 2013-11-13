@@ -37,7 +37,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private string CurrentOFDFilter
+        private string CurrentOFDAudioFileFilter
         {
             get
             {
@@ -47,6 +47,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         return "Wwise 2013 audio files (*.wem)|*.wem";
                     default:
                         return "Wwise 2010 audio files (*.ogg)|*.ogg"; 
+                }
+            }
+        }
+
+        private string CurrentOFDToneImportFilter
+        {
+            get
+            {
+                switch (CurrentGameVersion)
+                {
+                    case GameVersion.RS2014:
+                        return CurrentRocksmithTitle + " Song Package or Song Manifest (*.*,*.psarc,*.json)|*.*;*.psarc;*.json";
+                    default:
+                        return CurrentRocksmithTitle + " Song Package, Tone Manifest or Rocksmith Tone Xml (*.*,*.dat,*.manifest.json,*.xml)|*.*;*.xml;*.dat;tone*.manifest.json"; 
                 }
             }
         }
@@ -219,7 +233,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "PC " + CurrentOFDFilter;
+                ofd.Filter = "PC " + CurrentOFDAudioFileFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggPCPath = ofd.FileName;
             }
@@ -229,7 +243,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "MAC " + CurrentOFDFilter;
+                ofd.Filter = "MAC " + CurrentOFDAudioFileFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggMACPath = ofd.FileName;
             }
@@ -239,7 +253,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "XBOX 360 " + CurrentOFDFilter;
+                ofd.Filter = "XBOX 360 " + CurrentOFDAudioFileFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggXBox360Path = ofd.FileName;
             }
@@ -249,7 +263,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "PS3 " + CurrentOFDFilter;
+                ofd.Filter = "PS3 " + CurrentOFDAudioFileFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
                     OggPS3Path = ofd.FileName;
             }
@@ -1024,8 +1038,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneImportFile;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Title = "Select a package or tone manifest file";
-                ofd.Filter = "Song package, Tone manifest or " + CurrentRocksmithTitle + "Tone Xml (*.xml,*.dat,*.,*.manifest.json)|*.xml;*.dat;*.*;tone*.manifest.json";
+                ofd.Title = "Select DLC Song Package or Tone File";
+                ofd.Filter = CurrentOFDToneImportFilter;
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneImportFile = ofd.FileName;
             }
@@ -1038,7 +1052,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 else
                 {
-                    List<Tone> tones = ToneReader.Read(toneImportFile);
+                    List<Tone> tones = Tone.Import(toneImportFile);
                     foreach (Tone tone in tones)
                         TonesLB.Items.Add(tone);
                 }

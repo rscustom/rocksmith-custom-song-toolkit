@@ -103,7 +103,6 @@
     <Compile Include="DLCPackage\Manifest2014\Header\AttributesHeader2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Header\ManifestHeader2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Manifest2014.cs" />
-    <Compile Include="DLCPackage\ToneReader.cs" />
     <Compile Include="DLCPackage\DLCPackageCreator.cs" />
     <Compile Include="DLCPackage\DLCPackageData.cs" />
     <Compile Include="DLCPackage\IdGenerator.cs" />
