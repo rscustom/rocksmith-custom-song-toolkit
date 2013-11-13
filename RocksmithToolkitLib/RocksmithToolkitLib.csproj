@@ -65,6 +65,8 @@
   <ItemGroup>
     <Compile Include="DLCPackage\Manifest\IAttributes.cs" />
     <Compile Include="DLCPackage\Manifest\Functions\ManifestFunctions.cs" />
+    <Compile Include="DLCPackage\Showlight\Showlight.cs" />
+    <Compile Include="DLCPackage\Showlight\Showlights.cs" />
     <Compile Include="DLCPackage\XBlock\IEntity.cs" />
     <Compile Include="DLCPackage\XBlock\ISet.cs">
       <SubType>Code</SubType>
@@ -90,8 +92,6 @@
     <Compile Include="DLCPackage\AggregateGraph\SoundBank.cs" />
     <Compile Include="DLCPackage\AggregateGraph\XBlock.cs" />
     <Compile Include="DLCPackage\Arrangement.cs" />
-    <Compile Include="DLCPackage\Showlight\Showlight2014.cs" />
-    <Compile Include="DLCPackage\Showlight\Showlights2014.cs" />
     <Compile Include="DLCPackage\Tone\Manifest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -208,6 +208,7 @@
     <None Include="Resources\XBox360_DLC_image.png" />
     <None Include="Resources\XBox360_KV.bin" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage.Showlight
 {
     [XmlType("showlight")]
-    public class Showlight2014
+    public class Showlight
     {
         [XmlAttribute("Time")]
         public float Time { get; set; }
