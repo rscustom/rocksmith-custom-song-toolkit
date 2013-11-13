@@ -93,7 +93,7 @@ namespace pedalgen
             List<ToolkitPedal> toolkitPedals = new List<ToolkitPedal>();
             foreach (var file in gearsJsonFiles)
             {
-                var gearManifest = ManifestRS2014<RsToneRS2014>.LoadFromFile(file);
+                var gearManifest = Manifest2014<RsToneRS2014>.LoadFromFile(file);
                 foreach (var pedal in gearManifest.Entries)
                 {
                     toolkitPedals.Add(pedal.Value["Attributes"].ToPedal());

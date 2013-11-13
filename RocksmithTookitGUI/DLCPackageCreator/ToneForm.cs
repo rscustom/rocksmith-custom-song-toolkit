@@ -73,10 +73,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 switch (CurrentGameVersion) {
                     case GameVersion.RS2012:
-                        tone = Tone.LoadFromFile(toneSavePath);
+                        tone = Tone.LoadFromXmlTemplateFile(toneSavePath);
                         break;
                     case GameVersion.RS2014:
-                        tone = Tone2014.LoadFromFile(toneSavePath);
+                        tone = Tone2014.LoadFromXmlTemplateFile(toneSavePath);
                         break;
                 }
                 

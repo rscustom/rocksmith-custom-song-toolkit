@@ -403,7 +403,7 @@ namespace RocksmithToolkitLib.DLCPackage
                                 packPsarc.AddEntry(String.Format("songs/arr/{0}_{1}.xml", dlcName, arrangementName), xmlSongFile);
 
                                 // MANIFEST
-                                var manifest = new ManifestRS2014<Attributes2014>();
+                                var manifest = new Manifest2014<Attributes2014>();
                                 var attribute = new Attributes2014(arrangement, info, aggregateGraph, platform);                                
                                 var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attribute } };
                                 manifest.Entries.Add(attribute.PersistentID, attributeDictionary);

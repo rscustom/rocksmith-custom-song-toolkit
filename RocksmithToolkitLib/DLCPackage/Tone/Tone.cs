@@ -55,7 +55,7 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
             }
         }
 
-        public static Tone LoadFromFile(string toneTemplateFilePath) {
+        public static Tone LoadFromXmlTemplateFile(string toneTemplateFilePath) {
             Tone tone = null;
             var serializer = new DataContractSerializer(typeof(Tone));
             using (var stm = new XmlTextReader(toneTemplateFilePath)) {
@@ -68,8 +68,6 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
             List<Tone> tones = new List<Tone>();
 
             var toneExtension = Path.GetExtension(filePath);
-
-            //FileInfo fi = new FileInfo(filePath);
 
             switch (toneExtension) {
                 case ".json":
@@ -201,7 +199,7 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
         private static List<Tone> ReadFromPackage(string packagePath, Platform platform) {
             List<Tone> tones = new List<Tone>();
             string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Packer.Unpack(packagePath, appDir, true);
+            Packer.Unpack(packagePath, appDir, (platform.platform == GamePlatform.Pc) ? true : false);
             string unpackedDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(packagePath) + String.Format("_{0}", platform.platform.ToString()));
 
             string[] toneManifestFiles = Directory.GetFiles(unpackedDir, "tone*.manifest.json", SearchOption.AllDirectories);

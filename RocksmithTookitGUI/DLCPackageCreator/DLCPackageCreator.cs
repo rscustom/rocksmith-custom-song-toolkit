@@ -1048,7 +1048,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 Application.DoEvents();
                 if (CurrentGameVersion == GameVersion.RS2014) {
-                    return; //TODO: Make compatible with RS2014
+                    List<Tone2014> tones = Tone2014.Import(toneImportFile);
+                    foreach (Tone2014 tone in tones)
+                        if (!TonesLB.Items.OfType<Tone2014>().Any(t => t.Key == tone.Key))
+                            TonesLB.Items.Add(tone);
                 }
                 else
                 {
