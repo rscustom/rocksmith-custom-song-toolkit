@@ -7,121 +7,111 @@ using RocksmithToolkitLib.Xml;
 using System.Xml.Serialization;
 using System.Text;
 
-namespace RocksmithToolkitLib.Sng
+namespace RocksmithToolkitLib.Sng2014HSL
 {
-    public class Sng2014File : Sng2014
-    {
-        public Sng2014File() {}
-        
-        public Sng2014File(string file)
-        {
+    public class Sng2014File : Sng {
+        public Sng2014File() { }
+
+        public Sng2014File(string file) {
             using (FileStream fs = new FileStream(file, FileMode.Open)) {
                 BinaryReader r = new BinaryReader(fs);
                 this.Read(r);
             }
         }
-        
-        new public void Read(BinaryReader r) {
-            this.BPMs = new BpmSection(); this.BPMs.Read(r);
-            this.Phrases = new PhraseSection(); this.Phrases.Read(r);
-            this.Chords = new ChordSection(); this.Chords.Read(r);
-            this.ChordNotes = new ChordNotesSection(); this.ChordNotes.Read(r);
-            this.Vocals = new VocalSection(); this.Vocals.Read(r);
-            
+
+        public void Read(BinaryReader r) {
+            this.BPMs = new BpmSection(); this.BPMs.read(r);
+            this.Phrases = new PhraseSection(); this.Phrases.read(r);
+            this.Chords = new ChordSection(); this.Chords.read(r);
+            this.ChordNotes = new ChordNotesSection(); this.ChordNotes.read(r);
+            this.Vocals = new VocalSection(); this.Vocals.read(r);
             if (this.Vocals.Count > 0) {
-                this.SymbolsHeader = new SymbolsHeaderSection(); this.SymbolsHeader.Read(r);
-                this.SymbolsTexture = new SymbolsTextureSection(); this.SymbolsTexture.Read(r);
-                this.SymbolsDefinition = new SymbolDefinitionSection(); this.SymbolsDefinition.Read(r);
+                this.SymbolsHeader = new SymbolsHeaderSection(); this.SymbolsHeader.read(r);
+                this.SymbolsTexture = new SymbolsTextureSection(); this.SymbolsTexture.read(r);
+                this.SymbolsDefinition = new SymbolDefinitionSection(); this.SymbolsDefinition.read(r);
             }
-            
-            this.PhraseIterations = new PhraseIterationSection(); this.PhraseIterations.Read(r);
-            this.PhraseExtraInfo = new PhraseExtraInfoByLevelSection(); this.PhraseExtraInfo.Read(r);
-            this.NLD = new NLinkedDifficultySection(); this.NLD.Read(r);
-            this.Actions = new ActionSection(); this.Actions.Read(r);
-            this.Events = new EventSection(); this.Events.Read(r);
-            this.Tones = new ToneSection(); this.Tones.Read(r);
-            this.DNAs = new DnaSection(); this.DNAs.Read(r);
-            this.Sections = new SectionSection(); this.Sections.Read(r);
-            this.Arrangements = new ArrangementSection(); this.Arrangements.Read(r);
-            this.Metadata = new Metadata2014(); this.Metadata.Read(r);
-        }
-        
-        public void write(BinaryWriter w)
-        {
-            write_struct(w, this.BPMs);
-            write_struct(w, this.Phrases);
-            write_struct(w, this.Chords);
-            write_struct(w, this.ChordNotes);
-            write_struct(w, this.Vocals);
-        
-            if (this.Vocals.Count > 0) {
-                write_struct(w, this.SymbolsHeader);
-                write_struct(w, this.SymbolsTexture);
-                write_struct(w, this.SymbolsDefinition);
-            }
-        
-            write_struct(w, this.PhraseIterations);
-            write_struct(w, this.PhraseExtraInfo);
-            write_struct(w, this.NLD);
-            write_struct(w, this.Actions);
-            write_struct(w, this.Events);
-            write_struct(w, this.Tones);
-            write_struct(w, this.DNAs);
-            write_struct(w, this.Sections);
-            write_struct(w, this.Arrangements);
-            write_struct(w, this.Metadata);
+            this.PhraseIterations = new PhraseIterationSection(); this.PhraseIterations.read(r);
+            this.PhraseExtraInfo = new PhraseExtraInfoByLevelSection(); this.PhraseExtraInfo.read(r);
+            this.NLD = new NLinkedDifficultySection(); this.NLD.read(r);
+            this.Actions = new ActionSection(); this.Actions.read(r);
+            this.Events = new EventSection(); this.Events.read(r);
+            this.Tones = new ToneSection(); this.Tones.read(r);
+            this.DNAs = new DnaSection(); this.DNAs.read(r);
+            this.Sections = new SectionSection(); this.Sections.read(r);
+            this.Arrangements = new ArrangementSection(); this.Arrangements.read(r);
+            this.Metadata = new Metadata(); this.Metadata.read(r);
         }
 
-        public static void write_struct(BinaryWriter w, object obj)
-        {
-            string[] order = (string[])GetPropertyValue(obj, "order");
+        public void Write(BinaryWriter w) {
+            writeStruct(w, this.BPMs);
+            writeStruct(w, this.Phrases);
+            writeStruct(w, this.Chords);
+            writeStruct(w, this.ChordNotes);
 
+            writeStruct(w, this.Vocals);
+            if (this.Vocals.Count > 0) {
+                writeStruct(w, this.SymbolsHeader);
+                writeStruct(w, this.SymbolsTexture);
+                writeStruct(w, this.SymbolsDefinition);
+            }
+
+            writeStruct(w, this.PhraseIterations);
+            writeStruct(w, this.PhraseExtraInfo);
+            writeStruct(w, this.NLD);
+            writeStruct(w, this.Actions);
+            writeStruct(w, this.Events);
+            writeStruct(w, this.Tones);
+            writeStruct(w, this.DNAs);
+            writeStruct(w, this.Sections);
+            writeStruct(w, this.Arrangements);
+            writeStruct(w, this.Metadata);
+        }
+
+        private void writeStruct(BinaryWriter w, object obj) {
+            string[] order = (string[])getPropertyValue(obj, "order");
             foreach (string name in order) {
-                var value = GetPropertyValue(obj, name);
+                var value = getPropertyValue(obj, name);
                 Console.WriteLine("{0} = {1}", name, value);
-
                 if (value.GetType().IsArray || value.GetType().IsPrimitive)
-                    write_field(w, value);
+                    writeField(w, value);
                 else
-                    write_struct(w, value);
+                    writeStruct(w, value);
             }
         }
 
-        public static void write_field(BinaryWriter w, object value)
-        {
+        private void writeField(BinaryWriter w, object value) {
             Type type = value.GetType();
             string type_name = type.Name;
-        
+
             if (type.IsArray) {
                 if (type.GetElementType().IsPrimitive) {
-                    foreach (var v in (IEnumerable) value) {
+                    foreach (var v in (IEnumerable)value) {
                         Console.WriteLine("{0}", v);
-                        write_field(w, v);
+                        writeField(w, v);
                     }
+                } else {
+                    foreach (var v in (IEnumerable)value)
+                        writeStruct(w, v);
                 }
-                else
-                {
-                    foreach (var v in (IEnumerable) value)
-                        write_struct(w, v);
-                }
-            }
-            else
-            {
+            } else {
                 switch (type_name) {
+                    case "UInt32":
+                        w.Write((UInt32)value);
+                        break;
                     case "Int32":
-                        w.Write((Int32) value);
+                        w.Write((Int32)value);
                         break;
                     case "Int16":
-                        w.Write((Int16) value);
+                        w.Write((Int16)value);
                         break;
                     case "Byte":
-                        w.Write((Byte) value);
+                        w.Write((Byte)value);
                         break;
                     case "Single":
-                        w.Write((float) value);
+                        w.Write((float)value);
                         break;
                     case "Double":
-                        w.Write((double) value);
+                        w.Write((double)value);
                         break;
                     default:
                         Console.WriteLine("Unhandled type {0} (value: {1})", type_name, value);
@@ -130,15 +120,13 @@ namespace RocksmithToolkitLib.Sng
             }
         }
 
-        public static object GetPropertyValue(object obj, string propertyName)
-        {
+        private object getPropertyValue(object obj, string propertyName) {
             Type t = obj.GetType();
             PropertyInfo prop = t.GetProperty(propertyName);
-            if(null != prop)
+            if (prop != null)
                 return prop.GetValue(obj, null);
-        
-            Console.WriteLine("Unknown property {0} in {1}", propertyName, obj);
-            throw new System.Exception("Unknown or unaccessible property");
+            else
+                throw new System.Exception("Unknown or unaccessible property");
         }
     }
 }

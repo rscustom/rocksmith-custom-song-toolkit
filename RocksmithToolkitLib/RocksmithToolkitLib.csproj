@@ -142,8 +142,8 @@
     <Compile Include="SngToTab\TabSection.cs" />
     <Compile Include="SngToTab\TuningInfo.cs" />
     <Compile Include="Sng\Sng2014FileWriter.cs" />
-    <Compile Include="Sng\Sng2014.cs" />
     <Compile Include="Sng\Sng2014File.cs" />
+    <Compile Include="Sng\Sng2014HSL.cs" />
     <Compile Include="ToolkitTone\ToolkitPedal.cs" />
     <Compile Include="ToolkitTone\ToolkitKnob.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

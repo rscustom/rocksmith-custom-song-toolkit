@@ -7,86 +7,59 @@ using RocksmithToolkitLib.Xml;
 using System.Xml.Serialization;
 using System.Text;
 
-namespace RocksmithToolkitLib.Sng
+namespace RocksmithToolkitLib.Sng2014HSL
 {
-    public class Sng2014FileWriter
-    {
+    public class Sng2014FileWriter {
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
         private static List<ChordNotes> cns = new List<ChordNotes>();
+        
+        //private void Main(string[] args) {
+        //    var infile = args[0];
+        //    var outfile = args[1];
+        //    using (FileStream fs = new FileStream(outfile, FileMode.Create)) {
+        //        BinaryWriter w = new BinaryWriter(fs);
+        //        // SNG reader
+        //        //var sng = new Sng2014File("SNG");
+        //        // XML parser
+        //        var sng = new Sng2014File();
+        //        // TODO tuning needed to compute MIDI notes
+        //        Int16[] tuning = { 0, 0, 0, 0, 0, 0 };
+        //        bool bass = false;
+        //        read_xml(infile, sng, tuning, bass);
+        //        // writer
+        //        sng.write(w);
+        //    }
+        //}
 
-        public void Write(string inputFile, string outputFile)
-        {
-            using (FileStream fs = new FileStream(outputFile, FileMode.Create)) {
-                BinaryWriter w = new BinaryWriter(fs);
-                // SNG reader
-                //var sng = new SngFile("SNG");
-                // XML parser
-                var sng = new Sng2014File();
-                // TODO tuning needed to compute MIDI notes
-                Int16[] tuning = { 0,0,0,0,0,0 };
-                bool bass = false;
-                readXml(inputFile, sng, tuning, bass);
-                // writer
-                sng.write(w);
-            }
-        }
-
-        public void readXml(string inputFile, Sng2014File sng, Int16[] tuning, bool bass) {
-            using (var reader = new StreamReader(inputFile)) {
-                var serializer = new XmlSerializer(typeof(Song2014));
-                var song = (Song2014)serializer.Deserialize(reader);
-                parseEbeats(song, sng);
-                parsePhrases(song, sng);
-                parse_chords(song, sng, tuning, bass);
-                // vocals will need different parse function
-                sng.Vocals = new VocalSection();
-                sng.Vocals.Vocals = new SngVocal2014[0];
-                parsePhraseIterations(song, sng);
-                parsePhraseExtraInfo(song, sng);
-                parseNld(song, sng);
-                parseActions(song, sng);
-                parseEvents(song, sng);
-                parseTones(song, sng);
-                parseDNAs(song, sng);
-                parseSections(song, sng);
-                parseArrangements(song, sng);
-                parseMetadata(song, sng, tuning);
-                // this needs to be initialized after arrangements
-                parseChordNotes(song, sng);
-            }
-        }
-
-        public Int32 getMidiNote(Int16[] tuning, Byte str, Byte fret, bool bass)
-        {
+        private Int32 getMidiNote(Int16[] tuning, Byte str, Byte fret, bool bass) {
             if (fret == 255)
                 return 255;
-            Int32 note = StandardMidiNotes[str] + tuning[str] + fret - (bass? 12 : 0);
+            Int32 note = StandardMidiNotes[str] + tuning[str] + fret - (bass ? 12 : 0);
             return note;
         }
-        
-        public Int32 getMaxDifficulty(Song2014 xml)
-        {
+
+        private Int32 getMaxDifficulty(Song2014 xml) {
             var max = 0;
             foreach (var phrase in xml.Phrases)
                 if (max < phrase.MaxDifficulty)
-                    max = phrase.MaxDifficulty; 
+                    max = phrase.MaxDifficulty;
             return max;
         }
-        
-        public void parseMetadata(Song2014 xml, Sng2014File sng, Int16[] tuning)
-        {
-            sng.Metadata = new Metadata2014();
+
+        private void parseMetadata(Song2014 xml, Sng2014File sng, Int16[] tuning) {
+            sng.Metadata = new Metadata();
             sng.Metadata.MaxScore = 100000;
-            
+
             sng.Metadata.MaxDifficulty = getMaxDifficulty(xml);
             // max used level
             SongLevel2014 full = xml.Levels[sng.Metadata.MaxDifficulty];
             sng.Metadata.MaxNotesAndChords = full.Chords.Length + full.Notes.Length;
             sng.Metadata.Unk3_MaxNotesAndChords = sng.Metadata.MaxNotesAndChords;
             sng.Metadata.PointsPerNote = sng.Metadata.MaxScore / sng.Metadata.MaxNotesAndChords;
+
             sng.Metadata.FirstBeatLength = xml.Ebeats[1].Time - xml.Ebeats[0].Time;
             sng.Metadata.StartTime = xml.Offset * -1;
-            sng.Metadata.CapoFretId = (xml.Capo == 0)? (Byte) 255 : xml.Capo;
+            sng.Metadata.CapoFretId = (xml.Capo == 0) ? (Byte)255 : xml.Capo;
             readString(xml.LastConversionDateTime, sng.Metadata.LastConversionDateTime);
             sng.Metadata.Part = xml.Part;
             sng.Metadata.SongLength = xml.SongLength;
@@ -97,32 +70,26 @@ namespace RocksmithToolkitLib.Sng
             sng.Metadata.Unk11_FirstSectionStartTime = start;
             sng.Metadata.Unk12_FirstSectionStartTime = start;
         }
-        
-        public void parseEbeats(Song2014 xml, Sng2014File sng)
-        {
-            sng.BPMs = new Sng.BpmSection();
+
+        private void parseEbeats(Song2014 xml, Sng2014File sng) {
+            sng.BPMs = new BpmSection();
             sng.BPMs.Count = xml.Ebeats.Length;
-            sng.BPMs.BPMs = new SngBpm[sng.BPMs.Count];
+            sng.BPMs.BPMs = new Bpm[sng.BPMs.Count];
             Int16 measure = 0;
             Int16 beat = 0;
-            for (int i=0; i<sng.BPMs.Count; i++) {
+            for (int i = 0; i < sng.BPMs.Count; i++) {
                 var ebeat = xml.Ebeats[i];
-                var bpm = new SngBpm();
+                var bpm = new Bpm();
                 bpm.Time = ebeat.Time;
-                
                 if (ebeat.Measure >= 0) {
                     measure = ebeat.Measure;
                     beat = 0;
-                }
-                else
-                {
+                } else {
                     beat++;
                 }
-                
                 bpm.Measure = measure;
                 bpm.Beat = beat;
-                
-                for (int iter_id=0; iter_id<xml.PhraseIterations.Length; iter_id++) {
+                for (int iter_id = 0; iter_id < xml.PhraseIterations.Length; iter_id++) {
                     var iter = xml.PhraseIterations[iter_id];
                     if (iter.Time > bpm.Time) {
                         // we're one past current iteration
@@ -130,7 +97,6 @@ namespace RocksmithToolkitLib.Sng
                         break;
                     }
                 }
-                
                 if (beat == 0) {
                     bpm.Mask |= 1;
                     if (measure % 2 == 0)
@@ -139,131 +105,117 @@ namespace RocksmithToolkitLib.Sng
                 sng.BPMs.BPMs[i] = bpm;
             }
         }
-        
-        public void readString(string From, Byte[] To) {
+
+        private void readString(string From, Byte[] To) {
             var bytes = Encoding.ASCII.GetBytes(From);
             System.Buffer.BlockCopy(bytes, 0, To, 0, bytes.Length);
         }
-        
-        public void parse_chords(Song2014 xml, Sng2014File sng, Int16[] tuning, bool bass)
-        {
+
+        private void parseChords(Song2014 xml, Sng2014File sng, Int16[] tuning, bool bass) {
             sng.Chords = new ChordSection();
             sng.Chords.Count = xml.ChordTemplates.Length;
-            sng.Chords.Chords = new SngChord[sng.Chords.Count];
-            
-            for (int i=0; i<sng.Chords.Count; i++) {
+            sng.Chords.Chords = new Chord[sng.Chords.Count];
+
+            for (int i = 0; i < sng.Chords.Count; i++) {
                 var chord = xml.ChordTemplates[i];
-                var c = new SngChord();
-                
+                var c = new Chord();
                 // TODO
                 //"Mask",
-                c.Frets[0] = (Byte) chord.Fret0;
-                c.Frets[1] = (Byte) chord.Fret1;
-                c.Frets[2] = (Byte) chord.Fret2;
-                c.Frets[3] = (Byte) chord.Fret3;
-                c.Frets[4] = (Byte) chord.Fret4;
-                c.Frets[5] = (Byte) chord.Fret5;
-                c.Fingers[0] = (Byte) chord.Finger0;
-                c.Fingers[1] = (Byte) chord.Finger1;
-                c.Fingers[2] = (Byte) chord.Finger2;
-                c.Fingers[3] = (Byte) chord.Finger3;
-                c.Fingers[4] = (Byte) chord.Finger4;
-                c.Fingers[5] = (Byte) chord.Finger5;
-
-                for (Byte s=0; s<6; s++)
+                c.Frets[0] = (Byte)chord.Fret0;
+                c.Frets[1] = (Byte)chord.Fret1;
+                c.Frets[2] = (Byte)chord.Fret2;
+                c.Frets[3] = (Byte)chord.Fret3;
+                c.Frets[4] = (Byte)chord.Fret4;
+                c.Frets[5] = (Byte)chord.Fret5;
+                c.Fingers[0] = (Byte)chord.Finger0;
+                c.Fingers[1] = (Byte)chord.Finger1;
+                c.Fingers[2] = (Byte)chord.Finger2;
+                c.Fingers[3] = (Byte)chord.Finger3;
+                c.Fingers[4] = (Byte)chord.Finger4;
+                c.Fingers[5] = (Byte)chord.Finger5;
+                for (Byte s = 0; s < 6; s++)
                     c.Notes[s] = getMidiNote(tuning, s, c.Frets[s], bass);
                 readString(chord.ChordName, c.Name);
                 sng.Chords.Chords[i] = c;
             }
         }
-        
-        public void parseChordNotes(Song2014 xml, Sng2014File sng)
-        {
-            sng.ChordNotes = new Sng.ChordNotesSection();
+
+        private void parseChordNotes(Song2014 xml, Sng2014File sng) {
+            sng.ChordNotes = new ChordNotesSection();
             sng.ChordNotes.ChordNotes = cns.ToArray();
             sng.ChordNotes.Count = sng.ChordNotes.ChordNotes.Length;
         }
-        
-        public Int32 addChordNotes(SongChord2014 chord)
-        {
+
+        public Int32 addChordNotes(SongChord2014 chord) {
             // TODO processing all chordnotes in all levels separately, but
             //      there is a lot of reuse going on in original files
             //      (probably if all attributes match)
             var c = new ChordNotes();
-            
-            for (int i=0; i<6; i++) {
+            for (int i = 0; i < 6; i++) {
                 SongNote2014 n = null;
                 foreach (var cn in chord.chordNotes) {
-                    if (cn.String == i)
-                    {
+                    if (cn.String == i) {
                         n = cn;
                         break;
                     }
                 }
-                
-                // TODO helper function to translate XML element to note mask
-                //"NoteMask",
-                // TODO
-                c.BendData[i] = new SngBendData();
-                for (int j=0; j<32; j++)
-                    c.BendData[i].BendData32[j] = new SngBendData32();
-                c.StartFretId[i] = 255;
-                c.EndFretId[i] = 255;
+                c.NoteMask[i] = parse_notemask(n);
+                // TODO no XML example on chordnote bend values?
+                c.BendData[i] = new BendData();
+                for (int j = 0; j < 32; j++)
+                    c.BendData[i].BendData32[j] = new BendData32();
                 // TODO just guessing
                 if (n != null && n.SlideTo != -1) {
-                    c.StartFretId[i] = n.Fret;
-                    c.EndFretId[i] = (Byte) n.SlideTo;
+                    c.StartFretId[i] = (Byte)n.Fret;
+                    c.EndFretId[i] = (Byte)n.SlideTo;
+                } else {
+                    c.StartFretId[i] = 255;
+                    c.EndFretId[i] = 255;
                 }
                 // this appears to be always zero
                 //"Unk_0"
             }
-
             Int32 id = cns.Count;
             cns.Add(c);
             return id;
         }
-        
-        public void parsePhrases(Song2014 xml, Sng2014File sng)
-        {
+
+        private void parsePhrases(Song2014 xml, Sng2014File sng) {
             sng.Phrases = new PhraseSection();
             sng.Phrases.Count = xml.Phrases.Length;
-            sng.Phrases.Phrases = new SngPhrase2014[sng.Phrases.Count];
-            
-            for (int i=0; i<sng.Phrases.Count; i++) {
+            sng.Phrases.Phrases = new Phrase[sng.Phrases.Count];
+
+            for (int i = 0; i < sng.Phrases.Count; i++) {
                 var phrase = xml.Phrases[i];
-                var p = new SngPhrase2014();
+                var p = new Phrase();
                 p.Solo = phrase.Solo;
                 p.Disparity = phrase.Disparity;
                 p.Ignore = phrase.Ignore;
                 p.MaxDifficulty = phrase.MaxDifficulty;
                 Int32 links = 0;
-                
                 foreach (var iter in xml.PhraseIterations)
                     if (iter.PhraseId == i)
                         links++;
-
                 p.PhraseIterationLinks = links;
                 readString(phrase.Name, p.Name);
                 sng.Phrases.Phrases[i] = p;
             }
         }
-        
-        public void parsePhraseIterations(Song2014 xml, Sng2014File sng)
-        {
+
+        private void parsePhraseIterations(Song2014 xml, Sng2014File sng) {
             sng.PhraseIterations = new PhraseIterationSection();
             sng.PhraseIterations.Count = xml.PhraseIterations.Length;
-            sng.PhraseIterations.PhraseIterations = new SngPhraseIteration2014[sng.PhraseIterations.Count];
-            
-            for (int i=0; i<sng.PhraseIterations.Count; i++) {
+            sng.PhraseIterations.PhraseIterations = new PhraseIteration[sng.PhraseIterations.Count];
+
+            for (int i = 0; i < sng.PhraseIterations.Count; i++) {
                 var piter = xml.PhraseIterations[i];
-                var p = new SngPhraseIteration2014();
+                var p = new PhraseIteration();
                 p.PhraseId = piter.PhraseId;
                 p.StartTime = piter.Time;
-                if (i+1 < sng.PhraseIterations.Count)
-                    p.NextPhraseTime = xml.PhraseIterations[i+1].Time;
+                if (i + 1 < sng.PhraseIterations.Count)
+                    p.NextPhraseTime = xml.PhraseIterations[i + 1].Time;
                 else
                     p.NextPhraseTime = xml.SongLength;
-                
                 // TODO unknown meaning (rename in HSL and regenerate when discovered)
                 //"Unk3",
                 //"Unk4",
@@ -271,17 +223,16 @@ namespace RocksmithToolkitLib.Sng
                 sng.PhraseIterations.PhraseIterations[i] = p;
             }
         }
-        
-        public void parsePhraseExtraInfo(Song2014 xml, Sng2014File sng)
-        {
+
+        private void parsePhraseExtraInfo(Song2014 xml, Sng2014File sng) {
             sng.PhraseExtraInfo = new PhraseExtraInfoByLevelSection();
             sng.PhraseExtraInfo.Count = 0;
-            sng.PhraseExtraInfo.PhraseExtraInfoByLevel = new SngPhraseExtraInfoByLevel[sng.PhraseExtraInfo.Count];
+            sng.PhraseExtraInfo.PhraseExtraInfoByLevel = new PhraseExtraInfoByLevel[sng.PhraseExtraInfo.Count];
 
-            for (int i=0; i<sng.PhraseExtraInfo.Count; i++) {
+            for (int i = 0; i < sng.PhraseExtraInfo.Count; i++) {
                 // TODO
                 //var extra = xml.?[i];
-                var e = new SngPhraseExtraInfoByLevel();
+                var e = new PhraseExtraInfoByLevel();
                 //"PhraseId",
                 //"Difficulty",
                 //"Empty",
@@ -291,75 +242,75 @@ namespace RocksmithToolkitLib.Sng
                 sng.PhraseExtraInfo.PhraseExtraInfoByLevel[i] = e;
             }
         }
-        
-        public void parseNld(Song2014 xml, Sng2014File sng)
-        {
+
+        private void parseNLD(Song2014 xml, Sng2014File sng) {
+            // TODO there are no newLinkedDiffs produced by EOF XML
+            if (xml.NewLinkedDiff == null) {
+                sng.NLD = new NLinkedDifficultySection();
+                sng.NLD.Count = 0;
+                sng.NLD.NLinkedDifficulties = new NLinkedDifficulty[sng.NLD.Count];
+                return;
+            }
             // TODO it is unclear whether LinkedDiffs affect RS2 SNG
-            sng.NLD = new Sng.NLinkedDifficultySection();
+            sng.NLD = new NLinkedDifficultySection();
             sng.NLD.Count = xml.NewLinkedDiff.Length;
-            sng.NLD.NLinkedDifficulties = new SngNLinkedDifficulty[sng.NLD.Count];
-            
-            for (int i=0; i<sng.NLD.Count; i++) {
+            sng.NLD.NLinkedDifficulties = new NLinkedDifficulty[sng.NLD.Count];
+
+            for (int i = 0; i < sng.NLD.Count; i++) {
                 var nld = xml.NewLinkedDiff[i];
-                var n = new SngNLinkedDifficulty();
+                var n = new NLinkedDifficulty();
                 // TODO Ratio attribute unused?
                 n.LevelBreak = nld.LevelBreak;
                 n.PhraseCount = nld.PhraseCount;
                 n.NLD_Phrase = new Int32[n.PhraseCount];
-                
-                for (int j=0; j<n.PhraseCount; j++)
-                {
+                for (int j = 0; j < n.PhraseCount; j++) {
                     Console.WriteLine("{0}", j);
                     n.NLD_Phrase[j] = nld.Nld_phrase[j].Id;
                 }
                 sng.NLD.NLinkedDifficulties[i] = n;
             }
         }
-        
-        public void parseActions(Song2014 xml, Sng2014File sng)
-        {
+
+        private void parseActions(Song2014 xml, Sng2014File sng) {
             // there is no XML example, EOF does not support it either
-            sng.Actions = new Sng.ActionSection();
+            sng.Actions = new ActionSection();
             sng.Actions.Count = 0;
-            sng.Actions.Actions = new SngAction[sng.Actions.Count];
-            
-            for (int i=0; i<sng.Actions.Count; i++) {
+            sng.Actions.Actions = new Action[sng.Actions.Count];
+
+            for (int i = 0; i < sng.Actions.Count; i++) {
                 //var action = xml.?[i];
-                var a = new SngAction();
+                var a = new Action();
                 //a.Time = action.Time;
                 //read_string(action.ActionName, a.ActionName);
                 sng.Actions.Actions[i] = a;
             }
         }
-        
-        public void parseEvents(Song2014 xml, Sng2014File sng)
-        {
-            sng.Events = new Sng.EventSection();
+
+        private void parseEvents(Song2014 xml, Sng2014File sng) {
+            sng.Events = new EventSection();
             sng.Events.Count = xml.Events.Length;
-            sng.Events.Events = new SngEvent[sng.Events.Count];
-            
-            for (int i=0; i<sng.Events.Count; i++) {
+            sng.Events.Events = new Event[sng.Events.Count];
+
+            for (int i = 0; i < sng.Events.Count; i++) {
                 var evnt = xml.Events[i];
-                var e = new SngEvent();
+                var e = new Event();
                 e.Time = evnt.Time;
                 readString(evnt.Code, e.EventName);
                 sng.Events.Events[i] = e;
             }
         }
-        
+
         // TODO empty for one tone songs, need to pass tone changes for more
-        public void parseTones(Song2014 xml, Sng2014File sng)
-        {
-            sng.Tones = new Sng.ToneSection();
+        private void parseTones(Song2014 xml, Sng2014File sng) {
+            sng.Tones = new ToneSection();
             sng.Tones.Count = 0;
-            sng.Tones.Tones = new SngTone[sng.Tones.Count];
+            sng.Tones.Tones = new Tone[sng.Tones.Count];
         }
-        
-        public void parseDNAs(Song2014 xml, Sng2014File sng)
-        {
-            sng.DNAs = new Sng.DnaSection();
-            List<SngDna> dnas = new List<SngDna>();
-            
+
+        private void parseDNAs(Song2014 xml, Sng2014File sng) {
+            sng.DNAs = new DnaSection();
+            List<Dna> dnas = new List<Dna>();
+
             // TODO this is unclear
             // there can be less DNAs (ID 3 for start and ID 0 for end)
             // noguitar => 0
@@ -372,7 +323,6 @@ namespace RocksmithToolkitLib.Sng
                     case "noguitar":
                         new_id = 0;
                         break;
-                    
                     // TODO disabled for now to match lesson DNAs
                     //case "verse":
                     //  new_id = 2;
@@ -381,50 +331,46 @@ namespace RocksmithToolkitLib.Sng
                         new_id = 3;
                         break;
                 }
-                
+
                 if (new_id == id)
                     continue;
-                
                 id = new_id;
-                var dna = new SngDna();
+
+                var dna = new Dna();
                 dna.Time = section.StartTime;
                 dna.DnaId = id;
                 dnas.Add(dna);
             }
-            
+
             sng.DNAs.Dnas = dnas.ToArray();
             sng.DNAs.Count = sng.DNAs.Dnas.Length;
         }
-        
-        public void parseSections(Song2014 xml, Sng2014File sng)
-        {
+
+        private void parseSections(Song2014 xml, Sng2014File sng) {
             sng.Sections = new SectionSection();
             sng.Sections.Count = xml.Sections.Length;
-            sng.Sections.Sections = new SngSection[sng.Sections.Count];
-            
+            sng.Sections.Sections = new Section[sng.Sections.Count];
+
             int p_id = 0;
-            for (int i=0; i<sng.Sections.Count; i++) {
+            for (int i = 0; i < sng.Sections.Count; i++) {
                 var section = xml.Sections[i];
-                var s = new SngSection();
+                var s = new Section();
                 readString(section.Name, s.Name);
                 s.Number = section.Number;
                 s.StartTime = section.StartTime;
-
-                if (i+1 < sng.Sections.Count)
-                    s.EndTime = xml.Sections[i+1].StartTime;
+                if (i + 1 < sng.Sections.Count)
+                    s.EndTime = xml.Sections[i + 1].StartTime;
                 else
                     s.EndTime = xml.SongLength;
-
                 s.StartPhraseIterationId = p_id;
                 // find phrase iteration outside of section time
-                for (int end = p_id+1; end<xml.PhraseIterations.Length; end++) {
+                for (int end = p_id + 1; end < xml.PhraseIterations.Length; end++) {
                     if (xml.PhraseIterations[end].Time >= s.EndTime) {
                         // this p_id marks the start of the next section
                         p_id = end;
                         break;
                     }
                 }
-                
                 s.EndPhraseIterationId = p_id - 1;
                 // TODO unknown meaning (rename in HSL and regenerate when discovered)
                 //"Unk12",
@@ -440,11 +386,105 @@ namespace RocksmithToolkitLib.Sng
                 sng.Sections.Sections[i] = s;
             }
         }
-        
-        public void parseNote(Song2014 xml, SongNote2014 note, SngNotes n)
-        {
-            // TODO helper function to translate XML element to note mask
-            //"NoteMask",
+
+        // NoteMask:
+        const UInt32 NOTE_MASK_UNDEFINED = 0x0;
+        // missing                                0x1
+        const UInt32 NOTE_MASK_CHORD = 0x2;
+        const UInt32 NOTE_MASK_OPEN = 0x4;
+        const UInt32 NOTE_MASK_FRETHANDMUTE = 0x8;
+        const UInt32 NOTE_MASK_TREMOLO = 0x10;
+        const UInt32 NOTE_MASK_HARMONIC = 0x20;
+        const UInt32 NOTE_MASK_PALMMUTE = 0x40;
+        const UInt32 NOTE_MASK_SLAP = 0x80;
+        const UInt32 NOTE_MASK_PLUCK = 0x100;
+        const UInt32 NOTE_MASK_POP = 0x100;
+        const UInt32 NOTE_MASK_HAMMERON = 0x200;
+        const UInt32 NOTE_MASK_PULLOFF = 0x400;
+        const UInt32 NOTE_MASK_SLIDE = 0x800;
+        const UInt32 NOTE_MASK_BEND = 0x1000;
+        const UInt32 NOTE_MASK_SUSTAIN = 0x2000;
+        const UInt32 NOTE_MASK_TAP = 0x4000;
+        const UInt32 NOTE_MASK_PINCHHARMONIC = 0x8000;
+        const UInt32 NOTE_MASK_VIBRATO = 0x10000;
+        const UInt32 NOTE_MASK_MUTE = 0x20000;
+        const UInt32 NOTE_MASK_IGNORE = 0x40000;
+        // missing                               0x80000
+        // missing                               0x100000
+        const UInt32 NOTE_MASK_HIGHDENSITY = 0x200000;
+        const UInt32 NOTE_MASK_SLIDEUNPITCHEDTO = 0x400000;
+        // missing                               0x800000
+        // missing                               0x1000000
+        const UInt32 NOTE_MASK_DOUBLESTOP = 0x2000000;
+        const UInt32 NOTE_MASK_ACCENT = 0x4000000;
+        const UInt32 NOTE_MASK_PARENT = 0x8000000;
+        const UInt32 NOTE_MASK_CHILD = 0x10000000;
+        const UInt32 NOTE_MASK_ARPEGGIO = 0x20000000;
+        // missing                               0x40000000
+        const UInt32 NOTE_MASK_STRUM = 0x80000000;
+        public UInt32 parse_notemask(SongNote2014 note) {
+            UInt32 mask = 0;
+            if (note == null)
+                return NOTE_MASK_UNDEFINED;
+
+            // TODO some masks are not used here (open, arpeggio, chord, ...)
+            //      and some are missing (unused attributes below)
+            // linkNext = 0
+            //if (note. != 0)
+            //  mask |= NOTE_MASK_;
+            if (note.Accent != 0)
+                mask |= NOTE_MASK_ACCENT;
+            if (note.Bend != 0)
+                mask |= NOTE_MASK_BEND;
+            if (note.HammerOn != 0)
+                mask |= NOTE_MASK_HAMMERON;
+            if (note.Harmonic != 0)
+                mask |= NOTE_MASK_HARMONIC;
+            // hopo = 0
+            //if (note. != 0)
+            //  mask |= NOTE_MASK_;
+            if (note.Ignore != 0)
+                mask |= NOTE_MASK_IGNORE;
+            // leftHand = -1
+            //if (note. != 0)
+            //  mask |= NOTE_MASK_;
+            if (note.Mute != 0)
+                mask |= NOTE_MASK_MUTE;
+            if (note.PalmMute != 0)
+                mask |= NOTE_MASK_PALMMUTE;
+            if (note.Pluck != -1)
+                mask |= NOTE_MASK_PLUCK;
+            if (note.PullOff != 0)
+                mask |= NOTE_MASK_PULLOFF;
+            if (note.Slap != -1)
+                mask |= NOTE_MASK_SLAP;
+            if (note.SlideTo != -1)
+                mask |= NOTE_MASK_SLIDE;
+            if (note.Sustain != 0)
+                mask |= NOTE_MASK_SUSTAIN;
+            if (note.Tremolo != 0)
+                mask |= NOTE_MASK_TREMOLO;
+            if (note.HarmonicPinch != 0)
+                mask |= NOTE_MASK_PINCHHARMONIC;
+            // pickDirection="0"
+            //if (note. != 0)
+            //  mask |= NOTE_MASK_;
+            // rightHand="-1"
+            //if (note. != 0)
+            //  mask |= NOTE_MASK_;
+            if (note.SlideUnpitchTo != -1)
+                mask |= NOTE_MASK_SLIDEUNPITCHEDTO;
+            if (note.Tap != 0)
+                mask |= NOTE_MASK_TAP;
+            if (note.Vibrato != 0)
+                mask |= NOTE_MASK_VIBRATO;
+
+            return mask;
+        }
+
+        private void parseNote(Song2014 xml, SongNote2014 note, Notes n) {
+            // TODO unknown meaning of second mask - mask for chord attributes?
+            n.NoteMask[0] = parse_notemask(note);
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
             //"Unk1",
             n.Time = note.Time;
@@ -455,66 +495,57 @@ namespace RocksmithToolkitLib.Sng
             n.Unk3_4 = 4;
             n.ChordId = 255;
             n.ChordNotesId = 255;
-            
             // counting on phrase iterations to be sorted by time
-            for (int i=0; i<xml.PhraseIterations.Length; i++)
+            for (int i = 0; i < xml.PhraseIterations.Length; i++)
                 if (xml.PhraseIterations[i].Time > n.Time) {
-                    n.PhraseIterationId = i-1;
+                    n.PhraseIterationId = i - 1;
                     n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
                 }
-            
             // TODO
             //"FingerPrintId",
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
             //"Unk4",
             //"Unk5",
             //"Unk6",
-            
             // TODO
             //"FingerId",
-            n.PickDirection = (Byte) note.PickDirection;
-            n.Slap = (Byte) note.Slap;
-            n.Pluck = (Byte) note.Pluck;
+            n.PickDirection = (Byte)note.PickDirection;
+            n.Slap = (Byte)note.Slap;
+            n.Pluck = (Byte)note.Pluck;
             n.Vibrato = note.Vibrato;
             n.Sustain = note.Sustain;
             n.MaxBend = note.Bend;
-            
             // TODO
-            n.BendData = new Sng.BendDataSection();
+            n.BendData = new BendDataSection();
             n.BendData.Count = 0;
-            n.BendData.BendData = new SngBendData32[n.BendData.Count];
+            n.BendData.BendData = new BendData32[n.BendData.Count];
         }
-        
-        public void parseChord(Song2014 xml, SongChord2014 chord, SngNotes n, Int32 id)
-        {
+
+        private void parseChord(Song2014 xml, SongChord2014 chord, Notes n, Int32 id) {
             // TODO helper function to translate XML element to note mask
             //"NoteMask",
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
             //"Unk1",
             n.Time = chord.Time;
             n.StringIndex = 255;
-            
             // TODO this is an array, unclear how to do this
             //"FretId",
             // this appears to be always 4
             n.Unk3_4 = 4;
             n.ChordId = chord.ChordId;
             n.ChordNotesId = id;
-
             // counting on phrase iterations to be sorted by time
-            for (int i=0; i<xml.PhraseIterations.Length; i++)
+            for (int i = 0; i < xml.PhraseIterations.Length; i++)
                 if (xml.PhraseIterations[i].Time > n.Time) {
-                    n.PhraseIterationId = i-1;
+                    n.PhraseIterationId = i - 1;
                     n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
                 }
-            
             // TODO
             //"FingerPrintId",
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
             //"Unk4",
             //"Unk5",
             //"Unk6",
-            
             // TODO
             //"FingerId",
             n.PickDirection = 255;
@@ -524,76 +555,69 @@ namespace RocksmithToolkitLib.Sng
             n.Vibrato = 0;
             n.Sustain = 0;
             n.MaxBend = 0;
-            n.BendData = new Sng.BendDataSection();
+            n.BendData = new BendDataSection();
             n.BendData.Count = 0;
-            n.BendData.BendData = new SngBendData32[n.BendData.Count];
+            n.BendData.BendData = new BendData32[n.BendData.Count];
         }
-        
-        public void parseArrangements(Song2014 xml, Sng2014File sng)
-        {
-            sng.Arrangements = new Sng.ArrangementSection();
+
+        private void parseArrangements(Song2014 xml, Sng2014File sng) {
+            sng.Arrangements = new ArrangementSection();
             sng.Arrangements.Count = getMaxDifficulty(xml) + 1;
-            sng.Arrangements.Arrangements = new SngArrangement[sng.Arrangements.Count];
-            
-            for (int i=0; i<sng.Arrangements.Count; i++) {
+            sng.Arrangements.Arrangements = new Arrangement[sng.Arrangements.Count];
+
+            for (int i = 0; i < sng.Arrangements.Count; i++) {
                 var level = xml.Levels[i];
-                var a = new SngArrangement();
+                var a = new Arrangement();
                 a.Difficulty = level.Difficulty;
                 var anchors = new AnchorSection();
                 anchors.Count = level.Anchors.Length;
-                anchors.Anchors = new SngAnchor2014[anchors.Count];
-
-                for (int j=0; j<anchors.Count; j++) {
-                    var anchor = new SngAnchor2014();
+                anchors.Anchors = new Anchor[anchors.Count];
+                for (int j = 0; j < anchors.Count; j++) {
+                    var anchor = new Anchor();
                     anchor.StartBeatTime = level.Anchors[j].Time;
-                    if (j+1 < anchors.Count)
-                        anchor.EndBeatTime = level.Anchors[j+1].Time;
+                    if (j + 1 < anchors.Count)
+                        anchor.EndBeatTime = level.Anchors[j + 1].Time;
                     else
                         // last section = noguitar
-                        anchor.EndBeatTime = xml.Sections[xml.Sections.Length-1].StartTime;
+                        anchor.EndBeatTime = xml.Sections[xml.Sections.Length - 1].StartTime;
                     anchor.Unk3_StartBeatTime = anchor.StartBeatTime;
                     anchor.Unk4_StartBeatTime = anchor.StartBeatTime;
                     anchor.FretId = level.Anchors[j].Fret;
-                    anchor.Width = (Int32) level.Anchors[j].Width;
-
+                    anchor.Width = (Int32)level.Anchors[j].Width;
                     // TODO
                     //"PhraseIterationId"
                     anchors.Anchors[j] = anchor;
                 }
-                
                 a.Anchors = anchors;
                 // TODO no idea what this is, there is no XML/SNG using it?
-                a.AnchorExtensions = new Sng.AnchorExtensionSection();
+                a.AnchorExtensions = new AnchorExtensionSection();
                 a.AnchorExtensions.Count = 0;
-                a.AnchorExtensions.AnchorExtensions = new SngAnchorExtension[0];
-                
+                a.AnchorExtensions.AnchorExtensions = new AnchorExtension[0];
                 // TODO one for fretting hand and one for picking hand?
                 //"Fingerprints1",
-                a.Fingerprints1 = new Sng.FingerprintSection();
+                a.Fingerprints1 = new FingerprintSection();
                 a.Fingerprints1.Count = 0;
-                a.Fingerprints1.Fingerprints = new SngFingerprint[0];
+                a.Fingerprints1.Fingerprints = new Fingerprint[0];
                 //"Fingerprints2",
-                a.Fingerprints2 = new Sng.FingerprintSection();
+                a.Fingerprints2 = new FingerprintSection();
                 a.Fingerprints2.Count = 0;
-                a.Fingerprints2.Fingerprints = new SngFingerprint[0];
+                a.Fingerprints2.Fingerprints = new Fingerprint[0];
                 // notes and chords sorted by time
-                List<SngNotes> notes = new List<SngNotes>();
+                List<Notes> notes = new List<Notes>();
                 foreach (var note in level.Notes) {
-                    var n = new SngNotes();
+                    var n = new Notes();
                     parseNote(xml, note, n);
                     notes.Add(n);
                 }
-                
                 foreach (var chord in level.Chords) {
-                    var n = new SngNotes();
+                    var n = new Notes();
                     Int32 id = -1;
                     if (chord.chordNotes != null && chord.chordNotes.Length > 0)
                         id = addChordNotes(chord);
                     parseChord(xml, chord, n, id);
                     notes.Add(n);
                 }
-                
-                a.Notes = new Sng.NotesSection();
+                a.Notes = new NotesSection();
                 a.Notes.Count = notes.Count;
                 notes.Sort((x, y) => x.Time.CompareTo(y.Time));
                 a.Notes.Notes = notes.ToArray();
@@ -607,6 +631,33 @@ namespace RocksmithToolkitLib.Sng
                 a.PhraseIterationCount2 = a.PhraseIterationCount1;
                 a.NotesInIteration2 = a.NotesInIteration1;
                 sng.Arrangements.Arrangements[i] = a;
+            }
+        }
+
+        private void readXml(string inputFile, Sng2014File sng, Int16[] tuning, bool bass) {
+            using (var reader = new StreamReader(inputFile)) {
+                var serializer = new XmlSerializer(typeof(Song2014));
+                var song = (Song2014)serializer.Deserialize(reader);
+
+                parseEbeats(song, sng);
+                parsePhrases(song, sng);
+                parseChords(song, sng, tuning, bass);
+                // vocals will need different parse function
+                sng.Vocals = new VocalSection();
+                sng.Vocals.Vocals = new Vocal[0];
+                parsePhraseIterations(song, sng);
+                parsePhraseExtraInfo(song, sng);
+                parseNLD(song, sng);
+                parseActions(song, sng);
+                parseEvents(song, sng);
+                parseTones(song, sng);
+                parseDNAs(song, sng);
+                parseSections(song, sng);
+                parseArrangements(song, sng);
+                parseMetadata(song, sng, tuning);
+
+                // this needs to be initialized after arrangements
+                parseChordNotes(song, sng);
             }
         }
     }

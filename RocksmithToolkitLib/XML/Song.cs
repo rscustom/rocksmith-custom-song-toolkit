@@ -596,7 +596,7 @@ namespace RocksmithToolkitLib.Xml
         public Byte HammerOn { get; set; }
 
         [XmlAttribute("fret")]
-        public Byte Fret { get; set; }
+        public SByte Fret { get; set; }
 
         [XmlAttribute("bend")]
         public Byte Bend { get; set; }

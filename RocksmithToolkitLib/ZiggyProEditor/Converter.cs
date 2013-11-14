@@ -314,7 +314,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
         {
             SongNote note = new SongNote();
             Note zNote = chord.Notes[0];
-            note.Fret = (byte)zNote.Fret;
+            note.Fret = (sbyte)zNote.Fret;
             note.String = (byte)zNote.StringNo;
             note.Bend = 0;
             note.HammerOn = (zNote.IsTapNote || chord.IsHammerOn) ? (byte)1 : (byte)0;
