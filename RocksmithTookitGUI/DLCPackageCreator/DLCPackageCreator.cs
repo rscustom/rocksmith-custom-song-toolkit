@@ -791,23 +791,26 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     oggPcPathTB.Focus();
                     return null;
                 }
-                oggPreviewPCPath = Path.Combine(Path.GetDirectoryName(OggPCPath), String.Format(Path.GetFileNameWithoutExtension(OggPCPath) + "_preview" + Path.GetExtension(OggPCPath)));
-                if (!File.Exists(oggPreviewPCPath))
+
+                if (CurrentGameVersion == GameVersion.RS2014)
                 {
-                    if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
-                                        "File: " + oggPreviewPCPath + Environment.NewLine +
-                                        "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
-                                        "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    oggPreviewPCPath = Path.Combine(Path.GetDirectoryName(OggPCPath), String.Format(Path.GetFileNameWithoutExtension(OggPCPath) + "_preview" + Path.GetExtension(OggPCPath)));
+                    if (!File.Exists(oggPreviewPCPath))
                     {
-                        oggPcPathTB.Focus();
-                        return null;
+                        if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
+                                            "File: " + oggPreviewPCPath + Environment.NewLine +
+                                            "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
+                                            "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        {
+                            oggPcPathTB.Focus();
+                            return null;
+                        }
                     }
                 }
             }
 
             string oggPreviewMACPath = null;
-            if (CurrentGameVersion == GameVersion.RS2014) {
-                
+            if (CurrentGameVersion == GameVersion.RS2014) {                
                 if (platformMAC.Checked)
                 {
                     if (!File.Exists(OggMACPath))
@@ -838,16 +841,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     oggXBox360PathTB.Focus();
                     return null;
                 }
-                oggPreviewXBox360Path = Path.Combine(Path.GetDirectoryName(OggXBox360Path), String.Format(Path.GetFileNameWithoutExtension(OggXBox360Path) + "_preview" + Path.GetExtension(OggXBox360Path)));
-                if (!File.Exists(oggPreviewXBox360Path))
+
+                if (CurrentGameVersion == GameVersion.RS2014)
                 {
-                    if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
-                                        "File: " + oggPreviewXBox360Path + Environment.NewLine +
-                                        "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
-                                        "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    oggPreviewXBox360Path = Path.Combine(Path.GetDirectoryName(OggXBox360Path), String.Format(Path.GetFileNameWithoutExtension(OggXBox360Path) + "_preview" + Path.GetExtension(OggXBox360Path)));
+                    if (!File.Exists(oggPreviewXBox360Path))
                     {
-                        oggXBox360PathTB.Focus();
-                        return null;
+                        if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
+                                            "File: " + oggPreviewXBox360Path + Environment.NewLine +
+                                            "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
+                                            "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        {
+                            oggXBox360PathTB.Focus();
+                            return null;
+                        }
                     }
                 }
             }
@@ -860,16 +867,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     oggPS3PathTB.Focus();
                     return null;
                 }
-                oggPreviewPS3Path = Path.Combine(Path.GetDirectoryName(OggPS3Path), String.Format(Path.GetFileNameWithoutExtension(OggPS3Path) + "_preview" + Path.GetExtension(OggPS3Path)));
-                if (!File.Exists(oggPreviewPS3Path))
+
+                if (CurrentGameVersion == GameVersion.RS2014)
                 {
-                    if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
-                                        "File: " + oggPreviewPS3Path + Environment.NewLine +
-                                        "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
-                                        "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    oggPreviewPS3Path = Path.Combine(Path.GetDirectoryName(OggPS3Path), String.Format(Path.GetFileNameWithoutExtension(OggPS3Path) + "_preview" + Path.GetExtension(OggPS3Path)));
+                    if (!File.Exists(oggPreviewPS3Path))
                     {
-                        oggPS3PathTB.Focus();
-                        return null;
+                        if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
+                                            "File: " + oggPreviewPS3Path + Environment.NewLine +
+                                            "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
+                                            "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        {
+                            oggPS3PathTB.Focus();
+                            return null;
+                        }
                     }
                 }
             }
