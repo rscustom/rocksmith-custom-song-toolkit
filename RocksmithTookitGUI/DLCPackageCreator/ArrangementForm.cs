@@ -94,6 +94,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 toneCCombo.Enabled = currentGameVersion == GameVersion.RS2014;
                 toneDCombo.Enabled = currentGameVersion == GameVersion.RS2014;
 
+                EnableSequencedToneCombo();
+
                 // DLC ID
                 MasterId.Enabled = selectedType != ArrangementType.Vocal;
                 PersistentId.Enabled = selectedType != ArrangementType.Vocal;
@@ -133,12 +135,19 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void FillToneCombo(ComboBox combo, IEnumerable<string> toneNames, bool isBase)
         {
             combo.Items.Clear();
-            if (!isBase) combo.Items.Add("");
+            if (!isBase)
+                combo.Items.Add("");
+
             foreach (var tone in toneNames)
-            {
                 combo.Items.Add(tone);
-            }
+
             combo.SelectedIndex = 0;
+        }
+
+        private void EnableSequencedToneCombo() {
+            toneBCombo.Enabled = toneACombo.SelectedIndex > 0;
+            toneCCombo.Enabled = toneBCombo.SelectedIndex > 0;
+            toneDCombo.Enabled = toneCCombo.SelectedIndex > 0;
         }
 
         public Arrangement Arrangement
@@ -266,7 +275,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             if (!pathLeadCheckbox.Checked && !pathRhythmCheckbox.Checked && !pathBassCheckbox.Checked && (ArrangementType)arrangementTypeCombo.SelectedItem != ArrangementType.Vocal)
             {
-
+                MessageBox.Show("At least one Game Play Path is required. Please select one.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                gbGameplayPath.Focus();
+                return;
             }
             
             //Song XML File
@@ -315,6 +326,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void toneCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            EnableSequencedToneCombo();
         }
     }
 }

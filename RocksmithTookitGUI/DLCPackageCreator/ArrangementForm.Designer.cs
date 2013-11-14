@@ -225,7 +225,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label6.Location = new System.Drawing.Point(7, 75);
+            this.label6.Location = new System.Drawing.Point(6, 79);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(43, 13);
@@ -307,6 +307,7 @@
             this.toneCCombo.Name = "toneCCombo";
             this.toneCCombo.Size = new System.Drawing.Size(134, 21);
             this.toneCCombo.TabIndex = 15;
+            this.toneCCombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
             // label12
             // 
@@ -351,6 +352,7 @@
             this.toneBCombo.Name = "toneBCombo";
             this.toneBCombo.Size = new System.Drawing.Size(134, 21);
             this.toneBCombo.TabIndex = 13;
+            this.toneBCombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
             // label8
             // 
@@ -373,6 +375,7 @@
             this.toneACombo.Name = "toneACombo";
             this.toneACombo.Size = new System.Drawing.Size(134, 21);
             this.toneACombo.TabIndex = 12;
+            this.toneACombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
             // lblToneA
             // 
