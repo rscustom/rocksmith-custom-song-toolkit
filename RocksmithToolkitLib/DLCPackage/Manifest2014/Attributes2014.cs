@@ -97,6 +97,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             {
                 ArrangementProperties = SongContent.ArrangementProperties;
                 ArrangementProperties.BassPick = (int)arrangement.PluckedType;
+                ArrangementProperties.PathLead = Convert.ToInt32(arrangement.PathLead);
+                ArrangementProperties.PathRhythm = Convert.ToInt32(arrangement.PathRhythm);
+                ArrangementProperties.PathBass = Convert.ToInt32(arrangement.PathBass);
 
                 ArrangementType = (int)arrangement.Name;
 
