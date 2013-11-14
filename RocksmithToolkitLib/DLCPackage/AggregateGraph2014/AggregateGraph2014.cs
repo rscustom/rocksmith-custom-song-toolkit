@@ -200,27 +200,33 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             foreach (var json in JsonDB) {
                 json.Write(writer);
             }
+
             if (currentPlatform.version == GameVersion.RS2014) {
                 // HSAN
                 HsanDB.Write(writer);
+
                 // Showlight
                 ShowlightXml.Write(writer);
             }
+
             // Xblock
             GameXblock.Write(writer);
+
             // Song Xml
-            foreach (var xml in SongXml) {
+            foreach (var xml in SongXml)
                 xml.Write(writer);
-            }
+
             // Song SNG
-            foreach (var sng in MusicgameSong) {
+            foreach (var sng in MusicgameSong)
                 sng.Write(writer);
-            }
+
+            // Album Art
+            foreach (var album in AlbumArt)
+                album.Write(writer);
+
             // Soundbank
             foreach (var bnk in Soundbank)
-            {
                 bnk.Write(writer);
-            }
 
             writer.Flush();
         }
