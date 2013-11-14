@@ -8,11 +8,11 @@
 
 #pragma byteorder(little_endian)
 
-struct MeasureMask {
-    long FirstBeat : 1;
-    long EvenMeasure : 1;
-    long Unk_0 : 30;
-};
+//struct MeasureMask {
+//    long FirstBeat : 1;
+//    long EvenMeasure : 1;
+//    long Unk_0 : 30;
+//};
 
 struct BPM
 {
@@ -22,7 +22,8 @@ struct BPM
     long PhraseIteration;
     // bit 0 = first beat of measure
     // bit 1 = even measure (starting with 0)
-    struct MeasureMask Mask;
+    //struct MeasureMask Mask;
+    long Mask;
 };
 
 struct BPM_SECTION
@@ -45,12 +46,12 @@ struct PHRASE
 struct PHRASE_SECTION
 {
     long Count;
-    struct PHRASE Phrases[Count];  
+    struct PHRASE Phrases[Count];
 };
 
 struct CHORD
 {
-    long Mask;
+    ulong Mask;
     byte Frets[6];
     byte Fingers[6];
     long Notes[6];
@@ -83,7 +84,7 @@ struct BEND_DATA32
 
 struct BEND_DATA
 {
-    struct BEND_DATA32 BendData32[32]; 
+    struct BEND_DATA32 BendData32[32];
     long UsedCount;
 };
 
@@ -95,7 +96,7 @@ struct BEND_DATA_SECTION
 
 struct CHORD_NOTES
 {
-    long NoteMask[6];
+    ulong NoteMask[6];
     struct BEND_DATA BendData[6];
     byte StartFretId[6];
     byte EndFretId[6];
@@ -114,13 +115,13 @@ struct VOCAL
     float Time;
     long Note;
     float Length;
-    char Lyric[48];  
+    char Lyric[48];
 };
 
 struct VOCAL_SECTION
 {
     long Count;
-    struct VOCAL Vocals[Count];  
+    struct VOCAL Vocals[Count];
 };
 
 // TODO only in vocals
@@ -174,7 +175,7 @@ struct PHRASE_ITERATION
     // FIXME TODO small integer values or zero
     long Unk3;
     long Unk4;
-    long Unk5; 
+    long Unk5;
 };
 
 struct PHRASE_ITERATION_SECTION
@@ -215,7 +216,7 @@ struct N_LINKED_DIFFICULTY_SECTION
 struct ACTION
 {
     float Time;
-    char Action[256];
+    char ActionName[256];
 };
 
 struct ACTION_SECTION
@@ -227,7 +228,7 @@ struct ACTION_SECTION
 struct EVENT
 {
     float Time;
-    char Event[256];
+    char EventName[256];
 };
 
 struct EVENT_SECTION
@@ -239,7 +240,7 @@ struct EVENT_SECTION
 struct TONE
 {
     float Time;
-    long Tone;
+    long ToneId;
 };
 
 struct TONE_SECTION
@@ -251,7 +252,7 @@ struct TONE_SECTION
 struct DNA
 {
     float Time;
-    long Dna;
+    long DnaId;
 };
 
 struct DNA_SECTION
@@ -367,11 +368,11 @@ struct FINGERPRINT_SECTION
 // NOTE_MASK_ARPEGGIO = 0x20000000
 // NOTE_MASK_POP = 0x100
 // NOTE_MASK_STRUM = 0x80000000
-// 
+//
 // FIXME TODO there are unclear and heavily used fields, including NoteMask
 struct NOTES
 {
-    long NoteMask[2];
+    ulong NoteMask[2];
     long Unk1;
     float Time;
     byte StringIndex;
@@ -413,7 +414,7 @@ struct ARRANGEMENT
     struct FINGERPRINT_SECTION Fingerprints1;
     struct FINGERPRINT_SECTION Fingerprints2;
     struct NOTES_SECTION Notes;
-    
+
     long PhraseCount;
     float AverageNotesPerIteration[PhraseCount];
     long PhraseIterationCount1;
@@ -454,6 +455,30 @@ struct METADATA
     long MaxDifficulty;
 };
 
+struct SNG {
+    struct BPM_SECTION BPMs;
+    struct PHRASE_SECTION Phrases;
+    struct CHORD_SECTION Chords;
+    struct CHORD_NOTES_SECTION ChordNotes;
+
+    struct VOCAL_SECTION Vocals;
+    // skipped if Vocals count is zero
+    struct SYMBOLS_HEADER_SECTION SymbolsHeader;
+    struct SYMBOLS_TEXTURE_SECTION SymbolsTexture;
+    struct SYMBOL_DEFINITION_SECTION SymbolsDefinition;
+
+    struct PHRASE_ITERATION_SECTION PhraseIterations;
+    struct PHRASE_EXTRA_INFO_BY_LEVEL_SECTION PhraseExtraInfo;
+    struct N_LINKED_DIFFICULTY_SECTION NLD;
+    struct ACTION_SECTION Actions;
+    struct EVENT_SECTION Events;
+    struct TONE_SECTION Tones;
+    struct DNA_SECTION DNAs;
+    struct SECTION_SECTION Sections;
+    struct ARRANGEMENT_SECTION Arrangements;
+    struct METADATA Metadata;
+};
+
 function ParseFile
 {
     UQWord pos = 0;
@@ -471,7 +496,7 @@ function ParseFile
         pos += __addStructureAt(pos, "SYMBOL_DEFINITION_SECTION", "");
     };
 
-    pos += __addStructureAt(pos, "PHRASE_ITERATION_SECTION", "");   
+    pos += __addStructureAt(pos, "PHRASE_ITERATION_SECTION", "");
     pos += __addStructureAt(pos, "PHRASE_EXTRA_INFO_BY_LEVEL_SECTION", "");
     pos += __addStructureAt(pos, "N_LINKED_DIFFICULTY_SECTION", "");
     pos += __addStructureAt(pos, "ACTION_SECTION", "");
