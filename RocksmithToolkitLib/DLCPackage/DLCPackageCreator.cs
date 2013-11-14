@@ -107,6 +107,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 
                 switch (platform.platform) {
                     case GamePlatform.Pc:
+                    case GamePlatform.Mac:
                         var fileNameWithoutExtension = Path.Combine(Path.GetDirectoryName(packagePath), Path.GetFileNameWithoutExtension(packagePath));
                         switch (platform.version)
 	                    {
