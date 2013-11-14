@@ -107,4 +107,9 @@
   <SongAppId Version="RS2014" AppId="258354" Name="Hotei - Battle Without Honor or Humanity" />
   <SongAppId Version="RS2014" AppId="258355" Name="Hotei - Bambina" />
   <SongAppId Version="RS2014" AppId="258356" Name="Hotei - Thrill" />
+  <SongAppId Version="RS2014" AppId="258358" Name="Alice in Chains - Man in the	 Box" />
+  <SongAppId Version="RS2014" AppId="258359" Name="Alice in Chains - Would?" />
+  <SongAppId Version="RS2014" AppId="258360" Name="Alice in Chains - Hollow" />
+  <SongAppId Version="RS2014" AppId="258361" Name="Alice in Chains - Them Bones" />
+  <SongAppId Version="RS2014" AppId="258362" Name="Alice in Chains - Check My Brain" />
 </ArrayOfSongAppId>
