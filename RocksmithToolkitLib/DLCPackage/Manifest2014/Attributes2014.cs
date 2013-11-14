@@ -96,6 +96,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             if (!IsVocal)
             {
                 ArrangementProperties = SongContent.ArrangementProperties;
+                ArrangementProperties.BassPick = (int)arrangement.PluckedType;
+
                 ArrangementType = (int)arrangement.Name;
 
                 //Chords        -- //TODO: MISSING GENERATE
@@ -131,7 +133,20 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 Tone_C = arrangement.ToneC;
                 Tone_D = arrangement.ToneD;
                 Tone_Multiplayer = arrangement.ToneMultiplayer;
-                //Tones
+
+                Tones = new List<Tone2014>();
+                if (!String.IsNullOrEmpty(arrangement.ToneA))
+                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_A));
+                if (!String.IsNullOrEmpty(arrangement.ToneB))
+                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_B));
+                if (!String.IsNullOrEmpty(arrangement.ToneBase))
+                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_Base));
+                if (!String.IsNullOrEmpty(arrangement.ToneC))
+                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_C));
+                if (!String.IsNullOrEmpty(arrangement.ToneD))
+                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_D));
+                if (!String.IsNullOrEmpty(arrangement.ToneMultiplayer))
+                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_Multiplayer));
             }
 
             #endregion
