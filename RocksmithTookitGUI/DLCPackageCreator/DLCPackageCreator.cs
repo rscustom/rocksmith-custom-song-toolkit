@@ -540,20 +540,28 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             RS2012.Checked = info.GameVersion == GameVersion.RS2012;
             RS2014.Checked = info.GameVersion == GameVersion.RS2014;
-            
-            if (CurrentGameVersion == GameVersion.RS2014)
+
+            switch (CurrentGameVersion)
             {
-                if (info.TonesRS2014 == null)
-                    info.TonesRS2014 = new List<Tone2014>();
-                if (info.TonesRS2014.Count == 0)
-                    info.TonesRS2014.Add(CreateNewTone());
-            }
-            else {
-                if (info.Tones == null)
+                case GameVersion.RS2012:
+                    if (info.Tones == null)
                     info.Tones = new List<Tone>();
-                if (info.Tones.Count == 0)
-                    info.Tones.Add(CreateNewTone());
-            }
+                    if (info.Tones.Count == 0)
+                        info.Tones.Add(CreateNewTone());
+
+                    foreach (var tone in info.Tones)
+                        TonesLB.Items.Add(tone);
+                    break;
+                case GameVersion.RS2014:
+                    if (info.TonesRS2014 == null)
+                    info.TonesRS2014 = new List<Tone2014>();
+                    if (info.TonesRS2014.Count == 0)
+                        info.TonesRS2014.Add(CreateNewTone());
+
+                    foreach (var toneRS2014 in info.TonesRS2014)
+                        TonesLB.Items.Add(toneRS2014);
+                    break;
+            }              
 
             var path = new Uri(Path.GetDirectoryName(dlcSavePath) + Path.DirectorySeparatorChar);
 
@@ -613,13 +621,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 ArrangementLB.Items.Add(arrangement);
             }
-
-            if (CurrentGameVersion == GameVersion.RS2014)
-                foreach (var toneRS2014 in info.TonesRS2014)
-                    TonesLB.Items.Add(toneRS2014);
-            else
-                foreach (var tone in info.Tones)
-                    TonesLB.Items.Add(tone);
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -865,11 +866,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             List<Tone> tones = new List<Tone>();
             if (CurrentGameVersion == GameVersion.RS2012)
-                TonesLB.Items.OfType<Tone>().ToList();
+                tones = TonesLB.Items.OfType<Tone>().ToList();
 
             List<Tone2014> tonesRS2014 = new List<Tone2014>();
             if (CurrentGameVersion == GameVersion.RS2014)
-                TonesLB.Items.OfType<Tone2014>().ToList();
+                tonesRS2014 = TonesLB.Items.OfType<Tone2014>().ToList();
 
             //string liveSignatureID = xboxLicense0IDTB.Text.Trim();
             //if (rbuttonSignatureLIVE.Checked && String.IsNullOrEmpty(liveSignatureID))
