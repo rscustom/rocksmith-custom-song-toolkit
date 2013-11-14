@@ -188,12 +188,14 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\albumart2014_64.dds" />
     <None Include="Resources\albumart2014_128.dds" />
     <None Include="Resources\albumart2014_256.dds" />
+    <None Include="Resources\XBox360_DLC_image2014.png" />
     <Content Include="RocksmithToolkitLib.TuningDefinition.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -204,7 +206,6 @@
     <None Include="Resources\pedals2014.json" />
     <None Include="Resources\rsenumerable_root.flat" />
     <None Include="Resources\rsenumerable_song.flat" />
-    <None Include="Resources\TuningDefintions2014.json" />
     <None Include="Resources\XBox360_DLC_image.png" />
     <None Include="Resources\XBox360_KV.bin" />
   </ItemGroup>

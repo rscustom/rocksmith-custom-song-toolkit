@@ -145,9 +145,6 @@
   <data name="pedals2014" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pedals2014.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="TuningDefintions2014" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\TuningDefintions2014.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="albumart2014_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\albumart2014_128.dds;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -162,5 +159,8 @@
   </data>
   <data name="rsenumerable_song" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rsenumerable_song.flat;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="XBox360_DLC_image2014" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XBox360_DLC_image2014.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -131,7 +131,7 @@ namespace RocksmithToolkitLib.DLCPackage
 	                    }
                         break;
                     case GamePlatform.XBox360:
-                        BuildXBox360Package(packagePath, info, FILES_XBOX);
+                        BuildXBox360Package(packagePath, info, FILES_XBOX, platform.version);
                         break;
                     case GamePlatform.PS3:
                         EncryptPS3EdatFiles(packagePath);
@@ -154,12 +154,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region XBox360
 
-        public static void BuildXBox360Package(string packagePath, DLCPackageData info, IEnumerable<string> xboxFiles)
+        public static void BuildXBox360Package(string packagePath, DLCPackageData info, IEnumerable<string> xboxFiles, GameVersion gameVersion)
         {
             LogRecord x = new LogRecord();
             RSAParams xboxRSA = info.SignatureType == PackageMagic.CON ? new RSAParams(new DJsIO(Resources.XBox360_KV, true)) : new RSAParams(StrongSigned.LIVE);
             CreateSTFS xboxSTFS = new CreateSTFS();
-            xboxSTFS.HeaderData = info.GetSTFSHeader();
+            xboxSTFS.HeaderData = info.GetSTFSHeader(gameVersion);
             foreach (string file in xboxFiles)
                 xboxSTFS.AddFile(file, Path.GetFileName(file));
 
@@ -179,11 +179,23 @@ namespace RocksmithToolkitLib.DLCPackage
             catch { /*Have no problem if don't delete*/ }
         }
 
-        private static HeaderData GetSTFSHeader(this DLCPackageData dlcData) {
+        private static HeaderData GetSTFSHeader(this DLCPackageData dlcData, GameVersion gameVersion) {
             HeaderData hd = new HeaderData();
             string displayName = String.Format("{0} by {1}", dlcData.SongInfo.SongDisplayName, dlcData.SongInfo.Artist);
-            hd.Title_Package = "Rocksmith";
-            hd.TitleID = 1431505011; //55530873 in HEXA
+            switch (gameVersion)
+            {
+                case GameVersion.RS2012:
+                    hd.Title_Package = "Rocksmith";
+                    hd.TitleID = 1431505011; //55530873 in HEXA for RS1
+                    hd.PackageImageBinary = Resources.XBox360_DLC_image.ImageToBytes(ImageFormat.Png);
+                    break;
+                case GameVersion.RS2014:
+                    hd.Title_Package = "Rocksmith 2014";
+                    hd.TitleID = 1431505088; //555308C0 in HEXA for RS2014
+                    hd.PackageImageBinary = Resources.XBox360_DLC_image2014.ImageToBytes(ImageFormat.Png);
+                    break;
+            }
+            
             hd.Publisher = String.Format("Custom Song Creator Toolkit (v{0}.{1}.{2}.{3} beta)",
                                         Assembly.GetExecutingAssembly().GetName().Version.Major,
                                         Assembly.GetExecutingAssembly().GetName().Version.Minor,
@@ -192,7 +204,6 @@ namespace RocksmithToolkitLib.DLCPackage
             hd.Title_Display = displayName;
             hd.Description = displayName;
             hd.ThisType = PackageType.MarketPlace;
-            hd.PackageImageBinary = Resources.XBox360_DLC_image.ImageToBytes(ImageFormat.Png);;
             hd.ContentImageBinary = hd.PackageImageBinary;
             hd.IDTransfer = TransferLock.AllowTransfer;
             if (dlcData.SignatureType == PackageMagic.LIVE)
@@ -270,7 +281,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // Move directory to user selected path
             if (Directory.Exists(PS3_WORKDIR))
-                DirectoryExtension.Move(PS3_WORKDIR, packagesPath);
+            {
+                DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", packagesPath));
+            }
 
             if (rebuilderResult.IndexOf("Encrypt all EDAT files successfully") < 0)
                 throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output bellow:" + Environment.NewLine + Environment.NewLine + rebuilderResult);
@@ -345,6 +358,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     packPsarc.AddEntry("flatmodels/rs/rsenumerable_song.flat", rsenumerableSongStream);
 
                     using (var appIdStream = new MemoryStream())
+                    using (var packageListStream = new MemoryStream())
                     using (var soundbankStream = new MemoryStream())
                     using (var soundbankPreviewStream = new MemoryStream())
                     using (var aggregateGraphStream = new MemoryStream())
@@ -359,6 +373,15 @@ namespace RocksmithToolkitLib.DLCPackage
                         {
                             GenerateAppId(appIdStream, info.AppId);
                             packPsarc.AddEntry("appid.appid", appIdStream);
+                        }
+
+                        if (platform.platform == GamePlatform.XBox360) {
+                            var packageListWriter = new StreamWriter(packageListStream);
+                            packageListWriter.WriteLine(dlcName);
+                            packageListWriter.Flush();
+                            packageListStream.Seek(0, SeekOrigin.Begin);
+                            string packageList = "PackageList.txt";
+                            packageListStream.WriteTmpFile(packageList, platform);
                         }
                             
                         // SOUNDBANK
@@ -439,6 +462,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.Write(output, true);
                         output.Flush();
                         output.Seek(0, SeekOrigin.Begin);
+                        output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
                     }
                 }
                 finally

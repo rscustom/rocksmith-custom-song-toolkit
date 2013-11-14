@@ -28,7 +28,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         PackPC2014(sourcePath, saveFileName);
                     break;
                 case GamePlatform.XBox360:
-                    PackXBox360(sourcePath, saveFileName);
+                    PackXBox360(sourcePath, saveFileName, platform.version);
                     break;
                 case GamePlatform.PS3:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
@@ -134,7 +134,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void PackXBox360(string sourcePath, string saveFileName) {
+        private static void PackXBox360(string sourcePath, string saveFileName, GameVersion gameVersion) {
             foreach (var directory in Directory.EnumerateDirectories(Path.Combine(sourcePath, ROOT_XBox360))) {
                 PackInnerXBox360(Path.Combine(sourcePath, ROOT_XBox360), directory);
             }
@@ -190,7 +190,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             IEnumerable<string> xboxFiles = Directory.EnumerateFiles(Path.Combine(sourcePath, ROOT_XBox360));
-            DLCPackageCreator.BuildXBox360Package(saveFileName, songData, xboxFiles);
+            DLCPackageCreator.BuildXBox360Package(saveFileName, songData, xboxFiles, gameVersion);
 
             foreach (var file in xboxFiles)
                 if (Path.GetExtension(file) == ".psarc" && File.Exists(file))

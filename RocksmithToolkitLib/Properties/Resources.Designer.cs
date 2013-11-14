@@ -181,21 +181,21 @@ namespace RocksmithToolkitLib.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static byte[] TuningDefintions2014 {
+        internal static System.Drawing.Bitmap XBox360_DLC_image {
             get {
-                object obj = ResourceManager.GetObject("TuningDefintions2014", resourceCulture);
-                return ((byte[])(obj));
+                object obj = ResourceManager.GetObject("XBox360_DLC_image", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap XBox360_DLC_image {
+        internal static System.Drawing.Bitmap XBox360_DLC_image2014 {
             get {
-                object obj = ResourceManager.GetObject("XBox360_DLC_image", resourceCulture);
+                object obj = ResourceManager.GetObject("XBox360_DLC_image2014", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
