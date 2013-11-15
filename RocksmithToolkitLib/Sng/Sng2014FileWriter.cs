@@ -14,33 +14,21 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
         private static List<ChordNotes> cns = new List<ChordNotes>();
 
-        public static void Write(string xmlSongFile, string songFileOutput, ArrangementType arrangementType, Platform platform, InstrumentTuning tuning)
+        public static void Write(string xmlSongFile, BinaryWriter writer, ArrangementType arrangementType, Platform platform)
         {
-            using (FileStream fs = new FileStream(songFileOutput, FileMode.Create))
-            {
-                BinaryWriter writer = new BinaryWriter(fs);
-                
-                Song2014 song = Song2014.LoadFromFile(xmlSongFile);
-                var sng = new Sng2014File();
-                
-                // TODO tuning needed to compute MIDI notes
-                Int16[] tuningStrings = {
-                                     (short)song.Tuning.String0,
-                                     (short)song.Tuning.String1,
-                                     (short)song.Tuning.String2,
-                                     (short)song.Tuning.String3,
-                                     (short)song.Tuning.String4,
-                                     (short)song.Tuning.String5
-                                 };
+            Song2014 song = Song2014.LoadFromFile(xmlSongFile);
+            var sng = new Sng2014File();
 
-                var sngFileWriter = new Sng2014FileWriter();
-                sngFileWriter.readXml(song, sng, tuningStrings, arrangementType);
-                sng.Write(writer);
-            }
+            var sngFileWriter = new Sng2014FileWriter();
+            sngFileWriter.readXml(song, sng, arrangementType);
+            sng.Write(writer);
+            // TODO this was supposed to convert XML to SNG data, it should be wrapped with header and encrypted on another level, making Platform not needed here
         }
 
-        private void readXml(Song2014 songXml, Sng2014File sngFile, Int16[] tuning, ArrangementType arrangementType)
+        private void readXml(Song2014 songXml, Sng2014File sngFile, ArrangementType arrangementType)
         {
+            // TODO
+            Int16[] tuning = { 0,0,0,0,0,0 };
             parseEbeats(songXml, sngFile);
             parsePhrases(songXml, sngFile);
             parseChords(songXml, sngFile, tuning, arrangementType == ArrangementType.Bass);

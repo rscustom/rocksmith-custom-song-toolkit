@@ -706,7 +706,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     var cleanSngFile = Path.ChangeExtension(sngFile, ".sng.tmp");
 
                     // Generate SNG
-                    Sng2014FileWriter.Write(arrangement.SongXml.File, cleanSngFile, arrangement.ArrangementType, platform, tuning);
+                    // TODO this call needs a wrapper to create proper SNG -- filled Sng classes can be used multiple times to produce different files, no need to parse them over and over again
+                    //Sng2014FileWriter.Write(arrangement.SongXml.File, cleanSngFile, arrangement.ArrangementType, platform);
 
                     using (var cleanSngStream = new FileStream(cleanSngFile, FileMode.Open, FileAccess.Read))
                     using (var packedSngStream = new TempFileStream())
