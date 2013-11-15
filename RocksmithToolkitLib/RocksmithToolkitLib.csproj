@@ -158,9 +158,9 @@
     <Compile Include="XmlRepository\SongAppId.cs" />
     <Compile Include="XmlRepository\SongAppIdRepository.cs" />
     <Compile Include="XmlRepository\XmlRepository.cs" />
-    <Compile Include="Xml\Song2014.cs" />
-    <Compile Include="Xml\Vocals.cs" />
-    <Compile Include="Xml\Song.cs" />
+    <Compile Include="XML\Song2014.cs" />
+    <Compile Include="XML\Vocals.cs" />
+    <Compile Include="XML\Song.cs" />
     <Compile Include="DLCPackage\SoundBankGenerator.cs" />
     <Compile Include="DLCPackage\ToneGenerator.cs" />
     <Compile Include="DLCPackage\Tone\Pedal.cs" />
