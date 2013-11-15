@@ -82,6 +82,28 @@ namespace RocksmithToolkitLib.PSARC
 			output.Flush();
 			output.Seek(0, SeekOrigin.Begin);
 		}
+
+        public void PackSng2014(Stream inputStream, Stream outputStream)
+        {
+            BigEndianBinaryReader BEbinReader = new BigEndianBinaryReader(inputStream);
+
+            //calculate lenght of plain SNG data
+            byte[] len = BitConverter.GetBytes(inputStream.Length);
+            outputStream.Write(len, 0, 4);
+
+            ZOutputStream zOut = new ZOutputStream(outputStream, 9);
+            byte[] b = new byte[inputStream.Length];
+            inputStream.Read(b, 0, b.Length);
+            zOut.Write(b, 0, b.Length);
+            zOut.finish();
+
+            //zeroed DSA
+            outputStream.Write(new byte[58], 0, 58);
+            //ZOutputStream DSA = new ZOutputStream(IOO, 3);
+            outputStream.Flush();
+            outputStream.Seek(0, SeekOrigin.Begin);
+        }
+
 		public void ReadNames()
 		{
 			this.Entries[0].Name = "NamesBlock.bin";
@@ -132,7 +154,7 @@ namespace RocksmithToolkitLib.PSARC
             BigEndianBinaryReader bigEndianBinaryReaderTOC = bigEndianBinaryReader;
             if (this.header.archiveFlags == 4)
             {
-                var decStream = new MemoryStream();
+                var decStream = new TempFileStream();
                 using (var outputStream = new MemoryStream())
                 {
                     RijndaelEncryptor.DecryptPSARC(str, outputStream, this.header.TotalTOCSize);
