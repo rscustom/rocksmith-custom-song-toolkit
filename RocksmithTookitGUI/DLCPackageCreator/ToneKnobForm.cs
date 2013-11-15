@@ -12,7 +12,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class ToneKnobForm : Form
     {
-
         Regex nameParser = new Regex(@"\$\[\d+\] (.+)");
 
         public ToneKnobForm()

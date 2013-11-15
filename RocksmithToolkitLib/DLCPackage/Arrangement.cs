@@ -7,6 +7,14 @@ using RocksmithToolkitLib.Sng;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
+    public enum RouteMask : int {
+        // Used for lessons or for display only in song list
+        None = 0,
+        Lead = 1,
+        Rhythm = 2,
+        Bass = 4
+    }
+
     public class Arrangement
     {
         public Arrangement()
@@ -26,11 +34,9 @@ namespace RocksmithToolkitLib.DLCPackage
         public int RelativeDifficulty { get; set; }
         public PluckedType PluckedType { get; set; }
         // Gameplay Path
-        public bool PathLead { get; set; }
-        public bool PathRhythm { get; set; }
-        public bool PathBass { get; set; }
-        public string ToneBase { get; set; }
+        public RouteMask RouteMask { get; set; }
         // Tone Selector
+        public string ToneBase { get; set; }
         public string ToneMultiplayer { get; set; }
         public string ToneA { get; set; }
         public string ToneB { get; set; }

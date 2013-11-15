@@ -103,7 +103,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 NotesHard = 0; //TODO: ???
                 NotesMedium = 0; //TODO: ???
                 Representative = 1;
-                RouteMask = 0; //TODO: ???
+                RouteMask = (int)arrangement.RouteMask;
                 SongDiffEasy = 0; //TODO: ???
                 SongDiffHard = 0; //TODO: ???
                 SongDifficulty = 0; //TODO: ???

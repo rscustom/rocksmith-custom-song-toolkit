@@ -64,9 +64,10 @@
             this.gbScrollSpeed = new System.Windows.Forms.GroupBox();
             this.RelativeDifficulty = new RocksmithToolkitGUI.CueTextBox();
             this.gbGameplayPath = new System.Windows.Forms.GroupBox();
-            this.pathBassCheckbox = new System.Windows.Forms.CheckBox();
-            this.pathRhythmCheckbox = new System.Windows.Forms.CheckBox();
-            this.pathLeadCheckbox = new System.Windows.Forms.CheckBox();
+            this.routeMaskNoneRadio = new System.Windows.Forms.RadioButton();
+            this.routeMaskBassRadio = new System.Windows.Forms.RadioButton();
+            this.routeMaskRhythmRadio = new System.Windows.Forms.RadioButton();
+            this.routeMaskLeadRadio = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).BeginInit();
             this.gbTone.SuspendLayout();
             this.gbDLCId.SuspendLayout();
@@ -488,9 +489,10 @@
             // 
             // gbGameplayPath
             // 
-            this.gbGameplayPath.Controls.Add(this.pathBassCheckbox);
-            this.gbGameplayPath.Controls.Add(this.pathRhythmCheckbox);
-            this.gbGameplayPath.Controls.Add(this.pathLeadCheckbox);
+            this.gbGameplayPath.Controls.Add(this.routeMaskNoneRadio);
+            this.gbGameplayPath.Controls.Add(this.routeMaskBassRadio);
+            this.gbGameplayPath.Controls.Add(this.routeMaskRhythmRadio);
+            this.gbGameplayPath.Controls.Add(this.routeMaskLeadRadio);
             this.gbGameplayPath.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbGameplayPath.Location = new System.Drawing.Point(6, 176);
             this.gbGameplayPath.Name = "gbGameplayPath";
@@ -499,40 +501,51 @@
             this.gbGameplayPath.TabStop = false;
             this.gbGameplayPath.Text = "Gameplay Path";
             // 
-            // pathBassCheckbox
+            // routeMaskNoneRadio
             // 
-            this.pathBassCheckbox.AutoSize = true;
-            this.pathBassCheckbox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.pathBassCheckbox.Location = new System.Drawing.Point(278, 19);
-            this.pathBassCheckbox.Name = "pathBassCheckbox";
-            this.pathBassCheckbox.Size = new System.Drawing.Size(49, 17);
-            this.pathBassCheckbox.TabIndex = 10;
-            this.pathBassCheckbox.Text = "Bass";
-            this.pathBassCheckbox.UseVisualStyleBackColor = true;
+            this.routeMaskNoneRadio.AutoSize = true;
+            this.routeMaskNoneRadio.Checked = true;
+            this.routeMaskNoneRadio.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.routeMaskNoneRadio.Location = new System.Drawing.Point(322, 21);
+            this.routeMaskNoneRadio.Name = "routeMaskNoneRadio";
+            this.routeMaskNoneRadio.Size = new System.Drawing.Size(51, 17);
+            this.routeMaskNoneRadio.TabIndex = 14;
+            this.routeMaskNoneRadio.TabStop = true;
+            this.routeMaskNoneRadio.Text = "None";
+            this.routeMaskNoneRadio.UseVisualStyleBackColor = true;
             // 
-            // pathRhythmCheckbox
+            // routeMaskBassRadio
             // 
-            this.pathRhythmCheckbox.AutoSize = true;
-            this.pathRhythmCheckbox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.pathRhythmCheckbox.Location = new System.Drawing.Point(187, 19);
-            this.pathRhythmCheckbox.Name = "pathRhythmCheckbox";
-            this.pathRhythmCheckbox.Size = new System.Drawing.Size(62, 17);
-            this.pathRhythmCheckbox.TabIndex = 9;
-            this.pathRhythmCheckbox.Text = "Rhythm";
-            this.pathRhythmCheckbox.UseVisualStyleBackColor = true;
+            this.routeMaskBassRadio.AutoSize = true;
+            this.routeMaskBassRadio.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.routeMaskBassRadio.Location = new System.Drawing.Point(243, 21);
+            this.routeMaskBassRadio.Name = "routeMaskBassRadio";
+            this.routeMaskBassRadio.Size = new System.Drawing.Size(48, 17);
+            this.routeMaskBassRadio.TabIndex = 13;
+            this.routeMaskBassRadio.Text = "Bass";
+            this.routeMaskBassRadio.UseVisualStyleBackColor = true;
             // 
-            // pathLeadCheckbox
+            // routeMaskRhythmRadio
             // 
-            this.pathLeadCheckbox.AutoSize = true;
-            this.pathLeadCheckbox.Checked = true;
-            this.pathLeadCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.pathLeadCheckbox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.pathLeadCheckbox.Location = new System.Drawing.Point(100, 19);
-            this.pathLeadCheckbox.Name = "pathLeadCheckbox";
-            this.pathLeadCheckbox.Size = new System.Drawing.Size(50, 17);
-            this.pathLeadCheckbox.TabIndex = 8;
-            this.pathLeadCheckbox.Text = "Lead";
-            this.pathLeadCheckbox.UseVisualStyleBackColor = true;
+            this.routeMaskRhythmRadio.AutoSize = true;
+            this.routeMaskRhythmRadio.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.routeMaskRhythmRadio.Location = new System.Drawing.Point(156, 21);
+            this.routeMaskRhythmRadio.Name = "routeMaskRhythmRadio";
+            this.routeMaskRhythmRadio.Size = new System.Drawing.Size(61, 17);
+            this.routeMaskRhythmRadio.TabIndex = 12;
+            this.routeMaskRhythmRadio.Text = "Rhythm";
+            this.routeMaskRhythmRadio.UseVisualStyleBackColor = true;
+            // 
+            // routeMaskLeadRadio
+            // 
+            this.routeMaskLeadRadio.AutoSize = true;
+            this.routeMaskLeadRadio.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.routeMaskLeadRadio.Location = new System.Drawing.Point(72, 21);
+            this.routeMaskLeadRadio.Name = "routeMaskLeadRadio";
+            this.routeMaskLeadRadio.Size = new System.Drawing.Size(49, 17);
+            this.routeMaskLeadRadio.TabIndex = 11;
+            this.routeMaskLeadRadio.Text = "Lead";
+            this.routeMaskLeadRadio.UseVisualStyleBackColor = true;
             // 
             // ArrangementForm
             // 
@@ -612,8 +625,9 @@
         private System.Windows.Forms.GroupBox gbArrInfo;
         private System.Windows.Forms.GroupBox gbScrollSpeed;
         private System.Windows.Forms.GroupBox gbGameplayPath;
-        private System.Windows.Forms.CheckBox pathBassCheckbox;
-        private System.Windows.Forms.CheckBox pathRhythmCheckbox;
-        private System.Windows.Forms.CheckBox pathLeadCheckbox;
+        private System.Windows.Forms.RadioButton routeMaskLeadRadio;
+        private System.Windows.Forms.RadioButton routeMaskBassRadio;
+        private System.Windows.Forms.RadioButton routeMaskRhythmRadio;
+        private System.Windows.Forms.RadioButton routeMaskNoneRadio;
     }
 }

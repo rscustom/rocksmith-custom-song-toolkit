@@ -20,6 +20,19 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private DLCPackageCreator parentControl = null;
         private GameVersion currentGameVersion;
 
+        private RouteMask SelectedRouteMask {
+            get {
+                if (routeMaskLeadRadio.Checked)
+                    return RouteMask.Lead;
+                else if (routeMaskRhythmRadio.Checked)
+                    return RouteMask.Rhythm;
+                else if (routeMaskBassRadio.Checked)
+                    return RouteMask.Bass;
+                else
+                    return RouteMask.None;
+            }
+        }
+
         public ArrangementForm(IEnumerable<string> toneNames, DLCPackageCreator control, GameVersion gameVersion)
             : this(new Arrangement
             {
@@ -78,13 +91,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Picked.Checked = selectedType == ArrangementType.Bass ? false : true;
 
                 // Gameplay Path
-                gbGameplayPath.Enabled = selectedType != ArrangementType.Vocal && currentGameVersion == GameVersion.RS2014;
-                pathLeadCheckbox.Enabled = selectedType == ArrangementType.Guitar;
-                pathLeadCheckbox.Checked = selectedType == ArrangementType.Guitar;
-                pathRhythmCheckbox.Enabled = selectedType == ArrangementType.Guitar;
-                pathRhythmCheckbox.Checked = selectedType == ArrangementType.Guitar && selectedArrangementName == ArrangementName.Rhythm;
-                pathBassCheckbox.Enabled = selectedType == ArrangementType.Bass;
-                pathBassCheckbox.Checked = selectedType == ArrangementType.Bass;
+                UpdateRouteMaskPath(selectedType, selectedArrangementName);
 
                 // Tone Selector
                 gbTone.Enabled = selectedType != ArrangementType.Vocal;
@@ -101,6 +108,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 PersistentId.Enabled = selectedType != ArrangementType.Vocal;
             };
 
+            arrangementNameCombo.SelectedValueChanged += (sender, e) =>
+            {
+                var selectedType = ((ArrangementType)((ComboBox)arrangementTypeCombo).SelectedItem);
+                var selectedArrangementName = ((ArrangementName)((ComboBox)sender).SelectedItem);
+
+                UpdateRouteMaskPath(selectedType, selectedArrangementName);
+            };
+
             FillToneCombo(toneBaseCombo, toneNames, true);
             FillToneCombo(toneMultiplayerCombo, toneNames, false);
             FillToneCombo(toneACombo, toneNames, false);
@@ -115,6 +130,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             Arrangement = arrangement;
             parentControl = control;
+        }
+
+        private void UpdateRouteMaskPath(ArrangementType arrangementType, ArrangementName arrangementName)
+        {
+            gbGameplayPath.Enabled = arrangementType != ArrangementType.Vocal && currentGameVersion == GameVersion.RS2014;
+
+            //Enabling
+            routeMaskLeadRadio.Enabled = arrangementType == ArrangementType.Guitar && (arrangementName == ArrangementName.Combo || arrangementName == ArrangementName.Lead);
+            routeMaskRhythmRadio.Enabled = arrangementType == ArrangementType.Guitar && (arrangementName == ArrangementName.Combo || arrangementName == ArrangementName.Rhythm);
+            routeMaskBassRadio.Enabled = arrangementType == ArrangementType.Bass;
+            
+            //Auto-checking
+            routeMaskLeadRadio.Checked = arrangementType == ArrangementType.Guitar && (arrangementName == ArrangementName.Combo || arrangementName == ArrangementName.Lead);
+            routeMaskRhythmRadio.Checked = arrangementType == ArrangementType.Guitar && (arrangementName == ArrangementName.Combo || arrangementName == ArrangementName.Rhythm);
+            routeMaskBassRadio.Checked = arrangementType == ArrangementType.Bass;
         }
 
         private void FillTuningCombo()
@@ -174,9 +204,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 RelativeDifficulty.Text = arrangement.RelativeDifficulty.ToString();
                 Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
                 //Gameplay Path
-                pathLeadCheckbox.Checked = arrangement.PathLead;
-                pathRhythmCheckbox.Checked = arrangement.PathRhythm;
-                pathBassCheckbox.Checked = arrangement.PathBass;
+                routeMaskLeadRadio.Checked = arrangement.RouteMask == RouteMask.Lead;
+                routeMaskRhythmRadio.Checked = arrangement.RouteMask == RouteMask.Rhythm;
+                routeMaskBassRadio.Checked = arrangement.RouteMask == RouteMask.Bass;
                 //Tone Selector
                 toneBaseCombo.SelectedItem = arrangement.ToneBase;
                 if (toneBaseCombo.SelectedItem == null && toneBaseCombo.Items.Count > 0)
@@ -254,7 +284,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
             } catch (Exception ex) {
-                MessageBox.Show("Unable to get information from the arrangement XML. \r\nYour version of the EoF is up to date? \r\n" + ex.Message, "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Unable to get information from the arrangement XML. \r\nYour version of the EoF is up to date? \r\n" + ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -273,11 +303,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 RelativeDifficulty.Focus();
                 return;
             }
-            if (!pathLeadCheckbox.Checked && !pathRhythmCheckbox.Checked && !pathBassCheckbox.Checked && (ArrangementType)arrangementTypeCombo.SelectedItem != ArrangementType.Vocal)
+            if (!routeMaskLeadRadio.Checked && !routeMaskRhythmRadio.Checked && !routeMaskBassRadio.Checked && (ArrangementType)arrangementTypeCombo.SelectedItem != ArrangementType.Vocal)
             {
-                MessageBox.Show("At least one Game Play Path is required. Please select one.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                gbGameplayPath.Focus();
-                return;
+                if (MessageBox.Show("You not selected a Gameplay Path, this arrangement you show only in song list.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Cancel)
+                {
+                    gbGameplayPath.Focus();
+                    return;
+                }
             }
             
             //Song XML File
@@ -300,9 +332,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arrangement.ToneD = (toneDCombo.SelectedItem != null) ? toneDCombo.SelectedItem.ToString() : "";
             
             //Gameplay Path
-            arrangement.PathLead = pathLeadCheckbox.Checked;
-            arrangement.PathRhythm = pathRhythmCheckbox.Checked;
-            arrangement.PathBass = pathBassCheckbox.Checked;
+            arrangement.RouteMask = SelectedRouteMask;
             
             // DLC ID
             Guid guid;
@@ -316,7 +346,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MasterId.Focus();
             else
                 arrangement.MasterId = masterId;
-
 
             DialogResult = DialogResult.OK;
             Close();

@@ -153,6 +153,9 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlAttribute("pathBass")]
         public Int32 PathBass { get; set; }
+
+        [XmlAttribute("routeMask")]
+        public Int32 RouteMask { get; set; }
     }
 
     public class SongPhraseIteration2014 : SongPhraseIteration {

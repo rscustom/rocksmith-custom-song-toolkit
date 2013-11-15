@@ -16,8 +16,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class ToneForm : Form
     {
-        private const string MESSAGEBOX_CAPTION = "DLC Package Creator";
-
         public bool Saved = false;
         public dynamic LoadedTone = null;
         private GameVersion CurrentGameVersion;
@@ -83,14 +81,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can't load saved tone. \n\r" + ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Can't load saved tone. \n\r" + ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             toneControl1.Tone = tone;
             LoadedTone = toneControl1.Tone;
 
-            MessageBox.Show("Tone was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Tone was loaded.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void saveButton_Click(object sender, EventArgs e)
@@ -107,7 +105,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var tone = toneControl1.Tone;
             tone.Serialize(toneSavePath);
 
-            MessageBox.Show("Tone was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Tone was saved.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

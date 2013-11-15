@@ -26,7 +26,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class DLCPackageCreator : UserControl
     {
-        private const string MESSAGEBOX_CAPTION =  "DLC Package Creator";
+        public static readonly string MESSAGEBOX_CAPTION =  "DLC Package Creator";
         
         private GameVersion CurrentGameVersion {
             get {
@@ -617,33 +617,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 arrangement.SongXml.File = MakeAbsolute(path, arrangement.SongXml.File);
                 if (arrangement.ToneBase == null)
                     arrangement.ToneBase = info.Tones[0].Name;
-
-                if (CurrentGameVersion == GameVersion.RS2014) {
-                    //Defining a default gameplay path if all is false
-                    if (arrangement.PathLead == false && arrangement.PathRhythm == false && arrangement.PathBass == false && arrangement.ArrangementType != ArrangementType.Vocal) {
-                        switch (arrangement.ArrangementType)
-                        {
-                            case ArrangementType.Guitar:
-                                switch (arrangement.Name)
-	                            {
-                                    case ArrangementName.Lead:
-                                        arrangement.PathLead = true;
-                                        break;
-                                    case ArrangementName.Rhythm:
-                                        arrangement.PathRhythm = true;
-                                        break;
-                                    case ArrangementName.Combo:
-                                        arrangement.PathLead = true;
-                                        arrangement.PathRhythm = true;
-                                        break;
-	                            }
-                                break;
-                            case ArrangementType.Bass:
-                                arrangement.PathBass = true;
-                                break;
-                        }
-                    }
-                }
 
                 ArrangementLB.Items.Add(arrangement);
             }
