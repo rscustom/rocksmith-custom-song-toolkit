@@ -918,7 +918,7 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).String : -1);
                     
                 // fret tag
-                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Fret : -1);
+                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Fret : (sbyte)-1);
 
                 // chord id
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? -1 : ((SongChord)notesChords[i].Entity).ChordId);
@@ -930,10 +930,10 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Sustain : 0);
 
                 // bend
-                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Bend : 0);
+                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Bend : (byte) 0);
 
                 // slideTo
-                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).SlideTo : -1);
+                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).SlideTo : (sbyte) -1);
 
                 // tremolo
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Tremolo : new byte());
@@ -949,10 +949,10 @@ namespace RocksmithToolkitLib.Sng
                     w.Write(new byte());//unknownB
 
                     //Bass only - Slap
-                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Slap : -1);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Slap : (sbyte) -1);
 
                     //Bass only - Pluck
-                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Pluck : -1);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Pluck : (sbyte) -1);
                 }
 
                 // hopo
@@ -970,7 +970,7 @@ namespace RocksmithToolkitLib.Sng
                 // high density chord
                 if (arrangementType == ArrangementType.Bass)
                 {
-                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? new byte() : ((SongChord)notesChords[i].Entity).HighDensity);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? new byte() : (byte) ((SongChord)notesChords[i].Entity).HighDensity);
                     w.Write(new byte());
                     w.Write((byte)140);
                     w.Write(new byte());
