@@ -12,7 +12,34 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
     public class Showlights
     {
         [XmlElement("showlight")]
-        public Showlight[] ShowlightList { get; set; }
+        public List<Showlight> ShowlightList { get; set; }
+
+        public Showlights() { }
+
+        public Showlights(List<Arrangement> arrangements) {
+            ShowlightList = new List<Showlight>();
+            List<Showlight> listOne = new List<Showlight>();
+            foreach (var arrangement in arrangements) {
+                if (arrangement.ArrangementType == Sng.ArrangementType.Vocal)
+                    continue;
+
+                var showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File), Path.GetFileNameWithoutExtension(arrangement.SongXml.File) + "_showlights.xml");
+                listOne = Showlights.LoadFromFile(showlightFile).ShowlightList;
+
+                if (ShowlightList.Count == 0)
+                    ShowlightList = listOne;
+                else
+                {
+                    var slIntersected = from first in listOne
+                                        join second in ShowlightList
+                                        on first.Note equals second.Note
+                                        where (first.Time - 100) < second.Time
+                                        && (first.Time + 100) > second.Time
+                                        select first;
+                    ShowlightList = slIntersected.ToList();
+                }
+            }
+        }
 
         public void Serialize(Stream stream)
         {

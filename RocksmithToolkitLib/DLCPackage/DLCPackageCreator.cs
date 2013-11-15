@@ -20,6 +20,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 using RocksmithToolkitLib.Sng2014HSL;
+using RocksmithToolkitLib.DLCPackage.Showlight;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -444,7 +445,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/songs_dlc_{0}.hsan", dlcName), manifestHeaderStream);
 
                         // SHOWLIGHT
-                        //TODO: MAKE LOGIC TO GENERATE DEFAULT showlights.xml BASED ON SONG TIME
+                        Showlights showlight = new Showlights(info.Arrangements);
+                        showlight.Serialize(showlightStream);
                         showlightStream.Flush();
                         showlightStream.Seek(0, SeekOrigin.Begin);
                         packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
@@ -482,7 +484,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         rsenumerableSongStream.Dispose();
                 }
             }
-        }
+        }     
 
         #endregion
 
