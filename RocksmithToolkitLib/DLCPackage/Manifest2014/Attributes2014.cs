@@ -85,7 +85,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             ShowlightsXML = showlightUrn;
             SongAsset = songSngUrn;
             SongBank = String.Format(AggregateGraph2014.NAME_SOUNDBANK + ".bnk", info.Name.ToLower());
-            SongEvent = String.Format("Play_", info.Name);
+            SongEvent = String.Format("Play_{0}", info.Name);
             SongXml = songXmlUrn;
                 
             // Only for Vocal
