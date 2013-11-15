@@ -479,7 +479,7 @@
             // 
             // RelativeDifficulty
             // 
-            this.RelativeDifficulty.Cue = "Difficulty";
+            this.RelativeDifficulty.Cue = "Relative Difficulty";
             this.RelativeDifficulty.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.RelativeDifficulty.ForeColor = System.Drawing.Color.Gray;
             this.RelativeDifficulty.Location = new System.Drawing.Point(201, 77);

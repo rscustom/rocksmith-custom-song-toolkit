@@ -81,7 +81,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             MasterID_PS3 = (IsVocal) ? -1 : arrangement.MasterId;
             MasterID_Xbox360 = (IsVocal) ? -1 : arrangement.MasterId;
             PreviewBankPath = String.Format(AggregateGraph2014.NAME_SOUNDBANKPREVIEW + ".bnk", info.Name.ToLower());
-            RelativeDifficulty = (IsVocal) ? 0 : SongContent.Levels.Count();
+            RelativeDifficulty = 0; //Always 0 in RS2014
             ShowlightsXML = showlightUrn;
             SongAsset = songSngUrn;
             SongBank = String.Format(AggregateGraph2014.NAME_SOUNDBANK + ".bnk", info.Name.ToLower());

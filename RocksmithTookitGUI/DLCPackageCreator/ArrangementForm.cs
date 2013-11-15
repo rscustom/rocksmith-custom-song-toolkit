@@ -39,7 +39,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 SongFile = new SongFile { File = "" },
                 SongXml = new SongXML { File = "" },
                 ArrangementType = ArrangementType.Guitar,
-                RelativeDifficulty = 1,
+                RelativeDifficulty = gameVersion == GameVersion.RS2012 ? 1 : 0,
                 ScrollSpeed = 20
             }, toneNames, control, gameVersion)
         {
@@ -50,6 +50,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             InitializeComponent();
             currentGameVersion = gameVersion;
             FillTuningCombo();
+
+            RelativeDifficulty.Visible = gameVersion == GameVersion.RS2012;
 
             foreach (var val in Enum.GetValues(typeof(ArrangementType)))
             {
