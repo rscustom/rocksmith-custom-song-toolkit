@@ -112,6 +112,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 LastConversionDateTime = SongContent.LastConversionDateTime;
                 MaxPhraseDifficulty = 0; //TODO: MISSING GENERATE
 
+                TargetScore = 100000;
                 PhraseIterations = new List<PhraseIteration>();
                 manifestFunctions.GeneratePhraseIterationsData(this, SongContent);
                 //Score_MaxNotes -- Generated on function above
@@ -129,7 +130,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 if (arrangement.ArrangementType != Sng.ArrangementType.Vocal)
                     SongPartition = manifestFunctions.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
 
-                TargetScore = 0;
                 //Techniques     -- //TODO: MISSING GENERATE
                 Tone_A = arrangement.ToneA;
                 Tone_B = arrangement.ToneB;
