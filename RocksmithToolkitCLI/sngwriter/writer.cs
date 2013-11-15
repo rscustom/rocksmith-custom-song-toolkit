@@ -3,6 +3,8 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib;
 using System.IO;
 using System.Text;
+using MiscUtil.IO;
+using MiscUtil.Conversion;
 
 namespace Writer
 {
@@ -13,16 +15,18 @@ namespace Writer
             var xmlfile = args[0];
             var sngfile = args[1];
 
-            // TODO we need this only to decide encryption and endianness, not for parsing XML, it should be removed from Write()
-            Platform platform = new Platform(GamePlatform.Pc, GameVersion.RS2014);
-            // TODO we only need Guitar / Bass and maybe Vocals in the future
-            ArrangementType instrument = ArrangementType.Bass;
             using (FileStream fs = new FileStream(sngfile, FileMode.Create)) {
-                // TODO here we can decide endianness
-                BinaryWriter sngdata = new BinaryWriter(fs);
-                Sng2014FileWriter.Write(xmlfile, sngdata, instrument, platform);
-                // TODO here we can pack, encrypt and wrap raw SNG data (memory writer)
-                //      and write correct SNG to sngfile (writing raw SNG data for now)
+                // parse from XML
+                // TODO we only need Guitar / Bass and maybe Vocals in the future
+                ArrangementType instrument = ArrangementType.Bass;
+                Sng2014File sng = new Sng2014File(xmlfile, instrument);
+                // write raw SNG data
+                //EndianBitConverter conv = EndianBitConverter.Little;
+                //EndianBinaryWriter w = new EndianBinaryWriter(conv, fs);
+                //sng.Write(w);
+                // write fully packed SNG
+                Platform platform = new Platform(GamePlatform.Pc, GameVersion.RS2014);
+                sng.writeSng(fs, platform);
             }
         }
     }

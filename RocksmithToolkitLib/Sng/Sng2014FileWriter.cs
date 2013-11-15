@@ -4,9 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.Sng;
 using System.Xml.Serialization;
 using System.Text;
-using RocksmithToolkitLib.Sng;
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {
@@ -14,21 +14,16 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
         private static List<ChordNotes> cns = new List<ChordNotes>();
 
-        public static void Write(string xmlSongFile, BinaryWriter writer, ArrangementType arrangementType, Platform platform)
+        public void readXml(Song2014 songXml, Sng2014File sngFile, ArrangementType arrangementType)
         {
-            Song2014 song = Song2014.LoadFromFile(xmlSongFile);
-            var sng = new Sng2014File();
-
-            var sngFileWriter = new Sng2014FileWriter();
-            sngFileWriter.readXml(song, sng, arrangementType);
-            sng.Write(writer);
-            // TODO this was supposed to convert XML to SNG data, it should be wrapped with header and encrypted on another level, making Platform not needed here
-        }
-
-        private void readXml(Song2014 songXml, Sng2014File sngFile, ArrangementType arrangementType)
-        {
-            // TODO
-            Int16[] tuning = { 0,0,0,0,0,0 };
+            Int16[] tuning = {
+                (Int16) songXml.Tuning.String0,
+                (Int16) songXml.Tuning.String1,
+                (Int16) songXml.Tuning.String2,
+                (Int16) songXml.Tuning.String3,
+                (Int16) songXml.Tuning.String4,
+                (Int16) songXml.Tuning.String5,
+            };
             parseEbeats(songXml, sngFile);
             parsePhrases(songXml, sngFile);
             parseChords(songXml, sngFile, tuning, arrangementType == ArrangementType.Bass);
@@ -85,9 +80,20 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.Metadata.StringCount = 6;
             sng.Metadata.Tuning = new Int16[sng.Metadata.StringCount];
             sng.Metadata.Tuning = tuning;
-            var start = xml.Sections[0].StartTime;
+            // TODO actually seems to be first chord/note time
+            var start = sng.Arrangements.Arrangements[sng.Metadata.MaxDifficulty].Notes.Notes[0].Time;
             sng.Metadata.Unk11_FirstSectionStartTime = start;
             sng.Metadata.Unk12_FirstSectionStartTime = start;
+        }
+
+        private static Int32 getPhraseIterationId(Song2014 xml, float Time)
+        {
+            Int32 id = 0;
+            while (id+1 < xml.PhraseIterations.Length &&
+                   xml.PhraseIterations[id+1].Time <= Time) {
+                ++id;
+            }
+            return id;
         }
 
         private void parseEbeats(Song2014 xml, Sng2014File sng) {
@@ -108,14 +114,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 bpm.Measure = measure;
                 bpm.Beat = beat;
-                for (int iter_id = 0; iter_id < xml.PhraseIterations.Length; iter_id++) {
-                    var iter = xml.PhraseIterations[iter_id];
-                    if (iter.Time > bpm.Time) {
-                        // we're one past current iteration
-                        bpm.PhraseIteration = iter_id - 1;
-                        break;
-                    }
-                }
+                bpm.PhraseIteration = getPhraseIterationId(xml, bpm.Time);
                 if (beat == 0) {
                     bpm.Mask |= 1;
                     if (measure % 2 == 0)
@@ -370,7 +369,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.Sections.Count = xml.Sections.Length;
             sng.Sections.Sections = new Section[sng.Sections.Count];
 
-            int p_id = 0;
             for (int i = 0; i < sng.Sections.Count; i++) {
                 var section = xml.Sections[i];
                 var s = new Section();
@@ -381,16 +379,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     s.EndTime = xml.Sections[i + 1].StartTime;
                 else
                     s.EndTime = xml.SongLength;
-                s.StartPhraseIterationId = p_id;
-                // find phrase iteration outside of section time
-                for (int end = p_id + 1; end < xml.PhraseIterations.Length; end++) {
-                    if (xml.PhraseIterations[end].Time >= s.EndTime) {
-                        // this p_id marks the start of the next section
-                        p_id = end;
-                        break;
-                    }
-                }
-                s.EndPhraseIterationId = p_id - 1;
+                s.StartPhraseIterationId = getPhraseIterationId(xml, s.StartTime);
+                s.EndPhraseIterationId = getPhraseIterationId(xml, s.EndTime);
                 // TODO unknown meaning (rename in HSL and regenerate when discovered)
                 //"Unk12",
                 //"Unk13",
@@ -406,41 +396,44 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
         }
 
+        // TODO these masks seems to be garbage
+        // (0x04008000,0x00000000) = single note
+        // (0x00008400,0x01000000) = single open note
         // NoteMask:
-        const UInt32 NOTE_MASK_UNDEFINED = 0x0;
+        const UInt32 NOTE_MASK_UNDEFINED        = 0x0;
         // missing                                0x1
-        const UInt32 NOTE_MASK_CHORD = 0x2;
-        const UInt32 NOTE_MASK_OPEN = 0x4;
-        const UInt32 NOTE_MASK_FRETHANDMUTE = 0x8;
-        const UInt32 NOTE_MASK_TREMOLO = 0x10;
-        const UInt32 NOTE_MASK_HARMONIC = 0x20;
-        const UInt32 NOTE_MASK_PALMMUTE = 0x40;
-        const UInt32 NOTE_MASK_SLAP = 0x80;
-        const UInt32 NOTE_MASK_PLUCK = 0x100;
-        const UInt32 NOTE_MASK_POP = 0x100;
-        const UInt32 NOTE_MASK_HAMMERON = 0x200;
-        const UInt32 NOTE_MASK_PULLOFF = 0x400;
-        const UInt32 NOTE_MASK_SLIDE = 0x800;
-        const UInt32 NOTE_MASK_BEND = 0x1000;
-        const UInt32 NOTE_MASK_SUSTAIN = 0x2000;
-        const UInt32 NOTE_MASK_TAP = 0x4000;
-        const UInt32 NOTE_MASK_PINCHHARMONIC = 0x8000;
-        const UInt32 NOTE_MASK_VIBRATO = 0x10000;
-        const UInt32 NOTE_MASK_MUTE = 0x20000;
-        const UInt32 NOTE_MASK_IGNORE = 0x40000;
-        // missing                               0x80000
-        // missing                               0x100000
-        const UInt32 NOTE_MASK_HIGHDENSITY = 0x200000;
+        const UInt32 NOTE_MASK_CHORD            = 0x2;
+        const UInt32 NOTE_MASK_OPEN             = 0x4;
+        const UInt32 NOTE_MASK_FRETHANDMUTE     = 0x8;
+        const UInt32 NOTE_MASK_TREMOLO          = 0x10;
+        const UInt32 NOTE_MASK_HARMONIC         = 0x20;
+        const UInt32 NOTE_MASK_PALMMUTE         = 0x40;
+        const UInt32 NOTE_MASK_SLAP             = 0x80;
+        const UInt32 NOTE_MASK_PLUCK            = 0x100;
+        const UInt32 NOTE_MASK_POP              = 0x100;
+        const UInt32 NOTE_MASK_HAMMERON         = 0x200;
+        const UInt32 NOTE_MASK_PULLOFF          = 0x400;
+        const UInt32 NOTE_MASK_SLIDE            = 0x800;
+        const UInt32 NOTE_MASK_BEND             = 0x1000;
+        const UInt32 NOTE_MASK_SUSTAIN          = 0x2000;
+        const UInt32 NOTE_MASK_TAP              = 0x4000;
+        const UInt32 NOTE_MASK_PINCHHARMONIC    = 0x8000;
+        const UInt32 NOTE_MASK_VIBRATO          = 0x10000;
+        const UInt32 NOTE_MASK_MUTE             = 0x20000;
+        const UInt32 NOTE_MASK_IGNORE           = 0x40000;
+        // missing                                0x80000
+        // missing                                0x100000
+        const UInt32 NOTE_MASK_HIGHDENSITY      = 0x200000;
         const UInt32 NOTE_MASK_SLIDEUNPITCHEDTO = 0x400000;
-        // missing                               0x800000
-        // missing                               0x1000000
-        const UInt32 NOTE_MASK_DOUBLESTOP = 0x2000000;
-        const UInt32 NOTE_MASK_ACCENT = 0x4000000;
-        const UInt32 NOTE_MASK_PARENT = 0x8000000;
-        const UInt32 NOTE_MASK_CHILD = 0x10000000;
-        const UInt32 NOTE_MASK_ARPEGGIO = 0x20000000;
-        // missing                               0x40000000
-        const UInt32 NOTE_MASK_STRUM = 0x80000000;
+        // missing                                0x800000
+        // missing                                0x1000000
+        const UInt32 NOTE_MASK_DOUBLESTOP       = 0x2000000;
+        const UInt32 NOTE_MASK_ACCENT           = 0x4000000;
+        const UInt32 NOTE_MASK_PARENT           = 0x8000000;
+        const UInt32 NOTE_MASK_CHILD            = 0x10000000;
+        const UInt32 NOTE_MASK_ARPEGGIO         = 0x20000000;
+        // missing                                0x40000000
+        const UInt32 NOTE_MASK_STRUM            = 0x80000000;
         public UInt32 parse_notemask(SongNote2014 note) {
             UInt32 mask = 0;
             if (note == null)
@@ -514,18 +507,14 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.Unk3_4 = 4;
             n.ChordId = 255;
             n.ChordNotesId = 255;
-            // counting on phrase iterations to be sorted by time
-            for (int i = 0; i < xml.PhraseIterations.Length; i++)
-                if (xml.PhraseIterations[i].Time > n.Time) {
-                    n.PhraseIterationId = i - 1;
-                    n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
-                }
+            n.PhraseIterationId = getPhraseIterationId(xml, n.Time);
+            n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
             // TODO
             //"FingerPrintId",
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
-            //"Unk4",
-            //"Unk5",
-            //"Unk6",
+            n.Unk4 = 255;
+            n.Unk5 = 255;
+            n.Unk6 = 255;
             // TODO
             //"FingerId",
             n.PickDirection = (Byte)note.PickDirection;
@@ -597,14 +586,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     if (j + 1 < anchors.Count)
                         anchor.EndBeatTime = level.Anchors[j + 1].Time;
                     else
-                        // last section = noguitar
-                        anchor.EndBeatTime = xml.Sections[xml.Sections.Length - 1].StartTime;
+                        // last phrase iteration = noguitar/end
+                        anchor.EndBeatTime = xml.PhraseIterations[xml.PhraseIterations.Length - 1].Time;
                     anchor.Unk3_StartBeatTime = anchor.StartBeatTime;
                     anchor.Unk4_StartBeatTime = anchor.StartBeatTime;
                     anchor.FretId = level.Anchors[j].Fret;
                     anchor.Width = (Int32)level.Anchors[j].Width;
-                    // TODO
-                    //"PhraseIterationId"
+                    anchor.PhraseIterationId = getPhraseIterationId(xml, anchor.StartBeatTime);
                     anchors.Anchors[j] = anchor;
                 }
                 a.Anchors = anchors;

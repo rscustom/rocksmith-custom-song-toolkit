@@ -69,12 +69,8 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        public static void EncryptSng(Stream input, Stream output, byte[] key)
+        public static void EncryptSngData(Stream input, Stream output, byte[] key)
         {
-            var header = new byte[8] { 0x4A, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00 };
-            output.Write(header, 0, header.Length);
-
-            var reader = new BinaryReader(input);
             byte[] iv = new byte[16];
             using (var rij = new RijndaelManaged())
             {

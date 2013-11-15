@@ -703,36 +703,11 @@ namespace RocksmithToolkitLib.DLCPackage
                     SngFileWriter.Write(arrangement.SongXml.File, sngFile, arrangement.ArrangementType, platform, tuning);
                     break;
                 case GameVersion.RS2014:
-                    var cleanSngFile = Path.ChangeExtension(sngFile, ".sng.tmp");
-
-                    // Generate SNG
-                    // TODO this call needs a wrapper to create proper SNG -- filled Sng classes can be used multiple times to produce different files, no need to parse them over and over again
-                    //Sng2014FileWriter.Write(arrangement.SongXml.File, cleanSngFile, arrangement.ArrangementType, platform);
-
-                    using (var cleanSngStream = new FileStream(cleanSngFile, FileMode.Open, FileAccess.Read))
-                    using (var packedSngStream = new TempFileStream())
-                    using (var encryptedSngStream = new FileStream(sngFile, FileMode.Create, FileAccess.Write))
-                    {
-                        // Pack SNG
-                        var packer = new PSARC.PSARC();
-                        packer.PackSng2014(cleanSngStream, packedSngStream);
-
-                        // Encrypt SNG
-                        switch (platform.platform)
-                        {
-                            case GamePlatform.Pc:
-                                RijndaelEncryptor.EncryptSng(packedSngStream, encryptedSngStream, RijndaelEncryptor.SngKeyPC);
-                                break;
-                            case GamePlatform.Mac:
-                                RijndaelEncryptor.EncryptSng(packedSngStream, encryptedSngStream, RijndaelEncryptor.SngKeyMac);
-                                break;
-                            default:
-                                throw new InvalidOperationException("Unexpected game platform value");
-                        }
+                    using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
+                        // Sng2014File can be reused when generating for multiple platforms
+                        Sng2014File sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
+                        sng.writeSng(fs, platform);
                     }
-
-                    if (File.Exists(cleanSngFile))
-                        File.Decrypt(cleanSngFile);
                     break;
                 default:
                     throw new InvalidOperationException("Unexpected game version value");
