@@ -6,30 +6,61 @@ using System.Reflection;
 using RocksmithToolkitLib.Xml;
 using System.Xml.Serialization;
 using System.Text;
+using RocksmithToolkitLib.Sng;
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {
     public class Sng2014FileWriter {
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
         private static List<ChordNotes> cns = new List<ChordNotes>();
-        
-        //private void Main(string[] args) {
-        //    var infile = args[0];
-        //    var outfile = args[1];
-        //    using (FileStream fs = new FileStream(outfile, FileMode.Create)) {
-        //        BinaryWriter w = new BinaryWriter(fs);
-        //        // SNG reader
-        //        //var sng = new Sng2014File("SNG");
-        //        // XML parser
-        //        var sng = new Sng2014File();
-        //        // TODO tuning needed to compute MIDI notes
-        //        Int16[] tuning = { 0, 0, 0, 0, 0, 0 };
-        //        bool bass = false;
-        //        read_xml(infile, sng, tuning, bass);
-        //        // writer
-        //        sng.write(w);
-        //    }
-        //}
+
+        public static void Write(string xmlSongFile, string songFileOutput, ArrangementType arrangementType, Platform platform, InstrumentTuning tuning)
+        {
+            using (FileStream fs = new FileStream(songFileOutput, FileMode.Create))
+            {
+                BinaryWriter writer = new BinaryWriter(fs);
+                
+                Song2014 song = Song2014.LoadFromFile(xmlSongFile);
+                var sng = new Sng2014File();
+                
+                // TODO tuning needed to compute MIDI notes
+                Int16[] tuningStrings = {
+                                     (short)song.Tuning.String0,
+                                     (short)song.Tuning.String1,
+                                     (short)song.Tuning.String2,
+                                     (short)song.Tuning.String3,
+                                     (short)song.Tuning.String4,
+                                     (short)song.Tuning.String5
+                                 };
+
+                var sngFileWriter = new Sng2014FileWriter();
+                sngFileWriter.readXml(song, sng, tuningStrings, arrangementType);
+                sng.Write(writer);
+            }
+        }
+
+        private void readXml(Song2014 songXml, Sng2014File sngFile, Int16[] tuning, ArrangementType arrangementType)
+        {
+            parseEbeats(songXml, sngFile);
+            parsePhrases(songXml, sngFile);
+            parseChords(songXml, sngFile, tuning, arrangementType == ArrangementType.Bass);
+            // vocals will need different parse function
+            sngFile.Vocals = new VocalSection();
+            sngFile.Vocals.Vocals = new Vocal[0];
+            parsePhraseIterations(songXml, sngFile);
+            parsePhraseExtraInfo(songXml, sngFile);
+            parseNLD(songXml, sngFile);
+            parseActions(songXml, sngFile);
+            parseEvents(songXml, sngFile);
+            parseTones(songXml, sngFile);
+            parseDNAs(songXml, sngFile);
+            parseSections(songXml, sngFile);
+            parseArrangements(songXml, sngFile);
+            parseMetadata(songXml, sngFile, tuning);
+
+            // this needs to be initialized after arrangements
+            parseChordNotes(songXml, sngFile);
+        }
 
         private Int32 getMidiNote(Int16[] tuning, Byte str, Byte fret, bool bass) {
             if (fret == 255)
@@ -631,33 +662,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 a.PhraseIterationCount2 = a.PhraseIterationCount1;
                 a.NotesInIteration2 = a.NotesInIteration1;
                 sng.Arrangements.Arrangements[i] = a;
-            }
-        }
-
-        private void readXml(string inputFile, Sng2014File sng, Int16[] tuning, bool bass) {
-            using (var reader = new StreamReader(inputFile)) {
-                var serializer = new XmlSerializer(typeof(Song2014));
-                var song = (Song2014)serializer.Deserialize(reader);
-
-                parseEbeats(song, sng);
-                parsePhrases(song, sng);
-                parseChords(song, sng, tuning, bass);
-                // vocals will need different parse function
-                sng.Vocals = new VocalSection();
-                sng.Vocals.Vocals = new Vocal[0];
-                parsePhraseIterations(song, sng);
-                parsePhraseExtraInfo(song, sng);
-                parseNLD(song, sng);
-                parseActions(song, sng);
-                parseEvents(song, sng);
-                parseTones(song, sng);
-                parseDNAs(song, sng);
-                parseSections(song, sng);
-                parseArrangements(song, sng);
-                parseMetadata(song, sng, tuning);
-
-                // this needs to be initialized after arrangements
-                parseChordNotes(song, sng);
             }
         }
     }

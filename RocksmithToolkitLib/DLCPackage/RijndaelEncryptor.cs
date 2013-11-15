@@ -9,6 +9,7 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public static class RijndaelEncryptor
     {
+        #region RS1
         public static byte[] DLCKey = new byte[32]
         {
             0xFA, 0x6F, 0x4F, 0x42, 0x3E, 0x66, 0x9F, 0x9E,
@@ -24,7 +25,8 @@ namespace RocksmithToolkitLib.DLCPackage
             0x3C, 0x3F, 0x72, 0x17, 0xCA, 0x7F, 0x44, 0xC1,
             0xE4, 0x36, 0xFC, 0xFC, 0x84, 0xE6, 0xE7, 0x15
         };
-
+        #endregion
+        #region RS2
         public static byte[] PsarcKey = new byte[32]
         {
             0xC5, 0x3D, 0xB2, 0x38, 0x70, 0xA1, 0xA2, 0xF7,
@@ -48,7 +50,7 @@ namespace RocksmithToolkitLib.DLCPackage
             0x17, 0x1C, 0xCA, 0x5D, 0x2A, 0x14, 0x2E, 0x3E,
             0x59, 0xDE, 0x7A, 0xDD, 0xA1, 0x8A, 0x3A, 0x30
         };
-
+        #endregion
         public static void EncryptFile(Stream input, Stream output, byte[] key)
         {
             using (var rij = new RijndaelManaged())
@@ -110,7 +112,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public static void DecryptSng(Stream input, Stream output, byte[] key)
         {
             var reader = new BinaryReader(input);
-            reader.ReadBytes(8);
+            reader.ReadBytes(8); //skip header
             byte[] iv = reader.ReadBytes(16);
             using (var rij = new RijndaelManaged())
             {
@@ -181,9 +183,11 @@ namespace RocksmithToolkitLib.DLCPackage
                 input.Read(buffer, 0, sz);
                 cs.Write(buffer, 0, sz);
             }
+            //Its need only for RS1, RS2 works fine w\o ?
             int pad = buffer.Length - (int)(len % buffer.Length);
             if (pad > 0)
                 cs.Write(new byte[pad], 0, pad);
+
             cs.Flush();
             output.Flush();
             output.Seek(0, SeekOrigin.Begin);

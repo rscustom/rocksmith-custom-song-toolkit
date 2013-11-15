@@ -19,6 +19,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.DLCPackage.Manifest.Header;
+using RocksmithToolkitLib.Sng2014HSL;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -220,8 +221,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 image.Save(xMS, format);
                 xReturn = xMS.ToArray();
-                xMS.Dispose();
-            }
+            }//disposed automaticly()
             return xReturn;
         }
 
@@ -232,12 +232,12 @@ namespace RocksmithToolkitLib.DLCPackage
                 string workDir = platform.platform == GamePlatform.XBox360 ? XBOX_WORKDIR : PS3_WORKDIR;
                 string filePath = Path.Combine(workDir, fileName);
 
-                FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-                byte[] bytes = new byte[ms.Length];
-                ms.Read(bytes, 0, (int)ms.Length);
-                file.Write(bytes, 0, bytes.Length);
-                file.Close();
-
+                using (FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                {
+                    byte[] bytes = new byte[ms.Length];
+                    ms.Read(bytes, 0, (int)ms.Length);
+                    file.Write(bytes, 0, bytes.Length);
+                }
                 switch (platform.platform)
                 {
                     case GamePlatform.XBox360:
@@ -281,9 +281,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // Move directory to user selected path
             if (Directory.Exists(PS3_WORKDIR))
-            {
                 DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", packagesPath));
-            }
 
             if (rebuilderResult.IndexOf("Encrypt all EDAT files successfully") < 0)
                 throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output bellow:" + Environment.NewLine + Environment.NewLine + rebuilderResult);
@@ -415,7 +413,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             var arrangementName = arrangement.Name.ToString().ToLower();
 
                             // GAME SONG (SNG)
-                            GenerateSNG(arrangement, platform); //TODO: NEED IMPLEMENTATION FOR RS2014
+                            GenerateSNG(arrangement, platform);
                             var sngSongFile = File.OpenRead(arrangement.SongFile.File);
                             arrangementStream.Add(sngSongFile);
                             packPsarc.AddEntry(String.Format("songs/bin/{0}/{1}_{2}.sng", platform.GetPathName()[1].ToLower(), dlcName, arrangementName), sngSongFile);
@@ -695,13 +693,54 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         public static void GenerateSNG(Arrangement arrangement, Platform platform) {
-            string sngFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File), arrangement.SongXml.Name + ".sng");
+            string sngFile = Path.ChangeExtension(arrangement.SongXml.File, ".sng");
             InstrumentTuning tuning = InstrumentTuning.Standard;
             Enum.TryParse<InstrumentTuning>(arrangement.Tuning, true, out tuning);
-            SngFileWriter.Write(arrangement.SongXml.File, sngFile, arrangement.ArrangementType, platform, tuning);
+
+            switch (platform.version)
+            {
+                case GameVersion.RS2012:
+                    SngFileWriter.Write(arrangement.SongXml.File, sngFile, arrangement.ArrangementType, platform, tuning);
+                    break;
+                case GameVersion.RS2014:
+                    var cleanSngFile = Path.ChangeExtension(sngFile, ".sng.tmp");
+
+                    // Generate SNG
+                    Sng2014FileWriter.Write(arrangement.SongXml.File, cleanSngFile, arrangement.ArrangementType, platform, tuning);
+
+                    using (var cleanSngStream = new FileStream(cleanSngFile, FileMode.Open, FileAccess.Read))
+                    using (var packedSngStream = new TempFileStream())
+                    using (var encryptedSngStream = new FileStream(sngFile, FileMode.Create, FileAccess.Write))
+                    {
+                        // Pack SNG
+                        var packer = new PSARC.PSARC();
+                        packer.PackSng2014(cleanSngStream, packedSngStream);
+
+                        // Encrypt SNG
+                        switch (platform.platform)
+                        {
+                            case GamePlatform.Pc:
+                                RijndaelEncryptor.EncryptSng(packedSngStream, encryptedSngStream, RijndaelEncryptor.SngKeyPC);
+                                break;
+                            case GamePlatform.Mac:
+                                RijndaelEncryptor.EncryptSng(packedSngStream, encryptedSngStream, RijndaelEncryptor.SngKeyMac);
+                                break;
+                            default:
+                                throw new InvalidOperationException("Unexpected game platform value");
+                        }
+                    }
+
+                    if (File.Exists(cleanSngFile))
+                        File.Decrypt(cleanSngFile);
+                    break;
+                default:
+                    throw new InvalidOperationException("Unexpected game version value");
+            }
+
             if (arrangement.SongFile == null)
                 arrangement.SongFile = new SongFile();
             arrangement.SongFile.File = sngFile;
+
             TMPFILES_SNG.Add(sngFile);
         }
     }
