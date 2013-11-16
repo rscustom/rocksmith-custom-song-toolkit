@@ -424,14 +424,11 @@ namespace RocksmithToolkitLib.DLCPackage
                         {
                             var arrangementName = arrangement.Name.ToString().ToLower();
 
-                            if (arrangement.ArrangementType != ArrangementType.Vocal) //Vocal SNG writer not supported at this time.
-                            {
-                                // GAME SONG (SNG)
-                                GenerateSNG(arrangement, platform);
-                                var sngSongFile = File.OpenRead(arrangement.SongFile.File);
-                                arrangementStream.Add(sngSongFile);
-                                packPsarc.AddEntry(String.Format("songs/bin/{0}/{1}_{2}.sng", platform.GetPathName()[1].ToLower(), dlcName, arrangementName), sngSongFile);
-                            }
+                            // GAME SONG (SNG)
+                            GenerateSNG(arrangement, platform);
+                            var sngSongFile = File.OpenRead(arrangement.SongFile.File);
+                            arrangementStream.Add(sngSongFile);
+                            packPsarc.AddEntry(String.Format("songs/bin/{0}/{1}_{2}.sng", platform.GetPathName()[1].ToLower(), dlcName, arrangementName), sngSongFile);
 
                             // XML SONG
                             var xmlSongFile = File.OpenRead(arrangement.SongXml.File);
