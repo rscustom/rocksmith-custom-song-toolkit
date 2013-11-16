@@ -20,10 +20,7 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public TuningDefinition Select(string uiName, GameVersion gameVersion)
         {
-            if (List.OfType<TuningDefinition>().Where(s => s.UIName == uiName && s.GameVersion == gameVersion).Count() > 0)
-                return List.Single<TuningDefinition>(s => s.UIName == uiName);
-            else
-                return List[0];
+            return List.SingleOrDefault<TuningDefinition>(s => s.UIName == uiName && s.GameVersion == gameVersion);
         }
 
         public IEnumerable<TuningDefinition> Select(GameVersion gameVersion)
@@ -36,9 +33,9 @@ namespace RocksmithToolkitLib.DLCPackage {
             return List.OfType<TuningDefinition>().Where(s => s.Tuning == tuningStrings);
         }
 
-        public IEnumerable<TuningDefinition> Select(int[] tuningStrings)
+        public TuningDefinition Select(int[] tuningStrings, GameVersion gameVersion)
         {
-            return List.OfType<TuningDefinition>().Where(s => s.Tuning.ToArray().SequenceEqual(tuningStrings));
+            return List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
         }
     }
 }
