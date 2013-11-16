@@ -772,6 +772,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 if (CurrentGameVersion == GameVersion.RS2014)
                 {
+                    if (arr.ArrangementType == ArrangementType.Vocal)
+                        continue;
+
                     //Showlights validation (alert only)
                     var showlightFile = Path.Combine(Path.GetDirectoryName(arr.SongXml.File), Path.GetFileNameWithoutExtension(arr.SongXml.File) + "_showlights.xml");
                     if (!File.Exists(showlightFile))
