@@ -24,6 +24,9 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                     continue;
 
                 var showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File), Path.GetFileNameWithoutExtension(arrangement.SongXml.File) + "_showlights.xml");
+                if (!File.Exists(showlightFile))
+                    continue;
+
                 listOne = Showlights.LoadFromFile(showlightFile).ShowlightList;
 
                 if (ShowlightList.Count == 0)
