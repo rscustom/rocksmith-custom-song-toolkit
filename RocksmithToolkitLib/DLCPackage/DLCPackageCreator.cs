@@ -396,7 +396,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             
                         // SOUNDBANK
                         var soundbankFileName = String.Format("song_{0}", dlcName);
-                        var audioFileNameId = SoundBankGenerator.GenerateSoundBank(soundbankFileName, soundStream, soundbankStream, info.Volume, platform);
+                        var audioFileNameId = SoundBankGenerator.GenerateSoundBank(info.Name, soundStream, soundbankStream, info.Volume, platform);
                         soundbankStream.Flush();
                         soundbankStream.Seek(0, SeekOrigin.Begin);
                         packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);
@@ -404,7 +404,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         // SOUNDBANK PREVIEW
                         var soundbankPreviewFileName = String.Format("song_{0}_preview", dlcName);
-                        var audioPreviewFileNameId = SoundBankGenerator.GenerateSoundBank(soundbankPreviewFileName, soundPreviewStream, soundbankPreviewStream, info.Volume, platform);
+                        var audioPreviewFileNameId = SoundBankGenerator.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform);
                         soundbankPreviewStream.Flush();
                         soundbankPreviewStream.Seek(0, SeekOrigin.Begin);
                         packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
