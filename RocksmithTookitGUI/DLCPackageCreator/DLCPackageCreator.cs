@@ -529,9 +529,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
-            TonesLB.Items.Clear();
-            ArrangementLB.Items.Clear();
-
             if (info == null)
             {
                 MessageBox.Show("Can't load saved DLC. An error ocurred.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -541,6 +538,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             RS2012.Checked = info.GameVersion == GameVersion.RS2012;
             RS2014.Checked = info.GameVersion == GameVersion.RS2014;
 
+            TonesLB.Items.Clear();
             switch (CurrentGameVersion)
             {
                 case GameVersion.RS2012:
@@ -612,6 +610,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //if (platformXBox360.Checked)
             //    rbuttonSignatureLIVE.Checked = info.SignatureType == PackageMagic.LIVE;
 
+            ArrangementLB.Items.Clear();
             foreach (var arrangement in info.Arrangements)
             {
                 arrangement.SongXml.File = MakeAbsolute(path, arrangement.SongXml.File);
