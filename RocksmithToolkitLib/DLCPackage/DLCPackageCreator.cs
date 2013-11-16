@@ -747,8 +747,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 case GameVersion.RS2014:
                     using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
                         // Sng2014File can be reused when generating for multiple platforms
-                        //Sng2014File sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
-                        //sng.writeSng(fs, platform);
+                        Sng2014File sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
+                        sng.writeSng(fs, platform);
                     }
                     break;
                 default:
