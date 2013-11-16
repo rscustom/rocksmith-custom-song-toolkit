@@ -64,7 +64,7 @@ namespace RocksmithToolkitLib.DLCPackage
             return hash;
         }
 
-        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, decimal volume, Platform platform)
+        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, decimal volume, Platform platform, bool usepreviewbnk = false)
         {
             string eventName = PLAY + soundbankName;
             string previewName = PLAY30SEC + soundbankName;
@@ -94,11 +94,11 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         case GamePlatform.Pc:
                         case GamePlatform.Mac:
-                            soundbank = Resources.PC2014_soundbank;
+                            soundbank = (usepreviewbnk) ? Resources.PC2014_soundbank_preview : Resources.PC2014_soundbank;
                             break;
                         case GamePlatform.XBox360:
                         case GamePlatform.PS3:
-                            soundbank = Resources.Console2014_soundbank;
+                            soundbank = (usepreviewbnk) ? Resources.Console2014_soundbank_preview : Resources.Console2014_soundbank;
                             break;
                         default:
                             throw new InvalidOperationException("Unexpected game platform value");
