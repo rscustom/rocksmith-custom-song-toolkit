@@ -90,7 +90,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 // Musicgame
                 var sng = new GraphItemLLID();
                 sng.Name = name;
-                sng.Canonical = String.Format(CANONICAL_GAMESONG, platform.GetPathName()[1].ToLower());
+                sng.Canonical = String.Format(CANONICAL_GAMESONG, platform.GetPathName()[0].ToLower());
                 sng.RelPathDirectory = sng.Canonical;
                 sng.LogPathDirectory = sng.Canonical;
                 sng.Tag = new List<string>();
@@ -138,9 +138,9 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             var aArtArray = new string[] { info.AlbumArtPath };
             if (currentPlatform.version == GameVersion.RS2014)
                aArtArray = new string[] { 
-                    String.Format("album_{0}_256.dds", info.ShortName), 
-                    String.Format("album_{0}_128.dds", info.ShortName), 
-                    String.Format("album_{0}_64.dds", info.ShortName) };
+                    String.Format("album_{0}_256.dds", dlcName), 
+                    String.Format("album_{0}_128.dds", dlcName), 
+                    String.Format("album_{0}_64.dds", dlcName) };
             AlbumArt = new List<GraphItemLLID>();
             foreach (var album in aArtArray) {
                 var dds = new GraphItemLLID();
@@ -150,7 +150,6 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 dds.Tag = new List<string>();
                 dds.Tag.Add(TagValue.DDS.GetDescription());
                 dds.Tag.Add(TagValue.Image.GetDescription());
-
                 dds.UUID = IdGenerator.Guid();
                 dds.LLID = Guid.Parse(IdGenerator.LLID());
                 dds.Name = Path.GetFileNameWithoutExtension(album);
@@ -162,7 +161,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             // Soundbank
             Soundbank = new List<GraphItemLLID>();
             var bnk = new GraphItemLLID();
-            bnk.Canonical = CANONICAL_ALBUMART;
+            bnk.Canonical = String.Format(CANONICAL_SOUNDBANK, platform.GetPathName()[1].ToLower());
             bnk.RelPathDirectory = bnk.Canonical;
             bnk.LogPathDirectory = LOGPATH_SOUNDBANK;
             bnk.Tag = new List<string>();
@@ -179,7 +178,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             if (currentPlatform.version == GameVersion.RS2014) {
                 // Soundbank Preview
                 var bnkPreview = new GraphItemLLID();
-                bnkPreview.Canonical = CANONICAL_ALBUMART;
+                bnkPreview.Canonical = String.Format(CANONICAL_SOUNDBANK, platform.GetPathName()[1].ToLower());
                 bnkPreview.RelPathDirectory = bnkPreview.Canonical;
                 bnkPreview.LogPathDirectory = LOGPATH_SOUNDBANK;
                 bnkPreview.Tag = new List<string>();

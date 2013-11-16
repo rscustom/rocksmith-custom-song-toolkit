@@ -21,19 +21,6 @@ namespace RocksmithToolkitLib.DLCPackage
         public decimal Volume { get; set; }
         public PackageMagic SignatureType { get; set; }
 
-        public string ShortName {
-            get
-            {
-                string name = String.Empty;
-                if (!String.IsNullOrEmpty(Name))
-                {
-                    Regex rgx = new Regex("[^a-zA-Z0-9\\-]");
-                    name = rgx.Replace(Name, "");
-                }
-                return name;
-            }
-        }
-
         private List<XBox360License> xbox360Licenses = null;
         public List<XBox360License> XBox360Licenses
         {

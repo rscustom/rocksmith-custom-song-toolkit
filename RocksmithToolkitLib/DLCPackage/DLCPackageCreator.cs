@@ -330,19 +330,19 @@ namespace RocksmithToolkitLib.DLCPackage
                     albumArt256Stream = new MemoryStream();
                     imgExport.SaveImageToStream(img, ImageType.Dds,
                         albumArt256Stream);
-                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_256.dds", info.ShortName), albumArt256Stream);
+                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_256.dds", dlcName), albumArt256Stream);
 
                     albumArt128Stream = new MemoryStream();
                     img.Resize(128, 128, 0, SamplingFilter.Nearest, false);
                     imgExport.SaveImageToStream(img, ImageType.Dds,
                         albumArt128Stream);
-                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_128.dds", info.ShortName), albumArt128Stream);
+                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_128.dds", dlcName), albumArt128Stream);
 
                     albumArt64Stream = new MemoryStream();
                     img.Resize(64, 64, 0, SamplingFilter.Nearest, false);
                     imgExport.SaveImageToStream(img, ImageType.Dds,
                         albumArt64Stream);
-                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_64.dds", info.ShortName), albumArt64Stream);
+                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_64.dds", dlcName), albumArt64Stream);
 
                     // AUDIO
                     var audioFile = platform.GetAudioPath(info)[0];
@@ -747,8 +747,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 case GameVersion.RS2014:
                     using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
                         // Sng2014File can be reused when generating for multiple platforms
-                        Sng2014File sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
-                        sng.writeSng(fs, platform);
+                        //Sng2014File sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
+                        //sng.writeSng(fs, platform);
                     }
                     break;
                 default:
