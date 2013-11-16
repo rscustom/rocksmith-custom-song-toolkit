@@ -15,6 +15,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
     public class AttributesHeader2014
     {
         public static readonly string URN_TEMPLATE = "urn:{0}:{1}:{2}";
+        public static readonly string URN_TEMPLATE_SHORT = "urn:{0}:{1}";
+
+
         [JsonIgnore]
         internal bool IsVocal = false;
         [JsonIgnore]

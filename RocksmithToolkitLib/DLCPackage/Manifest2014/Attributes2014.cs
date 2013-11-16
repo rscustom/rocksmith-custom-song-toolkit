@@ -63,7 +63,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             var dlcName = info.Name.ToLower();
             var arrangementName = arrangement.Name.ToString().ToLower();
 
-            var xblockUrn = String.Format(URN_TEMPLATE, TagValue.EmergentWorld.GetDescription(), TagValue.XWorld.GetDescription(), aggregateGraph.GameXblock.Name);
+            var xblockUrn = String.Format(URN_TEMPLATE_SHORT, TagValue.EmergentWorld.GetDescription(), aggregateGraph.GameXblock.Name);
             var showlightUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), aggregateGraph.ShowlightXml.Name);
             var songXmlUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementName));
             var songSngUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementName));
@@ -102,8 +102,15 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 ArrangementProperties.PathBass = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Bass);
                 ArrangementProperties.RouteMask = (int)arrangement.RouteMask;
 
-                if (arrangement.Name == Sng.ArrangementName.Combo && arrangement.RouteMask == DLCPackage.RouteMask.Rhythm)
-                    ArrangementType = (int)Sng.ArrangementName.Rhythm; //Exclusive condition
+                if (arrangement.Name == Sng.ArrangementName.Combo)
+                { //Exclusive condition
+                    if (arrangement.RouteMask == DLCPackage.RouteMask.Lead)
+                        ArrangementType = (int)Sng.ArrangementName.Lead;
+                    else if (arrangement.RouteMask == DLCPackage.RouteMask.Rhythm)
+                        ArrangementType = (int)Sng.ArrangementName.Rhythm;
+                    else
+                        ArrangementType = (int)arrangement.Name;
+                }
                 else
                     ArrangementType = (int)arrangement.Name;
 
