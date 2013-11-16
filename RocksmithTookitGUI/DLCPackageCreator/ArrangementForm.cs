@@ -205,10 +205,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeed) / 10);
                 RelativeDifficulty.Text = arrangement.RelativeDifficulty.ToString();
                 Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
-                //Gameplay Path
-                routeMaskLeadRadio.Checked = arrangement.RouteMask == RouteMask.Lead;
-                routeMaskRhythmRadio.Checked = arrangement.RouteMask == RouteMask.Rhythm;
-                routeMaskBassRadio.Checked = arrangement.RouteMask == RouteMask.Bass;
                 //Tone Selector
                 toneBaseCombo.SelectedItem = arrangement.ToneBase;
                 if (toneBaseCombo.SelectedItem == null && toneBaseCombo.Items.Count > 0)

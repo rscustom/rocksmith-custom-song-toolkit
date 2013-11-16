@@ -94,7 +94,7 @@
             this.addArrangementButton.Location = new System.Drawing.Point(291, 391);
             this.addArrangementButton.Name = "addArrangementButton";
             this.addArrangementButton.Size = new System.Drawing.Size(72, 29);
-            this.addArrangementButton.TabIndex = 19;
+            this.addArrangementButton.TabIndex = 20;
             this.addArrangementButton.Text = "Ok";
             this.addArrangementButton.UseVisualStyleBackColor = false;
             this.addArrangementButton.Click += new System.EventHandler(this.addArrangementButton_Click);
@@ -127,7 +127,7 @@
             this.cancelButton.Location = new System.Drawing.Point(369, 391);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(72, 29);
-            this.cancelButton.TabIndex = 20;
+            this.cancelButton.TabIndex = 21;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
@@ -141,7 +141,7 @@
             this.toneBaseCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneBaseCombo.Name = "toneBaseCombo";
             this.toneBaseCombo.Size = new System.Drawing.Size(134, 21);
-            this.toneBaseCombo.TabIndex = 11;
+            this.toneBaseCombo.TabIndex = 12;
             // 
             // scrollSpeedTrackBar
             // 
@@ -285,7 +285,7 @@
             this.toneDCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneDCombo.Name = "toneDCombo";
             this.toneDCombo.Size = new System.Drawing.Size(134, 21);
-            this.toneDCombo.TabIndex = 16;
+            this.toneDCombo.TabIndex = 17;
             // 
             // label11
             // 
@@ -307,7 +307,7 @@
             this.toneCCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneCCombo.Name = "toneCCombo";
             this.toneCCombo.Size = new System.Drawing.Size(134, 21);
-            this.toneCCombo.TabIndex = 15;
+            this.toneCCombo.TabIndex = 16;
             this.toneCCombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
             // label12
@@ -330,7 +330,7 @@
             this.toneMultiplayerCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneMultiplayerCombo.Name = "toneMultiplayerCombo";
             this.toneMultiplayerCombo.Size = new System.Drawing.Size(134, 21);
-            this.toneMultiplayerCombo.TabIndex = 14;
+            this.toneMultiplayerCombo.TabIndex = 15;
             // 
             // label9
             // 
@@ -352,7 +352,7 @@
             this.toneBCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneBCombo.Name = "toneBCombo";
             this.toneBCombo.Size = new System.Drawing.Size(134, 21);
-            this.toneBCombo.TabIndex = 13;
+            this.toneBCombo.TabIndex = 14;
             this.toneBCombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
             // label8
@@ -375,7 +375,7 @@
             this.toneACombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneACombo.Name = "toneACombo";
             this.toneACombo.Size = new System.Drawing.Size(134, 21);
-            this.toneACombo.TabIndex = 12;
+            this.toneACombo.TabIndex = 13;
             this.toneACombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
             // lblToneA
@@ -410,7 +410,7 @@
             this.PersistentId.Location = new System.Drawing.Point(156, 19);
             this.PersistentId.Name = "PersistentId";
             this.PersistentId.Size = new System.Drawing.Size(269, 20);
-            this.PersistentId.TabIndex = 18;
+            this.PersistentId.TabIndex = 19;
             // 
             // MasterId
             // 
@@ -420,7 +420,7 @@
             this.MasterId.Location = new System.Drawing.Point(6, 19);
             this.MasterId.Name = "MasterId";
             this.MasterId.Size = new System.Drawing.Size(144, 20);
-            this.MasterId.TabIndex = 17;
+            this.MasterId.TabIndex = 18;
             // 
             // gbXmlDefinition
             // 
@@ -509,7 +509,7 @@
             this.routeMaskNoneRadio.Location = new System.Drawing.Point(322, 21);
             this.routeMaskNoneRadio.Name = "routeMaskNoneRadio";
             this.routeMaskNoneRadio.Size = new System.Drawing.Size(51, 17);
-            this.routeMaskNoneRadio.TabIndex = 14;
+            this.routeMaskNoneRadio.TabIndex = 11;
             this.routeMaskNoneRadio.TabStop = true;
             this.routeMaskNoneRadio.Text = "None";
             this.routeMaskNoneRadio.UseVisualStyleBackColor = true;
@@ -521,7 +521,7 @@
             this.routeMaskBassRadio.Location = new System.Drawing.Point(243, 21);
             this.routeMaskBassRadio.Name = "routeMaskBassRadio";
             this.routeMaskBassRadio.Size = new System.Drawing.Size(48, 17);
-            this.routeMaskBassRadio.TabIndex = 13;
+            this.routeMaskBassRadio.TabIndex = 10;
             this.routeMaskBassRadio.Text = "Bass";
             this.routeMaskBassRadio.UseVisualStyleBackColor = true;
             // 
@@ -532,7 +532,7 @@
             this.routeMaskRhythmRadio.Location = new System.Drawing.Point(156, 21);
             this.routeMaskRhythmRadio.Name = "routeMaskRhythmRadio";
             this.routeMaskRhythmRadio.Size = new System.Drawing.Size(61, 17);
-            this.routeMaskRhythmRadio.TabIndex = 12;
+            this.routeMaskRhythmRadio.TabIndex = 9;
             this.routeMaskRhythmRadio.Text = "Rhythm";
             this.routeMaskRhythmRadio.UseVisualStyleBackColor = true;
             // 
@@ -543,7 +543,7 @@
             this.routeMaskLeadRadio.Location = new System.Drawing.Point(72, 21);
             this.routeMaskLeadRadio.Name = "routeMaskLeadRadio";
             this.routeMaskLeadRadio.Size = new System.Drawing.Size(49, 17);
-            this.routeMaskLeadRadio.TabIndex = 11;
+            this.routeMaskLeadRadio.TabIndex = 8;
             this.routeMaskLeadRadio.Text = "Lead";
             this.routeMaskLeadRadio.UseVisualStyleBackColor = true;
             // 
