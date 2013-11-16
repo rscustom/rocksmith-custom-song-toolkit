@@ -13,6 +13,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
     public class Sng2014FileWriter {
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
         private static List<ChordNotes> cns = new List<ChordNotes>();
+        private bool consoleMode = !Environment.UserInteractive;
 
         public void readXml(Song2014 songXml, Sng2014File sngFile, ArrangementType arrangementType)
         {
@@ -282,7 +283,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 n.PhraseCount = nld.PhraseCount;
                 n.NLD_Phrase = new Int32[n.PhraseCount];
                 for (int j = 0; j < n.PhraseCount; j++) {
-                    Console.WriteLine("{0}", j);
+                    if (consoleMode)
+                        Console.WriteLine("{0}", j);
                     n.NLD_Phrase[j] = nld.Nld_phrase[j].Id;
                 }
                 sng.NLD.NLinkedDifficulties[i] = n;
