@@ -178,6 +178,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         break;
                     }
                 }
+                // TODO guessing that NOTE mask is used here
                 c.NoteMask[i] = parse_notemask(n);
                 // TODO no XML example on chordnote bend values?
                 c.BendData[i] = new BendData();
@@ -398,54 +399,63 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
         }
 
-        // TODO these masks seems to be garbage
-        // (0x04008000,0x00000000) = single note
-        // (0x00008400,0x01000000) = single open note
         // NoteMask:
         const UInt32 NOTE_MASK_UNDEFINED        = 0x0;
-        // missing                                0x1
-        const UInt32 NOTE_MASK_CHORD            = 0x2;
-        const UInt32 NOTE_MASK_OPEN             = 0x4;
-        const UInt32 NOTE_MASK_FRETHANDMUTE     = 0x8;
+        // missing                                0x01
+        const UInt32 NOTE_MASK_CHORD            = 0x02; // confirmed
+        const UInt32 NOTE_MASK_OPEN             = 0x04; // confirmed
+        const UInt32 NOTE_MASK_FRETHANDMUTE     = 0x08;
         const UInt32 NOTE_MASK_TREMOLO          = 0x10;
         const UInt32 NOTE_MASK_HARMONIC         = 0x20;
         const UInt32 NOTE_MASK_PALMMUTE         = 0x40;
         const UInt32 NOTE_MASK_SLAP             = 0x80;
-        const UInt32 NOTE_MASK_PLUCK            = 0x100;
-        const UInt32 NOTE_MASK_POP              = 0x100;
-        const UInt32 NOTE_MASK_HAMMERON         = 0x200;
-        const UInt32 NOTE_MASK_PULLOFF          = 0x400;
-        const UInt32 NOTE_MASK_SLIDE            = 0x800;
+        const UInt32 NOTE_MASK_PLUCK            = 0x0100;
+        const UInt32 NOTE_MASK_POP              = 0x0100;
+        const UInt32 NOTE_MASK_HAMMERON         = 0x0200;
+        const UInt32 NOTE_MASK_PULLOFF          = 0x0400;
+        const UInt32 NOTE_MASK_SLIDE            = 0x0800;
         const UInt32 NOTE_MASK_BEND             = 0x1000;
         const UInt32 NOTE_MASK_SUSTAIN          = 0x2000;
         const UInt32 NOTE_MASK_TAP              = 0x4000;
         const UInt32 NOTE_MASK_PINCHHARMONIC    = 0x8000;
-        const UInt32 NOTE_MASK_VIBRATO          = 0x10000;
-        const UInt32 NOTE_MASK_MUTE             = 0x20000;
-        const UInt32 NOTE_MASK_IGNORE           = 0x40000;
-        // missing                                0x80000
+        const UInt32 NOTE_MASK_VIBRATO          = 0x010000;
+        const UInt32 NOTE_MASK_MUTE             = 0x020000;
+        const UInt32 NOTE_MASK_IGNORE           = 0x040000; // confirmed
+        // missing                                0x080000
         // missing                                0x100000
         const UInt32 NOTE_MASK_HIGHDENSITY      = 0x200000;
         const UInt32 NOTE_MASK_SLIDEUNPITCHEDTO = 0x400000;
         // missing                                0x800000
-        // missing                                0x1000000
-        const UInt32 NOTE_MASK_DOUBLESTOP       = 0x2000000;
-        const UInt32 NOTE_MASK_ACCENT           = 0x4000000;
-        const UInt32 NOTE_MASK_PARENT           = 0x8000000;
+        // missing                                0x01000000
+        const UInt32 NOTE_MASK_DOUBLESTOP       = 0x02000000;
+        const UInt32 NOTE_MASK_ACCENT           = 0x04000000;
+        const UInt32 NOTE_MASK_PARENT           = 0x08000000;
         const UInt32 NOTE_MASK_CHILD            = 0x10000000;
         const UInt32 NOTE_MASK_ARPEGGIO         = 0x20000000;
         // missing                                0x40000000
         const UInt32 NOTE_MASK_STRUM            = 0x80000000;
+
+        // reverse-engineered values
+        // single note mask?
+        const UInt32 NOTE_MASK_SINGLE           = 0x00800000;
+        // CHORD + STRUM + missing mask
+        const UInt32 NOTE_MASK_CHORDNOTES       = 0x01000000;
         public UInt32 parse_notemask(SongNote2014 note) {
-            UInt32 mask = 0;
             if (note == null)
                 return NOTE_MASK_UNDEFINED;
+
+            // single note
+            UInt32 mask = NOTE_MASK_SINGLE;
+
+            if (note.Fret == 0)
+                mask |= NOTE_MASK_OPEN;
 
             // TODO some masks are not used here (open, arpeggio, chord, ...)
             //      and some are missing (unused attributes below)
             // linkNext = 0
             //if (note. != 0)
             //  mask |= NOTE_MASK_;
+
             if (note.Accent != 0)
                 mask |= NOTE_MASK_ACCENT;
             if (note.Bend != 0)
@@ -454,14 +464,20 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 mask |= NOTE_MASK_HAMMERON;
             if (note.Harmonic != 0)
                 mask |= NOTE_MASK_HARMONIC;
+
+            // TODO
             // hopo = 0
             //if (note. != 0)
             //  mask |= NOTE_MASK_;
+
             if (note.Ignore != 0)
                 mask |= NOTE_MASK_IGNORE;
+
+            // TODO
             // leftHand = -1
             //if (note. != 0)
             //  mask |= NOTE_MASK_;
+
             if (note.Mute != 0)
                 mask |= NOTE_MASK_MUTE;
             if (note.PalmMute != 0)
@@ -480,12 +496,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 mask |= NOTE_MASK_TREMOLO;
             if (note.HarmonicPinch != 0)
                 mask |= NOTE_MASK_PINCHHARMONIC;
+
+            // TODO
             // pickDirection="0"
             //if (note. != 0)
             //  mask |= NOTE_MASK_;
             // rightHand="-1"
             //if (note. != 0)
             //  mask |= NOTE_MASK_;
+
             if (note.SlideUnpitchTo != -1)
                 mask |= NOTE_MASK_SLIDEUNPITCHEDTO;
             if (note.Tap != 0)
@@ -497,7 +516,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         private void parseNote(Song2014 xml, SongNote2014 note, Notes n) {
-            // TODO unknown meaning of second mask - mask for chord attributes?
+            // TODO unknown meaning of second mask
             n.NoteMask[0] = parse_notemask(note);
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
             //"Unk1",
@@ -532,8 +551,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         private void parseChord(Song2014 xml, SongChord2014 chord, Notes n, Int32 id) {
-            // TODO helper function to translate XML element to note mask
-            //"NoteMask",
+            n.NoteMask[0] |= NOTE_MASK_CHORD | NOTE_MASK_STRUM;
+            if (id != -1)
+                n.NoteMask[0] |= NOTE_MASK_CHORDNOTES;
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
             //"Unk1",
             n.Time = chord.Time;

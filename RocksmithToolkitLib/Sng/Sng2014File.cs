@@ -63,13 +63,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                 if (platform_header == 3) {
                     MemoryStream encrypted = new MemoryStream();
-                    MemoryStream data = new MemoryStream();
-                    var encw = new EndianBinaryWriter(conv, data);
+                    MemoryStream plain = new MemoryStream();
+                    var encw = new EndianBinaryWriter(conv, plain);
                     // write size of uncompressed data and packed data itself
                     encw.Write((Int32) chart_data.Length);
                     encw.Write(packed);
                     encw.Flush();
-                    MemoryStream input = new MemoryStream(data.ToArray());
+                    MemoryStream input = new MemoryStream(plain.ToArray());
                     // choose key
                     byte[] key;
                     if (platform.platform == GamePlatform.Mac)
@@ -83,11 +83,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     w.Write(new Byte[56]);
                 } else {
                     // unencrypted and unsigned
-                    //if (consoleMode)
-                    //{
-                    //    Console.WriteLine("{0}", chart_data.Length);
-                    //    Console.WriteLine("{0}", packed.Length);
-                    //}
                     w.Write((Int32) chart_data.Length);
                     w.Write(packed);
                 }
@@ -194,6 +189,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 switch (type_name) {
                     case "UInt32":
                         w.Write((UInt32)value);
+                        if (consoleMode)
+                            Console.WriteLine("mask: {0:x}", value);
                         break;
                     case "Int32":
                         w.Write((Int32)value);
