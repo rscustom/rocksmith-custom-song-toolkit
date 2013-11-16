@@ -93,7 +93,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         if (pad > 0)
                             cs.Write(new byte[pad], 0, pad);
 
-                        cs.Flush();
+                        cs.FlushFinalBlock();
                     }
 
                     int j;
