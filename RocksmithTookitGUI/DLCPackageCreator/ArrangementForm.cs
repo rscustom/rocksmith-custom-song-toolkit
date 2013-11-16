@@ -20,7 +20,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private DLCPackageCreator parentControl = null;
         private GameVersion currentGameVersion;
 
-        private RouteMask SelectedRouteMask {
+        private RouteMask RouteMask {
             get {
                 if (routeMaskLeadRadio.Checked)
                     return RouteMask.Lead;
@@ -30,6 +30,23 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return RouteMask.Bass;
                 else
                     return RouteMask.None;
+            }
+            set {
+                switch (value)
+                {
+                    case RouteMask.Lead:
+                        routeMaskLeadRadio.Checked = true;
+                        break;
+                    case RouteMask.Rhythm:
+                        routeMaskRhythmRadio.Checked = true;
+                        break;
+                    case RouteMask.Bass:
+                        routeMaskBassRadio.Checked = true;
+                        break;
+                    default:
+                        routeMaskNoneRadio.Checked = true;
+                        break;
+                }
             }
         }
 
@@ -202,6 +219,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeed) / 10);
                 RelativeDifficulty.Text = arrangement.RelativeDifficulty.ToString();
                 Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
+                RouteMask = arrangement.RouteMask;
                 //Tone Selector
                 toneBaseCombo.SelectedItem = arrangement.ToneBase;
                 if (toneBaseCombo.SelectedItem == null && toneBaseCombo.Items.Count > 0)
@@ -211,7 +229,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 toneBCombo.SelectedItem = arrangement.ToneB;
                 toneCCombo.SelectedItem = arrangement.ToneC;
                 toneDCombo.SelectedItem = arrangement.ToneD;
-
                 //DLC ID
                 PersistentId.Text = arrangement.Id.ToString().Replace("-", "").ToUpper();
                 MasterId.Text = arrangement.MasterId.ToString();
@@ -328,7 +345,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arrangement.ToneD = (toneDCombo.SelectedItem != null) ? toneDCombo.SelectedItem.ToString() : "";
             
             //Gameplay Path
-            arrangement.RouteMask = SelectedRouteMask;
+            arrangement.RouteMask = RouteMask;
             
             // DLC ID
             Guid guid;
