@@ -279,83 +279,113 @@ namespace RocksmithToolkitLib.Xml
 
     [XmlType("arrangementProperties")]
     public class SongArrangementProperties {
+        [JsonProperty("represent")]
         [XmlAttribute("represent")]
         public Int32 Represent { get; set; }
 
+        [JsonProperty("standardTuning")]
         [XmlAttribute("standardTuning")]
         public Int32 StandardTuning { get; set; }
 
+        [JsonProperty("nonStandardChords")]
         [XmlAttribute("nonStandardChords")]
         public Int32 NonStandardChords { get; set; }
 
+        [JsonProperty("barreChords")]
         [XmlAttribute("barreChords")]
         public Int32 BarreChords { get; set; }
 
+        [JsonProperty("powerChords")]
         [XmlAttribute("powerChords")]
         public Int32 PowerChords { get; set; }
 
+        [JsonProperty("dropDPower")]
         [XmlAttribute("dropDPower")]
         public Int32 DropDPower { get; set; }
 
+        [JsonProperty("openChords")]
         [XmlAttribute("openChords")]
         public Int32 OpenChords { get; set; }
 
+        [JsonProperty("fingerPicking")]
         [XmlAttribute("fingerPicking")]
         public Int32 FingerPicking { get; set; }
 
+        [JsonProperty("pickDirection")]
         [XmlAttribute("pickDirection")]
         public sbyte PickDirection { get; set; }
 
+        [JsonProperty("doubleStops")]
         [XmlAttribute("doubleStops")]
         public Int32 DoubleStops { get; set; }
 
+        [JsonProperty("palmMutes")]
         [XmlAttribute("palmMutes")]
         public Int32 PalmMutes { get; set; }
 
+        [JsonProperty("harmonics")]
         [XmlAttribute("harmonics")]
         public Int32 Harmonics { get; set; }
 
+        [JsonProperty("pinchHarmonics")]
         [XmlAttribute("pinchHarmonics")]
         public Int32 PinchHarmonics { get; set; }
 
+        [JsonProperty("hopo")]
         [XmlAttribute("hopo")]
         public Int32 Hopo { get; set; }
 
+        [JsonProperty("tremolo")]
         [XmlAttribute("tremolo")]
         public Int32 Tremolo { get; set; }
 
+        [JsonProperty("slides")]
         [XmlAttribute("slides")]
         public Int32 Slides { get; set; }
 
+        [JsonProperty("unpitchedSlides")]
         [XmlAttribute("unpitchedSlides")]
         public Int32 UnpitchedSlides { get; set; }
 
+        [JsonProperty("bends")]
         [XmlAttribute("bends")]
         public Int32 Bends { get; set; }
 
+        [JsonProperty("tapping")]
         [XmlAttribute("tapping")]
         public Int32 Tapping { get; set; }
 
+        [JsonProperty("vibrato")]
         [XmlAttribute("vibrato")]
         public Int16 Vibrato { get; set; }
 
+        [JsonProperty("fretHandMutes")]
         [XmlAttribute("fretHandMutes")]
         public Int32 FretHandMutes { get; set; }
 
+        [JsonProperty("slapPop")]
         [XmlAttribute("slapPop")]
         public Int32 SlapPop { get; set; }
 
+        [JsonProperty("twoFingerPicking")]
         [XmlAttribute("twoFingerPicking")]
         public Int32 TwoFingerPicking { get; set; }
 
+        [JsonProperty("fifthsAndOctaves")]
         [XmlAttribute("fifthsAndOctaves")]
         public Int32 FifthsAndOctaves { get; set; }
 
+        [JsonProperty("syncopation")]
         [XmlAttribute("syncopation")]
         public Int32 Syncopation { get; set; }
 
+        [JsonProperty("bassPick")]
         [XmlAttribute("bassPick")]
         public Int32 BassPick { get; set; }
+
+        [JsonProperty("sustain")]
+        [XmlAttribute("sustain")]
+        public Int32 Sustain { get; set; }
     }
 
     [XmlType("tuning")]

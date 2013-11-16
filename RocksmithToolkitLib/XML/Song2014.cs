@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace RocksmithToolkitLib.Xml {
     [XmlRoot("song", Namespace = "", IsNullable = false)]
@@ -138,21 +139,23 @@ namespace RocksmithToolkitLib.Xml {
     }
 
     public class SongArrangementProperties2014 : SongArrangementProperties {
+        [JsonProperty("bonusArr")]
         [XmlAttribute("bonusArr")]
         public Int32 BonusArr { get; set; }
-        
-        [XmlAttribute("sustain")]
-        public Int32 Sustain { get; set; }
 
+        [JsonProperty("pathLead")]
         [XmlAttribute("pathLead")]
         public Int32 PathLead { get; set; }
 
+        [JsonProperty("pathRhythm")]
         [XmlAttribute("pathRhythm")]
         public Int32 PathRhythm { get; set; }
 
+        [JsonProperty("pathBass")]
         [XmlAttribute("pathBass")]
         public Int32 PathBass { get; set; }
 
+        [JsonProperty("routeMask")]
         [XmlAttribute("routeMask")]
         public Int32 RouteMask { get; set; }
     }
