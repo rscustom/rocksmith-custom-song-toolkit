@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevILNet">
+      <HintPath>..\lib\DevIL\DevILNet.dll</HintPath>
+    </Reference>
     <Reference Include="MiscUtil">
       <HintPath>..\lib\MiscUtil\MiscUtil.dll</HintPath>
     </Reference>

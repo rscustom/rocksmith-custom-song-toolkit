@@ -150,9 +150,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             get { return AlbumArtPathTB.Text; }
             set { AlbumArtPathTB.Text = value; }
         }
-        private string AlbumArt256Path; // RS2014
-        private string AlbumArt128Path; // RS2014
-        private string AlbumArt64Path; // RS2014
+
 
         private string OggPCPath
         {
@@ -337,74 +335,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Album Art File (*.dds)|*.dds";
+                ofd.Filter = "Album Art File (*.dds,*.gif,*.jpg,*.jpeg,*.bmp,*.png)|*.dds;*.gif;*.jpg;*.jpeg;*.bmp;*.png";
                 if (ofd.ShowDialog() == DialogResult.OK)
                     AlbumArtPath = ofd.FileName;
-            }
-            if (CurrentGameVersion == GameVersion.RS2014)
-            {
-                GenerateAlbumArtFiles();
-            }
-        }
-
-        private void GenerateAlbumArtFiles()
-        {
-            // Rename file
-            var oldName = Path.GetFileNameWithoutExtension(AlbumArtPath);
-            var newName = String.Format("album_{0}", DLCName);
-
-            var aArtDirBase = Path.GetDirectoryName(AlbumArtPath);
-
-            var aArt512JpgTmp = Path.Combine(aArtDirBase, String.Format("{0}.jpg", oldName));
-            var aArt256JpgTmp = Path.Combine(aArtDirBase, String.Format("{0}_256.jpg", newName));
-            var aArt128JpgTmp = Path.Combine(aArtDirBase, String.Format("{0}_128.jpg", newName));
-            var aArt64JpgTmp = Path.Combine(aArtDirBase, String.Format("{0}_64.jpg", newName));
-
-            // Convert input DDS to JPG
-            ConvertAlbumArtFile("dds2jpg.exe", AlbumArtPath);
-
-            if (!File.Exists(aArt512JpgTmp))
-                MessageBox.Show("Can't generate new .dds file. An error ocurred!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            // Generate new rezised images
-            ImageHandler.Save(aArt512JpgTmp, 256, 256, 100, aArt256JpgTmp);
-            ImageHandler.Save(aArt512JpgTmp, 128, 128, 100, aArt128JpgTmp);
-            ImageHandler.Save(aArt512JpgTmp, 64, 64, 100, aArt64JpgTmp);
-
-            // Convert new sizes JPG to DDS
-            ConvertAlbumArtFile("jpg2dds.exe", aArt256JpgTmp);
-            ConvertAlbumArtFile("jpg2dds.exe", aArt128JpgTmp);
-            ConvertAlbumArtFile("jpg2dds.exe", aArt64JpgTmp);
-
-            // Get new DDS files path
-            AlbumArt256Path = Path.Combine(aArtDirBase, Path.GetFileNameWithoutExtension(aArt256JpgTmp) + ".dds");
-            AlbumArt128Path = Path.Combine(aArtDirBase, Path.GetFileNameWithoutExtension(aArt128JpgTmp) + ".dds");
-            AlbumArt64Path = Path.Combine(aArtDirBase, Path.GetFileNameWithoutExtension(aArt64JpgTmp) + ".dds");
-
-            // Delete jpg tmp files
-            if (File.Exists(aArt512JpgTmp))
-                File.Delete(aArt512JpgTmp);
-            if (File.Exists(aArt256JpgTmp))
-                File.Delete(aArt256JpgTmp);
-            if (File.Exists(aArt128JpgTmp))
-                File.Delete(aArt128JpgTmp);
-            if (File.Exists(aArt64JpgTmp))
-                File.Delete(aArt64JpgTmp);
-        }
-
-        private void ConvertAlbumArtFile(string converter, string imageFilePath) {
-            string workDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ddstool");
-
-            using (Process dds2jpgProcess = new Process())
-            {
-                dds2jpgProcess.StartInfo.FileName = Path.Combine(workDir, converter);
-                dds2jpgProcess.StartInfo.WorkingDirectory = workDir;
-                dds2jpgProcess.StartInfo.Arguments = String.Format("-c \"{0}\" \"{1}\"", imageFilePath, Path.GetDirectoryName(imageFilePath));
-                dds2jpgProcess.StartInfo.UseShellExecute = false;
-                dds2jpgProcess.StartInfo.CreateNoWindow = true;
-
-                dds2jpgProcess.Start();
-                dds2jpgProcess.WaitForExit();
             }
         }
 
@@ -431,31 +364,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string albumPath = packageData.AlbumArtPath;
             if (!string.IsNullOrEmpty(albumPath) && Uri.IsWellFormedUriString(albumPath, UriKind.Absolute))
                 packageData.AlbumArtPath = path.MakeRelativeUri(new Uri(albumPath)).ToString();
-
-            if (CurrentGameVersion == GameVersion.RS2014){
-                string album256Path = packageData.AlbumArtPath;
-                if (!string.IsNullOrEmpty(album256Path) && Uri.IsWellFormedUriString(album256Path, UriKind.Absolute))
-                    packageData.AlbumArt256 = path.MakeRelativeUri(new Uri(album256Path)).ToString();
-
-                string album128Path = packageData.AlbumArtPath;
-                if (!string.IsNullOrEmpty(album128Path) && Uri.IsWellFormedUriString(album128Path, UriKind.Absolute))
-                    packageData.AlbumArt128 = path.MakeRelativeUri(new Uri(album128Path)).ToString();
-
-                string album64Path = packageData.AlbumArtPath;
-                if (!string.IsNullOrEmpty(album64Path) && Uri.IsWellFormedUriString(album64Path, UriKind.Absolute))
-                    packageData.AlbumArt64 = path.MakeRelativeUri(new Uri(album64Path)).ToString();
-            }
-
-            if (CurrentGameVersion == GameVersion.RS2014)
-            {
-                string albumPath128 = packageData.AlbumArt128;
-                if (!string.IsNullOrEmpty(albumPath128) && Uri.IsWellFormedUriString(albumPath128, UriKind.Absolute))
-                    packageData.AlbumArt128 = path.MakeRelativeUri(new Uri(albumPath128)).ToString();
-
-                string albumPath64 = packageData.AlbumArt64;
-                if (!string.IsNullOrEmpty(albumPath64) && Uri.IsWellFormedUriString(albumPath64, UriKind.Absolute))
-                    packageData.AlbumArt64 = path.MakeRelativeUri(new Uri(albumPath64)).ToString();
-            }
 
             string oggPath = packageData.OggPath;
             if (!String.IsNullOrEmpty(oggPath) && Uri.IsWellFormedUriString(oggPath, UriKind.Absolute))
@@ -581,9 +489,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // Album art
             AlbumArtPath = MakeAbsolute(path, info.AlbumArtPath);
-            AlbumArt256Path = MakeAbsolute(path, info.AlbumArt256);
-            AlbumArt128Path = MakeAbsolute(path, info.AlbumArt128);
-            AlbumArt64Path = MakeAbsolute(path, info.AlbumArt64);
 
             // Windows audio file
             if (!String.IsNullOrEmpty(info.OggPath))
@@ -747,12 +652,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     default:
                         break;
 	            }
-            }
-
-            if (CurrentGameVersion == GameVersion.RS2014 && !String.IsNullOrEmpty(AlbumArtPath)) {
-                if (String.IsNullOrEmpty(AlbumArt256Path) || String.IsNullOrEmpty(AlbumArt128Path) || String.IsNullOrEmpty(AlbumArt64Path))
-                    MessageBox.Show("Warning: Album Art 256, 128 or 64 size not found!" + Environment.NewLine +
-                                    "Package will generated with default art.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             string oggPreviewPCPath = null;
@@ -919,9 +818,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 },
 
                 AlbumArtPath = AlbumArtPath,
-                AlbumArt256 = AlbumArt256Path,
-                AlbumArt128 = AlbumArt128Path,
-                AlbumArt64 = AlbumArt64Path,
                 OggPath = OggPCPath,
                 OggPreviewPath = oggPreviewPCPath,
                 OggMACPath = OggMACPath,

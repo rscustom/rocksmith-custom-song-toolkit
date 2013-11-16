@@ -137,8 +137,10 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             // Album Art (DDS)
             var aArtArray = new string[] { info.AlbumArtPath };
             if (currentPlatform.version == GameVersion.RS2014)
-                aArtArray = new string[] { info.AlbumArt256, info.AlbumArt128, info.AlbumArt64 };
-
+               aArtArray = new string[] { 
+                    String.Format("album_{0}_256.dds", info.ShortName), 
+                    String.Format("album_{0}_128.dds", info.ShortName), 
+                    String.Format("album_{0}_64.dds", info.ShortName) };
             AlbumArt = new List<GraphItemLLID>();
             foreach (var album in aArtArray) {
                 var dds = new GraphItemLLID();
