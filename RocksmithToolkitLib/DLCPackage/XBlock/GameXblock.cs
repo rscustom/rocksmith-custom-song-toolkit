@@ -71,8 +71,10 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
         }
 
         public void SerializeXml(Stream outStream) {
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
             var serializer = new XmlSerializer(typeof(GameXblock<T>));
-            serializer.Serialize(outStream, this);
+            serializer.Serialize(outStream, this, ns);
         }
 
         #endregion

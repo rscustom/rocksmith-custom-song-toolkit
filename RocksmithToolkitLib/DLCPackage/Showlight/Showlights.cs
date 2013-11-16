@@ -43,8 +43,10 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
         public void Serialize(Stream stream)
         {
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
             var serializer = new XmlSerializer(typeof(Showlights));
-            serializer.Serialize(stream, this);
+            serializer.Serialize(stream, this, ns);
         }
 
         public static Showlights LoadFromFile(string showlightsRS2014File)
