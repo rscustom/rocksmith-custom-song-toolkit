@@ -102,7 +102,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 ArrangementProperties.PathBass = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Bass);
                 ArrangementProperties.RouteMask = (int)arrangement.RouteMask;
 
-                ArrangementType = (int)arrangement.Name;
+                if (arrangement.Name == Sng.ArrangementName.Combo && arrangement.RouteMask == DLCPackage.RouteMask.Rhythm)
+                    ArrangementType = (int)Sng.ArrangementName.Rhythm; //Exclusive condition
+                else
+                    ArrangementType = (int)arrangement.Name;
 
                 //Chords        -- //TODO: MISSING GENERATE
 
