@@ -420,20 +420,20 @@ namespace RocksmithToolkitLib.Sng2014HSL
         const UInt32 NOTE_MASK_POP              = 0x0100;
         const UInt32 NOTE_MASK_HAMMERON         = 0x0200;
         const UInt32 NOTE_MASK_PULLOFF          = 0x0400;
-        const UInt32 NOTE_MASK_SLIDE            = 0x0800;
+        const UInt32 NOTE_MASK_SLIDE            = 0x0800; // confirmed
         const UInt32 NOTE_MASK_BEND             = 0x1000;
-        const UInt32 NOTE_MASK_SUSTAIN          = 0x2000;
+        const UInt32 NOTE_MASK_SUSTAIN          = 0x2000; // confirmed
         const UInt32 NOTE_MASK_TAP              = 0x4000;
         const UInt32 NOTE_MASK_PINCHHARMONIC    = 0x8000;
         const UInt32 NOTE_MASK_VIBRATO          = 0x010000;
         const UInt32 NOTE_MASK_MUTE             = 0x020000;
-        const UInt32 NOTE_MASK_IGNORE           = 0x040000; // confirmed
+        const UInt32 NOTE_MASK_IGNORE           = 0x040000; // confirmed, unknown meaning
         // missing                                0x080000
         // missing                                0x100000
         const UInt32 NOTE_MASK_HIGHDENSITY      = 0x200000;
         const UInt32 NOTE_MASK_SLIDEUNPITCHEDTO = 0x400000;
-        // missing                                0x800000
-        // missing                                0x01000000
+        // missing                                0x800000 single note?
+        // missing                                0x01000000 chord notes?
         const UInt32 NOTE_MASK_DOUBLESTOP       = 0x02000000;
         const UInt32 NOTE_MASK_ACCENT           = 0x04000000;
         const UInt32 NOTE_MASK_PARENT           = 0x08000000;
@@ -447,6 +447,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         const UInt32 NOTE_MASK_SINGLE           = 0x00800000;
         // CHORD + STRUM + missing mask
         const UInt32 NOTE_MASK_CHORDNOTES       = 0x01000000;
+
         public UInt32 parse_notemask(SongNote2014 note) {
             if (note == null)
                 return NOTE_MASK_UNDEFINED;
@@ -548,7 +549,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.Unk5 = -1;
             n.Unk6 = -1;
             // TODO
-            //"FingerId",
+            // is FingerId[0] used as SlideTo value?
+            n.FingerId[0] = unchecked((Byte) (-1));
+            n.FingerId[1] = unchecked((Byte) (-1));
+            n.FingerId[2] = unchecked((Byte) (-1));
+            n.FingerId[3] = unchecked((Byte) (-1));
             n.PickDirection = (Byte)note.PickDirection;
             n.Slap = (Byte)note.Slap;
             n.Pluck = (Byte)note.Pluck;
@@ -562,9 +567,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         private void parseChord(Song2014 xml, SongChord2014 chord, Notes n, Int32 id) {
-            n.NoteMask[0] |= NOTE_MASK_CHORD | NOTE_MASK_STRUM;
+            n.NoteMask[0] |= NOTE_MASK_CHORD;
             if (id != -1)
-                n.NoteMask[0] |= NOTE_MASK_CHORDNOTES;
+                n.NoteMask[0] |= NOTE_MASK_CHORDNOTES | NOTE_MASK_STRUM;
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
             //"Unk1",
             n.Time = chord.Time;
@@ -582,14 +587,18 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     n.PhraseIterationId = i - 1;
                     n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
                 }
-            // TODO
-            //"FingerPrintId",
+            // TODO "FingerPrintId",
+            n.FingerPrintId[0] = -1;
+            n.FingerPrintId[1] = -1;
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
-            //"Unk4",
-            //"Unk5",
-            //"Unk6",
-            // TODO
-            //"FingerId",
+            n.Unk4 = -1;
+            n.Unk5 = -1;
+            n.Unk6 = -1;
+            // TODO "FingerId",
+            n.FingerId[0] = unchecked((Byte) (-1));
+            n.FingerId[1] = unchecked((Byte) (-1));
+            n.FingerId[2] = unchecked((Byte) (-1));
+            n.FingerId[3] = unchecked((Byte) (-1));
             n.PickDirection = unchecked((Byte) (-1));
             n.Slap = unchecked((Byte) (-1));
             n.Pluck = unchecked((Byte) (-1));
