@@ -131,6 +131,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             System.Buffer.BlockCopy(bytes, 0, To, 0, bytes.Length);
         }
 
+        private Dictionary<Int32,SByte> chordFretId = new Dictionary<Int32,SByte>();
         private void parseChords(Song2014 xml, Sng2014File sng, Int16[] tuning, bool bass) {
             sng.Chords = new ChordSection();
             sng.Chords.Count = xml.ChordTemplates.Length;
@@ -147,6 +148,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 c.Frets[3] = (Byte)chord.Fret3;
                 c.Frets[4] = (Byte)chord.Fret4;
                 c.Frets[5] = (Byte)chord.Fret5;
+                // this value seems to be used in chord's FretId in Notes
+                for (int j=0; j<6; j++) {
+                    chordFretId[i] = (SByte) 0;
+                    SByte FretId = unchecked((SByte) c.Frets[j]);
+                    if (FretId > 0 && (SByte) chordFretId[i] > FretId)
+                        chordFretId[i] = FretId;
+                }
                 c.Fingers[0] = (Byte)chord.Finger0;
                 c.Fingers[1] = (Byte)chord.Finger1;
                 c.Fingers[2] = (Byte)chord.Finger2;
@@ -561,8 +569,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             //"Unk1",
             n.Time = chord.Time;
             n.StringIndex = unchecked((Byte) (-1));
-            // TODO this is an array, unclear how to do this
-            //"FretId",
+            // TODO seems to use -1 and lowest positive fret
+            n.FretId[0] = unchecked((Byte) (-1));
+            n.FretId[1] = (Byte) chordFretId[chord.ChordId];
             // this appears to be always 4
             n.Unk3_4 = 4;
             n.ChordId = chord.ChordId;
