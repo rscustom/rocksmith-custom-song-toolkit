@@ -56,6 +56,7 @@
             this.platformMAC = new System.Windows.Forms.CheckBox();
             this.openOggMacButton = new System.Windows.Forms.Button();
             this.gbFiles = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.AlbumArtPathTB = new RocksmithToolkitGUI.CueTextBox();
             this.oggPcPathTB = new RocksmithToolkitGUI.CueTextBox();
             this.oggMacPathTB = new RocksmithToolkitGUI.CueTextBox();
@@ -77,7 +78,6 @@
             this.SongDisplayNameSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.ArtistSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.gbGameVersion = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.gbPlatofmr.SuspendLayout();
             this.gbFiles.SuspendLayout();
             this.gbTones.SuspendLayout();
@@ -416,10 +416,21 @@
             this.gbFiles.TabStop = false;
             this.gbFiles.Text = "Files";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label2.Location = new System.Drawing.Point(5, 93);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(487, 13);
+            this.label2.TabIndex = 36;
+            this.label2.Text = "Song preview must have the same file name with \"_preview\" in the end, eg.: \"filen" +
+    "ame_preview.wem\"";
+            // 
             // AlbumArtPathTB
             // 
             this.AlbumArtPathTB.BackColor = System.Drawing.SystemColors.Window;
-            this.AlbumArtPathTB.Cue = "Album Art (use 512x512 size only) (*.dds)";
+            this.AlbumArtPathTB.Cue = "Album Art (use 512x512 size only) (*.dds,*.gif,*.jpg,*.jpeg,*.bmp,*.png)";
             this.AlbumArtPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.AlbumArtPathTB.ForeColor = System.Drawing.Color.Gray;
             this.AlbumArtPathTB.Location = new System.Drawing.Point(6, 19);
@@ -671,17 +682,6 @@
             this.gbGameVersion.TabIndex = 82;
             this.gbGameVersion.TabStop = false;
             this.gbGameVersion.Text = "Game Version";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label2.Location = new System.Drawing.Point(5, 93);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(487, 13);
-            this.label2.TabIndex = 36;
-            this.label2.Text = "Song preview must have the same file name with \"_preview\" in the end, eg.: \"filen" +
-    "ame_preview.wem\"";
             // 
             // DLCPackageCreator
             // 
