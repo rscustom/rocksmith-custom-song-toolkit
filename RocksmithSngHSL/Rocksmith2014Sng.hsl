@@ -269,18 +269,8 @@ struct SECTION
     float EndTime;
     long StartPhraseIterationId;
     long EndPhraseIterationId;
-    // FIXME TODO 12-13 may be based on section id, 14-15 is used too
-    //            mostly repetitive bytes
-    long Unk12;
-    long Unk13;
-    long Unk14;
-    long Unk15;
-    // always zero?
-    long Unk16_0;
-    long Unk17_0;
-    long Unk18_0;
-    long Unk19_0;
-    long Unk20_0;
+    // FIXME TODO unknown value but seems to by one used byte per Arrangement
+    byte Unk12_Arrangements[36];
 };
 
 struct SECTION_SECTION

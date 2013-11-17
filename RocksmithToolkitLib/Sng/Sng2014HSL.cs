@@ -673,15 +673,8 @@ public class Section
     public float EndTime { get; set; }
     public Int32 StartPhraseIterationId { get; set; }
     public Int32 EndPhraseIterationId { get; set; }
-    public Int32 Unk12 { get; set; }
-    public Int32 Unk13 { get; set; }
-    public Int32 Unk14 { get; set; }
-    public Int32 Unk15 { get; set; }
-    public Int32 Unk16_0 { get; set; }
-    public Int32 Unk17_0 { get; set; }
-    public Int32 Unk18_0 { get; set; }
-    public Int32 Unk19_0 { get; set; }
-    public Int32 Unk20_0 { get; set; }
+    public Byte[] _Unk12_Arrangements = new Byte[36];
+    public Byte[] Unk12_Arrangements { get { return this._Unk12_Arrangements; } set { _Unk12_Arrangements = value; } }
 
     public string[] _order = {
         "Name",
@@ -690,15 +683,7 @@ public class Section
         "EndTime",
         "StartPhraseIterationId",
         "EndPhraseIterationId",
-        "Unk12",
-        "Unk13",
-        "Unk14",
-        "Unk15",
-        "Unk16_0",
-        "Unk17_0",
-        "Unk18_0",
-        "Unk19_0",
-        "Unk20_0"
+        "Unk12_Arrangements"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
@@ -708,15 +693,7 @@ public class Section
         this.EndTime = r.ReadSingle();
         this.StartPhraseIterationId = r.ReadInt32();
         this.EndPhraseIterationId = r.ReadInt32();
-        this.Unk12 = r.ReadInt32();
-        this.Unk13 = r.ReadInt32();
-        this.Unk14 = r.ReadInt32();
-        this.Unk15 = r.ReadInt32();
-        this.Unk16_0 = r.ReadInt32();
-        this.Unk17_0 = r.ReadInt32();
-        this.Unk18_0 = r.ReadInt32();
-        this.Unk19_0 = r.ReadInt32();
-        this.Unk20_0 = r.ReadInt32();
+        this.Unk12_Arrangements = r.ReadBytes(36);
     }
 }
 

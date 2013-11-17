@@ -391,17 +391,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     s.EndTime = xml.SongLength;
                 s.StartPhraseIterationId = getPhraseIterationId(xml, s.StartTime, false);
                 s.EndPhraseIterationId = getPhraseIterationId(xml, s.EndTime, true);
-                // TODO unknown meaning (rename in HSL and regenerate when discovered)
-                //"Unk12",
-                //"Unk13",
-                //"Unk14",
-                //"Unk15",
-                // these appear to be always zero
-                //"Unk16_0",
-                //"Unk17_0",
-                //"Unk18_0",
-                //"Unk19_0",
-                //"Unk20_0"
+                // TODO unknown meaning, one byte per Arrangement
+                for (int j=0; j<getMaxDifficulty(xml)+1; j++)
+                    s.Unk12_Arrangements[j] = 1;
                 sng.Sections.Sections[i] = s;
             }
         }

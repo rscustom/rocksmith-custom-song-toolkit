@@ -10,6 +10,7 @@ namespace RocksmithToolkitLib.DLCPackage
     public static class RijndaelEncryptor
     {
         #region RS1
+
         public static byte[] DLCKey = new byte[32]
         {
             0xFA, 0x6F, 0x4F, 0x42, 0x3E, 0x66, 0x9F, 0x9E,
@@ -18,15 +19,18 @@ namespace RocksmithToolkitLib.DLCPackage
             0x12, 0xB2, 0x7F, 0x76, 0x80, 0xD1, 0x51, 0x41
         };
 
-        public static byte[] PcKey = new byte[32]
+        public static byte[] PCFilesKey = new byte[32]
         {
             0xB8, 0x7A, 0x00, 0xBD, 0xB8, 0x9C, 0x21, 0x03,
             0xA3, 0x94, 0xC0, 0x44, 0x71, 0x51, 0xEE, 0xC4,
             0x3C, 0x3F, 0x72, 0x17, 0xCA, 0x7F, 0x44, 0xC1,
             0xE4, 0x36, 0xFC, 0xFC, 0x84, 0xE6, 0xE7, 0x15
         };
+
         #endregion
+
         #region RS2
+
         public static byte[] PsarcKey = new byte[32]
         {
             0xC5, 0x3D, 0xB2, 0x38, 0x70, 0xA1, 0xA2, 0xF7,
@@ -50,7 +54,9 @@ namespace RocksmithToolkitLib.DLCPackage
             0x17, 0x1C, 0xCA, 0x5D, 0x2A, 0x14, 0x2E, 0x3E,
             0x59, 0xDE, 0x7A, 0xDD, 0xA1, 0x8A, 0x3A, 0x30
         };
+
         #endregion
+
         public static void EncryptFile(Stream input, Stream output, byte[] key)
         {
             using (var rij = new RijndaelManaged())
@@ -105,7 +111,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        public static void DecryptSng(Stream input, Stream output, byte[] key)
+        public static void DecryptSngData(Stream input, Stream output, byte[] key)
         {
             var reader = new BinaryReader(input);
             reader.ReadBytes(8); //skip header

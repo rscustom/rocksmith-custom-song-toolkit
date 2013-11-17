@@ -88,7 +88,7 @@ namespace PcDecrypt
 
 						Directory.CreateDirectory(outputDirectory);
 						using (var outputStream = File.Create(outputPath))
-						RijndaelEncryptor.DecryptFile(inputStream, outputStream, RijndaelEncryptor.PcKey);
+						RijndaelEncryptor.DecryptFile(inputStream, outputStream, RijndaelEncryptor.PCFilesKey);
 					}
 					if(arguments.Encrypt)
 					{
@@ -97,7 +97,7 @@ namespace PcDecrypt
 
 						Directory.CreateDirectory(outputDirectory);
 						using (var outputStream = File.Create(outputPath))
-						RijndaelEncryptor.EncryptFile(inputStream, outputStream, RijndaelEncryptor.PcKey);
+						RijndaelEncryptor.EncryptFile(inputStream, outputStream, RijndaelEncryptor.PCFilesKey);
 					}
 				}
             }

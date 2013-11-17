@@ -32,12 +32,14 @@ namespace RocksmithToolkitLib.PSARC
 				this.archiveFlags = 0;
 			}
 		}
+
 		private PSARC.Header header = new PSARC.Header();
 		public List<Entry> Entries
 		{
 			get;
 			private set;
 		}
+
 		public PSARC()
 		{
 			this.Entries = new List<Entry>();
@@ -46,6 +48,7 @@ namespace RocksmithToolkitLib.PSARC
 				id = 0
 			});
 		}
+
 		public void InflateEntry(Entry entry, BigEndianBinaryReader reader, uint[] zLenghts, uint blockSize, Stream output)
 		{
 			if (entry.Length != 0)
@@ -129,6 +132,7 @@ namespace RocksmithToolkitLib.PSARC
 			data.Seek(0, SeekOrigin.Begin);
             this.Entries.Remove(this.Entries[0]);
 		}
+
         private void inflateEntries(BigEndianBinaryReader reader, uint[] zLenghts, uint blockSize)
         {
             foreach (Entry current in this.Entries)
@@ -137,6 +141,7 @@ namespace RocksmithToolkitLib.PSARC
                 this.InflateEntry(current, reader, zLenghts, blockSize, current.Data);
             }
         }
+
 		public void Read(Stream str)
 		{
 			this.Entries.Clear();
@@ -231,6 +236,7 @@ namespace RocksmithToolkitLib.PSARC
 			}
             str.Flush();
 		}
+
 		private void deflateEntries(out Dictionary<Entry, byte[]> entryDeflatedData, out List<uint> zLengths, uint blockSize)
 		{
 			entryDeflatedData = new Dictionary<Entry, byte[]>();
@@ -283,6 +289,7 @@ namespace RocksmithToolkitLib.PSARC
 				entryDeflatedData.Add(current, array3);
 			}
 		}
+
 		public void AddEntry(string name, Stream data)
 		{
             if (name == "NamesBlock.bin")
@@ -296,11 +303,13 @@ namespace RocksmithToolkitLib.PSARC
 			entry.Length = (ulong)entry.Data.Length;
 			this.AddEntry(entry);
 		}
+
 		public void AddEntry(Entry entry)
 		{
 			this.Entries.Add(entry);
 			entry.id = this.Entries.Count - 1;
 		}
+
 		private void UpdateManifest()
 		{
 			if (this.Entries.Count < 1)
@@ -317,6 +326,7 @@ namespace RocksmithToolkitLib.PSARC
 			}
 			this.Entries[0].Data.Seek(0, SeekOrigin.Begin);
 		}
+
 		public void Write(Stream str, bool encrypt)
 		{
             if (encrypt)
