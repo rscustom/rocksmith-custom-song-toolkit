@@ -351,7 +351,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
             }
-            var path = new Uri(Path.GetDirectoryName(dlcSavePath) + Path.DirectorySeparatorChar);
+            var BasePath = new Uri(Path.GetDirectoryName(dlcSavePath) + Path.DirectorySeparatorChar);
 
             var packageData = GetPackageData();
             if (packageData == null)
@@ -362,33 +362,48 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             //Make the paths relative
             string albumPath = packageData.AlbumArtPath;
-            if (!string.IsNullOrEmpty(albumPath) && Uri.IsWellFormedUriString(albumPath, UriKind.Absolute))
-                packageData.AlbumArtPath = path.MakeRelativeUri(new Uri(albumPath)).ToString();
-
+            if (!string.IsNullOrEmpty(albumPath))
+                packageData.AlbumArtPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(albumPath));
+            //Win
             string oggPath = packageData.OggPath;
-            if (!String.IsNullOrEmpty(oggPath) && Uri.IsWellFormedUriString(oggPath, UriKind.Absolute))
-                packageData.OggPath = path.MakeRelativeUri(new Uri(oggPath)).ToString();
+            string oggPreview = packageData.OggPreviewPath;
+            if (!String.IsNullOrEmpty(oggPath))
+                packageData.OggPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(oggPath));
+            if (!String.IsNullOrEmpty(oggPreview))
+                packageData.OggPreviewPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(oggPreview));
 
             if (CurrentGameVersion == GameVersion.RS2014)
             {
                 string oggMacPath = packageData.OggMACPath;
-                if (!String.IsNullOrEmpty(oggMacPath) && Uri.IsWellFormedUriString(oggMacPath, UriKind.Absolute))
-                    packageData.OggMACPath = path.MakeRelativeUri(new Uri(oggMacPath)).ToString();
+                string oggMacPreview = packageData.OggPreviewMACPath;
+                if (!String.IsNullOrEmpty(oggMacPath))
+                    packageData.OggMACPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(oggMacPath));
+                if (!String.IsNullOrEmpty(oggMacPreview))
+                    packageData.OggPreviewMACPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(oggMacPreview));
             }
 
             string oggXBox360Path = packageData.OggXBox360Path;
-            if (!String.IsNullOrEmpty(oggXBox360Path) && Uri.IsWellFormedUriString(oggXBox360Path, UriKind.Absolute))
-                packageData.OggXBox360Path = path.MakeRelativeUri(new Uri(oggXBox360Path)).ToString();
+            string oggXBox360Preview = packageData.OggPreviewXBox360Path;
+            if (!String.IsNullOrEmpty(oggXBox360Path))
+                packageData.OggXBox360Path = BasePath.LocalPath.RelativeTo(Path.GetFullPath(oggXBox360Path));
+            if (!String.IsNullOrEmpty(oggXBox360Preview))
+                packageData.OggPreviewXBox360Path = BasePath.LocalPath.RelativeTo(Path.GetFullPath(oggXBox360Preview));
 
             string oggPS3Path = packageData.OggPS3Path;
-            if (!String.IsNullOrEmpty(oggPS3Path) && Uri.IsWellFormedUriString(oggPS3Path, UriKind.Absolute))
-                packageData.OggPS3Path = path.MakeRelativeUri(new Uri(oggPS3Path)).ToString();
+            string oggPS3Preview = packageData.OggPreviewPS3Path;
+            if (!String.IsNullOrEmpty(oggPS3Path))
+                packageData.OggPS3Path = BasePath.LocalPath.RelativeTo(Path.GetFullPath(oggPS3Path));
+            if (!String.IsNullOrEmpty(oggPS3Preview))
+                packageData.OggPreviewPS3Path = BasePath.LocalPath.RelativeTo(Path.GetFullPath(oggPS3Preview));
             
             foreach (var arr in packageData.Arrangements)
             {
                 string songXmlFile = arr.SongXml.File;
-                if (!String.IsNullOrEmpty(songXmlFile) && Uri.IsWellFormedUriString(songXmlFile, UriKind.Absolute))
-                    arr.SongXml.File = path.MakeRelativeUri(new Uri(songXmlFile)).ToString();
+                string songSngFile = arr.SongFile.File;
+                if (!String.IsNullOrEmpty(songXmlFile) && !String.IsNullOrEmpty(songSngFile)) {
+                    arr.SongXml.File = BasePath.LocalPath.RelativeTo(Path.GetFullPath(songXmlFile));
+                    arr.SongFile.File = BasePath.LocalPath.RelativeTo(Path.GetFullPath(songSngFile));
+                }
             }
             var serializer = new DataContractSerializer(typeof(DLCPackageData));
             using (var stm = XmlWriter.Create(dlcSavePath, new XmlWriterSettings() { CheckCharacters = true, Indent = true }))
@@ -400,8 +415,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             foreach (var arr in packageData.Arrangements)
             {
                 string songXmlFile = arr.SongXml.File;
-                if (!String.IsNullOrEmpty(songXmlFile) && Uri.IsWellFormedUriString(songXmlFile, UriKind.Relative))
-                    arr.SongXml.File = MakeAbsolute(path, arr.SongXml.File);
+                string songSngFile = arr.SongFile.File;
+                if (!String.IsNullOrEmpty(songXmlFile) && !String.IsNullOrEmpty(songSngFile))
+                {
+                    arr.SongXml.File = BasePath.AbsoluteTo(arr.SongXml.File);
+                    arr.SongFile.File = BasePath.AbsoluteTo(arr.SongFile.File);
+                }
             }
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Package template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -469,7 +488,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     break;
             }              
 
-            var path = new Uri(Path.GetDirectoryName(dlcSavePath) + Path.DirectorySeparatorChar);
+            var BasePath = new Uri(Path.GetDirectoryName(dlcSavePath) + Path.DirectorySeparatorChar);
 
             // Song INFO
             DlcNameTB.Text = info.Name;
@@ -488,26 +507,26 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             AverageTempoTB.Text = info.SongInfo.AverageTempo.ToString();
 
             // Album art
-            AlbumArtPath = MakeAbsolute(path, info.AlbumArtPath);
+            AlbumArtPath = BasePath.AbsoluteTo(info.AlbumArtPath);
 
             // Windows audio file
             if (!String.IsNullOrEmpty(info.OggPath))
-                OggPCPath = MakeAbsolute(path, info.OggPath);
+                OggPCPath = BasePath.AbsoluteTo(info.OggPath);
             platformPC.Checked = !String.IsNullOrEmpty(OggPCPath);
 
             // Mac audio file
             if (!String.IsNullOrEmpty(info.OggMACPath))
-                OggMACPath = MakeAbsolute(path, info.OggMACPath);
+                OggMACPath = BasePath.AbsoluteTo(info.OggMACPath);
             platformMAC.Checked = !String.IsNullOrEmpty(OggMACPath);
 
             // XBox360 audio file
             if (!String.IsNullOrEmpty(info.OggXBox360Path))
-                OggXBox360Path = MakeAbsolute(path, info.OggXBox360Path);
+                OggXBox360Path = BasePath.AbsoluteTo(info.OggXBox360Path);
             platformXBox360.Checked = !String.IsNullOrEmpty(OggXBox360Path);
 
             // PS3 audio file
             if (!String.IsNullOrEmpty(info.OggPS3Path))
-                OggPS3Path = MakeAbsolute(path, info.OggPS3Path);
+                OggPS3Path = BasePath.AbsoluteTo(info.OggPS3Path);
             platformPS3.Checked = !String.IsNullOrEmpty(OggPS3Path);
 
             volumeBox.Value = info.Volume;
@@ -518,7 +537,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             ArrangementLB.Items.Clear();
             foreach (var arrangement in info.Arrangements)
             {
-                arrangement.SongXml.File = MakeAbsolute(path, arrangement.SongXml.File);
+                arrangement.SongXml.File = BasePath.AbsoluteTo(arrangement.SongXml.File);
                 if (arrangement.ToneBase == null)
                     arrangement.ToneBase = info.Tones[0].Name;
 
@@ -569,11 +588,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show("Warning: One or more arrangement have no ArrangementType defined. Guitar has added by default, take a look.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             return new XmlTextReader(new StringReader(doc.Document.ToString()));
-        }
-
-        private string MakeAbsolute(Uri baseUri, string path)
-        {
-            return new Uri(baseUri, path).AbsolutePath.Replace("%25", "%").Replace("%20", " ");
         }
 
         private DLCPackageData GetPackageData()

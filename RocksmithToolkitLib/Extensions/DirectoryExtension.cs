@@ -55,5 +55,55 @@ namespace RocksmithToolkitLib.Extensions
                 Directory.Delete(sourceDirName, true);
             }
         }
+
+        /// <summary>
+        /// Returns rel paths..
+        /// </summary>
+        /// <param name="BasePath">Base folder</param>
+        /// <param name="ObjectPath">Full path to the File or Folder</param>
+        /// <returns>Convert to rel path "absolutePath"</returns>
+        public static string RelativeTo(this string BasePath, string ObjectPath)
+        {
+            string[] absoluteDirectories = BasePath.Split('\\');
+            string[] relativeDirectories = ObjectPath.Split('\\');
+
+            //Get the shortest of the two paths
+            int length = absoluteDirectories.Length < relativeDirectories.Length ? absoluteDirectories.Length : relativeDirectories.Length;
+
+            //Use to determine where in the loop we exited
+            int lastCommonRoot = -1;
+            int index;
+
+            //Find common root
+            for (index = 0; index < length; index++)
+                if (absoluteDirectories[index] == relativeDirectories[index])
+                    lastCommonRoot = index;
+                else
+                    break;
+
+            //If we didn't find a common prefix then return wo results
+            if (lastCommonRoot == -1)
+                return ObjectPath;
+
+            //Build up the relative path
+            System.Text.StringBuilder relativePath = new System.Text.StringBuilder();
+
+            //Add on the ..
+            for (index = lastCommonRoot + 1; index < absoluteDirectories.Length; index++)
+                if (absoluteDirectories[index].Length > 0)
+                    relativePath.Append("..\\");
+
+            //Add on the folders
+            for (index = lastCommonRoot + 1; index < relativeDirectories.Length - 1; index++)
+                relativePath.Append(relativeDirectories[index] + "\\");
+            relativePath.Append(relativeDirectories[relativeDirectories.Length - 1]);
+
+            return relativePath.ToString();
+        }
+
+        public static string AbsoluteTo(this Uri baseUri, string path)
+        {
+            return new Uri(baseUri, path).AbsolutePath.Replace("%25", "%").Replace("%20", " ");
+        }
     }
 }
