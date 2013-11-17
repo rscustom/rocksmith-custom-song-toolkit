@@ -748,7 +748,7 @@
     "DisplayName": "EN-50"
   },
   {
-    "Name": "Epiphone® Electar Century",
+    "Name": "Epiphone Electar Century",
     "Type": "Amps",
     "Category": "Amp",
     "Key": "Amp_EpiphoneElectarCentury",
@@ -767,10 +767,10 @@
     ],
     "Bass": false,
     "TypeEnum": 0,
-    "DisplayName": "Epiphone® Electar Century"
+    "DisplayName": "Epiphone Electar Century"
   },
   {
-    "Name": "Epiphone® Electar Model M",
+    "Name": "Epiphone Electar Model M",
     "Type": "Amps",
     "Category": "Amp",
     "Key": "Amp_EpiphoneElectarM",
@@ -789,10 +789,10 @@
     ],
     "Bass": false,
     "TypeEnum": 0,
-    "DisplayName": "Epiphone® Electar Model M"
+    "DisplayName": "Epiphone Electar Model M"
   },
   {
-    "Name": "Epiphone® Electric Hawaiian",
+    "Name": "Epiphone Electric Hawaiian",
     "Type": "Amps",
     "Category": "Amp",
     "Key": "Amp_EpiphoneElectricHawaiian",
@@ -822,10 +822,10 @@
     ],
     "Bass": false,
     "TypeEnum": 0,
-    "DisplayName": "Epiphone® Electric Hawaiian"
+    "DisplayName": "Epiphone Electric Hawaiian"
   },
   {
-    "Name": "Epiphone® Zephyr",
+    "Name": "Epiphone Zephyr",
     "Type": "Amps",
     "Category": "Amp",
     "Key": "Amp_EpiphoneZephyr",
@@ -866,7 +866,7 @@
     ],
     "Bass": false,
     "TypeEnum": 0,
-    "DisplayName": "Epiphone® Zephyr"
+    "DisplayName": "Epiphone Zephyr"
   },
   {
     "Name": "GBC-1H",
@@ -1067,7 +1067,7 @@
     "DisplayName": "GBC-50"
   },
   {
-    "Name": "Gibson® GA-79",
+    "Name": "Gibson GA-79",
     "Type": "Amps",
     "Category": "Amp",
     "Key": "Amp_GibsonGA79",
@@ -1108,10 +1108,10 @@
     ],
     "Bass": false,
     "TypeEnum": 0,
-    "DisplayName": "Gibson® GA-79"
+    "DisplayName": "Gibson GA-79"
   },
   {
-    "Name": "Gibson® GA-8",
+    "Name": "Gibson GA-8",
     "Type": "Amps",
     "Category": "Amp",
     "Key": "Amp_GibsonGA8",
@@ -1152,10 +1152,10 @@
     ],
     "Bass": false,
     "TypeEnum": 0,
-    "DisplayName": "Gibson® GA-8"
+    "DisplayName": "Gibson GA-8"
   },
   {
-    "Name": "Gibson® GA-88",
+    "Name": "Gibson GA-88",
     "Type": "Amps",
     "Category": "Amp",
     "Key": "Amp_GibsonGA88",
@@ -1196,7 +1196,7 @@
     ],
     "Bass": false,
     "TypeEnum": 0,
-    "DisplayName": "Gibson® GA-88"
+    "DisplayName": "Gibson GA-88"
   },
   {
     "Name": "HG-100",
