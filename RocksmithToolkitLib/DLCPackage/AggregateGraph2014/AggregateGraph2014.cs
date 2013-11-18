@@ -14,7 +14,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
         public static readonly string CANONICAL_GAMESONG = "/songs/bin/{0}"; //Platform Path [1]
         public static readonly string CANONICAL_ALBUMART = "/gfxassets/album_art";
         public static readonly string CANONICAL_XMLSONG = "/songs/arr";
-        public static readonly string CANONICAL_XBLOCK = "gamexblocks/nsongs";
+        public static readonly string CANONICAL_XBLOCK = "/gamexblocks/nsongs";
         public static readonly string CANONICAL_SOUNDBANK = "/audio/{0}"; //Platform Path [0]
         public static readonly string LOGPATH_SOUNDBANK = "/audio";
 
