@@ -91,6 +91,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
         }
 
+        private byte[] chart_LE = null;
+        private byte[] chart_BE = null;
         public byte[] getChartData(Platform platform)
         {
             using (MemoryStream stream = new MemoryStream()) {
@@ -101,11 +103,24 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 else
                     conv = EndianBitConverter.Big;
 
+                // cached result
+                if (conv == EndianBitConverter.Little && chart_LE != null)
+                    return chart_LE;
+                if (conv == EndianBitConverter.Big && chart_BE != null)
+                    return chart_BE;
+
                 using (EndianBinaryWriter w = new EndianBinaryWriter(conv, stream)) {
                     this.Write(w);
                 }
                 stream.Flush();
-                return stream.ToArray();
+
+                var data = stream.ToArray();
+                if (conv == EndianBitConverter.Little)
+                    chart_LE = data;
+                else
+                    chart_BE = data;
+
+                return data;
             }
         }
 
