@@ -111,5 +111,8 @@
   <SongAppId Version="RS2014" AppId="258359" Name="Alice in Chains - Would?" />
   <SongAppId Version="RS2014" AppId="258360" Name="Alice in Chains - Hollow" />
   <SongAppId Version="RS2014" AppId="258361" Name="Alice in Chains - Them Bones" />
-  <SongAppId Version="RS2014" AppId="258362" Name="Alice in Chains - Check My Brain" />
+  <SongAppId Version="RS2014" AppId="258362" Name="Alice in Chains - Check My Brain" />  
+  <SongAppId Version="RS2014" AppId="258364" Name="Green Day - Oh Love" />
+  <SongAppId Version="RS2014" AppId="258365" Name="Green Day - Basket Case" />
+  <SongAppId Version="RS2014" AppId="258366" Name="Green Day - American Idiot" />
 </ArrayOfSongAppId>
