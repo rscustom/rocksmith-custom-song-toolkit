@@ -221,7 +221,7 @@ namespace RocksmithToolkitLib.Xml {
         public Int32 Accent { get; set; }
 
         [XmlAttribute("leftHand")]
-        public Int32 LeftHand { get; set; }
+        public SByte LeftHand { get; set; }
 
         [XmlAttribute("mute")]
         public Int32 Mute { get; set; }
@@ -236,10 +236,10 @@ namespace RocksmithToolkitLib.Xml {
         public Int32 RightHand { get; set; }
 
         [XmlAttribute("slideUnpitchTo")]
-        public Int32 SlideUnpitchTo { get; set; }
+        public SByte SlideUnpitchTo { get; set; }
 
         [XmlAttribute("tap")]
-        public Int32 Tap { get; set; }
+        public Byte Tap { get; set; }
 
         [XmlAttribute("vibrato")]
         public Int16 Vibrato { get; set; }

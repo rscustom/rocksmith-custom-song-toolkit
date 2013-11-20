@@ -20,6 +20,7 @@ struct BPM
     short Measure;
     short Beat;
     long PhraseIteration;
+    // no more bits found in any lessons
     // bit 0 = first beat of measure
     // bit 1 = even measure (starting with 0)
     //struct MeasureMask Mask;
@@ -305,12 +306,12 @@ struct ANCHOR_SECTION
 
 struct ANCHOR_EXTENSION
 {
-    long BeatTime;
+    float BeatTime;
     byte FretId;
-    // TODO need example SNG with anchor extension section
-    long Unk2;
-    short Unk3;
-    byte Unk4;
+    // all lessons have these always set to zero
+    long Unk2_0;
+    short Unk3_0;
+    byte Unk4_0;
 };
 
 struct ANCHOR_EXTENSION_SECTION
@@ -366,7 +367,8 @@ struct FINGERPRINT_SECTION
 //
 struct NOTES
 {
-    ulong NoteMask[2];
+    ulong NoteMask;
+    ulong NoteFlags;
     // TODO not clear which attributes are significant, but Time certainly is
     long Hash;
     float Time;
@@ -383,7 +385,10 @@ struct NOTES
     short PrevIterNote;
     // TODO mostly -1, may be connected to multiple notes at timestamp and/or slide
     short Unk6;
-    byte FingerId[4];
+    byte SlideTo;
+    byte SlideUnpitchTo;
+    byte LeftHand;
+    byte Tap;
     byte PickDirection;
     byte Slap;
     byte Pluck;
@@ -404,6 +409,7 @@ struct ARRANGEMENT
 {
     long Difficulty;
     struct ANCHOR_SECTION Anchors;
+    // TODO so far used for slideTo FretId at Time+Sustain time
     struct ANCHOR_EXTENSION_SECTION AnchorExtensions;
     struct FINGERPRINT_SECTION Fingerprints1;
     struct FINGERPRINT_SECTION Fingerprints2;

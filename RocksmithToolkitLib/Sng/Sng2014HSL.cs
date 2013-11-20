@@ -779,26 +779,26 @@ public class AnchorSection
 
 public class AnchorExtension
 {
-    public Int32 BeatTime { get; set; }
+    public float BeatTime { get; set; }
     public Byte FretId { get; set; }
-    public Int32 Unk2 { get; set; }
-    public Int16 Unk3 { get; set; }
-    public Byte Unk4 { get; set; }
+    public Int32 Unk2_0 { get; set; }
+    public Int16 Unk3_0 { get; set; }
+    public Byte Unk4_0 { get; set; }
 
     public string[] _order = {
         "BeatTime",
         "FretId",
-        "Unk2",
-        "Unk3",
-        "Unk4"
+        "Unk2_0",
+        "Unk3_0",
+        "Unk4_0"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
-        this.BeatTime = r.ReadInt32();
+        this.BeatTime = r.ReadSingle();
         this.FretId = r.ReadByte();
-        this.Unk2 = r.ReadInt32();
-        this.Unk3 = r.ReadInt16();
-        this.Unk4 = r.ReadByte();
+        this.Unk2_0 = r.ReadInt32();
+        this.Unk3_0 = r.ReadInt16();
+        this.Unk4_0 = r.ReadByte();
     }
 }
 
@@ -863,8 +863,8 @@ public class FingerprintSection
 
 public class Notes
 {
-    public UInt32[] _NoteMask = new UInt32[2];
-    public UInt32[] NoteMask { get { return this._NoteMask; } set { _NoteMask = value; } }
+    public UInt32 NoteMask { get; set; }
+    public UInt32 NoteFlags { get; set; }
     public Int32 Hash { get; set; }
     public float Time { get; set; }
     public Byte StringIndex { get; set; }
@@ -880,8 +880,10 @@ public class Notes
     public Int16 NextIterNote { get; set; }
     public Int16 PrevIterNote { get; set; }
     public Int16 Unk6 { get; set; }
-    public Byte[] _FingerId = new Byte[4];
-    public Byte[] FingerId { get { return this._FingerId; } set { _FingerId = value; } }
+    public Byte SlideTo { get; set; }
+    public Byte SlideUnpitchTo { get; set; }
+    public Byte LeftHand { get; set; }
+    public Byte Tap { get; set; }
     public Byte PickDirection { get; set; }
     public Byte Slap { get; set; }
     public Byte Pluck { get; set; }
@@ -892,6 +894,7 @@ public class Notes
 
     public string[] _order = {
         "NoteMask",
+        "NoteFlags",
         "Hash",
         "Time",
         "StringIndex",
@@ -905,7 +908,10 @@ public class Notes
         "NextIterNote",
         "PrevIterNote",
         "Unk6",
-        "FingerId",
+        "SlideTo",
+        "SlideUnpitchTo",
+        "LeftHand",
+        "Tap",
         "PickDirection",
         "Slap",
         "Pluck",
@@ -916,7 +922,8 @@ public class Notes
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
-        this.NoteMask = new UInt32[2]; for (int i=0; i<2; i++) this.NoteMask[i] = r.ReadUInt32();
+        this.NoteMask = r.ReadUInt32();
+        this.NoteFlags = r.ReadUInt32();
         this.Hash = r.ReadInt32();
         this.Time = r.ReadSingle();
         this.StringIndex = r.ReadByte();
@@ -930,7 +937,10 @@ public class Notes
         this.NextIterNote = r.ReadInt16();
         this.PrevIterNote = r.ReadInt16();
         this.Unk6 = r.ReadInt16();
-        this.FingerId = r.ReadBytes(4);
+        this.SlideTo = r.ReadByte();
+        this.SlideUnpitchTo = r.ReadByte();
+        this.LeftHand = r.ReadByte();
+        this.Tap = r.ReadByte();
         this.PickDirection = r.ReadByte();
         this.Slap = r.ReadByte();
         this.Pluck = r.ReadByte();

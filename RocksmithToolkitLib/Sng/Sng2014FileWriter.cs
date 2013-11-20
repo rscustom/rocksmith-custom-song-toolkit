@@ -429,7 +429,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         // unknown constant -- is this for field Unk3_4?
         const UInt32 NOTE_TURNING_BPM_TEMPO     = 0x00000004;
 
-        // NoteMask[1]
+        // NoteFlags:
         const UInt32 NOTE_FLAGS_NUMBERED        = 0x00000001;
 
         // NoteMask:
@@ -557,9 +557,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private Int32 note_id = 1;
         private void parseNote(Song2014 xml, SongNote2014 note, Notes n) {
             // TODO unknown meaning of second mask
-            n.NoteMask[0] = parse_notemask(note);
-            // TODO value 1 probably places number marker under the note
-            n.NoteMask[1] = NOTE_FLAGS_NUMBERED;
+            n.NoteMask = parse_notemask(note);
+            // TODO when to set numbered note?
+            n.NoteFlags = NOTE_FLAGS_NUMBERED;
             // TODO all notes get different id/hash for now
             n.Hash = note_id++;
             n.Time = note.Time;
@@ -581,12 +581,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.PrevIterNote = -1;
             // TODO
             n.Unk6 = -1;
-            // TODO
-            // is FingerId[0] used as SlideTo value?
-            n.FingerId[0] = unchecked((Byte) (-1));
-            n.FingerId[1] = unchecked((Byte) (-1));
-            n.FingerId[2] = unchecked((Byte) (-1));
-            n.FingerId[3] = unchecked((Byte) (-1));
+            n.SlideTo = unchecked((Byte) note.SlideTo);
+            n.SlideUnpitchTo = unchecked((Byte) note.SlideUnpitchTo);
+            n.LeftHand = unchecked((Byte) note.LeftHand);
+            // bvibrato and rchords8 are using 0 value but without TAP mask
+            if (note.Tap != 0)
+                n.Tap = unchecked((Byte) note.Tap);
+            else
+                n.Tap = unchecked((Byte) (-1));
+                
             n.PickDirection = (Byte)note.PickDirection;
             n.Slap = (Byte)note.Slap;
             n.Pluck = (Byte)note.Pluck;
@@ -600,20 +603,21 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         private void parseChord(Song2014 xml, SongChord2014 chord, Notes n, Int32 id) {
-            n.NoteMask[0] |= NOTE_MASK_CHORD;
+            n.NoteMask |= NOTE_MASK_CHORD;
             if (id != -1)
                 // TODO this seems to always add STRUM
-                n.NoteMask[0] |= NOTE_MASK_CHORDNOTES | NOTE_MASK_STRUM;
+                n.NoteMask |= NOTE_MASK_CHORDNOTES | NOTE_MASK_STRUM;
 
             // TODO tried STRUM as barre or open chord indicator, but it's something else
             // var ch_tpl = xml.ChordTemplates[chord.ChordId];
             // if (ch_tpl.Fret0 == 0 || ch_tpl.Fret1 == 0 ||
             //     ch_tpl.Fret2 == 0 || ch_tpl.Fret3 == 0 ||
             //     ch_tpl.Fret4 == 0 || ch_tpl.Fret5 == 0) {
-            //     n.NoteMask[0] |= NOTE_MASK_STRUM;
+            //     n.NoteMask |= NOTE_MASK_STRUM;
             // }
 
-            n.NoteMask[1] = NOTE_FLAGS_NUMBERED;
+            // TODO when to set numbered note?
+            n.NoteFlags = NOTE_FLAGS_NUMBERED;
 
             // TODO all notes get different id/hash for now
             n.Hash = note_id++;
@@ -640,11 +644,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.PrevIterNote = -1;
             // TODO
             n.Unk6 = -1;
-            // TODO "FingerId",
-            n.FingerId[0] = unchecked((Byte) (-1));
-            n.FingerId[1] = unchecked((Byte) (-1));
-            n.FingerId[2] = unchecked((Byte) (-1));
-            n.FingerId[3] = unchecked((Byte) (-1));
+            n.SlideTo = unchecked((Byte) (-1));
+            n.SlideUnpitchTo = unchecked((Byte) (-1));
+            n.LeftHand = unchecked((Byte) (-1));
+            n.Tap = unchecked((Byte) (-1));
             n.PickDirection = unchecked((Byte) (-1));
             n.Slap = unchecked((Byte) (-1));
             n.Pluck = unchecked((Byte) (-1));
