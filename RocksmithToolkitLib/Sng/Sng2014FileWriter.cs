@@ -544,6 +544,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             return mask;
         }
 
+        private Int32 note_id = 1;
         private void parseNote(Song2014 xml, SongNote2014 note, Notes n) {
             // TODO unknown meaning of second mask
             n.NoteMask[0] = parse_notemask(note);
@@ -551,6 +552,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.NoteMask[1] = NOTE_FLAGS_NUMBERED;
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
             //"Unk1",
+            n.Unk1 = note_id++;
             n.Time = note.Time;
             n.StringIndex = note.String;
             // TODO this is an array, unclear why there are two values
@@ -605,6 +607,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
             // TODO unknown meaning (rename in HSL and regenerate when discovered)
             //"Unk1",
+            n.Unk1 = note_id++;
             n.Time = chord.Time;
             n.StringIndex = unchecked((Byte) (-1));
             // TODO seems to use -1 and lowest positive fret
