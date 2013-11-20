@@ -79,10 +79,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.Metadata.StringCount = 6;
             sng.Metadata.Tuning = new Int16[sng.Metadata.StringCount];
             sng.Metadata.Tuning = tuning;
-            // TODO actually seems to be first chord/note time
             var start = sng.Arrangements.Arrangements[sng.Metadata.MaxDifficulty].Notes.Notes[0].Time;
-            sng.Metadata.Unk11_FirstSectionStartTime = start;
-            sng.Metadata.Unk12_FirstSectionStartTime = start;
+            sng.Metadata.Unk11_FirstNoteTime = start;
+            sng.Metadata.Unk12_FirstNoteTime = start;
         }
 
         private static Int32 getPhraseIterationId(Song2014 xml, float Time, bool end)
@@ -189,7 +188,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 // TODO guessing that NOTE mask is used here
                 c.NoteMask[i] = parse_notemask(n);
-                // TODO no XML example on chordnote bend values?
+                // TODO no XML example of chordnotes bend (like weezer)?
                 c.BendData[i] = new BendData();
                 for (int j = 0; j < 32; j++)
                     c.BendData[i].BendData32[j] = new BendData32();
@@ -245,10 +244,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     p.NextPhraseTime = xml.PhraseIterations[i + 1].Time;
                 else
                     p.NextPhraseTime = xml.SongLength;
-                // TODO unknown meaning (rename in HSL and regenerate when discovered)
-                //"Unk3",
-                //"Unk4",
-                //"Unk5"
+                // TODO how to choose difficulties?
+                p.Easy = 0;
+                p.Medium = 0;
+                p.Hard = xml.Phrases[p.PhraseId].MaxDifficulty;
                 sng.PhraseIterations.PhraseIterations[i] = p;
             }
         }
@@ -280,7 +279,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 sng.NLD.NLinkedDifficulties = new NLinkedDifficulty[sng.NLD.Count];
                 return;
             }
-            // TODO it is unclear whether LinkedDiffs affect RS2 SNG
+            // TODO it is unclear whether old LinkedDiffs affect RS2 SNG
             sng.NLD = new NLinkedDifficultySection();
             sng.NLD.Count = xml.NewLinkedDiff.Length;
             sng.NLD.NLinkedDifficulties = new NLinkedDifficulty[sng.NLD.Count];
@@ -391,24 +390,35 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     s.EndTime = xml.SongLength;
                 s.StartPhraseIterationId = getPhraseIterationId(xml, s.StartTime, false);
                 s.EndPhraseIterationId = getPhraseIterationId(xml, s.EndTime, true);
-                // TODO unknown meaning, one byte per Arrangement
-                //var times = new Dictionary<float,bool>();
-                for (int j=0; j<getMaxDifficulty(xml)+1; j++) {
-                    //var count = times.Count;
-                    // TODO this computations creates very different values
-                    // foreach (var note in xml.Levels[j].Notes)
-                    //     if (note.Time >= s.StartTime && note.Time < s.EndTime) {
-                    //         times[note.Time] = true;
-                    //     }
-                    // foreach (var chord in xml.Levels[j].Chords)
-                    //     if (chord.Time >= s.StartTime && chord.Time < s.EndTime) {
-                    //         times[chord.Time] = true;
-                    //     }
-                    // s.Unk12_Arrangements[j] = (Byte) (times.Count - count);
+                for (int j=getMaxDifficulty(xml); j>=0; j--) {
+                    // used string mask for section at all difficulty j
+                    Byte mask = 0;
+                    foreach (var note in xml.Levels[j].Notes) 
+                        if (note.Time >= s.StartTime && note.Time < s.EndTime) {
+                            mask |= (Byte) (1 << note.String);
+                        }
+                    foreach (var chord in xml.Levels[j].Chords)
+                        if (chord.Time >= s.StartTime && chord.Time < s.EndTime) {
+                            var ch = xml.ChordTemplates[chord.ChordId];
+                            if (ch.Fret0 != -1)
+                                mask |= (Byte) (1 << 0);
+                            if (ch.Fret1 != -1)
+                                mask |= (Byte) (1 << 1);
+                            if (ch.Fret2 != -1)
+                                mask |= (Byte) (1 << 2);
+                            if (ch.Fret3 != -1)
+                                mask |= (Byte) (1 << 3);
+                            if (ch.Fret4 != -1)
+                                mask |= (Byte) (1 << 4);
+                            if (ch.Fret5 != -1)
+                                mask |= (Byte) (1 << 5);
+                        }
 
-                    // zero not allowed even for empty noguitar section?
-                    if (s.Unk12_Arrangements[j] == 0)
-                        s.Unk12_Arrangements[j] = 1;
+                    // use mask from next section if there are no notes
+                    if (mask == 0 && j<getMaxDifficulty(xml))
+                        mask = s.StringMask[j+1];
+
+                    s.StringMask[j] = mask;
                 }
                 sng.Sections.Sections[i] = s;
             }
@@ -550,9 +560,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.NoteMask[0] = parse_notemask(note);
             // TODO value 1 probably places number marker under the note
             n.NoteMask[1] = NOTE_FLAGS_NUMBERED;
-            // TODO unknown meaning (rename in HSL and regenerate when discovered)
-            //"Unk1",
-            n.Unk1 = note_id++;
+            // TODO all notes get different id/hash for now
+            n.Hash = note_id++;
             n.Time = note.Time;
             n.StringIndex = note.String;
             // TODO this is an array, unclear why there are two values
@@ -567,9 +576,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // TODO
             n.FingerPrintId[0] = -1;
             n.FingerPrintId[1] = -1;
-            // TODO unknown meaning (rename in HSL and regenerate when discovered)
-            n.Unk4 = -1;
-            n.Unk5 = -1;
+            // these will be overwritten
+            n.NextIterNote = -1;
+            n.PrevIterNote = -1;
+            // TODO
             n.Unk6 = -1;
             // TODO
             // is FingerId[0] used as SlideTo value?
@@ -605,9 +615,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
             n.NoteMask[1] = NOTE_FLAGS_NUMBERED;
 
-            // TODO unknown meaning (rename in HSL and regenerate when discovered)
-            //"Unk1",
-            n.Unk1 = note_id++;
+            // TODO all notes get different id/hash for now
+            n.Hash = note_id++;
             n.Time = chord.Time;
             n.StringIndex = unchecked((Byte) (-1));
             // TODO seems to use -1 and lowest positive fret
@@ -626,9 +635,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // TODO "FingerPrintId",
             n.FingerPrintId[0] = -1;
             n.FingerPrintId[1] = -1;
-            // TODO unknown meaning (rename in HSL and regenerate when discovered)
-            n.Unk4 = -1;
-            n.Unk5 = -1;
+            // these will be overwritten
+            n.NextIterNote = -1;
+            n.PrevIterNote = -1;
+            // TODO
             n.Unk6 = -1;
             // TODO "FingerId",
             n.FingerId[0] = unchecked((Byte) (-1));
@@ -648,6 +658,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         // used for counting total notes+chords (incremental arrangements)
+        // TODO this does not include two notes at same time like in bwalking1,
+        //      we should add both notes if they are in the same difficulty level
+        //      but it would only work if higher diff. didn't override them
         private Hashtable note_times = new Hashtable();
 
         private void parseArrangements(Song2014 xml, Sng2014File sng) {
@@ -745,7 +758,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 //         a.NotesInIteration2[j] > 0)
                 //         a.NotesInIteration1[j-1] = 0;
 
-                // TODO double check if it always produces correct values
                 foreach (var piter in sng.PhraseIterations.PhraseIterations) {
                     int count = 0;
                     int j = 0;
@@ -757,15 +769,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             break;
                         }
                         // set to next arrangement note
-                        a.Notes.Notes[j].Unk4 = (Int16) (j+1);
+                        a.Notes.Notes[j].NextIterNote = (Int16) (j+1);
                         // set all but first note to previous note
                         if (count > 0)
-                            a.Notes.Notes[j].Unk5 = (Int16) (j-1);
+                            a.Notes.Notes[j].PrevIterNote = (Int16) (j-1);
                         ++count;
                     }
                     // fix last phrase note
                     if (count > 0)
-                        a.Notes.Notes[j-1].Unk4 = -1;
+                        a.Notes.Notes[j-1].NextIterNote = -1;
                 }
 
                 a.PhraseCount = xml.Phrases.Length;

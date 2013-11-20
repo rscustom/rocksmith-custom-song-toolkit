@@ -343,15 +343,22 @@ public class SymbolsHeaderSection
 
 public class SymbolsTexture
 {
-    public Byte[] _Unk = new Byte[144];
+    public Byte[] _Font = new Byte[128];
+    public Byte[] Font { get { return this._Font; } set { _Font = value; } }
+    public Byte FontpathLength { get; set; }
+    public Byte[] _Unk = new Byte[15];
     public Byte[] Unk { get { return this._Unk; } set { _Unk = value; } }
 
     public string[] _order = {
+        "Font",
+        "FontpathLength",
         "Unk"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
-        this.Unk = r.ReadBytes(144);
+        this.Font = r.ReadBytes(128);
+        this.FontpathLength = r.ReadByte();
+        this.Unk = r.ReadBytes(15);
     }
 }
 
@@ -374,15 +381,23 @@ public class SymbolsTextureSection
 
 public class SymbolDefinition
 {
-    public Byte[] _Unk = new Byte[44];
-    public Byte[] Unk { get { return this._Unk; } set { _Unk = value; } }
+    public Byte[] _Text = new Byte[12];
+    public Byte[] Text { get { return this._Text; } set { _Text = value; } }
+    public float[] _Rect1 = new float[4];
+    public float[] Rect1 { get { return this._Rect1; } set { _Rect1 = value; } }
+    public float[] _Rect2 = new float[4];
+    public float[] Rect2 { get { return this._Rect2; } set { _Rect2 = value; } }
 
     public string[] _order = {
-        "Unk"
+        "Text",
+        "Rect1",
+        "Rect2"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
-        this.Unk = r.ReadBytes(44);
+        this.Text = r.ReadBytes(12);
+        this.Rect1 = new float[4]; for (int i=0; i<4; i++) this.Rect1[i] = r.ReadSingle();
+        this.Rect2 = new float[4]; for (int i=0; i<4; i++) this.Rect2[i] = r.ReadSingle();
     }
 }
 
@@ -408,26 +423,26 @@ public class PhraseIteration
     public Int32 PhraseId { get; set; }
     public float StartTime { get; set; }
     public float NextPhraseTime { get; set; }
-    public Int32 Unk3 { get; set; }
-    public Int32 Unk4 { get; set; }
-    public Int32 Unk5 { get; set; }
+    public Int32 Easy { get; set; }
+    public Int32 Medium { get; set; }
+    public Int32 Hard { get; set; }
 
     public string[] _order = {
         "PhraseId",
         "StartTime",
         "NextPhraseTime",
-        "Unk3",
-        "Unk4",
-        "Unk5"
+        "Easy",
+        "Medium",
+        "Hard"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
         this.PhraseId = r.ReadInt32();
         this.StartTime = r.ReadSingle();
         this.NextPhraseTime = r.ReadSingle();
-        this.Unk3 = r.ReadInt32();
-        this.Unk4 = r.ReadInt32();
-        this.Unk5 = r.ReadInt32();
+        this.Easy = r.ReadInt32();
+        this.Medium = r.ReadInt32();
+        this.Hard = r.ReadInt32();
     }
 }
 
@@ -673,8 +688,8 @@ public class Section
     public float EndTime { get; set; }
     public Int32 StartPhraseIterationId { get; set; }
     public Int32 EndPhraseIterationId { get; set; }
-    public Byte[] _Unk12_Arrangements = new Byte[36];
-    public Byte[] Unk12_Arrangements { get { return this._Unk12_Arrangements; } set { _Unk12_Arrangements = value; } }
+    public Byte[] _StringMask = new Byte[36];
+    public Byte[] StringMask { get { return this._StringMask; } set { _StringMask = value; } }
 
     public string[] _order = {
         "Name",
@@ -683,7 +698,7 @@ public class Section
         "EndTime",
         "StartPhraseIterationId",
         "EndPhraseIterationId",
-        "Unk12_Arrangements"
+        "StringMask"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
@@ -693,7 +708,7 @@ public class Section
         this.EndTime = r.ReadSingle();
         this.StartPhraseIterationId = r.ReadInt32();
         this.EndPhraseIterationId = r.ReadInt32();
-        this.Unk12_Arrangements = r.ReadBytes(36);
+        this.StringMask = r.ReadBytes(36);
     }
 }
 
@@ -850,7 +865,7 @@ public class Notes
 {
     public UInt32[] _NoteMask = new UInt32[2];
     public UInt32[] NoteMask { get { return this._NoteMask; } set { _NoteMask = value; } }
-    public Int32 Unk1 { get; set; }
+    public Int32 Hash { get; set; }
     public float Time { get; set; }
     public Byte StringIndex { get; set; }
     public Byte[] _FretId = new Byte[2];
@@ -862,8 +877,8 @@ public class Notes
     public Int32 PhraseIterationId { get; set; }
     public Int16[] _FingerPrintId = new Int16[2];
     public Int16[] FingerPrintId { get { return this._FingerPrintId; } set { _FingerPrintId = value; } }
-    public Int16 Unk4 { get; set; }
-    public Int16 Unk5 { get; set; }
+    public Int16 NextIterNote { get; set; }
+    public Int16 PrevIterNote { get; set; }
     public Int16 Unk6 { get; set; }
     public Byte[] _FingerId = new Byte[4];
     public Byte[] FingerId { get { return this._FingerId; } set { _FingerId = value; } }
@@ -877,7 +892,7 @@ public class Notes
 
     public string[] _order = {
         "NoteMask",
-        "Unk1",
+        "Hash",
         "Time",
         "StringIndex",
         "FretId",
@@ -887,8 +902,8 @@ public class Notes
         "PhraseId",
         "PhraseIterationId",
         "FingerPrintId",
-        "Unk4",
-        "Unk5",
+        "NextIterNote",
+        "PrevIterNote",
         "Unk6",
         "FingerId",
         "PickDirection",
@@ -902,7 +917,7 @@ public class Notes
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
         this.NoteMask = new UInt32[2]; for (int i=0; i<2; i++) this.NoteMask[i] = r.ReadUInt32();
-        this.Unk1 = r.ReadInt32();
+        this.Hash = r.ReadInt32();
         this.Time = r.ReadSingle();
         this.StringIndex = r.ReadByte();
         this.FretId = r.ReadBytes(2);
@@ -912,8 +927,8 @@ public class Notes
         this.PhraseId = r.ReadInt32();
         this.PhraseIterationId = r.ReadInt32();
         this.FingerPrintId = new Int16[2]; for (int i=0; i<2; i++) this.FingerPrintId[i] = r.ReadInt16();
-        this.Unk4 = r.ReadInt16();
-        this.Unk5 = r.ReadInt16();
+        this.NextIterNote = r.ReadInt16();
+        this.PrevIterNote = r.ReadInt16();
         this.Unk6 = r.ReadInt16();
         this.FingerId = r.ReadBytes(4);
         this.PickDirection = r.ReadByte();
@@ -1026,8 +1041,8 @@ public class Metadata
     public Int32 StringCount { get; set; }
     // count = StringCount
     public Int16[] Tuning { get; set; }
-    public float Unk11_FirstSectionStartTime { get; set; }
-    public float Unk12_FirstSectionStartTime { get; set; }
+    public float Unk11_FirstNoteTime { get; set; }
+    public float Unk12_FirstNoteTime { get; set; }
     public Int32 MaxDifficulty { get; set; }
 
     public string[] _order = {
@@ -1043,8 +1058,8 @@ public class Metadata
         "SongLength",
         "StringCount",
         "Tuning",
-        "Unk11_FirstSectionStartTime",
-        "Unk12_FirstSectionStartTime",
+        "Unk11_FirstNoteTime",
+        "Unk12_FirstNoteTime",
         "MaxDifficulty"
     };
     public string[] order { get { return this._order; } }
@@ -1061,8 +1076,8 @@ public class Metadata
         this.SongLength = r.ReadSingle();
         this.StringCount = r.ReadInt32();
         this.Tuning = new Int16[this.StringCount]; for (int i=0; i<this.StringCount; i++) this.Tuning[i] = r.ReadInt16();
-        this.Unk11_FirstSectionStartTime = r.ReadSingle();
-        this.Unk12_FirstSectionStartTime = r.ReadSingle();
+        this.Unk11_FirstNoteTime = r.ReadSingle();
+        this.Unk12_FirstNoteTime = r.ReadSingle();
         this.MaxDifficulty = r.ReadInt32();
     }
 }
