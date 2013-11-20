@@ -190,6 +190,7 @@ struct PHRASE_ITERATION_SECTION
     struct PHRASE_ITERATION PhraseIterations[Count];
 };
 
+// no RS2 SNG is using this
 struct PHRASE_EXTRA_INFO_BY_LEVEL
 {
     long PhraseId;
@@ -219,6 +220,7 @@ struct N_LINKED_DIFFICULTY_SECTION
     struct N_LINKED_DIFFICULTY NLinkedDifficulties[Count];
 };
 
+// no RS2 SNG is using this
 struct ACTION
 {
     float Time;
@@ -409,7 +411,7 @@ struct ARRANGEMENT
 {
     long Difficulty;
     struct ANCHOR_SECTION Anchors;
-    // TODO so far used for slideTo FretId at Time+Sustain time
+    // TODO so far used for slides: slideTo is FretId at Time+Sustain time
     struct ANCHOR_EXTENSION_SECTION AnchorExtensions;
     struct FINGERPRINT_SECTION Fingerprints1;
     struct FINGERPRINT_SECTION Fingerprints2;
