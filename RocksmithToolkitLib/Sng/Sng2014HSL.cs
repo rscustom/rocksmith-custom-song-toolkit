@@ -879,7 +879,7 @@ public class Notes
     public Int16[] FingerPrintId { get { return this._FingerPrintId; } set { _FingerPrintId = value; } }
     public Int16 NextIterNote { get; set; }
     public Int16 PrevIterNote { get; set; }
-    public Int16 Unk6 { get; set; }
+    public Int16 ParentPrevNote { get; set; }
     public Byte SlideTo { get; set; }
     public Byte SlideUnpitchTo { get; set; }
     public Byte LeftHand { get; set; }
@@ -907,7 +907,7 @@ public class Notes
         "FingerPrintId",
         "NextIterNote",
         "PrevIterNote",
-        "Unk6",
+        "ParentPrevNote",
         "SlideTo",
         "SlideUnpitchTo",
         "LeftHand",
@@ -936,7 +936,7 @@ public class Notes
         this.FingerPrintId = new Int16[2]; for (int i=0; i<2; i++) this.FingerPrintId[i] = r.ReadInt16();
         this.NextIterNote = r.ReadInt16();
         this.PrevIterNote = r.ReadInt16();
-        this.Unk6 = r.ReadInt16();
+        this.ParentPrevNote = r.ReadInt16();
         this.SlideTo = r.ReadByte();
         this.SlideUnpitchTo = r.ReadByte();
         this.LeftHand = r.ReadByte();

@@ -67,6 +67,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
             sng.Metadata.MaxDifficulty = getMaxDifficulty(xml);
             // we need to track note times because of incremental arrangements
+            // TODO this is not correct for e21_bwalking1, same timestamp
             sng.Metadata.MaxNotesAndChords = note_times.Count;
             sng.Metadata.Unk3_MaxNotesAndChords = sng.Metadata.MaxNotesAndChords;
             sng.Metadata.PointsPerNote = sng.Metadata.MaxScore / sng.Metadata.MaxNotesAndChords;
@@ -569,8 +570,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.Hash = note_id++;
             n.Time = note.Time;
             n.StringIndex = note.String;
-            // TODO this is an array, unclear why there are two values
+            // actual fret number
             n.FretId[0] = (Byte) note.Fret;
+            // TODO unknown, many times same, many times different, few times -1
             n.FretId[1] = (Byte) note.Fret;
             // this appears to be always 4
             n.Unk3_4 = 4;
@@ -646,8 +648,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.Hash = note_id++;
             n.Time = chord.Time;
             n.StringIndex = unchecked((Byte) (-1));
-            // TODO seems to use -1 and lowest positive fret
+            // always -1
             n.FretId[0] = unchecked((Byte) (-1));
+            // TODO seems to be always lowest non-zero fret
             n.FretId[1] = (Byte) chordFretId[chord.ChordId];
             // this appears to be always 4
             n.Unk3_4 = 4;
@@ -769,8 +772,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 a.Fingerprints2.Fingerprints = fp2.ToArray();
 
                 // calculated as we go through notes, seems to work
+                // NotesInIteration1 is count without ignore="1" notes
                 a.PhraseIterationCount1 = xml.PhraseIterations.Length;
                 a.NotesInIteration1 = new Int32[a.PhraseIterationCount1];
+                // NotesInIteration2 seems to be the full count
+                a.PhraseIterationCount2 = a.PhraseIterationCount1;
+                a.NotesInIteration2 = new Int32[a.PhraseIterationCount2];
+
                 // notes and chords sorted by time
                 List<Notes> notes = new List<Notes>();
                 int aecnt = 0;
@@ -785,7 +793,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     for (int j=0; j<xml.PhraseIterations.Length; j++) {
                         var piter = xml.PhraseIterations[j];
                         if (piter.Time > note.Time) {
-                            ++a.NotesInIteration1[j-1];
+                            if (note.Ignore == 0)
+                                ++a.NotesInIteration1[j-1];
+                            ++a.NotesInIteration2[j-1];
                             break;
                         }
                     }
@@ -807,7 +817,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     for (int j=0; j<xml.PhraseIterations.Length; j++) {
                         var piter = xml.PhraseIterations[j];
                         if (piter.Time > chord.Time) {
-                            ++a.NotesInIteration1[j-1];
+                            if (chord.Ignore == 0)
+                                ++a.NotesInIteration1[j-1];
+                            ++a.NotesInIteration2[j-1];
                             break;
                         }
                     }
@@ -828,21 +840,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 a.Notes.Count = notes.Count;
                 notes.Sort((x, y) => x.Time.CompareTo(y.Time));
                 a.Notes.Notes = notes.ToArray();
-
-                // NotesInIteration2 actually seems to be the full count
-                a.PhraseIterationCount2 = a.PhraseIterationCount1;
-                a.NotesInIteration2 = new Int32[a.PhraseIterationCount2];
-                Array.Copy(a.NotesInIteration1, a.NotesInIteration2, a.PhraseIterationCount1);
-                // TODO experiment - works for bbasics1_lsn53, not for bshifting1
-                // zero immediately repeated phrases in NotesInIteration1
-                // (leaves the last repeated phrase iteration note count)
-                // for (int j=a.PhraseIterationCount2-1; j>0; j--)
-                //     // TODO should we zero only on equal count and otherwise do something else?
-                //     //      we have only example with same count (bbasics1_lsn53)
-                //     // zero if previous is the same phrase and has notes
-                //     if (xml.PhraseIterations[j-1].PhraseId == xml.PhraseIterations[j].PhraseId &&
-                //         a.NotesInIteration2[j] > 0)
-                //         a.NotesInIteration1[j-1] = 0;
 
                 foreach (var piter in sng.PhraseIterations.PhraseIterations) {
                     int count = 0;
@@ -866,10 +863,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         a.Notes.Notes[j-1].NextIterNote = -1;
                 }
 
-                // TODO set if previous note is linkNext or is at same timestamp
                 for (int j=1; j<a.Notes.Notes.Length; j++) {
                     var n = a.Notes.Notes[j];
                     var prev = a.Notes.Notes[j-1];
+
+                    // set ParentPrevNote if previous note is linkNext or is at same timestamp
                     if ((prev.NoteMask & NOTE_MASK_PARENT) != 0 || prev.Time == n.Time) {
                         if (prev.ParentPrevNote == -1)
                             prev.ParentPrevNote = prev.PrevIterNote;

@@ -385,8 +385,7 @@ struct NOTES
     // -1 if last/first note in iteration
     short NextIterNote;
     short PrevIterNote;
-    // TODO mostly -1, may be connected to multiple notes at timestamp and/or slide
-    short Unk6;
+    short ParentPrevNote;
     byte SlideTo;
     byte SlideUnpitchTo;
     byte LeftHand;
