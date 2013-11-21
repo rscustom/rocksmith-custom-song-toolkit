@@ -30,7 +30,12 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public IEnumerable<TuningDefinition> Select(TuningStrings tuningStrings)
         {
-            return List.OfType<TuningDefinition>().Where(s => s.Tuning == tuningStrings);
+            return List.OfType<TuningDefinition>().Where(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()));
+        }
+
+        public TuningDefinition Select(TuningStrings tuningStrings, GameVersion gameVersion) {
+            var tuning = List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
+            return tuning;
         }
 
         public TuningDefinition Select(int[] tuningStrings, GameVersion gameVersion)
