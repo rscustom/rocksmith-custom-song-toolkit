@@ -29,7 +29,6 @@ namespace RocksmithToolkitLib.DLCPackage
         public ArrangementName Name { get; set; }
         public string Tuning { get; set; }
         public int ScrollSpeed { get; set; }
-        public int RelativeDifficulty { get; set; }
         public PluckedType PluckedType { get; set; }
         // Gameplay Path
         public RouteMask RouteMask { get; set; }
@@ -64,7 +63,6 @@ namespace RocksmithToolkitLib.DLCPackage
             this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
             this.Tuning = TuningDefinitionRepository.Instance().Select(attr.Tuning, GameVersion.RS2014).UIName;
             this.ScrollSpeed = (int)attr.DynamicVisualDensity.Last();
-            this.RelativeDifficulty = attr.RelativeDifficulty;
             this.PluckedType = (PluckedType)attr.ArrangementProperties.BassPick;
             this.RouteMask = (RouteMask)attr.ArrangementProperties.RouteMask;
             this.ToneBase = attr.Tone_Base;

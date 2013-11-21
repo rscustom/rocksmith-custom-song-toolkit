@@ -76,7 +76,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 attribute.PhraseIterations = new List<PhraseIteration>();
                 attribute.Phrases = new List<Phrase>();
                 attribute.PluckedType = x.PluckedType == Sng.PluckedType.Picked ? "Picked" : "Not Picked";
-                attribute.RelativeDifficulty = x.RelativeDifficulty;
+                attribute.RelativeDifficulty = isVocal ? 0 : song.Levels.Count();
                 attribute.RepresentativeArrangement = false;
                 attribute.Score_MaxNotes = 0;
                 attribute.Score_PNV = 0;

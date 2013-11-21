@@ -62,7 +62,6 @@
             this.XmlFilePath = new RocksmithToolkitGUI.CueTextBox();
             this.gbArrInfo = new System.Windows.Forms.GroupBox();
             this.gbScrollSpeed = new System.Windows.Forms.GroupBox();
-            this.RelativeDifficulty = new RocksmithToolkitGUI.CueTextBox();
             this.gbGameplayPath = new System.Windows.Forms.GroupBox();
             this.routeMaskNoneRadio = new System.Windows.Forms.RadioButton();
             this.routeMaskBassRadio = new System.Windows.Forms.RadioButton();
@@ -454,7 +453,6 @@
             this.gbArrInfo.Controls.Add(this.arrangementNameCombo);
             this.gbArrInfo.Controls.Add(this.label6);
             this.gbArrInfo.Controls.Add(this.tuningComboBox);
-            this.gbArrInfo.Controls.Add(this.RelativeDifficulty);
             this.gbArrInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbArrInfo.Location = new System.Drawing.Point(6, 64);
             this.gbArrInfo.Name = "gbArrInfo";
@@ -476,16 +474,6 @@
             this.gbScrollSpeed.TabIndex = 42;
             this.gbScrollSpeed.TabStop = false;
             this.gbScrollSpeed.Text = "Scroll Speed";
-            // 
-            // RelativeDifficulty
-            // 
-            this.RelativeDifficulty.Cue = "Relative Difficulty";
-            this.RelativeDifficulty.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.RelativeDifficulty.ForeColor = System.Drawing.Color.Gray;
-            this.RelativeDifficulty.Location = new System.Drawing.Point(201, 77);
-            this.RelativeDifficulty.Name = "RelativeDifficulty";
-            this.RelativeDifficulty.Size = new System.Drawing.Size(126, 20);
-            this.RelativeDifficulty.TabIndex = 6;
             // 
             // gbGameplayPath
             // 
@@ -589,7 +577,6 @@
         private CueTextBox XmlFilePath;
         private System.Windows.Forms.Button songXmlBrowseButton;
         private System.Windows.Forms.Button addArrangementButton;
-        private CueTextBox RelativeDifficulty;
         private System.Windows.Forms.ComboBox arrangementTypeCombo;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button cancelButton;

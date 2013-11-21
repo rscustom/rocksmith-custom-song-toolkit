@@ -56,7 +56,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 SongFile = new SongFile { File = "" },
                 SongXml = new SongXML { File = "" },
                 ArrangementType = ArrangementType.Guitar,
-                RelativeDifficulty = gameVersion == GameVersion.RS2012 ? 1 : 0,
                 ScrollSpeed = 20
             }, toneNames, control, gameVersion)
         {
@@ -67,8 +66,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             InitializeComponent();
             currentGameVersion = gameVersion;
             FillTuningCombo();
-
-            RelativeDifficulty.Visible = gameVersion == GameVersion.RS2012;
 
             foreach (var val in Enum.GetValues(typeof(ArrangementType)))
             {
@@ -105,7 +102,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 arrangementNameCombo.Enabled = selectedType == ArrangementType.Guitar;
                 tuningComboBox.Enabled = selectedType != ArrangementType.Vocal;
                 gbScrollSpeed.Enabled = selectedType != ArrangementType.Vocal;
-                RelativeDifficulty.Enabled = selectedType != ArrangementType.Vocal;
                 Picked.Visible = selectedType == ArrangementType.Bass;
                 Picked.Checked = selectedType == ArrangementType.Bass ? false : true;
 
@@ -217,7 +213,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 int scrollSpeed = Math.Min(scrollSpeedTrackBar.Maximum, Math.Max(scrollSpeedTrackBar.Minimum, arrangement.ScrollSpeed));
                 scrollSpeedTrackBar.Value = scrollSpeed;
                 scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeed) / 10);
-                RelativeDifficulty.Text = arrangement.RelativeDifficulty.ToString();
                 Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
                 RouteMask = arrangement.RouteMask;
                 //Tone Selector
@@ -310,12 +305,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 XmlFilePath.Focus();
                 return;
             }
-            var relDificulty = RelativeDifficulty.Text.ToInt32();
-            if (relDificulty == -1)
-            {
-                RelativeDifficulty.Focus();
-                return;
-            }
             if (!routeMaskLeadRadio.Checked && !routeMaskRhythmRadio.Checked && !routeMaskBassRadio.Checked && (ArrangementType)arrangementTypeCombo.SelectedItem != ArrangementType.Vocal)
             {
                 if (MessageBox.Show("You not selected a Gameplay Path, this arrangement you show only in song list.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Cancel)
@@ -333,7 +322,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arrangement.ArrangementType = (ArrangementType)arrangementTypeCombo.SelectedItem;
             arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
             arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
-            arrangement.RelativeDifficulty = relDificulty;
             arrangement.PluckedType = Picked.Checked ? PluckedType.Picked : PluckedType.NotPicked;
 
             //ToneSelector
