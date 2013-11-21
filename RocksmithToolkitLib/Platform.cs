@@ -18,5 +18,11 @@ namespace RocksmithToolkitLib
             this.platform = platform;
             this.version = version;
         }
+
+        public Platform(string platform, string version)
+        {
+            this.platform = (GamePlatform)Enum.Parse(typeof(GamePlatform), platform);
+            this.version = (GameVersion)Enum.Parse(typeof(GameVersion), version);
+        }
     }
 }

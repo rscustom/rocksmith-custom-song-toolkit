@@ -76,6 +76,12 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DLCConverter\DLCConverter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DLCConverter\DLCConverter.Designer.cs">
+      <DependentUpon>DLCConverter.cs</DependentUpon>
+    </Compile>
     <Compile Include="CueTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -156,6 +162,9 @@
     </Compile>
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLCConverter\DLCConverter.resx">
+      <DependentUpon>DLCConverter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\ArrangementForm.resx">
       <DependentUpon>ArrangementForm.cs</DependentUpon>

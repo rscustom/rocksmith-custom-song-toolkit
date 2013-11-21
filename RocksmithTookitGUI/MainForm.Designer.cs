@@ -42,6 +42,8 @@
             this.dlcPackageCreatorControl = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator();
             this.dlcPackerUnpackerTab = new System.Windows.Forms.TabPage();
             this.dlcPackerUnpackerControl = new RocksmithToolkitGUI.DLCPackerUnpacker.DLCPackerUnpacker();
+            this.dlcConverterTab = new System.Windows.Forms.TabPage();
+            this.dlcConverterControl = new RocksmithToolkitGUI.DLCConverter.DLCConverter();
             this.oggConverterTab = new System.Windows.Forms.TabPage();
             this.oggConverterControl = new RocksmithToolkitGUI.OggConverter.OggConverter();
             this.sngFileCreatorTab = new System.Windows.Forms.TabPage();
@@ -55,6 +57,7 @@
             this.tabControl1.SuspendLayout();
             this.dlcPackageCreatorTab.SuspendLayout();
             this.dlcPackerUnpackerTab.SuspendLayout();
+            this.dlcConverterTab.SuspendLayout();
             this.oggConverterTab.SuspendLayout();
             this.sngFileCreatorTab.SuspendLayout();
             this.zigProConverterTab.SuspendLayout();
@@ -131,6 +134,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.dlcPackageCreatorTab);
             this.tabControl1.Controls.Add(this.dlcPackerUnpackerTab);
+            this.tabControl1.Controls.Add(this.dlcConverterTab);
             this.tabControl1.Controls.Add(this.sngToTabConverterTab);
             this.tabControl1.Controls.Add(this.zigProConverterTab);
             this.tabControl1.Controls.Add(this.oggConverterTab);
@@ -194,6 +198,27 @@
             this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
             this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(419, 204);
             this.dlcPackerUnpackerControl.TabIndex = 0;
+            // 
+            // dlcConverterTab
+            // 
+            this.dlcConverterTab.Controls.Add(this.dlcConverterControl);
+            this.dlcConverterTab.Location = new System.Drawing.Point(4, 22);
+            this.dlcConverterTab.Margin = new System.Windows.Forms.Padding(2);
+            this.dlcConverterTab.Name = "dlcConverterTab";
+            this.dlcConverterTab.Padding = new System.Windows.Forms.Padding(2);
+            this.dlcConverterTab.Size = new System.Drawing.Size(696, 469);
+            this.dlcConverterTab.TabIndex = 3;
+            this.dlcConverterTab.Text = "DLC Converter";
+            this.dlcConverterTab.UseVisualStyleBackColor = true;
+            // 
+            // dlcConverterControl
+            // 
+            this.dlcConverterControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dlcConverterControl.Location = new System.Drawing.Point(70, 30);
+            this.dlcConverterControl.Margin = new System.Windows.Forms.Padding(4);
+            this.dlcConverterControl.Name = "dlcConverterControl";
+            this.dlcConverterControl.Size = new System.Drawing.Size(419, 270);
+            this.dlcConverterControl.TabIndex = 0;
             // 
             // oggConverterTab
             // 
@@ -340,6 +365,8 @@
         private SngFileCreator.SngFileCreator sngFileCreatorControl;
         private OggConverter.OggConverter oggConverterControl;
         private System.Windows.Forms.TabPage dlcPackerUnpackerTab;
+        private System.Windows.Forms.TabPage dlcConverterTab;
+        private DLCConverter.DLCConverter dlcConverterControl;
         private DLCPackerUnpacker.DLCPackerUnpacker dlcPackerUnpackerControl;
         private DLCPackageCreator.DLCPackageCreator dlcPackageCreatorControl;
         private System.Windows.Forms.TabPage zigProConverterTab;

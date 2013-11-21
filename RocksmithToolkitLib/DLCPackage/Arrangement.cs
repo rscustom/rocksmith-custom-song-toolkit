@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
+using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -18,12 +21,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
     public class Arrangement
     {
-        public Arrangement()
-        {
-            Id = IdGenerator.Guid();
-            MasterId = ArrangementType == Sng.ArrangementType.Vocal ? 1 : RandomGenerator.NextInt();
-        }
-
         public SongFile SongFile { get; set; }
         public SongXML SongXml { get; set; }
         // Song Information
@@ -46,6 +43,40 @@ namespace RocksmithToolkitLib.DLCPackage
         // DLC ID
         public Guid Id { get; set; }
         public int MasterId { get; set; }
+
+        public Arrangement()
+        {
+            Id = IdGenerator.Guid();
+            MasterId = ArrangementType == Sng.ArrangementType.Vocal ? 1 : RandomGenerator.NextInt();
+        }
+
+        public Arrangement(Attributes2014 attr, string xmlSongFile)
+        {
+            var song = Song2014.LoadFromFile(xmlSongFile);
+
+            this.SongFile = new SongFile();
+
+            this.SongXml = new SongXML();
+            this.SongXml.File = xmlSongFile;
+
+            this.ArrangementType = (ArrangementType)attr.ArrangementType;
+            this.ArrangementSort = attr.ArrangementSort;
+            this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
+            this.Tuning = TuningDefinitionRepository.Instance().Select(attr.Tuning, GameVersion.RS2014).UIName;
+            this.ScrollSpeed = (int)attr.DynamicVisualDensity.Last();
+            this.RelativeDifficulty = attr.RelativeDifficulty;
+            this.PluckedType = (PluckedType)attr.ArrangementProperties.BassPick;
+            this.RouteMask = (RouteMask)attr.ArrangementProperties.RouteMask;
+            this.ToneBase = attr.Tone_Base;
+            this.ToneMultiplayer = attr.Tone_Multiplayer;
+            this.ToneA = attr.Tone_A;
+            this.ToneB = attr.Tone_B;
+            this.ToneC = attr.Tone_C;
+            this.ToneD = attr.Tone_D;
+
+            this.Id = Guid.Parse(attr.PersistentID);
+            this.MasterId = attr.MasterID_RDV;
+        }
         
         public override string ToString()
         {

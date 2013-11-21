@@ -51,6 +51,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public string Tone_Multiplayer { get; set; }
         public List<Tone2014> Tones { get; set; }
         public string InputEvent { get; set; } //Vocals only
+        public decimal SongVolume { get; set; } //Customs only (to easy platform conversion)
 
         public Attributes2014() {}
 
@@ -87,6 +88,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             SongBank = String.Format(AggregateGraph2014.NAME_SOUNDBANK + ".bnk", info.Name.ToLower());
             SongEvent = String.Format("Play_{0}", info.Name);
             SongXml = songXmlUrn;
+            SongVolume = info.Volume;
                 
             // Only for Vocal
             if (IsVocal)
