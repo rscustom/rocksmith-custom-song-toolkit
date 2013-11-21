@@ -503,9 +503,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
             if (note.LinkNext != 0)
                 mask |= NOTE_MASK_PARENT;
-            // add CHILD flag if previous note has linkNext
-            if (prev != null && (prev.NoteMask & NOTE_MASK_PARENT) != 0)
-                mask |= NOTE_MASK_CHILD;
 
             if (note.Accent != 0)
                 mask |= NOTE_MASK_ACCENT;
@@ -609,11 +606,30 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.BendData.BendData = new BendData32[n.BendData.Count];
         }
 
-        private void parseChord(Song2014 xml, SongChord2014 chord, Notes n, Int32 id) {
+        private void parseChord(Song2014 xml, Sng2014File sng, SongChord2014 chord, Notes n, Int32 id) {
             n.NoteMask |= NOTE_MASK_CHORD;
             if (id != -1)
                 // TODO this seems to always add STRUM
                 n.NoteMask |= NOTE_MASK_CHORDNOTES | NOTE_MASK_STRUM;
+
+            if (chord.LinkNext != 0)
+                n.NoteMask |= NOTE_MASK_PARENT;
+
+            // TODO not checked against examples
+            if (chord.Accent != 0)
+                n.NoteMask |= NOTE_MASK_ACCENT;
+            if (chord.FretHandMute != 0)
+                n.NoteMask |= NOTE_MASK_FRETHANDMUTE;
+            if (chord.HighDensity != 0)
+                n.NoteMask |= NOTE_MASK_HIGHDENSITY;
+            if (chord.Ignore != 0)
+                n.NoteMask |= NOTE_MASK_IGNORE;
+            if (chord.PalmMute != 0)
+                n.NoteMask |= NOTE_MASK_PALMMUTE;
+            // TODO there are some weird values in there, how do they affect SNG?
+            //      otherwise does not seem to have a mask
+            // if (chord.Hopo != 0)
+            //     n.NoteMask |= ;
 
             // TODO tried STRUM as barre or open chord indicator, but it's something else
             // var ch_tpl = xml.ChordTemplates[chord.ChordId];
@@ -658,11 +674,26 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.PickDirection = unchecked((Byte) (-1));
             n.Slap = unchecked((Byte) (-1));
             n.Pluck = unchecked((Byte) (-1));
-            if (chord.chordNotes != null)
+            if (chord.chordNotes != null) {
                 foreach (var cn in chord.chordNotes)
                     if (cn.Sustain > n.Sustain)
                         n.Sustain = cn.Sustain;
-            // TODO there are only zeros for all chords in lessons
+            }
+            
+            if (n.Sustain > 0)
+                n.NoteMask |= NOTE_MASK_SUSTAIN;
+
+            if ((sng.Chords.Chords[chord.ChordId].Mask & CHORD_MASK_ARPEGGIO) != 0)
+                n.NoteMask |= NOTE_MASK_ARPEGGIO;
+
+            int cnt = 0;
+            for (int str=0; str<6; str++)
+                if (sng.Chords.Chords[chord.ChordId].Frets[str] != 255)
+                    ++cnt;
+            if (cnt == 2)
+                n.NoteMask |= NOTE_MASK_DOUBLESTOP;
+
+            // there are only zeros for all chords in lessons
             //n.Vibrato = 0;
             //n.MaxBend = 0;
             n.BendData = new BendDataSection();
@@ -770,7 +801,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     Int32 id = -1;
                     if (chord.chordNotes != null && chord.chordNotes.Length > 0)
                         id = addChordNotes(chord);
-                    parseChord(xml, chord, n, id);
+                    parseChord(xml, sng, chord, n, id);
                     notes.Add(n);
                     note_times[chord.Time] = chord;
                     for (int j=0; j<xml.PhraseIterations.Length; j++) {
@@ -844,6 +875,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             prev.ParentPrevNote = prev.PrevIterNote;
                         n.ParentPrevNote = prev.ParentPrevNote;
                     }
+
+                    // add CHILD flag if previous note has linkNext
+                    if ((prev.NoteMask & NOTE_MASK_PARENT) != 0)
+                        n.NoteMask |= NOTE_MASK_CHILD;
                 }
 
                 a.PhraseCount = xml.Phrases.Length;
