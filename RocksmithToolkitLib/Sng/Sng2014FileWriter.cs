@@ -587,8 +587,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // these will be overwritten
             n.NextIterNote = -1;
             n.PrevIterNote = -1;
-            // seems to be unused for chords
-            n.Unk6 = -1;
+            n.ParentPrevNote = -1;
             n.SlideTo = unchecked((Byte) note.SlideTo);
             n.SlideUnpitchTo = unchecked((Byte) note.SlideUnpitchTo);
             n.LeftHand = unchecked((Byte) note.LeftHand);
@@ -650,8 +649,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // these will be overwritten
             n.NextIterNote = -1;
             n.PrevIterNote = -1;
-            // TODO
-            n.Unk6 = -1;
+            // seems to be unused for chords
+            n.ParentPrevNote = -1;
             n.SlideTo = unchecked((Byte) (-1));
             n.SlideUnpitchTo = unchecked((Byte) (-1));
             n.LeftHand = unchecked((Byte) (-1));
@@ -831,6 +830,17 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     // fix last phrase note
                     if (count > 0)
                         a.Notes.Notes[j-1].NextIterNote = -1;
+                }
+
+                // TODO set if previous note is linkNext or is at same timestamp
+                for (int j=1; j<a.Notes.Notes.Length; j++) {
+                    var n = a.Notes.Notes[j];
+                    var prev = a.Notes.Notes[j-1];
+                    if ((prev.NoteMask & NOTE_MASK_PARENT) != 0 || prev.Time == n.Time) {
+                        if (prev.ParentPrevNote == -1)
+                            prev.ParentPrevNote = prev.PrevIterNote;
+                        n.ParentPrevNote = prev.ParentPrevNote;
+                    }
                 }
 
                 a.PhraseCount = xml.Phrases.Length;
