@@ -658,10 +658,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.PickDirection = unchecked((Byte) (-1));
             n.Slap = unchecked((Byte) (-1));
             n.Pluck = unchecked((Byte) (-1));
-            // TODO are these always zero for chords and used only in chordnotes?
-            n.Vibrato = 0;
-            n.Sustain = 0;
-            n.MaxBend = 0;
+            if (chord.chordNotes != null)
+                foreach (var cn in chord.chordNotes)
+                    if (cn.Sustain > n.Sustain)
+                        n.Sustain = cn.Sustain;
+            // TODO there are only zeros for all chords in lessons
+            //n.Vibrato = 0;
+            //n.MaxBend = 0;
             n.BendData = new BendDataSection();
             n.BendData.Count = 0;
             n.BendData.BendData = new BendData32[n.BendData.Count];
