@@ -270,7 +270,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (!xboxPackage.ParseSuccess)
                 throw new InvalidDataException("Invalid XBox360 Rocksmith package!\n\r" + x.Log);
 
-            var rootDir = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourceFileName)) + String.Format("_{0}", platform.ToString());
+            var rootDir = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourceFileName)) + String.Format("_{0}", platform.platform.ToString());
             xboxPackage.ExtractPayload(rootDir, true, true);
 
             foreach (var fileName in Directory.EnumerateFiles(Path.Combine(rootDir, "Root"))) {
