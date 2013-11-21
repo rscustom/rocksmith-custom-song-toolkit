@@ -140,8 +140,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
             for (int i = 0; i < sng.Chords.Count; i++) {
                 var chord = xml.ChordTemplates[i];
                 var c = new Chord();
-                // TODO
-                //"Mask",
+                if (chord.DisplayName.EndsWith("arp"))
+                    c.Mask |= CHORD_MASK_ARPEGGIO;
+                else if (chord.DisplayName.EndsWith("nop"))
+                    c.Mask |= CHORD_MASK_NOP;
                 c.Frets[0] = (Byte)chord.Fret0;
                 c.Frets[1] = (Byte)chord.Fret1;
                 c.Frets[2] = (Byte)chord.Fret2;
@@ -431,6 +433,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
         // unknown constant -- is this for field Unk3_4?
         const UInt32 NOTE_TURNING_BPM_TEMPO     = 0x00000004;
 
+        // chord template Mask (displayName ends with "arp" or "nop")
+        const UInt32 CHORD_MASK_ARPEGGIO        = 0x00000001;
+        const UInt32 CHORD_MASK_NOP             = 0x00000002;
+
         // NoteFlags:
         const UInt32 NOTE_FLAGS_NUMBERED        = 0x00000001;
 
@@ -575,13 +581,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.ChordNotesId = -1;
             n.PhraseIterationId = getPhraseIterationId(xml, n.Time, false);
             n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
-            // TODO
+            // these will be overwritten
             n.FingerPrintId[0] = -1;
             n.FingerPrintId[1] = -1;
             // these will be overwritten
             n.NextIterNote = -1;
             n.PrevIterNote = -1;
-            // TODO
+            // seems to be unused for chords
             n.Unk6 = -1;
             n.SlideTo = unchecked((Byte) note.SlideTo);
             n.SlideUnpitchTo = unchecked((Byte) note.SlideUnpitchTo);
@@ -638,7 +644,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     n.PhraseIterationId = i - 1;
                     n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
                 }
-            // TODO "FingerPrintId",
+            // these will be overwritten
             n.FingerPrintId[0] = -1;
             n.FingerPrintId[1] = -1;
             // these will be overwritten
@@ -702,15 +708,33 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     if (note.SlideTo != -1)
                         ++a.AnchorExtensions.Count;
                 a.AnchorExtensions.AnchorExtensions = new AnchorExtension[a.AnchorExtensions.Count];
-                // TODO one for fretting hand and one for picking hand?
-                //"Fingerprints1",
+                // TODO need to double check
+                // Fingerprints1 is for handshapes without "arp" displayName
                 a.Fingerprints1 = new FingerprintSection();
-                a.Fingerprints1.Count = 0;
-                a.Fingerprints1.Fingerprints = new Fingerprint[0];
-                //"Fingerprints2",
+                // Fingerprints2 is for handshapes with "arp" displayName
                 a.Fingerprints2 = new FingerprintSection();
-                a.Fingerprints2.Count = 0;
-                a.Fingerprints2.Fingerprints = new Fingerprint[0];
+
+                List<Fingerprint> fp1 = new List<Fingerprint>();
+                List<Fingerprint> fp2 = new List<Fingerprint>();
+                foreach (var h in level.HandShapes) {
+                    var fp = new Fingerprint();
+                    fp.ChordId = h.ChordId;
+                    fp.StartTime = h.StartTime;
+                    fp.EndTime = h.EndTime;
+                    // TODO not always StartTime
+                    fp.Unk3_StartTime = fp.StartTime;
+                    fp.Unk4_StartTime = fp.StartTime;
+
+                    if (xml.ChordTemplates[fp.ChordId].DisplayName.EndsWith("arp"))
+                        fp2.Add(fp);
+                    else
+                        fp1.Add(fp);
+                }
+                a.Fingerprints1.Count = fp1.Count;
+                a.Fingerprints1.Fingerprints = fp1.ToArray();
+                a.Fingerprints2.Count = fp2.Count;
+                a.Fingerprints2.Fingerprints = fp2.ToArray();
+
                 // calculated as we go through notes, seems to work
                 a.PhraseIterationCount1 = xml.PhraseIterations.Length;
                 a.NotesInIteration1 = new Int32[a.PhraseIterationCount1];
@@ -754,6 +778,18 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             break;
                         }
                     }
+                }
+                foreach (var n in notes) {
+                    for (Int16 id=0; id<fp1.Count; id++)
+                        if (n.Time >= fp1[id].StartTime) {
+                            n.FingerPrintId[0] = id;
+                            break;
+                        }
+                    for (Int16 id=0; id<fp2.Count; id++)
+                        if (n.Time >= fp2[id].StartTime) {
+                            n.FingerPrintId[1] = id;
+                            break;
+                        }
                 }
                 a.Notes = new NotesSection();
                 a.Notes.Count = notes.Count;
