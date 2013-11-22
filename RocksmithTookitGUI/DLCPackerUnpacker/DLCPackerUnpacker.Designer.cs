@@ -45,6 +45,7 @@
             // 
             // unpackButton
             // 
+            this.unpackButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.unpackButton.Location = new System.Drawing.Point(215, 81);
             this.unpackButton.Name = "unpackButton";
             this.unpackButton.Size = new System.Drawing.Size(89, 23);
@@ -55,6 +56,7 @@
             // 
             // packButton
             // 
+            this.packButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.packButton.Location = new System.Drawing.Point(215, 57);
             this.packButton.Name = "packButton";
             this.packButton.Size = new System.Drawing.Size(89, 23);
@@ -75,6 +77,7 @@
             // repackButton
             // 
             this.repackButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.repackButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.repackButton.Location = new System.Drawing.Point(83, 43);
             this.repackButton.Name = "repackButton";
             this.repackButton.Size = new System.Drawing.Size(306, 23);
