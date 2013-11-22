@@ -302,19 +302,42 @@ namespace RocksmithToolkitLib.DLCPackage
                     default:
                         return new Platform(GamePlatform.None, GameVersion.None);
                 }
-            } else if (Directory.Exists(fileExtension)) {
+            }
+            else if (Directory.Exists(fileExtension))
+            {
                 //TODO: Need to refactor this code in near future, works, but is not the best way.
-                if (File.Exists(Path.Combine(fileExtension, "APP_ID"))) {
+                if (File.Exists(Path.Combine(fileExtension, "APP_ID")))
+                {
                     return new Platform(GamePlatform.Pc, GameVersion.RS2012);
-                } else if (File.Exists(Path.Combine(fileExtension, "appid.appid"))) {
+                }
+                else if (File.Exists(Path.Combine(fileExtension, "appid.appid")))
+                {
                     return new Platform(GamePlatform.Pc, GameVersion.RS2014);
-                } else if (Directory.Exists(Path.Combine(fileExtension, ROOT_XBox360))) {
+                }
+                else if (Directory.Exists(Path.Combine(fileExtension, ROOT_XBox360)))
+                {
                     return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
-                } else if (Directory.Exists(Path.Combine(fileExtension, ROOT_PS3))) {
+                }
+                else if (Directory.Exists(Path.Combine(fileExtension, ROOT_PS3)))
+                {
                     return new Platform(GamePlatform.PS3, GameVersion.RS2012);
                 }
+                else
+                    return GetPlatformByFolderEndName(fileExtension);
             }
             return new Platform(GamePlatform.None, GameVersion.None);
+        }
+
+        private static Platform GetPlatformByFolderEndName(string fileExtension)
+        {
+            var pIndex = Path.GetFileNameWithoutExtension(fileExtension).LastIndexOf("_");
+            string platformString = Path.GetFileNameWithoutExtension(fileExtension).Substring(pIndex+1);
+            GamePlatform p = GamePlatform.None;
+            var isValid = Enum.TryParse(platformString, out p);
+            if (isValid)
+                return new Platform(p, GameVersion.RS2012);
+            else
+                return new Platform(GamePlatform.None, GameVersion.None);
         }
 
         private static void ExtractPSARC(string filename, string path, Stream inputStream, Platform platform)
