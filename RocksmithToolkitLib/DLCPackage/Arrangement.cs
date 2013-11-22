@@ -28,6 +28,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public int ArrangementSort { get; set; }
         public ArrangementName Name { get; set; }
         public string Tuning { get; set; }
+        public double TuningPitch { get; set; }
         public int ScrollSpeed { get; set; }
         public PluckedType PluckedType { get; set; }
         // Gameplay Path

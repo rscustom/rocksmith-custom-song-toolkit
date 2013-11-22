@@ -95,7 +95,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
             {
                 AlbumName = AlbumNameSort = info.SongInfo.Album;
                 ArtistName = info.SongInfo.Artist;
-                CentOffset = 0;
+                CentOffset = TuningFrequency.Frequency2Note(arrangement.TuningPitch);
                 ArtistNameSort = info.SongInfo.ArtistSort;
                 DNA_Chords = 0; //TODO: ???
                 DNA_Riffs = 0; //TODO: ???

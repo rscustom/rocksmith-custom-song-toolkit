@@ -83,6 +83,7 @@
     <Compile Include="DLCPackage\XBlock\Property2014.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DLCPackage\TuningFrequency.cs" />
     <Compile Include="Extensions\DisposableCollection.cs">
       <SubType>Code</SubType>
     </Compile>
