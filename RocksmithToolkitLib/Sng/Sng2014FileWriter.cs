@@ -656,12 +656,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.Unk3_4 = 4;
             n.ChordId = chord.ChordId;
             n.ChordNotesId = id;
-            // counting on phrase iterations to be sorted by time
-            for (int i = 0; i < xml.PhraseIterations.Length; i++)
-                if (xml.PhraseIterations[i].Time > n.Time) {
-                    n.PhraseIterationId = i - 1;
-                    n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
-                }
+            n.PhraseIterationId = getPhraseIterationId(xml, n.Time, false);
+            n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
             // these will be overwritten
             n.FingerPrintId[0] = -1;
             n.FingerPrintId[1] = -1;
