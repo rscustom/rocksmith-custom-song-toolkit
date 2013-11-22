@@ -610,9 +610,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         private void parseChord(Song2014 xml, Sng2014File sng, SongChord2014 chord, Notes n, Int32 chordnotes_id) {
             n.NoteMask |= NOTE_MASK_CHORD;
-            if (chordnotes_id != -1)
+            if (chordnotes_id != -1) {
                 // this seems to always require STRUM => handshape at chord time
-                n.NoteMask |= NOTE_MASK_CHORDNOTES;
+                // but the flag is not set if all chordnotes has leftHand != -1
+                foreach (var mask in cns[chordnotes_id].NoteMask) 
+                    if (mask != 0 && (mask & NOTE_MASK_LEFTHAND) == 0) {
+                        n.NoteMask |= NOTE_MASK_CHORDNOTES;
+                        break;
+                    }
+            }
 
             if (chord.LinkNext != 0)
                 n.NoteMask |= NOTE_MASK_PARENT;
