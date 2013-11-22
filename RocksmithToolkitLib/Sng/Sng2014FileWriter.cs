@@ -574,8 +574,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.StringIndex = note.String;
             // actual fret number
             n.FretId[0] = (Byte) note.Fret;
-            // TODO unknown, many times same, many times different, few times -1
-            n.FretId[1] = (Byte) note.Fret;
+            // anchor fret
+            n.FretId[1] = unchecked((Byte) (-1));
+            // will be overwritten
+            n.AnchorWidth = unchecked((Byte) (-1));
             n.ChordId = -1;
             n.ChordNotesId = -1;
             n.PhraseIterationId = getPhraseIterationId(xml, n.Time, false);
@@ -650,6 +652,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.FretId[0] = unchecked((Byte) (-1));
             // TODO seems to be always lowest non-zero fret
             n.FretId[1] = (Byte) chordFretId[chord.ChordId];
+            // will be overwritten
+            n.AnchorWidth = unchecked((Byte) (-1));
             n.ChordId = chord.ChordId;
             n.ChordNotesId = chordnotes_id;
             n.PhraseIterationId = getPhraseIterationId(xml, n.Time, false);
@@ -817,14 +821,16 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     for (Int16 id=0; id<fp1.Count; id++)
                         if (n.Time >= fp1[id].StartTime && n.Time < fp1[id].EndTime) {
                             n.FingerPrintId[0] = id;
-                            if (fp1[id].StartTime == n.Time)
-                              n.NoteMask |= NOTE_MASK_STRUM;
+                            // add STRUM to chords
+                            if (fp1[id].StartTime == n.Time && n.ChordId != -1)
+                                n.NoteMask |= NOTE_MASK_STRUM;
                             break;
                         }
                     for (Int16 id=0; id<fp2.Count; id++)
                         if (n.Time >= fp2[id].StartTime && n.Time < fp2[id].EndTime) {
                             n.FingerPrintId[1] = id;
-                            if (fp2[id].StartTime == n.Time)
+                            // add STRUM to chords
+                            if (fp2[id].StartTime == n.Time && n.ChordId != -1)
                               n.NoteMask |= NOTE_MASK_STRUM;
                             n.NoteMask |= NOTE_MASK_ARPEGGIO;
                             break;
@@ -832,6 +838,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     for (int j=0; j<a.Anchors.Count; j++)
                         if (n.Time >= a.Anchors.Anchors[j].StartBeatTime && n.Time < a.Anchors.Anchors[j].EndBeatTime) {
                             n.AnchorWidth = (Byte) a.Anchors.Anchors[j].Width;
+                            // set anchor fret for single notes
+                            if (n.FretId[0] != 255)
+                                n.FretId[1] = (Byte) a.Anchors.Anchors[j].FretId;
                             break;
                         }
                 }
