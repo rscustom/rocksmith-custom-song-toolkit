@@ -488,7 +488,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
         // reverse-engineered values
         // single note mask?
         const UInt32 NOTE_MASK_SINGLE           = 0x00800000;
-        // CHORD + STRUM + missing mask
         const UInt32 NOTE_MASK_CHORDNOTES       = 0x01000000;
         const UInt32 NOTE_MASK_RIGHTHAND        = 0x00100000;
         const UInt32 NOTE_MASK_LEFTHAND         = 0x00080000;
@@ -609,11 +608,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.BendData.BendData = new BendData32[n.BendData.Count];
         }
 
-        private void parseChord(Song2014 xml, Sng2014File sng, SongChord2014 chord, Notes n, Int32 id) {
+        private void parseChord(Song2014 xml, Sng2014File sng, SongChord2014 chord, Notes n, Int32 chordnotes_id) {
             n.NoteMask |= NOTE_MASK_CHORD;
-            if (id != -1)
-                // TODO this seems to always add STRUM
-                n.NoteMask |= NOTE_MASK_CHORDNOTES | NOTE_MASK_STRUM;
+            if (chordnotes_id != -1)
+                // this seems to always require STRUM => handshape at chord time
+                n.NoteMask |= NOTE_MASK_CHORDNOTES;
 
             if (chord.LinkNext != 0)
                 n.NoteMask |= NOTE_MASK_PARENT;
@@ -634,14 +633,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // if (chord.Hopo != 0)
             //     n.NoteMask |= ;
 
-            // TODO tried STRUM as barre or open chord indicator, but it's something else
-            // var ch_tpl = xml.ChordTemplates[chord.ChordId];
-            // if (ch_tpl.Fret0 == 0 || ch_tpl.Fret1 == 0 ||
-            //     ch_tpl.Fret2 == 0 || ch_tpl.Fret3 == 0 ||
-            //     ch_tpl.Fret4 == 0 || ch_tpl.Fret5 == 0) {
-            //     n.NoteMask |= NOTE_MASK_STRUM;
-            // }
-
             // TODO when to set numbered note?
             n.NoteFlags = NOTE_FLAGS_NUMBERED;
 
@@ -654,13 +645,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // TODO seems to be always lowest non-zero fret
             n.FretId[1] = (Byte) chordFretId[chord.ChordId];
             n.ChordId = chord.ChordId;
-            n.ChordNotesId = id;
-            // counting on phrase iterations to be sorted by time
-            for (int i = 0; i < xml.PhraseIterations.Length; i++)
-                if (xml.PhraseIterations[i].Time > n.Time) {
-                    n.PhraseIterationId = i - 1;
-                    n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
-                }
+            n.ChordNotesId = chordnotes_id;
+            n.PhraseIterationId = getPhraseIterationId(xml, n.Time, false);
+            n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
             // these will be overwritten
             n.FingerPrintId[0] = -1;
             n.FingerPrintId[1] = -1;
@@ -824,11 +811,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     for (Int16 id=0; id<fp1.Count; id++)
                         if (n.Time >= fp1[id].StartTime && n.Time < fp1[id].EndTime) {
                             n.FingerPrintId[0] = id;
+                            if (fp1[id].StartTime == n.Time)
+                              n.NoteMask |= NOTE_MASK_STRUM;
                             break;
                         }
                     for (Int16 id=0; id<fp2.Count; id++)
                         if (n.Time >= fp2[id].StartTime && n.Time < fp2[id].EndTime) {
                             n.FingerPrintId[1] = id;
+                            if (fp2[id].StartTime == n.Time)
+                              n.NoteMask |= NOTE_MASK_STRUM;
                             n.NoteMask |= NOTE_MASK_ARPEGGIO;
                             break;
                         }
