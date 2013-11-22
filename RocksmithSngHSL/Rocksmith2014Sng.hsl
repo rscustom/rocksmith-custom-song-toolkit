@@ -376,7 +376,7 @@ struct NOTES
     float Time;
     byte StringIndex;
     byte FretId[2];
-    byte Unk3_4;
+    byte AnchorWidth;
     long ChordId;
     long ChordNotesId;
     long PhraseId;

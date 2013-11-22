@@ -870,7 +870,7 @@ public class Notes
     public Byte StringIndex { get; set; }
     public Byte[] _FretId = new Byte[2];
     public Byte[] FretId { get { return this._FretId; } set { _FretId = value; } }
-    public Byte Unk3_4 { get; set; }
+    public Byte AnchorWidth { get; set; }
     public Int32 ChordId { get; set; }
     public Int32 ChordNotesId { get; set; }
     public Int32 PhraseId { get; set; }
@@ -899,7 +899,7 @@ public class Notes
         "Time",
         "StringIndex",
         "FretId",
-        "Unk3_4",
+        "AnchorWidth",
         "ChordId",
         "ChordNotesId",
         "PhraseId",
@@ -928,7 +928,7 @@ public class Notes
         this.Time = r.ReadSingle();
         this.StringIndex = r.ReadByte();
         this.FretId = r.ReadBytes(2);
-        this.Unk3_4 = r.ReadByte();
+        this.AnchorWidth = r.ReadByte();
         this.ChordId = r.ReadInt32();
         this.ChordNotesId = r.ReadInt32();
         this.PhraseId = r.ReadInt32();

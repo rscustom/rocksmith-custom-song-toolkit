@@ -577,8 +577,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.FretId[0] = (Byte) note.Fret;
             // TODO unknown, many times same, many times different, few times -1
             n.FretId[1] = (Byte) note.Fret;
-            // this appears to be always 4
-            n.Unk3_4 = 4;
             n.ChordId = -1;
             n.ChordNotesId = -1;
             n.PhraseIterationId = getPhraseIterationId(xml, n.Time, false);
@@ -655,8 +653,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.FretId[0] = unchecked((Byte) (-1));
             // TODO seems to be always lowest non-zero fret
             n.FretId[1] = (Byte) chordFretId[chord.ChordId];
-            // this appears to be always 4
-            n.Unk3_4 = 4;
             n.ChordId = chord.ChordId;
             n.ChordNotesId = id;
             // counting on phrase iterations to be sorted by time
@@ -834,6 +830,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         if (n.Time >= fp2[id].StartTime && n.Time < fp2[id].EndTime) {
                             n.FingerPrintId[1] = id;
                             n.NoteMask |= NOTE_MASK_ARPEGGIO;
+                            break;
+                        }
+                    for (int j=0; j<a.Anchors.Count; j++)
+                        if (n.Time >= a.Anchors.Anchors[j].StartBeatTime && n.Time < a.Anchors.Anchors[j].EndBeatTime) {
+                            n.AnchorWidth = (Byte) a.Anchors.Anchors[j].Width;
                             break;
                         }
                 }
