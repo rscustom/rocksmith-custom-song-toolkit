@@ -417,6 +417,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                                 mask |= (Byte) (1 << 4);
                             if (ch.Fret5 != -1)
                                 mask |= (Byte) (1 << 5);
+
+                            if (mask == 0x3F)
+                                break;
                         }
 
                     // use mask from next section if there are no notes
@@ -464,7 +467,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         const UInt32 NOTE_MASK_MUTE             = 0x020000;
         const UInt32 NOTE_MASK_IGNORE           = 0x040000; // confirmed, unknown meaning
         // missing                                0x080000 leftHand?
-        // missing                                0x100000 // unknown meaning - used in btapping, bvibrato, rchords8, ... always with single note?
+        // missing                                0x100000 rightHand?
         const UInt32 NOTE_MASK_HIGHDENSITY      = 0x200000;
         const UInt32 NOTE_MASK_SLIDEUNPITCHEDTO = 0x400000;
         // missing                                0x800000 single note?
@@ -487,6 +490,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         const UInt32 NOTE_MASK_SINGLE           = 0x00800000;
         // CHORD + STRUM + missing mask
         const UInt32 NOTE_MASK_CHORDNOTES       = 0x01000000;
+        const UInt32 NOTE_MASK_RIGHTHAND        = 0x00100000;
         const UInt32 NOTE_MASK_LEFTHAND         = 0x00080000;
 
         public UInt32 parse_notemask(SongNote2014 note, Notes prev) {
@@ -546,10 +550,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // pickDirection="0"
             //if (note. != 0)
             //  mask |= NOTE_MASK_;
-            // rightHand="-1"
-            //if (note. != 0)
-            //  mask |= NOTE_MASK_;
 
+            if (note.RightHand != -1)
+                mask |= NOTE_MASK_RIGHTHAND;
             if (note.SlideUnpitchTo != -1)
                 mask |= NOTE_MASK_SLIDEUNPITCHEDTO;
             if (note.Tap != 0)
@@ -656,8 +659,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.Unk3_4 = 4;
             n.ChordId = chord.ChordId;
             n.ChordNotesId = id;
-            n.PhraseIterationId = getPhraseIterationId(xml, n.Time, false);
-            n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
+            // counting on phrase iterations to be sorted by time
+            for (int i = 0; i < xml.PhraseIterations.Length; i++)
+                if (xml.PhraseIterations[i].Time > n.Time) {
+                    n.PhraseIterationId = i - 1;
+                    n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
+                }
             // these will be overwritten
             n.FingerPrintId[0] = -1;
             n.FingerPrintId[1] = -1;
@@ -681,9 +688,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             
             if (n.Sustain > 0)
                 n.NoteMask |= NOTE_MASK_SUSTAIN;
-
-            if ((sng.Chords.Chords[chord.ChordId].Mask & CHORD_MASK_ARPEGGIO) != 0)
-                n.NoteMask |= NOTE_MASK_ARPEGGIO;
 
             int cnt = 0;
             for (int str=0; str<6; str++)
@@ -822,13 +826,14 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 foreach (var n in notes) {
                     for (Int16 id=0; id<fp1.Count; id++)
-                        if (n.Time >= fp1[id].StartTime) {
+                        if (n.Time >= fp1[id].StartTime && n.Time < fp1[id].EndTime) {
                             n.FingerPrintId[0] = id;
                             break;
                         }
                     for (Int16 id=0; id<fp2.Count; id++)
-                        if (n.Time >= fp2[id].StartTime) {
+                        if (n.Time >= fp2[id].StartTime && n.Time < fp2[id].EndTime) {
                             n.FingerPrintId[1] = id;
+                            n.NoteMask |= NOTE_MASK_ARPEGGIO;
                             break;
                         }
                 }

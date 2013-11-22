@@ -244,13 +244,17 @@ class SngParser:
 	# comments are offset in the class GRNote
         return {
             'mask':         map(hex, x.arrN(BinReader.long, 2)), #0 4
-            'u0':           x.raw(4).encode('hex'), # 8
+            # BYPASS
+            #'u0':           x.raw(4).encode('hex'), # 8
+            'u0':           x.fp.read(4) and False,
             'time':         x.float(), #c
             'string':       x.byte(), #10
             'fret':         x.arrN(BinReader.byte, 2), #11 12
             'u1':           x.byte(), #13
             'chord':        x.long(), #14
-            'chord_notes':  x.long(), #18
+            # BYPASS
+            #'chord_notes':  x.long(), #18
+            'chord_notes':  x.fp.read(4) and False,
             'phrase':       x.long(), #1c
             'phrase_iter':  x.long(), #20
             'fingerprints': x.arrN(BinReader.short, 2), #24 26
@@ -330,4 +334,15 @@ import sys
 from datadiff import diff
 a = parseSNG(sys.argv[1])
 b = parseSNG(sys.argv[2])
+
+# some field are bypassed, this code messes diff up for some reason
+# for sng in (a,b):
+#     for a in sng['arrangements']:
+#         for n in a['notes']:
+#             # we know this Hash is different and it should be ok
+#             n['u0'] = None
+#             # we know this is different too and it should be ok too
+#             if n['chord_notes'] != -1:
+#                 n['chord_notes'] = None
+
 print diff(a,b)
