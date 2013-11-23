@@ -157,7 +157,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     manifestFunctions.GenerateChordTemplateData(attribute, song);
                     manifestFunctions.GeneratePhraseData(attribute, song);
                     manifestFunctions.GenerateSectionData(attribute, song);
-                    manifestFunctions.GeneratePhraseIterationsData(attribute, song);
+                    manifestFunctions.GeneratePhraseIterationsData(attribute, song, platform.version);
                 }
                 var attrDict = new Dictionary<string, Attributes> { { "Attributes", attribute } };
                 manifest.Entries.Add(attribute.PersistentID, attrDict);

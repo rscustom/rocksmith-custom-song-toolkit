@@ -127,7 +127,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
                 TargetScore = 100000;
                 PhraseIterations = new List<PhraseIteration>();
-                manifestFunctions.GeneratePhraseIterationsData(this, SongContent);
+                manifestFunctions.GeneratePhraseIterationsData(this, SongContent, platform.version);
                 //Score_MaxNotes -- Generated on function above
                 //Score_PNV      -- Generated on function above
 

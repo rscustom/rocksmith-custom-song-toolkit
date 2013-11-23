@@ -110,28 +110,30 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             };
         }
 
-        public void GeneratePhraseIterationsData(IAttributes attribute, dynamic song)
+        public void GeneratePhraseIterationsData(IAttributes attribute, dynamic song, GameVersion gameVersion)
         {
             if (song.PhraseIterations == null)
-            {
                 return;
-            }
+            
             for (int i = 0; i < song.PhraseIterations.Length; i++)
             {
                 var phraseIteration = song.PhraseIterations[i];
                 var phrase = song.Phrases[phraseIteration.PhraseId];
                 var endTime = i >= song.PhraseIterations.Length - 1 ? song.SongLength : song.PhraseIterations[i + 1].Time;
-                var phraseIt = new PhraseIteration
-                {
-                    StartTime = phraseIteration.Time,
-                    EndTime = endTime,
-                    PhraseIndex = phraseIteration.PhraseId,
-                    Name = phrase.Name,
-                    MaxDifficulty = phrase.MaxDifficulty,
-                    MaxScorePerDifficulty = new List<float>()
-                };
+
+                var phraseIt = new PhraseIteration();
+                phraseIt.StartTime = phraseIteration.Time;
+                phraseIt.EndTime = endTime;
+                phraseIt.PhraseIndex = phraseIteration.PhraseId;
+                phraseIt.Name = phrase.Name;
+                phraseIt.MaxDifficulty = phrase.MaxDifficulty;
+
+                if (gameVersion == GameVersion.RS2012)
+                    phraseIt.MaxScorePerDifficulty = new List<float>();
+                
                 attribute.PhraseIterations.Add(phraseIt);
             }
+
             var noteCnt = 0;
             foreach (var y in attribute.PhraseIterations)
             {
@@ -144,6 +146,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     noteCnt += GetChordCount(y.StartTime, y.EndTime, song.Levels[y.MaxDifficulty].Chords);
                 }
             }
+
             attribute.Score_MaxNotes = noteCnt;
             attribute.Score_PNV = ((float)attribute.TargetScore) / noteCnt;
 
@@ -155,16 +158,18 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     var multiplier = ((float)(o + 1)) / (phrase.MaxDifficulty + 1);
                     var pnv = attribute.Score_PNV;
                     var noteCount = 0;
+                    
                     if (song.Levels[o].Chords != null)
-                    {
                         noteCount += GetNoteCount(y.StartTime, y.EndTime, song.Levels[o].Notes);
-                    }
+
                     if (song.Levels[o].Chords != null)
-                    {
                         noteCount += GetChordCount(y.StartTime, y.EndTime, song.Levels[o].Chords);
+
+                    if (gameVersion == GameVersion.RS2012)
+                    {
+                        var score = pnv * noteCount * multiplier;
+                        y.MaxScorePerDifficulty.Add(score);
                     }
-                    var score = pnv * noteCount * multiplier;
-                    y.MaxScorePerDifficulty.Add(score);
                 }
             }
         }
