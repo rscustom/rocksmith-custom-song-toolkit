@@ -343,35 +343,30 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.DNAs = new DnaSection();
             List<Dna> dnas = new List<Dna>();
 
-            // TODO this is unclear
-            // there can be less DNAs (ID 3 for start and ID 0 for end)
-            // noguitar => 0
-            // verse => 2?
-            // chorus/hook/solo => 3?
-            var id = -1;
-            foreach (var section in xml.Sections) {
-                var new_id = -1;
-                switch (section.Name) {
-                    case "noguitar":
-                        new_id = 0;
-                        break;
-                    // TODO disabled for now to match lesson DNAs
-                    //case "verse":
-                    //  new_id = 2;
-                    //  break;
-                    default:
-                        new_id = 3;
-                        break;
+            // based on events: dna_none=0, dna_solo=1, dna_riff=2, dna_chord=3
+            foreach (var e in xml.Events) {
+                Int32 id = -1;
+                switch (e.Code) {
+                case "dna_none":
+                    id = 0;
+                    break;
+                case "dna_solo":
+                    id = 1;
+                    break;
+                case "dna_riff":
+                    id = 2;
+                    break;
+                case "dna_chord":
+                    id = 3;
+                    break;
                 }
 
-                if (new_id == id)
-                    continue;
-                id = new_id;
-
-                var dna = new Dna();
-                dna.Time = section.StartTime;
-                dna.DnaId = id;
-                dnas.Add(dna);
+                if (id != -1) {
+                    var dna = new Dna();
+                    dna.Time = e.Time;
+                    dna.DnaId = id;
+                    dnas.Add(dna);
+                }
             }
 
             sng.DNAs.Dnas = dnas.ToArray();
@@ -398,7 +393,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 for (int j=getMaxDifficulty(xml); j>=0; j--) {
                     // used string mask for section at all difficulty j
                     Byte mask = 0;
-                    foreach (var note in xml.Levels[j].Notes) 
+                    foreach (var note in xml.Levels[j].Notes)
                         if (note.Time >= s.StartTime && note.Time < s.EndTime) {
                             mask |= (Byte) (1 << note.String);
                         }
@@ -434,7 +429,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
 
         // more constants: http://pastebin.com/Hn3LsP4X
-        // unknown constant -- is this for field Unk3_4?
+        // unknown constant
         const UInt32 NOTE_TURNING_BPM_TEMPO     = 0x00000004;
 
         // chord template Mask (displayName ends with "arp" or "nop")
@@ -598,7 +593,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 n.Tap = unchecked((Byte) note.Tap);
             else
                 n.Tap = unchecked((Byte) (-1));
-                
+
             n.PickDirection = (Byte)note.PickDirection;
             n.Slap = (Byte)note.Slap;
             n.Pluck = (Byte)note.Pluck;
@@ -616,7 +611,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             if (chordnotes_id != -1) {
                 // this seems to always require STRUM => handshape at chord time
                 // but the flag is not set if all chordnotes has leftHand != -1
-                foreach (var mask in cns[chordnotes_id].NoteMask) 
+                foreach (var mask in cns[chordnotes_id].NoteMask)
                     if (mask != 0 && (mask & NOTE_MASK_LEFTHAND) == 0) {
                         n.NoteMask |= NOTE_MASK_CHORDNOTES;
                         break;
@@ -679,7 +674,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     if (cn.Sustain > n.Sustain)
                         n.Sustain = cn.Sustain;
             }
-            
+
             if (n.Sustain > 0)
                 n.NoteMask |= NOTE_MASK_SUSTAIN;
 
