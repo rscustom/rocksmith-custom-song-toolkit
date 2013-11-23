@@ -115,7 +115,7 @@ namespace PackerConsole
 
                     try
                     {
-                        Console.WriteLine("Warning: You should load and save XML with 'RocksmithToolkitGUI 1.4.0.0' or above to make sure it is still valid and compatible with this feature!");
+                        Console.WriteLine("Warning: You should load and save XML with 'RocksmithToolkitGUI 2.1.0.0' or above to make sure it is still valid and compatible with this feature!");
 
                         DLCPackageData info = null;
                         var serializer = new DataContractSerializer(typeof(DLCPackageData));
@@ -124,12 +124,19 @@ namespace PackerConsole
                             info = (DLCPackageData)serializer.ReadObject(stm);
                         }
 
+                        var gameVersion = GameVersion.RS2012;
+                        if (info.GameVersion != null)
+                            gameVersion = info.GameVersion;
+
                         if (!String.IsNullOrEmpty(info.OggPath))
-                            DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Pc, GameVersion.None));
+                            DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Pc, gameVersion));
+                        if (gameVersion == GameVersion.RS2014)
+                            if (!String.IsNullOrEmpty(info.OggMACPath))
+                                DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Mac, gameVersion));
                         if (!String.IsNullOrEmpty(info.OggXBox360Path))
-                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.XBox360, GameVersion.None));
+                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.XBox360, gameVersion));
                         if (!String.IsNullOrEmpty(info.OggPS3Path))
-                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.PS3, GameVersion.None));
+                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.PS3, gameVersion));
 
                         Console.WriteLine("Package was generated.");
                         return 0;
