@@ -209,26 +209,26 @@ public class ChordNotes
     public UInt32[] NoteMask { get { return this._NoteMask; } set { _NoteMask = value; } }
     public BendData[] _BendData = new BendData[6];
     public BendData[] BendData { get { return this._BendData; } set { _BendData = value; } }
-    public Byte[] _StartFretId = new Byte[6];
-    public Byte[] StartFretId { get { return this._StartFretId; } set { _StartFretId = value; } }
-    public Byte[] _EndFretId = new Byte[6];
-    public Byte[] EndFretId { get { return this._EndFretId; } set { _EndFretId = value; } }
+    public Byte[] _SlideTo = new Byte[6];
+    public Byte[] SlideTo { get { return this._SlideTo; } set { _SlideTo = value; } }
+    public Byte[] _SlideUnpitchTo = new Byte[6];
+    public Byte[] SlideUnpitchTo { get { return this._SlideUnpitchTo; } set { _SlideUnpitchTo = value; } }
     public Int16[] _Vibrato = new Int16[6];
     public Int16[] Vibrato { get { return this._Vibrato; } set { _Vibrato = value; } }
 
     public string[] _order = {
         "NoteMask",
         "BendData",
-        "StartFretId",
-        "EndFretId",
+        "SlideTo",
+        "SlideUnpitchTo",
         "Vibrato"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
         this.NoteMask = new UInt32[6]; for (int i=0; i<6; i++) this.NoteMask[i] = r.ReadUInt32();
         this.BendData = new BendData[6]; for (int i=0; i<6; i++) { BendData obj = new BendData(); obj.read(r); this.BendData[i] = obj; }
-        this.StartFretId = r.ReadBytes(6);
-        this.EndFretId = r.ReadBytes(6);
+        this.SlideTo = r.ReadBytes(6);
+        this.SlideUnpitchTo = r.ReadBytes(6);
         this.Vibrato = new Int16[6]; for (int i=0; i<6; i++) this.Vibrato[i] = r.ReadInt16();
     }
 }

@@ -99,8 +99,8 @@ struct CHORD_NOTES
 {
     ulong NoteMask[6];
     struct BEND_DATA BendData[6];
-    byte StartFretId[6];
-    byte EndFretId[6];
+    byte SlideTo[6];
+    byte SlideUnpitchTo[6];
     short Vibrato[6];
 };
 

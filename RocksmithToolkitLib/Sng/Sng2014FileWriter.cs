@@ -188,13 +188,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 c.BendData[i] = new BendData();
                 for (int j = 0; j < 32; j++)
                     c.BendData[i].BendData32[j] = new BendData32();
-                // TODO just guessing, slideUnpitchTo not supported here? bwalking did it differently
-                if (n != null && n.SlideTo != -1) {
-                    c.StartFretId[i] = (Byte)n.Fret;
-                    c.EndFretId[i] = (Byte)n.SlideTo;
+                if (n != null) {
+                    c.SlideTo[i] = (Byte)n.SlideTo;
+                    c.SlideUnpitchTo[i] = (Byte)n.SlideUnpitchTo;
                 } else {
-                    c.StartFretId[i] = unchecked((Byte) (-1));
-                    c.EndFretId[i] = unchecked((Byte) (-1));
+                    c.SlideTo[i] = unchecked((Byte) (-1));
+                    c.SlideUnpitchTo[i] = unchecked((Byte) (-1));
                 }
                 if (n != null)
                     c.Vibrato[i] = n.Vibrato;
@@ -512,7 +511,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             //if (note. != 0)
             //  mask |= NOTE_MASK_;
 
-            if (note.Ignore != 0)
+            if (single && note.Ignore != 0)
                 mask |= NOTE_MASK_IGNORE;
             if (single && note.LeftHand != -1)
                 mask |= NOTE_MASK_LEFTHAND;
