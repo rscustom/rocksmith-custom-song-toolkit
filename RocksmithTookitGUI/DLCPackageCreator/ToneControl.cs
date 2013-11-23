@@ -41,6 +41,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             InitializeComboBoxes();
 
             gbLoopPedalAndRacks.Text = (CurrentGameVersion == GameVersion.RS2012) ? "Loop Pedal" : "Rack";
+            gbPostPedal.Text = (CurrentGameVersion == GameVersion.RS2012) ? "Post Pedal" : "Loop Pedal";
             loopPedalRack4Box.Enabled = CurrentGameVersion == GameVersion.RS2014;
             loopPedalRack4KnobButton.Enabled = CurrentGameVersion == GameVersion.RS2014;
             prePedal4Box.Enabled = CurrentGameVersion == GameVersion.RS2014;
