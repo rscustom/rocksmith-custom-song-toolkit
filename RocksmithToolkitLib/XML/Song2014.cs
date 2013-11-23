@@ -163,6 +163,19 @@ namespace RocksmithToolkitLib.Xml {
     public class SongPhraseIteration2014 : SongPhraseIteration {
         [XmlAttribute("variation")]
         public string Variation { get; set; }
+
+        [XmlArray("heroLevels")]
+        [XmlArrayItem("heroLevel")]
+        public HeroLevel[] HeroLevels { get; set; }
+    }
+
+    [XmlType("heroLevels")]
+    public class HeroLevel {
+        [XmlAttribute("hero")]
+        public int Hero { get; set; }
+
+        [XmlAttribute("difficulty")]
+        public Byte Difficulty { get; set; }
     }
 
     [XmlType("newLinkedDiffs")]

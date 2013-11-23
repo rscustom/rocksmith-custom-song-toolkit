@@ -239,10 +239,22 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     p.NextPhraseTime = xml.PhraseIterations[i + 1].Time;
                 else
                     p.NextPhraseTime = xml.SongLength;
-                // TODO how to choose difficulties?
-                p.Easy = 0;
-                p.Medium = 0;
+                // default to (0, 0, max)
+                // they use Medium (previous) value if there is hero=3 missing
                 p.Hard = xml.Phrases[p.PhraseId].MaxDifficulty;
+                if (piter.HeroLevels != null)
+                    foreach (var h in piter.HeroLevels)
+                        switch (h.Hero) {
+                        case 1:
+                            p.Easy = h.Difficulty;
+                            break;
+                        case 2:
+                            p.Medium = h.Difficulty;
+                            break;
+                        case 3:
+                            p.Hard = h.Difficulty;
+                            break;
+                        }
                 sng.PhraseIterations.PhraseIterations[i] = p;
             }
         }
