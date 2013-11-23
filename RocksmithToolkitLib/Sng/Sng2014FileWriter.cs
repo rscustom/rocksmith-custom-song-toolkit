@@ -132,7 +132,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             System.Buffer.BlockCopy(bytes, 0, To, 0, bytes.Length);
         }
 
-        private Dictionary<Int32,SByte> chordFretId = new Dictionary<Int32,SByte>();
         private void parseChords(Song2014 xml, Sng2014File sng, Int16[] tuning, bool bass) {
             sng.Chords = new ChordSection();
             sng.Chords.Count = xml.ChordTemplates.Length;
@@ -151,13 +150,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 c.Frets[3] = (Byte)chord.Fret3;
                 c.Frets[4] = (Byte)chord.Fret4;
                 c.Frets[5] = (Byte)chord.Fret5;
-                // this value seems to be used in chord's FretId in Notes
-                for (int j=0; j<6; j++) {
-                    chordFretId[i] = (SByte) 0;
-                    SByte FretId = unchecked((SByte) c.Frets[j]);
-                    if (FretId > 0 && (SByte) chordFretId[i] > FretId)
-                        chordFretId[i] = FretId;
-                }
                 c.Fingers[0] = (Byte)chord.Finger0;
                 c.Fingers[1] = (Byte)chord.Finger1;
                 c.Fingers[2] = (Byte)chord.Finger2;
@@ -646,8 +638,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.StringIndex = unchecked((Byte) (-1));
             // always -1
             n.FretId[0] = unchecked((Byte) (-1));
-            // TODO seems to be always lowest non-zero fret
-            n.FretId[1] = (Byte) chordFretId[chord.ChordId];
+            // anchor fret
+            n.FretId[1] = unchecked((Byte) (-1));
             // will be overwritten
             n.AnchorWidth = unchecked((Byte) (-1));
             n.ChordId = chord.ChordId;
@@ -834,9 +826,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     for (int j=0; j<a.Anchors.Count; j++)
                         if (n.Time >= a.Anchors.Anchors[j].StartBeatTime && n.Time < a.Anchors.Anchors[j].EndBeatTime) {
                             n.AnchorWidth = (Byte) a.Anchors.Anchors[j].Width;
-                            // set anchor fret for single notes
-                            if (n.FretId[0] != 255)
-                                n.FretId[1] = (Byte) a.Anchors.Anchors[j].FretId;
+                            // anchor fret
+                            n.FretId[1] = (Byte) a.Anchors.Anchors[j].FretId;
                             break;
                         }
                 }
