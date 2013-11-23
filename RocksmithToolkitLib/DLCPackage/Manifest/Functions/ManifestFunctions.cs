@@ -201,9 +201,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             // Is not the way of official are calculated, but is a way to calculate unique values for custom
             // Can be rewrited with the correct way or a best way to get this value
             var itCount = song.PhraseIterations.Count();
-            attribute.SongDiffEasy = easyArray.Average() / itCount;
-            attribute.SongDiffMed = mediumArray.Average() / itCount;
-            attribute.SongDiffHard = hardArray.Average() / itCount;
+
+            attribute.SongDiffEasy = (easyArray.Count() > 0) ? easyArray.Average() / itCount : 0;
+            attribute.SongDiffMed = (easyArray.Count() > 0) ? mediumArray.Average() / itCount : 0;
+            attribute.SongDiffHard = (easyArray.Count() > 0) ? hardArray.Average() / itCount : 0;
             attribute.SongDifficulty = attribute.SongDiffHard;
         }
 

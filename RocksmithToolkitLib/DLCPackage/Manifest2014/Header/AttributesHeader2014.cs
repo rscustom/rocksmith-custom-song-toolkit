@@ -112,7 +112,12 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 //SongDiffEasy  -- Generated on function above
                 //SongDiffMed   -- Generated on function above
                 //SongDiffHard  -- Generated on function above
-                //SongDifficulty = (float)SongContent.PhraseIterations.Average(it => SongContent.Phrases[it.PhraseId].MaxDifficulty);
+                //SongDifficulty-- Generated on function above
+                if (SongDiffHard == 0)
+                {
+                    SongDiffHard = (float)SongContent.PhraseIterations.Average(it => SongContent.Phrases[it.PhraseId].MaxDifficulty);
+                    SongDifficulty = SongDiffHard;
+                }
                 
                 SongLength = SongContent.SongLength;
                 SongName = info.SongInfo.SongDisplayName;
