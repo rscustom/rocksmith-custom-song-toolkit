@@ -183,7 +183,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     }
                 }
                 // TODO guessing that NOTE mask is used here
-                c.NoteMask[i] = parse_notemask(n, null);
+                c.NoteMask[i] = parse_notemask(n, null, false);
                 // TODO no XML example of chordnotes bend (like weezer)?
                 c.BendData[i] = new BendData();
                 for (int j = 0; j < 32; j++)
@@ -479,12 +479,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
         const UInt32 NOTE_MASK_RIGHTHAND        = 0x00100000;
         const UInt32 NOTE_MASK_LEFTHAND         = 0x00080000;
 
-        public UInt32 parse_notemask(SongNote2014 note, Notes prev) {
+        public UInt32 parse_notemask(SongNote2014 note, Notes prev, bool single) {
             if (note == null)
                 return NOTE_MASK_UNDEFINED;
 
             // single note
-            UInt32 mask = NOTE_MASK_SINGLE;
+            UInt32 mask = 0;
+
+            if (single)
+                mask |= NOTE_MASK_SINGLE;
 
             if (note.Fret == 0)
                 mask |= NOTE_MASK_OPEN;
@@ -511,7 +514,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
             if (note.Ignore != 0)
                 mask |= NOTE_MASK_IGNORE;
-            if (note.LeftHand != -1)
+            if (single && note.LeftHand != -1)
                 mask |= NOTE_MASK_LEFTHAND;
             if (note.Mute != 0)
                 mask |= NOTE_MASK_MUTE;
@@ -552,7 +555,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private Int32 note_id = 1;
         private void parseNote(Song2014 xml, SongNote2014 note, Notes n, Notes prev) {
             // TODO unknown meaning of second mask
-            n.NoteMask = parse_notemask(note, prev);
+            n.NoteMask = parse_notemask(note, prev, true);
             // TODO when to set numbered note?
             if (note.Fret != 0)
                 n.NoteFlags = NOTE_FLAGS_NUMBERED;
