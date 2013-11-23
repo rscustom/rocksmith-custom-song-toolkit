@@ -105,6 +105,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 gbScrollSpeed.Enabled = selectedType != ArrangementType.Vocal;
                 Picked.Visible = selectedType == ArrangementType.Bass;
                 Picked.Checked = selectedType == ArrangementType.Bass ? false : true;
+                BonusCheckBox.Visible = selectedType != ArrangementType.Vocal && currentGameVersion == GameVersion.RS2014;
                 UpdateCentOffset();
 
                 // Gameplay Path
@@ -218,6 +219,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 scrollSpeedTrackBar.Value = scrollSpeed;
                 scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeed) / 10);
                 Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
+                BonusCheckBox.Checked = arrangement.BonusArr;
                 RouteMask = arrangement.RouteMask;
                 //Tone Selector
                 toneBaseCombo.SelectedItem = arrangement.ToneBase;
@@ -337,6 +339,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
             arrangement.PluckedType = Picked.Checked ? PluckedType.Picked : PluckedType.NotPicked;
+            arrangement.BonusArr = BonusCheckBox.Checked;
 
             //ToneSelector
             arrangement.ToneBase = toneBaseCombo.SelectedItem.ToString();

@@ -33,6 +33,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public PluckedType PluckedType { get; set; }
         // Gameplay Path
         public RouteMask RouteMask { get; set; }
+        public bool BonusArr = false;
         // Tone Selector
         public string ToneBase { get; set; }
         public string ToneMultiplayer { get; set; }

@@ -103,6 +103,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 ArrangementProperties.PathRhythm = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Rhythm);
                 ArrangementProperties.PathBass = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Bass);
                 ArrangementProperties.RouteMask = (int)arrangement.RouteMask;
+                ArrangementProperties.BonusArr = Convert.ToInt32(arrangement.BonusArr);
 
                 if (arrangement.Name == Sng.ArrangementName.Combo)
                 { //Exclusive condition
