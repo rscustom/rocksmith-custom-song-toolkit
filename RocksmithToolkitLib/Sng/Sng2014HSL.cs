@@ -423,26 +423,21 @@ public class PhraseIteration
     public Int32 PhraseId { get; set; }
     public float StartTime { get; set; }
     public float NextPhraseTime { get; set; }
-    public Int32 Easy { get; set; }
-    public Int32 Medium { get; set; }
-    public Int32 Hard { get; set; }
+    public Int32[] _Difficulty = new Int32[3];
+    public Int32[] Difficulty { get { return this._Difficulty; } set { _Difficulty = value; } }
 
     public string[] _order = {
         "PhraseId",
         "StartTime",
         "NextPhraseTime",
-        "Easy",
-        "Medium",
-        "Hard"
+        "Difficulty"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
         this.PhraseId = r.ReadInt32();
         this.StartTime = r.ReadSingle();
         this.NextPhraseTime = r.ReadSingle();
-        this.Easy = r.ReadInt32();
-        this.Medium = r.ReadInt32();
-        this.Hard = r.ReadInt32();
+        this.Difficulty = new Int32[3]; for (int i=0; i<3; i++) this.Difficulty[i] = r.ReadInt32();
     }
 }
 

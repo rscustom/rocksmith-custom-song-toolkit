@@ -177,10 +177,8 @@ struct PHRASE_ITERATION
     long PhraseId;
     float StartTime;
     float NextPhraseTime;
-    // difficulty levels
-    long Easy;
-    long Medium;
-    long Hard;
+    // difficulty levels for Easy, Medium, Hard
+    long Difficulty[3];
 };
 
 struct PHRASE_ITERATION_SECTION

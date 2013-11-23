@@ -61,14 +61,51 @@ namespace RocksmithToolkitLib.Sng2014HSL
             return max;
         }
 
+
+        // Easy, Medium, Hard = 0, 1, 2
+        private int[] _NoteCount = new int[3];
+        public int[] NoteCount { get { return this._NoteCount; } }
+        private int GetNoteCount(Song2014 xml, Sng2014File sng, int Level)
+        {
+            // time => note count
+            Dictionary<float,int> notes = new Dictionary<float,int>();
+            Dictionary<float,int> level = new Dictionary<float,int>();
+
+            for (int i=sng.Arrangements.Count-1; i>=0; i--) {
+                var a = sng.Arrangements.Arrangements[i];
+                foreach (var n in a.Notes.Notes) {
+                    if (i > sng.PhraseIterations.PhraseIterations[n.PhraseIterationId].Difficulty[Level])
+                        // this note is above requested level
+                        continue;
+
+                    if (!notes.ContainsKey(n.Time)) {
+                        // 1 note at difficulty i
+                        notes[n.Time] = 1;
+                        level[n.Time] = i;
+                    } else if (i == level[n.Time]) {
+                        // we can add notes while still in the same difficulty
+                        notes[n.Time] += 1;
+                    }
+                }
+            }
+
+            int count = 0;
+            foreach (var time_count in notes.Values)
+                count += time_count;
+            return count;
+        }
+
         private void parseMetadata(Song2014 xml, Sng2014File sng, Int16[] tuning) {
+            // Easy, Medium, Hard
+            NoteCount[0] = GetNoteCount(xml, sng, 0);
+            NoteCount[1] = GetNoteCount(xml, sng, 1);
+            NoteCount[2] = GetNoteCount(xml, sng, 2);
+
             sng.Metadata = new Metadata();
             sng.Metadata.MaxScore = 100000;
 
             sng.Metadata.MaxDifficulty = getMaxDifficulty(xml);
-            // we need to track note times because of incremental arrangements
-            // TODO this is not correct for e21_bwalking1, same timestamp
-            sng.Metadata.MaxNotesAndChords = note_times.Count;
+            sng.Metadata.MaxNotesAndChords = NoteCount[2];
             sng.Metadata.Unk3_MaxNotesAndChords = sng.Metadata.MaxNotesAndChords;
             sng.Metadata.PointsPerNote = sng.Metadata.MaxScore / sng.Metadata.MaxNotesAndChords;
 
@@ -241,20 +278,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     p.NextPhraseTime = xml.SongLength;
                 // default to (0, 0, max)
                 // they use Medium (previous) value if there is hero=3 missing
-                p.Hard = xml.Phrases[p.PhraseId].MaxDifficulty;
+                p.Difficulty[2] = xml.Phrases[p.PhraseId].MaxDifficulty;
                 if (piter.HeroLevels != null)
                     foreach (var h in piter.HeroLevels)
-                        switch (h.Hero) {
-                        case 1:
-                            p.Easy = h.Difficulty;
-                            break;
-                        case 2:
-                            p.Medium = h.Difficulty;
-                            break;
-                        case 3:
-                            p.Hard = h.Difficulty;
-                            break;
-                        }
+                        p.Difficulty[h.Hero-1] = h.Difficulty;
                 sng.PhraseIterations.PhraseIterations[i] = p;
             }
         }
@@ -279,13 +306,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         private void parseNLD(Song2014 xml, Sng2014File sng) {
-            // TODO there are no newLinkedDiffs produced by EOF XML
-            if (xml.NewLinkedDiff == null) {
-                sng.NLD = new NLinkedDifficultySection();
-                sng.NLD.Count = 0;
-                sng.NLD.NLinkedDifficulties = new NLinkedDifficulty[sng.NLD.Count];
-                return;
-            }
             // TODO it is unclear whether old LinkedDiffs affect RS2 SNG
             sng.NLD = new NLinkedDifficultySection();
             sng.NLD.Count = xml.NewLinkedDiff.Length;
@@ -565,7 +585,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         private Int32 note_id = 1;
         private void parseNote(Song2014 xml, SongNote2014 note, Notes n, Notes prev) {
-            // TODO unknown meaning of second mask
             n.NoteMask = parse_notemask(note, prev, true);
             // TODO when to set numbered note?
             if (note.Fret != 0)
@@ -626,7 +645,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             if (chord.LinkNext != 0)
                 n.NoteMask |= NOTE_MASK_PARENT;
 
-            // TODO not checked against examples
             if (chord.Accent != 0)
                 n.NoteMask |= NOTE_MASK_ACCENT;
             if (chord.FretHandMute != 0)
@@ -720,7 +738,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 var b = bd[i];
                 b.Time = note.BendValues[i].Time;
                 b.Step = note.BendValues[i].Step;
-                // TODO these appear to be always zero
+                // these are always zero for lessons and songs
                 //"Unk3_0",
                 //"Unk4_0",
                 // TODO unknown meaning
@@ -729,12 +747,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
             return bd;
         }
-
-        // used for counting total notes+chords (incremental arrangements)
-        // TODO this does not include two notes at same time like in bwalking1,
-        //      we should add both notes if they are in the same difficulty level
-        //      but it would only work if higher diff. didn't override them
-        private Hashtable note_times = new Hashtable();
 
         private void parseArrangements(Song2014 xml, Sng2014File sng) {
             sng.Arrangements = new ArrangementSection();
@@ -756,6 +768,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     else
                         // last phrase iteration = noguitar/end
                         anchor.EndBeatTime = xml.PhraseIterations[xml.PhraseIterations.Length - 1].Time;
+                    // TODO unknown
                     anchor.Unk3_StartBeatTime = anchor.StartBeatTime;
                     anchor.Unk4_StartBeatTime = anchor.StartBeatTime;
                     anchor.FretId = level.Anchors[j].Fret;
@@ -770,7 +783,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     if (note.SlideTo != -1)
                         ++a.AnchorExtensions.Count;
                 a.AnchorExtensions.AnchorExtensions = new AnchorExtension[a.AnchorExtensions.Count];
-                // TODO need to double check
                 // Fingerprints1 is for handshapes without "arp" displayName
                 a.Fingerprints1 = new FingerprintSection();
                 // Fingerprints2 is for handshapes with "arp" displayName
@@ -815,7 +827,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         prev = notes.Last();
                     parseNote(xml, note, n, prev);
                     notes.Add(n);
-                    note_times[note.Time] = note;
+
                     for (int j=0; j<xml.PhraseIterations.Length; j++) {
                         var piter = xml.PhraseIterations[j];
                         if (piter.Time > note.Time) {
@@ -839,7 +851,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         id = addChordNotes(chord);
                     parseChord(xml, sng, chord, n, id);
                     notes.Add(n);
-                    note_times[chord.Time] = chord;
+
                     for (int j=0; j<xml.PhraseIterations.Length; j++) {
                         var piter = xml.PhraseIterations[j];
                         if (piter.Time > chord.Time) {
