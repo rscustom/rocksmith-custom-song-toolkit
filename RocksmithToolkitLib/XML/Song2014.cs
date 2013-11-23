@@ -256,6 +256,19 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlAttribute("vibrato")]
         public Int16 Vibrato { get; set; }
+
+        [XmlArray("bendValues")]
+        [XmlArrayItem("bendValue")]
+        public BendValue[] BendValues { get; set; }
+    }
+
+    [XmlType("bendValues")]
+    public class BendValue {
+        [XmlAttribute("time")]
+        public float Time { get; set; }
+
+        [XmlAttribute("step")]
+        public float Step { get; set; }
     }
 
     public class SongChord2014 : SongChord {

@@ -184,10 +184,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 // TODO need to figure out which masks are not applied
                 c.NoteMask[i] = parse_notemask(n, null, false);
-                // TODO no XML example of chordnotes bend (like weezer)?
                 c.BendData[i] = new BendData();
-                for (int j = 0; j < 32; j++)
-                    c.BendData[i].BendData32[j] = new BendData32();
+                c.BendData[i].BendData32 = parse_benddata(n, false);
+                if (n != null && n.BendValues != null)
+                    c.BendData[i].UsedCount = n.BendValues.Length;
                 if (n != null) {
                     c.SlideTo[i] = (Byte)n.SlideTo;
                     c.SlideUnpitchTo[i] = (Byte)n.SlideUnpitchTo;
@@ -606,10 +606,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.Vibrato = note.Vibrato;
             n.Sustain = note.Sustain;
             n.MaxBend = note.Bend;
-            // TODO
             n.BendData = new BendDataSection();
-            n.BendData.Count = 0;
-            n.BendData.BendData = new BendData32[n.BendData.Count];
+            n.BendData.BendData = parse_benddata(note, true);
+            n.BendData.Count = n.BendData.BendData.Length;
         }
 
         private void parseChord(Song2014 xml, Sng2014File sng, SongChord2014 chord, Notes n, Int32 chordnotes_id) {
@@ -697,6 +696,38 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.BendData = new BendDataSection();
             n.BendData.Count = 0;
             n.BendData.BendData = new BendData32[n.BendData.Count];
+        }
+
+        private BendData32[] parse_benddata(SongNote2014 note, bool single) {
+            // single can be any size, otherwise 32x BendData32 are allocated
+            Int32 count = 32;
+
+            // count of available values
+            Int32 bend_values = 0;
+            if (note != null && note.BendValues != null)
+                bend_values = note.BendValues.Length;
+
+            if (single) {
+                count = bend_values;
+            }
+
+            var bd = new BendData32[count];
+            for (int i=0; i<count; i++)
+                bd[i] = new BendData32();
+
+            // intentionally not using "count"
+            for (int i=0; i<bend_values; i++) {
+                var b = bd[i];
+                b.Time = note.BendValues[i].Time;
+                b.Step = note.BendValues[i].Step;
+                // TODO these appear to be always zero
+                //"Unk3_0",
+                //"Unk4_0",
+                // TODO unknown meaning
+                //"Unk5"
+            }
+
+            return bd;
         }
 
         // used for counting total notes+chords (incremental arrangements)
