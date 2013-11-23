@@ -101,8 +101,7 @@ struct CHORD_NOTES
     struct BEND_DATA BendData[6];
     byte StartFretId[6];
     byte EndFretId[6];
-    // TODO always zero?
-    short Unk_0[6];
+    short Vibrato[6];
 };
 
 struct CHORD_NOTES_SECTION

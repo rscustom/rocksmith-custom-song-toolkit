@@ -213,15 +213,15 @@ public class ChordNotes
     public Byte[] StartFretId { get { return this._StartFretId; } set { _StartFretId = value; } }
     public Byte[] _EndFretId = new Byte[6];
     public Byte[] EndFretId { get { return this._EndFretId; } set { _EndFretId = value; } }
-    public Int16[] _Unk_0 = new Int16[6];
-    public Int16[] Unk_0 { get { return this._Unk_0; } set { _Unk_0 = value; } }
+    public Int16[] _Vibrato = new Int16[6];
+    public Int16[] Vibrato { get { return this._Vibrato; } set { _Vibrato = value; } }
 
     public string[] _order = {
         "NoteMask",
         "BendData",
         "StartFretId",
         "EndFretId",
-        "Unk_0"
+        "Vibrato"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
@@ -229,7 +229,7 @@ public class ChordNotes
         this.BendData = new BendData[6]; for (int i=0; i<6; i++) { BendData obj = new BendData(); obj.read(r); this.BendData[i] = obj; }
         this.StartFretId = r.ReadBytes(6);
         this.EndFretId = r.ReadBytes(6);
-        this.Unk_0 = new Int16[6]; for (int i=0; i<6; i++) this.Unk_0[i] = r.ReadInt16();
+        this.Vibrato = new Int16[6]; for (int i=0; i<6; i++) this.Vibrato[i] = r.ReadInt16();
     }
 }
 

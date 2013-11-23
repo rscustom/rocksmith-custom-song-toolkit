@@ -182,13 +182,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         break;
                     }
                 }
-                // TODO guessing that NOTE mask is used here
+                // TODO need to figure out which masks are not applied
                 c.NoteMask[i] = parse_notemask(n, null, false);
                 // TODO no XML example of chordnotes bend (like weezer)?
                 c.BendData[i] = new BendData();
                 for (int j = 0; j < 32; j++)
                     c.BendData[i].BendData32[j] = new BendData32();
-                // TODO just guessing
+                // TODO just guessing, slideUnpitchTo not supported here? bwalking did it differently
                 if (n != null && n.SlideTo != -1) {
                     c.StartFretId[i] = (Byte)n.Fret;
                     c.EndFretId[i] = (Byte)n.SlideTo;
@@ -196,8 +196,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     c.StartFretId[i] = unchecked((Byte) (-1));
                     c.EndFretId[i] = unchecked((Byte) (-1));
                 }
-                // this appears to be always zero
-                //"Unk_0"
+                if (n != null)
+                    c.Vibrato[i] = n.Vibrato;
             }
             Int32 id = cns.Count;
             cns.Add(c);
