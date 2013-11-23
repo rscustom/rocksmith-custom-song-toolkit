@@ -567,7 +567,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // TODO unknown meaning of second mask
             n.NoteMask = parse_notemask(note, prev);
             // TODO when to set numbered note?
-            n.NoteFlags = NOTE_FLAGS_NUMBERED;
+            if (note.Fret != 0)
+                n.NoteFlags = NOTE_FLAGS_NUMBERED;
             // TODO all notes get different id/hash for now
             n.Hash = note_id++;
             n.Time = note.Time;
