@@ -9,6 +9,7 @@ using RocksmithToolkitLib.Xml;
 using System.ComponentModel;
 using System.Reflection;
 using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
@@ -166,6 +167,44 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     y.MaxScorePerDifficulty.Add(score);
                 }
             }
+        }
+
+        public static void GetSongDifficulty(AttributesHeader2014 attribute, Song2014 song) {
+            var easyArray = new List<int>();
+            var mediumArray = new List<int>();
+            var hardArray = new List<int>();
+
+            for (int i = 0; i < song.PhraseIterations.Count(); i++)
+            {
+                var pt = song.PhraseIterations[i];
+                
+                var hard = song.Phrases[pt.PhraseId].MaxDifficulty;
+                if (pt.HeroLevels != null)
+                    foreach (var h in pt.HeroLevels)
+                    {
+                        switch (h.Hero)
+                        {
+                            case 1:
+                                easyArray.Add(h.Difficulty);
+                                break;
+                            case 2:
+                                mediumArray.Add(h.Difficulty);
+                                break;
+                            case 3:
+                                hard = h.Difficulty;
+                                break;
+                        }
+                        hardArray.Add(hard);
+                    }
+            }
+
+            // Is not the way of official are calculated, but is a way to calculate unique values for custom
+            // Can be rewrited with the correct way or a best way to get this value
+            var itCount = song.PhraseIterations.Count();
+            attribute.SongDiffEasy = easyArray.Average() / itCount;
+            attribute.SongDiffMed = mediumArray.Average() / itCount;
+            attribute.SongDiffHard = hardArray.Average() / itCount;
+            attribute.SongDifficulty = attribute.SongDiffHard;
         }
 
         public void GenerateSectionData(IAttributes attribute, dynamic song)
