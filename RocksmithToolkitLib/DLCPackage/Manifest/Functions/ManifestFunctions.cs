@@ -211,9 +211,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public void GenerateSectionData(IAttributes attribute, dynamic song)
         {
             if (song.Sections == null)
-            {
                 return;
-            }
+
             for (int i = 0; i < song.Sections.Length; i++)
             {
                 var section = song.Sections[i];
@@ -224,7 +223,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     StartTime = section.StartTime,
                     EndTime = (i >= song.Sections.Length - 1) ? song.SongLength : song.Sections[i + 1].StartTime,
                     UIName = String.Format("$[6007] {0} [1]", section.Name)
-
                 };
                 var sep = sect.Name.Split(new string[1] { " " }, StringSplitOptions.RemoveEmptyEntries);
                 if (sep.Length == 1)
@@ -249,7 +247,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 }
                 var phraseIterStart = -1;
                 var phraseIterEnd = 0;
-                var isSolo = false;
+                var isSolo = section.Name == "solo";
                 if (song.PhraseIterations != null)
                 {
                     for (int o = 0; o < song.PhraseIterations.Length; o++)
