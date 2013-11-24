@@ -86,7 +86,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
             LeaderboardChallengeRating = 0;
             ManifestUrn = jsonUrn;
             MasterID_RDV = arrangement.MasterId;
-            PersistentID = IdGenerator.IdString().ToUpper();
+            PersistentID = arrangement.Id.ToString().Replace("-", "").ToUpper();
             Shipping = true;
             SKU = "RS2";
             SongKey = info.Name;

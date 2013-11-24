@@ -47,7 +47,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                 var entity = new Entity2014();
                 var arrangementName = arrangement.Name.ToString().ToLower();
 
-                entity.Id = IdGenerator.IdString().ToLower();
+                entity.Id = arrangement.Id.ToString().Replace("-", "").ToLower();
                 entity.ModelName = "RSEnumerable_Song";
                 entity.Name = String.Format("{0}_{1}", info.Name, arrangement.Name);
                 entity.Iterations = 0;
