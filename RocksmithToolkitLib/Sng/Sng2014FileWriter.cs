@@ -322,7 +322,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         private void parseNLD(Song2014 xml, Sng2014File sng) {
             sng.NLD = new NLinkedDifficultySection();
-            sng.NLD.Count = xml.NewLinkedDiff.Length;
+            sng.NLD.Count = (xml.NewLinkedDiff != null) ? xml.NewLinkedDiff.Length : 0;
             sng.NLD.NLinkedDifficulties = new NLinkedDifficulty[sng.NLD.Count];
 
             for (int i = 0; i < sng.NLD.Count; i++) {
