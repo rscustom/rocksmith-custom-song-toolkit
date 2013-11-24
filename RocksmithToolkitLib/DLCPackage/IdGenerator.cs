@@ -12,12 +12,14 @@ namespace RocksmithToolkitLib.DLCPackage
             return String.Format("{0}{1}{2}{3}-0000-0000-0000-000000000000",
                 GetHexRandomByte(), GetHexRandomByte(), GetHexRandomByte(), GetHexRandomByte()).ToLower();
         }
+
         public static string Id()
         {
             return String.Format("{0}{1}{2}{3}{4}{5}{6}{7}",
                 GetHexRandomByte(), GetHexRandomByte(), GetHexRandomByte(), GetHexRandomByte(),
                 GetHexRandomByte(), GetHexRandomByte(), GetHexRandomByte(), GetHexRandomByte());
         }
+
         public static Guid Guid()
         {
             Guid guid;
@@ -26,10 +28,7 @@ namespace RocksmithToolkitLib.DLCPackage
             while (guid == System.Guid.Empty);
             return guid;
         }
-        public static string IdString()
-        {
-            return IdGenerator.Guid().ToString().Replace("-", "");
-        }
+
         private static string GetHexRandomByte()
         {
             return RandomGenerator.NextByte().ToString("X").PadLeft(2, '0');
