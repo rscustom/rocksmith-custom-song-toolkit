@@ -301,8 +301,8 @@ namespace RocksmithToolkitLib.Xml {
         [XmlAttribute("time")]
         public float Time { get; set; }
 
-        [XmlAttribute("key")]
-        public string Key { get; set; }
+        [XmlAttribute("id")]
+        public Int32 Id { get; set; }
 
         [XmlAttribute("name")]
         public string Name { get; set; }

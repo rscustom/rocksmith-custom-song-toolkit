@@ -372,8 +372,19 @@ namespace RocksmithToolkitLib.Sng2014HSL
         // TODO tone at the start is tone 0, need to pass tone changes for more
         private void parseTones(Song2014 xml, Sng2014File sng) {
             sng.Tones = new ToneSection();
-            sng.Tones.Count = 0;
+            if (xml.Tones != null)
+                sng.Tones.Count = xml.Tones.Length;
+            else
+                sng.Tones.Count = 0;
             sng.Tones.Tones = new Tone[sng.Tones.Count];
+                for (int i = 0; i < sng.Tones.Count; i++)
+                {
+                    var tn = xml.Tones[i];
+                    var t = new Tone();
+                    t.Time = tn.Time;
+                    t.ToneId = tn.Id;
+                    sng.Tones.Tones[i] = t;
+                };
         }
 
         private void parseDNAs(Song2014 xml, Sng2014File sng) {
