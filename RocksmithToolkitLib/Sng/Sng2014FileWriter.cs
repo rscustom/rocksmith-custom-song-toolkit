@@ -13,7 +13,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
 {
     public class Sng2014FileWriter {
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
-        private static List<ChordNotes> cns = new List<ChordNotes>();
 
         public void readXml(Song2014 songXml, Sng2014File sngFile, ArrangementType arrangementType)
         {
@@ -206,10 +205,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.ChordNotes.Count = sng.ChordNotes.ChordNotes.Length;
         }
 
-        public Int32 addChordNotes(SongChord2014 chord) {
-            // TODO processing all chordnotes in all levels separately, but
-            //      there is a lot of reuse going on in original files
-            //      (probably if all attributes match)
+        private static List<ChordNotes> cns = new List<ChordNotes>();
+        private static Dictionary<UInt32,Int32> cns_id = new Dictionary<UInt32,Int32>();
+        public Int32 addChordNotes(Sng2014File sng, SongChord2014 chord) {
             var c = new ChordNotes();
             for (int i = 0; i < 6; i++) {
                 SongNote2014 n = null;
@@ -235,9 +233,26 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 if (n != null)
                     c.Vibrato[i] = n.Vibrato;
             }
+
+            UInt32 crc = sng.hashStruct(c);
+            if (cns_id.ContainsKey(crc))
+                return cns_id[crc];
+
+            // don't export chordnotes if there are no techniques
+            bool no_techniques = true;
+            foreach (var m in c.NoteMask)
+                if (m != 0) {
+                    no_techniques = false;
+                    break;
+                }
+            if (no_techniques)
+                return -1;
+
+            // add new ChordNotes instance
             Int32 id = cns.Count;
+            cns_id[crc] = id;
             cns.Add(c);
-            return id;
+            return cns_id[crc];
         }
 
         private void parsePhrases(Song2014 xml, Sng2014File sng) {
@@ -306,7 +321,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         private void parseNLD(Song2014 xml, Sng2014File sng) {
-            // TODO it is unclear whether old LinkedDiffs affect RS2 SNG
             sng.NLD = new NLinkedDifficultySection();
             sng.NLD.Count = xml.NewLinkedDiff.Length;
             sng.NLD.NLinkedDifficulties = new NLinkedDifficulty[sng.NLD.Count];
@@ -355,7 +369,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
         }
 
-        // TODO empty for one tone songs, need to pass tone changes for more
+        // TODO tone at the start is tone 0, need to pass tone changes for more
         private void parseTones(Song2014 xml, Sng2014File sng) {
             sng.Tones = new ToneSection();
             sng.Tones.Count = 0;
@@ -464,9 +478,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         // NoteMask:
         const UInt32 NOTE_MASK_UNDEFINED        = 0x0;
-        // missing                                0x01  // not used in lessons
-        const UInt32 NOTE_MASK_CHORD            = 0x02; // confirmed
-        const UInt32 NOTE_MASK_OPEN             = 0x04; // confirmed
+        // missing - not used in lessons/songs    0x01
+        const UInt32 NOTE_MASK_CHORD            = 0x02;
+        const UInt32 NOTE_MASK_OPEN             = 0x04;
         const UInt32 NOTE_MASK_FRETHANDMUTE     = 0x08;
         const UInt32 NOTE_MASK_TREMOLO          = 0x10;
         const UInt32 NOTE_MASK_HARMONIC         = 0x20;
@@ -476,39 +490,33 @@ namespace RocksmithToolkitLib.Sng2014HSL
         const UInt32 NOTE_MASK_POP              = 0x0100;
         const UInt32 NOTE_MASK_HAMMERON         = 0x0200;
         const UInt32 NOTE_MASK_PULLOFF          = 0x0400;
-        const UInt32 NOTE_MASK_SLIDE            = 0x0800; // confirmed
+        const UInt32 NOTE_MASK_SLIDE            = 0x0800;
         const UInt32 NOTE_MASK_BEND             = 0x1000;
-        const UInt32 NOTE_MASK_SUSTAIN          = 0x2000; // confirmed
+        const UInt32 NOTE_MASK_SUSTAIN          = 0x2000;
         const UInt32 NOTE_MASK_TAP              = 0x4000;
         const UInt32 NOTE_MASK_PINCHHARMONIC    = 0x8000;
         const UInt32 NOTE_MASK_VIBRATO          = 0x010000;
         const UInt32 NOTE_MASK_MUTE             = 0x020000;
-        const UInt32 NOTE_MASK_IGNORE           = 0x040000; // confirmed, unknown meaning
-        // missing                                0x080000 leftHand?
-        // missing                                0x100000 rightHand?
+        const UInt32 NOTE_MASK_IGNORE           = 0x040000; // ignore=1
+        const UInt32 NOTE_MASK_LEFTHAND         = 0x00080000;
+        const UInt32 NOTE_MASK_RIGHTHAND        = 0x00100000;
         const UInt32 NOTE_MASK_HIGHDENSITY      = 0x200000;
         const UInt32 NOTE_MASK_SLIDEUNPITCHEDTO = 0x400000;
-        // missing                                0x800000 single note?
-        // missing                                0x01000000 chord notes?
+        const UInt32 NOTE_MASK_SINGLE           = 0x00800000; // single note
+        const UInt32 NOTE_MASK_CHORDNOTES       = 0x01000000; // has chordnotes exported
         const UInt32 NOTE_MASK_DOUBLESTOP       = 0x02000000;
         const UInt32 NOTE_MASK_ACCENT           = 0x04000000;
         const UInt32 NOTE_MASK_PARENT           = 0x08000000; // linkNext=1
         const UInt32 NOTE_MASK_CHILD            = 0x10000000; // note after linkNext=1
         const UInt32 NOTE_MASK_ARPEGGIO         = 0x20000000;
-        // missing                                0x40000000 // not used in lessons
-        const UInt32 NOTE_MASK_STRUM            = 0x80000000; // barre?
+        // missing - not used in lessons/songs    0x40000000 /
+        const UInt32 NOTE_MASK_STRUM            = 0x80000000; // handShape defined at chord time
 
         const UInt32 NOTE_MASK_ARTICULATIONS_RH = 0x0000C1C0;
         const UInt32 NOTE_MASK_ARTICULATIONS_LH = 0x00020628;
         const UInt32 NOTE_MASK_ARTICULATIONS    = 0x0002FFF8;
         const UInt32 NOTE_MASK_ROTATION_DISABLED= 0x0000C1E0;
 
-        // reverse-engineered values
-        // single note mask?
-        const UInt32 NOTE_MASK_SINGLE           = 0x00800000;
-        const UInt32 NOTE_MASK_CHORDNOTES       = 0x01000000;
-        const UInt32 NOTE_MASK_RIGHTHAND        = 0x00100000;
-        const UInt32 NOTE_MASK_LEFTHAND         = 0x00080000;
 
         public UInt32 parse_notemask(SongNote2014 note, Notes prev, bool single) {
             if (note == null)
@@ -523,9 +531,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             if (note.Fret == 0)
                 mask |= NOTE_MASK_OPEN;
 
-            // TODO some masks are not used here (open, arpeggio, chord, ...)
-            //      and some are missing (unused attributes below)
-
             if (note.LinkNext != 0)
                 mask |= NOTE_MASK_PARENT;
 
@@ -538,10 +543,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             if (note.Harmonic != 0)
                 mask |= NOTE_MASK_HARMONIC;
 
-            // TODO
+            // TODO seems to have no effect
             // hopo = 0
-            //if (note. != 0)
-            //  mask |= NOTE_MASK_;
 
             if (single && note.Ignore != 0)
                 mask |= NOTE_MASK_IGNORE;
@@ -566,10 +569,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             if (note.HarmonicPinch != 0)
                 mask |= NOTE_MASK_PINCHHARMONIC;
 
-            // TODO
-            // pickDirection="0"
-            //if (note. != 0)
-            //  mask |= NOTE_MASK_;
+            // TODO seems to have no effect
+            // pickDirection = 0
 
             if (note.RightHand != -1)
                 mask |= NOTE_MASK_RIGHTHAND;
@@ -633,13 +634,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private void parseChord(Song2014 xml, Sng2014File sng, SongChord2014 chord, Notes n, Int32 chordnotes_id) {
             n.NoteMask |= NOTE_MASK_CHORD;
             if (chordnotes_id != -1) {
-                // this seems to always require STRUM => handshape at chord time
-                // but the flag is not set if all chordnotes has leftHand != -1
-                foreach (var mask in cns[chordnotes_id].NoteMask)
-                    if (mask != 0 && (mask & NOTE_MASK_LEFTHAND) == 0) {
-                        n.NoteMask |= NOTE_MASK_CHORDNOTES;
-                        break;
-                    }
+                // there should always be a STRUM too => handshape at chord time
+                // probably even for chordNotes which are not exported to SNG
+                n.NoteMask |= NOTE_MASK_CHORDNOTES;
             }
 
             if (chord.LinkNext != 0)
@@ -655,8 +652,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 n.NoteMask |= NOTE_MASK_IGNORE;
             if (chord.PalmMute != 0)
                 n.NoteMask |= NOTE_MASK_PALMMUTE;
-            // TODO there are some weird values in there, how do they affect SNG?
-            //      otherwise does not seem to have a mask
+            // TODO does not seem to have a mask or any effect
             // if (chord.Hopo != 0)
             //     n.NoteMask |= ;
 
@@ -848,7 +844,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     var n = new Notes();
                     Int32 id = -1;
                     if (chord.chordNotes != null && chord.chordNotes.Length > 0)
-                        id = addChordNotes(chord);
+                        id = addChordNotes(sng, chord);
                     parseChord(xml, sng, chord, n, id);
                     notes.Add(n);
 

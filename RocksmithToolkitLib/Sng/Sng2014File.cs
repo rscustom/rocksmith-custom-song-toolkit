@@ -11,6 +11,7 @@ using System.Text;
 using MiscUtil.IO;
 using MiscUtil.Conversion;
 using zlib;
+using DamienG.Security.Cryptography;
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {
@@ -170,6 +171,20 @@ namespace RocksmithToolkitLib.Sng2014HSL
             writeStruct(w, this.Sections);
             writeStruct(w, this.Arrangements);
             writeStruct(w, this.Metadata);
+        }
+
+        public UInt32 hashStruct(object obj) {
+            EndianBitConverter conv = EndianBitConverter.Little;
+            MemoryStream data = new MemoryStream();
+            var w = new EndianBinaryWriter(conv, data);
+            writeStruct(w, obj);
+            w.Flush();
+
+            bool mode = this.consoleMode;
+            this.consoleMode = false;
+            UInt32 crc = Crc32.Compute(data.ToArray());
+            this.consoleMode = mode;
+            return crc;
         }
 
         private void writeStruct(EndianBinaryWriter w, object obj) {
