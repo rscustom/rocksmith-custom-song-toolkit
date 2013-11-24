@@ -860,7 +860,7 @@ public class Notes
 {
     public UInt32 NoteMask { get; set; }
     public UInt32 NoteFlags { get; set; }
-    public Int32 Hash { get; set; }
+    public UInt32 Hash { get; set; }
     public float Time { get; set; }
     public Byte StringIndex { get; set; }
     public Byte[] _FretId = new Byte[2];
@@ -919,7 +919,7 @@ public class Notes
     public void read(BinaryReader r) {
         this.NoteMask = r.ReadUInt32();
         this.NoteFlags = r.ReadUInt32();
-        this.Hash = r.ReadInt32();
+        this.Hash = r.ReadUInt32();
         this.Time = r.ReadSingle();
         this.StringIndex = r.ReadByte();
         this.FretId = r.ReadBytes(2);

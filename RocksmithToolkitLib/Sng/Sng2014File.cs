@@ -173,12 +173,18 @@ namespace RocksmithToolkitLib.Sng2014HSL
             writeStruct(w, this.Metadata);
         }
 
-        public UInt32 hashStruct(object obj) {
+        public MemoryStream copyStruct(object obj) {
             EndianBitConverter conv = EndianBitConverter.Little;
             MemoryStream data = new MemoryStream();
             var w = new EndianBinaryWriter(conv, data);
             writeStruct(w, obj);
             w.Flush();
+            data.Position = 0;
+            return data;
+        }
+
+        public UInt32 hashStruct(object obj) {
+            MemoryStream data = copyStruct(obj);
 
             bool mode = this.consoleMode;
             this.consoleMode = false;

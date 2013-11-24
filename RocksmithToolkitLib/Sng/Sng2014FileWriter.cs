@@ -67,8 +67,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private int GetNoteCount(Sng2014File sng, int Level)
         {
             // time => note count
-            Dictionary<float,int> notes = new Dictionary<float,int>();
-            Dictionary<float,int> level = new Dictionary<float,int>();
+            var notes = new Dictionary<float,int>();
+            var level = new Dictionary<float,int>();
 
             for (int i=sng.Arrangements.Count-1; i>=0; i--) {
                 var a = sng.Arrangements.Arrangements[i];
@@ -584,14 +584,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
             return mask;
         }
 
-        private Int32 note_id = 1;
         private void parseNote(Song2014 xml, SongNote2014 note, Notes n, Notes prev) {
             n.NoteMask = parse_notemask(note, prev, true);
             // TODO when to set numbered note?
             if (note.Fret != 0)
                 n.NoteFlags = NOTE_FLAGS_NUMBERED;
-            // TODO all notes get different id/hash for now
-            n.Hash = note_id++;
             n.Time = note.Time;
             n.StringIndex = note.String;
             // actual fret number
@@ -659,8 +656,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // TODO when to set numbered note?
             n.NoteFlags = NOTE_FLAGS_NUMBERED;
 
-            // TODO all notes get different id/hash for now
-            n.Hash = note_id++;
             n.Time = chord.Time;
             n.StringIndex = unchecked((Byte) (-1));
             // always -1
@@ -748,6 +743,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.Arrangements = new ArrangementSection();
             sng.Arrangements.Count = getMaxDifficulty(xml) + 1;
             sng.Arrangements.Arrangements = new Arrangement[sng.Arrangements.Count];
+
+            // not strictly necessary but more helpful than hash value
+            var note_id = new Dictionary<UInt32,UInt32>();
 
             for (int i = 0; i < sng.Arrangements.Count; i++) {
                 var level = xml.Levels[i];
@@ -940,6 +938,24 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     if (iter_count[j] > 0)
                         a.AverageNotesPerIteration[j] /= iter_count[j];
                 }
+
+                // this is some kind of optimization in RS2 where they
+                // hash all note data but their position in phrase iteration
+                // to mark otherwise unchanged notes
+                foreach (var n in a.Notes.Notes) {
+                    MemoryStream data = sng.copyStruct(n);
+                    BinaryReader r = new BinaryReader(data);
+                    var ncopy = new Notes();
+                    ncopy.read(r);
+                    ncopy.NextIterNote = 0;
+                    ncopy.PrevIterNote = 0;
+                    ncopy.ParentPrevNote = 0;
+                    UInt32 crc = sng.hashStruct(ncopy);
+                    if (!note_id.ContainsKey(crc))
+                        note_id[crc] = (UInt32) note_id.Count;
+                    n.Hash = note_id[crc];
+                }
+
                 sng.Arrangements.Arrangements[i] = a;
             }
         }

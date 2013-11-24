@@ -369,7 +369,7 @@ struct NOTES
     ulong NoteMask;
     ulong NoteFlags;
     // TODO not clear which attributes are significant, but Time certainly is
-    long Hash;
+    ulong Hash;
     float Time;
     byte StringIndex;
     byte FretId[2];
