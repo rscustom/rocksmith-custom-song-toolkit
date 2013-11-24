@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DLCPackage\Crc32.cs" />
     <Compile Include="DLCPackage\Manifest2014\Tone\Gear2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Tone\Pedal2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Tone\Tone2014.cs" />
