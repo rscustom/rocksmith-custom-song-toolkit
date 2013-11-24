@@ -324,7 +324,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         albumArtStream = new MemoryStream(Resources.albumart2014_256);
                     img = imgImport.LoadImageFromStream(albumArtStream);
                     if (img.Width != 256 || img.Height != 256)
-                        img.Resize(256, 256, 0, SamplingFilter.Nearest, false);
+                        img.Resize(256, 256, 1, SamplingFilter.Bilinear, false); //change filter to
 
 
                     albumArt256Stream = new MemoryStream();
@@ -333,13 +333,13 @@ namespace RocksmithToolkitLib.DLCPackage
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_256.dds", dlcName), albumArt256Stream);
 
                     albumArt128Stream = new MemoryStream();
-                    img.Resize(128, 128, 0, SamplingFilter.Nearest, false);
+                    img.Resize(128, 128, 1, SamplingFilter.Bilinear, false);
                     imgExport.SaveImageToStream(img, ImageType.Dds,
                         albumArt128Stream);
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_128.dds", dlcName), albumArt128Stream);
 
                     albumArt64Stream = new MemoryStream();
-                    img.Resize(64, 64, 0, SamplingFilter.Nearest, false);
+                    img.Resize(64, 64, 0, SamplingFilter.Bilinear, false);
                     imgExport.SaveImageToStream(img, ImageType.Dds,
                         albumArt64Stream);
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_64.dds", dlcName), albumArt64Stream);
