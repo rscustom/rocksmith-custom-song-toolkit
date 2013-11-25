@@ -85,6 +85,12 @@
     <Compile Include="CueTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DDC\DDC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DDC\DDC.Designer.cs">
+      <DependentUpon>DDC.cs</DependentUpon>
+    </Compile>
     <Compile Include="DLCPackageCreator\ArrangementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,6 +171,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DLCConverter\DLCConverter.resx">
       <DependentUpon>DLCConverter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DDC\DDC.resx">
+      <DependentUpon>DDC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\ArrangementForm.resx">
       <DependentUpon>ArrangementForm.cs</DependentUpon>
@@ -258,6 +267,7 @@
     <None Include="Resources\toolkit_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\ddc-512.png" />
     <Content Include="songcreator.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,24 @@
+<ddc>
+  <level maxCategory= "1" maxSubCategory="1"   maxChordNotes="1"/>
+  <level maxCategory= "2" maxSubCategory="1"   maxChordNotes="1"/>
+  <level maxCategory= "4" maxSubCategory="1"   maxChordNotes="1"/>
+  <level maxCategory= "4" maxSubCategory="1"   maxChordNotes="2"/>
+  <level maxCategory= "8" maxSubCategory="2"   maxChordNotes="2"/>
+  <level maxCategory= "8" maxSubCategory="1"   maxChordNotes="2"/>
+  <level maxCategory= "8" maxSubCategory="1"   maxChordNotes="3"/>
+  <level maxCategory="16" maxSubCategory="2"   maxChordNotes="3"/>
+  <level maxCategory="16" maxSubCategory="1"   maxChordNotes="3"/>
+  <level maxCategory="16" maxSubCategory="1"   maxChordNotes="4"/>
+  <level maxCategory="32" maxSubCategory="3"   maxChordNotes="4"/>
+  <level maxCategory="32" maxSubCategory="2"   maxChordNotes="5"/>
+  <level maxCategory="32" maxSubCategory="1.2" maxChordNotes="6"/>
+  <level maxCategory="32" maxSubCategory="1.1" maxChordNotes="6"/>
+  <level maxCategory="64" maxSubCategory="4"   maxChordNotes="6"/>
+  <level maxCategory="64" maxSubCategory="3"   maxChordNotes="6"/>
+  <level maxCategory="64" maxSubCategory="2.2" maxChordNotes="6"/>
+  <level maxCategory="64" maxSubCategory="2.1" maxChordNotes="6"/>
+  <level maxCategory="64" maxSubCategory="1.4" maxChordNotes="6"/>
+  <level maxCategory="64" maxSubCategory="1.3" maxChordNotes="6"/>
+  <level maxCategory="64" maxSubCategory="1.2" maxChordNotes="6"/>
+  <level maxCategory="64" maxSubCategory="1.1" maxChordNotes="6"/>
+</ddc>

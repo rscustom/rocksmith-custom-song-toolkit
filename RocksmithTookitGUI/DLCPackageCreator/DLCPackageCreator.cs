@@ -175,8 +175,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public DLCPackageCreator()
         {
             InitializeComponent();
-            PopulateAppIdCombo();
-            PopulateTonesLB();
+            try
+            {
+                PopulateAppIdCombo();
+                PopulateTonesLB();
+            }
+            catch { }
         }
 
         private void PopulateTonesLB()

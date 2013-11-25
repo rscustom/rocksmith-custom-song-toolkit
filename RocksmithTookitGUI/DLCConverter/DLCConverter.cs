@@ -54,8 +54,12 @@ namespace RocksmithToolkitGUI.DLCConverter
             platformTargetCombo.SelectedItem = GamePlatform.XBox360.ToString();
             
             // Fill App ID
-            PopulateAppIdCombo(GameVersion.RS2014); //Supported game version
-            AppIdVisibilty();
+            try
+            {
+                PopulateAppIdCombo(GameVersion.RS2014); //Supported game version
+                AppIdVisibilty();
+            }
+            catch { }
         }
 
         private void PopulateAppIdCombo(GameVersion gameVersion)

@@ -44,6 +44,8 @@
             this.dlcPackerUnpackerControl = new RocksmithToolkitGUI.DLCPackerUnpacker.DLCPackerUnpacker();
             this.dlcConverterTab = new System.Windows.Forms.TabPage();
             this.dlcConverterControl = new RocksmithToolkitGUI.DLCConverter.DLCConverter();
+            this.DDCtabControl = new System.Windows.Forms.TabPage();
+            this.ddc1 = new RocksmithToolkitGUI.DDC.DDC();
             this.oggConverterTab = new System.Windows.Forms.TabPage();
             this.oggConverterControl = new RocksmithToolkitGUI.OggConverter.OggConverter();
             this.sngFileCreatorTab = new System.Windows.Forms.TabPage();
@@ -58,6 +60,7 @@
             this.dlcPackageCreatorTab.SuspendLayout();
             this.dlcPackerUnpackerTab.SuspendLayout();
             this.dlcConverterTab.SuspendLayout();
+            this.DDCtabControl.SuspendLayout();
             this.oggConverterTab.SuspendLayout();
             this.sngFileCreatorTab.SuspendLayout();
             this.zigProConverterTab.SuspendLayout();
@@ -135,12 +138,14 @@
             this.tabControl1.Controls.Add(this.dlcPackageCreatorTab);
             this.tabControl1.Controls.Add(this.dlcPackerUnpackerTab);
             this.tabControl1.Controls.Add(this.dlcConverterTab);
+            this.tabControl1.Controls.Add(this.DDCtabControl);
             this.tabControl1.Controls.Add(this.sngToTabConverterTab);
             this.tabControl1.Controls.Add(this.zigProConverterTab);
             this.tabControl1.Controls.Add(this.oggConverterTab);
             this.tabControl1.Controls.Add(this.sngFileCreatorTab);
             this.tabControl1.Location = new System.Drawing.Point(17, 93);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(8);
+            this.tabControl1.MinimumSize = new System.Drawing.Size(550, 590);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(550, 580);
@@ -153,7 +158,7 @@
             this.dlcPackageCreatorTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcPackageCreatorTab.Name = "dlcPackageCreatorTab";
             this.dlcPackageCreatorTab.Padding = new System.Windows.Forms.Padding(2);
-            this.dlcPackageCreatorTab.Size = new System.Drawing.Size(530, 580);
+            this.dlcPackageCreatorTab.Size = new System.Drawing.Size(542, 564);
             this.dlcPackageCreatorTab.TabIndex = 0;
             this.dlcPackageCreatorTab.Text = "DLC Package Creator";
             this.dlcPackageCreatorTab.UseVisualStyleBackColor = true;
@@ -171,7 +176,7 @@
             this.dlcPackageCreatorControl.DLCName = "";
             this.dlcPackageCreatorControl.Location = new System.Drawing.Point(16, 6);
             this.dlcPackageCreatorControl.Margin = new System.Windows.Forms.Padding(4);
-            this.dlcPackageCreatorControl.MinimumSize = new System.Drawing.Size(610, 426);
+            this.dlcPackageCreatorControl.MinimumSize = new System.Drawing.Size(520, 555);
             this.dlcPackageCreatorControl.Name = "dlcPackageCreatorControl";
             this.dlcPackageCreatorControl.Size = new System.Drawing.Size(630, 600);
             this.dlcPackageCreatorControl.SongTitle = "";
@@ -198,6 +203,26 @@
             this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
             this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(419, 204);
             this.dlcPackerUnpackerControl.TabIndex = 0;
+            // 
+            // DDCtabControl
+            // 
+            this.DDCtabControl.Controls.Add(this.ddc1);
+            this.DDCtabControl.Location = new System.Drawing.Point(4, 22);
+            this.DDCtabControl.Name = "DDCtabControl";
+            this.DDCtabControl.Padding = new System.Windows.Forms.Padding(3);
+            this.DDCtabControl.Size = new System.Drawing.Size(542, 564);
+            this.DDCtabControl.TabIndex = 6;
+            this.DDCtabControl.Text = "DDC";
+            this.DDCtabControl.ToolTipText = "Generator of low levels for arrangement.";
+            this.DDCtabControl.UseVisualStyleBackColor = true;
+            // 
+            // ddc1
+            // 
+            this.ddc1.Location = new System.Drawing.Point(6, 6);
+            this.ddc1.MinimumSize = new System.Drawing.Size(530, 380);
+            this.ddc1.Name = "ddc1";
+            this.ddc1.Size = new System.Drawing.Size(530, 380);
+            this.ddc1.TabIndex = 0;
             // 
             // dlcConverterTab
             // 
@@ -323,7 +348,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(582, 680);
+            this.ClientSize = new System.Drawing.Size(584, 702);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
@@ -331,6 +356,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(600, 740);
             this.Name = "MainForm";
             this.Text = "Custom Song Creator Toolkit";
             this.menuStrip1.ResumeLayout(false);
@@ -338,6 +364,7 @@
             this.tabControl1.ResumeLayout(false);
             this.dlcPackageCreatorTab.ResumeLayout(false);
             this.dlcPackerUnpackerTab.ResumeLayout(false);
+            this.DDCtabControl.ResumeLayout(false);
             this.oggConverterTab.ResumeLayout(false);
             this.sngFileCreatorTab.ResumeLayout(false);
             this.zigProConverterTab.ResumeLayout(false);
@@ -374,6 +401,8 @@
         private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
 		private System.Windows.Forms.TabPage sngToTabConverterTab;
         private SngToTabConverter.SngToTabConverter sngToTabConverter1;
+        private System.Windows.Forms.TabPage DDCtabControl;
+        private DDC.DDC ddc1;
     }
 }
 
