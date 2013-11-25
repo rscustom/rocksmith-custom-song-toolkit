@@ -751,6 +751,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         arrangement.NoteCount = sng.NoteCount;
                         arrangement.DNACount = sng.DNACount;
                         arrangement.MaxPhraseDifficulty = sng.Metadata.MaxDifficulty;
+                        arrangement.StartTime = sng.Metadata.StartTime;
                         sng.writeSng(fs, platform);
                     }
                     break;

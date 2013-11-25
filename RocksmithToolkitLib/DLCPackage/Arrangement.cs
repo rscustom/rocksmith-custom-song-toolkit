@@ -41,6 +41,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public int[] NoteCount { get; set; }
         public int[] DNACount { get; set; }
         public int MaxPhraseDifficulty { get; set; }
+        public float StartTime { get; set; }
         // Gameplay Path
         public RouteMask RouteMask { get; set; }
         public bool BonusArr = false;

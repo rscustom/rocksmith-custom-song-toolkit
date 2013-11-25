@@ -108,16 +108,11 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 Representative = 1;
                 RouteMask = (int)arrangement.RouteMask;
 
-                ManifestFunctions.GetSongDifficulty(this, SongContent);
-                //SongDiffEasy  -- Generated on function above
-                //SongDiffMed   -- Generated on function above
-                //SongDiffHard  -- Generated on function above
-                //SongDifficulty-- Generated on function above
-                if (SongDiffHard == 0)
-                {
-                    SongDiffHard = (float)SongContent.PhraseIterations.Average(it => SongContent.Phrases[it.PhraseId].MaxDifficulty);
-                    SongDifficulty = SongDiffHard;
-                }
+                // TODO this is not quite it but much closer
+                SongDiffEasy = SongContent.SongLength / NotesEasy;
+                SongDiffMed = SongContent.SongLength / NotesMedium;
+                SongDiffHard = SongContent.SongLength / NotesHard;
+                SongDifficulty = SongDiffHard;
                 
                 SongLength = SongContent.SongLength;
                 SongName = info.SongInfo.SongDisplayName;
