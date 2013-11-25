@@ -750,6 +750,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         Sng2014File sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
                         arrangement.NoteCount = sng.NoteCount;
                         arrangement.DNACount = sng.DNACount;
+                        arrangement.MaxPhraseDifficulty = sng.Metadata.MaxDifficulty;
                         sng.writeSng(fs, platform);
                     }
                     break;

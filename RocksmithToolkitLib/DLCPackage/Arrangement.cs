@@ -40,6 +40,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public PluckedType PluckedType { get; set; }
         public int[] NoteCount { get; set; }
         public int[] DNACount { get; set; }
+        public int MaxPhraseDifficulty { get; set; }
         // Gameplay Path
         public RouteMask RouteMask { get; set; }
         public bool BonusArr = false;

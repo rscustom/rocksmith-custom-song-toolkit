@@ -123,7 +123,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 manifestFunctions.GenerateChordTemplateData(this, SongContent);
 
                 LastConversionDateTime = SongContent.LastConversionDateTime;
-                MaxPhraseDifficulty = 0; //TODO: MISSING GENERATE
+                MaxPhraseDifficulty = arrangement.MaxPhraseDifficulty;
 
                 TargetScore = 100000;
                 PhraseIterations = new List<PhraseIteration>();
