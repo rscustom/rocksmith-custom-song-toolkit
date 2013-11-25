@@ -227,16 +227,16 @@ namespace RocksmithToolkitLib.Ogg
             }
         }
 
-        public static WwiseVersion GetWwiseVersion(this Platform platform)
+        public static WwiseVersion GetWwiseVersion(this string extension)
         {
-            switch (platform.version)
+            switch (extension)
             {
-                case GameVersion.RS2012:
+                case ".ogg":
                     return WwiseVersion.Wwise2010;
-                case GameVersion.RS2014:
+                case ".wem":
                     return WwiseVersion.Wwise2013;
                 default:
-                    throw new InvalidOperationException("Platform not found.");
+                    throw new InvalidOperationException("Audio file not supported.");
             }
         }
     }

@@ -97,12 +97,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     {
                         var name = Path.GetFileNameWithoutExtension(sourceFileName);
                         name += String.Format("_{0}", platform.platform.ToString());
-                        string[] oggFiles = Directory.GetFiles(Path.Combine(savePath, name), (platform.GetWwiseVersion() == OggFile.WwiseVersion.Wwise2010) ? "*.ogg" : "*.wem" , SearchOption.AllDirectories);
+                        var audioFiles = Directory.GetFiles(Path.Combine(savePath, name), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
 
-                        foreach (var file in oggFiles)
+                        foreach (var file in audioFiles)
                         {
-                            var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
-                            OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath), platform.GetWwiseVersion());
+                            var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
+                            OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(file).GetWwiseVersion());
                         }
                     }
                     catch (FileNotFoundException ex)

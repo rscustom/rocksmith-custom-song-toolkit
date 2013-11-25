@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -199,15 +200,12 @@ namespace PackerConsole
                                 var name = Path.GetFileNameWithoutExtension(sourceFileName);
                                 name += String.Format("_{0}", platform.platform.ToString());
 
-                                string[] audioFiles = Directory.GetFiles(Path.Combine(arguments.Output, name), (platform.GetWwiseVersion() == OggFile.WwiseVersion.Wwise2010) ? "*.ogg" : "*.wem", SearchOption.AllDirectories);
+                                var audioFiles = Directory.GetFiles(Path.Combine(arguments.Output, name), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
 
-                                if (audioFiles != null && audioFiles.Length > 0)
+                                foreach (var file in audioFiles)
                                 {
-                                    foreach (var file in audioFiles)
-                                    {
-                                        var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
-                                        OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), platform.GetWwiseVersion());
-                                    }
+                                    var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
+                                    OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Path.GetExtension(file).GetWwiseVersion());
                                 }
                             }
                         }
