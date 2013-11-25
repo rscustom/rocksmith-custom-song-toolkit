@@ -138,7 +138,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 manifestFunctions.GenerateSectionData(this, SongContent);
 
                 SongAverageTempo = SongContent.AverageTempo;
-                SongOffset = -10; //All songs is -10 -- Have no idea
+                SongOffset = arrangement.StartTime * -1;
 
                 if (arrangement.ArrangementType != Sng.ArrangementType.Vocal)
                     SongPartition = manifestFunctions.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
