@@ -62,8 +62,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
 
         // Easy, Medium, Hard = 0, 1, 2
-        private int[] _NoteCount = new int[3];
-        public int[] NoteCount { get { return this._NoteCount; } }
+        public int[] NoteCount { get; set; }
         private int GetNoteCount(Sng2014File sng, int Level)
         {
             // time => note count
@@ -96,6 +95,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         private void parseMetadata(Song2014 xml, Sng2014File sng, Int16[] tuning) {
             // Easy, Medium, Hard
+            NoteCount = new int[3];
             NoteCount[0] = GetNoteCount(sng, 0);
             NoteCount[1] = GetNoteCount(sng, 1);
             NoteCount[2] = GetNoteCount(sng, 2);
@@ -387,9 +387,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 };
         }
 
+        // none, solo, riff, chord
+        public int[] DNACount { get; set; }
         private void parseDNAs(Song2014 xml, Sng2014File sng) {
             sng.DNAs = new DnaSection();
             List<Dna> dnas = new List<Dna>();
+
+            DNACount = new int[4];
 
             // based on events: dna_none=0, dna_solo=1, dna_riff=2, dna_chord=3
             foreach (var e in xml.Events) {
@@ -413,6 +417,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     var dna = new Dna();
                     dna.Time = e.Time;
                     dna.DnaId = id;
+                    DNACount[id] += 1;
                     dnas.Add(dna);
                 }
             }

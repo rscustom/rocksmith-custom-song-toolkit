@@ -19,6 +19,13 @@ namespace RocksmithToolkitLib.DLCPackage
         Bass = 4
     }
 
+    public enum DNAId : int {
+        None = 0,
+        Solo = 1,
+        Riff = 2,
+        Chord = 3
+    }
+
     public class Arrangement
     {
         public SongFile SongFile { get; set; }
@@ -31,6 +38,8 @@ namespace RocksmithToolkitLib.DLCPackage
         public double TuningPitch { get; set; }
         public int ScrollSpeed { get; set; }
         public PluckedType PluckedType { get; set; }
+        public int[] NoteCount { get; set; }
+        public int[] DNACount { get; set; }
         // Gameplay Path
         public RouteMask RouteMask { get; set; }
         public bool BonusArr = false;

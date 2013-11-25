@@ -748,6 +748,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
                         // Sng2014File can be reused when generating for multiple platforms
                         Sng2014File sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
+                        arrangement.NoteCount = sng.NoteCount;
+                        arrangement.DNACount = sng.DNACount;
                         sng.writeSng(fs, platform);
                     }
                     break;

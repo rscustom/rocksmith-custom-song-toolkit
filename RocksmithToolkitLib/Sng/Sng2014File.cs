@@ -20,11 +20,18 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         public Sng2014File() { }
 
+        // Easy, Medium, Hard = 0, 1, 2
+        public int[] NoteCount { get ; set; }
+        // none, solo, riff, chord
+        public int[] DNACount { get ; set ; }
+
         // this is platform independent SNG object
         public Sng2014File(string xml_file, ArrangementType arrangementType) {
             Song2014 song = Song2014.LoadFromFile(xml_file);
             var parser = new Sng2014FileWriter();
             parser.readXml(song, this, arrangementType);
+            NoteCount = parser.NoteCount;
+            DNACount = parser.DNACount;
         }
 
         // raw SNG data reader, pretty much useless but it's here
