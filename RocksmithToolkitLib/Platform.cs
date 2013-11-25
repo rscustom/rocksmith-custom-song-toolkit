@@ -12,6 +12,7 @@ namespace RocksmithToolkitLib
     {
         public GamePlatform platform { get; set; }
         public GameVersion version { get; set; }
+        public bool IsConsole { get { return (platform == GamePlatform.XBox360 || platform == GamePlatform.PS3); } }
 
         public Platform(GamePlatform platform, GameVersion version)
         {

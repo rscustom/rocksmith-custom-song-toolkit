@@ -22,6 +22,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
         Database,
         [Description("json-db")]
         JsonDB,
+        [Description("hson-db")]
+        HsonDB,
         [Description("hsan-db")]
         HsanDB,
         [Description("application")]
@@ -78,12 +80,17 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
             }
         }
 
-        public void Write(StreamWriter writer) {
+        public void Write(StreamWriter writer, bool lastLine = false) {
             var uuid = UUID.ToString().ToLower();
 
             base.Write(writer);
             writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.llid.ToString(), LLID);
-            writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.logpath.ToString(), LogPath);
+
+            var line = String.Format(GRAPHLINETEMPLATE, uuid, TagType.logpath.ToString(), LogPath);
+            if (!lastLine)
+                writer.WriteLine(line);
+            else
+                writer.Write(line); //Xbox crashes if this file have a blank line in the end
         }
     }
 
@@ -128,7 +135,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
             }
         }
 
-        public void Write(StreamWriter writer) {
+        public void Write(StreamWriter writer, bool lastLine = false) {
             var uuid = UUID.ToString().ToLower();
 
             foreach (var tag in Tag)
@@ -136,10 +143,15 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
 
             writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.canonical.ToString(), Canonical);
             writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.name.ToString(), Name);
-            writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.relpath.ToString(), RelPath);
+
+            var line = String.Format(GRAPHLINETEMPLATE, uuid, TagType.relpath.ToString(), RelPath);
+            if (!lastLine)
+                writer.WriteLine(line);
+            else
+                writer.Write(line);
         }
 
-        public static string GetAudioTagPlatformDescription(GamePlatform platform)
+        public static string GetPlatformTagDescription(GamePlatform platform)
         {
             switch (platform)
             {

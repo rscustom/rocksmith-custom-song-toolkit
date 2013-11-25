@@ -372,14 +372,15 @@ namespace RocksmithToolkitLib.DLCPackage
                     using (var soundbankStream = new MemoryStream())
                     using (var soundbankPreviewStream = new MemoryStream())
                     using (var aggregateGraphStream = new MemoryStream())
-                    using (var manifestHeaderStream = new MemoryStream())
+                    using (var manifestHeaderHSANStream = new MemoryStream())
+                    using (var manifestHeaderHSONStreamList = new DisposableCollection<Stream>())
                     using (var manifestStreamList = new DisposableCollection<Stream>())
                     using (var arrangementStream = new DisposableCollection<Stream>())
                     using (var showlightStream = new MemoryStream())
                     using (var xblockStream = new MemoryStream())
                     {
                         // APP ID
-                        if (platform.platform == GamePlatform.Pc || platform.platform == GamePlatform.Mac)
+                        if (!platform.IsConsole)
                         {
                             GenerateAppId(appIdStream, info.AppId);
                             packPsarc.AddEntry("appid.appid", appIdStream);
@@ -387,7 +388,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         if (platform.platform == GamePlatform.XBox360) {
                             var packageListWriter = new StreamWriter(packageListStream);
-                            packageListWriter.WriteLine(dlcName);
+                            packageListWriter.Write(dlcName);
                             packageListWriter.Flush();
                             packageListStream.Seek(0, SeekOrigin.Begin);
                             string packageList = "PackageList.txt";
@@ -413,12 +414,12 @@ namespace RocksmithToolkitLib.DLCPackage
                         // AGGREGATE GRAPH
                         var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", info.Name.ToLower());
                         var aggregateGraph = new AggregateGraph2014(info, platform);
-                        aggregateGraph.Serialize(aggregateGraphStream);
+                        aggregateGraph.Serialize(aggregateGraphStream, platform);
                         aggregateGraphStream.Flush();
                         aggregateGraphStream.Seek(0, SeekOrigin.Begin);
                         packPsarc.AddEntry(aggregateGraphFileName, aggregateGraphStream); 
 
-                        var manifestHeader = new ManifestHeader2014();
+                        var manifestHeader = new ManifestHeader2014(platform);
 
                         foreach (var arrangement in info.Arrangements)
                         {
@@ -437,23 +438,41 @@ namespace RocksmithToolkitLib.DLCPackage
 
                             // MANIFEST
                             var manifest = new Manifest2014<Attributes2014>();
-                            var attribute = new Attributes2014(arrangement, info, aggregateGraph, platform);                                
+                            var attribute = new Attributes2014(arrangement, info, aggregateGraph, platform);
                             var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attribute } };
-                            manifest.Entries.Add(attribute.PersistentID, attributeDictionary);
-                                
+                            manifest.Entries.Add(attribute.PersistentID, attributeDictionary);                                
                             var manifestStream = new MemoryStream();
                             manifestStreamList.Add(manifestStream);
                             manifest.Serialize(manifestStream);
                             manifestStream.Seek(0, SeekOrigin.Begin);
-                            packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/{0}_{1}.json", dlcName, arrangementName), manifestStream);                        
+
+                            var jsonPathPC = "manifests/songs_dlc_{0}/{0}_{1}.json";
+                            var jsonPathConsole = "manifests/songs_dlc/{0}_{1}.json";
+                            packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName, arrangementName), manifestStream);
 
                             // MANIFEST HEADER
                             var attributeHeaderDictionary = new Dictionary<string, AttributesHeader2014> { { "Attributes", new AttributesHeader2014(attribute) } };
-                            manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
+
+                            if (platform.IsConsole) {
+                                // One for each arrangements (Xbox360/PS3)
+                                manifestHeader = new ManifestHeader2014(platform);
+                                manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
+                                var manifestHeaderStream = new MemoryStream();
+                                manifestHeaderHSONStreamList.Add(manifestHeaderStream);
+                                manifestHeader.Serialize(manifestHeaderStream);
+                                manifestStream.Seek(0, SeekOrigin.Begin);
+                                packPsarc.AddEntry(String.Format("manifests/songs_dlc/{0}_{1}.hson", dlcName, arrangementName), manifestHeaderHSANStream);
+                            } else {
+                                // One for all arrangements (PC/Mac)
+                                manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
+                            }
                         }
-                        manifestHeader.Serialize(manifestHeaderStream);
-                        manifestHeaderStream.Seek(0, SeekOrigin.Begin);
-                        packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/songs_dlc_{0}.hsan", dlcName), manifestHeaderStream);
+
+                        if (!platform.IsConsole) {
+                            manifestHeader.Serialize(manifestHeaderHSANStream);
+                            manifestHeaderHSANStream.Seek(0, SeekOrigin.Begin);
+                            packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/songs_dlc_{0}.hsan", dlcName), manifestHeaderHSANStream);
+                        }
 
                         // SHOWLIGHT
                         Showlights showlight = new Showlights(info.Arrangements);
@@ -463,14 +482,14 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
 
                         // XBLOCK
-                        GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info);
+                        GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform);
                         game.SerializeXml(xblockStream);
                         xblockStream.Flush();
                         xblockStream.Seek(0, SeekOrigin.Begin);
                         packPsarc.AddEntry(String.Format("gamexblocks/nsongs/{0}.xblock", info.Name.ToLower()), xblockStream);
 
                         // WRITE PACKAGE
-                        packPsarc.Write(output, true);
+                        packPsarc.Write(output, !platform.IsConsole);
                         output.Flush();
                         output.Seek(0, SeekOrigin.Begin);
                         output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);

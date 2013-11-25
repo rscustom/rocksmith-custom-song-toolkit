@@ -10,7 +10,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
 {
     public class AggregateGraph2014 {
         #region Path/Names Template
-        public static readonly string CANONICAL_MANIFEST = "/manifests/songs_dlc_{0}"; //DLC Name
+        public static readonly string CANONICAL_MANIFEST_CONSOLE = "/manifests/songs_dlc";
+        public static readonly string CANONICAL_MANIFEST_PC = "/manifests/songs_dlc_{0}"; //DLC Name
         public static readonly string CANONICAL_GAMESONG = "/songs/bin/{0}"; //Platform Path [1]
         public static readonly string CANONICAL_ALBUMART = "/gfxassets/album_art";
         public static readonly string CANONICAL_XMLSONG = "/songs/arr";
@@ -26,8 +27,9 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
         #endregion
 
         private Platform currentPlatform { get; set; }
-
+        
         public List<GraphItem> JsonDB { get; set; }
+        public List<GraphItem> HsonDB { get; set; }
         public GraphItem HsanDB { get; set; }
         public List<GraphItemLLID> MusicgameSong { get; set; }
         public List<GraphItemLLID> SongXml { get; set; }
@@ -55,15 +57,18 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             GameXblock = xbl;
 
             JsonDB = new List<GraphItem>();
+            if (platform.IsConsole)
+                HsonDB = new List<GraphItem>();
             SongXml = new List<GraphItemLLID>();
             MusicgameSong = new List<GraphItemLLID>();
             foreach (var arrangement in info.Arrangements)
             {
                 var name = String.Format(NAME_DEFAULT, dlcName, arrangement.Name.ToString().ToLower());
+
                 // JsonDB
                 var json = new GraphItem();
                 json.Name = name;
-                json.Canonical = String.Format(CANONICAL_MANIFEST, dlcName);
+                json.Canonical = platform.IsConsole ? CANONICAL_MANIFEST_CONSOLE : String.Format(CANONICAL_MANIFEST_PC, dlcName);
                 json.RelPathDirectory = json.Canonical;
                 json.Tag = new List<string>();
                 json.Tag.Add(TagValue.Database.GetDescription());
@@ -71,6 +76,21 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 json.UUID = IdGenerator.Guid();
                 json.RelPathFile = String.Format("{0}.json", json.Name);
                 JsonDB.Add(json);
+
+                //One file for each arrangement (Xbox360 / PS3 only)
+                if (platform.IsConsole) {
+                    // HsonDB
+                    var hson = new GraphItem();
+                    hson.Name = name;
+                    hson.Canonical = CANONICAL_MANIFEST_CONSOLE;
+                    hson.RelPathDirectory = hson.Canonical;
+                    hson.Tag = new List<string>();
+                    hson.Tag.Add(TagValue.Database.GetDescription());
+                    hson.Tag.Add(TagValue.HsonDB.GetDescription());
+                    hson.UUID = IdGenerator.Guid();
+                    hson.RelPathFile = String.Format("{0}.hson", json.Name);
+                    HsonDB.Add(hson);
+                }
 
                 // XmlSong
                 var xml = new GraphItemLLID();
@@ -96,6 +116,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 sng.Tag = new List<string>();
                 sng.Tag.Add(TagValue.Application.GetDescription());
                 sng.Tag.Add(TagValue.MusicgameSong.GetDescription());
+                if (platform.IsConsole)
+                    sng.Tag.Add(GraphItem.GetPlatformTagDescription(currentPlatform.platform));
                 sng.UUID = arrangement.SongFile.UUID;
                 sng.LLID = Guid.Parse(arrangement.SongFile.LLID);
                 sng.RelPathFile = String.Format("{0}.sng", sng.Name);
@@ -105,17 +127,21 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
 
             if (currentPlatform.version == GameVersion.RS2014)
             {
-                // Hsan
-                var hsan = new GraphItem();
-                hsan.Name = String.Format(NAME_HSAN, dlcName);
-                hsan.Canonical = String.Format(CANONICAL_MANIFEST, dlcName);
-                hsan.RelPathDirectory = hsan.Canonical;
-                hsan.Tag = new List<string>();
-                hsan.Tag.Add(TagValue.Database.GetDescription());
-                hsan.Tag.Add(TagValue.HsanDB.GetDescription());
-                hsan.UUID = IdGenerator.Guid();
-                hsan.RelPathFile = String.Format("{0}.hsan", hsan.Name);
-                HsanDB = hsan;
+                //One file for all arrangement (PC / Mac only)
+                if (!platform.IsConsole)
+                {
+                    // Hsan
+                    var hsan = new GraphItem();
+                    hsan.Name = String.Format(NAME_HSAN, dlcName);
+                    hsan.Canonical = String.Format(CANONICAL_MANIFEST_PC, dlcName);
+                    hsan.RelPathDirectory = hsan.Canonical;
+                    hsan.Tag = new List<string>();
+                    hsan.Tag.Add(TagValue.Database.GetDescription());
+                    hsan.Tag.Add(TagValue.HsanDB.GetDescription());
+                    hsan.UUID = IdGenerator.Guid();
+                    hsan.RelPathFile = String.Format("{0}.hsan", hsan.Name);
+                    HsanDB = hsan;
+                }
 
                 // Showlight (Xml)
                 var xml = new GraphItemLLID();
@@ -167,7 +193,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             bnk.Tag = new List<string>();
             bnk.Tag.Add(TagValue.Audio.GetDescription());
             bnk.Tag.Add(TagValue.WwiseSoundBank.GetDescription());
-            bnk.Tag.Add(GraphItem.GetAudioTagPlatformDescription(currentPlatform.platform));
+            bnk.Tag.Add(GraphItem.GetPlatformTagDescription(currentPlatform.platform));
             bnk.UUID = IdGenerator.Guid();
             bnk.LLID = Guid.Parse(IdGenerator.LLID());
             bnk.Name = String.Format(NAME_SOUNDBANK, dlcName);
@@ -184,7 +210,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 bnkPreview.Tag = new List<string>();
                 bnkPreview.Tag.Add(TagValue.Audio.GetDescription());
                 bnkPreview.Tag.Add(TagValue.WwiseSoundBank.GetDescription());
-                bnkPreview.Tag.Add(GraphItem.GetAudioTagPlatformDescription(currentPlatform.platform));
+                bnkPreview.Tag.Add(GraphItem.GetPlatformTagDescription(currentPlatform.platform));
                 bnkPreview.UUID = IdGenerator.Guid();
                 bnkPreview.LLID = Guid.Parse(IdGenerator.LLID());
                 bnkPreview.Name = String.Format(NAME_SOUNDBANKPREVIEW, dlcName);
@@ -194,24 +220,26 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             }
         }
 
-        public void Serialize(Stream stream) {
+        public void Serialize(Stream stream, Platform platform) {
             StreamWriter writer = new StreamWriter(stream);
 
             // JSON
-            foreach (var json in JsonDB) {
+            foreach (var json in JsonDB)
                 json.Write(writer);
-            }
+
+            // HSON
+            if (platform.IsConsole)
+                foreach (var hson in HsonDB)
+                    hson.Write(writer);
 
             if (currentPlatform.version == GameVersion.RS2014) {
                 // HSAN
-                HsanDB.Write(writer);
+                if (!platform.IsConsole)
+                    HsanDB.Write(writer);
 
                 // Showlight
                 ShowlightXml.Write(writer);
             }
-
-            // Xblock
-            GameXblock.Write(writer);
 
             // Song Xml
             foreach (var xml in SongXml)
@@ -228,6 +256,9 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             // Soundbank
             foreach (var bnk in Soundbank)
                 bnk.Write(writer);
+
+            // Xblock
+            GameXblock.Write(writer, true);
 
             writer.Flush();
         }

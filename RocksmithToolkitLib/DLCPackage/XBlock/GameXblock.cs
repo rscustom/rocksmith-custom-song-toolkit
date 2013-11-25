@@ -37,7 +37,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
 
         #region RS2014
 
-        public static GameXblock<Entity2014> Generate2014(DLCPackageData info) {
+        public static GameXblock<Entity2014> Generate2014(DLCPackageData info, Platform platform) {
             GameXblock<Entity2014> game = new GameXblock<Entity2014>();
             game.EntitySet = new List<Entity2014>();
 
@@ -53,7 +53,10 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                 entity.Iterations = 0;
 
                 entity.Properties = new List<Property2014>();
-                entity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsanDB.GetDescription(), String.Format(AggregateGraph2014.NAME_HSAN, dlcName)) } });
+                if (platform.IsConsole)
+                    entity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsonDB.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementName)) } });
+                else
+                    entity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsanDB.GetDescription(), String.Format(AggregateGraph2014.NAME_HSAN, dlcName)) } });
                 entity.Properties.Add(new Property2014() { Name = "Manifest", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementName)) } });
                 entity.Properties.Add(new Property2014() { Name = "SngAsset", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementName)) } });
                 entity.Properties.Add(new Property2014() { Name = "AlbumArtSmall", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}_64", dlcName)) } });

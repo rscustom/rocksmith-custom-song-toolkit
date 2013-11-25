@@ -10,11 +10,19 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
     public class ManifestHeader2014
     {
         public Dictionary<string, Dictionary<string, AttributesHeader2014>> Entries { get; set; }
+        public String ModelName { get; set; }
+        public int IterationVersion { get; set; }
         public String InsertRoot { get; set; }
 
-        public ManifestHeader2014()
+        public ManifestHeader2014() { }
+
+        public ManifestHeader2014(Platform platform)
         {
             Entries = new Dictionary<string, Dictionary<string, AttributesHeader2014>>();
+            if (platform.IsConsole) {
+                ModelName = "RSEnumerable_Song_Header";
+                IterationVersion = 2;
+            }
             InsertRoot = "Static.Songs.Headers";
         }
 
