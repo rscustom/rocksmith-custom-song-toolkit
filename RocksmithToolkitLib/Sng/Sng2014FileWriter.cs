@@ -17,9 +17,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         public static Sng2014File read_vocals(string xml_file)
         {
-            byte[] bytes = new byte[Resources.VOCALS_RS2.Length];
-            System.Buffer.BlockCopy(Resources.VOCALS_RS2.ToCharArray(), 0, bytes, 0, bytes.Length);
-            var data = new MemoryStream(bytes);
+            var data = new MemoryStream(Resources.VOCALS_RS2);
             var sng = new Sng2014File(data);
             var xml = Vocals.LoadVocalsFromXmlFile(xml_file);
             Sng2014FileWriter.parseVocals(xml, sng);
