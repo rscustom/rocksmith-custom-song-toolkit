@@ -1,10 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
-call :dequote %1
-set solution=%ret%
-call :dequote %2
-set toolkitver=%ret%
+set solution=%~1
+set toolkitver=%~2
 
 echo Checking for .git\HEAD...
 set rev=nongit
@@ -34,7 +32,3 @@ echo Writing ToolkitVersion.cs...
 move /y tempfile.txt "%toolkitver%"
 echo Done
 exit /b 0
-
-:dequote
-set remquote=%~1
-set ret=%remquote%
