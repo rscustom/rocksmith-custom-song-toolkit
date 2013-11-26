@@ -31,6 +31,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
+        private string loopOrRackSlot;
+        private string LoopOrRackSlot {
+            get {
+                loopOrRackSlot = "LoopPedal";
+                if (CurrentGameVersion == GameVersion.RS2014)
+                    loopOrRackSlot = "Rack";
+                return loopOrRackSlot;
+            }
+        }
+
         public ToneControl() { }
 
         public ToneControl(GameVersion gameVersion)
@@ -64,10 +74,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             UpdateComboSelection(prePedal3Box, prePedal3KnobButton, "PrePedal3");
             UpdateComboSelection(prePedal4Box, prePedal4KnobButton, "PrePedal4");
 
-            UpdateComboSelection(loopPedalRack1Box, loopPedalRack1KnobButton, "LoopPedal1");
-            UpdateComboSelection(loopPedalRack2Box, loopPedalRack2KnobButton, "LoopPedal2");
-            UpdateComboSelection(loopPedalRack3Box, loopPedalRack3KnobButton, "LoopPedal3");
-            UpdateComboSelection(loopPedalRack4Box, loopPedalRack4KnobButton, "LoopPedal4");
+            UpdateComboSelection(loopPedalRack1Box, loopPedalRack1KnobButton, LoopOrRackSlot + "1");
+            UpdateComboSelection(loopPedalRack2Box, loopPedalRack2KnobButton, LoopOrRackSlot + "2");
+            UpdateComboSelection(loopPedalRack3Box, loopPedalRack3KnobButton, LoopOrRackSlot + "3");
+            UpdateComboSelection(loopPedalRack4Box, loopPedalRack4KnobButton, LoopOrRackSlot + "4");
 
             UpdateComboSelection(postPedal1Box, postPedal1KnobButton, "PostPedal1");
             UpdateComboSelection(postPedal2Box, postPedal2KnobButton, "PostPedal2");
@@ -127,14 +137,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             InitializeSelectedPedal(ampBox, ampKnobButton, "Amp", amps, false);
             InitializeSelectedPedal(cabinetBox, cabinetKnobButton, "Cabinet", cabinets, false);
 
-            var loopOrRackSlot = "LoopPedal";
-            if (CurrentGameVersion == GameVersion.RS2014)
-                loopOrRackSlot = "Rack";
 
-            InitializeSelectedPedal(loopPedalRack1Box, loopPedalRack1KnobButton, loopOrRackSlot + "1", loopRackPedals, true);
-            InitializeSelectedPedal(loopPedalRack2Box, loopPedalRack2KnobButton, loopOrRackSlot + "2", loopRackPedals, true);
-            InitializeSelectedPedal(loopPedalRack3Box, loopPedalRack3KnobButton, loopOrRackSlot + "3", loopRackPedals, true);
-            InitializeSelectedPedal(loopPedalRack4Box, loopPedalRack4KnobButton, loopOrRackSlot + "4", loopRackPedals, true);
+
+            InitializeSelectedPedal(loopPedalRack1Box, loopPedalRack1KnobButton, LoopOrRackSlot + "1", loopRackPedals, true);
+            InitializeSelectedPedal(loopPedalRack2Box, loopPedalRack2KnobButton, LoopOrRackSlot + "2", loopRackPedals, true);
+            InitializeSelectedPedal(loopPedalRack3Box, loopPedalRack3KnobButton, LoopOrRackSlot + "3", loopRackPedals, true);
+            InitializeSelectedPedal(loopPedalRack4Box, loopPedalRack4KnobButton, LoopOrRackSlot + "4", loopRackPedals, true);
 
             InitializeSelectedPedal(prePedal1Box, prePedal1KnobButton, "PrePedal1", prePedals, true);
             InitializeSelectedPedal(prePedal2Box, prePedal2KnobButton, "PrePedal2", prePedals, true);
