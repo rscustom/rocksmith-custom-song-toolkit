@@ -101,7 +101,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 // Arrangement Information
                 arrangementNameCombo.Enabled = selectedType == ArrangementType.Guitar;
                 tuningComboBox.Enabled = selectedType != ArrangementType.Vocal;
-                gbTuningPitch.Visible = currentGameVersion == GameVersion.RS2014;
+                gbTuningPitch.Visible = selectedType != ArrangementType.Vocal && currentGameVersion == GameVersion.RS2014;
                 gbScrollSpeed.Enabled = selectedType != ArrangementType.Vocal;
                 Picked.Visible = selectedType == ArrangementType.Bass;
                 Picked.Checked = selectedType == ArrangementType.Bass ? false : true;
