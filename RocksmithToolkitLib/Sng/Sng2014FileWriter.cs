@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.Properties;
 using System.Xml.Serialization;
 using System.Text;
 using System.Linq;
@@ -16,6 +17,22 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         public void readXml(Song2014 songXml, Sng2014File sngFile, ArrangementType arrangementType)
         {
+            //i tried to do the following line, only withing arrangement vocal, butgave me errors????
+            Song2014 vocalXml = songXml; // store the songXml, as vocalXml (vocals only) 
+
+            if (arrangementType == ArrangementType.Vocal)
+            {
+                //add all the missing tags for vocalXml so that the readXml doesnt crash
+                //and so it creates a RS2014 compatable Vocal.sng
+                byte[] byteArray = Encoding.UTF8.GetBytes(Resources.VOCALS_RS2);
+                MemoryStream stream = new MemoryStream(byteArray);
+                using (var reader = stream)
+                {
+                    var serializer = new XmlSerializer(typeof(Song2014));
+                    songXml = (Song2014)serializer.Deserialize(reader);
+                }
+            }
+
             Int16[] tuning = {
                 (Int16) songXml.Tuning.String0,
                 (Int16) songXml.Tuning.String1,
@@ -27,9 +44,17 @@ namespace RocksmithToolkitLib.Sng2014HSL
             parseEbeats(songXml, sngFile);
             parsePhrases(songXml, sngFile);
             parseChords(songXml, sngFile, tuning, arrangementType == ArrangementType.Bass);
-            // vocals will need different parse function
-            sngFile.Vocals = new VocalSection();
-            sngFile.Vocals.Vocals = new Vocal[0];
+            // vocals + Symbol Header + SymbolHeader + SybmolDefinition
+            if (arrangementType == ArrangementType.Vocal)
+            {
+                parseVocals(vocalXml, sngFile);
+                parseStaticSymbolSection(sngFile);
+            }
+            else
+            {
+                sngFile.Vocals = new VocalSection();
+                sngFile.Vocals.Vocals = new Vocal[0];
+            }
             parsePhraseIterations(songXml, sngFile);
             parsePhraseExtraInfo(songXml, sngFile);
             parseNLD(songXml, sngFile);
@@ -39,7 +64,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             parseDNAs(songXml, sngFile);
             parseSections(songXml, sngFile);
             parseArrangements(songXml, sngFile);
-            parseMetadata(songXml, sngFile, tuning);
+            parseMetadata(songXml, sngFile, tuning, arrangementType);
 
             // this needs to be initialized after arrangements
             parseChordNotes(songXml, sngFile);
@@ -93,7 +118,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             return count;
         }
 
-        private void parseMetadata(Song2014 xml, Sng2014File sng, Int16[] tuning) {
+        private void parseMetadata(Song2014 xml, Sng2014File sng, Int16[] tuning, ArrangementType arrangementType) {
             // Easy, Medium, Hard
             NoteCount = new int[3];
             NoteCount[0] = GetNoteCount(sng, 0);
@@ -106,9 +131,14 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.Metadata.MaxDifficulty = getMaxDifficulty(xml);
             sng.Metadata.MaxNotesAndChords = NoteCount[2];
             sng.Metadata.Unk3_MaxNotesAndChords = sng.Metadata.MaxNotesAndChords;
-            sng.Metadata.PointsPerNote = sng.Metadata.MaxScore / sng.Metadata.MaxNotesAndChords;
-
-            sng.Metadata.FirstBeatLength = xml.Ebeats[1].Time - xml.Ebeats[0].Time;
+            if (arrangementType == ArrangementType.Vocal)
+                sng.Metadata.PointsPerNote = 0;
+            else
+                sng.Metadata.PointsPerNote = sng.Metadata.MaxScore / sng.Metadata.MaxNotesAndChords;
+            if (arrangementType == ArrangementType.Vocal) 
+                sng.Metadata.FirstBeatLength = 0;
+            else
+                sng.Metadata.FirstBeatLength = xml.Ebeats[1].Time - xml.Ebeats[0].Time;
             sng.Metadata.StartTime = xml.Offset * -1;
             sng.Metadata.CapoFretId = (xml.Capo == 0) ? unchecked((Byte) (-1)) : xml.Capo;
             readString(xml.LastConversionDateTime, sng.Metadata.LastConversionDateTime);
@@ -117,9 +147,17 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.Metadata.StringCount = 6;
             sng.Metadata.Tuning = new Int16[sng.Metadata.StringCount];
             sng.Metadata.Tuning = tuning;
-            var start = sng.Arrangements.Arrangements[sng.Metadata.MaxDifficulty].Notes.Notes[0].Time;
-            sng.Metadata.Unk11_FirstNoteTime = start;
-            sng.Metadata.Unk12_FirstNoteTime = start;
+            if (arrangementType == ArrangementType.Vocal)
+            {
+                sng.Metadata.Unk11_FirstNoteTime = 0;
+                sng.Metadata.Unk12_FirstNoteTime = 0;
+            }
+            else
+            {
+                var start = sng.Arrangements.Arrangements[sng.Metadata.MaxDifficulty].Notes.Notes[0].Time;
+                sng.Metadata.Unk11_FirstNoteTime = start;
+                sng.Metadata.Unk12_FirstNoteTime = start;
+            }
         }
 
         private static Int32 getPhraseIterationId(Song2014 xml, float Time, bool end)
@@ -386,6 +424,77 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     sng.Tones.Tones[i] = t;
                 };
         }
+
+        private void parseVocals(Song2014 xml, Sng2014File sng)
+        {
+
+            sng.Vocals = new VocalSection();
+            sng.Vocals.Count = xml.Vocals.Length;
+            sng.Vocals.Vocals = new Vocal[sng.Vocals.Count];
+
+            for (int i = 0; i < sng.Vocals.Count; i++)
+            {
+                var vcl = xml.Vocals[i];
+                var v = new Vocal();
+                v.Time = vcl.Time;
+                v.Note = vcl.Note;
+                v.Length = vcl.Length;
+                readString(vcl.Lyric, v.Lyric);
+                sng.Vocals.Vocals[i] = v;
+            }
+        }
+
+        private void parseStaticSymbolSection(Sng2014File sng)
+        {
+            //Load Data from Resource File for SymbolSections
+            byte[] Symbol = null;
+            //TO DO  : add support for consoles . it might be ok without it they way im doing it.
+            Symbol = Resources.PC_RS2014_vocal_symbol;
+            using (var SymbolStream = new MemoryStream(Symbol))
+            using (var reader = new BinaryReader(SymbolStream))
+            {
+                sng.SymbolsHeader = new SymbolsHeaderSection();
+                sng.SymbolsHeader.Count = reader.ReadInt32();
+                sng.SymbolsHeader.SymbolsHeader = new SymbolsHeader[sng.SymbolsHeader.Count];
+                for (int i = 0; i < sng.SymbolsHeader.Count; i++)
+                {
+                    SymbolsHeader obj = new SymbolsHeader();
+                    obj.read(reader);
+                    sng.SymbolsHeader.SymbolsHeader[i] = obj;
+                }
+
+                sng.SymbolsTexture = new SymbolsTextureSection();
+                sng.SymbolsTexture.Count = reader.ReadInt32();
+                sng.SymbolsTexture.SymbolsTextures = new SymbolsTexture[sng.SymbolsTexture.Count];
+                for (int i = 0; i < sng.SymbolsTexture.Count; i++)
+                {
+                    SymbolsTexture obj = new SymbolsTexture();
+                    obj.read(reader);
+                    sng.SymbolsTexture.SymbolsTextures[i] = obj;
+                }
+    
+
+                sng.SymbolsDefinition = new SymbolDefinitionSection();
+                sng.SymbolsDefinition.Count = reader.ReadInt32();
+                sng.SymbolsDefinition.SymbolDefinitions = new SymbolDefinition[sng.SymbolsDefinition.Count];
+                for (int i = 0; i < sng.SymbolsDefinition.Count; i++)
+                {
+                    SymbolDefinition obj = new SymbolDefinition();
+                    obj.read(reader);
+                    sng.SymbolsDefinition.SymbolDefinitions[i] = obj; 
+                }
+   
+
+            }
+        }
+
+ 
+
+
+
+            //writeStruct(w, this.SymbolsTexture);
+            //writeStruct(w, this.SymbolsDefinition);
+
 
         // none, solo, riff, chord
         public int[] DNACount { get; set; }

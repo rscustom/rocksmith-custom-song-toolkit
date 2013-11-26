@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<song version="7">
+  <title></title>
+  <arrangement>PART VOCAL</arrangement>
+  <part>1</part>
+  <offset>0.000</offset>
+  <centOffset>0</centOffset>
+  <songLength>0.000</songLength>
+  <lastConversionDateTime>11-25-13 6:47</lastConversionDateTime>
+  <startBeat>0.000</startBeat>
+  <averageTempo>180.000</averageTempo>
+  <tuning string0="0" string1="0" string2="0" string3="0" string4="0" string5="0" />
+  <capo>0</capo>
+  <artistName></artistName>
+  <artistNameSort></artistNameSort>
+  <albumName></albumName>
+  <albumYear></albumYear>
+  <crowdSpeed>1</crowdSpeed>
+  <arrangementProperties represent="1" bonusArr="0" standardTuning="1" nonStandardChords="0" barreChords="0" powerChords="0" dropDPower="0" openChords="0" fingerPicking="0" pickDirection="0" doubleStops="0" palmMutes="0" harmonics="0" pinchHarmonics="0" hopo="0" tremolo="0" slides="0" unpitchedSlides="0" bends="0" tapping="0" vibrato="0" fretHandMutes="0" slapPop="0" twoFingerPicking="0" fifthsAndOctaves="0" syncopation="0" bassPick="0" sustain="1" pathLead="0" pathRhythm="0" pathBass="0" />
+  <phrases count="0"/>
+  <phraseIterations count="0"/>
+  <newLinkedDiffs count="0"/>
+  <linkedDiffs count="0"/>
+  <phraseProperties count="0"/>
+  <chordTemplates count="0"/>
+  <fretHandMuteTemplates count="0"/>
+  <ebeats count="0"/>
+  <sections count="0"/>
+  <events count="0"/>
+  <transcriptionTrack difficulty="-1">
+      <notes count="0"/>
+      <chords count="0"/>
+      <anchors count="0"/>
+      <handShapes count="0"/>
+  </transcriptionTrack>
+  <levels count="0">
+	<level difficulty ="0">
+		<notes count="0"/>
+		<chords count="0"/>
+		<anchors count="0"/>
+		<handShapes count="0"/>
+	</level>
+  </levels>
+</song>

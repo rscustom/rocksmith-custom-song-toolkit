@@ -122,6 +122,10 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArrayItem("event")]
         public SongEvent[] Events { get; set; }
 
+        [XmlArray("vocals")]
+        [XmlArrayItem("vocal")]
+        public SongVocal2014[] Vocals { get; set; }
+
         [XmlArray("levels")]
         [XmlArrayItem("level", typeof(SongLevel2014))]
         public SongLevel2014[] Levels { get; set; }
@@ -306,5 +310,21 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlAttribute("name")]
         public string Name { get; set; }
+    }
+
+    [XmlType("vocal")]
+    public class SongVocal2014
+    {
+        [XmlAttribute("time")]
+        public float Time { get; set; }
+
+        [XmlAttribute("note")]
+        public Int32 Note { get; set; }
+
+        [XmlAttribute("length")]
+        public float Length { get; set; }
+
+        [XmlAttribute("lyric")] // len 32
+        public string Lyric { get; set; }
     }
 }
