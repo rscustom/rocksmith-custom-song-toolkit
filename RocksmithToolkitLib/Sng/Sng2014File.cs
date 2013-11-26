@@ -42,6 +42,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
         }
 
+        public Sng2014File(Stream data) {
+            BinaryReader r = new BinaryReader(data);
+            this.Read(r);
+        }
+
         public void writeSng(Stream output, Platform platform)
         {
             EndianBitConverter conv;
