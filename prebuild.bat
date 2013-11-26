@@ -11,6 +11,8 @@ if exist "%solution%\.git\HEAD" (
 	set /p head=<"%solution%\.git\HEAD"
 	if "!head:~0,4!" == "ref:" (
 		if exist "%solution%\.git\!head:~5!" set /p commit=<"%solution%\.git\!head:~5!"
+	) else (
+		set commit=!head!
 	)
 	if not "!commit!" == ""	set rev=!commit:~0,8!
 )
