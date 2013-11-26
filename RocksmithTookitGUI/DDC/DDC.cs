@@ -18,6 +18,7 @@ namespace RocksmithToolkitGUI.DDC
         internal static string AppWD = Directory.GetCurrentDirectory();
         internal string ArrangementPath { get; set; }
         internal string rampupPath { get; set; }
+        internal bool samefolder { get; set; }
         internal string newWD { get; set; }
 
         public DDC()
@@ -25,8 +26,8 @@ namespace RocksmithToolkitGUI.DDC
             InitializeComponent();
             DescriptionDDC.TextAlign = ContentAlignment.MiddleCenter;
             DescriptionDDC.Text = "This is DDC - Dynamic Difficulty Creator by Chlipouni\r\n\r\n"+
-                "If you unfamiliar with it, please, read this help: http://ddcreator.wordpress.com \r\n";
-            DescriptionDDC.LinkArea = new LinkArea(108, 31);
+                "If you are unfamiliar with it, please, read this help: http://ddcreator.wordpress.com \r\n";
+            DescriptionDDC.LinkArea = new LinkArea(112, 31);
         }
 
         private void ProduceDDbt_Click(object sender, EventArgs e)
@@ -38,13 +39,17 @@ namespace RocksmithToolkitGUI.DDC
             string arrDDClog = Path.ChangeExtension(sourceDDC, ".log");
             string destLog = Path.GetDirectoryName(destDDC) + "\\ddc.log";
             string ddcLog = Path.GetDirectoryName(sourceDDC) + "\\ddc.log";
+            if (newWD.Equals(Path.GetDirectoryName(ArrFilePathTB.Text))) samefolder = true;
             switch (GenerateDD())
             {
                 case "0":
-                    msgtext = "DD created Succsesful!";
-                    if (File.Exists(sourceDDC)) { File.Delete(destDDC); File.Delete(destDDC.Replace(".xml", ".log")); File.Delete(destLog); }
-                    File.Move(sourceDDC, destDDC); File.Move(arrDDClog, destDDC.Replace(".xml",".log"));
-                    File.Move(ddcLog, destLog);
+                    msgtext = "DD created succsesfully!";
+                    if (File.Exists(sourceDDC)&(!samefolder)) { File.Delete(destDDC); File.Delete(destDDC.Replace(".xml", ".log")); File.Delete(destLog); }
+                    if (!samefolder)
+                    {
+                        File.Move(sourceDDC, destDDC); File.Move(arrDDClog, destDDC.Replace(".xml", ".log"));
+                        File.Move(ddcLog, destLog);
+                    }
                     break;
                 case "1":
                     msgtext = "System Error, check access rights."; break;
@@ -64,13 +69,15 @@ namespace RocksmithToolkitGUI.DDC
                 {
                     WorkingDirectory = Path.GetDirectoryName(ArrFilePathTB.Text),
                     FileName = AppWD + @"\ddc\ddc.exe",
-                    Arguments = String.Format("\"{0}\" -l {1} -s {2} {3}", Path.GetFileName(ArrFilePathTB.Text), (UInt16)phaseLenNum.Value, REMsus(), GetRampUpMdl()),
+                    Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}", Path.GetFileName(ArrFilePathTB.Text), (UInt16)phaseLenNum.Value, REMsus(), GetRampUpMdl()),
                     UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true
+                    CreateNoWindow = false,
+                    //WindowStyle = ProcessWindowStyle.Minimized,
+                    //RedirectStandardOutput = true
                 };
 
                 DDC.Start();
+                //Application.DoEvents();
                 DDC.WaitForExit();
 
                 return DDC.ExitCode.ToString();
@@ -79,9 +86,9 @@ namespace RocksmithToolkitGUI.DDC
         private string GetRampUpMdl()
         {
             if (remChordsCB.Checked)
-                return String.Format("-m {0}", Path.GetFullPath(AppWD + @"\ddc\ddc_chords_remover.xml"));
+                return String.Format(" -m {0}", Path.GetFullPath(AppWD + @"\ddc\ddc_chords_remover.xml"));
             if (RampUPcbbx.Text.Trim().Length > 0)
-                return String.Format("-m {0}", Path.GetFullPath(RampUPcbbx.Text));
+                return String.Format(" -m {0}", Path.GetFullPath(RampUPcbbx.Text));
             else return "";
         }
 

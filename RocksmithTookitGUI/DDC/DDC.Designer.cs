@@ -46,7 +46,6 @@
             this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.RampUPcbbx = new RocksmithToolkitGUI.CueTextBox();
             this.ArrFilePathTB = new RocksmithToolkitGUI.CueTextBox();
-            this.basePH = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.GeneratRampUPcstp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).BeginInit();
@@ -168,7 +167,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 13);
             this.label1.TabIndex = 15;
-            this.label1.Text = "Phase lenght :";
+            this.label1.Text = "Phase length :";
             // 
             // GeneratRampUPcstp
             // 
@@ -233,21 +232,10 @@
             this.ArrFilePathTB.Size = new System.Drawing.Size(434, 20);
             this.ArrFilePathTB.TabIndex = 8;
             // 
-            // basePH
-            // 
-            this.basePH.AutoSize = true;
-            this.basePH.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.basePH.Location = new System.Drawing.Point(417, 226);
-            this.basePH.Name = "basePH";
-            this.basePH.Size = new System.Drawing.Size(20, 17);
-            this.basePH.TabIndex = 18;
-            this.basePH.Text = "/4";
-            // 
             // DDC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.basePH);
             this.Controls.Add(this.phaseLenNum);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.NDDcbx);
@@ -290,6 +278,5 @@
         private CueTextBox RampUPcbbx;
         private System.Windows.Forms.ContextMenuStrip GeneratRampUPcstp;
         private System.Windows.Forms.ToolStripMenuItem GenRMPPitm;
-        private System.Windows.Forms.Label basePH;
     }
 }
