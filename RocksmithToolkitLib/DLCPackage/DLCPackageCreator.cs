@@ -326,7 +326,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (img.Width != 256 || img.Height != 256)
                         img.Resize(256, 256, 1, SamplingFilter.Bilinear, false); //change filter to
 
-
                     albumArt256Stream = new MemoryStream();
                     imgExport.SaveImageToStream(img, ImageType.Dds,
                         albumArt256Stream);
@@ -367,6 +366,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     rsenumerableSongStream = new MemoryStream(Resources.rsenumerable_song);
                     packPsarc.AddEntry("flatmodels/rs/rsenumerable_song.flat", rsenumerableSongStream);
 
+                    using (var toolkitVersionStream = new MemoryStream())
                     using (var appIdStream = new MemoryStream())
                     using (var packageListStream = new MemoryStream())
                     using (var soundbankStream = new MemoryStream())
@@ -379,6 +379,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     using (var showlightStream = new MemoryStream())
                     using (var xblockStream = new MemoryStream())
                     {
+                        // TOOLKIT VERSION
+                        GenerateToolkitVersion(toolkitVersionStream);
+                        packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
+
                         // APP ID
                         if (!platform.IsConsole)
                         {
@@ -527,6 +531,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void GeneratePsarcsForRS1(Stream output, DLCPackageData info, Platform platform)
         {
             IList<Stream> toneStreams = new List<Stream>();
+            using (var toolkitVersionStream = new MemoryStream())
             using (var appIdStream = new MemoryStream())
             using (var packageListStream = new MemoryStream())
             using (var songPsarcStream = new MemoryStream())
@@ -536,6 +541,11 @@ namespace RocksmithToolkitLib.DLCPackage
                     var packPsarc = new PSARC.PSARC();
                     var packageListWriter = new StreamWriter(packageListStream);
 
+                    // TOOLKIT VERSION
+                    GenerateToolkitVersion(toolkitVersionStream);
+                    packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
+
+                    // APP ID
                     if (platform.platform == GamePlatform.Pc)
                     {
                         GenerateAppId(appIdStream, info.AppId);
@@ -744,6 +754,14 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         #endregion
+
+        private static void GenerateToolkitVersion(Stream output)
+        {
+            var writer = new StreamWriter(output);
+            writer.Write(ToolkitVersion.version);
+            writer.Flush();
+            output.Seek(0, SeekOrigin.Begin);
+        }
 
         private static void GenerateAppId(Stream output, string appId)
         {
