@@ -15,9 +15,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
     public class Sng2014FileWriter {
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
 
-        public static Sng2014File read_vocals(Vocals xml)
+        public static Sng2014File read_vocals(string xml_file)
         {
             var sng = new Sng2014File(Resources.VOCALS_RS2);
+            var xml = Vocals.LoadVocalsFromXmlFile(xml_file);
             Sng2014FileWriter.parseVocals(xml, sng);
             return sng;
         }

@@ -766,11 +766,16 @@ namespace RocksmithToolkitLib.DLCPackage
                 case GameVersion.RS2014:
                     using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
                         // Sng2014File can be reused when generating for multiple platforms
-                        Sng2014File sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
-                        arrangement.NoteCount = sng.NoteCount;
-                        arrangement.DNACount = sng.DNACount;
-                        arrangement.MaxPhraseDifficulty = sng.Metadata.MaxDifficulty;
-                        arrangement.StartTime = sng.Metadata.StartTime;
+                        Sng2014File sng;
+                        if (arrangement.ArrangementType != ArrangementType.Vocal) {
+                            sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
+                            arrangement.NoteCount = sng.NoteCount;
+                            arrangement.DNACount = sng.DNACount;
+                            arrangement.MaxPhraseDifficulty = sng.Metadata.MaxDifficulty;
+                            arrangement.StartTime = sng.Metadata.StartTime;
+                        } else {
+                            sng = Sng2014FileWriter.read_vocals(arrangement.SongXml.File);
+                        }
                         sng.writeSng(fs, platform);
                     }
                     break;
