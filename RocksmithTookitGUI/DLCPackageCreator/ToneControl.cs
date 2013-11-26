@@ -62,14 +62,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             UpdateComboSelection(prePedal1Box, prePedal1KnobButton, "PrePedal1");
             UpdateComboSelection(prePedal2Box, prePedal2KnobButton, "PrePedal2");
             UpdateComboSelection(prePedal3Box, prePedal3KnobButton, "PrePedal3");
+            UpdateComboSelection(prePedal4Box, prePedal4KnobButton, "PrePedal4");
 
             UpdateComboSelection(loopPedalRack1Box, loopPedalRack1KnobButton, "LoopPedal1");
             UpdateComboSelection(loopPedalRack2Box, loopPedalRack2KnobButton, "LoopPedal2");
             UpdateComboSelection(loopPedalRack3Box, loopPedalRack3KnobButton, "LoopPedal3");
+            UpdateComboSelection(loopPedalRack4Box, loopPedalRack4KnobButton, "LoopPedal4");
 
             UpdateComboSelection(postPedal1Box, postPedal1KnobButton, "PostPedal1");
             UpdateComboSelection(postPedal2Box, postPedal2KnobButton, "PostPedal2");
             UpdateComboSelection(postPedal3Box, postPedal3KnobButton, "PostPedal3");
+            UpdateComboSelection(postPedal4Box, postPedal4KnobButton, "PostPedal4");
             _RefreshingCombos = false;
         }
 
