@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -170,9 +170,6 @@
     <value>..\Resources\PC2014_soundbank_preview.bnk;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="VOCALS_RS2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\VOCALS_RS2.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="PC_RS2014_vocal_symbol" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PC_RS2014_vocal_symbol.sng;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\VOCALS_RS2.sng;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

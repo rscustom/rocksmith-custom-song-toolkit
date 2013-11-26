@@ -29,7 +29,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         public Sng2014File(string xml_file, ArrangementType arrangementType) {
             Song2014 song = Song2014.LoadFromFile(xml_file);
             var parser = new Sng2014FileWriter();
-            parser.readXml(song, this, arrangementType);
+            parser.read_song(song, this, arrangementType);
             NoteCount = parser.NoteCount;
             DNACount = parser.DNACount;
         }

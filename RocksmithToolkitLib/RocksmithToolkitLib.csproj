@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -191,7 +191,7 @@
     <None Include="Resources\Console_soundbank.bnk" />
     <None Include="Resources\PC2014_soundbank.bnk" />
     <None Include="Resources\PC2014_soundbank_preview.bnk" />
-    <None Include="Resources\PC_RS2014_vocal_symbol.sng" />
+    <None Include="Resources\VOCALS_RS2.sng" />
     <None Include="Resources\PC_soundbank.bnk" />
   </ItemGroup>
   <ItemGroup>
@@ -206,7 +206,6 @@
     <None Include="Resources\albumart2014_128.dds" />
     <None Include="Resources\albumart2014_256.dds" />
     <None Include="Resources\XBox360_DLC_image2014.png" />
-    <None Include="Resources\VOCALS_RS2.xml" />
     <Content Include="RocksmithToolkitLib.TuningDefinition.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
