@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DLCConverter));
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.previewMessageLabel = new System.Windows.Forms.Label();
             this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.audioPathTB = new RocksmithToolkitGUI.CueTextBox();
@@ -56,7 +56,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.previewMessageLabel);
             this.groupBox1.Controls.Add(this.AppIdTB);
             this.groupBox1.Controls.Add(this.appIdCombo);
             this.groupBox1.Controls.Add(this.audioPathTB);
@@ -75,15 +75,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Platform";
             // 
-            // label3
+            // previewMessageLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label3.Location = new System.Drawing.Point(6, 66);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(346, 13);
-            this.label3.TabIndex = 51;
-            this.label3.Text = "Song preview must have the same file name with \"_preview\" in the end.";
+            this.previewMessageLabel.AutoSize = true;
+            this.previewMessageLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.previewMessageLabel.Location = new System.Drawing.Point(6, 66);
+            this.previewMessageLabel.Name = "previewMessageLabel";
+            this.previewMessageLabel.Size = new System.Drawing.Size(346, 13);
+            this.previewMessageLabel.TabIndex = 51;
+            this.previewMessageLabel.Text = "Song preview must have the same file name with \"_preview\" in the end.";
             // 
             // AppIdTB
             // 
@@ -215,6 +215,6 @@
         private System.Windows.Forms.Button convertButton;
         private System.Windows.Forms.ComboBox appIdCombo;
         private CueTextBox AppIdTB;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label previewMessageLabel;
     }
 }
