@@ -252,9 +252,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var doc = XDocument.Load(XmlFilePath.Text);
 
                 bool isVocal = doc.XPathSelectElement("/vocals") != null;
+                var version = GameVersion.None;
+                try {
+                    version = doc.XPathSelectElement("/song").HasAttributes ?
+                       GameVersion.RS2014 : GameVersion.RS2012;
+                } catch { }
 
                 if (isVocal) {
                     arrangementTypeCombo.SelectedItem = ArrangementType.Vocal;
+                }
+                else if (!(currentGameVersion == version))
+                {
+                    string ver = currentGameVersion.ToString();
+                    MessageBox.Show(String.Format("Please choose valid Rocksmith {0} arrangement file!", ver));
+                    XmlFilePath.Text = "";
+                    return;
                 } else {
                     Form parentForm = (this.Parent as Form);
 
