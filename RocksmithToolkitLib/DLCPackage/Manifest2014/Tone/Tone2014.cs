@@ -18,6 +18,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         BASS = 35715,
         [Description("$[35716]OVERDRIVE")]
         OVERDRIVE = 35716,
+        [Description("$[35718]VOCAL")]
+        VOCAL = 35718,
         [Description("$[35719]OCTAVE")]
         OCTAVE = 35719,
         [Description("$[35720]CLEAN")]
@@ -46,8 +48,16 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         FLANGER = 35731,
         [Description("$[35732]LOW OUTPUT")]
         LOW_OUTPUT = 35732,
+        [Description("$[35733]EFFECT")]
+        LOW_OUTPUT = 35733,
         [Description("$[35734]PROCESSED")]
         PROCESSED = 35734,
+        [Description("$[35750]SPECIAL EFFECT")]
+        DELAY = 35750,
+        [Description("$[35751]MULTI-EFFECT")]
+        DELAY = 35751,
+        [Description("$[35752]DIRECT")]
+        DELAY = 35752,
         [Description("$[35753]DELAY")]
         DELAY = 35753,
         [Description("$[35754]ECHO")]
