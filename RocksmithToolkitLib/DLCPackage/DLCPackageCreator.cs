@@ -22,6 +22,8 @@ using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.Showlight;
 using DevIL;
+using DevIL.Unmanaged;
+using System.Drawing.Drawing2D;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -39,6 +41,17 @@ namespace RocksmithToolkitLib.DLCPackage
         private static List<string> FILES_XBOX = new List<string>();
         private static List<string> FILES_PS3 = new List<string>();
         private static List<string> TMPFILES_SNG = new List<string>();
+        private static void TMPFILES_SNG_Delete_all()
+        {
+            try {
+                foreach (var TmpFile in TMPFILES_SNG)
+                {
+                    if (File.Exists(TmpFile)) File.Delete(TmpFile);
+                }
+            }
+            catch { /*Have no problem if don't delete*/ }
+            TMPFILES_SNG.Clear();
+        }
 
         #endregion
 
@@ -142,17 +155,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 }                
             }
 
-            try {
-                foreach (var sngTmpFile in TMPFILES_SNG)
-                {
-                    if (File.Exists(sngTmpFile))
-                        File.Delete(sngTmpFile);
-                }
-            } catch { /*Have no problem if don't delete*/ }
-
             FILES_XBOX.Clear();
             FILES_PS3.Clear();
-            TMPFILES_SNG.Clear();
+            TMPFILES_SNG_Delete_all();
         }
 
         #region XBox360
@@ -295,6 +300,25 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region Generate PSARC RS2014
 
+        private static string ImageToFileResized(Stream IOsrcImage, int QubeSide)
+        {
+            string TempFileName = Path.Combine(Path.GetTempPath(), "albumTmp" + QubeSide.ToString() + ".png");
+            var outp = new FileStream(TempFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.None);
+
+            var srcImage = new Bitmap(IOsrcImage);
+            Bitmap newImage = new Bitmap(QubeSide, QubeSide);
+            using (Graphics gr = Graphics.FromImage(newImage))
+            {
+                gr.SmoothingMode = SmoothingMode.HighQuality;
+                gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                gr.DrawImage(srcImage, new Rectangle(0, 0, QubeSide, QubeSide));
+            }
+            newImage.Save(outp, ImageFormat.Png);
+            TMPFILES_SNG.Add(TempFileName);
+            return TempFileName;
+        }
+
         private static void GeneratePsarcsForRS2014(MemoryStream output, DLCPackageData info, Platform platform)
         {
             var dlcName = info.Name.ToLower();
@@ -324,27 +348,25 @@ namespace RocksmithToolkitLib.DLCPackage
                     else
                         albumArtStream = new MemoryStream(Resources.albumart2014_256);
                     sourceimg = imgImport.LoadImageFromStream(albumArtStream);
-                    img = sourceimg;
-                    if (img.Width != 256 || img.Height != 256)
-                        img.Resize(256, 256, 1, SamplingFilter.Bilinear, false); //change filter to
+
+                    var tmpImg = new TempFileStream();
+                    imgExport.SaveImageToStream(sourceimg, ImageType.Png, tmpImg);
 
                     albumArt256Stream = new MemoryStream();
-                    imgExport.SaveImageToStream(img, ImageType.Dds,
-                        albumArt256Stream);
+                    if (sourceimg.Width != 256 || sourceimg.Height != 256)
+                        img = imgImport.LoadImage(ImageToFileResized(tmpImg, 256));
+                    else img = sourceimg;
+                    imgExport.SaveImageToStream(img, ImageType.Dds, albumArt256Stream);
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_256.dds", dlcName), albumArt256Stream);
 
                     albumArt128Stream = new MemoryStream();
-                    img = sourceimg;
-                    img.Resize(128, 128, 1, SamplingFilter.Bilinear, false);
-                    imgExport.SaveImageToStream(img, ImageType.Dds,
-                        albumArt128Stream);
+                    img = imgImport.LoadImage(ImageToFileResized(tmpImg, 128));
+                    imgExport.SaveImageToStream(img, ImageType.Dds, albumArt128Stream);
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_128.dds", dlcName), albumArt128Stream);
 
                     albumArt64Stream = new MemoryStream();
-                    img = sourceimg;
-                    img.Resize(64, 64, 0, SamplingFilter.Bilinear, false);
-                    imgExport.SaveImageToStream(img, ImageType.Dds,
-                        albumArt64Stream);
+                    img = imgImport.LoadImage(ImageToFileResized(tmpImg, 64));
+                    imgExport.SaveImageToStream(img, ImageType.Dds, albumArt64Stream);
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_64.dds", dlcName), albumArt64Stream);
 
                     // AUDIO
@@ -524,6 +546,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         rsenumerableRootStream.Dispose();
                     if (rsenumerableSongStream != null)
                         rsenumerableSongStream.Dispose();
+                    TMPFILES_SNG_Delete_all();
                 }
             }
         }     
