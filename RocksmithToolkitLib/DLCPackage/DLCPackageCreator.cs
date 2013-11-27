@@ -465,7 +465,7 @@ namespace RocksmithToolkitLib.DLCPackage
                                 manifestHeaderHSONStreamList.Add(manifestHeaderStream);
                                 manifestHeader.Serialize(manifestHeaderStream);
                                 manifestStream.Seek(0, SeekOrigin.Begin);
-                                packPsarc.AddEntry(String.Format("manifests/songs_dlc/{0}_{1}.hson", dlcName, arrangementName), manifestHeaderHSANStream);
+                                packPsarc.AddEntry(String.Format("manifests/songs_dlc/{0}_{1}.hson", dlcName, arrangementName), manifestHeaderStream);
                             } else {
                                 // One for all arrangements (PC/Mac)
                                 manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
