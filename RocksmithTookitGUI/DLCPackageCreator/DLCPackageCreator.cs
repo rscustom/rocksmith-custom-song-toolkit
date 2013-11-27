@@ -339,7 +339,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Album Art File (*.dds,*.gif,*.jpg,*.jpeg,*.bmp,*.png)|*.dds;*.gif;*.jpg;*.jpeg;*.bmp;*.png";
+                ofd.Filter = "Album Art File (*.bmp,*.dds,*.gif,*.jpg,*.jpeg,*.png)|*.bmp;*.dds;*.gif;*.jpg;*.jpeg;*.png";
                 if (ofd.ShowDialog() == DialogResult.OK)
                     AlbumArtPath = ofd.FileName;
             }

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Windows.Forms;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
@@ -14,7 +16,6 @@ using X360.Other;
 using X360.STFS;
 using X360.IO;
 using RocksmithToolkitLib.Ogg;
-using System.Diagnostics;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.XBlock;
@@ -22,8 +23,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.Showlight;
 using DevIL;
-using DevIL.Unmanaged;
-using System.Drawing.Drawing2D;
+
 
 namespace RocksmithToolkitLib.DLCPackage
 {
