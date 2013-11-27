@@ -279,11 +279,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = doc.XPathSelectElement("/song/albumName") != null ? doc.XPathSelectElement("/song/albumName").Value : String.Empty;
                     if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = doc.XPathSelectElement("/song/albumYear") != null ? doc.XPathSelectElement("/song/albumYear").Value : String.Empty;
 
+                    //Specifying RouteMask
                     string arr = doc.XPathSelectElement("/song/arrangement").Value;
                     if (arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("lead") > -1 || arr.ToLower().IndexOf("rhythm") > -1 || arr.ToLower().IndexOf("combo") > -1)
                     {
                         arrangementTypeCombo.SelectedItem = ArrangementType.Guitar;
-                        if (arr.ToLower().IndexOf("guitar 22") > -1 || arr.ToLower().IndexOf("rhythm") > -1)
+                        if (arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("lead") > -1)
+                            arrangementNameCombo.SelectedItem = ArrangementName.Lead;
+                        if (arr.ToLower().IndexOf("guitar 22") > -1 || arr.ToLower().IndexOf("rhythm") > -1 || arr.ToLower().IndexOf("combo") > -1)
                             arrangementNameCombo.SelectedItem = ArrangementName.Rhythm;
                     }
                     if (arr.ToLower().IndexOf("bass") > -1)
@@ -308,6 +311,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             tuningComboBox.SelectedItem = TuningDefinitionRepository.Instance().Select(strings, currentGameVersion);
                         }
                     }
+                    //TODO: parse autotone values below
                 }
             } catch (Exception ex) {
                 MessageBox.Show("Unable to get information from the arrangement XML. \r\nYour version of the EoF is up to date? \r\n" + ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -354,6 +358,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arrangement.BonusArr = BonusCheckBox.Checked;
 
             //ToneSelector
+            //TODO if tone not exist - create empty for autotonechanger.
             arrangement.ToneBase = toneBaseCombo.SelectedItem.ToString();
             arrangement.ToneMultiplayer = (toneMultiplayerCombo.SelectedItem != null) ? toneMultiplayerCombo.SelectedItem.ToString() : "";
             arrangement.ToneA = (toneACombo.SelectedItem != null) ? toneACombo.SelectedItem.ToString() : "";
