@@ -63,7 +63,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     SectionUINames.Add("hook", "$[34280] Hook [1]");
                     SectionUINames.Add("head", "$[34281] Head [1]");
                     SectionUINames.Add("bridge", "$[34282] Bridge [1]");
-                    SectionUINames.Add("breakdown", "$[34284] Breakdown [1]");//Where is 34283 ???
+                    SectionUINames.Add("ambient", "$[34283] Ambient [1]");
+                    SectionUINames.Add("breakdown", "$[34284] Breakdown [1]");
                     SectionUINames.Add("interlude", "$[34285] Interlude [1]");
                     SectionUINames.Add("intro", "$[34286] Intro [1]");
                     SectionUINames.Add("melody", "$[34287] Melody [1]");
@@ -77,15 +78,14 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     SectionUINames.Add("prebrdg", "$[34295] Pre Bridge [1]");
                     SectionUINames.Add("prechorus", "$[34296] Pre Chorus [1]");
                     SectionUINames.Add("preverse", "$[34297] Pre Verse [1]");
-                    SectionUINames.Add("riff", "$[34298] Riff [1]");//Where is 34299 ???
+                    SectionUINames.Add("riff", "$[34298] Riff [1]");
+                    SectionUINames.Add("silence", "$[34299] Silence [1]");
                     SectionUINames.Add("solo", "$[34300] Solo [1]");
                     SectionUINames.Add("transition", "$[34301] Transition [1]");
                     SectionUINames.Add("vamp", "$[34302] Vamp [1]");
                     SectionUINames.Add("variation", "$[34303] Variation [1]");
                     SectionUINames.Add("verse", "$[34304] Verse [1]");
                     SectionUINames.Add("noguitar", "$[6091] No Guitar [1]");
-                    SectionUINames.Add("silence", "$[6092] Silence [1]");//Not found in RS2014
-                    SectionUINames.Add("ambient", "$[6011] Ambient [1]");//Not found in RS2014
                     break;
             }
         }
