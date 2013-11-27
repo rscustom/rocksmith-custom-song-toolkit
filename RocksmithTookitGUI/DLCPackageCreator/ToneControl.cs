@@ -103,7 +103,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void InitializeTextBoxes()
         {
             toneNameBox.TextChanged += (sender, e) =>
-                tone.Name = toneNameBox.Text;
+            {
+                var toneName = toneNameBox.Text;
+                tone.Key = GetValidName(toneName);
+                tone.Name = toneName;
+            };
+
             volumeBox.ValueChanged += (sender, e) =>
                 tone.Volume = volumeBox.Value;
         }
