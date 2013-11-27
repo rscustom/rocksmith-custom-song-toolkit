@@ -8,6 +8,9 @@ using X360.Other;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.Sng2014HSL;
+using MiscUtil.IO;
+using MiscUtil.Conversion;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -25,7 +28,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (platform.version == GameVersion.RS2012)
                         PackPC(sourcePath, saveFileName, useCryptography, updateSng);
                     else if (platform.version == GameVersion.RS2014)
-                        PackPC2014(sourcePath, saveFileName);
+                        PackPC2014(sourcePath, saveFileName, updateSng);
                     break;
                 case GamePlatform.XBox360:
                     PackXBox360(sourcePath, saveFileName, platform.version);
@@ -110,12 +113,12 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void PackPC2014(string sourcePath, string saveFileName)
+        private static void PackPC2014(string sourcePath, string saveFileName, bool updateSng)
         {
             using (var psarcStream = new MemoryStream())
             {
                 var psarc = new PSARC.PSARC();
-
+                if (updateSng) UpdateSng2014(sourcePath, new Platform(GamePlatform.Pc, GameVersion.RS2014));
                 WalkThroughDirectory("", sourcePath, (a, b) =>
                 {
                     var fileStream = File.OpenRead(b);
@@ -396,6 +399,38 @@ namespace RocksmithToolkitLib.DLCPackage
                     SngFileWriter.Write(xmlFile, sngFile, arrType, platform, tuning);
                 } else {
                     throw new ArgumentException(String.Format("'{0}' is not a valid XML file.", xmlFile));
+                }
+            }
+        }
+
+        private static void UpdateSng2014(string songDirectory, Platform platform) {
+            var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, @"songs\arr"));
+
+            foreach (var xmlFile in xmlFiles)
+            {
+                if (File.Exists(xmlFile) && !(xmlFile.ToLower().IndexOf("_showlights.xml") > 0))
+                {
+                    var sngFile = Path.Combine(songDirectory, "songs\\bin\\generic", Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
+                    var arrType = ArrangementType.Guitar;
+                    if (Path.GetFileName(xmlFile).ToLower().IndexOf("_vocals.xml") >= 0)
+                    {
+                        arrType = ArrangementType.Vocal;
+                        return; // No supp
+                    }
+                    else
+                    {
+                        using (FileStream fs = new FileStream(sngFile, FileMode.Create))
+                        //using (var raw = new MemoryStream())
+                        {
+                            Song2014 song = Song2014.LoadFromFile(xmlFile);
+                            if (!Enum.TryParse<ArrangementType>(song.Arrangement, out arrType))
+                                if (song.Arrangement.ToLower().IndexOf("_bass.xml") >= 0)
+                                    arrType = ArrangementType.Bass;
+
+                            Sng2014File sng = new Sng2014File(xmlFile, arrType);
+                            sng.writeSng(fs, platform);
+                        }
+                    }
                 }
             }
         }
