@@ -266,8 +266,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     return;
                 case GamePlatform.None:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
-            }
-            
+            }            
         }
 
         private static void UnpackPS3Package(string sourceFileName, string savePath, Platform platform)
@@ -417,7 +416,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 if (File.Exists(xmlFile) && !(xmlFile.ToLower().IndexOf("_showlights.xml") > 0))
                 {
-                    var sngFile = Path.Combine(songDirectory, "songs\\bin\\generic", Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
+                    var sngFile = Path.Combine(songDirectory, Path.Combine("songs","bin", platform.GetPathName()[1]), Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
                     var arrType = ArrangementType.Guitar;
                     if (Path.GetFileName(xmlFile).ToLower().IndexOf("_vocals.xml") >= 0)
                     {
