@@ -147,8 +147,12 @@ struct SYMBOLS_HEADER_SECTION
 struct SYMBOLS_TEXTURE
 {
     byte Font[128];
-    byte FontpathLength;
-    byte Unk[15];
+    long FontpathLength;
+    long Unk1_0;
+    // 1024
+    long Unk2;
+    // 512
+    long Unk3;
 };
 
 struct SYMBOLS_TEXTURE_SECTION

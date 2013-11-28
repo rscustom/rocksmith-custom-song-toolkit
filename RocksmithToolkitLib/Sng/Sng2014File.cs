@@ -123,22 +123,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     return chart_BE;
 
                 using (EndianBinaryWriter w = new EndianBinaryWriter(conv, stream)) {
-                    if (platform.platform != GamePlatform.Pc &&
-                        platform.platform != GamePlatform.Mac) {
-                        // on consoles there seems to be FontPathLength zero
-                        if (this.SymbolsTexture != null && this.SymbolsTexture.SymbolsTextures.Length > 0) {
-                            var t = this.SymbolsTexture.SymbolsTextures[0];
-                            // vocal file
-                            var len = t.FontpathLength;
-                            t.FontpathLength = 0;
-                            this.Write(w);
-                            t.FontpathLength = len;
-                        } else {
-                            this.Write(w);
-                        }
-                    } else {
-                        this.Write(w);
-                    }
+                    this.Write(w);
                 }
                 stream.Flush();
 

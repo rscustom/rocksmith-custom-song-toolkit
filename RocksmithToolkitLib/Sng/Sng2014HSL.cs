@@ -345,20 +345,25 @@ public class SymbolsTexture
 {
     public Byte[] _Font = new Byte[128];
     public Byte[] Font { get { return this._Font; } set { _Font = value; } }
-    public Byte FontpathLength { get; set; }
-    public Byte[] _Unk = new Byte[15];
-    public Byte[] Unk { get { return this._Unk; } set { _Unk = value; } }
+    public Int32 FontpathLength { get; set; }
+    public Int32 Unk1_0 { get; set; }
+    public Int32 Unk2 { get; set; }
+    public Int32 Unk3 { get; set; }
 
     public string[] _order = {
         "Font",
         "FontpathLength",
-        "Unk"
+        "Unk1_0",
+        "Unk2",
+        "Unk3"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
         this.Font = r.ReadBytes(128);
-        this.FontpathLength = r.ReadByte();
-        this.Unk = r.ReadBytes(15);
+        this.FontpathLength = r.ReadInt32();
+        this.Unk1_0 = r.ReadInt32();
+        this.Unk2 = r.ReadInt32();
+        this.Unk3 = r.ReadInt32();
     }
 }
 
