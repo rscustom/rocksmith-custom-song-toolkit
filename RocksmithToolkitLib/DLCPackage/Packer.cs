@@ -285,8 +285,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var outputMessage = RijndaelEncryptor.DecryptPS3Edat();
 
-            if (File.Exists(sourceFileName))
-                File.Decrypt(sourceFileName);
+            if (File.Exists(outputFilename))
+                File.Delete(outputFilename);
 
             foreach (var fileName in Directory.EnumerateFiles(rootDir, "*.psarc.dat"))
             {
@@ -302,12 +302,9 @@ namespace RocksmithToolkitLib.DLCPackage
             var outName = Path.GetFileNameWithoutExtension(sourceFileName);
             var outputDir = Path.Combine(savePath, outName.Substring(0, outName.LastIndexOf(".")) + String.Format("_{0}", platform.platform.ToString()));
 
-            if (!Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
-
             foreach (var unpackedDir in Directory.EnumerateDirectories(rootDir))
                 if (Directory.Exists(unpackedDir))
-                    Directory.Move(unpackedDir, Path.Combine(outputDir, outName.Substring(0, outName.LastIndexOf("."))));
+                    Directory.Move(unpackedDir, outputDir);
 
             if (outputMessage.IndexOf("Decrypt all EDAT files successfully") < 0)
                 throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output below:" + Environment.NewLine + Environment.NewLine + outputMessage);
