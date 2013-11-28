@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -37,6 +38,30 @@ namespace RocksmithToolkitLib.Extensions
             if (int.TryParse(value, out v) == false)
                 return -1;
             return v;
+        }
+
+        public static string GetValidSongName(this string value, string songTitle)
+        {
+            string name = String.Empty;
+            if (!String.IsNullOrEmpty(value))
+            {
+                Regex rgx = new Regex("[^a-zA-Z0-9\\-]");
+                name = rgx.Replace(value, "");
+                if (name == songTitle)
+                    name = name + "Song";
+            }
+            return name;
+        }
+
+        public static string GetValidName(this string value)
+        {
+            string name = String.Empty;
+            if (!String.IsNullOrEmpty(value))
+            {
+                Regex rgx = new Regex("[^a-zA-Z0-9\\- ]");
+                name = rgx.Replace(value, "");
+            }
+            return name;
         }
     }
 }

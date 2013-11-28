@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using RocksmithToolkitLib;
+using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.ToolkitTone;
 using RocksmithToolkitLib.DLCPackage.Tone;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
@@ -105,7 +106,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             toneNameBox.TextChanged += (sender, e) =>
             {
                 var toneName = toneNameBox.Text;
-                tone.Key = GetValidName(toneName);
+                tone.Key = toneName.GetValidName();
                 tone.Name = toneName;
             };
 
@@ -244,16 +245,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void toneNameBox_Leave(object sender, EventArgs e) {
             TextBox control = (TextBox)sender;
-            control.Text = GetValidName(control.Text.Trim());
-        }
-
-        private string GetValidName(string value) {
-            string name = String.Empty;
-            if (!String.IsNullOrEmpty(value)) {
-                Regex rgx = new Regex("[^a-zA-Z0-9\\- _]");
-                name = rgx.Replace(value, "");
-            }
-            return name;
+            control.Text = control.Text.Trim().GetValidName();
         }
     }
 }
