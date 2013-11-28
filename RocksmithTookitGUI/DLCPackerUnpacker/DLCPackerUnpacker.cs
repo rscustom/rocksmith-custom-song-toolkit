@@ -96,6 +96,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     try
                     {
                         var name = Path.GetFileNameWithoutExtension(sourceFileName);
+                        if (platform.platform == GamePlatform.PS3)
+                            name = name.Substring(0, name.LastIndexOf("."));
                         name += String.Format("_{0}", platform.platform.ToString());
                         var audioFiles = Directory.GetFiles(Path.Combine(savePath, name), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
 
