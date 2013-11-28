@@ -22,7 +22,7 @@ using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.Showlight;
-using DevIL;
+using ImageMagick;
 
 
 namespace RocksmithToolkitLib.DLCPackage
@@ -316,7 +316,7 @@ namespace RocksmithToolkitLib.DLCPackage
         #endregion
 
         #region Generate PSARC RS2014
-
+        [Obsolete()]
         private static string ImageToFileResized(Stream IOsrcImage, int QubeSide)
         {
             string TempFileName = Path.Combine(Path.GetTempPath(), "albumTmp" + QubeSide.ToString() + ".png");
@@ -353,38 +353,40 @@ namespace RocksmithToolkitLib.DLCPackage
                         soundPreviewStream = null,
                         rsenumerableRootStream = null,
                         rsenumerableSongStream = null;
-
-				ImageImporter imgImport = new ImageImporter();
-                ImageExporter imgExport = new ImageExporter();
-                DevIL.Image sourceimg = null;
-                DevIL.Image img = null;
+                
+                MagickImage sourceimg = null;
+                MagickImage img = null;
 
                 try
                 {
+                    // ALBUM ART
                     if (File.Exists(info.AlbumArtPath))
                         albumArtStream = File.OpenRead(info.AlbumArtPath);
-                    else
-                        albumArtStream = new MemoryStream(Resources.albumart2014_256);
-                    sourceimg = imgImport.LoadImageFromStream(albumArtStream);
-
-                    var tmpImg = new TempFileStream();
-                    imgExport.SaveImageToStream(sourceimg, ImageType.Png, tmpImg);
+                    else albumArtStream = new MemoryStream(Resources.albumart2014_256);
 
                     albumArt256Stream = new MemoryStream();
-                    if (sourceimg.Width != 256 || sourceimg.Height != 256)
-                        img = imgImport.LoadImage(ImageToFileResized(tmpImg, 256));
-                    else img = sourceimg;
-                    imgExport.SaveImageToStream(img, ImageType.Dds, albumArt256Stream);
-                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_256.dds", dlcName), albumArt256Stream);
-
                     albumArt128Stream = new MemoryStream();
-                    img = imgImport.LoadImage(ImageToFileResized(tmpImg, 128));
-                    imgExport.SaveImageToStream(img, ImageType.Dds, albumArt128Stream);
-                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_128.dds", dlcName), albumArt128Stream);
-
                     albumArt64Stream = new MemoryStream();
-                    img = imgImport.LoadImage(ImageToFileResized(tmpImg, 64));
-                    imgExport.SaveImageToStream(img, ImageType.Dds, albumArt64Stream);
+                    sourceimg = new MagickImage(albumArtStream);
+                    sourceimg.CompressionMethod = CompressionMethod.DXT1;
+                    sourceimg.Format = MagickFormat.Dds;
+                    sourceimg.FilterType = FilterType.Box;
+
+                    img = sourceimg.Clone();
+                    if (sourceimg.Width != 256 || sourceimg.Height != 256)
+                        img.Sample(256, 256);
+                    img.Write(albumArt256Stream);
+                    //resize,then save
+                    img = sourceimg.Clone();
+                    img.Sample(128, 128);
+                    img.Write(albumArt128Stream);
+                    //resize,then save
+                    img = sourceimg.Clone();
+                    img.Sample(64, 64);
+                    img.Write(albumArt64Stream);
+
+                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_256.dds", dlcName), albumArt256Stream);
+                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_128.dds", dlcName), albumArt128Stream);
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_64.dds", dlcName), albumArt64Stream);
 
                     // AUDIO
@@ -543,11 +545,13 @@ namespace RocksmithToolkitLib.DLCPackage
                         output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
                     }
                 }
+                catch (MagickException exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
                 finally
                 {
                     // Dispose all objects
-                    imgImport.Dispose();
-                    imgExport.Dispose();
                     if (sourceimg != null)
                         sourceimg.Dispose();
                     if (img != null)
@@ -654,27 +658,23 @@ namespace RocksmithToolkitLib.DLCPackage
             var soundBankName = String.Format("Song_{0}", info.Name);
             Stream albumArtStream = null;
             Stream TempAlbumArtStream = null;
-            ImageImporter imgImport = new ImageImporter();
-            ImageExporter imgExport = new ImageExporter();
-            DevIL.Image img = null;
+
+            MagickImage img = null;
             try
             {
                 if (File.Exists(info.AlbumArtPath))
-                {
                     TempAlbumArtStream = File.OpenRead(info.AlbumArtPath);
-                }
                 else
-                {
                     TempAlbumArtStream = new MemoryStream(Resources.albumart);
-                }
 
-
-                img = imgImport.LoadImageFromStream(TempAlbumArtStream);
+                img = new MagickImage(TempAlbumArtStream);
+                img.Format = MagickFormat.Dds;
+                img.FilterType = FilterType.Box;
                 if (img.Width != 512 || img.Height != 512)
-                    img.Resize(512, 512, 0, SamplingFilter.Nearest, false);
+                    img.Resize(512, 512);
 
                 albumArtStream = new MemoryStream();
-                imgExport.SaveImageToStream(img, ImageType.Dds, albumArtStream);
+                img.Write(albumArtStream);
 
 
                 using (var aggregateGraphStream = new MemoryStream())
@@ -745,8 +745,6 @@ namespace RocksmithToolkitLib.DLCPackage
             }
             finally
             {
-                imgImport.Dispose();
-                imgExport.Dispose();
                 if (albumArtStream != null)
                 {
                     albumArtStream.Dispose();
