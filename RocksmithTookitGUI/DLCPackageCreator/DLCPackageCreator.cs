@@ -83,7 +83,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string DLCName
         {
             get { return DlcNameTB.Text; }
-            set { DlcNameTB.Text = GetValidName(value); }
+            set { DlcNameTB.Text = value.GetValidSongName(SongTitle); }
         }
         public string SongTitle
         {
@@ -204,9 +204,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             } while (!uniqueToneName);
 
             if (CurrentGameVersion == GameVersion.RS2014)
-                return new Tone2014() { Name = name };
+                return new Tone2014() { Name = name, Key = name };
             else
-                return new Tone() { Name = name };
+                return new Tone() { Name = name, Key = name };
         }
 
         private void arrangementAddButton_Click(object sender, EventArgs e)
@@ -479,7 +479,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         info.Tones.Add(CreateNewTone());
 
                     foreach (var tone in info.Tones)
+                    {
+                        if (String.IsNullOrEmpty(tone.Key))
+                            tone.Key = tone.Name.GetValidName();
+
                         TonesLB.Items.Add(tone);
+                    }
                     break;
                 case GameVersion.RS2014:
                     if (info.TonesRS2014 == null)
@@ -488,7 +493,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         info.TonesRS2014.Add(CreateNewTone());
 
                     foreach (var toneRS2014 in info.TonesRS2014)
+                    {
+                        if (String.IsNullOrEmpty(toneRS2014.Key))
+                            toneRS2014.Key = toneRS2014.Name.GetValidName();
+
                         TonesLB.Items.Add(toneRS2014);
+                    }
                     break;
             }              
 
@@ -1070,19 +1080,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void DlcNameTB_Leave(object sender, EventArgs e)
         {
             TextBox dlcName = (TextBox)sender;
-            dlcName.Text = GetValidName(dlcName.Text.Trim());
-        }
-
-        private string GetValidName(string value) {
-            string name = String.Empty;
-            if (!String.IsNullOrEmpty(value))
-            {
-                Regex rgx = new Regex("[^a-zA-Z0-9\\-]");
-                name = rgx.Replace(value, "");
-                if (name == SongTitle)
-                    name = name + "Song";
-            }
-            return name;
+            dlcName.Text = dlcName.Text.Trim().GetValidSongName(SongTitle);
         }
 
         //private void rbuttonSignature_CheckedChanged(object sender, EventArgs e)
