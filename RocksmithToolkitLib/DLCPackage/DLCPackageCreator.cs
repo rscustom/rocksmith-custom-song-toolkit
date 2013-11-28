@@ -303,18 +303,19 @@ namespace RocksmithToolkitLib.DLCPackage
         private static string ImageToFileResized(Stream IOsrcImage, int QubeSide)
         {
             string TempFileName = Path.Combine(Path.GetTempPath(), "albumTmp" + QubeSide.ToString() + ".png");
-            var outp = new FileStream(TempFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.None);
-
-            var srcImage = new Bitmap(IOsrcImage);
-            Bitmap newImage = new Bitmap(QubeSide, QubeSide);
-            using (Graphics gr = Graphics.FromImage(newImage))
+            using (var outp = new FileStream(TempFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.None))
             {
-                gr.SmoothingMode = SmoothingMode.HighQuality;
-                gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                gr.DrawImage(srcImage, new Rectangle(0, 0, QubeSide, QubeSide));
+                var srcImage = new Bitmap(IOsrcImage);
+                Bitmap newImage = new Bitmap(QubeSide, QubeSide);
+                using (Graphics gr = Graphics.FromImage(newImage))
+                {
+                    gr.SmoothingMode = SmoothingMode.HighQuality;
+                    gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    gr.DrawImage(srcImage, new Rectangle(0, 0, QubeSide, QubeSide));
+                }
+                newImage.Save(outp, ImageFormat.Png);
             }
-            newImage.Save(outp, ImageFormat.Png);
             TMPFILES_SNG.Add(TempFileName);
             return TempFileName;
         }
@@ -530,6 +531,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     // Dispose all objects
                     imgImport.Dispose();
                     imgExport.Dispose();
+                    if (sourceimg != null)
+                        sourceimg.Dispose();
                     if (img != null)
                         img.Dispose();
                     if (albumArt256Stream != null)
