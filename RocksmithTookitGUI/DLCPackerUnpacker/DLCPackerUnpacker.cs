@@ -14,7 +14,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 {
     public partial class DLCPackerUnpacker : UserControl
     {
-        private const string MESSAGEBOX_CAPTION = "DLC Packer";
+        private const string MESSAGEBOX_CAPTION = "DLC Packer/Unpacker";
 
         public DLCPackerUnpacker()
         {

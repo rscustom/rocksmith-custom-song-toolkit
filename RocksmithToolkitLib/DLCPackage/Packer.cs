@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -262,9 +262,17 @@ namespace RocksmithToolkitLib.DLCPackage
                     UnpackXBox360Package(sourceFileName, savePath, platform);
                     return;
                 case GamePlatform.PS3:
+                    UnpackPS3Package(sourceFileName, savePath, platform);
+                    return;
+                case GamePlatform.None:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
             }
             
+        }
+
+        private static void UnpackPS3Package(string sourceFileName, string savePath, Platform platform)
+        {
+
         }
 
         private static void UnpackXBox360Package(string sourceFileName, string savePath, Platform platform) {
@@ -297,7 +305,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         return new Platform(GamePlatform.Pc, GameVersion.RS2012);
                     case "":
                         return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
-                    case ".pkg":
                     case ".edat":
                         return new Platform(GamePlatform.PS3, GameVersion.RS2012);
                     case ".psarc":

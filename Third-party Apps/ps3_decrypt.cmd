@@ -1,0 +1,1 @@
+rebuilder.exe <ps3_decrypt.config

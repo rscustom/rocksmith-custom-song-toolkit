@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -194,5 +196,39 @@ namespace RocksmithToolkitLib.DLCPackage
             output.Flush();
             output.Seek(0, SeekOrigin.Begin);
         }
+
+        #region PS3 EDAT Encrypt/Decrypt
+
+        /// <summary>
+        /// Encrypt using TruAncestor Edat Rebuilder (files must be in "/edat" folder in application root directory)
+        /// </summary>
+        /// <returns>Output message from execution</returns>
+        public static string EncryptPS3Edat() { return EdatCrypto("ps3_encrypt.cmd"); }
+
+        /// <summary>
+        /// Decrypt using TruAncestor Edat Rebuilder (files must be in "/edat" folder in application root directory)
+        /// </summary>
+        /// <returns>Output message from execution</returns>
+        public static string DecryptPS3Edat() { return EdatCrypto("ps3_decrypt.cmd"); }
+
+        private static string EdatCrypto(string command) {
+            // Encrypt/decrypt using TruAncestor Edat Rebuilder
+            string toolkitPath = Path.GetDirectoryName(Application.ExecutablePath);
+            string rebuilderApp = Path.Combine(toolkitPath, command);
+
+            Process PS3Process = new Process();
+            PS3Process.StartInfo.FileName = rebuilderApp;
+            PS3Process.StartInfo.WorkingDirectory = toolkitPath;
+            PS3Process.StartInfo.UseShellExecute = false;
+            PS3Process.StartInfo.CreateNoWindow = true;
+            PS3Process.StartInfo.RedirectStandardOutput = true;
+
+            PS3Process.Start();
+            PS3Process.WaitForExit();
+
+            return PS3Process.StandardOutput.ReadToEnd();
+        }
+
+        #endregion
     }
 }

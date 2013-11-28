@@ -261,11 +261,28 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PS3
 
+        public static void DecryptPS3EdatFiles(string packagesPath)
+        {
+            var output = RijndaelEncryptor.EncryptPS3Edat();
+
+            // Delete .psarc files
+            foreach (var ps3File in FILES_PS3)
+                if (File.Exists(ps3File))
+                    File.Delete(ps3File);
+
+            // Move directory to user selected path
+            if (Directory.Exists(PS3_WORKDIR))
+                DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", packagesPath));
+
+            if (output.IndexOf("Encrypt all EDAT files successfully") < 0)
+                throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output bellow:" + Environment.NewLine + Environment.NewLine + output);
+        }
+
         public static void EncryptPS3EdatFiles(string packagesPath)
         {
             // Packing using TruAncestor Edat
             string toolkitPath = Path.GetDirectoryName(Application.ExecutablePath);
-            string rebuilderApp = Path.Combine(toolkitPath, "rebuilder.cmd");
+            string rebuilderApp = Path.Combine(toolkitPath, "ps3_encrypt.cmd");
             
             Process PS3Process = new Process();
             PS3Process.StartInfo.FileName = rebuilderApp;
