@@ -22,8 +22,6 @@ using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.Showlight;
-using ImageMagick;
-
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -316,25 +314,68 @@ namespace RocksmithToolkitLib.DLCPackage
         #endregion
 
         #region Generate PSARC RS2014
-        [Obsolete()]
-        private static string ImageToFileResized(Stream IOsrcImage, int QubeSide)
+
+        private static void ToFile(Stream IOsrcImage, int QubeSide, string ext)
         {
-            string TempFileName = Path.Combine(Path.GetTempPath(), "albumTmp" + QubeSide.ToString() + ".png");
-            using (var outp = new FileStream(TempFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.None))
+            if (ext == string.Empty) ext = ".dds";
+            string srcImageFileName = Path.Combine(Path.GetTempPath(), "albumTmp_" + QubeSide.ToString() + ext);
+            using (var srcImageFile = new FileStream(srcImageFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.None))
             {
-                var srcImage = new Bitmap(IOsrcImage);
-                Bitmap newImage = new Bitmap(QubeSide, QubeSide);
-                using (Graphics gr = Graphics.FromImage(newImage))
-                {
-                    gr.SmoothingMode = SmoothingMode.HighQuality;
-                    gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    gr.DrawImage(srcImage, new Rectangle(0, 0, QubeSide, QubeSide));
-                }
-                newImage.Save(outp, ImageFormat.Png);
+                IOsrcImage.CopyTo(srcImageFile);
+                IOsrcImage.Position = 0;
             }
-            TMPFILES_SNG.Add(TempFileName);
-            return TempFileName;
+            TMPFILES_SNG.Add(srcImageFileName);
+        }
+        private static List<Stream> ToDds()
+        {
+            var DdsFiles = new List<Stream>();
+            string AppWD = Directory.GetCurrentDirectory();
+            string inDir = Path.GetTempPath();
+            string format = "dxt1a";
+            foreach (var file in TMPFILES_SNG)
+            {
+                var MS = new MemoryStream();
+                int QubeSide = 512;
+                var s = Path.GetFileNameWithoutExtension(file).Split('_');
+                switch (s[1])
+                {
+                    case "256":
+                        QubeSide = 256;
+                        break;
+                    case "128":
+                        QubeSide = 128;
+                        break;
+                    case "64":
+                        QubeSide = 64;
+                        break;
+                }
+                var args = String.Format("-file {2} -nomipmap -prescale {0} {0} -RescaleBox -{1} -outsamedir -overwrite -forcewrite",
+                    QubeSide, format, file);
+
+                using (var nvdxt = new Process())
+                {
+                    nvdxt.StartInfo = new ProcessStartInfo
+                    {
+                        WorkingDirectory = inDir,
+                        FileName = AppWD + @"\nvdxt.exe",
+                        Arguments = args,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                    };
+                    nvdxt.Start();
+                    nvdxt.WaitForExit(2000);
+                }
+                try
+                {
+                    using (var srcImageFile = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.None))
+                        srcImageFile.CopyTo(MS);
+                    MS.Position = 0;
+                    DdsFiles.Add(MS);
+                }
+                catch { }
+            }
+
+            return DdsFiles;
         }
 
         private static void GeneratePsarcsForRS2014(MemoryStream output, DLCPackageData info, Platform platform)
@@ -354,36 +395,35 @@ namespace RocksmithToolkitLib.DLCPackage
                         rsenumerableRootStream = null,
                         rsenumerableSongStream = null;
                 
-                MagickImage sourceimg = null;
-                MagickImage img = null;
+                Bitmap sourceimg = null;
+                List<Stream> ddsfiles = null;
 
                 try
                 {
                     // ALBUM ART
-                    if (File.Exists(info.AlbumArtPath))
-                        albumArtStream = File.OpenRead(info.AlbumArtPath);
-                    else albumArtStream = new MemoryStream(Resources.albumart2014_256);
-
                     albumArt256Stream = new MemoryStream();
                     albumArt128Stream = new MemoryStream();
                     albumArt64Stream = new MemoryStream();
-                    sourceimg = new MagickImage(albumArtStream);
-                    sourceimg.CompressionMethod = CompressionMethod.DXT1;
-                    sourceimg.Format = MagickFormat.Dds;
-                    sourceimg.FilterType = FilterType.Box;
+                    string ext = string.Empty;
 
-                    img = sourceimg.Clone();
-                    if (sourceimg.Width != 256 || sourceimg.Height != 256)
-                        img.Sample(256, 256);
-                    img.Write(albumArt256Stream);
-                    //resize,then save
-                    img = sourceimg.Clone();
-                    img.Sample(128, 128);
-                    img.Write(albumArt128Stream);
-                    //resize,then save
-                    img = sourceimg.Clone();
-                    img.Sample(64, 64);
-                    img.Write(albumArt64Stream);
+                    if (File.Exists(info.AlbumArtPath))
+                    {
+                        albumArtStream = File.OpenRead(info.AlbumArtPath);
+                        ext = Path.GetExtension(info.AlbumArtPath);
+                    }
+                    else albumArtStream = new MemoryStream(Resources.albumart2014_256);
+                    //256
+                    ToFile(albumArtStream, 256, ext);
+                    //128
+                    ToFile(albumArtStream, 128, ext);
+                    // 64
+                    ToFile(albumArtStream, 64, ext);
+                    // Processing
+                    ddsfiles = ToDds();
+
+                    ddsfiles[0].CopyTo(albumArt256Stream);
+                    ddsfiles[1].CopyTo(albumArt128Stream);
+                    ddsfiles[2].CopyTo(albumArt64Stream);
 
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_256.dds", dlcName), albumArt256Stream);
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_128.dds", dlcName), albumArt128Stream);
@@ -552,10 +592,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 finally
                 {
                     // Dispose all objects
+                    if (ddsfiles != null)
+                        ddsfiles.Clear();
                     if (sourceimg != null)
                         sourceimg.Dispose();
-                    if (img != null)
-                        img.Dispose();
                     if (albumArt256Stream != null)
                         albumArt256Stream.Dispose();
                     if (albumArt128Stream != null)
@@ -660,22 +700,25 @@ namespace RocksmithToolkitLib.DLCPackage
             Stream TempAlbumArtStream = null;
 
             MagickImage img = null;
+            List<Stream> ddsfiles = null;
             try
             {
+                albumArtStream = new MemoryStream();
+                string ext = string.Empty;
                 if (File.Exists(info.AlbumArtPath))
+                {
                     TempAlbumArtStream = File.OpenRead(info.AlbumArtPath);
-                else
-                    TempAlbumArtStream = new MemoryStream(Resources.albumart);
+                    ext = Path.GetExtension(info.AlbumArtPath);
+                }
+                else TempAlbumArtStream = new MemoryStream(Resources.albumart);
 
-                img = new MagickImage(TempAlbumArtStream);
-                img.Format = MagickFormat.Dds;
-                img.FilterType = FilterType.Box;
                 if (img.Width != 512 || img.Height != 512)
                     img.Resize(512, 512);
 
-                albumArtStream = new MemoryStream();
-                img.Write(albumArtStream);
-
+                
+                ToFile(TempAlbumArtStream, 512, ext);
+                ddsfiles = ToDds();
+                ddsfiles[0].CopyTo(albumArtStream);
 
                 using (var aggregateGraphStream = new MemoryStream())
                 using (var manifestStream = new MemoryStream())
