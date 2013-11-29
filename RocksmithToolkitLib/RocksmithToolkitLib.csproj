@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevILNet">
-      <HintPath>..\lib\DevIL\DevILNet.dll</HintPath>
+    <Reference Include="Magick.NET-x86">
+      <HintPath>..\lib\IM\Magick.NET-x86.dll</HintPath>
     </Reference>
     <Reference Include="MiscUtil">
       <HintPath>..\lib\MiscUtil\MiscUtil.dll</HintPath>
@@ -188,11 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\albumart.dds" />
-    <None Include="Resources\Console2014_soundbank.bnk" />
-    <None Include="Resources\Console2014_soundbank_preview.bnk" />
     <None Include="Resources\Console_soundbank.bnk" />
-    <None Include="Resources\PC2014_soundbank.bnk" />
-    <None Include="Resources\PC2014_soundbank_preview.bnk" />
     <None Include="Resources\VOCALS_RS2.sng" />
     <None Include="Resources\PC_soundbank.bnk" />
   </ItemGroup>
