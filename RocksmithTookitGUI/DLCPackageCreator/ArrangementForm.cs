@@ -113,8 +113,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 // Tone Selector
                 gbTone.Enabled = selectedType != ArrangementType.Vocal;
-                toneMultiplayerCombo.Enabled = currentGameVersion == GameVersion.RS2014;
-                toneACombo.Enabled = currentGameVersion == GameVersion.RS2014;
                 toneBCombo.Enabled = currentGameVersion == GameVersion.RS2014;
                 toneCCombo.Enabled = currentGameVersion == GameVersion.RS2014;
                 toneDCombo.Enabled = currentGameVersion == GameVersion.RS2014;
@@ -135,8 +133,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             };
 
             FillToneCombo(toneBaseCombo, toneNames, true);
-            FillToneCombo(toneMultiplayerCombo, toneNames, false);
-            FillToneCombo(toneACombo, toneNames, false);
             FillToneCombo(toneBCombo, toneNames, false);
             FillToneCombo(toneCCombo, toneNames, false);
             FillToneCombo(toneDCombo, toneNames, false);
@@ -191,7 +187,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         private void SequencialToneComboEnabling() {
-            toneBCombo.Enabled = toneACombo.SelectedIndex > 0;
+            toneBCombo.Enabled = toneBaseCombo.SelectedIndex > 0;
             toneCCombo.Enabled = toneBCombo.SelectedIndex > 0;
             toneDCombo.Enabled = toneCCombo.SelectedIndex > 0;
         }
@@ -225,8 +221,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 toneBaseCombo.SelectedItem = arrangement.ToneBase;
                 if (toneBaseCombo.SelectedItem == null && toneBaseCombo.Items.Count > 0)
                     toneBaseCombo.SelectedItem = toneBaseCombo.Items[0];
-                toneMultiplayerCombo.SelectedItem = arrangement.ToneMultiplayer;
-                toneACombo.SelectedItem = arrangement.ToneA;
                 toneBCombo.SelectedItem = arrangement.ToneB;
                 toneCCombo.SelectedItem = arrangement.ToneC;
                 toneDCombo.SelectedItem = arrangement.ToneD;
@@ -366,8 +360,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //ToneSelector
             //TODO if tone not exist - create empty Tone instance and add it to tonesLB, used for autotone.
             arrangement.ToneBase = toneBaseCombo.SelectedItem.ToString();
-            arrangement.ToneMultiplayer = (toneMultiplayerCombo.SelectedItem != null) ? toneMultiplayerCombo.SelectedItem.ToString() : "";
-            arrangement.ToneA = (toneACombo.SelectedItem != null) ? toneACombo.SelectedItem.ToString() : "";
+            arrangement.ToneA = (toneBCombo.SelectedItem != null) ? toneBaseCombo.SelectedItem.ToString() : ""; //Only need if have more than one tone
             arrangement.ToneB = (toneBCombo.SelectedItem != null) ? toneBCombo.SelectedItem.ToString() : "";
             arrangement.ToneC = (toneCCombo.SelectedItem != null) ? toneCCombo.SelectedItem.ToString() : "";
             arrangement.ToneD = (toneDCombo.SelectedItem != null) ? toneDCombo.SelectedItem.ToString() : "";

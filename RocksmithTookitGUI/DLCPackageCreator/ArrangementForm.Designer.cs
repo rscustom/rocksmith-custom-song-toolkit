@@ -48,12 +48,8 @@
             this.toneDCombo = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.toneCCombo = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.toneMultiplayerCombo = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.toneBCombo = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.toneACombo = new System.Windows.Forms.ComboBox();
             this.lblToneA = new System.Windows.Forms.Label();
             this.gbDLCId = new System.Windows.Forms.GroupBox();
             this.PersistentId = new RocksmithToolkitGUI.CueTextBox();
@@ -100,7 +96,7 @@
             // 
             this.addArrangementButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.addArrangementButton.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.addArrangementButton.Location = new System.Drawing.Point(291, 427);
+            this.addArrangementButton.Location = new System.Drawing.Point(291, 407);
             this.addArrangementButton.Name = "addArrangementButton";
             this.addArrangementButton.Size = new System.Drawing.Size(72, 29);
             this.addArrangementButton.TabIndex = 20;
@@ -133,7 +129,7 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.cancelButton.Location = new System.Drawing.Point(369, 427);
+            this.cancelButton.Location = new System.Drawing.Point(369, 407);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(72, 29);
             this.cancelButton.TabIndex = 21;
@@ -258,18 +254,14 @@
             this.gbTone.Controls.Add(this.toneDCombo);
             this.gbTone.Controls.Add(this.label11);
             this.gbTone.Controls.Add(this.toneCCombo);
-            this.gbTone.Controls.Add(this.label12);
-            this.gbTone.Controls.Add(this.toneMultiplayerCombo);
             this.gbTone.Controls.Add(this.label9);
             this.gbTone.Controls.Add(this.toneBCombo);
-            this.gbTone.Controls.Add(this.label8);
-            this.gbTone.Controls.Add(this.toneACombo);
             this.gbTone.Controls.Add(this.lblToneA);
             this.gbTone.Controls.Add(this.toneBaseCombo);
             this.gbTone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbTone.Location = new System.Drawing.Point(6, 267);
             this.gbTone.Name = "gbTone";
-            this.gbTone.Size = new System.Drawing.Size(435, 101);
+            this.gbTone.Size = new System.Drawing.Size(435, 78);
             this.gbTone.TabIndex = 42;
             this.gbTone.TabStop = false;
             this.gbTone.Text = "Tone Selector";
@@ -278,7 +270,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label10.Location = new System.Drawing.Point(217, 72);
+            this.label10.Location = new System.Drawing.Point(217, 50);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(46, 13);
@@ -290,7 +282,7 @@
             this.toneDCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toneDCombo.ForeColor = System.Drawing.SystemColors.ControlText;
             this.toneDCombo.FormattingEnabled = true;
-            this.toneDCombo.Location = new System.Drawing.Point(291, 69);
+            this.toneDCombo.Location = new System.Drawing.Point(291, 47);
             this.toneDCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneDCombo.Name = "toneDCombo";
             this.toneDCombo.Size = new System.Drawing.Size(134, 21);
@@ -300,7 +292,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label11.Location = new System.Drawing.Point(217, 47);
+            this.label11.Location = new System.Drawing.Point(217, 25);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(45, 13);
@@ -312,40 +304,18 @@
             this.toneCCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toneCCombo.ForeColor = System.Drawing.SystemColors.ControlText;
             this.toneCCombo.FormattingEnabled = true;
-            this.toneCCombo.Location = new System.Drawing.Point(291, 44);
+            this.toneCCombo.Location = new System.Drawing.Point(291, 22);
             this.toneCCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneCCombo.Name = "toneCCombo";
             this.toneCCombo.Size = new System.Drawing.Size(134, 21);
             this.toneCCombo.TabIndex = 16;
             this.toneCCombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label12.Location = new System.Drawing.Point(217, 22);
-            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(60, 13);
-            this.label12.TabIndex = 51;
-            this.label12.Text = "Multiplayer:";
-            // 
-            // toneMultiplayerCombo
-            // 
-            this.toneMultiplayerCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toneMultiplayerCombo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.toneMultiplayerCombo.FormattingEnabled = true;
-            this.toneMultiplayerCombo.Location = new System.Drawing.Point(291, 19);
-            this.toneMultiplayerCombo.Margin = new System.Windows.Forms.Padding(2);
-            this.toneMultiplayerCombo.Name = "toneMultiplayerCombo";
-            this.toneMultiplayerCombo.Size = new System.Drawing.Size(134, 21);
-            this.toneMultiplayerCombo.TabIndex = 15;
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label9.Location = new System.Drawing.Point(6, 72);
+            this.label9.Location = new System.Drawing.Point(6, 50);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(45, 13);
@@ -357,35 +327,12 @@
             this.toneBCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toneBCombo.ForeColor = System.Drawing.SystemColors.ControlText;
             this.toneBCombo.FormattingEnabled = true;
-            this.toneBCombo.Location = new System.Drawing.Point(72, 69);
+            this.toneBCombo.Location = new System.Drawing.Point(72, 47);
             this.toneBCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneBCombo.Name = "toneBCombo";
             this.toneBCombo.Size = new System.Drawing.Size(134, 21);
             this.toneBCombo.TabIndex = 14;
             this.toneBCombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label8.Location = new System.Drawing.Point(6, 47);
-            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(45, 13);
-            this.label8.TabIndex = 47;
-            this.label8.Text = "Tone A:";
-            // 
-            // toneACombo
-            // 
-            this.toneACombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toneACombo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.toneACombo.FormattingEnabled = true;
-            this.toneACombo.Location = new System.Drawing.Point(72, 44);
-            this.toneACombo.Margin = new System.Windows.Forms.Padding(2);
-            this.toneACombo.Name = "toneACombo";
-            this.toneACombo.Size = new System.Drawing.Size(134, 21);
-            this.toneACombo.TabIndex = 13;
-            this.toneACombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
             // lblToneA
             // 
@@ -403,7 +350,7 @@
             this.gbDLCId.Controls.Add(this.PersistentId);
             this.gbDLCId.Controls.Add(this.MasterId);
             this.gbDLCId.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbDLCId.Location = new System.Drawing.Point(6, 374);
+            this.gbDLCId.Location = new System.Drawing.Point(6, 351);
             this.gbDLCId.Name = "gbDLCId";
             this.gbDLCId.Size = new System.Drawing.Size(435, 47);
             this.gbDLCId.TabIndex = 33;
@@ -660,7 +607,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(450, 468);
+            this.ClientSize = new System.Drawing.Size(450, 448);
             this.Controls.Add(this.gbGameplayPath);
             this.Controls.Add(this.gbArrInfo);
             this.Controls.Add(this.gbXmlDefinition);
@@ -725,12 +672,8 @@
         private System.Windows.Forms.ComboBox toneDCombo;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox toneCCombo;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.ComboBox toneMultiplayerCombo;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox toneBCombo;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ComboBox toneACombo;
         private System.Windows.Forms.GroupBox gbXmlDefinition;
         private System.Windows.Forms.GroupBox gbArrInfo;
         private System.Windows.Forms.GroupBox gbScrollSpeed;
