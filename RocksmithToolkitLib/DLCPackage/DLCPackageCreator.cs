@@ -395,7 +395,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         rsenumerableRootStream = null,
                         rsenumerableSongStream = null;
                 
-                Bitmap sourceimg = null;
                 List<Stream> ddsfiles = null;
 
                 try
@@ -585,17 +584,11 @@ namespace RocksmithToolkitLib.DLCPackage
                         output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
                     }
                 }
-                catch (MagickException exception)
-                {
-                    MessageBox.Show(exception.Message);
-                }
                 finally
                 {
                     // Dispose all objects
                     if (ddsfiles != null)
                         ddsfiles.Clear();
-                    if (sourceimg != null)
-                        sourceimg.Dispose();
                     if (albumArt256Stream != null)
                         albumArt256Stream.Dispose();
                     if (albumArt128Stream != null)
@@ -699,7 +692,6 @@ namespace RocksmithToolkitLib.DLCPackage
             Stream albumArtStream = null;
             Stream TempAlbumArtStream = null;
 
-            MagickImage img = null;
             List<Stream> ddsfiles = null;
             try
             {
@@ -711,10 +703,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     ext = Path.GetExtension(info.AlbumArtPath);
                 }
                 else TempAlbumArtStream = new MemoryStream(Resources.albumart);
-
-                if (img.Width != 512 || img.Height != 512)
-                    img.Resize(512, 512);
-
                 
                 ToFile(TempAlbumArtStream, 512, ext);
                 ddsfiles = ToDds();
