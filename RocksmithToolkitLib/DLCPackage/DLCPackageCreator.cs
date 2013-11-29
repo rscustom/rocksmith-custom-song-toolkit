@@ -319,8 +319,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void ToDds(string input, Dictionary<int,string> output)
         {
-            var DdsFiles = new List<Stream>();
-            string inDir = Path.GetTempPath();
             string format = "dxt1a";
             Dictionary<int,Process> proc = new Dictionary<int,Process>();
 
@@ -335,19 +333,14 @@ namespace RocksmithToolkitLib.DLCPackage
                 var nvdxt = new Process();
                 nvdxt.StartInfo = new ProcessStartInfo
                 {
-                    //WorkingDirectory = inDir,
                     FileName = "nvdxt.exe",
                     Arguments = args,
                     UseShellExecute = false,
                     CreateNoWindow = true,
                 };
                 nvdxt.Start();
-                proc[Size] = nvdxt;
-            }
-
-            foreach (KeyValuePair<int, Process> item in proc) {
-                item.Value.WaitForExit();
-                TMPFILES_ART.Add(output[item.Key]);
+                nvdxt.WaitForExit();
+                TMPFILES_ART.Add(OutPath);
             }
         }
 
