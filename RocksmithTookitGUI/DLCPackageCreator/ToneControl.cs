@@ -14,7 +14,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class ToneControl : UserControl
     {
-        private bool _RefreshingCombos = false;
+        private bool _refreshingCombos = false;
         public GameVersion CurrentGameVersion;
 
         private dynamic tone;
@@ -48,9 +48,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             CurrentGameVersion = gameVersion;
             InitializeComponent();
-            InitializeTextBoxes();
+            InitializeToneInformation();
             InitializeComboBoxes();
 
+            descriptorLabel.Enabled = CurrentGameVersion == GameVersion.RS2014;
+            descriptorCombo.Enabled = CurrentGameVersion == GameVersion.RS2014;
             gbLoopPedalAndRacks.Text = (CurrentGameVersion == GameVersion.RS2012) ? "Loop Pedal" : "Rack";
             gbPostPedal.Text = (CurrentGameVersion == GameVersion.RS2012) ? "Post Pedal" : "Loop Pedal";
             loopPedalRack4Box.Enabled = CurrentGameVersion == GameVersion.RS2014;
@@ -63,7 +65,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void RefreshControls()
         {
-            _RefreshingCombos = true;
+            _refreshingCombos = true;
             toneNameBox.Text = tone.Name ?? "";
             volumeBox.Value = tone.Volume;
 
@@ -84,7 +86,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             UpdateComboSelection(postPedal2Box, postPedal2KnobButton, "PostPedal2");
             UpdateComboSelection(postPedal3Box, postPedal3KnobButton, "PostPedal3");
             UpdateComboSelection(postPedal4Box, postPedal4KnobButton, "PostPedal4");
-            _RefreshingCombos = false;
+            _refreshingCombos = false;
+
+            if (CurrentGameVersion == GameVersion.RS2014)
+            {
+                if (tone.ToneDescriptors.Count > 0)
+                {
+                    if (ToneDescriptor.List().Any<ToneDescriptor>(t => t.Descriptor == tone.ToneDescriptors[0]))
+                        descriptorCombo.SelectedIndex = ToneDescriptor.List().TakeWhile(t => t.Descriptor != tone.ToneDescriptors[0]).Count();
+                }
+                else
+                    UpdateToneDescription(descriptorCombo);
+            }
         }
 
         private void UpdateComboSelection(ComboBox box, Control knobSelectButton, string pedalSlot)
@@ -101,8 +114,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void InitializeTextBoxes()
+        private void InitializeToneInformation()
         {
+            // NAME
             toneNameBox.TextChanged += (sender, e) =>
             {
                 var toneName = toneNameBox.Text;
@@ -110,8 +124,37 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 tone.Name = toneName;
             };
 
+            // VOLUME
             volumeBox.ValueChanged += (sender, e) =>
                 tone.Volume = volumeBox.Value;
+
+            // TONE DESCRIPTOR
+            if (CurrentGameVersion == GameVersion.RS2014)
+            {
+                var tonedesclist = ToneDescriptor.List().ToList();
+                descriptorCombo.DisplayMember = "Name";
+                descriptorCombo.ValueMember = "Descriptor";
+                descriptorCombo.DataSource = tonedesclist;
+
+                descriptorCombo.SelectedValueChanged += (sender, e) =>
+                    UpdateToneDescription((ComboBox)sender);
+            }
+        }
+
+        private void UpdateToneDescription(ComboBox combo) {
+            if (_refreshingCombos)
+                return;
+
+            var descriptor = combo.SelectedItem as ToneDescriptor;
+            tone.ToneDescriptors.Clear();
+            tone.ToneDescriptors.Add(descriptor.Descriptor);
+
+            string toneName = tone.Name;
+            var descIndex = toneName.LastIndexOf("_");
+            if (descIndex > -1)
+                toneName = toneName.Substring(0, descIndex);
+
+            toneNameBox.Text = String.Format("{0}_{1}", toneName, descriptor.ShortName);
         }
 
         private void InitializeComboBoxes()
@@ -139,11 +182,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 .OrderBy(p => p.DisplayName)
                 .ToArray();
 
-
             InitializeSelectedPedal(ampBox, ampKnobButton, "Amp", amps, false);
             InitializeSelectedPedal(cabinetBox, cabinetKnobButton, "Cabinet", cabinets, false);
-
-
 
             InitializeSelectedPedal(loopPedalRack1Box, loopPedalRack1KnobButton, LoopOrRackSlot + "1", loopRackPedals, true);
             InitializeSelectedPedal(loopPedalRack2Box, loopPedalRack2KnobButton, LoopOrRackSlot + "2", loopRackPedals, true);
@@ -181,7 +221,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             box.Items.AddRange(pedals);
             box.SelectedValueChanged += (sender, e) =>
             {
-                if (_RefreshingCombos)
+                if (_refreshingCombos)
                     return;
 
                 var pedal = box.SelectedItem as ToolkitPedal;

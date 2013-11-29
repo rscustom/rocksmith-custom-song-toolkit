@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.okButton = new System.Windows.Forms.Button();
-            this.toneControl1 = new RocksmithToolkitGUI.DLCPackageCreator.ToneControl();
             this.loadButton = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
+            this.toneControl1 = new RocksmithToolkitGUI.DLCPackageCreator.ToneControl();
             this.SuspendLayout();
             // 
             // okButton
@@ -39,7 +39,7 @@
             this.okButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.okButton.AutoSize = true;
             this.okButton.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.okButton.Location = new System.Drawing.Point(427, 287);
+            this.okButton.Location = new System.Drawing.Point(427, 322);
             this.okButton.Margin = new System.Windows.Forms.Padding(2);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(93, 23);
@@ -48,20 +48,12 @@
             this.okButton.UseVisualStyleBackColor = false;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
-            // toneControl1
-            // 
-            this.toneControl1.Location = new System.Drawing.Point(10, 11);
-            this.toneControl1.Name = "toneControl1";
-            this.toneControl1.Size = new System.Drawing.Size(512, 268);
-            this.toneControl1.TabIndex = 0;
-            this.toneControl1.Tone = null;
-            // 
             // loadButton
             // 
             this.loadButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.loadButton.AutoSize = true;
             this.loadButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.loadButton.Location = new System.Drawing.Point(13, 287);
+            this.loadButton.Location = new System.Drawing.Point(13, 322);
             this.loadButton.Margin = new System.Windows.Forms.Padding(2);
             this.loadButton.Name = "loadButton";
             this.loadButton.Size = new System.Drawing.Size(92, 23);
@@ -75,7 +67,7 @@
             this.saveButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.saveButton.AutoSize = true;
             this.saveButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.saveButton.Location = new System.Drawing.Point(109, 287);
+            this.saveButton.Location = new System.Drawing.Point(109, 322);
             this.saveButton.Margin = new System.Windows.Forms.Padding(2);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(92, 23);
@@ -84,11 +76,19 @@
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
+            // toneControl1
+            // 
+            this.toneControl1.Location = new System.Drawing.Point(10, 11);
+            this.toneControl1.Name = "toneControl1";
+            this.toneControl1.Size = new System.Drawing.Size(513, 300);
+            this.toneControl1.TabIndex = 0;
+            this.toneControl1.Tone = null;
+            // 
             // ToneForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(533, 325);
+            this.ClientSize = new System.Drawing.Size(533, 360);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.loadButton);
             this.Controls.Add(this.okButton);

@@ -44,7 +44,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             toneControl1 = new RocksmithToolkitGUI.DLCPackageCreator.ToneControl(CurrentGameVersion);
             this.toneControl1.Location = new System.Drawing.Point(10, 11);
             this.toneControl1.Name = "toneControl1";
-            this.toneControl1.Size = new System.Drawing.Size(512, 268);
+            this.toneControl1.Size = new System.Drawing.Size(513, 300);
             this.toneControl1.TabIndex = 0;
             toneControl1.Tone = tone;
             Controls.Add(toneControl1); 

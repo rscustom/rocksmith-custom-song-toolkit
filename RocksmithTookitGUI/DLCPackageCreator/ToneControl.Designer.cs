@@ -56,7 +56,7 @@
             this.loopPedalRack4KnobButton = new System.Windows.Forms.Button();
             this.postPedal4Box = new System.Windows.Forms.ComboBox();
             this.postPedal4KnobButton = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbAmpCab = new System.Windows.Forms.GroupBox();
             this.gbLoopPedalAndRacks = new System.Windows.Forms.GroupBox();
             this.volumeBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.toneNameBox = new RocksmithToolkitGUI.CueTextBox();
@@ -64,13 +64,15 @@
             this.prePedal4Box = new System.Windows.Forms.ComboBox();
             this.prePedal4KnobButton = new System.Windows.Forms.Button();
             this.gbPostPedal = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox1.SuspendLayout();
+            this.gbToneInformation = new System.Windows.Forms.GroupBox();
+            this.descriptorLabel = new System.Windows.Forms.Label();
+            this.descriptorCombo = new System.Windows.Forms.ComboBox();
+            this.gbAmpCab.SuspendLayout();
             this.gbLoopPedalAndRacks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).BeginInit();
             this.gbPrePedal.SuspendLayout();
             this.gbPostPedal.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.gbToneInformation.SuspendLayout();
             this.SuspendLayout();
             // 
             // prePedal1Box
@@ -81,7 +83,7 @@
             this.prePedal1Box.Location = new System.Drawing.Point(6, 19);
             this.prePedal1Box.Name = "prePedal1Box";
             this.prePedal1Box.Size = new System.Drawing.Size(206, 21);
-            this.prePedal1Box.TabIndex = 14;
+            this.prePedal1Box.TabIndex = 15;
             // 
             // prePedal2Box
             // 
@@ -91,7 +93,7 @@
             this.prePedal2Box.Location = new System.Drawing.Point(6, 46);
             this.prePedal2Box.Name = "prePedal2Box";
             this.prePedal2Box.Size = new System.Drawing.Size(206, 21);
-            this.prePedal2Box.TabIndex = 16;
+            this.prePedal2Box.TabIndex = 17;
             // 
             // prePedal3Box
             // 
@@ -101,37 +103,37 @@
             this.prePedal3Box.Location = new System.Drawing.Point(6, 73);
             this.prePedal3Box.Name = "prePedal3Box";
             this.prePedal3Box.Size = new System.Drawing.Size(206, 21);
-            this.prePedal3Box.TabIndex = 18;
+            this.prePedal3Box.TabIndex = 19;
             // 
             // loopPedalRack1Box
             // 
             this.loopPedalRack1Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.loopPedalRack1Box.ForeColor = System.Drawing.SystemColors.ControlText;
             this.loopPedalRack1Box.FormattingEnabled = true;
-            this.loopPedalRack1Box.Location = new System.Drawing.Point(5, 19);
+            this.loopPedalRack1Box.Location = new System.Drawing.Point(7, 19);
             this.loopPedalRack1Box.Name = "loopPedalRack1Box";
             this.loopPedalRack1Box.Size = new System.Drawing.Size(206, 21);
-            this.loopPedalRack1Box.TabIndex = 6;
+            this.loopPedalRack1Box.TabIndex = 7;
             // 
             // loopPedalRack2Box
             // 
             this.loopPedalRack2Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.loopPedalRack2Box.ForeColor = System.Drawing.SystemColors.ControlText;
             this.loopPedalRack2Box.FormattingEnabled = true;
-            this.loopPedalRack2Box.Location = new System.Drawing.Point(5, 46);
+            this.loopPedalRack2Box.Location = new System.Drawing.Point(6, 46);
             this.loopPedalRack2Box.Name = "loopPedalRack2Box";
             this.loopPedalRack2Box.Size = new System.Drawing.Size(206, 21);
-            this.loopPedalRack2Box.TabIndex = 8;
+            this.loopPedalRack2Box.TabIndex = 9;
             // 
             // loopPedalRack3Box
             // 
             this.loopPedalRack3Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.loopPedalRack3Box.ForeColor = System.Drawing.SystemColors.ControlText;
             this.loopPedalRack3Box.FormattingEnabled = true;
-            this.loopPedalRack3Box.Location = new System.Drawing.Point(5, 73);
+            this.loopPedalRack3Box.Location = new System.Drawing.Point(261, 19);
             this.loopPedalRack3Box.Name = "loopPedalRack3Box";
             this.loopPedalRack3Box.Size = new System.Drawing.Size(206, 21);
-            this.loopPedalRack3Box.TabIndex = 10;
+            this.loopPedalRack3Box.TabIndex = 11;
             // 
             // postPedal1Box
             // 
@@ -141,7 +143,7 @@
             this.postPedal1Box.Location = new System.Drawing.Point(6, 19);
             this.postPedal1Box.Name = "postPedal1Box";
             this.postPedal1Box.Size = new System.Drawing.Size(206, 21);
-            this.postPedal1Box.TabIndex = 22;
+            this.postPedal1Box.TabIndex = 23;
             // 
             // postPedal2Box
             // 
@@ -151,7 +153,7 @@
             this.postPedal2Box.Location = new System.Drawing.Point(6, 46);
             this.postPedal2Box.Name = "postPedal2Box";
             this.postPedal2Box.Size = new System.Drawing.Size(206, 21);
-            this.postPedal2Box.TabIndex = 24;
+            this.postPedal2Box.TabIndex = 25;
             // 
             // postPedal3Box
             // 
@@ -161,14 +163,14 @@
             this.postPedal3Box.Location = new System.Drawing.Point(6, 73);
             this.postPedal3Box.Name = "postPedal3Box";
             this.postPedal3Box.Size = new System.Drawing.Size(206, 21);
-            this.postPedal3Box.TabIndex = 26;
+            this.postPedal3Box.TabIndex = 27;
             // 
             // prePedal1KnobButton
             // 
             this.prePedal1KnobButton.Location = new System.Drawing.Point(218, 18);
             this.prePedal1KnobButton.Name = "prePedal1KnobButton";
             this.prePedal1KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.prePedal1KnobButton.TabIndex = 15;
+            this.prePedal1KnobButton.TabIndex = 16;
             this.prePedal1KnobButton.Text = "...";
             this.prePedal1KnobButton.UseVisualStyleBackColor = true;
             // 
@@ -177,7 +179,7 @@
             this.prePedal2KnobButton.Location = new System.Drawing.Point(218, 45);
             this.prePedal2KnobButton.Name = "prePedal2KnobButton";
             this.prePedal2KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.prePedal2KnobButton.TabIndex = 17;
+            this.prePedal2KnobButton.TabIndex = 18;
             this.prePedal2KnobButton.Text = "...";
             this.prePedal2KnobButton.UseVisualStyleBackColor = true;
             // 
@@ -186,34 +188,34 @@
             this.prePedal3KnobButton.Location = new System.Drawing.Point(218, 72);
             this.prePedal3KnobButton.Name = "prePedal3KnobButton";
             this.prePedal3KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.prePedal3KnobButton.TabIndex = 19;
+            this.prePedal3KnobButton.TabIndex = 20;
             this.prePedal3KnobButton.Text = "...";
             this.prePedal3KnobButton.UseVisualStyleBackColor = true;
             // 
             // loopPedalRack1KnobButton
             // 
-            this.loopPedalRack1KnobButton.Location = new System.Drawing.Point(216, 19);
+            this.loopPedalRack1KnobButton.Location = new System.Drawing.Point(219, 19);
             this.loopPedalRack1KnobButton.Name = "loopPedalRack1KnobButton";
             this.loopPedalRack1KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.loopPedalRack1KnobButton.TabIndex = 7;
+            this.loopPedalRack1KnobButton.TabIndex = 8;
             this.loopPedalRack1KnobButton.Text = "...";
             this.loopPedalRack1KnobButton.UseVisualStyleBackColor = true;
             // 
             // loopPedalRack2KnobButton
             // 
-            this.loopPedalRack2KnobButton.Location = new System.Drawing.Point(216, 45);
+            this.loopPedalRack2KnobButton.Location = new System.Drawing.Point(219, 45);
             this.loopPedalRack2KnobButton.Name = "loopPedalRack2KnobButton";
             this.loopPedalRack2KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.loopPedalRack2KnobButton.TabIndex = 9;
+            this.loopPedalRack2KnobButton.TabIndex = 10;
             this.loopPedalRack2KnobButton.Text = "...";
             this.loopPedalRack2KnobButton.UseVisualStyleBackColor = true;
             // 
             // loopPedalRack3KnobButton
             // 
-            this.loopPedalRack3KnobButton.Location = new System.Drawing.Point(216, 72);
+            this.loopPedalRack3KnobButton.Location = new System.Drawing.Point(472, 18);
             this.loopPedalRack3KnobButton.Name = "loopPedalRack3KnobButton";
             this.loopPedalRack3KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.loopPedalRack3KnobButton.TabIndex = 11;
+            this.loopPedalRack3KnobButton.TabIndex = 12;
             this.loopPedalRack3KnobButton.Text = "...";
             this.loopPedalRack3KnobButton.UseVisualStyleBackColor = true;
             // 
@@ -222,7 +224,7 @@
             this.postPedal1KnobButton.Location = new System.Drawing.Point(218, 19);
             this.postPedal1KnobButton.Name = "postPedal1KnobButton";
             this.postPedal1KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.postPedal1KnobButton.TabIndex = 23;
+            this.postPedal1KnobButton.TabIndex = 24;
             this.postPedal1KnobButton.Text = "...";
             this.postPedal1KnobButton.UseVisualStyleBackColor = true;
             // 
@@ -231,7 +233,7 @@
             this.postPedal2KnobButton.Location = new System.Drawing.Point(218, 45);
             this.postPedal2KnobButton.Name = "postPedal2KnobButton";
             this.postPedal2KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.postPedal2KnobButton.TabIndex = 25;
+            this.postPedal2KnobButton.TabIndex = 26;
             this.postPedal2KnobButton.Text = "...";
             this.postPedal2KnobButton.UseVisualStyleBackColor = true;
             // 
@@ -240,7 +242,7 @@
             this.postPedal3KnobButton.Location = new System.Drawing.Point(218, 72);
             this.postPedal3KnobButton.Name = "postPedal3KnobButton";
             this.postPedal3KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.postPedal3KnobButton.TabIndex = 27;
+            this.postPedal3KnobButton.TabIndex = 28;
             this.postPedal3KnobButton.Text = "...";
             this.postPedal3KnobButton.UseVisualStyleBackColor = true;
             // 
@@ -249,17 +251,17 @@
             this.ampBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ampBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ampBox.FormattingEnabled = true;
-            this.ampBox.Location = new System.Drawing.Point(6, 19);
+            this.ampBox.Location = new System.Drawing.Point(4, 20);
             this.ampBox.Name = "ampBox";
             this.ampBox.Size = new System.Drawing.Size(206, 21);
-            this.ampBox.TabIndex = 2;
+            this.ampBox.TabIndex = 3;
             // 
             // ampKnobButton
             // 
-            this.ampKnobButton.Location = new System.Drawing.Point(217, 18);
+            this.ampKnobButton.Location = new System.Drawing.Point(215, 19);
             this.ampKnobButton.Name = "ampKnobButton";
             this.ampKnobButton.Size = new System.Drawing.Size(26, 23);
-            this.ampKnobButton.TabIndex = 3;
+            this.ampKnobButton.TabIndex = 4;
             this.ampKnobButton.Text = "...";
             this.ampKnobButton.UseVisualStyleBackColor = true;
             // 
@@ -268,17 +270,17 @@
             this.cabinetBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cabinetBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.cabinetBox.FormattingEnabled = true;
-            this.cabinetBox.Location = new System.Drawing.Point(6, 46);
+            this.cabinetBox.Location = new System.Drawing.Point(4, 47);
             this.cabinetBox.Name = "cabinetBox";
             this.cabinetBox.Size = new System.Drawing.Size(206, 21);
-            this.cabinetBox.TabIndex = 4;
+            this.cabinetBox.TabIndex = 5;
             // 
             // cabinetKnobButton
             // 
-            this.cabinetKnobButton.Location = new System.Drawing.Point(217, 45);
+            this.cabinetKnobButton.Location = new System.Drawing.Point(215, 46);
             this.cabinetKnobButton.Name = "cabinetKnobButton";
             this.cabinetKnobButton.Size = new System.Drawing.Size(26, 23);
-            this.cabinetKnobButton.TabIndex = 5;
+            this.cabinetKnobButton.TabIndex = 6;
             this.cabinetKnobButton.Text = "...";
             this.cabinetKnobButton.UseVisualStyleBackColor = true;
             // 
@@ -307,17 +309,17 @@
             this.loopPedalRack4Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.loopPedalRack4Box.ForeColor = System.Drawing.SystemColors.ControlText;
             this.loopPedalRack4Box.FormattingEnabled = true;
-            this.loopPedalRack4Box.Location = new System.Drawing.Point(5, 100);
+            this.loopPedalRack4Box.Location = new System.Drawing.Point(261, 46);
             this.loopPedalRack4Box.Name = "loopPedalRack4Box";
             this.loopPedalRack4Box.Size = new System.Drawing.Size(206, 21);
-            this.loopPedalRack4Box.TabIndex = 12;
+            this.loopPedalRack4Box.TabIndex = 13;
             // 
             // loopPedalRack4KnobButton
             // 
-            this.loopPedalRack4KnobButton.Location = new System.Drawing.Point(216, 99);
+            this.loopPedalRack4KnobButton.Location = new System.Drawing.Point(472, 45);
             this.loopPedalRack4KnobButton.Name = "loopPedalRack4KnobButton";
             this.loopPedalRack4KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.loopPedalRack4KnobButton.TabIndex = 13;
+            this.loopPedalRack4KnobButton.TabIndex = 14;
             this.loopPedalRack4KnobButton.Text = "...";
             this.loopPedalRack4KnobButton.UseVisualStyleBackColor = true;
             // 
@@ -329,30 +331,30 @@
             this.postPedal4Box.Location = new System.Drawing.Point(6, 100);
             this.postPedal4Box.Name = "postPedal4Box";
             this.postPedal4Box.Size = new System.Drawing.Size(206, 21);
-            this.postPedal4Box.TabIndex = 28;
+            this.postPedal4Box.TabIndex = 29;
             // 
             // postPedal4KnobButton
             // 
             this.postPedal4KnobButton.Location = new System.Drawing.Point(218, 99);
             this.postPedal4KnobButton.Name = "postPedal4KnobButton";
             this.postPedal4KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.postPedal4KnobButton.TabIndex = 29;
+            this.postPedal4KnobButton.TabIndex = 30;
             this.postPedal4KnobButton.Text = "...";
             this.postPedal4KnobButton.UseVisualStyleBackColor = true;
             // 
-            // groupBox1
+            // gbAmpCab
             // 
-            this.groupBox1.Controls.Add(this.ampBox);
-            this.groupBox1.Controls.Add(this.ampKnobButton);
-            this.groupBox1.Controls.Add(this.cabinetBox);
-            this.groupBox1.Controls.Add(this.cabinetKnobButton);
-            this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.groupBox1.Location = new System.Drawing.Point(3, 56);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(249, 74);
-            this.groupBox1.TabIndex = 11;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Amp / Cabinet";
+            this.gbAmpCab.Controls.Add(this.ampBox);
+            this.gbAmpCab.Controls.Add(this.ampKnobButton);
+            this.gbAmpCab.Controls.Add(this.cabinetBox);
+            this.gbAmpCab.Controls.Add(this.cabinetKnobButton);
+            this.gbAmpCab.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbAmpCab.Location = new System.Drawing.Point(260, 4);
+            this.gbAmpCab.Name = "gbAmpCab";
+            this.gbAmpCab.Size = new System.Drawing.Size(249, 76);
+            this.gbAmpCab.TabIndex = 11;
+            this.gbAmpCab.TabStop = false;
+            this.gbAmpCab.Text = "Amp / Cabinet";
             // 
             // gbLoopPedalAndRacks
             // 
@@ -365,9 +367,9 @@
             this.gbLoopPedalAndRacks.Controls.Add(this.loopPedalRack2KnobButton);
             this.gbLoopPedalAndRacks.Controls.Add(this.loopPedalRack3KnobButton);
             this.gbLoopPedalAndRacks.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbLoopPedalAndRacks.Location = new System.Drawing.Point(4, 136);
+            this.gbLoopPedalAndRacks.Location = new System.Drawing.Point(4, 86);
             this.gbLoopPedalAndRacks.Name = "gbLoopPedalAndRacks";
-            this.gbLoopPedalAndRacks.Size = new System.Drawing.Size(248, 130);
+            this.gbLoopPedalAndRacks.Size = new System.Drawing.Size(506, 76);
             this.gbLoopPedalAndRacks.TabIndex = 12;
             this.gbLoopPedalAndRacks.TabStop = false;
             this.gbLoopPedalAndRacks.Text = "Loop Pedal";
@@ -412,7 +414,7 @@
             this.gbPrePedal.Controls.Add(this.prePedal2KnobButton);
             this.gbPrePedal.Controls.Add(this.prePedal3KnobButton);
             this.gbPrePedal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbPrePedal.Location = new System.Drawing.Point(258, 3);
+            this.gbPrePedal.Location = new System.Drawing.Point(3, 168);
             this.gbPrePedal.Name = "gbPrePedal";
             this.gbPrePedal.Size = new System.Drawing.Size(251, 127);
             this.gbPrePedal.TabIndex = 13;
@@ -427,14 +429,14 @@
             this.prePedal4Box.Location = new System.Drawing.Point(6, 100);
             this.prePedal4Box.Name = "prePedal4Box";
             this.prePedal4Box.Size = new System.Drawing.Size(206, 21);
-            this.prePedal4Box.TabIndex = 20;
+            this.prePedal4Box.TabIndex = 21;
             // 
             // prePedal4KnobButton
             // 
             this.prePedal4KnobButton.Location = new System.Drawing.Point(218, 99);
             this.prePedal4KnobButton.Name = "prePedal4KnobButton";
             this.prePedal4KnobButton.Size = new System.Drawing.Size(26, 23);
-            this.prePedal4KnobButton.TabIndex = 21;
+            this.prePedal4KnobButton.TabIndex = 22;
             this.prePedal4KnobButton.Text = "...";
             this.prePedal4KnobButton.UseVisualStyleBackColor = true;
             // 
@@ -449,45 +451,67 @@
             this.gbPostPedal.Controls.Add(this.postPedal4Box);
             this.gbPostPedal.Controls.Add(this.postPedal3KnobButton);
             this.gbPostPedal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbPostPedal.Location = new System.Drawing.Point(258, 136);
+            this.gbPostPedal.Location = new System.Drawing.Point(258, 168);
             this.gbPostPedal.Name = "gbPostPedal";
-            this.gbPostPedal.Size = new System.Drawing.Size(251, 130);
+            this.gbPostPedal.Size = new System.Drawing.Size(251, 127);
             this.gbPostPedal.TabIndex = 14;
             this.gbPostPedal.TabStop = false;
             this.gbPostPedal.Text = "Post Pedal";
             // 
-            // groupBox2
+            // gbToneInformation
             // 
-            this.groupBox2.Controls.Add(this.toneNameBox);
-            this.groupBox2.Controls.Add(this.volumeBox);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.groupBox2.Location = new System.Drawing.Point(4, 4);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(248, 46);
-            this.groupBox2.TabIndex = 15;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Tone Information";
+            this.gbToneInformation.Controls.Add(this.descriptorLabel);
+            this.gbToneInformation.Controls.Add(this.descriptorCombo);
+            this.gbToneInformation.Controls.Add(this.toneNameBox);
+            this.gbToneInformation.Controls.Add(this.volumeBox);
+            this.gbToneInformation.Controls.Add(this.label4);
+            this.gbToneInformation.Controls.Add(this.label5);
+            this.gbToneInformation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbToneInformation.Location = new System.Drawing.Point(4, 4);
+            this.gbToneInformation.Name = "gbToneInformation";
+            this.gbToneInformation.Size = new System.Drawing.Size(250, 76);
+            this.gbToneInformation.TabIndex = 15;
+            this.gbToneInformation.TabStop = false;
+            this.gbToneInformation.Text = "Tone Information";
+            // 
+            // descriptorLabel
+            // 
+            this.descriptorLabel.AutoSize = true;
+            this.descriptorLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.descriptorLabel.Location = new System.Drawing.Point(6, 51);
+            this.descriptorLabel.Name = "descriptorLabel";
+            this.descriptorLabel.Size = new System.Drawing.Size(86, 13);
+            this.descriptorLabel.TabIndex = 7;
+            this.descriptorLabel.Text = "Tone Descriptor:";
+            // 
+            // descriptorCombo
+            // 
+            this.descriptorCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.descriptorCombo.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.descriptorCombo.FormattingEnabled = true;
+            this.descriptorCombo.Location = new System.Drawing.Point(96, 46);
+            this.descriptorCombo.Name = "descriptorCombo";
+            this.descriptorCombo.Size = new System.Drawing.Size(147, 21);
+            this.descriptorCombo.TabIndex = 2;
             // 
             // ToneControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.gbToneInformation);
             this.Controls.Add(this.gbPostPedal);
             this.Controls.Add(this.gbPrePedal);
             this.Controls.Add(this.gbLoopPedalAndRacks);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbAmpCab);
             this.Name = "ToneControl";
-            this.Size = new System.Drawing.Size(512, 270);
-            this.groupBox1.ResumeLayout(false);
+            this.Size = new System.Drawing.Size(513, 301);
+            this.gbAmpCab.ResumeLayout(false);
             this.gbLoopPedalAndRacks.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).EndInit();
             this.gbPrePedal.ResumeLayout(false);
             this.gbPostPedal.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.gbToneInformation.ResumeLayout(false);
+            this.gbToneInformation.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -524,12 +548,14 @@
         private System.Windows.Forms.Button loopPedalRack4KnobButton;
         private System.Windows.Forms.ComboBox postPedal4Box;
         private System.Windows.Forms.Button postPedal4KnobButton;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbAmpCab;
         private System.Windows.Forms.GroupBox gbLoopPedalAndRacks;
         private System.Windows.Forms.GroupBox gbPrePedal;
         private System.Windows.Forms.ComboBox prePedal4Box;
         private System.Windows.Forms.Button prePedal4KnobButton;
         private System.Windows.Forms.GroupBox gbPostPedal;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbToneInformation;
+        private System.Windows.Forms.ComboBox descriptorCombo;
+        private System.Windows.Forms.Label descriptorLabel;
     }
 }
