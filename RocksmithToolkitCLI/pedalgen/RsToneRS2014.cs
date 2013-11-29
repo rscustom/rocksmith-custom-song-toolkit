@@ -67,10 +67,10 @@ public class Rs2014Knob
     public float PosY { get; set; }
     public string Name { get; set; }
     public string UnitType { get; set; }
-    public decimal DefaultValue { get; set; }
-    public decimal MinValue { get; set; }
-    public decimal MaxValue { get; set; }
-    public decimal ValueStep { get; set; }
+    public float DefaultValue { get; set; }
+    public float MinValue { get; set; }
+    public float MaxValue { get; set; }
+    public float ValueStep { get; set; }
     public string Ring { get; set; }
     public int Index { get; set; }
     public Dictionary<string, string> EnumValues { get; set; }

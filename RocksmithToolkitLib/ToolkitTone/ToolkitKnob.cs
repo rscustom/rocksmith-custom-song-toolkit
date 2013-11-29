@@ -11,10 +11,10 @@ namespace RocksmithToolkitLib.ToolkitTone
         public string Name { get; set; }
         public string Key { get; set; }
         public string UnitType { get; set; }
-        public decimal MinValue { get; set; }
-        public decimal MaxValue { get; set; }
-        public decimal ValueStep { get; set; }
-        public decimal DefaultValue { get; set; }
+        public float MinValue { get; set; }
+        public float MaxValue { get; set; }
+        public float ValueStep { get; set; }
+        public float DefaultValue { get; set; }
         public int Index { get; set; }
         public IList<Tuple<string, string>> EnumValues { get; set; }
 

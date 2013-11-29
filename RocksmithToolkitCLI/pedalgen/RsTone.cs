@@ -65,10 +65,10 @@ namespace pedalgen
         [JsonProperty("TonePedalRTPCName")]
         public string Key; // "Pedal_RingMod_Sensitivity"
         public string UnitType; // "Number"
-        public decimal MinValue; // 0.0
-        public decimal MaxValue; // 100.0
-        public decimal ValueStep; // 1.0
-        public decimal DefaultValue; // 50.0
+        public float MinValue; // 0.0
+        public float MaxValue; // 100.0
+        public float ValueStep; // 1.0
+        public float DefaultValue; // 50.0
         public string NifAsset; // ""
         public string ParentLocator; // ""
         public string CameraLocator; // ""

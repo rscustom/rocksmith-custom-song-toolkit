@@ -30,7 +30,7 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
         public Dictionary<string, Pedal> PedalList { get; set; }
         public string PersistentID { get; set; }
         public string UnlockKey { get; set; }
-        public decimal Volume { get; set; }
+        public float Volume { get; set; } //float, lol
 
         public Tone()
         {
@@ -106,12 +106,12 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
                     UnlockKey = null,
 
                     Name = (string)e.Attribute("name"),
-                    Volume = (decimal)e.Attribute("volume"),
+                    Volume = (float)e.Attribute("volume"),
                     PedalList = (//key = amp or cabinet or pedal; value = type of Tone.Pedal
                         from p in e.Elements("pedal")
                         select new Pedal {
                             PedalKey = (string)p.Attribute("name"), //string from pedal list
-                            KnobValues = p.Descendants("rtpc").ToDictionary(r => r.Attribute("name").Value, r => Convert.ToDecimal(r
+                            KnobValues = p.Descendants("rtpc").ToDictionary(r => r.Attribute("name").Value, r => (float)Convert.ToDouble(r
                                 .Attribute("value").Value))
                         })
                         .ToDictionary(x => Transform(x.PedalKey.Split("_".ToCharArray())[0].ToString()))

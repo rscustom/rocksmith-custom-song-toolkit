@@ -50,7 +50,7 @@ namespace RocksmithToolkitLib.DLCPackage
             return hash;
         }
 
-        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, decimal volume, Platform platform)
+        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, float volume, Platform platform)
         {
             string eventName = PLAY + soundbankName;
             string previewName = PLAY30SEC + soundbankName;
@@ -201,7 +201,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private const byte HIERARCHY_SOUND = 2;
-        private static byte[] HierarchySound(int id, int fileid, int mixerid, decimal volume, bool preview, Platform platform)
+        private static byte[] HierarchySound(int id, int fileid, int mixerid, float volume, bool preview, Platform platform)
         {
             int soundID = id;
             int pluginID = 262145;
@@ -222,7 +222,7 @@ namespace RocksmithToolkitLib.DLCPackage
             byte param1Type = 0; // Volume
             byte param2Type = 46; // MidiNoteOnAction
             byte param3Type = 47; // MidiNoteOffAction
-            float param1Value = (float)volume;
+            float param1Value = volume;
             int param2Value = 1;
             int param3Value = 3;
             byte numRange = 0;
@@ -412,7 +412,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static byte[] Hierarchy(int bankid, int soundid, int fileid, string name, decimal volume, bool preview, Platform platform)
+        private static byte[] Hierarchy(int bankid, int soundid, int fileid, string name, float volume, bool preview, Platform platform)
         {
             int mixerID = 650605636;
             int actionID = RandomGenerator.NextInt();
@@ -473,7 +473,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, decimal volume, Platform platform, bool preview = false)
+        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, float volume, Platform platform, bool preview = false)
         {
             var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
             var audioReader = new EndianBinaryReader(bitConverter, audioStream);

@@ -8,11 +8,11 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
     public class Pedal
     {
         public string PedalKey { get; set; }
-        public Dictionary<string, decimal> KnobValues { get; set; }
+        public Dictionary<string, float> KnobValues { get; set; }
 
         public Pedal()
         {
-            KnobValues = new Dictionary<string, decimal>();
+            KnobValues = new Dictionary<string, float>();
         }
 
         public bool Any() {

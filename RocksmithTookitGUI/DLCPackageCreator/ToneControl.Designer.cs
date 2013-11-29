@@ -375,7 +375,8 @@
             this.gbLoopPedalAndRacks.Text = "Loop Pedal";
             // 
             // volumeBox
-            // 
+            //
+            this.volumeBox.DecimalPlaces = 2;
             this.volumeBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.volumeBox.Location = new System.Drawing.Point(180, 19);
             this.volumeBox.Maximum = new decimal(new int[] {

@@ -620,6 +620,7 @@
             // 
             this.volumeBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.volumeBox.Location = new System.Drawing.Point(52, 69);
+            this.volumeBox.DecimalPlaces = 2;
             this.volumeBox.Maximum = new decimal(new int[] {
             0,
             0,

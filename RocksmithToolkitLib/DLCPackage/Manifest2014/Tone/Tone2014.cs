@@ -15,7 +15,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
     {
         public Gear2014 GearList { get; set; }
         public bool IsCustom { get; set; }
-        public decimal Volume { get; set; }
+        public float Volume { get; set; } //its float round 3
         public List<string> ToneDescriptors { get; set; }
         public string Key { get; set; }
         public string NameSeparator { get; set; }

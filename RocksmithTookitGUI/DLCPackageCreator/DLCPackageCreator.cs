@@ -543,7 +543,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 OggPS3Path = BasePath.AbsoluteTo(info.OggPS3Path);
             platformPS3.Checked = !String.IsNullOrEmpty(OggPS3Path);
 
-            volumeBox.Value = info.Volume;
+            volumeBox.Value = Decimal.Round((decimal)info.Volume, 2);
 
             //if (platformXBox360.Checked)
             //    rbuttonSignatureLIVE.Checked = info.SignatureType == PackageMagic.LIVE;
@@ -880,7 +880,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Arrangements = arrangements,
                 Tones = tones,
                 TonesRS2014 = tonesRS2014,
-                Volume = volumeBox.Value,
+                Volume = (float)volumeBox.Value,
                 SignatureType = PackageMagic.CON
             };
 

@@ -149,7 +149,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     attribute.AverageTempo = songInfo.AverageTempo;
                     attribute.RepresentativeArrangement = true;
                     attribute.SongPartition = manifestFunctions.GetSongPartition(x.Name, x.ArrangementType);
-                    attribute.SongLength = song.SongLength;
+                    attribute.SongLength = (float)Math.Round((decimal)song.SongLength, 3, MidpointRounding.AwayFromZero); //rounded
                     attribute.LastConversionDateTime = song.LastConversionDateTime;
                     attribute.TargetScore = 100000;
                     attribute.ToneUnlockScore = 70000;

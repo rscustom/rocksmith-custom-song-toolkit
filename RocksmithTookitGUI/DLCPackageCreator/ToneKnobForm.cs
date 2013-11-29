@@ -38,13 +38,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 var numericControl = new NumericUpDownFixed();
                 tableLayoutPanel.Controls.Add(numericControl, 1, i);
-                numericControl.Minimum = knob.MinValue;
-                numericControl.Maximum = knob.MaxValue;
-                numericControl.Increment = knob.ValueStep;
-                numericControl.DecimalPlaces = 1;
-                numericControl.Value = pedal.KnobValues[knob.Key];
+                numericControl.DecimalPlaces = 2;
+                numericControl.Minimum = (decimal)knob.MinValue;
+                numericControl.Maximum = (decimal)knob.MaxValue;
+                numericControl.Increment = (decimal)knob.ValueStep;                
+                numericControl.Value = (decimal)pedal.KnobValues[knob.Key];
                 numericControl.ValueChanged += (obj, args) =>
-                    pedal.KnobValues[knob.Key] = numericControl.Value;
+                    pedal.KnobValues[knob.Key] = (float)numericControl.Value;
             }
         }
 
