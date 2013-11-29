@@ -12,13 +12,15 @@ using RocksmithToolkitLib.Sng2014HSL;
 using MiscUtil.IO;
 using MiscUtil.Conversion;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
+using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
     public static class Packer
     {
         private const string ROOT_XBox360 = "Root";
-        private const string ROOT_PS3 = "USRDIR";
+        
         internal static Platform Game { get; set; }
 
         public static void Pack(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
@@ -336,47 +338,72 @@ namespace RocksmithToolkitLib.DLCPackage
             xboxPackage.CloseIO();
         }
 
-        public static Platform GetPlatform(this string fileExtension) {
-            if (File.Exists(fileExtension)) {
-                switch (Path.GetExtension(fileExtension)) {
+        public static Platform GetPlatform(this string fullPath) {
+            if (File.Exists(fullPath)) {
+                // GET PLATFORM BY FILE
+                switch (Path.GetExtension(fullPath)) {
                     case ".dat":
                         return new Platform(GamePlatform.Pc, GameVersion.RS2012);
                     case "":
                         return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
                     case ".edat":
-                        return new Platform(GamePlatform.PS3, GameVersion.RS2012);
+                        return new Platform(GamePlatform.PS3, GameVersion.None);
                     case ".psarc":
                         return new Platform(GamePlatform.Pc, GameVersion.RS2014);
                     default:
                         return new Platform(GamePlatform.None, GameVersion.None);
                 }
             }
-            else if (Directory.Exists(fileExtension))
+            else if (Directory.Exists(fullPath))
             {
-                //TODO: Need to refactor this code in near future, works, but is not the best way.
-                if (File.Exists(Path.Combine(fileExtension, "APP_ID")))
-                {
+                // GET PLATFORM BY PACKAGE ROOT DIRECTORY
+                if (File.Exists(Path.Combine(fullPath, "APP_ID"))) {
+                    // PC 2012
                     return new Platform(GamePlatform.Pc, GameVersion.RS2012);
-                }
-                else if (File.Exists(Path.Combine(fileExtension, "appid.appid")))
-                {
-                    return new Platform(GamePlatform.Pc, GameVersion.RS2014);
-                }
-                else if (Directory.Exists(Path.Combine(fileExtension, ROOT_XBox360)))
-                {
-                    return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
-                }
-                else if (Directory.Exists(Path.Combine(fileExtension, ROOT_PS3)))
-                {
-                    return new Platform(GamePlatform.PS3, GameVersion.RS2012);
-                }
-                else
-                    return GetPlatformByFolderEndName(fileExtension);
-            }
-            return new Platform(GamePlatform.None, GameVersion.None);
+                } else if (File.Exists(Path.Combine(fullPath, "appid.appid"))) {
+                    // PC / MAC 2014
+                    var agg = Directory.GetFiles(fullPath, "*.nt", SearchOption.TopDirectoryOnly)[0];
+                    var aggContent = File.ReadAllText(agg);
+
+                    if (aggContent.Contains("\"dx9\""))
+                        return new Platform(GamePlatform.Pc, GameVersion.RS2014);
+                    else if (aggContent.Contains("\"macos\""))
+                        return new Platform(GamePlatform.Mac, GameVersion.RS2014);
+                    else
+                        return new Platform(GamePlatform.Pc, GameVersion.None);
+                } else if (Directory.Exists(Path.Combine(fullPath, ROOT_XBox360))) {
+                    // XBOX 2012/2014
+                    var hTxt = Directory.GetFiles(fullPath, "*.txt", SearchOption.TopDirectoryOnly)[0];
+                    var hTxtContent = File.ReadAllText(hTxt);
+
+                    if (hTxtContent.Contains("Title ID: 55530873"))
+                        return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
+                    else if (hTxtContent.Contains("Title ID: 555308C0"))
+                        return new Platform(GamePlatform.XBox360, GameVersion.RS2014);
+                    else
+                        return new Platform(GamePlatform.XBox360, GameVersion.None);
+                } else {
+                    // PS3 2012/2014
+                    var agg = Directory.GetFiles(fullPath, "*.nt", SearchOption.TopDirectoryOnly);
+
+                    if (agg.Length > 0) {
+                        var aggContent = File.ReadAllText(agg[0]);
+
+                        if (aggContent.Contains("\"PS3\""))
+                            return new Platform(GamePlatform.PS3, GameVersion.RS2012);
+                        else if (aggContent.Contains("\"ps3\""))
+                            return new Platform(GamePlatform.PS3, GameVersion.RS2014);
+                        else {
+                            return new Platform(GamePlatform.PS3, GameVersion.None);
+                        }
+                    } else
+                        return TryGetPlatformByFolderEndName(fullPath);
+                } 
+            } else
+                return new Platform(GamePlatform.None, GameVersion.None);
         }
 
-        private static Platform GetPlatformByFolderEndName(string fileExtension)
+        private static Platform TryGetPlatformByFolderEndName(string fileExtension)
         {
             var pIndex = Path.GetFileNameWithoutExtension(fileExtension).LastIndexOf("_");
             string platformString = Path.GetFileNameWithoutExtension(fileExtension).Substring(pIndex+1);

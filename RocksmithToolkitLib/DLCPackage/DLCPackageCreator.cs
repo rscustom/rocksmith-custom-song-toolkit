@@ -33,8 +33,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static readonly string[] PATH_PC = { "Windows", "Generic", "_p" };
         private static readonly string[] PATH_MAC = { "Mac", "MacOS", "_m" };
-        private static readonly string[] PATH_XBOX = { "XBox360", "XBox360" };
-        private static readonly string[] PATH_PS3 = { "PS3", "PS3" };
+        private static readonly string[] PATH_XBOX = { "XBox360", "XBox360", "_xbox" };
+        private static readonly string[] PATH_PS3 = { "PS3", "PS3", "_ps3" };
 
         private static List<string> FILES_XBOX = new List<string>();
         private static List<string> FILES_PS3 = new List<string>();
