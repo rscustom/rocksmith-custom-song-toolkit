@@ -33,13 +33,14 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (platform.version == GameVersion.RS2012)
                         PackPC(sourcePath, saveFileName, useCryptography, updateSng);
                     else if (platform.version == GameVersion.RS2014)
-                        PackPC2014(sourcePath, saveFileName, updateSng);
+                        Pack2014(sourcePath, saveFileName, platform, updateSng);
                     break;
                 case GamePlatform.XBox360:
                     PackXBox360(sourcePath, saveFileName, platform.version, updateSng);
                     break;
                 case GamePlatform.PS3:
-                    throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+                    PackPS3(sourcePath, saveFileName, platform, updateSng);
+                    break;
                 case GamePlatform.None:
                     throw new InvalidOperationException("Invalid directory structure of package. \n\rDirectory: " + sourcePath);
             }
@@ -118,7 +119,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void PackPC2014(string sourcePath, string saveFileName, bool updateSng)
+        private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng)
         {
             using (var psarcStream = new MemoryStream())
             {
@@ -130,7 +131,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     psarc.AddEntry(a, fileStream);
                 });
 
-                psarc.Write(psarcStream, true);
+                psarc.Write(psarcStream, platform.IsConsole ? false : true);
                 psarcStream.Flush();
                 psarcStream.Seek(0, SeekOrigin.Begin);
 
@@ -204,6 +205,31 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var file in xboxFiles)
                 if (Path.GetExtension(file) == ".psarc" && File.Exists(file))
                     File.Delete(file);
+        }
+
+        private static void PackPS3(string sourcePath, string saveFileName, Platform platform, bool updateSng) {
+            Pack2014(sourcePath, saveFileName, platform, updateSng);
+
+            var edatDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "edat");
+            if (!Directory.Exists(edatDir))
+                Directory.CreateDirectory(edatDir);
+
+            var sourceCleanPackage = saveFileName + ".psarc";
+            var destCleanPackage = Path.Combine(edatDir, Path.GetFileName(saveFileName) + ".psarc");
+            var encryptedPackage = destCleanPackage + ".edat";
+
+            if (File.Exists(sourceCleanPackage))
+                File.Move(sourceCleanPackage, destCleanPackage);
+
+            var outputMessage = RijndaelEncryptor.EncryptPS3Edat();
+
+            if (outputMessage.IndexOf("Encrypt all EDAT files successfully") > 0) {
+                if (File.Exists(destCleanPackage))
+                    File.Delete(destCleanPackage);
+
+                if (File.Exists(encryptedPackage))
+                    File.Move(encryptedPackage, sourceCleanPackage + ".edat");
+            }
         }
 
         private static string GetHeaderValue(this string value) {
