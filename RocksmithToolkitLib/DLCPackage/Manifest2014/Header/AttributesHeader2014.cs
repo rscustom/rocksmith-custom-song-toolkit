@@ -114,7 +114,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 SongDiffHard = SongContent.SongLength / NotesHard;
                 SongDifficulty = SongDiffHard;
                 
-                SongLength = SongContent.SongLength;
+                SongLength = (double?)Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
                 SongName = info.SongInfo.SongDisplayName;
                 SongNameSort = info.SongInfo.SongDisplayNameSort;
                 SongYear = info.SongInfo.SongYear;

@@ -378,7 +378,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     ToDds(albumArtPath, ddsfiles);
 
                     foreach (var size in sizes)
-                        packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, size), new FileStream(ddsfiles[size], FileMode.Open));
+                        packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, size), new FileStream(ddsfiles[size], FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.DeleteOnClose));
 
                     // AUDIO
                     var audioFile = platform.GetAudioPath(info)[0];
