@@ -212,7 +212,7 @@ namespace RocksmithToolkitLib.DLCPackage
             byte overrideParent = 0;
             byte numFX = 0;
             int parentBusID = RandomGenerator.NextInt();
-            int directParentID = 65536;
+            int directParentID = (platform.IsConsole) ? 134217984 : 65536; // todo, changes on console
             uint unkID1 = (preview) ? 4178100890 : 0;
             int mixerID = mixerid;
             byte priorityOverrideParent = 0;
