@@ -252,10 +252,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var doc = XDocument.Load(XmlFilePath.Text);
 
                 bool isVocal = doc.XPathSelectElement("/vocals") != null;
+                // Prevent errors with song xmls
                 var version = GameVersion.None;
                 try {
-                    version = doc.XPathSelectElement("/song").HasAttributes ?
-                       GameVersion.RS2014 : GameVersion.RS2012;
+                    if (doc.XPathSelectElement("/song").HasAttributes)
+                    {
+                        var verAttrib = Convert.ToDecimal(doc.XPathSelectElement("/song").FirstAttribute.Value);
+                        if ( verAttrib <= 6 )    version = GameVersion.RS2012;
+                        else if (verAttrib >= 7) version = GameVersion.RS2014;
+                    }
+                    else version = GameVersion.None;
                 } catch { }
 
                 if (isVocal) {
@@ -284,9 +290,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("lead") > -1 || arr.ToLower().IndexOf("rhythm") > -1 || arr.ToLower().IndexOf("combo") > -1)
                     {
                         arrangementTypeCombo.SelectedItem = ArrangementType.Guitar;
-                        if (arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("lead") > -1)
+                        if (arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("lead") > -1 || arr.ToLower().IndexOf("combo") > -1)
                             arrangementNameCombo.SelectedItem = ArrangementName.Lead;
-                        if (arr.ToLower().IndexOf("guitar 22") > -1 || arr.ToLower().IndexOf("rhythm") > -1 || arr.ToLower().IndexOf("combo") > -1)
+                        if (arr.ToLower().IndexOf("guitar 22") > -1 || arr.ToLower().IndexOf("rhythm") > -1)
                             arrangementNameCombo.SelectedItem = ArrangementName.Rhythm;
                     }
                     if (arr.ToLower().IndexOf("bass") > -1)
@@ -358,7 +364,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arrangement.BonusArr = BonusCheckBox.Checked;
 
             //ToneSelector
-            //TODO if tone not exist - create empty for autotonechanger.
+            //TODO if tone not exist - create empty Tone instance and add it to tonesLB, used for autotone.
             arrangement.ToneBase = toneBaseCombo.SelectedItem.ToString();
             arrangement.ToneMultiplayer = (toneMultiplayerCombo.SelectedItem != null) ? toneMultiplayerCombo.SelectedItem.ToString() : "";
             arrangement.ToneA = (toneACombo.SelectedItem != null) ? toneACombo.SelectedItem.ToString() : "";

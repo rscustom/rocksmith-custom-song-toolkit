@@ -19,10 +19,12 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         private const string ROOT_XBox360 = "Root";
         private const string ROOT_PS3 = "USRDIR";
+        internal static Platform Game { get; set; }
 
         public static void Pack(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
         {
             Platform platform = sourcePath.GetPlatform();
+            Game = platform;
 
             switch (platform.platform) {
                 case GamePlatform.Pc:
@@ -32,7 +34,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         PackPC2014(sourcePath, saveFileName, updateSng);
                     break;
                 case GamePlatform.XBox360:
-                    PackXBox360(sourcePath, saveFileName, platform.version);
+                    PackXBox360(sourcePath, saveFileName, platform.version, updateSng);
                     break;
                 case GamePlatform.PS3:
                     throw new InvalidOperationException("PS3 platform is not supported at this time :(");
@@ -138,7 +140,8 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void PackXBox360(string sourcePath, string saveFileName, GameVersion gameVersion) {
+        private static void PackXBox360(string sourcePath, string saveFileName, GameVersion gameVersion, bool updateSng) {
+            if (updateSng && Game.version == GameVersion.RS2014) UpdateSng2014(sourcePath, Game);
             foreach (var directory in Directory.EnumerateDirectories(Path.Combine(sourcePath, ROOT_XBox360))) {
                 PackInnerXBox360(Path.Combine(sourcePath, ROOT_XBox360), directory);
             }
