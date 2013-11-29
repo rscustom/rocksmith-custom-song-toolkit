@@ -122,7 +122,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.Metadata.CapoFretId = (xml.Capo == 0) ? unchecked((Byte) (-1)) : xml.Capo;
             readString(xml.LastConversionDateTime, sng.Metadata.LastConversionDateTime);
             sng.Metadata.Part = xml.Part;
-            sng.Metadata.SongLength = (float)Math.Round(xml.SongLength, 3, MidpointRounding.AwayFromZero);
+            sng.Metadata.SongLength = xml.SongLength;
             sng.Metadata.StringCount = 6;
             sng.Metadata.Tuning = new Int16[sng.Metadata.StringCount];
             sng.Metadata.Tuning = tuning;
