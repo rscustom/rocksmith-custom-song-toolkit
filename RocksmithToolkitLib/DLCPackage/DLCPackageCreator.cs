@@ -329,7 +329,6 @@ namespace RocksmithToolkitLib.DLCPackage
         private static List<Stream> ToDds()
         {
             var DdsFiles = new List<Stream>();
-            string AppWD = Directory.GetCurrentDirectory();
             string inDir = Path.GetTempPath();
             string format = "dxt1a";
             foreach (var file in TMPFILES_SNG)
@@ -357,7 +356,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     nvdxt.StartInfo = new ProcessStartInfo
                     {
                         WorkingDirectory = inDir,
-                        FileName = AppWD + @"\nvdxt.exe",
+                        FileName = "nvdxt.exe",
                         Arguments = args,
                         UseShellExecute = false,
                         CreateNoWindow = true,
