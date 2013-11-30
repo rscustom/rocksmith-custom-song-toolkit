@@ -363,12 +363,14 @@ namespace RocksmithToolkitLib.DLCPackage
                     var sizes = new List<int> { 64, 128, 256 };
 
                     if (ddsfiles == null) {
-                        string albumArtPath = "albumart_default";
+                        string albumArtPath;
                         if (File.Exists(info.AlbumArtPath)) {
                             albumArtPath = info.AlbumArtPath;
                         } else {
                             var albumArtStream = new MemoryStream(Resources.albumart2014_256);
+                            albumArtPath = System.IO.Path.GetTempFileName();
                             albumArtStream.WriteTmpFile(albumArtPath, platform);
+                            TMPFILES_ART.Add(albumArtPath);
                         }
 
                         ddsfiles = new Dictionary<int,string>();
@@ -641,12 +643,12 @@ namespace RocksmithToolkitLib.DLCPackage
             try
             {
                 Stream albumArtStream;
-                string albumArtPath = System.IO.Path.GetTempFileName();
+                string albumArtPath;
                 if (File.Exists(info.AlbumArtPath)) {
                     albumArtPath = info.AlbumArtPath;
-                }
-                else {
+                } else {
                     var defaultArtStream = new MemoryStream(Resources.albumart);
+                    albumArtPath = System.IO.Path.GetTempFileName();
                     defaultArtStream.WriteTmpFile(albumArtPath, platform);
                     defaultArtStream.Dispose();
                     TMPFILES_ART.Add(albumArtPath);
