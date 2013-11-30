@@ -913,6 +913,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             // add STRUM to chords
                             if (fp1[id].StartTime == n.Time && n.ChordId != -1)
                                 n.NoteMask |= NOTE_MASK_STRUM;
+                            fp1[id].Unk4_StartTime = n.Time;
                             break;
                         }
                     for (Int16 id=0; id<fp2.Count; id++)
@@ -922,6 +923,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             if (fp2[id].StartTime == n.Time && n.ChordId != -1)
                               n.NoteMask |= NOTE_MASK_STRUM;
                             n.NoteMask |= NOTE_MASK_ARPEGGIO;
+                            fp2[id].Unk4_StartTime = n.Time;
                             break;
                         }
                     for (int j=0; j<a.Anchors.Count; j++)
@@ -929,6 +931,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             n.AnchorWidth = (Byte) a.Anchors.Anchors[j].Width;
                             // anchor fret
                             n.FretId[1] = (Byte) a.Anchors.Anchors[j].FretId;
+                            a.Anchors.Anchors[j].Unk4_StartBeatTime = n.Time;
                             break;
                         }
                 }
