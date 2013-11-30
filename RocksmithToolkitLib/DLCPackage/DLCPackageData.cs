@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using X360.STFS;
 using System.Text.RegularExpressions;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
@@ -54,5 +55,29 @@ namespace RocksmithToolkitLib.DLCPackage
         public List<Tone2014> TonesRS2014 { get; set; }
 
         #endregion
+
+        // cache album art conversion
+        public Dictionary<int,string> AlbumArt { get; set; }
+
+        // needs to be called after all packages for platforms are created
+        public void CleanCache()
+        {
+            if (AlbumArt != null) {
+                foreach (var path in AlbumArt.Values) {
+                    try {
+                        File.Delete(path);
+                    }
+                    catch {}
+                }
+                AlbumArt = null;
+            }
+            foreach (var a in Arrangements)
+                a.CleanCache();
+        }
+
+        ~DLCPackageData()
+        {
+            CleanCache();
+        }
     }
 }

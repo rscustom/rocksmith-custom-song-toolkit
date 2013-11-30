@@ -327,6 +327,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (platformPS3.Checked)
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(dlcSavePath), Path.GetFileNameWithoutExtension(dlcSavePath)), packageData, new Platform(GamePlatform.PS3, CurrentGameVersion));
 
+            // cache cleanup so we don't serialize or reuse data that could be changed
+            packageData.CleanCache();
+
             MessageBox.Show("Package was generated.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

@@ -340,7 +340,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 };
                 nvdxt.Start();
                 nvdxt.WaitForExit();
-                TMPFILES_ART.Add(OutPath);
             }
         }
 
@@ -360,25 +359,29 @@ namespace RocksmithToolkitLib.DLCPackage
                 try
                 {
                     // ALBUM ART
-                    string albumArtPath = "albumart_default";
-                    if (File.Exists(info.AlbumArtPath))
-                    {
-                        albumArtPath = info.AlbumArtPath;
-                    }
-                    else {
-                        var albumArtStream = new MemoryStream(Resources.albumart2014_256);
-                        albumArtStream.WriteTmpFile(albumArtPath, platform);
-                    }
-
-                    Dictionary<int,string> ddsfiles = new Dictionary<int,string>();
+                    Dictionary<int,string> ddsfiles = info.AlbumArt;
                     var sizes = new List<int> { 64, 128, 256 };
-                    foreach (var size in sizes)
-                        ddsfiles[size] = Path.Combine(Path.GetTempPath(), "albumTmp_" + size + ".dds");
 
-                    ToDds(albumArtPath, ddsfiles);
+                    if (ddsfiles == null) {
+                        string albumArtPath = "albumart_default";
+                        if (File.Exists(info.AlbumArtPath)) {
+                            albumArtPath = info.AlbumArtPath;
+                        } else {
+                            var albumArtStream = new MemoryStream(Resources.albumart2014_256);
+                            albumArtStream.WriteTmpFile(albumArtPath, platform);
+                        }
+
+                        ddsfiles = new Dictionary<int,string>();
+                        foreach (var size in sizes)
+                            ddsfiles[size] = System.IO.Path.GetTempFileName();
+
+                        ToDds(albumArtPath, ddsfiles);
+                        // save for reuse
+                        info.AlbumArt = ddsfiles;
+                    }
 
                     foreach (var size in sizes)
-                        packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, size), new FileStream(ddsfiles[size], FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.DeleteOnClose));
+                        packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, size), new FileStream(ddsfiles[size], FileMode.Open, FileAccess.Read, FileShare.Read));
 
                     // AUDIO
                     var audioFile = platform.GetAudioPath(info)[0];
@@ -638,7 +641,7 @@ namespace RocksmithToolkitLib.DLCPackage
             try
             {
                 Stream albumArtStream;
-                string albumArtPath = "albumart_default";
+                string albumArtPath = System.IO.Path.GetTempFileName();
                 if (File.Exists(info.AlbumArtPath)) {
                     albumArtPath = info.AlbumArtPath;
                 }
@@ -646,12 +649,20 @@ namespace RocksmithToolkitLib.DLCPackage
                     var defaultArtStream = new MemoryStream(Resources.albumart);
                     defaultArtStream.WriteTmpFile(albumArtPath, platform);
                     defaultArtStream.Dispose();
+                    TMPFILES_ART.Add(albumArtPath);
                 }
 
-                Dictionary<int,string> ddsfiles = new Dictionary<int,string>();
-                ddsfiles[512] = Path.Combine(Path.GetTempPath(), "albumTmp_512.dds");
-                ToDds(albumArtPath, ddsfiles);
-                albumArtStream = new FileStream(ddsfiles[512], FileMode.Open);
+                Dictionary<int,string> ddsfiles = info.AlbumArt;
+                if (ddsfiles == null) {
+                    ddsfiles = new Dictionary<int,string>();
+                    ddsfiles[512] = System.IO.Path.GetTempFileName();
+                    ToDds(albumArtPath, ddsfiles);
+
+                    // save for reuse
+                    info.AlbumArt = ddsfiles;
+                }
+
+                albumArtStream = new FileStream(ddsfiles[512], FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 using (var aggregateGraphStream = new MemoryStream())
                 using (var manifestStream = new MemoryStream())
@@ -797,20 +808,19 @@ namespace RocksmithToolkitLib.DLCPackage
                     SngFileWriter.Write(arrangement.SongXml.File, sngFile, arrangement.ArrangementType, platform, tuning);
                     break;
                 case GameVersion.RS2014:
-                    using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
+                    if (arrangement.Sng2014 == null) {
                         // Sng2014File can be reused when generating for multiple platforms
                         Sng2014File sng;
                         if (arrangement.ArrangementType != ArrangementType.Vocal) {
                             sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
-                            arrangement.NoteCount = sng.NoteCount;
-                            arrangement.DNACount = sng.DNACount;
-                            arrangement.MaxPhraseDifficulty = sng.Metadata.MaxDifficulty;
-                            arrangement.StartTime = sng.Metadata.StartTime;
                         } else {
                             sng = Sng2014FileWriter.read_vocals(arrangement.SongXml.File);
                         }
-                        sng.writeSng(fs, platform);
+                        // cache results
+                        arrangement.Sng2014 = sng;
                     }
+                    using (FileStream fs = new FileStream(sngFile, FileMode.Create))
+                        arrangement.Sng2014.writeSng(fs, platform);
                     break;
                 default:
                     throw new InvalidOperationException("Unexpected game version value");

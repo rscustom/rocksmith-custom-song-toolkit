@@ -97,12 +97,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 ArtistName = info.SongInfo.Artist;
                 CentOffset = arrangement.TuningPitch != 0 ? TuningFrequency.Frequency2Note(arrangement.TuningPitch) : 0.0;
                 ArtistNameSort = info.SongInfo.ArtistSort;
-                DNA_Chords = arrangement.DNACount[(int) DNAId.Chord];
-                DNA_Riffs = arrangement.DNACount[(int) DNAId.Riff];
-                DNA_Solo = arrangement.DNACount[(int) DNAId.Solo];
-                NotesEasy = arrangement.NoteCount[0];
-                NotesMedium = arrangement.NoteCount[1];
-                NotesHard = arrangement.NoteCount[2];
+
+                DNA_Chords = arrangement.Sng2014.DNACount[(int) DNAId.Chord];
+                DNA_Riffs = arrangement.Sng2014.DNACount[(int) DNAId.Riff];
+                DNA_Solo = arrangement.Sng2014.DNACount[(int) DNAId.Solo];
+                NotesEasy = arrangement.Sng2014.NoteCount[0];
+                NotesMedium = arrangement.Sng2014.NoteCount[1];
+                NotesHard = arrangement.Sng2014.NoteCount[2];
                 EasyMastery = NotesEasy / NotesHard;
                 MediumMastery = NotesMedium / NotesHard;
                 Representative = 1;

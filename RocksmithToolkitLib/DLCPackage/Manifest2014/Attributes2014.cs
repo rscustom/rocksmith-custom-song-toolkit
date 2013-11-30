@@ -123,7 +123,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 manifestFunctions.GenerateChordTemplateData(this, SongContent);
 
                 LastConversionDateTime = SongContent.LastConversionDateTime;
-                MaxPhraseDifficulty = arrangement.MaxPhraseDifficulty;
+                MaxPhraseDifficulty = arrangement.Sng2014.Metadata.MaxDifficulty;
 
                 TargetScore = 100000;
                 PhraseIterations = new List<PhraseIteration>();
@@ -138,7 +138,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 manifestFunctions.GenerateSectionData(this, SongContent);
 
                 SongAverageTempo = SongContent.AverageTempo;
-                SongOffset = arrangement.StartTime * -1;
+                SongOffset = arrangement.Sng2014.Metadata.StartTime * -1;
 
                 if (arrangement.ArrangementType != Sng.ArrangementType.Vocal)
                     SongPartition = manifestFunctions.GetSongPartition(arrangement.Name, arrangement.ArrangementType);

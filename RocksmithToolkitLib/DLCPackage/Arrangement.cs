@@ -6,6 +6,7 @@ using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage
@@ -38,10 +39,8 @@ namespace RocksmithToolkitLib.DLCPackage
         public double TuningPitch { get; set; }
         public int ScrollSpeed { get; set; }
         public PluckedType PluckedType { get; set; }
-        public int[] NoteCount { get; set; }
-        public int[] DNACount { get; set; }
-        public int MaxPhraseDifficulty { get; set; }
-        public float StartTime { get; set; }
+        // cache parsing results (speeds up generating for multiple platforms)
+        public Sng2014File Sng2014 { get; set; }
         // Gameplay Path
         public RouteMask RouteMask { get; set; }
         public bool BonusArr = false;
@@ -101,5 +100,11 @@ namespace RocksmithToolkitLib.DLCPackage
                     return String.Format("{0} - {1} [{2}]", ArrangementType, Name, Tuning);
             }
         }
+
+        public void CleanCache()
+        {
+            Sng2014 = null;
+        }
+
     }
 }
