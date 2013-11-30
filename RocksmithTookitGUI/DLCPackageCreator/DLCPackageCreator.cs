@@ -85,41 +85,49 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             get { return DlcNameTB.Text; }
             set { DlcNameTB.Text = value.GetValidSongName(SongTitle); }
         }
+
         public string SongTitle
         {
             get { return SongDisplayNameTB.Text; }
             set { SongDisplayNameTB.Text = value; }
         }
+
         public string SongTitleSort
         {
             get { return SongDisplayNameSortTB.Text; }
             set { SongDisplayNameSortTB.Text = value; }
         }
+
         public string Album
         {
             get { return AlbumTB.Text; }
             set { AlbumTB.Text = value; }
         }
+
         public string Artist
         {
             get { return ArtistTB.Text; }
             set { ArtistTB.Text = value; }
         }
+
         public string ArtistSort
         {
             get { return ArtistSortTB.Text; }
             set { ArtistSortTB.Text = value; }
         }
+
         public string AlbumYear
         {
             get { return YearTB.Text; }
             set { YearTB.Text = value; }
         }
+
         public string AppId
         {
             get { return AppIdTB.Text; }
             set { AppIdTB.Text = value; }
         }
+
         public string AverageTempo
         {
             get { return AverageTempoTB.Text; }
@@ -150,7 +158,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             get { return AlbumArtPathTB.Text; }
             set { AlbumArtPathTB.Text = value; }
         }
-
 
         private string OggPCPath
         {
@@ -529,22 +536,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Windows audio file
             if (!String.IsNullOrEmpty(info.OggPath))
                 OggPCPath = BasePath.AbsoluteTo(info.OggPath);
-            platformPC.Checked = !String.IsNullOrEmpty(OggPCPath);
+            platformPC.Checked = !String.IsNullOrEmpty(info.OggPath);
 
             // Mac audio file
             if (!String.IsNullOrEmpty(info.OggMACPath))
                 OggMACPath = BasePath.AbsoluteTo(info.OggMACPath);
-            platformMAC.Checked = !String.IsNullOrEmpty(OggMACPath);
+            platformMAC.Checked = !String.IsNullOrEmpty(info.OggMACPath);
 
             // XBox360 audio file
             if (!String.IsNullOrEmpty(info.OggXBox360Path))
                 OggXBox360Path = BasePath.AbsoluteTo(info.OggXBox360Path);
-            platformXBox360.Checked = !String.IsNullOrEmpty(OggXBox360Path);
+            platformXBox360.Checked = !String.IsNullOrEmpty(info.OggXBox360Path);
 
             // PS3 audio file
             if (!String.IsNullOrEmpty(info.OggPS3Path))
                 OggPS3Path = BasePath.AbsoluteTo(info.OggPS3Path);
-            platformPS3.Checked = !String.IsNullOrEmpty(OggPS3Path);
+            platformPS3.Checked = !String.IsNullOrEmpty(info.OggPS3Path);
 
             volumeBox.Value = Decimal.Round((decimal)info.Volume, 2);
 
@@ -710,6 +717,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
             }
+            else
+                OggPCPath = "";
 
             string oggPreviewMACPath = null;
             if (CurrentGameVersion == GameVersion.RS2014) {                
@@ -733,6 +742,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         }
                     }
                 }
+                else
+                    OggMACPath = "";
             }
 
             string oggPreviewXBox360Path = null;
@@ -760,6 +771,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
             }
+            else
+                OggXBox360Path = "";
 
             string oggPreviewPS3Path = null;
             if (platformPS3.Checked)
@@ -786,6 +799,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
             }
+            else
+                OggPS3Path = "";
 
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal) > 1)
