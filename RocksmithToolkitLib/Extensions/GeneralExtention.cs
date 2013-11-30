@@ -58,7 +58,7 @@ namespace RocksmithToolkitLib.Extensions
             string name = String.Empty;
             if (!String.IsNullOrEmpty(value))
             {
-                Regex rgx = new Regex("[^a-zA-Z0-9\\- ]");
+                Regex rgx = new Regex("[^a-zA-Z0-9\\-_ ]");
                 name = rgx.Replace(value, "");
             }
             return name;
