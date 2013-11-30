@@ -733,8 +733,8 @@ public class Anchor
 {
     public float StartBeatTime { get; set; }
     public float EndBeatTime { get; set; }
-    public float Unk3_StartBeatTime { get; set; }
-    public float Unk4_StartBeatTime { get; set; }
+    public float Unk3_FirstNoteTime { get; set; }
+    public float Unk4_LastNoteTime { get; set; }
     public Int32 FretId { get; set; }
     public Int32 Width { get; set; }
     public Int32 PhraseIterationId { get; set; }
@@ -742,8 +742,8 @@ public class Anchor
     public string[] _order = {
         "StartBeatTime",
         "EndBeatTime",
-        "Unk3_StartBeatTime",
-        "Unk4_StartBeatTime",
+        "Unk3_FirstNoteTime",
+        "Unk4_LastNoteTime",
         "FretId",
         "Width",
         "PhraseIterationId"
@@ -752,8 +752,8 @@ public class Anchor
     public void read(BinaryReader r) {
         this.StartBeatTime = r.ReadSingle();
         this.EndBeatTime = r.ReadSingle();
-        this.Unk3_StartBeatTime = r.ReadSingle();
-        this.Unk4_StartBeatTime = r.ReadSingle();
+        this.Unk3_FirstNoteTime = r.ReadSingle();
+        this.Unk4_LastNoteTime = r.ReadSingle();
         this.FretId = r.ReadInt32();
         this.Width = r.ReadInt32();
         this.PhraseIterationId = r.ReadInt32();
@@ -824,23 +824,23 @@ public class Fingerprint
     public Int32 ChordId { get; set; }
     public float StartTime { get; set; }
     public float EndTime { get; set; }
-    public float Unk3_StartTime { get; set; }
-    public float Unk4_StartTime { get; set; }
+    public float Unk3_FirstNoteTime { get; set; }
+    public float Unk4_LastNoteTime { get; set; }
 
     public string[] _order = {
         "ChordId",
         "StartTime",
         "EndTime",
-        "Unk3_StartTime",
-        "Unk4_StartTime"
+        "Unk3_FirstNoteTime",
+        "Unk4_LastNoteTime"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
         this.ChordId = r.ReadInt32();
         this.StartTime = r.ReadSingle();
         this.EndTime = r.ReadSingle();
-        this.Unk3_StartTime = r.ReadSingle();
-        this.Unk4_StartTime = r.ReadSingle();
+        this.Unk3_FirstNoteTime = r.ReadSingle();
+        this.Unk4_LastNoteTime = r.ReadSingle();
     }
 }
 

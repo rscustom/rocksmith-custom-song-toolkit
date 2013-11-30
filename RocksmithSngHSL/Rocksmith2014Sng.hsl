@@ -293,9 +293,9 @@ struct ANCHOR
     float StartBeatTime;
     float EndBeatTime;
     // sometimes Unk3-4 is garbage, probably unused (many times StartBeatTime)
-    float Unk3_StartBeatTime;
+    float Unk3_FirstNoteTime;
     // sometimes start time, sometimes later (first?) beat time
-    float Unk4_StartBeatTime;
+    float Unk4_LastNoteTime;
     long FretId;
     long Width;
     long PhraseIterationId;
@@ -328,8 +328,8 @@ struct FINGERPRINT
     long ChordId;
     float StartTime;
     float EndTime;
-    float Unk3_StartTime;
-    float Unk4_StartTime;
+    float Unk3_FirstNoteTime;
+    float Unk4_LastNoteTime;
 };
 
 struct FINGERPRINT_SECTION

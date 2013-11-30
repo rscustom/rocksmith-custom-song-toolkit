@@ -812,9 +812,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     else
                         // last phrase iteration = noguitar/end
                         anchor.EndBeatTime = xml.PhraseIterations[xml.PhraseIterations.Length - 1].Time;
-                    // TODO unknown
-                    anchor.Unk3_StartBeatTime = anchor.StartBeatTime;
-                    anchor.Unk4_StartBeatTime = anchor.StartBeatTime;
+                    // TODO not 100% clear
+                    // times will be updated later
+                    // these garbage values are only in interactive lessons?
+                    //anchor.Unk3_FirstNoteTime = (float) 3.4028234663852886e+38;
+                    //anchor.Unk4_LastNoteTime = (float) 1.1754943508222875e-38;
                     anchor.FretId = level.Anchors[j].Fret;
                     anchor.Width = (Int32)level.Anchors[j].Width;
                     anchor.PhraseIterationId = getPhraseIterationId(xml, anchor.StartBeatTime, false);
@@ -840,8 +842,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     fp.StartTime = h.StartTime;
                     fp.EndTime = h.EndTime;
                     // TODO not always StartTime
-                    fp.Unk3_StartTime = fp.StartTime;
-                    fp.Unk4_StartTime = fp.StartTime;
+                    //fp.Unk3_FirstNoteTime = fp.StartTime;
+                    //fp.Unk4_LastNoteTime = fp.StartTime;
 
                     if (xml.ChordTemplates[fp.ChordId].DisplayName.EndsWith("arp"))
                         fp2.Add(fp);
@@ -906,6 +908,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         }
                     }
                 }
+
+                // need to be sorted before anchor note times are updated
+                notes.Sort((x, y) => x.Time.CompareTo(y.Time));
+
                 foreach (var n in notes) {
                     for (Int16 id=0; id<fp1.Count; id++)
                         if (n.Time >= fp1[id].StartTime && n.Time < fp1[id].EndTime) {
@@ -913,7 +919,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             // add STRUM to chords
                             if (fp1[id].StartTime == n.Time && n.ChordId != -1)
                                 n.NoteMask |= NOTE_MASK_STRUM;
-                            fp1[id].Unk4_StartTime = n.Time;
+                            if (fp1[id].Unk3_FirstNoteTime == 0)
+                                fp1[id].Unk3_FirstNoteTime = n.Time;
+
+                            float sustain = 0;
+                            if (n.Time + n.Sustain < fp1[id].EndTime)
+                                sustain = n.Sustain;
+                            fp1[id].Unk4_LastNoteTime = n.Time + sustain;
                             break;
                         }
                     for (Int16 id=0; id<fp2.Count; id++)
@@ -921,9 +933,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             n.FingerPrintId[1] = id;
                             // add STRUM to chords
                             if (fp2[id].StartTime == n.Time && n.ChordId != -1)
-                              n.NoteMask |= NOTE_MASK_STRUM;
+                                n.NoteMask |= NOTE_MASK_STRUM;
                             n.NoteMask |= NOTE_MASK_ARPEGGIO;
-                            fp2[id].Unk4_StartTime = n.Time;
+                            if (fp2[id].Unk3_FirstNoteTime == 0)
+                                fp2[id].Unk3_FirstNoteTime = n.Time;
+
+                            float sustain = 0;
+                            if (n.Time + n.Sustain < fp2[id].EndTime)
+                                sustain = n.Sustain;
+                            fp2[id].Unk4_LastNoteTime = n.Time + sustain;
                             break;
                         }
                     for (int j=0; j<a.Anchors.Count; j++)
@@ -931,13 +949,25 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             n.AnchorWidth = (Byte) a.Anchors.Anchors[j].Width;
                             // anchor fret
                             n.FretId[1] = (Byte) a.Anchors.Anchors[j].FretId;
-                            a.Anchors.Anchors[j].Unk4_StartBeatTime = n.Time;
+                            if (a.Anchors.Anchors[j].Unk3_FirstNoteTime == 0)
+                                a.Anchors.Anchors[j].Unk3_FirstNoteTime = n.Time;
+
+                            float sustain = 0;
+                            if (n.Time + n.Sustain < a.Anchors.Anchors[j].EndBeatTime - 0.1)
+                                sustain = n.Sustain;
+                            a.Anchors.Anchors[j].Unk4_LastNoteTime = n.Time + sustain;
                             break;
                         }
                 }
+                // initialize times for empty anchors, based on lrocknroll
+                foreach (var anchor in a.Anchors.Anchors)
+                    if (anchor.Unk3_FirstNoteTime == 0) {
+                        anchor.Unk3_FirstNoteTime = anchor.StartBeatTime;
+                        anchor.Unk4_LastNoteTime = anchor.StartBeatTime + (float)0.1;
+                    }
+
                 a.Notes = new NotesSection();
                 a.Notes.Count = notes.Count;
-                notes.Sort((x, y) => x.Time.CompareTo(y.Time));
                 a.Notes.Notes = notes.ToArray();
 
                 foreach (var piter in sng.PhraseIterations.PhraseIterations) {
