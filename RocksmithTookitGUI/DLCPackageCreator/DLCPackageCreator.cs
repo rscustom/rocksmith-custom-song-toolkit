@@ -442,27 +442,27 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void dlcLoadButton_Click(object sender, EventArgs e)
         {
-            string dlcSavePath;
+            string dlcLoadPath;
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Filter = CurrentRocksmithTitle + " DLC Template (*.dlc.xml)|*.dlc.xml";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
-                dlcSavePath = ofd.FileName;
+                dlcLoadPath = ofd.FileName;
             }
 
             DLCPackageData info = null;
 
-            var serializer = new DataContractSerializer(typeof(DLCPackageData));
-            using (var stm = new XmlTextReader(dlcSavePath))
+            var deserializer = new DataContractSerializer(typeof(DLCPackageData));
+            using (var stm = new XmlTextReader(dlcLoadPath))
             {
                 try {
-                    info = (DLCPackageData)serializer.ReadObject(stm);
+                    info = (DLCPackageData)deserializer.ReadObject(stm);
                 } catch (SerializationException se) {
                     //Make compatible with previous version saved DLC
                     if (se.Message.IndexOf("ArrangementName") > -1 || se.Message.IndexOf("InstrumentTuning") > -1)
                     {
                         try {
-                            info = (DLCPackageData)serializer.ReadObject(FixOldDlcPackage(dlcSavePath));
+                            info = (DLCPackageData)deserializer.ReadObject(FixOldDlcPackage(dlcLoadPath));
                         } catch (SerializationException se2) {
                             MessageBox.Show("Can't load saved DLC because is not compatible with new DLC save format. \n\r" + se2.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
@@ -512,7 +512,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     break;
             }              
 
-            var BasePath = new Uri(Path.GetDirectoryName(dlcSavePath) + Path.DirectorySeparatorChar);
+            var BasePath = new Uri(Path.GetDirectoryName(dlcLoadPath) + Path.DirectorySeparatorChar);
 
             // Song INFO
             DlcNameTB.Text = info.Name;

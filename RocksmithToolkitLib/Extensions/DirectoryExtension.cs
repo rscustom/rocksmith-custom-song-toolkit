@@ -103,7 +103,7 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string AbsoluteTo(this Uri baseUri, string path)
         {
-            return new Uri(baseUri, path).AbsolutePath.Replace("%25", "%").Replace("%20", " ");
+            return new Uri(baseUri, path).OriginalString;
         }
     }
 }
