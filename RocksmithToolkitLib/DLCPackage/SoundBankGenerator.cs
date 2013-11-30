@@ -473,14 +473,15 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, float volume, Platform platform, bool preview = false)
+        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, float volume, Platform platform, bool preview = false, bool same = false)
         {
             var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
             var audioReader = new EndianBinaryReader(bitConverter, audioStream);
-
             int soundbankID = RandomGenerator.NextInt();
-            var fileID = RandomGenerator.NextInt();
-            var soundID = RandomGenerator.NextInt();
+            int fileID = same ? oldFileID : RandomGenerator.NextInt();
+            int soundID = same ? oldSoundID : RandomGenerator.NextInt();
+            oldSoundID = soundID;
+            oldFileID = fileID;
 
             byte[] dataChunk = audioReader.ReadBytes(51200); // wwise is based on audio length, we'll just make it up
             byte[] dataIndexChunk = DataIndex(fileID, dataChunk.Length, platform);
@@ -498,5 +499,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             return fileID.ToString();
         }
+
+        public static int oldSoundID { get; set; }
+        public static int oldFileID { get; set; }
     }
 }

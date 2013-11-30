@@ -451,11 +451,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         // SOUNDBANK PREVIEW
                         var soundbankPreviewFileName = String.Format("song_{0}_preview", dlcName);
-                        var audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform, true);
+                        dynamic audioPreviewFileNameId;
+                        if (previewAudioFile != audioFile) audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform, true);
+                        else audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform, true, true);
                         soundbankPreviewStream.Flush();
                         soundbankPreviewStream.Seek(0, SeekOrigin.Begin);
                         packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
-                        packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioPreviewFileNameId), soundPreviewStream);
+                        if (previewAudioFile != audioFile) packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioPreviewFileNameId), soundPreviewStream);
 
                         // AGGREGATE GRAPH
                         var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", info.Name.ToLower());
