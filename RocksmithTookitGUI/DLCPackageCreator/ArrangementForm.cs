@@ -324,36 +324,42 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         {
                             // FILL TONE COMBO
                             List<string> toneNames = new List<string>();
-                            
-                            toneNames.Add(xmlSong.ToneBase);
-                            toneNames.Add(xmlSong.ToneB);
-                            if (!String.IsNullOrEmpty(xmlSong.ToneC))
+
+                            if (parentControl.TonesLB.Items.Count == 1 && parentControl.TonesLB.Items[0].ToString() == "Default")
+                                parentControl.TonesLB.Items.Clear();
+                            else
+                                toneNames.AddRange(parentControl.TonesLB.Items.OfType<Tone2014>().Select(t => t.Name));
+
+                            if (!toneNames.Contains(xmlSong.ToneBase))
                                 toneNames.Add(xmlSong.ToneBase);
-                            if (!String.IsNullOrEmpty(xmlSong.ToneD))
-                                toneNames.Add(xmlSong.ToneBase);
+                            if (!toneNames.Contains(xmlSong.ToneB))
+                                toneNames.Add(xmlSong.ToneB);
+                            if (!toneNames.Contains(xmlSong.ToneC))
+                                if (!String.IsNullOrEmpty(xmlSong.ToneC))
+                                    toneNames.Add(xmlSong.ToneBase);
+                            if (!toneNames.Contains(xmlSong.ToneC))
+                                if (!String.IsNullOrEmpty(xmlSong.ToneD))
+                                    toneNames.Add(xmlSong.ToneBase);
 
                             FillToneCombo(toneBaseCombo, toneNames, true);
                             FillToneCombo(toneBCombo, toneNames, false);
                             FillToneCombo(toneCCombo, toneNames, false);
-                            FillToneCombo(toneDCombo, toneNames, false);
-
-                            if (parentControl.TonesLB.Items.Count == 1 && parentControl.TonesLB.Items[0].ToString() == "Default")
-                                parentControl.TonesLB.Items.Clear();
+                            FillToneCombo(toneDCombo, toneNames, false);                            
 
                             // SELECTING TONES
                             toneBaseCombo.SelectedItem = xmlSong.ToneBase;
-                            if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Key == xmlSong.ToneBase))
+                            if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == xmlSong.ToneBase))
                                 parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(xmlSong.ToneBase));
 
                             toneBCombo.SelectedItem = xmlSong.ToneB;
-                            if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Key == xmlSong.ToneB))
+                            if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == xmlSong.ToneB))
                                 parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(xmlSong.ToneB));
 
                             if (!String.IsNullOrEmpty(xmlSong.ToneC))
                             {
                                 toneCCombo.Enabled = true;
                                 toneCCombo.SelectedItem = xmlSong.ToneC;
-                                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Key == xmlSong.ToneC))
+                                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == xmlSong.ToneC))
                                     parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(xmlSong.ToneC));
                             }
 
@@ -361,7 +367,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             {
                                 toneDCombo.Enabled = true;
                                 toneDCombo.SelectedItem = xmlSong.ToneD;
-                                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Key == xmlSong.ToneD))
+                                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == xmlSong.ToneD))
                                     parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(xmlSong.ToneD));
                             }
                         }
