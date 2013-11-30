@@ -187,7 +187,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         private void SequencialToneComboEnabling() {
-            toneBCombo.Enabled = toneBaseCombo.SelectedIndex > 0;
             toneCCombo.Enabled = toneBCombo.SelectedIndex > 0;
             toneDCombo.Enabled = toneCCombo.SelectedIndex > 0;
         }
