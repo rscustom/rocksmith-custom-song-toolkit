@@ -418,6 +418,12 @@ namespace RocksmithToolkitLib.Xml
             Int32[] strings = { String0, String1, String2, String3, String4, String5 };
             return strings;
         }
+
+        public int[] ToBassArray()
+        {
+            Int32[] strings = { String0, String1, String2, String3, 0, 0 };
+            return strings;
+        }
     }
 
     [XmlType("phrase")]

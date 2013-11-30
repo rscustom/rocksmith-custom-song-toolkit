@@ -738,7 +738,7 @@
         private System.Windows.Forms.ComboBox cmbAppIds;
         private System.Windows.Forms.Button toneRemoveButton;
         private System.Windows.Forms.Button toneAddButton;
-        private System.Windows.Forms.ListBox TonesLB;
+        public System.Windows.Forms.ListBox TonesLB;
         private System.Windows.Forms.Button arrangementEditButton;
         private System.Windows.Forms.Button toneEditButton;
         private System.Windows.Forms.Button toneImportButton;

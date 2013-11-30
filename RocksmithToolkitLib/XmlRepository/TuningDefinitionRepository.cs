@@ -6,6 +6,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Reflection;
 using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.Sng;
 
 namespace RocksmithToolkitLib.DLCPackage {
     public class TuningDefinitionRepository : XmlRepository<TuningDefinition>
@@ -33,14 +34,24 @@ namespace RocksmithToolkitLib.DLCPackage {
             return List.OfType<TuningDefinition>().Where(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()));
         }
 
-        public TuningDefinition Select(TuningStrings tuningStrings, GameVersion gameVersion) {
-            var tuning = List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
-            return tuning;
+        public TuningDefinition Select(TuningStrings tuningStrings, GameVersion gameVersion)
+        {
+            return List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
+        }
+
+        public TuningDefinition SelectForBass(TuningStrings tuningStrings, GameVersion gameVersion)
+        {
+            return List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings.ToBassArray()) && s.GameVersion == gameVersion);
         }
 
         public TuningDefinition Select(int[] tuningStrings, GameVersion gameVersion)
         {
             return List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
+        }
+
+        public TuningDefinition SelectForBass(int[] tuningStrings, GameVersion gameVersion)
+        {
+            return List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
         }
     }
 }

@@ -189,9 +189,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             TonesLB.Items.Add(CreateNewTone());
         }
 
-        private dynamic CreateNewTone()
+        public dynamic CreateNewTone(string toneName = "Default")
         {
-            var name = "Default";
+            var name = toneName;
             bool uniqueToneName = false;
             int ind = 0;
             do
@@ -199,7 +199,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 uniqueToneName = !TonesLB.Items.Contains(name);
                 if (!uniqueToneName)
                 {
-                    name = "Default " + (++ind);
+                    name = toneName + (++ind);
                 }
             } while (!uniqueToneName);
 
