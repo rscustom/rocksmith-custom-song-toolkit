@@ -391,7 +391,14 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 var tn = xml.Tones[i];
                 var t = new Tone();
                 t.Time = tn.Time;
-                t.ToneId = tn.Id;
+                    if (tn.Name == xml.ToneA)
+                        t.ToneId = 0;
+                    else if (tn.Name == xml.ToneB)
+                        t.ToneId = 1;
+                    else if (tn.Name == xml.ToneC)
+                        t.ToneId = 2;
+                    else if (tn.Name == xml.ToneD)
+                        t.ToneId = 3;
                 sng.Tones.Tones[i] = t;
             };
         }

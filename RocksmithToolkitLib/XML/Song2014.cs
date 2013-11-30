@@ -110,6 +110,21 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArrayItem("tone")]
         public SongTone2014[] Tones { get; set; }
 
+        [XmlElement("tonebase")]
+        public string ToneBase { get; set; }
+
+        [XmlElement("tonea")]
+        public string ToneA { get; set; }
+
+        [XmlElement("toneb")]
+        public string ToneB { get; set; }
+
+        [XmlElement("tonec")]
+        public string ToneC { get; set; }
+
+        [XmlElement("toned")]
+        public string ToneD { get; set; }
+
         [XmlArray("ebeats")]
         [XmlArrayItem("ebeat")]
         public SongEbeat[] Ebeats { get; set; }
