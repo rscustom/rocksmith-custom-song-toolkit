@@ -296,7 +296,8 @@ struct ANCHOR
     float Unk3_FirstNoteTime;
     // sometimes start time, sometimes later (first?) beat time
     float Unk4_LastNoteTime;
-    long FretId;
+    byte FretId;
+    byte Unk_Padding[3];
     long Width;
     long PhraseIterationId;
 };

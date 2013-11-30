@@ -735,7 +735,9 @@ public class Anchor
     public float EndBeatTime { get; set; }
     public float Unk3_FirstNoteTime { get; set; }
     public float Unk4_LastNoteTime { get; set; }
-    public Int32 FretId { get; set; }
+    public Byte FretId { get; set; }
+    public Byte[] _Unk_Padding = new Byte[3];
+    public Byte[] Unk_Padding { get { return this._Unk_Padding; } set { _Unk_Padding = value; } }
     public Int32 Width { get; set; }
     public Int32 PhraseIterationId { get; set; }
 
@@ -745,6 +747,7 @@ public class Anchor
         "Unk3_FirstNoteTime",
         "Unk4_LastNoteTime",
         "FretId",
+        "Unk_Padding",
         "Width",
         "PhraseIterationId"
     };
@@ -754,7 +757,8 @@ public class Anchor
         this.EndBeatTime = r.ReadSingle();
         this.Unk3_FirstNoteTime = r.ReadSingle();
         this.Unk4_LastNoteTime = r.ReadSingle();
-        this.FretId = r.ReadInt32();
+        this.FretId = r.ReadByte();
+        this.Unk_Padding = r.ReadBytes(3);
         this.Width = r.ReadInt32();
         this.PhraseIterationId = r.ReadInt32();
     }

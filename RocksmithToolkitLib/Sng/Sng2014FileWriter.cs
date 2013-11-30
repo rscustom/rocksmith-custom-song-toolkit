@@ -818,7 +818,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     // these garbage values are only in interactive lessons?
                     //anchor.Unk3_FirstNoteTime = (float) 3.4028234663852886e+38;
                     //anchor.Unk4_LastNoteTime = (float) 1.1754943508222875e-38;
-                    anchor.FretId = level.Anchors[j].Fret;
+                    anchor.FretId = (byte) level.Anchors[j].Fret;
                     anchor.Width = (Int32)level.Anchors[j].Width;
                     anchor.PhraseIterationId = getPhraseIterationId(xml, anchor.StartBeatTime, false);
                     anchors.Anchors[j] = anchor;
