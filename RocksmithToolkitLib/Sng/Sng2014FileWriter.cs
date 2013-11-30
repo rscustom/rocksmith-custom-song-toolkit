@@ -126,9 +126,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.Metadata.StringCount = 6;
             sng.Metadata.Tuning = new Int16[sng.Metadata.StringCount];
             sng.Metadata.Tuning = tuning;
-            var start = sng.Arrangements.Arrangements[sng.Metadata.MaxDifficulty].Notes.Notes[0].Time;
-            sng.Metadata.Unk11_FirstNoteTime = start;
-            sng.Metadata.Unk12_FirstNoteTime = start;
+            // calculated when parsing arrangements
+            sng.Metadata.Unk11_FirstNoteTime = first_note_time;
+            sng.Metadata.Unk12_FirstNoteTime = first_note_time;
         }
 
         private static Int32 getPhraseIterationId(Song2014 xml, float Time, bool end)
@@ -789,6 +789,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             return bd;
         }
 
+        private float first_note_time = 0;
         private void parseArrangements(Song2014 xml, Sng2014File sng) {
             sng.Arrangements = new ArrangementSection();
             sng.Arrangements.Count = getMaxDifficulty(xml) + 1;
@@ -911,6 +912,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                 // need to be sorted before anchor note times are updated
                 notes.Sort((x, y) => x.Time.CompareTo(y.Time));
+                if (first_note_time == 0 || first_note_time > notes[0].Time)
+                    first_note_time = notes[0].Time;
 
                 foreach (var n in notes) {
                     for (Int16 id=0; id<fp1.Count; id++)

@@ -436,7 +436,8 @@ struct METADATA
     // 100k
     double MaxScore;
     double MaxNotesAndChords;
-    // this one is divided by 2 in ge_baccents_lsn50
+    // ge_baccents_lsn50, ge_e14_rchords4 show that this count is without example riff
+    // for songs it will be always the same value
     double Unk3_MaxNotesAndChords;
     // MaxScore / MaxNotesAndChords
     double PointsPerNote;
