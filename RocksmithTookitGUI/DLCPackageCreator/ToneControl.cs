@@ -96,7 +96,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         descriptorCombo.SelectedIndex = ToneDescriptor.List().TakeWhile(t => t.Descriptor != tone.ToneDescriptors[0]).Count();
                 }
                 else
-                    UpdateToneDescription(descriptorCombo);
+                    UpdateToneDescription(descriptorCombo, false);
             }
         }
 
@@ -141,7 +141,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void UpdateToneDescription(ComboBox combo) {
+        private void UpdateToneDescription(ComboBox combo, bool updateName = true) {
             if (_refreshingCombos)
                 return;
 
@@ -149,12 +149,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tone.ToneDescriptors.Clear();
             tone.ToneDescriptors.Add(descriptor.Descriptor);
 
-            string toneName = tone.Name;
-            var descIndex = toneName.LastIndexOf("_");
-            if (descIndex > -1)
-                toneName = toneName.Substring(0, descIndex);
+            if (updateName)
+            {
+                string toneName = tone.Name;
+                var descIndex = toneName.LastIndexOf("_");
+                if (descIndex > 0)
+                    toneName = toneName.Substring(0, descIndex);
 
-            toneNameBox.Text = String.Format("{0}_{1}", toneName, descriptor.ShortName);
+                toneNameBox.Text = String.Format("{0}_{1}", toneName, descriptor.ShortName);
+            }
         }
 
         private void InitializeComboBoxes()
