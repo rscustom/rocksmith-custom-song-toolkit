@@ -780,8 +780,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 // these are always zero for lessons and songs
                 //"Unk3_0",
                 //"Unk4_0",
-                // TODO unknown meaning
+                // TODO unknown meaning, added attribute to XML for testing
                 //"Unk5"
+                b.Unk5 = note.BendValues[i].Unk5;
             }
 
             return bd;

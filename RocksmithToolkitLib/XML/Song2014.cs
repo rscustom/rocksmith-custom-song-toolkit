@@ -284,6 +284,9 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlAttribute("step")]
         public float Step { get; set; }
+
+        [XmlAttribute("unk5")]
+        public Byte Unk5 { get; set; }
     }
 
     public class SongChord2014 : SongChord {
