@@ -163,8 +163,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region XBox360
 
-        public static void BuildXBox360Package(string packagePath, DLCPackageData info, IEnumerable<string> xboxFiles, GameVersion gameVersion)
+        public static void BuildXBox360Package(string songFileName, DLCPackageData info, IEnumerable<string> xboxFiles, GameVersion gameVersion)
         {
+            var songFile = Path.Combine(Path.GetDirectoryName(songFileName), Path.GetFileNameWithoutExtension(songFileName));
+
             LogRecord x = new LogRecord();
             RSAParams xboxRSA = info.SignatureType == PackageMagic.CON ? new RSAParams(new DJsIO(Resources.XBox360_KV, true)) : new RSAParams(StrongSigned.LIVE);
             CreateSTFS xboxSTFS = new CreateSTFS();
@@ -172,7 +174,7 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (string file in xboxFiles)
                 xboxSTFS.AddFile(file, Path.GetFileName(file));
 
-            STFSPackage xboxPackage = new STFSPackage(xboxSTFS, xboxRSA, packagePath, x);
+            STFSPackage xboxPackage = new STFSPackage(xboxSTFS, xboxRSA, songFile, x);
             var generated = xboxPackage.RebuildPackage(xboxRSA);
             if (!generated)
                 throw new InvalidOperationException("Error on create XBox360 package, details: \n\r" + x.Log);
