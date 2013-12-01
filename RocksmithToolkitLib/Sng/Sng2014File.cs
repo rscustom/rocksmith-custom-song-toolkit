@@ -202,7 +202,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
             EndianBitConverter conv = EndianBitConverter.Little;
             MemoryStream data = new MemoryStream();
             var w = new EndianBinaryWriter(conv, data);
+            bool mode = this.consoleMode;
+            this.consoleMode = false;
             writeStruct(w, obj);
+            this.consoleMode = mode;
             w.Flush();
             data.Position = 0;
             return data;
@@ -210,11 +213,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         public UInt32 hashStruct(object obj) {
             MemoryStream data = copyStruct(obj);
-
-            bool mode = this.consoleMode;
-            this.consoleMode = false;
             UInt32 crc = Crc32.Compute(data.ToArray());
-            this.consoleMode = mode;
             return crc;
         }
 

@@ -1050,15 +1050,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
         {
             // current phrase iteration
             int p = 0;
-            // count of repeats and starting time
-            int count = 0;
-            Notes first = null;
             for (int o=0; o < notes.Length; o++) {
                 var current = notes[o];
-                
+
                 // skip open strings
                 if (current.FretId == 0) {
-                    first = null;
                     continue;
                 }
 
@@ -1067,55 +1063,36 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     // advance and re-run
                     // will be repeated through empty iterations
                     ++p;
-                    first = null;
                     o = o-1;
                     continue;
                 }
 
-                // take care of the first note
-                if (first == null) {
-                    current.NoteFlags |= NOTE_FLAGS_NUMBERED;
-                    first = current;
-                    count = 1;
-                    continue;
-                } else {
-                    int start = o-8;
-                    if (start < 0)
-                        start = 0;
-                    // search last 8 notes
-                    for (int i=o; i<=0; i++) {
-                        // ignore notes which are too far away
-                        if (notes[i].Time + 2.0 < current.Time)
-                            continue;
+                bool repeat = false;
+                int start = o-8;
+                if (start < 0)
+                    start = 0;
+                // search last 8 notes
+                for (int i=o-1; i>=start; i--) {
+                    // ignore notes which are too far away
+                    if (notes[i].Time + 2.0 < current.Time)
+                        continue;
+                    // ignore notes outside of iteration
+                    if (notes[i].Time < sng.PhraseIterations.PhraseIterations[p].StartTime)
+                        continue;
 
-                        // count as repeat if this fret/chord was numbered recently
-                        if (notes[i].FretId == current.FretId ||
-                            notes[i].ChordId == current.ChordId) {
-                            if ((notes[i].NoteFlags & NOTE_FLAGS_NUMBERED) != 0) {
-                                ++count;
-                                continue;
-                            }
+                    // count as repeat if this fret/chord was numbered recently
+                    if ((current.ChordId == -1 && notes[i].FretId == current.FretId) ||
+                        (current.ChordId != -1 && notes[i].ChordId == current.ChordId)) {
+                        if ((notes[i].NoteFlags & NOTE_FLAGS_NUMBERED) != 0) {
+                            repeat = true;
+                            break;
                         }
                     }
-
-                    // chord change
-                    if (current.ChordId != first.ChordId) {
-                        // re-run
-                        first = null;
-                        o = o-1;
-                        continue;
-                    }
-                    // note change                    
-                    if (current.FretId != first.FretId) {
-                        // re-run
-                        first = null;
-                        o = o-1;
-                        continue;
-                    }
-
-                    // repeated note
-                    ++count;
                 }
+
+                // change
+                if (!repeat)
+                    current.NoteFlags |= NOTE_FLAGS_NUMBERED;
             }
         }
     }
