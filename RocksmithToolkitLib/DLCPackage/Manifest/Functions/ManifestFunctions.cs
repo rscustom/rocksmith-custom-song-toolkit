@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.IO;
 using Newtonsoft.Json;
@@ -206,14 +207,23 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     Number = section.Number,
                     StartTime = section.StartTime,
                     EndTime = (i >= song.Sections.Length - 1) ? song.SongLength : song.Sections[i + 1].StartTime,
-                    UIName = String.Format("$[6007] {0} [1]", section.Name)
+                    UIName = null
                 };
-                var sep = sect.Name.Split(new string[1] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                string[] sep = sect.Name.Split(new string[1] { " " }, StringSplitOptions.RemoveEmptyEntries);
+
+                // process "<section><number>" used by official XML
+                var numAlpha = new Regex("(?<Alpha>[a-zA-Z]*)(?<Numeric>[0-9]*)");
+                var match = numAlpha.Match(sep[0]);
+                if (match.Groups["Numeric"].Value != "")
+                    sep = new string[] { match.Groups["Alpha"].Value, match.Groups["Numeric"].Value };
+
                 if (sep.Length == 1)
                 {
                     string uiName;
                     if (SectionUINames.TryGetValue(sep[0], out uiName))
                         sect.UIName = uiName;
+                    else
+                        throw new InvalidOperationException(String.Format("Unknown section name: {0}", sep[0]));
                 }
                 else
                 {
@@ -227,7 +237,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                         }
                         catch { }
                         sect.UIName = uiName;
-                    }
+                    } else
+                          throw new InvalidOperationException(String.Format("Unknown section name: {0}", sep[0]));
                 }
                 var phraseIterStart = -1;
                 var phraseIterEnd = 0;
