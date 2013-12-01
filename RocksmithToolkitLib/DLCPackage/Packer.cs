@@ -514,21 +514,11 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (Path.GetFileName(xmlFile).ToLower().IndexOf("_vocals.xml") >= 0)
                     {
                         arrType = ArrangementType.Vocal;
-                        return; // No supp
                     }
-                    else
-                    {
-                        using (FileStream fs = new FileStream(sngFile, FileMode.Create))
-                        //using (var raw = new MemoryStream())
-                        {
-                            Song2014 song = Song2014.LoadFromFile(xmlFile);
-                            if (!Enum.TryParse<ArrangementType>(song.Arrangement, out arrType))
-                                if (song.Arrangement.ToLower().IndexOf("_bass.xml") >= 0)
-                                    arrType = ArrangementType.Bass;
 
-                            Sng2014File sng = new Sng2014File(xmlFile, arrType);
-                            sng.writeSng(fs, platform);
-                        }
+                    using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
+                        Sng2014File sng = Sng2014File.ConvertXML(xmlFile, arrType);
+                        sng.writeSng(fs, platform);
                     }
                 }
             }

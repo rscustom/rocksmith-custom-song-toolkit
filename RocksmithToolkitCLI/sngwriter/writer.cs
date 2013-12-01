@@ -17,9 +17,7 @@ namespace Writer
 
             using (FileStream fs = new FileStream(sngfile, FileMode.Create)) {
                 // parse from XML
-                // TODO we only need Guitar / Bass and maybe Vocals in the future
-                ArrangementType instrument = ArrangementType.Bass;
-                Sng2014File sng = new Sng2014File(xmlfile, instrument);
+                Sng2014File sng = Sng2014File.ConvertSong(xmlfile);
 
                 // write raw SNG data for diffing and inspection
                 var raw = new FileStream(sngfile + ".raw", FileMode.Create);

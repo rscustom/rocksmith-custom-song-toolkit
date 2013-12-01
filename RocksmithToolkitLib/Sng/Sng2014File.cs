@@ -18,6 +18,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
     public class Sng2014File : Sng {
         private bool consoleMode = !Environment.UserInteractive;
 
+        public static Sng2014File ConvertXML(string xml_path, ArrangementType type)
+        {
+            if (type != ArrangementType.Vocal) {
+                return Sng2014File.ConvertSong(xml_path);
+            } else {
+                return Sng2014FileWriter.read_vocals(xml_path);
+            }
+        }
+
         public Sng2014File() { }
 
         // Easy, Medium, Hard = 0, 1, 2
@@ -26,19 +35,23 @@ namespace RocksmithToolkitLib.Sng2014HSL
         public int[] DNACount { get ; set ; }
 
         // this is platform independent SNG object
-        public Sng2014File(string xml_file, ArrangementType arrangementType) {
+        public static Sng2014File ConvertSong(string xml_file) {
             Song2014 song = Song2014.LoadFromFile(xml_file);
             var parser = new Sng2014FileWriter();
-            parser.read_song(song, this, arrangementType);
-            NoteCount = parser.NoteCount;
-            DNACount = parser.DNACount;
+            Sng2014File sng = new Sng2014File();
+            parser.read_song(song, sng);
+            sng.NoteCount = parser.NoteCount;
+            sng.DNACount = parser.DNACount;
+            return sng;
         }
 
         // raw SNG data reader, pretty much useless but it's here
-        public Sng2014File(string sng_file) {
+        public static Sng2014File LoadSNG(string sng_file) {
             using (FileStream fs = new FileStream(sng_file, FileMode.Open)) {
                 BinaryReader r = new BinaryReader(fs);
-                this.Read(r);
+                Sng2014File sng = new Sng2014File();
+                sng.Read(r);
+                return sng;
             }
         }
 

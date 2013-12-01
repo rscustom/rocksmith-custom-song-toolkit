@@ -827,14 +827,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 case GameVersion.RS2014:
                     if (arrangement.Sng2014 == null) {
                         // Sng2014File can be reused when generating for multiple platforms
-                        Sng2014File sng;
-                        if (arrangement.ArrangementType != ArrangementType.Vocal) {
-                            sng = new Sng2014File(arrangement.SongXml.File, arrangement.ArrangementType);
-                        } else {
-                            sng = Sng2014FileWriter.read_vocals(arrangement.SongXml.File);
-                        }
                         // cache results
-                        arrangement.Sng2014 = sng;
+                        arrangement.Sng2014 = Sng2014File.ConvertXML(arrangement.SongXml.File, arrangement.ArrangementType);
                     }
                     using (FileStream fs = new FileStream(sngFile, FileMode.Create))
                         arrangement.Sng2014.writeSng(fs, platform);

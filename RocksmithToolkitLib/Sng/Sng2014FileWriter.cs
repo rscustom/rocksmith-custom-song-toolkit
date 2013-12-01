@@ -20,11 +20,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
             var data = new MemoryStream(Resources.VOCALS_RS2);
             var sng = new Sng2014File(data);
             var xml = Vocals.LoadVocalsFromXmlFile(xml_file);
-            Sng2014FileWriter.parseVocals(xml, sng);
+            Sng2014FileWriter.ParseVocals(xml, sng);
             return sng;
         }
 
-        public void read_song(Song2014 songXml, Sng2014File sngFile, ArrangementType arrangementType)
+        public void read_song(Song2014 songXml, Sng2014File sngFile)
         {
             Int16[] tuning = {
                 (Int16) songXml.Tuning.String0,
@@ -36,7 +36,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             };
             parseEbeats(songXml, sngFile);
             parsePhrases(songXml, sngFile);
-            parseChords(songXml, sngFile, tuning, arrangementType == ArrangementType.Bass);
+            parseChords(songXml, sngFile, tuning, songXml.Arrangement == "Bass");
             // vocals use different parse function
             sngFile.Vocals = new VocalSection();
             sngFile.Vocals.Vocals = new Vocal[0];
@@ -49,7 +49,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             parseDNAs(songXml, sngFile);
             parseSections(songXml, sngFile);
             parseArrangements(songXml, sngFile);
-            parseMetadata(songXml, sngFile, tuning, arrangementType);
+            parseMetadata(songXml, sngFile, tuning);
 
             // this needs to be initialized after arrangements
             parseChordNotes(songXml, sngFile);
@@ -102,7 +102,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             return count;
         }
 
-        private void parseMetadata(Song2014 xml, Sng2014File sng, Int16[] tuning, ArrangementType arrangementType) {
+        private void parseMetadata(Song2014 xml, Sng2014File sng, Int16[] tuning) {
             // Easy, Medium, Hard
             NoteCount = new int[3];
             NoteCount[0] = GetNoteCount(sng, 0);
@@ -403,7 +403,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             };
         }
 
-        public static void parseVocals(Vocals xml, Sng2014File sng)
+        public static void ParseVocals(Vocals xml, Sng2014File sng)
         {
             sng.Vocals = new VocalSection();
             sng.Vocals.Count = xml.Vocal.Length;
