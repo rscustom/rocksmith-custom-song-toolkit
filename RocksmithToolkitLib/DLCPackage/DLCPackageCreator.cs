@@ -121,8 +121,15 @@ namespace RocksmithToolkitLib.DLCPackage
                         throw new InvalidOperationException("Unexpected game version value");
                 }
 
-                var fileNameWithoutExtension = Path.Combine(Path.GetDirectoryName(packagePath), Path.GetFileNameWithoutExtension(packagePath));
-                var songFileName = String.Format("{0}{1}.psarc", fileNameWithoutExtension, (!fileNameWithoutExtension.EndsWith(platform.GetPathName()[2]) ? platform.GetPathName()[2] : ""));
+                var packageName = Path.GetFileNameWithoutExtension(packagePath);
+                if (packageName.EndsWith(new Platform(GamePlatform.Pc, GameVersion.None).GetPathName()[2]) ||
+                    packageName.EndsWith(new Platform(GamePlatform.Mac, GameVersion.None).GetPathName()[2]) ||
+                    packageName.EndsWith(new Platform(GamePlatform.XBox360, GameVersion.None).GetPathName()[2]) ||
+                    packageName.EndsWith(new Platform(GamePlatform.PS3, GameVersion.None).GetPathName()[2] + ".psarc"))
+                {
+                    packageName = packageName.Substring(0, packageName.LastIndexOf("_"));
+                }
+                var songFileName = String.Format("{0}{1}.psarc", Path.Combine(Path.GetDirectoryName(packagePath), packageName), platform.GetPathName()[2]);
                                 
                 switch (platform.platform)
                 {
@@ -266,6 +273,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void EncryptPS3EdatFiles(string songFileName, Platform platform)
         {
+            // Cleaning work dir
+            var junkFiles = Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".edat") || s.EndsWith(".bak"));
+            foreach(var junk in junkFiles)
+                File.Delete(junk);
+
             if (platform.version == GameVersion.RS2014) {
                 // Have only one file for RS2014 package, so can be rename that the user defined
                 if (FILES_PS3.Count == 1)
@@ -288,8 +300,13 @@ namespace RocksmithToolkitLib.DLCPackage
             if (platform.version == GameVersion.RS2014)
             {
                 var encryptedFile = String.Format("{0}.edat", FILES_PS3[0]);
+                var userSavePath = String.Format("{0}.edat", songFileName);
+
+                if (File.Exists(userSavePath))
+                    File.Delete(userSavePath);
+
                 if (File.Exists(encryptedFile))
-                    File.Move(encryptedFile, String.Format("{0}.edat", songFileName));
+                    File.Move(encryptedFile, userSavePath);
             }
             else
             {
