@@ -1087,8 +1087,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         continue;
                     }
                     // note change                    
-                    if (current.FretId != first.FretId ||
-                        current.StringIndex != first.StringIndex) {
+                    if (current.FretId != first.FretId) {
                         // re-run
                         first = null;
                         o = o-1;
