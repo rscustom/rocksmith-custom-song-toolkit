@@ -120,24 +120,25 @@ namespace RocksmithToolkitLib.DLCPackage
                     case GameVersion.None:
                         throw new InvalidOperationException("Unexpected game version value");
                 }
-                
-                switch (platform.platform) {
+
+                var fileNameWithoutExtension = Path.Combine(Path.GetDirectoryName(packagePath), Path.GetFileNameWithoutExtension(packagePath));
+                var songFileName = String.Format("{0}{1}.psarc", fileNameWithoutExtension, (!fileNameWithoutExtension.EndsWith(platform.GetPathName()[2]) ? platform.GetPathName()[2] : ""));
+                                
+                switch (platform.platform)
+                {
                     case GamePlatform.Pc:
                     case GamePlatform.Mac:
-                        var fileNameWithoutExtension = Path.Combine(Path.GetDirectoryName(packagePath), Path.GetFileNameWithoutExtension(packagePath));
                         switch (platform.version)
 	                    {
                             // SAVE PACKAGE
                             case GameVersion.RS2014:
-                                var songRS2014FileName = String.Format("{0}{1}.psarc", fileNameWithoutExtension, platform.GetPathName()[2]);
-                                using (FileStream fl = File.Create(songRS2014FileName))
+                                using (FileStream fl = File.Create(songFileName))
                                 {
                                     packPsarcStream.CopyTo(fl);
                                 }
                                 break;
                             case GameVersion.RS2012:
-                                var songRS1FileName = String.Format("{0}.dat", fileNameWithoutExtension);
-                                using (var fl = File.Create(songRS1FileName))
+                                using (var fl = File.Create(songFileName))
                                 {
                                     RijndaelEncryptor.EncryptFile(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
                                 }
@@ -147,10 +148,10 @@ namespace RocksmithToolkitLib.DLCPackage
 	                    }
                         break;
                     case GamePlatform.XBox360:
-                        BuildXBox360Package(packagePath, info, FILES_XBOX, platform.version);
+                        BuildXBox360Package(songFileName, info, FILES_XBOX, platform.version);
                         break;
                     case GamePlatform.PS3:
-                        EncryptPS3EdatFiles(packagePath);
+                        EncryptPS3EdatFiles(songFileName, platform);
                         break;
                 }                
             }
@@ -261,54 +262,41 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PS3
 
-        public static void DecryptPS3EdatFiles(string packagesPath)
+        public static void EncryptPS3EdatFiles(string songFileName, Platform platform)
         {
-            var output = RijndaelEncryptor.EncryptPS3Edat();
-
-            // Delete .psarc files
-            foreach (var ps3File in FILES_PS3)
-                if (File.Exists(ps3File))
-                    File.Delete(ps3File);
-
-            // Move directory to user selected path
-            if (Directory.Exists(PS3_WORKDIR))
-                DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", packagesPath));
-
-            if (output.IndexOf("Encrypt all EDAT files successfully") < 0)
-                throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output bellow:" + Environment.NewLine + Environment.NewLine + output);
-        }
-
-        public static void EncryptPS3EdatFiles(string packagesPath)
-        {
-            // Packing using TruAncestor Edat
-            string toolkitPath = Path.GetDirectoryName(Application.ExecutablePath);
-            string rebuilderApp = Path.Combine(toolkitPath, "ps3_encrypt.cmd");
-            
-            Process PS3Process = new Process();
-            PS3Process.StartInfo.FileName = rebuilderApp;
-            PS3Process.StartInfo.WorkingDirectory = toolkitPath;
-            PS3Process.StartInfo.UseShellExecute = false;
-            PS3Process.StartInfo.CreateNoWindow = true;
-            PS3Process.StartInfo.RedirectStandardOutput = true;
-
-            PS3Process.Start();
-            PS3Process.WaitForExit();
-
-            string rebuilderResult = PS3Process.StandardOutput.ReadToEnd();
-
-            // Delete .psarc files
-            foreach (var ps3File in FILES_PS3)
-            {
-                if (File.Exists(ps3File))
-                    File.Delete(ps3File);
+            if (platform.version == GameVersion.RS2014) {
+                // Have only one file for RS2014 package, so can be rename that the user defined
+                if (FILES_PS3.Count == 1)
+                    if (File.Exists(FILES_PS3[0]))
+                    {
+                        var oldName = FILES_PS3[0].Clone().ToString();
+                        FILES_PS3[0] = Path.Combine(Path.GetDirectoryName(FILES_PS3[0]), Path.GetFileName(songFileName));
+                        File.Move(oldName, FILES_PS3[0]);
+                    }
             }
 
-            // Move directory to user selected path
-            if (Directory.Exists(PS3_WORKDIR))
-                DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", packagesPath));
+            string encryptResult = RijndaelEncryptor.EncryptPS3Edat();
 
-            if (rebuilderResult.IndexOf("Encrypt all EDAT files successfully") < 0)
-                throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output bellow:" + Environment.NewLine + Environment.NewLine + rebuilderResult);
+            // Delete .psarc files
+            foreach (var ps3File in FILES_PS3)
+                if (File.Exists(ps3File))
+                    File.Delete(ps3File);
+
+            // Move directory if RS1 or file in RS2014 to user selected path
+            if (platform.version == GameVersion.RS2014)
+            {
+                var encryptedFile = String.Format("{0}.edat", FILES_PS3[0]);
+                if (File.Exists(encryptedFile))
+                    File.Move(encryptedFile, String.Format("{0}.edat", songFileName));
+            }
+            else
+            {
+                if (Directory.Exists(PS3_WORKDIR))
+                    DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", songFileName));
+            }
+
+            if (encryptResult.IndexOf("Encrypt all EDAT files successfully") < 0)
+                throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output bellow:" + Environment.NewLine + Environment.NewLine + encryptResult);
         }
 
         #endregion
