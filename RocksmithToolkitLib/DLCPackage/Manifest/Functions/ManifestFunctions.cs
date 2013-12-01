@@ -15,7 +15,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
     public class ManifestFunctions
     {
-        int[] songPartitionCount = { 0 /* Combo count */, 0 /* Lead count */, 0 /* Rhythm count */, 0 /* Bass Count */ };
         private Dictionary<string, string> SectionUINames { get; set; }
 
         public ManifestFunctions(GameVersion gameVersion)
@@ -88,26 +87,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     SectionUINames.Add("noguitar", "$[6091] No Guitar [1]");
                     break;
             }
-        }
-
-        public int GetSongPartition(ArrangementName arrangementName, ArrangementType arrangementType) {
-            switch (arrangementType) {
-                case Sng.ArrangementType.Bass:
-                    songPartitionCount[3]++;
-                    return songPartitionCount[3];
-                default:
-                    switch (arrangementName) {
-                        case RocksmithToolkitLib.Sng.ArrangementName.Lead:
-                            songPartitionCount[1]++;
-                            return songPartitionCount[1];
-                        case RocksmithToolkitLib.Sng.ArrangementName.Rhythm:
-                            songPartitionCount[2]++;
-                            return songPartitionCount[2];
-                        default:
-                            songPartitionCount[0]++;
-                            return songPartitionCount[0];
-                    }
-            };
         }
 
         public void GeneratePhraseIterationsData(IAttributes attribute, dynamic song, GameVersion gameVersion)

@@ -67,16 +67,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                     GetType().GetProperty(prop.Name).SetValue(this, prop.GetValue(attributes, null), null);
         }
 
-        public AttributesHeader2014(Arrangement arrangement, DLCPackageData info, AggregateGraph2014 aggregateGraph, Platform platform) {
+        public AttributesHeader2014(string arrangementFileName, Arrangement arrangement, DLCPackageData info, Platform platform) {
             IsVocal = arrangement.ArrangementType == Sng.ArrangementType.Vocal;
             SongContent = (IsVocal) ? null : Song2014.LoadFromFile(arrangement.SongXml.File);
-            
-            var albumAggName = aggregateGraph.AlbumArt[0].Name;
-            var albumUrn = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), albumAggName.Substring(0, albumAggName.LastIndexOf("_")));
-            
-            var jsonAggName = String.Format(AggregateGraph2014.NAME_DEFAULT, info.Name.ToLower(), arrangement.Name.ToString().ToLower());
-            var jsonAggItem = aggregateGraph.JsonDB.SingleOrDefault(t => t.Name == jsonAggName);
-            var jsonUrn = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), jsonAggItem.Name);
+            var dlcName = info.Name.ToLower();
+
+            var albumUrn = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}", dlcName));
+            var jsonUrn = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), String.Format("{0}_{1}", dlcName, arrangementFileName));
 
             //FILL ATTRIBUTES
             this.AlbumArt = albumUrn;

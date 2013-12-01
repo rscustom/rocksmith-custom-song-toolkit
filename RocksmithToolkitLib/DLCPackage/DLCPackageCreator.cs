@@ -317,32 +317,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region Generate PSARC RS2014
 
-        private static void ToDds(string input, Dictionary<int,string> output)
-        {
-            string format = "dxt1a";
-            Dictionary<int,Process> proc = new Dictionary<int,Process>();
-
-            foreach (KeyValuePair<int, string> item in output)
-            {
-                var MS = new MemoryStream();
-                int Size = item.Key;
-                string OutPath = item.Value;
-                var args = String.Format("-file \"{0}\" -output \"{1}\" -nomipmap -prescale {2} {2} -RescaleBox -{3} -overwrite -forcewrite",
-                                         input, OutPath, Size, format);
-
-                var nvdxt = new Process();
-                nvdxt.StartInfo = new ProcessStartInfo
-                {
-                    FileName = "nvdxt.exe",
-                    Arguments = args,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                };
-                nvdxt.Start();
-                nvdxt.WaitForExit();
-            }
-        }
-
         private static void GeneratePsarcsForRS2014(MemoryStream output, DLCPackageData info, Platform platform)
         {
             var dlcName = info.Name.ToLower();
@@ -352,9 +326,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 // Stream objects
                 Stream soundStream = null,
-                        soundPreviewStream = null,
-                        rsenumerableRootStream = null,
-                        rsenumerableSongStream = null;
+                       soundPreviewStream = null,
+                       rsenumerableRootStream = null,
+                       rsenumerableSongStream = null;
                 
                 try
                 {
@@ -468,25 +442,29 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry(aggregateGraphFileName, aggregateGraphStream); 
 
                         var manifestHeader = new ManifestHeader2014(platform);
+                        var songPartition = new SongPartition();
+                        var songPartitionCount = new SongPartition();
 
                         foreach (var arrangement in info.Arrangements)
                         {
-                            var arrangementName = arrangement.Name.ToString().ToLower();
+                            var arrangementFileName = songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower();
 
                             // GAME SONG (SNG)
                             GenerateSNG(arrangement, platform);
                             var sngSongFile = File.OpenRead(arrangement.SongFile.File);
                             arrangementStream.Add(sngSongFile);
-                            packPsarc.AddEntry(String.Format("songs/bin/{0}/{1}_{2}.sng", platform.GetPathName()[1].ToLower(), dlcName, arrangementName), sngSongFile);
+                            packPsarc.AddEntry(String.Format("songs/bin/{0}/{1}_{2}.sng", platform.GetPathName()[1].ToLower(), dlcName, arrangementFileName), sngSongFile);
 
                             // XML SONG
                             var xmlSongFile = File.OpenRead(arrangement.SongXml.File);
                             arrangementStream.Add(xmlSongFile);
-                            packPsarc.AddEntry(String.Format("songs/arr/{0}_{1}.xml", dlcName, arrangementName), xmlSongFile);
+                            packPsarc.AddEntry(String.Format("songs/arr/{0}_{1}.xml", dlcName, arrangementFileName), xmlSongFile);
 
                             // MANIFEST
                             var manifest = new Manifest2014<Attributes2014>();
-                            var attribute = new Attributes2014(arrangement, info, aggregateGraph, platform);
+                            var attribute = new Attributes2014(arrangementFileName, arrangement, info, platform);
+                            if (arrangement.ArrangementType != Sng.ArrangementType.Vocal)
+                                attribute.SongPartition = songPartitionCount.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
                             var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attribute } };
                             manifest.Entries.Add(attribute.PersistentID, attributeDictionary);                                
                             var manifestStream = new MemoryStream();
@@ -496,7 +474,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                             var jsonPathPC = "manifests/songs_dlc_{0}/{0}_{1}.json";
                             var jsonPathConsole = "manifests/songs_dlc/{0}_{1}.json";
-                            packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName, arrangementName), manifestStream);
+                            packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName, arrangementFileName), manifestStream);
 
                             // MANIFEST HEADER
                             var attributeHeaderDictionary = new Dictionary<string, AttributesHeader2014> { { "Attributes", new AttributesHeader2014(attribute) } };
@@ -509,7 +487,7 @@ namespace RocksmithToolkitLib.DLCPackage
                                 manifestHeaderHSONStreamList.Add(manifestHeaderStream);
                                 manifestHeader.Serialize(manifestHeaderStream);
                                 manifestStream.Seek(0, SeekOrigin.Begin);
-                                packPsarc.AddEntry(String.Format("manifests/songs_dlc/{0}_{1}.hson", dlcName, arrangementName), manifestHeaderStream);
+                                packPsarc.AddEntry(String.Format("manifests/songs_dlc/{0}_{1}.hson", dlcName, arrangementFileName), manifestHeaderStream);
                             } else {
                                 // One for all arrangements (PC/Mac)
                                 manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
@@ -785,6 +763,34 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #endregion
 
+        #region COMMON
+
+        private static void ToDds(string input, Dictionary<int, string> output)
+        {
+            string format = "dxt1a";
+            Dictionary<int, Process> proc = new Dictionary<int, Process>();
+
+            foreach (KeyValuePair<int, string> item in output)
+            {
+                var MS = new MemoryStream();
+                int Size = item.Key;
+                string OutPath = item.Value;
+                var args = String.Format("-file \"{0}\" -output \"{1}\" -nomipmap -prescale {2} {2} -RescaleBox -{3} -overwrite -forcewrite",
+                                         input, OutPath, Size, format);
+
+                var nvdxt = new Process();
+                nvdxt.StartInfo = new ProcessStartInfo
+                {
+                    FileName = "nvdxt.exe",
+                    Arguments = args,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+                nvdxt.Start();
+                nvdxt.WaitForExit();
+            }
+        }
+
         private static void GenerateToolkitVersion(Stream output)
         {
             var writer = new StreamWriter(output);
@@ -836,5 +842,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             TMPFILES_SNG.Add(sngFile);
         }
+
+        #endregion
     }
 }

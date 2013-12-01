@@ -42,10 +42,11 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
             game.EntitySet = new List<Entity2014>();
 
             var dlcName = info.Name.ToLower();
-            
+            var songPartition = new SongPartition();
+
             foreach (var arrangement in info.Arrangements) {
                 var entity = new Entity2014();
-                var arrangementName = arrangement.Name.ToString().ToLower();
+                var arrangementFileName = songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower();
 
                 entity.Id = arrangement.Id.ToString().Replace("-", "").ToLower();
                 entity.ModelName = "RSEnumerable_Song";
@@ -54,11 +55,11 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
 
                 entity.Properties = new List<Property2014>();
                 if (platform.IsConsole)
-                    entity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsonDB.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementName)) } });
+                    entity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsonDB.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementFileName)) } });
                 else
                     entity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsanDB.GetDescription(), String.Format(AggregateGraph2014.NAME_HSAN, dlcName)) } });
-                entity.Properties.Add(new Property2014() { Name = "Manifest", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementName)) } });
-                entity.Properties.Add(new Property2014() { Name = "SngAsset", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementName)) } });
+                entity.Properties.Add(new Property2014() { Name = "Manifest", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementFileName)) } });
+                entity.Properties.Add(new Property2014() { Name = "SngAsset", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementFileName)) } });
                 entity.Properties.Add(new Property2014() { Name = "AlbumArtSmall", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}_64", dlcName)) } });
                 entity.Properties.Add(new Property2014() { Name = "AlbumArtMedium", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}_128", dlcName)) } });
                 entity.Properties.Add(new Property2014() { Name = "AlbumArtLarge", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}_256", dlcName)) } });

@@ -12,8 +12,6 @@ using RocksmithToolkitLib.Extensions;
 namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
     public class Attributes2014 : AttributesHeader2014, IAttributes {
-        private int[] songPartitionCount = { 0 /* Combo count */, 0 /* Lead count */, 0 /* Rhythm count */, 0 /* Bass Count */ }; 
-
         public SongArrangementProperties2014 ArrangementProperties { get; set; }
         public int ArrangementSort { get; set; }
         public int ArrangementType { get; set; }
@@ -55,22 +53,21 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
         public Attributes2014() {}
 
-        public Attributes2014(Arrangement arrangement, DLCPackageData info, AggregateGraph2014 aggregateGraph, Platform platform)
-            : base(arrangement, info, aggregateGraph, platform)
+        public Attributes2014(string arrangementFileName, Arrangement arrangement, DLCPackageData info, Platform platform)
+            : base(arrangementFileName, arrangement, info, platform)
         {
 
             #region VARIABLES
 
             var dlcName = info.Name.ToLower();
-            var arrangementName = arrangement.Name.ToString().ToLower();
-
-            var xblockUrn = String.Format(URN_TEMPLATE_SHORT, TagValue.EmergentWorld.GetDescription(), aggregateGraph.GameXblock.Name);
-            var showlightUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), aggregateGraph.ShowlightXml.Name);
-            var songXmlUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementName));
-            var songSngUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementName));
+            
+            var xblockUrn = String.Format(URN_TEMPLATE_SHORT, TagValue.EmergentWorld.GetDescription(), dlcName);
+            var showlightUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format("{0}_showlights", dlcName));
+            var songXmlUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementFileName));
+            var songSngUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementFileName));
 
             var manifestFunctions = new ManifestFunctions(platform.version);
-
+            
             #endregion
 
             #region FILL ATTRIBUTES
@@ -140,8 +137,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 SongAverageTempo = SongContent.AverageTempo;
                 SongOffset = arrangement.Sng2014.Metadata.StartTime * -1;
 
-                if (arrangement.ArrangementType != Sng.ArrangementType.Vocal)
-                    SongPartition = manifestFunctions.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
+                //SongPartition  -- Generated in DLCPackageCreator after this constructor
 
                 //Techniques     -- //TODO: MISSING GENERATE
                 Tone_A = arrangement.ToneA;

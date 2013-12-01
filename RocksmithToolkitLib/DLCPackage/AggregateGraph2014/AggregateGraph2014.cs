@@ -43,6 +43,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
         public AggregateGraph2014(DLCPackageData info, Platform platform) {
             currentPlatform = platform;
             var dlcName = info.Name.ToLower();
+            var songPartition = new SongPartition();
 
             // Xblock
             var xbl = new GraphItem();
@@ -63,7 +64,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             MusicgameSong = new List<GraphItemLLID>();
             foreach (var arrangement in info.Arrangements)
             {
-                var name = String.Format(NAME_DEFAULT, dlcName, arrangement.Name.ToString().ToLower());
+                var name = String.Format(NAME_DEFAULT, dlcName, songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower());
 
                 // JsonDB
                 var json = new GraphItem();
