@@ -143,16 +143,15 @@ struct SYMBOLS_HEADER_SECTION
     struct SYMBOLS_HEADER SymbolsHeader[Count];
 };
 
-// TODO only in vocals
 struct SYMBOLS_TEXTURE
 {
     byte Font[128];
     long FontpathLength;
     long Unk1_0;
     // 1024
-    long Unk2;
+    long Width;
     // 512
-    long Unk3;
+    long Height;
 };
 
 struct SYMBOLS_TEXTURE_SECTION
@@ -161,7 +160,7 @@ struct SYMBOLS_TEXTURE_SECTION
     struct SYMBOLS_TEXTURE SymbolsTextures[Count];
 };
 
-// TODO only in vocals
+// TODO how does rect work
 struct SYMBOL_DEFINITION
 {
     // UTF-8
@@ -297,7 +296,7 @@ struct ANCHOR
     // sometimes start time, sometimes later (first?) beat time
     float Unk4_LastNoteTime;
     byte FretId;
-    byte Unk_Padding[3];
+    byte Padding[3];
     long Width;
     long PhraseIterationId;
 };

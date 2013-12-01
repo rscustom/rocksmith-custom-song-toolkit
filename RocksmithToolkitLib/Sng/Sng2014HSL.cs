@@ -347,23 +347,23 @@ public class SymbolsTexture
     public Byte[] Font { get { return this._Font; } set { _Font = value; } }
     public Int32 FontpathLength { get; set; }
     public Int32 Unk1_0 { get; set; }
-    public Int32 Unk2 { get; set; }
-    public Int32 Unk3 { get; set; }
+    public Int32 Width { get; set; }
+    public Int32 Height { get; set; }
 
     public string[] _order = {
         "Font",
         "FontpathLength",
         "Unk1_0",
-        "Unk2",
-        "Unk3"
+        "Width",
+        "Height"
     };
     public string[] order { get { return this._order; } }
     public void read(BinaryReader r) {
         this.Font = r.ReadBytes(128);
         this.FontpathLength = r.ReadInt32();
         this.Unk1_0 = r.ReadInt32();
-        this.Unk2 = r.ReadInt32();
-        this.Unk3 = r.ReadInt32();
+        this.Width = r.ReadInt32();
+        this.Height = r.ReadInt32();
     }
 }
 
@@ -736,8 +736,8 @@ public class Anchor
     public float Unk3_FirstNoteTime { get; set; }
     public float Unk4_LastNoteTime { get; set; }
     public Byte FretId { get; set; }
-    public Byte[] _Unk_Padding = new Byte[3];
-    public Byte[] Unk_Padding { get { return this._Unk_Padding; } set { _Unk_Padding = value; } }
+    public Byte[] _Padding = new Byte[3];
+    public Byte[] Padding { get { return this._Padding; } set { _Padding = value; } }
     public Int32 Width { get; set; }
     public Int32 PhraseIterationId { get; set; }
 
@@ -747,7 +747,7 @@ public class Anchor
         "Unk3_FirstNoteTime",
         "Unk4_LastNoteTime",
         "FretId",
-        "Unk_Padding",
+        "Padding",
         "Width",
         "PhraseIterationId"
     };
@@ -758,7 +758,7 @@ public class Anchor
         this.Unk3_FirstNoteTime = r.ReadSingle();
         this.Unk4_LastNoteTime = r.ReadSingle();
         this.FretId = r.ReadByte();
-        this.Unk_Padding = r.ReadBytes(3);
+        this.Padding = r.ReadBytes(3);
         this.Width = r.ReadInt32();
         this.PhraseIterationId = r.ReadInt32();
     }
