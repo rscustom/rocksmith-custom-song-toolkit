@@ -131,16 +131,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string AverageTempo
         {
             get { return AverageTempoTB.Text; }
-            set
-            {
-                int tempo = 0;
-                string stringTempo = value;
-                int pointIndex = value.IndexOf(".");
-                if (pointIndex > -1)
-                    stringTempo = stringTempo.Substring(0, pointIndex);
-                if (int.TryParse(stringTempo, out tempo))
-                    AverageTempoTB.Text = tempo.ToString();
-            }
+            set { AverageTempoTB.Text = value; }
         }
 
         //Tones
