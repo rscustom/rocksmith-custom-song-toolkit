@@ -1079,6 +1079,25 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     count = 1;
                     continue;
                 } else {
+                    int start = o-8;
+                    if (start < 0)
+                        start = 0;
+                    // search last 8 notes
+                    for (int i=o; i<=0; i++) {
+                        // ignore notes which are too far away
+                        if (notes[i].Time + 2.0 < current.Time)
+                            continue;
+
+                        // count as repeat if this fret/chord was numbered recently
+                        if (notes[i].FretId == current.FretId ||
+                            notes[i].ChordId == current.ChordId) {
+                            if ((notes[i].NoteFlags & NOTE_FLAGS_NUMBERED) != 0) {
+                                ++count;
+                                continue;
+                            }
+                        }
+                    }
+
                     // chord change
                     if (current.ChordId != first.ChordId) {
                         // re-run
@@ -1096,13 +1115,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                     // repeated note
                     ++count;
-
-                    // reset counter after 3 seconds or 8 repeated notes
-                    if (current.Time > first.Time + 3.0 || count > 8) {
-                        first = null;
-                        o = o-1;
-                        continue;
-                    }
                 }
             }
         }
