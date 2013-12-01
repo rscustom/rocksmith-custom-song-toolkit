@@ -872,8 +872,8 @@ public class Notes
     public UInt32 Hash { get; set; }
     public float Time { get; set; }
     public Byte StringIndex { get; set; }
-    public Byte[] _FretId = new Byte[2];
-    public Byte[] FretId { get { return this._FretId; } set { _FretId = value; } }
+    public Byte FretId { get; set; }
+    public Byte AnchorFretId { get; set; }
     public Byte AnchorWidth { get; set; }
     public Int32 ChordId { get; set; }
     public Int32 ChordNotesId { get; set; }
@@ -903,6 +903,7 @@ public class Notes
         "Time",
         "StringIndex",
         "FretId",
+        "AnchorFretId",
         "AnchorWidth",
         "ChordId",
         "ChordNotesId",
@@ -931,7 +932,8 @@ public class Notes
         this.Hash = r.ReadUInt32();
         this.Time = r.ReadSingle();
         this.StringIndex = r.ReadByte();
-        this.FretId = r.ReadBytes(2);
+        this.FretId = r.ReadByte();
+        this.AnchorFretId = r.ReadByte();
         this.AnchorWidth = r.ReadByte();
         this.ChordId = r.ReadInt32();
         this.ChordNotesId = r.ReadInt32();

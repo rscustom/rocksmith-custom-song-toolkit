@@ -377,7 +377,8 @@ struct NOTES
     ulong Hash;
     float Time;
     byte StringIndex;
-    byte FretId[2];
+    byte FretId;
+    byte AnchorFretId;
     byte AnchorWidth;
     long ChordId;
     long ChordNotesId;

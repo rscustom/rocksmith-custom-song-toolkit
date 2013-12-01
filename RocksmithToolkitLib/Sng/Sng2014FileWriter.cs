@@ -525,7 +525,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         // NoteFlags:
         const UInt32 NOTE_FLAGS_NUMBERED        = 0x00000001;
-        const UInt32 NOTE_FLAGS_NONNUMBERED     = 0x00000000;
 
         // NoteMask:
         const UInt32 NOTE_MASK_UNDEFINED        = 0x0;
@@ -637,15 +636,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         private void parseNote(Song2014 xml, SongNote2014 note, Notes n, Notes prev) {
             n.NoteMask = parse_notemask(note, prev, true);
-            // TODO when to set numbered note? using test code at the moment, based on iterations so value is overwriten if set
-            if (note.Fret != 0)
-                n.NoteFlags = NOTE_FLAGS_NONNUMBERED;
+            // numbering (NoteFlags) will be set later
             n.Time = note.Time;
             n.StringIndex = note.String;
             // actual fret number
-            n.FretId[0] = (Byte) note.Fret;
-            // anchor fret
-            n.FretId[1] = unchecked((Byte) (-1));
+            n.FretId = (Byte) note.Fret;
+            // anchor fret will be set later
+            n.AnchorFretId = unchecked((Byte) (-1));
             // will be overwritten
             n.AnchorWidth = unchecked((Byte) (-1));
             n.ChordId = -1;
@@ -704,15 +701,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // if (chord.Hopo != 0)
             //     n.NoteMask |= ;
 
-            // TODO when to set numbered note? not used with chords?
-            n.NoteFlags = NOTE_FLAGS_NUMBERED;
+            // numbering will be set later
+            //n.NoteFlags = NOTE_FLAGS_NUMBERED;
 
             n.Time = chord.Time;
             n.StringIndex = unchecked((Byte) (-1));
             // always -1
-            n.FretId[0] = unchecked((Byte) (-1));
-            // anchor fret
-            n.FretId[1] = unchecked((Byte) (-1));
+            n.FretId = unchecked((Byte) (-1));
+            // anchor fret will be set later
+            n.AnchorFretId = unchecked((Byte) (-1));
             // will be overwritten
             n.AnchorWidth = unchecked((Byte) (-1));
             n.ChordId = chord.ChordId;
@@ -952,7 +949,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         if (n.Time >= a.Anchors.Anchors[j].StartBeatTime && n.Time < a.Anchors.Anchors[j].EndBeatTime) {
                             n.AnchorWidth = (Byte) a.Anchors.Anchors[j].Width;
                             // anchor fret
-                            n.FretId[1] = (Byte) a.Anchors.Anchors[j].FretId;
+                            n.AnchorFretId = (Byte) a.Anchors.Anchors[j].FretId;
                             if (a.Anchors.Anchors[j].Unk3_FirstNoteTime == 0)
                                 a.Anchors.Anchors[j].Unk3_FirstNoteTime = n.Time;
 
@@ -994,58 +991,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     // fix last phrase note
                     if (count > 0)
                         a.Notes.Notes[j-1].NextIterNote = -1;
-                }
-
-                foreach (var piter in sng.PhraseIterations.PhraseIterations)
-                {
-                    int count = 0;
-                    int o = 0;
-                    for (; o < a.Notes.Count; o++)
-                    {
-                        // skip notes outside of a phraseiteration
-                        if (a.Notes.Notes[o].Time < piter.StartTime)
-                            continue;
-                        if (a.Notes.Notes[o].Time >= piter.NextPhraseTime)
-                        {
-                            break;
-                        }
-                        
-                        //skip notes if they have a chord id
-                        if (a.Notes.Notes[o].ChordId > -1)
-                            continue;
-                        //skip notes if its an open string
-                        if (a.Notes.Notes[o].FretId[0] < 1)
-                            continue;
-                        // always set the first note in a phraseiteration to numbered
-                        if (count < 1)
-                            a.Notes.Notes[o].NoteFlags = NOTE_FLAGS_NUMBERED;
-                        if (count > 0)
-                        {
-                            int k = 0;
-                            int r = 0;
-                            for (; k < o; k++)
-                            {
-                                // if the fretid & string ID is repeated then increase value of r if its within 3 seconds 
-                                // there is probably a better way to check this?
-                                if (a.Notes.Notes[o].FretId[0] == a.Notes.Notes[k].FretId[0])
-                                    if (a.Notes.Notes[o].StringIndex == a.Notes.Notes[k].StringIndex)
-                                    {
-                                        float t1 = a.Notes.Notes[o].Time;
-                                        float t2 = a.Notes.Notes[k].Time;
-                                        float t3 = t1 - t2;
-                                        if (t3 < 3.0) // TOO DO - make this a user selected time to customize numbered notes?
-                                        {
-                                            r++; // r should only increase if the time between notes is less than time differnce used
-                                            break;
-                                        }
-                                    }
-                            }
-                            // if r is still 0, then set noteflag to numbered note
-                            if (r < 1)
-                                a.Notes.Notes[o].NoteFlags = NOTE_FLAGS_NUMBERED;
-                        }
-                        ++count;
-                    }
                 }
 
                 for (int j=1; j<a.Notes.Notes.Length; j++) {
@@ -1095,7 +1040,70 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     n.Hash = note_id[crc];
                 }
 
+                numberNotes(sng, a.Notes.Notes);
                 sng.Arrangements.Arrangements[i] = a;
+            }
+        }
+
+        private void numberNotes(Sng2014File sng, Notes[] notes)
+        {
+            // current phrase iteration
+            int p = 0;
+            // count of repeats and starting time
+            int count = 0;
+            Notes first = null;
+            for (int o=0; o < notes.Length; o++) {
+                var current = notes[o];
+                
+                // skip open strings
+                if (current.FretId == 0) {
+                    first = null;
+                    continue;
+                }
+
+                // are we past phrase iteration boundary?
+                if (current.Time >= sng.PhraseIterations.PhraseIterations[p].NextPhraseTime) {
+                    // advance and re-run
+                    // will be repeated through empty iterations
+                    ++p;
+                    first = null;
+                    o = o-1;
+                    continue;
+                }
+
+                // take care of the first note
+                if (first == null) {
+                    current.NoteFlags |= NOTE_FLAGS_NUMBERED;
+                    first = current;
+                    count = 1;
+                    continue;
+                } else {
+                    // chord change
+                    if (current.ChordId != first.ChordId) {
+                        // re-run
+                        first = null;
+                        o = o-1;
+                        continue;
+                    }
+                    // note change                    
+                    if (current.FretId != first.FretId ||
+                        current.StringIndex != first.StringIndex) {
+                        // re-run
+                        first = null;
+                        o = o-1;
+                        continue;
+                    }
+
+                    // repeated note
+                    ++count;
+
+                    // reset counter after 3 seconds or 8 repeated notes
+                    if (current.Time > first.Time + 3.0 || count > 8) {
+                        first = null;
+                        o = o-1;
+                        continue;
+                    }
+                }
             }
         }
     }
