@@ -19,7 +19,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public string OggXBox360Path { get; set; }
         public string OggPS3Path { get; set; }
         public List<Arrangement> Arrangements { get; set; }
-        public float Volume { get; set; } // flot value
+        public float Volume { get; set; }
         public PackageMagic SignatureType { get; set; }
 
         private List<XBox360License> xbox360Licenses = null;

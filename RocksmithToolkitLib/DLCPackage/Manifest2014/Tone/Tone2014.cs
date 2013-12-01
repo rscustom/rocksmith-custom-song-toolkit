@@ -15,7 +15,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
     {
         public Gear2014 GearList { get; set; }
         public bool IsCustom { get; set; }
-        public float Volume { get; set; } //its float round 3
+        public string Volume { get; set; }
         public List<string> ToneDescriptors { get; set; }
         public string Key { get; set; }
         public string NameSeparator { get; set; }
@@ -23,10 +23,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         public decimal SortOrder { get; set; }
 
         public Tone2014()
-        {
+        {//for each type of instrument - neet to use its default volume values;
             GearList = new Gear2014();
             IsCustom = true;
-            Volume = -12;
+            Volume = "-12"; 
             ToneDescriptors = new List<string>();
             NameSeparator = " - ";
             SortOrder = 0;

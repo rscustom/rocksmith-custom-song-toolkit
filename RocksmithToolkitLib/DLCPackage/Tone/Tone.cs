@@ -30,7 +30,7 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
         public Dictionary<string, Pedal> PedalList { get; set; }
         public string PersistentID { get; set; }
         public string UnlockKey { get; set; }
-        public float Volume { get; set; } //float, lol
+        public float Volume { get; set; }
 
         public Tone()
         {
