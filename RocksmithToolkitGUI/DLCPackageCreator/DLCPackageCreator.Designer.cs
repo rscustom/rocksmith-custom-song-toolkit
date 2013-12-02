@@ -330,7 +330,7 @@
             // RS2012
             // 
             this.RS2012.AutoSize = true;
-            this.RS2012.Checked = true;
+            this.RS2012.Checked = false;
             this.RS2012.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RS2012.ForeColor = System.Drawing.SystemColors.ControlText;
             this.RS2012.Location = new System.Drawing.Point(8, 18);
@@ -345,6 +345,7 @@
             // RS2014
             // 
             this.RS2014.AutoSize = true;
+            this.RS2014.Checked = true;
             this.RS2014.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RS2014.ForeColor = System.Drawing.SystemColors.ControlText;
             this.RS2014.Location = new System.Drawing.Point(88, 18);
