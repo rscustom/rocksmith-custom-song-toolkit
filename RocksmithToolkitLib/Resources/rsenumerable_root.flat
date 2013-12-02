@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<model
+  name="RSEnumerable_Root"
+  id="1917312803">
+  <trait
+    value="Active" />
+  <property
+    type="AssetID"
+    name="Manifest"
+    id="3402662178">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="Header"
+    id="3529813182">
+    <set
+      value="" />
+  </property>
+</model>

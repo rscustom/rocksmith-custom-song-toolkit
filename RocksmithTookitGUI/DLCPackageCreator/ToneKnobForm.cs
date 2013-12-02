@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using RocksmithToolkitLib.Tone;
+using RocksmithToolkitLib.ToolkitTone;
 using Pedal = RocksmithToolkitLib.DLCPackage.Tone.Pedal;
 using System.Text.RegularExpressions;
 
@@ -12,7 +12,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class ToneKnobForm : Form
     {
-
         Regex nameParser = new Regex(@"\$\[\d+\] (.+)");
 
         public ToneKnobForm()
@@ -20,12 +19,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             InitializeComponent();
         }
 
-        public void Init(Pedal pedal, IList<Knob> knobs)
+        public void Init(dynamic pedal, IList<ToolkitKnob> knobs)
         {
+            var sortedKnobs = knobs.OrderBy(k => k.Index).ToList();
             tableLayoutPanel.RowCount = knobs.Count;
-            for (var i = 0; i < knobs.Count; i++)
+            for (var i = 0; i < sortedKnobs.Count; i++)
             {
-                var knob = knobs[i];
+                var knob = sortedKnobs[i];
                 var label = new Label();
                 tableLayoutPanel.Controls.Add(label, 0, i);
                 var name = knob.Name;
@@ -38,17 +38,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 var numericControl = new NumericUpDownFixed();
                 tableLayoutPanel.Controls.Add(numericControl, 1, i);
-                numericControl.Minimum = knob.MinValue;
-                numericControl.Maximum = knob.MaxValue;
-                numericControl.Increment = knob.ValueStep;
-                numericControl.DecimalPlaces = 1;
-                numericControl.Value = pedal.KnobValues[knob.Key];
+                numericControl.DecimalPlaces = 2;
+                numericControl.Minimum = (decimal)knob.MinValue;
+                numericControl.Maximum = (decimal)knob.MaxValue;
+                numericControl.Increment = (decimal)knob.ValueStep;                
+                numericControl.Value = (decimal)pedal.KnobValues[knob.Key];
                 numericControl.ValueChanged += (obj, args) =>
-                    pedal.KnobValues[knob.Key] = numericControl.Value;
-
+                    pedal.KnobValues[knob.Key] = (float)numericControl.Value;
             }
-            
-            
         }
 
         private void okButton_Click(object sender, EventArgs e)

@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<model
+  name="RSEnumerable_Song"
+  id="3871465268">
+  <trait
+    value="Active" />
+  <mixin
+    name="RSEnumerable_Root"
+    id="1917312803"
+    type="Active" />
+  <property
+    type="AssetID"
+    name="XmlAsset"
+    id="194332538">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="SngAsset"
+    id="2132105560">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="AlbumArtSmall"
+    id="2295103720">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="AlbumArtMedium"
+    id="3067535336">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="AlbumArtLarge"
+    id="223887511">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="LyricArt"
+    id="3842719743">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="ShowLightsXMLAsset"
+    id="2024527203">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="SoundBank"
+    id="4177482269">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="PreviewSoundBank"
+    id="1820138184">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="Manifest"
+    id="3402662178">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="Header"
+    id="3529813182">
+    <set
+      value="" />
+  </property>
+</model>

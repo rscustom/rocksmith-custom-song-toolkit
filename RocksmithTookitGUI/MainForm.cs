@@ -10,14 +10,12 @@ namespace RocksmithToolkitGUI
 {
     public partial class MainForm : Form
     {
-        public MainForm()
+        public MainForm(string[] args)
         {
             InitializeComponent();
-            this.Text = String.Format("Custom Song Creator Toolkit (v{0}.{1}.{2}.{3} beta)",
-                Assembly.GetExecutingAssembly().GetName().Version.Major,
-                Assembly.GetExecutingAssembly().GetName().Version.Minor,
-                Assembly.GetExecutingAssembly().GetName().Version.Build,
-                Assembly.GetExecutingAssembly().GetName().Version.Revision);
+            if (args.Length > 0)
+                LoadTemplate(args[0]);
+            this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", RocksmithToolkitLib.ToolkitVersion.version);
         }
 
         private void restartToolStripMenuItem_Click(object sender, EventArgs e)

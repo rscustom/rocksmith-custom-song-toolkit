@@ -4,15 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
-using System.Windows.Forms;
 using System.Xml;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace RocksmithToolkitLib.Xml
 {
     [XmlRoot("song", Namespace = "", IsNullable = false)]
     public class Song
     {
+        [XmlAttribute("version")] // RS1 is 4
+        public string Version { get; set; }
+
         [XmlElement("title")]
         public string Title { get; set; }
 
@@ -51,6 +54,9 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlElement("albumYear")]
         public string AlbumYear { get; set; }
+
+        [XmlElement("arrangementProperties")]
+        public SongArrangementProperties ArrangementProperties { get; set; }
 
         [XmlArray("phrases")]
         [XmlArrayItem("phrase")]
@@ -95,34 +101,132 @@ namespace RocksmithToolkitLib.Xml
         [XmlArray("levels")]
         [XmlArrayItem("level")]
         public SongLevel[] Levels { get; set; }
+
+        #region Old techniques
+        //# RS1 old song xml have no arrangement properties
+        private bool HasArrangementProperties {
+            get {
+                return ArrangementProperties != null;
+            }
+        }
+
+        public bool HasPowerChords() {
+            if (HasArrangementProperties)
+                return ArrangementProperties.PowerChords == 1;
+            else
+                return Levels.Any(c => c.Chords == null ? false : HasPowerChords(c.Chords));
+        }
+        private bool HasPowerChords(SongChord[] songChord) {
+            return true; //Pending (old song xml only)
+        }
+
+        public bool HasBarChords() {
+            if (HasArrangementProperties)
+                return ArrangementProperties.BarreChords == 1;
+            else
+                return Levels.Any(c => c.Chords == null ? false : HasBarChords(c.Chords));
+        }
+        private bool HasBarChords(SongChord[] songChord) {
+            return true; //Pending (old song xml only)
+        }
+
+        public bool HasOpenChords() {
+            if (HasArrangementProperties)
+                return ArrangementProperties.OpenChords == 1;
+            else
+                return Levels.Any(c => c.Chords == null ? false : HasOpenChords(c.Chords));
+        }
+        private bool HasOpenChords(SongChord[] songChord) {
+            return true; //Pending (old song xml only)
+        }
+
+        public bool HasDoubleStops() {
+            if (HasArrangementProperties)
+                return ArrangementProperties.DoubleStops == 1;
+            else
+                return Levels.Any(c => c.Chords == null ? false : HasDoubleStops(c.Chords));
+        }
+        private bool HasDoubleStops(SongChord[] songChord) {
+            return true; //Pending (old song xml only)
+        }
+
+        public bool HasDropDPowerChords() {
+            if (HasArrangementProperties)
+                return ArrangementProperties.DropDPower == 1;
+            else
+                return Levels.Any(c => c.Chords == null ? false : HasDropDPowerChords(c.Chords));
+        }
+        private bool HasDropDPowerChords(SongChord[] songChord) {
+            return true; //Pending (old song xml only)
+        }
+
         public bool HasBends()
         {
-            return Levels.Any(x => x.Notes == null ? false : x.Notes.Any(y => y.Bend > 0));
+            if (HasArrangementProperties)
+                return ArrangementProperties.Bends == 1;
+            else
+                return Levels.Any(x => x.Notes == null ? false : x.Notes.Any(y => y.Bend > 0));
         }
 
         public bool HasSlapAndPop()
         {
-            return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Pluck > 0 || y.Slap > 0);
+            if (HasArrangementProperties)
+                return ArrangementProperties.SlapPop == 1;
+            else
+                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Pluck > 0 || y.Slap > 0);
         }
 
         public bool HasHarmonics()
         {
-            return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Harmonic > 0);
+            if (HasArrangementProperties)
+                return ArrangementProperties.Harmonics == 1;
+            else
+                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Harmonic > 0);
         }
 
         public bool HasHOPOs()
         {
-            return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Hopo > 0);
+            if (HasArrangementProperties)
+                return ArrangementProperties.Hopo == 1;
+            else
+                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Hopo > 0);
+        }
+
+        public bool HasFretHandMutes() {
+            if (HasArrangementProperties)
+                return ArrangementProperties.FretHandMutes == 1;
+            else
+                return false; //No definition in old XML
+        }
+
+        public bool HasPrebends() { //Identify only bend, no definition in old XML
+            if (HasArrangementProperties)
+                return ArrangementProperties.Bends == 1;
+            else
+                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Bend > 0);
+        }
+
+        public bool HasVibrato() {
+            if (HasArrangementProperties)
+                return ArrangementProperties.Vibrato == 1;
+            else
+                return false; //No definition in old XML
         }
 
         public bool HasPalmMutes()
         {
-            return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.PalmMute > 0);
+            if (HasArrangementProperties)
+                return ArrangementProperties.PalmMutes == 1;
+            else
+                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.PalmMute > 0);
         }
 
         public bool HasSlides()
         {
-            return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.SlideTo >= 0);
+            if (HasArrangementProperties)
+                return ArrangementProperties.Slides == 1;
+            else
+                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.SlideTo >= 0);
         }
 
         public bool HasSustain()
@@ -132,10 +236,36 @@ namespace RocksmithToolkitLib.Xml
 
         public bool HasTremolo()
         {
-            return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Tremolo > 0);
+            if (HasArrangementProperties)
+                return ArrangementProperties.Tremolo == 1;
+            else
+                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Tremolo > 0);
         }
 
-        public static Song LoadSongFromXmlFile(string xmlSongFile) {
+        public bool HasTwoFingerPlucking() {
+            if (HasArrangementProperties)
+                return ArrangementProperties.TwoFingerPicking == 1;
+            else
+                return false; //No definition in old XML
+        }
+
+        public bool HasFifthsAndOctaves() {
+            if (HasArrangementProperties)
+                return ArrangementProperties.FifthsAndOctaves == 1;
+            else
+                return false; //No definition in old XML
+        }
+
+        public bool HasSyncopation() {
+            if (HasArrangementProperties)
+                return ArrangementProperties.Syncopation == 1;
+            else
+                return false; //No definition in old XML
+        }
+
+        #endregion
+
+        public static Song LoadFromFile(string xmlSongFile) {
             Song XmlSong = null;
 
             using (var reader = new StreamReader(xmlSongFile)) {
@@ -147,28 +277,151 @@ namespace RocksmithToolkitLib.Xml
         }
     }
 
+    [XmlType("arrangementProperties")]
+    public class SongArrangementProperties {
+        [JsonProperty("represent")]
+        [XmlAttribute("represent")]
+        public Int32 Represent { get; set; }
+
+        [JsonProperty("standardTuning")]
+        [XmlAttribute("standardTuning")]
+        public Int32 StandardTuning { get; set; }
+
+        [JsonProperty("nonStandardChords")]
+        [XmlAttribute("nonStandardChords")]
+        public Int32 NonStandardChords { get; set; }
+
+        [JsonProperty("barreChords")]
+        [XmlAttribute("barreChords")]
+        public Int32 BarreChords { get; set; }
+
+        [JsonProperty("powerChords")]
+        [XmlAttribute("powerChords")]
+        public Int32 PowerChords { get; set; }
+
+        [JsonProperty("dropDPower")]
+        [XmlAttribute("dropDPower")]
+        public Int32 DropDPower { get; set; }
+
+        [JsonProperty("openChords")]
+        [XmlAttribute("openChords")]
+        public Int32 OpenChords { get; set; }
+
+        [JsonProperty("fingerPicking")]
+        [XmlAttribute("fingerPicking")]
+        public Int32 FingerPicking { get; set; }
+
+        [JsonProperty("pickDirection")]
+        [XmlAttribute("pickDirection")]
+        public sbyte PickDirection { get; set; }
+
+        [JsonProperty("doubleStops")]
+        [XmlAttribute("doubleStops")]
+        public Int32 DoubleStops { get; set; }
+
+        [JsonProperty("palmMutes")]
+        [XmlAttribute("palmMutes")]
+        public Int32 PalmMutes { get; set; }
+
+        [JsonProperty("harmonics")]
+        [XmlAttribute("harmonics")]
+        public Int32 Harmonics { get; set; }
+
+        [JsonProperty("pinchHarmonics")]
+        [XmlAttribute("pinchHarmonics")]
+        public Int32 PinchHarmonics { get; set; }
+
+        [JsonProperty("hopo")]
+        [XmlAttribute("hopo")]
+        public Int32 Hopo { get; set; }
+
+        [JsonProperty("tremolo")]
+        [XmlAttribute("tremolo")]
+        public Int32 Tremolo { get; set; }
+
+        [JsonProperty("slides")]
+        [XmlAttribute("slides")]
+        public Int32 Slides { get; set; }
+
+        [JsonProperty("unpitchedSlides")]
+        [XmlAttribute("unpitchedSlides")]
+        public Int32 UnpitchedSlides { get; set; }
+
+        [JsonProperty("bends")]
+        [XmlAttribute("bends")]
+        public Int32 Bends { get; set; }
+
+        [JsonProperty("tapping")]
+        [XmlAttribute("tapping")]
+        public Int32 Tapping { get; set; }
+
+        [JsonProperty("vibrato")]
+        [XmlAttribute("vibrato")]
+        public Int16 Vibrato { get; set; }
+
+        [JsonProperty("fretHandMutes")]
+        [XmlAttribute("fretHandMutes")]
+        public Int32 FretHandMutes { get; set; }
+
+        [JsonProperty("slapPop")]
+        [XmlAttribute("slapPop")]
+        public Int32 SlapPop { get; set; }
+
+        [JsonProperty("twoFingerPicking")]
+        [XmlAttribute("twoFingerPicking")]
+        public Int32 TwoFingerPicking { get; set; }
+
+        [JsonProperty("fifthsAndOctaves")]
+        [XmlAttribute("fifthsAndOctaves")]
+        public Int32 FifthsAndOctaves { get; set; }
+
+        [JsonProperty("syncopation")]
+        [XmlAttribute("syncopation")]
+        public Int32 Syncopation { get; set; }
+
+        [JsonProperty("bassPick")]
+        [XmlAttribute("bassPick")]
+        public Int32 BassPick { get; set; }
+
+        [JsonProperty("sustain")]
+        [XmlAttribute("sustain")]
+        public Int32 Sustain { get; set; }
+    }
+
     [XmlType("tuning")]
     public class TuningStrings {
+        [JsonProperty("string0")]
         [XmlAttribute("string0")]
         public Int32 String0 { get; set; }
 
+        [JsonProperty("string1")]
         [XmlAttribute("string1")]
         public Int32 String1 { get; set; }
 
+        [JsonProperty("string2")]
         [XmlAttribute("string2")]
         public Int32 String2 { get; set; }
 
+        [JsonProperty("string3")]
         [XmlAttribute("string3")]
         public Int32 String3 { get; set; }
 
+        [JsonProperty("string4")]
         [XmlAttribute("string4")]
         public Int32 String4 { get; set; }
 
+        [JsonProperty("string5")]
         [XmlAttribute("string5")]
         public Int32 String5 { get; set; }
 
         public int[] ToArray() {
             Int32[] strings = { String0, String1, String2, String3, String4, String5 };
+            return strings;
+        }
+
+        public int[] ToBassArray()
+        {
+            Int32[] strings = { String0, String1, String2, String3, 0, 0 };
             return strings;
         }
     }
@@ -177,7 +430,7 @@ namespace RocksmithToolkitLib.Xml
     public class SongPhrase
     {
         [XmlAttribute("disparity")]
-        public Int32 Disparity { get; set; }
+        public Byte Disparity { get; set; }
 
         [XmlAttribute("maxDifficulty")]
         public Int32 MaxDifficulty { get; set; }
@@ -186,10 +439,10 @@ namespace RocksmithToolkitLib.Xml
         public string Name { get; set; }
 
         [XmlAttribute("ignore")]
-        public Int32 Ignore { get; set; }
+        public Byte Ignore { get; set; }
 
         [XmlAttribute("solo")]
-        public Int32 Solo { get; set; }
+        public Byte Solo { get; set; }
     }
 
     [XmlType("phraseIteration")]
@@ -238,40 +491,40 @@ namespace RocksmithToolkitLib.Xml
         public string ChordName { get; set; }
         
         [XmlAttribute("fret0")]
-        public Int32 Fret0 { get; set; }
+        public sbyte Fret0 { get; set; }
 
         [XmlAttribute("fret1")]
-        public Int32 Fret1 { get; set; }
+        public sbyte Fret1 { get; set; }
 
         [XmlAttribute("fret2")]
-        public Int32 Fret2 { get; set; }
+        public sbyte Fret2 { get; set; }
 
         [XmlAttribute("fret3")]
-        public Int32 Fret3 { get; set; }
+        public sbyte Fret3 { get; set; }
 
         [XmlAttribute("fret4")]
-        public Int32 Fret4 { get; set; }
+        public sbyte Fret4 { get; set; }
 
         [XmlAttribute("fret5")]
-        public Int32 Fret5 { get; set; }
+        public sbyte Fret5 { get; set; }
 
         [XmlAttribute("finger0")]
-        public Int32 Finger0 { get; set; }
+        public sbyte Finger0 { get; set; }
 
         [XmlAttribute("finger1")]
-        public Int32 Finger1 { get; set; }
+        public sbyte Finger1 { get; set; }
 
         [XmlAttribute("finger2")]
-        public Int32 Finger2 { get; set; }
+        public sbyte Finger2 { get; set; }
 
         [XmlAttribute("finger3")]
-        public Int32 Finger3 { get; set; }
+        public sbyte Finger3 { get; set; }
 
         [XmlAttribute("finger4")]
-        public Int32 Finger4 { get; set; }
+        public sbyte Finger4 { get; set; }
 
         [XmlAttribute("finger5")]
-        public Int32 Finger5 { get; set; }
+        public sbyte Finger5 { get; set; }
     }
 
     //TBD
@@ -288,7 +541,7 @@ namespace RocksmithToolkitLib.Xml
         public Single Time { get; set; }
 
         [XmlAttribute("measure")]
-        public Int32 Measure { get; set; }
+        public Int16 Measure { get; set; }
     }
 
     [XmlType("section")]
@@ -357,10 +610,10 @@ namespace RocksmithToolkitLib.Xml
         public Single Sustain { get; set; }
 
         [XmlAttribute("string")]
-        public Int32 String { get; set; }
+        public Byte String { get; set; }
 
         [XmlAttribute("slideTo")]
-        public Int32 SlideTo { get; set; }
+        public sbyte SlideTo { get; set; }
 
         [XmlAttribute("pullOff")]
         public Byte PullOff { get; set; }
@@ -378,16 +631,16 @@ namespace RocksmithToolkitLib.Xml
         public Byte HammerOn { get; set; }
 
         [XmlAttribute("fret")]
-        public Int32 Fret { get; set; }
+        public SByte Fret { get; set; }
 
         [XmlAttribute("bend")]
-        public Int32 Bend { get; set; }
+        public Byte Bend { get; set; }
 
         [XmlAttribute("pluck")]
-        public Int32 Pluck { get; set; }
+        public sbyte Pluck { get; set; }
 
         [XmlAttribute("slap")]
-        public Int32 Slap { get; set; }
+        public sbyte Slap { get; set; }
     }
 
     [XmlType("chord")]

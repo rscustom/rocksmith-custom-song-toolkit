@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
-    public class Attributes
+    public class Attributes : IAttributes
     {
         public string AlbumArt { get; set; }
         public string AlbumName { get; set; }
@@ -65,7 +65,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public float SongLength { get; set; }
         public string SongName { get; set; }
         public string SongNameSort { get; set; }
-        public int SongPartition { get; set; }//
+        public int SongPartition { get; set; }
         public string SongXml { get; set; }
         public int SongYear { get; set; }
         public bool Sustain { get; set; }

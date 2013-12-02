@@ -61,13 +61,13 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             var signature = tempoTrack.TimeSignatures[0];
             float time = 0;
             int beat = 1;
-            int measure = 1;
+            short measure = 1;
             float secondsPerQuarter = tempo.SecondsPerBar / signature.Numerator;
             var end = tempoTrack.MetaEvents.Single(ev => "EndOfTrack".Equals(ev.MetaType)).StartTime;
 
             while (time < end)
             {
-                ebeats.Add(new SongEbeat { Measure = beat == 1 ? measure : -1, Time = time });
+                ebeats.Add(new SongEbeat { Measure = (beat == 1) ? measure : (short)-1, Time = time });
                 var delta = secondsPerQuarter * ((float)4 / signature.Denominator);
                 time += delta;
                 var changed = false;
@@ -98,7 +98,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             var lastNote = guitarTrack.Chords.Max(c => c.EndTime);
             int measOffset = ebeats.Where(eb => eb.Measure != -1 && eb.Time <= firstNote).Last().Measure,
                 phraseId = 0;
-            measure = measOffset;
+            measure = (short)measOffset;
             SongEbeat ebeat = null;
             //count in
             phrases.Add(new SongPhraseIteration { PhraseId = phraseId++, Time = 0 });
@@ -141,7 +141,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                 var zChords = group.OrderBy(chord => chord.StartTime).ToList();
                 var lastMeasure = 0;
                 int highFret = -1;
-                bool lastWasChord = false;
+                //bool lastWasChord = false;
                 SongAnchor curAnchor = null;
                 for (int i = 0; i < zChords.Count; i++)
                 {
@@ -220,7 +220,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                         {
                             if (curAnchor == null)
                             {
-                                curAnchor = new SongAnchor { Fret = Math.Min(19, note.Fret), Time = note.Time };
+                                curAnchor = new SongAnchor { Fret = Math.Min(19, (int)note.Fret), Time = note.Time };
                                 highFret = note.Fret;
                             }
                             else if (note.Fret < curAnchor.Fret)
@@ -232,7 +232,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                                 else
                                 {
                                     gAnchors.Add(curAnchor);
-                                    curAnchor = new SongAnchor { Fret = Math.Min(19, note.Fret), Time = note.Time };
+                                    curAnchor = new SongAnchor { Fret = Math.Min(19, (int)note.Fret), Time = note.Time };
                                     highFret = note.Fret;
                                 }
                             }
@@ -245,7 +245,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                                 else
                                 {
                                     gAnchors.Add(curAnchor);
-                                    curAnchor = new SongAnchor { Fret = Math.Min(19, note.Fret), Time = note.Time };
+                                    curAnchor = new SongAnchor { Fret = Math.Min(19, (int)note.Fret), Time = note.Time };
                                     highFret = note.Fret;
                                 }
                             }
@@ -299,12 +299,12 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                 val = new Tuple<int, SongChordTemplate>(chordTemps.Count == 0 ? 0 : chordTemps.Values.Select(v => v.Item1).Max() + 1, templ);
                 templ.Finger0 = templ.Finger1 = templ.Finger2 = templ.Finger3 = templ.Finger4 = templ.Finger5 = -1;
                 templ.Fret0 = templ.Fret1 = templ.Fret2 = templ.Fret3 = templ.Fret4 = templ.Fret5 = -1;
-                zChord.Notes.Where(n => n.StringNo == 0).ToList().ForEach(note => templ.Fret0 = note.Fret);
-                zChord.Notes.Where(n => n.StringNo == 1).ToList().ForEach(note => templ.Fret1 = note.Fret);
-                zChord.Notes.Where(n => n.StringNo == 2).ToList().ForEach(note => templ.Fret2 = note.Fret);
-                zChord.Notes.Where(n => n.StringNo == 3).ToList().ForEach(note => templ.Fret3 = note.Fret);
-                zChord.Notes.Where(n => n.StringNo == 4).ToList().ForEach(note => templ.Fret4 = note.Fret);
-                zChord.Notes.Where(n => n.StringNo == 5).ToList().ForEach(note => templ.Fret5 = note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 0).ToList().ForEach(note => templ.Fret0 = (sbyte)note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 1).ToList().ForEach(note => templ.Fret1 = (sbyte)note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 2).ToList().ForEach(note => templ.Fret2 = (sbyte)note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 3).ToList().ForEach(note => templ.Fret3 = (sbyte)note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 4).ToList().ForEach(note => templ.Fret4 = (sbyte)note.Fret);
+                zChord.Notes.Where(n => n.StringNo == 5).ToList().ForEach(note => templ.Fret5 = (sbyte)note.Fret);
                 chordTemps[HashChord(zChord)] = val;
             }
             return val;
@@ -314,8 +314,8 @@ namespace RocksmithToolkitLib.ZiggyProEditor
         {
             SongNote note = new SongNote();
             Note zNote = chord.Notes[0];
-            note.Fret = zNote.Fret;
-            note.String = zNote.StringNo;
+            note.Fret = (sbyte)zNote.Fret;
+            note.String = (byte)zNote.StringNo;
             note.Bend = 0;
             note.HammerOn = (zNote.IsTapNote || chord.IsHammerOn) ? (byte)1 : (byte)0;
             note.Harmonic = 0;
@@ -327,7 +327,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             note.Tremolo = 0;
             if (chord.IsSlide && nextChord != null)
             {
-                note.SlideTo = Math.Max(nextChord.Notes[0].Fret, 1);
+                note.SlideTo = (sbyte)Math.Max(nextChord.Notes[0].Fret, 1);
                 note.Sustain = chord.EndTime - chord.StartTime;
                 note.HammerOn = note.Hopo = note.PalmMute = 0;
             }

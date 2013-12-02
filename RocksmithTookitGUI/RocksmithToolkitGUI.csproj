@@ -46,9 +46,6 @@
     <Reference Include="Ookii.Dialogs">
       <HintPath>..\lib\OokiiDialogs\Ookii.Dialogs.dll</HintPath>
     </Reference>
-    <Reference Include="PSARC">
-      <HintPath>..\lib\PSARC\PSARC.dll</HintPath>
-    </Reference>
     <Reference Include="PSTaskDialog">
       <HintPath>..\lib\PSTaskDialog\PSTaskDialog.dll</HintPath>
     </Reference>
@@ -67,8 +64,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\X360\X360.dll</HintPath>
     </Reference>
-    <Reference Include="ZLIB">
-      <HintPath>..\lib\ZLib\ZLIB.dll</HintPath>
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\ZLib\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -78,8 +76,20 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DLCConverter\DLCConverter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DLCConverter\DLCConverter.Designer.cs">
+      <DependentUpon>DLCConverter.cs</DependentUpon>
+    </Compile>
     <Compile Include="CueTextBox.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DDC\DDC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DDC\DDC.Designer.cs">
+      <DependentUpon>DDC.cs</DependentUpon>
     </Compile>
     <Compile Include="DLCPackageCreator\ArrangementForm.cs">
       <SubType>Form</SubType>
@@ -158,6 +168,12 @@
     </Compile>
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLCConverter\DLCConverter.resx">
+      <DependentUpon>DLCConverter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DDC\DDC.resx">
+      <DependentUpon>DDC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\ArrangementForm.resx">
       <DependentUpon>ArrangementForm.cs</DependentUpon>
@@ -251,11 +267,16 @@
     <None Include="Resources\toolkit_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\ddc-512.png" />
     <Content Include="songcreator.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /S /Y "$(SolutionDir)Third-party Apps" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

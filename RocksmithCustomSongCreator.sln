@@ -16,10 +16,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-party Apps", "{17ADB8C7-17DF-4BE3-8460-3E342F334B53}"
 	ProjectSection(SolutionItems) = preProject
 		Third-party Apps\tool\core.jar = Third-party Apps\tool\core.jar
+		Third-party Apps\nvdxt.exe = Third-party Apps\nvdxt.exe
 		Third-party Apps\packed_codebooks.bin = Third-party Apps\packed_codebooks.bin
+		Third-party Apps\packed_codebooks_aoTuV_603.bin = Third-party Apps\packed_codebooks_aoTuV_603.bin
+		Third-party Apps\ps3_decrypt.cmd = Third-party Apps\ps3_decrypt.cmd
+		Third-party Apps\ps3_decrypt.config = Third-party Apps\ps3_decrypt.config
+		Third-party Apps\ps3_encrypt.cmd = Third-party Apps\ps3_encrypt.cmd
+		Third-party Apps\ps3_encrypt.config = Third-party Apps\ps3_encrypt.config
 		Third-party Apps\readme.txt = Third-party Apps\readme.txt
-		Third-party Apps\rebuilder.cmd = Third-party Apps\rebuilder.cmd
-		Third-party Apps\rebuilder.config = Third-party Apps\rebuilder.config
 		Third-party Apps\rebuilder.exe = Third-party Apps\rebuilder.exe
 		Third-party Apps\revorb.exe = Third-party Apps\revorb.exe
 		Third-party Apps\tool\sfk.exe = Third-party Apps\tool\sfk.exe

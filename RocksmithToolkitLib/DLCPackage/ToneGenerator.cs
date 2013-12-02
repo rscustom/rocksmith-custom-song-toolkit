@@ -37,7 +37,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void generateXBlock(string toneKey, Stream outXblock, Tone.Tone tone)
         {
-            var game = new Game();
+            var game = new GameXblock<Entity>();
             var entity = new Entity
             {
                 Name = String.Format("GRTonePreset_{0}", toneKey),
@@ -49,7 +49,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var addProperty = new Action<string, object>((a, b) => properties.Add(CreateProperty(a, b.ToString())));
             addProperty("Key", tone.Key);
             addProperty("Name", tone.Name);
-            game.Entities = new List<Entity> {entity};
+            game.EntitySet = new List<Entity> {entity};
             game.Serialize(outXblock);
         }
 

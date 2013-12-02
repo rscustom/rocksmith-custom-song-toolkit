@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RocksmithToolkitLib.Tone;
+using RocksmithToolkitLib.ToolkitTone;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using RocksmithToolkitLib;
 
 namespace pedalgen
 {
@@ -21,6 +23,7 @@ namespace pedalgen
         public string[] ExclusiveBuild; // []
         public bool IsDLC; // false
         public bool IsPreviewOnlyItem; // false
+        [JsonProperty("TonePedalRTPCName")]
         public string Key; // "Cab_1X12_MegaModern_57_Cone"
         public RsKnob[] Knobs; // []
         public string Name; // "Megan 1X12"
@@ -33,9 +36,9 @@ namespace pedalgen
         public string UnlockKey; // "Cabinet_Cab_1X12_MegaModern_57_Cone"
         public int UnlockOrder; // -1
 
-        public Pedal ToPedal()
+        public ToolkitPedal ToPedal()
         {
-            return new Pedal
+            return new ToolkitPedal()
             {
                 AllowLoop = AllowLoop,
                 AllowPost = AllowPost,
@@ -59,32 +62,33 @@ namespace pedalgen
         private static Regex BadName = new Regex(@"^\$\[\d{5}\]$");
 
         public string Name; // "$[24509] Sensitivity"
-        public string TonePedalRTPCName; // "Pedal_RingMod_Sensitivity"
+        [JsonProperty("TonePedalRTPCName")]
+        public string Key; // "Pedal_RingMod_Sensitivity"
         public string UnitType; // "Number"
-        public decimal MinValue; // 0.0
-        public decimal MaxValue; // 100.0
-        public decimal ValueStep; // 1.0
-        public decimal DefaultValue; // 50.0
+        public float MinValue; // 0.0
+        public float MaxValue; // 100.0
+        public float ValueStep; // 1.0
+        public float DefaultValue; // 50.0
         public string NifAsset; // ""
         public string ParentLocator; // ""
         public string CameraLocator; // ""
         public int SortOrder; // 1
         public Dictionary<string, string> EnumValues; // {} I have seen both numbers and strings ("Out", "In") as keys
 
-        public Knob ToKnob()
+        public ToolkitKnob ToKnob()
         {
             var name = Name;
             if(BadName.IsMatch(name)) {
-                var last_ = TonePedalRTPCName.LastIndexOf('_')+1;
-                if(last_ < TonePedalRTPCName.Length && last_ > 0) {
-                    name = TonePedalRTPCName.Substring(last_);
+                var last_ = Key.LastIndexOf('_')+1;
+                if(last_ < Key.Length && last_ > 0) {
+                    name = Key.Substring(last_);
                 }
             }
-            return new Knob
+            return new ToolkitKnob
             {
                 DefaultValue = DefaultValue,
                 EnumValues = EnumValues.Select(kvp => new Tuple<string, string>(kvp.Key, kvp.Value)).ToList(),
-                Key = TonePedalRTPCName,
+                Key = Key,
                 MaxValue = MaxValue,
                 MinValue = MinValue,
                 Name = name,

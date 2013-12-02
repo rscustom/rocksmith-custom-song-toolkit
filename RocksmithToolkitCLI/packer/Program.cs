@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -115,7 +116,7 @@ namespace PackerConsole
 
                     try
                     {
-                        Console.WriteLine("Warning: You should load and save XML with 'RocksmithToolkitGUI 1.4.0.0' or above to make sure it is still valid and compatible with this feature!");
+                        Console.WriteLine("Warning: You should load and save XML with 'RocksmithToolkitGUI 2.1.0.0' or above to make sure it is still valid and compatible with this feature!");
 
                         DLCPackageData info = null;
                         var serializer = new DataContractSerializer(typeof(DLCPackageData));
@@ -124,12 +125,19 @@ namespace PackerConsole
                             info = (DLCPackageData)serializer.ReadObject(stm);
                         }
 
+                        var gameVersion = GameVersion.RS2012;
+                        if (info.GameVersion != null)
+                            gameVersion = info.GameVersion;
+
                         if (!String.IsNullOrEmpty(info.OggPath))
-                            DLCPackageCreator.Generate(arguments.Output, info, GamePlatform.Pc, null);
+                            DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Pc, gameVersion));
+                        if (gameVersion == GameVersion.RS2014)
+                            if (!String.IsNullOrEmpty(info.OggMACPath))
+                                DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Mac, gameVersion));
                         if (!String.IsNullOrEmpty(info.OggXBox360Path))
-                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, GamePlatform.XBox360, PackageMagic.CON);
+                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.XBox360, gameVersion));
                         if (!String.IsNullOrEmpty(info.OggPS3Path))
-                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, GamePlatform.PS3, null);
+                            DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.PS3, gameVersion));
 
                         Console.WriteLine("Package was generated.");
                         return 0;
@@ -154,7 +162,7 @@ namespace PackerConsole
                         foreach (var file in decodedOGGFiles)
                             File.Delete(file);
 
-                        Packer.Pack(arguments.Input, arguments.Output, true, arguments.UpdateSng);
+                        Packer.Pack(Path.GetFullPath(arguments.Input), arguments.Output, true, arguments.UpdateSng);
                         Console.WriteLine("Packing is complete.");
                         return 0;
                     }
@@ -176,11 +184,11 @@ namespace PackerConsole
 
                     foreach (string sourceFileName in sourceFiles)
                     {
-                        GamePlatform platform = Packer.GetPlatform(sourceFileName);
-                        if (platform == GamePlatform.None)
+                        Platform platform = Packer.GetPlatform(sourceFileName);
+                        if (platform.platform == GamePlatform.None)
                         {
-                            Console.WriteLine("Error: Platform not found or invalid 'input' file.");
-                            return 1;
+                            Console.WriteLine("Error: Platform not found or invalid 'input' file:" + sourceFileName);
+                            continue;
                         }
 
                         try
@@ -190,12 +198,14 @@ namespace PackerConsole
                             if (arguments.DecodeOGG)
                             {
                                 var name = Path.GetFileNameWithoutExtension(sourceFileName);
-                                name += String.Format("_{0}", platform.ToString());
-                                string[] oggFiles = Directory.GetFiles(Path.Combine(arguments.Output, name), "*.ogg", SearchOption.AllDirectories);
-                                foreach (var file in oggFiles)
+                                name += String.Format("_{0}", platform.platform.ToString());
+
+                                var audioFiles = Directory.GetFiles(Path.Combine(arguments.Output, name), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
+
+                                foreach (var file in audioFiles)
                                 {
                                     var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                                    OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                                    OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Path.GetExtension(file).GetWwiseVersion());
                                 }
                             }
                         }
