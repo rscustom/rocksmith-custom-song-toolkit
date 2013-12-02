@@ -639,6 +639,7 @@
             0,
             0,
             -2147483648});
+            this.volumeBox.ValueChanged += new System.EventHandler(this.Song_Volume_Tip);
             // 
             // AppIdTB
             // 

@@ -562,6 +562,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void Song_Volume_Tip(object sender, EventArgs e)
+        {
+            ToolTip tt = new ToolTip();
+            tt.IsBalloon = true;
+            tt.InitialDelay = 0;
+            tt.ShowAlways = true;
+            tt.SetToolTip(volumeBox, "HIGHER 0 , -1,-2 , -3 ,,,, AVERAGE -12, ....,-16,-17 LOWER ...");
+        }
+
+
+
         private XmlTextReader FixOldDlcPackage(string xmlPath) {
             var doc = XDocument.Load(xmlPath);
             XNamespace dlcNamespace = "http://schemas.datacontract.org/2004/07/RocksmithToolkitLib.DLCPackage";

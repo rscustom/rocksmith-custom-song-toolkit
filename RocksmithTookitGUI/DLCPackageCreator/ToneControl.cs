@@ -127,6 +127,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // VOLUME
             volumeBox.ValueChanged += (sender, e) =>
             {
+                Tone_Volume_Tip(volumeBox, e);
                 if (CurrentGameVersion == GameVersion.RS2012)
                     tone.Volume = (float)volumeBox.Value;
                 else
@@ -144,6 +145,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 descriptorCombo.SelectedValueChanged += (sender, e) =>
                     UpdateToneDescription((ComboBox)sender);
             }
+        }
+
+        private void Tone_Volume_Tip(object sender, EventArgs f)
+        {
+            ToolTip tvt = new ToolTip();
+            tvt.IsBalloon = true;
+            tvt.InitialDelay = 0;
+            tvt.ShowAlways = true;
+            tvt.SetToolTip(volumeBox, "LOWEST 0 , -1 , -2, -3, ..... AVERAGE -12 .... ,-20, -21 HIGHER,...");
         }
 
         private void UpdateToneDescription(ComboBox combo, bool updateName = true) {
