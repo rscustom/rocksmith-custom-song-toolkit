@@ -441,6 +441,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dlcLoadPath = ofd.FileName;
             }
 
+            loadTemplate(dlcLoadPath);
+        }
+
+        public void loadTemplate(string dlcLoadPath)
+        {
             DLCPackageData info = null;
 
             var deserializer = new DataContractSerializer(typeof(DLCPackageData));

@@ -20,6 +20,11 @@
             base.Dispose(disposing);
         }
 
+        protected void LoadTemplate(string path)
+        {
+            this.dlcPackageCreatorControl.loadTemplate(path);
+        }
+
         #region Windows Form Designer generated code
 
         /// <summary>

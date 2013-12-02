@@ -10,9 +10,11 @@ namespace RocksmithToolkitGUI
 {
     public partial class MainForm : Form
     {
-        public MainForm()
+        public MainForm(string[] args)
         {
             InitializeComponent();
+            if (args.Length > 0)
+                LoadTemplate(args[0]);
             this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", RocksmithToolkitLib.ToolkitVersion.version);
         }
 
