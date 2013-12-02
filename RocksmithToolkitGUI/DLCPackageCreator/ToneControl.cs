@@ -126,7 +126,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // VOLUME
             volumeBox.ValueChanged += (sender, e) =>
+            {
+                Tone_Volume_Tip(volumeBox, e);
                 tone.Volume = (float)volumeBox.Value;
+            };
 
             // TONE DESCRIPTOR
             if (CurrentGameVersion == GameVersion.RS2014)
