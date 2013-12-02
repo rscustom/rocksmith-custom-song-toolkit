@@ -162,7 +162,7 @@ namespace PackerConsole
                         foreach (var file in decodedOGGFiles)
                             File.Delete(file);
 
-                        Packer.Pack(arguments.Input, arguments.Output, true, arguments.UpdateSng);
+                        Packer.Pack(Path.GetFullPath(arguments.Input), arguments.Output, true, arguments.UpdateSng);
                         Console.WriteLine("Packing is complete.");
                         return 0;
                     }
