@@ -508,7 +508,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     break;
             }              
 
-            var BasePath = new Uri(Path.GetDirectoryName(dlcLoadPath) + Path.DirectorySeparatorChar);
+            var BasePath = new Uri(Path.GetDirectoryName(Path.GetFullPath(dlcLoadPath)) + Path.DirectorySeparatorChar);
 
             // Song INFO
             DlcNameTB.Text = info.Name;
