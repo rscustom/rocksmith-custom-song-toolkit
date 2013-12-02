@@ -330,7 +330,6 @@
             // RS2012
             // 
             this.RS2012.AutoSize = true;
-            this.RS2012.Checked = false;
             this.RS2012.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RS2012.ForeColor = System.Drawing.SystemColors.ControlText;
             this.RS2012.Location = new System.Drawing.Point(8, 18);
@@ -352,6 +351,7 @@
             this.RS2014.Name = "RS2014";
             this.RS2014.Size = new System.Drawing.Size(102, 17);
             this.RS2014.TabIndex = 2;
+            this.RS2014.TabStop = true;
             this.RS2014.Text = "Rocksmith 2014";
             this.RS2014.UseVisualStyleBackColor = true;
             this.RS2014.CheckedChanged += new System.EventHandler(this.GameVersion_CheckedChanged);
@@ -374,7 +374,6 @@
             // platformMAC
             // 
             this.platformMAC.AutoSize = true;
-            this.platformMAC.Enabled = false;
             this.platformMAC.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.platformMAC.ForeColor = System.Drawing.SystemColors.ControlText;
             this.platformMAC.Location = new System.Drawing.Point(74, 19);
@@ -619,9 +618,9 @@
             // 
             // volumeBox
             // 
+            this.volumeBox.DecimalPlaces = 2;
             this.volumeBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.volumeBox.Location = new System.Drawing.Point(52, 69);
-            this.volumeBox.DecimalPlaces = 2;
             this.volumeBox.Maximum = new decimal(new int[] {
             0,
             0,
