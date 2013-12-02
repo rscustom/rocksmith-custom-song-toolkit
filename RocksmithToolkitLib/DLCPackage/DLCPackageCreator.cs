@@ -510,8 +510,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         // SHOWLIGHT
                         Showlights showlight = new Showlights(info.Arrangements);
                         showlight.Serialize(showlightStream);
-                        showlightStream.Flush();
-                        showlightStream.Seek(0, SeekOrigin.Begin);
+                        if(showlightStream.CanRead)
                         packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
 
                         // XBLOCK

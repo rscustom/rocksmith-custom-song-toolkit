@@ -375,9 +375,14 @@
             this.gbLoopPedalAndRacks.Text = "Loop Pedal";
             // 
             // volumeBox
-            //
+            // 
             this.volumeBox.DecimalPlaces = 2;
             this.volumeBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.volumeBox.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.volumeBox.Location = new System.Drawing.Point(180, 19);
             this.volumeBox.Maximum = new decimal(new int[] {
             0,
@@ -504,6 +509,7 @@
             this.Controls.Add(this.gbPrePedal);
             this.Controls.Add(this.gbLoopPedalAndRacks);
             this.Controls.Add(this.gbAmpCab);
+            this.MinimumSize = new System.Drawing.Size(513, 301);
             this.Name = "ToneControl";
             this.Size = new System.Drawing.Size(513, 301);
             this.gbAmpCab.ResumeLayout(false);

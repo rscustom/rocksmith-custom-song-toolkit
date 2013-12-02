@@ -18,50 +18,61 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
         public Showlights(List<Arrangement> arrangements) {
             ShowlightList = new List<Showlight>();
-            List<Showlight> listOne = new List<Showlight>();
             foreach (var arrangement in arrangements) {
                 if (arrangement.ArrangementType == Sng.ArrangementType.Vocal)
                     continue;
-
-                var showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File), Path.GetFileNameWithoutExtension(arrangement.SongXml.File) + "_showlights.xml");
+                
+                var showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File), 
+                    Path.GetFileNameWithoutExtension(arrangement.SongXml.File) + "_showlights.xml");
                 if (!File.Exists(showlightFile))
                     continue;
 
+                var listOne = new List<Showlight>();
                 listOne = Showlights.LoadFromFile(showlightFile).ShowlightList;
 
                 if (ShowlightList.Count == 0)
-                    ShowlightList = listOne;
+                    ShowlightList.AddRange(listOne);
                 else
                 {
-                    var slIntersected = from first in listOne
-                                        join second in ShowlightList
-                                        on first.Note equals second.Note
-                                        where (first.Time - 100) < second.Time
-                                        && (first.Time + 100) > second.Time
-                                        select first;
-                    ShowlightList = slIntersected.ToList();
+                    try
+                    {
+                        var comp = new EqShowlight();
+                        ShowlightList.Except(listOne, comp);
+                    }
+                    catch { continue; }
                 }
             }
         }
+        class EqShowlight : IEqualityComparer<Showlight>
+        {
+            public bool Equals(Showlight x, Showlight y)
+            { return x.Note == y.Note && (x.Time - 100 < y.Time) && (x.Time + 100 > y.Time); }
 
+            public int GetHashCode(Showlight obj)
+            {   if (Object.ReferenceEquals(obj, null)) return 0;
+                return obj.Time.GetHashCode() ^ obj.Time.GetHashCode(); }
+        }
         public void Serialize(Stream stream)
         {
+
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
+
+            var buf = new BufferedStream(stream, 131072);
             var serializer = new XmlSerializer(typeof(Showlights));
-            serializer.Serialize(stream, this, ns);
+            serializer.Serialize(buf, this, ns);
+            stream.Flush();
+            stream.Seek(0, SeekOrigin.Begin);            
         }
 
         public static Showlights LoadFromFile(string showlightsRS2014File)
         {
             Showlights xmlShowlightsRS2014 = null;
-
             using (var reader = new StreamReader(showlightsRS2014File))
             {
-                var serializer = new XmlSerializer(typeof(Showlights));
-                xmlShowlightsRS2014 = (Showlights)serializer.Deserialize(reader);
+                var serializer = new Extensions.XmlStreamingDeserializer<Showlights>(reader);
+                xmlShowlightsRS2014 = (Showlights)serializer.Deserialize();            
             }
-
             return xmlShowlightsRS2014;
         }
     }
