@@ -8,6 +8,7 @@ using System.Xml;
 using System.IO;
 using System.Reflection;
 using RocksmithToolkitLib.Sng;
+using Newtonsoft.Json;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {
@@ -15,7 +16,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
     {
         public Gear2014 GearList { get; set; }
         public bool IsCustom { get; set; }
-        public string Volume { get; set; }
+        [JsonProperty]
+        [JsonConverter(typeof(FloatToString))]
+        public float Volume { get; set; }
         public List<string> ToneDescriptors { get; set; }
         public string Key { get; set; }
         public string NameSeparator { get; set; }
@@ -23,10 +26,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         public decimal SortOrder { get; set; }
 
         public Tone2014()
-        {//for each type of instrument - neet to use its default volume values;
+        {
             GearList = new Gear2014();
             IsCustom = true;
-            Volume = "-12"; 
+            Volume = -12;
             ToneDescriptors = new List<string>();
             NameSeparator = " - ";
             SortOrder = 0;
@@ -119,5 +122,23 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         }
 
         #endregion
+    }
+
+    public class FloatToString: JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(float);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            return Convert.ToSingle(serializer.Deserialize<string>(reader));
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            serializer.Serialize(writer, ((float)value).ToString("G"));
+        }
     }
 }

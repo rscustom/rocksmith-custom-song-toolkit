@@ -67,7 +67,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             _refreshingCombos = true;
             toneNameBox.Text = tone.Name ?? "";
-            volumeBox.Value = Decimal.Round(Convert.ToDecimal(tone.Volume), 2);
+            volumeBox.Value = Decimal.Round((decimal)tone.Volume, 2);
 
             UpdateComboSelection(ampBox, ampKnobButton, "Amp");
             UpdateComboSelection(cabinetBox, cabinetKnobButton, "Cabinet");
@@ -126,13 +126,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // VOLUME
             volumeBox.ValueChanged += (sender, e) =>
-            {
-                Tone_Volume_Tip(volumeBox, e);
-                if (CurrentGameVersion == GameVersion.RS2012)
-                    tone.Volume = (float)volumeBox.Value;
-                else
-                    tone.Volume = volumeBox.Value.ToString();
-            };
+                tone.Volume = (float)volumeBox.Value;
 
             // TONE DESCRIPTOR
             if (CurrentGameVersion == GameVersion.RS2014)
