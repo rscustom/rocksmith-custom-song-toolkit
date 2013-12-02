@@ -223,7 +223,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     if (SectionUINames.TryGetValue(sep[0], out uiName))
                         sect.UIName = uiName;
                     else
-                        throw new InvalidOperationException(String.Format("Unknown section name: {0}", sep[0]));
+                        throw new InvalidDataException(String.Format("Unknown section name: {0}", sep[0]));
                 }
                 else
                 {
@@ -238,7 +238,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                         catch { }
                         sect.UIName = uiName;
                     } else
-                          throw new InvalidOperationException(String.Format("Unknown section name: {0}", sep[0]));
+                          throw new InvalidDataException(String.Format("Unknown section name: {0}", sep[0]));
                 }
                 var phraseIterStart = -1;
                 var phraseIterEnd = 0;
