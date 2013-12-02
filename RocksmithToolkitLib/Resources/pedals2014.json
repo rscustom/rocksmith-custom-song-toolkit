@@ -5811,7 +5811,7 @@
   {
     "Name": "Bass Auto Filter",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Bass_Pedal_BassAutoFilter",
     "Knobs": [
       {
@@ -5890,7 +5890,7 @@
   {
     "Name": "Bass Chorus",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Bass_Pedal_BassChorus",
     "Knobs": [
       {
@@ -5945,7 +5945,7 @@
   {
     "Name": "Bass Distortion",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Bass_Pedal_BassDistortion",
     "Knobs": [
       {
@@ -5989,7 +5989,7 @@
   {
     "Name": "Bass Enbiggenator",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Bass_Pedal_BassEnbig",
     "Knobs": [
       {
@@ -6044,7 +6044,7 @@
   {
     "Name": "8-Band Bass EQ",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Bass_Pedal_BassEQ8",
     "Knobs": [
       {
@@ -6143,7 +6143,7 @@
   {
     "Name": "Bass Filter Delay",
     "Type": "Pedals",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Bass_Pedal_BassFilterDelay",
     "Knobs": [
       {
@@ -6198,7 +6198,7 @@
   {
     "Name": "Bass Filter Echo",
     "Type": "Pedals",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Bass_Pedal_BassFilterEcho",
     "Knobs": [
       {
@@ -6253,7 +6253,7 @@
   {
     "Name": "Bass Flange",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Bass_Pedal_BassFlanger",
     "Knobs": [
       {
@@ -6308,7 +6308,7 @@
   {
     "Name": "Bass Fuzz",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Bass_Pedal_BassFuzz",
     "Knobs": [
       {
@@ -6352,7 +6352,7 @@
   {
     "Name": "Bass Overdrive",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Bass_Pedal_BassOverdrive",
     "Knobs": [
       {
@@ -6407,7 +6407,7 @@
   {
     "Name": "Bass Phase",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Bass_Pedal_BassPhase",
     "Knobs": [
       {
@@ -6462,7 +6462,7 @@
   {
     "Name": "Bass Sub Octave",
     "Type": "Pedals",
-    "Category": "30791",
+    "Category": "Pitch",
     "Key": "Bass_Pedal_BassSubOctave",
     "Knobs": [
       {
@@ -6495,7 +6495,7 @@
   {
     "Name": "Bass Wah",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Bass_Pedal_BassWah",
     "Knobs": [
       {
@@ -6559,7 +6559,7 @@
   {
     "Name": "Eden WT D.I.",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Bass_Pedal_EdenWTDI",
     "Knobs": [
       {
@@ -6676,7 +6676,7 @@
   {
     "Name": "MB Comp",
     "Type": "Pedals",
-    "Category": "30781",
+    "Category": "Dynamics",
     "Key": "Bass_Pedal_MBComp",
     "Knobs": [
       {
@@ -9618,7 +9618,7 @@
   {
     "Name": "80's Flanger",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_80sFlanger",
     "Knobs": [
       {
@@ -9662,7 +9662,7 @@
   {
     "Name": "Acoustic Emulator",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_AcousticEmulator",
     "Knobs": [
       {
@@ -9717,7 +9717,7 @@
   {
     "Name": "Amp EQ",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_AmpEQ",
     "Knobs": [
       {
@@ -9825,7 +9825,7 @@
   {
     "Name": "Amp Trem",
     "Type": "Pedals",
-    "Category": "30793",
+    "Category": "Tremolo",
     "Key": "Pedal_AmpTrem",
     "Knobs": [
       {
@@ -9858,7 +9858,7 @@
   {
     "Name": "Amp Vibe",
     "Type": "Pedals",
-    "Category": "30793",
+    "Category": "Tremolo",
     "Key": "Pedal_AmpVibe",
     "Knobs": [
       {
@@ -9891,7 +9891,7 @@
   {
     "Name": "Analog Delay",
     "Type": "Pedals",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Pedal_AnalogueDelay",
     "Knobs": [
       {
@@ -9935,7 +9935,7 @@
   {
     "Name": "Auto Filter",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_AutoFilter",
     "Knobs": [
       {
@@ -10014,7 +10014,7 @@
   {
     "Name": "Auto Vibe",
     "Type": "Pedals",
-    "Category": "30793",
+    "Category": "Tremolo",
     "Key": "Pedal_AutoVibe",
     "Knobs": [
       {
@@ -10069,7 +10069,7 @@
   {
     "Name": "Baked Rotatoe",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_BakedRotatoe",
     "Knobs": [
       {
@@ -10124,7 +10124,7 @@
   {
     "Name": "Guitar>Bass Emulator",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_BassEmulator",
     "Knobs": [
       {
@@ -10157,7 +10157,7 @@
   {
     "Name": "Bit Cruncher",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_BitCruncher",
     "Knobs": [
       {
@@ -10223,7 +10223,7 @@
   {
     "Name": "Analog Filter",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_BobFilter",
     "Knobs": [
       {
@@ -10302,7 +10302,7 @@
   {
     "Name": "Buzz 1",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_BuzzOne",
     "Knobs": [
       {
@@ -10335,7 +10335,7 @@
   {
     "Name": "Buzz 2",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_BuzzToo",
     "Knobs": [
       {
@@ -10368,7 +10368,7 @@
   {
     "Name": "Captain Fuzzle",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_CaptFuzzle",
     "Knobs": [
       {
@@ -10401,7 +10401,7 @@
   {
     "Name": "Chorus",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_Chorus",
     "Knobs": [
       {
@@ -10445,7 +10445,7 @@
   {
     "Name": "Chorus 2.0",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_Chorus20",
     "Knobs": [
       {
@@ -10489,7 +10489,7 @@
   {
     "Name": "Classic Flange",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_ClassicFlanger",
     "Knobs": [
       {
@@ -10533,7 +10533,7 @@
   {
     "Name": "Compression",
     "Type": "Pedals",
-    "Category": "30781",
+    "Category": "Dynamics",
     "Key": "Pedal_Compression",
     "Knobs": [
       {
@@ -10577,7 +10577,7 @@
   {
     "Name": "Cosmonaut Echo",
     "Type": "Pedals",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Pedal_CosmicEcho",
     "Knobs": [
       {
@@ -10621,7 +10621,7 @@
   {
     "Name": "Custom Drive",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_CustomDrive",
     "Knobs": [
       {
@@ -10674,7 +10674,7 @@
   {
     "Name": "Digital Chorus",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_DigitalChorus",
     "Knobs": [
       {
@@ -10740,7 +10740,7 @@
   {
     "Name": "Digital Verb",
     "Type": "Pedals",
-    "Category": "30792",
+    "Category": "Reverb",
     "Key": "Pedal_DigitalVerb",
     "Knobs": [
       {
@@ -10795,7 +10795,7 @@
   {
     "Name": "Distortion",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_Distortion",
     "Knobs": [
       {
@@ -10828,7 +10828,7 @@
   {
     "Name": "Enbiggenator",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_Enbiggenator",
     "Knobs": [
       {
@@ -10872,7 +10872,7 @@
   {
     "Name": "5-Band Graphic EQ",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_EQ5",
     "Knobs": [
       {
@@ -10938,7 +10938,7 @@
   {
     "Name": "8-Band Graphic EQ",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_EQ8",
     "Knobs": [
       {
@@ -11037,7 +11037,7 @@
   {
     "Name": "Fuzz Was He?",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_FuzzWasHe",
     "Knobs": [
       {
@@ -11070,7 +11070,7 @@
   {
     "Name": "Germanium Drive",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_GermaniumDrive",
     "Knobs": [
       {
@@ -11103,7 +11103,7 @@
   {
     "Name": "Limiter",
     "Type": "Pedals",
-    "Category": "30781",
+    "Category": "Dynamics",
     "Key": "Pedal_Limiter",
     "Knobs": [
       {
@@ -11136,7 +11136,7 @@
   {
     "Name": "Line Drive",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_LineDrive",
     "Knobs": [
       {
@@ -11169,7 +11169,7 @@
   {
     "Name": "Lo-Fi Filter",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_LoFiFilter",
     "Knobs": [
       {
@@ -11202,7 +11202,7 @@
   {
     "Name": "Marshall Guv'nor Plus",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_MarshallGuvnorPlus",
     "Knobs": [
       {
@@ -11268,7 +11268,7 @@
   {
     "Name": "Marshall Supervibe",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_MarshallSupervibe",
     "Knobs": [
       {
@@ -11323,7 +11323,7 @@
   {
     "Name": "Alloy Distortion",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_MetalDistortion",
     "Knobs": [
       {
@@ -11356,7 +11356,7 @@
   {
     "Name": "Mod Delay",
     "Type": "Pedals",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Pedal_ModDelay",
     "Knobs": [
       {
@@ -11422,7 +11422,7 @@
   {
     "Name": "Modern Flange",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_ModernFlanger",
     "Knobs": [
       {
@@ -11477,7 +11477,7 @@
   {
     "Name": "Modern Wah",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_ModernWah",
     "Knobs": [
       {
@@ -11541,7 +11541,7 @@
   {
     "Name": "MultiPitch",
     "Type": "Pedals",
-    "Category": "30791",
+    "Category": "Pitch",
     "Key": "Pedal_MultiPitch",
     "Knobs": [
       {
@@ -11585,7 +11585,7 @@
   {
     "Name": "Multi-Trem",
     "Type": "Pedals",
-    "Category": "30793",
+    "Category": "Tremolo",
     "Key": "Pedal_MultiTrem",
     "Knobs": [
       {
@@ -11650,7 +11650,7 @@
   {
     "Name": "Multi-Vibe",
     "Type": "Pedals",
-    "Category": "30793",
+    "Category": "Tremolo",
     "Key": "Pedal_MultiVibe",
     "Knobs": [
       {
@@ -11715,7 +11715,7 @@
   {
     "Name": "No-Fi Echo",
     "Type": "Pedals",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Pedal_NoFiEcho",
     "Knobs": [
       {
@@ -11759,7 +11759,7 @@
   {
     "Name": "Noise Gate",
     "Type": "Pedals",
-    "Category": "30781",
+    "Category": "Dynamics",
     "Key": "Pedal_NoiseGate",
     "Knobs": [
       {
@@ -11792,7 +11792,7 @@
   {
     "Name": "Classic NPN Delay",
     "Type": "Pedals",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Pedal_NPNDelay",
     "Knobs": [
       {
@@ -11836,7 +11836,7 @@
   {
     "Name": "OctaveUp!",
     "Type": "Pedals",
-    "Category": "30791",
+    "Category": "Pitch",
     "Key": "Pedal_OctaveUp",
     "Knobs": [
       {
@@ -11869,7 +11869,7 @@
   {
     "Name": "Octavius",
     "Type": "Pedals",
-    "Category": "30791",
+    "Category": "Pitch",
     "Key": "Pedal_Octavius",
     "Knobs": [
       {
@@ -11902,7 +11902,7 @@
   {
     "Name": "Oil-Can Echo",
     "Type": "Pedals",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Pedal_OilCanEcho",
     "Knobs": [
       {
@@ -11946,7 +11946,7 @@
   {
     "Name": "Omni-Mod",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_OmniMod",
     "Knobs": [
       {
@@ -11990,7 +11990,7 @@
   {
     "Name": "Phaser-363",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_Phaser",
     "Knobs": [
       {
@@ -12012,7 +12012,7 @@
   {
     "Name": "Plane Phase",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_PlanePhase",
     "Knobs": [
       {
@@ -12056,7 +12056,7 @@
   {
     "Name": "Plate Reverb",
     "Type": "Pedals",
-    "Category": "30792",
+    "Category": "Reverb",
     "Key": "Pedal_PlateVerb",
     "Knobs": [
       {
@@ -12120,7 +12120,7 @@
   {
     "Name": "Range Booster",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_RangeBooster",
     "Knobs": [
       {
@@ -12142,7 +12142,7 @@
   {
     "Name": "Ring Mod",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_RingMod",
     "Knobs": [
       {
@@ -12206,7 +12206,7 @@
   {
     "Name": "Send In The Clones!",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_SendInTheClones",
     "Knobs": [
       {
@@ -12250,7 +12250,7 @@
   {
     "Name": "Shaver Phaser",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_ShaverPhaser",
     "Knobs": [
       {
@@ -12283,7 +12283,7 @@
   {
     "Name": "Shred Zone",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_ShredZone",
     "Knobs": [
       {
@@ -12338,7 +12338,7 @@
   {
     "Name": "Spring Reverb",
     "Type": "Pedals",
-    "Category": "30792",
+    "Category": "Reverb",
     "Key": "Pedal_SpringReverb",
     "Knobs": [
       {
@@ -12382,7 +12382,7 @@
   {
     "Name": "Super Drive",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_SuperDrive",
     "Knobs": [
       {
@@ -12415,7 +12415,7 @@
   {
     "Name": "Swole",
     "Type": "Pedals",
-    "Category": "30781",
+    "Category": "Dynamics",
     "Key": "Pedal_Swole",
     "Knobs": [
       {
@@ -12448,7 +12448,7 @@
   {
     "Name": "TremOle'",
     "Type": "Pedals",
-    "Category": "30793",
+    "Category": "Tremolo",
     "Key": "Pedal_TremOle",
     "Knobs": [
       {
@@ -12503,7 +12503,7 @@
   {
     "Name": "Tremolo",
     "Type": "Pedals",
-    "Category": "30793",
+    "Category": "Tremolo",
     "Key": "Pedal_Tremolo",
     "Knobs": [
       {
@@ -12536,7 +12536,7 @@
   {
     "Name": "Tube Spring Reverb",
     "Type": "Pedals",
-    "Category": "30792",
+    "Category": "Reverb",
     "Key": "Pedal_TubeSpring",
     "Knobs": [
       {
@@ -12569,7 +12569,7 @@
   {
     "Name": "UK Wah",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_UKWah",
     "Knobs": [
       {
@@ -12633,7 +12633,7 @@
   {
     "Name": "US Wah",
     "Type": "Pedals",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Pedal_USWah",
     "Knobs": [
       {
@@ -12697,7 +12697,7 @@
   {
     "Name": "Valve Echo",
     "Type": "Pedals",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Pedal_ValveEcho",
     "Knobs": [
       {
@@ -12741,7 +12741,7 @@
   {
     "Name": "Vintage Chorus",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_VintageChorus",
     "Knobs": [
       {
@@ -12785,7 +12785,7 @@
   {
     "Name": "Vintage Distortion",
     "Type": "Pedals",
-    "Category": "30780",
+    "Category": "Distortion",
     "Key": "Pedal_VintageDistortion",
     "Knobs": [
       {
@@ -12818,7 +12818,7 @@
   {
     "Name": "Vintage Flanger",
     "Type": "Pedals",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Pedal_VintageFlanger",
     "Knobs": [
       {
@@ -12862,7 +12862,7 @@
   {
     "Name": "RotaVibe",
     "Type": "Racks",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Rack_RotaVibe",
     "Knobs": [
       {
@@ -12917,7 +12917,7 @@
   {
     "Name": "Stereo Analog Vibrato",
     "Type": "Racks",
-    "Category": "30793",
+    "Category": "Tremolo",
     "Key": "Rack_StereoAnalogVibe",
     "Knobs": [
       {
@@ -12974,7 +12974,7 @@
   {
     "Name": "Stereo Phaser",
     "Type": "Racks",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Rack_StereoPhaser",
     "Knobs": [
       {
@@ -13018,7 +13018,7 @@
   {
     "Name": "Stereo Tube Trem",
     "Type": "Racks",
-    "Category": "30793",
+    "Category": "Tremolo",
     "Key": "Rack_StereoTubeTrem",
     "Knobs": [
       {
@@ -13075,7 +13075,7 @@
   {
     "Name": "Studio Chamber Reverb",
     "Type": "Racks",
-    "Category": "30792",
+    "Category": "Reverb",
     "Key": "Rack_StudioChamber",
     "Knobs": [
       {
@@ -13130,7 +13130,7 @@
   {
     "Name": "Studio Chorus",
     "Type": "Racks",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Rack_StudioChorus",
     "Knobs": [
       {
@@ -13218,7 +13218,7 @@
   {
     "Name": "Studio Compressor",
     "Type": "Racks",
-    "Category": "30781",
+    "Category": "Dynamics",
     "Key": "Rack_StudioCompressor",
     "Knobs": [
       {
@@ -13294,7 +13294,7 @@
   {
     "Name": "Studio Delay",
     "Type": "Racks",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Rack_StudioDelay",
     "Knobs": [
       {
@@ -13360,7 +13360,7 @@
   {
     "Name": "Studio Parametric EQ",
     "Type": "Racks",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Rack_StudioEQ",
     "Knobs": [
       {
@@ -13499,7 +13499,7 @@
   {
     "Name": "Studio Flanger",
     "Type": "Racks",
-    "Category": "30788",
+    "Category": "Modulation",
     "Key": "Rack_StudioFlanger",
     "Knobs": [
       {
@@ -13565,7 +13565,7 @@
   {
     "Name": "Studio ParaGraphic EQ",
     "Type": "Racks",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Rack_StudioGraphicEQ",
     "Knobs": [
       {
@@ -13686,7 +13686,7 @@
   {
     "Name": "Studio Pitch",
     "Type": "Racks",
-    "Category": "30791",
+    "Category": "Pitch",
     "Key": "Rack_StudioPitch",
     "Knobs": [
       {
@@ -13741,7 +13741,7 @@
   {
     "Name": "Studio Plate Reverb",
     "Type": "Racks",
-    "Category": "30792",
+    "Category": "Reverb",
     "Key": "Rack_StudioPlate",
     "Knobs": [
       {
@@ -13796,7 +13796,7 @@
   {
     "Name": "Studio Hall Reverb",
     "Type": "Racks",
-    "Category": "30792",
+    "Category": "Reverb",
     "Key": "Rack_StudioVerb",
     "Knobs": [
       {
@@ -13851,7 +13851,7 @@
   {
     "Name": "Studio Wah Filter",
     "Type": "Racks",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Rack_StudioWahFilter",
     "Knobs": [
       {
@@ -13926,7 +13926,7 @@
   {
     "Name": "Synth Filter",
     "Type": "Racks",
-    "Category": "30785",
+    "Category": "Filter",
     "Key": "Rack_SynthFilter",
     "Knobs": [
       {
@@ -14005,7 +14005,7 @@
   {
     "Name": "Tape Echo",
     "Type": "Racks",
-    "Category": "30779",
+    "Category": "Delay",
     "Key": "Rack_TapeEcho",
     "Knobs": [
       {

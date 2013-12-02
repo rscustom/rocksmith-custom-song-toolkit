@@ -187,6 +187,7 @@
   <ItemGroup>
     <None Include="Resources\albumart.dds" />
     <None Include="Resources\Console_soundbank.bnk" />
+    <None Include="Resources\pedals2014.json" />
     <None Include="Resources\VOCALS_RS2.sng" />
     <None Include="Resources\PC_soundbank.bnk" />
   </ItemGroup>
@@ -209,7 +210,6 @@
     <Content Include="RocksmithToolkitLib.SongAppId.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\pedals2014.json" />
     <None Include="Resources\rsenumerable_root.flat" />
     <None Include="Resources\rsenumerable_song.flat" />
     <None Include="Resources\XBox360_DLC_image.png" />
