@@ -184,8 +184,12 @@ namespace RocksmithToolkitGUI.DLCConverter
 
             // SOURCE
             var tmpDir = Path.GetTempPath();
-            Packer.Unpack(sourcePackage, tmpDir, false);
             var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(sourcePackage), SourcePlatform.platform));
+
+            if (Directory.Exists(unpackedDir))
+                Directory.Delete(unpackedDir, true);
+
+            Packer.Unpack(sourcePackage, tmpDir, SourcePlatform.platform == GamePlatform.Pc);            
             
             // DESTINATION
             var nameTemplate = (!TargetPlatform.IsConsole) ? "{0}_{1}.psarc" : "{0}_{1}";
@@ -217,18 +221,28 @@ namespace RocksmithToolkitGUI.DLCConverter
 
             // Rename directories
             foreach (var dir in Directory.GetDirectories(unpackedDir, "*.*", SearchOption.AllDirectories)) {
-                if (dir.EndsWith(sourceDir0)) {
+                if (dir.EndsWith(sourceDir0))
+                {
                     var newDir = dir.Replace(sourceDir0, targetDir0);
+                    if (Directory.Exists(newDir))
+                        Directory.Delete(newDir, true);
                     DirectoryExtension.Move(dir, newDir);
                 }
-                else if (dir.EndsWith(sourceDir1)) {
+                else if (dir.EndsWith(sourceDir1))
+                {
                     var newDir = dir.Replace(sourceDir1, targetDir1);
+                    if (Directory.Exists(newDir))
+                        Directory.Delete(newDir, true);
                     DirectoryExtension.Move(dir, newDir);
                 }
             }
 
             // Packing
             Packer.Pack(unpackedDir, targetFileName, (TargetPlatform.platform == GamePlatform.Pc) ? true : false, false);
+
+            if (Directory.Exists(unpackedDir))
+                Directory.Delete(unpackedDir, true);
+
             MessageBox.Show(String.Format("DLC was converted from '{0}' to '{1}'.", SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
