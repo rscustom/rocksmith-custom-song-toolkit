@@ -399,6 +399,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         t.ToneId = 2;
                     else if (tn.Name == xml.ToneD)
                         t.ToneId = 3;
+                    else
+                        throw new InvalidDataException("Undefined tone name: " + tn.Name);
                 sng.Tones.Tones[i] = t;
             };
         }
