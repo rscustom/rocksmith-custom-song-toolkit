@@ -135,12 +135,15 @@ namespace RocksmithToolkitLib.DLCPackage
                 psarc.Write(psarcStream, platform.IsConsole ? false : true);
                 psarcStream.Flush();
                 psarcStream.Seek(0, SeekOrigin.Begin);
-
+                
                 if (Path.GetExtension(saveFileName) != ".psarc")
                     saveFileName += ".psarc";
 
                 using (var outputFileStream = File.Create(saveFileName))
                     psarcStream.CopyTo(outputFileStream);
+
+                foreach (var entry in psarc.Entries)
+                    entry.Data.Close();
             }
         }
 
