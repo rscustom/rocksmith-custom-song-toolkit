@@ -30,6 +30,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             switch (platform.platform) {
                 case GamePlatform.Pc:
+                case GamePlatform.Mac:
                     if (platform.version == GameVersion.RS2012)
                         PackPC(sourcePath, saveFileName, useCryptography, updateSng);
                     else if (platform.version == GameVersion.RS2014)
@@ -124,7 +125,7 @@ namespace RocksmithToolkitLib.DLCPackage
             using (var psarcStream = new MemoryStream())
             {
                 var psarc = new PSARC.PSARC();
-                if (updateSng) UpdateSng2014(sourcePath, new Platform(GamePlatform.Pc, GameVersion.RS2014));
+                if (updateSng) UpdateSng2014(sourcePath, platform);
                 WalkThroughDirectory("", sourcePath, (a, b) =>
                 {
                     var fileStream = File.OpenRead(b);
