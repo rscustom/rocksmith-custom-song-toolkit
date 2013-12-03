@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ArrayOfTuningDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <!-- Rocksmith 1 (have fixed tuning, don't change) -->
-  <TuningDefinition Version="RS2012" Name="EStandard" UIName="E Standard">
+  <TuningDefinition Version="RS2012" Name="Standard" UIName="E Standard">
     <Tuning string0="0" string1="0" string2="0" string3="0" string4="0" string5="0" />
   </TuningDefinition>
   <TuningDefinition Version="RS2012" Name="DropD" UIName="Drop D">

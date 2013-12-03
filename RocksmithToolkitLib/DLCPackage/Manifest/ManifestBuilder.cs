@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using RocksmithToolkitLib.Xml;
 using System.ComponentModel;
 using System.Reflection;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
@@ -95,7 +96,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 attribute.ToneUnlockScore = 0;
                 attribute.TwoHandTapping = false;
                 attribute.UnlockKey = "";
-                attribute.Tuning = TunningDescription(Enum.Parse(typeof(Sng.InstrumentTuning), x.Tuning));
+                attribute.Tuning = x.Tuning;
                 attribute.VocalsAssetId = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : (vocal != null) ? String.Format("{0}|GRSong_{1}", vocal.Id, vocal.Name) : "";
                 attribute.ChordTemplates = new List<ChordTemplate>();
                 manifestFunctions.GenerateDynamicVisualDensity(attribute, song, x);
@@ -166,19 +167,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             manifest.ModelName = "GRSong_Asset";
             manifest.IterationVersion = 2;
             return JsonConvert.SerializeObject(manifest, Formatting.Indented);
-        }
-
-        private string TunningDescription(object value)
-        {
-            FieldInfo fi = value.GetType().GetField(value.ToString());
-
-            DescriptionAttribute[] attributes = 
-                (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-            if (attributes != null && attributes.Length > 0)
-                return attributes[0].Description;
-            else
-                return value.ToString();
         }
 
         private void AssociateTechniques(Arrangement x, Attributes att, string technique)
