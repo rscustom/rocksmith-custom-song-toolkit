@@ -192,9 +192,18 @@ namespace RocksmithToolkitGUI.DLCConverter
             Packer.Unpack(sourcePackage, tmpDir, SourcePlatform.platform == GamePlatform.Pc);            
             
             // DESTINATION
-            var nameTemplate = (!TargetPlatform.IsConsole) ? "{0}_{1}.psarc" : "{0}_{1}";
-            var targetFileName = Path.Combine(Path.GetDirectoryName(sourcePackage), String.Format(nameTemplate, Path.GetFileNameWithoutExtension(sourcePackage), TargetPlatform.platform.ToString()));
-            
+            var nameTemplate = (!TargetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";
+
+            var packageName = Path.GetFileNameWithoutExtension(sourcePackage);
+            if (packageName.EndsWith(SourcePlatform.GetPathName()[2]) ||
+                packageName.EndsWith(SourcePlatform.GetPathName()[2]) ||
+                packageName.EndsWith(SourcePlatform.GetPathName()[2]) ||
+                packageName.EndsWith(SourcePlatform.GetPathName()[2] + ".psarc"))
+            {
+                packageName = packageName.Substring(0, packageName.LastIndexOf("_"));
+            }
+            var targetFileName = Path.Combine(Path.GetDirectoryName(sourcePackage), String.Format(nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), TargetPlatform.GetPathName()[2]));
+
             // CONVERSION
             if (NeedRebuildPackage)
                 ConvertPackageRebuilding(unpackedDir, targetFileName);
