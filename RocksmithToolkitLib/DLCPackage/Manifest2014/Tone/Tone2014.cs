@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using RocksmithToolkitLib.Sng;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {
@@ -133,7 +134,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return Convert.ToSingle(serializer.Deserialize<string>(reader));
+            return Convert.ToSingle(serializer.Deserialize<string>(reader), CultureInfo.InvariantCulture.NumberFormat);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
