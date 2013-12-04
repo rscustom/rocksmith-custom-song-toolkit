@@ -26,7 +26,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             gameVersionCombo.SelectedItem = GameVersion.RS2012;
 
             GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), gameVersionCombo.SelectedItem.ToString());
-            PopulateAppIdCombo(gameVersion);
+            try { PopulateAppIdCombo(gameVersion); }
+            catch { }
         }
 
         private void packButton_Click(object sender, EventArgs e)
