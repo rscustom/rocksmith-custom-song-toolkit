@@ -39,7 +39,10 @@ namespace RocksmithToolkitGUI.DDC
             DDprogress.Value = 100;
             if (e.Result.Equals(0))
             {
-                if (!newWD.Equals(null))
+                string newWP = null;
+                this.Invoke(new MethodInvoker(() =>
+                { newWP = newWD; }));
+                if (newWP != null)
                 {
                     foreach (var file in DLCdb)
                     {
