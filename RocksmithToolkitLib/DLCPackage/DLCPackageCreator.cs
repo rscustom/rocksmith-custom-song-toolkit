@@ -21,6 +21,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.DLCPackage.Manifest.Header;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.Showlight;
 
@@ -458,6 +459,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             var arrangementFileName = songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower();
 
                             // GAME SONG (SNG)
+                            UpdateToneDescriptors(info);
                             GenerateSNG(arrangement, platform);
                             var sngSongFile = File.OpenRead(arrangement.SongFile.File);
                             arrangementStream.Add(sngSongFile);
@@ -814,6 +816,21 @@ namespace RocksmithToolkitLib.DLCPackage
             output.Seek(0, SeekOrigin.Begin);
         }
 
+        public static void UpdateToneDescriptors(DLCPackageData info)
+        {
+            foreach (var tone in info.TonesRS2014) {
+                string DescName = tone.Name.Split('_').Last();
+                foreach (var td in ToneDescriptor.List()) {
+                    if (td.ShortName != DescName)
+                        continue;
+
+                    tone.ToneDescriptors.Clear();
+                    tone.ToneDescriptors.Add(td.Descriptor);
+                    break;
+                }
+            }
+        }
+
         public static void UpdateTones(Arrangement arrangement)
         {
             // template may not reflect current XML state, update tone slots
@@ -825,10 +842,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 // A (ID 0)
                 if (xml.ToneA != null) {
-                    arrangement.ToneA = xml.ToneA;
                     if (xml.ToneA != xml.ToneBase)
                         // SNG convertor expects ToneA to be ID 0
                         throw new InvalidDataException(String.Format("Invalid tone definition detected in {0}, ToneA (ID 0) is expected to be same as ToneBase.", arrangement.SongXml.File));
+                    arrangement.ToneA = xml.ToneA;
                 } else
                     arrangement.ToneA = null;
                 // B (ID 1)
