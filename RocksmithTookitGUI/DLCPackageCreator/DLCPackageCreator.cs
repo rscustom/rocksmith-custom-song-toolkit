@@ -1110,6 +1110,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             dlcName.Text = dlcName.Text.Trim().GetValidSongName(SongTitle);
         }
 
+        private void AverageTempoTB_Leave(object sender, EventArgs e)
+        {
+            TextBox averageTB = (TextBox)sender;
+            float tempo = 0;
+            float.TryParse(averageTB.Text.Trim(), out tempo);
+            averageTB.Text = Math.Round(tempo).ToString();
+        }
+
         //private void rbuttonSignature_CheckedChanged(object sender, EventArgs e)
         //{
         //    xboxLicense0IDTB.Visible = rbuttonSignatureLIVE.Checked;

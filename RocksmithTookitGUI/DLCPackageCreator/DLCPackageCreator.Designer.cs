@@ -615,6 +615,7 @@
             this.AverageTempoTB.Name = "AverageTempoTB";
             this.AverageTempoTB.Size = new System.Drawing.Size(91, 20);
             this.AverageTempoTB.TabIndex = 17;
+            this.AverageTempoTB.Leave += new System.EventHandler(this.AverageTempoTB_Leave);
             // 
             // volumeBox
             // 
