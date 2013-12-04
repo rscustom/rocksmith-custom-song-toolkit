@@ -204,8 +204,10 @@ namespace RocksmithToolkitGUI.DLCConverter
             }
             var targetFileName = Path.Combine(Path.GetDirectoryName(sourcePackage), String.Format(nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), TargetPlatform.GetPathName()[2]));
 
+            var hasNoXmlSong = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*.xml", SearchOption.AllDirectories).Length <= 1;
+
             // CONVERSION
-            if (NeedRebuildPackage)
+            if (NeedRebuildPackage || hasNoXmlSong)
                 ConvertPackageRebuilding(unpackedDir, targetFileName);
             else
                 ConvertPackageForSimilarPlatform(unpackedDir, targetFileName);
@@ -246,8 +248,12 @@ namespace RocksmithToolkitGUI.DLCConverter
                 }
             }
 
+            // Recreates SNG because SNG have different keys in PC and Mac
+            bool updateSNG = ((SourcePlatform.platform == GamePlatform.Pc && TargetPlatform.platform == GamePlatform.Mac) ||
+                (SourcePlatform.platform == GamePlatform.Mac && TargetPlatform.platform == GamePlatform.Pc));
+
             // Packing
-            Packer.Pack(unpackedDir, targetFileName, (TargetPlatform.platform == GamePlatform.Pc) ? true : false, false);
+            Packer.Pack(unpackedDir, targetFileName, (TargetPlatform.platform == GamePlatform.Pc) ? true : false, updateSNG);
 
             if (Directory.Exists(unpackedDir))
                 Directory.Delete(unpackedDir, true);
