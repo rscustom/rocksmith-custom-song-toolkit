@@ -41,7 +41,7 @@ namespace RocksmithToolkitGUI.OggConverter
             using (var fd = new OpenFileDialog()) {
                 fd.Filter = "Wwise 2010.3.3 OGG files (*.ogg)|*.ogg";
                 if (converterType == ConverterType.Revorb)
-                    fd.Filter += "|*.ogg|Wwise 2013 WEM files (*.wem)|*.wem";
+                    fd.Filter += "|Wwise 2013 WEM files (*.wem)|*.wem";
 
                 fd.Multiselect = true;
                 fd.ShowDialog();
@@ -86,8 +86,11 @@ namespace RocksmithToolkitGUI.OggConverter
                 if (errorFiles.Count <= 0 && successFiles.Count > 0)
                     MessageBox.Show("Conversion complete!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else if (errorFiles.Count > 0 && successFiles.Count > 0) {
-                    StringBuilder alertMessage = new StringBuilder("Conversion complete with errors." + Environment.NewLine + Environment.NewLine);
-                    alertMessage.AppendLine("Files converted with success:" + Environment.NewLine);
+                    StringBuilder alertMessage = new StringBuilder(
+                        "Conversion complete with errors." + Environment.NewLine + Environment.NewLine);
+                    alertMessage.AppendLine(
+                        "Files converted with success:" + Environment.NewLine);
+
                     foreach (var sFile in successFiles)
                         alertMessage.AppendLine(String.Format("File: {0}", sFile));
                     alertMessage.AppendLine("Files converted with error:" + Environment.NewLine);
@@ -96,8 +99,10 @@ namespace RocksmithToolkitGUI.OggConverter
 
                     MessageBox.Show(alertMessage.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 } else {
-                    StringBuilder alertMessage = new StringBuilder("Conversion complete with errors." + Environment.NewLine);
-                    alertMessage.AppendLine("Files converted with error: " + Environment.NewLine);
+                    StringBuilder alertMessage = new StringBuilder(
+                        "Conversion complete with errors." + Environment.NewLine);
+                    alertMessage.AppendLine(
+                        "Files converted with error: " + Environment.NewLine);
                     foreach (var eFile in errorFiles)
                         alertMessage.AppendLine(String.Format("File: {0}, error: {1}", eFile.Key, eFile.Value));
 
