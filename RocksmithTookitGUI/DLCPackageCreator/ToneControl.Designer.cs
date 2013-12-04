@@ -58,8 +58,6 @@
             this.postPedal4KnobButton = new System.Windows.Forms.Button();
             this.gbAmpCab = new System.Windows.Forms.GroupBox();
             this.gbLoopPedalAndRacks = new System.Windows.Forms.GroupBox();
-            this.volumeBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
-            this.toneNameBox = new RocksmithToolkitGUI.CueTextBox();
             this.gbPrePedal = new System.Windows.Forms.GroupBox();
             this.prePedal4Box = new System.Windows.Forms.ComboBox();
             this.prePedal4KnobButton = new System.Windows.Forms.Button();
@@ -67,12 +65,14 @@
             this.gbToneInformation = new System.Windows.Forms.GroupBox();
             this.descriptorLabel = new System.Windows.Forms.Label();
             this.descriptorCombo = new System.Windows.Forms.ComboBox();
+            this.toneNameBox = new RocksmithToolkitGUI.CueTextBox();
+            this.volumeBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.gbAmpCab.SuspendLayout();
             this.gbLoopPedalAndRacks.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).BeginInit();
             this.gbPrePedal.SuspendLayout();
             this.gbPostPedal.SuspendLayout();
             this.gbToneInformation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).BeginInit();
             this.SuspendLayout();
             // 
             // prePedal1Box
@@ -303,6 +303,7 @@
             this.label5.Size = new System.Drawing.Size(20, 13);
             this.label5.TabIndex = 5;
             this.label5.Text = "dB";
+            this.label5.Visible = false;
             // 
             // loopPedalRack4Box
             // 
@@ -373,41 +374,6 @@
             this.gbLoopPedalAndRacks.TabIndex = 12;
             this.gbLoopPedalAndRacks.TabStop = false;
             this.gbLoopPedalAndRacks.Text = "Loop Pedal";
-            // 
-            // volumeBox
-            // 
-            this.volumeBox.DecimalPlaces = 2;
-            this.volumeBox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.volumeBox.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            65536});
-            this.volumeBox.Location = new System.Drawing.Point(180, 19);
-            this.volumeBox.Maximum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.volumeBox.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.volumeBox.Name = "volumeBox";
-            this.volumeBox.Size = new System.Drawing.Size(43, 20);
-            this.volumeBox.TabIndex = 1;
-            // 
-            // toneNameBox
-            // 
-            this.toneNameBox.Cue = "Tone Name";
-            this.toneNameBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.toneNameBox.ForeColor = System.Drawing.Color.Gray;
-            this.toneNameBox.Location = new System.Drawing.Point(6, 18);
-            this.toneNameBox.Name = "toneNameBox";
-            this.toneNameBox.Size = new System.Drawing.Size(143, 20);
-            this.toneNameBox.TabIndex = 0;
-            this.toneNameBox.Leave += new System.EventHandler(this.toneNameBox_Leave);
             // 
             // gbPrePedal
             // 
@@ -500,6 +466,42 @@
             this.descriptorCombo.Size = new System.Drawing.Size(147, 21);
             this.descriptorCombo.TabIndex = 2;
             // 
+            // toneNameBox
+            // 
+            this.toneNameBox.Cue = "Tone Name";
+            this.toneNameBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.toneNameBox.ForeColor = System.Drawing.Color.Gray;
+            this.toneNameBox.Location = new System.Drawing.Point(6, 18);
+            this.toneNameBox.Name = "toneNameBox";
+            this.toneNameBox.Size = new System.Drawing.Size(143, 20);
+            this.toneNameBox.TabIndex = 0;
+            this.toneNameBox.Leave += new System.EventHandler(this.toneNameBox_Leave);
+            // 
+            // volumeBox
+            // 
+            this.volumeBox.DecimalPlaces = 1;
+            this.volumeBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.volumeBox.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.volumeBox.Location = new System.Drawing.Point(180, 19);
+            this.volumeBox.Maximum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.volumeBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.volumeBox.Name = "volumeBox";
+            this.volumeBox.Size = new System.Drawing.Size(43, 20);
+            this.volumeBox.TabIndex = 1;
+            this.volumeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // ToneControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -514,11 +516,11 @@
             this.Size = new System.Drawing.Size(513, 301);
             this.gbAmpCab.ResumeLayout(false);
             this.gbLoopPedalAndRacks.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).EndInit();
             this.gbPrePedal.ResumeLayout(false);
             this.gbPostPedal.ResumeLayout(false);
             this.gbToneInformation.ResumeLayout(false);
             this.gbToneInformation.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).EndInit();
             this.ResumeLayout(false);
 
         }

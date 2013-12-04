@@ -618,8 +618,13 @@
             // 
             // volumeBox
             // 
-            this.volumeBox.DecimalPlaces = 2;
+            this.volumeBox.DecimalPlaces = 1;
             this.volumeBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.volumeBox.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
             this.volumeBox.Location = new System.Drawing.Point(52, 69);
             this.volumeBox.Maximum = new decimal(new int[] {
             0,
@@ -634,8 +639,9 @@
             this.volumeBox.Name = "volumeBox";
             this.volumeBox.Size = new System.Drawing.Size(43, 20);
             this.volumeBox.TabIndex = 14;
+            this.volumeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.volumeBox.Value = new decimal(new int[] {
-            15,
+            7,
             0,
             0,
             -2147483648});
