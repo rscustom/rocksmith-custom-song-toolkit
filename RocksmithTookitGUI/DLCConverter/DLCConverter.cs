@@ -195,10 +195,10 @@ namespace RocksmithToolkitGUI.DLCConverter
             var nameTemplate = (!TargetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";
 
             var packageName = Path.GetFileNameWithoutExtension(sourcePackage);
-            if (packageName.EndsWith(SourcePlatform.GetPathName()[2]) ||
-                packageName.EndsWith(SourcePlatform.GetPathName()[2]) ||
-                packageName.EndsWith(SourcePlatform.GetPathName()[2]) ||
-                packageName.EndsWith(SourcePlatform.GetPathName()[2] + ".psarc"))
+            if (packageName.EndsWith(new Platform(GamePlatform.Pc, GameVersion.None).GetPathName()[2]) ||
+                    packageName.EndsWith(new Platform(GamePlatform.Mac, GameVersion.None).GetPathName()[2]) ||
+                    packageName.EndsWith(new Platform(GamePlatform.XBox360, GameVersion.None).GetPathName()[2]) ||
+                    packageName.EndsWith(new Platform(GamePlatform.PS3, GameVersion.None).GetPathName()[2] + ".psarc"))
             {
                 packageName = packageName.Substring(0, packageName.LastIndexOf("_"));
             }
