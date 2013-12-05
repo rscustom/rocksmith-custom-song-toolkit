@@ -21,7 +21,8 @@ namespace RocksmithToolkitGUI.OggConverter
 
         private enum ConverterType {
             HeaderFix,
-            Revorb
+            Revorb,
+            WEM
         }
 
         private string[] InputAudioFiles;
@@ -35,15 +36,25 @@ namespace RocksmithToolkitGUI.OggConverter
             Converter(inputOggTextBox, ConverterType.Revorb);
         }
 
+
+        private void WEMConvertBrowseButton_Click_1(object sender, EventArgs e)
+        {
+            Converter(InputWemConversionTextbox, ConverterType.WEM);
+        }
+
         private void Converter(TextBox control, ConverterType converterType) {
             InputAudioFiles = null;
 
             using (var fd = new OpenFileDialog()) {
+                fd.Multiselect = true;
                 fd.Filter = "Wwise 2010.3.3 OGG files (*.ogg)|*.ogg";
                 if (converterType == ConverterType.Revorb)
                     fd.Filter += "|Wwise 2013 WEM files (*.wem)|*.wem";
-
-                fd.Multiselect = true;
+                else if (converterType == ConverterType.WEM)
+                {
+                    fd.Filter = "Wwise 2013 WEM files (*.wem)|*.wem";
+                    //fd.Multiselect = false;
+                }
                 fd.ShowDialog();
                 if (fd.FileNames.Count() <= 0) {
                     MessageBox.Show("The selected directory has no valid file inside!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -58,6 +69,9 @@ namespace RocksmithToolkitGUI.OggConverter
                         break;
                     case ConverterType.Revorb:
                         inputAudioRocksmithTextBox.Text = path;
+                        break;
+                    case ConverterType.WEM:
+                        InputWemConversionTextbox.Text = path;
                         break;
                 }
 
@@ -75,6 +89,9 @@ namespace RocksmithToolkitGUI.OggConverter
                                 break;
                             case ConverterType.Revorb:
                                 OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath), (extension == ".ogg") ? OggFile.WwiseVersion.Wwise2010 : OggFile.WwiseVersion.Wwise2013);
+                                break;
+                            case ConverterType.WEM:
+                                OggFile.ConvertWem(file, outputFileName);
                                 break;
                         }
                         successFiles.Add(file);
@@ -110,5 +127,6 @@ namespace RocksmithToolkitGUI.OggConverter
                 }
             }
         }
+
     }
 }

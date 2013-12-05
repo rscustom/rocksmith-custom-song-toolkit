@@ -34,8 +34,12 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.oggRocksmithBrowseButton = new System.Windows.Forms.Button();
             this.inputAudioRocksmithTextBox = new System.Windows.Forms.TextBox();
+            this.InputWemConversionTextbox = new System.Windows.Forms.TextBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.WEMConvertBrowseButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // inputOggTextBox
@@ -101,18 +105,49 @@
             this.inputAudioRocksmithTextBox.Size = new System.Drawing.Size(407, 20);
             this.inputAudioRocksmithTextBox.TabIndex = 3;
             // 
+            // InputWemConversionTextbox
+            // 
+            this.InputWemConversionTextbox.Location = new System.Drawing.Point(6, 35);
+            this.InputWemConversionTextbox.Name = "InputWemConversionTextbox";
+            this.InputWemConversionTextbox.Size = new System.Drawing.Size(406, 20);
+            this.InputWemConversionTextbox.TabIndex = 5;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.WEMConvertBrowseButton);
+            this.groupBox3.Controls.Add(this.InputWemConversionTextbox);
+            this.groupBox3.Location = new System.Drawing.Point(5, 119);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(477, 68);
+            this.groupBox3.TabIndex = 6;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Input WEM (Wwise 2013) file to convert from PC <-> Console";
+            // 
+            // WEMConvertBrowseButton
+            // 
+            this.WEMConvertBrowseButton.Location = new System.Drawing.Point(416, 31);
+            this.WEMConvertBrowseButton.Name = "WEMConvertBrowseButton";
+            this.WEMConvertBrowseButton.Size = new System.Drawing.Size(55, 23);
+            this.WEMConvertBrowseButton.TabIndex = 6;
+            this.WEMConvertBrowseButton.Text = "Browse";
+            this.WEMConvertBrowseButton.UseVisualStyleBackColor = true;
+            this.WEMConvertBrowseButton.Click += new System.EventHandler(this.WEMConvertBrowseButton_Click_1);
+            // 
             // OggConverter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "OggConverter";
-            this.Size = new System.Drawing.Size(487, 148);
+            this.Size = new System.Drawing.Size(544, 329);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -125,5 +160,8 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button oggRocksmithBrowseButton;
         private System.Windows.Forms.TextBox inputAudioRocksmithTextBox;
+        private System.Windows.Forms.TextBox InputWemConversionTextbox;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button WEMConvertBrowseButton;
     }
 }
