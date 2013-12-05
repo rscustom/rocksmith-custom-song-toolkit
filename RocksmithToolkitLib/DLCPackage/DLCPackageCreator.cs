@@ -834,6 +834,41 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
+        public static void UpdateTones(Arrangement arrangement)
+        {
+            // template may not reflect current XML state, update tone slots
+            if (arrangement.ArrangementType != ArrangementType.Vocal) {
+                var xml = Song2014.LoadFromFile(arrangement.SongXml.File);
+
+                if (xml.ToneBase != null)
+                    arrangement.ToneBase = xml.ToneBase;
+
+                // A (ID 0)
+                if (xml.ToneA != null) {
+                    if (xml.ToneA != xml.ToneBase)
+                        // SNG convertor expects ToneA to be ID 0
+                        throw new InvalidDataException(String.Format("Invalid tone definition detected in {0}, ToneA (ID 0) is expected to be same as ToneBase.", arrangement.SongXml.File));
+                    arrangement.ToneA = xml.ToneA;
+                } else
+                    arrangement.ToneA = null;
+                // B (ID 1)
+                if (xml.ToneB != null)
+                    arrangement.ToneB = xml.ToneB;
+                else
+                    arrangement.ToneB = null;
+                // C (ID 2)
+                if (xml.ToneC != null)
+                    arrangement.ToneC = xml.ToneC;
+                else
+                    arrangement.ToneC = null;
+                // D (ID 3)
+                if (xml.ToneD != null)
+                    arrangement.ToneD = xml.ToneD;
+                else
+                    arrangement.ToneD = null;
+            }
+        }
+
         public static void GenerateSNG(Arrangement arrangement, Platform platform) {
             string sngFile = Path.ChangeExtension(arrangement.SongXml.File, ".sng");
             InstrumentTuning tuning = InstrumentTuning.Standard;
@@ -846,6 +881,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     break;
                 case GameVersion.RS2014:
                     if (arrangement.Sng2014 == null) {
+                        // TODO this needs to be enabled again
+                        //UpdateTones(arrangement);
+
                         // Sng2014File can be reused when generating for multiple platforms
                         // cache results
                         arrangement.Sng2014 = Sng2014File.ConvertXML(arrangement.SongXml.File, arrangement.ArrangementType);
