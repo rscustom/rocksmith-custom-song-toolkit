@@ -224,6 +224,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 toneBCombo.SelectedItem = arrangement.ToneB;
                 toneCCombo.SelectedItem = arrangement.ToneC;
                 toneDCombo.SelectedItem = arrangement.ToneD;
+                // If have ToneBase and ToneB is setup it's because auto tone are setup in EoF, so, disable edit to prevent errors.
+                if (!String.IsNullOrEmpty(toneBaseCombo.SelectedItem.ToString()) && !String.IsNullOrEmpty(toneBCombo.SelectedItem.ToString()))
+                    ToneComboEnabled(false);
                 //DLC ID
                 PersistentId.Text = arrangement.Id.ToString().Replace("-", "").ToUpper();
                 MasterId.Text = arrangement.MasterId.ToString();
@@ -344,7 +347,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             FillToneCombo(toneBaseCombo, toneNames, true);
                             FillToneCombo(toneBCombo, toneNames, false);
                             FillToneCombo(toneCCombo, toneNames, false);
-                            FillToneCombo(toneDCombo, toneNames, false);                            
+                            FillToneCombo(toneDCombo, toneNames, false);
 
                             // SELECTING TONES
                             toneBaseCombo.SelectedItem = xmlSong.ToneBase;
@@ -370,6 +373,31 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                                 if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == xmlSong.ToneD))
                                     parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(xmlSong.ToneD));
                             }
+
+                            // If have ToneBase and ToneB is setup it's because auto tone are setup in EoF, so, disable edit to prevent errors.
+                            if (!String.IsNullOrEmpty(xmlSong.ToneBase) && !String.IsNullOrEmpty(xmlSong.ToneB))
+                                ToneComboEnabled(false);
+                        }
+                        else
+                        {
+                            toneBaseCombo.Enabled = true;
+                            if (xmlSong.ToneBase != null)
+                                toneBaseCombo.SelectedItem = xmlSong.ToneBase;
+                            else
+                                toneBaseCombo.SelectedItem = null;
+                            if (xmlSong.ToneB != null)
+                                toneBCombo.SelectedItem = xmlSong.ToneB;
+                            else
+                                toneBCombo.SelectedItem = null;
+                            if (xmlSong.ToneC != null)
+                                toneCCombo.SelectedItem = xmlSong.ToneC;
+                            else
+                                toneBCombo.SelectedItem = null;
+                            if (xmlSong.ToneD != null)
+                                toneDCombo.SelectedItem = xmlSong.ToneD;
+                            else
+                                toneBCombo.SelectedItem = null;
+                            SequencialToneComboEnabling();
                         }
                     }
                 }
@@ -475,6 +503,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     noteDisplay.Text = noteName;
                 }
             }
+        }
+
+        private void ToneComboEnabled(bool enabled) {
+            // Not disabling in gbTone to not disable labels
+            toneBaseCombo.Enabled = enabled;
+            toneBCombo.Enabled = enabled;
+            toneCCombo.Enabled = enabled;
+            toneDCombo.Enabled = enabled;
         }
     }
 }
