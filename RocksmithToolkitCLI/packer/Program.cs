@@ -11,6 +11,7 @@ using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib;
 using System.Reflection;
 using X360.STFS;
+using RocksmithToolkitLib.Xml;
 
 namespace PackerConsole
 {
@@ -42,12 +43,12 @@ namespace PackerConsole
             return new OptionSet
             {
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
-                { "i|input=", "The input file or directory (multiple allowed)", v => outputArguments.Input = v },
-                { "o|output=", "The output file or directory", v => outputArguments.Output = v },
-                { "t|template=", "The template file for building package", v => outputArguments.Template = v },
                 { "pack", "Pack a song", v => {if (v != null) outputArguments.Pack = true; }},
                 { "unpack", "Unpack a song", v => {if (v != null) outputArguments.Unpack = true; }},
                 { "build", "Build a song package from 'Rocksmith DLC template' (*.dlc.xml)", v => {if (v != null) outputArguments.Build = true; }},
+                { "i|input=", "The input file or directory (multiple allowed)", v => outputArguments.Input = v },
+                { "o|output=", "The output file or directory", v => outputArguments.Output = v },
+                { "t|template=", "The template file for building package", v => outputArguments.Template = v },
                 { "ogg|decodeogg", "Decode ogg file when unpack a song (default is true)", v => {if (v != null) outputArguments.DecodeOGG = true; }},
                 { "sng|updatesng", "Recreate SNG files when pack a song (default is false)", v => {if (v != null) outputArguments.UpdateSng = true; }}
             };
@@ -128,6 +129,8 @@ namespace PackerConsole
                         var gameVersion = GameVersion.RS2012;
                         if (info.GameVersion != null)
                             gameVersion = info.GameVersion;
+
+                        FixPaths(info, arguments.Template, gameVersion);
 
                         if (!String.IsNullOrEmpty(info.OggPath))
                             DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Pc, gameVersion));
@@ -236,7 +239,7 @@ namespace PackerConsole
             Console.WriteLine("Try 'packer --help' for more information.");
         }
 
-        public static bool IsDirectory(this string path)
+        private static bool IsDirectory(this string path)
         {
             bool isDirectory = false;
 
@@ -251,6 +254,70 @@ namespace PackerConsole
             }
 
             return isDirectory;
+        }
+
+        private static void FixPaths(DLCPackageData info, string templateDir, GameVersion gameVersion)
+        {
+            foreach (var arr in info.Arrangements) {
+                arr.SongXml.File = Path.Combine(Path.GetDirectoryName(templateDir), arr.SongXml.File);
+                if (gameVersion == GameVersion.RS2014)
+                    UpdateTones(arr);
+            }
+            info.AlbumArtPath = Path.Combine(Path.GetDirectoryName(templateDir), info.AlbumArtPath);
+            if (!String.IsNullOrEmpty(info.OggPath))
+                info.OggPath = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPath);
+            if (!String.IsNullOrEmpty(info.OggPreviewPath))
+                info.OggPreviewPath = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPreviewPath);
+            if (!String.IsNullOrEmpty(info.OggMACPath))
+                info.OggMACPath = Path.Combine(Path.GetDirectoryName(templateDir), info.OggMACPath);
+            if (!String.IsNullOrEmpty(info.OggPreviewMACPath))
+                info.OggPreviewMACPath = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPreviewMACPath);
+            if (!String.IsNullOrEmpty(info.OggXBox360Path))
+                info.OggXBox360Path = Path.Combine(Path.GetDirectoryName(templateDir), info.OggXBox360Path);
+            if (!String.IsNullOrEmpty(info.OggPreviewXBox360Path))
+                info.OggPreviewXBox360Path = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPreviewXBox360Path);
+            if (!String.IsNullOrEmpty(info.OggPS3Path))
+                info.OggPS3Path = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPS3Path);
+            if (!String.IsNullOrEmpty(info.OggPreviewPS3Path))
+                info.OggPreviewPS3Path = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPreviewPS3Path);
+        }
+
+        private static void UpdateTones(Arrangement arrangement)
+        {
+            // template may not reflect current XML state, update tone slots
+            if (arrangement.ArrangementType != ArrangementType.Vocal)
+            {
+                var xml = Song2014.LoadFromFile(arrangement.SongXml.File);
+
+                if (xml.ToneBase != null)
+                    arrangement.ToneBase = xml.ToneBase;
+
+                // A (ID 0)
+                if (xml.ToneA != null)
+                {
+                    if (xml.ToneA != xml.ToneBase)
+                        // SNG convertor expects ToneA to be ID 0
+                        throw new InvalidDataException(String.Format("Invalid tone definition detected in {0}, ToneA (ID 0) is expected to be same as ToneBase.", arrangement.SongXml.File));
+                    arrangement.ToneA = xml.ToneA;
+                }
+                else
+                    arrangement.ToneA = null;
+                // B (ID 1)
+                if (xml.ToneB != null)
+                    arrangement.ToneB = xml.ToneB;
+                else
+                    arrangement.ToneB = null;
+                // C (ID 2)
+                if (xml.ToneC != null)
+                    arrangement.ToneC = xml.ToneC;
+                else
+                    arrangement.ToneC = null;
+                // D (ID 3)
+                if (xml.ToneD != null)
+                    arrangement.ToneD = xml.ToneD;
+                else
+                    arrangement.ToneD = null;
+            }
         }
     }
 }
