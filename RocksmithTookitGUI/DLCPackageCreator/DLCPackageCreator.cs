@@ -316,6 +316,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dlcSavePath = ofd.FileName;
             }
 
+            if (dlcSavePath.Contains(" ") && platformPS3.Checked)
+                MessageBox.Show("PS3 package name can't support space character due to encryption limitation." + Environment.NewLine +
+                    "Spaces will be automatic removed for your PS3 package name.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
             if (platformPC.Checked)
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, CurrentGameVersion));
             if (platformMAC.Checked)

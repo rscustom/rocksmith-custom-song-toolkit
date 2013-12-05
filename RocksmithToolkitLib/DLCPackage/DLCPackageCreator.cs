@@ -275,6 +275,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void EncryptPS3EdatFiles(string songFileName, Platform platform)
         {
+            if (Path.GetFileName(songFileName).Contains(" "))
+                songFileName = Path.Combine(Path.GetDirectoryName(songFileName), Path.GetFileName(songFileName).Replace(" ", "_")); // Due to PS3 encryption limitation
+
             // Cleaning work dir
             var junkFiles = Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".edat") || s.EndsWith(".bak"));
             foreach(var junk in junkFiles)
