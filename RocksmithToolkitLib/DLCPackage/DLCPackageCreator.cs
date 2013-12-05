@@ -131,7 +131,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     packageName = packageName.Substring(0, packageName.LastIndexOf("_"));
                 }
-                var songFileName = String.Format("{0}{1}.psarc", Path.Combine(Path.GetDirectoryName(packagePath), packageName), platform.GetPathName()[2]);
+
+                var songFileName = String.Format("{0}{1}", Path.Combine(Path.GetDirectoryName(packagePath), packageName), platform.GetPathName()[2]);
                                 
                 switch (platform.platform)
                 {
@@ -141,13 +142,13 @@ namespace RocksmithToolkitLib.DLCPackage
 	                    {
                             // SAVE PACKAGE
                             case GameVersion.RS2014:
-                                using (FileStream fl = File.Create(songFileName))
+                                using (FileStream fl = File.Create(songFileName + ".psarc"))
                                 {
                                     packPsarcStream.CopyTo(fl);
                                 }
                                 break;
                             case GameVersion.RS2012:
-                                using (var fl = File.Create(songFileName))
+                                using (var fl = File.Create(songFileName + ".dat"))
                                 {
                                     RijndaelEncryptor.EncryptFile(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
                                 }
@@ -160,7 +161,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         BuildXBox360Package(songFileName, info, FILES_XBOX, platform.version);
                         break;
                     case GamePlatform.PS3:
-                        EncryptPS3EdatFiles(songFileName, platform);
+                        EncryptPS3EdatFiles(songFileName + ".psarc", platform);
                         break;
                 }                
             }
@@ -174,8 +175,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void BuildXBox360Package(string songFileName, DLCPackageData info, IEnumerable<string> xboxFiles, GameVersion gameVersion)
         {
-            var songFile = Path.Combine(Path.GetDirectoryName(songFileName), Path.GetFileNameWithoutExtension(songFileName));
-
             LogRecord x = new LogRecord();
             RSAParams xboxRSA = info.SignatureType == PackageMagic.CON ? new RSAParams(new DJsIO(Resources.XBox360_KV, true)) : new RSAParams(StrongSigned.LIVE);
             CreateSTFS xboxSTFS = new CreateSTFS();
@@ -183,7 +182,7 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (string file in xboxFiles)
                 xboxSTFS.AddFile(file, Path.GetFileName(file));
 
-            STFSPackage xboxPackage = new STFSPackage(xboxSTFS, xboxRSA, songFile, x);
+            STFSPackage xboxPackage = new STFSPackage(xboxSTFS, xboxRSA, songFileName, x);
             var generated = xboxPackage.RebuildPackage(xboxRSA);
             if (!generated)
                 throw new InvalidOperationException("Error on create XBox360 package, details: \n\r" + x.Log);
