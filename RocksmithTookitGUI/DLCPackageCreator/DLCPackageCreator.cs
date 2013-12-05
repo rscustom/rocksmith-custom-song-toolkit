@@ -1009,13 +1009,28 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 if (toneName != tone.Name)
                 {
+                    // Update tone slots if name are changed
                     for(int i = 0; i <ArrangementLB.Items.Count; i++) {
                         var arrangement = (Arrangement)ArrangementLB.Items[i];
+                        var toneSlotsAffected = false;
+
                         if (toneName.Equals(arrangement.ToneBase))
                         {
                             arrangement.ToneBase = tone.Name;
-                            ArrangementLB.Items[i] = arrangement;
+                            if (CurrentGameVersion == GameVersion.RS2014)
+                                arrangement.ToneA = tone.Name;
                         }
+                        if (CurrentGameVersion == GameVersion.RS2014) {
+                            if (toneName.Equals(arrangement.ToneB))
+                                arrangement.ToneB = tone.Name;
+                            if (toneName.Equals(arrangement.ToneC))
+                                arrangement.ToneC = tone.Name;
+                            if (toneName.Equals(arrangement.ToneD))
+                                arrangement.ToneD = tone.Name;
+                        }
+
+                        if (toneSlotsAffected)
+                            ArrangementLB.Items[i] = arrangement;
                     }                    
                 }
             }
