@@ -115,4 +115,14 @@
   <SongAppId Version="RS2014" AppId="258364" Name="Green Day - Oh Love" />
   <SongAppId Version="RS2014" AppId="258365" Name="Green Day - Basket Case" />
   <SongAppId Version="RS2014" AppId="258366" Name="Green Day - American Idiot" />
+  <SongAppId Version="RS2014" AppId="258372" Name="The Who - Baba O'Riley" />
+  <SongAppId Version="RS2014" AppId="258373" Name="The Who - Behind Blue Eyes" />
+  <SongAppId Version="RS2014" AppId="258374" Name="The Who - Who Are You" />
+  <SongAppId Version="RS2014" AppId="258375" Name="The Who - Pinball Wizard" />
+  <SongAppId Version="RS2014" AppId="258376" Name="The Who - The Seeker" />
+  <SongAppId Version="RS2014" AppId="258378" Name="Radiohead - Creep" />
+  <SongAppId Version="RS2014" AppId="258379" Name="Radiohead - Just" />
+  <SongAppId Version="RS2014" AppId="258380" Name="Radiohead - Optimistic" />
+  <SongAppId Version="RS2014" AppId="258381" Name="Radiohead - Karma Police" />
+  <SongAppId Version="RS2014" AppId="258382" Name="Radiohead - My Iron Lung" />
 </ArrayOfSongAppId>
