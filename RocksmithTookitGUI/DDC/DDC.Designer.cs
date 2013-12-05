@@ -42,11 +42,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ramUpMdlsCbox = new System.Windows.Forms.ComboBox();
             this.DDCfilesDgw = new System.Windows.Forms.DataGridView();
+            this.PathColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TypeColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DestPathCbx = new System.Windows.Forms.CheckBox();
             this.DDprogress = new System.Windows.Forms.ProgressBar();
             this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
-            this.PathColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TypeColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).BeginInit();
@@ -100,6 +100,8 @@
             // delsustainsBT
             // 
             this.delsustainsBT.AutoSize = true;
+            this.delsustainsBT.Checked = true;
+            this.delsustainsBT.CheckState = System.Windows.Forms.CheckState.Checked;
             this.delsustainsBT.Location = new System.Drawing.Point(17, 297);
             this.delsustainsBT.Name = "delsustainsBT";
             this.delsustainsBT.Size = new System.Drawing.Size(107, 17);
@@ -127,7 +129,7 @@
             this.DescriptionDDC.ActiveLinkColor = System.Drawing.Color.RosyBrown;
             this.DescriptionDDC.AutoEllipsis = true;
             this.DescriptionDDC.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.DescriptionDDC.LinkArea = new System.Windows.Forms.LinkArea(100, 31);
+            this.DescriptionDDC.LinkArea = new System.Windows.Forms.LinkArea(99, 32);
             this.DescriptionDDC.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.DescriptionDDC.Location = new System.Drawing.Point(145, 10);
             this.DescriptionDDC.Name = "DescriptionDDC";
@@ -191,6 +193,21 @@
             this.DDCfilesDgw.TabIndex = 37;
             this.DDCfilesDgw.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DDCfilesDgw_UserDeletingRow);
             // 
+            // PathColnm
+            // 
+            this.PathColnm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.PathColnm.HeaderText = "Path";
+            this.PathColnm.Name = "PathColnm";
+            this.PathColnm.ReadOnly = true;
+            // 
+            // TypeColnm
+            // 
+            this.TypeColnm.HeaderText = "Type";
+            this.TypeColnm.MinimumWidth = 50;
+            this.TypeColnm.Name = "TypeColnm";
+            this.TypeColnm.ReadOnly = true;
+            this.TypeColnm.Width = 80;
+            // 
             // DestPathCbx
             // 
             this.DestPathCbx.AutoSize = true;
@@ -236,21 +253,6 @@
             0,
             0,
             0});
-            // 
-            // PathColnm
-            // 
-            this.PathColnm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.PathColnm.HeaderText = "Path";
-            this.PathColnm.Name = "PathColnm";
-            this.PathColnm.ReadOnly = true;
-            // 
-            // TypeColnm
-            // 
-            this.TypeColnm.HeaderText = "Type";
-            this.TypeColnm.MinimumWidth = 50;
-            this.TypeColnm.Name = "TypeColnm";
-            this.TypeColnm.ReadOnly = true;
-            this.TypeColnm.Width = 80;
             // 
             // DDC
             // 
