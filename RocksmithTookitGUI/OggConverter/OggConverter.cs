@@ -82,7 +82,7 @@ namespace RocksmithToolkitGUI.OggConverter
                 foreach (var file in InputAudioFiles) {
                     try {
                         var extension = Path.GetExtension(file);
-                        var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
+                        var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_console{1}", Path.GetFileNameWithoutExtension(file), ".wem"));
                         switch (converterType) {
                             case ConverterType.HeaderFix:
                                 OggFile.ConvertOgg(file, outputFileName);

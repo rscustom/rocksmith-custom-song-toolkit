@@ -146,7 +146,7 @@ namespace RocksmithToolkitGUI.DLCConverter
         private void convertButton_Click(object sender, EventArgs e)
         {
             // Validations
-            if (SourcePlatform == TargetPlatform) {
+            if (SourcePlatform.Equals(TargetPlatform)) {
                 MessageBox.Show("The source and target platform should be different.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -285,7 +285,7 @@ namespace RocksmithToolkitGUI.DLCConverter
             foreach (var json in jsonFiles) {
                 Attributes2014 attr = Manifest2014<Attributes2014>.LoadFromFile(json).Entries.ToArray()[0].Value.ToArray()[0].Value;
 
-                if ((ArrangementType)attr.ArrangementType != ArrangementType.Vocal) {
+                if (attr.Phrases != null) {
                     if (data.SongInfo == null) {
                         // Fill Package Data
                         data.Name = attr.DLCKey;
@@ -309,10 +309,20 @@ namespace RocksmithToolkitGUI.DLCConverter
                 }
 
                 // Adding Arrangements
-                var xmlName = attr.SongXml.Split(new char[] { ':' })[3];
+                var xmlName = attr.SongXml.Split(':')[3];
                 var aggXml = aggregateData.SongXml.SingleOrDefault(n => n.Name == xmlName);
                 var xmlFile = unpackedDir + aggXml.RelPath.Replace("/", "\\");
-                data.Arrangements.Add(new Arrangement(attr, xmlFile));
+                if (attr.Phrases != null)
+                    data.Arrangements.Add(new Arrangement(attr, xmlFile));
+                else
+                {   // issue for vocal file
+                    var voc = new Arrangement();
+                    voc.ArrangementType = ArrangementType.Vocal;
+                    voc.SongFile = new SongFile { File = "" };
+                    voc.SongXml = new SongXML { File = xmlFile };
+                    voc.ScrollSpeed = 20;
+                    data.Arrangements.Add(voc);
+                }
             }
 
             //Get Files
