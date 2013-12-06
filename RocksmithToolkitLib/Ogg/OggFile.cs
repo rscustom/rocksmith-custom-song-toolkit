@@ -337,6 +337,115 @@ namespace RocksmithToolkitLib.Ogg
             
         }
 
+        public static Stream ConvertWEM(string inputFile)
+        {
+            VerifyHeaders(inputFile);
+
+            var platform = getPlatform(inputFile);
+            EndianBitConverter bitConverter;
+            EndianBitConverter targetbitConverter;
+            if (platform.platform == GamePlatform.Pc || platform.platform == GamePlatform.Mac)
+            {
+                bitConverter = EndianBitConverter.Little;
+                targetbitConverter = EndianBitConverter.Big;
+            }
+            else if (platform.platform == GamePlatform.XBox360 || platform.platform == GamePlatform.PS3)
+            {
+                bitConverter = EndianBitConverter.Big;
+                targetbitConverter = EndianBitConverter.Little;
+            }
+            else
+                throw new InvalidDataException("The input file doesn't appear to be a valid Wwise file.");
+
+            using (var outputFileStream = new MemoryStream())
+            using (var inputFileStream = File.Open(inputFile, FileMode.Open))
+            using (var writer = new EndianBinaryWriter(targetbitConverter, outputFileStream))
+            using (var reader = new EndianBinaryReader(bitConverter, inputFileStream))
+            {
+                // Process Header First
+                UInt32 header = reader.ReadUInt32();
+                if (header == 1179011410)//RIFF header to RIFX
+                    //raw
+                    writer.Write(1380533848);
+                else
+                    //raw
+                    writer.Write(1179011410); // 1179011410
+                writer.Write(reader.ReadUInt32()); // Size of File
+                //raw
+                writer.Write(reader.ReadBytes(8)); // WAVEfmt
+
+
+                //Process Format
+                writer.Write(reader.ReadUInt32()); // fmt size
+                writer.Write(reader.ReadUInt16()); // fmt tag
+                writer.Write(reader.ReadUInt16()); // channels
+                writer.Write(reader.ReadUInt32()); // samplesPerSec
+                writer.Write(reader.ReadUInt32()); // avgBytesPerSec
+                writer.Write(reader.ReadUInt16()); // blockAlign
+                writer.Write(reader.ReadUInt16()); // bitsPerSample
+                writer.Write(reader.ReadUInt16());//short cbSize;                    // WAVEFORMATEXTENSIBLE
+                writer.Write(reader.ReadUInt16());//short wSamplesPerBlock;          // WAVEFORMATEXTENSIBLE
+                writer.Write(reader.ReadUInt32());//long  dwChannelMask;             // WAVEFORMATEXTENSIBLE
+                writer.Write(reader.ReadUInt32());//long  dwTotalPCMFrames;          // Wwise
+                UInt32 start = reader.ReadUInt32();
+                writer.Write(start);//long  dwLoopStartPacketOffset;   // Wwise
+                UInt32 end = reader.ReadUInt32();
+                writer.Write(end);//long  dwLoopEndPacketOffset;     // Wwise
+                writer.Write(reader.ReadUInt16());//short uLoopBeginExtra;           // Wwise
+                writer.Write(reader.ReadUInt16());//short uLoopEndExtra;             // Wwise
+                UInt32 seektablesize = reader.ReadUInt32();
+                writer.Write(seektablesize);//long dwSeekTableSize;           // Wwise
+                writer.Write(reader.ReadUInt32());//long  dwVorbisDataOffset;        // Wwise
+                writer.Write(reader.ReadUInt16());//short uMaxPacketSize;            // Wwise
+                writer.Write(reader.ReadUInt16());//short uLastGranuleExtra;         // Wwise
+                writer.Write(reader.ReadUInt32());//long  dwDecodeAllocSize;         // Wwise
+                writer.Write(reader.ReadUInt32());//long  dwDecodeX64AllocSize;      // Wwise
+                //raw
+                writer.Write(reader.ReadBytes(4));//long  uHashCodebook;             // Wwise vorbis_analysis_headerout
+                writer.Write(reader.ReadByte());//char  uBlockSizes[2];            // Wwise
+                writer.Write(reader.ReadByte());//char  uBlockSizes[2];            // Wwise
+
+                // Process DATA section - contains size, seektable, codebook, stream (biggest part)
+                //raw data
+                writer.Write(reader.ReadBytes(4)); // the word data
+                writer.Write(reader.ReadUInt32()); //data size
+
+                //seektable
+                var y = seektablesize / 4;
+                for (int i = 0; i < y; i++)
+                {
+                    writer.Write(reader.ReadUInt16());//seekgranularity
+                    writer.Write(reader.ReadUInt16()); //unk. actuall granularity used??
+                }
+
+                //codebook
+                UInt16 codebooksize = reader.ReadUInt16();
+                writer.Write(codebooksize); //codebook size
+                for (int i = 0; i < codebooksize; i++)
+                {
+                    //raw data
+                    writer.Write(reader.ReadByte());
+                }
+
+                //stream
+                var streamsize = (end - start); //calculate the total stream size till End of File
+                for (int i = 0; i < streamsize; i++)
+                {
+                    UInt16 packetsize = reader.ReadUInt16(); // size of packet
+                    i++; // increase becuase two bytes read for size of packet
+                    writer.Write(packetsize);
+                    for (int z = 0; z < packetsize; z++)
+                    {
+                        Byte packet = reader.ReadByte();
+                        writer.Write(packet); // the packets are the same in both pc/console
+                        i++; // add the  bytes read to packetsize counter.
+                    }
+                    return new MemoryStream(outputFileStream.GetBuffer(), 0, (int)outputFileStream.Length);
+                }
+            }
+            return File.OpenRead(inputFile);
+        }
+
         public static WwiseVersion GetWwiseVersion(this string extension)
         {
             switch (extension)
