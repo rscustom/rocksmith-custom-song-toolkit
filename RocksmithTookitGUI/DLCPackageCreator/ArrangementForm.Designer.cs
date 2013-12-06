@@ -44,6 +44,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tuningComboBox = new System.Windows.Forms.ComboBox();
             this.gbTone = new System.Windows.Forms.GroupBox();
+            this.disableTonesCheckbox = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.toneDCombo = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -96,7 +97,7 @@
             // 
             this.addArrangementButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.addArrangementButton.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.addArrangementButton.Location = new System.Drawing.Point(291, 407);
+            this.addArrangementButton.Location = new System.Drawing.Point(291, 425);
             this.addArrangementButton.Name = "addArrangementButton";
             this.addArrangementButton.Size = new System.Drawing.Size(72, 29);
             this.addArrangementButton.TabIndex = 20;
@@ -129,7 +130,7 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.cancelButton.Location = new System.Drawing.Point(369, 407);
+            this.cancelButton.Location = new System.Drawing.Point(369, 425);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(72, 29);
             this.cancelButton.TabIndex = 21;
@@ -250,6 +251,7 @@
             // 
             // gbTone
             // 
+            this.gbTone.Controls.Add(this.disableTonesCheckbox);
             this.gbTone.Controls.Add(this.label10);
             this.gbTone.Controls.Add(this.toneDCombo);
             this.gbTone.Controls.Add(this.label11);
@@ -261,10 +263,22 @@
             this.gbTone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbTone.Location = new System.Drawing.Point(6, 267);
             this.gbTone.Name = "gbTone";
-            this.gbTone.Size = new System.Drawing.Size(435, 78);
+            this.gbTone.Size = new System.Drawing.Size(435, 96);
             this.gbTone.TabIndex = 42;
             this.gbTone.TabStop = false;
             this.gbTone.Text = "Tone Selector";
+            // 
+            // disableTonesCheckbox
+            // 
+            this.disableTonesCheckbox.AutoSize = true;
+            this.disableTonesCheckbox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.disableTonesCheckbox.Location = new System.Drawing.Point(72, 73);
+            this.disableTonesCheckbox.Name = "disableTonesCheckbox";
+            this.disableTonesCheckbox.Size = new System.Drawing.Size(266, 17);
+            this.disableTonesCheckbox.TabIndex = 45;
+            this.disableTonesCheckbox.Text = "Disable tone slot changes to prevent auto-tone fail.";
+            this.disableTonesCheckbox.UseVisualStyleBackColor = true;
+            this.disableTonesCheckbox.CheckedChanged += new System.EventHandler(this.disableTonesCheckbox_CheckedChanged);
             // 
             // label10
             // 
@@ -350,7 +364,7 @@
             this.gbDLCId.Controls.Add(this.PersistentId);
             this.gbDLCId.Controls.Add(this.MasterId);
             this.gbDLCId.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbDLCId.Location = new System.Drawing.Point(6, 351);
+            this.gbDLCId.Location = new System.Drawing.Point(6, 369);
             this.gbDLCId.Name = "gbDLCId";
             this.gbDLCId.Size = new System.Drawing.Size(435, 47);
             this.gbDLCId.TabIndex = 33;
@@ -607,7 +621,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(450, 448);
+            this.ClientSize = new System.Drawing.Size(450, 466);
             this.Controls.Add(this.gbGameplayPath);
             this.Controls.Add(this.gbArrInfo);
             this.Controls.Add(this.gbXmlDefinition);
@@ -691,5 +705,6 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label noteDisplay;
         private System.Windows.Forms.CheckBox BonusCheckBox;
+        private System.Windows.Forms.CheckBox disableTonesCheckbox;
     }
 }
