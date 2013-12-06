@@ -225,7 +225,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 toneCCombo.SelectedItem = arrangement.ToneC;
                 toneDCombo.SelectedItem = arrangement.ToneD;
                 // If have ToneBase and ToneB is setup it's because auto tone are setup in EoF, so, disable edit to prevent errors.
-                if (!String.IsNullOrEmpty(toneBaseCombo.SelectedItem.ToString()) && (toneBCombo.SelectedItem != null))
+                if ((toneBaseCombo.SelectedItem != null && !String.IsNullOrEmpty(toneBaseCombo.SelectedItem.ToString())) && (toneBCombo.SelectedItem != null && !String.IsNullOrEmpty(toneBCombo.SelectedItem.ToString())))
                     ToneComboEnabled(false);
                 //DLC ID
                 PersistentId.Text = arrangement.Id.ToString().Replace("-", "").ToUpper();
