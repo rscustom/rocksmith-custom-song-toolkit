@@ -157,10 +157,11 @@ namespace RocksmithToolkitGUI.DLCConverter
                 }
 
             // Conversion
-            string sourcePackage;
+            string[] sourcePackages;
 
             using (var ofd = new OpenFileDialog()) {
                 ofd.Title = "Select one DLC for platform conversion";
+                ofd.Multiselect = true;
                 switch (SourcePlatform.platform) {
                     case GamePlatform.Pc:
                     case GamePlatform.Mac:
@@ -179,38 +180,75 @@ namespace RocksmithToolkitGUI.DLCConverter
 
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
-                sourcePackage = ofd.FileName;
+                sourcePackages = ofd.FileNames;
             }
 
             // SOURCE
             var tmpDir = Path.GetTempPath();
-            var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(sourcePackage), SourcePlatform.platform));
 
-            if (Directory.Exists(unpackedDir))
-                Directory.Delete(unpackedDir, true);
+            StringBuilder errorsFound = new StringBuilder();
 
-            Packer.Unpack(sourcePackage, tmpDir, SourcePlatform.platform == GamePlatform.Pc);            
-            
-            // DESTINATION
-            var nameTemplate = (!TargetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";
-
-            var packageName = Path.GetFileNameWithoutExtension(sourcePackage);
-            if (packageName.EndsWith(new Platform(GamePlatform.Pc, GameVersion.None).GetPathName()[2]) ||
-                    packageName.EndsWith(new Platform(GamePlatform.Mac, GameVersion.None).GetPathName()[2]) ||
-                    packageName.EndsWith(new Platform(GamePlatform.XBox360, GameVersion.None).GetPathName()[2]) ||
-                    packageName.EndsWith(new Platform(GamePlatform.PS3, GameVersion.None).GetPathName()[2] + ".psarc"))
+            foreach (var sourcePackage in sourcePackages)
             {
-                packageName = packageName.Substring(0, packageName.LastIndexOf("_"));
+                var alertMessage = String.Format("Source package '{0}' seems to be not {1} platform, the conversion can't be work.", Path.GetFileName(sourcePackage), SourcePlatform.platform);
+                if (SourcePlatform.platform != GamePlatform.PS3)
+                {
+                    if (!Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2]))
+                    {
+                        errorsFound.AppendLine(alertMessage);
+                        if (MessageBox.Show(String.Format(alertMessage + Environment.NewLine + "Force try to convert this package?", SourcePlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                            continue;
+                    }
+                } else if (SourcePlatform.platform == GamePlatform.PS3) {
+                    if (!(Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2] + ".psarc")))
+                    {
+                        errorsFound.AppendLine(alertMessage);
+                        if (MessageBox.Show(String.Format(alertMessage + Environment.NewLine + "Force try to convert this package?", SourcePlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                            continue;
+                    }
+                }
+
+                var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(sourcePackage), SourcePlatform.platform));
+
+                if (Directory.Exists(unpackedDir))
+                    Directory.Delete(unpackedDir, true);
+
+                Packer.Unpack(sourcePackage, tmpDir, SourcePlatform.platform == GamePlatform.Pc);
+
+                // DESTINATION
+                var nameTemplate = (!TargetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";
+
+                var packageName = Path.GetFileNameWithoutExtension(sourcePackage);
+                if (packageName.EndsWith(new Platform(GamePlatform.Pc, GameVersion.None).GetPathName()[2]) ||
+                        packageName.EndsWith(new Platform(GamePlatform.Mac, GameVersion.None).GetPathName()[2]) ||
+                        packageName.EndsWith(new Platform(GamePlatform.XBox360, GameVersion.None).GetPathName()[2]) ||
+                        packageName.EndsWith(new Platform(GamePlatform.PS3, GameVersion.None).GetPathName()[2] + ".psarc"))
+                {
+                    packageName = packageName.Substring(0, packageName.LastIndexOf("_"));
+                }
+                var targetFileName = Path.Combine(Path.GetDirectoryName(sourcePackage), String.Format(nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), TargetPlatform.GetPathName()[2]));
+
+                var hasNoXmlSong = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*.xml", SearchOption.AllDirectories).Length <= 1;
+
+                // CONVERSION
+                
+                if (NeedRebuildPackage) {
+                    if (hasNoXmlSong) {
+                        errorsFound.AppendLine(String.Format("Package {0} is not a custom song, you need a custom song to convert Rocksmith 2014 from non similiar platforms.", sourcePackage));
+                        return;
+                    }
+                    ConvertPackageRebuilding(unpackedDir, targetFileName);
+                } else
+                    ConvertPackageForSimilarPlatform(unpackedDir, targetFileName);
+
+                if (Directory.Exists(unpackedDir))
+                    Directory.Delete(unpackedDir);
             }
-            var targetFileName = Path.Combine(Path.GetDirectoryName(sourcePackage), String.Format(nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), TargetPlatform.GetPathName()[2]));
 
-            var hasNoXmlSong = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*.xml", SearchOption.AllDirectories).Length <= 1;
-
-            // CONVERSION
-            if (NeedRebuildPackage || hasNoXmlSong)
-                ConvertPackageRebuilding(unpackedDir, targetFileName);
+            if (errorsFound.Length <= 0)
+                MessageBox.Show(String.Format("DLC was converted from '{0}' to '{1}'.", SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             else
-                ConvertPackageForSimilarPlatform(unpackedDir, targetFileName);
+                MessageBox.Show(String.Format("DLC was converted from '{0}' to '{1}' with erros. See below: " + Environment.NewLine + errorsFound.ToString(), SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void ConvertPackageForSimilarPlatform(string unpackedDir, string targetFileName) {
@@ -257,17 +295,12 @@ namespace RocksmithToolkitGUI.DLCConverter
 
             if (Directory.Exists(unpackedDir))
                 Directory.Delete(unpackedDir, true);
-
-            MessageBox.Show(String.Format("DLC was converted from '{0}' to '{1}'.", SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void ConvertPackageRebuilding(string unpackedDir, string targetFileName) {
             //Load files
             var xmlSongs = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*.xml", SearchOption.AllDirectories);
-            if (xmlSongs.Length <= 1) {
-                MessageBox.Show("The selected DLC is not a custom song, you need a custom song for Rocksmith 2014 to use this feature.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            
             var jsonFiles = Directory.GetFiles(unpackedDir, "*.json", SearchOption.AllDirectories);
             var aggregateFile = Directory.GetFiles(unpackedDir, "*.nt", SearchOption.TopDirectoryOnly)[0];
             var aggregateData = AggregateGraph2014.LoadFromFile(aggregateFile);
@@ -351,7 +384,6 @@ namespace RocksmithToolkitGUI.DLCConverter
             }
 
             RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(targetFileName, data, new Platform(TargetPlatform.platform, GameVersion.RS2014));
-            MessageBox.Show(String.Format("DLC was converted from '{0}' to '{1}'.", SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 }
