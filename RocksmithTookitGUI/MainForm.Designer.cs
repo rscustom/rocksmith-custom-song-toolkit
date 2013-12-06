@@ -144,9 +144,9 @@
             this.tabControl1.Controls.Add(this.dlcPackerUnpackerTab);
             this.tabControl1.Controls.Add(this.dlcConverterTab);
             this.tabControl1.Controls.Add(this.DDCtabControl);
+            this.tabControl1.Controls.Add(this.oggConverterTab);
             this.tabControl1.Controls.Add(this.sngToTabConverterTab);
             this.tabControl1.Controls.Add(this.zigProConverterTab);
-            this.tabControl1.Controls.Add(this.oggConverterTab);
             this.tabControl1.Controls.Add(this.sngFileCreatorTab);
             this.tabControl1.Location = new System.Drawing.Point(17, 93);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(8);

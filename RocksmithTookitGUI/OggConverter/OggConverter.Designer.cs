@@ -49,7 +49,7 @@
             this.inputOggTextBox.Name = "inputOggTextBox";
             this.inputOggTextBox.ReadOnly = true;
             this.inputOggTextBox.Size = new System.Drawing.Size(407, 20);
-            this.inputOggTextBox.TabIndex = 1;
+            this.inputOggTextBox.TabIndex = 0;
             // 
             // oggBrowseButton
             // 
@@ -57,7 +57,7 @@
             this.oggBrowseButton.Margin = new System.Windows.Forms.Padding(2);
             this.oggBrowseButton.Name = "oggBrowseButton";
             this.oggBrowseButton.Size = new System.Drawing.Size(56, 20);
-            this.oggBrowseButton.TabIndex = 2;
+            this.oggBrowseButton.TabIndex = 1;
             this.oggBrowseButton.Text = "Browse";
             this.oggBrowseButton.UseVisualStyleBackColor = true;
             this.oggBrowseButton.Click += new System.EventHandler(this.oggBrowseButton_Click);
@@ -66,6 +66,7 @@
             // 
             this.groupBox1.Controls.Add(this.oggBrowseButton);
             this.groupBox1.Controls.Add(this.inputOggTextBox);
+            this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.groupBox1.Location = new System.Drawing.Point(5, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(477, 45);
@@ -77,7 +78,8 @@
             // 
             this.groupBox2.Controls.Add(this.oggRocksmithBrowseButton);
             this.groupBox2.Controls.Add(this.inputAudioRocksmithTextBox);
-            this.groupBox2.Location = new System.Drawing.Point(5, 66);
+            this.groupBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.groupBox2.Location = new System.Drawing.Point(5, 73);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(477, 47);
             this.groupBox2.TabIndex = 4;
@@ -91,7 +93,7 @@
             this.oggRocksmithBrowseButton.Margin = new System.Windows.Forms.Padding(2);
             this.oggRocksmithBrowseButton.Name = "oggRocksmithBrowseButton";
             this.oggRocksmithBrowseButton.Size = new System.Drawing.Size(56, 20);
-            this.oggRocksmithBrowseButton.TabIndex = 4;
+            this.oggRocksmithBrowseButton.TabIndex = 3;
             this.oggRocksmithBrowseButton.Text = "Browse";
             this.oggRocksmithBrowseButton.UseVisualStyleBackColor = true;
             this.oggRocksmithBrowseButton.Click += new System.EventHandler(this.oggRocksmithBrowseButton_Click);
@@ -103,32 +105,34 @@
             this.inputAudioRocksmithTextBox.Name = "inputAudioRocksmithTextBox";
             this.inputAudioRocksmithTextBox.ReadOnly = true;
             this.inputAudioRocksmithTextBox.Size = new System.Drawing.Size(407, 20);
-            this.inputAudioRocksmithTextBox.TabIndex = 3;
+            this.inputAudioRocksmithTextBox.TabIndex = 2;
             // 
             // InputWemConversionTextbox
             // 
-            this.InputWemConversionTextbox.Location = new System.Drawing.Point(6, 35);
+            this.InputWemConversionTextbox.Location = new System.Drawing.Point(5, 19);
             this.InputWemConversionTextbox.Name = "InputWemConversionTextbox";
+            this.InputWemConversionTextbox.ReadOnly = true;
             this.InputWemConversionTextbox.Size = new System.Drawing.Size(406, 20);
-            this.InputWemConversionTextbox.TabIndex = 5;
+            this.InputWemConversionTextbox.TabIndex = 4;
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.WEMConvertBrowseButton);
             this.groupBox3.Controls.Add(this.InputWemConversionTextbox);
-            this.groupBox3.Location = new System.Drawing.Point(5, 119);
+            this.groupBox3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.groupBox3.Location = new System.Drawing.Point(5, 146);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(477, 68);
+            this.groupBox3.Size = new System.Drawing.Size(477, 48);
             this.groupBox3.TabIndex = 6;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Input WEM (Wwise 2013) file to convert from PC <-> Console";
             // 
             // WEMConvertBrowseButton
             // 
-            this.WEMConvertBrowseButton.Location = new System.Drawing.Point(416, 31);
+            this.WEMConvertBrowseButton.Location = new System.Drawing.Point(416, 17);
             this.WEMConvertBrowseButton.Name = "WEMConvertBrowseButton";
             this.WEMConvertBrowseButton.Size = new System.Drawing.Size(55, 23);
-            this.WEMConvertBrowseButton.TabIndex = 6;
+            this.WEMConvertBrowseButton.TabIndex = 5;
             this.WEMConvertBrowseButton.Text = "Browse";
             this.WEMConvertBrowseButton.UseVisualStyleBackColor = true;
             this.WEMConvertBrowseButton.Click += new System.EventHandler(this.WEMConvertBrowseButton_Click_1);
@@ -141,7 +145,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "OggConverter";
-            this.Size = new System.Drawing.Size(544, 329);
+            this.Size = new System.Drawing.Size(496, 210);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
