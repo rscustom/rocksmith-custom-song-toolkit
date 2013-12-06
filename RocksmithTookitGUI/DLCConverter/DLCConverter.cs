@@ -111,13 +111,13 @@ namespace RocksmithToolkitGUI.DLCConverter
 
         private void convertButton_Click(object sender, EventArgs e)
         {
-            // Validations
+            // VALIDATIONS
             if (SourcePlatform.Equals(TargetPlatform)) {
                 MessageBox.Show("The source and target platform should be different.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             
-            // Conversion
+            // GET FILES
             string[] sourcePackages;
 
             using (var ofd = new OpenFileDialog()) {
@@ -191,8 +191,7 @@ namespace RocksmithToolkitGUI.DLCConverter
 
                 var hasNoXmlSong = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*.xml", SearchOption.AllDirectories).Length <= 1;
 
-                // CONVERSION
-                
+                // CONVERSION                
                 if (NeedRebuildPackage) {
                     if (hasNoXmlSong) {
                         errorsFound.AppendLine(String.Format("Package {0} is not a custom song, you need a custom song to convert Rocksmith 2014 from non similiar platforms.", sourcePackage));
@@ -202,9 +201,8 @@ namespace RocksmithToolkitGUI.DLCConverter
                 } else
                     ConvertPackageForSimilarPlatform(unpackedDir, targetFileName);
 
-                // TODO: Uncomment when ConvertWEM dispose files correctly.
-                //if (Directory.Exists(unpackedDir))
-                //    Directory.Delete(unpackedDir);
+                if (Directory.Exists(unpackedDir))
+                    Directory.Delete(unpackedDir, true);
             }
 
             if (errorsFound.Length <= 0)
@@ -331,12 +329,7 @@ namespace RocksmithToolkitGUI.DLCConverter
             foreach (var file in sourceAudioFiles)
             {
                 var newFile = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                try
-                {
-                    // TODO: Remove Try/Catch needed because an error end file on ConvertWem logic
-                    OggFile.ConvertWem(file, newFile);
-                }
-                catch { }
+                OggFile.ConvertWem(file, newFile);
                 targetAudioFiles.Add(newFile);
             }
 
