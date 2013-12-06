@@ -229,6 +229,7 @@ namespace RocksmithToolkitLib.Ogg
 
         public static void ConvertWem(string inputFile, string outputFileName)
         {
+            
             VerifyHeaders(inputFile);
 
             var platform = getPlatform(inputFile);
@@ -246,22 +247,23 @@ namespace RocksmithToolkitLib.Ogg
             }
             else
                 throw new InvalidDataException("The input file doesn't appear to be a valid Wwise file.");
-
-            using (var outputFileStream = File.Open(outputFileName, FileMode.Create))
+        
+            using (var outputFileStream = File.Open(outputFileName, FileMode.Append))
             using (var inputFileStream = File.Open(inputFile, FileMode.Open))
             using (var writer = new EndianBinaryWriter(targetbitConverter, outputFileStream))
-            using (var rawwriter = new EndianBinaryWriter(bitConverter, outputFileStream))
             using (var reader = new EndianBinaryReader(bitConverter, inputFileStream))
-
             {
                 // Process Header First
                 UInt32 header = reader.ReadUInt32();
                 if (header == 1179011410)//RIFF header to RIFX
-                    rawwriter.Write(1481001298);
+                    //raw
+                    writer.Write(1380533848);
                 else
-                    rawwriter.Write(1380533830); // 1179011410
+                    //raw
+                    writer.Write(1179011410); // 1179011410
                 writer.Write(reader.ReadUInt32()); // Size of File
-                rawwriter.Write(reader.ReadBytes(8)); // WAVEfmt
+                //raw
+                writer.Write(reader.ReadBytes(8)); // WAVEfmt
 
                 //Process Format
                 writer.Write(reader.ReadUInt32()); // fmt size
@@ -288,16 +290,18 @@ namespace RocksmithToolkitLib.Ogg
                 writer.Write(reader.ReadUInt16());//short uLastGranuleExtra;         // Wwise
                 writer.Write(reader.ReadUInt32());//long  dwDecodeAllocSize;         // Wwise
                 writer.Write(reader.ReadUInt32());//long  dwDecodeX64AllocSize;      // Wwise
-                rawwriter.Write(reader.ReadUInt32());//long  uHashCodebook;             // Wwise vorbis_analysis_headerout
+                //raw
+                writer.Write(reader.ReadBytes(4));//long  uHashCodebook;             // Wwise vorbis_analysis_headerout
                 writer.Write(reader.ReadByte());//char  uBlockSizes[2];            // Wwise
                 writer.Write(reader.ReadByte());//char  uBlockSizes[2];            // Wwise
 
                 // Process DATA section - contains size, seektable, codebook, stream (biggest part)
-                rawwriter.Write(reader.ReadUInt32()); // the word data
+                //raw data
+                writer.Write(reader.ReadBytes(4)); // the word data
                 writer.Write(reader.ReadUInt32()); //data size
 
                 //seektable
-                var y = seektablesize / 4; 
+                var y = seektablesize / 4;
                 for (int i = 0; i < y; i++)
                 {
                     writer.Write(reader.ReadUInt16());//seekgranularity
@@ -309,7 +313,8 @@ namespace RocksmithToolkitLib.Ogg
                 writer.Write(codebooksize); //codebook size
                 for (int i = 0; i < codebooksize; i++)
                 {
-                    rawwriter.Write(reader.ReadByte());
+                    //raw data
+                    writer.Write(reader.ReadByte());
                 }
 
                 //stream
@@ -317,16 +322,19 @@ namespace RocksmithToolkitLib.Ogg
                 for (int i = 0; i < streamsize; i++)
                 {
                     UInt16 packetsize = reader.ReadUInt16(); // size of packet
-                    i++; // increase becuase two bytes read for szie of packet
+                    i++; // increase becuase two bytes read for size of packet
                     writer.Write(packetsize);
                     for (int z = 0; z < packetsize; z++)
                     {
-                        writer.Write(reader.ReadByte()); // the packets are the same in both pc/console
+                        Byte packet = reader.ReadByte();
+                        writer.Write(packet); // the packets are the same in both pc/console
                         i++; // add the  bytes read to packetsize counter.
                     }
-                       
                 }
+
             }
+
+            
         }
 
         public static WwiseVersion GetWwiseVersion(this string extension)
