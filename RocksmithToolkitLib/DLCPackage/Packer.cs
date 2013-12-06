@@ -507,18 +507,17 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private static void UpdateSng2014(string songDirectory, Platform platform) {
-            var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, @"songs\arr"));
+            var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, "songs", "arr"));
 
             foreach (var xmlFile in xmlFiles)
             {
-                if (File.Exists(xmlFile) && !(xmlFile.ToLower().IndexOf("_showlights.xml") > 0))
+                if (File.Exists(xmlFile) && !(xmlFile.ToLower().IndexOf("showlight") > 0))
                 {
                     var sngFile = Path.Combine(songDirectory, Path.Combine("songs","bin", platform.GetPathName()[1]), Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
                     var arrType = ArrangementType.Guitar;
-                    if (Path.GetFileName(xmlFile).ToLower().IndexOf("_vocals.xml") >= 0)
-                    {
+                    
+                    if (Path.GetFileName(xmlFile).ToLower().IndexOf("vocal") >= 0)
                         arrType = ArrangementType.Vocal;
-                    }
 
                     using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
                         Sng2014File sng = Sng2014File.ConvertXML(xmlFile, arrType);
