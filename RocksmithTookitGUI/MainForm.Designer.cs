@@ -204,7 +204,7 @@
             // dlcPackerUnpackerControl
             // 
             this.dlcPackerUnpackerControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(-102, 60);
+            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(58, 60);
             this.dlcPackerUnpackerControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
             this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(419, 204);
@@ -259,7 +259,7 @@
             this.sngToTabConverterTab.Location = new System.Drawing.Point(4, 22);
             this.sngToTabConverterTab.Name = "sngToTabConverterTab";
             this.sngToTabConverterTab.Padding = new System.Windows.Forms.Padding(3);
-            this.sngToTabConverterTab.Size = new System.Drawing.Size(542, 564);
+            this.sngToTabConverterTab.Size = new System.Drawing.Size(520, 435);
             this.sngToTabConverterTab.TabIndex = 5;
             this.sngToTabConverterTab.Text = "SNG 2 Tab Converter";
             this.sngToTabConverterTab.UseVisualStyleBackColor = true;
@@ -270,7 +270,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.sngToTabConverter1.Location = new System.Drawing.Point(65, 20);
             this.sngToTabConverter1.Name = "sngToTabConverter1";
-            this.sngToTabConverter1.Size = new System.Drawing.Size(172, 282);
+            this.sngToTabConverter1.Size = new System.Drawing.Size(500, 282);
             this.sngToTabConverter1.TabIndex = 0;
             // 
             // zigProConverterTab
