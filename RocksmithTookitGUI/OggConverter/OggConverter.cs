@@ -91,6 +91,7 @@ namespace RocksmithToolkitGUI.OggConverter
                                 OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath), (extension == ".ogg") ? OggFile.WwiseVersion.Wwise2010 : OggFile.WwiseVersion.Wwise2013);
                                 break;
                             case ConverterType.WEM:
+                                outputFileName = Path.ChangeExtension(outputFileName, Path.GetExtension(file));
                                 OggFile.ConvertWem(file, outputFileName);
                                 break;
                         }
