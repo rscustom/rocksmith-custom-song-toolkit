@@ -24,12 +24,6 @@ namespace RocksmithToolkitGUI.DLCConverter
     {
         private const string MESSAGEBOX_CAPTION = "DLC Converter";
 
-        public string AudioPath
-        {
-            get { return audioPathTB.Text; }
-            set { audioPathTB.Text = value; }
-        }
-
         public string AppId
         {
             get { return AppIdTB.Text; }
@@ -76,14 +70,8 @@ namespace RocksmithToolkitGUI.DLCConverter
             platformTargetCombo.SelectedItem = GamePlatform.XBox360.ToString();
 
             // Fill App ID
-            try
-            {
-                PopulateAppIdCombo(GameVersion.RS2014); //Supported game version
-                AppIdVisibilty();
-            }
-            catch { }
-
-            AudioPathVisibility();
+            PopulateAppIdCombo(GameVersion.RS2014); //Supported game version
+            AppIdVisibilty();
         }
 
         private void PopulateAppIdCombo(GameVersion gameVersion)
@@ -100,12 +88,6 @@ namespace RocksmithToolkitGUI.DLCConverter
             AppId = firstSong.AppId;
         }
 
-        private void AudioPathVisibility() {
-            audioPathTB.Visible = NeedRebuildPackage;
-            openAudioButton.Visible = NeedRebuildPackage;
-            previewMessageLabel.Visible = NeedRebuildPackage;
-        }
-
         private void AppIdVisibilty() {
             if (platformTargetCombo.SelectedItem != null)
             {
@@ -116,31 +98,15 @@ namespace RocksmithToolkitGUI.DLCConverter
             }
         }
 
-        private void platformSourceCombo_SelectedIndexChanged(object sender, EventArgs e) {
-            AudioPathVisibility();
-        }
-
         private void platformTargetCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             AppIdVisibilty();
-            AudioPathVisibility();
         }
 
         private void appIdCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (appIdCombo.SelectedItem != null)
                 AppId = ((SongAppId)appIdCombo.SelectedItem).AppId;
-        }
-
-        private void openAudioButton_Click(object sender, EventArgs e)
-        {
-            using (var ofd = new OpenFileDialog())
-            {
-                ofd.Title = "Select converted audio for Target Platform";
-                ofd.Filter = "Wwise 2013 audio file (*.wem)|*.wem";
-                if (ofd.ShowDialog() == DialogResult.OK)
-                    AudioPath = ofd.FileName;
-            }
         }
 
         private void convertButton_Click(object sender, EventArgs e)
@@ -150,12 +116,7 @@ namespace RocksmithToolkitGUI.DLCConverter
                 MessageBox.Show("The source and target platform should be different.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (NeedRebuildPackage)
-                if (String.IsNullOrEmpty(AudioPath)) {
-                    MessageBox.Show("The converted audio on Wwise 2013 for target platform should be selected.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
+            
             // Conversion
             string[] sourcePackages;
 
@@ -241,8 +202,9 @@ namespace RocksmithToolkitGUI.DLCConverter
                 } else
                     ConvertPackageForSimilarPlatform(unpackedDir, targetFileName);
 
-                if (Directory.Exists(unpackedDir))
-                    Directory.Delete(unpackedDir);
+                // TODO: Uncomment when ConvertWEM dispose files correctly.
+                //if (Directory.Exists(unpackedDir))
+                //    Directory.Delete(unpackedDir);
             }
 
             if (errorsFound.Length <= 0)
@@ -363,22 +325,58 @@ namespace RocksmithToolkitGUI.DLCConverter
             if (ddsFiles.Length > 0)
                 data.AlbumArtPath = ddsFiles[1];
 
-            var audioPreview = Path.Combine(Path.GetDirectoryName(AudioPath), String.Format("{0}_preview{1}", Path.GetFileNameWithoutExtension(AudioPath), Path.GetExtension(AudioPath)));
-            switch (TargetPlatform.platform) {
+            var sourceAudioFiles = Directory.GetFiles(unpackedDir, "*.wem", SearchOption.AllDirectories);
+            
+            var targetAudioFiles = new List<string>();
+            foreach (var file in sourceAudioFiles)
+            {
+                var newFile = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
+                try
+                {
+                    // TODO: Remove Try/Catch needed because an error end file on ConvertWem logic
+                    OggFile.ConvertWem(file, newFile);
+                }
+                catch { }
+                targetAudioFiles.Add(newFile);
+            }
+
+            if (targetAudioFiles.Count() <= 0)
+                throw new InvalidDataException("Audio files not found.");
+            
+            string audioPath, audioPreviewPath;
+            FileInfo a = new FileInfo(targetAudioFiles[0]);
+            FileInfo b = a; // For packages that have not audio preview
+            if (targetAudioFiles.Count() == 2)
+                b = new FileInfo(targetAudioFiles[1]);
+
+            if (a.Length > b.Length)
+            {
+                audioPath = a.FullName;
+                audioPreviewPath = b.FullName;
+            }
+            else
+            {
+                audioPath = b.FullName;
+                audioPreviewPath = a.FullName;
+            }
+
+            var audioPreview = Path.Combine(Path.GetDirectoryName(audioPath), String.Format("{0}_preview{1}", Path.GetFileNameWithoutExtension(audioPath), Path.GetExtension(audioPath)));
+            switch (TargetPlatform.platform)
+            {
                 case GamePlatform.Pc:
-                    data.OggPath = AudioPath;
+                    data.OggPath = audioPath;
                     data.OggPreviewPath = audioPreview;
                     break;
                 case GamePlatform.Mac:
-                    data.OggMACPath = AudioPath;
+                    data.OggMACPath = audioPath;
                     data.OggPreviewMACPath = audioPreview;
                     break;
                 case GamePlatform.XBox360:
-                    data.OggXBox360Path = AudioPath;
+                    data.OggXBox360Path = audioPath;
                     data.OggPreviewXBox360Path = audioPreview;
                     break;
                 case GamePlatform.PS3:
-                    data.OggPS3Path = AudioPath;
+                    data.OggPS3Path = audioPath;
                     data.OggPreviewPS3Path = audioPreview;
                     break;
             }

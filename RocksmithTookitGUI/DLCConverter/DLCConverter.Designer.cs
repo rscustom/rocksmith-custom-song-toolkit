@@ -31,11 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DLCConverter));
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.previewMessageLabel = new System.Windows.Forms.Label();
             this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
-            this.audioPathTB = new RocksmithToolkitGUI.CueTextBox();
-            this.openAudioButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.platformTargetCombo = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -56,11 +53,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.previewMessageLabel);
             this.groupBox1.Controls.Add(this.AppIdTB);
             this.groupBox1.Controls.Add(this.appIdCombo);
-            this.groupBox1.Controls.Add(this.audioPathTB);
-            this.groupBox1.Controls.Add(this.openAudioButton);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.platformTargetCombo);
             this.groupBox1.Controls.Add(this.label1);
@@ -70,27 +64,17 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(395, 108);
+            this.groupBox1.Size = new System.Drawing.Size(395, 72);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Platform";
-            // 
-            // previewMessageLabel
-            // 
-            this.previewMessageLabel.AutoSize = true;
-            this.previewMessageLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.previewMessageLabel.Location = new System.Drawing.Point(6, 66);
-            this.previewMessageLabel.Name = "previewMessageLabel";
-            this.previewMessageLabel.Size = new System.Drawing.Size(346, 13);
-            this.previewMessageLabel.TabIndex = 51;
-            this.previewMessageLabel.Text = "Song preview must have the same file name with \"_preview\" in the end.";
             // 
             // AppIdTB
             // 
             this.AppIdTB.Cue = "APP ID";
             this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
-            this.AppIdTB.Location = new System.Drawing.Point(9, 83);
+            this.AppIdTB.Location = new System.Drawing.Point(8, 43);
             this.AppIdTB.Name = "AppIdTB";
             this.AppIdTB.Size = new System.Drawing.Size(74, 20);
             this.AppIdTB.TabIndex = 50;
@@ -101,32 +85,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.appIdCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.appIdCombo.FormattingEnabled = true;
-            this.appIdCombo.Location = new System.Drawing.Point(88, 83);
+            this.appIdCombo.Location = new System.Drawing.Point(88, 43);
             this.appIdCombo.Margin = new System.Windows.Forms.Padding(2);
             this.appIdCombo.Name = "appIdCombo";
             this.appIdCombo.Size = new System.Drawing.Size(301, 21);
             this.appIdCombo.TabIndex = 49;
             this.appIdCombo.SelectedIndexChanged += new System.EventHandler(this.appIdCombo_SelectedIndexChanged);
-            // 
-            // audioPathTB
-            // 
-            this.audioPathTB.Cue = "Converted audio on Wwise 2013 for Target Platform (*.wem)";
-            this.audioPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.audioPathTB.ForeColor = System.Drawing.Color.Gray;
-            this.audioPathTB.Location = new System.Drawing.Point(9, 43);
-            this.audioPathTB.Name = "audioPathTB";
-            this.audioPathTB.Size = new System.Drawing.Size(341, 20);
-            this.audioPathTB.TabIndex = 47;
-            // 
-            // openAudioButton
-            // 
-            this.openAudioButton.Location = new System.Drawing.Point(356, 41);
-            this.openAudioButton.Name = "openAudioButton";
-            this.openAudioButton.Size = new System.Drawing.Size(34, 23);
-            this.openAudioButton.TabIndex = 48;
-            this.openAudioButton.Text = "...";
-            this.openAudioButton.UseVisualStyleBackColor = true;
-            this.openAudioButton.Click += new System.EventHandler(this.openAudioButton_Click);
             // 
             // label2
             // 
@@ -172,13 +136,12 @@
             this.platformSourceCombo.Name = "platformSourceCombo";
             this.platformSourceCombo.Size = new System.Drawing.Size(130, 21);
             this.platformSourceCombo.TabIndex = 43;
-            this.platformSourceCombo.SelectedIndexChanged += new System.EventHandler(this.platformSourceCombo_SelectedIndexChanged);
             // 
             // convertButton
             // 
             this.convertButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.convertButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.convertButton.Location = new System.Drawing.Point(240, 224);
+            this.convertButton.Location = new System.Drawing.Point(240, 188);
             this.convertButton.Name = "convertButton";
             this.convertButton.Size = new System.Drawing.Size(159, 29);
             this.convertButton.TabIndex = 32;
@@ -194,7 +157,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox2);
             this.Name = "DLCConverter";
-            this.Size = new System.Drawing.Size(400, 259);
+            this.Size = new System.Drawing.Size(400, 223);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -210,11 +173,8 @@
         private System.Windows.Forms.ComboBox platformTargetCombo;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox platformSourceCombo;
-        private CueTextBox audioPathTB;
-        private System.Windows.Forms.Button openAudioButton;
         private System.Windows.Forms.Button convertButton;
         private System.Windows.Forms.ComboBox appIdCombo;
         private CueTextBox AppIdTB;
-        private System.Windows.Forms.Label previewMessageLabel;
     }
 }
