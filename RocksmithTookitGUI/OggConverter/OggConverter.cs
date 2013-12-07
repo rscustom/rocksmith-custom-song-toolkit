@@ -52,7 +52,7 @@ namespace RocksmithToolkitGUI.OggConverter
                     fd.Filter += "|Wwise 2013 WEM files (*.wem)|*.wem";
                 else if (converterType == ConverterType.WEM)
                 {
-                    fd.Filter = "Wwise 2013 WEM files (*.wem)|*.wem";
+                    fd.Filter += "|Wwise 2013 WEM files (*.wem)|*.wem";
                     //fd.Multiselect = false;
                 }
                 fd.ShowDialog();
