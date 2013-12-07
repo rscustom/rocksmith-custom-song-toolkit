@@ -298,7 +298,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label5.Location = new System.Drawing.Point(224, 23);
+            this.label5.Location = new System.Drawing.Point(227, 23);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(20, 13);
             this.label5.TabIndex = 5;
@@ -498,7 +498,7 @@
             0,
             -2147483648});
             this.volumeBox.Name = "volumeBox";
-            this.volumeBox.Size = new System.Drawing.Size(43, 20);
+            this.volumeBox.Size = new System.Drawing.Size(48, 20);
             this.volumeBox.TabIndex = 1;
             this.volumeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
