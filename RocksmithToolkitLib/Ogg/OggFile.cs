@@ -188,7 +188,7 @@ namespace RocksmithToolkitLib.Ogg
                     ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\"", file, outputFileName);
                     break;
                 case WwiseVersion.Wwise2013:
-                    ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\" --pcb {2}", file, outputFileName, codebooks603Path);
+                    ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\" --pcb \"{2}\"", file, outputFileName, codebooks603Path);
                     break;
                 default:
                     throw new InvalidOperationException("Wwise version not supported or invalid input file.");
