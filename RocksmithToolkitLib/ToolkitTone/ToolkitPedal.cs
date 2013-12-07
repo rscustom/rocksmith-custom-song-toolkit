@@ -80,7 +80,7 @@ namespace RocksmithToolkitLib.ToolkitTone
                 return new DLCPackage.Tone.Pedal
                 {
                     PedalKey = Key,
-                    KnobValues = Knobs.ToDictionary(k => k.Key, k => k.DefaultValue)
+                    KnobValues = Knobs.ToDictionary(k => k.Key, k => (decimal)k.DefaultValue)
                 };
             }
         }

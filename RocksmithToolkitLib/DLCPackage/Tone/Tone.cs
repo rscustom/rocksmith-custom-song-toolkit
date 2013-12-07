@@ -111,7 +111,7 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
                         from p in e.Elements("pedal")
                         select new Pedal {
                             PedalKey = (string)p.Attribute("name"), //string from pedal list
-                            KnobValues = p.Descendants("rtpc").ToDictionary(r => r.Attribute("name").Value, r => (float)Convert.ToDouble(r
+                            KnobValues = p.Descendants("rtpc").ToDictionary(r => r.Attribute("name").Value, r => Convert.ToDecimal(r
                                 .Attribute("value").Value))
                         })
                         .ToDictionary(x => Transform(x.PedalKey.Split("_".ToCharArray())[0].ToString()))
