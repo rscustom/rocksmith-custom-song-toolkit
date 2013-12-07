@@ -125,7 +125,7 @@
             this.groupBox3.Size = new System.Drawing.Size(477, 48);
             this.groupBox3.TabIndex = 6;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Input WEM (Wwise 2013) file to convert from PC <-> Console";
+            this.groupBox3.Text = "Input OGG (Wwise 2010) or WEM (Wwise 2013) file to convert from PC <-> Console:";
             // 
             // WEMConvertBrowseButton
             // 
