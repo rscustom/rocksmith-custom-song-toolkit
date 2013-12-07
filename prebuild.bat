@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 
 set solution=%~1
 set toolkitver=%~2
-
+::git in 128 char range.
 echo Checking for .git\HEAD...
 set rev=nongit
 if exist "%solution%\.git\HEAD" (
@@ -20,9 +20,10 @@ if exist "%solution%\.git\HEAD" (
 		set rev=!commit:~0,8!
 	) else echo Unable to find commit
 )
-
+:: *.cs files in Unicode
 echo Reading ToolkitVersion.cs_dist...
 set origstr=00000000
+chcp 65001>null
 for /f "tokens=* delims=" %%i in ('type "%toolkitver%_dist"') do (
 	set str=%%i
 	set newstr=!str:%origstr%=%rev%!
