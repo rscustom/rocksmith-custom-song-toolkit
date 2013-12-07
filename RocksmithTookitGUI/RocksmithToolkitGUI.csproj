@@ -242,6 +242,10 @@
       <Project>{63FB3334-1E7E-42D7-A025-744BC387AAD6}</Project>
       <Name>devtools</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RocksmithToolkitCLI\dlcconverter\dlcconverter.csproj">
+      <Project>{972BC97A-B70A-4007-B915-952CC3606A2A}</Project>
+      <Name>dlcconverter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitCLI\packer\packer.csproj">
       <Project>{822D185A-28A3-4AE0-A811-800E968AA2E7}</Project>
       <Name>packer</Name>

@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DLCPackage\DLCPackageConverter.cs" />
     <Compile Include="DLCPackage\SongPartition.cs" />
     <Compile Include="DLCPackage\Crc32.cs" />
     <Compile Include="DLCPackage\Manifest2014\Tone\ToneDescriptor.cs" />

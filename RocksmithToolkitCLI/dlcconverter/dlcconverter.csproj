@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{822D185A-28A3-4AE0-A811-800E968AA2E7}</ProjectGuid>
+    <ProjectGuid>{972BC97A-B70A-4007-B915-952CC3606A2A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>packer</RootNamespace>
-    <AssemblyName>packer</AssemblyName>
+    <RootNamespace>dlcconverter</RootNamespace>
+    <AssemblyName>dlcconverter</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

@@ -13,7 +13,7 @@ using System.Reflection;
 using X360.STFS;
 using RocksmithToolkitLib.Xml;
 
-namespace PackerConsole
+namespace packer
 {
     internal class Arguments
     {
