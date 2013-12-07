@@ -21,7 +21,7 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public TuningDefinition Select(string uiName, GameVersion gameVersion)
         {
-            return List.SingleOrDefault<TuningDefinition>(s => s.UIName == uiName && s.GameVersion == gameVersion);
+            return List.FirstOrDefault<TuningDefinition>(s => s.UIName == uiName && s.GameVersion == gameVersion);
         }
 
         public IEnumerable<TuningDefinition> Select(GameVersion gameVersion)
@@ -36,22 +36,22 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public TuningDefinition Select(TuningStrings tuningStrings, GameVersion gameVersion)
         {
-            return List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
+            return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
         }
 
         public TuningDefinition SelectForBass(TuningStrings tuningStrings, GameVersion gameVersion)
         {
-            return List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings.ToBassArray()) && s.GameVersion == gameVersion);
+            return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings.ToBassArray()) && s.GameVersion == gameVersion);
         }
 
         public TuningDefinition Select(int[] tuningStrings, GameVersion gameVersion)
         {
-            return List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
+            return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
         }
 
         public TuningDefinition SelectForBass(int[] tuningStrings, GameVersion gameVersion)
         {
-            return List.SingleOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
+            return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
         }
     }
 }
