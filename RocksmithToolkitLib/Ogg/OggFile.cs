@@ -440,10 +440,9 @@ namespace RocksmithToolkitLib.Ogg
                         writer.Write(packet); // the packets are the same in both pc/console
                         i++; // add the  bytes read to packetsize counter.
                     }
-                    return new MemoryStream(outputFileStream.GetBuffer(), 0, (int)outputFileStream.Length);
                 }
+                return new MemoryStream(outputFileStream.GetBuffer(), 0, (int)outputFileStream.Length);
             }
-            return File.OpenRead(inputFile);
         }
 
         public static WwiseVersion GetWwiseVersion(this string extension)
