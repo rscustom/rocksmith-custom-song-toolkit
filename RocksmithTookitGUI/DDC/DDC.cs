@@ -130,7 +130,7 @@ namespace RocksmithToolkitGUI.DDC
         private string GetRampUpMdl()
         {
             if (ramUpMdlsCbox.Text.Trim().Length > 0)
-                return String.Format(" -m {0}", Path.GetFullPath(RampMdlsDb[ramUpMdlsCbox.Text]));
+                return String.Format(" -m \"{0}\"", Path.GetFullPath(RampMdlsDb[ramUpMdlsCbox.Text]));
             else return "";
         }
         private string IsREMsus()
