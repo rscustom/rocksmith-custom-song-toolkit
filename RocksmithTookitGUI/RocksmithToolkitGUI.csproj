@@ -293,7 +293,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'ReleaseMac'">
-    <PostBuildEvent>cp -Rf "$(ProjectDir)../Third-party Apps" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
