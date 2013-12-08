@@ -200,10 +200,19 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             var name = toneName;
             bool uniqueToneName = false;
-            int ind = 0;
+            int ind = 1;
             do
             {
-                uniqueToneName = !TonesLB.Items.Contains(name);
+                switch (CurrentGameVersion)
+                {
+                    case GameVersion.RS2012:
+                        uniqueToneName = !TonesLB.Items.OfType<Tone>().Any(n => n.Name == name);
+                        break;
+                    case GameVersion.RS2014:
+                        uniqueToneName = !TonesLB.Items.OfType<Tone2014>().Any(n => n.Name == name);
+                        break;
+                }
+                
                 if (!uniqueToneName)
                 {
                     name = toneName + (++ind);
