@@ -52,7 +52,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 ConvertPackageRebuilding(unpackedDir, targetFileName, sourcePlatform, targetPlatform, appId);
             }
             else
-                ConvertPackageForSimilarPlatform(unpackedDir, targetFileName, sourcePlatform, targetPlatform);
+                ConvertPackageForSimilarPlatform(unpackedDir, targetFileName, sourcePlatform, targetPlatform, appId);
 
             if (Directory.Exists(unpackedDir))
                 Directory.Delete(unpackedDir, true);
@@ -60,13 +60,20 @@ namespace RocksmithToolkitLib.DLCPackage
             return String.Empty;
         }
 
-        private static void ConvertPackageForSimilarPlatform(string unpackedDir, string targetFileName, Platform sourcePlatform, Platform targetPlatform)
+        private static void ConvertPackageForSimilarPlatform(string unpackedDir, string targetFileName, Platform sourcePlatform, Platform targetPlatform, string appId)
         {
             // Old and new paths
             var sourceDir0 = sourcePlatform.GetPathName()[0].ToLower();
             var sourceDir1 = sourcePlatform.GetPathName()[1].ToLower();
             var targetDir0 = targetPlatform.GetPathName()[0].ToLower();
             var targetDir1 = targetPlatform.GetPathName()[1].ToLower();
+
+            if (!targetPlatform.IsConsole)
+            {
+                // Replace AppId
+                var appIdFile = Path.Combine(unpackedDir, "appid.appid");
+                File.WriteAllText(appIdFile, appId);
+            }
 
             // Replace aggregate graph values
             var aggregateFile = Directory.GetFiles(unpackedDir, "*.nt", SearchOption.TopDirectoryOnly)[0];
