@@ -1207,7 +1207,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // RS1      = US Holiday Song Pack
             var songAppId = SongAppIdRepository.Instance().Select((CurrentGameVersion == GameVersion.RS2014) ? "248750" : "206102", CurrentGameVersion);
             cmbAppIds.SelectedItem = songAppId;
-            AppIdTB.Text = songAppId.AppId;
+            AppId = songAppId.AppId;
         }
     }
 }
