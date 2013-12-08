@@ -25,8 +25,8 @@ then
 fi
 echo Reading ToolkitVersion.cs_dist...
 origstr=00000000
-cp -f "${toolkitver}_dist" "$toolkitver"
+/bin/cp -f "${toolkitver}_dist" "$toolkitver"
 echo Writing ToolkitVersion.cs...
-sed -ie "s/$origstr/$rev/g" "$toolkitver"
+/usr/bin/sed -ie "s/$origstr/$rev/g" "$toolkitver"
 echo Done
 #exit /b 0
