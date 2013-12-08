@@ -17,8 +17,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     public partial class ToneForm : Form
     {
         public bool Saved = false;
-        public dynamic LoadedTone = null;
-        private GameVersion CurrentGameVersion;
+        public GameVersion CurrentGameVersion;
 
         private string CurrentOFDFilter {
             get {
@@ -31,23 +30,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        public ToneForm(dynamic tone, GameVersion gameVersion)
+        public ToneForm()
         {
-            CurrentGameVersion = gameVersion;
             InitializeComponent();
-            RecreateToneControl(tone);
-        }
-
-        private void RecreateToneControl(dynamic tone) {
-            // Recreate toneControl from CurrentGameVersion
-            Controls.Remove(toneControl1);
-            toneControl1 = new RocksmithToolkitGUI.DLCPackageCreator.ToneControl(CurrentGameVersion);
-            this.toneControl1.Location = new System.Drawing.Point(10, 11);
-            this.toneControl1.Name = "toneControl1";
-            this.toneControl1.Size = new System.Drawing.Size(513, 300);
-            this.toneControl1.TabIndex = 0;
-            toneControl1.Tone = tone;
-            Controls.Add(toneControl1); 
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -86,7 +71,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             toneControl1.Tone = tone;
-            LoadedTone = toneControl1.Tone;
 
             MessageBox.Show("Tone was loaded.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

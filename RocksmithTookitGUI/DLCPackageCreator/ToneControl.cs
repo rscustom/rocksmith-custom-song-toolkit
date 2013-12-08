@@ -42,12 +42,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        public ToneControl() { }
-
-        public ToneControl(GameVersion gameVersion)
+        public ToneControl()
         {
-            CurrentGameVersion = gameVersion;
             InitializeComponent();
+        }
+
+        public void Init()
+        {
             InitializeToneInformation();
             InitializeComboBoxes();
 

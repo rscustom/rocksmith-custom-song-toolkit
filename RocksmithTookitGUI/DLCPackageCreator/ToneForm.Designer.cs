@@ -88,7 +88,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(533, 360);
+            this.ClientSize = new System.Drawing.Size(543, 369);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.loadButton);
             this.Controls.Add(this.okButton);
@@ -107,9 +107,9 @@
 
         #endregion
 
-        private ToneControl toneControl1;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.Button saveButton;
+        public ToneControl toneControl1;
     }
 }

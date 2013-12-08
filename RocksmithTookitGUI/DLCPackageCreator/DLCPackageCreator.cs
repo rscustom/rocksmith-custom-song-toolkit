@@ -956,21 +956,19 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-
         private void toneAddButton_Click(object sender, EventArgs e)
         {
             var tone = CreateNewTone();
-            using (var form = new ToneForm(tone, CurrentGameVersion))
+            using (var form = new ToneForm())
             {
+                form.CurrentGameVersion = CurrentGameVersion;
+                form.toneControl1.CurrentGameVersion = CurrentGameVersion;
+                form.toneControl1.Init();
+                form.toneControl1.Tone = Copy(tone);
                 form.ShowDialog();
 
                 if (form.Saved)
-                {
-                    if (form.LoadedTone != null)
-                        tone = form.LoadedTone;
-
                     TonesLB.Items.Add(tone);
-                }
             }
         }
 
@@ -983,10 +981,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 dynamic firstTone = TonesLB.Items[0];
                 foreach (var item in ArrangementLB.Items.OfType<Arrangement>())
-                {
                     if (tone.Name.Equals(item.ToneBase))
                         item.ToneBase = firstTone.Name;
-                }
                 ArrangementLB.Refresh();
             }
         }
@@ -1001,20 +997,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (TonesLB.SelectedItem != null)
             {
                 dynamic tone = TonesLB.SelectedItem;
-                dynamic newTone = Copy(tone);
-                var toneName = newTone.Name;
-                using (var form = new ToneForm(newTone, CurrentGameVersion))
+                var toneName = tone.Name;
+                using (var form = new ToneForm())
                 {
+                    form.CurrentGameVersion = CurrentGameVersion;
+                    form.toneControl1.CurrentGameVersion = CurrentGameVersion;
+                    form.toneControl1.Init();
+                    form.toneControl1.Tone = Copy(tone);
                     form.ShowDialog();
                     
 					if (form.Saved)
-                    {
-                        if (form.LoadedTone != null)
-                            tone = form.LoadedTone;
-                        
-                        tone = newTone;
-                        TonesLB.Items[TonesLB.SelectedIndex] = tone;
-                    }
+                        TonesLB.Items[TonesLB.SelectedIndex] = form.toneControl1.Tone;
                 }
                 if (toneName != tone.Name)
                 {
