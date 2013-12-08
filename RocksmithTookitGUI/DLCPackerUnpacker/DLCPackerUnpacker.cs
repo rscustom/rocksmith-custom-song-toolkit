@@ -27,7 +27,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), gameVersionCombo.SelectedItem.ToString());
             try { PopulateAppIdCombo(gameVersion); }
-            catch { }
+            catch { /*For mono compatibility*/ }
         }
 
         private void packButton_Click(object sender, EventArgs e)
@@ -197,18 +197,16 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         private void PopulateAppIdCombo(GameVersion gameVersion)
         {
-            SongAppId firstSong = null;
             appIdCombo.Items.Clear();
             foreach (var song in SongAppIdRepository.Instance().Select(gameVersion))
-            {
                 appIdCombo.Items.Add(song);
-                if (firstSong == null)
-                {
-                    firstSong = song;
-                }
-            }
-            appIdCombo.SelectedItem = firstSong;
-            AppIdTB.Text = firstSong.AppId;
+
+            // DEFAULT  >>>
+            // RS2014   = Cherub Rock
+            // RS1      = US Holiday Song Pack
+            var songAppId = SongAppIdRepository.Instance().Select((gameVersion == GameVersion.RS2014) ? "248750" : "206102", gameVersion);
+            appIdCombo.SelectedItem = songAppId;
+            AppIdTB.Text = songAppId.AppId;
         }
     }
 }

@@ -187,7 +187,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 PopulateAppIdCombo();
                 PopulateTonesLB();
             }
-            catch { }
+            catch { /*For mono compatibility*/ }
         }
 
         private void PopulateTonesLB()
@@ -1196,20 +1196,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void PopulateAppIdCombo()
         {
-            SongAppId firstSong = null;
             cmbAppIds.Items.Clear();
             foreach (var song in SongAppIdRepository.Instance().Select(CurrentGameVersion))
-            {
                 cmbAppIds.Items.Add(song);
-                if (firstSong == null)
-                {
-                    firstSong = song;
-                }
-            }
-            cmbAppIds.SelectedItem = firstSong;
-            cmbAppIds.Refresh();
-            AppIdTB.Text = firstSong.AppId;
-            AppIdTB.Refresh();
+
+            // DEFAULT  >>>
+            // RS2014   = Cherub Rock
+            // RS1      = US Holiday Song Pack
+            var songAppId = SongAppIdRepository.Instance().Select((CurrentGameVersion == GameVersion.RS2014) ? "248750" : "206102", CurrentGameVersion);
+            cmbAppIds.SelectedItem = songAppId;
+            AppIdTB.Text = songAppId.AppId;
         }
     }
 }
