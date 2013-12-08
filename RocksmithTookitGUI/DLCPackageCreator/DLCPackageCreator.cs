@@ -55,13 +55,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             get
             {
+                var filter = "*.*";
                 switch (CurrentGameVersion)
                 {
                     case GameVersion.RS2014:
-                        return CurrentRocksmithTitle + " Song Package or Song Manifest (*.*,*.psarc,*.json)|*.*;*.psarc;*.json";
+                        filter = CurrentRocksmithTitle + " PC/Mac Package (*.psarc)|*.psarc|";
+                        filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*|";
+                        filter += CurrentRocksmithTitle + " PS3 Package (*.edat)|*.edat|";
+                        filter += CurrentRocksmithTitle + " Song Manifest (*.json)|*.json";
+                        break;
                     default:
-                        return CurrentRocksmithTitle + " Song Package, Tone Manifest or Rocksmith Tone Xml (*.*,*.dat,*.manifest.json,*.xml)|*.*;*.xml;*.dat;tone*.manifest.json"; 
+                        filter = CurrentRocksmithTitle + " PC/Mac Package (*.psarc)|*.psarc|";
+                        filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*|";
+                        filter += CurrentRocksmithTitle + " Song Manifest (*.json)|*.json";
+                        break;
                 }
+                return filter;
             }
         }
 
