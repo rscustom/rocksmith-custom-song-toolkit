@@ -23,7 +23,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
             gameVersionList.Remove("None");
             gameVersionCombo.DataSource = gameVersionList;
-            gameVersionCombo.SelectedItem = GameVersion.RS2012;
+            gameVersionCombo.SelectedIndex = 0;
 
             GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), gameVersionCombo.SelectedItem.ToString());
             try { PopulateAppIdCombo(gameVersion); }
