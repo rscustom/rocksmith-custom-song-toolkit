@@ -977,7 +977,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 form.ShowDialog();
 
                 if (form.Saved)
-                    TonesLB.Items.Add(tone);
+                    TonesLB.Items.Add(form.toneControl1.Tone);
             }
         }
 
