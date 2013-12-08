@@ -161,6 +161,7 @@
             this.ramUpMdlsCbox.Size = new System.Drawing.Size(441, 21);
             this.ramUpMdlsCbox.Sorted = true;
             this.ramUpMdlsCbox.TabIndex = 36;
+            this.ramUpMdlsCbox.DropDown += new System.EventHandler(this.ramUpMdlsCbox_DropDown);
             // 
             // DDCfilesDgw
             // 

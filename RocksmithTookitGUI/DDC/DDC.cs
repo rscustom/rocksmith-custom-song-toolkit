@@ -39,31 +39,34 @@ namespace RocksmithToolkitGUI.DDC
             DDprogress.Value = 100;
             if (e.Result.Equals(0))
             {
-                string newWP = null;
+                string newPath = String.Empty;
                 this.Invoke(new MethodInvoker(() =>
-                { newWP = newWD; }));
-                if (newWP != null)
-                {
+                { newPath = newWD; }));
                     foreach (var file in DLCdb)
                     {
-                        string ddcArrXML = "DDC_" + Path.GetFileName(file.Value), /*DDC_ArrangementName.xml*/
-                        srcDDCArrXML = Path.Combine(Path.GetDirectoryName(file.Value), ddcArrXML), /*<oldPath>\DDC_ArrName.xml*/
-                        destDDCArrXML = Path.Combine(newWD, ddcArrXML), /*<newPath>\DDC_ArrName.xml*/
+                        if (newPath == String.Empty) newPath = Path.GetDirectoryName(file.Value);
+                        string ddcArrXML = "DDC_" + file.Key+".xml", /*DDC_ArrangementName.xml*/
+                        oldPath = Path.GetDirectoryName(file.Value),
+                        srcDDCArrXML = Path.Combine(oldPath, ddcArrXML), /*<oldPath>\DDC_ArrName.xml*/
+                        destDDCArrXML = Path.Combine(newPath, ddcArrXML), /*<newPath>\DDC_ArrName.xml*/
                         arrDDClog = Path.ChangeExtension(srcDDCArrXML, ".log"), /*<oldPath>\DDC_ArrName.log*/
-                        srcLog = Path.GetDirectoryName(srcDDCArrXML) + "\\ddc.log",
-                        destLog = Path.GetDirectoryName(destDDCArrXML) + "\\ddc.log";
+                        srcLog = oldPath + "\\ddc.log",
+                        destLog = newPath + "\\ddc.log",
+                        srcShowlights = Path.Combine(oldPath, file.Key + "_showlights.xml"),
+                        destShowlights = Path.Combine(newPath, "DDC_" + file.Key + "_showlights.xml");
 
-                        samefolder = srcDDCArrXML.Equals(destDDCArrXML) ? true : false;
+                        samefolder = oldPath.Equals(newPath) ? true : false;
                         if (!samefolder && File.Exists(srcDDCArrXML))
                         {
                             if (File.Exists(destDDCArrXML))
-                            { File.Delete(destDDCArrXML); File.Delete(destDDCArrXML.Replace(".xml", ".log")); File.Delete(destLog); }
+                            { File.Delete(destDDCArrXML); File.Delete(destDDCArrXML.Replace(".xml", ".log")); File.Delete(destLog);
+                            File.Delete(destShowlights); }
                             File.Move(srcDDCArrXML, destDDCArrXML); File.Move(arrDDClog, destDDCArrXML.Replace(".xml", ".log"));
                             File.Move(srcLog, destLog);
                         }
+                        if(File.Exists(srcShowlights)) File.Copy(srcShowlights, destShowlights);
                     }
-                }
-                MessageBox.Show("DD generated!");
+                    MessageBox.Show("DD generated!");
             }
             else if (e.Result.Equals(1))
                 MessageBox.Show("DD generation error! System Error.");
@@ -71,6 +74,7 @@ namespace RocksmithToolkitGUI.DDC
 
             ProduceDDbt.Enabled = true;
             DDprogress.Visible = false;
+            this.Focus();
         }
         private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -168,7 +172,7 @@ namespace RocksmithToolkitGUI.DDC
                 {
                     if (i.EndsWith("_showlights.xml")
                         || i.EndsWith(".dlc.xml")
-                        || i.StartsWith("DDC_")) continue;
+                        || i.IndexOf("DDC_")>0) continue;
                     if (!DLCdb.ContainsValue(i))
                         DLCdb.Add(Path.GetFileNameWithoutExtension(i), i);
                 }
@@ -183,7 +187,7 @@ namespace RocksmithToolkitGUI.DDC
                     }
                 }
             }
-            newWD = null;
+            newWD = String.Empty;
             FillDB();
         }
         private void rampUpBT_Click(object sender, EventArgs e)
@@ -202,7 +206,8 @@ namespace RocksmithToolkitGUI.DDC
                 foreach (var i in ofd.FileNames)
                 {                    
                     var name = Path.GetFileNameWithoutExtension(i);
-                    var path = AppWD+@"\ddc\umdls\user_" + name + ".xml";
+                    Directory.CreateDirectory(@".\ddc\umdls\");
+                    var path = @".\ddc\umdls\user_" + name + ".xml";
                     if (!ramUpMdlsCbox.Items.Contains(name))
                     {
                         try { File.Copy(i, path, true); }
@@ -244,23 +249,30 @@ namespace RocksmithToolkitGUI.DDC
                 }
                 if (done) break;
             }
-            if (!done) System.Diagnostics.Process.Start("explorer", link);
+            if (!done) System.Diagnostics.Process.Start(link);
             this.DescriptionDDC.Links[DescriptionDDC.Links.IndexOf(e.Link)].Visited = true;
         }
         private void DDC_Load(object sender, EventArgs e)
         {
-            ramUpMdlsCbox.Items.Clear();
-            foreach (var mdl in Directory.EnumerateFiles(@"ddc\", "*.xml", SearchOption.AllDirectories))
+            PopMDLs();
+        }
+        private void PopMDLs()
+        {
+            if (Directory.Exists(@".\ddc\"))
             {
-                var name = Path.GetFileNameWithoutExtension(mdl);
-                if (name.StartsWith("user_")) name = name.Substring(5, name.Length-5);
+                ramUpMdlsCbox.Items.Clear();
+                RampMdlsDb.Clear();
+                foreach (var mdl in Directory.EnumerateFiles(@".\ddc\", "*.xml", SearchOption.AllDirectories))
+                {
+                    var name = Path.GetFileNameWithoutExtension(mdl);
+                    if (name.StartsWith("user_")) name = name.Substring(5, name.Length - 5);
                     ramUpMdlsCbox.Items.Add(name);
                     ramUpMdlsCbox.SelectedIndex = ramUpMdlsCbox.FindStringExact("ddc_default");
-                    RampMdlsDb.Add(name, AppWD + "\\" + mdl);
+                    RampMdlsDb.Add(name, Path.GetFullPath(mdl));
+                }
+                ramUpMdlsCbox.Refresh();
             }
-            ramUpMdlsCbox.Refresh();
         }
-
         private void DDCfilesDgw_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             string i = String.Empty;
@@ -272,6 +284,11 @@ namespace RocksmithToolkitGUI.DDC
             string value = Path.GetFileNameWithoutExtension(i);
             if (DLCdb != null)
                 DLCdb.Remove(value);
+        }
+
+        private void ramUpMdlsCbox_DropDown(object sender, EventArgs e)
+        {
+            PopMDLs();
         }
     }
 }
