@@ -19,9 +19,14 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public static class Packer
     {
-        private const string ROOT_XBox360 = "Root";
-        
+        #region FIELDS
+
+        private const string ROOT_XBox360 = "Root";        
         internal static Platform Game { get; set; }
+
+        #endregion
+
+        #region PACK
 
         public static void Pack(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
         {
@@ -46,6 +51,53 @@ namespace RocksmithToolkitLib.DLCPackage
                     throw new InvalidOperationException("Invalid directory structure of package. \n\rDirectory: " + sourcePath);
             }
         }
+
+        #endregion
+
+        #region UNPACK
+
+        public static void Unpack(string sourceFileName, string savePath, bool useCryptography)
+        {
+            Platform platform = sourceFileName.GetPlatform();
+
+            switch (platform.platform)
+            {
+                case GamePlatform.Pc:
+                    if (platform.version == GameVersion.RS2014)
+                        using (var inputStream = File.OpenRead(sourceFileName))
+                            ExtractPSARC(sourceFileName, savePath, inputStream, platform);
+                    else
+                    {
+                        using (var inputFileStream = File.OpenRead(sourceFileName))
+                        using (var inputStream = new MemoryStream())
+                        {
+
+                            if (useCryptography)
+                            {
+                                RijndaelEncryptor.DecryptFile(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
+                            }
+                            else
+                            {
+                                inputFileStream.CopyTo(inputStream);
+                            }
+                            ExtractPSARC(sourceFileName, savePath, inputStream, platform);
+                        }
+                    }
+                    return;
+                case GamePlatform.XBox360:
+                    UnpackXBox360Package(sourceFileName, savePath, platform);
+                    return;
+                case GamePlatform.PS3:
+                    UnpackPS3Package(sourceFileName, savePath, platform);
+                    return;
+                case GamePlatform.None:
+                    throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+            }
+        }
+
+        #endregion
+
+        #region PC 2012
 
         private static void PackPC(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
         {
@@ -120,6 +172,10 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
+        #endregion
+
+        #region PC/MAC 2014
+
         private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng)
         {
             using (var psarcStream = new MemoryStream())
@@ -146,6 +202,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     entry.Data.Close();
             }
         }
+
+        #endregion
+
+        #region XBox 360
 
         private static void PackXBox360(string sourcePath, string saveFileName, GameVersion gameVersion, bool updateSng) {
             if (updateSng && Game.version == GameVersion.RS2014) UpdateSng2014(sourcePath, Game);
@@ -211,6 +271,65 @@ namespace RocksmithToolkitLib.DLCPackage
                     File.Delete(file);
         }
 
+        private static void PackInnerXBox360(string sourcePath, string directory)
+        {
+            using (var psarcStream = new MemoryStream())
+            {
+                var innerPsarc = new PSARC.PSARC();
+
+                WalkThroughDirectory("", directory, (a, b) =>
+                {
+                    var fileStream = File.OpenRead(b);
+                    innerPsarc.AddEntry(a, fileStream);
+                });
+
+                innerPsarc.Write(psarcStream, false);
+                psarcStream.Flush();
+                psarcStream.Seek(0, SeekOrigin.Begin);
+
+                using (var outputFileStream = File.Create(Path.Combine(sourcePath, Path.GetFileName(directory)) + ".psarc"))
+                {
+                    psarcStream.CopyTo(outputFileStream);
+                }
+            }
+        }
+
+        private static void UnpackXBox360Package(string sourceFileName, string savePath, Platform platform)
+        {
+            LogRecord x = new LogRecord();
+            STFSPackage xboxPackage = new STFSPackage(sourceFileName, x);
+            if (!xboxPackage.ParseSuccess)
+                throw new InvalidDataException("Invalid Rocksmith XBox 360 package!\n\r" + x.Log);
+
+            var rootDir = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourceFileName)) + String.Format("_{0}", platform.platform.ToString());
+            xboxPackage.ExtractPayload(rootDir, true, true);
+
+            foreach (var fileName in Directory.EnumerateFiles(Path.Combine(rootDir, "Root")))
+            {
+                if (Path.GetExtension(fileName) == ".psarc")
+                {
+                    using (var outputFileStream = File.OpenRead(fileName))
+                    {
+                        ExtractPSARC(fileName, Path.GetDirectoryName(fileName), outputFileStream, new Platform(GamePlatform.XBox360, GameVersion.None));
+                    }
+                }
+
+                if (File.Exists(fileName) && Path.GetExtension(fileName) == ".psarc")
+                    File.Delete(fileName);
+            }
+
+            xboxPackage.CloseIO();
+        }
+
+        private static string GetHeaderValue(this string value)
+        {
+            return value.Substring(value.IndexOf(":") + 2);
+        }
+
+#endregion
+
+        #region PS3
+
         private static void PackPS3(string sourcePath, string saveFileName, Platform platform, bool updateSng) {
             Pack2014(sourcePath, saveFileName, platform, updateSng);
 
@@ -234,75 +353,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (File.Exists(encryptedPackage))
                     File.Move(encryptedPackage, sourceCleanPackage + ".edat");
             }
-        }
-
-        private static string GetHeaderValue(this string value) {
-            return value.Substring(value.IndexOf(":") + 2);
-        }
-
-        private static void PackInnerXBox360(string sourcePath, string directory) {
-            using (var psarcStream = new MemoryStream()) {
-                var innerPsarc = new PSARC.PSARC();
-
-                WalkThroughDirectory("", directory, (a, b) =>
-                {
-                    var fileStream = File.OpenRead(b);
-                    innerPsarc.AddEntry(a, fileStream);
-                });
-
-                innerPsarc.Write(psarcStream, false);
-                psarcStream.Flush();
-                psarcStream.Seek(0, SeekOrigin.Begin);
-
-                using (var outputFileStream = File.Create(Path.Combine(sourcePath, Path.GetFileName(directory)) + ".psarc")) {
-                    psarcStream.CopyTo(outputFileStream);
-                }
-            }
-        }
-
-        private static void WalkThroughDirectory(string baseDir, string directory, Action<string, string> action) {
-            foreach (var fl in Directory.GetFiles(directory))
-                action(String.Format("{0}/{1}", baseDir, Path.GetFileName(fl)).TrimStart('/'), fl);
-            foreach (var dr in Directory.GetDirectories(Path.Combine(baseDir, directory)))
-                WalkThroughDirectory(String.Format("{0}/{1}", baseDir, Path.GetFileName(dr)), dr, action);
-        }
-
-        public static void Unpack(string sourceFileName, string savePath, bool useCryptography)
-        {
-            Platform platform = sourceFileName.GetPlatform();
-
-            switch (platform.platform) {
-                case GamePlatform.Pc:
-                    if (platform.version == GameVersion.RS2014)
-                        using (var inputStream = File.OpenRead(sourceFileName))
-                            ExtractPSARC(sourceFileName, savePath, inputStream, platform);
-                    else
-                    {
-                        using (var inputFileStream = File.OpenRead(sourceFileName))
-                        using (var inputStream = new MemoryStream())
-                        {
-
-                            if (useCryptography)
-                            {
-                                RijndaelEncryptor.DecryptFile(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
-                            }
-                            else
-                            {
-                                inputFileStream.CopyTo(inputStream);
-                            }
-                            ExtractPSARC(sourceFileName, savePath, inputStream, platform);
-                        }
-                    }
-                    return;
-                case GamePlatform.XBox360:
-                    UnpackXBox360Package(sourceFileName, savePath, platform);
-                    return;
-                case GamePlatform.PS3:
-                    UnpackPS3Package(sourceFileName, savePath, platform);
-                    return;
-                case GamePlatform.None:
-                    throw new InvalidOperationException("PS3 platform is not supported at this time :(");
-            }            
         }
 
         private static void UnpackPS3Package(string sourceFileName, string savePath, Platform platform)
@@ -345,27 +395,15 @@ namespace RocksmithToolkitLib.DLCPackage
                 throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output below:" + Environment.NewLine + Environment.NewLine + outputMessage);
         }
 
-        private static void UnpackXBox360Package(string sourceFileName, string savePath, Platform platform) {
-            LogRecord x = new LogRecord();            
-            STFSPackage xboxPackage = new STFSPackage(sourceFileName, x);
-            if (!xboxPackage.ParseSuccess)
-                throw new InvalidDataException("Invalid Rocksmith XBox 360 package!\n\r" + x.Log);
+        #endregion
 
-            var rootDir = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourceFileName)) + String.Format("_{0}", platform.platform.ToString());
-            xboxPackage.ExtractPayload(rootDir, true, true);
+        #region COMMON FUNCTIONS
 
-            foreach (var fileName in Directory.EnumerateFiles(Path.Combine(rootDir, "Root"))) {
-                if (Path.GetExtension(fileName) == ".psarc") {
-                    using (var outputFileStream = File.OpenRead(fileName)) {
-                        ExtractPSARC(fileName, Path.GetDirectoryName(fileName), outputFileStream, new Platform(GamePlatform.XBox360, GameVersion.None));
-                    }
-                }
-
-                if (File.Exists(fileName) && Path.GetExtension(fileName) == ".psarc")
-                    File.Delete(fileName);
-            }
-
-            xboxPackage.CloseIO();
+        private static void WalkThroughDirectory(string baseDir, string directory, Action<string, string> action) {
+            foreach (var fl in Directory.GetFiles(directory))
+                action(String.Format("{0}/{1}", baseDir, Path.GetFileName(fl)).TrimStart('/'), fl);
+            foreach (var dr in Directory.GetDirectories(Path.Combine(baseDir, directory)))
+                WalkThroughDirectory(String.Format("{0}/{1}", baseDir, Path.GetFileName(dr)), dr, action);
         }
 
         public static Platform GetPlatform(this string fullPath) {
@@ -526,5 +564,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
         }
+
+        #endregion
     }
 }
