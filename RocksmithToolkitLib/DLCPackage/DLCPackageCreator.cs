@@ -476,7 +476,14 @@ namespace RocksmithToolkitLib.DLCPackage
                             var manifest = new Manifest2014<Attributes2014>();
                             var attribute = new Attributes2014(arrangementFileName, arrangement, info, platform);
                             if (arrangement.ArrangementType != Sng.ArrangementType.Vocal)
+                            {
                                 attribute.SongPartition = songPartitionCount.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
+                                if (attribute.SongPartition > 1)
+                                { // Make the second arrangement with the same arrangement type as ALTERNATE arrangement ingame
+                                    attribute.Representative = 0;
+                                    attribute.ArrangementProperties.Represent = 0;
+                                }
+                            }
                             var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attribute } };
                             manifest.Entries.Add(attribute.PersistentID, attributeDictionary);                                
                             var manifestStream = new MemoryStream();

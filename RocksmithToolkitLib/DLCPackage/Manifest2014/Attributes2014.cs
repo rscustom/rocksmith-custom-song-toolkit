@@ -49,7 +49,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public string Tone_Multiplayer { get; set; }
         public List<Tone2014> Tones { get; set; }
         public string InputEvent { get; set; } //Vocals only
-        public float SongVolume { get; set; } //Customs only (to easy platform conversion) its float, dude!
+        public float SongVolume { get; set; } //Customs only (to easy platform conversion) its float!
 
         public Attributes2014() {}
 
@@ -103,8 +103,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
                 // BONUS ARRANGEMENT
                 ArrangementProperties.BonusArr = Convert.ToInt32(arrangement.BonusArr);
-                ArrangementProperties.Represent = Convert.ToInt32(!arrangement.BonusArr);
-
+                
                 if (arrangement.Name == Sng.ArrangementName.Combo)
                 { //Exclusive condition
                     if (arrangement.RouteMask == DLCPackage.RouteMask.Lead)
