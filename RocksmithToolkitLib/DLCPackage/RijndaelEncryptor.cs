@@ -76,6 +76,7 @@ namespace RocksmithToolkitLib.DLCPackage
 		};
 
         #endregion
+
         /// <summary>
         /// All profile stuff: crd (u play credentials), LocalProfiles.json and profiles themselves
         /// Good for RS2014 and RS1

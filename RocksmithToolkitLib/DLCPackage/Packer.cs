@@ -440,7 +440,7 @@ namespace RocksmithToolkitLib.DLCPackage
             GamePlatform p = GamePlatform.None;
             var isValid = Enum.TryParse(platformString, out p);
             if (isValid)
-                return new Platform(p, GameVersion.RS2012);
+                return new Platform(p, GameVersion.RS2014);
             else
                 return new Platform(GamePlatform.None, GameVersion.None);
         }
