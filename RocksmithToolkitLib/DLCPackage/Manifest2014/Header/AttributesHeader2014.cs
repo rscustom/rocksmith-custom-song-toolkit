@@ -103,7 +103,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 NotesHard = arrangement.Sng2014.NoteCount[2];
                 EasyMastery = NotesEasy / NotesHard;
                 MediumMastery = NotesMedium / NotesHard;
-                Representative = 1;
+                Representative = Convert.ToInt32(!arrangement.BonusArr);
                 RouteMask = (int)arrangement.RouteMask;
 
                 // TODO this is not quite it but much closer
