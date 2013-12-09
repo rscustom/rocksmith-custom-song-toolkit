@@ -1091,6 +1091,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 oggMacPathTB.Enabled = pChecked;
                 openOggMacButton.Enabled = pChecked;
+                AppIdTB.Visible = pChecked;
+                cmbAppIds.Visible = pChecked;
             }
             else if (platformCkb.Name.IndexOf("XBox360") > 0)
             {
