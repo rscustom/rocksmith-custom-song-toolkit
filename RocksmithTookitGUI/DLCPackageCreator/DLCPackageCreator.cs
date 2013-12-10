@@ -233,11 +233,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 ArrangementLB.Items.Remove(ArrangementLB.SelectedItem);
         }
 
-        private void openOggButton_Click(object sender, EventArgs e)
+        private void openAudioButton_Click(object sender, EventArgs e)
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "PC " + CurrentOFDAudioFileFilter;
+                ofd.Filter = CurrentOFDAudioFileFilter;
                 if (ofd.ShowDialog() == DialogResult.OK)
                     AudioPath = ofd.FileName;
             }
@@ -339,13 +339,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (!string.IsNullOrEmpty(albumPath))
                 packageData.AlbumArtPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(albumPath));
             
-            //Win
-            string oggPath = packageData.OggPath;
-            string oggPreview = packageData.OggPreviewPath;
-            if (!String.IsNullOrEmpty(oggPath))
-                packageData.OggPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(oggPath));
-            if (!String.IsNullOrEmpty(oggPreview))
-                packageData.OggPreviewPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(oggPreview));
+            string audioPath = packageData.OggPath;
+            string audioPreviewPath = packageData.OggPreviewPath;
+            if (!String.IsNullOrEmpty(audioPath))
+                packageData.OggPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(audioPath));
+            if (!String.IsNullOrEmpty(audioPreviewPath))
+                packageData.OggPreviewPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(audioPreviewPath));
 
             foreach (var arr in packageData.Arrangements)
             {
@@ -953,7 +952,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // MAC RS2014 only
             platformMAC.Enabled = CurrentGameVersion == GameVersion.RS2014;
-            platformMAC.Checked = false;
+            platformMAC.Checked = CurrentGameVersion == GameVersion.RS2014;
+
+            // AudioTB
+            switch (CurrentGameVersion)
+            {
+                case GameVersion.RS2012:
+                    audioPathTB.Cue = "Converted audio on Wwise 2010 for Windows, XBox360 or PS3 (*.ogg)";
+                    break;
+                case GameVersion.RS2014:
+                    audioPathTB.Cue = "Converted audio on Wwise 2013 for Windows, Mac, XBox360 or PS3 (*.wem)";
+                    break;
+             }
         }
 
         private void PopulateAppIdCombo()
