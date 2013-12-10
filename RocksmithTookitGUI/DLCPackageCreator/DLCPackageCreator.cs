@@ -246,6 +246,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void dlcGenerateButton_Click(object sender, EventArgs e)
         {
             var packageData = GetPackageData();
+
             if (packageData == null)
             {
                 MessageBox.Show("One or more fields are missing information.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -256,18 +257,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 try
                 {
-                    if (platformPC.Checked)
-                        OggFile.VerifyHeaders(AudioPath);
+                    OggFile.VerifyHeaders(AudioPath);
                 }
                 catch (InvalidDataException ex)
                 {
                     MessageBox.Show(ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                if (platformPC.Checked && AudioPath.GetAudioPlatform().platform != GamePlatform.Pc)
-                {
-                    MessageBox.Show("The Windows OGG is either invalid or for the wrong platform.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -280,7 +274,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dlcSavePath = ofd.FileName;
             }
 
-            if (dlcSavePath.Contains(" ") && platformPS3.Checked)
+            if (Path.GetFileName(dlcSavePath).Contains(" ") && platformPS3.Checked)
                 MessageBox.Show("PS3 package name can't support space character due to encryption limitation." + Environment.NewLine +
                     "Spaces will be automatic removed for your PS3 package name.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
