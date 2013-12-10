@@ -38,6 +38,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.platformSourceCombo = new System.Windows.Forms.ComboBox();
             this.convertButton = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -141,7 +142,7 @@
             // 
             this.convertButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.convertButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.convertButton.Location = new System.Drawing.Point(240, 188);
+            this.convertButton.Location = new System.Drawing.Point(239, 204);
             this.convertButton.Name = "convertButton";
             this.convertButton.Size = new System.Drawing.Size(159, 29);
             this.convertButton.TabIndex = 32;
@@ -149,19 +150,31 @@
             this.convertButton.UseVisualStyleBackColor = false;
             this.convertButton.Click += new System.EventHandler(this.convertButton_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label3.Location = new System.Drawing.Point(113, 188);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(183, 13);
+            this.label3.TabIndex = 38;
+            this.label3.Text = "Compatible only with Rocksmith 2014";
+            // 
             // DLCConverter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.convertButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox2);
             this.Name = "DLCConverter";
-            this.Size = new System.Drawing.Size(400, 223);
+            this.Size = new System.Drawing.Size(400, 236);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -176,5 +189,6 @@
         private System.Windows.Forms.Button convertButton;
         private System.Windows.Forms.ComboBox appIdCombo;
         private CueTextBox AppIdTB;
+        private System.Windows.Forms.Label label3;
     }
 }

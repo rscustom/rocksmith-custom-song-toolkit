@@ -35,6 +35,7 @@ namespace RocksmithToolkitGUI.SngToTabConverter
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Multiselect = true;
+                ofd.Filter = "Rocksmith 1 DLC Package (.dat)|*.dat";
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
                 sourceFileNames = ofd.FileNames;
