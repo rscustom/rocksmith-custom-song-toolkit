@@ -89,8 +89,8 @@ namespace RocksmithToolkitGUI.DLCConverter
             {
                 var target = new Platform(platformTargetCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
                 var isPCorMac = target.platform == GamePlatform.Pc || target.platform == GamePlatform.Mac;
-                appIdCombo.Visible = isPCorMac;
-                AppIdTB.Visible = isPCorMac;
+                appIdCombo.Enabled = isPCorMac;
+                AppIdTB.Enabled = isPCorMac;
             }
         }
 
