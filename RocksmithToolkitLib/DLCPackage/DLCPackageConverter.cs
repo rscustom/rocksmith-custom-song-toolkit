@@ -194,7 +194,7 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var file in sourceAudioFiles)
             {
                 var newFile = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                OggFile.ConvertWem(file, newFile);
+                OggFile.ConvertAudioPlatform(file, newFile);
                 targetAudioFiles.Add(newFile);
             }
 
@@ -218,27 +218,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 audioPreviewPath = a.FullName;
             }
 
-            var audioPreview = Path.Combine(Path.GetDirectoryName(audioPath), String.Format("{0}_preview{1}", Path.GetFileNameWithoutExtension(audioPath), Path.GetExtension(audioPath)));
-            switch (targetPlatform.platform)
-            {
-                case GamePlatform.Pc:
-                    data.OggPath = audioPath;
-                    data.OggPreviewPath = audioPreview;
-                    break;
-                case GamePlatform.Mac:
-                    data.OggMACPath = audioPath;
-                    data.OggPreviewMACPath = audioPreview;
-                    break;
-                case GamePlatform.XBox360:
-                    data.OggXBox360Path = audioPath;
-                    data.OggPreviewXBox360Path = audioPreview;
-                    break;
-                case GamePlatform.PS3:
-                    data.OggPS3Path = audioPath;
-                    data.OggPreviewPS3Path = audioPreview;
-                    break;
-            }
+            data.OggPath = audioPath;
+            data.OggPreviewPath = Path.Combine(Path.GetDirectoryName(audioPath), String.Format("{0}_preview{1}", Path.GetFileNameWithoutExtension(audioPath), Path.GetExtension(audioPath)));
 
+            //Build
             RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(targetFileName, data, new Platform(targetPlatform.platform, GameVersion.RS2014));
         }
     }

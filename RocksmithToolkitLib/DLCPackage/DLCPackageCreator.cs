@@ -76,21 +76,6 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        public static string[] GetAudioPath(this Platform platform, DLCPackageData info) {
-            switch (platform.platform) {
-                case GamePlatform.Pc:
-                    return new string[] { info.OggPath, info.OggPreviewPath };
-                case GamePlatform.Mac:
-                    return new string[] { info.OggMACPath, info.OggPreviewMACPath };
-                case GamePlatform.XBox360:
-                    return new string[] { info.OggXBox360Path, info.OggPreviewXBox360Path };
-                case GamePlatform.PS3:
-                    return new string[] { info.OggPS3Path, info.OggPreviewPS3Path };
-                default:
-                    throw new InvalidOperationException("Unexpected game platform value");
-            }
-        }
-
         #endregion
 
         #region PACKAGE
@@ -371,21 +356,24 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, size), new FileStream(ddsfiles[size], FileMode.Open, FileAccess.Read, FileShare.Read));
 
                     // AUDIO
-                    var audioFile = platform.GetAudioPath(info)[0];
+                    var audioFile = info.OggPath;
                     if (File.Exists(audioFile))
-                        soundStream = File.OpenRead(audioFile);
+                        if (platform != audioFile.GetAudioPlatform())
+                            soundStream = OggFile.ConvertAudioPlatform(audioFile);
+                        else
+                            soundStream = File.OpenRead(audioFile);
                     else
                         throw new InvalidOperationException(String.Format("Audio file '{0}' not found.", audioFile));
                         
                     // AUDIO PREVIEW
-                    var previewAudioFile = platform.GetAudioPath(info)[1];
+                    var previewAudioFile = info.OggPreviewPath;
                     if (File.Exists(previewAudioFile))
-                        soundPreviewStream = File.OpenRead(previewAudioFile);
+                        if (platform != previewAudioFile.GetAudioPlatform())
+                            soundPreviewStream = OggFile.ConvertAudioPlatform(previewAudioFile);
+                        else
+                            soundPreviewStream = File.OpenRead(previewAudioFile);
                     else
-                    {
-                        previewAudioFile = audioFile;
-                        soundPreviewStream = File.OpenRead(previewAudioFile);
-                    }
+                        soundPreviewStream = soundStream;
 
                     // FLAT MODEL
                     rsenumerableRootStream = new MemoryStream(Resources.rsenumerable_root);
@@ -640,7 +628,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
             try
             {
-                Stream albumArtStream;
+                Stream albumArtStream = null,
+                       audioStream = null;
+
                 string albumArtPath;
                 if (File.Exists(info.AlbumArtPath)) {
                     albumArtPath = info.AlbumArtPath;
@@ -664,12 +654,16 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 albumArtStream = new FileStream(ddsfiles[512], FileMode.Open, FileAccess.Read, FileShare.Read);
 
+                var audioFile = info.OggPath;
+                if (platform != audioFile.GetAudioPlatform())
+                    audioStream = OggFile.ConvertAudioPlatform(audioFile);
+
                 using (var aggregateGraphStream = new MemoryStream())
                 using (var manifestStream = new MemoryStream())
                 using (var xblockStream = new MemoryStream())
                 using (var soundbankStream = new MemoryStream())
                 using (var packageIdStream = new MemoryStream())
-                using (var soundStream = OggFile.ConvertOgg(platform.GetAudioPath(info)[0]))
+                using (var soundStream = OggFile.ConvertOgg(audioStream))
                 using (var arrangementFiles = new DisposableCollection<Stream>()) {
                     var manifestBuilder = new ManifestBuilder {
                         AggregateGraph = new AggregateGraph.AggregateGraph {

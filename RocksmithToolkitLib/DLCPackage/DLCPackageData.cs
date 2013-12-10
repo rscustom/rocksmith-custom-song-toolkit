@@ -12,12 +12,18 @@ namespace RocksmithToolkitLib.DLCPackage
     public class DLCPackageData
     {
         public GameVersion GameVersion;
+        
+        public bool Pc { get; set; }
+        public bool Mac { get; set; }
+        public bool XBox360 { get; set; }
+        public bool PS3 { get; set; }
+
         public string AppId { get; set; }
         public string Name { get; set; }
-        public SongInfo SongInfo { get; set; }        
+        public SongInfo SongInfo { get; set; }
+        public string AlbumArtPath { get; set; }
         public string OggPath { get; set; }
-        public string OggXBox360Path { get; set; }
-        public string OggPS3Path { get; set; }
+        public string OggPreviewPath { get; set; }
         public List<Arrangement> Arrangements { get; set; }
         public float Volume { get; set; }
         public PackageMagic SignatureType { get; set; }
@@ -40,34 +46,26 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region RS1 only
 
-        public string AlbumArtPath { get; set; }
         public List<Tone.Tone> Tones { get; set; }
 
         #endregion
 
         #region RS2014 only
 
-        public string OggMACPath { get; set; }
-        public string OggPreviewPath { get; set; }
-        public string OggPreviewMACPath { get; set; }
-        public string OggPreviewXBox360Path { get; set; }
-        public string OggPreviewPS3Path { get; set; }
         public List<Tone2014> TonesRS2014 { get; set; }
+
+        // cache album art conversion
+        public Dictionary<int, string> AlbumArt { get; set; }
 
         #endregion
 
-        // cache album art conversion
-        public Dictionary<int,string> AlbumArt { get; set; }
-
         // needs to be called after all packages for platforms are created
-        public void CleanCache()
-        {
+        public void CleanCache() {
             if (AlbumArt != null) {
                 foreach (var path in AlbumArt.Values) {
                     try {
                         File.Delete(path);
-                    }
-                    catch {}
+                    } catch { }
                 }
                 AlbumArt = null;
             }

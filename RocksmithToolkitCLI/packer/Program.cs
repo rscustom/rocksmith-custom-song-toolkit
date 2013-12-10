@@ -117,7 +117,7 @@ namespace packer
 
                     try
                     {
-                        Console.WriteLine("Warning: You should load and save XML with 'RocksmithToolkitGUI 2.1.0.0' or above to make sure it is still valid and compatible with this feature!");
+                        Console.WriteLine("Warning: You should load and save XML with 'RocksmithToolkitGUI 2.3.0.0' or above to make sure it is still valid and compatible with this feature!");
 
                         DLCPackageData info = null;
                         var serializer = new DataContractSerializer(typeof(DLCPackageData));
@@ -132,14 +132,14 @@ namespace packer
 
                         FixPaths(info, arguments.Template, gameVersion);
 
-                        if (!String.IsNullOrEmpty(info.OggPath))
+                        if (info.Pc)
                             DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Pc, gameVersion));
                         if (gameVersion == GameVersion.RS2014)
-                            if (!String.IsNullOrEmpty(info.OggMACPath))
+                            if (info.Mac)
                                 DLCPackageCreator.Generate(arguments.Output, info, new Platform(GamePlatform.Mac, gameVersion));
-                        if (!String.IsNullOrEmpty(info.OggXBox360Path))
+                        if (info.XBox360)
                             DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.XBox360, gameVersion));
-                        if (!String.IsNullOrEmpty(info.OggPS3Path))
+                        if (info.PS3)
                             DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.PS3, gameVersion));
 
                         Console.WriteLine("Package was generated.");
@@ -268,18 +268,6 @@ namespace packer
                 info.OggPath = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPath);
             if (!String.IsNullOrEmpty(info.OggPreviewPath))
                 info.OggPreviewPath = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPreviewPath);
-            if (!String.IsNullOrEmpty(info.OggMACPath))
-                info.OggMACPath = Path.Combine(Path.GetDirectoryName(templateDir), info.OggMACPath);
-            if (!String.IsNullOrEmpty(info.OggPreviewMACPath))
-                info.OggPreviewMACPath = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPreviewMACPath);
-            if (!String.IsNullOrEmpty(info.OggXBox360Path))
-                info.OggXBox360Path = Path.Combine(Path.GetDirectoryName(templateDir), info.OggXBox360Path);
-            if (!String.IsNullOrEmpty(info.OggPreviewXBox360Path))
-                info.OggPreviewXBox360Path = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPreviewXBox360Path);
-            if (!String.IsNullOrEmpty(info.OggPS3Path))
-                info.OggPS3Path = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPS3Path);
-            if (!String.IsNullOrEmpty(info.OggPreviewPS3Path))
-                info.OggPreviewPS3Path = Path.Combine(Path.GetDirectoryName(templateDir), info.OggPreviewPS3Path);
         }
 
         private static void UpdateTones(Arrangement arrangement)

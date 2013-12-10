@@ -43,25 +43,19 @@
             this.arrangementEditButton = new System.Windows.Forms.Button();
             this.toneEditButton = new System.Windows.Forms.Button();
             this.toneImportButton = new System.Windows.Forms.Button();
-            this.openOggXBox360Button = new System.Windows.Forms.Button();
             this.platformPC = new System.Windows.Forms.CheckBox();
             this.platformXBox360 = new System.Windows.Forms.CheckBox();
             this.platformPS3 = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.openOggPS3Button = new System.Windows.Forms.Button();
             this.RS2012 = new System.Windows.Forms.RadioButton();
             this.RS2014 = new System.Windows.Forms.RadioButton();
             this.gbPlatofmr = new System.Windows.Forms.GroupBox();
             this.platformMAC = new System.Windows.Forms.CheckBox();
-            this.openOggMacButton = new System.Windows.Forms.Button();
             this.gbFiles = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.AlbumArtPathTB = new RocksmithToolkitGUI.CueTextBox();
-            this.oggPcPathTB = new RocksmithToolkitGUI.CueTextBox();
-            this.oggMacPathTB = new RocksmithToolkitGUI.CueTextBox();
-            this.oggXBox360PathTB = new RocksmithToolkitGUI.CueTextBox();
-            this.oggPS3PathTB = new RocksmithToolkitGUI.CueTextBox();
+            this.audioPathTB = new RocksmithToolkitGUI.CueTextBox();
             this.gbTones = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -101,7 +95,7 @@
             // 
             this.dlcGenerateButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.dlcGenerateButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dlcGenerateButton.Location = new System.Drawing.Point(405, 519);
+            this.dlcGenerateButton.Location = new System.Drawing.Point(404, 497);
             this.dlcGenerateButton.Name = "dlcGenerateButton";
             this.dlcGenerateButton.Size = new System.Drawing.Size(97, 29);
             this.dlcGenerateButton.TabIndex = 31;
@@ -111,7 +105,7 @@
             // 
             // openOggPcButton
             // 
-            this.openOggPcButton.Location = new System.Drawing.Point(210, 43);
+            this.openOggPcButton.Location = new System.Drawing.Point(457, 43);
             this.openOggPcButton.Name = "openOggPcButton";
             this.openOggPcButton.Size = new System.Drawing.Size(34, 23);
             this.openOggPcButton.TabIndex = 22;
@@ -153,7 +147,7 @@
             // 
             this.dlcSaveButton.BackColor = System.Drawing.SystemColors.Control;
             this.dlcSaveButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.dlcSaveButton.Location = new System.Drawing.Point(105, 519);
+            this.dlcSaveButton.Location = new System.Drawing.Point(106, 497);
             this.dlcSaveButton.Name = "dlcSaveButton";
             this.dlcSaveButton.Size = new System.Drawing.Size(97, 29);
             this.dlcSaveButton.TabIndex = 30;
@@ -165,7 +159,7 @@
             // 
             this.dlcLoadButton.BackColor = System.Drawing.SystemColors.Control;
             this.dlcLoadButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.dlcLoadButton.Location = new System.Drawing.Point(2, 519);
+            this.dlcLoadButton.Location = new System.Drawing.Point(3, 497);
             this.dlcLoadButton.Name = "dlcLoadButton";
             this.dlcLoadButton.Size = new System.Drawing.Size(97, 29);
             this.dlcLoadButton.TabIndex = 0;
@@ -244,17 +238,6 @@
             this.toneImportButton.UseVisualStyleBackColor = true;
             this.toneImportButton.Click += new System.EventHandler(this.toneImportButton_Click);
             // 
-            // openOggXBox360Button
-            // 
-            this.openOggXBox360Button.Enabled = false;
-            this.openOggXBox360Button.Location = new System.Drawing.Point(457, 43);
-            this.openOggXBox360Button.Name = "openOggXBox360Button";
-            this.openOggXBox360Button.Size = new System.Drawing.Size(34, 23);
-            this.openOggXBox360Button.TabIndex = 24;
-            this.openOggXBox360Button.Text = "...";
-            this.openOggXBox360Button.UseVisualStyleBackColor = true;
-            this.openOggXBox360Button.Click += new System.EventHandler(this.openOggXBox360Button_Click);
-            // 
             // platformPC
             // 
             this.platformPC.AutoSize = true;
@@ -273,6 +256,8 @@
             // platformXBox360
             // 
             this.platformXBox360.AutoSize = true;
+            this.platformXBox360.Checked = true;
+            this.platformXBox360.CheckState = System.Windows.Forms.CheckState.Checked;
             this.platformXBox360.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.platformXBox360.ForeColor = System.Drawing.SystemColors.ControlText;
             this.platformXBox360.Location = new System.Drawing.Point(150, 19);
@@ -281,11 +266,12 @@
             this.platformXBox360.TabIndex = 5;
             this.platformXBox360.Text = "XBox360";
             this.platformXBox360.UseVisualStyleBackColor = true;
-            this.platformXBox360.CheckedChanged += new System.EventHandler(this.plataform_CheckedChanged);
             // 
             // platformPS3
             // 
             this.platformPS3.AutoSize = true;
+            this.platformPS3.Checked = true;
+            this.platformPS3.CheckState = System.Windows.Forms.CheckState.Checked;
             this.platformPS3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.platformPS3.ForeColor = System.Drawing.SystemColors.ControlText;
             this.platformPS3.Location = new System.Drawing.Point(248, 19);
@@ -294,7 +280,6 @@
             this.platformPS3.TabIndex = 6;
             this.platformPS3.Text = "PS3";
             this.platformPS3.UseVisualStyleBackColor = true;
-            this.platformPS3.CheckedChanged += new System.EventHandler(this.plataform_CheckedChanged);
             // 
             // label3
             // 
@@ -315,17 +300,6 @@
             this.label4.Size = new System.Drawing.Size(42, 13);
             this.label4.TabIndex = 62;
             this.label4.Text = "Volume";
-            // 
-            // openOggPS3Button
-            // 
-            this.openOggPS3Button.Enabled = false;
-            this.openOggPS3Button.Location = new System.Drawing.Point(457, 69);
-            this.openOggPS3Button.Name = "openOggPS3Button";
-            this.openOggPS3Button.Size = new System.Drawing.Size(34, 23);
-            this.openOggPS3Button.TabIndex = 25;
-            this.openOggPS3Button.Text = "...";
-            this.openOggPS3Button.UseVisualStyleBackColor = true;
-            this.openOggPS3Button.Click += new System.EventHandler(this.openOggPS3Button_Click);
             // 
             // RS2012
             // 
@@ -374,6 +348,8 @@
             // platformMAC
             // 
             this.platformMAC.AutoSize = true;
+            this.platformMAC.Checked = true;
+            this.platformMAC.CheckState = System.Windows.Forms.CheckState.Checked;
             this.platformMAC.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.platformMAC.ForeColor = System.Drawing.SystemColors.ControlText;
             this.platformMAC.Location = new System.Drawing.Point(74, 19);
@@ -384,34 +360,17 @@
             this.platformMAC.UseVisualStyleBackColor = true;
             this.platformMAC.CheckedChanged += new System.EventHandler(this.plataform_CheckedChanged);
             // 
-            // openOggMacButton
-            // 
-            this.openOggMacButton.Enabled = false;
-            this.openOggMacButton.Location = new System.Drawing.Point(210, 70);
-            this.openOggMacButton.Name = "openOggMacButton";
-            this.openOggMacButton.Size = new System.Drawing.Size(34, 23);
-            this.openOggMacButton.TabIndex = 23;
-            this.openOggMacButton.Text = "...";
-            this.openOggMacButton.UseVisualStyleBackColor = true;
-            this.openOggMacButton.Click += new System.EventHandler(this.openOggMacButton_Click);
-            // 
             // gbFiles
             // 
             this.gbFiles.Controls.Add(this.label2);
             this.gbFiles.Controls.Add(this.AlbumArtPathTB);
-            this.gbFiles.Controls.Add(this.openOggMacButton);
-            this.gbFiles.Controls.Add(this.oggPcPathTB);
-            this.gbFiles.Controls.Add(this.oggMacPathTB);
+            this.gbFiles.Controls.Add(this.audioPathTB);
             this.gbFiles.Controls.Add(this.openOggPcButton);
             this.gbFiles.Controls.Add(this.albumArtButton);
-            this.gbFiles.Controls.Add(this.oggXBox360PathTB);
-            this.gbFiles.Controls.Add(this.openOggPS3Button);
-            this.gbFiles.Controls.Add(this.openOggXBox360Button);
-            this.gbFiles.Controls.Add(this.oggPS3PathTB);
             this.gbFiles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbFiles.Location = new System.Drawing.Point(3, 264);
             this.gbFiles.Name = "gbFiles";
-            this.gbFiles.Size = new System.Drawing.Size(498, 111);
+            this.gbFiles.Size = new System.Drawing.Size(498, 88);
             this.gbFiles.TabIndex = 78;
             this.gbFiles.TabStop = false;
             this.gbFiles.Text = "Files";
@@ -420,7 +379,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label2.Location = new System.Drawing.Point(5, 93);
+            this.label2.Location = new System.Drawing.Point(4, 69);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(487, 13);
             this.label2.TabIndex = 36;
@@ -438,48 +397,15 @@
             this.AlbumArtPathTB.Size = new System.Drawing.Size(445, 20);
             this.AlbumArtPathTB.TabIndex = 13;
             // 
-            // oggPcPathTB
+            // audioPathTB
             // 
-            this.oggPcPathTB.Cue = "Audio - PC - Wwise (*.ogg; *.wem)";
-            this.oggPcPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.oggPcPathTB.ForeColor = System.Drawing.Color.Gray;
-            this.oggPcPathTB.Location = new System.Drawing.Point(6, 45);
-            this.oggPcPathTB.Name = "oggPcPathTB";
-            this.oggPcPathTB.Size = new System.Drawing.Size(198, 20);
-            this.oggPcPathTB.TabIndex = 15;
-            // 
-            // oggMacPathTB
-            // 
-            this.oggMacPathTB.Cue = "Audio - MAC on Wwise (*.ogg; *.wem)";
-            this.oggMacPathTB.Enabled = false;
-            this.oggMacPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.oggMacPathTB.ForeColor = System.Drawing.Color.Gray;
-            this.oggMacPathTB.Location = new System.Drawing.Point(6, 71);
-            this.oggMacPathTB.Name = "oggMacPathTB";
-            this.oggMacPathTB.Size = new System.Drawing.Size(198, 20);
-            this.oggMacPathTB.TabIndex = 76;
-            // 
-            // oggXBox360PathTB
-            // 
-            this.oggXBox360PathTB.Cue = "Audio - XBox360 - Wwise (*.ogg; *.wem)";
-            this.oggXBox360PathTB.Enabled = false;
-            this.oggXBox360PathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.oggXBox360PathTB.ForeColor = System.Drawing.Color.Gray;
-            this.oggXBox360PathTB.Location = new System.Drawing.Point(256, 45);
-            this.oggXBox360PathTB.Name = "oggXBox360PathTB";
-            this.oggXBox360PathTB.Size = new System.Drawing.Size(195, 20);
-            this.oggXBox360PathTB.TabIndex = 17;
-            // 
-            // oggPS3PathTB
-            // 
-            this.oggPS3PathTB.Cue = "Audio - PS3 - Wwise (*.ogg; *.wem)";
-            this.oggPS3PathTB.Enabled = false;
-            this.oggPS3PathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.oggPS3PathTB.ForeColor = System.Drawing.Color.Gray;
-            this.oggPS3PathTB.Location = new System.Drawing.Point(256, 71);
-            this.oggPS3PathTB.Name = "oggPS3PathTB";
-            this.oggPS3PathTB.Size = new System.Drawing.Size(195, 20);
-            this.oggPS3PathTB.TabIndex = 70;
+            this.audioPathTB.Cue = "Audio - PC/Console - Wwise (*.ogg; *.wem)";
+            this.audioPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.audioPathTB.ForeColor = System.Drawing.Color.Gray;
+            this.audioPathTB.Location = new System.Drawing.Point(6, 45);
+            this.audioPathTB.Name = "audioPathTB";
+            this.audioPathTB.Size = new System.Drawing.Size(445, 20);
+            this.audioPathTB.TabIndex = 15;
             // 
             // gbTones
             // 
@@ -490,7 +416,7 @@
             this.gbTones.Controls.Add(this.toneEditButton);
             this.gbTones.Controls.Add(this.toneImportButton);
             this.gbTones.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbTones.Location = new System.Drawing.Point(3, 381);
+            this.gbTones.Location = new System.Drawing.Point(3, 358);
             this.gbTones.Name = "gbTones";
             this.gbTones.Size = new System.Drawing.Size(498, 133);
             this.gbTones.TabIndex = 79;
@@ -706,7 +632,7 @@
             this.Controls.Add(this.dlcSaveButton);
             this.Controls.Add(this.dlcGenerateButton);
             this.Name = "DLCPackageCreator";
-            this.Size = new System.Drawing.Size(507, 552);
+            this.Size = new System.Drawing.Size(507, 530);
             this.gbPlatofmr.ResumeLayout(false);
             this.gbPlatofmr.PerformLayout();
             this.gbFiles.ResumeLayout(false);
@@ -730,7 +656,7 @@
         private RocksmithToolkitGUI.CueTextBox AlbumArtPathTB;
         private System.Windows.Forms.Button dlcGenerateButton;
         private System.Windows.Forms.Button openOggPcButton;
-        private RocksmithToolkitGUI.CueTextBox oggPcPathTB;
+        private RocksmithToolkitGUI.CueTextBox audioPathTB;
         private System.Windows.Forms.Button arrangementRemoveButton;
         private System.Windows.Forms.Button arrangementAddButton;
         private System.Windows.Forms.ListBox ArrangementLB;
@@ -750,8 +676,6 @@
         private System.Windows.Forms.Button arrangementEditButton;
         private System.Windows.Forms.Button toneEditButton;
         private System.Windows.Forms.Button toneImportButton;
-        private CueTextBox oggXBox360PathTB;
-        private System.Windows.Forms.Button openOggXBox360Button;
         private System.Windows.Forms.CheckBox platformPC;
         private System.Windows.Forms.CheckBox platformXBox360;
         private System.Windows.Forms.CheckBox platformPS3;
@@ -760,14 +684,10 @@
         private NumericUpDownFixed volumeBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button openOggPS3Button;
-        private CueTextBox oggPS3PathTB;
         private System.Windows.Forms.RadioButton RS2012;
         private System.Windows.Forms.RadioButton RS2014;
         private System.Windows.Forms.GroupBox gbPlatofmr;
         private System.Windows.Forms.CheckBox platformMAC;
-        private System.Windows.Forms.Button openOggMacButton;
-        private CueTextBox oggMacPathTB;
         private System.Windows.Forms.GroupBox gbFiles;
         private System.Windows.Forms.GroupBox gbTones;
         private System.Windows.Forms.GroupBox groupBox1;

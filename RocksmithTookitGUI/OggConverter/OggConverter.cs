@@ -85,14 +85,16 @@ namespace RocksmithToolkitGUI.OggConverter
                         var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
                         switch (converterType) {
                             case ConverterType.HeaderFix:
-                                OggFile.ConvertOgg(file, outputFileName);
+                                using (FileStream fl = File.Create(outputFileName)) {
+                                    OggFile.ConvertOgg(file).CopyTo(fl);
+                                }
                                 break;
                             case ConverterType.Revorb:
                                 OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath), (extension == ".ogg") ? OggFile.WwiseVersion.Wwise2010 : OggFile.WwiseVersion.Wwise2013);
                                 break;
                             case ConverterType.WEM:
                                 outputFileName = Path.ChangeExtension(outputFileName, Path.GetExtension(file));
-                                OggFile.ConvertWem(file, outputFileName);
+                                OggFile.ConvertAudioPlatform(file, outputFileName);
                                 break;
                         }
                         successFiles.Add(file);
