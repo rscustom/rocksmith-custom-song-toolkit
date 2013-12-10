@@ -828,6 +828,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public static void UpdateToneDescriptors(DLCPackageData info)
         {
             foreach (var tone in info.TonesRS2014) {
+                if (tone == null) continue;
                 string DescName = tone.Name.Split('_').Last();
                 foreach (var td in ToneDescriptor.List()) {
                     if (td.ShortName != DescName)

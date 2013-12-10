@@ -159,8 +159,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     // Adding Tones
                     foreach (var jsonTone in attr.Tones)
+                    {
+                        if (jsonTone == null) continue;
                         if (!data.TonesRS2014.OfType<Tone2014>().Any(t => t.Key == jsonTone.Key))
                             data.TonesRS2014.Add(jsonTone);
+                    }
                 }
 
                 // Adding Arrangements
