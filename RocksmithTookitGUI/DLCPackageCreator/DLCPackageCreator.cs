@@ -576,33 +576,28 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 	            }
             }
 
-            string oggPreviewPCPath = null;
-            if (platformPC.Checked)
+            if (!File.Exists(AudioPath))
             {
-                if (!File.Exists(AudioPath))
-                {
-                    audioPathTB.Focus();
-                    return null;
-                }
+                audioPathTB.Focus();
+                return null;
+            }
 
-                if (CurrentGameVersion == GameVersion.RS2014)
+            string audioPreviewPath = null;
+            if (CurrentGameVersion == GameVersion.RS2014)
+            {
+                audioPreviewPath = Path.Combine(Path.GetDirectoryName(AudioPath), String.Format(Path.GetFileNameWithoutExtension(AudioPath) + "_preview" + Path.GetExtension(AudioPath)));
+                if (!File.Exists(audioPreviewPath))
                 {
-                    oggPreviewPCPath = Path.Combine(Path.GetDirectoryName(AudioPath), String.Format(Path.GetFileNameWithoutExtension(AudioPath) + "_preview" + Path.GetExtension(AudioPath)));
-                    if (!File.Exists(oggPreviewPCPath))
+                    if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
+                                        "File: " + audioPreviewPath + Environment.NewLine +
+                                        "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
+                                        "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                     {
-                        if (MessageBox.Show("Warning: Song Preview not found!" + Environment.NewLine +
-                                            "File: " + oggPreviewPCPath + Environment.NewLine +
-                                            "If you click 'Yes' the song file will be used for the song preview." + Environment.NewLine +
-                                            "Else you click 'No' you could fix the problem before package generation.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                        {
-                            audioPathTB.Focus();
-                            return null;
-                        }
+                        audioPathTB.Focus();
+                        return null;
                     }
                 }
             }
-            else
-                AudioPath = "";
 
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal) > 1)
@@ -694,6 +689,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 AlbumArtPath = AlbumArtPath,
                 OggPath = AudioPath,
+                OggPreviewPath = audioPreviewPath,
                 Arrangements = arrangements,
                 Tones = tones,
                 TonesRS2014 = tonesRS2014,

@@ -358,7 +358,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     // AUDIO
                     var audioFile = info.OggPath;
                     if (File.Exists(audioFile))
-                        if (platform != audioFile.GetAudioPlatform())
+                        if (platform.IsConsole != audioFile.GetAudioPlatform().IsConsole)
                             soundStream = OggFile.ConvertAudioPlatform(audioFile);
                         else
                             soundStream = File.OpenRead(audioFile);
@@ -368,7 +368,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     // AUDIO PREVIEW
                     var previewAudioFile = info.OggPreviewPath;
                     if (File.Exists(previewAudioFile))
-                        if (platform != previewAudioFile.GetAudioPlatform())
+                        if (platform.IsConsole != previewAudioFile.GetAudioPlatform().IsConsole)
                             soundPreviewStream = OggFile.ConvertAudioPlatform(previewAudioFile);
                         else
                             soundPreviewStream = File.OpenRead(previewAudioFile);
@@ -655,7 +655,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 albumArtStream = new FileStream(ddsfiles[512], FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 var audioFile = info.OggPath;
-                if (platform != audioFile.GetAudioPlatform())
+                if (platform.IsConsole != audioFile.GetAudioPlatform().IsConsole)
                     audioStream = OggFile.ConvertAudioPlatform(audioFile);
 
                 using (var aggregateGraphStream = new MemoryStream())
