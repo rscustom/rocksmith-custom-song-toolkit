@@ -49,6 +49,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void Init()
         {
+            toneNameBox.Cue = (CurrentGameVersion == GameVersion.RS2014) ? "Tone key" : "Tone Name";
+
             InitializeToneInformation();
             InitializeComboBoxes();
 
