@@ -496,6 +496,8 @@ namespace RocksmithToolkitLib.DLCPackage
             WriteChunk(bankWriter, "HIRC", hierarchyChunk);
             WriteChunk(bankWriter, "STID", stringIdChunk);
             bankWriter.Flush();
+            outStream.Flush();
+            outStream.Seek(0, SeekOrigin.Begin);
 
             return fileID.ToString();
         }

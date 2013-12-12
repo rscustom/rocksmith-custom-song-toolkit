@@ -10,6 +10,7 @@ using System.Reflection;
 using RocksmithToolkitLib.Sng;
 using Newtonsoft.Json;
 using System.Globalization;
+using Newtonsoft.Json.Linq;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {
@@ -103,23 +104,48 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 
             return tones;
         }
+        
+        private static List<Tone2014> ReadFromProfile(string profilePath)
+        {
+        	List<Tone2014> tones = new List<Tone2014>();
+        	try {                
+        		using (var input = File.OpenRead(profilePath))
+				using (var outMS = new MemoryStream())
+                using (var br = new StreamReader(outMS))
+                {
+        			RijndaelEncryptor.DecryptProfile(input, outMS);
+                    JToken token = JObject.Parse(br.ReadToEnd());
+                    foreach (var toon in token.SelectToken("CustomTones"))
+                        tones.Add(toon.ToObject<Tone2014>());
+        		}
+        	}
+        	catch {
+                throw new NotSupportedException("Unknown file format exception. File not supported.");
+        	}   return tones;
+        }
 
         private static List<Tone2014> ReadFromPackage(string packagePath, Platform platform)
         {
-            List<Tone2014> tones = new List<Tone2014>();
-            string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Packer.Unpack(packagePath, appDir, (platform.platform == GamePlatform.Pc) ? true : false);
-            string unpackedDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(packagePath) + String.Format("_{0}", platform.platform.ToString()));
+            if (packagePath.EndsWith("_prfldb") || packagePath.EndsWith("_profile"))
+                return ReadFromProfile(packagePath);
+            else
+            {
+                List<Tone2014> tones = new List<Tone2014>();
+                string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string tmpDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(packagePath) 
+                              + String.Format("_{0}", platform.platform.ToString()));
 
-            string[] toneManifestFiles = Directory.GetFiles(unpackedDir, "*.json", SearchOption.AllDirectories);
+                Packer.Unpack(packagePath, appDir, platform.platform == GamePlatform.Pc);
+                string[] toneManifestFiles = Directory.GetFiles(tmpDir, "*.json", SearchOption.AllDirectories);
 
-            foreach (var file in toneManifestFiles)
-                tones.AddRange(ReadFromManifest(file));
+                foreach (var file in toneManifestFiles)
+                    tones.AddRange(ReadFromManifest(file));
 
-            if (Directory.Exists(unpackedDir))
-                Directory.Delete(unpackedDir, true);
+                if (Directory.Exists(tmpDir))
+                    Directory.Delete(tmpDir, true);
 
-            return tones;
+                return tones;
+            }
         }
 
         #endregion

@@ -291,6 +291,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             packageData.CleanCache();
 
             MessageBox.Show("Package was generated.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Focus();
         }
 
         private void albumArtButton_Click(object sender, EventArgs e)
@@ -329,9 +330,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             //Make the paths relative
-            string albumPath = packageData.AlbumArtPath;
-            if (!string.IsNullOrEmpty(albumPath))
-                packageData.AlbumArtPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(albumPath));
+            if (!string.IsNullOrEmpty(packageData.AlbumArtPath))
+                packageData.AlbumArtPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(packageData.AlbumArtPath));
             
             string audioPath = packageData.OggPath;
             string audioPreviewPath = packageData.OggPreviewPath;
@@ -342,12 +342,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             foreach (var arr in packageData.Arrangements)
             {
-                string songXmlFile = arr.SongXml.File;
-                string songSngFile = arr.SongFile.File;
-                if (!String.IsNullOrEmpty(songXmlFile) && !String.IsNullOrEmpty(songSngFile)) {
-                    arr.SongXml.File = BasePath.LocalPath.RelativeTo(Path.GetFullPath(songXmlFile));
-                    arr.SongFile.File = BasePath.LocalPath.RelativeTo(Path.GetFullPath(songSngFile));
-                }
+            	if (!String.IsNullOrEmpty(arr.SongXml.File))
+                    arr.SongXml.File = BasePath.LocalPath.RelativeTo(Path.GetFullPath(arr.SongXml.File));
+            	if (!String.IsNullOrEmpty(arr.SongFile.File))
+                    arr.SongFile.File = BasePath.LocalPath.RelativeTo(Path.GetFullPath(arr.SongFile.File));
             }
             var serializer = new DataContractSerializer(typeof(DLCPackageData));
             using (var stm = XmlWriter.Create(dlcSavePath, new XmlWriterSettings() { CheckCharacters = true, Indent = true }))
@@ -358,13 +356,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //Re-absolutize the paths
             foreach (var arr in packageData.Arrangements)
             {
-                string songXmlFile = arr.SongXml.File;
-                string songSngFile = arr.SongFile.File;
-                if (!String.IsNullOrEmpty(songXmlFile) && !String.IsNullOrEmpty(songSngFile))
-                {
-                    arr.SongXml.File = BasePath.AbsoluteTo(arr.SongXml.File);
+                if (!String.IsNullOrEmpty(arr.SongXml.File))
+                	arr.SongXml.File = BasePath.AbsoluteTo(arr.SongXml.File);
+                if(!String.IsNullOrEmpty(arr.SongFile.File))
                     arr.SongFile.File = BasePath.AbsoluteTo(arr.SongFile.File);
-                }
             }
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Package template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -816,7 +811,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneImportFile;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Title = "Select DLC Song Package or Tone File";
+                ofd.Title = "Select DLC Song Package or Tone File or your Profile";
                 ofd.Filter = CurrentOFDToneImportFilter;
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneImportFile = ofd.FileName;

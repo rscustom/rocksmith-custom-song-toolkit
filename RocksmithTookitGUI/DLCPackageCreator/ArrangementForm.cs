@@ -302,12 +302,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         arrangementTypeCombo.SelectedItem = ArrangementType.Guitar;
                         tuningComboBox.SelectedItem = TuningDefinitionRepository.Instance().Select(xmlSong.Tuning, currentGameVersion);
 
-                        if (arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("lead") > -1 || arr.ToLower().IndexOf("combo") > -1)
+                        if (arr.ToLower().IndexOf("guitar 22") > -1 || arr.ToLower().IndexOf("lead") > -1 || arr.ToLower().IndexOf("combo") > -1)
                         {
                             arrangementNameCombo.SelectedItem = ArrangementName.Lead;
                             if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Lead;
                         }
-                        if (arr.ToLower().IndexOf("guitar 22") > -1 || arr.ToLower().IndexOf("rhythm") > -1)
+                        if (arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("rhythm") > -1)
                         {
                             arrangementNameCombo.SelectedItem = ArrangementName.Rhythm;
                             if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Rhythm;

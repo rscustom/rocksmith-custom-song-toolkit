@@ -117,6 +117,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     z.Close();
                 }
             }
+            outStream.Flush();
+            outStream.Position = 0;
         }
 
         public static void EncryptFile(Stream input, Stream output, byte[] key)

@@ -417,8 +417,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         // SOUNDBANK
                         var soundbankFileName = String.Format("song_{0}", dlcName);
                         var audioFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name, soundStream, soundbankStream, info.Volume, platform);
-                        soundbankStream.Flush();
-                        soundbankStream.Seek(0, SeekOrigin.Begin);
                         packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);
                         packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioFileNameId), soundStream);
 
@@ -427,10 +425,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         dynamic audioPreviewFileNameId;
                         if (previewAudioFile != audioFile) audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform, true);
                         else audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform, true, true);
-                        soundbankPreviewStream.Flush();
-                        soundbankPreviewStream.Seek(0, SeekOrigin.Begin);
                         packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
-                        if (previewAudioFile != audioFile) packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioPreviewFileNameId), soundPreviewStream);
+                        if (!soundPreviewStream.Equals(soundStream)) packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioPreviewFileNameId), soundPreviewStream);
 
                         // AGGREGATE GRAPH
                         var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", info.Name.ToLower());
