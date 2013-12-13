@@ -303,6 +303,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", songFileName));
             }
 
+            if (encryptResult.IndexOf("No JDK or JRE is intsalled on your machine") > 0)
+                throw new InvalidOperationException("You need install Java SE 7 (x86) or higher on your machine. The Java path should be in PATH Environment Variable:" + Environment.NewLine + Environment.NewLine + encryptResult);
+
             if (encryptResult.IndexOf("Encrypt all EDAT files successfully") < 0)
                 throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output bellow:" + Environment.NewLine + Environment.NewLine + encryptResult);
         }
