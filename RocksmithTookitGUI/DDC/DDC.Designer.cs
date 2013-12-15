@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DDC));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.AddArrBT = new System.Windows.Forms.Button();
             this.ProduceDDbt = new System.Windows.Forms.Button();
@@ -100,8 +101,6 @@
             // delsustainsBT
             // 
             this.delsustainsBT.AutoSize = true;
-            this.delsustainsBT.Checked = true;
-            this.delsustainsBT.CheckState = System.Windows.Forms.CheckState.Checked;
             this.delsustainsBT.Location = new System.Drawing.Point(17, 297);
             this.delsustainsBT.Name = "delsustainsBT";
             this.delsustainsBT.Size = new System.Drawing.Size(107, 17);
@@ -176,16 +175,24 @@
             this.DDCfilesDgw.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PathColnm,
             this.TypeColnm});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle1;
             this.DDCfilesDgw.GridColor = System.Drawing.SystemColors.AppWorkspace;
             this.DDCfilesDgw.Location = new System.Drawing.Point(10, 152);
             this.DDCfilesDgw.MinimumSize = new System.Drawing.Size(441, 102);
             this.DDCfilesDgw.Name = "DDCfilesDgw";
             this.DDCfilesDgw.RowHeadersWidth = 4;
             this.DDCfilesDgw.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
-            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.DDCfilesDgw.RowTemplate.ErrorText = "#####";
             this.DDCfilesDgw.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DDCfilesDgw.ShowEditingIcon = false;

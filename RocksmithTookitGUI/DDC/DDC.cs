@@ -64,9 +64,11 @@ namespace RocksmithToolkitGUI.DDC
                             File.Move(srcDDCArrXML, destDDCArrXML); File.Move(arrDDClog, destDDCArrXML.Replace(".xml", ".log"));
                             File.Move(srcLog, destLog);
                         }
-                        if(File.Exists(srcShowlights)) File.Copy(srcShowlights, destShowlights);
+                        if (!File.Exists(destShowlights) && File.Exists(srcShowlights)) File.Copy(srcShowlights, destShowlights);
+                        Invoke(new MethodInvoker(() => { DelEntry(file.Value); }));
                     }
-                    MessageBox.Show("DD generated!");
+                DLCdb.Clear();
+                MessageBox.Show("DD generated!");
             }
             else if (e.Result.Equals(1))
                 MessageBox.Show("DD generation error! System Error.");
@@ -271,6 +273,14 @@ namespace RocksmithToolkitGUI.DDC
                     RampMdlsDb.Add(name, Path.GetFullPath(mdl));
                 }
                 ramUpMdlsCbox.Refresh();
+            }
+        }
+        private void DelEntry(string path)
+        {
+            for (int i = DDCfilesDgw.RowCount - 1; i >= 0; i--)
+            {
+                if (DDCfilesDgw.Rows[i].Cells["PathColnm"].Value.Equals(path))
+                { DDCfilesDgw.Rows.RemoveAt(i); return; }
             }
         }
         private void DDCfilesDgw_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
