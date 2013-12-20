@@ -147,7 +147,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 13);
             this.label1.TabIndex = 15;
-            this.label1.Text = "Phase length :";
+            this.label1.Text = "Phrase length :";
             // 
             // ramUpMdlsCbox
             // 
