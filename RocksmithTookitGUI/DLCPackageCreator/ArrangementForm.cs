@@ -244,7 +244,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 else
                     return;
             }
-
             try {
                 Song2014 xmlSong = null;
                 bool isVocal = false;
@@ -297,17 +296,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     // SONG AND ARRANGEMENT INFO / ROUTE MASK
                     string arr = xmlSong.Arrangement;
+                    bool Edit = routeMaskNoneRadio.Checked;
                     if (arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("lead") > -1 || arr.ToLower().IndexOf("rhythm") > -1 || arr.ToLower().IndexOf("combo") > -1)
                     {
                         arrangementTypeCombo.SelectedItem = ArrangementType.Guitar;
                         tuningComboBox.SelectedItem = TuningDefinitionRepository.Instance().Select(xmlSong.Tuning, currentGameVersion);
 
-                        if (arr.ToLower().IndexOf("guitar 22") > -1 || arr.ToLower().IndexOf("lead") > -1 || arr.ToLower().IndexOf("combo") > -1)
+                        if (Edit & arr.ToLower().IndexOf("guitar 22") > -1 || arr.ToLower().IndexOf("lead") > -1 || arr.ToLower().IndexOf("combo") > -1)
                         {
                             arrangementNameCombo.SelectedItem = ArrangementName.Lead;
                             if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Lead;
                         }
-                        if (arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("rhythm") > -1)
+                        if (Edit & arr.ToLower().IndexOf("guitar") > -1 || arr.ToLower().IndexOf("rhythm") > -1)
                         {
                             arrangementNameCombo.SelectedItem = ArrangementName.Rhythm;
                             if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Rhythm;
@@ -505,7 +505,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var isValid = Double.TryParse(value, out freq);
                 if (isValid && freq > 0) {
                     string noteName;
-                    centOffsetDisplay.Text = TuningFrequency.Frequency2Note(freq, out noteName).ToString();
+                    TuningFrequency.Frequency2Note(freq, out noteName);
+                    centOffsetDisplay.Text = TuningFrequency.Frequency2Cents(freq).ToString();
                     noteDisplay.Text = noteName;
                 }
             }

@@ -8,16 +8,30 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public static class TuningFrequency
     {
-        public static double Frequency2Note(double frequency) {
-            string dummy;
-            return TuningFrequency.Frequency2Note(frequency, out dummy);
+        private static double A440 { get{ return 440D; } }
+        private static double CentsInOctave { get { return 1200D; } }
+        
+        private static double _Ratio2Cents(double Ratio)
+        {
+            return CentsInOctave * Math.Log(Ratio) / Math.Log(2);
+        }
+        public static double Cents2Frequency(double Cents)
+        {
+            return A440 * Math.Pow(Math.Pow(2, 1 / 1200), Cents);
+        }
+        // Gets cents for frequency based on A440.
+        public static double Frequency2Cents(double Freq, out double Cents)
+        {
+            double Ratio = Freq / A440;
+            Cents = _Ratio2Cents(Ratio);
+            return Math.Round(Cents, MidpointRounding.AwayFromZero);
         }
 
         public static double Frequency2Note(double frequency, out string note)
         {
             var lnote = (Math.Log(frequency) - Math.Log(261.626)) / Math.Log(2) + 4.0;
             decimal oct = Math.Floor((decimal)lnote);
-            var cents = 1200 * (lnote - (double)oct);
+            var cents = CentsInOctave * (lnote - (double)oct);
             
             var noteTable = new string[] { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
             string noteName = "";
@@ -25,7 +39,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 noteName = "C";
             } else if (cents >= 1150) {
                 noteName = "C";
-                cents -= 1200;
+                cents -= CentsInOctave;
                 oct++;
             } else {
                 var offset = 50.0;
@@ -41,6 +55,17 @@ namespace RocksmithToolkitLib.DLCPackage
 
             note = noteName + oct;
             return Math.Round(cents);
+        }
+
+        public static double Frequency2Note(double frequency)
+        {
+            string dummy;
+            return TuningFrequency.Frequency2Note(frequency, out dummy);
+        }
+        public static double Frequency2Cents(double frequency)
+        {
+            double dummy;
+            return TuningFrequency.Frequency2Cents(frequency, out dummy);
         }
     }
 }
