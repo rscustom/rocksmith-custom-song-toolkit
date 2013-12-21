@@ -112,7 +112,7 @@ namespace RocksmithToolkitGUI.DDC
                     };
 
                     DDC.Start();
-                    DDC.WaitForExit(30000);
+                    DDC.WaitForExit(30000000);
 
                     result = DDC.ExitCode;
                 }
@@ -157,8 +157,9 @@ namespace RocksmithToolkitGUI.DDC
         }
         private void AddArrBT_Click(object sender, EventArgs e)
         {
+            newWD = String.Empty;
             using (var ofd = new VistaOpenFileDialog())
-            using (var sfd = new FolderBrowserDialog())
+            using (var sfd = new VistaFolderBrowserDialog())
             {
                 ofd.Filter = "Select DLC or Arrangement|*.psarc;*.dat;*.xml;*.edat|" + "All files|*.*";
                 ofd.FilterIndex = 0;
@@ -181,15 +182,11 @@ namespace RocksmithToolkitGUI.DDC
 
                 if (DestPathCbx.Checked)
                 {
-
-                    {
-                        if (sfd.ShowDialog() != DialogResult.OK)
-                            return;
-                        newWD = sfd.SelectedPath;
-                    }
+                    if (sfd.ShowDialog() != DialogResult.OK)
+                        return;
+                    newWD = sfd.SelectedPath;
                 }
             }
-            newWD = String.Empty;
             FillDB();
         }
         private void rampUpBT_Click(object sender, EventArgs e)
