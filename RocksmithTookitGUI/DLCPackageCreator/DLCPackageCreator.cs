@@ -269,6 +269,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string dlcSavePath;
             using (var ofd = new SaveFileDialog())
             {
+                ofd.FileName = String.Format("{0} - {1}", Artist, SongTitle);
                 ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
