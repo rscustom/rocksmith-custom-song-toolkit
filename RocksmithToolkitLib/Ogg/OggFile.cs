@@ -399,9 +399,12 @@ namespace RocksmithToolkitLib.Ogg
             };
         }
 
-        public static Platform GetAudioPlatform(this Stream inputStream) {
-            using (var reader = new BinaryReader(inputStream)) {
-                string fileID = new string(reader.ReadChars(4));
+        public static Platform GetAudioPlatform(this Stream input) {
+			using (var MS = new MemoryStream())
+			using (var reader = new BinaryReader(MS)) {
+                input.Position = 0; input.CopyTo(MS);
+                MS.Position = 0; input.Position = 0;
+				string fileID = new string(reader.ReadChars(4));
                 if (fileID == "RIFF")
                     return new Platform(GamePlatform.Pc, GameVersion.None);
                 else if (fileID == "RIFX")
@@ -416,12 +419,15 @@ namespace RocksmithToolkitLib.Ogg
             }
         }
 
-        public static bool NeedsConversion(this Stream inputStream) {
-            var platform = inputStream.GetAudioPlatform();
+        public static bool NeedsConversion(this Stream input) {
+            var platform = input.GetAudioPlatform();
             EndianBitConverter bitConverter = platform.GetBitConverter();
 
-            using (var reader = new EndianBinaryReader(bitConverter, inputStream)) {
-                reader.Seek(16, SeekOrigin.Begin);
+            using (var MS = new MemoryStream())
+            using (var reader = new EndianBinaryReader(bitConverter, MS)) {
+            	input.Position = 0; input.CopyTo(MS); 
+                MS.Position = 0; input.Position = 0;
+            	reader.Seek(16, SeekOrigin.Begin);
                 if (reader.ReadUInt32() == 24)
                     return true;
             }

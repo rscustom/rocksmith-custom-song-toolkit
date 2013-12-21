@@ -34,7 +34,7 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
 
         public Tone()
         {
-            PedalList = new Dictionary<string, Pedal>(); // exclusive for each platform please.
+            PedalList = new Dictionary<string, Pedal>();
             ExclusiveBuild = new List<object>();
             UnlockKey = "";
             IsDLC = true;

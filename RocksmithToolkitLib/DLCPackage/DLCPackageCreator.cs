@@ -653,9 +653,15 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 albumArtStream = new FileStream(ddsfiles[512], FileMode.Open, FileAccess.Read, FileShare.Read);
 
+                // AUDIO
                 var audioFile = info.OggPath;
-                if (platform.IsConsole != audioFile.GetAudioPlatform().IsConsole)
-                    audioStream = OggFile.ConvertAudioPlatform(audioFile);
+                if (File.Exists(audioFile))
+                    if (platform.IsConsole != audioFile.GetAudioPlatform().IsConsole)
+                        audioStream = OggFile.ConvertAudioPlatform(audioFile);
+                    else
+                        audioStream = File.OpenRead(audioFile);
+                else
+                    throw new InvalidOperationException(String.Format("Audio file '{0}' not found.", audioFile));
 
                 using (var aggregateGraphStream = new MemoryStream())
                 using (var manifestStream = new MemoryStream())
