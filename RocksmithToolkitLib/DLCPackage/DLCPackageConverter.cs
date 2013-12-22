@@ -40,7 +40,10 @@ namespace RocksmithToolkitLib.DLCPackage
             }
             var targetFileName = Path.Combine(Path.GetDirectoryName(sourcePackage), String.Format(nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), targetPlatform.GetPathName()[2]));
 
-            var hasNoXmlSong = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*.xml", SearchOption.AllDirectories).Length <= 1;
+            var search4xml = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*.xml", SearchOption.AllDirectories).Length;
+            var search4showLts = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*_showlights.xml", SearchOption.AllDirectories).Length;
+            
+            var hasNoXmlSong = search4xml <= 1 || search4showLts < 1;
 
             // CONVERSION                
             if (needRebuildPackage)

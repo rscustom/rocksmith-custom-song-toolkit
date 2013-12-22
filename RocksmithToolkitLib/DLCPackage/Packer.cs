@@ -522,22 +522,19 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (File.Exists(xmlFile) && Path.GetExtension(xmlFile) == ".xml") {
                     var sngFile = Path.Combine(songDirectory, "GRExports", platform.GetPathName()[1], Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
                     var arrType = ArrangementType.Guitar;
-                    var tuning = InstrumentTuning.Standard;
 
                     if (Path.GetFileName(xmlFile).ToLower().IndexOf("vocal") >= 0) {
                         arrType = ArrangementType.Vocal;
-                        SngFileWriter.Write(xmlFile, sngFile, arrType, platform, tuning);
+                        SngFileWriter.Write(xmlFile, sngFile, arrType, platform);
                     } else {
                         Song song = Song.LoadFromFile(xmlFile);
 
                         if (!Enum.TryParse<ArrangementType>(song.Arrangement, out arrType))
                             if (song.Arrangement.ToLower().IndexOf("bass") >= 0)
                                 arrType = ArrangementType.Bass;
-
-                        tuning = InstrumentTuningExtensions.GetTuningByOffsets(song.Tuning.ToArray());                        
                     }
 
-                    SngFileWriter.Write(xmlFile, sngFile, arrType, platform, tuning);
+                    SngFileWriter.Write(xmlFile, sngFile, arrType, platform);
                 } else {
                     throw new ArgumentException(String.Format("'{0}' is not a valid XML file.", xmlFile));
                 }

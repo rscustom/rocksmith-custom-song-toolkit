@@ -16,14 +16,14 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
         public Showlights() { }
 
-        public Showlights(List<Arrangement> arrangements) {
+        public Showlights(DLCPackageData info) {
             ShowlightList = new List<Showlight>();
-            foreach (var arrangement in arrangements) {
-                if (arrangement.ArrangementType == Sng.ArrangementType.Vocal)
-                    continue;
-                
+            foreach (var arrangement in info.Arrangements) {
                 var showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File), 
                     Path.GetFileNameWithoutExtension(arrangement.SongXml.File) + "_showlights.xml");
+                if (!File.Exists(showlightFile))
+                    showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File),
+                	    info.Name  + "_showlights.xml");
                 if (!File.Exists(showlightFile))
                     continue;
 

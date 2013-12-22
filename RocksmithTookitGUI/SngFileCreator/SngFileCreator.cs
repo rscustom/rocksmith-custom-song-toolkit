@@ -84,7 +84,7 @@ namespace RocksmithToolkitGUI.SngFileCreator
 
             try
             {
-                SngFileWriter.Write(InputXmlFile, OutputSngFile, ArrangementType, Platform, Tuning);
+                SngFileWriter.Write(InputXmlFile, OutputSngFile, ArrangementType, Platform);
                 MessageBox.Show("Process Complete", "File Creation Process");
             }
             catch (Exception ex)

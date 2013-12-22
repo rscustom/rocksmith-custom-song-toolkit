@@ -507,7 +507,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
 
                         // SHOWLIGHT
-                        Showlights showlight = new Showlights(info.Arrangements);
+                        Showlights showlight = new Showlights(info);
                         showlight.Serialize(showlightStream);
                         if(showlightStream.CanRead)
                         packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
@@ -842,13 +842,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void GenerateSNG(Arrangement arrangement, Platform platform) {
             string sngFile = Path.ChangeExtension(arrangement.SongXml.File, ".sng");
-            InstrumentTuning tuning = InstrumentTuning.Standard;
-            Enum.TryParse<InstrumentTuning>(arrangement.Tuning, true, out tuning);
-
             switch (platform.version)
             {
                 case GameVersion.RS2012:
-                    SngFileWriter.Write(arrangement.SongXml.File, sngFile, arrangement.ArrangementType, platform, tuning);
+                    SngFileWriter.Write(arrangement.SongXml.File, sngFile, arrangement.ArrangementType, platform);
                     break;
                 case GameVersion.RS2014:
                     if (arrangement.Sng2014 == null) {

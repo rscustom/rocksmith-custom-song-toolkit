@@ -846,6 +846,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     // TODO not always StartTime
                     //fp.Unk3_FirstNoteTime = fp.StartTime;
                     //fp.Unk4_LastNoteTime = fp.StartTime;
+                    if(fp.ChordId < 0) continue;
 
                     if (xml.ChordTemplates[fp.ChordId].DisplayName.EndsWith("arp"))
                         fp2.Add(fp);

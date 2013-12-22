@@ -118,7 +118,7 @@ namespace Xml2Sng
                 return 1;
             }
 
-            SngFileWriter.Write(arguments.InputFile, arguments.OutputFile, arguments.ArrangementType, arguments.Platform, arguments.Tuning);
+            SngFileWriter.Write(arguments.InputFile, arguments.OutputFile, arguments.ArrangementType, arguments.Platform);
 
             Console.WriteLine(string.Format("Successfully converted XML file to SNG file."));
             Console.WriteLine("\tInput:  " + arguments.InputFile);

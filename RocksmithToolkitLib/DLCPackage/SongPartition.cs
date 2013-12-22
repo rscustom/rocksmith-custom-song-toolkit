@@ -12,6 +12,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public string GetArrangementFileName(ArrangementName arrangementName, ArrangementType arrangementType)
         {
+        	if(arrangementType == ArrangementType.Vocal) return "vocals";
             var name = arrangementName.ToString();
             var count = GetSongPartition(arrangementName, arrangementType);
             if (count > 1)

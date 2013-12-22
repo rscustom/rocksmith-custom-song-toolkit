@@ -71,7 +71,7 @@ namespace RocksmithToolkitLib.Sng
     
     public static class SngFileWriter
     {
-        public static void Write(string inputFile, string outputFile, ArrangementType arrangementType, Platform platform, InstrumentTuning tuning)
+        public static void Write(string inputFile, string outputFile, ArrangementType arrangementType, Platform platform)
         {
             using (var reader = new StreamReader(inputFile))
             {
@@ -89,7 +89,7 @@ namespace RocksmithToolkitLib.Sng
                 {
                     var serializer = new XmlSerializer(typeof(Song));
                     var song = (Song)serializer.Deserialize(reader);
-                    WriteRocksmithSngFile(song, tuning, arrangementType, outputFile, bitConverter);
+                    WriteRocksmithSngFile(song, InstrumentTuningExtensions.GetTuningByOffsets(song.Tuning.ToArray()), arrangementType, outputFile, bitConverter);
                 }
             }
         }
