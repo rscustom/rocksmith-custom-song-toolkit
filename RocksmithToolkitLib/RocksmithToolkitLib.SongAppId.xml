@@ -125,4 +125,18 @@
   <SongAppId Version="RS2014" AppId="258380" Name="Radiohead - Optimistic" />
   <SongAppId Version="RS2014" AppId="258381" Name="Radiohead - Karma Police" />
   <SongAppId Version="RS2014" AppId="258382" Name="Radiohead - My Iron Lung" />
+  <SongAppId Version="RS2014" AppId="258384" Name="ONE OK ROCK - No Scared" />
+  <SongAppId Version="RS2014" AppId="258385" Name="ONE OK ROCK - Liar" />
+  <SongAppId Version="RS2014" AppId="258386" Name="Kazuyoshi Saito - Yasashiku Naritai" />
+  <SongAppId Version="RS2014" AppId="258388" Name="Disturbed - Down with the Sickness" />
+  <SongAppId Version="RS2014" AppId="258389" Name="Disturbed - Asylum" />
+  <SongAppId Version="RS2014" AppId="258390" Name="Disturbed - Voices" />
+  <SongAppId Version="RS2014" AppId="258392" Name="Muse - Hysteria" />
+  <SongAppId Version="RS2014" AppId="258393" Name="Muse - Time is Running Out" />
+  <SongAppId Version="RS2014" AppId="258394" Name="Muse - Supermassive Black Hole" />
+  <SongAppId Version="RS2014" AppId="258395" Name="Muse - Stockholm Syndrome" />
+  <SongAppId Version="RS2014" AppId="258396" Name="Muse - Muscle Museum" />
+  <SongAppId Version="RS2014" AppId="258398" Name="Golden Bomber - Memeshikute" />
+  <SongAppId Version="RS2014" AppId="258399" Name="Golden Bomber - Earphone" />
+  <SongAppId Version="RS2014" AppId="258400" Name="Golden Bomber - Death Mental" />
 </ArrayOfSongAppId>
