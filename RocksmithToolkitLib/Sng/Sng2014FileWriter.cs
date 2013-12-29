@@ -119,7 +119,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
             sng.Metadata.FirstBeatLength = xml.Ebeats[1].Time - xml.Ebeats[0].Time;
             sng.Metadata.StartTime = xml.Offset * -1;
-            sng.Metadata.CapoFretId = (xml.Capo == 0) ? unchecked((Byte) (-1)) : xml.Capo;
+            if (Convert.ToDecimal(xml.CapoFret) > 0)
+                sng.Metadata.CapoFretId = Convert.ToByte(xml.CapoFret);                
+            else
+                sng.Metadata.CapoFretId = 0xff;
             readString(xml.LastConversionDateTime, sng.Metadata.LastConversionDateTime);
             sng.Metadata.Part = xml.Part;
             sng.Metadata.SongLength = xml.SongLength;

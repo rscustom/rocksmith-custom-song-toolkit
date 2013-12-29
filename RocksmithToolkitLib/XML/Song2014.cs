@@ -45,7 +45,7 @@ namespace RocksmithToolkitLib.Xml {
         public TuningStrings Tuning { get; set; }
 
         [XmlElement("capo")]
-        public Byte Capo { get; set; }
+        public decimal CapoFret { get; set; }
         
         [XmlElement("artistName")]
         public string ArtistName { get; set; }
