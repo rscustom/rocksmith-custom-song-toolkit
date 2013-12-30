@@ -29,7 +29,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
         public string ArrangementName { get; set; }
         public string ArtistName { get; set; }
         public string ArtistNameSort { get; set; }
-        public decimal Capo { get; set; }
+        public decimal CapoFret { get; set; }
         public double? CentOffset { get; set; }
         public bool DLC { get; set; }
         public string DLCKey { get; set; }
@@ -95,7 +95,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 ArtistName = info.SongInfo.Artist;
                 CentOffset = arrangement.TuningPitch != 0 ? TuningFrequency.Frequency2Cents(arrangement.TuningPitch) : 0.0;
                 ArtistNameSort = info.SongInfo.ArtistSort;
-                Capo = (arrangement.Sng2014.Metadata.CapoFretId == 0xFF) ? Capo = 0 : Convert.ToDecimal(arrangement.Sng2014.Metadata.CapoFretId); //(xml.Capo == 0) ? unchecked((Byte) (-1)) : xml.Capo;
+                CapoFret = (arrangement.Sng2014.Metadata.CapoFretId == 0xFF) ? CapoFret = 0 : Convert.ToDecimal(arrangement.Sng2014.Metadata.CapoFretId);
                 DNA_Chords = arrangement.Sng2014.DNACount[(int) DNAId.Chord];
                 DNA_Riffs = arrangement.Sng2014.DNACount[(int) DNAId.Riff];
                 DNA_Solo = arrangement.Sng2014.DNACount[(int) DNAId.Solo];
