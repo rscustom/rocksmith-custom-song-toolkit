@@ -16,7 +16,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public int ArrangementSort { get; set; }
         public int ArrangementType { get; set; }
         public string BlockAsset { get; set; }
-        public decimal CapoFret { get; set; }
         public Dictionary<string, Dictionary<string, object>> Chords { get; set; } //Problem in 3rd sublevel that can be a list or not
         public List<ChordTemplate> ChordTemplates { get; set; }
         public List<float> DynamicVisualDensity { get; set; }
@@ -75,7 +74,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
             ArrangementSort = arrangement.ArrangementSort;
             BlockAsset = xblockUrn;
-            CapoFret = Convert.ToDecimal(arrangement.Sng2014.Metadata.CapoFretId);
             manifestFunctions.GenerateDynamicVisualDensity(this, SongContent, arrangement);
             FullName = String.Format(AggregateGraph2014.NAME_DEFAULT, info.Name, arrangement.Name);
             MasterID_PS3 = (IsVocal) ? -1 : arrangement.MasterId;

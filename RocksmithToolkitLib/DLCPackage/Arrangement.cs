@@ -36,7 +36,6 @@ namespace RocksmithToolkitLib.DLCPackage
         public int ArrangementSort { get; set; }
         public ArrangementName Name { get; set; }
         public string Tuning { get; set; }
-        public Decimal CapoFret { get; set; }
         public double TuningPitch { get; set; }
         public int ScrollSpeed { get; set; }
         public PluckedType PluckedType { get; set; }
@@ -73,7 +72,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
             this.ArrangementType = (ArrangementType)attr.ArrangementType;
             this.ArrangementSort = attr.ArrangementSort;
-            this.CapoFret = Convert.ToDecimal(attr.CapoFret);
             this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
             this.Tuning = TuningDefinitionRepository.Instance().Select(attr.Tuning, GameVersion.RS2014).UIName;
             this.ScrollSpeed = (int)attr.DynamicVisualDensity.Last();
