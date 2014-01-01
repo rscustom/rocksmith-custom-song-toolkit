@@ -65,7 +65,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         filter += CurrentRocksmithTitle + " Song Manifest (*.json)|*.json";
                         break;
                     default:
-                        filter = CurrentRocksmithTitle + " PC/Mac Package (*.psarc)|*.psarc|";
+                        filter = CurrentRocksmithTitle + " PC/Mac Package (*.dat)|*.dat|";
                         filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*|";
                         filter += CurrentRocksmithTitle + " Song Manifest (*.json)|*.json";
                         break;
