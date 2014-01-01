@@ -999,18 +999,83 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                 for (int j=1; j<a.Notes.Notes.Length; j++) {
                     var n = a.Notes.Notes[j];
-                    var prev = a.Notes.Notes[j-1];
+                    var p = a.Notes.Notes[j-1];
+                    //
+                    //originail code
+//                    for (int j = 1; j < a.Notes.Notes.Length; j++)
+//                    {
+//                        var n = a.Notes.Notes[j];
+//                        var prev = a.Notes.Notes[j - 1];
+//
+//                        // set ParentPrevNote if previous note is linkNext or is at same timestamp
+//                        if ((prev.NoteMask & NOTE_MASK_PARENT) != 0 || prev.Time == n.Time)
+//                        {
+//                            if (prev.ParentPrevNote == -1)
+//                                prev.ParentPrevNote = prev.PrevIterNote;
+//                            n.ParentPrevNote = prev.ParentPrevNote;
+//                        }
+//
+//                        // add CHILD flag if previous note has linkNext
+//                        if ((prev.NoteMask & NOTE_MASK_PARENT) != 0)
+//                            n.NoteMask |= NOTE_MASK_CHILD;
+//                    }
 
-                    // set ParentPrevNote if previous note is linkNext or is at same timestamp
-                    if ((prev.NoteMask & NOTE_MASK_PARENT) != 0 || prev.Time == n.Time) {
-                        if (prev.ParentPrevNote == -1)
-                            prev.ParentPrevNote = prev.PrevIterNote;
-                        n.ParentPrevNote = prev.ParentPrevNote;
+                    //
+                    //
+                    //
+
+
+                    // the prev note that it needs to be comparing, is the previous note at a differnt timestamp, on the same string
+                    // becuase you cant link to a different string or it can be displayed incorectly
+
+                    //find the previous note, in the same iteration, at a different timestamp, on the samestring.
+                    //if previous note is a chord, then thats good enough
+
+                    int prvnote = 1; //initialize prvnote variable
+                    //do not do this searching for a parent, if the previous note timestamp != current time stamp
+                    if (n.Time != p.Time)
+                        prvnote = 1;
+                    else
+                    {                    
+                        for (int x = 1; x < (a.Notes.Notes.Length); x++) //search up till the begining of iteration 
+                        {
+                            if (j - x < 1) //dont search past the first note in iteration
+                            {
+                                prvnote = x;
+                                x = a.Notes.Notes.Length + 2;
+                                break; // stop searching for a match we reached the begining
+                            }
+                            var prv = a.Notes.Notes[j - x]; // get the info for the note we are checking against
+
+                            if (prv.Time != n.Time) //now check the timestamp if its the same timestamp then keep looking
+                            {
+                                if (prv.ChordId != -1) //check if its a chord
+                                {
+                                    prvnote = x;
+                                    x = a.Notes.Notes.Length + 2;
+                                    break; //stop here, its a chord so dont need to check the strings
+                                }
+                                if (prv.StringIndex == n.StringIndex) //check to see if we are looking at the same string
+                                {
+                                    prvnote = x;
+                                    x = a.Notes.Notes.Length + 2;
+                                    break; //stop here we found the same string, at a differnt timestamp, thats not a chord
+                                }
+                            }
+                        }
                     }
-
-                    // add CHILD flag if previous note has linkNext
-                    if ((prev.NoteMask & NOTE_MASK_PARENT) != 0)
-                        n.NoteMask |= NOTE_MASK_CHILD;
+                    //var prevnote = a.Notes.Notes[j - 1];
+                    var prev = a.Notes.Notes[j - prvnote]; //this will be either the first note of piter, or the last note on the same string at previous timestamp
+                    // set ParentPrevNote if previous note is linkNext or is at same timestamp // the same timestamp option will be irrelevant
+                        // changed 
+                    if ((prev.NoteMask & NOTE_MASK_PARENT) != 0 ) 
+                    {
+                        n.ParentPrevNote = (short)(prev.NextIterNote - 1); //set the ParentPrevNote# = the matched Note#
+                        n.NoteMask |= NOTE_MASK_CHILD; //add CHILD flag
+                    }
+                    //if ((previtr.NoteMask & NOTE_MASK_PARENT) == 0)
+                    //    if ((n.NoteMask & NOTE_MASK_PARENT) != 0)
+                    //        n.ParentPrevNote = -1;
                 }
 
                 a.PhraseCount = xml.Phrases.Length;
