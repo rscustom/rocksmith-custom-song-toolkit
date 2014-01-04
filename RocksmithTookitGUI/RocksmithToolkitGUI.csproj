@@ -53,6 +53,9 @@
     <Reference Include="NDesk.Options">
       <HintPath>..\lib\NDesk\NDesk.Options.dll</HintPath>
     </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\lib\NLog\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="Ookii.Dialogs">
       <HintPath>..\lib\OokiiDialogs\Ookii.Dialogs.dll</HintPath>
     </Reference>
@@ -231,6 +234,9 @@
     <EmbeddedResource Include="ZiggyProEditorConverter\ConverterInput.resx">
       <DependentUpon>ConverterInput.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

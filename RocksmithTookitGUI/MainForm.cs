@@ -5,13 +5,24 @@ using System.Text;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Diagnostics;
+using NLog;
 
 namespace RocksmithToolkitGUI
 {
     public partial class MainForm : Form
     {
+        /// <summary>
+        /// Usage: RocksmithToolkitGUI.log.Error(«ERROR: {0}», this.Text);
+        /// </summary>
+        public static Logger log;
         public MainForm(string[] args)
         {
+            log = LogManager.GetCurrentClassLogger();
+
+            log.Info("Version: {0}", RocksmithToolkitLib.ToolkitVersion.version);
+            log.Info("OS: {0}", Environment.OSVersion.ToString());
+            log.Info("Command: {0}", Environment.CommandLine.ToString());
+
             InitializeComponent();
             if (args.Length > 0)
                 LoadTemplate(args[0]);
