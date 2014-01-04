@@ -40,8 +40,8 @@ namespace RocksmithToolkitLib.DLCPackage
             }
             var targetFileName = Path.Combine(Path.GetDirectoryName(sourcePackage), String.Format(nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), targetPlatform.GetPathName()[2]));
 
-            var search4xml = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*.xml", SearchOption.AllDirectories).Length;
-            var search4showLts = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*_showlights.xml", SearchOption.AllDirectories).Length;
+            var search4xml = Directory.GetFiles(unpackedDir, "*_*.xml", SearchOption.AllDirectories).Length;
+            var search4showLts = Directory.GetFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).Length;
             
             var hasNoXmlSong = search4xml <= 1 || search4showLts < 1;
 
@@ -58,7 +58,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 ConvertPackageForSimilarPlatform(unpackedDir, targetFileName, sourcePlatform, targetPlatform, appId);
 
             if (Directory.Exists(unpackedDir))
-                Directory.Delete(unpackedDir, true);
+                try { Directory.Delete(unpackedDir, true); }
+                catch { /* Got no problems if no delete*/ }
 
             return String.Empty;
         }
@@ -121,10 +122,10 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void ConvertPackageRebuilding(string unpackedDir, string targetFileName, Platform sourcePlatform, Platform targetPlatform, string appId)
         {
             //Load files
-            var xmlSongs = Directory.GetFiles(Path.Combine(unpackedDir, "songs", "arr"), "*.xml", SearchOption.AllDirectories);
+            var xmlSongs = Directory.GetFiles(unpackedDir, "*_*.xml", SearchOption.AllDirectories);
 
             var jsonFiles = Directory.GetFiles(unpackedDir, "*.json", SearchOption.AllDirectories);
-            var aggregateFile = Directory.GetFiles(unpackedDir, "*.nt", SearchOption.TopDirectoryOnly)[0];
+            var aggregateFile = Directory.GetFiles(unpackedDir, "*.nt", SearchOption.AllDirectories)[0];
             var aggregateData = AggregateGraph2014.LoadFromFile(aggregateFile);
 
             var data = new DLCPackageData();
@@ -172,7 +173,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 // Adding Arrangements
                 var xmlName = attr.SongXml.Split(':')[3];
                 var aggXml = aggregateData.SongXml.SingleOrDefault(n => n.Name == xmlName);
-                var xmlFile = unpackedDir + aggXml.RelPath.Replace("/", "\\");
+                var xmlFile = Directory.GetFiles(unpackedDir, xmlName+".xml", SearchOption.AllDirectories)[0];
                 if (attr.Phrases != null)
                     data.Arrangements.Add(new Arrangement(attr, xmlFile));
                 else
