@@ -903,10 +903,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                     for (int j=0; j<xml.PhraseIterations.Length; j++) {
                         var piter = xml.PhraseIterations[j];
-                        if (piter.Time > chord.Time) {
+                        if (chord.Time >= piter.Time && piter.Time >= chord.Time)
+                        {
                             if (chord.Ignore == 0)
-                                ++a.NotesInIteration1[j-1];
-                            ++a.NotesInIteration2[j-1];
+                                ++a.NotesInIteration1[j];
+                            ++a.NotesInIteration2[j]; // j-1 not safe with j=0
                             break;
                         }
                     }
