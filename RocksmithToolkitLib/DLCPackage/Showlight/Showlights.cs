@@ -71,14 +71,13 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             stream.Flush();
             stream.Seek(0, SeekOrigin.Begin);            
         }
-        public List<Showlight> FixShowlights(List<Showlight> ShowlightList)
+        public static List<Showlight> FixShowlights(List<Showlight> ShowlightList)
         {
             for (var i = 0; ShowlightList.Count - 1 < i; i++)
             {
-                if (ShowlightList[i].Note < 35 && ShowlightList[i + 1].Note != ShowlightList[i].Note+24
-                    && ShowlightList[i + 1].Time != ShowlightList[i].Time)
+                if (ShowlightList[i].Note < 35)
                 {
-                    var objectToAdd = ShowlightList[i]; objectToAdd.Note += 24;
+                    var objectToAdd = ShowlightList[i]; objectToAdd.Note += 12;
                     if (i + 1 == ShowlightList.Count) ShowlightList.Add(objectToAdd);
                     else ShowlightList.Insert(i + 1, objectToAdd);
                 }
