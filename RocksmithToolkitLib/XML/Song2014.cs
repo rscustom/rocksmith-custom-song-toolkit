@@ -142,14 +142,10 @@ namespace RocksmithToolkitLib.Xml {
         public SongLevel2014[] Levels { get; set; }
 
         public static Song2014 LoadFromFile(string xmlSongRS2014File) {
-            Song2014 xmlSongRS2014 = null;
-
-            using (var reader = new StreamReader(xmlSongRS2014File)) {
-                var serializer = new XmlSerializer(typeof(Song2014));
-                xmlSongRS2014 = (Song2014)serializer.Deserialize(reader);
+            using (var reader = new StreamReader(xmlSongRS2014File))
+            {
+                return new Extensions.XmlStreamingDeserializer<Song2014>(reader).Deserialize();
             }
-
-            return xmlSongRS2014;
         }
     }
 

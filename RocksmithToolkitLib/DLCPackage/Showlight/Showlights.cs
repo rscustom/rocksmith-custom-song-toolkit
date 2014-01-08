@@ -14,6 +14,9 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         [XmlElement("showlight")]
         public List<Showlight> ShowlightList { get; set; }
 
+        [XmlAttribute("count")]
+        public Int32 Count { get; set; }
+
         public Showlights() { }
 
         public Showlights(DLCPackageData info) {
@@ -40,40 +43,53 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                         ShowlightList.Except(listOne, comp);
                     }
                     catch { continue; }
-                }
+                }                
             }
+            ShowlightList = FixShowlights(ShowlightList);
+            Count = ShowlightList.Count;
         }
         class EqShowlight : IEqualityComparer<Showlight>
         {
             public bool Equals(Showlight x, Showlight y)
-            { return x.Note == y.Note && (x.Time - 100 < y.Time) && (x.Time + 100 > y.Time); }
+            {   if     (x==null || y==null) return false;
+                return (x.Note == y.Note && x.Time == y.Time) || 
+                       (x.Note == y.Note && x.Time + .500D > y.Time); }
 
             public int GetHashCode(Showlight obj)
             {   if (Object.ReferenceEquals(obj, null)) return 0;
-                return obj.Time.GetHashCode() ^ obj.Time.GetHashCode(); }
+                return obj.Time.GetHashCode() ^ obj.Time.GetHashCode() + obj.Note.GetHashCode(); }
         }
         public void Serialize(Stream stream)
         {
-
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
-
-            var buf = new BufferedStream(stream, 131072);
-            var serializer = new XmlSerializer(typeof(Showlights));
-            serializer.Serialize(buf, this, ns);
+            using (var writer = System.Xml.XmlWriter.Create(stream, new System.Xml.XmlWriterSettings
+            { Indent = true, OmitXmlDeclaration = false, Encoding = Encoding.UTF8 }))
+            {
+                new XmlSerializer(typeof(Showlights)).Serialize(writer, this, ns);
+            }
             stream.Flush();
             stream.Seek(0, SeekOrigin.Begin);            
         }
-
+        public static List<Showlight> FixShowlights(List<Showlight> ShowlightList)
+        {
+            for (var i = 0; ShowlightList.Count - 1 < i; i++)
+            {
+                if (ShowlightList[i].Note < 35)
+                {
+                    var objectToAdd = ShowlightList[i]; objectToAdd.Note += 12;
+                    if (i + 1 == ShowlightList.Count) ShowlightList.Add(objectToAdd);
+                    else ShowlightList.Insert(i + 1, objectToAdd);
+                }
+            }
+            return ShowlightList;
+        }
         public static Showlights LoadFromFile(string showlightsRS2014File)
         {
-            Showlights xmlShowlightsRS2014 = null;
             using (var reader = new StreamReader(showlightsRS2014File))
             {
-                var serializer = new Extensions.XmlStreamingDeserializer<Showlights>(reader);
-                xmlShowlightsRS2014 = (Showlights)serializer.Deserialize();            
+                return new Extensions.XmlStreamingDeserializer<Showlights>(reader).Deserialize();
             }
-            return xmlShowlightsRS2014;
         }
     }
 }

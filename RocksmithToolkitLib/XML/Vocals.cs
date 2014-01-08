@@ -14,14 +14,10 @@ namespace RocksmithToolkitLib.Xml
         public Vocal[] Vocal { get; set; }
 
         public static Vocals LoadVocalsFromXmlFile(string xmlVocalFile) {
-            Vocals XmlVocal = null;
-
-            using (var reader = new StreamReader(xmlVocalFile)) {
-                var serializer = new XmlSerializer(typeof(Vocals));
-                XmlVocal = (Vocals)serializer.Deserialize(reader);
+            using (var reader = new StreamReader(xmlVocalFile))
+            {
+                return new Extensions.XmlStreamingDeserializer<Vocals>(reader).Deserialize();
             }
-
-            return XmlVocal;
         }
     }
 
