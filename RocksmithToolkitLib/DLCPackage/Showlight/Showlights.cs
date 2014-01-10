@@ -64,23 +64,58 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
             using (var writer = System.Xml.XmlWriter.Create(stream, new System.Xml.XmlWriterSettings
-            { Indent = true, OmitXmlDeclaration = false, Encoding = Encoding.UTF8 }))
+            { Indent = true, OmitXmlDeclaration = false, Encoding = new UTF8Encoding(false) }))
             {
                 new XmlSerializer(typeof(Showlights)).Serialize(writer, this, ns);
             }
             stream.Flush();
             stream.Seek(0, SeekOrigin.Begin);            
         }
+        // TODO: in official RS alg they probably merge all notes for curent low note and adds mid value for compared notes.
+        // plus refactor this.
         public List<Showlight> FixShowlights(List<Showlight> ShowlightList)
         {
-            for (var i = 0; ShowlightList.Count - 1 < i; i++)
+            bool end = false;
+            if (ShowlightList[0].Time > 10.0F) { ShowlightList.Insert(0, new Showlight() { Note = 33, Time = 10.0F }); }
+            for (var i = 0; i < ShowlightList.Count; i++)
             {
-                if (ShowlightList[i].Note < 35 && ShowlightList[i + 1].Note != ShowlightList[i].Note+24
-                    && ShowlightList[i + 1].Time != ShowlightList[i].Time)
+                if (ShowlightList[i].Note > 47) continue;
+                if (!end && ShowlightList[i].Note <= 47 && i+1 == ShowlightList.Count)
                 {
-                    var objectToAdd = ShowlightList[i]; objectToAdd.Note += 24;
+                    var objectToAdd = new Showlight()
+                    {
+                        Note = ShowlightList[i].Note,
+                        Time = ShowlightList[i].Time
+                    };  ShowlightList.Add(objectToAdd);
+                    end = true;
+                }
+                if (ShowlightList[i].Note <= 35 && !(ShowlightList[i + 1].Note == ShowlightList[i].Note+24
+                    && ShowlightList[i + 1].Time == ShowlightList[i].Time))
+                {
+                    var objectToAdd = new Showlight()
+                    {
+                        Note = ShowlightList[i].Note,
+                        Time = ShowlightList[i].Time
+                    };  objectToAdd.Note += 24;
                     if (i + 1 == ShowlightList.Count) ShowlightList.Add(objectToAdd);
                     else ShowlightList.Insert(i + 1, objectToAdd);
+                    if (!end)i++;
+                    else ShowlightList.Remove(ShowlightList[i + 2]);
+                    continue;
+                }
+                if (ShowlightList[i].Note <= 47 && !(ShowlightList[i + 1].Note == ShowlightList[i].Note + 12
+                    && ShowlightList[i + 1].Time == ShowlightList[i].Time))
+                {
+                    var objectToAdd = new Showlight()
+                    {
+                        Note = ShowlightList[i].Note,
+                        Time = ShowlightList[i].Time
+                    };  objectToAdd.Note += 12;
+                    if (i + 1 == ShowlightList.Count) ShowlightList.Add(objectToAdd);
+                    else ShowlightList.Insert(i + 1, objectToAdd);
+                    if (!end) i++;
+                    else ShowlightList.Remove(ShowlightList[i + 2]);
+                    continue;
                 }
             }
             return ShowlightList;

@@ -562,7 +562,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (File.Exists(xmlFile) && (xmlFile.ToLower().IndexOf("showlight") > 0))
                 {
                     var shl = new RocksmithToolkitLib.DLCPackage.Showlight.Showlights();
-                    shl.ShowlightList = RocksmithToolkitLib.DLCPackage.Showlight.Showlights.LoadFromFile(xmlFile).ShowlightList;
+                    shl.ShowlightList = shl.FixShowlights(RocksmithToolkitLib.DLCPackage.Showlight.Showlights.LoadFromFile(xmlFile).ShowlightList);
                     shl.Count = shl.ShowlightList.Count;
                     using (var fs = new FileStream(xmlFile, FileMode.Create))
                     {
