@@ -31,6 +31,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public static void Pack(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
         {
             Platform platform = sourcePath.GetPlatform();
+            if (platform.platform == GamePlatform.None) platform = saveFileName.GetPlatform();
             Game = platform;
 
             switch (platform.platform) {
@@ -461,11 +462,11 @@ namespace RocksmithToolkitLib.DLCPackage
                             return new Platform(GamePlatform.PS3, GameVersion.RS2012);
                         else if (aggContent.Contains("\"ps3\""))
                             return new Platform(GamePlatform.PS3, GameVersion.RS2014);
-                        else {
-                            return new Platform(GamePlatform.PS3, GameVersion.None);
-                        }
-                    } else
-                        return TryGetPlatformByFolderEndName(fullPath);
+                        else
+                            return TryGetPlatformByFolderEndName(fullPath);
+                    }
+                    else
+                        return new Platform(GamePlatform.None, GameVersion.None);
                 } 
             } else
                 return new Platform(GamePlatform.None, GameVersion.None);
