@@ -160,12 +160,12 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return Convert.ToSingle(serializer.Deserialize<string>(reader), CultureInfo.InvariantCulture.NumberFormat);
+            return float.Parse(serializer.Deserialize<string>(reader).Replace(',', '.'), CultureInfo.InvariantCulture);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            serializer.Serialize(writer, ((float)value).ToString("G"));
+            serializer.Serialize(writer, ((float)value).ToString("G", new CultureInfo("en-US")));
         }
     }
 }
