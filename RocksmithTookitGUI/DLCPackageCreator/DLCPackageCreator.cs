@@ -743,6 +743,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void toneRemoveButton_Click(object sender, EventArgs e)
         {
+            RemoveTone();
+        }
+
+        private void RemoveTone()
+        {
             if (TonesLB.SelectedItem != null && TonesLB.Items.Count > 1)
             {
                 dynamic tone = TonesLB.SelectedItem;
@@ -824,8 +829,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (CurrentGameVersion == GameVersion.RS2014) {
                     List<Tone2014> tones = Tone2014.Import(toneImportFile);
                     foreach (Tone2014 tone in tones)
-                        if (!TonesLB.Items.OfType<Tone2014>().Any(t => t.Key == tone.Key))
+                    {
+                        if (tone != null)
+                        if (!TonesLB.Items.OfType<Tone2014>().Any(t => t.Key == null || t.Key == tone.Key))
                             TonesLB.Items.Add(tone);
+                    }
                 }
                 else
                 {
@@ -919,6 +927,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     newIndex++;
                     break;
             }
+            if (e.KeyValue == 46) RemoveTone();
+            if (e.KeyValue == 17 && e.Modifiers == Keys.Control)
+                DuplicateTone();
 
             if (newIndex >= 0 && newIndex <= control.Items.Count) {
                 control.Items.Insert(newIndex, item);
@@ -931,6 +942,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             control.Refresh();
         }
 
+        private void DuplicateTone()
+        {
+            if (TonesLB.SelectedItem != null && TonesLB.Items.Count > 0)
+            {
+                dynamic tone = Copy(TonesLB.SelectedItem);
+                tone.Name = TonesLB.Text+"_copy";
+                tone.Key = TonesLB.Text+"_copy";
+                TonesLB.Items.Add(tone);
+
+                dynamic firstTone = TonesLB.Items[0];
+                foreach (var item in ArrangementLB.Items.OfType<Arrangement>())
+                    if (tone.Name.Equals(item.ToneBase))
+                        item.ToneBase = firstTone.Name;
+                ArrangementLB.Refresh();
+            }
+        }
         private void GameVersion_CheckedChanged(object sender, EventArgs e)
         {
             PopulateAppIdCombo();

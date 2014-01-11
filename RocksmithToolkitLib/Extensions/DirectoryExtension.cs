@@ -63,7 +63,7 @@ namespace RocksmithToolkitLib.Extensions
                 if (Directory.Exists(path))
                     Directory.Delete(path, true);
             }
-            catch (Exception e) { /*Don't worry*/ }
+            catch { /*Don't worry*/ }
         }
         /// <summary>
         /// Returns rel paths..
