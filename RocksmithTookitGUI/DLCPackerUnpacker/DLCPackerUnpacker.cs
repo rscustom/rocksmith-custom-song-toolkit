@@ -52,10 +52,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             try
             {
                 var platform = sourcePath.GetPlatform();
-                string[] decodedAudioFiles = Directory.GetFiles(sourcePath, "*_fixed.ogg", SearchOption.AllDirectories);
-                foreach (var file in decodedAudioFiles)
-                    File.Delete(file);
-                Packer.Pack(sourcePath, saveFileName, (platform.platform == GamePlatform.Pc) ? true : false, updateSng);
+                Packer.DeleteFixedAudio(sourcePath);
+                Packer.Pack(sourcePath, saveFileName, updateSng);
                 MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -90,7 +88,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             {
                 Application.DoEvents();
                 Platform platform = Packer.GetPlatform(sourceFileName);
-                Packer.Unpack(sourceFileName, savePath, (platform.platform == GamePlatform.Pc) ? true : false); // Cryptography way is used only for PC in Rocksmith 1
+                Packer.Unpack(sourceFileName, savePath);
 
                 if (decodeAudio) {
                     try
@@ -99,8 +97,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                         if (platform.platform == GamePlatform.PS3)
                             name = name.Substring(0, name.LastIndexOf("."));
                         name += String.Format("_{0}", platform.platform.ToString());
+                        
                         var audioFiles = Directory.GetFiles(Path.Combine(savePath, name), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
-
                         foreach (var file in audioFiles)
                         {
                             var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
@@ -162,9 +160,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 var platform = sourceFileName.GetPlatform();
 
                 if (platform.platform == GamePlatform.Pc)
-                {
-                    var useCryptography = (platform.version == GameVersion.RS2012) ? true : false;
-                    Packer.Unpack(sourceFileName, tmpDir, useCryptography);
+                {   
+                    Packer.Unpack(sourceFileName, tmpDir);
 
                     var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + String.Format("_{0}", platform.platform);
 
@@ -172,7 +169,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                     File.WriteAllText(appIdFile, appId);
 
-                    Packer.Pack(unpackedDir, sourceFileName, useCryptography, updateSng);
+                    Packer.Pack(unpackedDir, sourceFileName, updateSng);
                 }
                 else
                 {

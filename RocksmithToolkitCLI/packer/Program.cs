@@ -161,11 +161,8 @@ namespace packer
 
                     try
                     {
-                        string[] decodedOGGFiles = Directory.GetFiles(arguments.Input, "*_fixed.ogg", SearchOption.AllDirectories);
-                        foreach (var file in decodedOGGFiles)
-                            File.Delete(file);
-
-                        Packer.Pack(Path.GetFullPath(arguments.Input), arguments.Output, true, arguments.UpdateSng);
+                        Packer.DeleteFixedAudio(arguments.Input);
+                        Packer.Pack(Path.GetFullPath(arguments.Input), arguments.Output, arguments.UpdateSng);
                         Console.WriteLine("Packing is complete.");
                         return 0;
                     }
@@ -196,7 +193,7 @@ namespace packer
 
                         try
                         {
-                            Packer.Unpack(sourceFileName, arguments.Output, true);
+                            Packer.Unpack(sourceFileName, arguments.Output);
 
                             if (arguments.DecodeOGG)
                             {

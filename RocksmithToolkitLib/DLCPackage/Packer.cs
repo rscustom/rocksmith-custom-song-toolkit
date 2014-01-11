@@ -28,7 +28,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PACK
 
-        public static void Pack(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
+        public static void Pack(string sourcePath, string saveFileName, bool updateSng)
         {
             Platform platform = sourcePath.GetPlatform();
             if (platform.platform == GamePlatform.None) platform = saveFileName.GetPlatform();
@@ -38,7 +38,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 case GamePlatform.Pc:
                 case GamePlatform.Mac:
                     if (platform.version == GameVersion.RS2012)
-                        PackPC(sourcePath, saveFileName, useCryptography, updateSng);
+                        PackPC(sourcePath, saveFileName, true, updateSng);
                     else if (platform.version == GameVersion.RS2014)
                         Pack2014(sourcePath, saveFileName, platform, updateSng);
                     break;
@@ -57,10 +57,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region UNPACK
 
-        public static void Unpack(string sourceFileName, string savePath, bool useCryptography)
+        public static void Unpack(string sourceFileName, string savePath)
         {
             Platform platform = sourceFileName.GetPlatform();
+            if (platform.platform == GamePlatform.None) platform = savePath.GetPlatform();
+            Game = platform;
 
+            var useCryptography = platform.version == GameVersion.RS2012; // Cryptography way is used only for PC in Rocksmith 1
             switch (platform.platform)
             {
                 case GamePlatform.Pc:
@@ -399,6 +402,13 @@ namespace RocksmithToolkitLib.DLCPackage
         #endregion
 
         #region COMMON FUNCTIONS
+
+        public static void DeleteFixedAudio(string sourcePath)
+        {
+            foreach (var file in Directory.GetFiles(sourcePath, "*_fixed.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))
+                try { if (File.Exists(file)) File.Delete(file); }
+                catch (Exception ex){ throw new InvalidOperationException(String.Format("Can't delete garbage Audio files!\r\n {0}", ex)); }
+        }
 
         private static void WalkThroughDirectory(string baseDir, string directory, Action<string, string> action) {
             foreach (var fl in Directory.GetFiles(directory))
