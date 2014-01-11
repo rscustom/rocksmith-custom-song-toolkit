@@ -37,6 +37,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void okButton_Click(object sender, EventArgs e)
         {
+            switch (CurrentGameVersion)
+            {
+                case GameVersion.RS2012:
+                    if (toneControl1.Tone.PedalList.Count == 0) return;
+                    break;
+                case GameVersion.RS2014:
+                    if (toneControl1.Tone.GearList.Amp == null) return;
+                    break;
+            }
             Saved = true;
             Close();
         }
