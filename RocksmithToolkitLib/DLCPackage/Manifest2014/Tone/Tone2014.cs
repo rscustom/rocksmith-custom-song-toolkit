@@ -11,6 +11,7 @@ using RocksmithToolkitLib.Sng;
 using Newtonsoft.Json;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {
@@ -28,8 +29,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         public decimal SortOrder { get; set; }
 
         public Tone2014()
-        {
-            GearList = new Gear2014();
+        {   //fill with defauld amp\cab
+            GearList = new Gear2014(); //{ Amp = new Pedal2014() { }, Cabinet = new Pedal2014() { } }; 
             IsCustom = true;
             Volume = -12;
             ToneDescriptors = new List<string>();
@@ -141,8 +142,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
                 foreach (var file in toneManifestFiles)
                     tones.AddRange(ReadFromManifest(file));
 
-                if (Directory.Exists(tmpDir))
-                    Directory.Delete(tmpDir, true);
+                DirectoryExtension.SafeDelete(tmpDir);
 
                 return tones;
             }

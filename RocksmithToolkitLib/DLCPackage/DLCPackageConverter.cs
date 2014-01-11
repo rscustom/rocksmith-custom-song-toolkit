@@ -22,8 +22,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var tmpDir = Path.GetTempPath();
             var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(sourcePackage), sourcePlatform.platform));
 
-            if (Directory.Exists(unpackedDir))
-                Directory.Delete(unpackedDir, true);
+            DirectoryExtension.SafeDelete(unpackedDir);
 
             Packer.Unpack(sourcePackage, tmpDir);
 
@@ -57,9 +56,7 @@ namespace RocksmithToolkitLib.DLCPackage
             else
                 ConvertPackageForSimilarPlatform(unpackedDir, targetFileName, sourcePlatform, targetPlatform, appId);
 
-            if (Directory.Exists(unpackedDir))
-                try { Directory.Delete(unpackedDir, true); }
-                catch { /* Got no problems if no delete*/ }
+            DirectoryExtension.SafeDelete(unpackedDir);
 
             return String.Empty;
         }
@@ -95,15 +92,13 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (dir.EndsWith(sourceDir0))
                 {
                     var newDir = dir.Replace(sourceDir0, targetDir0);
-                    if (Directory.Exists(newDir))
-                        Directory.Delete(newDir, true);
+                    DirectoryExtension.SafeDelete(newDir);
                     DirectoryExtension.Move(dir, newDir);
                 }
                 else if (dir.EndsWith(sourceDir1))
                 {
                     var newDir = dir.Replace(sourceDir1, targetDir1);
-                    if (Directory.Exists(newDir))
-                        Directory.Delete(newDir, true);
+                    DirectoryExtension.SafeDelete(newDir);
                     DirectoryExtension.Move(dir, newDir);
                 }
             }
@@ -114,9 +109,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // Packing
             Packer.Pack(unpackedDir, targetFileName, updateSNG);
-
-            if (Directory.Exists(unpackedDir))
-                Directory.Delete(unpackedDir, true);
+            DirectoryExtension.SafeDelete(unpackedDir);
         }
 
         private static void ConvertPackageRebuilding(string unpackedDir, string targetFileName, Platform sourcePlatform, Platform targetPlatform, string appId)

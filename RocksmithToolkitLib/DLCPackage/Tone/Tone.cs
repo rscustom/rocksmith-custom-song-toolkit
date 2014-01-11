@@ -8,6 +8,7 @@ using System.IO;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using System.Reflection;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage.Tone
 {
@@ -34,6 +35,7 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
 
         public Tone()
         {
+            //fill with defauld amp\cab
             PedalList = new Dictionary<string, Pedal>();
             ExclusiveBuild = new List<object>();
             UnlockKey = "";
@@ -200,16 +202,15 @@ namespace RocksmithToolkitLib.DLCPackage.Tone
             List<Tone> tones = new List<Tone>();
             string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Packer.Unpack(packagePath, appDir);
-            string unpackedDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(packagePath) + String.Format("_{0}", platform.platform.ToString()));
+            string unpackedDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(packagePath) 
+                               + String.Format("_{0}", platform.platform.ToString()));
 
             string[] toneManifestFiles = Directory.GetFiles(unpackedDir, "tone*.manifest.json", SearchOption.AllDirectories);
 
-            foreach (var file in toneManifestFiles) {
+            foreach (var file in toneManifestFiles)
                 tones.Add(ReadFromManifest(file));
-            }
 
-            if (Directory.Exists(unpackedDir))
-                Directory.Delete(unpackedDir, true);
+            DirectoryExtension.SafeDelete(unpackedDir);
 
             return tones;
         }

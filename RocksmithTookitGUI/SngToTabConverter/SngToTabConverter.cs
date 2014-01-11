@@ -12,6 +12,7 @@ using RocksmithToolkitLib.SngToTab;
 using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage;
 using System.Reflection;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitGUI.SngToTabConverter
 {
@@ -101,12 +102,7 @@ namespace RocksmithToolkitGUI.SngToTabConverter
                 Convert(sng, savePath, all);
             }
 
-            try
-            {
-                if (Directory.Exists(unpackedDir))
-                    Directory.Delete(unpackedDir, true);
-            }
-            catch { /*Have no problem if don't delete*/ }
+            DirectoryExtension.SafeDelete(unpackedDir);
         }
     }
 }

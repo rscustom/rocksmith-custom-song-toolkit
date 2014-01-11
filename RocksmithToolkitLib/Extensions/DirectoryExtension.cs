@@ -55,7 +55,16 @@ namespace RocksmithToolkitLib.Extensions
                 Directory.Delete(sourceDirName, true);
             }
         }
-
+        
+        public static void SafeDelete(string path)
+        {
+            try
+            {
+                if (Directory.Exists(path))
+                    Directory.Delete(path, true);
+            }
+            catch (Exception e) { /*Don't worry*/ }
+        }
         /// <summary>
         /// Returns rel paths..
         /// </summary>
