@@ -54,12 +54,14 @@
             this.platformMAC = new System.Windows.Forms.CheckBox();
             this.gbFiles = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.AlbumArtPathTB = new RocksmithToolkitGUI.CueTextBox();
+            this.audioPathTB = new RocksmithToolkitGUI.CueTextBox();
             this.gbTones = new System.Windows.Forms.GroupBox();
+            this.toneDuplicateButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.keyboardDescArrLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.gbGameVersion = new System.Windows.Forms.GroupBox();
             this.DlcNameTB = new RocksmithToolkitGUI.CueTextBox();
             this.SongDisplayNameTB = new RocksmithToolkitGUI.CueTextBox();
             this.ArtistTB = new RocksmithToolkitGUI.CueTextBox();
@@ -70,15 +72,14 @@
             this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.SongDisplayNameSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.ArtistSortTB = new RocksmithToolkitGUI.CueTextBox();
-            this.AlbumArtPathTB = new RocksmithToolkitGUI.CueTextBox();
-            this.audioPathTB = new RocksmithToolkitGUI.CueTextBox();
+            this.gbGameVersion = new System.Windows.Forms.GroupBox();
             this.gbPlatofmr.SuspendLayout();
             this.gbFiles.SuspendLayout();
             this.gbTones.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.gbGameVersion.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).BeginInit();
+            this.gbGameVersion.SuspendLayout();
             this.SuspendLayout();
             // 
             // albumArtButton
@@ -180,11 +181,11 @@
             // 
             // toneRemoveButton
             // 
-            this.toneRemoveButton.Location = new System.Drawing.Point(400, 67);
+            this.toneRemoveButton.Location = new System.Drawing.Point(447, 43);
             this.toneRemoveButton.Name = "toneRemoveButton";
-            this.toneRemoveButton.Size = new System.Drawing.Size(91, 23);
+            this.toneRemoveButton.Size = new System.Drawing.Size(44, 23);
             this.toneRemoveButton.TabIndex = 29;
-            this.toneRemoveButton.Text = "Remove";
+            this.toneRemoveButton.Text = "Del";
             this.toneRemoveButton.UseVisualStyleBackColor = true;
             this.toneRemoveButton.Click += new System.EventHandler(this.toneRemoveButton_Click);
             // 
@@ -220,9 +221,9 @@
             // 
             // toneEditButton
             // 
-            this.toneEditButton.Location = new System.Drawing.Point(400, 42);
+            this.toneEditButton.Location = new System.Drawing.Point(400, 43);
             this.toneEditButton.Name = "toneEditButton";
-            this.toneEditButton.Size = new System.Drawing.Size(91, 23);
+            this.toneEditButton.Size = new System.Drawing.Size(45, 23);
             this.toneEditButton.TabIndex = 28;
             this.toneEditButton.Text = "Edit";
             this.toneEditButton.UseVisualStyleBackColor = true;
@@ -386,8 +387,30 @@
             this.label2.Text = "Song preview must have the same file name with \"_preview\" in the end, eg.: \"filen" +
     "ame_preview.wem\"";
             // 
+            // AlbumArtPathTB
+            // 
+            this.AlbumArtPathTB.BackColor = System.Drawing.SystemColors.Window;
+            this.AlbumArtPathTB.Cue = "Album Art [use 512x512 size only] (*.dds,*.gif,*.jpg,*.jpeg,*.bmp,*.png)";
+            this.AlbumArtPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AlbumArtPathTB.ForeColor = System.Drawing.Color.Gray;
+            this.AlbumArtPathTB.Location = new System.Drawing.Point(6, 19);
+            this.AlbumArtPathTB.Name = "AlbumArtPathTB";
+            this.AlbumArtPathTB.Size = new System.Drawing.Size(445, 20);
+            this.AlbumArtPathTB.TabIndex = 22;
+            // 
+            // audioPathTB
+            // 
+            this.audioPathTB.Cue = "Converted audio on Wwise 2013 for Windows, Mac, XBox360 or PS3 (*.wem)";
+            this.audioPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.audioPathTB.ForeColor = System.Drawing.Color.Gray;
+            this.audioPathTB.Location = new System.Drawing.Point(6, 45);
+            this.audioPathTB.Name = "audioPathTB";
+            this.audioPathTB.Size = new System.Drawing.Size(445, 20);
+            this.audioPathTB.TabIndex = 24;
+            // 
             // gbTones
             // 
+            this.gbTones.Controls.Add(this.toneDuplicateButton);
             this.gbTones.Controls.Add(this.label1);
             this.gbTones.Controls.Add(this.TonesLB);
             this.gbTones.Controls.Add(this.toneAddButton);
@@ -402,15 +425,26 @@
             this.gbTones.TabStop = false;
             this.gbTones.Text = "Tones";
             // 
+            // toneDuplicateButton
+            // 
+            this.toneDuplicateButton.Location = new System.Drawing.Point(400, 67);
+            this.toneDuplicateButton.Name = "toneDuplicateButton";
+            this.toneDuplicateButton.Size = new System.Drawing.Size(91, 23);
+            this.toneDuplicateButton.TabIndex = 37;
+            this.toneDuplicateButton.Text = "Duplicate";
+            this.toneDuplicateButton.UseVisualStyleBackColor = true;
+            this.toneDuplicateButton.Click += new System.EventHandler(this.toneDuplicateButton_Click);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label1.Location = new System.Drawing.Point(4, 116);
+            this.label1.Location = new System.Drawing.Point(2, 116);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(284, 13);
+            this.label1.Size = new System.Drawing.Size(495, 13);
             this.label1.TabIndex = 36;
-            this.label1.Text = "Use keyboard up/down keys to change order of the tones.";
+            this.label1.Text = "Use \"Up/Down\" keys to change order of the tones, use \"Delete\" to delete and \"D\" t" +
+    "o duplicate a tone.";
             // 
             // groupBox1
             // 
@@ -431,11 +465,11 @@
             // 
             this.keyboardDescArrLabel.AutoSize = true;
             this.keyboardDescArrLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.keyboardDescArrLabel.Location = new System.Drawing.Point(4, 89);
+            this.keyboardDescArrLabel.Location = new System.Drawing.Point(2, 89);
             this.keyboardDescArrLabel.Name = "keyboardDescArrLabel";
-            this.keyboardDescArrLabel.Size = new System.Drawing.Size(322, 13);
+            this.keyboardDescArrLabel.Size = new System.Drawing.Size(336, 13);
             this.keyboardDescArrLabel.TabIndex = 35;
-            this.keyboardDescArrLabel.Text = "Use keyboard up/down keys to change order of the arrangements.";
+            this.keyboardDescArrLabel.Text = "Use keyboard \"Up/Down\" keys to change order of the arrangements.";
             // 
             // groupBox2
             // 
@@ -459,19 +493,6 @@
             this.groupBox2.TabIndex = 81;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Song Information";
-            // 
-            // gbGameVersion
-            // 
-            this.gbGameVersion.Controls.Add(this.RS2014);
-            this.gbGameVersion.Controls.Add(this.RS2012);
-            this.gbGameVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbGameVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbGameVersion.Location = new System.Drawing.Point(3, 0);
-            this.gbGameVersion.Name = "gbGameVersion";
-            this.gbGameVersion.Size = new System.Drawing.Size(192, 41);
-            this.gbGameVersion.TabIndex = 82;
-            this.gbGameVersion.TabStop = false;
-            this.gbGameVersion.Text = "Game Version";
             // 
             // DlcNameTB
             // 
@@ -597,26 +618,18 @@
             this.ArtistSortTB.Size = new System.Drawing.Size(130, 20);
             this.ArtistSortTB.TabIndex = 12;
             // 
-            // AlbumArtPathTB
+            // gbGameVersion
             // 
-            this.AlbumArtPathTB.BackColor = System.Drawing.SystemColors.Window;
-            this.AlbumArtPathTB.Cue = "Album Art [use 512x512 size only] (*.dds,*.gif,*.jpg,*.jpeg,*.bmp,*.png)";
-            this.AlbumArtPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.AlbumArtPathTB.ForeColor = System.Drawing.Color.Gray;
-            this.AlbumArtPathTB.Location = new System.Drawing.Point(6, 19);
-            this.AlbumArtPathTB.Name = "AlbumArtPathTB";
-            this.AlbumArtPathTB.Size = new System.Drawing.Size(445, 20);
-            this.AlbumArtPathTB.TabIndex = 22;
-            // 
-            // audioPathTB
-            // 
-            this.audioPathTB.Cue = "Converted audio on Wwise 2013 for Windows, Mac, XBox360 or PS3 (*.wem)";
-            this.audioPathTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.audioPathTB.ForeColor = System.Drawing.Color.Gray;
-            this.audioPathTB.Location = new System.Drawing.Point(6, 45);
-            this.audioPathTB.Name = "audioPathTB";
-            this.audioPathTB.Size = new System.Drawing.Size(445, 20);
-            this.audioPathTB.TabIndex = 24;
+            this.gbGameVersion.Controls.Add(this.RS2014);
+            this.gbGameVersion.Controls.Add(this.RS2012);
+            this.gbGameVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbGameVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbGameVersion.Location = new System.Drawing.Point(3, 0);
+            this.gbGameVersion.Name = "gbGameVersion";
+            this.gbGameVersion.Size = new System.Drawing.Size(192, 41);
+            this.gbGameVersion.TabIndex = 82;
+            this.gbGameVersion.TabStop = false;
+            this.gbGameVersion.Text = "Game Version";
             // 
             // DLCPackageCreator
             // 
@@ -643,9 +656,9 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).EndInit();
             this.gbGameVersion.ResumeLayout(false);
             this.gbGameVersion.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.volumeBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -696,5 +709,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox gbGameVersion;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button toneDuplicateButton;
     }
 }

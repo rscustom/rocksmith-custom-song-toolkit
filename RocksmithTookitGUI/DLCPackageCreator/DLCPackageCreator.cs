@@ -184,31 +184,39 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public dynamic CreateNewTone(string toneName = "Default")
         {
-            var name = toneName;
-            bool uniqueToneName = false;
-            int ind = 1;
-            do
-            {
-                switch (CurrentGameVersion)
-                {
-                    case GameVersion.RS2012:
-                        uniqueToneName = !TonesLB.Items.OfType<Tone>().Any(n => n.Name == name);
-                        break;
-                    case GameVersion.RS2014:
-                        uniqueToneName = !TonesLB.Items.OfType<Tone2014>().Any(n => n.Name == name);
-                        break;
-                }
-                
-                if (!uniqueToneName)
-                {
-                    name = toneName + (++ind);
-                }
-            } while (!uniqueToneName);
+            var name = GetUniqueToneName(toneName);
 
             if (CurrentGameVersion == GameVersion.RS2014)
                 return new Tone2014() { Name = name, Key = name };
             else
                 return new Tone() { Name = name, Key = name };
+        }
+
+        private string GetUniqueToneName(string toneName)
+        {
+            var uniqueName = toneName;
+            bool isUnique = false;
+            int ind = 1;
+
+            do
+            {
+                switch (CurrentGameVersion)
+                {
+                    case GameVersion.RS2012:
+                        isUnique = !TonesLB.Items.OfType<Tone>().Any(n => n.Name == uniqueName);
+                        break;
+                    case GameVersion.RS2014:
+                        isUnique = !TonesLB.Items.OfType<Tone2014>().Any(n => n.Name == uniqueName);
+                        break;
+                }
+
+                if (!isUnique)
+                {
+                    uniqueName = toneName + (++ind);
+                }
+            } while (!isUnique);
+
+            return uniqueName;
         }
 
         private void arrangementAddButton_Click(object sender, EventArgs e)
@@ -229,6 +237,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void arrangementRemoveButton_Click(object sender, EventArgs e)
         {
+            if (MessageBox.Show("Are you sure to delete the selected arrangement?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                return;
+
             if (ArrangementLB.SelectedItem != null)
                 ArrangementLB.Items.Remove(ArrangementLB.SelectedItem);
         }
@@ -748,10 +759,45 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void RemoveTone()
         {
+            if (MessageBox.Show("Are you sure to delete the selected tone?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                return;
+
             if (TonesLB.SelectedItem != null && TonesLB.Items.Count > 1)
             {
                 dynamic tone = TonesLB.SelectedItem;
                 TonesLB.Items.Remove(TonesLB.SelectedItem);
+
+                dynamic firstTone = TonesLB.Items[0];
+                foreach (var item in ArrangementLB.Items.OfType<Arrangement>())
+                    if (tone.Name.Equals(item.ToneBase))
+                        item.ToneBase = firstTone.Name;
+                ArrangementLB.Refresh();
+            }
+        }
+
+        private void toneDuplicateButton_Click(object sender, EventArgs e)
+        {
+            DuplicateTone();
+        }
+
+        private void DuplicateTone()
+        {
+            if (TonesLB.SelectedItem != null && TonesLB.Items.Count > 0)
+            {
+                dynamic tone = TonesLB.SelectedItem;
+                switch (CurrentGameVersion)
+                {
+                    case GameVersion.RS2012:
+                        tone = Copy<Tone>((Tone)TonesLB.SelectedItem);
+                        break;
+                    case GameVersion.RS2014:
+                        tone = Copy<Tone2014>((Tone2014)TonesLB.SelectedItem);
+                        break;
+                 }
+                var name = GetUniqueToneName(TonesLB.Text);
+                tone.Name = name;
+                tone.Key = name;
+                TonesLB.Items.Add(tone);
 
                 dynamic firstTone = TonesLB.Items[0];
                 foreach (var item in ArrangementLB.Items.OfType<Arrangement>())
@@ -814,6 +860,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void toneImportButton_Click(object sender, EventArgs e)
         {
+            ImportTone();
+        }
+
+        private void ImportTone() {
             string toneImportFile;
             using (var ofd = new OpenFileDialog())
             {
@@ -826,13 +876,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             try
             {
                 Application.DoEvents();
-                if (CurrentGameVersion == GameVersion.RS2014) {
+                if (CurrentGameVersion == GameVersion.RS2014)
+                {
                     List<Tone2014> tones = Tone2014.Import(toneImportFile);
                     foreach (Tone2014 tone in tones)
                     {
                         if (tone != null)
-                        if (!TonesLB.Items.OfType<Tone2014>().Any(t => t.Key == null || t.Key == tone.Key))
-                            TonesLB.Items.Add(tone);
+                            if (!TonesLB.Items.OfType<Tone2014>().Any(t => t.Key == null || t.Key == tone.Key))
+                                TonesLB.Items.Add(tone);
                     }
                 }
                 else
@@ -913,24 +964,25 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             int index = control.SelectedIndex;
             int newIndex = index;
 
-            control.Items.RemoveAt(index);
-            
             switch ((Keys)e.KeyValue) {
                 case Keys.Up:
                 case Keys.PageUp:
-                case Keys.Add:
                     newIndex--;
                     break;
                 case Keys.Down:
                 case Keys.PageDown:
-                case Keys.Subtract:
                     newIndex++;
                     break;
+                case Keys.D:
+                    DuplicateTone();
+                    break;
+                case Keys.Delete:
+                    RemoveTone();
+                    return;
             }
-            if (e.KeyValue == 46) RemoveTone();
-            if (e.KeyValue == 17 && e.Modifiers == Keys.Control)
-                DuplicateTone();
 
+            control.Items.RemoveAt(index);
+            
             if (newIndex >= 0 && newIndex <= control.Items.Count) {
                 control.Items.Insert(newIndex, item);
                 control.SelectedIndex = index;
@@ -942,22 +994,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             control.Refresh();
         }
 
-        private void DuplicateTone()
-        {
-            if (TonesLB.SelectedItem != null && TonesLB.Items.Count > 0)
-            {
-                dynamic tone = Copy(TonesLB.SelectedItem);
-                tone.Name = TonesLB.Text+"_copy";
-                tone.Key = TonesLB.Text+"_copy";
-                TonesLB.Items.Add(tone);
-
-                dynamic firstTone = TonesLB.Items[0];
-                foreach (var item in ArrangementLB.Items.OfType<Arrangement>())
-                    if (tone.Name.Equals(item.ToneBase))
-                        item.ToneBase = firstTone.Name;
-                ArrangementLB.Refresh();
-            }
-        }
         private void GameVersion_CheckedChanged(object sender, EventArgs e)
         {
             PopulateAppIdCombo();
