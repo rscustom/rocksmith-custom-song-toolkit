@@ -88,7 +88,7 @@ namespace PcDecrypt
 
 						Directory.CreateDirectory(outputDirectory);
 						using (var outputStream = File.Create(outputPath))
-						RijndaelEncryptor.DecryptProfile(inputStream, outputStream);
+						RijndaelEncryptor.DecryptFile(inputStream, outputStream, RijndaelEncryptor.PCFilesKey);
 					}
 					if(arguments.Encrypt)
 					{
