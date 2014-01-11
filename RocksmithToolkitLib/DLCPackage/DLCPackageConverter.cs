@@ -25,7 +25,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (Directory.Exists(unpackedDir))
                 Directory.Delete(unpackedDir, true);
 
-            Packer.Unpack(sourcePackage, tmpDir, sourcePlatform.platform == GamePlatform.Pc);
+            Packer.Unpack(sourcePackage, tmpDir);
 
             // DESTINATION
             var nameTemplate = (!targetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";
@@ -113,7 +113,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 (sourcePlatform.platform == GamePlatform.Mac && targetPlatform.platform == GamePlatform.Pc));
 
             // Packing
-            Packer.Pack(unpackedDir, targetFileName, (targetPlatform.platform == GamePlatform.Pc) ? true : false, updateSNG);
+            Packer.Pack(unpackedDir, targetFileName, updateSNG);
 
             if (Directory.Exists(unpackedDir))
                 Directory.Delete(unpackedDir, true);

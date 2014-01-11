@@ -28,7 +28,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PACK
 
-        public static void Pack(string sourcePath, string saveFileName, bool updateSng)
+        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false)
         {
             Platform platform = sourcePath.GetPlatform();
             if (platform.platform == GamePlatform.None) platform = saveFileName.GetPlatform();

@@ -161,7 +161,7 @@ namespace packer
 
                     try
                     {
-                        Packer.DeleteFixedAudio(arguments.Input);
+                        Packer.DeleteFixedAudio(arguments.Input.FirstOrDefault().ToString());
                         Packer.Pack(Path.GetFullPath(arguments.Input), arguments.Output, arguments.UpdateSng);
                         Console.WriteLine("Packing is complete.");
                         return 0;
