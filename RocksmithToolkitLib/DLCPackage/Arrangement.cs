@@ -77,6 +77,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last());
             this.PluckedType = (PluckedType)attr.ArrangementProperties.BassPick;
             this.RouteMask = (RouteMask)attr.ArrangementProperties.RouteMask;
+            this.BonusArr = attr.ArrangementProperties.BonusArr == 1;
             this.ToneBase = attr.Tone_Base;
             this.ToneMultiplayer = attr.Tone_Multiplayer;
             this.ToneA = attr.Tone_A;
