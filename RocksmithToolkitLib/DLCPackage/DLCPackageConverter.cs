@@ -134,6 +134,9 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var json in jsonFiles)
             {
                 Attributes2014 attr = Manifest2014<Attributes2014>.LoadFromFile(json).Entries.ToArray()[0].Value.ToArray()[0].Value;
+                var xmlName = attr.SongXml.Split(':')[3];
+                var aggXml = aggregateData.SongXml.SingleOrDefault(n => n.Name == xmlName);
+                var xmlFile = Directory.GetFiles(unpackedDir, xmlName + ".xml", SearchOption.AllDirectories)[0];
 
                 if (attr.Phrases != null)
                 {
@@ -161,21 +164,21 @@ namespace RocksmithToolkitLib.DLCPackage
                         if (!data.TonesRS2014.OfType<Tone2014>().Any(t => t.Key == jsonTone.Key))
                             data.TonesRS2014.Add(jsonTone);
                     }
-                }
-
-                // Adding Arrangements
-                var xmlName = attr.SongXml.Split(':')[3];
-                var aggXml = aggregateData.SongXml.SingleOrDefault(n => n.Name == xmlName);
-                var xmlFile = Directory.GetFiles(unpackedDir, xmlName+".xml", SearchOption.AllDirectories)[0];
-                if (attr.Phrases != null)
+                    
+                    // Adding Arrangement
                     data.Arrangements.Add(new Arrangement(attr, xmlFile));
+                }
                 else
-                {   // issue for vocal file
+                {
                     var voc = new Arrangement();
+                    voc.Name = ArrangementName.Vocals;
                     voc.ArrangementType = ArrangementType.Vocal;
-                    voc.SongFile = new SongFile { File = "" };
                     voc.SongXml = new SongXML { File = xmlFile };
+                    voc.SongFile = new SongFile { File = "" };
+                    voc.Sng2014 = Sng2014HSL.Sng2014File.ConvertXML(xmlFile, ArrangementType.Vocal);
                     voc.ScrollSpeed = 20;
+
+                    // Adding Arrangement
                     data.Arrangements.Add(voc);
                 }
             }
