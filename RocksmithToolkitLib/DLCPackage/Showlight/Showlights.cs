@@ -76,7 +76,8 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         public List<Showlight> FixShowlights(List<Showlight> ShowlightList)
         {
             bool end = false;
-            if (ShowlightList[0].Time > 10.0F) { ShowlightList.Insert(0, new Showlight() { Note = 33, Time = 10.0F }); }
+            if (ShowlightList[0].Time > 10.0F) { ShowlightList.Insert(0, new Showlight() { Note = 33, Time = 10.0F } ); }
+            if (ShowlightList[0].Note > 35) { ShowlightList[0].Note = 33; }
             for (var i = 0; i < ShowlightList.Count; i++)
             {
                 if (ShowlightList[i].Note > 47) continue;
