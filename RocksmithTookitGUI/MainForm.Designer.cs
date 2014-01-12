@@ -216,7 +216,6 @@
             // dlcConverterControl
             // 
             this.dlcConverterControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dlcConverterControl.AppId = "";
             this.dlcConverterControl.Location = new System.Drawing.Point(70, 30);
             this.dlcConverterControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcConverterControl.Name = "dlcConverterControl";

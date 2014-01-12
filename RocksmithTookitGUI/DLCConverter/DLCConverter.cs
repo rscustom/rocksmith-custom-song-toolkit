@@ -72,16 +72,15 @@ namespace RocksmithToolkitGUI.DLCConverter
 
         private void PopulateAppIdCombo(GameVersion gameVersion)
         {
-            SongAppId firstSong = null;
             appIdCombo.Items.Clear();
             foreach (var song in SongAppIdRepository.Instance().Select(gameVersion))
-            {
                 appIdCombo.Items.Add(song);
-                if (firstSong == null)
-                    firstSong = song;
-            }
-            appIdCombo.SelectedItem = firstSong;
-            AppId = firstSong.AppId;
+
+            // DEFAULT  >>>
+            // RS2014   = Cherub Rock
+            var songAppId = SongAppIdRepository.Instance().Select("248750", gameVersion);
+            appIdCombo.SelectedItem = songAppId;
+            AppId = songAppId.AppId;
         }
 
         private void AppIdVisibilty() {
