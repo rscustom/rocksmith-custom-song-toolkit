@@ -148,7 +148,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         data.SongInfo.SongDisplayName = attr.SongName;
                         data.SongInfo.SongDisplayNameSort = attr.SongNameSort;
                         data.SongInfo.Album = attr.AlbumName;
-                        //data.SongInfo.SongYear = Convert.ToInt32(attr.SongYear);
+                        data.SongInfo.SongYear = attr.SongYear ?? 0;
                         data.SongInfo.Artist = attr.ArtistName;
                         data.SongInfo.ArtistSort = attr.ArtistNameSort;
                         data.SongInfo.AverageTempo = (int)attr.SongAverageTempo;
