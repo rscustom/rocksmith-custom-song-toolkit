@@ -198,25 +198,36 @@ namespace RocksmithToolkitLib.DLCPackage
             if (targetAudioFiles.Count() <= 0)
                 throw new InvalidDataException("Audio files not found.");
 
-            string audioPath, audioPreviewPath;
+            string audioPath = null, audioPreviewPath = null;
             FileInfo a = new FileInfo(targetAudioFiles[0]);
-            FileInfo b = a; // For packages that have not audio preview
+            FileInfo b = null;
+
             if (targetAudioFiles.Count() == 2)
+            {
                 b = new FileInfo(targetAudioFiles[1]);
 
-            if (a.Length > b.Length)
-            {
+                if (a.Length > b.Length)
+                {
+                    audioPath = a.FullName;
+                    audioPreviewPath = b.FullName;
+                }
+                else
+                {
+                    audioPath = b.FullName;
+                    audioPreviewPath = a.FullName;
+                }
+            } else
                 audioPath = a.FullName;
-                audioPreviewPath = b.FullName;
-            }
-            else
-            {
-                audioPath = b.FullName;
-                audioPreviewPath = a.FullName;
-            }
 
             data.OggPath = audioPath;
-            data.OggPreviewPath = Path.Combine(Path.GetDirectoryName(audioPath), String.Format("{0}_preview{1}", Path.GetFileNameWithoutExtension(audioPath), Path.GetExtension(audioPath)));
+            
+            //Make Audio preview with expected name when rebuild
+            if (!String.IsNullOrEmpty(audioPreviewPath))
+            {
+                var newPreviewFileName = Path.Combine(Path.GetDirectoryName(audioPath), String.Format("{0}_preview{1}", Path.GetFileNameWithoutExtension(audioPath), Path.GetExtension(audioPath)));
+                File.Move(audioPreviewPath, newPreviewFileName);
+                data.OggPreviewPath = newPreviewFileName;
+            }
 
             //Build
             RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(targetFileName, data, new Platform(targetPlatform.platform, GameVersion.RS2014));
