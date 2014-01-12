@@ -119,7 +119,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             {
                 if (song.Levels[y.MaxDifficulty].Notes != null)
                 {
-                    noteCnt += GetNoteCount(y.StartTime, y.EndTime, song.Levels[y.MaxDifficulty].Notes);
+                    if (gameVersion == GameVersion.RS2012)
+                        noteCnt += GetNoteCount(y.StartTime, y.EndTime, song.Levels[y.MaxDifficulty].Notes);
+                    else
+                        noteCnt += GetNoteCount2014(y.StartTime, y.EndTime, song.Levels[y.MaxDifficulty].Notes);
                 }
                 if (song.Levels[y.MaxDifficulty].Chords != null )
                 {
@@ -138,9 +141,14 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     var multiplier = ((float)(o + 1)) / (phrase.MaxDifficulty + 1);
                     var pnv = attribute.Score_PNV;
                     var noteCount = 0;
-                    
+
                     if (song.Levels[o].Chords != null)
-                        noteCount += GetNoteCount(y.StartTime, y.EndTime, song.Levels[o].Notes);
+                    {
+                        if (gameVersion == GameVersion.RS2012)
+                            noteCnt += GetNoteCount(y.StartTime, y.EndTime, song.Levels[y.MaxDifficulty].Notes);
+                        else
+                            noteCnt += GetNoteCount2014(y.StartTime, y.EndTime, song.Levels[y.MaxDifficulty].Notes);
+                    }
 
                     if (song.Levels[o].Chords != null)
                         noteCount += GetChordCount(y.StartTime, y.EndTime, song.Levels[o].Chords);
@@ -355,6 +363,18 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 if(notes.ElementAt(i).Time < endTime)
                 if (notes.ElementAt(i).Time >= startTime)
                     count++;
+            }
+            return count;
+        }
+
+        public int GetNoteCount2014(float startTime, float endTime, ICollection<SongNote2014> notes)
+        {
+            int count = 0;
+            for (int i = 0; i < notes.Count(); i++)
+            {
+                if (notes.ElementAt(i).Time < endTime)
+                    if (notes.ElementAt(i).Time >= startTime)
+                        count++;
             }
             return count;
         }

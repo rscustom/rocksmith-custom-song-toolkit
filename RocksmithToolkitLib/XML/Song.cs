@@ -491,40 +491,40 @@ namespace RocksmithToolkitLib.Xml
         public string ChordName { get; set; }
         
         [XmlAttribute("fret0")]
-        public sbyte Fret0 { get; set; }
+        public Int32 Fret0 { get; set; }
 
         [XmlAttribute("fret1")]
-        public sbyte Fret1 { get; set; }
+        public Int32 Fret1 { get; set; }
 
         [XmlAttribute("fret2")]
-        public sbyte Fret2 { get; set; }
+        public Int32 Fret2 { get; set; }
 
         [XmlAttribute("fret3")]
-        public sbyte Fret3 { get; set; }
+        public Int32 Fret3 { get; set; }
 
         [XmlAttribute("fret4")]
-        public sbyte Fret4 { get; set; }
+        public Int32 Fret4 { get; set; }
 
         [XmlAttribute("fret5")]
-        public sbyte Fret5 { get; set; }
+        public Int32 Fret5 { get; set; }
 
         [XmlAttribute("finger0")]
-        public sbyte Finger0 { get; set; }
+        public Int32 Finger0 { get; set; }
 
         [XmlAttribute("finger1")]
-        public sbyte Finger1 { get; set; }
+        public Int32 Finger1 { get; set; }
 
         [XmlAttribute("finger2")]
-        public sbyte Finger2 { get; set; }
+        public Int32 Finger2 { get; set; }
 
         [XmlAttribute("finger3")]
-        public sbyte Finger3 { get; set; }
+        public Int32 Finger3 { get; set; }
 
         [XmlAttribute("finger4")]
-        public sbyte Finger4 { get; set; }
+        public Int32 Finger4 { get; set; }
 
         [XmlAttribute("finger5")]
-        public sbyte Finger5 { get; set; }
+        public Int32 Finger5 { get; set; }
     }
 
     //TBD
@@ -610,10 +610,10 @@ namespace RocksmithToolkitLib.Xml
         public Single Sustain { get; set; }
 
         [XmlAttribute("string")]
-        public Byte String { get; set; }
+        public Int32 String { get; set; }
 
         [XmlAttribute("slideTo")]
-        public sbyte SlideTo { get; set; }
+        public Int32 SlideTo { get; set; }
 
         [XmlAttribute("pullOff")]
         public Byte PullOff { get; set; }
@@ -631,16 +631,16 @@ namespace RocksmithToolkitLib.Xml
         public Byte HammerOn { get; set; }
 
         [XmlAttribute("fret")]
-        public SByte Fret { get; set; }
+        public Int32 Fret { get; set; }
 
         [XmlAttribute("bend")]
-        public Byte Bend { get; set; }
+        public Int32 Bend { get; set; }
 
         [XmlAttribute("pluck")]
-        public sbyte Pluck { get; set; }
+        public Int32 Pluck { get; set; }
 
         [XmlAttribute("slap")]
-        public sbyte Slap { get; set; }
+        public Int32 Slap { get; set; }
     }
 
     [XmlType("chord")]

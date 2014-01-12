@@ -210,10 +210,49 @@ namespace RocksmithToolkitLib.Xml {
         public Int32 Id { get; set; }
     }
 
-    public class SongChordTemplate2014 : SongChordTemplate
+    public class SongChordTemplate2014 
     {
         [XmlAttribute("displayName")]
-        public string DisplayName { get; set; }        
+        public string DisplayName { get; set; }
+
+        [XmlAttribute("chordName")]
+        public string ChordName { get; set; }
+
+        [XmlAttribute("fret0")]
+        public sbyte Fret0 { get; set; }
+
+        [XmlAttribute("fret1")]
+        public sbyte Fret1 { get; set; }
+
+        [XmlAttribute("fret2")]
+        public sbyte Fret2 { get; set; }
+
+        [XmlAttribute("fret3")]
+        public sbyte Fret3 { get; set; }
+
+        [XmlAttribute("fret4")]
+        public sbyte Fret4 { get; set; }
+
+        [XmlAttribute("fret5")]
+        public sbyte Fret5 { get; set; }
+
+        [XmlAttribute("finger0")]
+        public sbyte Finger0 { get; set; }
+
+        [XmlAttribute("finger1")]
+        public sbyte Finger1 { get; set; }
+
+        [XmlAttribute("finger2")]
+        public sbyte Finger2 { get; set; }
+
+        [XmlAttribute("finger3")]
+        public sbyte Finger3 { get; set; }
+
+        [XmlAttribute("finger4")]
+        public sbyte Finger4 { get; set; }
+
+        [XmlAttribute("finger5")]
+        public sbyte Finger5 { get; set; }
     }
 
     public class SongLevel2014 {
@@ -237,7 +276,53 @@ namespace RocksmithToolkitLib.Xml {
         public SongHandShape[] HandShapes { get; set; }
     }
 
-    public class SongNote2014 : SongNote {
+    public class SongNote2014
+    {
+        [XmlAttribute("ignore")]
+        public Byte Ignore { get; set; }
+
+        [XmlAttribute("time")]
+        public Single Time { get; set; }
+
+        [XmlAttribute("tremolo")]
+        public Byte Tremolo { get; set; }
+
+        [XmlAttribute("sustain")]
+        public Single Sustain { get; set; }
+
+        [XmlAttribute("string")]
+        public Byte String { get; set; }
+
+        [XmlAttribute("slideTo")]
+        public sbyte SlideTo { get; set; }
+
+        [XmlAttribute("pullOff")]
+        public Byte PullOff { get; set; }
+
+        [XmlAttribute("palmMute")]
+        public Byte PalmMute { get; set; }
+
+        [XmlAttribute("hopo")]
+        public Byte Hopo { get; set; }
+
+        [XmlAttribute("harmonic")]
+        public Byte Harmonic { get; set; }
+
+        [XmlAttribute("hammerOn")]
+        public Byte HammerOn { get; set; }
+
+        [XmlAttribute("fret")]
+        public SByte Fret { get; set; }
+
+        [XmlAttribute("bend")]
+        public Byte Bend { get; set; }
+
+        [XmlAttribute("pluck")]
+        public sbyte Pluck { get; set; }
+
+        [XmlAttribute("slap")]
+        public sbyte Slap { get; set; }
+
         [XmlAttribute("linkNext")]
         public Int32 LinkNext { get; set; }
 
