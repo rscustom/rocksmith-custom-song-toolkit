@@ -27,6 +27,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public List<Arrangement> Arrangements { get; set; }
         public float Volume { get; set; }
         public PackageMagic SignatureType { get; set; }
+        public string PackageVersion { get; set; }
 
         private List<XBox360License> xbox360Licenses = null;
         public List<XBox360License> XBox360Licenses

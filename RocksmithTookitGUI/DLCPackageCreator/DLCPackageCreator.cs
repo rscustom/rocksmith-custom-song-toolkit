@@ -143,6 +143,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { AverageTempoTB.Text = value; }
         }
 
+        public string PackageVersion
+        {
+            get { return packageVersionTB.Text; }
+            set { packageVersionTB.Text = value; }
+        }
+
         //Tones
         private IEnumerable<string> GetToneNames()
         {
@@ -280,7 +286,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string dlcSavePath;
             using (var ofd = new SaveFileDialog())
             {
-                ofd.FileName = String.Format("{0} - {1}", Artist, SongTitle);
+                ofd.FileName = String.Format("{0} {1} v{2}", Artist, SongTitle, PackageVersion).Replace(" ", "_").Replace(".", "_");
                 ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
@@ -418,6 +424,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             platformMAC.Checked = info.Mac;
             platformXBox360.Checked = info.XBox360;
             platformPS3.Checked = info.PS3;
+
+            PackageVersion = info.PackageVersion;
 
             TonesLB.Items.Clear();
             switch (CurrentGameVersion)
@@ -564,6 +572,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 AppIdTB.Focus();
                 return null;
             }
+            if (String.IsNullOrEmpty(PackageVersion))
+                PackageVersion = "1";
 
             //Album Art validation (alert only)
             if (String.IsNullOrEmpty(AlbumArtPath) && !File.Exists(AlbumArtPath))
@@ -701,7 +711,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Tones = tones,
                 TonesRS2014 = tonesRS2014,
                 Volume = (float)volumeBox.Value,
-                SignatureType = PackageMagic.CON
+                SignatureType = PackageMagic.CON,
+                PackageVersion = PackageVersion
             };
 
             return data;

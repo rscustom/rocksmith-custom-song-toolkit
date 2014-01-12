@@ -62,6 +62,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.keyboardDescArrLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.packageVersionTB = new RocksmithToolkitGUI.CueTextBox();
             this.DlcNameTB = new RocksmithToolkitGUI.CueTextBox();
             this.SongDisplayNameTB = new RocksmithToolkitGUI.CueTextBox();
             this.ArtistTB = new RocksmithToolkitGUI.CueTextBox();
@@ -87,7 +88,7 @@
             this.albumArtButton.Location = new System.Drawing.Point(457, 18);
             this.albumArtButton.Name = "albumArtButton";
             this.albumArtButton.Size = new System.Drawing.Size(34, 23);
-            this.albumArtButton.TabIndex = 23;
+            this.albumArtButton.TabIndex = 24;
             this.albumArtButton.Text = "...";
             this.albumArtButton.UseVisualStyleBackColor = true;
             this.albumArtButton.Click += new System.EventHandler(this.albumArtButton_Click);
@@ -99,7 +100,7 @@
             this.dlcGenerateButton.Location = new System.Drawing.Point(404, 497);
             this.dlcGenerateButton.Name = "dlcGenerateButton";
             this.dlcGenerateButton.Size = new System.Drawing.Size(97, 29);
-            this.dlcGenerateButton.TabIndex = 32;
+            this.dlcGenerateButton.TabIndex = 34;
             this.dlcGenerateButton.Text = "Generate";
             this.dlcGenerateButton.UseVisualStyleBackColor = false;
             this.dlcGenerateButton.Click += new System.EventHandler(this.dlcGenerateButton_Click);
@@ -109,7 +110,7 @@
             this.openAudioButton.Location = new System.Drawing.Point(457, 43);
             this.openAudioButton.Name = "openAudioButton";
             this.openAudioButton.Size = new System.Drawing.Size(34, 23);
-            this.openAudioButton.TabIndex = 25;
+            this.openAudioButton.TabIndex = 26;
             this.openAudioButton.Text = "...";
             this.openAudioButton.UseVisualStyleBackColor = true;
             this.openAudioButton.Click += new System.EventHandler(this.openAudioButton_Click);
@@ -119,7 +120,7 @@
             this.arrangementRemoveButton.Location = new System.Drawing.Point(400, 65);
             this.arrangementRemoveButton.Name = "arrangementRemoveButton";
             this.arrangementRemoveButton.Size = new System.Drawing.Size(91, 23);
-            this.arrangementRemoveButton.TabIndex = 21;
+            this.arrangementRemoveButton.TabIndex = 22;
             this.arrangementRemoveButton.Text = "Remove";
             this.arrangementRemoveButton.UseVisualStyleBackColor = true;
             this.arrangementRemoveButton.Click += new System.EventHandler(this.arrangementRemoveButton_Click);
@@ -129,7 +130,7 @@
             this.arrangementAddButton.Location = new System.Drawing.Point(400, 16);
             this.arrangementAddButton.Name = "arrangementAddButton";
             this.arrangementAddButton.Size = new System.Drawing.Size(91, 23);
-            this.arrangementAddButton.TabIndex = 19;
+            this.arrangementAddButton.TabIndex = 20;
             this.arrangementAddButton.Text = "Add";
             this.arrangementAddButton.UseVisualStyleBackColor = true;
             this.arrangementAddButton.Click += new System.EventHandler(this.arrangementAddButton_Click);
@@ -140,7 +141,7 @@
             this.ArrangementLB.Location = new System.Drawing.Point(6, 18);
             this.ArrangementLB.Name = "ArrangementLB";
             this.ArrangementLB.Size = new System.Drawing.Size(389, 69);
-            this.ArrangementLB.TabIndex = 18;
+            this.ArrangementLB.TabIndex = 19;
             this.ArrangementLB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBox_KeyDown);
             this.ArrangementLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ArrangementLB_MouseDoubleClick);
             // 
@@ -151,7 +152,7 @@
             this.dlcSaveButton.Location = new System.Drawing.Point(106, 497);
             this.dlcSaveButton.Name = "dlcSaveButton";
             this.dlcSaveButton.Size = new System.Drawing.Size(97, 29);
-            this.dlcSaveButton.TabIndex = 31;
+            this.dlcSaveButton.TabIndex = 33;
             this.dlcSaveButton.Text = "Save Package";
             this.dlcSaveButton.UseVisualStyleBackColor = false;
             this.dlcSaveButton.Click += new System.EventHandler(this.dlcSaveButton_Click);
@@ -175,7 +176,7 @@
             this.cmbAppIds.Location = new System.Drawing.Point(197, 68);
             this.cmbAppIds.Margin = new System.Windows.Forms.Padding(2);
             this.cmbAppIds.Name = "cmbAppIds";
-            this.cmbAppIds.Size = new System.Drawing.Size(198, 21);
+            this.cmbAppIds.Size = new System.Drawing.Size(171, 21);
             this.cmbAppIds.TabIndex = 16;
             this.cmbAppIds.SelectedIndexChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
@@ -184,7 +185,7 @@
             this.toneRemoveButton.Location = new System.Drawing.Point(447, 43);
             this.toneRemoveButton.Name = "toneRemoveButton";
             this.toneRemoveButton.Size = new System.Drawing.Size(44, 23);
-            this.toneRemoveButton.TabIndex = 29;
+            this.toneRemoveButton.TabIndex = 30;
             this.toneRemoveButton.Text = "Del";
             this.toneRemoveButton.UseVisualStyleBackColor = true;
             this.toneRemoveButton.Click += new System.EventHandler(this.toneRemoveButton_Click);
@@ -194,7 +195,7 @@
             this.toneAddButton.Location = new System.Drawing.Point(400, 18);
             this.toneAddButton.Name = "toneAddButton";
             this.toneAddButton.Size = new System.Drawing.Size(91, 23);
-            this.toneAddButton.TabIndex = 27;
+            this.toneAddButton.TabIndex = 28;
             this.toneAddButton.Text = "Add";
             this.toneAddButton.UseVisualStyleBackColor = true;
             this.toneAddButton.Click += new System.EventHandler(this.toneAddButton_Click);
@@ -205,7 +206,7 @@
             this.TonesLB.Location = new System.Drawing.Point(6, 19);
             this.TonesLB.Name = "TonesLB";
             this.TonesLB.Size = new System.Drawing.Size(389, 95);
-            this.TonesLB.TabIndex = 26;
+            this.TonesLB.TabIndex = 27;
             this.TonesLB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBox_KeyDown);
             this.TonesLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ToneLB_MouseDoubleClick);
             // 
@@ -214,7 +215,7 @@
             this.arrangementEditButton.Location = new System.Drawing.Point(400, 40);
             this.arrangementEditButton.Name = "arrangementEditButton";
             this.arrangementEditButton.Size = new System.Drawing.Size(91, 23);
-            this.arrangementEditButton.TabIndex = 20;
+            this.arrangementEditButton.TabIndex = 21;
             this.arrangementEditButton.Text = "Edit";
             this.arrangementEditButton.UseVisualStyleBackColor = true;
             this.arrangementEditButton.Click += new System.EventHandler(this.arrangementEditButton_Click);
@@ -224,7 +225,7 @@
             this.toneEditButton.Location = new System.Drawing.Point(400, 43);
             this.toneEditButton.Name = "toneEditButton";
             this.toneEditButton.Size = new System.Drawing.Size(45, 23);
-            this.toneEditButton.TabIndex = 28;
+            this.toneEditButton.TabIndex = 29;
             this.toneEditButton.Text = "Edit";
             this.toneEditButton.UseVisualStyleBackColor = true;
             this.toneEditButton.Click += new System.EventHandler(this.toneEditButton_Click);
@@ -234,7 +235,7 @@
             this.toneImportButton.Location = new System.Drawing.Point(400, 92);
             this.toneImportButton.Name = "toneImportButton";
             this.toneImportButton.Size = new System.Drawing.Size(91, 23);
-            this.toneImportButton.TabIndex = 30;
+            this.toneImportButton.TabIndex = 32;
             this.toneImportButton.Text = "Import";
             this.toneImportButton.UseVisualStyleBackColor = true;
             this.toneImportButton.Click += new System.EventHandler(this.toneImportButton_Click);
@@ -396,7 +397,7 @@
             this.AlbumArtPathTB.Location = new System.Drawing.Point(6, 19);
             this.AlbumArtPathTB.Name = "AlbumArtPathTB";
             this.AlbumArtPathTB.Size = new System.Drawing.Size(445, 20);
-            this.AlbumArtPathTB.TabIndex = 22;
+            this.AlbumArtPathTB.TabIndex = 23;
             // 
             // audioPathTB
             // 
@@ -406,7 +407,7 @@
             this.audioPathTB.Location = new System.Drawing.Point(6, 45);
             this.audioPathTB.Name = "audioPathTB";
             this.audioPathTB.Size = new System.Drawing.Size(445, 20);
-            this.audioPathTB.TabIndex = 24;
+            this.audioPathTB.TabIndex = 25;
             // 
             // gbTones
             // 
@@ -430,7 +431,7 @@
             this.toneDuplicateButton.Location = new System.Drawing.Point(400, 67);
             this.toneDuplicateButton.Name = "toneDuplicateButton";
             this.toneDuplicateButton.Size = new System.Drawing.Size(91, 23);
-            this.toneDuplicateButton.TabIndex = 37;
+            this.toneDuplicateButton.TabIndex = 31;
             this.toneDuplicateButton.Text = "Duplicate";
             this.toneDuplicateButton.UseVisualStyleBackColor = true;
             this.toneDuplicateButton.Click += new System.EventHandler(this.toneDuplicateButton_Click);
@@ -473,6 +474,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.packageVersionTB);
             this.groupBox2.Controls.Add(this.DlcNameTB);
             this.groupBox2.Controls.Add(this.SongDisplayNameTB);
             this.groupBox2.Controls.Add(this.ArtistTB);
@@ -493,6 +495,17 @@
             this.groupBox2.TabIndex = 81;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Song Information";
+            // 
+            // packageVersionTB
+            // 
+            this.packageVersionTB.Cue = "Version";
+            this.packageVersionTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.packageVersionTB.ForeColor = System.Drawing.Color.Gray;
+            this.packageVersionTB.Location = new System.Drawing.Point(439, 68);
+            this.packageVersionTB.MaxLength = 5;
+            this.packageVersionTB.Name = "packageVersionTB";
+            this.packageVersionTB.Size = new System.Drawing.Size(52, 20);
+            this.packageVersionTB.TabIndex = 18;
             // 
             // DlcNameTB
             // 
@@ -547,12 +560,12 @@
             // 
             // AverageTempoTB
             // 
-            this.AverageTempoTB.Cue = "Average Tempo";
+            this.AverageTempoTB.Cue = "Avg Tempo";
             this.AverageTempoTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.AverageTempoTB.ForeColor = System.Drawing.Color.Gray;
-            this.AverageTempoTB.Location = new System.Drawing.Point(400, 69);
+            this.AverageTempoTB.Location = new System.Drawing.Point(373, 68);
             this.AverageTempoTB.Name = "AverageTempoTB";
-            this.AverageTempoTB.Size = new System.Drawing.Size(91, 20);
+            this.AverageTempoTB.Size = new System.Drawing.Size(60, 20);
             this.AverageTempoTB.TabIndex = 17;
             this.AverageTempoTB.Leave += new System.EventHandler(this.AverageTempoTB_Leave);
             // 
@@ -710,5 +723,6 @@
         private System.Windows.Forms.GroupBox gbGameVersion;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button toneDuplicateButton;
+        private CueTextBox packageVersionTB;
     }
 }
