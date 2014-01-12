@@ -74,7 +74,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.ArrangementSort = attr.ArrangementSort;
             this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
             this.Tuning = TuningDefinitionRepository.Instance().Select(attr.Tuning, GameVersion.RS2014).UIName;
-            this.ScrollSpeed = (int)attr.DynamicVisualDensity.Last();
+            this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last());
             this.PluckedType = (PluckedType)attr.ArrangementProperties.BassPick;
             this.RouteMask = (RouteMask)attr.ArrangementProperties.RouteMask;
             this.ToneBase = attr.Tone_Base;
