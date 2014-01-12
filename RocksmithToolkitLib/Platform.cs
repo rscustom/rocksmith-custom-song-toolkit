@@ -25,5 +25,16 @@ namespace RocksmithToolkitLib
             this.platform = (GamePlatform)Enum.Parse(typeof(GamePlatform), platform);
             this.version = (GameVersion)Enum.Parse(typeof(GameVersion), version);
         }
+
+        public override bool Equals(object obj)
+        {
+            var o = obj as Platform;
+            return o != null && o.platform == this.platform && o.version == this.version;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.platform.GetHashCode() + this.version.GetHashCode();
+        }
     }
 }
