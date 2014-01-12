@@ -162,7 +162,7 @@ namespace packer
                     try
                     {
                         Packer.DeleteFixedAudio(arguments.Input.FirstOrDefault().ToString());
-                        Packer.Pack(Path.GetFullPath(arguments.Input), arguments.Output, arguments.UpdateSng);
+                        Packer.Pack(Path.GetFullPath(arguments.Input), Path.GetFullPath(arguments.Output), arguments.UpdateSng);
                         Console.WriteLine("Packing is complete.");
                         return 0;
                     }
@@ -193,7 +193,7 @@ namespace packer
 
                         try
                         {
-                            Packer.Unpack(sourceFileName, arguments.Output);
+                            Packer.Unpack(Path.GetFullPath(sourceFileName), Path.GetFullPath(arguments.Output));
 
                             if (arguments.DecodeOGG)
                             {
@@ -205,7 +205,7 @@ namespace packer
                                 foreach (var file in audioFiles)
                                 {
                                     var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                                    OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Path.GetExtension(file).GetWwiseVersion());
+                                    OggFile.Revorb(Path.GetFullPath(file), Path.GetFullPath(outputFileName), Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Path.GetExtension(file).GetWwiseVersion());
                                 }
                             }
                         }
