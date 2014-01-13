@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -56,6 +58,29 @@ namespace RocksmithToolkitLib.Extensions
         private static ImageCodecInfo GetEncoderInfo(ImageFormat format)
         {
             return ImageCodecInfo.GetImageDecoders().SingleOrDefault(c => c.FormatID == format.Guid);
+        }
+
+        public static bool IsValidImage(this string fileName)
+        {
+            //Supported image types in DLC Package Converter
+            var mimeByteHeaderList = new Dictionary<string, byte[]>();
+            mimeByteHeaderList.Add(".dds", new byte[] { 68, 68, 83, 32, 124 });
+            mimeByteHeaderList.Add(".gif", new byte[] { 71, 73, 70, 56 });
+            mimeByteHeaderList.Add(".jpg", new byte[] { 255, 216, 255 });
+            mimeByteHeaderList.Add(".jpeg", new byte[] { 255, 216, 255 });
+            mimeByteHeaderList.Add(".bmp", new byte[] { 66, 77 });
+            mimeByteHeaderList.Add(".png", new byte[] { 137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82 });
+            
+            var extension = Path.GetExtension(fileName);
+            if (mimeByteHeaderList.ContainsKey(extension))
+            {
+                byte[] mime = mimeByteHeaderList[extension];
+                byte[] file = File.ReadAllBytes(fileName);
+
+                return file.Take(mime.Length).SequenceEqual(mime);
+            }
+            else
+                return false;
         }
     }
 }

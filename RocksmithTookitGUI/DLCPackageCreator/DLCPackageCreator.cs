@@ -327,7 +327,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 ofd.Filter = "Album Art File (*.bmp,*.dds,*.gif,*.jpg,*.jpeg,*.png)|*.bmp;*.dds;*.gif;*.jpg;*.jpeg;*.png";
                 if (ofd.ShowDialog() == DialogResult.OK)
-                    AlbumArtPath = ofd.FileName;
+                {
+                    if (ofd.FileName.IsValidImage())
+                        AlbumArtPath = ofd.FileName;
+                    else
+                        MessageBox.Show("The selected image is not valid or not supported." + Environment.NewLine +
+                                        "MimeType doesn't match with file extension!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
             }
         }
 
