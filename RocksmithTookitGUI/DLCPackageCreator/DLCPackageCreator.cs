@@ -308,7 +308,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // cache cleanup so we don't serialize or reuse data that could be changed
             packageData.CleanCache();
 
-            MessageBox.Show("Package was generated.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (MessageBox.Show("Package was generated." + Environment.NewLine +
+                                "You want to open the folder in which the package was generated?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes) {
+                Process.Start(Path.GetDirectoryName(dlcSavePath));
+            }
+
             this.Focus();
         }
 
