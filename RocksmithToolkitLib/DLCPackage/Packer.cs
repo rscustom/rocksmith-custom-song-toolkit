@@ -77,13 +77,10 @@ namespace RocksmithToolkitLib.DLCPackage
                         {
 
                             if (useCryptography)
-                            {
                                 RijndaelEncryptor.DecryptFile(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
-                            }
                             else
-                            {
                                 inputFileStream.CopyTo(inputStream);
-                            }
+                            
                             ExtractPSARC(sourceFileName, savePath, inputStream, platform);
                         }
                     }
@@ -95,7 +92,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     UnpackPS3Package(sourceFileName, savePath, platform);
                     return;
                 case GamePlatform.None:
-                    throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+                    throw new InvalidOperationException("Platform not found :(");
             }
         }
 

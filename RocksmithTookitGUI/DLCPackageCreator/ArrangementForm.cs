@@ -138,6 +138,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillToneCombo(toneCCombo, toneNames, false);
             FillToneCombo(toneDCombo, toneNames, false);
 
+            scrollSpeedTrackBar.Value = arrangement.ScrollSpeed;
             scrollSpeedTrackBar.Scroll += (sender, e) =>
             {
                 scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeedTrackBar.Value) / 10);

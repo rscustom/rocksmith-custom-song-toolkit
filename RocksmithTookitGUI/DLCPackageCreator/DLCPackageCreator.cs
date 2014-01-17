@@ -21,6 +21,7 @@ using System.Diagnostics;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.ToolkitTone;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
+using Ookii.Dialogs;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -427,6 +428,67 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
+            FillPackageCreatorForm(info, dlcLoadPath);
+
+            MessageBox.Show(CurrentRocksmithTitle + " DLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void dlcImportButton_Click(object sender, EventArgs e) {
+            string sourcePackage;
+            string savePath;
+
+            // GET PATH
+            using (var ofd = new OpenFileDialog()) {
+                ofd.Title = "Select one DLC to import";
+
+                var filter = CurrentRocksmithTitle + " PC/Mac Package (*.psarc)|*.psarc|";
+                filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*|";
+                filter += CurrentRocksmithTitle + " PS3 Package (*.edat)|*.edat";
+                ofd.Filter = filter;
+
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+                sourcePackage = ofd.FileName;
+            }
+
+            using (var fbd = new VistaFolderBrowserDialog()) {
+                fbd.Description = "Select folder to save project artifacts";
+                fbd.UseDescriptionForTitle = true;
+                
+                if (fbd.ShowDialog() != DialogResult.OK)
+                    return;
+                savePath = fbd.SelectedPath;
+            }
+
+            // UNPACK
+            Packer.Unpack(sourcePackage, savePath);
+
+            // LOAD DATA
+            var info = DLCPackageData.LoadFromFile(savePath);
+            info.PackageVersion = "1";
+            switch (sourcePackage.GetPlatform().platform)
+            {
+                case GamePlatform.Pc:
+                    info.Pc = true;
+                    break;
+                case GamePlatform.Mac:
+                    info.Mac = true;
+                    break;
+                case GamePlatform.XBox360:
+                    info.XBox360 = true;
+                    break;
+                case GamePlatform.PS3:
+                    info.PS3 = true;
+                    break;
+            }
+
+            // FILL PACKAGE CREATOR FORM
+            FillPackageCreatorForm(info, savePath);
+
+            MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void FillPackageCreatorForm(DLCPackageData info, string filesBaseDir) {
             RS2012.Checked = info.GameVersion == GameVersion.RS2012;
             RS2014.Checked = info.GameVersion == GameVersion.RS2014;
 
@@ -438,16 +500,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             PackageVersion = info.PackageVersion;
 
             TonesLB.Items.Clear();
-            switch (CurrentGameVersion)
-            {
+            switch (CurrentGameVersion) {
                 case GameVersion.RS2012:
                     if (info.Tones == null)
-                    info.Tones = new List<Tone>();
+                        info.Tones = new List<Tone>();
                     if (info.Tones.Count == 0)
                         info.Tones.Add(CreateNewTone());
 
-                    foreach (var tone in info.Tones)
-                    {
+                    foreach (var tone in info.Tones) {
                         if (String.IsNullOrEmpty(tone.Key))
                             tone.Key = tone.Name.GetValidName();
 
@@ -456,21 +516,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     break;
                 case GameVersion.RS2014:
                     if (info.TonesRS2014 == null)
-                    info.TonesRS2014 = new List<Tone2014>();
+                        info.TonesRS2014 = new List<Tone2014>();
                     if (info.TonesRS2014.Count == 0)
                         info.TonesRS2014.Add(CreateNewTone());
 
-                    foreach (var toneRS2014 in info.TonesRS2014)
-                    {
+                    foreach (var toneRS2014 in info.TonesRS2014) {
                         if (String.IsNullOrEmpty(toneRS2014.Key))
                             toneRS2014.Key = toneRS2014.Name.GetValidName();
 
                         TonesLB.Items.Add(toneRS2014);
                     }
                     break;
-            }              
+            }
 
-            var BasePath = new Uri(Path.GetDirectoryName(Path.GetFullPath(dlcLoadPath)) + Path.DirectorySeparatorChar);
+            var BasePath = new Uri(Path.GetDirectoryName(Path.GetFullPath(filesBaseDir)) + Path.DirectorySeparatorChar);
 
             // Song INFO
             DlcNameTB.Text = info.Name;
@@ -502,16 +561,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //    rbuttonSignatureLIVE.Checked = info.SignatureType == PackageMagic.LIVE;
 
             ArrangementLB.Items.Clear();
-            foreach (var arrangement in info.Arrangements)
-            {
+            foreach (var arrangement in info.Arrangements) {
                 arrangement.SongXml.File = BasePath.AbsoluteTo(arrangement.SongXml.File);
+
                 if (arrangement.ToneBase == null)
-                    arrangement.ToneBase = info.Tones[0].Name;
+                {
+                    switch (CurrentGameVersion) {
+                        case GameVersion.RS2012:
+                            arrangement.ToneBase = info.Tones[0].Name;
+                            break;
+                        case GameVersion.RS2014:
+                            arrangement.ToneBase = info.TonesRS2014[0].Name;
+                            break;
+                    }
+                }
+                
 
                 ArrangementLB.Items.Add(arrangement);
             }
-
-            MessageBox.Show(CurrentRocksmithTitle + " DLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void Song_Volume_Tip(object sender, EventArgs e)
@@ -1034,6 +1101,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     audioPathTB.Cue = "Converted audio on Wwise 2013 for Windows, Mac, XBox360 or PS3 (*.wem)";
                     break;
              }
+
+            // Import Package RS2014 only
+            dlcImportButton.Enabled = CurrentGameVersion == GameVersion.RS2014;
         }
 
         private void PopulateAppIdCombo()

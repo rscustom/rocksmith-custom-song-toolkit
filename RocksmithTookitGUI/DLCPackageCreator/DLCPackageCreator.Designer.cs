@@ -74,6 +74,7 @@
             this.SongDisplayNameSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.ArtistSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.gbGameVersion = new System.Windows.Forms.GroupBox();
+            this.dlcImportButton = new System.Windows.Forms.Button();
             this.gbPlatofmr.SuspendLayout();
             this.gbFiles.SuspendLayout();
             this.gbTones.SuspendLayout();
@@ -644,10 +645,23 @@
             this.gbGameVersion.TabStop = false;
             this.gbGameVersion.Text = "Game Version";
             // 
+            // dlcImportButton
+            // 
+            this.dlcImportButton.BackColor = System.Drawing.SystemColors.Control;
+            this.dlcImportButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.dlcImportButton.Location = new System.Drawing.Point(210, 497);
+            this.dlcImportButton.Name = "dlcImportButton";
+            this.dlcImportButton.Size = new System.Drawing.Size(97, 29);
+            this.dlcImportButton.TabIndex = 83;
+            this.dlcImportButton.Text = "Import Package";
+            this.dlcImportButton.UseVisualStyleBackColor = false;
+            this.dlcImportButton.Click += new System.EventHandler(this.dlcImportButton_Click);
+            // 
             // DLCPackageCreator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.dlcImportButton);
             this.Controls.Add(this.gbGameVersion);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -724,5 +738,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button toneDuplicateButton;
         private CueTextBox packageVersionTB;
+        private System.Windows.Forms.Button dlcImportButton;
     }
 }
