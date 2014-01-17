@@ -550,11 +550,11 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private static void UpdateSng2014(string songDirectory, Platform platform) {
-            var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, "songs", "arr"));
+            var xmlFiles = Directory.GetFiles(Path.Combine(songDirectory, "songs", "arr"), "*_*.xml", SearchOption.AllDirectories);
 
             foreach (var xmlFile in xmlFiles)
             {
-                if (File.Exists(xmlFile) && !(xmlFile.ToLower().IndexOf("showlight") > 0))
+                if (File.Exists(xmlFile) && !(xmlFile.ToLower().Contains("showlight")))
                 {
                     var sngFile = Path.Combine(songDirectory, Path.Combine("songs","bin", platform.GetPathName()[1]), Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
                     var arrType = ArrangementType.Guitar;
@@ -567,7 +567,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         sng.writeSng(fs, platform);
                     }
                 }
-                if (File.Exists(xmlFile) && (xmlFile.ToLower().IndexOf("showlight") > 0))
+                if (File.Exists(xmlFile) && (xmlFile.ToLower().Contains("showlight")))
                 {
                     var shl = new RocksmithToolkitLib.DLCPackage.Showlight.Showlights();
                     shl.ShowlightList = shl.FixShowlights(RocksmithToolkitLib.DLCPackage.Showlight.Showlights.LoadFromFile(xmlFile).ShowlightList);

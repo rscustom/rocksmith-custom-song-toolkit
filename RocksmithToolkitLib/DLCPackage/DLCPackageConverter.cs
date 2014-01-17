@@ -48,9 +48,8 @@ namespace RocksmithToolkitLib.DLCPackage
             if (needRebuildPackage)
             {
                 if (hasNoXmlSong)
-                {
                     return String.Format("Package {0} is not a custom song, you need a custom song to convert Rocksmith 2014 from non similiar platforms.", sourcePackage);
-                }
+
                 ConvertPackageRebuilding(unpackedDir, targetFileName, targetPlatform, appId);
             }
             else

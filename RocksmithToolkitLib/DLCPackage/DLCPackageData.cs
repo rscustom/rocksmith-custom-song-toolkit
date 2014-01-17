@@ -62,12 +62,8 @@ namespace RocksmithToolkitLib.DLCPackage
         // cache album art conversion
         public Dictionary<int, string> AlbumArt { get; set; }
 
-        #endregion
-
         public static DLCPackageData LoadFromFile(string unpackedDir) {
             //Load files
-            var xmlSongs = Directory.GetFiles(unpackedDir, "*_*.xml", SearchOption.AllDirectories);
-
             var jsonFiles = Directory.GetFiles(unpackedDir, "*.json", SearchOption.AllDirectories);
             var aggregateFile = Directory.GetFiles(unpackedDir, "*.nt", SearchOption.AllDirectories)[0];
             var aggregateData = AggregateGraph2014.LoadFromFile(aggregateFile);
@@ -175,6 +171,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             return data;
         }
+
+        #endregion
 
         // needs to be called after all packages for platforms are created
         public void CleanCache() {
