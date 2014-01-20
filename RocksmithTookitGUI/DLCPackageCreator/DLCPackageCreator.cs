@@ -941,7 +941,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                         if (toneSlotsAffected)
                             ArrangementLB.Items[i] = arrangement;
-                    }                    
+                    }
                 }
             }
         }

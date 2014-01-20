@@ -42,7 +42,7 @@ namespace RocksmithToolkitLib.DLCPackage {
         /// <summary>
         /// Persist object list into *.xml file
         /// </summary>
-        public void Save() {
+        public void Save(bool reload = false) {
             if (OnSaving != null)
                 this.OnSaving.Invoke();
 
@@ -55,15 +55,18 @@ namespace RocksmithToolkitLib.DLCPackage {
 
             if (OnSaved != null)
                 this.OnSaved.Invoke();
+
+            if (reload)
+                Load();
         }
 
         /// <summary>
         /// Add item into object list
         /// </summary>
         /// <param name="value">object</param>
-        public void Add(T value) {
+        public void Add(T value, bool reload = false) {
             List.Add(value);
-            Save();
+            Save(reload);
         }
 
         /// <summary>

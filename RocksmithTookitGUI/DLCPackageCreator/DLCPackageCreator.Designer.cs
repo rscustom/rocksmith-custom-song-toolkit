@@ -699,7 +699,6 @@
         private RocksmithToolkitGUI.CueTextBox audioPathTB;
         private System.Windows.Forms.Button arrangementRemoveButton;
         private System.Windows.Forms.Button arrangementAddButton;
-        private System.Windows.Forms.ListBox ArrangementLB;
         private RocksmithToolkitGUI.CueTextBox YearTB;
         private RocksmithToolkitGUI.CueTextBox AlbumTB;
         private RocksmithToolkitGUI.CueTextBox ArtistTB;
@@ -739,5 +738,6 @@
         private System.Windows.Forms.Button toneDuplicateButton;
         private CueTextBox packageVersionTB;
         private System.Windows.Forms.Button dlcImportButton;
+        public System.Windows.Forms.ListBox ArrangementLB;
     }
 }

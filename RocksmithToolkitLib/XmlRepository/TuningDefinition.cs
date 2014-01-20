@@ -14,11 +14,13 @@ namespace RocksmithToolkitLib.DLCPackage {
         public string Name { get; set; }
         [XmlAttribute]
         public string UIName { get; set; }
+        [XmlAttribute]
+        public bool Custom { get; set; }
         [XmlElement]
         public TuningStrings Tuning { get; set; }
 
         public override string ToString() {
-            return UIName;
+            return (Custom) ? String.Format("{0} (custom)", UIName) : UIName;
         }
     }
 }

@@ -73,6 +73,7 @@
             this.routeMaskBassRadio = new System.Windows.Forms.RadioButton();
             this.routeMaskRhythmRadio = new System.Windows.Forms.RadioButton();
             this.routeMaskLeadRadio = new System.Windows.Forms.RadioButton();
+            this.tuningEditButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).BeginInit();
             this.gbTone.SuspendLayout();
             this.gbDLCId.SuspendLayout();
@@ -112,7 +113,7 @@
             this.arrangementTypeCombo.Location = new System.Drawing.Point(54, 18);
             this.arrangementTypeCombo.Margin = new System.Windows.Forms.Padding(2);
             this.arrangementTypeCombo.Name = "arrangementTypeCombo";
-            this.arrangementTypeCombo.Size = new System.Drawing.Size(134, 21);
+            this.arrangementTypeCombo.Size = new System.Drawing.Size(152, 21);
             this.arrangementTypeCombo.TabIndex = 2;
             // 
             // label1
@@ -152,7 +153,7 @@
             // scrollSpeedTrackBar
             // 
             this.scrollSpeedTrackBar.AutoSize = false;
-            this.scrollSpeedTrackBar.Location = new System.Drawing.Point(42, 18);
+            this.scrollSpeedTrackBar.Location = new System.Drawing.Point(40, 18);
             this.scrollSpeedTrackBar.Margin = new System.Windows.Forms.Padding(2);
             this.scrollSpeedTrackBar.Maximum = 45;
             this.scrollSpeedTrackBar.Minimum = 10;
@@ -167,7 +168,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(4, 21);
+            this.label3.Location = new System.Drawing.Point(2, 21);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(44, 13);
@@ -178,7 +179,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label5.Location = new System.Drawing.Point(169, 21);
+            this.label5.Location = new System.Drawing.Point(167, 21);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 13);
@@ -189,7 +190,7 @@
             // 
             this.scrollSpeedDisplay.AutoSize = true;
             this.scrollSpeedDisplay.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.scrollSpeedDisplay.Location = new System.Drawing.Point(71, 39);
+            this.scrollSpeedDisplay.Location = new System.Drawing.Point(69, 39);
             this.scrollSpeedDisplay.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.scrollSpeedDisplay.Name = "scrollSpeedDisplay";
             this.scrollSpeedDisplay.Size = new System.Drawing.Size(71, 13);
@@ -225,7 +226,7 @@
             this.arrangementNameCombo.Location = new System.Drawing.Point(54, 43);
             this.arrangementNameCombo.Margin = new System.Windows.Forms.Padding(2);
             this.arrangementNameCombo.Name = "arrangementNameCombo";
-            this.arrangementNameCombo.Size = new System.Drawing.Size(134, 21);
+            this.arrangementNameCombo.Size = new System.Drawing.Size(152, 21);
             this.arrangementNameCombo.TabIndex = 3;
             // 
             // label6
@@ -246,7 +247,7 @@
             this.tuningComboBox.Location = new System.Drawing.Point(54, 68);
             this.tuningComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.tuningComboBox.Name = "tuningComboBox";
-            this.tuningComboBox.Size = new System.Drawing.Size(134, 21);
+            this.tuningComboBox.Size = new System.Drawing.Size(119, 21);
             this.tuningComboBox.TabIndex = 4;
             // 
             // gbTone
@@ -416,6 +417,7 @@
             // 
             // gbArrInfo
             // 
+            this.gbArrInfo.Controls.Add(this.tuningEditButton);
             this.gbArrInfo.Controls.Add(this.BonusCheckBox);
             this.gbArrInfo.Controls.Add(this.gbTuningPitch);
             this.gbArrInfo.Controls.Add(this.Picked);
@@ -455,9 +457,9 @@
             this.gbTuningPitch.Controls.Add(this.label7);
             this.gbTuningPitch.Controls.Add(this.label13);
             this.gbTuningPitch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbTuningPitch.Location = new System.Drawing.Point(201, 79);
+            this.gbTuningPitch.Location = new System.Drawing.Point(214, 79);
             this.gbTuningPitch.Name = "gbTuningPitch";
-            this.gbTuningPitch.Size = new System.Drawing.Size(224, 60);
+            this.gbTuningPitch.Size = new System.Drawing.Size(211, 60);
             this.gbTuningPitch.TabIndex = 43;
             this.gbTuningPitch.TabStop = false;
             this.gbTuningPitch.Text = "Tuning Pitch";
@@ -467,7 +469,7 @@
             this.noteDisplay.AutoSize = true;
             this.noteDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.noteDisplay.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.noteDisplay.Location = new System.Drawing.Point(180, 20);
+            this.noteDisplay.Location = new System.Drawing.Point(168, 20);
             this.noteDisplay.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.noteDisplay.Name = "noteDisplay";
             this.noteDisplay.Size = new System.Drawing.Size(36, 13);
@@ -479,7 +481,7 @@
             this.frequencyTB.Cue = "";
             this.frequencyTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.frequencyTB.ForeColor = System.Drawing.Color.Black;
-            this.frequencyTB.Location = new System.Drawing.Point(74, 17);
+            this.frequencyTB.Location = new System.Drawing.Point(71, 17);
             this.frequencyTB.MaxLength = 5;
             this.frequencyTB.Name = "frequencyTB";
             this.frequencyTB.Size = new System.Drawing.Size(44, 20);
@@ -492,7 +494,7 @@
             this.centOffsetDisplay.AutoSize = true;
             this.centOffsetDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.centOffsetDisplay.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.centOffsetDisplay.Location = new System.Drawing.Point(70, 41);
+            this.centOffsetDisplay.Location = new System.Drawing.Point(67, 41);
             this.centOffsetDisplay.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.centOffsetDisplay.Name = "centOffsetDisplay";
             this.centOffsetDisplay.Size = new System.Drawing.Size(64, 13);
@@ -503,7 +505,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label2.Location = new System.Drawing.Point(10, 19);
+            this.label2.Location = new System.Drawing.Point(7, 19);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 13);
@@ -514,7 +516,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label14.Location = new System.Drawing.Point(148, 20);
+            this.label14.Location = new System.Drawing.Point(138, 20);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(33, 13);
@@ -525,7 +527,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label7.Location = new System.Drawing.Point(11, 41);
+            this.label7.Location = new System.Drawing.Point(8, 41);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(38, 13);
@@ -536,7 +538,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label13.Location = new System.Drawing.Point(118, 20);
+            this.label13.Location = new System.Drawing.Point(115, 20);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(18, 13);
@@ -550,9 +552,9 @@
             this.gbScrollSpeed.Controls.Add(this.label3);
             this.gbScrollSpeed.Controls.Add(this.scrollSpeedDisplay);
             this.gbScrollSpeed.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbScrollSpeed.Location = new System.Drawing.Point(201, 12);
+            this.gbScrollSpeed.Location = new System.Drawing.Point(214, 12);
             this.gbScrollSpeed.Name = "gbScrollSpeed";
-            this.gbScrollSpeed.Size = new System.Drawing.Size(224, 60);
+            this.gbScrollSpeed.Size = new System.Drawing.Size(211, 60);
             this.gbScrollSpeed.TabIndex = 42;
             this.gbScrollSpeed.TabStop = false;
             this.gbScrollSpeed.Text = "Scroll Speed";
@@ -616,6 +618,16 @@
             this.routeMaskLeadRadio.TabIndex = 8;
             this.routeMaskLeadRadio.Text = "Lead";
             this.routeMaskLeadRadio.UseVisualStyleBackColor = true;
+            // 
+            // tuningEditButton
+            // 
+            this.tuningEditButton.Location = new System.Drawing.Point(178, 67);
+            this.tuningEditButton.Name = "tuningEditButton";
+            this.tuningEditButton.Size = new System.Drawing.Size(28, 23);
+            this.tuningEditButton.TabIndex = 2;
+            this.tuningEditButton.Text = "...";
+            this.tuningEditButton.UseVisualStyleBackColor = true;
+            this.tuningEditButton.Click += new System.EventHandler(this.tuningEditButton_Click);
             // 
             // ArrangementForm
             // 
@@ -706,5 +718,6 @@
         private System.Windows.Forms.Label noteDisplay;
         private System.Windows.Forms.CheckBox BonusCheckBox;
         private System.Windows.Forms.CheckBox disableTonesCheckbox;
+        private System.Windows.Forms.Button tuningEditButton;
     }
 }

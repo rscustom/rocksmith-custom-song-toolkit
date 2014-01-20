@@ -110,6 +110,12 @@
     <Compile Include="DLCPackageCreator\ArrangementForm.Designer.cs">
       <DependentUpon>ArrangementForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DLCPackageCreator\TuningForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DLCPackageCreator\TuningForm.Designer.cs">
+      <DependentUpon>TuningForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DLCPackageCreator\DLCPackageCreator.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -190,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\ArrangementForm.resx">
       <DependentUpon>ArrangementForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLCPackageCreator\TuningForm.resx">
+      <DependentUpon>TuningForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\DLCPackageCreator.resx">
       <DependentUpon>DLCPackageCreator.cs</DependentUpon>

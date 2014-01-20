@@ -70,24 +70,37 @@ namespace RocksmithToolkitLib.DLCPackage
             this.SongXml = new SongXML();
             this.SongXml.File = xmlSongFile;
 
+            TuningDefinition tuning = null;
             switch ((ArrangementName)attr.ArrangementType)
 	        {
                 case ArrangementName.Lead:
                 case ArrangementName.Rhythm:
                 case ArrangementName.Combo:
                     this.ArrangementType = Sng.ArrangementType.Guitar;
+                    tuning = TuningDefinitionRepository.Instance().Select(attr.Tuning, GameVersion.RS2014);
                     break;
                 case ArrangementName.Bass:
                     this.ArrangementType = Sng.ArrangementType.Bass;
+                    tuning = TuningDefinitionRepository.Instance().SelectForBass(attr.Tuning, GameVersion.RS2014);
                     break;
                 case ArrangementName.Vocals:
                     this.ArrangementType = Sng.ArrangementType.Vocal;
                     break;
 	        }
+            
+            if (tuning == null) {
+                tuning = new TuningDefinition();
+                tuning.UIName = tuning.Name = "Imported";
+                tuning.Custom = true;
+                tuning.GameVersion = GameVersion.RS2014;
+                tuning.Tuning = attr.Tuning;
+                TuningDefinitionRepository.Instance().Add(tuning, true);
+            }
+            this.Tuning = tuning.UIName;
+
             this.ArrangementSort = attr.ArrangementSort;
             this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
-            this.Tuning = TuningDefinitionRepository.Instance().Select(attr.Tuning, GameVersion.RS2014).UIName;
-            this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last()*10);
+            this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last() * 10);
             this.PluckedType = (PluckedType)attr.ArrangementProperties.BassPick;
             this.RouteMask = (RouteMask)attr.ArrangementProperties.RouteMask;
             this.BonusArr = attr.ArrangementProperties.BonusArr == 1;
