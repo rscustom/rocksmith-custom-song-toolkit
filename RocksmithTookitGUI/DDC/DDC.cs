@@ -180,7 +180,7 @@ namespace RocksmithToolkitGUI.DDC
 
             startInfo.FileName = Path.Combine(AppWD, "ddc", "ddc.exe");
             startInfo.WorkingDirectory = Path.GetDirectoryName(file);
-            startInfo.Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}{4}", Path.GetFileName(file), (UInt16)phaseLenNum.Value, remSUS, rampPath, (cleanProcess) ? " -c" : "");
+            startInfo.Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}{4}", Path.GetFileName(file), (UInt16)phaseLenNum.Value, remSUS, rampPath, (cleanProcess) ? " -p Y -t N" : "");
             startInfo.UseShellExecute = false;
             startInfo.CreateNoWindow = true;
             startInfo.RedirectStandardOutput = true;
