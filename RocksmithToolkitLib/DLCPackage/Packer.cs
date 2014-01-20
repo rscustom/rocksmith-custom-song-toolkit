@@ -57,16 +57,22 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region UNPACK
 
-        public static void Unpack(string sourceFileName, string savePath)
+        public static void Unpack(string sourceFileName, string savePath, GamePlatform packagePlatform = GamePlatform.None )
         {
             Platform platform = sourceFileName.GetPlatform();
-            if (platform.platform == GamePlatform.None) platform = savePath.GetPlatform();
+            if (packagePlatform != GamePlatform.None) 
+                platform.platform = packagePlatform;
+            else if (platform.platform == GamePlatform.None && packagePlatform == GamePlatform.None)
+                platform = TryGetPlatformByEndName(sourceFileName);
+            else{}
+                
             Game = platform;
 
             var useCryptography = platform.version == GameVersion.RS2012; // Cryptography way is used only for PC in Rocksmith 1
             switch (platform.platform)
             {
                 case GamePlatform.Pc:
+                case GamePlatform.Mac:
                     if (platform.version == GameVersion.RS2014)
                         using (var inputStream = File.OpenRead(sourceFileName))
                             ExtractPSARC(sourceFileName, savePath, inputStream, platform);
@@ -80,7 +86,7 @@ namespace RocksmithToolkitLib.DLCPackage
                                 RijndaelEncryptor.DecryptFile(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
                             else
                                 inputFileStream.CopyTo(inputStream);
-                            
+
                             ExtractPSARC(sourceFileName, savePath, inputStream, platform);
                         }
                     }
@@ -416,7 +422,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static Platform GetPlatform(this string fullPath) {
             if (File.Exists(fullPath)) {
-                // GET PLATFORM BY FILE
+                // Get PLATFORM by Extension + Get PLATFORM by pkg EndName
                 switch (Path.GetExtension(fullPath)) {
                     case ".dat":
                         return new Platform(GamePlatform.Pc, GameVersion.RS2012);
@@ -425,7 +431,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     case ".edat":
                         return new Platform(GamePlatform.PS3, GameVersion.None);
                     case ".psarc":
-                        return new Platform(GamePlatform.Pc, GameVersion.RS2014);
+                        return TryGetPlatformByEndName(fullPath);
                     default:
                         return new Platform(GamePlatform.None, GameVersion.None);
                 }
@@ -470,7 +476,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         else if (aggContent.Contains("\"ps3\""))
                             return new Platform(GamePlatform.PS3, GameVersion.RS2014);
                         else
-                            return TryGetPlatformByFolderEndName(fullPath);
+                            return TryGetPlatformByEndName(fullPath);
                     }
                     else
                         return new Platform(GamePlatform.None, GameVersion.None);
@@ -479,26 +485,38 @@ namespace RocksmithToolkitLib.DLCPackage
                 return new Platform(GamePlatform.None, GameVersion.None);
         }
 
-        private static Platform TryGetPlatformByFolderEndName(string fileExtension)
+        private static Platform TryGetPlatformByEndName(string fileName)
         {
-            var pIndex = Path.GetFileNameWithoutExtension(fileExtension).LastIndexOf("_");
-            string platformString = Path.GetFileNameWithoutExtension(fileExtension).Substring(pIndex+1);
             GamePlatform p = GamePlatform.None;
-            var isValid = Enum.TryParse(platformString, out p);
-            if (isValid)
-                return new Platform(p, GameVersion.RS2014);
+            var pIndex = Path.GetFileNameWithoutExtension(fileName).LastIndexOf("_"); 
+            if (Directory.Exists(fileName))
+            {// Pc, Mac, XBox360, PS3
+                string platformString = Path.GetFileNameWithoutExtension(fileName).Substring(pIndex+1);
+                bool isValid = Enum.TryParse(platformString, true, out p);
+                if (isValid) return new Platform(p, GameVersion.RS2014);
+                else return new Platform(GamePlatform.None, GameVersion.None);
+            }
             else
-                return new Platform(GamePlatform.None, GameVersion.None);
+            {//_p, _m, _ps3, _xbox
+                string platformString = Path.GetFileNameWithoutExtension(fileName).Substring(pIndex);
+                switch (platformString.ToLower()) {
+                    case "_p":
+                        return new Platform(GamePlatform.Pc, GameVersion.RS2014);
+                    case "_m":
+                        return new Platform(GamePlatform.Mac, GameVersion.RS2014);
+                    case "_ps3":
+                        return new Platform(GamePlatform.PS3, GameVersion.RS2014);
+                    case "_xbox":
+                        return new Platform(GamePlatform.XBox360, GameVersion.RS2014);
+                    default:
+                        return new Platform(GamePlatform.None, GameVersion.RS2014);
+                }
+            } 
         }
 
         private static void ExtractPSARC(string filename, string path, Stream inputStream, Platform platform)
         {
-            var name = Path.GetFileNameWithoutExtension(filename);
-            if (platform.platform == GamePlatform.Pc && platform.version == GameVersion.RS2012 && Path.GetExtension(filename) == ".dat" ||
-                platform.platform == GamePlatform.Pc && platform.version == GameVersion.RS2014 && Path.GetExtension(filename) == ".psarc")
-            {
-                name += String.Format("_{0}", platform.platform.ToString());
-            }
+            string name = String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(filename), platform.platform.ToString());
 
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream);

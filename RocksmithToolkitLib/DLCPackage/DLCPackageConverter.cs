@@ -24,7 +24,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             DirectoryExtension.SafeDelete(unpackedDir);
 
-            Packer.Unpack(sourcePackage, tmpDir);
+            Packer.Unpack(sourcePackage, tmpDir, sourcePlatform.platform);
 
             // DESTINATION
             var nameTemplate = (!targetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";
@@ -39,15 +39,13 @@ namespace RocksmithToolkitLib.DLCPackage
             }
             var targetFileName = Path.Combine(Path.GetDirectoryName(sourcePackage), String.Format(nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), targetPlatform.GetPathName()[2]));
 
-            var search4xml = Directory.GetFiles(unpackedDir, "*_*.xml", SearchOption.AllDirectories).Length;
-            var search4showLts = Directory.GetFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).Length;
+            var search4xml = Directory.GetFiles(unpackedDir, "*_*.xml", SearchOption.AllDirectories).Length <= 1;
+            var search4showLts = Directory.GetFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).Length < 1;
             
-            var hasNoXmlSong = search4xml <= 1 || search4showLts < 1;
-
             // CONVERSION                
             if (needRebuildPackage)
             {
-                if (hasNoXmlSong)
+                if (!(search4xml || search4showLts))
                     return String.Format("Package {0} is not a custom song, you need a custom song to convert Rocksmith 2014 from non similiar platforms.", sourcePackage);
 
                 ConvertPackageRebuilding(unpackedDir, targetFileName, targetPlatform, appId);
