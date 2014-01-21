@@ -301,13 +301,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = xmlSong.AlbumName ?? String.Empty;
                     if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear ?? String.Empty;
 
+                    //Setup tuning
+                    SetTuningCombo(xmlSong.Tuning);
+
                     // SONG AND ARRANGEMENT INFO / ROUTE MASK
                     string arr = xmlSong.Arrangement;
                     bool Edit = routeMaskNoneRadio.Checked;
                     if (arr.ToLower().Contains("guitar") || arr.ToLower().Contains("lead") || arr.ToLower().Contains("rhythm") || arr.ToLower().Contains("combo"))
                     {
                         arrangementTypeCombo.SelectedItem = ArrangementType.Guitar;
-                        SetTuningCombo(xmlSong.Tuning);
                         if (Edit & arr.ToLower().Contains("guitar 22") || arr.ToLower().Contains("lead") || arr.ToLower().Contains("combo"))
                         {
                             arrangementNameCombo.SelectedItem = ArrangementName.Lead;
@@ -321,8 +323,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                     if (arr.ToLower().Contains("bass"))
                     {
-                        arrangementTypeCombo.SelectedItem = ArrangementType.Bass;
                         SetTuningCombo(xmlSong.Tuning, true);
+                        arrangementTypeCombo.SelectedItem = ArrangementType.Bass;
                         Picked.Checked = xmlSong.ArrangementProperties.BassPick == 1;
                         if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Bass;
                     }
