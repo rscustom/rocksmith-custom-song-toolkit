@@ -488,28 +488,29 @@ namespace RocksmithToolkitLib.DLCPackage
         private static Platform TryGetPlatformByEndName(string fileName)
         {
             GamePlatform p = GamePlatform.None;
+            GameVersion v = GameVersion.RS2014;
             var pIndex = Path.GetFileNameWithoutExtension(fileName).LastIndexOf("_"); 
             if (Directory.Exists(fileName))
             {// Pc, Mac, XBox360, PS3
                 string platformString = Path.GetFileNameWithoutExtension(fileName).Substring(pIndex+1);
                 bool isValid = Enum.TryParse(platformString, true, out p);
-                if (isValid) return new Platform(p, GameVersion.RS2014);
+                if (isValid) return new Platform(p, v);
                 else return new Platform(GamePlatform.None, GameVersion.None);
             }
             else
             {//_p, _m, _ps3, _xbox
-                string platformString = Path.GetFileNameWithoutExtension(fileName).Substring(pIndex);
+                string platformString = pIndex > -1 ? Path.GetFileNameWithoutExtension(fileName).Substring(pIndex) : "";
                 switch (platformString.ToLower()) {
                     case "_p":
-                        return new Platform(GamePlatform.Pc, GameVersion.RS2014);
+                        return new Platform(GamePlatform.Pc, v);
                     case "_m":
-                        return new Platform(GamePlatform.Mac, GameVersion.RS2014);
+                        return new Platform(GamePlatform.Mac, v);
                     case "_ps3":
-                        return new Platform(GamePlatform.PS3, GameVersion.RS2014);
+                        return new Platform(GamePlatform.PS3, v);
                     case "_xbox":
-                        return new Platform(GamePlatform.XBox360, GameVersion.RS2014);
+                        return new Platform(GamePlatform.XBox360, v);
                     default:
-                        return new Platform(GamePlatform.None, GameVersion.RS2014);
+                        return new Platform(GamePlatform.Pc, v);
                 }
             } 
         }

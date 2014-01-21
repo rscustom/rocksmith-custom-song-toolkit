@@ -31,7 +31,7 @@ namespace RocksmithToolkitGUI
                 var exception = (Exception)e.ExceptionObject;
                 MessageBox.Show(String.Format("Application.ThreadException\r\n{0}\r\n{1}", exception.ToString(),
                     "\r\nPlease send us \"_RSToolkit_XXXX.log\", you can find it in Toolkit folder."), exception.Message.ToString());
-                log.ErrorException(String.Format("\r\n{0}\r\n{1}\r\nException catched:\r\n{}\r\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
+                log.ErrorException(String.Format("\r\n{0}\r\n{1}\r\nException catched:\r\n{2}\r\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
             };
 
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
