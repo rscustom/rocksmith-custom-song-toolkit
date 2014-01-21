@@ -418,6 +418,10 @@ namespace RocksmithToolkitLib.Xml
             Int32[] strings = { String0, String1, String2, String3, String4, String5 };
             return strings;
         }
+        public Int16[] ToShortArray() {
+            Int16[] strings = { (Int16)String0, (Int16)String1, (Int16)String2, (Int16)String3, (Int16)String4, (Int16)String5 };
+            return strings;
+        }
 
         public int[] ToBassArray()
         {

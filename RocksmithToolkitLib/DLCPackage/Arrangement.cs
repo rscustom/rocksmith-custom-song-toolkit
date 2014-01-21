@@ -70,6 +70,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.SongXml = new SongXML();
             this.SongXml.File = xmlSongFile;
 
+            bool isBass = false;
             TuningDefinition tuning = null;
             switch ((ArrangementName)attr.ArrangementType)
 	        {
@@ -77,11 +78,12 @@ namespace RocksmithToolkitLib.DLCPackage
                 case ArrangementName.Rhythm:
                 case ArrangementName.Combo:
                     this.ArrangementType = Sng.ArrangementType.Guitar;
-                    tuning = TuningDefinitionRepository.Instance().Select(attr.Tuning, GameVersion.RS2014);
+                    tuning = TuningDefinitionRepository.Instance().Select(song.Tuning, GameVersion.RS2014);
                     break;
                 case ArrangementName.Bass:
                     this.ArrangementType = Sng.ArrangementType.Bass;
-                    tuning = TuningDefinitionRepository.Instance().SelectForBass(attr.Tuning, GameVersion.RS2014);
+                    tuning = TuningDefinitionRepository.Instance().SelectForBass(song.Tuning, GameVersion.RS2014);
+                    isBass = true;
                     break;
                 case ArrangementName.Vocals:
                     this.ArrangementType = Sng.ArrangementType.Vocal;
@@ -90,10 +92,10 @@ namespace RocksmithToolkitLib.DLCPackage
             
             if (tuning == null) {
                 tuning = new TuningDefinition();
-                tuning.UIName = tuning.Name = "Imported";
+                tuning.UIName = tuning.Name = tuning.NameFromStrings(song.Tuning, isBass);
                 tuning.Custom = true;
                 tuning.GameVersion = GameVersion.RS2014;
-                tuning.Tuning = attr.Tuning;
+                tuning.Tuning = song.Tuning;
                 TuningDefinitionRepository.Instance().Add(tuning, true);
             }
             this.Tuning = tuning.UIName;

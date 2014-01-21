@@ -427,6 +427,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     tuning.Tuning = tuningStrings;
                     tuning.Custom = true;
                     tuning.GameVersion = currentGameVersion;
+                    tuning.Name = tuning.UIName = tuning.NameFromStrings(tuningStrings, isBass);
 
                     form.Tuning = tuning;
                     form.IsBass = isBass;
