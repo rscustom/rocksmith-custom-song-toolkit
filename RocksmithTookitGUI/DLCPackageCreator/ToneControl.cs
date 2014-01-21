@@ -149,11 +149,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void Tone_Volume_Tip(object sender, EventArgs f)
         {
-            ToolTip tvt = new ToolTip();
-            tvt.IsBalloon = true;
-            tvt.InitialDelay = 0;
-            tvt.ShowAlways = true;
-            tvt.SetToolTip(volumeBox, "LOWEST 0 , -1 , -2, -3, ..... AVERAGE -12 .... ,-20, -21 HIGHER,...");
+            using (ToolTip tvt = new ToolTip())
+            {
+                tvt.IsBalloon = true;
+                tvt.InitialDelay = 0;
+                tvt.ShowAlways = true;
+                tvt.SetToolTip(volumeBox, "LOWEST 0 , -1 , -2, -3, ..... AVERAGE -12 .... ,-20, -21 HIGHER,...");
+            }
         }
 
         private void UpdateToneDescription(ComboBox combo) {
