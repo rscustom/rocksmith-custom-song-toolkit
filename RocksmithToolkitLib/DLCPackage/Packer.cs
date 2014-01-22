@@ -28,10 +28,14 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PACK
 
-        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false)
+        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, GamePlatform packagePlatform = GamePlatform.None )
         {
-            Platform platform = sourcePath.GetPlatform();
-            if (platform.platform == GamePlatform.None) platform = saveFileName.GetPlatform();
+            Platform platform = TryGetPlatformByEndName(saveFileName);
+            if (packagePlatform != GamePlatform.None) 
+                platform.platform = packagePlatform;
+            else if (platform.platform == GamePlatform.None && packagePlatform == GamePlatform.None)
+                platform = sourcePath.GetPlatform();
+            else{}
             Game = platform;
 
             switch (platform.platform) {
@@ -408,9 +412,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void DeleteFixedAudio(string sourcePath)
         {
+        	try {
             foreach (var file in Directory.GetFiles(sourcePath, "*_fixed.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))
-                try { if (File.Exists(file)) File.Delete(file); }
-                catch (Exception ex){ throw new InvalidOperationException(String.Format("Can't delete garbage Audio files!\r\n {0}", ex)); }
+            	if (File.Exists(file)) File.Delete(file);
+        	}
+        	catch (Exception ex){ throw new InvalidOperationException(String.Format("Can't delete garbage Audio files!\r\n {0}", ex)); }
         }
 
         private static void WalkThroughDirectory(string baseDir, string directory, Action<string, string> action) {
@@ -419,7 +425,7 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var dr in Directory.GetDirectories(Path.Combine(baseDir, directory)))
                 WalkThroughDirectory(String.Format("{0}/{1}", baseDir, Path.GetFileName(dr)), dr, action);
         }
-
+//TODO: validate Files by MIME type.
         public static Platform GetPlatform(this string fullPath) {
             if (File.Exists(fullPath)) {
                 // Get PLATFORM by Extension + Get PLATFORM by pkg EndName
@@ -484,7 +490,11 @@ namespace RocksmithToolkitLib.DLCPackage
             } else
                 return new Platform(GamePlatform.None, GameVersion.None);
         }
-
+		/// <summary>
+		/// Gets platform from name ending
+		/// </summary>
+		/// <param name="fileName">Folder of File</param>
+		/// <returns>Platform(DetectedPlatform, RS2014 ? None)</returns>
         private static Platform TryGetPlatformByEndName(string fileName)
         {
             GamePlatform p = GamePlatform.None;

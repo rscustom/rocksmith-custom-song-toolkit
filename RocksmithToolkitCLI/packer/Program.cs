@@ -18,7 +18,7 @@ namespace packer
     internal class Arguments
     {
         public bool ShowHelp;
-        public string Input;
+        public string[] Input;
         public string Output;
         public string Template;
         public bool Pack;
@@ -45,8 +45,8 @@ namespace packer
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
                 { "pack", "Pack a song", v => {if (v != null) outputArguments.Pack = true; }},
                 { "unpack", "Unpack a song", v => {if (v != null) outputArguments.Unpack = true; }},
-                { "build", "Build a song package from 'Rocksmith DLC template' (*.dlc.xml)", v => {if (v != null) outputArguments.Build = true; }},
-                { "i|input=", "The input file or directory (multiple allowed)", v => outputArguments.Input = v },
+                { "build", "Build a song package from 'Rocksmith DLC template' (*.dlc.xml)", v => outputArguments.Build = v != null },
+                { "i|input=", "The input file or directory (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split(new[]{';'}, 2) },
                 { "o|output=", "The output file or directory", v => outputArguments.Output = v },
                 { "t|template=", "The template file for building package", v => outputArguments.Template = v },
                 { "ogg|decodeogg", "Decode ogg file when unpack a song (default is true)", v => {if (v != null) outputArguments.DecodeOGG = true; }},
@@ -86,7 +86,7 @@ namespace packer
                 }
                 if (arguments.Pack || arguments.Unpack)
                 {
-                    if (string.IsNullOrEmpty(arguments.Input))
+                	if (string.IsNullOrEmpty(arguments.Input[0]))
                     {
                         ShowHelpfulError("Must specify an 'input' file or directory.");
                         return 1;
@@ -153,24 +153,28 @@ namespace packer
                 }
                 if (arguments.Pack)
                 {
-                    if (!arguments.Input.IsDirectory())
+                	if (!arguments.Input[0].IsDirectory())
                     {
                         ShowHelpfulError("The 'input' argument in 'pack' command must be a directory.");
                         return 1;
                     }
-
-                    try
-                    {
-                        Packer.DeleteFixedAudio(arguments.Input.FirstOrDefault().ToString());
-                        Packer.Pack(Path.GetFullPath(arguments.Input), Path.GetFullPath(arguments.Output), arguments.UpdateSng);
-                        Console.WriteLine("Packing is complete.");
-                        return 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(String.Format("{0}\n\r{1}\n\r{2}", "Packing error!", ex.Message, ex.InnerException));
-                        return 1;
-                    }
+                    var srcFiles = arguments.Input;
+					foreach (string srcFileName in srcFiles)
+					{
+	                    try
+						{
+							Packer.DeleteFixedAudio(srcFileName);
+							Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng);
+							Console.WriteLine("Packing is complete.");
+	                        return 0;
+	                    }
+	                    catch (Exception ex)
+	                    {
+							Console.WriteLine(String.Format("Packing error!\n\rFile: {0}\n\r{1}\n\r{2}", 
+							                                srcFileName, ex.Message, ex.InnerException));
+	                        return 1;
+	                    }
+					}
                 }
                 if (arguments.Unpack)
                 {
@@ -180,24 +184,27 @@ namespace packer
                         return 1;
                     }
 
-                    var sourceFiles = (arguments.Input.IsDirectory()) ? Directory.EnumerateFiles(arguments.Input) : new string[] { arguments.Input };
+                    var srcFiles = new List<string>();
+                    foreach (var name in arguments.Input){
+                    	if(name.IsDirectory()) srcFiles.AddRange(Directory.EnumerateFiles(Path.GetFullPath(name), "*.psarc", SearchOption.AllDirectories));
+                    	if(File.Exists(name)) srcFiles.Add(name);}
 
-                    foreach (string sourceFileName in sourceFiles)
+                    foreach (string srcFileName in srcFiles)
                     {
-                        Platform platform = Packer.GetPlatform(sourceFileName);
+                        Platform platform = Packer.GetPlatform(srcFileName);
                         if (platform.platform == GamePlatform.None)
                         {
-                            Console.WriteLine("Error: Platform not found or invalid 'input' file:" + sourceFileName);
+                            Console.WriteLine("Error: Platform not found or invalid 'input' file:" + srcFileName);
                             continue;
                         }
 
                         try
                         {
-                            Packer.Unpack(Path.GetFullPath(sourceFileName), Path.GetFullPath(arguments.Output));
+                            Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output));
 
                             if (arguments.DecodeOGG)
                             {
-                                var name = Path.GetFileNameWithoutExtension(sourceFileName);
+                                var name = Path.GetFileNameWithoutExtension(srcFileName);
                                 name += String.Format("_{0}", platform.platform.ToString());
 
                                 var audioFiles = Directory.GetFiles(Path.Combine(arguments.Output, name), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
@@ -211,7 +218,8 @@ namespace packer
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(String.Format("{0}\n\r{1}\n\r{2}", "Unpacking error!", ex.Message, ex.InnerException));
+							Console.WriteLine(String.Format("Unpacking error!\n\rFile: {0}\n\r{1}\n\r{2}", 
+							                                srcFileName, ex.Message, ex.InnerException));
                             return 1;
                         }
                     }
