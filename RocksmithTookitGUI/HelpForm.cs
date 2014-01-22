@@ -17,7 +17,7 @@ namespace RocksmithToolkitGUI
             this.Text = String.Format("Help for {0}", AssemblyTitle);
             
             LinkLabel.Link link = new LinkLabel.Link();
-	        link.LinkData = @"http://code.google.com/p/rocksmith-custom-song-creator/";
+            link.LinkData = @"http://www.rscustom.net";
 	        linkLabel1.Links.Add(link);
         }
 

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Rocksmith Custom Song Creator Toolkit")]
-[assembly: AssemblyDescription("The purpose of this utility package is to generate custom songs compatible with Ubisoft® Rocksmith™ software. It is maintained by an open source community of enthusiasts and is not affiliated with Ubisoft® and/or the Rocksmith™ team. For more information, please visit: http://code.google.com/p/rocksmith-custom-song-creator/.")]
+[assembly: AssemblyDescription("The purpose of this utility package is to generate custom songs compatible with Ubisoft® Rocksmith™ software. It is maintained by an open source community of enthusiasts and is not affiliated with Ubisoft® and/or the Rocksmith™ team. For more information, please visit: http://www.rscustom.net.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rocksmith Custom Song Project")]
 [assembly: AssemblyProduct("Rocksmith Custom Song Creator Toolkit")]
