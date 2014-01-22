@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using RocksmithToolkitLib.DLCPackage;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -62,6 +63,18 @@ namespace RocksmithToolkitLib.Extensions
                 name = rgx.Replace(value, "");
             }
             return name;
+        }
+
+        public static string StripPlatformEndName(this string value) {
+            if (value.EndsWith(new Platform(GamePlatform.Pc, GameVersion.None).GetPathName()[2]) ||
+                value.EndsWith(new Platform(GamePlatform.Mac, GameVersion.None).GetPathName()[2]) ||
+                value.EndsWith(new Platform(GamePlatform.XBox360, GameVersion.None).GetPathName()[2]) ||
+                value.EndsWith(new Platform(GamePlatform.PS3, GameVersion.None).GetPathName()[2] + ".psarc"))
+            {
+                return value.Substring(0, value.LastIndexOf("_"));
+            }
+
+            return value;
         }
     }
 }

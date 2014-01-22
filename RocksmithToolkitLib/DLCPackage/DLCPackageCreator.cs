@@ -108,14 +108,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         throw new InvalidOperationException("Unexpected game version value");
                 }
 
-                var packageName = Path.GetFileNameWithoutExtension(packagePath);
-                if (packageName.EndsWith(new Platform(GamePlatform.Pc, GameVersion.None).GetPathName()[2]) ||
-                    packageName.EndsWith(new Platform(GamePlatform.Mac, GameVersion.None).GetPathName()[2]) ||
-                    packageName.EndsWith(new Platform(GamePlatform.XBox360, GameVersion.None).GetPathName()[2]) ||
-                    packageName.EndsWith(new Platform(GamePlatform.PS3, GameVersion.None).GetPathName()[2] + ".psarc"))
-                {
-                    packageName = packageName.Substring(0, packageName.LastIndexOf("_"));
-                }
+                var packageName = Path.GetFileNameWithoutExtension(packagePath).StripPlatformEndName();
 
                 var songFileName = String.Format("{0}{1}", Path.Combine(Path.GetDirectoryName(packagePath), packageName), platform.GetPathName()[2]);
                                 

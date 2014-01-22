@@ -28,14 +28,14 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PACK
 
-        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, GamePlatform packagePlatform = GamePlatform.None )
+        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, GamePlatform packagePlatform = GamePlatform.None)
         {
             Platform platform = TryGetPlatformByEndName(saveFileName);
             if (packagePlatform != GamePlatform.None) 
                 platform.platform = packagePlatform;
             else if (platform.platform == GamePlatform.None && packagePlatform == GamePlatform.None)
                 platform = sourcePath.GetPlatform();
-            else{}
+
             Game = platform;
 
             switch (platform.platform) {
@@ -425,7 +425,8 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var dr in Directory.GetDirectories(Path.Combine(baseDir, directory)))
                 WalkThroughDirectory(String.Format("{0}/{1}", baseDir, Path.GetFileName(dr)), dr, action);
         }
-//TODO: validate Files by MIME type.
+
+        //TODO: validate Files by MIME type.
         public static Platform GetPlatform(this string fullPath) {
             if (File.Exists(fullPath)) {
                 // Get PLATFORM by Extension + Get PLATFORM by pkg EndName
@@ -490,6 +491,7 @@ namespace RocksmithToolkitLib.DLCPackage
             } else
                 return new Platform(GamePlatform.None, GameVersion.None);
         }
+
 		/// <summary>
 		/// Gets platform from name ending
 		/// </summary>

@@ -140,6 +140,7 @@ namespace RocksmithToolkitGUI.DDC
 
                         var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
 
+                        int singleResult = -1;
                         foreach (var xml in xmlFiles) {
                             if (Path.GetFileNameWithoutExtension(xml).ToLower().Contains("vocal"))
                                 continue;
@@ -147,7 +148,7 @@ namespace RocksmithToolkitGUI.DDC
                             if (Path.GetFileNameWithoutExtension(xml).ToLower().Contains("showlight"))
                                 continue;
 
-                            var singleResult = ApplyDD(xml, remSUS, rampPath, out consoleOutput, true);
+                            singleResult = ApplyDD(xml, remSUS, rampPath, out consoleOutput, true);
 
                             if (singleResult == 1) {
                                 errorsFound.AppendLine(consoleOutput);
@@ -158,10 +159,13 @@ namespace RocksmithToolkitGUI.DDC
                         }
 
                         if (!exitedByError) {
-                            Packer.Pack(unpackedDir, String.Format("{0}_DD", Path.GetFileNameWithoutExtension(file.Value)), true);
+                            var platform = unpackedDir.GetPlatform();
+                            var newName = Path.Combine(Path.GetDirectoryName(file.Value), String.Format("{0}_DD{1}", Path.GetFileNameWithoutExtension(file.Value).StripPlatformEndName().GetValidName().Replace(" ", "_"), platform.GetPathName()[2]));
+                            Packer.Pack(unpackedDir, newName, true, platform.platform);
                             DirectoryExtension.SafeDelete(unpackedDir);
                         }
 
+                        result = singleResult;
                         break;
                 }
                 
@@ -198,6 +202,7 @@ namespace RocksmithToolkitGUI.DDC
         internal void FillDB()
         {
             int i = 0;
+            DDCfilesDgw.Rows.Clear();
             foreach (var rowFile in DLCdb)
             {
                 if (DDCfilesDgw.Rows.Count <= i && i < DLCdb.Count) DDCfilesDgw.Rows.Add();
@@ -238,7 +243,7 @@ namespace RocksmithToolkitGUI.DDC
             using (var ofd = new VistaOpenFileDialog())
             using (var sfd = new VistaFolderBrowserDialog())
             {
-                ofd.Filter = "Select DLC or Arrangement|*.psarc;*.dat;*.xml;*.edat|" + "All files|*.*";
+                ofd.Filter = "Select Package or Arrangement (*.psarc;*.dat;*.edat;*.xml)|*.psarc;*.dat;*.edat;*.xml|" + "All files|*.*";
                 ofd.FilterIndex = 0;
                 ofd.Multiselect = true;
                 ofd.ReadOnlyChecked = true;
@@ -368,20 +373,41 @@ namespace RocksmithToolkitGUI.DDC
 
         private void DDCfilesDgw_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            string i = String.Empty;
-            try
+            if (DDCfilesDgw.SelectedRows.Count > 0)
             {
-                i = e.Row.Cells["PathColnm"].Value.ToString();
+                if (MessageBox.Show("Are you sure to delete the selected file?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    return;
+
+                string file = e.Row.Cells["PathColnm"].Value.ToString();
+                string value = Path.GetFileNameWithoutExtension(file);
+                if (DLCdb != null)
+                    DLCdb.Remove(value);
             }
-            catch { }
-            string value = Path.GetFileNameWithoutExtension(i);
-            if (DLCdb != null)
-                DLCdb.Remove(value);
         }
 
         private void ramUpMdlsCbox_DropDown(object sender, EventArgs e)
         {
             PopMDLs();
+        }
+
+        private void deleteArrBT_Click(object sender, EventArgs e)
+        {
+            if (DDCfilesDgw.SelectedRows.Count > 0)
+            {
+                if (MessageBox.Show("Are you sure to delete the selected file?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                    return;
+
+                foreach (DataGridViewRow row in DDCfilesDgw.SelectedRows)
+                {
+                    string file = row.Cells["PathColnm"].Value.ToString();
+                    string value = Path.GetFileNameWithoutExtension(file);
+
+                    if (DLCdb != null)
+                        DLCdb.Remove(value);
+                }
+
+                FillDB();
+            }
         }
     }
 }
