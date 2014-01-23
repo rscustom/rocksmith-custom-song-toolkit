@@ -47,15 +47,14 @@
             this.TypeColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DDprogress = new System.Windows.Forms.ProgressBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.DestPathCbx = new System.Windows.Forms.CheckBox();
+            this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.deleteArrBT = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -107,7 +106,7 @@
             // 
             this.delsustainsBT.AutoSize = true;
             this.delsustainsBT.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.delsustainsBT.Location = new System.Drawing.Point(6, 45);
+            this.delsustainsBT.Location = new System.Drawing.Point(180, 45);
             this.delsustainsBT.Name = "delsustainsBT";
             this.delsustainsBT.Size = new System.Drawing.Size(107, 17);
             this.delsustainsBT.TabIndex = 4;
@@ -150,7 +149,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(375, 46);
+            this.label1.Location = new System.Drawing.Point(6, 46);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 13);
             this.label1.TabIndex = 0;
@@ -237,7 +236,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.DestPathCbx);
             this.groupBox1.Controls.Add(this.ramUpMdlsCbox);
             this.groupBox1.Controls.Add(this.rampUpBT);
             this.groupBox1.Controls.Add(this.phaseLenNum);
@@ -251,16 +249,30 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
             // 
-            // DestPathCbx
+            // phaseLenNum
             // 
-            this.DestPathCbx.AutoSize = true;
-            this.DestPathCbx.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.DestPathCbx.Location = new System.Drawing.Point(171, 45);
-            this.DestPathCbx.Name = "DestPathCbx";
-            this.DestPathCbx.Size = new System.Drawing.Size(146, 17);
-            this.DestPathCbx.TabIndex = 5;
-            this.DestPathCbx.Text = "Change destination folder";
-            this.DestPathCbx.UseVisualStyleBackColor = true;
+            this.phaseLenNum.Location = new System.Drawing.Point(84, 43);
+            this.phaseLenNum.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+            this.phaseLenNum.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.phaseLenNum.Name = "phaseLenNum";
+            this.phaseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.phaseLenNum.Size = new System.Drawing.Size(52, 20);
+            this.phaseLenNum.TabIndex = 5;
+            this.phaseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.phaseLenNum.ThousandsSeparator = true;
+            this.phaseLenNum.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
             // 
             // deleteArrBT
             // 
@@ -286,31 +298,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Package or Arrangement XML file";
             // 
-            // phaseLenNum
-            // 
-            this.phaseLenNum.Location = new System.Drawing.Point(453, 43);
-            this.phaseLenNum.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
-            this.phaseLenNum.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.phaseLenNum.Name = "phaseLenNum";
-            this.phaseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.phaseLenNum.Size = new System.Drawing.Size(52, 20);
-            this.phaseLenNum.TabIndex = 5;
-            this.phaseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.phaseLenNum.ThousandsSeparator = true;
-            this.phaseLenNum.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            // 
             // DDC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -329,8 +316,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).EndInit();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -352,7 +339,6 @@
         private System.Windows.Forms.DataGridView DDCfilesDgw;
         private System.Windows.Forms.ProgressBar DDprogress;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox DestPathCbx;
         private System.Windows.Forms.Button deleteArrBT;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridViewTextBoxColumn PathColnm;

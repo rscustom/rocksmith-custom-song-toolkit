@@ -262,13 +262,6 @@ namespace RocksmithToolkitGUI.DDC
                     if (!DLCdb.ContainsValue(i))
                         DLCdb.Add(Path.GetFileNameWithoutExtension(i), i);
                 }
-
-                if (DestPathCbx.Checked)
-                {
-                    if (sfd.ShowDialog() != DialogResult.OK)
-                        return;
-                    newWD = sfd.SelectedPath;
-                }
             }
 
             FillDB();
@@ -278,7 +271,7 @@ namespace RocksmithToolkitGUI.DDC
         {
             using (var ofd = new VistaOpenFileDialog())
             {
-                ofd.Filter = "DDC Ramp-Up model|*.xml";
+                ofd.Filter = "DDC Ramp-Up model (*.xml)|*.xml";
                 ofd.CheckFileExists = true;
                 ofd.CheckPathExists = true;
                 ofd.Multiselect = true;
@@ -288,14 +281,14 @@ namespace RocksmithToolkitGUI.DDC
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
-                foreach (var i in ofd.FileNames)
-                {                    
-                    var name = Path.GetFileNameWithoutExtension(i);
+                foreach (var file in ofd.FileNames)
+                {
+                    var name = Path.GetFileNameWithoutExtension(file);
                     Directory.CreateDirectory(@".\ddc\umdls\");
-                    var path = @".\ddc\umdls\user_" + name + ".xml";
+                    var path = String.Format(@".\ddc\umdls\user_{0}.xml", name);
                     if (!ramUpMdlsCbox.Items.Contains(name))
                     {
-                        try { File.Copy(i, path, true); }
+                        try { File.Copy(file, path, true); }
                         catch { }
                         ramUpMdlsCbox.Items.Add(name);
                     }
