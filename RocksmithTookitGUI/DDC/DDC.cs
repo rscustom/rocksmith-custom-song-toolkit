@@ -28,6 +28,15 @@ namespace RocksmithToolkitGUI.DDC
         internal string newWD { get; set; }
         internal string oldWD { get; set; }
 
+        internal bool CleanProcess {
+            get {
+                return cleanCheckbox.Checked;
+            }
+            set {
+                cleanCheckbox.Checked = value;
+            }
+        }
+
         internal string processOutput { get; set; }
 
         public DDC()
@@ -126,7 +135,7 @@ namespace RocksmithToolkitGUI.DDC
                 string consoleOutput = null;
                 switch (Path.GetExtension(file.Value)) {
                     case ".xml":   // Arrangement
-                        result = ApplyDD(file.Value, remSUS, rampPath, out consoleOutput);
+                        result = ApplyDD(file.Value, remSUS, rampPath, out consoleOutput, CleanProcess);
                         errorsFound.AppendLine(consoleOutput);
                         break;
                     case ".psarc": // PC / Mac (RS2014)
