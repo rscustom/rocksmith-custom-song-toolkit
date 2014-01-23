@@ -583,13 +583,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void Song_Volume_Tip(object sender, EventArgs e)
         {
-            using (ToolTip tt = new ToolTip())
-            {
-                tt.IsBalloon = true;
-                tt.InitialDelay = 0;
-                tt.ShowAlways = true;
-                tt.SetToolTip(volumeBox, "HIGHER 0 , -1,-2 , -3 ,,,, AVERAGE -12, ....,-16,-17 LOWER ...");
-            }
+            ToolTip tt = new ToolTip();
+            tt.IsBalloon = true;
+            tt.InitialDelay = 0;
+            tt.ShowAlways = true;
+            tt.SetToolTip(volumeBox, "HIGHER 0,-1,-2,-3,..., AVERAGE -12 ,...,-16,-17 LOWER");
         }
 
         private DLCPackageData GetPackageData()

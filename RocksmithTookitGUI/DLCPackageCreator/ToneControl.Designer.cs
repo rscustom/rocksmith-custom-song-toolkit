@@ -501,6 +501,7 @@
             this.volumeBox.Size = new System.Drawing.Size(48, 20);
             this.volumeBox.TabIndex = 1;
             this.volumeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.volumeBox.ValueChanged += new System.EventHandler(this.Tone_Volume_Tip);
             // 
             // ToneControl
             // 
