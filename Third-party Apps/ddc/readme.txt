@@ -1,5 +1,5 @@
 -------------------------------------------------------------
--- DDC v1.9 (c) 2013, by Chlipouni
+-- DDC v2.0 (c) 2013, by Chlipouni
 -------------------------------------------------------------
 
 DDC is a command line tool conceived to add Dynamic Difficulty Levels on Custom Downloadable Contents.
@@ -13,27 +13,29 @@ Use :
 - Open a Windows command-line interpreter
 - Execute the "ddc.exe" tool with the following parameters :
 
-  C:\ddc_v1.9>ddc.exe
+  C:\ddc_v2.0>ddc.exe
   -----------------------------------------------------------------------
-  -- D Y N A M I C   D I F F I C U L T Y   C R E A T O R   v 1.9       --
+  -- D Y N A M I C   D I F F I C U L T Y   C R E A T O R   v 2.0       --
   -----------------------------------------------------------------------
-  ddc.exe <arrangement> [-l <phraseLength>] [-s <removeSustain>] [-m <ramp-up>]
+  ddc.exe <arrangement> [-l <phraseLength>] [-s {Y | N}] [-m <ramp-up>] [-p {Y | N}] [-t {Y | N}]
 
   Parameters :
   ------------
     <arrangement>      : XML arrangement input file (mandatory)
     -l <phraseLength>  : Length of phrases in number of measures (optional; default : 2)
-    -s <removeSustain> : Remove sustain for notes with length < 1/4 of measure (optional; default : N)
+    -s {Y | N}         : Remove sustain for notes with length < 1/4 of measure (optional; default : N)
     -m <ramp-up>       : XML file with the specific ramp-up model to apply (optional; default : internal ramp-up model)
+    -p {Y | N}         : Preserve the XML file name, so existing content is overwritten (optional; default : N)
+    -t {Y | N}         : Trace the DDC process and generate log files (optional; default : Y)
 
   Example :
   ------------
-  C:\mySongs>C:\ddc_v1.9\ddc.exe "PART REAL_GUITAR.xml" -l 4 -s Y
+  C:\mySongs>C:\ddc_v2.0\ddc.exe "PART REAL_GUITAR.xml" -l 4 -s Y
 
 Result Files :
 --------------
-- The result XML file is named "DDC_<fileName>.xml"
-- A log file is automatically created as "DDC_<fileName>.log"
+- If "-p" equals "N", the result XML file is named "DDC_<fileName>.xml" otherwise, the input XML file is overwritten
+- If "-t" equals "Y", a log file is automatically created as "DDC_<fileName>.log"
 
 Return Error Codes :
 --------------------
