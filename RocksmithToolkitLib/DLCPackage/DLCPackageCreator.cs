@@ -350,6 +350,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     foreach (var size in sizes)
                         packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, size), new FileStream(ddsfiles[size], FileMode.Open, FileAccess.Read, FileShare.Read));
+                    
+                    //Lyrics Font Texture
+                    if (File.Exists(info.LyricsTex))
+                        packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricsTex, FileMode.Open, FileAccess.Read, FileShare.Read));
 
                     // AUDIO
                     var audioFile = info.OggPath;

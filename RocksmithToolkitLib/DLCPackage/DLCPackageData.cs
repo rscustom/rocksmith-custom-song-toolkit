@@ -62,6 +62,8 @@ namespace RocksmithToolkitLib.DLCPackage
         // cache album art conversion
         public Dictionary<int, string> AlbumArt { get; set; }
 
+        public string LyricsTex { get; set; }
+
         public static DLCPackageData LoadFromFile(string unpackedDir) {
             //Load files
             var jsonFiles = Directory.GetFiles(unpackedDir, "*.json", SearchOption.AllDirectories);

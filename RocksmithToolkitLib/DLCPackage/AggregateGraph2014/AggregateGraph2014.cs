@@ -13,6 +13,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
         public static readonly string CANONICAL_MANIFEST_CONSOLE = "/manifests/songs_dlc";
         public static readonly string CANONICAL_MANIFEST_PC = "/manifests/songs_dlc_{0}"; //DLC Name
         public static readonly string CANONICAL_GAMESONG = "/songs/bin/{0}"; //Platform Path [1]
+        public static readonly string CANONICAL_LRCTEX = "/assets/ui/lyrics/{0}"; //DLC Name
         public static readonly string CANONICAL_ALBUMART = "/gfxassets/album_art";
         public static readonly string CANONICAL_XMLSONG = "/songs/arr";
         public static readonly string CANONICAL_XBLOCK = "/gamexblocks/nsongs";
@@ -35,6 +36,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
         public List<GraphItemLLID> SongXml { get; set; }
         public GraphItemLLID ShowlightXml { get; set; }
         public List<GraphItemLLID> AlbumArt { get; set; }
+        public GraphItemLLID LyricsTex { get; set; }
         public List<GraphItemLLID> Soundbank { get; set; }
         public GraphItem GameXblock { get; set; }
 
@@ -183,6 +185,25 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 dds.RelPathFile = Path.GetFileName(album);
                 dds.LogPathFile = dds.RelPathFile;
                 AlbumArt.Add(dds);
+            }
+
+            //Lyrics Font Texture
+            if (!String.IsNullOrEmpty(info.LyricsTex))
+            {
+                LyricsTex = new GraphItemLLID();
+                var tex = new GraphItemLLID();
+                tex.Canonical = String.Format(CANONICAL_MANIFEST_PC, dlcName);
+                tex.RelPathDirectory = tex.Canonical;
+                tex.LogPathDirectory = tex.Canonical;
+                tex.Tag = new List<string>();
+                tex.Tag.Add(TagValue.DDS.GetDescription());
+                tex.Tag.Add(TagValue.Image.GetDescription());
+                tex.UUID = IdGenerator.Guid();
+                tex.LLID = Guid.Parse(IdGenerator.LLID());
+                tex.Name = String.Format("lyrics_{0}", dlcName);
+                tex.RelPathFile = tex.Name;
+                tex.LogPathFile = tex.RelPathFile;
+                LyricsTex = tex;
             }
 
             // Soundbank
