@@ -167,6 +167,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shortcut\GlobalHotKey.cs" />
+    <Compile Include="Shortcut\Shortcut.cs" />
     <Compile Include="SngFileCreator\SngFileCreator.cs">
       <SubType>UserControl</SubType>
     </Compile>

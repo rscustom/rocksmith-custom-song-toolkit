@@ -226,7 +226,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             return uniqueName;
         }
 
-        private void arrangementAddButton_Click(object sender, EventArgs e)
+        public void arrangementAddButton_Click(object sender = null, EventArgs e = null)
         {
             Arrangement arrangement;
             using (var form = new ArrangementForm(GetToneNames(), (DLCPackageCreator)this, CurrentGameVersion))
@@ -261,7 +261,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void dlcGenerateButton_Click(object sender, EventArgs e)
+        public void dlcGenerateButton_Click(object sender = null, EventArgs e = null)
         {
             var packageData = GetPackageData();
 
@@ -338,7 +338,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void dlcSaveButton_Click(object sender, EventArgs e)
+        public void dlcSaveButton_Click(object sender = null, EventArgs e = null)
         {
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
             string dlcSavePath;
@@ -394,7 +394,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             MessageBox.Show(CurrentRocksmithTitle + " DLC Package template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void dlcLoadButton_Click(object sender, EventArgs e)
+        public void dlcLoadButton_Click(object sender = null, EventArgs e = null)
         {
             string dlcLoadPath;
             using (var ofd = new OpenFileDialog())
@@ -433,7 +433,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void dlcImportButton_Click(object sender, EventArgs e) {
+        public void dlcImportButton_Click(object sender = null, EventArgs e = null) {
             string sourcePackage;
             string savePath;
 
@@ -824,7 +824,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void toneAddButton_Click(object sender, EventArgs e)
+        public void toneAddButton_Click(object sender = null, EventArgs e = null)
         {
             var tone = CreateNewTone();
             using (var form = new ToneForm())
