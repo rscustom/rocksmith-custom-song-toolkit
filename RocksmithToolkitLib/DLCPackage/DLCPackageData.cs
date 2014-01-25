@@ -64,7 +64,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public string LyricsTex { get; set; }
 
-        public static DLCPackageData LoadFromFile(string unpackedDir) {
+        public static DLCPackageData LoadFromFile(string unpackedDir, Platform targetPlatform) {
             //Load files
             var jsonFiles = Directory.GetFiles(unpackedDir, "*.json", SearchOption.AllDirectories);
             var aggregateFile = Directory.GetFiles(unpackedDir, "*.nt", SearchOption.AllDirectories)[0];
@@ -134,7 +134,8 @@ namespace RocksmithToolkitLib.DLCPackage
             var targetAudioFiles = new List<string>();
             foreach (var file in sourceAudioFiles) {
                 var newFile = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                OggFile.ConvertAudioPlatform(file, newFile);
+                if (targetPlatform.IsConsole != file.GetAudioPlatform().IsConsole)
+                    OggFile.ConvertAudioPlatform(file, newFile);
                 targetAudioFiles.Add(newFile);
             }
 
