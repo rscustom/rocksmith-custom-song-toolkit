@@ -13,6 +13,17 @@ namespace RocksmithToolkitGUI
     {
         private GlobalHotKey globalHotKeys;
 
+        public static bool IsInDesignMode
+        {
+            get
+            {
+                if (Application.ExecutablePath.IndexOf("devenv.exe", StringComparison.OrdinalIgnoreCase) > -1)
+                    return true;
+
+                return false;
+            }
+        }
+
         public MainForm(string[] args)
         {
             InitializeComponent();
