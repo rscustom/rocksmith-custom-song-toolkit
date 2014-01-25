@@ -175,19 +175,12 @@
             this.dlcPackageCreatorControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dlcPackageCreatorControl.AppId = "";
-            this.dlcPackageCreatorControl.Artist = "";
-            this.dlcPackageCreatorControl.ArtistSort = "";
-            this.dlcPackageCreatorControl.AverageTempo = "";
-            this.dlcPackageCreatorControl.DLCName = "";
             this.dlcPackageCreatorControl.Location = new System.Drawing.Point(16, 6);
             this.dlcPackageCreatorControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcPackageCreatorControl.MinimumSize = new System.Drawing.Size(520, 555);
             this.dlcPackageCreatorControl.Name = "dlcPackageCreatorControl";
             this.dlcPackageCreatorControl.PackageVersion = "";
             this.dlcPackageCreatorControl.Size = new System.Drawing.Size(630, 600);
-            this.dlcPackageCreatorControl.SongTitle = "";
-            this.dlcPackageCreatorControl.SongTitleSort = "";
             this.dlcPackageCreatorControl.TabIndex = 0;
             // 
             // dlcPackerUnpackerTab
@@ -226,7 +219,6 @@
             // dlcConverterControl
             // 
             this.dlcConverterControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dlcConverterControl.AppId = "";
             this.dlcConverterControl.Location = new System.Drawing.Point(70, 30);
             this.dlcConverterControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcConverterControl.Name = "dlcConverterControl";
