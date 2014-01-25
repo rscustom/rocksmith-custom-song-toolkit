@@ -462,11 +462,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // UNPACK
             Packer.Unpack(sourcePackage, savePath);
+            var pkgPlat = sourcePackage.GetPlatform();
+            savePath += "\\" + Path.GetFileNameWithoutExtension(sourcePackage) + pkgPlat.platform.ToString();
 
             // LOAD DATA
-            var info = DLCPackageData.LoadFromFile(savePath);
+            var info = DLCPackageData.LoadFromFile(savePath, pkgPlat);
             info.PackageVersion = "1";
-            switch (sourcePackage.GetPlatform().platform)
+            switch (pkgPlat.platform)
             {
                 case GamePlatform.Pc:
                     info.Pc = true;

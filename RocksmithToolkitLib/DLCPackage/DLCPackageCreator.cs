@@ -121,15 +121,11 @@ namespace RocksmithToolkitLib.DLCPackage
                             // SAVE PACKAGE
                             case GameVersion.RS2014:
                                 using (FileStream fl = File.Create(songFileName + ".psarc"))
-                                {
                                     packPsarcStream.CopyTo(fl);
-                                }
                                 break;
                             case GameVersion.RS2012:
                                 using (var fl = File.Create(songFileName + ".dat"))
-                                {
                                     RijndaelEncryptor.EncryptFile(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
-                                }
                                 break;
                             default:
                                 throw new InvalidOperationException("Unexpected game version value");

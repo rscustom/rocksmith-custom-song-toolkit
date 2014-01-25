@@ -52,22 +52,25 @@ namespace RocksmithToolkitGUI.DLCConverter
         public DLCConverter()
         {
             InitializeComponent();
+            try
+            {
+                // Fill source combo            
+                var sourcePlatform = Enum.GetNames(typeof(GamePlatform)).ToList<string>();
+                sourcePlatform.Remove("None");
+                platformSourceCombo.DataSource = sourcePlatform;
+                platformSourceCombo.SelectedItem = GamePlatform.Pc.ToString();
 
-            // Fill source combo            
-            var sourcePlatform = Enum.GetNames(typeof(GamePlatform)).ToList<string>();
-            sourcePlatform.Remove("None");
-            platformSourceCombo.DataSource = sourcePlatform;
-            platformSourceCombo.SelectedItem = GamePlatform.Pc.ToString();
+                // Fill target combo
+                var targetPlatform = Enum.GetNames(typeof(GamePlatform)).ToList<string>();
+                targetPlatform.Remove("None");
+                platformTargetCombo.DataSource = targetPlatform;
+                platformTargetCombo.SelectedItem = GamePlatform.XBox360.ToString();
 
-            // Fill target combo
-            var targetPlatform = Enum.GetNames(typeof(GamePlatform)).ToList<string>();
-            targetPlatform.Remove("None");
-            platformTargetCombo.DataSource = targetPlatform;
-            platformTargetCombo.SelectedItem = GamePlatform.XBox360.ToString();
-
-            // Fill App ID
-            PopulateAppIdCombo(GameVersion.RS2014); //Supported game version
-            AppIdVisibilty();
+                // Fill App ID
+                PopulateAppIdCombo(GameVersion.RS2014); //Supported game version
+                AppIdVisibilty();
+            }
+            catch { /*For mono compatibility*/ }
         }
 
         private void PopulateAppIdCombo(GameVersion gameVersion)

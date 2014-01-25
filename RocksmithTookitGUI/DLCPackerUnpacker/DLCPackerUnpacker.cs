@@ -19,13 +19,15 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         public DLCPackerUnpacker()
         {
             InitializeComponent();
-
-            var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
-            gameVersionList.Remove("None");
-            gameVersionCombo.DataSource = gameVersionList;
-            gameVersionCombo.SelectedIndex = 1;
-            GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), gameVersionCombo.SelectedItem.ToString());
-            try { PopulateAppIdCombo(gameVersion); }
+            try
+            {
+                var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
+                gameVersionList.Remove("None");
+                gameVersionCombo.DataSource = gameVersionList;
+                gameVersionCombo.SelectedIndex = 1;
+                GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), gameVersionCombo.SelectedItem.ToString());
+                PopulateAppIdCombo(gameVersion);
+            }
             catch { /*For mono compatibility*/ }
         }
 
