@@ -343,6 +343,9 @@ namespace RocksmithToolkitGUI.DDC
 
         private void DDC_Load(object sender, EventArgs e)
         {
+        	FileVersionInfo vi = FileVersionInfo.GetVersionInfo(@".\ddc\ddc.exe");
+        	ddcVersion.Text = String.Format("v{0}", vi.ProductVersion);
+        	
             PopMDLs();
         }
 

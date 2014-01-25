@@ -52,6 +52,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cleanCheckbox = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.ddcVersion = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -323,9 +324,20 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "Overwrite original file and doesn\'t generate log";
             // 
+            // ddcVersion
+            // 
+            this.ddcVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+        	this.ddcVersion.ForeColor = System.Drawing.Color.Gold;
+            this.ddcVersion.Location = new System.Drawing.Point(110, 125);
+            this.ddcVersion.Name = "ddcVersion";
+            this.ddcVersion.Size = new System.Drawing.Size(40, 16);
+            this.ddcVersion.TabIndex = 10;
+            this.ddcVersion.Text = "v0.0";
+            // 
             // DDC
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.ddcVersion);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.DDprogress);
@@ -369,5 +381,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TypeColnm;
         private System.Windows.Forms.CheckBox cleanCheckbox;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label ddcVersion;
     }
 }

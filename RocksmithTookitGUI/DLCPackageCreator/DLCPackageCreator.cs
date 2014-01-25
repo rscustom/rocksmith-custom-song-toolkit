@@ -466,7 +466,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             savePath += "\\" + Path.GetFileNameWithoutExtension(sourcePackage) + pkgPlat.platform.ToString();
 
             // LOAD DATA
-            var info = DLCPackageData.LoadFromFile(savePath, pkgPlat);
+            var info = DLCPackageData.LoadFromFile(savePath);
             info.PackageVersion = "1";
             switch (pkgPlat.platform)
             {
