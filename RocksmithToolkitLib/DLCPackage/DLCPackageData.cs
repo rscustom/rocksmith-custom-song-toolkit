@@ -135,8 +135,11 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var file in sourceAudioFiles) {
                 var newFile = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
                 if (targetPlatform.IsConsole != file.GetAudioPlatform().IsConsole)
+                {
                     OggFile.ConvertAudioPlatform(file, newFile);
-                targetAudioFiles.Add(newFile);
+                    targetAudioFiles.Add(newFile);
+                }
+                else targetAudioFiles.Add(file);
             }
 
             if (targetAudioFiles.Count() <= 0)
