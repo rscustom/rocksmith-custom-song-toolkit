@@ -24,10 +24,10 @@ namespace RocksmithToolkitGUI.DDC
         internal Dictionary<string, string> RampMdlsDb = new Dictionary<string,string>();
         internal static string AppWD = Application.StartupPath;
 
-        internal bool samefolder { get; set; }
-        internal string newWD { get; set; }
-        internal string oldWD { get; set; }
+        internal Color EnabledColor = System.Drawing.Color.Green;
+        internal Color DisabledColor = Color.Tomato;
 
+        internal bool isNDD { get; set; }
         internal bool CleanProcess {
             get {
                 return cleanCheckbox.Checked;
@@ -36,6 +36,15 @@ namespace RocksmithToolkitGUI.DDC
                 cleanCheckbox.Checked = value;
             }
         }
+        public bool KeepLog {
+            get {
+                return keepLogfile.Checked;
+            }
+            set {
+                keepLogfile.Checked = value;
+            }
+        }
+
 
         internal string processOutput { get; set; }
 
@@ -53,52 +62,44 @@ namespace RocksmithToolkitGUI.DDC
             DDprogress.Value = 100;
             if (e.Result.Equals(0))
             {
-                string newPath = String.Empty;
-                this.Invoke(new MethodInvoker(() =>
-                { newPath = newWD; }));
-
-                    foreach (var file in DLCdb)
+                foreach (var file in DLCdb)
+                {
+                    switch (Path.GetExtension(file.Value))
                     {
-                        if (newPath == String.Empty)
-                            newPath = Path.GetDirectoryName(file.Value);
-
-                        string ddcArrXML = String.Format("DDC_{0}.xml", file.Key), /*DDC_ArrangementName.xml*/
-                        oldPath = Path.GetDirectoryName(file.Value),
-                        srcDDCArrXML = Path.Combine(oldPath, ddcArrXML), /*<oldPath>\DDC_ArrName.xml*/
-                        destDDCArrXML = Path.Combine(newPath, ddcArrXML), /*<newPath>\DDC_ArrName.xml*/
-                        arrDDClog = Path.ChangeExtension(srcDDCArrXML, ".log"), /*<oldPath>\DDC_ArrName.log*/
-                        srcLog = Path.Combine(oldPath, "ddc.log"),
-                        destLog = Path.Combine(newPath, "ddc.log"),
-                        srcShowlights = Path.Combine(oldPath, file.Key + "_showlights.xml"),
-                        destShowlights = Path.Combine(newPath, String.Format("DDC_{0}_showlights.xml", file.Key));
-
-                        samefolder = oldPath.Equals(newPath) ? true : false;
-                        if (!samefolder && File.Exists(srcDDCArrXML))
-                        {
-                            if (File.Exists(destDDCArrXML))
+                        case ".xml":   // Arrangement
                             {
-                                File.Delete(destDDCArrXML);
-                                File.Delete(destDDCArrXML.Replace(".xml", ".log"));
-                                File.Delete(destLog);
-                                File.Delete(destShowlights);
+                                string filePath = Path.GetDirectoryName(file.Value),
+                                ddcArrXML = Path.Combine(filePath, String.Format("DDC_{0}.xml", file.Key)),
+                                srcShowlights = Path.Combine(filePath, String.Format("{0}_showlights.xml", file.Key)),
+                                destShowlights = Path.Combine(filePath, String.Format("DDC_{0}_showlights.xml", file.Key));
+
+                                if (!CleanProcess && !File.Exists(destShowlights) && File.Exists(srcShowlights) && File.Exists(ddcArrXML))
+                                    File.Copy(srcShowlights, destShowlights, true);
                             }
-                            File.Move(srcDDCArrXML, destDDCArrXML); File.Move(arrDDClog, destDDCArrXML.Replace(".xml", ".log"));
-                            File.Move(srcLog, destLog);
-                        }
+                            break;
+                        case ".psarc": // PC / Mac (RS2014)
+                        case ".dat":   // PC (RS1)
+                        case ".edat":  // PS3
+                        case "":       // XBox 360
+                            {
+                                string filePath = Path.GetDirectoryName(file.Value),
+                                newName = String.Format("{0}_DD{1}", file.Key.StripPlatformEndName().GetValidName(false).Replace("_DD", ""), file.Value.GetPlatform().GetPathName()[2]);
+                                if (CleanProcess && File.Exists(file.Value) && !Path.GetFileNameWithoutExtension(file.Value).GetValidName(false).Equals(newName))
+                                    File.Delete(file.Value);
+                            }
+                            break;
+                    } 
 
-                        if (!File.Exists(destShowlights) && File.Exists(srcShowlights))
-                            File.Copy(srcShowlights, destShowlights);
-
-                        Invoke(new MethodInvoker(() => { DelEntry(file.Value); }));
-                    }
+                    Invoke(new MethodInvoker(() => { DelEntry(file.Value); }));
+                }
 
                 DLCdb.Clear();
-                MessageBox.Show("Dynamic difficulty generated!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(String.Format("Dynamic difficulty {0}!", isNDD ? "removed" : "generated"), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else if (e.Result.Equals(1))
-                MessageBox.Show("DDC error! System Error. See below: " + Environment.NewLine + processOutput, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("DDC error! System Error. See below:\n" + processOutput, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (e.Result.Equals(2)) {
-                MessageBox.Show("Dynamic difficulty generated with errors! See below: " + Environment.NewLine + processOutput, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(String.Format("Dynamic difficulty {0} with errors! See below:\n{1}", isNDD ? "removed" : "generated", processOutput), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             } else
                 MessageBox.Show("DDC error! see ddc.log", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -123,61 +124,28 @@ namespace RocksmithToolkitGUI.DDC
             this.Invoke(new MethodInvoker(() => {
                     remSUS = IsREMsus();
                     rampPath = GetRampUpMdl();
-                }));
+            }));
 
             StringBuilder errorsFound = new StringBuilder();
-            bool exitedByError = false;
             foreach (var file in DLCdb)
             {
                 i++;
                 progress = (int)Math.Round(1.0 / DLCdb.Count() * 100, 0);
 
-                string consoleOutput = null;
+                string consoleOutput = String.Empty;
                 switch (Path.GetExtension(file.Value)) {
                     case ".xml":   // Arrangement
-                        result = ApplyDD(file.Value, remSUS, rampPath, out consoleOutput, CleanProcess);
+                        result = ApplyDD(file.Value, remSUS, rampPath, out consoleOutput, CleanProcess, KeepLog);
                         errorsFound.AppendLine(consoleOutput);
                         break;
                     case ".psarc": // PC / Mac (RS2014)
                     case ".dat":   // PC (RS1)
                     case ".edat":  // PS3
                     case "":       // XBox 360
-                        var tmpDir = Path.GetTempPath();
-                        var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(file.Value), file.Value.GetPlatform().platform));
-                        
-                        Packer.Unpack(file.Value, tmpDir);
-
-                        var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
-
-                        int singleResult = -1;
-                        foreach (var xml in xmlFiles) {
-                            if (Path.GetFileNameWithoutExtension(xml).ToLower().Contains("vocal"))
-                                continue;
-
-                            if (Path.GetFileNameWithoutExtension(xml).ToLower().Contains("showlight"))
-                                continue;
-
-                            singleResult = ApplyDD(xml, remSUS, rampPath, out consoleOutput, true);
-
-                            if (singleResult == 1) {
-                                errorsFound.AppendLine(consoleOutput);
-                                exitedByError = true;
-                                break;
-                            } else if (singleResult == 2)
-                                errorsFound.AppendLine(String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(xml), consoleOutput));
-                        }
-
-                        if (!exitedByError) {
-                            var platform = unpackedDir.GetPlatform();
-                            var newName = Path.Combine(Path.GetDirectoryName(file.Value), String.Format("{0}_DD{1}", Path.GetFileNameWithoutExtension(file.Value).StripPlatformEndName().GetValidName().Replace(" ", "_"), platform.GetPathName()[2]));
-                            Packer.Pack(unpackedDir, newName, true, platform.platform);
-                            DirectoryExtension.SafeDelete(unpackedDir);
-                        }
-
-                        result = singleResult;
+                        result = ApplyPackageDD(file.Value, remSUS, rampPath, out consoleOutput);
+                        errorsFound.AppendLine(consoleOutput);
                         break;
-                }
-                
+                }                
                 if (!String.IsNullOrEmpty(errorsFound.ToString())) {
                     processOutput = errorsFound.ToString();
                 }
@@ -188,12 +156,19 @@ namespace RocksmithToolkitGUI.DDC
             e.Result = result;
         }
 
-        private int ApplyDD(string file, string remSUS, string rampPath, out string consoleOutput, bool cleanProcess = false) {
+        private int ApplyDD(string file, string remSUS, string rampPath, out string consoleOutput, bool cleanProcess = false, bool keepLog = false)
+        {
             var startInfo = new ProcessStartInfo();
 
             startInfo.FileName = Path.Combine(AppWD, "ddc", "ddc.exe");
             startInfo.WorkingDirectory = Path.GetDirectoryName(file);
-            startInfo.Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}{4}", Path.GetFileName(file), (UInt16)phaseLenNum.Value, remSUS, rampPath, (cleanProcess) ? " -p Y -t N" : "");
+            startInfo.Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}{4}{5}", 
+                                                Path.GetFileName(file),
+                                                (UInt16)phaseLenNum.Value, 
+                                                remSUS, rampPath, 
+                                                cleanProcess ? " -p Y" : " -p N",
+                                                keepLog ? " -t Y" : " -t N" 
+            );
             startInfo.UseShellExecute = false;
             startInfo.CreateNoWindow = true;
             startInfo.RedirectStandardOutput = true;
@@ -206,6 +181,47 @@ namespace RocksmithToolkitGUI.DDC
 
                 return DDC.ExitCode;
             }
+        }
+
+        private int ApplyPackageDD(string file, string remSUS, string rampPath, out string consoleOutputPkg)
+        {
+            int singleResult = -1;
+            bool exitedByError = false;
+            consoleOutputPkg = String.Empty;
+            var tmpDir = Path.GetTempPath();
+            var platform = file.GetPlatform();
+            var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(file), platform.platform));
+
+            Packer.Unpack(file, tmpDir);
+
+            var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
+            foreach (var xml in xmlFiles)
+            {
+                if (Path.GetFileNameWithoutExtension(xml).ToLower().Contains("vocal"))
+                    continue;
+
+                if (Path.GetFileNameWithoutExtension(xml).ToLower().Contains("showlight"))
+                    continue;
+
+                singleResult = ApplyDD(xml, remSUS, rampPath, out consoleOutputPkg, true, false);
+
+                if (singleResult == 1)
+                {
+                    exitedByError = true;
+                    break;
+                }
+                else if (singleResult == 2)
+                    consoleOutputPkg = String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(xml), consoleOutputPkg);
+            }
+            //TODO: Update manifests for correct graph bars.
+            if (!exitedByError)
+            {
+                var newName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_DD{1}", 
+                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidName(false).Replace("_DD", ""), platform.GetPathName()[2]));
+                Packer.Pack(unpackedDir, newName, true, platform.platform);
+                DirectoryExtension.SafeDelete(unpackedDir);
+            }
+            return singleResult;
         }
 
         internal void FillDB()
@@ -225,7 +241,10 @@ namespace RocksmithToolkitGUI.DDC
         private string GetRampUpMdl()
         {
             if (ramUpMdlsCbox.Text.Trim().Length > 0)
+            {
+                isNDD = ramUpMdlsCbox.Text.Equals("ddc_dd_remover");
                 return String.Format(" -m \"{0}\"", Path.GetFullPath(RampMdlsDb[ramUpMdlsCbox.Text]));
+            }
             else return "";
         }
 
@@ -238,7 +257,7 @@ namespace RocksmithToolkitGUI.DDC
 
         private void ProduceDDbt_Click(object sender, EventArgs e)
         {
-            if (!this.bw.IsBusy)
+            if (!this.bw.IsBusy && DLCdb.Count > 0)
             {
                 if(DLCdb.Count > 1) DDprogress.Visible = true;
                 ProduceDDbt.Enabled = false;
@@ -248,7 +267,6 @@ namespace RocksmithToolkitGUI.DDC
 
         private void AddArrBT_Click(object sender, EventArgs e)
         {
-            newWD = String.Empty;
             using (var ofd = new VistaOpenFileDialog())
             using (var sfd = new VistaFolderBrowserDialog())
             {
@@ -416,6 +434,15 @@ namespace RocksmithToolkitGUI.DDC
 
                 FillDB();
             }
+        }
+
+        private void colorHiglight_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (cleanCheckbox.Checked) cleanCheckbox.ForeColor = EnabledColor;
+            else cleanCheckbox.ForeColor = DisabledColor;
+
+            if (keepLogfile.Checked) keepLogfile.ForeColor = EnabledColor;
+            else keepLogfile.ForeColor = DisabledColor;
         }
     }
 }

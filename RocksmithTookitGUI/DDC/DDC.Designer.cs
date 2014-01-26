@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DDC));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.AddArrBT = new System.Windows.Forms.Button();
             this.ProduceDDbt = new System.Windows.Forms.Button();
@@ -47,11 +47,12 @@
             this.TypeColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DDprogress = new System.Windows.Forms.ProgressBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.keepLogfile = new System.Windows.Forms.CheckBox();
+            this.cleanCheckbox = new System.Windows.Forms.CheckBox();
             this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.deleteArrBT = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cleanCheckbox = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.ddcVersion = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).BeginInit();
@@ -186,23 +187,23 @@
             this.DDCfilesDgw.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PathColnm,
             this.TypeColnm});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle1;
             this.DDCfilesDgw.GridColor = System.Drawing.SystemColors.AppWorkspace;
             this.DDCfilesDgw.Location = new System.Drawing.Point(6, 19);
             this.DDCfilesDgw.Name = "DDCfilesDgw";
             this.DDCfilesDgw.RowHeadersWidth = 4;
             this.DDCfilesDgw.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
-            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.DDCfilesDgw.RowTemplate.ErrorText = "#####";
             this.DDCfilesDgw.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DDCfilesDgw.ShowEditingIcon = false;
@@ -240,6 +241,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.keepLogfile);
             this.groupBox1.Controls.Add(this.cleanCheckbox);
             this.groupBox1.Controls.Add(this.ramUpMdlsCbox);
             this.groupBox1.Controls.Add(this.rampUpBT);
@@ -253,6 +255,40 @@
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label2.Location = new System.Drawing.Point(155, 59);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(241, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Overwrite original file^ and Force to generate log^";
+            // 
+            // keepLogfile
+            // 
+            this.keepLogfile.AutoSize = true;
+            this.keepLogfile.ForeColor = System.Drawing.Color.Tomato;
+            this.keepLogfile.Location = new System.Drawing.Point(284, 45);
+            this.keepLogfile.Name = "keepLogfile";
+            this.keepLogfile.Size = new System.Drawing.Size(88, 17);
+            this.keepLogfile.TabIndex = 6;
+            this.keepLogfile.Text = "Keep logging";
+            this.keepLogfile.UseVisualStyleBackColor = true;
+            this.keepLogfile.CheckStateChanged += new System.EventHandler(this.colorHiglight_CheckStateChanged);
+            // 
+            // cleanCheckbox
+            // 
+            this.cleanCheckbox.AutoSize = true;
+            this.cleanCheckbox.ForeColor = System.Drawing.Color.Tomato;
+            this.cleanCheckbox.Location = new System.Drawing.Point(170, 45);
+            this.cleanCheckbox.Name = "cleanCheckbox";
+            this.cleanCheckbox.Size = new System.Drawing.Size(94, 17);
+            this.cleanCheckbox.TabIndex = 6;
+            this.cleanCheckbox.Text = "Clean Process";
+            this.cleanCheckbox.UseVisualStyleBackColor = true;
+            this.cleanCheckbox.CheckStateChanged += new System.EventHandler(this.colorHiglight_CheckStateChanged);
             // 
             // phaseLenNum
             // 
@@ -303,31 +339,10 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Package or Arrangement XML file";
             // 
-            // cleanCheckbox
-            // 
-            this.cleanCheckbox.AutoSize = true;
-            this.cleanCheckbox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.cleanCheckbox.Location = new System.Drawing.Point(220, 45);
-            this.cleanCheckbox.Name = "cleanCheckbox";
-            this.cleanCheckbox.Size = new System.Drawing.Size(94, 17);
-            this.cleanCheckbox.TabIndex = 6;
-            this.cleanCheckbox.Text = "Clean Process";
-            this.cleanCheckbox.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label2.Location = new System.Drawing.Point(155, 59);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(224, 13);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "Overwrite original file and doesn\'t generate log";
-            // 
             // ddcVersion
             // 
             this.ddcVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-        	this.ddcVersion.ForeColor = System.Drawing.Color.Gold;
+            this.ddcVersion.ForeColor = System.Drawing.Color.Crimson;
             this.ddcVersion.Location = new System.Drawing.Point(110, 125);
             this.ddcVersion.Name = "ddcVersion";
             this.ddcVersion.Size = new System.Drawing.Size(40, 16);
@@ -382,5 +397,6 @@
         private System.Windows.Forms.CheckBox cleanCheckbox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label ddcVersion;
+        private System.Windows.Forms.CheckBox keepLogfile;
     }
 }
