@@ -29,9 +29,9 @@ namespace RocksmithToolkitGUI
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 var exception = (Exception)e.ExceptionObject;
-                MessageBox.Show(String.Format("Application.ThreadException\r\n{0}\r\n{1}", exception.ToString(),
-                    "\r\nPlease send us \"_RSToolkit_XXXX.log\", you can find it in Toolkit folder."), exception.Message.ToString());
-                log.ErrorException(String.Format("\r\n{0}\r\n{1}\r\nException catched:\r\n{2}\r\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
+                MessageBox.Show(String.Format("Application.ThreadException\n{0}\n{1}\nPlease send us \"_RSToolkit_{2}.log\", you can find it in Toolkit folder.",
+                    exception.ToString(), DateTime.Now.ToString("yyyy-MM-dd")), exception.Message.ToString());
+                log.ErrorException(String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
             };
 
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
@@ -40,9 +40,9 @@ namespace RocksmithToolkitGUI
             Application.ThreadException += (s, e) =>
             {
                 var exception = (Exception)e.Exception;
-                MessageBox.Show(String.Format("Application.ThreadException\r\n{0}\r\n{1}", exception.ToString(),
-                    "\r\nPlease send us \"_RSToolkit_XXXX.log\", you can find it in Toolkit folder."), exception.Message.ToString());
-                log.ErrorException(String.Format("\r\n{0}\r\n{1}\r\nException catched:\r\n{2}\r\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
+                MessageBox.Show(String.Format("Application.ThreadException\n{0}\n{1}\nPlease send us \"_RSToolkit_{2}.log\", you can find it in Toolkit folder.",
+                    exception.ToString(), DateTime.Now.ToString("yyyy-MM-dd")), exception.Message.ToString());
+                log.ErrorException(String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
             };
 
             Application.EnableVisualStyles();

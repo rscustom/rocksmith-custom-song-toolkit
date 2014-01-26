@@ -147,7 +147,7 @@ namespace packer
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(String.Format("{0}\n\r{1}\n\r{2}", "Build error!", ex.Message, ex.InnerException));
+                        Console.WriteLine(String.Format("{0}\n{1}\n{2}", "Build error!", ex.Message, ex.InnerException));
                         return 1;
                     }
                 }
@@ -170,7 +170,7 @@ namespace packer
 	                    }
 	                    catch (Exception ex)
 	                    {
-							Console.WriteLine(String.Format("Packing error!\n\rFile: {0}\n\r{1}\n\r{2}", 
+							Console.WriteLine(String.Format("Packing error!\nFile: {0}\n{1}\n{2}", 
 							                                srcFileName, ex.Message, ex.InnerException));
 	                        return 1;
 	                    }
@@ -218,7 +218,7 @@ namespace packer
                         }
                         catch (Exception ex)
                         {
-							Console.WriteLine(String.Format("Unpacking error!\n\rFile: {0}\n\r{1}\n\r{2}", 
+							Console.WriteLine(String.Format("Unpacking error!\nFile: {0}\n{1}\n{2}", 
 							                                srcFileName, ex.Message, ex.InnerException));
                             return 1;
                         }

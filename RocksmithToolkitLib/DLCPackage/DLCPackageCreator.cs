@@ -159,7 +159,7 @@ namespace RocksmithToolkitLib.DLCPackage
             STFSPackage xboxPackage = new STFSPackage(xboxSTFS, xboxRSA, songFileName, x);
             var generated = xboxPackage.RebuildPackage(xboxRSA);
             if (!generated)
-                throw new InvalidOperationException("Error on create XBox360 package, details: \n\r" + x.Log);
+                throw new InvalidOperationException("Error on create XBox360 package, details: \n" + x.Log);
 
             xboxPackage.FlushPackage(xboxRSA);
             xboxPackage.CloseIO();

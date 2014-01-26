@@ -418,7 +418,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 try {
                     info = (DLCPackageData)deserializer.ReadObject(stm);
                 } catch (Exception se) {
-                    MessageBox.Show("Can't load saved DLC because is not compatible with new DLC template format. \n\r" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Can't load saved DLC because is not compatible with new DLC template format. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -985,7 +985,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can't import tone(s). \n\r" + ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Can't import tone(s). \n" + ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

@@ -75,7 +75,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can't load saved tone. \n\r" + ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Can't load saved tone. \n" + ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
