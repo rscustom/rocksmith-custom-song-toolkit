@@ -83,7 +83,8 @@ namespace RocksmithToolkitGUI.DDC
                         case "":       // XBox 360
                             {
                                 string filePath = Path.GetDirectoryName(file.Value),
-                                newName = String.Format("{0}_DD{1}", file.Key.StripPlatformEndName().GetValidName(false).Replace("_DD", ""), file.Value.GetPlatform().GetPathName()[2]);
+                                newName = String.Format("{0}_{1}{2}", 
+                                file.Key.StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD", ""), isNDD ? "_NDD" : "DD", file.Value.GetPlatform().GetPathName()[2]);
                                 if (CleanProcess && File.Exists(file.Value) && !Path.GetFileNameWithoutExtension(file.Value).GetValidName(false).Equals(newName))
                                     File.Delete(file.Value);
                             }
@@ -216,8 +217,8 @@ namespace RocksmithToolkitGUI.DDC
             //TODO: Update manifests for correct graph bars.
             if (!exitedByError)
             {
-                var newName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_DD{1}", 
-                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidName(false).Replace("_DD", ""), platform.GetPathName()[2]));
+                var newName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_{1}{2}", 
+                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD",""), isNDD ? "NDD" :  "DD",platform.GetPathName()[2]));
                 Packer.Pack(unpackedDir, newName, true, platform.platform);
                 DirectoryExtension.SafeDelete(unpackedDir);
             }
