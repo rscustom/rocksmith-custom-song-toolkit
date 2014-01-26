@@ -53,7 +53,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     PackPS3(sourcePath, saveFileName, platform, updateSng);
                     break;
                 case GamePlatform.None:
-                    throw new InvalidOperationException("Invalid directory structure of package. \n\rDirectory: " + sourcePath);
+                    throw new InvalidOperationException("Invalid directory structure of package. \nDirectory: " + sourcePath);
             }
         }
 
@@ -265,7 +265,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
                     catch (Exception ex)
                     {
-                        throw new InvalidDataException("XBox360 header file (.txt) not found or is invalid. \n\rThe file is in the same level at 'Root' folder along with the files: 'Content image.png' and 'Package image.png' and no other file .txt can be here.", ex);
+                        throw new InvalidDataException("XBox360 header file (.txt) not found or is invalid. \nThe file is in the same level at 'Root' folder along with the files: 'Content image.png' and 'Package image.png' and no other file .txt can be here.", ex);
                     }
                 }
                 else
@@ -310,7 +310,7 @@ namespace RocksmithToolkitLib.DLCPackage
             LogRecord x = new LogRecord();
             STFSPackage xboxPackage = new STFSPackage(sourceFileName, x);
             if (!xboxPackage.ParseSuccess)
-                throw new InvalidDataException("Invalid Rocksmith XBox 360 package!\n\r" + x.Log);
+                throw new InvalidDataException("Invalid Rocksmith XBox 360 package!\n" + x.Log);
 
             var rootDir = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourceFileName)) + String.Format("_{0}", platform.platform.ToString());
             xboxPackage.ExtractPayload(rootDir, true, true);
