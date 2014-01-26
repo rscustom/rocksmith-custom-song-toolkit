@@ -62,6 +62,24 @@ namespace RocksmithToolkitLib.Sng2014HSL
             return note;
         }
 
+        public static Int32 getChordNote(Int16[] tuning, SongChord2014 crd, bool bass)
+        {
+            List<int> cNote = new List<int>();
+            for (int n = 1; n < crd.chordNotes.Length; n++ )
+                cNote.Add(getMidiNote(tuning, (Byte)crd.chordNotes[n].String, (Byte)crd.chordNotes[n].Fret, bass));
+
+            //Return bass note
+            if (cNote.Count < 3 && cNote[0] > cNote[1])
+                return cNote[1];
+            //Return most used note
+            if (cNote.Count > 3)
+            {
+                return cNote.Where(n => cNote.Any(t => t.Equals(n))).FirstOrDefault();
+            }
+            //Return bass note [2]
+            else return cNote[0];
+        }
+
         private Int32 getMaxDifficulty(Song2014 xml) {
             var max = 0;
             foreach (var phrase in xml.Phrases)
