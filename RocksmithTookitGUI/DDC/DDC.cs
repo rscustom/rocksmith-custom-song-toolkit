@@ -242,11 +242,9 @@ namespace RocksmithToolkitGUI.DDC
         private string GetRampUpMdl()
         {
             if (ramUpMdlsCbox.Text.Trim().Length > 0)
-            {
-                isNDD = ramUpMdlsCbox.Text.Equals("ddc_dd_remover");
                 return String.Format(" -m \"{0}\"", Path.GetFullPath(RampMdlsDb[ramUpMdlsCbox.Text]));
-            }
-            else return "";
+            else
+                return "";
         }
 
         private string IsREMsus()
@@ -444,6 +442,11 @@ namespace RocksmithToolkitGUI.DDC
 
             if (keepLogfile.Checked) keepLogfile.ForeColor = EnabledColor;
             else keepLogfile.ForeColor = DisabledColor;
+        }
+
+        private void ramUpMdlsCbox_SelectedIndexChanged(object sender, EventArgs e) {
+            isNDD = ((ComboBox)sender).Text.Equals("ddc_dd_remover");
+            ProduceDDbt.Text = (isNDD) ? "Remove DD" : "Generate DD";
         }
     }
 }

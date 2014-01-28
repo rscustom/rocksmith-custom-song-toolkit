@@ -120,14 +120,6 @@
   <metadata name="process1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="DescriptionDDC.Text" xml:space="preserve">
-    <value>This is DDC - Dynamic Difficulty Creator
-
-If you are unfamiliar with it, please, read this help: http://ddcreator.wordpress.com 
-
-If you don't want to bother yourself with the reading - 
-produce package with default preset</value>
-  </data>
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>117, 17</value>
   </metadata>
