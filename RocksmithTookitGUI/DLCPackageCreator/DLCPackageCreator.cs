@@ -1069,6 +1069,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 case Keys.Delete:
                     RemoveTone();
                     return;
+                default:
+                    return;
             }
 
             control.Items.RemoveAt(index);
