@@ -527,9 +527,12 @@ namespace RocksmithToolkitLib.DLCPackage
             } 
         }
 
-        private static void ExtractPSARC(string filename, string path, Stream inputStream, Platform platform)
+        private static void ExtractPSARC(string filename, string path, Stream inputStream, Platform platform, bool isExternalFile = true)
         {
-            string name = String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(filename), platform.platform.ToString());
+            string name = Path.GetFileNameWithoutExtension(filename);
+
+            if (isExternalFile)
+                name += String.Format("_{0}", platform.platform.ToString());
 
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream);
@@ -539,7 +542,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 entry.Data.Seek(0, SeekOrigin.Begin);
                 if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
                 {
-                    ExtractPSARC(fullfilename, Path.Combine(path, name), entry.Data, platform);
+                    ExtractPSARC(fullfilename, Path.Combine(path, name), entry.Data, platform, false);
                 }
                 else
                 {
