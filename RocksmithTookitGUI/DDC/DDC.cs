@@ -98,11 +98,11 @@ namespace RocksmithToolkitGUI.DDC
                 MessageBox.Show(String.Format("Dynamic difficulty {0}!", isNDD ? "removed" : "generated"), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else if (e.Result.Equals(1))
-                MessageBox.Show("DDC error! System Error. See below:\n" + processOutput, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("DDC error! System Error. See below: " + Environment.NewLine + processOutput, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (e.Result.Equals(2)) {
-                MessageBox.Show(String.Format("Dynamic difficulty {0} with errors! See below:\n{1}", isNDD ? "removed" : "generated", processOutput), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(String.Format("Dynamic difficulty {0} with errors! See below:{1}{2}", Environment.NewLine, isNDD ? "removed" : "generated", processOutput), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             } else
-                MessageBox.Show("DDC error! see ddc.log", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("DDC error! See ddc.log", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             ProduceDDbt.Enabled = true;
             DDprogress.Visible = false;
