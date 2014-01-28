@@ -191,7 +191,7 @@ namespace RocksmithToolkitGUI.DDC
             consoleOutputPkg = String.Empty;
             var tmpDir = Path.GetTempPath();
             var platform = file.GetPlatform();
-            var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(file), platform.platform));
+            var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(file), platform));
 
             Packer.Unpack(file, tmpDir);
 
@@ -218,8 +218,8 @@ namespace RocksmithToolkitGUI.DDC
             if (!exitedByError)
             {
                 var newName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_{1}{2}", 
-                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD",""), isNDD ? "NDD" :  "DD",platform.GetPathName()[2]));
-                Packer.Pack(unpackedDir, newName, true, platform.platform);
+                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD",""), isNDD ? "NDD" :  "DD", platform.GetPathName()[2]));
+                Packer.Pack(unpackedDir, newName, true, platform);
                 DirectoryExtension.SafeDelete(unpackedDir);
             }
             return singleResult;

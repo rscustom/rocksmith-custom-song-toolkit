@@ -26,6 +26,7 @@ namespace packer
         public bool Build;
         public bool DecodeOGG;
         public bool UpdateSng;
+        public Platform Platform;
     }
 
     static class Program
@@ -43,15 +44,47 @@ namespace packer
             return new OptionSet
             {
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
-                { "pack", "Pack a song", v => {if (v != null) outputArguments.Pack = true; }},
-                { "unpack", "Unpack a song", v => {if (v != null) outputArguments.Unpack = true; }},
+                { "pack", "Pack a song", v => { if (v != null) outputArguments.Pack = true; }},
+                { "unpack", "Unpack a song", v => { if (v != null) outputArguments.Unpack = true; }},
                 { "build", "Build a song package from 'Rocksmith DLC template' (*.dlc.xml)", v => outputArguments.Build = v != null },
-                { "i|input=", "The input file or directory (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split(new[]{';'}, 2) },
+                { "i|input=", "The input file or directory (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
                 { "o|output=", "The output file or directory", v => outputArguments.Output = v },
                 { "t|template=", "The template file for building package", v => outputArguments.Template = v },
-                { "ogg|decodeogg", "Decode ogg file when unpack a song (default is true)", v => {if (v != null) outputArguments.DecodeOGG = true; }},
-                { "sng|updatesng", "Recreate SNG files when pack a song (default is false)", v => {if (v != null) outputArguments.UpdateSng = true; }}
+                { "p|platform=", "Platform to pack package [Pc, Mac, XBox360, PS3]", v => outputArguments.SetPlatform(v) },
+                { "v|version=", "Version of the Rocksmith Game [RS2012 or RS2014]", v => outputArguments.SetVersion(v) },
+                { "ogg|decodeogg", "Decode ogg file when unpack a song (default is true)", v => { if (v != null) outputArguments.DecodeOGG = true; }},
+                { "sng|updatesng", "Recreate SNG files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateSng = true; }}
             };
+        }
+
+        private static void SetPlatform(this Arguments arguments, string platformString)
+        {
+            if (String.IsNullOrEmpty(platformString))
+                arguments.Platform.platform = GamePlatform.None;
+
+            GamePlatform p;
+            var validPlatform = Enum.TryParse(platformString, true, out p);
+            if (!validPlatform)
+            {
+                ShowHelpfulError(String.Format("{0} is not a valid platform.", platformString));
+                arguments.Platform.platform = GamePlatform.None;
+            }
+            arguments.Platform.platform = p;
+        }
+
+        private static void SetVersion(this Arguments arguments, string versionString)
+        {
+            if (String.IsNullOrEmpty(versionString))
+                arguments.Platform.version = GameVersion.None;
+
+            GameVersion v;
+            var validVersion = Enum.TryParse(versionString, true, out v);
+            if (!validVersion)
+            {
+                ShowHelpfulError(String.Format("{0} is not a valid game version.", versionString));
+                arguments.Platform.version = GameVersion.None;
+            }
+            arguments.Platform.version = v;
         }
 
         /// <summary>
@@ -98,6 +131,7 @@ namespace packer
                     }
                 }
 
+                // BUILD PACKAGE FROM TEMPLATE
                 if (arguments.Build)
                 {
                     if (string.IsNullOrEmpty(arguments.Template)) {
@@ -151,6 +185,8 @@ namespace packer
                         return 1;
                     }
                 }
+
+                // PACK A FOLDER TO A PACKAGE
                 if (arguments.Pack)
                 {
                 	if (!arguments.Input[0].IsDirectory())
@@ -158,13 +194,19 @@ namespace packer
                         ShowHelpfulError("The 'input' argument in 'pack' command must be a directory.");
                         return 1;
                     }
+
                     var srcFiles = arguments.Input;
 					foreach (string srcFileName in srcFiles)
 					{
 	                    try
 						{
 							Packer.DeleteFixedAudio(srcFileName);
-							Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng);
+                            
+                            if (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version != GameVersion.None)
+                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, arguments.Platform);
+                            else
+                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng);
+
 							Console.WriteLine("Packing is complete.");
 	                        return 0;
 	                    }
@@ -176,6 +218,8 @@ namespace packer
 	                    }
 					}
                 }
+
+                // UNPACK A PACKAGE FILE
                 if (arguments.Unpack)
                 {
                     if (!arguments.Output.IsDirectory())

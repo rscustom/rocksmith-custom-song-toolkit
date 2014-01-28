@@ -20,11 +20,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var needRebuildPackage = sourcePlatform.IsConsole != targetPlatform.IsConsole;
             var tmpDir = Path.GetTempPath();
-            var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(sourcePackage), sourcePlatform.platform));
+            var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(sourcePackage), sourcePlatform));
 
             DirectoryExtension.SafeDelete(unpackedDir);
 
-            Packer.Unpack(sourcePackage, tmpDir, sourcePlatform.platform);
+            Packer.Unpack(sourcePackage, tmpDir, sourcePlatform);
 
             // DESTINATION
             var nameTemplate = (!targetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";

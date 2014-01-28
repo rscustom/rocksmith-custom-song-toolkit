@@ -38,10 +38,10 @@ namespace dlcconverter
 
         private static Platform GetPlatform(string platformString) {
             GamePlatform p;
-            var validPlatform = Enum.TryParse(platformString, out p);
+            var validPlatform = Enum.TryParse(platformString, true, out p);
             if (!validPlatform)
             {
-                ShowHelpfulError(String.Format("{0} is a valid platform.", platformString));
+                ShowHelpfulError(String.Format("{0} is not a valid platform.", platformString));
                 return new Platform(GamePlatform.None, GameVersion.None);
             }
             return new Platform(p, GameVersion.RS2014);

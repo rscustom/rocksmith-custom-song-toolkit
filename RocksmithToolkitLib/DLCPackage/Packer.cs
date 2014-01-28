@@ -27,14 +27,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PACK
 
-        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, GamePlatform packagePlatform = GamePlatform.None)
+        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null)
         {
             Platform platform = sourcePath.GetPlatform();
 
-            if (packagePlatform != GamePlatform.None) 
-                platform.platform = packagePlatform;
-            else if (platform.platform == GamePlatform.None && packagePlatform == GamePlatform.None)
-                platform = TryGetPlatformByEndName(sourcePath);
+            if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
+                platform = predefinedPlatform;
 
             switch (platform.platform) {
                 case GamePlatform.Pc:
@@ -59,14 +57,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region UNPACK
 
-        public static void Unpack(string sourceFileName, string savePath, GamePlatform packagePlatform = GamePlatform.None)
+        public static void Unpack(string sourceFileName, string savePath, Platform predefinedPlatform = null)
         {
             Platform platform = sourceFileName.GetPlatform();
 
-            if (packagePlatform != GamePlatform.None)
-                platform.platform = packagePlatform;
-            else if (platform.platform == GamePlatform.None && packagePlatform == GamePlatform.None)
-                platform = TryGetPlatformByEndName(sourceFileName);
+            if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
+                platform = predefinedPlatform;
                 
             var useCryptography = platform.version == GameVersion.RS2012; // Cryptography way is used only for PC in Rocksmith 1
 

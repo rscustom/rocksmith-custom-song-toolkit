@@ -36,5 +36,10 @@ namespace RocksmithToolkitLib
         {
             return this.platform.GetHashCode() + this.version.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return String.Format("{0} - {1}", version, platform);
+        }
     }
 }
