@@ -1,0 +1,1 @@
+Need ruby and python installed on computer to use this scripts.

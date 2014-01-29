@@ -1,0 +1,1 @@
+C:\ruby\bin\ruby.exe sng-decrypt-cfb.rb win 25or6to4_vocals.sng
