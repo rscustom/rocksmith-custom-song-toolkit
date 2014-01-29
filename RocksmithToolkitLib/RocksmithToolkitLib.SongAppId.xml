@@ -139,4 +139,24 @@
   <SongAppId Version="RS2014" AppId="258398" Name="Golden Bomber - Memeshikute" />
   <SongAppId Version="RS2014" AppId="258399" Name="Golden Bomber - Earphone" />
   <SongAppId Version="RS2014" AppId="258400" Name="Golden Bomber - Death Mental" />
+  <SongAppId Version="RS2014" AppId="271410" Name="Aerosmith - Dream On" />
+  <SongAppId Version="RS2014" AppId="271411" Name="Aerosmith - Sweet Emotion" />
+  <SongAppId Version="RS2014" AppId="271412" Name="Aerosmith - Oh Yeah" />
+  <SongAppId Version="RS2014" AppId="271413" Name="Aerosmith - Legendary Child" />
+  <SongAppId Version="RS2014" AppId="271414" Name="Aerosmith - Same Old Song and Dance" />	
+  <SongAppId Version="RS2014" AppId="258414" Name="Oasis - Wonderwall" />
+  <SongAppId Version="RS2014" AppId="258415" Name="Oasis - Champagne Supernova" />
+  <SongAppId Version="RS2014" AppId="258416" Name="Oasis - Supersonic" />
+  <SongAppId Version="RS2014" AppId="258417" Name="Oasis - Live Forever" />
+  <SongAppId Version="RS2014" AppId="258418" Name="Oasis - Some Might Say" />	
+  <SongAppId Version="RS2014" AppId="271420" Name="9mm Parabellum Bullet - Atarashii Hikari" />
+  <SongAppId Version="RS2014" AppId="271421" Name="9mm Parabellum Bullet - Punishment" />	
+  <SongAppId Version="RS2014" AppId="258408" Name="Weezer - Island in the Sun" />
+  <SongAppId Version="RS2014" AppId="258409" Name="Weezer - My Name Is Jonas" />
+  <SongAppId Version="RS2014" AppId="258410" Name="Weezer - Buddy Holly" />
+  <SongAppId Version="RS2014" AppId="258411" Name="Weezer - Undone (The Sweater Song)" />
+  <SongAppId Version="RS2014" AppId="258412" Name="Weezer - Hash Pipe" />
+  <SongAppId Version="RS2014" AppId="271416" Name="System of a Down - B.Y.O.B." />
+  <SongAppId Version="RS2014" AppId="271417" Name="System of a Down - Toxicity" />
+  <SongAppId Version="RS2014" AppId="271418" Name="System of a Down - Aerials" />
 </ArrayOfSongAppId>
