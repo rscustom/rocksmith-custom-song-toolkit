@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "devtools", "RocksmithToolki
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dlcconverter", "RocksmithToolkitCLI\dlcconverter\dlcconverter.csproj", "{972BC97A-B70A-4007-B915-952CC3606A2A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sng2014", "RocksmithToolkitCLI\sng2014\sng2014.csproj", "{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -206,6 +208,21 @@ Global
 		{972BC97A-B70A-4007-B915-952CC3606A2A}.ReleaseMac|Mixed Platforms.Build.0 = ReleaseMac|x86
 		{972BC97A-B70A-4007-B915-952CC3606A2A}.ReleaseMac|x86.ActiveCfg = ReleaseMac|x86
 		{972BC97A-B70A-4007-B915-952CC3606A2A}.ReleaseMac|x86.Build.0 = ReleaseMac|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.Debug|x86.ActiveCfg = Debug|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.Debug|x86.Build.0 = Debug|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.Release|Any CPU.ActiveCfg = Release|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.Release|Mixed Platforms.Build.0 = Release|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.Release|x86.ActiveCfg = Release|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.Release|x86.Build.0 = Release|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.ReleaseMac|Any CPU.ActiveCfg = ReleaseMac|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.ReleaseMac|Mixed Platforms.ActiveCfg = ReleaseMac|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.ReleaseMac|Mixed Platforms.Build.0 = ReleaseMac|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.ReleaseMac|x86.ActiveCfg = ReleaseMac|x86
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}.ReleaseMac|x86.Build.0 = ReleaseMac|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -218,5 +235,6 @@ Global
 		{3AB6A6D5-B5AE-4319-9B57-2758D13EB042} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{63FB3334-1E7E-42D7-A025-744BC387AAD6} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{972BC97A-B70A-4007-B915-952CC3606A2A} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
+		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 	EndGlobalSection
 EndGlobal
