@@ -173,34 +173,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     rij.IV = iv;
                 }
             }
-        }
-
-        public static void DecryptSng(Stream input, Stream output, byte[] key, EndianBitConverter conv)
-        {
-            using (var decrypted = new MemoryStream())
-            using (var br = new EndianBinaryReader(conv, input))
-            using (var brDec = new EndianBinaryReader(conv, decrypted))
-            {
-                DecryptSngData(br.BaseStream, decrypted, key);
-                //unZip
-                int bSize = 1;
-                uint zLen = brDec.ReadUInt32();
-                ushort xU = brDec.ReadUInt16();
-                brDec.BaseStream.Position -= 2;
-                if (xU == 55928)//LE 55928 //BE 30938
-                {
-                    var z = new zlib.ZInputStream(brDec.BaseStream);
-                    do {
-                        byte[] buf = new byte[bSize];
-                        z.read(buf, 0, bSize);
-                        output.Write(buf, 0, bSize);
-                    } while (output.Length < (long)zLen);
-                    z.Close();
-                }
-            }
-            output.Flush();
-            output.Position = 0;
-        }
+        }        
 
         public static void DecryptSngData(Stream input, Stream output, byte[] key)
         {

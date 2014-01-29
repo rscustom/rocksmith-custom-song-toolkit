@@ -61,33 +61,66 @@ namespace RocksmithToolkitLib.Sng2014HSL
         public static Sng2014File readSng(Stream input, Platform platform) 
         {
             Sng2014File sng = new Sng2014File();
-            EndianBitConverter conv = EndianBitConverter.Little;
-            byte[] key = RijndaelEncryptor.SngKeyPC;
-            switch (platform.platform) {
-                case GamePlatform.Pc:
-                    conv = EndianBitConverter.Little;
-                    key = RijndaelEncryptor.SngKeyPC;
-                    break;
-                case GamePlatform.Mac:
-                    conv = EndianBitConverter.Little;
-                    key = RijndaelEncryptor.SngKeyPC;
-                    break;
-                case GamePlatform.XBox360:
-                case GamePlatform.PS3:
-                    // xbox
-                    conv = EndianBitConverter.Big;
-                    break;
-            }
+            
             using (var ms = new MemoryStream())
             using (var r = new BinaryReader(ms))
             {
-                if (conv == EndianBitConverter.Big) sng.Read(r);
-                else {
-                    RijndaelEncryptor.DecryptSng(input, ms, key, conv);
-                    sng.Read(r);
+                UnpackSng(input, ms, platform);
+                sng.Read(r);
+            }
+
+            return sng;
+        }
+
+        public static void UnpackSng(Stream input, Stream output, Platform platform) {
+            EndianBitConverter conv;
+            
+            switch (platform.platform) {
+                case GamePlatform.Pc:
+                case GamePlatform.Mac:
+                    // Desktop
+                    conv = EndianBitConverter.Little;
+                    break;
+                case GamePlatform.XBox360:
+                case GamePlatform.PS3:
+                    // Console
+                    conv = EndianBitConverter.Big;
+                    break;
+                default:
+                    conv = EndianBitConverter.Little;
+                    break;
+            }
+
+            using (var decrypted = new MemoryStream())
+            using (var br = new EndianBinaryReader(conv, input))
+            using (var brDec = new EndianBinaryReader(conv, decrypted)) {
+
+                byte[] key;
+                switch (platform.platform) {
+                    case GamePlatform.Mac:
+                        key = RijndaelEncryptor.SngKeyMac;
+                        break;
+                    default: //PC
+                        key = RijndaelEncryptor.SngKeyPC;
+                        break;
+                }
+                RijndaelEncryptor.DecryptSngData(br.BaseStream, decrypted, key);
+
+                //unZip
+                int bSize = 1;
+                uint zLen = brDec.ReadUInt32();
+                ushort xU = brDec.ReadUInt16();
+                brDec.BaseStream.Position -= 2;
+                if (xU == 55928) {//LE 55928 //BE 30938
+                    var z = new zlib.ZInputStream(brDec.BaseStream);
+                    do {
+                        byte[] buf = new byte[bSize];
+                        z.read(buf, 0, bSize);
+                        output.Write(buf, 0, bSize);
+                    } while (output.Length < (long)zLen);
+                    z.Close();
                 }
             }
-            return sng;
         }
 
         public Sng2014File(Stream data) {
@@ -99,21 +132,26 @@ namespace RocksmithToolkitLib.Sng2014HSL
         {
             EndianBitConverter conv;
             Int32 platform_header;
+
             switch (platform.platform) {
                 case GamePlatform.Pc:
                 case GamePlatform.Mac:
-                // PC
+                // Desktop
                     conv = EndianBitConverter.Little;
                     platform_header = 3;
                     break;
                 case GamePlatform.XBox360:
                 case GamePlatform.PS3:
-                // xbox
+                // Console
                     conv = EndianBitConverter.Big;
                     platform_header = 1;
                     break;
-                default: conv = EndianBitConverter.Little; platform_header = 3; break;
+                default:
+                    conv = EndianBitConverter.Little;
+                    platform_header = 3;
+                    break;
             }
+
             using (EndianBinaryWriter w = new EndianBinaryWriter(conv, output)) {
                 w.Write((Int32) 0x4A);
                 w.Write(platform_header);
@@ -135,12 +173,18 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     encw.Write(packed);
                     encw.Flush();
                     MemoryStream input = new MemoryStream(plain.ToArray());
+
                     // choose key
                     byte[] key;
-                    if (platform.platform == GamePlatform.Mac)
-                        key = RijndaelEncryptor.SngKeyMac;
-                    else
-                        key = RijndaelEncryptor.SngKeyPC;
+                    switch (platform.platform) {
+                        case GamePlatform.Mac:
+                            key = RijndaelEncryptor.SngKeyMac;
+                            break;
+                        default: //PC
+                            key = RijndaelEncryptor.SngKeyPC;
+                            break;
+                    }
+
                     // encrypt (writes 16B IV and encrypted data)
                     RijndaelEncryptor.EncryptSngData(input, encrypted, key);
                     w.Write(encrypted.ToArray());
