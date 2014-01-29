@@ -40,5 +40,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 return manifest;
             }
         }
+
+        public void SaveToFile(string manifestRS2014FilePath) {
+            JsonSerializerSettings jss = new JsonSerializerSettings();
+            jss.Formatting = Formatting.Indented;
+            jss.NullValueHandling = NullValueHandling.Ignore;
+            string json = JsonConvert.SerializeObject(this, jss);
+            File.WriteAllText(manifestRS2014FilePath, json);
+        }
     }
 }

@@ -11,6 +11,8 @@ using Ookii.Dialogs;
 using System.Diagnostics;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage;
+using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitGUI.DDC
 {
@@ -191,7 +193,7 @@ namespace RocksmithToolkitGUI.DDC
             consoleOutputPkg = String.Empty;
             var tmpDir = Path.GetTempPath();
             var platform = file.GetPlatform();
-            var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(file), platform));
+            var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(file), platform.platform));
 
             Packer.Unpack(file, tmpDir);
 
@@ -206,6 +208,31 @@ namespace RocksmithToolkitGUI.DDC
 
                 singleResult = ApplyDD(xml, remSUS, rampPath, out consoleOutputPkg, true, false);
 
+                // UPDATE MANIFEST (RS2014) for update
+                if (platform.version == RocksmithToolkitLib.GameVersion.RS2014) {
+                    var json = Directory.GetFiles(unpackedDir, String.Format("*{0}.json", Path.GetFileNameWithoutExtension(xml)), SearchOption.AllDirectories);
+                    if (json.Length > 0) {
+                        Attributes2014 attr = Manifest2014<Attributes2014>.LoadFromFile(json[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
+                        Song2014 xmlContent = Song2014.LoadFromFile(xml);
+
+                        var manifestFunctions = new ManifestFunctions(platform.version);
+
+                        attr.PhraseIterations = new List<PhraseIteration>();
+                        manifestFunctions.GeneratePhraseIterationsData(attr, xmlContent, platform.version);
+
+                        attr.Phrases = new List<Phrase>();
+                        manifestFunctions.GeneratePhraseData(attr, xmlContent);
+
+                        attr.Sections = new List<Section>();
+                        manifestFunctions.GenerateSectionData(attr, xmlContent);
+
+                        var manifest = new Manifest2014<Attributes2014>();
+                        var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attr } };
+                        manifest.Entries.Add(attr.PersistentID, attributeDictionary);
+                        manifest.SaveToFile(json[0]);                            
+                    }
+                }
+
                 if (singleResult == 1)
                 {
                     exitedByError = true;
@@ -214,7 +241,7 @@ namespace RocksmithToolkitGUI.DDC
                 else if (singleResult == 2)
                     consoleOutputPkg = String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(xml), consoleOutputPkg);
             }
-            //TODO: Update manifests for correct graph bars.
+            
             if (!exitedByError)
             {
                 var newName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_{1}{2}", 
