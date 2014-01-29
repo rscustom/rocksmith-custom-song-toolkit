@@ -61,23 +61,41 @@ namespace RocksmithToolkitLib.Sng2014HSL
             Int32 note = StandardMidiNotes[str] + tuning[str] + fret - (bass ? 12 : 0);
             return note;
         }
-
-        public static Int32 getChordNote(Int16[] tuning, SongChord2014 crd, bool bass)
+        /// <summary>
+        /// Showlights only.
+        /// </summary>
+        /// <param name="tuning"></param>
+        /// <param name="crd"></param>
+        /// <param name="bass"></param>
+        /// <returns></returns>
+        public static Int32 getChordNote(Int16[] tuning, SongChord2014 crd, SongChordTemplate2014[] handShape, bool bass)
         {
-            List<int> cNote = new List<int>();
-            for (int n = 1; n < crd.chordNotes.Length; n++ )
-                cNote.Add(getMidiNote(tuning, (Byte)crd.chordNotes[n].String, (Byte)crd.chordNotes[n].Fret, bass));
-
-            //Return bass note
-            if (cNote.Count < 3 && cNote[0] > cNote[1])
-                return cNote[1];
-            //Return most used note
-            if (cNote.Count > 3)
+            if (handShape[crd.ChordId] != null)
             {
-                return cNote.Where(n => cNote.Any(t => t.Equals(n))).FirstOrDefault();
-            }
-            //Return bass note [2]
-            else return cNote[0];
+                List<int> cNote = new List<int>();                
+                cNote.AddRange(new int[]{
+                    getMidiNote(tuning, (Byte)0, (Byte)handShape[crd.ChordId].Fret0, bass),
+                    getMidiNote(tuning, (Byte)1, (Byte)handShape[crd.ChordId].Fret1, bass),
+                    getMidiNote(tuning, (Byte)2, (Byte)handShape[crd.ChordId].Fret2, bass),
+                    getMidiNote(tuning, (Byte)3, (Byte)handShape[crd.ChordId].Fret3, bass),
+                    getMidiNote(tuning, (Byte)4, (Byte)handShape[crd.ChordId].Fret4, bass),
+                    getMidiNote(tuning, (Byte)5, (Byte)handShape[crd.ChordId].Fret5, bass)
+                });
+                //Cleanup for -1 notes
+                var cOut = new List<int>();
+                foreach (var c in cNote)
+                    if (c > 0) cOut.Add(c);
+                //Return bass note
+                if (cOut.Count < 3 && cOut[0] > cOut[1])
+                    return cOut[1];
+                //Return most used note
+                if (cOut.Count > 3)
+                {
+                    return cOut.Where(n => cOut.Any(t => t > n)).FirstOrDefault();
+                }
+                //Return bass note [2]
+                else return cOut[0];
+            } return 35;
         }
 
         private Int32 getMaxDifficulty(Song2014 xml) {

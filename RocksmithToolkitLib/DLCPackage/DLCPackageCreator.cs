@@ -503,7 +503,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         Showlights showlight = new Showlights(info);
                         showlight.Serialize(showlightStream);
                         if(showlightStream.CanRead)
-                        packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
+                            packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
 
                         // XBLOCK
                         GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform);

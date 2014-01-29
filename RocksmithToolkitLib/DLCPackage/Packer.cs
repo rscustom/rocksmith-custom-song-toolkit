@@ -579,35 +579,65 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void UpdateSng2014(string songDirectory, Platform platform) {
+        private static void UpdateSng2014(string songDirectory, Platform platform)
+        {
             var xmlFiles = Directory.GetFiles(Path.Combine(songDirectory, "songs", "arr"), "*_*.xml", SearchOption.AllDirectories);
-
+            var sngFolder = Path.Combine(songDirectory, "songs", "bin", platform.GetPathName()[1]); //-3 or more times re-calculation
             foreach (var xmlFile in xmlFiles)
             {
-                if (File.Exists(xmlFile) && !(xmlFile.ToLower().Contains("showlight")))
+                if (File.Exists(xmlFile))
                 {
-                    var sngFile = Path.Combine(songDirectory, Path.Combine("songs","bin", platform.GetPathName()[1]), Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
-                    var arrType = ArrangementType.Guitar;
-                    
-                    if (Path.GetFileName(xmlFile).ToLower().IndexOf("vocal") >= 0)
-                        arrType = ArrangementType.Vocal;
+                    var xmlName = Path.GetFileNameWithoutExtension(xmlFile);
+                    bool noShowlights = true;
 
-                    using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
-                        Sng2014File sng = Sng2014File.ConvertXML(xmlFile, arrType);
-                        sng.writeSng(fs, platform);
-                    }
-                }
-                if (File.Exists(xmlFile) && (xmlFile.ToLower().Contains("showlight")))
-                {
-                    var shl = new RocksmithToolkitLib.DLCPackage.Showlight.Showlights();
-                    shl.ShowlightList = shl.FixShowlights(RocksmithToolkitLib.DLCPackage.Showlight.Showlights.LoadFromFile(xmlFile).ShowlightList);
-                    shl.Count = shl.ShowlightList.Count;
-                    using (var fs = new FileStream(xmlFile, FileMode.Create))
+                    //Update Showlights
+                    if (xmlName.ToLower().Contains("_showlights"))
+                        updateShl(xmlFile);
+                    else
                     {
-                        shl.Serialize(fs);
+                        var sngFile = Path.Combine(sngFolder, xmlName + ".sng");
+                        var arrType = ArrangementType.Guitar;
+
+                        if (Path.GetFileName(xmlFile).ToLower().Contains("vocal"))
+                            arrType = ArrangementType.Vocal;
+
+                        using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
+                            Sng2014File sng = Sng2014File.ConvertXML(xmlFile, arrType);
+                            sng.writeSng(fs, platform);
+                        }
+
+                        if (xmlFiles.Any(x => Path.GetFileName(x).Contains(xmlName.Split('_')[0].ToLower() + "_showlights")))
+                            noShowlights = false;
+                        //Create Showlights
+                        if (noShowlights && arrType != ArrangementType.Vocal)
+                        {
+                            var shlName = Path.Combine(Path.GetDirectoryName(xmlFile), xmlName.Split('_')[0] + "_showlights.xml");
+                            var shl = new RocksmithToolkitLib.DLCPackage.Showlight.Showlights();
+                            if (shl.PopShList(shl.FixShowlights(shl.Genegate(xmlFile).ShowlightList)))
+                            {
+                                shl.Count = shl.ShowlightList.Count;
+                                using (var fs = new FileStream(shlName, FileMode.Create))
+                                    shl.Serialize(fs);
+                                noShowlights = false;
+                            }
+                        }
                     }
                 }
             }
+
+        }
+
+        internal static bool updateShl(string shlPath)
+        {
+            var shl = new RocksmithToolkitLib.DLCPackage.Showlight.Showlights();
+            if (shl.PopShList(shl.FixShowlights(shl.LoadFromFile(shlPath).ShowlightList)))
+            {
+                shl.Count = shl.ShowlightList.Count;
+                using (var fs = new FileStream(shlPath, FileMode.Create))
+                    shl.Serialize(fs);
+                return false;
+            }
+            return true;
         }
 
         #endregion

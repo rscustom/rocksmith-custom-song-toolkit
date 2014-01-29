@@ -37,22 +37,22 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         [XmlAttribute("count")]
         public Int32 Count { get; set; }
 
-        public Showlights() { }
+        public Showlights() { ShowlightList = new List<Showlight>(); }
 
         public Showlights(DLCPackageData info) {
             ShowlightList = new List<Showlight>();
             foreach (var arrangement in info.Arrangements) {
                 var showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File), 
                     Path.GetFileNameWithoutExtension(arrangement.SongXml.File) + "_showlights.xml");
+
                 if (!File.Exists(showlightFile))
                     showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File),
                 	    info.Name  + "_showlights.xml");
-                if (!File.Exists(showlightFile)) //We will generated it! Its not hard ;)
-                    continue;
+                if (!File.Exists(showlightFile))
+                    if (PopShList(Genegate(arrangement.SongXml.File).ShowlightList)) continue;
 
-                if (PopShList(Showlights.LoadFromFile(showlightFile).ShowlightList)) continue;
+                if (PopShList(LoadFromFile(showlightFile).ShowlightList)) continue;
             }
-            if (ShowlightList.Count == 0)
             ShowlightList = FixShowlights(ShowlightList);
             Count = ShowlightList.Count;
         }
@@ -97,40 +97,36 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         {
             if (ShowlightList.Count == 0) return ShowlightList;
 
-            bool end = false;
             if (ShowlightList[0].Time > 10.0F) { ShowlightList.Insert(0, new Showlight() { Note = getFogNote(ShowlightList[0].Note), Time = 10.0F } ); }
-            if (ShowlightList[0].Note > 35) { ShowlightList[0].Note = getFogNote(ShowlightList[0].Note); }
-            
-            //Additional fix for stage lights
-            for (var i = 1; i+1 < ShowlightList.Count; i++)
-            {
-                if (!(i + 1 == ShowlightList.Count)) //not(if current is last)
-                {
-                    if (ShowlightList[i].Note == ShowlightList[i + 1].Note) // if next note is current
-                    {
-                        ShowlightList.Remove(ShowlightList[i + 1]);
-                        continue;
-                    }
-                }
-                else //if current is last
-                {
-                    var objectToAdd = new Showlight()
-                    {
-                        Note = 66,
-                        Time = ShowlightList[i].Time
-                    }; ShowlightList.Add(objectToAdd);
-                    continue;
-                }
+            if (ShowlightList[0].Note < 24 || ShowlightList[0].Note > 35) { ShowlightList[0].Note = getFogNote(ShowlightList[0].Note); }
 
-                //Fog Color for, every: note < 24 || note in range [36..41] replace to its eq from 1 oct
-                if (ShowlightList[i].Note < 24 || ShowlightList[i].Note > 35 && ShowlightList[i].Note < 42)
+            //Additional fix for stage lights
+            for (var i = 1; i+1 <= ShowlightList.Count; i++)
+            {
+                try
+                {
+                    //if current is last, add new one n=66 t=i-1.t
+                    if (i + 1 == ShowlightList.Count)
+                    {
+                        var objectToAdd = new Showlight()
+                        {
+                            Note = ShowlightList[i].Note,
+                            Time = ShowlightList[i].Time + 1
+                        }; ShowlightList.Add(objectToAdd);
+                    }
+                    if (ShowlightList[i].Note == ShowlightList[i + 1].Note) // if next note is current
+                        ShowlightList.Remove(ShowlightList[i + 1]);
+                }
+                catch (Exception e){ }
+                //Fog Color for, every: note < 24 replace to its eq from 1 oct
+                if (ShowlightList[i].Note < 24)
                 {
                     ShowlightList[i].Note = getFogNote(ShowlightList[i].Note);
                     continue;
                 }
 
-                //For all notes > 67 translate it to spotlight range [42..59]
-                if (ShowlightList[i].Note > 67)
+                //For all notes > 67 || note in range [36..41] translate it to Beam\spotlight, range [42..59]
+                if (ShowlightList[i].Note > 35 && ShowlightList[i].Note < 42 || ShowlightList[i].Note > 67)
                 {
                     ShowlightList[i].Note = getBeamNote(ShowlightList[i].Note);
                     continue;
@@ -139,9 +135,10 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             return ShowlightList;
         }
 
-        public static Showlights Genegate(string xmlFile)
+        public Showlights Genegate(string xmlFile)
         {
             var midiNotes = new List<Showlight>();
+            var chordNotes = new List<Showlight>();
             var ShowL = new Showlights();
             var song = Song2014.LoadFromFile(xmlFile);
             // If vocals
@@ -151,41 +148,49 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             if (song.Levels != null)
                 foreach (var lvl in song.Levels)
                 {
-                    for (int i = 1; i < lvl.Notes.Count(); i++ )
+                    for (int i = 0; i+1 <= lvl.Notes.Count(); i++ )
                     {
                         var mNote = Sng2014FileWriter.getMidiNote(tuning, 
-                            (Byte)lvl.Notes[i - 1].String,
-                            (Byte)lvl.Notes[i - 1].Fret, 
+                            (Byte)lvl.Notes[i].String,
+                            (Byte)lvl.Notes[i].Fret, 
                             song.Arrangement == "Bass");
-                        midiNotes.Add(new Showlight() { Time = lvl.Notes[i - 1].Time, Note = mNote });                    
+                        midiNotes.Add(new Showlight() { Time = lvl.Notes[i].Time, Note = mNote });                    
                     }
-                    for (int i = 1; i < lvl.Chords.Count(); i++)
+                    try
                     {
-                        var mNote = Sng2014FileWriter.getChordNote(tuning,
-                            lvl.Chords[i - 1],
-                            song.Arrangement == "Bass");
-                        midiNotes.Add(new Showlight() { Time = lvl.Chords[i - 1].Time, Note = mNote });                      
+                        for (int i = 0; i + 1 <= lvl.Chords.Count(); i++)
+                        {
+                            if (lvl.Chords[i].HighDensity == 1) continue; //speedhack
+                            int mNote = Sng2014FileWriter.getChordNote(tuning,
+                                lvl.Chords[i], song.ChordTemplates,
+                                song.Arrangement == "Bass");
+                            chordNotes.Add(new Showlight() { Time = lvl.Chords[i].Time, Note = mNote });
+                        }
                     }
+                    catch (Exception e) { }
                 }
+            ShowL.PopShList(midiNotes);
+            ShowL.PopShList(chordNotes);
+            ShowL.Count = ShowL.ShowlightList.Count;
             return ShowL;
         }
 
-        private bool PopShList(List<Showlight> list)
+        internal bool PopShList(List<Showlight> list)
         {
-            if (this.ShowlightList.Count == 0)
-                this.ShowlightList.AddRange(list);
+            if (ShowlightList.Count == 0)
+                ShowlightList.AddRange(list);
             else
             {
                 try {
                     var comp = new EqShowlight();
-                    ShowlightList.Except(list, comp);
+                    ShowlightList = list.Except(ShowlightList, comp).ToList<Showlight>();
                 }
-                catch { return true; }
+                catch { return false; }
             }
-            return false;
+            return true;
         }
 
-        public static Showlights LoadFromFile(string showlightsRS2014File)
+        public Showlights LoadFromFile(string showlightsRS2014File)
         {
             using (var reader = new StreamReader(showlightsRS2014File))
             {
