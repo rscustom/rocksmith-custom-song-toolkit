@@ -44,9 +44,9 @@ namespace packer
             return new OptionSet
             {
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
-                { "pack", "Pack a song", v => { if (v != null) outputArguments.Pack = true; }},
-                { "unpack", "Unpack a song", v => { if (v != null) outputArguments.Unpack = true; }},
-                { "build", "Build a song package from 'Rocksmith DLC template' (*.dlc.xml)", v => outputArguments.Build = v != null },
+                { "p|pack", "Pack a song", v => { if (v != null) outputArguments.Pack = true; }},
+                { "u|unpack", "Unpack a song", v => { if (v != null) outputArguments.Unpack = true; }},
+                { "b|build", "Build a song package from 'Rocksmith DLC template' (*.dlc.xml)", v => outputArguments.Build = v != null },
                 { "i|input=", "The input file or directory (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
                 { "o|output=", "The output file or directory", v => outputArguments.Output = v },
                 { "t|template=", "The template file for building package", v => outputArguments.Template = v },
@@ -119,7 +119,7 @@ namespace packer
                 }
                 if (arguments.Pack || arguments.Unpack)
                 {
-                	if (string.IsNullOrEmpty(arguments.Input[0]))
+                    if (arguments.Input == null && arguments.Input.Length <= 0)
                     {
                         ShowHelpfulError("Must specify an 'input' file or directory.");
                         return 1;
@@ -229,9 +229,13 @@ namespace packer
                     }
 
                     var srcFiles = new List<string>();
-                    foreach (var name in arguments.Input){
-                    	if(name.IsDirectory()) srcFiles.AddRange(Directory.EnumerateFiles(Path.GetFullPath(name), "*.psarc", SearchOption.AllDirectories));
-                    	if(File.Exists(name)) srcFiles.Add(name);}
+                    
+                    foreach (var name in arguments.Input) {
+                    	if(name.IsDirectory())
+                            srcFiles.AddRange(Directory.EnumerateFiles(Path.GetFullPath(name), "*.psarc", SearchOption.AllDirectories));
+                    	if(File.Exists(name))
+                            srcFiles.Add(name);
+                    }
 
                     foreach (string srcFileName in srcFiles)
                     {
