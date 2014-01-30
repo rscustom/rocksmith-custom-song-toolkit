@@ -41,18 +41,26 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
         public Showlights(DLCPackageData info) {
             ShowlightList = new List<Showlight>();
+
             foreach (var arrangement in info.Arrangements) {
+                if (arrangement.ArrangementType == Sng.ArrangementType.Vocal)
+                    continue;
+
                 var showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File), 
                     Path.GetFileNameWithoutExtension(arrangement.SongXml.File) + "_showlights.xml");
 
                 if (!File.Exists(showlightFile))
-                    showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File),
-                	    info.Name  + "_showlights.xml");
-                if (!File.Exists(showlightFile))
-                    if (PopShList(Genegate(arrangement.SongXml.File).ShowlightList)) continue;
+                {
+                    showlightFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File), info.Name + "_showlights.xml");
 
-                if (PopShList(LoadFromFile(showlightFile).ShowlightList)) continue;
+                    if (PopShList(Genegate(arrangement.SongXml.File).ShowlightList))
+                        continue;
+                }
+
+                if (PopShList(LoadFromFile(showlightFile).ShowlightList))
+                    continue;
             }
+
             ShowlightList = FixShowlights(ShowlightList);
             Count = ShowlightList.Count;
         }
@@ -60,35 +68,50 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         class EqShowlight : IEqualityComparer<Showlight>
         {
             public bool Equals(Showlight x, Showlight y)
-            {   if     (x==null || y==null) return false;
+            {
+                if  (x == null || y == null)
+                    return false;
+                
                 return (x.Note == y.Note && x.Time == y.Time) || 
-                       (x.Note == y.Note && x.Time + .500D > y.Time); }
+                       (x.Note == y.Note && x.Time + .500D > y.Time);
+            }
 
             public int GetHashCode(Showlight obj)
-            {   if (Object.ReferenceEquals(obj, null)) return 0;
-                return obj.Time.GetHashCode() ^ obj.Time.GetHashCode() + obj.Note.GetHashCode(); }
+            {
+                if (Object.ReferenceEquals(obj, null))
+                    return 0;
+
+                return obj.Time.GetHashCode() ^ obj.Time.GetHashCode() + obj.Note.GetHashCode();
+            }
         }
 
         public void Serialize(Stream stream)
         {
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
-            using (var writer = System.Xml.XmlWriter.Create(stream, new System.Xml.XmlWriterSettings
-            { Indent = true, OmitXmlDeclaration = false, Encoding = new UTF8Encoding(false) }))
+
+            using (var writer = System.Xml.XmlWriter.Create(stream, new System.Xml.XmlWriterSettings {
+                Indent = true,
+                OmitXmlDeclaration = false,
+                Encoding = new UTF8Encoding(false) }))
             {
                 new XmlSerializer(typeof(Showlights)).Serialize(writer, this, ns);
             }
+
             stream.Flush();
             stream.Seek(0, SeekOrigin.Begin);            
         }
+
         private int getFogNote(int midiNote)
         {
             return (midiNote % 12) + (12 * 2);
         }
+
         private int getBeamNote(int midiNote)
         {
             return (midiNote % 12) + (12 * 4);
         }
+
         /* Add to list logic
          * if (i+1 == List.Count) List.Add(objectToAdd);
          * else List.Insert(i+1, objectToAdd);
@@ -97,8 +120,13 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         {
             if (ShowlightList.Count == 0) return ShowlightList;
 
-            if (ShowlightList[0].Time > 10.0F) { ShowlightList.Insert(0, new Showlight() { Note = getFogNote(ShowlightList[0].Note), Time = 10.0F } ); }
-            if (ShowlightList[0].Note < 24 || ShowlightList[0].Note > 35) { ShowlightList[0].Note = getFogNote(ShowlightList[0].Note); }
+            if (ShowlightList[0].Time > 10.0F) {
+                ShowlightList.Insert(0, new Showlight() { Note = getFogNote(ShowlightList[0].Note), Time = 10.0F });
+            }
+
+            if (ShowlightList[0].Note < 24 || ShowlightList[0].Note > 35) {
+                ShowlightList[0].Note = getFogNote(ShowlightList[0].Note);
+            }
 
             //Additional fix for stage lights
             for (var i = 1; i+1 <= ShowlightList.Count; i++)
@@ -112,13 +140,17 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                         {
                             Note = ShowlightList[i].Note,
                             Time = ShowlightList[i].Time + 1
-                        }; ShowlightList.Add(objectToAdd);
+                        };
+                        
+                        ShowlightList.Add(objectToAdd);
                     }
+
                     if (ShowlightList[i].Note == ShowlightList[i + 1].Note) // if next note is current
                         ShowlightList.Remove(ShowlightList[i + 1]);
                 }
-                catch (Exception e){ }
+                catch {}
                 //Fog Color for, every: note < 24 replace to its eq from 1 oct
+
                 if (ShowlightList[i].Note < 24)
                 {
                     ShowlightList[i].Note = getFogNote(ShowlightList[i].Note);
@@ -132,6 +164,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                     continue;
                 }
             }
+
             return ShowlightList;
         }
 
@@ -145,33 +178,42 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             if (song.Phrases == null || song.Tuning == null) return null;
             //Generate ShowlightList
             var tuning = song.Tuning.ToShortArray();
+
             if (song.Levels != null)
+            {
                 foreach (var lvl in song.Levels)
                 {
-                    for (int i = 0; i+1 <= lvl.Notes.Count(); i++ )
+                    for (int i = 0; i + 1 <= lvl.Notes.Count(); i++)
                     {
-                        var mNote = Sng2014FileWriter.getMidiNote(tuning, 
+                        var mNote = Sng2014FileWriter.getMidiNote(tuning,
                             (Byte)lvl.Notes[i].String,
-                            (Byte)lvl.Notes[i].Fret, 
+                            (Byte)lvl.Notes[i].Fret,
                             song.Arrangement == "Bass");
-                        midiNotes.Add(new Showlight() { Time = lvl.Notes[i].Time, Note = mNote });                    
+
+                        midiNotes.Add(new Showlight() { Time = lvl.Notes[i].Time, Note = mNote });
                     }
                     try
                     {
                         for (int i = 0; i + 1 <= lvl.Chords.Count(); i++)
                         {
-                            if (lvl.Chords[i].HighDensity == 1) continue; //speedhack
+                            if (lvl.Chords[i].HighDensity == 1)
+                                continue; //speedhack
+
                             int mNote = Sng2014FileWriter.getChordNote(tuning,
                                 lvl.Chords[i], song.ChordTemplates,
                                 song.Arrangement == "Bass");
+
                             chordNotes.Add(new Showlight() { Time = lvl.Chords[i].Time, Note = mNote });
                         }
                     }
-                    catch (Exception e) { }
+                    catch { }
                 }
+            }
+
             ShowL.PopShList(midiNotes);
             ShowL.PopShList(chordNotes);
             ShowL.Count = ShowL.ShowlightList.Count;
+
             return ShowL;
         }
 
@@ -185,8 +227,11 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                     var comp = new EqShowlight();
                     ShowlightList = list.Except(ShowlightList, comp).ToList<Showlight>();
                 }
-                catch { return false; }
+                catch {
+                    return false;
+                }
             }
+
             return true;
         }
 
