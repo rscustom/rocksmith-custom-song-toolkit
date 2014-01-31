@@ -164,12 +164,7 @@ namespace RocksmithToolkitLib.DLCPackage
             xboxPackage.FlushPackage(xboxRSA);
             xboxPackage.CloseIO();
 
-            try
-            {
-                if (Directory.Exists(XBOX_WORKDIR))
-                    Directory.Delete(XBOX_WORKDIR, true);
-            }
-            catch { /*Have no problem if don't delete*/ }
+            DirectoryExtension.SafeDelete(XBOX_WORKDIR);
         }
 
         private static HeaderData GetSTFSHeader(this DLCPackageData dlcData, GameVersion gameVersion) {
@@ -213,7 +208,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 image.Save(xMS, format);
                 xReturn = xMS.ToArray();
-            }//disposed automaticly()
+            }//disposed automatically()
             return xReturn;
         }
 

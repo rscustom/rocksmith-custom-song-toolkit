@@ -21,7 +21,7 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         #region FIELDS
 
-        private const string ROOT_XBox360 = "Root";        
+        public const string ROOT_XBox360 = "Root";        
         
         #endregion
 
@@ -215,15 +215,68 @@ namespace RocksmithToolkitLib.DLCPackage
             if (updateSng && platform.version == GameVersion.RS2014)
                 UpdateSng2014(sourcePath, platform);
 
-            foreach (var directory in Directory.EnumerateDirectories(Path.Combine(sourcePath, ROOT_XBox360))) {
-                PackInnerXBox360(Path.Combine(sourcePath, ROOT_XBox360), directory);
+            DLCPackageData songData = new DLCPackageData();
+            
+            var packageRoot = Path.Combine(sourcePath, ROOT_XBox360);
+
+            // If 'Root' directory doesn't exist the packing is a conversion process from another platform
+            if (!Directory.Exists(packageRoot))
+            {
+                var songXmlFiles = Directory.EnumerateFiles(sourcePath, "*_*.xml", SearchOption.AllDirectories);
+
+                var songTitle = String.Empty;
+                foreach (var xml in songXmlFiles)
+                {
+                    if (Path.GetFileNameWithoutExtension(xml).ToLower().Contains("vocal") || Path.GetFileNameWithoutExtension(xml).ToLower().Contains("showlight"))
+                        continue;
+
+                    var song = Song2014.LoadFromFile(xml);
+
+                    songData.SongInfo = new SongInfo();
+                    songData.SongInfo.SongDisplayName = songTitle = song.Title;
+                    songData.SongInfo.Artist = song.ArtistName;
+
+                    songData.SignatureType = PackageMagic.CON;
+                    break;
+                }
+
+                var directoryList = Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories);
+                var fileList = Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories);
+                
+                // MAKE THE XBOX360 EXPECTED STRUCTURE TO PACK WORK
+                var newPackageName = songTitle.GetValidSongName(songTitle).ToLower();
+                var newSongDir = Path.Combine(packageRoot, newPackageName);
+                
+                // Creating new directories
+                Directory.CreateDirectory(packageRoot);
+                Directory.CreateDirectory(newSongDir);
+
+                // Create PackageList file
+                var packListFile = Path.Combine(packageRoot, "PackageList.txt");
+                File.WriteAllText(packListFile, newPackageName);
+                
+                // Move directories to new path
+                foreach (string dir in directoryList)
+                    Directory.CreateDirectory(dir.Replace(sourcePath, newSongDir));
+
+                // Move files to new path
+                foreach (string file in fileList)
+                    File.Move(file, file.Replace(sourcePath, newSongDir));
+                
+                // Delete old empty directories
+                foreach (string emptyDir in directoryList)
+                    DirectoryExtension.SafeDelete(emptyDir);
             }
 
-            IEnumerable<string> xboxHeaderFiles = Directory.EnumerateFiles(sourcePath, "*.txt");
-            DLCPackageData songData = new DLCPackageData();
-            foreach (var file in xboxHeaderFiles) {
-                if (xboxHeaderFiles.Count() == 1)
-                {
+            foreach (var directory in Directory.EnumerateDirectories(packageRoot))
+            {
+                PackInnerXBox360(packageRoot, directory);
+            }
+
+            IEnumerable<string> xboxHeaderFiles = Directory.EnumerateFiles(sourcePath, "*.txt", SearchOption.TopDirectoryOnly);
+            if (xboxHeaderFiles.Count() == 1)
+            {
+                foreach (var file in xboxHeaderFiles) {                
                     try
                     {
                         string[] xboxHeader = File.ReadAllLines(file);
@@ -260,16 +313,13 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
                     catch (Exception ex)
                     {
-                        throw new InvalidDataException("XBox360 header file (.txt) not found or is invalid. \nThe file is in the same level at 'Root' folder along with the files: 'Content image.png' and 'Package image.png' and no other file .txt can be here.", ex);
-                    }
-                }
-                else
-                {
-                    throw new InvalidDataException("XBox360 header file (.txt) not found or is invalid. The file is in the same level at 'Root' folder along with the files: 'Content image.png' and 'Package image.png'. No other file .txt can be here.");
+                        throw new InvalidDataException("XBox360 header file (.txt) not found or is invalid. " + Environment.NewLine +
+                                                       "The file is in the same level at 'Root' folder along with the files: 'Content image.png' and 'Package image.png' and no other file .txt can be here.", ex);
+                    }                
                 }
             }
 
-            IEnumerable<string> xboxFiles = Directory.EnumerateFiles(Path.Combine(sourcePath, ROOT_XBox360));
+            IEnumerable<string> xboxFiles = Directory.EnumerateFiles(packageRoot);
             DLCPackageCreator.BuildXBox360Package(saveFileName, songData, xboxFiles, platform.version);
 
             foreach (var file in xboxFiles)
@@ -305,18 +355,18 @@ namespace RocksmithToolkitLib.DLCPackage
             LogRecord x = new LogRecord();
             STFSPackage xboxPackage = new STFSPackage(sourceFileName, x);
             if (!xboxPackage.ParseSuccess)
-                throw new InvalidDataException("Invalid Rocksmith XBox 360 package!\n" + x.Log);
+                throw new InvalidDataException("Invalid Rocksmith XBox 360 package!" + Environment.NewLine + x.Log);
 
             var rootDir = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourceFileName)) + String.Format("_{0}", platform.platform.ToString());
             xboxPackage.ExtractPayload(rootDir, true, true);
 
-            foreach (var fileName in Directory.EnumerateFiles(Path.Combine(rootDir, "Root")))
+            foreach (var fileName in Directory.EnumerateFiles(Path.Combine(rootDir, ROOT_XBox360)))
             {
                 if (Path.GetExtension(fileName) == ".psarc")
                 {
                     using (var outputFileStream = File.OpenRead(fileName))
                     {
-                        ExtractPSARC(fileName, Path.GetDirectoryName(fileName), outputFileStream, new Platform(GamePlatform.XBox360, GameVersion.None));
+                        ExtractPSARC(fileName, Path.GetDirectoryName(fileName), outputFileStream, new Platform(GamePlatform.XBox360, GameVersion.None), false);
                     }
                 }
 
@@ -395,7 +445,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
             foreach (var unpackedDir in Directory.EnumerateDirectories(rootDir))
                 if (Directory.Exists(unpackedDir))
-                    Directory.Move(unpackedDir, outputDir);
+                {
+                    if (Directory.Exists(outputDir))
+                        DirectoryExtension.SafeDelete(outputDir);
+
+                    DirectoryExtension.Move(unpackedDir, outputDir);
+                }
 
             if (outputMessage.IndexOf("Decrypt all EDAT files successfully") < 0)
                 throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output below:" + Environment.NewLine + Environment.NewLine + outputMessage);

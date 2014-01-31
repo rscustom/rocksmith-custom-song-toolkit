@@ -20,7 +20,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var needRebuildPackage = sourcePlatform.IsConsole != targetPlatform.IsConsole;
             var tmpDir = Path.GetTempPath();
-            var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(sourcePackage), sourcePlatform.platform));
+
+            var fileName = Path.GetFileNameWithoutExtension(sourcePackage);
+            if (sourcePlatform.platform == GamePlatform.PS3)
+                if (fileName.Contains(".psarc"))
+                    fileName = fileName.Substring(0, fileName.LastIndexOf("."));
+
+            var unpackedDir = Path.Combine(tmpDir, String.Format("{0}_{1}", fileName, sourcePlatform.platform));
 
             DirectoryExtension.SafeDelete(unpackedDir);
 
@@ -74,7 +80,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             // Replace aggregate graph values
-            var aggregateFile = Directory.GetFiles(unpackedDir, "*.nt", SearchOption.TopDirectoryOnly)[0];
+            var aggregateFile = Directory.GetFiles(unpackedDir, "*.nt", SearchOption.AllDirectories)[0];
             var aggregateGraphText = File.ReadAllText(aggregateFile);
             // Tags
             aggregateGraphText = Regex.Replace(aggregateGraphText, GraphItem.GetPlatformTagDescription(sourcePlatform.platform), GraphItem.GetPlatformTagDescription(targetPlatform.platform), RegexOptions.Multiline);
@@ -88,24 +94,27 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 if (dir.EndsWith(sourceDir0))
                 {
-                    var newDir = dir.Replace(sourceDir0, targetDir0);
+                    var newDir = dir.Substring(0, dir.LastIndexOf(sourceDir0)) + targetDir0;
                     DirectoryExtension.SafeDelete(newDir);
                     DirectoryExtension.Move(dir, newDir);
                 }
                 else if (dir.EndsWith(sourceDir1))
                 {
-                    var newDir = dir.Replace(sourceDir1, targetDir1);
+                    var newDir = dir.Substring(0, dir.LastIndexOf(sourceDir1)) + targetDir1;
                     DirectoryExtension.SafeDelete(newDir);
                     DirectoryExtension.Move(dir, newDir);
                 }
             }
 
             // Recreates SNG because SNG have different keys in PC and Mac
-            bool updateSNG = ((sourcePlatform.platform == GamePlatform.Pc && targetPlatform.platform == GamePlatform.Mac) ||
-                (sourcePlatform.platform == GamePlatform.Mac && targetPlatform.platform == GamePlatform.Pc));
+            bool updateSNG = ((sourcePlatform.platform == GamePlatform.Pc && targetPlatform.platform == GamePlatform.Mac) || (sourcePlatform.platform == GamePlatform.Mac && targetPlatform.platform == GamePlatform.Pc));
 
             // Packing
-            Packer.Pack(unpackedDir, targetFileName, updateSNG);
+            var dirToPack = unpackedDir;
+            if (sourcePlatform.platform == GamePlatform.XBox360)
+                dirToPack = Directory.GetDirectories(Path.Combine(unpackedDir, Packer.ROOT_XBox360))[0];
+
+            Packer.Pack(dirToPack, targetFileName, updateSNG, targetPlatform);
             DirectoryExtension.SafeDelete(unpackedDir);
         }
 

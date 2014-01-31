@@ -190,8 +190,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
                 AlbumArt = null;
             }
-            foreach (var a in Arrangements)
-                a.CleanCache();
+
+            if (Arrangements != null)
+                foreach (var a in Arrangements)
+                    a.CleanCache();
         }
 
         ~DLCPackageData()

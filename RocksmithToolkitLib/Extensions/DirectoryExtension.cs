@@ -56,15 +56,16 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
         
-        public static void SafeDelete(string path)
+        public static void SafeDelete(string path, bool recursive = true)
         {
             try
             {
                 if (Directory.Exists(path))
-                    Directory.Delete(path, true);
+                    Directory.Delete(path, recursive);
             }
             catch { /*Don't worry*/ }
         }
+
         /// <summary>
         /// Returns rel paths..
         /// </summary>
