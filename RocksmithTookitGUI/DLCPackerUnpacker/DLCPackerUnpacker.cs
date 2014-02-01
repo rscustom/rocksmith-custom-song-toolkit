@@ -161,7 +161,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Application.DoEvents();
                 var platform = sourceFileName.GetPlatform();
 
-                if (platform.platform == GamePlatform.Pc)
+                if (platform.platform == GamePlatform.Pc || platform.platform == GamePlatform.Mac)
                 {   
                     Packer.Unpack(sourceFileName, tmpDir);
 
