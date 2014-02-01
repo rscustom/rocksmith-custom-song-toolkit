@@ -50,7 +50,7 @@ namespace packer
                 { "i|input=", "The input file or directory (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
                 { "o|output=", "The output file or directory", v => outputArguments.Output = v },
                 { "t|template=", "The template file for building package", v => outputArguments.Template = v },
-                { "p|platform=", "Platform to pack package [Pc, Mac, XBox360, PS3]", v => outputArguments.SetPlatform(v) },
+                { "f|platform=", "Platform to pack package [Pc, Mac, XBox360, PS3]", v => outputArguments.SetPlatform(v) },
                 { "v|version=", "Version of the Rocksmith Game [RS2012 or RS2014]", v => outputArguments.SetVersion(v) },
                 { "ogg|decodeogg", "Decode ogg file when unpack a song (default is true)", v => { if (v != null) outputArguments.DecodeOGG = true; }},
                 { "sng|updatesng", "Recreate SNG files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateSng = true; }}
@@ -59,9 +59,9 @@ namespace packer
 
         private static void SetPlatform(this Arguments arguments, string platformString)
         {
-            if (String.IsNullOrEmpty(platformString))
-                arguments.Platform.platform = GamePlatform.None;
-
+            if (arguments.Platform == null)
+                arguments.Platform = new Platform(GamePlatform.None, GameVersion.None);
+            
             GamePlatform p;
             var validPlatform = Enum.TryParse(platformString, true, out p);
             if (!validPlatform)
@@ -74,9 +74,9 @@ namespace packer
 
         private static void SetVersion(this Arguments arguments, string versionString)
         {
-            if (String.IsNullOrEmpty(versionString))
-                arguments.Platform.version = GameVersion.None;
-
+            if (arguments.Platform == null)
+                arguments.Platform = new Platform(GamePlatform.None, GameVersion.None);
+            
             GameVersion v;
             var validVersion = Enum.TryParse(versionString, true, out v);
             if (!validVersion)
@@ -128,6 +128,11 @@ namespace packer
                     {
                         ShowHelpfulError("Must specified an 'output' file or directory.");
                         return 1;
+                    }
+                    if ((arguments.Platform.platform == GamePlatform.None && arguments.Platform.version != GameVersion.None) ||
+                        (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version == GameVersion.None)) {
+                            ShowHelpfulError("'platform' argument require 'version' and vice-versa to define platform. Use this option only if you have problem with platform auto identifier");
+                            return 1;
                     }
                 }
 
@@ -201,7 +206,7 @@ namespace packer
 	                    try
 						{
 							Packer.DeleteFixedAudio(srcFileName);
-                            
+
                             if (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version != GameVersion.None)
                                 Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, arguments.Platform);
                             else
