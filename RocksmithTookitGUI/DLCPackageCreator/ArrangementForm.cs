@@ -123,6 +123,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 // Arrangement ID
                 MasterId.Enabled = selectedType != ArrangementType.Vocal;
                 PersistentId.Enabled = selectedType != ArrangementType.Vocal;
+                
+                // Tuning Edit
+                tuningEditButton.Enabled = selectedType != ArrangementType.Vocal;
             };
 
             arrangementNameCombo.SelectedValueChanged += (sender, e) =>
@@ -421,8 +424,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         private void SetTuningCombo(TuningStrings tuningStrings, bool isBass = false) {
-            // Tuning
-            TuningDefinition tuning = (isBass) ? TuningDefinitionRepository.Instance().SelectForBass(tuningStrings, currentGameVersion) : TuningDefinitionRepository.Instance().Select(tuningStrings, currentGameVersion);
+            //Detect tuning
+            TuningDefinition tuning = TuningDefinitionRepository.Instance().SelectAny(tuningStrings, currentGameVersion);
+            //Create tuning
             if (tuning == null) {
                 using (var form = new TuningForm()) {
                     tuning = new TuningDefinition();
@@ -440,7 +444,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     FillTuningCombo();
                 }
             }
-            tuningComboBox.SelectedItem = (isBass) ? TuningDefinitionRepository.Instance().SelectForBass(tuningStrings, currentGameVersion) : TuningDefinitionRepository.Instance().Select(tuningStrings, currentGameVersion);
+            //Set tuning
+            tuningComboBox.SelectedItem = tuning;
         }
 
         private void addArrangementButton_Click(object sender, EventArgs e)

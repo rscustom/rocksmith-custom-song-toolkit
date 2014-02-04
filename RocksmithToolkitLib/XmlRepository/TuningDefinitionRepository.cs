@@ -19,11 +19,6 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public TuningDefinitionRepository() : base(FILENAME) { }
 
-        public TuningDefinition Select(string uiName, GameVersion gameVersion)
-        {
-            return List.FirstOrDefault<TuningDefinition>(s => s.UIName == uiName && s.GameVersion == gameVersion);
-        }
-
         public IEnumerable<TuningDefinition> Select(GameVersion gameVersion)
         {
             return List.OfType<TuningDefinition>().Where(s => s.GameVersion == gameVersion);
@@ -34,6 +29,19 @@ namespace RocksmithToolkitLib.DLCPackage {
             return List.OfType<TuningDefinition>().Where(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()));
         }
 
+        public TuningDefinition Select(string uiName, GameVersion gameVersion)
+        {
+            return List.FirstOrDefault<TuningDefinition>(s => s.UIName == uiName && s.GameVersion == gameVersion);
+        }
+
+        public TuningDefinition SelectAny(TuningStrings tuningStrings, GameVersion gameVersion)
+        {
+        	var g = Select(tuningStrings,gameVersion);
+        	var b = SelectForBass(tuningStrings,gameVersion);
+        	if (ReferenceEquals(g, b)) return g;
+        	else return b;
+        }
+        //Tuning Strings + GameVersion
         public TuningDefinition Select(TuningStrings tuningStrings, GameVersion gameVersion)
         {
             return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
