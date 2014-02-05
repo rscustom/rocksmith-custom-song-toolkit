@@ -66,6 +66,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var song = Song2014.LoadFromFile(xmlSongFile);
 
             this.SongFile = new SongFile();
+            this.SongFile.File = "";
 
             this.SongXml = new SongXML();
             this.SongXml.File = xmlSongFile;

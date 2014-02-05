@@ -341,22 +341,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public void dlcSaveButton_Click(object sender = null, EventArgs e = null)
         {
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
+            var packageData = GetPackageData();
+            if (packageData == null) {
+                MessageBox.Show("One or more fields are missing information.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             string dlcSavePath;
             using (var ofd = new SaveFileDialog())
             {
                 ofd.SupportMultiDottedExtensions = true;
                 ofd.Filter = CurrentRocksmithTitle + " DLC Template (*.dlc.xml)|*.dlc.xml";
-                if (ofd.ShowDialog() != DialogResult.OK) return;
+                ofd.FileName = packageData.Name;
+                if (DialogResult.OK != ofd.ShowDialog()) return;
                 dlcSavePath = ofd.FileName;
             }
             var BasePath = new Uri(Path.GetDirectoryName(dlcSavePath) + Path.DirectorySeparatorChar);
-
-            var packageData = GetPackageData();
-            if (packageData == null)
-            {
-                MessageBox.Show("One or more fields are missing information.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
 
             //Make the paths relative
             if (!string.IsNullOrEmpty(packageData.AlbumArtPath))
@@ -374,7 +373,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             	if (!String.IsNullOrEmpty(arr.SongXml.File))
                     arr.SongXml.File = BasePath.LocalPath.RelativeTo(Path.GetFullPath(arr.SongXml.File));
             	if (!String.IsNullOrEmpty(arr.SongFile.File))
-                    arr.SongFile.File = BasePath.LocalPath.RelativeTo(Path.GetFullPath(arr.SongFile.File));
+                    arr.SongFile.File = "";
             }
             var serializer = new DataContractSerializer(typeof(DLCPackageData));
             using (var stm = XmlWriter.Create(dlcSavePath, new XmlWriterSettings() { CheckCharacters = true, Indent = true }))
@@ -411,23 +410,19 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public void loadTemplate(string dlcLoadPath)
         {
             DLCPackageData info = null;
-
-            var deserializer = new DataContractSerializer(typeof(DLCPackageData));
-            using (var stm = new XmlTextReader(dlcLoadPath))
+            try
             {
-                try {
+                var deserializer = new DataContractSerializer(typeof(DLCPackageData));
+                using (var stm = new XmlTextReader(dlcLoadPath))
+                {
                     info = (DLCPackageData)deserializer.ReadObject(stm);
-                } catch (Exception se) {
-                    MessageBox.Show("Can't load saved DLC because is not compatible with new DLC template format. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                if (info == null) throw new InvalidDataException("DLC Template Is Null");
             }
-
-            if (info == null)
+            catch (Exception se)
             {
-                MessageBox.Show("Can't load saved DLC. An error ocurred.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                MessageBox.Show("Can't load saved DLC because is not compatible with new DLC template format. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
             FillPackageCreatorForm(info, dlcLoadPath);
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -708,6 +703,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     MessageBox.Show("Error: Song Xml File doesn't exist: " +  arr.SongXml.File, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
+                arr.SongFile.File = "";
             }
 
             List<Tone> tones = new List<Tone>();

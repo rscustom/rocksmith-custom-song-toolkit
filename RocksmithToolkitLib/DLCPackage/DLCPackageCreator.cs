@@ -849,8 +849,8 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             if (arrangement.SongFile == null)
-                arrangement.SongFile = new SongFile();
-            arrangement.SongFile.File = sngFile;
+                arrangement.SongFile = new SongFile { File = "" };
+            arrangement.SongFile.File = Path.GetFullPath(sngFile);
 
             TMPFILES_SNG.Add(sngFile);
         }
