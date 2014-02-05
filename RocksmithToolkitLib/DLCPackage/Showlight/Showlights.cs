@@ -192,21 +192,17 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
                         midiNotes.Add(new Showlight() { Time = lvl.Notes[i].Time, Note = mNote });
                     }
-                    try
+                    for (int i = 0; i + 1 <= lvl.Chords.Count(); i++)
                     {
-                        for (int i = 0; i + 1 <= lvl.Chords.Count(); i++)
-                        {
-                            if (lvl.Chords[i].HighDensity == 1)
-                                continue; //speedhack
+                        if (lvl.Chords[i].HighDensity == 1)
+                            continue; //speedhack
 
-                            int mNote = Sng2014FileWriter.getChordNote(tuning,
-                                lvl.Chords[i], song.ChordTemplates,
-                                song.Arrangement == "Bass");
+                        int mNote = Sng2014FileWriter.getChordNote(tuning,
+                            lvl.Chords[i], song.ChordTemplates,
+                            song.Arrangement == "Bass");
 
-                            chordNotes.Add(new Showlight() { Time = lvl.Chords[i].Time, Note = mNote });
-                        }
+                        chordNotes.Add(new Showlight() { Time = lvl.Chords[i].Time, Note = mNote });
                     }
-                    catch { }
                 }
             }
 
@@ -225,7 +221,8 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             {
                 try {
                     var comp = new EqShowlight();
-                    ShowlightList = list.Except(ShowlightList, comp).ToList<Showlight>();
+                    ShowlightList = list.Union(ShowlightList, comp).OrderBy(x => x.Time).ToList<Showlight>();
+                    ShowlightList.TrimExcess();
                 }
                 catch {
                     return false;
