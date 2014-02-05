@@ -7,11 +7,15 @@ using System.Runtime.Serialization;
 using System.Xml;
 using System.IO;
 using Newtonsoft.Json;
+using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
+using RocksmithToolkitLib.Sng;
 
 namespace RocksmithToolkitLib.Xml {
     [XmlRoot("song", Namespace = "", IsNullable = false)]
     public class Song2014 {
-        [XmlAttribute("version")] // RS2014 is 7
+        [XmlAttribute("version")] // RS2014 is 7 or above
         public string Version { get; set; }
 
         [XmlElement("title")]
@@ -141,11 +145,89 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArrayItem("level", typeof(SongLevel2014))]
         public SongLevel2014[] Levels { get; set; }
 
+        public Song2014(Sng2014HSL.Sng sngData, Attributes2014 attr = null) {
+            Version = "7";
+
+            if (attr != null) {
+                // If manifest is passed, fill general song information
+                Title = attr.SongName;
+                Arrangement = ((ArrangementName)attr.ArrangementType).ToString();
+                Part = (short)attr.SongPartition;
+                Offset = attr.SongOffset;
+                CentOffset = Convert.ToString(attr.CentOffset);
+                SongLength = (float)attr.SongLength;
+                SongNameSort = attr.SongNameSort;
+                AverageTempo = attr.SongAverageTempo;
+                Tuning = attr.Tuning;
+                Capo = Convert.ToByte(attr.CapoFret);
+                ArtistName = attr.ArtistName;
+                ArtistNameSort = attr.ArtistNameSort;
+                AlbumName = attr.AlbumName;
+                AlbumNameSort = attr.AlbumNameSort;
+                AlbumYear = Convert.ToString(attr.SongYear) ?? "";
+                AlbumArt = attr.AlbumArt;
+                CrowdSpeed = "1";
+                ArrangementProperties = attr.ArrangementProperties;
+                LastConversionDateTime = attr.LastConversionDateTime;
+
+                ToneBase = attr.Tone_Base;
+                ToneA = attr.Tone_A;
+                ToneB = attr.Tone_B;
+                ToneC = attr.Tone_C;
+                ToneD = attr.Tone_D;
+            } else {
+                Part = sngData.Metadata.Part;
+                SongLength = sngData.Metadata.SongLength;
+                Tuning = new TuningStrings(sngData.Metadata.Tuning);
+                Capo = (sngData.Metadata.CapoFretId >= 0) ? sngData.Metadata.CapoFretId : (byte)0;
+                LastConversionDateTime = sngData.Metadata.LastConversionDateTime.ToNullTerminatedAscii();                
+            }
+
+            Tones = (attr != null) ? SongTone2014.Parse(sngData.Tones, attr) : SongTone2014.Parse(sngData.Tones);
+            
+            //Sections can be obtained from manifest or sng file (manifest preferred)
+            ChordTemplates = (attr != null) ? SongChordTemplate2014.Parse(attr.ChordTemplates) : new SongChordTemplate2014[0]; //TODO: Get from SNG
+            Sections = (attr != null) ? SongSection.Parse(attr.Sections) : SongSection.Parse(sngData.Sections);
+
+            //Can be obtained from manifest or sng file (sng preferred)
+            Phrases = SongPhrase.Parse(sngData.Phrases);
+            PhraseIterations = SongPhraseIteration2014.Parse(sngData.PhraseIterations);            
+            
+            //Only in SNG
+            Ebeats = SongEbeat.Parse(sngData.BPMs); 
+            StartBeat = sngData.BPMs.BPMs[0].Time;
+            Events = SongEvent.Parse(sngData.Events);
+
+            Levels = new SongLevel2014[0]; //TODO: Parse levels from sng raw data
+
+            //Not used in RS2014 customs at this time. Need to check official files
+            NewLinkedDiff = SongNewLinkedDiff.Parse(sngData.NLD);
+            PhraseProperties = SongPhraseProperty.Parse(sngData.PhraseExtraInfo);
+            LinkedDiffs = new SongLinkedDiff[0];
+            FretHandMuteTemplates = new SongFretHandMuteTemplate[0];
+        }
+
         public static Song2014 LoadFromFile(string xmlSongRS2014File) {
             using (var reader = new StreamReader(xmlSongRS2014File))
             {
-                return new Extensions.XmlStreamingDeserializer<Song2014>(reader).Deserialize();
+                return new XmlStreamingDeserializer<Song2014>(reader).Deserialize();
             }
+        }
+
+        public void Serialize(Stream stream) {
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+
+            using (var writer = XmlWriter.Create(stream, new XmlWriterSettings {
+                Indent = true,
+                OmitXmlDeclaration = false,
+                Encoding = new UTF8Encoding(false)
+            })) {
+                new XmlSerializer(typeof(Song2014)).Serialize(writer, this, ns);
+            }
+
+            stream.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
         }
     }
 
@@ -178,6 +260,32 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArray("heroLevels")]
         [XmlArrayItem("heroLevel")]
         public HeroLevel[] HeroLevels { get; set; }
+
+        public static SongPhraseIteration2014[] Parse(List<RocksmithToolkitLib.DLCPackage.Manifest.PhraseIteration> piList) {
+            var piter = new SongPhraseIteration2014[piList.Count];
+            for (int i = 0; i < piList.Count; i++) {
+                var pi = new SongPhraseIteration2014();
+                pi.PhraseId = piList[i].PhraseIndex;
+                pi.Time = piList[i].StartTime;
+                pi.Variation = "";
+                pi.HeroLevels = null; //TODO
+                piter[i] = pi;
+            }
+            return piter;
+        }
+
+        public static SongPhraseIteration2014[] Parse(Sng2014HSL.PhraseIterationSection piSection) {
+            var piter = new SongPhraseIteration2014[piSection.Count];
+            for (int i = 0; i < piSection.Count; i++) {
+                var pi = new SongPhraseIteration2014();
+                pi.PhraseId = piSection.PhraseIterations[i].PhraseId;
+                pi.Time = piSection.PhraseIterations[i].StartTime;
+                pi.Variation = "";
+                pi.HeroLevels = null; //TODO
+                piter[i] = pi;
+            }
+            return piter;
+        }
     }
 
     [XmlType("heroLevels")]
@@ -202,12 +310,39 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlElement("nld_phrase")]
         public List<SongNld_phrase> Nld_phrase { get; set; }
+
+        public static SongNewLinkedDiff[] Parse(Sng2014HSL.NLinkedDifficultySection nlinkedDifficultySection) {
+            var newLinkedDiff = new SongNewLinkedDiff[nlinkedDifficultySection.Count];
+            for (int i = 0; i < nlinkedDifficultySection.Count; i++) {
+                var nld = new SongNewLinkedDiff();
+                nld.LevelBreak = nlinkedDifficultySection.NLinkedDifficulties[i].LevelBreak;
+                nld.PhraseCount = nlinkedDifficultySection.NLinkedDifficulties[i].PhraseCount;
+                nld.Nld_phrase = SongNld_phrase.Parse(nlinkedDifficultySection.NLinkedDifficulties[i].NLD_Phrase);
+                nld.Ratio = ""; //TODO:
+            }
+            return newLinkedDiff;
+        }
     }
 
     [XmlType("nld_phrase")]
     public class SongNld_phrase {
         [XmlAttribute("id")]
         public Int32 Id { get; set; }
+
+        //public static List<SongNld_phrase> Parse(Int32[] nldPraseArray) {
+        //    var snldPhraseList = new List<SongNld_phrase>();
+        //    foreach (var id in nldPraseArray) {
+        //        var snldp = new 
+        //    }
+        //    return list;
+        //}
+
+        internal static List<SongNld_phrase> Parse(int[] nldp) {
+            var songNldp = new List<SongNld_phrase>();
+            foreach (var n in nldp)
+                songNldp.Add(new SongNld_phrase() { Id = n });
+            return songNldp;
+        }
     }
 
     public class SongChordTemplate2014 
@@ -253,6 +388,28 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlAttribute("finger5")]
         public sbyte Finger5 { get; set; }
+
+        internal static SongChordTemplate2014[] Parse(List<DLCPackage.Manifest.ChordTemplate> cteamplateList) {
+            var chordTemplates = new SongChordTemplate2014[cteamplateList.Count];
+            for (int i = 0; i < cteamplateList.Count; i++) {
+                var sct2014 = new SongChordTemplate2014();
+                sct2014.ChordName = sct2014.DisplayName = cteamplateList[i].ChordName;
+                sct2014.Finger0 = (sbyte)cteamplateList[i].Fingers[0];
+                sct2014.Finger1 = (sbyte)cteamplateList[i].Fingers[1];
+                sct2014.Finger2 = (sbyte)cteamplateList[i].Fingers[2];
+                sct2014.Finger3 = (sbyte)cteamplateList[i].Fingers[3];
+                sct2014.Finger4 = (sbyte)cteamplateList[i].Fingers[4];
+                sct2014.Finger5 = (sbyte)cteamplateList[i].Fingers[5];
+                sct2014.Fret0 = (sbyte)cteamplateList[i].Frets[0];
+                sct2014.Fret1 = (sbyte)cteamplateList[i].Frets[1];
+                sct2014.Fret2 = (sbyte)cteamplateList[i].Frets[2];
+                sct2014.Fret3 = (sbyte)cteamplateList[i].Frets[3];
+                sct2014.Fret4 = (sbyte)cteamplateList[i].Frets[4];
+                sct2014.Fret5 = (sbyte)cteamplateList[i].Frets[5];
+                chordTemplates[i] = sct2014;
+            }
+            return chordTemplates;
+        }
     }
 
     public class SongLevel2014 {
@@ -405,5 +562,39 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlAttribute("name")]
         public string Name { get; set; }
+
+        internal static SongTone2014[] Parse(Sng2014HSL.ToneSection toneSection, Attributes2014 attr = null) {
+            var tones = new SongTone2014[toneSection.Count];
+            for (var i = 0; i < toneSection.Count; i++) {
+                var tone = new SongTone2014();
+                tone.Id = toneSection.Tones[i].ToneId;
+                tone.Time = toneSection.Tones[i].Time;
+
+                if (attr != null) {
+                    // Get tone name
+                    switch (tone.Id) {
+                        case 0:
+                            tone.Name = attr.Tone_A;
+                            break;
+                        case 1:
+                            tone.Name = attr.Tone_B;
+                            break;
+                        case 2:
+                            tone.Name = attr.Tone_C;
+                            break;
+                        case 3:
+                            tone.Name = attr.Tone_D;
+                            break;
+                        default:
+                            tone.Name = "importedtone_" + tone.Id;
+                            break;
+                    }
+                } else
+                    tone.Name = "importedtone_" + tone.Id;
+                    
+                tones[i] = tone;
+            }
+            return tones;
+        }
     }
 }

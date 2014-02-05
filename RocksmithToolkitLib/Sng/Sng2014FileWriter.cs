@@ -15,16 +15,16 @@ namespace RocksmithToolkitLib.Sng2014HSL
     public class Sng2014FileWriter {
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
 
-        public static Sng2014File read_vocals(string xml_file)
+        public static Sng2014File ReadVocals(string xml_file)
         {
             var data = new MemoryStream(Resources.VOCALS_RS2);
             var sng = new Sng2014File(data);
             var xml = Vocals.LoadVocalsFromXmlFile(xml_file);
-            Sng2014FileWriter.ParseVocals(xml, sng);
+            Sng2014FileWriter.parseVocals(xml, sng);
             return sng;
         }
 
-        public void read_song(Song2014 songXml, Sng2014File sngFile)
+        public void ReadSong(Song2014 songXml, Sng2014File sngFile)
         {
             Int16[] tuning = {
                 (Int16) songXml.Tuning.String0,
@@ -55,12 +55,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
             parseChordNotes(songXml, sngFile);
         }
 
-        public static Int32 getMidiNote(Int16[] tuning, Byte str, Byte fret, bool bass) {
+        public static Int32 GetMidiNote(Int16[] tuning, Byte str, Byte fret, bool bass) {
             if (fret == unchecked((Byte) (-1)))
                 return -1;
             Int32 note = StandardMidiNotes[str] + tuning[str] + fret - (bass ? 12 : 0);
             return note;
         }
+
         /// <summary>
         /// Showlights only.
         /// </summary>
@@ -74,12 +75,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
             {
                 List<int> cNote = new List<int>();                
                 cNote.AddRange(new int[]{
-                    getMidiNote(tuning, (Byte)0, (Byte)handShape[crd.ChordId].Fret0, bass),
-                    getMidiNote(tuning, (Byte)1, (Byte)handShape[crd.ChordId].Fret1, bass),
-                    getMidiNote(tuning, (Byte)2, (Byte)handShape[crd.ChordId].Fret2, bass),
-                    getMidiNote(tuning, (Byte)3, (Byte)handShape[crd.ChordId].Fret3, bass),
-                    getMidiNote(tuning, (Byte)4, (Byte)handShape[crd.ChordId].Fret4, bass),
-                    getMidiNote(tuning, (Byte)5, (Byte)handShape[crd.ChordId].Fret5, bass)
+                    GetMidiNote(tuning, (Byte)0, (Byte)handShape[crd.ChordId].Fret0, bass),
+                    GetMidiNote(tuning, (Byte)1, (Byte)handShape[crd.ChordId].Fret1, bass),
+                    GetMidiNote(tuning, (Byte)2, (Byte)handShape[crd.ChordId].Fret2, bass),
+                    GetMidiNote(tuning, (Byte)3, (Byte)handShape[crd.ChordId].Fret3, bass),
+                    GetMidiNote(tuning, (Byte)4, (Byte)handShape[crd.ChordId].Fret4, bass),
+                    GetMidiNote(tuning, (Byte)5, (Byte)handShape[crd.ChordId].Fret5, bass)
                 });
                 //Cleanup for -1 notes
                 var cOut = new List<int>();
@@ -108,7 +109,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         // Easy, Medium, Hard = 0, 1, 2
         public int[] NoteCount { get; set; }
-        private int GetNoteCount(Sng2014File sng, int Level)
+        private int getNoteCount(Sng2014File sng, int Level)
         {
             // time => note count
             var notes = new Dictionary<float,int>();
@@ -141,9 +142,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private void parseMetadata(Song2014 xml, Sng2014File sng, Int16[] tuning) {
             // Easy, Medium, Hard
             NoteCount = new int[3];
-            NoteCount[0] = GetNoteCount(sng, 0);
-            NoteCount[1] = GetNoteCount(sng, 1);
-            NoteCount[2] = GetNoteCount(sng, 2);
+            NoteCount[0] = getNoteCount(sng, 0);
+            NoteCount[1] = getNoteCount(sng, 1);
+            NoteCount[2] = getNoteCount(sng, 2);
 
             sng.Metadata = new Metadata();
             sng.Metadata.MaxScore = 100000;
@@ -208,7 +209,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
         }
 
-        public static void readString(string From, Byte[] To) {
+        private static void readString(string From, Byte[] To) {
             var bytes = Encoding.UTF8.GetBytes(From);
             System.Buffer.BlockCopy(bytes, 0, To, 0, bytes.Length);
         }
@@ -238,7 +239,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 c.Fingers[4] = (Byte)chord.Finger4;
                 c.Fingers[5] = (Byte)chord.Finger5;
                 for (Byte s = 0; s < 6; s++)
-                    c.Notes[s] = getMidiNote(tuning, s, c.Frets[s], bass);
+                    c.Notes[s] = GetMidiNote(tuning, s, c.Frets[s], bass);
                 readString(chord.ChordName, c.Name);
                 sng.Chords.Chords[i] = c;
             }
@@ -263,9 +264,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     }
                 }
                 // TODO need to figure out which masks are not applied
-                c.NoteMask[i] = parse_notemask(n, null, false);
+                c.NoteMask[i] = parseNoteMask(n, null, false);
                 c.BendData[i] = new BendData();
-                c.BendData[i].BendData32 = parse_benddata(n, false);
+                c.BendData[i].BendData32 = parseBendData(n, false);
                 if (n != null && n.BendValues != null)
                     c.BendData[i].UsedCount = n.BendValues.Length;
                 if (n != null) {
@@ -279,7 +280,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     c.Vibrato[i] = n.Vibrato;
             }
 
-            UInt32 crc = sng.hashStruct(c);
+            UInt32 crc = sng.HashStruct(c);
             if (cns_id.ContainsKey(crc))
                 return cns_id[crc];
 
@@ -414,7 +415,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
         }
 
-        // TODO tone at the start is tone 0, need to pass tone changes for more
         private void parseTones(Song2014 xml, Sng2014File sng) {
             sng.Tones = new ToneSection();
             if (xml.Tones != null)
@@ -441,7 +441,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             };
         }
 
-        public static void ParseVocals(Vocals xml, Sng2014File sng)
+        private static void parseVocals(Vocals xml, Sng2014File sng)
         {
             sng.Vocals = new VocalSection();
             sng.Vocals.Count = xml.Vocal.Length;
@@ -552,6 +552,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
         }
 
+        #region CONSTANTS
 
         // more constants: http://pastebin.com/Hn3LsP4X
         // unknown constant
@@ -605,8 +606,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
         const UInt32 NOTE_MASK_ARTICULATIONS    = 0x0002FFF8;
         const UInt32 NOTE_MASK_ROTATION_DISABLED= 0x0000C1E0;
 
+        #endregion
 
-        public UInt32 parse_notemask(SongNote2014 note, Notes prev, bool single) {
+        private UInt32 parseNoteMask(SongNote2014 note, Notes prev, bool single) {
             if (note == null)
                 return NOTE_MASK_UNDEFINED;
 
@@ -673,7 +675,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         private void parseNote(Song2014 xml, SongNote2014 note, Notes n, Notes prev) {
-            n.NoteMask = parse_notemask(note, prev, true);
+            n.NoteMask = parseNoteMask(note, prev, true);
             // numbering (NoteFlags) will be set later
             n.Time = note.Time;
             n.StringIndex = note.String;
@@ -710,7 +712,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.Sustain = note.Sustain;
             n.MaxBend = note.Bend;
             n.BendData = new BendDataSection();
-            n.BendData.BendData = parse_benddata(note, true);
+            n.BendData.BendData = parseBendData(note, true);
             n.BendData.Count = n.BendData.BendData.Length;
         }
 
@@ -793,7 +795,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.BendData.BendData = new BendData32[n.BendData.Count];
         }
 
-        private BendData32[] parse_benddata(SongNote2014 note, bool single) {
+        private BendData32[] parseBendData(SongNote2014 note, bool single) {
             // single can be any size, otherwise 32x BendData32 are allocated
             Int32 count = 32;
 
@@ -839,6 +841,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 var level = xml.Levels[i];
                 var a = new Arrangement();
                 a.Difficulty = level.Difficulty;
+
                 var anchors = new AnchorSection();
                 anchors.Count = level.Anchors.Length;
                 anchors.Anchors = new Anchor[anchors.Count];
@@ -860,12 +863,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     anchor.PhraseIterationId = getPhraseIterationId(xml, anchor.StartBeatTime, false);
                     anchors.Anchors[j] = anchor;
                 }
+
                 a.Anchors = anchors;
                 // each slideTo will get anchor extension
                 a.AnchorExtensions = new AnchorExtensionSection();
+
                 foreach (var note in level.Notes)
                     if (note.SlideTo != -1)
                         ++a.AnchorExtensions.Count;
+
                 a.AnchorExtensions.AnchorExtensions = new AnchorExtension[a.AnchorExtensions.Count];
                 // Fingerprints1 is for handshapes without "arp" displayName
                 a.Fingerprints1 = new FingerprintSection();
@@ -889,6 +895,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     else
                         fp1.Add(fp);
                 }
+
                 a.Fingerprints1.Count = fp1.Count;
                 a.Fingerprints1.Fingerprints = fp1.ToArray();
                 a.Fingerprints2.Count = fp2.Count;
@@ -929,6 +936,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         a.AnchorExtensions.AnchorExtensions[aecnt++] = ae;
                     }
                 }
+
                 foreach (var chord in level.Chords) {
                     var n = new Notes();
                     Int32 id = -1;
@@ -1001,6 +1009,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             break;
                         }
                 }
+
                 // initialize times for empty anchors, based on lrocknroll
                 foreach (var anchor in a.Anchors.Anchors)
                     if (anchor.Unk3_FirstNoteTime == 0) {
@@ -1057,6 +1066,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             }
                         }
                     }
+
                     var prev = a.Notes.Notes[j - prvnote]; //this will be either the first note of piter, or the last note on the same string at previous timestamp
                     if ((prev.NoteMask & NOTE_MASK_PARENT) != 0 ) {
                         n.ParentPrevNote = (short)(prev.NextIterNote - 1); n.NoteMask |= NOTE_MASK_CHILD; //set the ParentPrevNote# = the matched Note#//add CHILD flag
@@ -1072,6 +1082,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     a.AverageNotesPerIteration[piter.PhraseId] += a.NotesInIteration2[j];
                     ++iter_count[piter.PhraseId];
                 }
+
                 for (int j=0; j<iter_count.Length; j++) {
                     if (iter_count[j] > 0)
                         a.AverageNotesPerIteration[j] /= iter_count[j];
@@ -1081,14 +1092,14 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 // hash all note data but their position in phrase iteration
                 // to mark otherwise unchanged notes
                 foreach (var n in a.Notes.Notes) {
-                    MemoryStream data = sng.copyStruct(n);
+                    MemoryStream data = sng.CopyStruct(n);
                     BinaryReader r = new BinaryReader(data);
                     var ncopy = new Notes();
                     ncopy.read(r);
                     ncopy.NextIterNote = 0;
                     ncopy.PrevIterNote = 0;
                     ncopy.ParentPrevNote = 0;
-                    UInt32 crc = sng.hashStruct(ncopy);
+                    UInt32 crc = sng.HashStruct(ncopy);
                     if (!note_id.ContainsKey(crc))
                         note_id[crc] = (UInt32) note_id.Count;
                     n.Hash = note_id[crc];

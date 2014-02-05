@@ -9,6 +9,8 @@ using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Sng2014HSL;
 using MiscUtil.Conversion;
 using RocksmithToolkitLib;
+using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib.Xml;
 
 namespace sng2014
 {
@@ -16,7 +18,9 @@ namespace sng2014
         public bool ShowHelp;
         public bool Pack;
         public bool Unpack;
+        public bool Xml;
         public string[] Input;
+        public string[] Manifest;
         public GamePlatform Platform;
     }
 
@@ -34,7 +38,9 @@ namespace sng2014
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
                 { "p|pack", "Pack and encrypt a SNG file (RS2014)", v => { if (v != null) outputArguments.Pack = true; }},
                 { "u|unpack", "Unpack and decrypt a SNG file (RS2014)", v => { if (v != null) outputArguments.Unpack = true; }},
-                { "i|input=", "The input file or directory (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
+                { "x|xml", "Generate a song Xml from a SNG file (RS2014)", v => { if (v != null) outputArguments.Xml = true; }},
+                { "i|input|sng=", "The input SNG file(s) or directory [*.sng] (multiple allowed, use ; to split paths)", v => outputArguments.Manifest = v.Split( new[]{';'}, 2) },
+                { "m|manifest=", "The input manifest arrangement file [*.json] (multiple allowed, use ; to split paths in same order of input (SNG) files)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
                 { "p|platform=", "Platform to pack/unpack SNG [Pc, Mac, XBox360, PS3]", v => outputArguments.SetPlatform(v) }
             };
         }
@@ -75,6 +81,10 @@ namespace sng2014
                     return 1;
                 }
 
+                if (arguments.Xml && arguments.Manifest == null && arguments.Manifest.Length <= 0) {
+                    Console.WriteLine("No manifest file was entered. The song xml file will be generated without song informations like song title, album, artist, tone names, etc.");
+                }
+
                 var srcFiles = new List<string>();
                 foreach (var name in arguments.Input) {
                     if(name.IsDirectory())
@@ -85,20 +95,45 @@ namespace sng2014
                 }
 
                 var errorCount = 0;
+                var indexCount = 0;
                 foreach (string inputFile in srcFiles) {
                     if (!File.Exists(inputFile)) {
                         Console.WriteLine(String.Format("File '{0}' doesn't exists.", inputFile));
                         continue;
                     }
 
-                    var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), String.Format("{0}_{1}.sng", Path.GetFileNameWithoutExtension(inputFile), (arguments.Unpack) ? "decrypted" : "encrypted"));
+                    if (arguments.Unpack || arguments.Xml) {
+                        if (Path.GetExtension(inputFile) != ".sng") {
+                            Console.WriteLine(String.Format("File '{0}' is not support. \nOnly *.sng are supported on this command.", inputFile));
+                            continue;
+                        }
+                    }
 
-                    using (FileStream inputStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
-                    using (FileStream outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.ReadWrite)) {                        
-                        if (arguments.Pack)
-                            Sng2014File.UnpackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
-                        //else if (arguments.Unpack)
-                        //  Sng2014File.PackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
+                    
+                    if (arguments.Pack || arguments.Unpack) {
+                        var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), String.Format("{0}_{1}.sng", Path.GetFileNameWithoutExtension(inputFile), (arguments.Unpack) ? "decrypted" : "encrypted"));
+                        
+                        using (FileStream inputStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
+                        using (FileStream outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.ReadWrite)) {
+                            if (arguments.Pack)
+                                Sng2014File.UnpackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
+                            else if (arguments.Unpack)
+                                Console.WriteLine("Not supported at this time :(");
+                            //  Sng2014File.PackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
+                        }
+                    } else if (arguments.Xml) {
+                        Attributes2014 att = null;
+                        if (arguments.Manifest != null && arguments.Manifest.Length > indexCount)
+                            att = Manifest2014<Attributes2014>.LoadFromFile(arguments.Manifest[indexCount]).Entries.ToArray()[0].Value.ToArray()[0].Value;
+
+                        var sng = Sng2014File.LoadFromFile(inputFile, new Platform(arguments.Platform, GameVersion.RS2014));
+
+                        var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(inputFile)));
+                        using (FileStream outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                        {
+                            var song = new Song2014(sng, att ?? null);
+                            song.Serialize(outputStream);
+                        }
                     }
                 }
 

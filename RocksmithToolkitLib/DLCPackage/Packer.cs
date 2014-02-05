@@ -658,7 +658,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
                             Sng2014File sng = Sng2014File.ConvertXML(xmlFile, arrType);
-                            sng.writeSng(fs, platform);
+                            sng.WriteSng(fs, platform);
                         }
 
                         if (xmlFiles.Any(x => Path.GetFileName(x).Contains(xmlName.Split('_')[0].ToLower() + "_showlights")))

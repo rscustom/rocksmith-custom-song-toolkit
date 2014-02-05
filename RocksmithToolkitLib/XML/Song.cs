@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Xml;
 using System.IO;
 using Newtonsoft.Json;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.Xml
 {
@@ -414,6 +415,19 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("string5")]
         public Int32 String5 { get; set; }
 
+        public TuningStrings() { }
+
+        public TuningStrings(short[] stringArray) {
+            String0 = stringArray[0];
+            String1 = stringArray[1];
+            String2 = stringArray[2];
+            String3 = stringArray[3];
+            if (stringArray.Length > 4)
+                String4 = stringArray[4];
+            if (stringArray.Length > 5)
+                String5 = stringArray[5];
+        }
+
         public int[] ToArray() {
             Int32[] strings = { String0, String1, String2, String3, String4, String5 };
             return strings;
@@ -447,6 +461,34 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlAttribute("solo")]
         public Byte Solo { get; set; }
+
+        internal static SongPhrase[] Parse(List<DLCPackage.Manifest.Phrase> phraseList) {
+            var phrases = new SongPhrase[phraseList.Count];
+            for (int i = 0; i < phraseList.Count; i++) {
+                var phrase = new SongPhrase();
+                //phrase.Disparity = 0;
+                //phrase.Ignore = 0;
+                phrase.MaxDifficulty = phraseList[i].MaxDifficulty;
+                phrase.Name = phraseList[i].Name;
+                phrase.Solo = (byte)(phraseList[i].Name.ToLower().Contains("solo") ? 1 : 0);
+                phrases[i] = phrase;
+            }
+            return phrases;
+        }
+
+        public static SongPhrase[] Parse(Sng2014HSL.PhraseSection sngPhraseSection) {
+            var phrases = new SongPhrase[sngPhraseSection.Count];
+            for (int i = 0; i < sngPhraseSection.Count; i++) {
+                var phrase = new SongPhrase();
+                phrase.Disparity = sngPhraseSection.Phrases[i].Disparity;
+                phrase.Ignore = sngPhraseSection.Phrases[i].Ignore;
+                phrase.MaxDifficulty = sngPhraseSection.Phrases[i].MaxDifficulty;
+                phrase.Name = sngPhraseSection.Phrases[i].Name.ToNullTerminatedAscii();
+                phrase.Solo = sngPhraseSection.Phrases[i].Solo;
+                phrases[i] = phrase;
+            }
+            return phrases;
+        }
     }
 
     [XmlType("phraseIteration")]
@@ -486,6 +528,20 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlAttribute("difficulty")]
         public Int32 Difficulty { get; set; }
+
+        internal static SongPhraseProperty[] Parse(Sng2014HSL.PhraseExtraInfoByLevelSection phraseExtraInfoByLevelSection) {
+            var phraseProperties = new SongPhraseProperty[phraseExtraInfoByLevelSection.Count];
+            for (var i = 0; i < phraseExtraInfoByLevelSection.Count; i++) {
+                var spp = new SongPhraseProperty();
+                spp.PhraseId = phraseExtraInfoByLevelSection.PhraseExtraInfoByLevel[i].PhraseId;
+                spp.Redundant = phraseExtraInfoByLevelSection.PhraseExtraInfoByLevel[i].Redundant;
+                spp.LevelJump = phraseExtraInfoByLevelSection.PhraseExtraInfoByLevel[i].LevelJump;
+                spp.Empty = phraseExtraInfoByLevelSection.PhraseExtraInfoByLevel[i].Empty;
+                spp.Difficulty = phraseExtraInfoByLevelSection.PhraseExtraInfoByLevel[i].Difficulty;
+                phraseProperties[i] = spp;
+            }
+            return phraseProperties;
+        }
     }
 
     [XmlType("chordTemplate")]
@@ -546,6 +602,17 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlAttribute("measure")]
         public Int16 Measure { get; set; }
+
+        internal static SongEbeat[] Parse(Sng2014HSL.BpmSection bpmSection) {
+            var songEbeats = new SongEbeat[bpmSection.Count];
+            for (var i = 0; i < bpmSection.Count; i++) {
+                var sEbeat = new SongEbeat();
+                sEbeat.Time = bpmSection.BPMs[i].Time;
+                sEbeat.Measure = bpmSection.BPMs[i].Measure;
+                songEbeats[i] = sEbeat;
+            }
+            return songEbeats;
+        }
     }
 
     [XmlType("section")]
@@ -559,6 +626,30 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlAttribute("number")]
         public Int32 Number { get; set; }
+
+        internal static SongSection[] Parse(List<DLCPackage.Manifest.Section> manifestSectionList) {
+            var songSections = new SongSection[manifestSectionList.Count];
+            for (int i = 0; i < manifestSectionList.Count; i++) {
+                var songSection = new SongSection();
+                songSection.Name = manifestSectionList[i].Name;
+                songSection.Number = manifestSectionList[i].Number;
+                songSection.StartTime = manifestSectionList[i].StartTime;
+                songSections[i] = songSection;
+            }
+            return songSections;
+        }
+
+        internal static SongSection[] Parse(Sng2014HSL.SectionSection sectionSection) {
+            var songSections = new SongSection[sectionSection.Count];
+            for (int i = 0; i < sectionSection.Count; i++) {
+                var songSection = new SongSection();
+                songSection.Name = sectionSection.Sections[i].Name.ToNullTerminatedAscii();
+                songSection.Number = sectionSection.Sections[i].Number;
+                songSection.StartTime = sectionSection.Sections[i].StartTime;
+                songSections[i] = songSection;
+            }
+            return songSections;
+        }        
     }
 
     [XmlType("event")]
@@ -569,6 +660,17 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlAttribute("code")]
         public string Code { get; set; }
+
+        internal static SongEvent[] Parse(Sng2014HSL.EventSection eventSection) {
+            var songEvents = new SongEvent[eventSection.Count];
+            for (var i = 0; i < eventSection.Count; i++) {
+                var sevent = new SongEvent();
+                sevent.Code = eventSection.Events[i].EventName.ToNullTerminatedAscii();
+                sevent.Time = eventSection.Events[i].Time;
+                songEvents[i] = sevent;
+            }
+            return songEvents;
+        }
     }
 
     [XmlType("level")]

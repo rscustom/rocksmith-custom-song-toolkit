@@ -185,7 +185,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                 {
                     for (int i = 0; i + 1 <= lvl.Notes.Count(); i++)
                     {
-                        var mNote = Sng2014FileWriter.getMidiNote(tuning,
+                        var mNote = Sng2014FileWriter.GetMidiNote(tuning,
                             (Byte)lvl.Notes[i].String,
                             (Byte)lvl.Notes[i].Fret,
                             song.Arrangement == "Bass");

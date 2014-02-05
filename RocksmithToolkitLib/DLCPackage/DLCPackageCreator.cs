@@ -842,7 +842,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         arrangement.Sng2014 = Sng2014File.ConvertXML(arrangement.SongXml.File, arrangement.ArrangementType);
                     }
                     using (FileStream fs = new FileStream(sngFile, FileMode.Create))
-                        arrangement.Sng2014.writeSng(fs, platform);
+                        arrangement.Sng2014.WriteSng(fs, platform);
                     break;
                 default:
                     throw new InvalidOperationException("Unexpected game version value");

@@ -3,17 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.Sng
 {
-    public static class ByteArrayExtension
-    {
-        public static string ToNullTerminatedAscii(this Byte[] bytes)
-        {
-            return Encoding.ASCII.GetString(bytes).TrimEnd('\0');
-        }
-    }
-
     public class Ebeat
     {
         public  float Time { get; set; }

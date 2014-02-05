@@ -76,5 +76,10 @@ namespace RocksmithToolkitLib.Extensions
 
             return value;
         }
+
+        public static string ToNullTerminatedAscii(this Byte[] bytes)
+        {
+            return Encoding.ASCII.GetString(bytes).TrimEnd('\0');
+        }
     }
 }
