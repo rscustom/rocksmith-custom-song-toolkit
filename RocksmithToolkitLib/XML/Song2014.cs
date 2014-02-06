@@ -145,6 +145,8 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArrayItem("level", typeof(SongLevel2014))]
         public SongLevel2014[] Levels { get; set; }
 
+        public Song2014() { }
+
         public Song2014(Sng2014HSL.Sng sngData, Attributes2014 attr = null) {
             Version = "7";
 
