@@ -100,6 +100,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 TuningDefinitionRepository.Instance().Add(tuning, true);
             }
             this.Tuning = tuning.UIName;
+            if (attr.CentOffset != null)
+                this.TuningPitch = attr.CentOffset.Cents2Frequency();
 
             this.ArrangementSort = attr.ArrangementSort;
             this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);

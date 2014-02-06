@@ -15,12 +15,21 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             return CentsInOctave * Math.Log(Ratio) / Math.Log(2);
         }
-        public static double Cents2Frequency(double Cents)
+
+        public static double Cents2Frequency(this double Cents)
         {
             return A440 * Math.Pow(Math.Pow(2, 1 / 1200), Cents);
         }
+
+        public static double Cents2Frequency(this double? Cents) {
+            if (Cents != null)
+                return Convert.ToDouble(Cents).Cents2Frequency();
+            else
+                return 0;
+        }
+
         // Gets cents for frequency based on A440.
-        public static double Frequency2Cents(double Freq, out double Cents)
+        public static double Frequency2Cents(this double Freq, out double Cents)
         {
             double Ratio = Freq / A440;
             Cents = _Ratio2Cents(Ratio);
@@ -62,6 +71,7 @@ namespace RocksmithToolkitLib.DLCPackage
             string dummy;
             return TuningFrequency.Frequency2Note(frequency, out dummy);
         }
+
         public static double Frequency2Cents(double frequency)
         {
             double dummy;
