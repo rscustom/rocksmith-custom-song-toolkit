@@ -351,7 +351,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 ofd.SupportMultiDottedExtensions = true;
                 ofd.Filter = CurrentRocksmithTitle + " DLC Template (*.dlc.xml)|*.dlc.xml";
-                ofd.FileName = packageData.Name;
+                ofd.FileName = String.Format("{0} {1} {2}", Artist, SongTitle, CurrentGameVersion).Replace(" ", "_").Replace(".", "_");
                 if (DialogResult.OK != ofd.ShowDialog()) return;
                 dlcSavePath = ofd.FileName;
             }
