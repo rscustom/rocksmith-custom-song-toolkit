@@ -11,7 +11,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static double A440 { get{ return 440D; } }
         private static double CentsInOctave { get { return 1200D; } }
         
-        private static double _Ratio2Cents(double Ratio)
+        private static double ratio2Cents(double Ratio)
         {
             return CentsInOctave * Math.Log(Ratio) / Math.Log(2);
         }
@@ -32,8 +32,8 @@ namespace RocksmithToolkitLib.DLCPackage
         public static double Frequency2Cents(this double Freq, out double Cents)
         {
             double Ratio = Freq / A440;
-            Cents = _Ratio2Cents(Ratio);
-            return Math.Round(Cents, MidpointRounding.AwayFromZero);
+            Cents = ratio2Cents(Ratio);
+            return Math.Round(Cents, 2);
         }
 
         public static double Frequency2Note(double frequency, out string note)

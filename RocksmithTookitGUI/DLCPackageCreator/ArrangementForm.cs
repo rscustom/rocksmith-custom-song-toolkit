@@ -542,7 +542,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (isValid && freq > 0) {
                     string noteName;
                     TuningFrequency.Frequency2Note(freq, out noteName);
-                    centOffsetDisplay.Text = TuningFrequency.Frequency2Cents(freq).ToString();
+                    centOffsetDisplay.Text = String.Format("{0:0.00}", TuningFrequency.Frequency2Cents(freq));
                     noteDisplay.Text = noteName;
                 }
             }
