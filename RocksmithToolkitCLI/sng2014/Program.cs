@@ -11,6 +11,7 @@ using MiscUtil.Conversion;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.Sng;
 
 namespace sng2014
 {
@@ -21,6 +22,7 @@ namespace sng2014
         public bool Xml;
         public string[] Input;
         public string[] Manifest;
+        public ArrangementType ArrangementType;
         public GamePlatform Platform;
     }
 
@@ -39,10 +41,24 @@ namespace sng2014
                 { "p|pack", "Pack and encrypt a SNG file (RS2014)", v => { if (v != null) outputArguments.Pack = true; }},
                 { "u|unpack", "Unpack and decrypt a SNG file (RS2014)", v => { if (v != null) outputArguments.Unpack = true; }},
                 { "x|xml", "Generate a song Xml from a SNG file (RS2014)", v => { if (v != null) outputArguments.Xml = true; }},
-                { "i|input|sng=", "The input SNG file(s) or directory [*.sng] (multiple allowed, use ; to split paths)", v => outputArguments.Manifest = v.Split( new[]{';'}, 2) },
-                { "m|manifest=", "The input manifest arrangement file [*.json] (multiple allowed, use ; to split paths in same order of input (SNG) files)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
-                { "p|platform=", "Platform to pack/unpack SNG [Pc, Mac, XBox360, PS3]", v => outputArguments.SetPlatform(v) }
+                { "i|input|sng=", "The input SNG file(s) or directory [*.sng] (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
+                { "m|manifest=", "The input manifest arrangement file [*.json] (multiple allowed, use ; to split paths in same order of input (SNG) files)", v => outputArguments.Manifest = v.Split( new[]{';'}, 2) },
+                { "a|type|arrangement=", "Arrangement type of the SNG [Guitar, Bass, Vocal]", v => outputArguments.SetArrangementType(v) },
+                { "f|platform=", "Platform to pack/unpack SNG [Pc, Mac, XBox360, PS3]", v => outputArguments.SetPlatform(v) }
             };
+        }
+
+        private static void SetArrangementType(this Arguments arguments, string arrangementType) {
+            if (String.IsNullOrEmpty(arrangementType))
+                arguments.ArrangementType = ArrangementType.Guitar;
+
+            ArrangementType arr;
+            var validPlatform = Enum.TryParse <ArrangementType>(arrangementType, true, out arr);
+            if (!validPlatform) {
+                ShowHelpfulError(String.Format("{0} is not a valid platform.", arrangementType));
+                arguments.ArrangementType = ArrangementType.Guitar;
+            }
+            arguments.ArrangementType = arr;
         }
 
         private static void SetPlatform(this Arguments arguments, string platformString) {
@@ -71,8 +87,8 @@ namespace sng2014
                     return 0;
                 }
 
-                if (!arguments.Pack && !arguments.Unpack) {
-                    ShowHelpfulError("Must especify a primary command as 'pack' or 'unpack'.");
+                if (!arguments.Pack && !arguments.Unpack && !arguments.Xml) {
+                    ShowHelpfulError("Must especify a primary command as 'pack', 'unpack' or 'xml'.");
                     return 1;
                 }
 
@@ -131,8 +147,14 @@ namespace sng2014
                         var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(inputFile)));
                         using (FileStream outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                         {
-                            var song = new Song2014(sng, att ?? null);
-                            song.Serialize(outputStream);
+                            dynamic xml = null;
+                            
+                            if (arguments.ArrangementType == ArrangementType.Vocal)
+                                xml = new Vocals(sng);
+                            else
+                                xml = new Song2014(sng, att ?? null);
+
+                            xml.Serialize(outputStream);
                         }
                     }
                 }

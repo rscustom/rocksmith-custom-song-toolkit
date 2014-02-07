@@ -15,11 +15,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
     public class Sng2014FileWriter {
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
 
-        public static Sng2014File ReadVocals(string xml_file)
+        public static Sng2014File ReadVocals(string xmlFile)
         {
             var data = new MemoryStream(Resources.VOCALS_RS2);
             var sng = new Sng2014File(data);
-            var xml = Vocals.LoadVocalsFromXmlFile(xml_file);
+            var xml = Vocals.LoadFromFile(xmlFile);
             Sng2014FileWriter.parseVocals(xml, sng);
             return sng;
         }
@@ -554,7 +554,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         #region CONSTANTS
 
-        // more constants: http://pastebin.com/Hn3LsP4X
+        // more constants: RocksmithSngHSL/RocksmithSng_constants.txt
         // unknown constant
         const UInt32 NOTE_TURNING_BPM_TEMPO     = 0x00000004;
 
@@ -911,7 +911,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                 // notes and chords sorted by time
                 List<Notes> notes = new List<Notes>();
-                int aecnt = 0;
+                int acent = 0;
                 foreach (var note in level.Notes) {
                     var n = new Notes();
                     Notes prev = null;
@@ -933,7 +933,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         var ae = new AnchorExtension();
                         ae.FretId = (Byte) note.SlideTo;
                         ae.BeatTime = note.Time + note.Sustain;
-                        a.AnchorExtensions.AnchorExtensions[aecnt++] = ae;
+                        a.AnchorExtensions.AnchorExtensions[acent++] = ae;
                     }
                 }
 

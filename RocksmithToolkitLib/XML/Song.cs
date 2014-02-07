@@ -806,5 +806,25 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlAttribute("endTime")]
         public Single EndTime { get; set; }
+
+        internal static SongHandShape[] Parse(Sng2014HSL.Arrangement arrangement) {
+            var count = arrangement.Fingerprints1.Count + arrangement.Fingerprints2.Count;
+
+            var fprints = new List<Sng2014HSL.Fingerprint>();
+            fprints.AddRange(arrangement.Fingerprints1.Fingerprints);
+            fprints.AddRange(arrangement.Fingerprints2.Fingerprints);
+            fprints = fprints.OrderBy(e => e.StartTime).ToList<Sng2014HSL.Fingerprint>();
+
+            var hshapes = new SongHandShape[count];
+            for (var i = 0; i < count; i++) {
+                var hs = new SongHandShape();
+                hs.StartTime = fprints[i].StartTime;
+                hs.EndTime = fprints[i].EndTime;
+                hs.ChordId = fprints[i].ChordId;
+                hshapes[i] = hs;
+            }
+
+            return hshapes;
+        }
     }
 }

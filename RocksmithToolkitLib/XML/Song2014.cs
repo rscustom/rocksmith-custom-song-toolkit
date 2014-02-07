@@ -188,19 +188,19 @@ namespace RocksmithToolkitLib.Xml {
             Tones = (attr != null) ? SongTone2014.Parse(sngData.Tones, attr) : SongTone2014.Parse(sngData.Tones);
             
             //Sections can be obtained from manifest or sng file (manifest preferred)
-            ChordTemplates = (attr != null) ? SongChordTemplate2014.Parse(attr.ChordTemplates) : new SongChordTemplate2014[0]; //TODO: Get from SNG
+            ChordTemplates = (attr != null) ? SongChordTemplate2014.Parse(attr.ChordTemplates) : SongChordTemplate2014.Parse(sngData.Chords);
             Sections = (attr != null) ? SongSection.Parse(attr.Sections) : SongSection.Parse(sngData.Sections);
 
             //Can be obtained from manifest or sng file (sng preferred)
             Phrases = SongPhrase.Parse(sngData.Phrases);
-            PhraseIterations = SongPhraseIteration2014.Parse(sngData.PhraseIterations);            
-            
+            PhraseIterations = SongPhraseIteration2014.Parse(sngData.PhraseIterations);
+
             //Only in SNG
-            Ebeats = SongEbeat.Parse(sngData.BPMs); 
+            Ebeats = SongEbeat.Parse(sngData.BPMs);
             StartBeat = sngData.BPMs.BPMs[0].Time;
             Events = SongEvent.Parse(sngData.Events);
 
-            Levels = new SongLevel2014[0]; //TODO: Parse levels from sng raw data
+            Levels = SongLevel2014.Parse(sngData);
 
             //Not used in RS2014 customs at this time. Need to check official files
             NewLinkedDiff = SongNewLinkedDiff.Parse(sngData.NLD);
@@ -222,8 +222,7 @@ namespace RocksmithToolkitLib.Xml {
 
             using (var writer = XmlWriter.Create(stream, new XmlWriterSettings {
                 Indent = true,
-                OmitXmlDeclaration = false,
-                Encoding = new UTF8Encoding(false)
+                OmitXmlDeclaration = true
             })) {
                 new XmlSerializer(typeof(Song2014)).Serialize(writer, this, ns);
             }
@@ -262,20 +261,7 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArray("heroLevels")]
         [XmlArrayItem("heroLevel")]
         public HeroLevel[] HeroLevels { get; set; }
-
-        public static SongPhraseIteration2014[] Parse(List<RocksmithToolkitLib.DLCPackage.Manifest.PhraseIteration> piList) {
-            var piter = new SongPhraseIteration2014[piList.Count];
-            for (int i = 0; i < piList.Count; i++) {
-                var pi = new SongPhraseIteration2014();
-                pi.PhraseId = piList[i].PhraseIndex;
-                pi.Time = piList[i].StartTime;
-                pi.Variation = "";
-                pi.HeroLevels = null; //TODO
-                piter[i] = pi;
-            }
-            return piter;
-        }
-
+        
         public static SongPhraseIteration2014[] Parse(Sng2014HSL.PhraseIterationSection piSection) {
             var piter = new SongPhraseIteration2014[piSection.Count];
             for (int i = 0; i < piSection.Count; i++) {
@@ -283,7 +269,8 @@ namespace RocksmithToolkitLib.Xml {
                 pi.PhraseId = piSection.PhraseIterations[i].PhraseId;
                 pi.Time = piSection.PhraseIterations[i].StartTime;
                 pi.Variation = "";
-                pi.HeroLevels = null; //TODO
+                if (!piSection.PhraseIterations[i].Difficulty.SequenceEqual(new Int32[] { 0,0,0 }))
+                    pi.HeroLevels = HeroLevel.Parse(piSection.PhraseIterations[i]);
                 piter[i] = pi;
             }
             return piter;
@@ -297,6 +284,28 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlAttribute("difficulty")]
         public Byte Difficulty { get; set; }
+
+        internal static HeroLevel[] Parse(DLCPackage.Manifest.PhraseIteration phraseIteration) {
+            var heroLevels = new HeroLevel[3];
+            for (var i = 0; i < heroLevels.Length; i++) {
+                var hero = new HeroLevel();
+                hero.Hero = i + 1;
+                hero.Difficulty = (byte)phraseIteration.MaxScorePerDifficulty[i];
+                heroLevels[i] = hero;
+            }
+            return heroLevels;
+        }
+
+        internal static HeroLevel[] Parse(Sng2014HSL.PhraseIteration phraseIteration) {
+            var heroLevels = new HeroLevel[3];
+            for(var i = 0; i < heroLevels.Length; i++) {
+                var hero = new HeroLevel();
+                hero.Hero = i + 1;
+                hero.Difficulty = (byte)phraseIteration.Difficulty[i];
+                heroLevels[i] = hero;
+            }
+            return heroLevels;
+        }
     }
 
     [XmlType("newLinkedDiffs")]
@@ -320,7 +329,7 @@ namespace RocksmithToolkitLib.Xml {
                 nld.LevelBreak = nlinkedDifficultySection.NLinkedDifficulties[i].LevelBreak;
                 nld.PhraseCount = nlinkedDifficultySection.NLinkedDifficulties[i].PhraseCount;
                 nld.Nld_phrase = SongNld_phrase.Parse(nlinkedDifficultySection.NLinkedDifficulties[i].NLD_Phrase);
-                nld.Ratio = ""; //TODO:
+                nld.Ratio = ""; //TODO: ???
             }
             return newLinkedDiff;
         }
@@ -330,14 +339,6 @@ namespace RocksmithToolkitLib.Xml {
     public class SongNld_phrase {
         [XmlAttribute("id")]
         public Int32 Id { get; set; }
-
-        //public static List<SongNld_phrase> Parse(Int32[] nldPraseArray) {
-        //    var snldPhraseList = new List<SongNld_phrase>();
-        //    foreach (var id in nldPraseArray) {
-        //        var snldp = new 
-        //    }
-        //    return list;
-        //}
 
         internal static List<SongNld_phrase> Parse(int[] nldp) {
             var songNldp = new List<SongNld_phrase>();
@@ -412,6 +413,28 @@ namespace RocksmithToolkitLib.Xml {
             }
             return chordTemplates;
         }
+
+        internal static SongChordTemplate2014[] Parse(Sng2014HSL.ChordSection chordSection) {
+            var chordTemplates = new SongChordTemplate2014[chordSection.Count];
+            for (int i = 0; i < chordSection.Count; i++) {
+                var sct2014 = new SongChordTemplate2014();
+                sct2014.ChordName = sct2014.DisplayName = chordSection.Chords[i].Name.ToNullTerminatedAscii();
+                sct2014.Finger0 = (sbyte)chordSection.Chords[i].Fingers[0];
+                sct2014.Finger1 = (sbyte)chordSection.Chords[i].Fingers[1];
+                sct2014.Finger2 = (sbyte)chordSection.Chords[i].Fingers[2];
+                sct2014.Finger3 = (sbyte)chordSection.Chords[i].Fingers[3];
+                sct2014.Finger4 = (sbyte)chordSection.Chords[i].Fingers[4];
+                sct2014.Finger5 = (sbyte)chordSection.Chords[i].Fingers[5];
+                sct2014.Fret0 = (sbyte)chordSection.Chords[i].Frets[0];
+                sct2014.Fret1 = (sbyte)chordSection.Chords[i].Frets[1];
+                sct2014.Fret2 = (sbyte)chordSection.Chords[i].Frets[2];
+                sct2014.Fret3 = (sbyte)chordSection.Chords[i].Frets[3];
+                sct2014.Fret4 = (sbyte)chordSection.Chords[i].Frets[4];
+                sct2014.Fret5 = (sbyte)chordSection.Chords[i].Frets[5];
+                chordTemplates[i] = sct2014;
+            }
+            return chordTemplates;
+        }
     }
 
     public class SongLevel2014 {
@@ -433,6 +456,20 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArray("handShapes")]
         [XmlArrayItem("handShape")]
         public SongHandShape[] HandShapes { get; set; }
+
+        internal static SongLevel2014[] Parse(Sng2014HSL.Sng sngData) {
+            var levels = new SongLevel2014[sngData.Arrangements.Count];
+            for (var i = 0; i < sngData.Arrangements.Count; i++) {
+                var level = new SongLevel2014();
+                level.Difficulty = sngData.Arrangements.Arrangements[i].Difficulty;
+                level.Notes = SongNote2014.Parse(sngData.Arrangements.Arrangements[i].Notes);
+                level.Chords = SongChord2014.Parse(sngData);
+                level.Anchors = SongAnchor2014.Parse(sngData.Arrangements.Arrangements[i].Anchors);
+                level.HandShapes = SongHandShape.Parse(sngData.Arrangements.Arrangements[i]);
+                levels[i] = level;
+            }
+            return levels;
+        }
     }
 
     public class SongNote2014
@@ -515,6 +552,34 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArray("bendValues")]
         [XmlArrayItem("bendValue")]
         public BendValue[] BendValues { get; set; }
+
+        internal static SongNote2014[] Parse(Sng2014HSL.NotesSection notesSection) {
+            var notes = new SongNote2014[notesSection.Count];
+            for (var i = 0; i < notesSection.Count; i++) {
+                var note = new SongNote2014();
+                note.Time = notesSection.Notes[i].Time;
+                note.Fret = (sbyte)notesSection.Notes[i].FretId;
+                note.String = notesSection.Notes[i].StringIndex;
+                note.PickDirection = notesSection.Notes[i].PickDirection;
+                note.LeftHand = (sbyte)notesSection.Notes[i].LeftHand;
+                note.SlideTo = (sbyte)notesSection.Notes[i].SlideTo;
+                note.SlideUnpitchTo = (sbyte)notesSection.Notes[i].SlideUnpitchTo;
+                note.Tap = notesSection.Notes[i].Tap;
+                note.Slap = (sbyte)notesSection.Notes[i].Slap;
+                note.Pluck = (sbyte)notesSection.Notes[i].Pluck;
+                note.Vibrato = notesSection.Notes[i].Vibrato;
+                note.Sustain = notesSection.Notes[i].Sustain;
+                note.Bend = (byte)notesSection.Notes[i].MaxBend;
+                note.BendValues = BendValue.Parse(notesSection.Notes[i].BendData);
+                note.parseNoteMask(notesSection.Notes[i].NoteMask, true);
+                notes[i] = note;
+            }
+            return notes;
+        }
+
+        private void parseNoteMask(uint p, bool single) {
+            //TODO: Parse note mask here
+        }
     }
 
     [XmlType("bendValues")]
@@ -527,6 +592,18 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlAttribute("unk5")]
         public Byte Unk5 { get; set; }
+
+        internal static BendValue[] Parse(Sng2014HSL.BendDataSection bendDataSection) {
+            var bendValues = new BendValue[bendDataSection.Count];
+            for (var i = 0; i < bendDataSection.Count; i++) {
+                var bend = new BendValue();
+                bend.Time = bendDataSection.BendData[i].Time;
+                bend.Step = bendDataSection.BendData[i].Step;
+                bend.Unk5 = bendDataSection.BendData[i].Unk5;
+                bendValues[i] = bend;
+            }
+            return (bendValues.Length > 0) ? bendValues : null;
+        }
     }
 
     public class SongChord2014 : SongChord {
@@ -547,11 +624,33 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlElement("chordNote")]
         public SongNote2014[] chordNotes { get; set; }
+
+        internal static SongChord2014[] Parse(Sng2014HSL.Sng sngData) {
+            var chords = new SongChord2014[sngData.Chords.Count];
+            for (var i = 0; i < sngData.Chords.Count; i++) {
+                //var chord = new SongChord2014();
+                //TODO: Parse chords here
+                //chords[i] = chord;
+            }
+            return chords;
+        }
     }
 
     public class SongAnchor2014 : SongAnchor {
         [XmlAttribute("width")]
         public Single Width { get; set; }
+
+        internal static SongAnchor2014[] Parse(Sng2014HSL.AnchorSection anchorSection) {
+            var anchors = new SongAnchor2014[anchorSection.Count];
+            for (var i = 0; i < anchorSection.Count; i++) {
+                var anchor = new SongAnchor2014();
+                anchor.Time = anchorSection.Anchors[i].StartBeatTime;
+                anchor.Fret = anchorSection.Anchors[i].FretId;
+                anchor.Width = anchorSection.Anchors[i].Width;
+                anchors[i] = anchor;
+            }
+            return anchors;
+        }
     }
 
     [XmlType("tone")]
