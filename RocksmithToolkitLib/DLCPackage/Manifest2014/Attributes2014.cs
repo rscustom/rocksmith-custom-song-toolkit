@@ -122,7 +122,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 manifestFunctions.GenerateChordTemplateData(this, SongContent);
 
                 LastConversionDateTime = SongContent.LastConversionDateTime;
-                MaxPhraseDifficulty = arrangement.Sng2014.Metadata.MaxDifficulty;
+                MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(SongContent);
 
                 TargetScore = 100000;
                 PhraseIterations = new List<PhraseIteration>();

@@ -228,6 +228,8 @@ namespace RocksmithToolkitGUI.DDC
                         attr.Sections = new List<Section>();
                         manifestFunctions.GenerateSectionData(attr, xmlContent);
 
+                        attr.MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(xmlContent);
+
                         var manifest = new Manifest2014<Attributes2014>();
                         var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attr } };
                         manifest.Entries.Add(attr.PersistentID, attributeDictionary);

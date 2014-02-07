@@ -390,5 +390,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             }
             return count;
         }
+
+        public Int32 GetMaxDifficulty(Song2014 xml) {
+            var max = 0;
+            foreach (var phrase in xml.Phrases)
+                if (max < phrase.MaxDifficulty)
+                    max = phrase.MaxDifficulty;
+            return max;
+        }
     }
 }
