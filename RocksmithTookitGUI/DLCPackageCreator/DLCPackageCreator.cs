@@ -355,23 +355,23 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (DialogResult.OK != ofd.ShowDialog()) return;
                 dlcSavePath = ofd.FileName;
             }
-            var BasePath = new Uri(Path.GetDirectoryName(dlcSavePath) + Path.DirectorySeparatorChar);
+            var BasePath = Path.GetDirectoryName(dlcSavePath);
 
             //Make the paths relative
             if (!string.IsNullOrEmpty(packageData.AlbumArtPath))
-                packageData.AlbumArtPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(packageData.AlbumArtPath));
+                packageData.AlbumArtPath = BasePath.RelativeTo(packageData.AlbumArtPath);
             
             string audioPath = packageData.OggPath;
             string audioPreviewPath = packageData.OggPreviewPath;
             if (!String.IsNullOrEmpty(audioPath))
-                packageData.OggPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(audioPath));
+                packageData.OggPath = BasePath.RelativeTo(audioPath);
             if (!String.IsNullOrEmpty(audioPreviewPath))
-                packageData.OggPreviewPath = BasePath.LocalPath.RelativeTo(Path.GetFullPath(audioPreviewPath));
+                packageData.OggPreviewPath = BasePath.RelativeTo(audioPreviewPath);
 
             foreach (var arr in packageData.Arrangements)
             {
             	if (!String.IsNullOrEmpty(arr.SongXml.File))
-                    arr.SongXml.File = BasePath.LocalPath.RelativeTo(Path.GetFullPath(arr.SongXml.File));
+                    arr.SongXml.File = BasePath.RelativeTo(arr.SongXml.File);
             	if (!String.IsNullOrEmpty(arr.SongFile.File))
                     arr.SongFile.File = "";
             }
@@ -526,7 +526,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     break;
             }
 
-            var BasePath = new Uri(Path.GetDirectoryName(Path.GetFullPath(filesBaseDir)) + Path.DirectorySeparatorChar);
+            var BasePath = Path.GetDirectoryName(filesBaseDir);
 
             // Song INFO
             DlcNameTB.Text = info.Name;

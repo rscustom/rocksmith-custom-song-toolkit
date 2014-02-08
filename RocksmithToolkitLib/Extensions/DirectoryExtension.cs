@@ -111,9 +111,9 @@ namespace RocksmithToolkitLib.Extensions
             return relativePath.ToString();
         }
 
-        public static string AbsoluteTo(this Uri baseUri, string path)
+        public static string AbsoluteTo(this string basePath, string relPath)
         {
-            return new Uri(baseUri, path).OriginalString;
+            return Path.GetFullPath(Path.Combine(basePath, relPath));
         }
     }
 }
