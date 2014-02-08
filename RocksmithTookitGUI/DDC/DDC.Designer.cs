@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.AddArrBT = new System.Windows.Forms.Button();
             this.ProduceDDbt = new System.Windows.Forms.Button();
@@ -48,17 +48,17 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.keepLogfile = new System.Windows.Forms.CheckBox();
             this.cleanCheckbox = new System.Windows.Forms.CheckBox();
-            this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.deleteArrBT = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ddcVersion = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).BeginInit();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -173,6 +173,7 @@
             // 
             // DDCfilesDgw
             // 
+            this.DDCfilesDgw.AllowDrop = true;
             this.DDCfilesDgw.AllowUserToAddRows = false;
             this.DDCfilesDgw.AllowUserToResizeColumns = false;
             this.DDCfilesDgw.AllowUserToResizeRows = false;
@@ -186,23 +187,23 @@
             this.DDCfilesDgw.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PathColnm,
             this.TypeColnm});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle1;
             this.DDCfilesDgw.GridColor = System.Drawing.SystemColors.AppWorkspace;
             this.DDCfilesDgw.Location = new System.Drawing.Point(6, 19);
             this.DDCfilesDgw.Name = "DDCfilesDgw";
             this.DDCfilesDgw.RowHeadersWidth = 4;
             this.DDCfilesDgw.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
-            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.DDCfilesDgw.RowTemplate.ErrorText = "#####";
             this.DDCfilesDgw.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DDCfilesDgw.ShowEditingIcon = false;
@@ -210,6 +211,8 @@
             this.DDCfilesDgw.StandardTab = true;
             this.DDCfilesDgw.TabIndex = 0;
             this.DDCfilesDgw.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DDCfilesDgw_UserDeletingRow);
+            this.DDCfilesDgw.DragDrop += new System.Windows.Forms.DragEventHandler(this.DDCfilesDgw_DragDrop);
+            this.DDCfilesDgw.DragEnter += new System.Windows.Forms.DragEventHandler(this.DDCfilesDgw_DragEnter);
             // 
             // PathColnm
             // 
@@ -278,31 +281,6 @@
             this.cleanCheckbox.UseVisualStyleBackColor = true;
             this.cleanCheckbox.CheckStateChanged += new System.EventHandler(this.colorHiglight_CheckStateChanged);
             // 
-            // phaseLenNum
-            // 
-            this.phaseLenNum.Location = new System.Drawing.Point(81, 43);
-            this.phaseLenNum.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
-            this.phaseLenNum.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.phaseLenNum.Name = "phaseLenNum";
-            this.phaseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.phaseLenNum.Size = new System.Drawing.Size(52, 20);
-            this.phaseLenNum.TabIndex = 4;
-            this.phaseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.phaseLenNum.ThousandsSeparator = true;
-            this.phaseLenNum.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            // 
             // deleteArrBT
             // 
             this.deleteArrBT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
@@ -358,6 +336,31 @@
             this.label3.TabIndex = 12;
             this.label3.Text = "Help can be found on:";
             // 
+            // phaseLenNum
+            // 
+            this.phaseLenNum.Location = new System.Drawing.Point(81, 43);
+            this.phaseLenNum.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+            this.phaseLenNum.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.phaseLenNum.Name = "phaseLenNum";
+            this.phaseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.phaseLenNum.Size = new System.Drawing.Size(52, 20);
+            this.phaseLenNum.TabIndex = 4;
+            this.phaseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.phaseLenNum.ThousandsSeparator = true;
+            this.phaseLenNum.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
             // DDC
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -378,8 +381,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).EndInit();
             this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

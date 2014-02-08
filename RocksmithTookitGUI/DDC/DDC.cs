@@ -311,13 +311,15 @@ namespace RocksmithToolkitGUI.DDC
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
-                foreach (var i in ofd.FileNames)
+                foreach (var file in ofd.FileNames)
                 {
-                    if (i.EndsWith("_showlights.xml")
-                        || i.EndsWith(".dlc.xml")
-                        || i.IndexOf("DDC_")>0) continue;
-                    if (!DLCdb.ContainsValue(i))
-                        DLCdb.Add(Path.GetFileNameWithoutExtension(i), i);
+                    if (file.EndsWith("_showlights.xml") ||
+                        file.EndsWith(".dlc.xml") ||
+                        file.StartsWith("DDC_"))
+                        continue;
+
+                    if (!DLCdb.ContainsValue(file))
+                        DLCdb.Add(Path.GetFileNameWithoutExtension(file), file);
                 }
             }
 
@@ -478,6 +480,38 @@ namespace RocksmithToolkitGUI.DDC
         private void ramUpMdlsCbox_SelectedIndexChanged(object sender, EventArgs e) {
             isNDD = ((ComboBox)sender).Text.Equals("ddc_dd_remover");
             ProduceDDbt.Text = (isNDD) ? "Remove DD" : "Generate DD";
+        }
+
+        private void DDCfilesDgw_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                foreach (var file in files)
+                {
+                    if (!(Path.GetExtension(file) == ".xml" ||
+                          Path.GetExtension(file) == ".dat" ||
+                          Path.GetExtension(file) == ".psarc" ||
+                          Path.GetExtension(file) == "" ||
+                          Path.GetExtension(file) == ".edat"))
+                        continue;
+
+                    if (file.EndsWith("_showlights.xml") ||
+                        file.EndsWith(".dlc.xml") ||
+                        file.StartsWith("DDC_"))
+                        continue;
+
+                    if (!DLCdb.ContainsValue(file))
+                        DLCdb.Add(Path.GetFileNameWithoutExtension(file), file);
+                }
+
+                FillDB();
+            }
+        }
+
+        private void DDCfilesDgw_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
         }
     }
 }
