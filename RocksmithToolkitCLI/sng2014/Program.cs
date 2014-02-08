@@ -132,10 +132,9 @@ namespace sng2014
                         using (FileStream inputStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
                         using (FileStream outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.ReadWrite)) {
                             if (arguments.Pack)
-                                Sng2014File.UnpackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
+                                Console.WriteLine("Not implemented yet.");
                             else if (arguments.Unpack)
-                                Console.WriteLine("Not supported at this time :(");
-                            //  Sng2014File.PackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
+                                Sng2014File.UnpackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
                         }
                     } else if (arguments.Xml) {
                         Attributes2014 att = null;
