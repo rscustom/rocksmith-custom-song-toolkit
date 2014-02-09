@@ -132,13 +132,13 @@ namespace sng2014
                         using (FileStream inputStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
                         using (FileStream outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.ReadWrite)) {
                             if (arguments.Pack)
-                                Console.WriteLine("Not implemented yet.");
+                                Sng2014File.PackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
                             else if (arguments.Unpack)
                                 Sng2014File.UnpackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
                         }
                     } else if (arguments.Xml) {
                         Attributes2014 att = null;
-                        if (arguments.Manifest != null && arguments.Manifest.Length > indexCount)
+                        if (arguments.ArrangementType != ArrangementType.Vocal && arguments.Manifest != null && arguments.Manifest.Length > indexCount)
                             att = Manifest2014<Attributes2014>.LoadFromFile(arguments.Manifest[indexCount]).Entries.ToArray()[0].Value.ToArray()[0].Value;
 
                         var sng = Sng2014File.LoadFromFile(inputFile, new Platform(arguments.Platform, GameVersion.RS2014));

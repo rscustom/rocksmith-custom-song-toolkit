@@ -132,7 +132,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
             this.Read(r);
         }
 
-        public void WriteSng(Stream output, Platform platform)
+        public void WriteSng(Stream output, Platform platform) {
+            byte[] chartData = this.getChartData(platform);
+            using (Stream input = new MemoryStream(chartData))
+            {
+                PackSng(input, output, platform);
+            }
+        }
+
+        public static void PackSng(Stream input, Stream output, Platform platform)
         {
             EndianBitConverter conv;
             Int32 platform_header;
@@ -160,11 +168,17 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 w.Write((Int32) 0x4A);
                 w.Write(platform_header);
 
+                byte[] inputChartData = null;
+                using (var mStream = new MemoryStream())
+                {
+                    input.CopyTo(mStream);
+                    inputChartData = mStream.ToArray();
+                }
+
                 // pack with zlib
-                byte[] chart_data = this.getChartData(platform);
                 MemoryStream zData = new MemoryStream();
                 ZOutputStream zOut = new ZOutputStream(zData, zlib.zlibConst.Z_BEST_COMPRESSION);
-                zOut.Write(chart_data, 0, chart_data.Length);
+                zOut.Write(inputChartData, 0, inputChartData.Length);
                 zOut.finish();
                 byte[] packed = zData.ToArray();
 
@@ -173,10 +187,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     MemoryStream plain = new MemoryStream();
                     var encw = new EndianBinaryWriter(conv, plain);
                     // write size of uncompressed data and packed data itself
-                    encw.Write((Int32) chart_data.Length);
+                    encw.Write((Int32)inputChartData.Length);
                     encw.Write(packed);
                     encw.Flush();
-                    MemoryStream input = new MemoryStream(plain.ToArray());
+                    MemoryStream inputPlainStream = new MemoryStream(plain.ToArray());
 
                     // choose key
                     byte[] key;
@@ -190,13 +204,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     }
 
                     // encrypt (writes 16B IV and encrypted data)
-                    RijndaelEncryptor.EncryptSngData(input, encrypted, key);
+                    RijndaelEncryptor.EncryptSngData(inputPlainStream, encrypted, key);
                     w.Write(encrypted.ToArray());
                     // append zero signature
                     w.Write(new Byte[56]);
                 } else {
                     // unencrypted and unsigned
-                    w.Write((Int32) chart_data.Length);
+                    w.Write((Int32)inputChartData.Length);
                     w.Write(packed);
                 }
 
