@@ -287,7 +287,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string dlcSavePath;
             using (var ofd = new SaveFileDialog())
             {
-                ofd.FileName = String.Format("{0} {1} v{2}", Artist, SongTitle, PackageVersion).Replace(" ", "_").Replace(".", "_");
+                ofd.FileName = String.Format("{0}_{1}_v{2}", Artist.GetValidName(true), SongTitle.GetValidName(true), PackageVersion).Replace(" ", "-").Replace(".", "_");
                 ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
@@ -351,7 +351,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 ofd.SupportMultiDottedExtensions = true;
                 ofd.Filter = CurrentRocksmithTitle + " DLC Template (*.dlc.xml)|*.dlc.xml";
-                ofd.FileName = String.Format("{0} {1} {2}", Artist, SongTitle, CurrentGameVersion).Replace(" ", "_").Replace(".", "_");
+                ofd.FileName = String.Format("{0}_{1}_{2}", Artist.GetValidName(true), SongTitle.GetValidName(true), CurrentGameVersion).Replace(" ", "-").Replace(".", "_");
                 if (DialogResult.OK != ofd.ShowDialog()) return;
                 dlcSavePath = ofd.FileName;
             }
