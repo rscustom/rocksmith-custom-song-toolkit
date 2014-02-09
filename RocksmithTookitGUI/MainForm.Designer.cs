@@ -358,7 +358,8 @@
             this.MinimumSize = new System.Drawing.Size(600, 688);
             this.Name = "MainForm";
             this.Text = "Custom Song Creator Toolkit";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.KeyPreview = true;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
