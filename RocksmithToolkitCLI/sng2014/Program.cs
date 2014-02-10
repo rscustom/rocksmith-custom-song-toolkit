@@ -19,7 +19,8 @@ namespace sng2014
         public bool ShowHelp;
         public bool Pack;
         public bool Unpack;
-        public bool Xml;
+        public bool Xml2Sng;
+        public bool Sng2Xml;
         public string[] Input;
         public string[] Manifest;
         public ArrangementType ArrangementType;
@@ -38,9 +39,10 @@ namespace sng2014
             return new OptionSet
             {
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
-                { "p|pack", "Pack and encrypt a SNG file (RS2014)", v => { if (v != null) outputArguments.Pack = true; }},
-                { "u|unpack", "Unpack and decrypt a SNG file (RS2014)", v => { if (v != null) outputArguments.Unpack = true; }},
-                { "x|xml", "Generate a song Xml from a SNG file (RS2014)", v => { if (v != null) outputArguments.Xml = true; }},
+                { "p|pack", "Pack and encrypt a SNG file", v => { if (v != null) outputArguments.Pack = true; }},
+                { "u|unpack", "Unpack and decrypt a SNG file", v => { if (v != null) outputArguments.Unpack = true; }},
+                { "x|sng2xml", "Generate a song Xml from a SNG file", v => { if (v != null) outputArguments.Sng2Xml = true; }},
+                { "s|xml2sng", "Generate a song file (SNG) from a Xml file", v => { if (v != null) outputArguments.Xml2Sng = true; }},
                 { "i|input|sng=", "The input SNG file(s) or directory [*.sng] (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
                 { "m|manifest=", "The input manifest arrangement file [*.json] (multiple allowed, use ; to split paths in same order of input (SNG) files)", v => outputArguments.Manifest = v.Split( new[]{';'}, 2) },
                 { "a|type|arrangement=", "Arrangement type of the SNG [Guitar, Bass, Vocal]", v => outputArguments.SetArrangementType(v) },
@@ -87,8 +89,8 @@ namespace sng2014
                     return 0;
                 }
 
-                if (!arguments.Pack && !arguments.Unpack && !arguments.Xml) {
-                    ShowHelpfulError("Must especify a primary command as 'pack', 'unpack' or 'xml'.");
+                if (!arguments.Pack && !arguments.Unpack && !arguments.Sng2Xml && !arguments.Xml2Sng) {
+                    ShowHelpfulError("Must especify a primary command as 'pack', 'unpack', 'sng2xml' or 'xml2sng'.");
                     return 1;
                 }
 
@@ -97,7 +99,7 @@ namespace sng2014
                     return 1;
                 }
 
-                if (arguments.Xml && arguments.Manifest == null && arguments.Manifest.Length <= 0) {
+                if (arguments.Sng2Xml && arguments.Manifest == null && arguments.Manifest.Length <= 0) {
                     Console.WriteLine("No manifest file was entered. The song xml file will be generated without song informations like song title, album, artist, tone names, etc.");
                 }
 
@@ -118,25 +120,24 @@ namespace sng2014
                         continue;
                     }
 
-                    if (arguments.Unpack || arguments.Xml) {
+                    if (arguments.Unpack || arguments.Sng2Xml) {
                         if (Path.GetExtension(inputFile) != ".sng") {
                             Console.WriteLine(String.Format("File '{0}' is not support. \nOnly *.sng are supported on this command.", inputFile));
                             continue;
                         }
                     }
-
                     
                     if (arguments.Pack || arguments.Unpack) {
                         var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), String.Format("{0}_{1}.sng", Path.GetFileNameWithoutExtension(inputFile), (arguments.Unpack) ? "decrypted" : "encrypted"));
                         
                         using (FileStream inputStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
-                        using (FileStream outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.ReadWrite)) {
+                        using (FileStream outputStream = new FileStream(outputFile, FileMode.Create, FileAccess.ReadWrite)) {
                             if (arguments.Pack)
                                 Sng2014File.PackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
                             else if (arguments.Unpack)
                                 Sng2014File.UnpackSng(inputStream, outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
                         }
-                    } else if (arguments.Xml) {
+                    } else if (arguments.Sng2Xml) {
                         Attributes2014 att = null;
                         if (arguments.ArrangementType != ArrangementType.Vocal && arguments.Manifest != null && arguments.Manifest.Length > indexCount)
                             att = Manifest2014<Attributes2014>.LoadFromFile(arguments.Manifest[indexCount]).Entries.ToArray()[0].Value.ToArray()[0].Value;
@@ -144,7 +145,7 @@ namespace sng2014
                         var sng = Sng2014File.LoadFromFile(inputFile, new Platform(arguments.Platform, GameVersion.RS2014));
 
                         var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(inputFile)));
-                        using (FileStream outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                        using (FileStream outputStream = new FileStream(outputFile, FileMode.Create, FileAccess.ReadWrite))
                         {
                             dynamic xml = null;
                             
@@ -154,6 +155,13 @@ namespace sng2014
                                 xml = new Song2014(sng, att ?? null);
 
                             xml.Serialize(outputStream);
+                        }
+                    } else if (arguments.Xml2Sng) {
+                        var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), String.Format("{0}.sng", Path.GetFileNameWithoutExtension(inputFile)));
+
+                        using (FileStream outputStream = new FileStream(outputFile, FileMode.Create, FileAccess.ReadWrite)) {
+                            Sng2014File sng = Sng2014File.ConvertXML(inputFile, arguments.ArrangementType);
+                            sng.WriteSng(outputStream, new Platform(arguments.Platform, GameVersion.RS2014));
                         }
                     }
                 }
