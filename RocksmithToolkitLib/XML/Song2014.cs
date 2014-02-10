@@ -199,7 +199,6 @@ namespace RocksmithToolkitLib.Xml {
             Ebeats = SongEbeat.Parse(sngData.BPMs);
             StartBeat = sngData.BPMs.BPMs[0].Time;
             Events = SongEvent.Parse(sngData.Events);
-
             Levels = SongLevel2014.Parse(sngData);
 
             //Not used in RS2014 customs at this time. Need to check official files
@@ -463,7 +462,7 @@ namespace RocksmithToolkitLib.Xml {
                 var level = new SongLevel2014();
                 level.Difficulty = sngData.Arrangements.Arrangements[i].Difficulty;
                 level.Notes = SongNote2014.Parse(sngData.Arrangements.Arrangements[i].Notes);
-                level.Chords = SongChord2014.Parse(sngData);
+                level.Chords = SongChord2014.Parse(sngData, sngData.Arrangements.Arrangements[i].Notes);
                 level.Anchors = SongAnchor2014.Parse(sngData.Arrangements.Arrangements[i].Anchors);
                 level.HandShapes = SongHandShape.Parse(sngData.Arrangements.Arrangements[i]);
                 levels[i] = level;
@@ -554,31 +553,107 @@ namespace RocksmithToolkitLib.Xml {
         public BendValue[] BendValues { get; set; }
 
         internal static SongNote2014[] Parse(Sng2014HSL.NotesSection notesSection) {
-            var notes = new SongNote2014[notesSection.Count];
+            var notes = new List<SongNote2014>();
+            var notSetup = unchecked((sbyte)-1);
+
             for (var i = 0; i < notesSection.Count; i++) {
+                if (notesSection.Notes[i].ChordId != -1)
+                    continue; //Skip chord notes (get only single notes)
+
                 var note = new SongNote2014();
                 note.Time = notesSection.Notes[i].Time;
                 note.Fret = (sbyte)notesSection.Notes[i].FretId;
                 note.String = notesSection.Notes[i].StringIndex;
                 note.PickDirection = notesSection.Notes[i].PickDirection;
-                note.LeftHand = (sbyte)notesSection.Notes[i].LeftHand;
-                note.SlideTo = (sbyte)notesSection.Notes[i].SlideTo;
-                note.SlideUnpitchTo = (sbyte)notesSection.Notes[i].SlideUnpitchTo;
-                note.Tap = notesSection.Notes[i].Tap;
-                note.Slap = (sbyte)notesSection.Notes[i].Slap;
-                note.Pluck = (sbyte)notesSection.Notes[i].Pluck;
+                note.LeftHand = (notesSection.Notes[i].LeftHand != 255) ? (sbyte)notesSection.Notes[i].LeftHand : notSetup;
+                note.SlideTo = (notesSection.Notes[i].SlideTo != 255) ? (sbyte)notesSection.Notes[i].SlideTo : notSetup;
+                note.SlideUnpitchTo = (notesSection.Notes[i].SlideUnpitchTo != 255) ? (sbyte)notesSection.Notes[i].SlideUnpitchTo : notSetup;
+                note.Tap = (notesSection.Notes[i].Tap != 255) ? notesSection.Notes[i].Tap : (byte)0;
+                note.Slap = (notesSection.Notes[i].Slap != 255) ? (sbyte)notesSection.Notes[i].Slap : notSetup;
+                note.Pluck = (notesSection.Notes[i].Pluck != 255) ? (sbyte)notesSection.Notes[i].Pluck : notSetup;
                 note.Vibrato = notesSection.Notes[i].Vibrato;
                 note.Sustain = notesSection.Notes[i].Sustain;
+                note.LinkNext = (notesSection.Notes[i].NextIterNote > 0) ? 1 : 0;
                 note.Bend = (byte)notesSection.Notes[i].MaxBend;
                 note.BendValues = BendValue.Parse(notesSection.Notes[i].BendData);
-                note.parseNoteMask(notesSection.Notes[i].NoteMask, true);
-                notes[i] = note;
+                note.parseNoteMask(notesSection.Notes[i], notesSection.Notes[i].NoteMask);
+                notes.Add(note);
             }
-            return notes;
+
+            return notes.ToArray();
         }
 
-        private void parseNoteMask(uint p, bool single) {
-            //TODO: Parse note mask here
+        internal void parseNoteMask(Sng2014HSL.Notes note, uint p) {
+            // Remove flags from known techniques
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SINGLE) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SINGLE;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_OPEN) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_OPEN;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_BEND) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_BEND;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_LEFTHAND) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_LEFTHAND;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PLUCK) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PLUCK;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLAP) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLAP;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLIDE) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLIDE;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SUSTAIN) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SUSTAIN;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLIDEUNPITCHEDTO) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLIDEUNPITCHEDTO;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TAP) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TAP;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_VIBRATO) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_VIBRATO;
+
+            //Setup unknow techniques default values different of 0 default
+            this.RightHand = -1;
+            
+            // Get unknown techniques and remove flags
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT;
+                this.Accent = 1;
+            }
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HAMMERON) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HAMMERON;
+                this.HammerOn = 1;
+            }
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PULLOFF) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PULLOFF;
+                this.PullOff = 1;
+            }
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HARMONIC) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HARMONIC;
+                this.Harmonic = 1;
+            }
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE;
+                this.PalmMute = 1;
+            }
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TREMOLO) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TREMOLO;
+                this.Tremolo = 1;
+            }
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PINCHHARMONIC) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PINCHHARMONIC;
+                this.HarmonicPinch = 1;
+            }
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_RIGHTHAND) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_RIGHTHAND;
+                this.RightHand = 1;
+            }
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE;
+                this.Ignore = 1;
+            }
+        }
+
+        internal static SongNote2014[] Parse(Sng2014HSL.ChordNotes[] chordNotes) {
+            throw new NotImplementedException();
         }
     }
 
@@ -625,14 +700,101 @@ namespace RocksmithToolkitLib.Xml {
         [XmlElement("chordNote")]
         public SongNote2014[] chordNotes { get; set; }
 
-        internal static SongChord2014[] Parse(Sng2014HSL.Sng sngData) {
-            var chords = new SongChord2014[sngData.Chords.Count];
-            for (var i = 0; i < sngData.Chords.Count; i++) {
-                //var chord = new SongChord2014();
-                //TODO: Parse chords here
-                //chords[i] = chord;
+        internal static SongChord2014[] Parse(Sng2014HSL.Sng sngData, Sng2014HSL.NotesSection notesSection) {
+            var chords = new List<SongChord2014>();
+            
+            for (var i = 0; i < notesSection.Count; i++) {
+                if (notesSection.Notes[i].ChordId == -1)
+                    continue; //Skip single notes (get only chord notes)
+
+                var chord = new SongChord2014();
+                chord.ChordId = notesSection.Notes[i].ChordId;
+                chord.Time = notesSection.Notes[i].Time;
+                
+                // TECHNIQUES
+                chord.parseChordMask(notesSection.Notes[i], notesSection.Notes[i].NoteMask);
+
+                // CHORD NOTES (WITHOUT TECHNIQUES) + NOT HIGH DENSITY
+                if (chord.HighDensity != 1) {
+                    var template = sngData.Chords.Chords[chord.ChordId];
+
+                    var notes = new List<SongNote2014>();
+                    for (var j = 0; j < 6; j++) {
+                        if (template.Frets[j] != 255) {
+                            var note = new SongNote2014();
+                            note.Time = chord.Time;
+                            note.Fret = (sbyte)template.Frets[j];
+                            note.LeftHand = (sbyte)template.Fingers[j];
+                            notes.Add(note);
+                        }
+                    }
+
+                    chord.chordNotes = notes.ToArray();
+                }
+
+                // CHORD NOTES (WITH TECHNIQUES) //TODO:
+                if (notesSection.Notes[i].ChordNotesId != -1) {
+                    //chord.chordNotes = SongNote2014.Parse(sngData.ChordNotes.ChordNotes);
+                }
+                
+                chords.Add(chord);
             }
-            return chords;
+
+            return chords.ToArray();
+        }
+
+        private void parseChordMask(Sng2014HSL.Notes notes, uint p) {
+            // Remove flags from know techniques
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_CHORD) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_CHORD;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_CHORDNOTES) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_CHORDNOTES;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SUSTAIN) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SUSTAIN;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_DOUBLESTOP) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_DOUBLESTOP;
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ARPEGGIO) != 0)
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ARPEGGIO;
+
+            this.Strum = "down";
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_STRUM) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_STRUM;
+                this.Strum = "up"; //TODO: Wrong, need research about it later
+            }
+
+            if (p == 0)
+                return;
+
+            // Setup techniques and remove flags
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT;
+                this.LinkNext = 1;
+            }
+
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT;
+                this.Accent = 1;
+            }
+
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_FRETHANDMUTE) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_FRETHANDMUTE;
+                this.FretHandMute = 1;
+            }
+
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HIGHDENSITY) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HIGHDENSITY;
+                this.HighDensity = 1;
+            }
+
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE;
+                this.Ignore = 1;
+            }
+
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE) != 0) {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE;
+                this.PalmMute = 1;
+            }
         }
     }
 

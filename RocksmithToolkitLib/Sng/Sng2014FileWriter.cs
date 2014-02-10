@@ -252,7 +252,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         private static List<ChordNotes> cns = new List<ChordNotes>();
-        private static Dictionary<UInt32,Int32> cns_id = new Dictionary<UInt32,Int32>();
+        private static Dictionary<UInt32,Int32> cnsId = new Dictionary<UInt32,Int32>();
         public Int32 addChordNotes(Sng2014File sng, SongChord2014 chord) {
             var c = new ChordNotes();
             for (int i = 0; i < 6; i++) {
@@ -264,7 +264,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     }
                 }
                 // TODO need to figure out which masks are not applied
-                c.NoteMask[i] = parseNoteMask(n, null, false);
+                c.NoteMask[i] = parseNoteMask(n, false);
                 c.BendData[i] = new BendData();
                 c.BendData[i].BendData32 = parseBendData(n, false);
                 if (n != null && n.BendValues != null)
@@ -281,24 +281,24 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
 
             UInt32 crc = sng.HashStruct(c);
-            if (cns_id.ContainsKey(crc))
-                return cns_id[crc];
+            if (cnsId.ContainsKey(crc))
+                return cnsId[crc];
 
             // don't export chordnotes if there are no techniques
-            bool no_techniques = true;
+            bool noTechniques = true;
             foreach (var m in c.NoteMask)
                 if (m != 0) {
-                    no_techniques = false;
+                    noTechniques = false;
                     break;
                 }
-            if (no_techniques)
+            if (noTechniques)
                 return -1;
 
             // add new ChordNotes instance
             Int32 id = cns.Count;
-            cns_id[crc] = id;
+            cnsId[crc] = id;
             cns.Add(c);
-            return cns_id[crc];
+            return cnsId[crc];
         }
 
         private void parsePhrases(Song2014 xml, Sng2014File sng) {
@@ -556,59 +556,59 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         // more constants: RocksmithSngHSL/RocksmithSng_constants.txt
         // unknown constant
-        const UInt32 NOTE_TURNING_BPM_TEMPO     = 0x00000004;
+        public const UInt32 NOTE_TURNING_BPM_TEMPO      = 0x00000004;
 
         // chord template Mask (displayName ends with "arp" or "nop")
-        const UInt32 CHORD_MASK_ARPEGGIO        = 0x00000001;
-        const UInt32 CHORD_MASK_NOP             = 0x00000002;
+        public const UInt32 CHORD_MASK_ARPEGGIO         = 0x00000001;
+        public const UInt32 CHORD_MASK_NOP              = 0x00000002;
 
         // NoteFlags:
-        const UInt32 NOTE_FLAGS_NUMBERED        = 0x00000001;
+        public const UInt32 NOTE_FLAGS_NUMBERED         = 0x00000001;
 
         // NoteMask:
-        const UInt32 NOTE_MASK_UNDEFINED        = 0x0;
-        // missing - not used in lessons/songs    0x01
-        const UInt32 NOTE_MASK_CHORD            = 0x02;
-        const UInt32 NOTE_MASK_OPEN             = 0x04;
-        const UInt32 NOTE_MASK_FRETHANDMUTE     = 0x08;
-        const UInt32 NOTE_MASK_TREMOLO          = 0x10;
-        const UInt32 NOTE_MASK_HARMONIC         = 0x20;
-        const UInt32 NOTE_MASK_PALMMUTE         = 0x40;
-        const UInt32 NOTE_MASK_SLAP             = 0x80;
-        const UInt32 NOTE_MASK_PLUCK            = 0x0100;
-        const UInt32 NOTE_MASK_POP              = 0x0100;
-        const UInt32 NOTE_MASK_HAMMERON         = 0x0200;
-        const UInt32 NOTE_MASK_PULLOFF          = 0x0400;
-        const UInt32 NOTE_MASK_SLIDE            = 0x0800;
-        const UInt32 NOTE_MASK_BEND             = 0x1000;
-        const UInt32 NOTE_MASK_SUSTAIN          = 0x2000;
-        const UInt32 NOTE_MASK_TAP              = 0x4000;
-        const UInt32 NOTE_MASK_PINCHHARMONIC    = 0x8000;
-        const UInt32 NOTE_MASK_VIBRATO          = 0x010000;
-        const UInt32 NOTE_MASK_MUTE             = 0x020000;
-        const UInt32 NOTE_MASK_IGNORE           = 0x040000; // ignore=1
-        const UInt32 NOTE_MASK_LEFTHAND         = 0x00080000;
-        const UInt32 NOTE_MASK_RIGHTHAND        = 0x00100000;
-        const UInt32 NOTE_MASK_HIGHDENSITY      = 0x200000;
-        const UInt32 NOTE_MASK_SLIDEUNPITCHEDTO = 0x400000;
-        const UInt32 NOTE_MASK_SINGLE           = 0x00800000; // single note
-        const UInt32 NOTE_MASK_CHORDNOTES       = 0x01000000; // has chordnotes exported
-        const UInt32 NOTE_MASK_DOUBLESTOP       = 0x02000000;
-        const UInt32 NOTE_MASK_ACCENT           = 0x04000000;
-        const UInt32 NOTE_MASK_PARENT           = 0x08000000; // linkNext=1
-        const UInt32 NOTE_MASK_CHILD            = 0x10000000; // note after linkNext=1
-        const UInt32 NOTE_MASK_ARPEGGIO         = 0x20000000;
-        // missing - not used in lessons/songs    0x40000000 /
-        const UInt32 NOTE_MASK_STRUM            = 0x80000000; // handShape defined at chord time
+        public const UInt32 NOTE_MASK_UNDEFINED         = 0x0;
+        // missing - not used in lessons/songs            0x01
+        public const UInt32 NOTE_MASK_CHORD             = 0x02;
+        public const UInt32 NOTE_MASK_OPEN              = 0x04;
+        public const UInt32 NOTE_MASK_FRETHANDMUTE      = 0x08;
+        public const UInt32 NOTE_MASK_TREMOLO           = 0x10;
+        public const UInt32 NOTE_MASK_HARMONIC          = 0x20;
+        public const UInt32 NOTE_MASK_PALMMUTE          = 0x40;
+        public const UInt32 NOTE_MASK_SLAP              = 0x80;
+        public const UInt32 NOTE_MASK_PLUCK             = 0x0100;
+        public const UInt32 NOTE_MASK_POP               = 0x0100;
+        public const UInt32 NOTE_MASK_HAMMERON          = 0x0200;
+        public const UInt32 NOTE_MASK_PULLOFF           = 0x0400;
+        public const UInt32 NOTE_MASK_SLIDE             = 0x0800;
+        public const UInt32 NOTE_MASK_BEND              = 0x1000;
+        public const UInt32 NOTE_MASK_SUSTAIN           = 0x2000;
+        public const UInt32 NOTE_MASK_TAP               = 0x4000;
+        public const UInt32 NOTE_MASK_PINCHHARMONIC     = 0x8000;
+        public const UInt32 NOTE_MASK_VIBRATO           = 0x010000;
+        public const UInt32 NOTE_MASK_MUTE              = 0x020000;
+        public const UInt32 NOTE_MASK_IGNORE            = 0x040000;   // ignore=1
+        public const UInt32 NOTE_MASK_LEFTHAND          = 0x00080000;
+        public const UInt32 NOTE_MASK_RIGHTHAND         = 0x00100000;
+        public const UInt32 NOTE_MASK_HIGHDENSITY       = 0x200000;
+        public const UInt32 NOTE_MASK_SLIDEUNPITCHEDTO  = 0x400000;
+        public const UInt32 NOTE_MASK_SINGLE            = 0x00800000; // single note
+        public const UInt32 NOTE_MASK_CHORDNOTES        = 0x01000000; // has chordnotes exported
+        public const UInt32 NOTE_MASK_DOUBLESTOP        = 0x02000000;
+        public const UInt32 NOTE_MASK_ACCENT            = 0x04000000;
+        public const UInt32 NOTE_MASK_PARENT            = 0x08000000; // linkNext=1
+        public const UInt32 NOTE_MASK_CHILD             = 0x10000000; // note after linkNext=1
+        public const UInt32 NOTE_MASK_ARPEGGIO          = 0x20000000;
+        // missing - not used in lessons/songs            0x40000000
+        public const UInt32 NOTE_MASK_STRUM             = 0x80000000; // handShape defined at chord time
 
-        const UInt32 NOTE_MASK_ARTICULATIONS_RH = 0x0000C1C0;
-        const UInt32 NOTE_MASK_ARTICULATIONS_LH = 0x00020628;
-        const UInt32 NOTE_MASK_ARTICULATIONS    = 0x0002FFF8;
-        const UInt32 NOTE_MASK_ROTATION_DISABLED= 0x0000C1E0;
+        public const UInt32 NOTE_MASK_ARTICULATIONS_RH  = 0x0000C1C0;
+        public const UInt32 NOTE_MASK_ARTICULATIONS_LH  = 0x00020628;
+        public const UInt32 NOTE_MASK_ARTICULATIONS     = 0x0002FFF8;
+        public const UInt32 NOTE_MASK_ROTATION_DISABLED = 0x0000C1E0;
 
         #endregion
 
-        private UInt32 parseNoteMask(SongNote2014 note, Notes prev, bool single) {
+        private UInt32 parseNoteMask(SongNote2014 note, bool single) {
             if (note == null)
                 return NOTE_MASK_UNDEFINED;
 
@@ -675,7 +675,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         private void parseNote(Song2014 xml, SongNote2014 note, Notes n, Notes prev) {
-            n.NoteMask = parseNoteMask(note, prev, true);
+            n.NoteMask = parseNoteMask(note, true);
             // numbering (NoteFlags) will be set later
             n.Time = note.Time;
             n.StringIndex = note.String;
@@ -716,9 +716,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.BendData.Count = n.BendData.BendData.Length;
         }
 
-        private void parseChord(Song2014 xml, Sng2014File sng, SongChord2014 chord, Notes n, Int32 chordnotes_id) {
+        private void parseChord(Song2014 xml, Sng2014File sng, SongChord2014 chord, Notes n, Int32 chordNotesId) {
             n.NoteMask |= NOTE_MASK_CHORD;
-            if (chordnotes_id != -1) {
+            if (chordNotesId != -1) {
                 // there should always be a STRUM too => handshape at chord time
                 // probably even for chordNotes which are not exported to SNG
                 n.NoteMask |= NOTE_MASK_CHORDNOTES;
@@ -753,7 +753,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             // will be overwritten
             n.AnchorWidth = unchecked((Byte) (-1));
             n.ChordId = chord.ChordId;
-            n.ChordNotesId = chordnotes_id;
+            n.ChordNotesId = chordNotesId;
             n.PhraseIterationId = getPhraseIterationId(xml, n.Time, false);
             n.PhraseId = xml.PhraseIterations[n.PhraseIterationId].PhraseId;
             // these will be overwritten
@@ -938,12 +938,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
 
                 foreach (var chord in level.Chords) {
-                    var n = new Notes();
+                    var cn = new Notes();
                     Int32 id = -1;
                     if (chord.chordNotes != null && chord.chordNotes.Length > 0)
                         id = addChordNotes(sng, chord);
-                    parseChord(xml, sng, chord, n, id);
-                    notes.Add(n);
+                    parseChord(xml, sng, chord, cn, id);
+                    notes.Add(cn);
 
                     for (int j=0; j<xml.PhraseIterations.Length; j++) {
                         var piter = xml.PhraseIterations[j];
