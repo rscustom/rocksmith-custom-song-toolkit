@@ -450,15 +450,15 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("disparity")]
         public Byte Disparity { get; set; }
 
+        [XmlAttribute("ignore")]
+        public Byte Ignore { get; set; }
+        
         [XmlAttribute("maxDifficulty")]
         public Int32 MaxDifficulty { get; set; }
 
         [XmlAttribute("name")]
         public string Name { get; set; }
-
-        [XmlAttribute("ignore")]
-        public Byte Ignore { get; set; }
-
+        
         [XmlAttribute("solo")]
         public Byte Solo { get; set; }
 
@@ -494,11 +494,11 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("phraseIteration")]
     public class SongPhraseIteration
     {
-        [XmlAttribute("phraseId")]
-        public Int32 PhraseId { get; set; }
-
         [XmlAttribute("time")]
         public Single Time { get; set; }
+
+        [XmlAttribute("phraseId")]
+        public Int32 PhraseId { get; set; }
     }
 
     [XmlType("linkedDiff")]
@@ -623,11 +623,11 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("name")]
         public string Name { get; set; }
 
-        [XmlAttribute("startTime")]
-        public Single StartTime { get; set; }
-
         [XmlAttribute("number")]
         public Int32 Number { get; set; }
+
+        [XmlAttribute("startTime")]
+        public Single StartTime { get; set; }
 
         internal static SongSection[] Parse(List<DLCPackage.Manifest.Section> manifestSectionList) {
             var songSections = new SongSection[manifestSectionList.Count];
@@ -800,14 +800,14 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("handShape")]
     public class SongHandShape
     {
-        [XmlAttribute("startTime")]
-        public Single StartTime { get; set; }
-
         [XmlAttribute("chordId")]
         public Int32 ChordId { get; set; }
 
         [XmlAttribute("endTime")]
         public Single EndTime { get; set; }
+        
+        [XmlAttribute("startTime")]
+        public Single StartTime { get; set; }
 
         internal static SongHandShape[] Parse(Sng2014HSL.Arrangement arrangement) {
             var count = arrangement.Fingerprints1.Count + arrangement.Fingerprints2.Count;

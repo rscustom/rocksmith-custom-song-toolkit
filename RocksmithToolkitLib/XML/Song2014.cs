@@ -82,13 +82,13 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArrayItem("phrase")]
         public SongPhrase[] Phrases { get; set; }
 
-        [XmlArray("phraseIterations")]
-        [XmlArrayItem("phraseIteration", typeof(SongPhraseIteration), Type = typeof(SongPhraseIteration2014))]
-        public SongPhraseIteration2014[] PhraseIterations { get; set; }
-
         [XmlArray("newLinkedDiffs")]
         [XmlArrayItem("newLinkedDiff")]
         public SongNewLinkedDiff[] NewLinkedDiff { get; set; }
+
+        [XmlArray("phraseIterations")]
+        [XmlArrayItem("phraseIteration", typeof(SongPhraseIteration), Type = typeof(SongPhraseIteration2014))]
+        public SongPhraseIteration2014[] PhraseIterations { get; set; }
 
         [XmlArray("linkedDiffs")]
         [XmlArrayItem("linkedDiff")]
@@ -106,13 +106,9 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArrayItem("fretHandMuteTemplate")]
         public SongFretHandMuteTemplate[] FretHandMuteTemplates { get; set; }
 
-        [XmlArray("controls")]
-        [XmlArrayItem("control")]
-        public SongControl[] Controls { get; set; }
-
-        [XmlArray("tones")]
-        [XmlArrayItem("tone")]
-        public SongTone2014[] Tones { get; set; }
+        [XmlArray("ebeats")]
+        [XmlArrayItem("ebeat")]
+        public SongEbeat[] Ebeats { get; set; }
 
         [XmlElement("tonebase")]
         public string ToneBase { get; set; }
@@ -129,9 +125,9 @@ namespace RocksmithToolkitLib.Xml {
         [XmlElement("toned")]
         public string ToneD { get; set; }
 
-        [XmlArray("ebeats")]
-        [XmlArrayItem("ebeat")]
-        public SongEbeat[] Ebeats { get; set; }
+        [XmlArray("tones")]
+        [XmlArrayItem("tone")]
+        public SongTone2014[] Tones { get; set; }
 
         [XmlArray("sections")]
         [XmlArrayItem("section")]
@@ -140,6 +136,10 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArray("events")]
         [XmlArrayItem("event")]
         public SongEvent[] Events { get; set; }
+
+        [XmlArray("controls")]
+        [XmlArrayItem("control")]
+        public SongControl[] Controls { get; set; }
 
         [XmlArray("levels")]
         [XmlArrayItem("level", typeof(SongLevel2014))]
@@ -277,12 +277,12 @@ namespace RocksmithToolkitLib.Xml {
     }
 
     [XmlType("heroLevels")]
-    public class HeroLevel {
-        [XmlAttribute("hero")]
-        public int Hero { get; set; }
-
+    public class HeroLevel {        
         [XmlAttribute("difficulty")]
         public Byte Difficulty { get; set; }
+
+        [XmlAttribute("hero")]
+        public int Hero { get; set; }
 
         internal static HeroLevel[] Parse(DLCPackage.Manifest.PhraseIteration phraseIteration) {
             var heroLevels = new HeroLevel[3];
@@ -474,50 +474,8 @@ namespace RocksmithToolkitLib.Xml {
 
     public class SongNote2014
     {
-        [XmlAttribute("ignore")]
-        public Byte Ignore { get; set; }
-
         [XmlAttribute("time")]
         public Single Time { get; set; }
-
-        [XmlAttribute("tremolo")]
-        public Byte Tremolo { get; set; }
-
-        [XmlAttribute("sustain")]
-        public Single Sustain { get; set; }
-
-        [XmlAttribute("string")]
-        public Byte String { get; set; }
-
-        [XmlAttribute("slideTo")]
-        public sbyte SlideTo { get; set; }
-
-        [XmlAttribute("pullOff")]
-        public Byte PullOff { get; set; }
-
-        [XmlAttribute("palmMute")]
-        public Byte PalmMute { get; set; }
-
-        [XmlAttribute("hopo")]
-        public Byte Hopo { get; set; }
-
-        [XmlAttribute("harmonic")]
-        public Byte Harmonic { get; set; }
-
-        [XmlAttribute("hammerOn")]
-        public Byte HammerOn { get; set; }
-
-        [XmlAttribute("fret")]
-        public SByte Fret { get; set; }
-
-        [XmlAttribute("bend")]
-        public Byte Bend { get; set; }
-
-        [XmlAttribute("pluck")]
-        public sbyte Pluck { get; set; }
-
-        [XmlAttribute("slap")]
-        public sbyte Slap { get; set; }
 
         [XmlAttribute("linkNext")]
         public Int32 LinkNext { get; set; }
@@ -525,11 +483,53 @@ namespace RocksmithToolkitLib.Xml {
         [XmlAttribute("accent")]
         public Int32 Accent { get; set; }
 
+        [XmlAttribute("bend")]
+        public Byte Bend { get; set; }
+
+        [XmlAttribute("fret")]
+        public SByte Fret { get; set; }
+
+        [XmlAttribute("hammerOn")]
+        public Byte HammerOn { get; set; }
+
+        [XmlAttribute("harmonic")]
+        public Byte Harmonic { get; set; }
+
+        [XmlAttribute("hopo")]
+        public Byte Hopo { get; set; }
+
+        [XmlAttribute("ignore")]
+        public Byte Ignore { get; set; }
+
         [XmlAttribute("leftHand")]
         public SByte LeftHand { get; set; }
 
         [XmlAttribute("mute")]
         public Int32 Mute { get; set; }
+
+        [XmlAttribute("palmMute")]
+        public Byte PalmMute { get; set; }
+
+        [XmlAttribute("pluck")]
+        public sbyte Pluck { get; set; }
+
+        [XmlAttribute("pullOff")]
+        public Byte PullOff { get; set; }
+
+        [XmlAttribute("slap")]
+        public sbyte Slap { get; set; }
+
+        [XmlAttribute("slideTo")]
+        public sbyte SlideTo { get; set; }
+
+        [XmlAttribute("string")]
+        public Byte String { get; set; }
+
+        [XmlAttribute("sustain")]
+        public Single Sustain { get; set; }
+
+        [XmlAttribute("tremolo")]
+        public Byte Tremolo { get; set; }
 
         [XmlAttribute("harmonicPinch")]
         public Int32 HarmonicPinch { get; set; }
@@ -706,21 +706,36 @@ namespace RocksmithToolkitLib.Xml {
         }
     }
 
-    public class SongChord2014 : SongChord {
+    public class SongChord2014 {
+        [XmlAttribute("time")]
+        public Single Time { get; set; }
+
         [XmlAttribute("linkNext")]
         public Int32 LinkNext { get; set; }
 
         [XmlAttribute("accent")]
         public Int32 Accent { get; set; }
 
+        [XmlAttribute("chordId")]
+        public Int32 ChordId { get; set; }
+
         [XmlAttribute("fretHandMute")]
         public Int32 FretHandMute { get; set; }
+
+        [XmlAttribute("highDensity")]
+        public Byte HighDensity { get; set; }
+
+        [XmlAttribute("ignore")]
+        public Byte Ignore { get; set; }
 
         [XmlAttribute("palmMute")]
         public Int32 PalmMute { get; set; }
 
         [XmlAttribute("hopo")]
         public Int32 Hopo { get; set; }
+
+        [XmlAttribute("strum")]
+        public string Strum { get; set; }
 
         [XmlElement("chordNote")]
         public SongNote2014[] ChordNotes { get; set; }
