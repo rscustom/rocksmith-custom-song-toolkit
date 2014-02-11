@@ -580,7 +580,7 @@ namespace RocksmithToolkitLib.Xml {
                 if (notesSection.Notes[i].Vibrato != 0) note.Vibrato = notesSection.Notes[i].Vibrato;
                 if (notesSection.Notes[i].Sustain != 0) note.Sustain = notesSection.Notes[i].Sustain;
                 if (notesSection.Notes[i].MaxBend != 0) note.Bend = (byte)notesSection.Notes[i].MaxBend;
-                note.BendValues = BendValue.Parse(notesSection.Notes[i].BendData);
+                note.BendValues = BendValue.Parse(notesSection.Notes[i].BendData.BendData);
 
                 notes.Add(note);
             }
@@ -689,16 +689,20 @@ namespace RocksmithToolkitLib.Xml {
         [XmlAttribute("unk5")]
         public Byte Unk5 { get; set; }
 
-        internal static BendValue[] Parse(Sng2014HSL.BendDataSection bendDataSection) {
-            var bendValues = new BendValue[bendDataSection.Count];
-            for (var i = 0; i < bendDataSection.Count; i++) {
-                var bend = new BendValue();
-                bend.Time = bendDataSection.BendData[i].Time;
-                bend.Step = bendDataSection.BendData[i].Step;
-                bend.Unk5 = bendDataSection.BendData[i].Unk5;
-                bendValues[i] = bend;
+        internal static BendValue[] Parse(Sng2014HSL.BendData32[] bendData) {
+            var bendValues = new List<BendValue>();
+
+            for (var i = 0; i < bendData.Length; i++) {
+                if (bendData[i].Time > 0 && bendData[i].Step > 0) {
+                    var bend = new BendValue();
+                    bend.Time = bendData[i].Time;
+                    bend.Step = bendData[i].Step;
+                    bend.Unk5 = bendData[i].Unk5;
+                    bendValues.Add(bend);
+                }
             }
-            return (bendValues.Length > 0) ? bendValues : null;
+
+            return (bendValues.Count > 0) ? bendValues.ToArray() : null;
         }
     }
 
@@ -719,7 +723,7 @@ namespace RocksmithToolkitLib.Xml {
         public Int32 Hopo { get; set; }
 
         [XmlElement("chordNote")]
-        public SongNote2014[] chordNotes { get; set; }
+        public SongNote2014[] ChordNotes { get; set; }
 
         internal static SongChord2014[] Parse(Sng2014HSL.Sng sngData, Sng2014HSL.NotesSection notesSection) {
             var chords = new List<SongChord2014>();
@@ -737,31 +741,66 @@ namespace RocksmithToolkitLib.Xml {
 
                 // CHORD NOTES (WITHOUT TECHNIQUES) + NOT HIGH DENSITY
                 if (chord.HighDensity != 1) {
-                    var template = sngData.Chords.Chords[chord.ChordId];
-
-                    var notes = new List<SongNote2014>();
-                    for (var j = 0; j < 6; j++) {
-                        if (template.Frets[j] != 255) {
-                            var note = new SongNote2014();
-                            note.Time = chord.Time;
-                            note.Fret = (sbyte)template.Frets[j];
-                            note.LeftHand = (sbyte)template.Fingers[j];
-                            notes.Add(note);
-                        }
-                    }
-
-                    chord.chordNotes = notes.ToArray();
+                    chord.ParseChordNotes(sngData.Chords.Chords[chord.ChordId]);
                 }
 
-                // CHORD NOTES (WITH TECHNIQUES) //TODO:
-                if (notesSection.Notes[i].ChordNotesId != -1) {
-                    //chord.chordNotes = SongNote2014.Parse(sngData.ChordNotes.ChordNotes);
+                // CHORD NOTES (WITH TECHNIQUES)
+                var cnId = notesSection.Notes[i].ChordNotesId;
+                if (cnId != -1) {
+                    if (sngData.ChordNotes.ChordNotes.Length > cnId)
+                        chord.ParseChordNotes(sngData.Chords.Chords[chord.ChordId], sngData.ChordNotes.ChordNotes[cnId]);
                 }
                 
                 chords.Add(chord);
             }
 
             return chords.ToArray();
+        }
+
+        private void ParseChordNotes(Sng2014HSL.Chord template, Sng2014HSL.ChordNotes chordNotes = null) {
+            var notes = new List<SongNote2014>();
+            var notSetup = unchecked((sbyte)-1);
+
+            for (var i = 0; i < 6; i++) {
+                if ((chordNotes != null && chordNotes.NoteMask[i] != 0) || //notes with techniques
+                    (chordNotes == null && template.Frets[i] != 255)) { // Notes without techniques
+
+                    var cnote = new SongNote2014();
+
+                    // SETUP DEFAULT VALUES
+                    cnote.RightHand = notSetup;
+                    cnote.LeftHand = notSetup;
+                    cnote.SlideTo = notSetup;
+                    cnote.SlideUnpitchTo = notSetup;
+                    cnote.Tap = (byte)0;
+                    cnote.Slap = notSetup;
+                    cnote.Pluck = notSetup;
+
+                    if ((chordNotes != null && chordNotes.NoteMask[i] != 0)) {
+                        // SETUP FROM OWN PROPERTIES
+                        cnote.parseNoteMask(chordNotes.NoteMask[i]);
+                        cnote.SlideTo = (sbyte)chordNotes.SlideTo[i];
+                        cnote.SlideUnpitchTo = (sbyte)chordNotes.SlideUnpitchTo[i];
+                        cnote.Vibrato = chordNotes.Vibrato[i];
+                        cnote.BendValues = BendValue.Parse(chordNotes.BendData[i].BendData32);
+                        //Fix bend status from step in bendvalues
+                        if (cnote.BendValues != null && cnote.BendValues.Length > 0)
+                            foreach (var bend in cnote.BendValues)
+                                if (cnote.Bend < bend.Step)
+                                    cnote.Bend = (byte)Math.Round(bend.Step);
+                    }
+                    
+                    // BASIC INFO
+                    cnote.Time = this.Time;
+                    cnote.Fret = (sbyte)template.Frets[i];
+                    cnote.LeftHand = (sbyte)template.Fingers[i];
+                    cnote.String = (byte)i;
+
+                    notes.Add(cnote);
+                }
+            }
+
+            this.ChordNotes = notes.ToArray();
         }
 
         private void parseChordMask(Sng2014HSL.Notes notes, uint p) {
@@ -791,27 +830,22 @@ namespace RocksmithToolkitLib.Xml {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT;
                 this.LinkNext = 1;
             }
-
             if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT) != 0) {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT;
                 this.Accent = 1;
             }
-
             if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_FRETHANDMUTE) != 0) {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_FRETHANDMUTE;
                 this.FretHandMute = 1;
             }
-
             if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HIGHDENSITY) != 0) {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HIGHDENSITY;
                 this.HighDensity = 1;
             }
-
             if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE) != 0) {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE;
                 this.Ignore = 1;
             }
-
             if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE) != 0) {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE;
                 this.PalmMute = 1;

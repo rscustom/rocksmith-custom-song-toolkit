@@ -257,7 +257,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             var c = new ChordNotes();
             for (int i = 0; i < 6; i++) {
                 SongNote2014 n = null;
-                foreach (var cn in chord.chordNotes) {
+                foreach (var cn in chord.ChordNotes) {
                     if (cn.String == i) {
                         n = cn;
                         break;
@@ -771,8 +771,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.PickDirection = unchecked((Byte) (-1));
             n.Slap = unchecked((Byte) (-1));
             n.Pluck = unchecked((Byte) (-1));
-            if (chord.chordNotes != null) {
-                foreach (var cn in chord.chordNotes)
+            if (chord.ChordNotes != null) {
+                foreach (var cn in chord.ChordNotes)
                     if (cn.Sustain > n.Sustain)
                         n.Sustain = cn.Sustain;
             }
@@ -940,7 +940,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 foreach (var chord in level.Chords) {
                     var cn = new Notes();
                     Int32 id = -1;
-                    if (chord.chordNotes != null && chord.chordNotes.Length > 0)
+                    if (chord.ChordNotes != null && chord.ChordNotes.Length > 0)
                         id = addChordNotes(sng, chord);
                     parseChord(xml, sng, chord, cn, id);
                     notes.Add(cn);
