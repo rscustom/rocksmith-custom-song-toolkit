@@ -608,7 +608,9 @@ namespace RocksmithToolkitLib.Xml
             for (var i = 0; i < bpmSection.Count; i++) {
                 var sEbeat = new SongEbeat();
                 sEbeat.Time = bpmSection.BPMs[i].Time;
-                sEbeat.Measure = bpmSection.BPMs[i].Measure;
+                sEbeat.Measure = -1;
+                if (bpmSection.BPMs[i].Mask != 0)
+                    sEbeat.Measure = bpmSection.BPMs[i].Measure;
                 songEbeats[i] = sEbeat;
             }
             return songEbeats;
