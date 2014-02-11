@@ -329,6 +329,7 @@ namespace RocksmithToolkitLib.Xml {
                 nld.PhraseCount = nlinkedDifficultySection.NLinkedDifficulties[i].PhraseCount;
                 nld.Nld_phrase = SongNld_phrase.Parse(nlinkedDifficultySection.NLinkedDifficulties[i].NLD_Phrase);
                 nld.Ratio = ""; //TODO: ???
+                newLinkedDiff[i] = nld;
             }
             return newLinkedDiff;
         }
