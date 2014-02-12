@@ -284,6 +284,10 @@
       <Project>{54637C43-E331-443B-B30F-C181A5CA60A4}</Project>
       <Name>pedalgen</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RocksmithToolkitCLI\sng2014\sng2014.csproj">
+      <Project>{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}</Project>
+      <Name>sng2014</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitCLI\sngtotab\sngtotab.csproj">
       <Project>{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}</Project>
       <Name>sngtotab</Name>
