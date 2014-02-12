@@ -379,7 +379,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             return count;
         }
 
-        public int GetChordCount(float startTime, float endTime, ICollection<SongChord> chords)
+        public int GetChordCount(float startTime, float endTime, ICollection<dynamic> chords)
         {
             int count = 0;
             for (int i = 0; i < chords.Count(); i++)
