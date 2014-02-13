@@ -78,9 +78,9 @@
             // 
             this.repackButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.repackButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.repackButton.Location = new System.Drawing.Point(83, 43);
+            this.repackButton.Location = new System.Drawing.Point(82, 43);
             this.repackButton.Name = "repackButton";
-            this.repackButton.Size = new System.Drawing.Size(306, 23);
+            this.repackButton.Size = new System.Drawing.Size(308, 23);
             this.repackButton.TabIndex = 12;
             this.repackButton.Text = "Choose DLC";
             this.repackButton.UseVisualStyleBackColor = true;

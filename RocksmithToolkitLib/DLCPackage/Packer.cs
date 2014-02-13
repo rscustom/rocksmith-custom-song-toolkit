@@ -14,6 +14,7 @@ using MiscUtil.Conversion;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
+using RocksmithToolkitLib.Ogg;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -29,6 +30,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null)
         {
+            DeleteFixedAudio(sourcePath);
             Platform platform = sourcePath.GetPlatform();
 
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
@@ -57,7 +59,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region UNPACK
 
-        public static void Unpack(string sourceFileName, string savePath, Platform predefinedPlatform = null)
+        public static string Unpack(string sourceFileName, string savePath, bool decodeAudio = false, Platform predefinedPlatform = null)
         {
             Platform platform = sourceFileName.GetPlatform();
 
@@ -87,16 +89,32 @@ namespace RocksmithToolkitLib.DLCPackage
                             ExtractPSARC(sourceFileName, savePath, inputStream, platform);
                         }
                     }
-                    return;
+                    break;
                 case GamePlatform.XBox360:
                     UnpackXBox360Package(sourceFileName, savePath, platform);
-                    return;
+                    break;
                 case GamePlatform.PS3:
                     UnpackPS3Package(sourceFileName, savePath, platform);
-                    return;
+                    break;
                 case GamePlatform.None:
                     throw new InvalidOperationException("Platform not found :(");
             }
+
+            // DECODE AUDIO
+            if (decodeAudio) {
+                var name = Path.GetFileNameWithoutExtension(sourceFileName);
+                if (platform.platform == GamePlatform.PS3)
+                    name = name.Substring(0, name.LastIndexOf("."));
+                name += String.Format("_{0}", platform.platform.ToString());
+
+                var audioFiles = Directory.GetFiles(Path.Combine(savePath, name), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
+                foreach (var file in audioFiles) {
+                    var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
+                    OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(file).GetWwiseVersion());
+                }
+            }
+
+            return Path.Combine(savePath, String.Format("{0}_{1}", sourceFileName, platform.platform));
         }
 
         #endregion

@@ -16,6 +16,10 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
     {
         private const string MESSAGEBOX_CAPTION = "DLC Packer/Unpacker";
 
+        private bool decodeAudio {
+            get { return decodeAudioCheckbox.Checked; }
+        }
+
         public DLCPackerUnpacker()
         {
             InitializeComponent();
@@ -54,7 +58,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             try
             {
                 var platform = sourcePath.GetPlatform();
-                Packer.DeleteFixedAudio(sourcePath);
                 Packer.Pack(sourcePath, saveFileName, updateSng);
                 MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -68,8 +71,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         {
             IList<string> sourceFileNames;
             string savePath;
-            var decodeAudio = decodeAudioCheckbox.Checked;
-
+            
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Multiselect = true;
@@ -90,35 +92,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             {
                 Application.DoEvents();
                 Platform platform = Packer.GetPlatform(sourceFileName);
-                Packer.Unpack(sourceFileName, savePath);
-
-                if (decodeAudio) {
-                    try
-                    {
-                        var name = Path.GetFileNameWithoutExtension(sourceFileName);
-                        if (platform.platform == GamePlatform.PS3)
-                            name = name.Substring(0, name.LastIndexOf("."));
-                        name += String.Format("_{0}", platform.platform.ToString());
-                        
-                        var audioFiles = Directory.GetFiles(Path.Combine(savePath, name), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
-                        foreach (var file in audioFiles)
-                        {
-                            var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
-                            OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(file).GetWwiseVersion());
-                        }
-                    }
-                    catch (FileNotFoundException ex)
-                    {
-                        errorsFound.AppendLine(ex.Message);
-                    }
-                    catch (DirectoryNotFoundException ex)
-                    {
-                        errorsFound.AppendLine(ex.Message);
-                    }
-                    catch (Exception ex)
-                    {
-                        errorsFound.AppendLine(ex.Message);
-                    }
+                
+                try {
+                    Packer.Unpack(sourceFileName, savePath, decodeAudio);
+                }
+                catch (Exception ex) {
+                    errorsFound.AppendLine(ex.Message);
                 }
             }
 
@@ -162,10 +141,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 var platform = sourceFileName.GetPlatform();
 
                 if (platform.platform == GamePlatform.Pc || platform.platform == GamePlatform.Mac)
-                {   
-                    Packer.Unpack(sourceFileName, tmpDir);
-
-                    var unpackedDir = tmpDir + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourceFileName) + String.Format("_{0}", platform.platform);
+                {
+                    var unpackedDir = Packer.Unpack(sourceFileName, tmpDir);
 
                     var appIdFile = Path.Combine(unpackedDir, (platform.version == GameVersion.RS2012) ? "APP_ID" : "appid.appid");
 

@@ -165,10 +165,7 @@ namespace packer
                             info = (DLCPackageData)serializer.ReadObject(stm);
                         }
 
-                        var gameVersion = GameVersion.RS2012;
-                        if (info.GameVersion != null)
-                            gameVersion = info.GameVersion;
-
+                        var gameVersion = info.GameVersion;
                         FixPaths(info, arguments.Template, gameVersion);
 
                         if (info.Pc)
@@ -205,9 +202,7 @@ namespace packer
 					{
 	                    try
 						{
-							Packer.DeleteFixedAudio(srcFileName);
-
-                            if (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version != GameVersion.None)
+							if (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version != GameVersion.None)
                                 Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, arguments.Platform);
                             else
                                 Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng);
@@ -253,26 +248,11 @@ namespace packer
 
                         try
                         {
-                            Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output));
-
-                            if (arguments.DecodeOGG)
-                            {
-                                var name = Path.GetFileNameWithoutExtension(srcFileName);
-                                name += String.Format("_{0}", platform.platform.ToString());
-
-                                var audioFiles = Directory.GetFiles(Path.Combine(arguments.Output, name), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
-
-                                foreach (var file in audioFiles)
-                                {
-                                    var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                                    OggFile.Revorb(Path.GetFullPath(file), Path.GetFullPath(outputFileName), Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Path.GetExtension(file).GetWwiseVersion());
-                                }
-                            }
+                            Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.DecodeOGG);
                         }
                         catch (Exception ex)
                         {
-							Console.WriteLine(String.Format("Unpacking error!\nFile: {0}\n{1}\n{2}", 
-							                                srcFileName, ex.Message, ex.InnerException));
+							Console.WriteLine(String.Format("Unpacking error!\nFile: {0}\n{1}\n{2}", srcFileName, ex.Message, ex.InnerException));
                             return 1;
                         }
                     }

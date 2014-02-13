@@ -456,14 +456,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // UNPACK
-            Packer.Unpack(sourcePackage, savePath);
-            var pkgPlat = sourcePackage.GetPlatform();
-            savePath += String.Format("\\{0}_{1}", Path.GetFileNameWithoutExtension(sourcePackage), pkgPlat.platform.ToString());
-
+            var unpackedDir = Packer.Unpack(sourcePackage, savePath, true);
+            var packagePlatform = sourcePackage.GetPlatform();
+            
             // LOAD DATA
-            var info = DLCPackageData.LoadFromFile(savePath, pkgPlat);
+            var info = DLCPackageData.LoadFromFile(unpackedDir, packagePlatform);
             info.PackageVersion = "1";
-            switch (pkgPlat.platform)
+            switch (packagePlatform.platform)
             {
                 case GamePlatform.Pc:
                     info.Pc = true;
@@ -480,7 +479,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // FILL PACKAGE CREATOR FORM
-            FillPackageCreatorForm(info, savePath);
+            FillPackageCreatorForm(info, unpackedDir);
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
