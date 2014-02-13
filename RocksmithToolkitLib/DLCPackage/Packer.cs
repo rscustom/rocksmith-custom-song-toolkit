@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Ogg;
+using RocksmithToolkitLib.DLCPackage.Manifest;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -30,7 +31,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null)
         {
-            DeleteFixedAudio(sourcePath);
             Platform platform = sourcePath.GetPlatform();
 
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
@@ -59,7 +59,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region UNPACK
 
-        public static string Unpack(string sourceFileName, string savePath, bool decodeAudio = false, Platform predefinedPlatform = null)
+        public static string Unpack(string sourceFileName, string savePath, bool decodeAudio = false, bool extractSongXml = false, Platform predefinedPlatform = null)
         {
             Platform platform = sourceFileName.GetPlatform();
 
@@ -100,21 +100,56 @@ namespace RocksmithToolkitLib.DLCPackage
                     throw new InvalidOperationException("Platform not found :(");
             }
 
+            var fnameWithoutExt = Path.GetFileNameWithoutExtension(sourceFileName);
+            if (platform.platform == GamePlatform.PS3)
+                fnameWithoutExt = fnameWithoutExt.Substring(0, fnameWithoutExt.LastIndexOf("."));
+
+            var unpackedDir = Path.Combine(savePath, String.Format("{0}_{1}", fnameWithoutExt, platform.platform));
+
             // DECODE AUDIO
             if (decodeAudio) {
-                var name = Path.GetFileNameWithoutExtension(sourceFileName);
-                if (platform.platform == GamePlatform.PS3)
-                    name = name.Substring(0, name.LastIndexOf("."));
-                name += String.Format("_{0}", platform.platform.ToString());
-
-                var audioFiles = Directory.GetFiles(Path.Combine(savePath, name), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
+                var audioFiles = Directory.GetFiles(unpackedDir, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
                 foreach (var file in audioFiles) {
-                    var outputFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
-                    OggFile.Revorb(file, outputFileName, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(file).GetWwiseVersion());
+                    var outputAudioFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
+                    OggFile.Revorb(file, outputAudioFileName, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(file).GetWwiseVersion());
                 }
             }
 
-            return Path.Combine(savePath, String.Format("{0}_{1}", sourceFileName, platform.platform));
+            // EXTRACT XML FROM SNG
+            if (extractSongXml && platform.version == GameVersion.RS2014) {
+                var sngFiles = Directory.GetFiles(unpackedDir, "*.sng", SearchOption.AllDirectories);
+                
+                foreach (var sngFile in sngFiles) {
+                    var xmlOutput = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
+                    xmlOutput = xmlOutput.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, platform.GetPathName()[1].ToLower()), "arr");
+
+                    var arrType = ArrangementType.Guitar;
+                    if (Path.GetFileNameWithoutExtension(xmlOutput).ToLower().Contains("vocal"))
+                        arrType = ArrangementType.Vocal;
+
+                    Attributes2014 att = null;
+                    if (arrType != ArrangementType.Vocal) {
+                        var jsonFiles = Directory.GetFiles(unpackedDir, String.Format("{0}.json", Path.GetFileNameWithoutExtension(sngFile)), SearchOption.AllDirectories);
+                        if (jsonFiles.Length > 0 && !String.IsNullOrEmpty(jsonFiles[0]))
+                            att = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
+                    }
+
+                    var sngContent = Sng2014File.LoadFromFile(sngFile, platform);
+
+                    using (FileStream outputStream = new FileStream(xmlOutput, FileMode.Create, FileAccess.ReadWrite)) {
+                        dynamic xmlContent = null;
+
+                        if (arrType == ArrangementType.Vocal)
+                            xmlContent = new Vocals(sngContent);
+                        else
+                            xmlContent = new Song2014(sngContent, att ?? null);
+
+                        xmlContent.Serialize(outputStream);
+                    }
+                }
+            }
+
+            return unpackedDir;
         }
 
         #endregion

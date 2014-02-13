@@ -26,7 +26,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (fileName.Contains(".psarc"))
                     fileName = fileName.Substring(0, fileName.LastIndexOf("."));
 
-            var unpackedDir = Packer.Unpack(sourcePackage, tmpDir, false, sourcePlatform);
+            var unpackedDir = Packer.Unpack(sourcePackage, tmpDir, false, false, sourcePlatform);
 
             // DESTINATION
             var nameTemplate = (!targetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";

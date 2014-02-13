@@ -20,6 +20,14 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             get { return decodeAudioCheckbox.Checked; }
         }
 
+        private bool extractSongXml {
+            get { return extractSongXmlCheckBox.Checked; }
+        }
+
+        private bool updateSng {
+            get { return updateSngCheckBox.Checked; }
+        }
+
         public DLCPackerUnpacker()
         {
             InitializeComponent();
@@ -39,8 +47,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         {
             string sourcePath;
             string saveFileName;
-            var updateSng = updateSngCheckBox.Checked;
-
+            
             using (var fbd = new VistaFolderBrowserDialog())
             {
                 if (fbd.ShowDialog() != DialogResult.OK)
@@ -94,7 +101,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Platform platform = Packer.GetPlatform(sourceFileName);
                 
                 try {
-                    Packer.Unpack(sourceFileName, savePath, decodeAudio);
+                    Packer.Unpack(sourceFileName, savePath, decodeAudio, extractSongXml);
                 }
                 catch (Exception ex) {
                     errorsFound.AppendLine(ex.Message);
@@ -118,13 +125,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private void repackButton_Click(object sender, EventArgs e)
         {
             IList<string> sourceFileNames;
-            var updateSng = updateSngCheckBox.Checked;
-
+            
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Multiselect = true;
-                ofd.Filter = "Custom Rocksmith DLC PC (*.dat;*.psarc)|*.dat;*.psarc";
-                ofd.Title = "Select one or more PC DLC files to update";
+                ofd.Filter = "Custom Rocksmith/Rocksmith2014 DLC (*.dat;*.psarc)|*.dat;*.psarc";
+                ofd.Title = "Select one or more DLC files to update";
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
                 sourceFileNames = ofd.FileNames;
