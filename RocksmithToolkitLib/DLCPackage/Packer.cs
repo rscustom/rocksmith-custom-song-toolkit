@@ -59,7 +59,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region UNPACK
 
-        public static string Unpack(string sourceFileName, string savePath, bool decodeAudio = false, bool extractSongXml = false, Platform predefinedPlatform = null)
+        public static string Unpack(string sourceFileName, string savePath, Platform predefinedPlatform) {
+            return Unpack(sourceFileName, savePath, false, false, true, predefinedPlatform);
+        }
+
+        public static string Unpack(string sourceFileName, string savePath, bool decodeAudio = false, bool extractSongXml = false, bool overwriteSongXml = true, Platform predefinedPlatform = null)
         {
             Platform platform = sourceFileName.GetPlatform();
 

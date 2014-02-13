@@ -195,7 +195,7 @@ namespace RocksmithToolkitGUI.DDC
             consoleOutputPkg = String.Empty;
             var tmpDir = Path.GetTempPath();
             var platform = file.GetPlatform();
-            var unpackedDir = Packer.Unpack(file, tmpDir);
+            var unpackedDir = Packer.Unpack(file, tmpDir, false, true, false);
 
             var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
             foreach (var xml in xmlFiles)

@@ -142,28 +142,21 @@ namespace RocksmithToolkitGUI.DLCConverter
                 sourcePackages = ofd.FileNames;
             }
 
-            // SOURCE
-            
+            // SOURCE            
             StringBuilder errorsFound = new StringBuilder();
 
             foreach (var sourcePackage in sourcePackages)
             {
                 var alertMessage = String.Format("Source package '{0}' seems to be not {1} platform, the conversion can't be work.", Path.GetFileName(sourcePackage), SourcePlatform);
-                if (SourcePlatform.platform != GamePlatform.PS3)
+                var haveCorrectName = Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2]);
+                if (SourcePlatform.platform == GamePlatform.PS3)
+                    haveCorrectName = Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2] + ".psarc");
+
+                if (!haveCorrectName)
                 {
-                    if (!Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2]))
-                    {
-                        errorsFound.AppendLine(alertMessage);
-                        if (MessageBox.Show(String.Format(alertMessage + Environment.NewLine + "Force try to convert this package?", SourcePlatform), MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                            continue;
-                    }
-                } else if (SourcePlatform.platform == GamePlatform.PS3) {
-                    if (!(Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2] + ".psarc")))
-                    {
-                        errorsFound.AppendLine(alertMessage);
-                        if (MessageBox.Show(String.Format(alertMessage + Environment.NewLine + "Force try to convert this package?", SourcePlatform), MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                            continue;
-                    }
+                    errorsFound.AppendLine(alertMessage);
+                    if (MessageBox.Show(alertMessage + Environment.NewLine + "Force try to convert this package?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        continue;
                 }
 
                 // CONVERT
