@@ -31,6 +31,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null)
         {
+            DeleteFixedAudio(sourcePath);
             Platform platform = sourcePath.GetPlatform();
 
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)

@@ -148,9 +148,9 @@ namespace dlcconverter
 
         static void ShowHelpfulError(string message)
         {
-            Console.Write("packer: ");
+            Console.Write("dlcconverter: ");
             Console.WriteLine(message);
-            Console.WriteLine("Try 'packer --help' for more information.");
+            Console.WriteLine("Try 'dlcconverter --help' for more information.");
         }
 
         private static bool IsDirectory(this string path)

@@ -26,6 +26,7 @@ namespace packer
         public bool Build;
         public bool DecodeOGG;
         public bool UpdateSng;
+        public bool ExtractSongXml;
         public Platform Platform;
     }
 
@@ -53,7 +54,8 @@ namespace packer
                 { "f|platform=", "Platform to pack package [Pc, Mac, XBox360, PS3]", v => outputArguments.SetPlatform(v) },
                 { "v|version=", "Version of the Rocksmith Game [RS2012 or RS2014]", v => outputArguments.SetVersion(v) },
                 { "ogg|decodeogg", "Decode ogg file when unpack a song (default is true)", v => { if (v != null) outputArguments.DecodeOGG = true; }},
-                { "sng|updatesng", "Recreate SNG files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateSng = true; }}
+                { "sng|updatesng", "Recreate SNG files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateSng = true; }},
+                { "xml|extractxml", "Extract Song Xml files from SNG when unpack a song (default is false)", v => { if (v != null) outputArguments.ExtractSongXml = true; }}
             };
         }
 
@@ -212,8 +214,7 @@ namespace packer
 	                    }
 	                    catch (Exception ex)
 	                    {
-							Console.WriteLine(String.Format("Packing error!\nFile: {0}\n{1}\n{2}", 
-							                                srcFileName, ex.Message, ex.InnerException));
+							Console.WriteLine(String.Format("Packing error!\nFile: {0}\n{1}\n{2}", srcFileName, ex.Message, ex.InnerException));
 	                        return 1;
 	                    }
 					}
@@ -248,7 +249,7 @@ namespace packer
 
                         try
                         {
-                            Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.DecodeOGG);
+                            Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.DecodeOGG, arguments.ExtractSongXml);
                         }
                         catch (Exception ex)
                         {
