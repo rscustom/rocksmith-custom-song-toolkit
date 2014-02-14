@@ -594,7 +594,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             return TryGetPlatformByEndName(fullPath);
                     }
                     else
-                        return new Platform(GamePlatform.None, GameVersion.None);
+                        return TryGetPlatformByEndName(fullPath);
                 } 
             } else
                 return new Platform(GamePlatform.None, GameVersion.None);
