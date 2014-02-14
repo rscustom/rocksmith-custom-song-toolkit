@@ -128,6 +128,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     var xmlOutput = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
                     xmlOutput = xmlOutput.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, platform.GetPathName()[1].ToLower()), "arr");
 
+                    if (File.Exists(xmlOutput) && !overwriteSongXml)
+                        continue;
+
                     var arrType = ArrangementType.Guitar;
                     if (Path.GetFileNameWithoutExtension(xmlOutput).ToLower().Contains("vocal"))
                         arrType = ArrangementType.Vocal;
