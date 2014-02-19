@@ -22,7 +22,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         {
             switch (gameVersion) {
                 case GameVersion.RS2012:
-                    SectionUINames = new Dictionary<string, string>();
+                    SectionUINames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                     SectionUINames.Add("intro", "$[6005] Intro [1]");
                     SectionUINames.Add("outro", "$[6006] Outro [1]");
                     SectionUINames.Add("verse", "$[6007] Verse [1]");
@@ -55,7 +55,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     SectionUINames.Add("silence", "$[6092] Silence [1]");
                     break;
                 case GameVersion.RS2014:
-                    SectionUINames = new Dictionary<string, string>();
+                    SectionUINames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                     SectionUINames.Add("fadein", "$[34276] Fade In [1]");
                     SectionUINames.Add("fadeout", "$[34277] Fade Out [1]");
                     SectionUINames.Add("buildup", "$[34278] Buildup [1]");
