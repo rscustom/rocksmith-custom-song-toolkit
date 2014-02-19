@@ -122,14 +122,24 @@ namespace RocksmithToolkitLib.DLCPackage
         
         public override string ToString()
         {
+            var toneDesc = String.Empty;
+            if (!String.IsNullOrEmpty(ToneBase))
+                toneDesc = ToneBase;
+            if (!String.IsNullOrEmpty(ToneB))
+                toneDesc += String.Format(", {0}", ToneB);
+            if (!String.IsNullOrEmpty(ToneC))
+                toneDesc += String.Format(", {0}", ToneC);
+            if (!String.IsNullOrEmpty(ToneD))
+                toneDesc += String.Format(", {0}", ToneD);
+
             switch (ArrangementType)
             {
                 case ArrangementType.Bass:
-                    return String.Format("{0} [{1}]", ArrangementType, Tuning);
+                    return String.Format("{0} [{1}] ({2})", ArrangementType, Tuning, toneDesc);
                 case ArrangementType.Vocal:
                     return String.Format("{0}", ArrangementType);
                 default:
-                    return String.Format("{0} - {1} [{2}]", ArrangementType, Name, Tuning);
+                    return String.Format("{0} - {1} [{2}] ({3})", ArrangementType, Name, Tuning, toneDesc);
             }
         }
 
