@@ -306,13 +306,14 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 return;
 
             foreach (var y in song.ChordTemplates)
-                attribute.ChordTemplates.Add(new ChordTemplate
-                {
-                    ChordId = ind++,
-                    ChordName = y.ChordName,
-                    Fingers = new List<int> { y.Finger0, y.Finger1, y.Finger2, y.Finger3, y.Finger4, y.Finger5 },
-                    Frets = new List<int> { y.Fret0, y.Fret1, y.Fret2, y.Fret3, y.Fret4, y.Fret5 }
-                });
+                if (!String.IsNullOrEmpty(y.ChordName)) //Only add chords with name, checked in RS1 and RS14 packages
+                    attribute.ChordTemplates.Add(new ChordTemplate
+                    {
+                        ChordId = ind++,
+                        ChordName = y.ChordName,
+                        Fingers = new List<int> { y.Finger0, y.Finger1, y.Finger2, y.Finger3, y.Finger4, y.Finger5 },
+                        Frets = new List<int> { y.Fret0, y.Fret1, y.Fret2, y.Fret3, y.Fret4, y.Fret5 }
+                    });
         }
 
         public void GenerateDynamicVisualDensity(IAttributes attribute, dynamic song, Arrangement arrangement) {
