@@ -36,6 +36,8 @@
             this.packRadio = new System.Windows.Forms.RadioButton();
             this.packUnpackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.sngXmlTB = new RocksmithToolkitGUI.CueTextBox();
+            this.manifestTB = new RocksmithToolkitGUI.CueTextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.vocalRadio = new System.Windows.Forms.RadioButton();
             this.instrumentRadio = new System.Windows.Forms.RadioButton();
@@ -47,8 +49,7 @@
             this.xml2sngRadio = new System.Windows.Forms.RadioButton();
             this.sng2xmlRadio = new System.Windows.Forms.RadioButton();
             this.convertSngXmlButton = new System.Windows.Forms.Button();
-            this.sngXmlTB = new RocksmithToolkitGUI.CueTextBox();
-            this.manifestTB = new RocksmithToolkitGUI.CueTextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.gbPlatform.SuspendLayout();
             this.gbOperation.SuspendLayout();
@@ -152,6 +153,26 @@
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Sng 2 Xml / Xml 2 Sng Converter";
+            // 
+            // sngXmlTB
+            // 
+            this.sngXmlTB.Cue = "SNG file";
+            this.sngXmlTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.sngXmlTB.ForeColor = System.Drawing.Color.Gray;
+            this.sngXmlTB.Location = new System.Drawing.Point(6, 94);
+            this.sngXmlTB.Name = "sngXmlTB";
+            this.sngXmlTB.Size = new System.Drawing.Size(404, 20);
+            this.sngXmlTB.TabIndex = 43;
+            // 
+            // manifestTB
+            // 
+            this.manifestTB.Cue = "Manifest file";
+            this.manifestTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.manifestTB.ForeColor = System.Drawing.Color.Gray;
+            this.manifestTB.Location = new System.Drawing.Point(6, 70);
+            this.manifestTB.Name = "manifestTB";
+            this.manifestTB.Size = new System.Drawing.Size(404, 20);
+            this.manifestTB.TabIndex = 42;
             // 
             // groupBox5
             // 
@@ -274,33 +295,24 @@
             this.convertSngXmlButton.UseVisualStyleBackColor = true;
             this.convertSngXmlButton.Click += new System.EventHandler(this.convertSngXmlButton_Click);
             // 
-            // sngXmlTB
+            // label3
             // 
-            this.sngXmlTB.Cue = "SNG file";
-            this.sngXmlTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.sngXmlTB.ForeColor = System.Drawing.Color.Gray;
-            this.sngXmlTB.Location = new System.Drawing.Point(6, 94);
-            this.sngXmlTB.Name = "sngXmlTB";
-            this.sngXmlTB.Size = new System.Drawing.Size(404, 20);
-            this.sngXmlTB.TabIndex = 43;
-            // 
-            // manifestTB
-            // 
-            this.manifestTB.Cue = "Manifest file";
-            this.manifestTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.manifestTB.ForeColor = System.Drawing.Color.Gray;
-            this.manifestTB.Location = new System.Drawing.Point(6, 70);
-            this.manifestTB.Name = "manifestTB";
-            this.manifestTB.Size = new System.Drawing.Size(404, 20);
-            this.manifestTB.TabIndex = 42;
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label3.Location = new System.Drawing.Point(160, 239);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(183, 13);
+            this.label3.TabIndex = 39;
+            this.label3.Text = "Compatible only with Rocksmith 2014";
             // 
             // SngConverter
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Name = "SngConverter";
-            this.Size = new System.Drawing.Size(496, 245);
+            this.Size = new System.Drawing.Size(496, 259);
             this.groupBox2.ResumeLayout(false);
             this.gbPlatform.ResumeLayout(false);
             this.gbOperation.ResumeLayout(false);
@@ -313,6 +325,7 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -339,5 +352,6 @@
         private System.Windows.Forms.Button browseManifestButton;
         private CueTextBox sngXmlTB;
         private CueTextBox manifestTB;
+        private System.Windows.Forms.Label label3;
     }
 }
