@@ -18,12 +18,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
     public class Sng2014File : Sng {
         private bool consoleMode = !Environment.UserInteractive;
 
-        public static Sng2014File ConvertXML(string xml_path, ArrangementType type)
+        public static Sng2014File ConvertXML(string xmlPath, ArrangementType type)
         {
             if (type != ArrangementType.Vocal) {
-                return Sng2014File.ConvertSong(xml_path);
+                return Sng2014File.ConvertSong(xmlPath);
             } else {
-                return Sng2014FileWriter.ReadVocals(xml_path);
+                return Sng2014FileWriter.ReadVocals(xmlPath);
             }
         }
 
@@ -35,8 +35,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
         public int[] DNACount { get ; set ; }
 
         // this is platform independent SNG object
-        public static Sng2014File ConvertSong(string xml_file) {
-            Song2014 song = Song2014.LoadFromFile(xml_file);
+        public static Sng2014File ConvertSong(string xmlFile) {
+            Song2014 song = Song2014.LoadFromFile(xmlFile);
             var parser = new Sng2014FileWriter();
             Sng2014File sng = new Sng2014File();
             parser.ReadSong(song, sng);
@@ -143,30 +143,30 @@ namespace RocksmithToolkitLib.Sng2014HSL
         public static void PackSng(Stream input, Stream output, Platform platform)
         {
             EndianBitConverter conv;
-            Int32 platform_header;
+            Int32 platformHeader;
 
             switch (platform.platform) {
                 case GamePlatform.Pc:
                 case GamePlatform.Mac:
                 // Desktop
                     conv = EndianBitConverter.Little;
-                    platform_header = 3;
+                    platformHeader = 3;
                     break;
                 case GamePlatform.XBox360:
                 case GamePlatform.PS3:
                 // Console
                     conv = EndianBitConverter.Big;
-                    platform_header = 1;
+                    platformHeader = 1;
                     break;
                 default:
                     conv = EndianBitConverter.Little;
-                    platform_header = 3;
+                    platformHeader = 3;
                     break;
             }
 
             using (EndianBinaryWriter w = new EndianBinaryWriter(conv, output)) {
                 w.Write((Int32) 0x4A);
-                w.Write(platform_header);
+                w.Write(platformHeader);
 
                 byte[] inputChartData = null;
                 using (var mStream = new MemoryStream())
@@ -182,7 +182,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 zOut.finish();
                 byte[] packed = zData.ToArray();
 
-                if (platform_header == 3) {
+                if (platformHeader == 3) {
                     MemoryStream encrypted = new MemoryStream();
                     MemoryStream plain = new MemoryStream();
                     var encw = new EndianBinaryWriter(conv, plain);
@@ -218,8 +218,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
         }
 
-        private byte[] chart_LE = null;
-        private byte[] chart_BE = null;
+        private byte[] chartLE = null;
+        private byte[] chartBE = null;
         private byte[] getChartData(Platform platform)
         {
             using (MemoryStream stream = new MemoryStream()) {
@@ -231,10 +231,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     conv = EndianBitConverter.Big;
 
                 // cached result
-                if (conv == EndianBitConverter.Little && chart_LE != null)
-                    return chart_LE;
-                if (conv == EndianBitConverter.Big && chart_BE != null)
-                    return chart_BE;
+                if (conv == EndianBitConverter.Little && chartLE != null)
+                    return chartLE;
+                if (conv == EndianBitConverter.Big && chartBE != null)
+                    return chartBE;
 
                 using (EndianBinaryWriter w = new EndianBinaryWriter(conv, stream)) {
                     this.Write(w);
@@ -243,9 +243,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                 var data = stream.ToArray();
                 if (conv == EndianBitConverter.Little)
-                    chart_LE = data;
+                    chartLE = data;
                 else
-                    chart_BE = data;
+                    chartBE = data;
 
                 return data;
             }
@@ -333,7 +333,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         private void writeField(EndianBinaryWriter w, object value) {
             Type type = value.GetType();
-            string type_name = type.Name;
+            string typeName = type.Name;
 
             if (type.IsArray) {
                 if (type.GetElementType().IsPrimitive) {
@@ -347,7 +347,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         writeStruct(w, v);
                 }
             } else {
-                switch (type_name) {
+                switch (typeName) {
                     case "UInt32":
                         w.Write((UInt32)value);
                         if (consoleMode)
@@ -370,7 +370,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         break;
                     default:
                         if (consoleMode)
-                            Console.WriteLine("Unhandled type {0} (value: {1})", type_name, value);
+                            Console.WriteLine("Unhandled type {0} (value: {1})", typeName, value);
                         throw new System.Exception("Unhandled type");
                 }
             }

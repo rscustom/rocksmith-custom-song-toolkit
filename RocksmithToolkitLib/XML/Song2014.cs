@@ -202,10 +202,10 @@ namespace RocksmithToolkitLib.Xml {
             }
             
             //Sections can be obtained from manifest or sng file (manifest preferred)
-            ChordTemplates = (attr != null) ? SongChordTemplate2014.Parse(attr.ChordTemplates) : SongChordTemplate2014.Parse(sngData.Chords);
             Sections = (attr != null) ? SongSection.Parse(attr.Sections) : SongSection.Parse(sngData.Sections);
 
             //Can be obtained from manifest or sng file (sng preferred)
+            ChordTemplates = SongChordTemplate2014.Parse(sngData.Chords); // Only SNG have all ChordTemplates, manifest have only chord templates with name
             Phrases = SongPhrase.Parse(sngData.Phrases);
             PhraseIterations = SongPhraseIteration2014.Parse(sngData.PhraseIterations);
 
