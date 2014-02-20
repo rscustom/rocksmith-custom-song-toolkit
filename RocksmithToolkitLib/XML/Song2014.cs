@@ -186,6 +186,20 @@ namespace RocksmithToolkitLib.Xml {
             }
 
             Tones = (attr != null) ? SongTone2014.Parse(sngData.Tones, attr) : SongTone2014.Parse(sngData.Tones);
+            if (attr == null) { // Fix tones slots for fake tone names if manifest was not entered
+                foreach (var tone in Tones) {
+                    if (tone.Name.EndsWith("_0"))
+                        ToneBase = tone.Name;
+                    if (tone.Name.EndsWith("_1")) {
+                        ToneA = ToneBase;
+                        ToneB = tone.Name;
+                    }
+                    if (tone.Name.EndsWith("_2"))
+                        ToneC = tone.Name;
+                    if (tone.Name.EndsWith("_3"))
+                        ToneD = tone.Name;
+                }
+            }
             
             //Sections can be obtained from manifest or sng file (manifest preferred)
             ChordTemplates = (attr != null) ? SongChordTemplate2014.Parse(attr.ChordTemplates) : SongChordTemplate2014.Parse(sngData.Chords);
