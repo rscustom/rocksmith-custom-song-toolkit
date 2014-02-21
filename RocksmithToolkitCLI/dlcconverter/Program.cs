@@ -29,8 +29,8 @@ namespace dlcconverter
             return new OptionSet
             {
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
-                { "sp|sourceplatform", "Source platform (valid values: Pc, Mac, XBox360 or PS3)", v => outputArguments.SourcePlatform = GetPlatform(v) },
-                { "tp|targetplatform", "Target platform (valid values: Pc, Mac, XBox360 or PS3)", v => outputArguments.TargetPlatform = GetPlatform(v) },
+                { "sp|sourceplatform=", "Source platform (valid values: Pc, Mac, XBox360 or PS3)", v => outputArguments.SourcePlatform = GetPlatform(v) },
+                { "tp|targetplatform=", "Target platform (valid values: Pc, Mac, XBox360 or PS3)", v => outputArguments.TargetPlatform = GetPlatform(v) },
                 { "i|input=", "The input file or directory (multiple allowed)", v => outputArguments.Input = v },
                 { "appid=", "AppId (required for Pc and Mac platforms)", v => outputArguments.AppId = v }                
             };
@@ -68,13 +68,13 @@ namespace dlcconverter
                 // VALIDATIONS
                 if (arguments.SourcePlatform == null || arguments.SourcePlatform.platform == GamePlatform.None)
                 {
-                    ShowHelpfulError("Must specified a 'source platform', valid values: Pc|Mac|XBox360|PS3.");
+                    ShowHelpfulError("Must specify a 'source platform', valid values: Pc|Mac|XBox360|PS3.");
                     return 1;
                 }
 
                 if (arguments.TargetPlatform == null || arguments.TargetPlatform.platform == GamePlatform.None)
                 {
-                    ShowHelpfulError("Must specified a 'target platform', valid values: Pc|Mac|XBox360|PS3.");
+                    ShowHelpfulError("Must specify a 'target platform', valid values: Pc|Mac|XBox360|PS3.");
                     return 1;
                 }
 
