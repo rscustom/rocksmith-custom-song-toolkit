@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -80,6 +81,32 @@ namespace RocksmithToolkitLib.Extensions
         public static string ToNullTerminatedAscii(this Byte[] bytes)
         {
             return Encoding.ASCII.GetString(bytes).TrimEnd('\0');
+        }
+        
+        public static bool IsValidPSARC(this string fileName)
+        {
+            //Supported DLC Package types
+            var mimeByteHeaderList = new Dictionary<string, byte[]>();
+            mimeByteHeaderList.Add(".psarc", ASCIIEncoding.ASCII.GetBytes("PSAR"));
+            mimeByteHeaderList.Add(".edat", ASCIIEncoding.ASCII.GetBytes("NPD"));
+            mimeByteHeaderList.Add("xbox", ASCIIEncoding.ASCII.GetBytes("CON"));
+
+            string extension = Path.GetExtension(fileName);
+            if (string.IsNullOrEmpty(extension))
+                extension = fileName.Split('_').LastOrDefault();
+            if (mimeByteHeaderList.ContainsKey(extension))
+            {
+                byte[] mime = mimeByteHeaderList[extension];
+                byte[] file = File.ReadAllBytes(fileName);
+                
+                bool r = file.Take(mime.Length).SequenceEqual(mime);
+                if (!r)
+                    File.Move(fileName, Path.ChangeExtension(fileName, ".invalid"));
+
+                return r;
+            }
+            else
+                return false;
         }
     }
 }

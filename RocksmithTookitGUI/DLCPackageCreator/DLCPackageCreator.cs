@@ -445,6 +445,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return;
                 sourcePackage = ofd.FileName;
             }
+            if (!sourcePackage.IsValidPSARC()){
+                MessageBox.Show("You selected wrong file, its extension changet to '.invalid'", 
+                                MESSAGEBOX_CAPTION,MessageBoxButtons.OK, MessageBoxIcon.Error,
+                                MessageBoxDefaultButton.Button1);
+                return;
+            }
 
             using (var fbd = new VistaFolderBrowserDialog()) {
                 fbd.Description = "Select folder to save project artifacts";
