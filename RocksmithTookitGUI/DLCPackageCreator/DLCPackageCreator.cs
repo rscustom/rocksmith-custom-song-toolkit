@@ -445,10 +445,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return;
                 sourcePackage = ofd.FileName;
             }
+
             if (!sourcePackage.IsValidPSARC()){
-                MessageBox.Show("You selected wrong file, its extension changet to '.invalid'", 
-                                MESSAGEBOX_CAPTION,MessageBoxButtons.OK, MessageBoxIcon.Error,
-                                MessageBoxDefaultButton.Button1);
+                MessageBox.Show(String.Format("File '{0}' isn't valid. File extension was changed to '.invalid'", Path.GetFileName(sourcePackage)), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

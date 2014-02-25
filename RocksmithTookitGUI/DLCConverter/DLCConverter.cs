@@ -147,6 +147,13 @@ namespace RocksmithToolkitGUI.DLCConverter
 
             foreach (var sourcePackage in sourcePackages)
             {
+                if (!sourcePackage.IsValidPSARC())
+                {
+                    errorsFound.AppendLine(String.Format("File '{0}' isn't valid. File extension was changed to '.invalid'", Path.GetFileName(sourcePackage)));
+
+                    return;
+                }
+
                 var alertMessage = String.Format("Source package '{0}' seems to be not {1} platform, the conversion can't be work.", Path.GetFileName(sourcePackage), SourcePlatform);
                 var haveCorrectName = Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2]);
                 if (SourcePlatform.platform == GamePlatform.PS3)
