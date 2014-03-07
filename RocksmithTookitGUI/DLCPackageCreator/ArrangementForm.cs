@@ -351,10 +351,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                                 toneNames.Add(xmlSong.ToneB);
                             if (!toneNames.Contains(xmlSong.ToneC))
                                 if (!String.IsNullOrEmpty(xmlSong.ToneC))
-                                    toneNames.Add(xmlSong.ToneBase);
-                            if (!toneNames.Contains(xmlSong.ToneC))
+                                    toneNames.Add(xmlSong.ToneC);
+                            if (!toneNames.Contains(xmlSong.ToneD))
                                 if (!String.IsNullOrEmpty(xmlSong.ToneD))
-                                    toneNames.Add(xmlSong.ToneBase);
+                                    toneNames.Add(xmlSong.ToneD);
 
                             FillToneCombo(toneBaseCombo, toneNames, true);
                             FillToneCombo(toneBCombo, toneNames, false);
