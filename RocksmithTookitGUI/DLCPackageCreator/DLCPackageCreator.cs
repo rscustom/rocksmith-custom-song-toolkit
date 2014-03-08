@@ -461,7 +461,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // UNPACK
-            var unpackedDir = Packer.Unpack(sourcePackage, savePath, true);
+            var unpackedDir = Packer.Unpack(sourcePackage, savePath, true, true, false);
             var packagePlatform = sourcePackage.GetPlatform();
             
             // LOAD DATA
