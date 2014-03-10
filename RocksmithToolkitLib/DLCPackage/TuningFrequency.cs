@@ -18,7 +18,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static double Cents2Frequency(this double Cents)
         {
-            return A440 * Math.Pow(Math.Pow(2, 1 / 1200), Cents);
+            return Math.Round(A440 * Math.Pow(Math.Pow(2, 1D / 1200D), Cents), 3);
         }
 
         public static double Cents2Frequency(this double? Cents) {
