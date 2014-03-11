@@ -7,6 +7,8 @@ using System.Reflection;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using RocksmithToolkitLib.DLCPackage;
+using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -107,6 +109,17 @@ namespace RocksmithToolkitLib.Extensions
             }
             else
                 return false;
+        }
+
+        public static void OpenExecutable(string exeFileName, bool toolkitRootFolder = true) {
+            string toolkitRootPath = Path.GetDirectoryName(Application.ExecutablePath);
+
+            var rootPath = (toolkitRootFolder) ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
+
+            Process updaterProcess = new Process();
+            updaterProcess.StartInfo.FileName = (toolkitRootFolder) ? Path.Combine(rootPath, exeFileName) : exeFileName;
+            updaterProcess.StartInfo.WorkingDirectory = rootPath;
+            updaterProcess.Start();
         }
     }
 }

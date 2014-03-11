@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RocksmithToolkitGUI.Properties {
+namespace RocksmithToolkitUpdater.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace RocksmithToolkitGUI.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RocksmithToolkitGUI.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RocksmithToolkitUpdater.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,30 +60,9 @@ namespace RocksmithToolkitGUI.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap ddc_512 {
-            get {
-                object obj = ResourceManager.GetObject("ddc_512", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap guitar_256 {
             get {
                 object obj = ResourceManager.GetObject("guitar_256", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap logo_small {
-            get {
-                object obj = ResourceManager.GetObject("logo_small", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap toolkit_logo {
-            get {
-                object obj = ResourceManager.GetObject("toolkit_logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
