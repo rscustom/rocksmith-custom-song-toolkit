@@ -463,6 +463,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // UNPACK
             var unpackedDir = Packer.Unpack(sourcePackage, savePath, true, true, false);
             var packagePlatform = sourcePackage.GetPlatform();
+
+            //REORGANIZE
+            if(this.bStructured.Checked)
+                unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
             
             // LOAD DATA
             var info = DLCPackageData.LoadFromFile(unpackedDir, packagePlatform);
@@ -487,6 +491,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillPackageCreatorForm(info, unpackedDir);
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Focus();
         }
 
         private void FillPackageCreatorForm(DLCPackageData info, string filesBaseDir) {
@@ -654,7 +659,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 PackageVersion = "1";
 
             //Album Art validation (alert only)
-            if (String.IsNullOrEmpty(AlbumArtPath) && !File.Exists(AlbumArtPath))
+            if (String.IsNullOrEmpty(AlbumArtPath) || !File.Exists(AlbumArtPath))
             {
                 var diagResult = MessageBox.Show("Warning: Album Art file not found!" + Environment.NewLine +
                                                  "If you click 'Yes' default album art will be defined." + Environment.NewLine +
