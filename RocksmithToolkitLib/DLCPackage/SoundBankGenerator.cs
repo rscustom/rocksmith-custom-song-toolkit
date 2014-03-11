@@ -482,6 +482,8 @@ namespace RocksmithToolkitLib.DLCPackage
             int soundID = same ? oldSoundID : RandomGenerator.NextInt();
             oldSoundID = soundID;
             oldFileID = fileID;
+            //Prewiew volume should be independent
+            volume = preview ? -3.0F : volume;
 
             byte[] dataChunk = audioReader.ReadBytes(51200); // wwise is based on audio length, we'll just make it up
             byte[] dataIndexChunk = DataIndex(fileID, dataChunk.Length, platform);
