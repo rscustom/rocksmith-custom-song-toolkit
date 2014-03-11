@@ -88,17 +88,18 @@
   <!-- Rocksmith 2014 APP ID -->
   <SongAppId Version="RS2014" AppId="248750" Name="The Smashing Pumpkins - Cherub Rock" />
   <SongAppId Version="RS2014" AppId="248751" Name="Albert King - The Sky Is Crying" />
-  <SongAppId Version="RS2014" AppId="248752" Name="Chicago - 25 or 6 to 4" />
+  <SongAppId Version="RS2014" AppId="248752" Name="Chicago - 25 Or 6 To 4" />
   <SongAppId Version="RS2014" AppId="248753" Name="Tame Impala - Elephant" />
   <SongAppId Version="RS2014" AppId="248754" Name="The Lumineers - Ho Hey" />
   <SongAppId Version="RS2014" AppId="248755" Name="The Hives - Hate To Say I Told You So" />
   <SongAppId Version="RS2014" AppId="248756" Name="Them Crooked Vultures - Mind Eraser, No Chaser" />
-  <SongAppId Version="RS2014" AppId="248757" Name="Queens Of The Stone Age - My God Is the Sun" />
+  <SongAppId Version="RS2014" AppId="248757" Name="Queens Of The Stone Age - My God Is The Sun" />
   <SongAppId Version="RS2014" AppId="258342" Name="The Smashing Pumpkins - Today" />
   <SongAppId Version="RS2014" AppId="258343" Name="The Smashing Pumpkins - Bullet with Butterfly Wings" />
   <SongAppId Version="RS2014" AppId="258344" Name="The Smashing Pumpkins - 1979" />
   <SongAppId Version="RS2014" AppId="258345" Name="The Smashing Pumpkins - Tonight, Tonight" />
   <SongAppId Version="RS2014" AppId="258346" Name="The Smashing Pumpkins - Disarm" />
+  <SongAppId Version="RS2014" AppId="258347" Name="The Smashing Pumpkins Song Pack" />
   <SongAppId Version="RS2014" AppId="258348" Name="Iron Maiden - Fear of the Dark" />
   <SongAppId Version="RS2014" AppId="258349" Name="Iron Maiden - Run to the Hills" />
   <SongAppId Version="RS2014" AppId="258350" Name="Iron Maiden - Aces High" />
@@ -107,14 +108,17 @@
   <SongAppId Version="RS2014" AppId="258354" Name="Hotei - Battle Without Honor or Humanity" />
   <SongAppId Version="RS2014" AppId="258355" Name="Hotei - Bambina" />
   <SongAppId Version="RS2014" AppId="258356" Name="Hotei - Thrill" />
-  <SongAppId Version="RS2014" AppId="258358" Name="Alice in Chains - Man in the	 Box" />
+  <SongAppId Version="RS2014" AppId="258358" Name="Alice in Chains - Man in the Box" />
   <SongAppId Version="RS2014" AppId="258359" Name="Alice in Chains - Would?" />
   <SongAppId Version="RS2014" AppId="258360" Name="Alice in Chains - Hollow" />
   <SongAppId Version="RS2014" AppId="258361" Name="Alice in Chains - Them Bones" />
-  <SongAppId Version="RS2014" AppId="258362" Name="Alice in Chains - Check My Brain" />  
+  <SongAppId Version="RS2014" AppId="258362" Name="Alice in Chains - Check My Brain" />
   <SongAppId Version="RS2014" AppId="258364" Name="Green Day - Oh Love" />
   <SongAppId Version="RS2014" AppId="258365" Name="Green Day - Basket Case" />
   <SongAppId Version="RS2014" AppId="258366" Name="Green Day - American Idiot" />
+  <SongAppId Version="RS2014" AppId="258368" Name="B'z - Easy Come, Easy Go!" />
+  <SongAppId Version="RS2014" AppId="258369" Name="B'z - Juice" />
+  <SongAppId Version="RS2014" AppId="258370" Name="B'z - Giri Giri chop" />
   <SongAppId Version="RS2014" AppId="258372" Name="The Who - Baba O'Riley" />
   <SongAppId Version="RS2014" AppId="258373" Name="The Who - Behind Blue Eyes" />
   <SongAppId Version="RS2014" AppId="258374" Name="The Who - Who Are You" />
@@ -125,7 +129,7 @@
   <SongAppId Version="RS2014" AppId="258380" Name="Radiohead - Optimistic" />
   <SongAppId Version="RS2014" AppId="258381" Name="Radiohead - Karma Police" />
   <SongAppId Version="RS2014" AppId="258382" Name="Radiohead - My Iron Lung" />
-  <SongAppId Version="RS2014" AppId="258384" Name="ONE OK ROCK - No Scared" />
+  <SongAppId Version="RS2014" AppId="258384" Name="ONE OK ROCK - NO SCARED" />
   <SongAppId Version="RS2014" AppId="258385" Name="ONE OK ROCK - Liar" />
   <SongAppId Version="RS2014" AppId="258386" Name="Kazuyoshi Saito - Yasashiku Naritai" />
   <SongAppId Version="RS2014" AppId="258388" Name="Disturbed - Down with the Sickness" />
@@ -139,31 +143,50 @@
   <SongAppId Version="RS2014" AppId="258398" Name="Golden Bomber - Memeshikute" />
   <SongAppId Version="RS2014" AppId="258399" Name="Golden Bomber - Earphone" />
   <SongAppId Version="RS2014" AppId="258400" Name="Golden Bomber - Death Mental" />
-  <SongAppId Version="RS2014" AppId="271410" Name="Aerosmith - Dream On" />
-  <SongAppId Version="RS2014" AppId="271411" Name="Aerosmith - Sweet Emotion" />
-  <SongAppId Version="RS2014" AppId="271412" Name="Aerosmith - Oh Yeah" />
-  <SongAppId Version="RS2014" AppId="271413" Name="Aerosmith - Legendary Child" />
-  <SongAppId Version="RS2014" AppId="271414" Name="Aerosmith - Same Old Song and Dance" />	
+  <SongAppId Version="RS2014" AppId="258401" Name="Golden Bomber Song Pack" />
+  <SongAppId Version="RS2014" AppId="258408" Name="Weezer - Island in the Sun" />
+  <SongAppId Version="RS2014" AppId="258409" Name="Weezer - My Name is Jonas" />
+  <SongAppId Version="RS2014" AppId="258410" Name="Weezer - Buddy Holly" />
+  <SongAppId Version="RS2014" AppId="258411" Name="Weezer - Undone - The Sweater Song" />
+  <SongAppId Version="RS2014" AppId="258412" Name="Weezer - Hash Pipe" />
   <SongAppId Version="RS2014" AppId="258414" Name="Oasis - Wonderwall" />
   <SongAppId Version="RS2014" AppId="258415" Name="Oasis - Champagne Supernova" />
   <SongAppId Version="RS2014" AppId="258416" Name="Oasis - Supersonic" />
   <SongAppId Version="RS2014" AppId="258417" Name="Oasis - Live Forever" />
-  <SongAppId Version="RS2014" AppId="258418" Name="Oasis - Some Might Say" />	
-  <SongAppId Version="RS2014" AppId="271420" Name="9mm Parabellum Bullet - Atarashii Hikari" />
-  <SongAppId Version="RS2014" AppId="271421" Name="9mm Parabellum Bullet - Punishment" />	
-  <SongAppId Version="RS2014" AppId="258408" Name="Weezer - Island in the Sun" />
-  <SongAppId Version="RS2014" AppId="258409" Name="Weezer - My Name Is Jonas" />
-  <SongAppId Version="RS2014" AppId="258410" Name="Weezer - Buddy Holly" />
-  <SongAppId Version="RS2014" AppId="258411" Name="Weezer - Undone (The Sweater Song)" />
-  <SongAppId Version="RS2014" AppId="258412" Name="Weezer - Hash Pipe" />
+  <SongAppId Version="RS2014" AppId="258418" Name="Oasis - Some Might Say" />
+  <SongAppId Version="RS2014" AppId="271410" Name="Aerosmith - Dream On" />
+  <SongAppId Version="RS2014" AppId="271411" Name="Aerosmith - Sweet Emotion" />
+  <SongAppId Version="RS2014" AppId="271412" Name="Aerosmith - Oh Yeah" />
+  <SongAppId Version="RS2014" AppId="271413" Name="Aerosmith - Legendary Child" />
+  <SongAppId Version="RS2014" AppId="271414" Name="Aerosmith - Same Old Song and Dance" />
   <SongAppId Version="RS2014" AppId="271416" Name="System of a Down - B.Y.O.B." />
   <SongAppId Version="RS2014" AppId="271417" Name="System of a Down - Toxicity" />
   <SongAppId Version="RS2014" AppId="271418" Name="System of a Down - Aerials" />
+  <SongAppId Version="RS2014" AppId="271420" Name="9mm Parabellum Bullet - Atarashii Hikari" />
+  <SongAppId Version="RS2014" AppId="271421" Name="9mm Parabellum Bullet - Punishment" />
+  <SongAppId Version="RS2014" AppId="271422" Name="Kiss - Detroit Rock City" />
+  <SongAppId Version="RS2014" AppId="271423" Name="Kiss - I Was Made For Loving You" />
+  <SongAppId Version="RS2014" AppId="271424" Name="Kiss - Heaven's On Fire" />
   <SongAppId Version="RS2014" AppId="271426" Name="R.E.M. - What's the Frequency, Kenneth?" />
   <SongAppId Version="RS2014" AppId="271427" Name="R.E.M. - Überlin" />
   <SongAppId Version="RS2014" AppId="271428" Name="R.E.M. - Everybody Hurts" />
   <SongAppId Version="RS2014" AppId="271429" Name="R.E.M. - The One I Love" />
   <SongAppId Version="RS2014" AppId="271430" Name="R.E.M. - Shiny, Happy People" />
-  <SongAppId Version="RS2014" AppId="271432" Name="STRAIGHTENER - From Noon Till Dawn" />
+   <SongAppId Version="RS2014" AppId="271432" Name="STRAIGHTENER - From Noon Till Dawn" />
   <SongAppId Version="RS2014" AppId="271433" Name="STRAIGHTENER - ROCKSTEADY" />
+  <SongAppId Version="RS2014" AppId="271438" Name="RIZE - PARADOX Taiso" />
+  <SongAppId Version="RS2014" AppId="271439" Name="ACIDMAN - Shinsekai" />
+  <SongAppId Version="RS2014" AppId="271440" Name="The Birthday - stupid" />
+ <SongAppId Version="RS2014" AppId="271441" Name="Boston - Hitch A Ride" />
+  <SongAppId Version="RS2014" AppId="271442" Name="Boston - Don't Look Back" />
+  <SongAppId Version="RS2014" AppId="271443" Name="Boston - Foreplay/Long Time" />
+  <SongAppId Version="RS2014" AppId="271445" Name="The Doors - Light My Fire" />
+  <SongAppId Version="RS2014" AppId="271446" Name="The Doors - Riders on the Storm" />
+  <SongAppId Version="RS2014" AppId="271447" Name="The Doors - Roadhouse Blues" />
+  <SongAppId Version="RS2014" AppId="271449" Name="Rise Against - Prayer of the Refugee" />
+  <SongAppId Version="RS2014" AppId="271450" Name="Rise Against - Give It All" />
+  <SongAppId Version="RS2014" AppId="271451" Name="Rise Against - Make It Stop (September's Children)" />
+  <SongAppId Version="RS2014" AppId="271452" Name="Rise Against - Swing Life Away" />
+  <SongAppId Version="RS2014" AppId="271453" Name="Rise Against - Satellite" />
+  <SongAppId Version="RS2014" AppId="271454" Name="Rise Against Song Pack" />
 </ArrayOfSongAppId>
