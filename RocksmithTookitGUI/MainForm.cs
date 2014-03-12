@@ -9,6 +9,7 @@ using RocksmithToolkitLib;
 using RocksmithToolkitLib.Extensions;
 using System.IO;
 using System.Net;
+using System.ComponentModel;
 
 namespace RocksmithToolkitGUI
 {
@@ -16,6 +17,9 @@ namespace RocksmithToolkitGUI
     {
         private const string APP_UPDATER = "RocksmithToolkitUpdater.exe";
         private const string APP_UPDATING = "RocksmithToolkitUpdating.exe";
+
+        internal BackgroundWorker bWorker = new BackgroundWorker();
+        private bool NewVersionAvailable = false;
 
         public static bool IsInDesignMode
         {
@@ -43,22 +47,36 @@ namespace RocksmithToolkitGUI
 
             this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", ToolkitVersion.version);
 
-            try {
+            bWorker.DoWork += new DoWorkEventHandler(CheckForUpdate);
+            bWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(EnableUpdate);
+            bWorker.RunWorkerAsync();
+        }
+
+        private void CheckForUpdate(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
                 // DELETE OLD UPDATER APP IF EXISTS
                 var updatingApp = Path.Combine(RootDirectory, APP_UPDATING);
-                if (File.Exists(updatingApp)) {
+                if (File.Exists(updatingApp))
+                {
                     File.Delete(updatingApp);
                 }
 
                 // CHECK FOR NEW AVAILABLE VERSION AND ENABLE UPDATE
-                if (ToolkitVersionOnline.HasNewVersion()){
-                    updateButton.Visible = true;
-                }
-            } catch (WebException) {
-                // Do nothing on 404
-            } catch (Exception ex) {
+                if (ToolkitVersionOnline.HasNewVersion())
+                    NewVersionAvailable = true;
+            }
+            catch (WebException) { /* Do nothing on 404 */ }
+            catch (Exception ex)
+            {
                 throw ex;
             }
+        }
+
+        private void EnableUpdate(object sender, RunWorkerCompletedEventArgs e)
+        {
+            updateButton.Visible = updateButton.Enabled = NewVersionAvailable;            
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
