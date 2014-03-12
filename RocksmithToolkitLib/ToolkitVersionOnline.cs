@@ -20,6 +20,9 @@ namespace RocksmithToolkitLib
         [JsonProperty("date")]
         public double UnixTimestamp { get; set; }
 
+        [JsonProperty("update")]
+        public bool UpdateAvailable { get; set; }
+
         [JsonIgnore]
         public DateTime Date {
             get {
@@ -30,7 +33,7 @@ namespace RocksmithToolkitLib
         }
 
         public static bool HasNewVersion() {
-            var url = GetFileUrl();
+            var url = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.commit);
 
             // GET ONLINE VERSION
             var tvo = new ToolkitVersionOnline();
@@ -40,7 +43,7 @@ namespace RocksmithToolkitLib
 
             // COMPARE ONLINE AND LOCAL
             if (ToolkitVersion.commit != "nongit")
-                if (ToolkitVersion.version != String.Format("{0}-{1}", tvo.Version, tvo.Revision))
+                if (tvo.UpdateAvailable)
                     return true;
 
             return false;
