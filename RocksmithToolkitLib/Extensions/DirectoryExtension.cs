@@ -28,7 +28,6 @@ namespace RocksmithToolkitLib.Extensions
             if (destDir.Exists) { throw new IOException("The path specified by destDirName already exists: " + destDirName); }
 
             #endregion
-
             
             if (sourceDir.Root.Name.Equals(destDir.Root.Name, StringComparison.InvariantCultureIgnoreCase))
             {

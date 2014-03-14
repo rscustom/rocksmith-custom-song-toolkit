@@ -9,9 +9,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Diagnostics;
 using System.IO;
-using ICSharpCode.SharpZipLib;
-using ICSharpCode.SharpZipLib.Zip;
-using ICSharpCode.SharpZipLib.Core;
+using System.Threading;
 
 namespace RocksmithToolkitUpdater
 {
@@ -77,9 +75,12 @@ namespace RocksmithToolkitUpdater
             // UNPACK
             if (!String.IsNullOrEmpty(localFile)) {
                 if (File.Exists(localFile)) {
+                    currentOperationLabel.Text = "Extracting downloaded file.";
                     ExtractFile();
-
+                    Thread.Sleep(1000);
+                    
                     // DELETE DOWNLOADED FILE
+                    currentOperationLabel.Text = "Deleting temp files.";
                     File.Delete(localFile);
                     localFile = null;
                 }
@@ -90,9 +91,7 @@ namespace RocksmithToolkitUpdater
 
         public void ExtractFile() {
             var output = Path.GetDirectoryName(Application.ExecutablePath);
-
-            FastZip fz = new FastZip();
-            fz.ExtractZip(localFile, output, null);
+            AssemblyCaller.Call(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ICSharpCode.SharpZipLib.dll"), "ICSharpCode.SharpZipLib.Zip.FastZip", "ExtractZip", new Type[] { typeof(string), typeof(string), typeof(string) }, new object[] { localFile, output, null });
         }
 
         private void AutoUpdater_FormClosing(object sender, FormClosingEventArgs e) {
@@ -110,7 +109,7 @@ namespace RocksmithToolkitUpdater
         }
 
         private string GetFileUrl() {
-            return (string)AssemblyCaller.Call(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "RocksmithToolkitLib.dll"), "RocksmithToolkitLib.ToolkitVersionOnline", "GetFileUrl", new object[] { true });
+            return (string)AssemblyCaller.Call(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "RocksmithToolkitLib.dll"), "RocksmithToolkitLib.ToolkitVersionOnline", "GetFileUrl", null, new object[] { true });
         }
     }
 }

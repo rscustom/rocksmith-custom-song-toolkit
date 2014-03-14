@@ -10,19 +10,22 @@ namespace RocksmithToolkitUpdater
     {
         private const string UPDATER_DOMAIN = "UpdaterDomain";
 
-        public static object Call(string assemblyPath, string typeName, string method, params object[] methodParams) {
+        // EXECUTE METHOD IN LIBS WITHOUT LOCK FILE
+        public static object Call(string assemblyPath, string typeName, string method, Type[] paramTypes, params object[] methodParams) {
             AppDomain domain = AppDomain.CreateDomain(UPDATER_DOMAIN);
             AssemblyCaller assemblyCaller = (AssemblyCaller)domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(AssemblyCaller).FullName);
-            object result = assemblyCaller.PrivateCall(assemblyPath, typeName, method, methodParams);
+            object result = assemblyCaller.PrivateCall(assemblyPath, typeName, method, paramTypes, methodParams);
             AppDomain.Unload(domain);
             return result;
         }
 
-        private object PrivateCall(string assemblyPath, string typeName, string method, params object[] methodParams) {
+        private object PrivateCall(string assemblyPath, string typeName, string method, Type[] paramTypes, params object[] methodParams)
+        {
             Assembly assembly = Assembly.LoadFile(assemblyPath);
             Type compiledType = assembly.GetType(typeName);
             var istance = Activator.CreateInstance(compiledType);
-            return compiledType.GetMethod(method).Invoke(istance, methodParams == null ? new object[] { new object() } : methodParams);
+            var methodInfo = (paramTypes == null) ? compiledType.GetMethod(method) : compiledType.GetMethod(method, paramTypes);
+            return methodInfo.Invoke(istance, methodParams == null ? new object[] { new object() } : methodParams);
         }
     }
 }

@@ -50,6 +50,9 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\lib\ZLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="NDesk.Options">
       <HintPath>..\lib\NDesk\NDesk.Options.dll</HintPath>
     </Reference>
