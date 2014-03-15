@@ -1,5 +1,5 @@
 -------------------------------------------------------------
--- DDC v2.1 (c) 2013, by Chlipouni
+-- DDC v2.2 (c) 2013, by Chlipouni
 -------------------------------------------------------------
 
 DDC is a command line tool conceived to add Dynamic Difficulty Levels on Custom Downloadable Contents.
@@ -13,9 +13,9 @@ Use :
 - Open a Windows command-line interpreter
 - Execute the "ddc.exe" tool with the following parameters :
 
-  C:\ddc_v2.1>ddc.exe
+  C:\ddc_v2.2>ddc.exe
   -----------------------------------------------------------------------
-  -- D Y N A M I C   D I F F I C U L T Y   C R E A T O R   v 2.1       --
+  -- D Y N A M I C   D I F F I C U L T Y   C R E A T O R   v 2.2       --
   -----------------------------------------------------------------------
   ddc.exe <arrangement> [-l <phraseLength>] [-s {Y | N}] [-m <ramp-up>] [-p {Y | N}] [-t {Y | N}]
 
@@ -30,7 +30,7 @@ Use :
 
   Example :
   ------------
-  C:\mySongs>C:\ddc_v2.1\ddc.exe "PART REAL_GUITAR.xml" -l 4 -s Y
+  C:\mySongs>C:\ddc_v2.2\ddc.exe "PART REAL_GUITAR.xml" -l 4 -s Y
 
 Result Files :
 --------------
