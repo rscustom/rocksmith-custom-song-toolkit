@@ -53,7 +53,7 @@
             // currentOperationLabel
             // 
             this.currentOperationLabel.AutoSize = true;
-            this.currentOperationLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.currentOperationLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.currentOperationLabel.Location = new System.Drawing.Point(96, 8);
             this.currentOperationLabel.Name = "currentOperationLabel";
             this.currentOperationLabel.Size = new System.Drawing.Size(16, 13);
@@ -63,6 +63,7 @@
             // labelSpeed
             // 
             this.labelSpeed.AutoSize = true;
+            this.labelSpeed.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.labelSpeed.Location = new System.Drawing.Point(96, 58);
             this.labelSpeed.Name = "labelSpeed";
             this.labelSpeed.Size = new System.Drawing.Size(16, 13);
@@ -72,6 +73,7 @@
             // labelDownloaded
             // 
             this.labelDownloaded.AutoSize = true;
+            this.labelDownloaded.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.labelDownloaded.Location = new System.Drawing.Point(215, 58);
             this.labelDownloaded.Name = "labelDownloaded";
             this.labelDownloaded.Size = new System.Drawing.Size(16, 13);

@@ -126,7 +126,7 @@ namespace RocksmithToolkitUpdater
         {
             var source = new DirectoryInfo(sourceDir);
 
-            var files = source.GetFiles("*.*", SearchOption.AllDirectories);
+            var files = source.GetFiles("*.*", SearchOption.TopDirectoryOnly);
             var directories = source.GetDirectories();
 
             // CREATE DEST DIRECTORIES IF NOT EXISTS
@@ -135,6 +135,7 @@ namespace RocksmithToolkitUpdater
                 var od = Path.Combine(destDir, dir.Name);
                 if (!Directory.Exists(od))
                     Directory.CreateDirectory(od);
+                MoveFiles(dir.FullName, od);
             }
 
             // UPDATE FILES
