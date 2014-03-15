@@ -72,6 +72,7 @@ namespace RocksmithToolkitLib.Extensions
             if (value.EndsWith(new Platform(GamePlatform.Pc, GameVersion.None).GetPathName()[2]) ||
                 value.EndsWith(new Platform(GamePlatform.Mac, GameVersion.None).GetPathName()[2]) ||
                 value.EndsWith(new Platform(GamePlatform.XBox360, GameVersion.None).GetPathName()[2]) ||
+                value.EndsWith(new Platform(GamePlatform.PS3, GameVersion.None).GetPathName()[2]) ||
                 value.EndsWith(new Platform(GamePlatform.PS3, GameVersion.None).GetPathName()[2] + ".psarc"))
             {
                 return value.Substring(0, value.LastIndexOf("_"));
