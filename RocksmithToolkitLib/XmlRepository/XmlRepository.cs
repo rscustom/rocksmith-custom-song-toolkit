@@ -24,7 +24,7 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public string FilePath {
             get {
-                return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), FileName);
+                return Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), FileName);
             }
         }
 

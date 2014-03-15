@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.IO;
 
 namespace RocksmithToolkitUpdater
 {
@@ -21,7 +22,7 @@ namespace RocksmithToolkitUpdater
 
         private object PrivateCall(string assemblyPath, string typeName, string method, Type[] paramTypes, params object[] methodParams)
         {
-            Assembly assembly = Assembly.LoadFile(assemblyPath);
+            Assembly assembly = Assembly.Load(File.ReadAllBytes(assemblyPath));
             Type compiledType = assembly.GetType(typeName);
             var istance = Activator.CreateInstance(compiledType);
             var methodInfo = (paramTypes == null) ? compiledType.GetMethod(method) : compiledType.GetMethod(method, paramTypes);

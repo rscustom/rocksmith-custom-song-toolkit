@@ -59,9 +59,7 @@ namespace RocksmithToolkitGUI
                 // DELETE OLD UPDATER APP IF EXISTS
                 var updatingApp = Path.Combine(RootDirectory, APP_UPDATING);
                 if (File.Exists(updatingApp))
-                {
                     File.Delete(updatingApp);
-                }
 
                 // CHECK FOR NEW AVAILABLE VERSION AND ENABLE UPDATE
                 if (ToolkitVersionOnline.HasNewVersion())

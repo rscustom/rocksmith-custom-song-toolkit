@@ -15,19 +15,25 @@ namespace RocksmithToolkitUpdater
 {
     public partial class AutoUpdater : Form
     {
-        WebClient webClient;
-        Stopwatch sw = new Stopwatch();
+        private WebClient webClient;
+        private Stopwatch sw = new Stopwatch();
+        private BackgroundWorker bWorker = new BackgroundWorker();
         string localFile = String.Empty;
+
+        private string workDir {
+            get { return Path.GetDirectoryName(Application.ExecutablePath); }
+        }
 
         public AutoUpdater() {
             InitializeComponent();
+            //System.Diagnostics.Debugger.Launch();
             UpdateToolkit();
         }
 
         private void UpdateToolkit() {
             var url = GetFileUrl();
             var downloadUri = new Uri(url);
-            localFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), Path.GetFileName(downloadUri.LocalPath));
+            localFile = Path.Combine(workDir, Path.GetFileName(downloadUri.LocalPath));
             
             // DOWNLOADING FILE
             DownloadFile(downloadUri, localFile);
@@ -37,6 +43,8 @@ namespace RocksmithToolkitUpdater
             using (webClient = new WebClient()) {
                 webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
                 webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                bWorker.DoWork += new DoWorkEventHandler(UnpackAndUpdate);
+                bWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(StartToolkitGUI);
 
                 sw.Start();
                 webClient.DownloadFileAsync(downloadUri, location);
@@ -48,7 +56,7 @@ namespace RocksmithToolkitUpdater
             updateProgress.Value = e.ProgressPercentage;
 
             // Show current operation and percentage status
-            currentOperationLabel.Text = String.Format("Downloading new version: {0}%", e.ProgressPercentage);
+            ShowCurrentOperation(String.Format("Downloading new version: {0}%", e.ProgressPercentage));
 
             // Calculate download speed
             labelSpeed.Text = String.Format("Speed: {0:0.00} kb/s", (e.BytesReceived / 1024d / sw.Elapsed.TotalSeconds));
@@ -64,52 +72,82 @@ namespace RocksmithToolkitUpdater
             if (e.Cancelled == true) {
                 MessageBox.Show("Download has been canceled.");
             } else {
-                UnpackAndUpdate();
+                // Change to marquee
+                updateProgress.Style = ProgressBarStyle.Marquee;
+                updateProgress.Refresh();
+                ShowCurrentOperation("Updating application");
+                bWorker.RunWorkerAsync();
             }
         }
 
-        private void UnpackAndUpdate() {
-            updateProgress.Style = ProgressBarStyle.Continuous;
-            updateProgress.Refresh();
-            
+        private void UnpackAndUpdate(object sender, DoWorkEventArgs e)
+        {
             // UNPACK
             if (!String.IsNullOrEmpty(localFile)) {
                 if (File.Exists(localFile)) {
-                    currentOperationLabel.Text = "Extracting downloaded file.";
-                    ExtractFile();
-                    Thread.Sleep(1000);
+                    var output = Path.Combine(workDir, "temp");
+                    ExtractFile(output);
+                    MoveFiles(output, workDir); 
                     
                     // DELETE DOWNLOADED FILE
-                    currentOperationLabel.Text = "Deleting temp files.";
-                    File.Delete(localFile);
-                    localFile = null;
+                    try
+                    {
+                        File.Delete(localFile);
+                        localFile = null;
+                        if (Directory.Exists(output))
+                            Directory.Delete(output, true);
+                    }
+                    catch { /* Do nothing */ }
+                    Thread.Sleep(1000);
                 }
             }
-
-            Application.Exit();
         }
 
-        public void ExtractFile() {
-            var output = Path.GetDirectoryName(Application.ExecutablePath);
-            AssemblyCaller.Call(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ICSharpCode.SharpZipLib.dll"), "ICSharpCode.SharpZipLib.Zip.FastZip", "ExtractZip", new Type[] { typeof(string), typeof(string), typeof(string) }, new object[] { localFile, output, null });
+        public void ExtractFile(string output) {
+            AssemblyCaller.Call(Path.Combine(workDir, "ICSharpCode.SharpZipLib.dll"), "ICSharpCode.SharpZipLib.Zip.FastZip", "ExtractZip", new Type[] { typeof(string), typeof(string), typeof(string) }, new object[] { localFile, output, null });
         }
 
-        private void AutoUpdater_FormClosing(object sender, FormClosingEventArgs e) {
-            // OPEN TOOLKIT AND EXIT AUTO UPDATER
-            StartToolkitGUI();
-        }
-
-        private void StartToolkitGUI() {
+        private void StartToolkitGUI(object sender, RunWorkerCompletedEventArgs e)
+        {
             string toolkitRootPath = Path.GetDirectoryName(Application.ExecutablePath);
             
             Process updaterProcess = new Process();
             updaterProcess.StartInfo.FileName = Path.Combine(toolkitRootPath, "RocksmithToolkitGUI.exe");
             updaterProcess.StartInfo.WorkingDirectory = toolkitRootPath;
             updaterProcess.Start();
+            Application.Exit();
         }
 
         private string GetFileUrl() {
-            return (string)AssemblyCaller.Call(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "RocksmithToolkitLib.dll"), "RocksmithToolkitLib.ToolkitVersionOnline", "GetFileUrl", null, new object[] { true });
+            return (string)AssemblyCaller.Call(Path.Combine(workDir, "RocksmithToolkitLib.dll"), "RocksmithToolkitLib.ToolkitVersionOnline", "GetFileUrl", null, new object[] { true });
+        }
+
+        public void MoveFiles(string sourceDir, string destDir)
+        {
+            var source = new DirectoryInfo(sourceDir);
+
+            var files = source.GetFiles("*.*", SearchOption.AllDirectories);
+            var directories = source.GetDirectories();
+
+            // CREATE DEST DIRECTORIES IF NOT EXISTS
+            foreach (var dir in directories)
+            {
+                var od = Path.Combine(destDir, dir.Name);
+                if (!Directory.Exists(od))
+                    Directory.CreateDirectory(od);
+            }
+
+            // UPDATE FILES
+            foreach (var file in files)
+            {
+                var of = Path.Combine(destDir, file.Name);
+                File.Copy(file.FullName, of, true);
+            }
+        }
+
+        private void ShowCurrentOperation(string message) {
+            currentOperationLabel.Text = message;
+            currentOperationLabel.Refresh();
         }
     }
 }
