@@ -149,6 +149,7 @@ namespace RocksmithToolkitLib.Xml {
 
         public Song2014(Sng2014HSL.Sng sngData, Attributes2014 attr = null) {
             Version = "7";
+            CrowdSpeed = "1";
 
             if (attr != null) {
                 // If manifest is passed, fill general song information
@@ -167,8 +168,7 @@ namespace RocksmithToolkitLib.Xml {
                 AlbumName = attr.AlbumName;
                 AlbumNameSort = attr.AlbumNameSort;
                 AlbumYear = Convert.ToString(attr.SongYear) ?? "";
-                AlbumArt = attr.AlbumArt;
-                CrowdSpeed = "1";
+                AlbumArt = attr.AlbumArt;                
                 ArrangementProperties = attr.ArrangementProperties;
                 LastConversionDateTime = attr.LastConversionDateTime;
 
@@ -445,6 +445,17 @@ namespace RocksmithToolkitLib.Xml {
                 sct2014.Fret3 = (sbyte)chordSection.Chords[i].Frets[3];
                 sct2014.Fret4 = (sbyte)chordSection.Chords[i].Frets[4];
                 sct2014.Fret5 = (sbyte)chordSection.Chords[i].Frets[5];
+                
+                // Parse chord mask
+                var mask = chordSection.Chords[i].Mask;
+                if ((mask & Sng2014HSL.Sng2014FileWriter.CHORD_MASK_ARPEGGIO) != 0) {
+                    mask &= ~Sng2014HSL.Sng2014FileWriter.CHORD_MASK_ARPEGGIO;
+                    sct2014.DisplayName += "-arp";
+                } else if ((mask & Sng2014HSL.Sng2014FileWriter.CHORD_MASK_NOP) != 0) {
+                    mask &= ~Sng2014HSL.Sng2014FileWriter.CHORD_MASK_NOP;
+                    sct2014.DisplayName += "-nop";
+                }
+
                 chordTemplates[i] = sct2014;
             }
             return chordTemplates;
