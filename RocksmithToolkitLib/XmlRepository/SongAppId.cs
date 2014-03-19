@@ -14,6 +14,11 @@ namespace RocksmithToolkitLib.DLCPackage {
         [XmlAttribute]
         public string AppId { get; set; }
 
+        [XmlIgnore]
+        public string DisplayName {
+            get { return this.ToString(); }
+        }
+
         public override string ToString() {
             return string.Format("{0} - {1}", Name, AppId);
         }

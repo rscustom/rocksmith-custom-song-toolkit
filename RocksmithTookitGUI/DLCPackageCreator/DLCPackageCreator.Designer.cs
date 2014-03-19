@@ -75,7 +75,6 @@
             this.ArtistSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.gbGameVersion = new System.Windows.Forms.GroupBox();
             this.dlcImportButton = new System.Windows.Forms.Button();
-            this.bStructured = new System.Windows.Forms.CheckBox();
             this.gbPlatofmr.SuspendLayout();
             this.gbFiles.SuspendLayout();
             this.gbTones.SuspendLayout();
@@ -658,22 +657,9 @@
             this.dlcImportButton.UseVisualStyleBackColor = false;
             this.dlcImportButton.Click += new System.EventHandler(this.dlcImportButton_Click);
             // 
-            // bStructured
-            // 
-            this.bStructured.AutoSize = true;
-            this.bStructured.Checked = true;
-            this.bStructured.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.bStructured.Location = new System.Drawing.Point(314, 503);
-            this.bStructured.Name = "bStructured";
-            this.bStructured.Size = new System.Drawing.Size(75, 17);
-            this.bStructured.TabIndex = 84;
-            this.bStructured.Text = "Structured";
-            this.bStructured.UseVisualStyleBackColor = true;
-            // 
             // DLCPackageCreator
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.bStructured);
             this.Controls.Add(this.dlcImportButton);
             this.Controls.Add(this.gbGameVersion);
             this.Controls.Add(this.groupBox2);
@@ -700,7 +686,6 @@
             this.gbGameVersion.ResumeLayout(false);
             this.gbGameVersion.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -753,6 +738,5 @@
         private CueTextBox packageVersionTB;
         private System.Windows.Forms.Button dlcImportButton;
         public System.Windows.Forms.ListBox ArrangementLB;
-        private System.Windows.Forms.CheckBox bStructured;
     }
 }

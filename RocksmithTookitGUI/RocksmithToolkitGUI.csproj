@@ -92,6 +92,12 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Config\GeneralConfig.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Config\GeneralConfig.Designer.cs">
+      <DependentUpon>GeneralConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="SngConverter\SngConverter.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -196,6 +202,9 @@
     </Compile>
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\GeneralConfig.resx">
+      <DependentUpon>GeneralConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SngConverter\SngConverter.resx">
       <DependentUpon>SngConverter.cs</DependentUpon>

@@ -36,6 +36,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 else
                     return GameVersion.RS2012; //Default
             }
+            set {
+                switch (value) {
+                    case GameVersion.RS2014:
+                        RS2014.Checked = true;
+                        break;
+                    default:
+                        RS2012.Checked = true;
+                        break;
+                }
+            }
         }
 
         private string CurrentOFDAudioFileFilter
@@ -179,8 +189,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 PopulateAppIdCombo();
                 PopulateTonesLB();
+                SetDefaultFromConfig();
             }
             catch { /*For mono compatibility*/ }
+        }
+
+        private void SetDefaultFromConfig() {
+            CurrentGameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["creator_gameversion"]);
         }
 
         private void PopulateTonesLB()
@@ -464,8 +479,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var unpackedDir = Packer.Unpack(sourcePackage, savePath, true, true, false);
             var packagePlatform = sourcePackage.GetPlatform();
 
-            //REORGANIZE
-            if(this.bStructured.Checked)
+            // REORGANIZE
+            var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
+            if (structured)
                 unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
             
             // LOAD DATA
@@ -1097,10 +1113,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             foreach (var song in SongAppIdRepository.Instance().Select(CurrentGameVersion))
                 cmbAppIds.Items.Add(song);
 
-            // DEFAULT  >>>
-            // RS2014   = Cherub Rock
-            // RS1      = US Holiday Song Pack
-            var songAppId = SongAppIdRepository.Instance().Select((CurrentGameVersion == GameVersion.RS2014) ? "248750" : "206102", CurrentGameVersion);
+            var songAppId = SongAppIdRepository.Instance().Select((CurrentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], CurrentGameVersion);
             cmbAppIds.SelectedItem = songAppId;
             AppId = songAppId.AppId;
         }

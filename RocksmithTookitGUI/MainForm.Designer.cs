@@ -51,6 +51,7 @@
             this.oggConverterTab = new System.Windows.Forms.TabPage();
             this.sngToTabConverterTab = new System.Windows.Forms.TabPage();
             this.zigProConverterTab = new System.Windows.Forms.TabPage();
+            this.GeneralConfigTabControl = new System.Windows.Forms.TabPage();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.dlcPackageCreatorControl = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator();
             this.dlcPackerUnpackerControl = new RocksmithToolkitGUI.DLCPackerUnpacker.DLCPackerUnpacker();
@@ -60,6 +61,7 @@
             this.oggConverterControl = new RocksmithToolkitGUI.OggConverter.OggConverter();
             this.sngToTabConverter1 = new RocksmithToolkitGUI.SngToTabConverter.SngToTabConverter();
             this.convertInput1 = new RocksmithToolkitGUI.ZiggyProEditorConverter.ConvertInput();
+            this.generalConfig = new Config.GeneralConfig();
             this.updateButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -71,6 +73,7 @@
             this.oggConverterTab.SuspendLayout();
             this.sngToTabConverterTab.SuspendLayout();
             this.zigProConverterTab.SuspendLayout();
+            this.GeneralConfigTabControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -149,6 +152,7 @@
             this.tabControl1.Controls.Add(this.oggConverterTab);
             this.tabControl1.Controls.Add(this.sngToTabConverterTab);
             this.tabControl1.Controls.Add(this.zigProConverterTab);
+            this.tabControl1.Controls.Add(this.GeneralConfigTabControl);
             this.tabControl1.Location = new System.Drawing.Point(17, 93);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(8);
             this.tabControl1.MinimumSize = new System.Drawing.Size(550, 590);
@@ -251,6 +255,17 @@
             this.zigProConverterTab.Text = "Ziggy Pro";
             this.zigProConverterTab.UseVisualStyleBackColor = true;
             // 
+            // GeneralConfigTabControl
+            // 
+            this.GeneralConfigTabControl.Controls.Add(this.generalConfig);
+            this.GeneralConfigTabControl.Location = new System.Drawing.Point(4, 22);
+            this.GeneralConfigTabControl.Name = "GeneralConfigTabControl";
+            this.GeneralConfigTabControl.Padding = new System.Windows.Forms.Padding(3);
+            this.GeneralConfigTabControl.Size = new System.Drawing.Size(542, 564);
+            this.GeneralConfigTabControl.TabIndex = 8;
+            this.GeneralConfigTabControl.Text = "General Config";
+            this.GeneralConfigTabControl.UseVisualStyleBackColor = true;
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -343,6 +358,12 @@
             this.sngToTabConverter1.Size = new System.Drawing.Size(522, 282);
             this.sngToTabConverter1.TabIndex = 6;
             // 
+            // generalConfig
+            // 
+            this.generalConfig.Location = new System.Drawing.Point(8, 6);
+            this.generalConfig.Name = "generalConfig";
+            this.generalConfig.TabIndex = 7;
+            // 
             // convertInput1
             // 
             this.convertInput1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -430,6 +451,8 @@
         private System.Windows.Forms.TabPage DDCtabControl;
         private DDC.DDC ddc1;
         private System.Windows.Forms.Button updateButton;
+        private System.Windows.Forms.TabPage GeneralConfigTabControl;
+        private Config.GeneralConfig generalConfig;        
     }
 }
 

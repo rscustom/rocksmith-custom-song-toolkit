@@ -25,11 +25,11 @@ namespace RocksmithToolkitGUI.DDC
         internal Dictionary<string, string> DLCdb = new Dictionary<string,string>();
         internal Dictionary<string, string> RampMdlsDb = new Dictionary<string,string>();
         internal static string AppWD = Application.StartupPath;
-
         internal Color EnabledColor = System.Drawing.Color.Green;
         internal Color DisabledColor = Color.Tomato;
 
         internal bool isNDD { get; set; }
+
         internal bool CleanProcess {
             get {
                 return cleanCheckbox.Checked;
@@ -38,6 +38,7 @@ namespace RocksmithToolkitGUI.DDC
                 cleanCheckbox.Checked = value;
             }
         }
+
         public bool KeepLog {
             get {
                 return keepLogfile.Checked;
@@ -46,7 +47,6 @@ namespace RocksmithToolkitGUI.DDC
                 keepLogfile.Checked = value;
             }
         }
-
 
         internal string processOutput { get; set; }
 
@@ -57,6 +57,25 @@ namespace RocksmithToolkitGUI.DDC
             this.bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
             this.bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_Completed);
             this.bw.WorkerReportsProgress = true;
+        }
+
+        private void DDC_Load(object sender, EventArgs e)
+        {
+            if (!MainForm.IsInDesignMode)
+            {
+                FileVersionInfo vi = FileVersionInfo.GetVersionInfo(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ddc", "ddc.exe"));
+                ddcVersion.Text = String.Format("v{0}", vi.ProductVersion);
+            }
+
+            PopMDLs();
+
+            SetDefaultFromConfig();
+        }
+
+        private void SetDefaultFromConfig() {
+            ramUpMdlsCbox.SelectedItem = ConfigRepository.Instance()["ddc_rampup"];
+            phaseLenNum.Value = ConfigRepository.Instance().GetDecimal("ddc_phraselength");
+            delsustainsBT.Checked = ConfigRepository.Instance().GetBoolean("ddc_removesustain");
         }
 
         private void bw_Completed(object sender, RunWorkerCompletedEventArgs e)
@@ -367,14 +386,14 @@ namespace RocksmithToolkitGUI.DDC
             Process[] processlist = Process.GetProcesses();
             foreach (Process browser in processlist)
             {                
-                string[] Browsers = new string[]{
-                    "chrome", "opera", "firefox"
-                };
+                string[] Browsers = new string[]{ "chrome", "opera", "firefox" };
+
                 foreach (var browserID in Browsers)
                 {
                     if (browser.ProcessName.Equals(browserID))
                     {
-                        if(browserID.IndexOf("opera") >0) arg0 = "-newwindow ";
+                        if (browserID.IndexOf("opera") > 0)
+                            arg0 = "-newwindow ";
 
                         browser.StartInfo.FileName = browser.MainModule.FileName;
                         browser.StartInfo.Arguments = String.Format("{0}{1}", arg0, link);
@@ -383,21 +402,15 @@ namespace RocksmithToolkitGUI.DDC
                         break;
                     }
                 }
-                if (done) break;
+
+                if (done)
+                    break;
             }
-            if (!done) System.Diagnostics.Process.Start(link);
+
+            if (!done)
+                Process.Start(link);
+
             this.DescriptionDDC.Links[DescriptionDDC.Links.IndexOf(e.Link)].Visited = true;
-        }
-
-        private void DDC_Load(object sender, EventArgs e)
-        {
-            if (!MainForm.IsInDesignMode)
-            {
-                FileVersionInfo vi = FileVersionInfo.GetVersionInfo(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ddc", "ddc.exe"));
-                ddcVersion.Text = String.Format("v{0}", vi.ProductVersion);
-            }
-
-            PopMDLs();
         }
 
         private void PopMDLs()

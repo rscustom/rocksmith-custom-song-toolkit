@@ -36,7 +36,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
                 gameVersionList.Remove("None");
                 gameVersionCombo.DataSource = gameVersionList;
-                gameVersionCombo.SelectedIndex = 1;
+                gameVersionCombo.SelectedItem = ConfigRepository.Instance()["creator_gameversion"];
                 GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), gameVersionCombo.SelectedItem.ToString());
                 PopulateAppIdCombo(gameVersion);
             }
@@ -182,10 +182,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             foreach (var song in SongAppIdRepository.Instance().Select(gameVersion))
                 appIdCombo.Items.Add(song);
 
-            // DEFAULT  >>>
-            // RS2014   = Cherub Rock
-            // RS1      = US Holiday Song Pack
-            var songAppId = SongAppIdRepository.Instance().Select((gameVersion == GameVersion.RS2014) ? "248750" : "206102", gameVersion);
+            var songAppId = SongAppIdRepository.Instance().Select((gameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], gameVersion);
             appIdCombo.SelectedItem = songAppId;
             AppIdTB.Text = songAppId.AppId;
         }

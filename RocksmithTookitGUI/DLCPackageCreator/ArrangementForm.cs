@@ -57,8 +57,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 SongFile = new SongFile { File = "" },
                 SongXml = new SongXML { File = "" },
-                ArrangementType = ArrangementType.Guitar,
-                ScrollSpeed = 20
+                ArrangementType = ArrangementType.Guitar
             }, toneNames, control, gameVersion)
         {
         }
@@ -148,12 +147,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillToneCombo(toneCCombo, toneNames, false);
             FillToneCombo(toneDCombo, toneNames, false);
 
-            scrollSpeedTrackBar.Value = arrangement.ScrollSpeed;
-            scrollSpeedTrackBar.Scroll += (sender, e) =>
-            {
-                scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeedTrackBar.Value) / 10);
-            };
-
+            var scrollSpeed = arrangement.ScrollSpeed;
+            if (scrollSpeed == 0)
+                scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
+            scrollSpeedTrackBar.Value = scrollSpeed;            
+            
             Arrangement = arrangement;
             parentControl = control;
         }
@@ -223,9 +221,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (tuning != null)
                     tuningComboBox.SelectedItem = tuning;
                 frequencyTB.Text = (arrangement.TuningPitch > 0) ? arrangement.TuningPitch.ToString() : "440";
-                int scrollSpeed = Math.Min(scrollSpeedTrackBar.Maximum, Math.Max(scrollSpeedTrackBar.Minimum, arrangement.ScrollSpeed));
+
+                var scrollSpeed = arrangement.ScrollSpeed;
+                if (scrollSpeed == 0)
+                    scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
                 scrollSpeedTrackBar.Value = scrollSpeed;
-                scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeed) / 10);
+                
                 Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
                 BonusCheckBox.Checked = arrangement.BonusArr;
                 RouteMask = arrangement.RouteMask;
@@ -601,6 +602,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 FillTuningCombo();
                 tuningComboBox.SelectedItem = (form.IsBass) ? TuningDefinitionRepository.Instance().SelectForBass(form.Tuning.Tuning, currentGameVersion) : TuningDefinitionRepository.Instance().Select(form.Tuning.Tuning, currentGameVersion);
             }
+        }
+
+        private void scrollSpeedTrackBar_ValueChanged(object sender, EventArgs e) {
+            scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeedTrackBar.Value) / 10);
         }
     }
 }

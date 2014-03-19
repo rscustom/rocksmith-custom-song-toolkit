@@ -52,25 +52,26 @@ namespace RocksmithToolkitGUI.DLCConverter
         public DLCConverter()
         {
             InitializeComponent();
-            try
-            {
+        }
+
+        private void DLCConverter_Load(object sender, EventArgs e) {
+            try {
                 // Fill source combo            
                 var sourcePlatform = Enum.GetNames(typeof(GamePlatform)).ToList<string>();
                 sourcePlatform.Remove("None");
                 platformSourceCombo.DataSource = sourcePlatform;
-                platformSourceCombo.SelectedItem = GamePlatform.Pc.ToString();
+                platformSourceCombo.SelectedItem = ConfigRepository.Instance()["converter_source"];
 
                 // Fill target combo
                 var targetPlatform = Enum.GetNames(typeof(GamePlatform)).ToList<string>();
                 targetPlatform.Remove("None");
                 platformTargetCombo.DataSource = targetPlatform;
-                platformTargetCombo.SelectedItem = GamePlatform.XBox360.ToString();
+                platformTargetCombo.SelectedItem = ConfigRepository.Instance()["converter_target"];
 
                 // Fill App ID
                 PopulateAppIdCombo(GameVersion.RS2014); //Supported game version
                 AppIdVisibilty();
-            }
-            catch { /*For mono compatibility*/ }
+            } catch { /*For mono compatibility*/ }
         }
 
         private void PopulateAppIdCombo(GameVersion gameVersion)
@@ -79,9 +80,7 @@ namespace RocksmithToolkitGUI.DLCConverter
             foreach (var song in SongAppIdRepository.Instance().Select(gameVersion))
                 appIdCombo.Items.Add(song);
 
-            // DEFAULT  >>>
-            // RS2014   = Cherub Rock
-            var songAppId = SongAppIdRepository.Instance().Select("248750", gameVersion);
+            var songAppId = SongAppIdRepository.Instance().Select(ConfigRepository.Instance()["general_defaultappid_RS2014"], gameVersion);
             appIdCombo.SelectedItem = songAppId;
             AppId = songAppId.AppId;
         }
@@ -90,9 +89,8 @@ namespace RocksmithToolkitGUI.DLCConverter
             if (platformTargetCombo.SelectedItem != null)
             {
                 var target = new Platform(platformTargetCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
-                var isPCorMac = target.platform == GamePlatform.Pc || target.platform == GamePlatform.Mac;
-                appIdCombo.Enabled = isPCorMac;
-                AppIdTB.Enabled = isPCorMac;
+                appIdCombo.Enabled = !target.IsConsole;
+                AppIdTB.Enabled = !target.IsConsole;
             }
         }
 

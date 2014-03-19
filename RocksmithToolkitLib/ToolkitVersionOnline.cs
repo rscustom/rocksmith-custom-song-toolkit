@@ -50,9 +50,9 @@ namespace RocksmithToolkitLib
         }
 
         public static string GetFileUrl(bool addExtension = false) {
-            var lastestBuild = Convert.ToBoolean(ConfigRepository.Instance()["usebeta"]);
-            var lastestReleaseUrl = ConfigRepository.Instance()["urllastestrelease"];
-            var lastestBuildUrl = ConfigRepository.Instance()["urllastestbuild"];
+            var lastestBuild = ConfigRepository.Instance().GetBoolean("general_usebeta");
+            var lastestReleaseUrl = ConfigRepository.Instance()["general_urllastestrelease"];
+            var lastestBuildUrl = ConfigRepository.Instance()["general_urllastestbuild"];
 
             var fileUrl = (lastestBuild) ? lastestBuildUrl : lastestReleaseUrl;
 
