@@ -145,8 +145,6 @@ namespace RocksmithToolkitLib.DLCPackage
             using (var rij = new RijndaelManaged())
             {
                 InitRijndael(rij, key, CipherMode.CFB);
-                rij.GenerateIV();
-                iv = rij.IV;
                 output.Write(iv, 0, iv.Length);
 
                 var buffer = new byte[16];
