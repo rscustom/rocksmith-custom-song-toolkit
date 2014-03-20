@@ -150,7 +150,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var scrollSpeed = arrangement.ScrollSpeed;
             if (scrollSpeed == 0)
                 scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
-            scrollSpeedTrackBar.Value = scrollSpeed;            
+            scrollSpeedTrackBar.Value = scrollSpeed;
+            UpdateScrollSpeedDisplay();
             
             Arrangement = arrangement;
             parentControl = control;
@@ -226,6 +227,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (scrollSpeed == 0)
                     scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
                 scrollSpeedTrackBar.Value = scrollSpeed;
+                UpdateScrollSpeedDisplay();
                 
                 Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
                 BonusCheckBox.Checked = arrangement.BonusArr;
@@ -605,6 +607,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         private void scrollSpeedTrackBar_ValueChanged(object sender, EventArgs e) {
+            UpdateScrollSpeedDisplay();
+        }
+
+        private void UpdateScrollSpeedDisplay()
+        {
             scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeedTrackBar.Value) / 10);
         }
     }
