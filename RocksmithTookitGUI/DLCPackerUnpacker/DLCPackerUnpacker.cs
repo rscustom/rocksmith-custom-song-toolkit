@@ -134,7 +134,13 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 savePath = fbd.SelectedPath;
             }
 
-            bwUnpack.RunWorkerAsync(sourceFileNames);
+            if (!bwUnpack.IsBusy && sourceFileNames.Length > 0)
+            {
+                updateProgress.Visible = true;
+                currentOperationLabel.Visible = true;
+                unpackButton.Enabled = false;
+                bwUnpack.RunWorkerAsync(sourceFileNames);
+            }
         }
 
         private void Unpack(object sender, DoWorkEventArgs e)
@@ -176,7 +182,13 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
-                bwRepack.RunWorkerAsync(ofd.FileNames);
+                if (!bwRepack.IsBusy && ofd.FileNames.Length > 0)
+                {
+                    updateProgress.Visible = true;
+                    currentOperationLabel.Visible = true;
+                    repackButton.Enabled = false;
+                    bwRepack.RunWorkerAsync(ofd.FileNames);
+                }
             }
         }
 
@@ -221,7 +233,11 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            updateProgress.Value = e.ProgressPercentage;
+            if (e.ProgressPercentage <= updateProgress.Maximum)
+                updateProgress.Value = e.ProgressPercentage;
+            else
+                updateProgress.Value = updateProgress.Maximum;
+
             ShowCurrentOperation(e.UserState as string);
         }
 
@@ -234,14 +250,19 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                         MessageBox.Show("APP ID update is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else
                         MessageBox.Show("APP ID update is complete with errors. See below: " + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    repackButton.Enabled = true;
                     break;
                 case "unpack":
                     if (errorsFound.Length <= 0)
                         MessageBox.Show("Unpacking is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else
                         MessageBox.Show("Unpacking is complete with errors. See below: " + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    unpackButton.Enabled = true;
                     break;
             }
+
+            updateProgress.Visible = false;
+            currentOperationLabel.Visible = false;
         }
 
         private void ShowCurrentOperation(string message)

@@ -35,7 +35,6 @@
             this.repackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.gameVersionCombo = new System.Windows.Forms.ComboBox();
-            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.decodeAudioCheckbox = new System.Windows.Forms.CheckBox();
             this.updateSngCheckBox = new System.Windows.Forms.CheckBox();
@@ -45,6 +44,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.currentOperationLabel = new System.Windows.Forms.Label();
             this.updateProgress = new System.Windows.Forms.ProgressBar();
+            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -122,16 +122,6 @@
             this.gameVersionCombo.Size = new System.Drawing.Size(93, 21);
             this.gameVersionCombo.TabIndex = 42;
             this.gameVersionCombo.SelectedIndexChanged += new System.EventHandler(this.gameVersionCombo_SelectedIndexChanged);
-            // 
-            // AppIdTB
-            // 
-            this.AppIdTB.Cue = "APP ID";
-            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
-            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
-            this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(93, 20);
-            this.AppIdTB.TabIndex = 41;
             // 
             // appIdCombo
             // 
@@ -218,12 +208,13 @@
             // currentOperationLabel
             // 
             this.currentOperationLabel.AutoSize = true;
-            this.currentOperationLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.currentOperationLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.currentOperationLabel.Location = new System.Drawing.Point(6, 221);
             this.currentOperationLabel.Name = "currentOperationLabel";
             this.currentOperationLabel.Size = new System.Drawing.Size(16, 13);
             this.currentOperationLabel.TabIndex = 19;
             this.currentOperationLabel.Text = "...";
+            this.currentOperationLabel.Visible = false;
             // 
             // updateProgress
             // 
@@ -231,7 +222,18 @@
             this.updateProgress.Name = "updateProgress";
             this.updateProgress.Size = new System.Drawing.Size(389, 26);
             this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.updateProgress.TabIndex = 18;
+            this.updateProgress.TabIndex = 0;
+            this.updateProgress.Visible = false;
+            // 
+            // AppIdTB
+            // 
+            this.AppIdTB.Cue = "APP ID";
+            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
+            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
+            this.AppIdTB.Name = "AppIdTB";
+            this.AppIdTB.Size = new System.Drawing.Size(93, 20);
+            this.AppIdTB.TabIndex = 41;
             // 
             // DLCPackerUnpacker
             // 
