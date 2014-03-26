@@ -35,6 +35,7 @@
             this.repackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.gameVersionCombo = new System.Windows.Forms.ComboBox();
+            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.decodeAudioCheckbox = new System.Windows.Forms.CheckBox();
             this.updateSngCheckBox = new System.Windows.Forms.CheckBox();
@@ -42,7 +43,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.extractSongXmlCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
+            this.currentOperationLabel = new System.Windows.Forms.Label();
+            this.updateProgress = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -120,6 +122,16 @@
             this.gameVersionCombo.Size = new System.Drawing.Size(93, 21);
             this.gameVersionCombo.TabIndex = 42;
             this.gameVersionCombo.SelectedIndexChanged += new System.EventHandler(this.gameVersionCombo_SelectedIndexChanged);
+            // 
+            // AppIdTB
+            // 
+            this.AppIdTB.Cue = "APP ID";
+            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
+            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
+            this.AppIdTB.Name = "AppIdTB";
+            this.AppIdTB.Size = new System.Drawing.Size(93, 20);
+            this.AppIdTB.TabIndex = 41;
             // 
             // appIdCombo
             // 
@@ -203,25 +215,35 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Packer";
             // 
-            // AppIdTB
+            // currentOperationLabel
             // 
-            this.AppIdTB.Cue = "APP ID";
-            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
-            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
-            this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(93, 20);
-            this.AppIdTB.TabIndex = 41;
+            this.currentOperationLabel.AutoSize = true;
+            this.currentOperationLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.currentOperationLabel.Location = new System.Drawing.Point(6, 221);
+            this.currentOperationLabel.Name = "currentOperationLabel";
+            this.currentOperationLabel.Size = new System.Drawing.Size(16, 13);
+            this.currentOperationLabel.TabIndex = 19;
+            this.currentOperationLabel.Text = "...";
+            // 
+            // updateProgress
+            // 
+            this.updateProgress.Location = new System.Drawing.Point(8, 191);
+            this.updateProgress.Name = "updateProgress";
+            this.updateProgress.Size = new System.Drawing.Size(389, 26);
+            this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.updateProgress.TabIndex = 18;
             // 
             // DLCPackerUnpacker
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.currentOperationLabel);
+            this.Controls.Add(this.updateProgress);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "DLCPackerUnpacker";
-            this.Size = new System.Drawing.Size(400, 213);
+            this.Size = new System.Drawing.Size(400, 266);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -230,6 +252,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -249,5 +272,7 @@
         private System.Windows.Forms.CheckBox extractSongXmlCheckBox;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label currentOperationLabel;
+        private System.Windows.Forms.ProgressBar updateProgress;
     }
 }

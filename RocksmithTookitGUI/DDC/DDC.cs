@@ -140,7 +140,7 @@ namespace RocksmithToolkitGUI.DDC
             processOutput = String.Empty;
 
             var step = (int)Math.Round(1.0 / DLCdb.Count() * 100, 0);
-            int result = -1, i = 0, progress = 0;
+            int result = -1, progress = 0;
             string remSUS = String.Empty, rampPath = String.Empty;
 
             this.Invoke(new MethodInvoker(() => {
@@ -153,8 +153,6 @@ namespace RocksmithToolkitGUI.DDC
             StringBuilder errorsFound = new StringBuilder();
             foreach (var file in DLCdb)
             {
-                i++;
-                
                 string consoleOutput = String.Empty;
                 switch (Path.GetExtension(file.Value)) {
                     case ".xml":   // Arrangement
