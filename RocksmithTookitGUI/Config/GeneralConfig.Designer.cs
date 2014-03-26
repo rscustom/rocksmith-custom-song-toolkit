@@ -396,7 +396,7 @@
             this.isAcronymUsed.AutoSize = true;
             this.isAcronymUsed.ForeColor = System.Drawing.SystemColors.ControlText;
             this.isAcronymUsed.Location = new System.Drawing.Point(286, 16);
-            this.isAcronymUsed.Name = "isAcronymCbx";
+            this.isAcronymUsed.Name = "isAcronymUsed";
             this.isAcronymUsed.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.isAcronymUsed.Size = new System.Drawing.Size(216, 17);
             this.isAcronymUsed.TabIndex = 4;

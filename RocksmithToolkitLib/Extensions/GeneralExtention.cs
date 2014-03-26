@@ -6,9 +6,9 @@ using System.Text;
 using System.Reflection;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
-using RocksmithToolkitLib.DLCPackage;
 using System.Windows.Forms;
 using System.Diagnostics;
+using RocksmithToolkitLib.DLCPackage;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -95,7 +95,7 @@ namespace RocksmithToolkitLib.Extensions
                 return value.GetValidName();
         }
 
-        public static string GetShortName(string Format, string Artist, string Title, string Version, bool Acronym = false)
+        public static string GetShortName(string Format, string Artist, string Title, string Version, bool Acronym)
         {
             if (!Acronym)
                 return String.Format(Format, Artist.GetValidName(true), Title.GetValidName(true), Version.GetValidName(true)).Replace(" ", "-");
