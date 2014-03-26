@@ -368,8 +368,8 @@ namespace RocksmithToolkitLib.PSARC
 
             if (encrypt)
             {
-                var encStream = new MemoryStream();
-                using (var outputStream = new MemoryStream())
+                var encStream = new MemoryStreamExtension();
+                using (var outputStream = new MemoryStreamExtension())
                 {
                     str.Seek(32, SeekOrigin.Begin);
                     RijndaelEncryptor.EncryptPSARC(str, outputStream, this.header.TotalTOCSize);
