@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using RocksmithToolkitLib.DLCPackage;
-using RocksmithToolkitLib.DLCPackage.Tone;
 using System.Xml.Serialization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
-using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib;
 using System.Xml.XPath;
 using System.Xml.Linq;
-using RocksmithToolkitLib.Ogg;
+using System.Diagnostics;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
-using X360.STFS;
-using System.Diagnostics;
+using RocksmithToolkitLib;
+using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.ToolkitTone;
+using RocksmithToolkitLib.DLCPackage;
+using RocksmithToolkitLib.DLCPackage.Tone;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
+using X360.STFS;
 using Ookii.Dialogs;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
@@ -28,7 +29,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     public partial class DLCPackageCreator : UserControl
     {
         public static readonly string MESSAGEBOX_CAPTION =  "DLC Package Creator";
+        private BackgroundWorker bwGenerate = new BackgroundWorker();
+        private StringBuilder errorsFound;
+        private string dlcSavePath;
         
+        #region Properties
+
         private GameVersion CurrentGameVersion {
             get {
                 if (RS2014.Checked)
@@ -182,6 +188,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { audioPathTB.Text = value; }
         }
 
+        #endregion
+
         public DLCPackageCreator()
         {
             InitializeComponent();
@@ -192,6 +200,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 SetDefaultFromConfig();
             }
             catch { /*For mono compatibility*/ }
+
+            // Generate package worker
+            bwGenerate.DoWork += new DoWorkEventHandler(GeneratePackage);
+            bwGenerate.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
+            bwGenerate.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ProcessCompleted);
+            bwGenerate.WorkerReportsProgress = true;
         }
 
         private void SetDefaultFromConfig() {
@@ -279,7 +293,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public void dlcGenerateButton_Click(object sender = null, EventArgs e = null)
         {
             var packageData = GetPackageData();
-
+            
             if (packageData == null)
             {
                 MessageBox.Show("One or more fields are missing information.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -299,7 +313,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
-            string dlcSavePath;
             using (var ofd = new SaveFileDialog())
             {
                 ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
@@ -309,27 +322,80 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             if (Path.GetFileName(dlcSavePath).Contains(" ") && platformPS3.Checked)
-                MessageBox.Show("PS3 package name can't support space character due to encryption limitation." + Environment.NewLine +
-                    "Spaces will be automatic removed for your PS3 package name.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn")) {
+                    MessageBox.Show(String.Format("PS3 package name can't support space character due to encryption limitation. {0} Spaces will be automatic removed for your PS3 package name.", Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                } else {
+                    ConfigRepository.Instance()["creator_ps3pkgnamewarn"] = true.ToString();
+                }
+
+            if (!bwGenerate.IsBusy && packageData != null) {
+                updateProgress.Visible = true;
+                currentOperationLabel.Visible = true;
+                dlcGenerateButton.Enabled = false;
+                bwGenerate.RunWorkerAsync(packageData);
+            }
+        }
+
+        private void GeneratePackage(object sender, DoWorkEventArgs e) {
+            var packageData = e.Argument as DLCPackageData;
+            errorsFound = new StringBuilder();
+            
+            var numPlatforms = 0;
+            if (platformPC.Checked)
+                numPlatforms++;
+            if (platformMAC.Checked)
+                numPlatforms++;
+            if (platformXBox360.Checked)
+                numPlatforms++;
+            if (platformPS3.Checked)
+                numPlatforms++;
+
+            var step = (int)Math.Round(1.0 / numPlatforms * 100, 0);
+            int progress = 0;
 
             if (platformPC.Checked)
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, CurrentGameVersion));
+                try {
+                    bwGenerate.ReportProgress(progress, "Generating PC package");
+                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, CurrentGameVersion));
+                    progress += step;
+                    bwGenerate.ReportProgress(progress);
+                } catch (Exception ex) {
+                    errorsFound.AppendLine(String.Format("Error generate PC package: {0}", ex.Message));
+                }
+
             if (platformMAC.Checked)
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Mac, CurrentGameVersion));
+                try {
+                    bwGenerate.ReportProgress(progress, "Generating Mac package");                
+                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Mac, CurrentGameVersion));
+                    progress += step;
+                    bwGenerate.ReportProgress(progress);
+                } catch (Exception ex) {
+                    errorsFound.AppendLine(String.Format("Error generate Mac package: {0}", ex.Message));
+                }
+
             if (platformXBox360.Checked)
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.XBox360, CurrentGameVersion));
+                try {
+                    bwGenerate.ReportProgress(progress, "Generating XBox 360 package");
+                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.XBox360, CurrentGameVersion));
+                    progress += step;
+                    bwGenerate.ReportProgress(progress);
+                } catch (Exception ex) {
+                    errorsFound.AppendLine(String.Format("Error generate XBox 360 package: {0}", ex.Message));
+                }
+
             if (platformPS3.Checked)
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.PS3, CurrentGameVersion));
+                try {
+                    bwGenerate.ReportProgress(progress, "Generating PS3 package");
+                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.PS3, CurrentGameVersion));
+                    progress += step;
+                    bwGenerate.ReportProgress(progress);
+                } catch (Exception ex) {
+                    errorsFound.AppendLine(String.Format("Error generate PS3 package: {0}. {1}PS3 package require 'JAVA x86' (32 bits) installed on your machine to generate properly.", ex.Message, Environment.NewLine));
+                }
 
-            // cache cleanup so we don't serialize or reuse data that could be changed
+            // Cache cleanup so we don't serialize or reuse data that could be changed
             packageData.CleanCache();
-
-            if (MessageBox.Show("Package was generated." + Environment.NewLine +
-                                "You want to open the folder in which the package was generated?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes) {
-                Process.Start(Path.GetDirectoryName(dlcSavePath));
-            }
-
-            this.Focus();
+            e.Result = "generate";
         }
 
         private void albumArtButton_Click(object sender, EventArgs e)
@@ -1116,6 +1182,42 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var songAppId = SongAppIdRepository.Instance().Select((CurrentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], CurrentGameVersion);
             cmbAppIds.SelectedItem = songAppId;
             AppId = songAppId.AppId;
+        }
+
+        private void ProgressChanged(object sender, ProgressChangedEventArgs e) {
+            if (e.ProgressPercentage <= updateProgress.Maximum)
+                updateProgress.Value = e.ProgressPercentage;
+            else
+                updateProgress.Value = updateProgress.Maximum;
+
+            ShowCurrentOperation(e.UserState as string);
+        }
+
+        private void ProcessCompleted(object sender, RunWorkerCompletedEventArgs e) {
+            switch (Convert.ToString(e.Result)) {
+                case "generate":
+                    var message = "Package was generated.";
+                    if (errorsFound.Length > 0)
+                        message = String.Format("Package was generated with errors! See below: " + Environment.NewLine + errorsFound.ToString());
+
+                    message += Environment.NewLine + "You want to open the folder in which the package was generated?";
+
+                    if (MessageBox.Show(message, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes) {
+                        Process.Start(Path.GetDirectoryName(dlcSavePath));
+                    }
+
+                    this.Focus();
+                    dlcGenerateButton.Enabled = true;
+                    break;
+            }
+
+            updateProgress.Visible = false;
+            currentOperationLabel.Visible = false;
+        }
+
+        private void ShowCurrentOperation(string message) {
+            currentOperationLabel.Text = message;
+            currentOperationLabel.Refresh();
         }
     }
 }

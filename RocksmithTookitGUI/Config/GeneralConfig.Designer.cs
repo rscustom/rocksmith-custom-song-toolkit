@@ -33,6 +33,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.creator_scrollspeed = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.label1 = new System.Windows.Forms.Label();
+            this.creator_useacronyms = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.creator_gameversion = new System.Windows.Forms.ComboBox();
             this.creator_structured = new System.Windows.Forms.CheckBox();
@@ -52,7 +53,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.converter_source = new System.Windows.Forms.ComboBox();
-            this.creator_useacronyms = new System.Windows.Forms.CheckBox();
             this.gbCreator.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
@@ -79,6 +79,7 @@
             // 
             this.gbCreator.Controls.Add(this.groupBox1);
             this.gbCreator.Controls.Add(this.label3);
+            this.gbCreator.Controls.Add(this.creator_useacronyms);
             this.gbCreator.Controls.Add(this.creator_gameversion);
             this.gbCreator.Controls.Add(this.creator_structured);
             this.gbCreator.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
@@ -95,10 +96,9 @@
             // 
             this.groupBox1.Controls.Add(this.creator_scrollspeed);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.creator_useacronyms);
             this.groupBox1.Location = new System.Drawing.Point(5, 43);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(506, 42);
+            this.groupBox1.Size = new System.Drawing.Size(237, 42);
             this.groupBox1.TabIndex = 45;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Arrangement";
@@ -144,6 +144,19 @@
             this.label1.Size = new System.Drawing.Size(107, 13);
             this.label1.TabIndex = 41;
             this.label1.Text = "Default Scroll Speed:";
+            // 
+            // creator_useacronyms
+            // 
+            this.creator_useacronyms.AutoSize = true;
+            this.creator_useacronyms.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_useacronyms.Location = new System.Drawing.Point(291, 42);
+            this.creator_useacronyms.Name = "creator_useacronyms";
+            this.creator_useacronyms.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.creator_useacronyms.Size = new System.Drawing.Size(216, 17);
+            this.creator_useacronyms.TabIndex = 4;
+            this.creator_useacronyms.Text = "Use Acronym effect for long artist names";
+            this.creator_useacronyms.UseVisualStyleBackColor = true;
+            this.creator_useacronyms.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label3
             // 
@@ -390,19 +403,6 @@
             this.converter_source.Sorted = true;
             this.converter_source.TabIndex = 9;
             this.converter_source.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
-            // isAcronymUsed
-            // 
-            this.creator_useacronyms.AutoSize = true;
-            this.creator_useacronyms.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_useacronyms.Location = new System.Drawing.Point(286, 16);
-            this.creator_useacronyms.Name = "creator_useacronyms";
-            this.creator_useacronyms.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_useacronyms.Size = new System.Drawing.Size(216, 17);
-            this.creator_useacronyms.TabIndex = 4;
-            this.creator_useacronyms.Text = "Use Acronym effect for long artist names";
-            this.creator_useacronyms.UseVisualStyleBackColor = true;
-            this.creator_useacronyms.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // GeneralConfig
             // 
