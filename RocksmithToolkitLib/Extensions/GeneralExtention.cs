@@ -88,7 +88,11 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string Acronym(this string value)
         {
-            return string.Join(string.Empty, value.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(s => s[0]));
+            var v = Regex.Split(value, @"[\W\s]+").Where(r => !string.IsNullOrEmpty(r)).ToArray();
+            if(v.Length > 1)
+                return string.Join(string.Empty, v.Select(s => s[0])).ToUpper();
+            else 
+                return value.GetValidName();
         }
 
         public static string GetShortName(string Format, string Artist, string Title, string Version, bool Acronym = false)
