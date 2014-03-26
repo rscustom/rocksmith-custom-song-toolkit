@@ -52,7 +52,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.converter_source = new System.Windows.Forms.ComboBox();
-            this.isAcronymUsed = new System.Windows.Forms.CheckBox();
+            this.creator_useacronyms = new System.Windows.Forms.CheckBox();
             this.gbCreator.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
@@ -95,7 +95,7 @@
             // 
             this.groupBox1.Controls.Add(this.creator_scrollspeed);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.isAcronymUsed);
+            this.groupBox1.Controls.Add(this.creator_useacronyms);
             this.groupBox1.Location = new System.Drawing.Point(5, 43);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(506, 42);
@@ -393,16 +393,16 @@
             // 
             // isAcronymUsed
             // 
-            this.isAcronymUsed.AutoSize = true;
-            this.isAcronymUsed.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.isAcronymUsed.Location = new System.Drawing.Point(286, 16);
-            this.isAcronymUsed.Name = "isAcronymUsed";
-            this.isAcronymUsed.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.isAcronymUsed.Size = new System.Drawing.Size(216, 17);
-            this.isAcronymUsed.TabIndex = 4;
-            this.isAcronymUsed.Text = "Use Acronym effect for long artist names";
-            this.isAcronymUsed.UseVisualStyleBackColor = true;
-            this.isAcronymUsed.Leave += new System.EventHandler(this.ConfigurationChanged);
+            this.creator_useacronyms.AutoSize = true;
+            this.creator_useacronyms.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_useacronyms.Location = new System.Drawing.Point(286, 16);
+            this.creator_useacronyms.Name = "creator_useacronyms";
+            this.creator_useacronyms.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.creator_useacronyms.Size = new System.Drawing.Size(216, 17);
+            this.creator_useacronyms.TabIndex = 4;
+            this.creator_useacronyms.Text = "Use Acronym effect for long artist names";
+            this.creator_useacronyms.UseVisualStyleBackColor = true;
+            this.creator_useacronyms.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // GeneralConfig
             // 
@@ -455,6 +455,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox converter_source;
-        private System.Windows.Forms.CheckBox isAcronymUsed;
+        private System.Windows.Forms.CheckBox creator_useacronyms;
     }
 }
