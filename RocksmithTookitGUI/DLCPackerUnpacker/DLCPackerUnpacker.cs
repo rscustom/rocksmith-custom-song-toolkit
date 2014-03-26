@@ -162,7 +162,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 }
                 catch (Exception ex)
                 {
-                    errorsFound.AppendLine(ex.Message);
+                    errorsFound.AppendLine(String.Format("Error trying unpack file '{0}': {1}", Path.GetFileName(sourceFileName), ex.Message));
                 }
 
                 progress += step;
@@ -218,14 +218,14 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                         Packer.Pack(unpackedDir, sourceFileName, updateSng);
                     }
                     catch (Exception ex) {
-                        errorsFound.AppendLine(String.Format("File '{0}' found error: {1}", sourceFileName, ex.Message));
+                        errorsFound.AppendLine(String.Format("Error trying repack file '{0}': {1}", Path.GetFileName(sourceFileName), ex.Message));
                     }
 
                     progress += step;
                     bwRepack.ReportProgress(progress);
                 }
                 else
-                    errorsFound.AppendLine(String.Format("File '{0}' is not a valid package for desktop platform.", sourceFileName));
+                    errorsFound.AppendLine(String.Format("File '{0}' is not a valid package for desktop platform.", Path.GetFileName(sourceFileName)));
             }
 
             e.Result = "repack";
