@@ -52,6 +52,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.converter_source = new System.Windows.Forms.ComboBox();
+            this.isAcronymUsed = new System.Windows.Forms.CheckBox();
             this.gbCreator.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
@@ -94,6 +95,7 @@
             // 
             this.groupBox1.Controls.Add(this.creator_scrollspeed);
             this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.isAcronymUsed);
             this.groupBox1.Location = new System.Drawing.Point(5, 43);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(506, 42);
@@ -389,6 +391,19 @@
             this.converter_source.TabIndex = 9;
             this.converter_source.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
+            // isAcronymUsed
+            // 
+            this.isAcronymUsed.AutoSize = true;
+            this.isAcronymUsed.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.isAcronymUsed.Location = new System.Drawing.Point(286, 16);
+            this.isAcronymUsed.Name = "isAcronymCbx";
+            this.isAcronymUsed.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.isAcronymUsed.Size = new System.Drawing.Size(216, 17);
+            this.isAcronymUsed.TabIndex = 4;
+            this.isAcronymUsed.Text = "Use Acronym effect for long artist names";
+            this.isAcronymUsed.UseVisualStyleBackColor = true;
+            this.isAcronymUsed.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
             // GeneralConfig
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -440,5 +455,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox converter_source;
+        private System.Windows.Forms.CheckBox isAcronymUsed;
     }
 }

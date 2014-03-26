@@ -13,4 +13,5 @@
   <Config Key="ddc_removesustain" Value="false" />
   <Config Key="converter_source" Value="Pc" />
   <Config Key="converter_target" Value="XBox360" />
+  <Config Key="isAcronymUsed" Value="true" />
 </ArrayOfConfig>

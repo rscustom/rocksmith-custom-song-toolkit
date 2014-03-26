@@ -28,7 +28,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     public partial class DLCPackageCreator : UserControl
     {
         public static readonly string MESSAGEBOX_CAPTION =  "DLC Package Creator";
-        
+        private static bool isAcronymUsed = ConfigRepository.Instance().GetBoolean("isAcronymUsed");
         private GameVersion CurrentGameVersion {
             get {
                 if (RS2014.Checked)
@@ -302,7 +302,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string dlcSavePath;
             using (var ofd = new SaveFileDialog())
             {
-                ofd.FileName = String.Format("{0}_{1}_v{2}", ArtistSort.GetValidName(true), SongTitleSort.GetValidName(true), PackageVersion).Replace(" ", "-").Replace(".", "_");
+                ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion, isAcronymUsed);
                 ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
@@ -366,7 +366,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 ofd.SupportMultiDottedExtensions = true;
                 ofd.Filter = CurrentRocksmithTitle + " DLC Template (*.dlc.xml)|*.dlc.xml";
-                ofd.FileName = String.Format("{0}_{1}_{2}", ArtistSort.GetValidName(true), SongTitleSort.GetValidName(true), CurrentGameVersion).Replace(" ", "-").Replace(".", "_");
+                ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", ArtistSort, SongTitleSort, CurrentGameVersion.ToString(), isAcronymUsed);
                 if (DialogResult.OK != ofd.ShowDialog()) return;
                 dlcSavePath = ofd.FileName;
             }

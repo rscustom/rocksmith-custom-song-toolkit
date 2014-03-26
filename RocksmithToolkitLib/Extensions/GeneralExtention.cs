@@ -85,7 +85,20 @@ namespace RocksmithToolkitLib.Extensions
         {
             return Encoding.ASCII.GetString(bytes).TrimEnd('\0');
         }
-        
+
+        public static string Acronym(this string value)
+        {
+            return string.Join(string.Empty, value.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(s => s[0]));
+        }
+
+        public static string GetShortName(string Format, string Artist, string Title, string Version, bool Acronym = false)
+        {
+            if (!Acronym)
+                return String.Format(Format, Artist.GetValidName(true), Title.GetValidName(true), Version.GetValidName(true)).Replace(" ", "-");
+            else
+                return String.Format(Format, Artist.Acronym(), Title.GetValidName(true), Version.GetValidName(true)).Replace(" ", "-");
+        }
+
         public static bool IsValidPSARC(this string fileName)
         {
             //Supported DLC Package types

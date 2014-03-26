@@ -37,6 +37,7 @@ namespace RocksmithToolkitGUI.Config
             creator_scrollspeed.Value = ConfigRepository.Instance().GetDecimal(creator_scrollspeed.Name);
             ddc_phraselength.Value = ConfigRepository.Instance().GetDecimal(ddc_phraselength.Name);
             ddc_removesustain.Checked = ConfigRepository.Instance().GetBoolean(ddc_removesustain.Name);
+            isAcronymUsed.Checked = ConfigRepository.Instance().GetBoolean("isAcronymUsed");
         }
 
         private void PopulateAppIdCombo(ComboBox combo, GameVersion gameVersion) {
