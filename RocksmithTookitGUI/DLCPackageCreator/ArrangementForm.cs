@@ -504,6 +504,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             
             //Gameplay Path
             arrangement.RouteMask = RouteMask;
+
+            //Check if an arrangement with same gameplay path already exists and mark bonus arrangement automatically
+            if (parentControl.ArrangementLB.Items.OfType<Arrangement>().Any(ar => ar.RouteMask == RouteMask))
+            {
+                arrangement.BonusArr = true;
+                MessageBox.Show(String.Format("Already have an '{0}' arrangement. This arrangement was automatically marked as 'bonus arrangement' because the game doesn't support two representative arrangement at the same gameplay path.", arrangement.Name), DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             
             // DLC ID
             Guid guid;
