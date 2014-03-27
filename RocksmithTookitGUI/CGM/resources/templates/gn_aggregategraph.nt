@@ -1,0 +1,91 @@
+
+<urn:uuid:%RDM13%-3f6b-e531-4ae1-%RDM2%%RDM3%> <http://emergent.net/aweb/1.0/name> "guitar_%guitarnamesix%".
+
+
+
+<urn:uuid:%RDM13%-3f6b-e531-4ae1-%RDM2%%RDM3%> <http://emergent.net/aweb/1.0/relpath> "/manifests/songs_dlc_%guitarnamesix%/dlc_guitar_%guitarnamesix%.json".
+
+<urn:uuid:%RDM13%-3f6b-e531-4ae1-%RDM2%%RDM3%> <http://emergent.net/aweb/1.0/canonical> "/manifests/songs_dlc_%guitarnamesix%".
+<urn:uuid:%RDM13%-3f6b-e531-4ae1-%RDM2%%RDM3%> <http://emergent.net/aweb/1.0/tag> "database".
+<urn:uuid:%RDM13%-3f6b-e531-4ae1-%RDM2%%RDM3%> <http://emergent.net/aweb/1.0/tag> "json-db".
+
+
+<urn:uuid:%RDM14%-65a8-ec2a-9dac-%RDM3%%RDM4%> <http://emergent.net/aweb/1.0/tag> "hsan-db".
+<urn:uuid:%RDM14%-65a8-ec2a-9dac-%RDM3%%RDM4%> <http://emergent.net/aweb/1.0/relpath> "/manifests/songs_dlc_%guitarnamesix%/dlc_%guitarnamesix%.hsan".
+<urn:uuid:%RDM14%-65a8-ec2a-9dac-%RDM3%%RDM4%> <http://emergent.net/aweb/1.0/name> "guitars".
+
+<urn:uuid:%RDM14%-65a8-ec2a-9dac-%RDM3%%RDM4%> <http://emergent.net/aweb/1.0/canonical> "/manifests/songs_dlc_%guitarnamesix%".
+
+<urn:uuid:%RDM14%-65a8-ec2a-9dac-%RDM3%%RDM4%> <http://emergent.net/aweb/1.0/tag> "database".
+
+<urn:uuid:%RDM15%-ff29-5301-b813-%RDM4%%RDM5%> <http://emergent.net/aweb/1.0/name> "%guitarnamesix%".
+
+<urn:uuid:%RDM15%-ff29-5301-b813-%RDM4%%RDM5%> <http://emergent.net/aweb/1.0/relpath> "/assets/gameplay/inlay/%guitarnamesix%.nif".
+
+<urn:uuid:%RDM15%-ff29-5301-b813-%RDM4%%RDM5%> <http://emergent.net/aweb/1.0/canonical> "/assets/gameplay/inlay".
+
+<urn:uuid:%RDM15%-ff29-5301-b813-%RDM4%%RDM5%> <http://emergent.net/aweb/1.0/llid> "%RDM12%-0000-0000-0000-000000000000".
+
+<urn:uuid:%RDM15%-ff29-5301-b813-%RDM4%%RDM4%> <http://emergent.net/aweb/1.0/tag> "application".
+<urn:uuid:%RDM15%-ff29-5301-b813-%RDM4%%RDM5%> <http://emergent.net/aweb/1.0/tag> "gamebryo-scenegraph".
+
+
+<urn:uuid:%RDM15%-ff29-5301-b813-%RDM4%%RDM5%> <http://emergent.net/aweb/1.0/logpath> "/assets/gameplay/inlay/%guitarnamesix%.nif".
+
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM5%%RDM6%> <http://emergent.net/aweb/1.0/name> "inlay_%guitarnamesix%".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM5%%RDM6%> <http://emergent.net/aweb/1.0/relpath> "/assets/gameplay/inlay/inlay_%guitarnamesix%.dds".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM5%%RDM6%> <http://emergent.net/aweb/1.0/canonical> "/assets/gameplay/inlay".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM5%%RDM6%> <http://emergent.net/aweb/1.0/llid> "%RDM11%-0000-0000-0000-000000000000".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM5%%RDM6%> <http://emergent.net/aweb/1.0/tag> "image".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM5%%RDM6%> <http://emergent.net/aweb/1.0/tag> "dds".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM5%%RDM6%> <http://emergent.net/aweb/1.0/logpath> "/assets/gameplay/inlay/inlay_%guitarnamesix%.dds".
+
+<urn:uuid:%RDM17%-38aa-5335-cf1b-%RDM6%%RDM7%> <http://emergent.net/aweb/1.0/name> "guitar_%guitarnamesix%".
+
+<urn:uuid:%RDM17%-38aa-5335-cf1b-%RDM6%%RDM7%> <http://emergent.net/aweb/1.0/relpath> "/gamexblocks/nguitars/guitar_%guitarnamesix%.xblock".
+
+<urn:uuid:%RDM17%-38aa-5335-cf1b-%RDM6%%RDM7%> <http://emergent.net/aweb/1.0/canonical> "/gamexblocks/nguitars".
+<urn:uuid:%RDM17%-38aa-5335-cf1b-%RDM6%%RDM7%> <http://emergent.net/aweb/1.0/tag> "emergent-world".
+<urn:uuid:%RDM17%-38aa-5335-cf1b-%RDM6%%RDM7%> <http://emergent.net/aweb/1.0/tag> "x-world".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM7%%RDM8%> <http://emergent.net/aweb/1.0/tag> "image".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM7%%RDM8%> <http://emergent.net/aweb/1.0/tag> "dds".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM7%%RDM8%> <http://emergent.net/aweb/1.0/canonical> "/gfxassets/rewards/guitar_inlays".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM7%%RDM8%> <http://emergent.net/aweb/1.0/name> "reward_inlay_%guitarnamesix%_64".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM7%%RDM8%> <http://emergent.net/aweb/1.0/relpath> "/gfxassets/rewards/guitar_inlays/reward_inlay_%guitarnamesix%_64.dds".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM7%%RDM8%> <http://emergent.net/aweb/1.0/logpath> "/gfxassets/rewards/guitar_inlays/reward_inlay_%guitarnamesix%_64.dds".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM7%%RDM8%> <http://emergent.net/aweb/1.0/llid> "%RDM11%-0000-0000-0000-000000000000".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM8%%RDM9%> <http://emergent.net/aweb/1.0/tag> "image".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM8%%RDM9%> <http://emergent.net/aweb/1.0/tag> "dds".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM8%%RDM9%> <http://emergent.net/aweb/1.0/canonical> "/gfxassets/rewards/guitar_inlays".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM8%%RDM9%> <http://emergent.net/aweb/1.0/name> "reward_inlay_mintol_128".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM8%%RDM9%> <http://emergent.net/aweb/1.0/relpath> "/gfxassets/rewards/guitar_inlays/reward_inlay_%guitarnamesix%_128.dds".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM8%%RDM9%> <http://emergent.net/aweb/1.0/logpath> "/gfxassets/rewards/guitar_inlays/reward_inlay_%guitarnamesix%_128.dds".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM8%%RDM9%> <http://emergent.net/aweb/1.0/llid> "%RDM11%-0000-0000-0000-000000000000".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM9%%RDM10%> <http://emergent.net/aweb/1.0/tag> "image".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM9%%RDM10%> <http://emergent.net/aweb/1.0/tag> "dds".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM9%%RDM10%> <http://emergent.net/aweb/1.0/canonical> "/gfxassets/rewards/guitar_inlays".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM9%%RDM10%> <http://emergent.net/aweb/1.0/name> "reward_inlay_%guitarnamesix%_256".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM9%%RDM10%> <http://emergent.net/aweb/1.0/relpath> "/gfxassets/rewards/guitar_inlays/reward_inlay_%guitarnamesix%_256.dds".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM9%%RDM10%> <http://emergent.net/aweb/1.0/logpath> "/gfxassets/rewards/guitar_inlays/reward_inlay_%guitarnamesix%_256.dds".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM9%%RDM10%> <http://emergent.net/aweb/1.0/llid> "%RDM11%-0000-0000-0000-000000000000".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM10%%RDM2%> <http://emergent.net/aweb/1.0/tag> "image".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM10%%RDM2%> <http://emergent.net/aweb/1.0/tag> "dds".
+
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM10%%RDM2%> <http://emergent.net/aweb/1.0/canonical> "/gfxassets/rewards/guitar_inlays".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM10%%RDM2%> <http://emergent.net/aweb/1.0/name> "reward_inlay_%guitarnamesix%_512".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM10%%RDM2%> <http://emergent.net/aweb/1.0/relpath> "/gfxassets/rewards/guitar_inlays/reward_inlay_%guitarnamesix%_512.dds".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM10%%RDM2%> <http://emergent.net/aweb/1.0/logpath> "/gfxassets/rewards/guitar_inlays/reward_inlay_%guitarnamesix%_512.dds".
+<urn:uuid:%RDM16%-8deb-bdf6-0f80-%RDM10%%RDM2%> <http://emergent.net/aweb/1.0/llid> "%RDM11%-0000-0000-0000-000000000000".

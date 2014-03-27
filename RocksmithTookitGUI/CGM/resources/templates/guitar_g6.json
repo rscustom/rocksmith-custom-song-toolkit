@@ -1,0 +1,18 @@
+{
+  "Entries": {
+    "%ID1MAJ%": {
+      "Attributes": {
+        "DecorativeInlays": "urn:application:gamebryo-scenegraph:%guitarnamesix%",
+        "DLC": true,
+        "LocName": "%guitarname%",
+        "ManifestUrn": "urn:database:json-db:guitar_%guitarnamesix%",
+        "Name": "%guitarname%",
+        "PreviewArt": "urn:image:dds:reward_inlay_%guitarnamesix%",
+        "PersistentID": "%ID1MAJ%"
+      }
+    }
+  },
+  "ModelName": "RSEnumerable_Guitars",
+  "IterationVersion": 2,
+  "InsertRoot": "Static.Guitars.Entries"
+}
