@@ -1,0 +1,15 @@
+{
+    "Entries" : {
+        "%ID1MAJ%" : {
+           "Attributes" : {
+               "DLC" : true,
+               "LocName" : "%guitarname%",
+               "ManifestUrn" : "urn:database:json-db:guitar_%guitarnamesix%",
+               "Name" : "%guitarname%",
+               "PersistentID" : "%ID1MAJ%",
+               "PreviewArt" : "urn:image:dds:reward_inlay_%guitarnamesix%"
+            }
+        }
+    },
+    "InsertRoot" : "Static.Guitars.Headers"
+}

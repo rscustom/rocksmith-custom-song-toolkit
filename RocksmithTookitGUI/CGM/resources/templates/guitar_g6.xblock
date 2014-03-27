@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<game>
+  <entitySet>
+    <entity id="%ID1%" modelName="RSEnumerable_Guitars" name="%guitarname%" iterations="0">
+      <properties>
+        <property name="Header">
+          <set value="urn:database:hsan-db:guitars" />
+        </property>
+        <property name="Manifest">
+          <set value="urn:database:json-db:guitar_%guitarnamesix%" />
+        </property>
+        <property name="PreviewArt">
+          <set value="urn:image:dds:reward_inlay_%guitarnamesix%" />
+        </property>
+        <property name="DecorativeInlays">
+          <set value="urn:application:gamebryo-scenegraph:%guitarnamesix%" />
+        </property>
+      </properties>
+    </entity>
+  </entitySet>
+</game>

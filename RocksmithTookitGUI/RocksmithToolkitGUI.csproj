@@ -92,6 +92,22 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CGM\clsCMD.cs" />
+    <Compile Include="CGM\clsDLC.cs" />
+    <Compile Include="CGM\clsINI.cs" />
+    <Compile Include="CGM\ctrlCGM.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CGM\ctrlCGM.Designer.cs">
+      <DependentUpon>ctrlCGM.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CGM\frmProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CGM\frmProgress.Designer.cs">
+      <DependentUpon>frmProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CGM\resCGM.Designer.cs" />
     <Compile Include="Config\GeneralConfig.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -203,6 +219,13 @@
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CGM\ctrlCGM.resx">
+      <DependentUpon>ctrlCGM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CGM\frmProgress.resx">
+      <DependentUpon>frmProgress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CGM\resCGM.resx" />
     <EmbeddedResource Include="Config\GeneralConfig.resx">
       <DependentUpon>GeneralConfig.cs</DependentUpon>
     </EmbeddedResource>
@@ -264,6 +287,27 @@
     <EmbeddedResource Include="ZiggyProEditorConverter\ConverterInput.resx">
       <DependentUpon>ConverterInput.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="CGM\resources\inlays\Default_Inlay_CGM.cgm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CGM\resources\inlays\Fret_Notes_24_Cozy1.cgm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CGM\resources\inlays\Fret_Notes_Cozy1.cgm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CGM\resources\inlays\Ibanez_Shark_Tooth_Frack.cgm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CGM\resources\inlays\Super_Mario_Bros_Baoulettes.cgm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="CGM\resources\templates\gn_aggregategraph.nt" />
+    <EmbeddedResource Include="CGM\resources\templates\guitars.hsan" />
+    <EmbeddedResource Include="CGM\resources\templates\guitar_g6.json" />
+    <EmbeddedResource Include="CGM\resources\templates\guitar_g6.xblock" />
+    <EmbeddedResource Include="CGM\resources\templates\rsenumerable_guitars.flat" />
+    <EmbeddedResource Include="CGM\resources\templates\rsenumerable_root.flat" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -326,6 +370,18 @@
     <None Include="Resources\toolkit_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CGM\resources\images\default_icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CGM\resources\images\default_inlay.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CGM\resources\tools\7za.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CGM\resources\tools\topng.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\ddc-512.png" />
     <None Include="Resources\guitar_256.png" />
     <Content Include="songcreator.ico" />

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<model name="RSEnumerable_Root" id="%RDM20%">
+  <trait value="Active" />
+  <property type="AssetID" name="Manifest" id="%RDM26%">
+    <set value="" />
+  </property>
+  <property type="AssetID" name="Header" id="%RDM27%">
+    <set value="" />
+  </property>
+</model>
