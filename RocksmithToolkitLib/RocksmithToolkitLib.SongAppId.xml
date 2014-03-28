@@ -188,5 +188,31 @@
   <SongAppId Version="RS2014" AppId="271451" Name="Rise Against - Make It Stop (September's Children)" />
   <SongAppId Version="RS2014" AppId="271452" Name="Rise Against - Swing Life Away" />
   <SongAppId Version="RS2014" AppId="271453" Name="Rise Against - Satellite" />
-  <SongAppId Version="RS2014" AppId="271454" Name="Rise Against Song Pack" />
+  <SongAppId Version="RS2014" AppId="271454" Name="Rise Against Song Pack" />  
+  <SongAppId Version="RS2014" AppId="271438" Name="RIZE - PARADOX Taiso" />
+  <SongAppId Version="RS2014" AppId="271439" Name="ACIDMAN - Shinsekai" />
+  <SongAppId Version="RS2014" AppId="271440" Name="The Birthday - Stupid" />
+  <SongAppId Version="RS2014" AppId="271441" Name="Boston - Hitch A Ride" />
+  <SongAppId Version="RS2014" AppId="271442" Name="Boston - Don't Look Back" />
+  <SongAppId Version="RS2014" AppId="271443" Name="Boston - Foreplay/Long Time" />
+  <SongAppId Version="RS2014" AppId="271444" Name="Boston Song Pack" />
+  <SongAppId Version="RS2014" AppId="271445" Name="The Doors - Light My Fire" />
+  <SongAppId Version="RS2014" AppId="271446" Name="The Doors - Riders On The Storm" />
+  <SongAppId Version="RS2014" AppId="271447" Name="The Doors - Roadhouse Blues" />
+  <SongAppId Version="RS2014" AppId="271448" Name="The Doors Song Pack" />  
+  <SongAppId Version="RS2014" AppId="271455" Name="Heart - Crazy On You" />
+  <SongAppId Version="RS2014" AppId="271456" Name="Halestorm - Love Bites (So Do I)" />
+  <SongAppId Version="RS2014" AppId="271457" Name="Flyleaf - All Around Me" />  
+  <SongAppId Version="RS2014" AppId="271458" Name="A Day To Remember - It's Complicated" />
+  <SongAppId Version="RS2014" AppId="271459" Name="A Day To Remember - The Downfall of Us All" />
+  <SongAppId Version="RS2014" AppId="271460" Name="A Day To Remember - All I Want" />
+  <SongAppId Version="RS2014" AppId="271461" Name="A Day To Remember - If It Means a Lot to You" />
+  <SongAppId Version="RS2014" AppId="271462" Name="A Day To Remember - All Signs Point to Lauderdale" />
+  <SongAppId Version="RS2014" AppId="271463" Name="A Day To Remember Song Pack" />  
+  <SongAppId Version="RS2014" AppId="271464" Name="Matchbox Twenty - 3AM" />
+  <SongAppId Version="RS2014" AppId="271465" Name="Matchbox Twenty - Push" />
+  <SongAppId Version="RS2014" AppId="271466" Name="Matchbox Twenty - How Far We've Come" />
+  <SongAppId Version="RS2014" AppId="271467" Name="Matchbox Twenty - She's So Mean" />
+  <SongAppId Version="RS2014" AppId="271468" Name="Matchbox Twenty - Unwell" />
+  <SongAppId Version="RS2014" AppId="271469" Name="Matchbox Twenty Song Pack" />
 </ArrayOfSongAppId>
