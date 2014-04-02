@@ -51,7 +51,9 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
         [Description("emergent-world")]
         EmergentWorld,
         [Description("x-world")]
-        XWorld
+        XWorld,
+        [Description("gamebryo-scenegraph")]
+        GamebryoSceneGraph
     };
 
     public class GraphItemLLID : GraphItem {

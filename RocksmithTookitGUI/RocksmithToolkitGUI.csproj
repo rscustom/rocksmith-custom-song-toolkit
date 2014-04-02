@@ -65,6 +65,9 @@
     <Reference Include="PSTaskDialog">
       <HintPath>..\lib\PSTaskDialog\PSTaskDialog.dll</HintPath>
     </Reference>
+    <Reference Include="SharpConfig">
+      <HintPath>..\lib\SharpConfig\SharpConfig.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -91,6 +94,12 @@
     </Compile>
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DLCInlayCreator\DLCInlayCreator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DLCInlayCreator\DLCInlayCreator.Designer.cs">
+      <DependentUpon>DLCInlayCreator.cs</DependentUpon>
     </Compile>
     <Compile Include="Config\GeneralConfig.cs">
       <SubType>UserControl</SubType>
@@ -202,6 +211,9 @@
     </Compile>
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLCInlayCreator\DLCInlayCreator.resx">
+      <DependentUpon>DLCInlayCreator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Config\GeneralConfig.resx">
       <DependentUpon>GeneralConfig.cs</DependentUpon>
@@ -326,10 +338,14 @@
     <None Include="Resources\toolkit_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\colored.png" />
     <Content Include="Resources\ddc-512.png" />
     <None Include="Resources\guitar_256.png" />
+    <None Include="Resources\flipXc.png" />
+    <None Include="Resources\flipYc.png" />
     <Content Include="songcreator.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /S /Y "$(SolutionDir)Third-party Apps" "$(TargetDir)"</PostBuildEvent>

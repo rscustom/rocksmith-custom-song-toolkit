@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<model
+  name="RSEnumerable_Guitar"
+  id="992441809">
+  <trait
+    value="Active" />
+  <mixin
+    name="RSEnumerable_Root"
+    id="1917312803"
+    type="Active" />
+  <property
+    type="AssetID"
+    name="DecorativeInlays"
+    id="2998393480">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="PreviewArtSmall"
+    id="1475066245">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="PreviewArtMedium"
+    id="1495037319">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="PreviewArtLarge"
+    id="3288326972">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="Manifest"
+    id="3402662178">
+    <set
+      value="" />
+  </property>
+  <property
+    type="AssetID"
+    name="Header"
+    id="3529813182">
+    <set
+      value="" />
+  </property>
+</model>

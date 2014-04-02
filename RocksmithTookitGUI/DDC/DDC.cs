@@ -67,9 +67,10 @@ namespace RocksmithToolkitGUI.DDC
                 ddcVersion.Text = String.Format("v{0}", vi.ProductVersion);
             }
 
-            PopMDLs();
-
-            SetDefaultFromConfig();
+            try {
+                PopMDLs();
+                SetDefaultFromConfig();
+            } catch { /*For mono compatibility*/ }
         }
 
         private void SetDefaultFromConfig() {

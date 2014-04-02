@@ -11,6 +11,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Ogg;
+using System.Xml.Serialization;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -33,7 +34,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public float Volume { get; set; }
         public PackageMagic SignatureType { get; set; }
         public string PackageVersion { get; set; }
-
+        
         private List<XBox360License> xbox360Licenses = null;
         public List<XBox360License> XBox360Licenses
         {
@@ -60,17 +61,14 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public List<Tone2014> TonesRS2014 { get; set; }
 
-        // cache album art conversion
-        public Dictionary<int, string> AlbumArt { get; set; }
+        // Cache art image conversion
+        public List<DDSConvertedFile> ArtFiles { get; set; }
 
         public string LyricsTex { get; set; }
 
         public static DLCPackageData LoadFromFile(string unpackedDir, Platform targetPlatform) {
             //Load files
             var jsonFiles = Directory.GetFiles(unpackedDir, "*.json", SearchOption.AllDirectories);
-            //var aggregateFile = Directory.GetFiles(unpackedDir, "*.nt", SearchOption.AllDirectories)[0];
-            //var aggregateData = AggregateGraph2014.LoadFromFile(aggregateFile);
-
             var data = new DLCPackageData();
             data.GameVersion = GameVersion.RS2014;
             data.SignatureType = PackageMagic.CON;
@@ -82,7 +80,6 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var json in jsonFiles) {
                 Attributes2014 attr = Manifest2014<Attributes2014>.LoadFromFile(json).Entries.ToArray()[0].Value.ToArray()[0].Value;
                 var xmlName = attr.SongXml.Split(':')[3];
-                //var aggXml = aggregateData.SongXml.SingleOrDefault(n => n.Name == xmlName);
                 var xmlFile = Directory.GetFiles(unpackedDir, xmlName + ".xml", SearchOption.AllDirectories)[0];
 
                 if (attr.Phrases != null) {
@@ -181,15 +178,22 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #endregion
 
+        #region RS2014 Inlay only
+
+        [XmlIgnore]
+        public InlayData Inlay { get; set; }
+
+        #endregion
+
         // needs to be called after all packages for platforms are created
         public void CleanCache() {
-            if (AlbumArt != null) {
-                foreach (var path in AlbumArt.Values) {
+            if (ArtFiles != null) {
+                foreach (var file in ArtFiles) {
                     try {
-                        File.Delete(path);
+                        File.Delete(file.destinationFile);
                     } catch { }
                 }
-                AlbumArt = null;
+                ArtFiles = null;
             }
 
             if (Arrangements != null)
@@ -287,6 +291,25 @@ namespace RocksmithToolkitLib.DLCPackage
             DirectoryExtension.SafeDelete(unpackedDir);
 
             return outdir;
+        }
+    }
+
+    public class DDSConvertedFile {
+        public int sizeX { get; set; }
+        public int sizeY { get; set; }
+        public string sourceFile { get; set; }
+        public string destinationFile { get; set; }
+    }
+
+    public class InlayData {
+        public string InlayPath { get; set; }
+        public string IconPath { get; set; }
+        public Guid Id { get; set; }
+        public bool Frets24 { get; set; }
+        public bool Colored { get; set; }
+
+        public InlayData() {
+            Id = IdGenerator.Guid();
         }
     }
 }

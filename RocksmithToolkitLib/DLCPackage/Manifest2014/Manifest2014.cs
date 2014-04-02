@@ -15,11 +15,23 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public int IterationVersion { get; set; }
         public String InsertRoot { get; set; }
 
-        public Manifest2014() {            
-            ModelName = "RSEnumerable_Song";
-            IterationVersion = 2;
-            InsertRoot = "Static.Songs.Entries";
-            Entries = new Dictionary<string, Dictionary<string, T>>();
+        public Manifest2014(DLCPackageType dlcType = DLCPackageType.Song) {
+            switch (dlcType) {
+                case DLCPackageType.Song:
+                    ModelName = "RSEnumerable_Song";
+                    IterationVersion = 2;
+                    InsertRoot = "Static.Songs.Entries";
+                    Entries = new Dictionary<string, Dictionary<string, T>>();
+                    break;
+                case DLCPackageType.Lesson:
+                    throw new NotImplementedException("Lesson package type not implemented yet :(");
+                case DLCPackageType.Inlay:
+                    ModelName = "RSEnumerable_Guitars";
+                    IterationVersion = 2;
+                    InsertRoot = "Static.Guitars.Entries";
+                    Entries = new Dictionary<string, Dictionary<string, T>>();
+                    break;
+            }
         }
 
         public void Serialize(Stream stream) {

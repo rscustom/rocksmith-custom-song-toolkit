@@ -1,0 +1,603 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SharpConfig</name>
+    </assembly>
+    <members>
+        <member name="T:SharpConfig.CommentType">
+            <summary>
+            Represents a comment type.
+            </summary>
+        </member>
+        <member name="F:SharpConfig.CommentType.Semicolon">
+            <summary>
+            The comment begins with a semicolon.
+            </summary>
+        </member>
+        <member name="F:SharpConfig.CommentType.HashSymbol">
+            <summary>
+            The comment begins with a hash symbol.
+            </summary>
+        </member>
+        <member name="T:SharpConfig.Comment">
+            <summary>
+            A comment.
+            </summary>
+        </member>
+        <member name="M:SharpConfig.Comment.ToString">
+             <summary>
+             Returns the fully qualified type name of this instance.
+             </summary>
+            
+             <returns>
+             A <see cref="T:System.String" /> containing a fully qualified type name.
+             </returns>
+        </member>
+        <member name="P:SharpConfig.Comment.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+        </member>
+        <member name="P:SharpConfig.Comment.Type">
+            <summary>
+            Gets or sets the type.
+            </summary>
+        </member>
+        <member name="T:SharpConfig.CommentCollection">
+            <summary>
+            Collection of comments.
+            </summary>
+        </member>
+        <member name="M:SharpConfig.CommentCollection.ConvertType(SharpConfig.CommentType)">
+             <summary>
+             Converts the type of all comments to a specific type.
+             </summary>
+            
+             <param name="newType">The new comment type.</param>
+        </member>
+        <member name="T:SharpConfig.Configuration">
+            <summary>
+            Contains information about a configuration file or stream.
+            </summary>
+        </member>
+        <member name="F:SharpConfig.Configuration.GlobalCategoryName">
+            <summary>
+            Name of the global category.
+            </summary>
+        </member>
+        <member name="M:SharpConfig.Configuration.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:SharpConfig.Configuration.Load(System.String)">
+             <summary>
+             Loads a configuration from a file, including comments. Empty setting values are not accepted.
+             </summary>
+            
+             <exception cref="T:System.IO.FileNotFoundException">Thrown when the requested file is not present.</exception>
+            
+             <param name="filename">The location of the configuration file.</param>
+            
+             <returns>
+             The loaded <see cref="T:SharpConfig.Configuration"/> object.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Configuration.Load(System.String,SharpConfig.ParseFlags)">
+             <summary>
+             Loads a configuration from a file.
+             </summary>
+            
+             <exception cref="T:System.IO.FileNotFoundException">Thrown when the requested file is not present.</exception>
+            
+             <param name="filename">The location of the configuration file.</param>
+             <param name="flags">Parsing flags.</param>
+            
+             <returns>
+             The loaded <see cref="T:SharpConfig.Configuration"/> object.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Configuration.Load(System.IO.Stream,SharpConfig.ParseFlags)">
+             <summary>
+             Loads a configuration from a stream.
+             </summary>
+            
+             <exception cref="T:System.ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+            
+             <param name="stream">The stream to load the configuration from.</param>
+             <param name="flags">Parsing flags.</param>
+            
+             <returns>
+             The loaded <see cref="T:SharpConfig.Configuration"/> object.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Configuration.LoadBinary(System.String)">
+             <summary>
+             Loads a configuration from a binary file, using the default <see cref="T:System.IO.BinaryReader"/>.
+             </summary>
+            
+             <param name="filename">The location of the configuration file.</param>
+            
+             <returns>
+             The configuration.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Configuration.LoadBinary(System.IO.BinaryReader,System.String)">
+             <summary>
+             Loads a configuration from a binary file, using a specific reader.
+             </summary>
+            
+             <exception cref="T:System.ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+            
+             <param name="reader">  The reader to use. Specifiy <b>null</b> to use the default reader.</param>
+             <param name="filename">The location of the configuration file.</param>
+            
+             <returns>
+             The configuration.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Configuration.LoadBinary(System.IO.Stream)">
+             <summary>
+             Loads a configuration from a binary stream, using the default <see cref="T:System.IO.BinaryReader"/>.
+             </summary>
+            
+             <param name="stream">The stream to load the configuration from.</param>
+            
+             <returns>
+             The configuration.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Configuration.LoadBinary(System.IO.BinaryReader,System.IO.Stream)">
+             <summary>
+             Loads a configuration from a binary stream, using a specific <see cref="T:System.IO.BinaryReader"/>.
+             </summary>
+            
+             <exception cref="T:System.ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+            
+             <param name="reader">The reader to use. Specifiy <b>null</b> to use the default reader.</param>
+             <param name="stream">The stream to load the configuration from.</param>
+            
+             <returns>
+             The configuration.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Configuration.Save(System.String)">
+             <summary>
+             Saves the configuration to a file.
+             </summary>
+            
+             <exception cref="T:System.ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+            
+             <param name="filename">The location of the configuration file.</param>
+        </member>
+        <member name="M:SharpConfig.Configuration.Save(System.IO.Stream)">
+             <summary>
+             Saves the configuration to a stream.
+             </summary>
+            
+             <exception cref="T:System.ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+            
+             <param name="stream">The stream to save the configuration to.</param>
+        </member>
+        <member name="M:SharpConfig.Configuration.SaveBinary(System.String)">
+             <summary>
+             Saves the configuration to a binary file, using the default <see cref="T:System.IO.BinaryWriter"/>.
+             </summary>
+            
+             <param name="filename">The location of the configuration file.</param>
+        </member>
+        <member name="M:SharpConfig.Configuration.SaveBinary(System.IO.BinaryWriter,System.String)">
+             <summary>
+             Saves the configuration to a binary file, using a specific <see cref="T:System.IO.BinaryWriter"/>.
+             </summary>
+            
+             <exception cref="T:System.ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+            
+             <param name="writer">  The writer to use. Specifiy <b>null</b> to use the default writer.</param>
+             <param name="filename">The location of the configuration file.</param>
+        </member>
+        <member name="M:SharpConfig.Configuration.SaveBinary(System.IO.Stream)">
+             <summary>
+             Saves the configuration to a binary stream, using the default <see cref="T:System.IO.BinaryWriter"/>.
+             </summary>
+            
+             <param name="stream">The stream to save the configuration to.</param>
+        </member>
+        <member name="M:SharpConfig.Configuration.SaveBinary(System.IO.BinaryWriter,System.IO.Stream)">
+             <summary>
+             Saves the configuration to a binary file, using a specific <see cref="T:System.IO.BinaryWriter"/>.
+             </summary>
+            
+             <exception cref="T:System.ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+            
+             <param name="writer">The writer to use. Specifiy <b>null</b> to use the default writer.</param>
+             <param name="stream">The stream to save the configuration to.</param>
+        </member>
+        <member name="M:SharpConfig.Configuration.ConvertToLowerCase">
+            <summary>
+            Converts the names of all categories and settings
+            within this configuration to lower-case.
+            </summary>
+        </member>
+        <member name="M:SharpConfig.Configuration.RemoveLineComment(System.String)">
+            Removes the comment part from a line.
+            For example if you have a line like:
+            
+            Age = 20 # this is a comment
+            
+            The result of this method would be:
+            Age = 20
+        </member>
+        <member name="P:SharpConfig.Configuration.GlobalCategory">
+             <summary>
+             Gets the global category of this configuration.
+             </summary>
+            
+             <value>
+             The global category.
+             </value>
+        </member>
+        <member name="P:SharpConfig.Configuration.Categories">
+             <summary>
+             Gets the categories of this configuration.
+             </summary>
+            
+             <value>
+             The categories.
+             </value>
+        </member>
+        <member name="P:SharpConfig.Configuration.Item(System.String)">
+             <summary>
+             Gets a category by its name.
+             </summary>
+            
+             <param name="name">      The name of the category.</param>
+            
+             <returns>
+             The category if found, <b>null</b> otherwise.
+             </returns>
+        </member>
+        <member name="P:SharpConfig.Configuration.Item(System.String,System.Boolean)">
+             <summary>
+             Gets a category by its name.
+             </summary>
+            
+             <param name="name">      The name of the category.</param>
+             <param name="ignoreCase">True to ignore case, false otherwise.</param>
+            
+             <returns>
+             The category if found, <b>null</b> otherwise.
+             </returns>
+        </member>
+        <member name="T:SharpConfig.ParseFlags">
+            <summary>
+            Defines the behaviour of the configuration parser.
+            This is only valid for text-based configuration files.
+            </summary>
+        </member>
+        <member name="F:SharpConfig.ParseFlags.None">
+            <summary>
+            No special behaviour.
+            Comments will be parsed and empty setting values will throw an exception.
+            </summary>
+        </member>
+        <member name="F:SharpConfig.ParseFlags.IgnoreComments">
+            <summary>
+            Tells the parser to ignore comments.
+            </summary>
+        </member>
+        <member name="F:SharpConfig.ParseFlags.AcceptEmptyValues">
+            <summary>
+            Tells the parser to accept empty values. e.g: MySetting=
+            </summary>
+        </member>
+        <member name="T:SharpConfig.SettingCollection">
+            <summary>
+            A collection of settings.
+            </summary>
+        </member>
+        <member name="M:SharpConfig.SettingCollection.InsertItem(System.Int32,SharpConfig.Setting)">
+             <summary>
+             Inserts an item.
+             </summary>
+            
+             <exception cref="T:System.Exception">Thrown when an exception error condition occurs.</exception>
+            
+             <param name="index">Zero-based index of the item.</param>
+             <param name="item"> The item.</param>
+        </member>
+        <member name="P:SharpConfig.SettingCollection.Item(System.String)">
+             <summary>
+             Gets a setting by its name.
+             </summary>
+            
+             <param name="name">      The name of the setting.</param>
+            
+             <returns>
+             The setting if found, <b>null</b> otherwise.
+             </returns>
+        </member>
+        <member name="P:SharpConfig.SettingCollection.Item(System.String,System.Boolean)">
+             <summary>
+             Gets a setting by its name.
+             </summary>
+            
+             <param name="name">      The name of the setting.</param>
+             <param name="ignoreCase">True to ignore case, false otherwise.</param>
+            
+             <returns>
+             The setting if found, <b>null</b> otherwise.
+             </returns>
+        </member>
+        <member name="T:SharpConfig.Setting">
+            <summary>
+            A setting.
+            </summary>
+        </member>
+        <member name="M:SharpConfig.Setting.#ctor(System.String,System.String)">
+             <summary>
+             Constructor.
+             </summary>
+            
+             <param name="name"> The name of the setting.</param>
+             <param name="value">The value of the setting.</param>
+        </member>
+        <member name="M:SharpConfig.Setting.GetValue(System.Type)">
+             <summary>
+             Gets this setting's value as a specific type.
+             </summary>
+            
+             <exception cref="T:System.ArgumentException">Thrown when one or more arguments have unsupported or
+                                                 illegal values.</exception>
+            
+             <param name="type">The type.</param>
+            
+             <returns>
+             The value.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Setting.GetValueArray(System.Type)">
+             <summary>
+             Gets this setting's value as a specific type array.
+             </summary>
+            
+             <exception cref="T:System.ArgumentException">Thrown when one or more arguments have unsupported or
+                                                 illegal values.</exception>
+            
+             <param name="type">The type.</param>
+            
+             <returns>
+             The value array.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Setting.GetValue``1">
+             <summary>
+             Gets this setting's value as a specific type.
+             </summary>
+            
+             <typeparam name="T">Generic type parameter.</typeparam>
+            
+             <returns>
+             The value.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Setting.GetValueArray``1">
+             <summary>
+             Gets this setting's value as a specific type array.
+             </summary>
+            
+             <typeparam name="T">Generic type parameter.</typeparam>
+            
+             <returns>
+             The value array.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Setting.ToString">
+             <summary>
+             Returns a string that represents the current object.
+             </summary>
+            
+             <returns>
+             A string that represents the current object.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.Setting.ToString(System.Boolean)">
+             <summary>
+             Returns a string that represents the current object.
+             </summary>
+            
+             <param name="includeComment">True to include, false to exclude the comment.</param>
+            
+             <returns>
+             A string that represents the current object.
+             </returns>
+        </member>
+        <member name="P:SharpConfig.Setting.Name">
+             <summary>
+             Gets the name of this setting.
+             </summary>
+            
+             <value>
+             The name.
+             </value>
+        </member>
+        <member name="P:SharpConfig.Setting.PreComments">
+             <summary>
+             Gets the pre-comments of this setting.
+             </summary>
+            
+             <value>
+             The pre-comments.
+             </value>
+        </member>
+        <member name="P:SharpConfig.Setting.Comment">
+             <summary>
+             Gets the comment of this setting.
+             </summary>
+            
+             <value>
+             The comment.
+             </value>
+        </member>
+        <member name="P:SharpConfig.Setting.Value">
+             <summary>
+             Gets or sets the string value of this setting.
+             </summary>
+            
+             <value>
+             The value.
+             </value>
+        </member>
+        <member name="P:SharpConfig.Setting.IsArray">
+             <summary>
+             Gets a value indicating whether this setting is an array.
+             </summary>
+            
+             <value>
+             true if this object is array, false if not.
+             </value>
+        </member>
+        <member name="T:SharpConfig.SettingCategory">
+            <summary>
+            A group of settings.
+            </summary>
+        </member>
+        <member name="M:SharpConfig.SettingCategory.#ctor(System.String)">
+             <summary>
+             Constructor.
+             </summary>
+            
+             <param name="name">The name of the category.</param>
+        </member>
+        <member name="M:SharpConfig.SettingCategory.AssignTo``1(``0)">
+             <summary>
+             Assign the values of this category to an object's public properties.
+             </summary>
+            
+             <typeparam name="T">Generic type parameter.</typeparam>
+             <param name="obj">The object.</param>
+            
+             <returns>
+             Returns the object that was given to this method.
+             Useful for structures.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.SettingCategory.ToString">
+             <summary>
+             Returns a string that represents the current object.
+             </summary>
+            
+             <returns>
+             A string that represents the current object.
+             </returns>
+        </member>
+        <member name="M:SharpConfig.SettingCategory.ToString(System.Boolean)">
+             <summary>
+             Convert this object into a string representation.
+             </summary>
+            
+             <param name="includeComment">True to include, false to exclude the comment.</param>
+            
+             <returns>
+             includeComment as a string.
+             </returns>
+        </member>
+        <member name="P:SharpConfig.SettingCategory.Name">
+             <summary>
+             Gets the name of this category.
+             </summary>
+            
+             <value>
+             The name.
+             </value>
+        </member>
+        <member name="P:SharpConfig.SettingCategory.Settings">
+             <summary>
+             Gets the settings of this category.
+             </summary>
+            
+             <value>
+             The settings.
+             </value>
+        </member>
+        <member name="P:SharpConfig.SettingCategory.PreComments">
+             <summary>
+             Gets the pre-comments of this category.
+             </summary>
+            
+             <value>
+             The pre-comments.
+             </value>
+        </member>
+        <member name="P:SharpConfig.SettingCategory.Comment">
+             <summary>
+             Gets the comment of this category.
+             </summary>
+            
+             <value>
+             The comment.
+             </value>
+        </member>
+        <member name="P:SharpConfig.SettingCategory.Item(System.String)">
+             <summary>
+             Gets a setting by its name.
+             </summary>
+            
+             <param name="name">      The name of the setting.</param>
+            
+             <returns>
+             The setting if found, <b>null</b> otherwise.
+             </returns>
+        </member>
+        <member name="P:SharpConfig.SettingCategory.Item(System.String,System.Boolean)">
+             <summary>
+             Gets a setting by its name.
+             </summary>
+            
+             <param name="name">      The name of the setting.</param>
+             <param name="ignoreCase">True to ignore case, false otherwise.</param>
+            
+             <returns>
+             The setting if found, <b>null</b> otherwise.
+             </returns>
+        </member>
+        <member name="T:SharpConfig.SettingCategoryCollection">
+            <summary>
+            A collection of setting categories.
+            </summary>
+        </member>
+        <member name="M:SharpConfig.SettingCategoryCollection.InsertItem(System.Int32,SharpConfig.SettingCategory)">
+             <summary>
+             Inserts an item.
+             </summary>
+            
+             <exception cref="T:System.Exception">Thrown when an exception error condition occurs.</exception>
+            
+             <param name="index">Zero-based index of the item.</param>
+             <param name="item"> The item.</param>
+        </member>
+        <member name="P:SharpConfig.SettingCategoryCollection.Item(System.String)">
+             <summary>
+             Gets a category by its name using ordinal string sorting rules.
+             </summary>
+            
+             <param name="name">The name of the category.</param>
+            
+             <returns>
+             The category if found, <b>null</b> otherwise.
+             </returns>
+        </member>
+        <member name="P:SharpConfig.SettingCategoryCollection.Item(System.String,System.Boolean)">
+             <summary>
+             Gets a category by its name.
+             </summary>
+            
+             <param name="name">      The name of the category.</param>
+             <param name="ignoreCase">True to ignore case, false otherwise.</param>
+            
+             <returns>
+             The category if found, <b>null</b> otherwise.
+             </returns>
+        </member>
+    </members>
+</doc>

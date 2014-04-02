@@ -63,8 +63,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             
             var xblockUrn = String.Format(URN_TEMPLATE_SHORT, TagValue.EmergentWorld.GetDescription(), dlcName);
             var showlightUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format("{0}_showlights", dlcName));
-            var songXmlUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementFileName));
-            var songSngUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.NAME_DEFAULT, dlcName, arrangementFileName));
+            var songXmlUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format(AggregateGraph2014.NAME_ARRANGEMENT, dlcName, arrangementFileName));
+            var songSngUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.NAME_ARRANGEMENT, dlcName, arrangementFileName));
 
             var manifestFunctions = new ManifestFunctions(platform.version);
             
@@ -75,14 +75,14 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             ArrangementSort = arrangement.ArrangementSort;
             BlockAsset = xblockUrn;
             manifestFunctions.GenerateDynamicVisualDensity(this, SongContent, arrangement);
-            FullName = String.Format(AggregateGraph2014.NAME_DEFAULT, info.Name, arrangement.Name);
+            FullName = String.Format(AggregateGraph2014.NAME_ARRANGEMENT, info.Name, arrangement.Name);
             MasterID_PS3 = (IsVocal) ? -1 : arrangement.MasterId;
             MasterID_Xbox360 = (IsVocal) ? -1 : arrangement.MasterId;
-            PreviewBankPath = String.Format(AggregateGraph2014.NAME_SOUNDBANKPREVIEW + ".bnk", info.Name.ToLower());
+            PreviewBankPath = String.Format("song_{0}_preview.bnk", info.Name.ToLower());
             RelativeDifficulty = 0; //Always 0 in RS2014
             ShowlightsXML = showlightUrn;
             SongAsset = songSngUrn;
-            SongBank = String.Format(AggregateGraph2014.NAME_SOUNDBANK + ".bnk", info.Name.ToLower());
+            SongBank = String.Format("song_{0}.bnk", info.Name.ToLower());
             SongEvent = String.Format("Play_{0}", info.Name);
             SongXml = songXmlUrn;
             SongVolume = info.Volume;

@@ -209,7 +209,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         private void SetDefaultFromConfig() {
-            CurrentGameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["creator_gameversion"]);
+            CurrentGameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
         }
 
         private void PopulateTonesLB()

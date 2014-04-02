@@ -41,7 +41,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
                 gameVersionList.Remove("None");
                 gameVersionCombo.DataSource = gameVersionList;
-                gameVersionCombo.SelectedItem = ConfigRepository.Instance()["creator_gameversion"];
+                gameVersionCombo.SelectedItem = ConfigRepository.Instance()["general_defaultgameversion"];
                 GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), gameVersionCombo.SelectedItem.ToString());
                 PopulateAppIdCombo(gameVersion);
             }

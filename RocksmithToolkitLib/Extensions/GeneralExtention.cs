@@ -8,12 +8,16 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Drawing.Imaging;
+using System.Drawing;
 using RocksmithToolkitLib.DLCPackage;
 
 namespace RocksmithToolkitLib.Extensions
 {
     public static class GeneralExtensions
     {
+        private static readonly Random randomNumber = new Random();
+
         public static bool Contains(this String obj, char[] chars)
         {
             return (obj.IndexOfAny(chars) >= 0);
@@ -129,15 +133,91 @@ namespace RocksmithToolkitLib.Extensions
                 return false;
         }
 
-        public static void OpenExecutable(string exeFileName, bool toolkitRootFolder = true) {
+        public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null) {
             string toolkitRootPath = Path.GetDirectoryName(Application.ExecutablePath);
 
             var rootPath = (toolkitRootFolder) ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
 
-            Process updaterProcess = new Process();
-            updaterProcess.StartInfo.FileName = (toolkitRootFolder) ? Path.Combine(rootPath, exeFileName) : exeFileName;
-            updaterProcess.StartInfo.WorkingDirectory = rootPath;
-            updaterProcess.Start();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = (toolkitRootFolder) ? Path.Combine(rootPath, exeFileName) : exeFileName;
+            startInfo.WorkingDirectory = rootPath;
+
+            if (runInBackground) {
+                startInfo.CreateNoWindow = true;
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+            }
+
+            if (!String.IsNullOrEmpty(arguments))
+                startInfo.Arguments = arguments;
+
+            Process process = new Process();
+            process.StartInfo = startInfo;
+            process.Start();
+
+            if (waitToFinish)
+                process.WaitForExit();
+
+            var output = String.Empty;
+                
+            if (runInBackground)
+                output = process.StandardOutput.ReadToEnd();
+
+            return output;
+        }
+
+        public static string RandomName(int iLen) {
+            var builder = new StringBuilder(iLen);
+
+            for (int i = 0; i < iLen; i++)
+                builder.Append((char)randomNumber.Next(0x61, 0x7A)); // Alpha Lower Case Only
+
+            return builder.ToString();
+        }
+
+        public static long RandomLong(long lMin, long lMax) {
+            return lMin + randomNumber.Next() % (lMax - lMin);
+        }
+
+        public static string ToHex(this string inputString) {
+            byte[] bArray = Encoding.Default.GetBytes(inputString);
+            var hexString = BitConverter.ToString(bArray);
+            hexString = hexString.Replace("-", "");
+            return hexString;
+        }
+
+        public static byte[] ToByteArray(this string hexString) {
+            return Enumerable.Range(0, hexString.Length)
+                    .Where(x => x % 2 == 0)
+                    .Select(x => Convert.ToByte(hexString.Substring(x, 2), 16))
+                    .ToArray();
+        }
+
+        public static string ToLowerId(this Guid guid) {
+            return guid.ToString().Replace("-", "").ToLower();
+        }
+
+        public static byte[] ImageToBytes(this Image image, ImageFormat format) {
+            byte[] xret = null;
+            using (MemoryStream ms = new MemoryStream()) {
+                image.Save(ms, format);
+                xret = ms.ToArray();
+            }
+            return xret;
+        }
+
+        public static void WriteFile(this Stream memoryStream, string fileName)
+        {
+            using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            {
+                byte[] bytes = new byte[memoryStream.Length];
+                memoryStream.Read(bytes, 0, (int)memoryStream.Length);
+                file.Write(bytes, 0, bytes.Length);
+            }
+        }
+
+        public static string GetTempFileName(string extension = ".tmp") {
+            return Path.ChangeExtension(Path.GetTempFileName(), extension);
         }
     }
 }

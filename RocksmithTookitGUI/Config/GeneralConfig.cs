@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using Ookii.Dialogs;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage;
@@ -23,7 +24,7 @@ namespace RocksmithToolkitGUI.Config
                 SetupStoredConfigValues();
                 PopulateAppIdCombo(general_defaultappid_RS2012, GameVersion.RS2012);
                 PopulateAppIdCombo(general_defaultappid_RS2014, GameVersion.RS2014);
-                PopulateEnumCombo(creator_gameversion, typeof(GameVersion));
+                PopulateEnumCombo(general_defaultgameversion, typeof(GameVersion));
                 PopulateEnumCombo(converter_source, typeof(GamePlatform));
                 PopulateEnumCombo(converter_target, typeof(GamePlatform));
                 PopulateRampUp();
@@ -33,6 +34,9 @@ namespace RocksmithToolkitGUI.Config
 
         private void SetupStoredConfigValues() {
             general_usebeta.Checked = ConfigRepository.Instance().GetBoolean(general_usebeta.Name);
+            general_defaultauthor.Text = ConfigRepository.Instance()[general_defaultauthor.Name];
+            general_rs1path.Text = ConfigRepository.Instance()[general_rs1path.Name];
+            general_rs2014path.Text = ConfigRepository.Instance()[general_rs2014path.Name];
             creator_structured.Checked = ConfigRepository.Instance().GetBoolean(creator_structured.Name);
             creator_scrollspeed.Value = ConfigRepository.Instance().GetDecimal(creator_scrollspeed.Name);
             ddc_phraselength.Value = ConfigRepository.Instance().GetDecimal(ddc_phraselength.Name);
@@ -88,6 +92,34 @@ namespace RocksmithToolkitGUI.Config
 
                 if (ConfigRepository.Instance().ValueChanged(key, value) && !String.IsNullOrEmpty(value))
                     ConfigRepository.Instance()[key] = value;
+            }
+        }
+
+        private void closeConfigButton_Click(object sender, EventArgs e) {
+            ((MainForm)ParentForm).EnableConfig = false;
+        }
+
+        private void rs1PathButton_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new VistaFolderBrowserDialog())
+            {
+                if (fbd.ShowDialog() != DialogResult.OK)
+                    return;
+                var rs1Path = fbd.SelectedPath;
+                general_rs1path.Text = rs1Path;
+                ConfigRepository.Instance()[general_rs1path.Name] = rs1Path;
+            }
+        }
+
+        private void rs2014PathButton_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new VistaFolderBrowserDialog())
+            {
+                if (fbd.ShowDialog() != DialogResult.OK)
+                    return;
+                var rs2014Path = fbd.SelectedPath;
+                general_rs2014path.Text = rs2014Path;
+                ConfigRepository.Instance()[general_rs2014path.Name] = rs2014Path;
             }
         }
     }

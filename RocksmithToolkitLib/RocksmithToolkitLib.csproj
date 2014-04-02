@@ -86,6 +86,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DLCPackage\InlayNif.cs" />
+    <Compile Include="DLCPackage\Manifest2014\InlayAttributes2014.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
     <Compile Include="ToolkitVersionOnline.cs" />
     <Compile Include="DLCPackage\DLCPackageConverter.cs" />
@@ -216,12 +218,13 @@
     <None Include="Resources\albumart.dds" />
     <None Include="Resources\Console_soundbank.bnk" />
     <None Include="Resources\pedals2014.json" />
+    <None Include="Resources\rsenumerable_guitar.flat" />
     <None Include="Resources\VOCALS_RS2.sng" />
     <None Include="Resources\PC_soundbank.bnk" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -231,6 +234,8 @@
     <None Include="Resources\albumart2014_128.dds" />
     <None Include="Resources\albumart2014_256.dds" />
     <None Include="Resources\XBox360_DLC_image2014.png" />
+    <None Include="Resources\cgm_default_icon.png" />
+    <None Include="Resources\cgm_default_inlay.png" />
     <Content Include="RocksmithToolkitLib.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

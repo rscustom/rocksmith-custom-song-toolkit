@@ -7,23 +7,37 @@ using Newtonsoft.Json;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
 {
-    public class ManifestHeader2014
+    public class ManifestHeader2014<T>
     {
-        public Dictionary<string, Dictionary<string, AttributesHeader2014>> Entries { get; set; }
+        public Dictionary<string, Dictionary<string, T>> Entries { get; set; }
         public String ModelName { get; set; }
         public int IterationVersion { get; set; }
         public String InsertRoot { get; set; }
 
         public ManifestHeader2014() { }
 
-        public ManifestHeader2014(Platform platform)
+        public ManifestHeader2014(Platform platform, DLCPackageType dlcType = DLCPackageType.Song)
         {
-            Entries = new Dictionary<string, Dictionary<string, AttributesHeader2014>>();
-            if (platform.IsConsole) {
-                ModelName = "RSEnumerable_Song_Header";
-                IterationVersion = 2;
+            switch (dlcType) {
+                case DLCPackageType.Song:
+                    if (platform.IsConsole) {
+                        ModelName = "RSEnumerable_Song_Header";
+                        IterationVersion = 2;
+                    }
+                    InsertRoot = "Static.Songs.Headers";
+                    Entries = new Dictionary<string, Dictionary<string, T>>();
+                    break;
+                case DLCPackageType.Lesson:
+                    throw new NotImplementedException("Lesson package type not implemented yet :(");
+                case DLCPackageType.Inlay:
+                    if (platform.IsConsole) {
+                        ModelName = "RSEnumerable_Guitar_Header";
+                    }
+                    InsertRoot = "Static.Guitars.Headers";
+                    Entries = new Dictionary<string, Dictionary<string, T>>();
+                    break;
             }
-            InsertRoot = "Static.Songs.Headers";
+            
         }
 
         public void Serialize(Stream stream) {
@@ -36,10 +50,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
             writer.Flush();
         }
 
-        public static ManifestHeader2014 LoadFromFile(string manifestHeader2014FilePath) {
+        public static ManifestHeader2014<T> LoadFromFile(string manifestHeader2014FilePath) {
             using (var reader = new StreamReader(manifestHeader2014FilePath)) {
-                var manifest = new ManifestHeader2014();
-                manifest = JsonConvert.DeserializeObject<ManifestHeader2014>(reader.ReadToEnd());
+                var manifest = new ManifestHeader2014<T>();
+                manifest = JsonConvert.DeserializeObject<ManifestHeader2014<T>>(reader.ReadToEnd());
                 return manifest;
             }
         }

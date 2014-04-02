@@ -38,6 +38,49 @@ namespace RocksmithToolkitGUI
             }
         }
 
+        public bool EnableConfig {
+            set {
+                switch (value) {
+                    case true:
+                        configurationToolStripMenuItem.Enabled = false;
+
+                        // Remove all tabs
+                        tabControl1.TabPages.Remove(dlcPackageCreatorTab);
+                        tabControl1.TabPages.Remove(dlcPackerUnpackerTab);
+                        tabControl1.TabPages.Remove(dlcConverterTab);
+                        tabControl1.TabPages.Remove(DDCTab);
+                        tabControl1.TabPages.Remove(dlcInlayCreatorTab);
+                        tabControl1.TabPages.Remove(sngConverterTab);
+                        tabControl1.TabPages.Remove(oggConverterTab);
+                        tabControl1.TabPages.Remove(sngToTabConverterTab);
+                        tabControl1.TabPages.Remove(zigProConverterTab);
+
+                        // Add config
+                        if (!tabControl1.TabPages.Contains(GeneralConfigTab))
+                            tabControl1.TabPages.Add(GeneralConfigTab);
+                        break;
+                    case false:
+                        configurationToolStripMenuItem.Enabled = true;
+
+                        // Remove all tabs
+                        tabControl1.TabPages.Add(dlcPackageCreatorTab);
+                        tabControl1.TabPages.Add(dlcPackerUnpackerTab);
+                        tabControl1.TabPages.Add(dlcConverterTab);
+                        tabControl1.TabPages.Add(DDCTab);
+                        tabControl1.TabPages.Add(dlcInlayCreatorTab);
+                        tabControl1.TabPages.Add(sngConverterTab);
+                        tabControl1.TabPages.Add(oggConverterTab);
+                        tabControl1.TabPages.Add(sngToTabConverterTab);
+                        tabControl1.TabPages.Add(zigProConverterTab);
+
+                        // Add config
+                        if (tabControl1.TabPages.Contains(GeneralConfigTab))
+                            tabControl1.TabPages.Remove(GeneralConfigTab);
+                        break;
+                }
+            }
+        }
+
         public MainForm(string[] args)
         {
             InitializeComponent();
@@ -50,6 +93,11 @@ namespace RocksmithToolkitGUI
             bWorker.DoWork += new DoWorkEventHandler(CheckForUpdate);
             bWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(EnableUpdate);
             bWorker.RunWorkerAsync();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e) {
+            // Show only by 'Configuration' click
+            tabControl1.TabPages.Remove(GeneralConfigTab);
         }
 
         private void CheckForUpdate(object sender, DoWorkEventArgs e)
@@ -143,10 +191,14 @@ namespace RocksmithToolkitGUI
             }                
 
             // START AUTO UPDATE
-            GeneralExtensions.OpenExecutable(updatingApp);
+            GeneralExtensions.RunExternalExecutable(updatingApp);
             
             // EXIT TOOLKIT
             Application.Exit();
+        }
+
+        private void configurationToolStripMenuItem_Click(object sender, EventArgs e) {
+            EnableConfig = true;
         }
     }
 }
