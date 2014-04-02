@@ -19,7 +19,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
     public partial class DLCInlayCreator : UserControl {
         #region Properties
 
-        private const string MESSAGEBOX_CAPTION = "Custom Guitar Maker";
+        private const string MESSAGEBOX_CAPTION = "DLC Inlay Creator";
         private const string APP_TOPNG = "topng.exe";
         private const string APP_7Z = "7za.exe";
         private const string APP_NVDXT = "nvdxt.exe";
@@ -73,6 +73,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             {
                 PopulateInlayTypeCombo();
                 PopulateAppIdCombo();
+                PopulateInlayTemplateCombo();
                 InlayName = ConfigRepository.Instance()["cgm_inlayname"];
                 Frets24 = ConfigRepository.Instance().GetBoolean("cgm_24frets");
                 Colored = ConfigRepository.Instance().GetBoolean("cgm_coloredinlay");
@@ -93,6 +94,15 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             var songAppId = SongAppIdRepository.Instance().Select(ConfigRepository.Instance()["general_defaultappid_RS2014"], GameVersion.RS2014);
             appIdCombo.SelectedValue = songAppId.AppId;
+        }
+
+        private void PopulateInlayTemplateCombo() {
+            var templateList = Directory.EnumerateFiles(Path.Combine(workDir, "cgm"));
+            inlayTemplateCombo.Items.Clear();
+            inlayTemplateCombo.Items.Add("Select template");
+            foreach (var template in templateList)
+                inlayTemplateCombo.Items.Add(Path.GetFileNameWithoutExtension(template));
+            inlayTemplateCombo.SelectedIndex = 0;
         }
 
         private void plataform_CheckedChanged(object sender, EventArgs e) {
@@ -121,7 +131,13 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 ofd.CheckPathExists = true;
 
                 if (ofd.ShowDialog() != DialogResult.OK) return;
-                picIcon.ImageLocation = IconFile = ofd.FileName;
+
+                var fileName = ofd.FileName;
+                if (fileName.IsValidImage())
+                    picIcon.ImageLocation = IconFile = fileName;
+                else
+                    MessageBox.Show("The selected image is not valid or not supported." + Environment.NewLine +
+                                        "MimeType doesn't match with file extension!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -134,7 +150,13 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 ofd.CheckPathExists = true;
 
                 if (ofd.ShowDialog() != DialogResult.OK) return;
-                picInlay.ImageLocation = InlayFile = ofd.FileName;
+
+                var fileName = ofd.FileName;
+                if (fileName.IsValidImage())
+                    picInlay.ImageLocation = InlayFile = fileName;
+                else
+                    MessageBox.Show("The selected image is not valid or not supported." + Environment.NewLine +
+                                        "MimeType doesn't match with file extension!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -189,14 +211,33 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 customCGM = ofd.FileName;
             }
 
+            LoadCGM(customCGM);
+        }
+
+        private void inlayTemplateCombo_SelectedIndexChanged(object sender, EventArgs e) {
+            if (inlayTemplateCombo.SelectedIndex != 0)
+                LoadCGM(Path.Combine(workDir, "cgm", inlayTemplateCombo.SelectedItem + ".cgm"));
+        }
+
+        private void LoadCGM(string customCGM) {
             if (!String.IsNullOrEmpty(customCGM)) {
                 // Unpack CGM file (7z file format)
-                var unpackedCGMTmpFolder = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(customCGM));
-                var args = String.Format(" x \"{0}\" -o\"{1}\"", customCGM, unpackedCGMTmpFolder);
+                var unpackedFolder = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(customCGM));
+
+                if (Directory.Exists(unpackedFolder))
+                    DirectoryExtension.SafeDelete(unpackedFolder);
+
+                var args = String.Format(" x \"{0}\" -o\"{1}\"", customCGM, unpackedFolder);
                 GeneralExtensions.RunExternalExecutable(APP_7Z, true, true, true, args);
 
+                var errorMessage = string.Format("Template {0} can't be loaded, maybe doesn't exists or is corrupted.", customCGM);
+                if (!Directory.Exists(unpackedFolder)) {
+                    MessageBox.Show(errorMessage, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 // Open the setup.smb INI file
-                Configuration iniConfig = Configuration.Load(Path.Combine(unpackedCGMTmpFolder, "setup.smb"), ParseFlags.IgnoreComments);
+                Configuration iniConfig = Configuration.Load(Path.Combine(unpackedFolder, "setup.smb"), ParseFlags.IgnoreComments);
 
                 Author = iniConfig["Setup"]["creatorname"].Value;
                 InlayName = iniConfig["Setup"]["guitarname"].Value;
@@ -209,10 +250,15 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 ColoredCheckbox.Checked = Colored;
 
                 // Convert the dds files to png
-                var iconFile = Path.Combine(unpackedCGMTmpFolder, "icon.dds");
+                var iconFile = Path.Combine(unpackedFolder, "icon.dds");
                 GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, String.Format(" -out png \"{0}\"", iconFile));
-                var inlayFile = Path.Combine(unpackedCGMTmpFolder, "inlay.dds");
+                var inlayFile = Path.Combine(unpackedFolder, "inlay.dds");
                 GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, String.Format(" -out png \"{0}\"", inlayFile));
+
+                if (!File.Exists(iconFile) || !File.Exists(inlayFile)) {
+                    MessageBox.Show(errorMessage, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 // Load png into picBoxes and save paths
                 picIcon.ImageLocation = IconFile = Path.ChangeExtension(iconFile, ".png");
@@ -223,39 +269,37 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         private void saveCGMButton_Click(object sender, EventArgs e) {
             var saveFile = String.Empty;
 
-            using (var ofd = new OpenFileDialog()) {
-                ofd.Title = "Select a location to store your CGM file";
-                ofd.Filter = "CGM file (*.cgm)|*.cgm";
-                ofd.FilterIndex = 1;
-                ofd.InitialDirectory = Path.Combine(workDir, "cgm");
-                ofd.CheckPathExists = true;
-
-                if (ofd.ShowDialog() != DialogResult.OK) return;
-                saveFile = ofd.FileName;
+            using (var sfd = new SaveFileDialog()) {
+                sfd.Title = "Select a location to store your CGM file";
+                sfd.Filter = "CGM file (*.cgm)|*.cgm";
+                sfd.InitialDirectory = Path.Combine(workDir, "cgm");
+                
+                if (sfd.ShowDialog() != DialogResult.OK) return;
+                saveFile = sfd.FileName;
             }
 
             // Create workDir folder
-            var workCGMDir = Path.GetFileNameWithoutExtension(saveFile);
-            if (Directory.Exists(workCGMDir))
-                DirectoryExtension.SafeDelete(workCGMDir);
+            var tmpWorkDir = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(saveFile));
 
-            if (!Directory.Exists(workCGMDir))
-                Directory.CreateDirectory(workCGMDir);
+            if (Directory.Exists(tmpWorkDir))
+                DirectoryExtension.SafeDelete(tmpWorkDir);
+            
+            if (!Directory.Exists(tmpWorkDir))
+                Directory.CreateDirectory(tmpWorkDir);
 
             // Convert PNG to DDS
-            var iconArgs = String.Format(" -file \"{0}\" -prescale 512 512 -quality_highest -max -32 dxt5 -dxt5 -overwrite -alpha -output \"{1}\"", IconFile, Path.ChangeExtension(IconFile, ".dds"));
+            var iconArgs = String.Format(" -file \"{0}\" -output \"{1}\" -prescale 512 512 -quality_highest -max -32 dxt5 -dxt5 -overwrite -alpha", IconFile, Path.Combine(tmpWorkDir, Path.GetFileNameWithoutExtension(IconFile) + ".dds"));
             GeneralExtensions.RunExternalExecutable(APP_NVDXT, true, true, true, iconArgs);
-            var inlayArgs = String.Format(" -file \"{0}\" -prescale 1024 512 -quality_highest -max -32 dxt5 -dxt5 -overwrite -alpha -output \"{1}\"", InlayFile, Path.ChangeExtension(InlayFile, ".dds"));
+            var inlayArgs = String.Format(" -file \"{0}\" -output \"{1}\" -prescale 1024 512 -quality_highest -max -32 dxt5 -dxt5 -overwrite -alpha", InlayFile, Path.Combine(tmpWorkDir, Path.GetFileNameWithoutExtension(InlayFile) + ".dds"));
             GeneralExtensions.RunExternalExecutable(APP_NVDXT, true, true, true, inlayArgs);
             
             // Create setup.smb
-            var iniFile = Path.Combine(workCGMDir, "setup.smb");
-
+            var iniFile = Path.Combine(tmpWorkDir, "setup.smb");
             Configuration iniCFG = new Configuration();
             iniCFG.Categories.Add(new SettingCategory("Setup"));
 
             var author = ConfigRepository.Instance()["general_defaultauthor"];
-            iniCFG.Categories["Setup"].Settings.Add(new Setting("creatorname", String.IsNullOrEmpty(author) ? "CustomSongCreator" : author));
+            iniCFG.Categories["Setup"].Settings.Add(new Setting("creatorname", String.IsNullOrEmpty(author) ? "Custom Song Creator" : author));
             iniCFG.Categories["Setup"].Settings.Add(new Setting("guitarname", InlayName));
             iniCFG.Categories["Setup"].Settings.Add(new Setting("24frets", Convert.ToString(Convert.ToInt32(Frets24))));
             iniCFG.Categories["Setup"].Settings.Add(new Setting("coloredinlay", Convert.ToString(Convert.ToInt32(Colored))));
@@ -264,12 +308,18 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             iniCFG.Save(iniFile);
 
             // Pack file into a .cgm file (7zip file format)
-            var zipArgs = String.Format(" a \"{0}\" \"{1}\"", saveFile, workCGMDir);
+            var zipArgs = String.Format(" a \"{0}\" \"{1}\\*\"", saveFile, tmpWorkDir);
             GeneralExtensions.RunExternalExecutable(APP_7Z, true, true, true, zipArgs);
 
+            // Delete temp work dir
+            if (Directory.Exists(tmpWorkDir))
+                DirectoryExtension.SafeDelete(tmpWorkDir);
+            
             if (MessageBox.Show("CGM template was saved." + Environment.NewLine + "You want to open the folder in which the template was saved?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes) {
                 Process.Start(Path.GetDirectoryName(Path.GetDirectoryName(saveFile)));
             }
+
+            PopulateInlayTemplateCombo();
         }
 
         private void inlayGenerateButton_Click(object sender, EventArgs e) {
