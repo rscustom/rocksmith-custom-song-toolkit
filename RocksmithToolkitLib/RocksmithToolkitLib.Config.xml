@@ -6,9 +6,9 @@
   <Config Key="general_defaultappid_RS2012" Value="206102"  />
   <Config Key="general_defaultappid_RS2014" Value="248750"  />
   <Config Key="general_defaultgameversion" Value="RS2014" />
-  <Config Key="general_defaultauthor" Value="CustomSongCreator" />
-  <Config Key="general_rs1path" Value="D:\Fabiano\DROP\WORK\PACKAGES" />
-  <Config Key="general_rs2014path" Value="D:\Fabiano\DROP\WORK\PACKAGES" />
+  <Config Key="general_defaultauthor" Value="Custom Song Creator" />
+  <Config Key="general_rs1path" Value="C:\PROGRAM FILES\Steam\steamapps\common\Rocksmith" />
+  <Config Key="general_rs2014path" Value="C:\PROGRAM FILES\Steam\steamapps\common\Rocksmith2014" />
   <Config Key="creator_scrollspeed" Value="2.0" />
   <Config Key="creator_structured" Value="true" />
   <Config Key="creator_useacronyms" Value="false" />
