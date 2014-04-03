@@ -11,6 +11,8 @@ using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Drawing;
 using RocksmithToolkitLib.DLCPackage;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -218,6 +220,24 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string GetTempFileName(string extension = ".tmp") {
             return Path.ChangeExtension(Path.GetTempFileName(), extension);
+        }
+
+        public static T Copy<T>(T value) {
+            using (MemoryStream stream = new MemoryStream()) {
+                DataContractSerializer dcs = new DataContractSerializer(typeof(T));
+                dcs.WriteObject(stream, value);
+                stream.Position = 0;
+                return (T)dcs.ReadObject(stream);
+            }
+        }
+
+        public static T DeepCopy<T>(object value) {
+            using (MemoryStream memoryStream = new MemoryStream()) {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                binaryFormatter.Serialize(memoryStream, value);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return (T)binaryFormatter.Deserialize(memoryStream);
+            }
         }
     }
 }

@@ -897,7 +897,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 form.CurrentGameVersion = CurrentGameVersion;
                 form.toneControl1.CurrentGameVersion = CurrentGameVersion;
                 form.toneControl1.Init();
-                form.toneControl1.Tone = Copy(tone);
+                form.toneControl1.Tone = GeneralExtensions.Copy(tone);
                 form.ShowDialog();
 
                 if (form.Saved)
@@ -941,10 +941,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 switch (CurrentGameVersion)
                 {
                     case GameVersion.RS2012:
-                        tone = Copy<Tone>((Tone)TonesLB.SelectedItem);
+                        tone = GeneralExtensions.Copy<Tone>((Tone)TonesLB.SelectedItem);
                         break;
                     case GameVersion.RS2014:
-                        tone = Copy<Tone2014>((Tone2014)TonesLB.SelectedItem);
+                        tone = GeneralExtensions.Copy<Tone2014>((Tone2014)TonesLB.SelectedItem);
                         break;
                  }
                 var name = GetUniqueToneName(TonesLB.Text);
@@ -976,7 +976,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     form.CurrentGameVersion = CurrentGameVersion;
                     form.toneControl1.CurrentGameVersion = CurrentGameVersion;
                     form.toneControl1.Init();
-                    form.toneControl1.Tone = Copy(tone);
+                    form.toneControl1.Tone = GeneralExtensions.Copy(tone);
                     form.ShowDialog();
                     
 					if (form.Saved)
@@ -1078,17 +1078,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             SongAppId songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppIds.SelectedItem = songAppId;
-        }
-
-        private T Copy<T>(T value)
-        {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                DataContractSerializer dcs = new DataContractSerializer(typeof(T));
-                dcs.WriteObject(stream, value);
-                stream.Position = 0;
-                return (T)dcs.ReadObject(stream);
-            }
         }
 
         private void DlcNameTB_Leave(object sender, EventArgs e)
