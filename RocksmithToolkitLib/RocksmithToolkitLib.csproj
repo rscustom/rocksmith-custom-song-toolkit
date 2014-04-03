@@ -150,11 +150,11 @@
     <Compile Include="DLCPackage\RijndaelEncryptor.cs" />
     <Compile Include="DLCPackage\SongInfo.cs" />
     <Compile Include="DLCPackage\XBox360License.cs" />
-    <Compile Include="Extensions\FileStreamExtention.cs" />
-    <Compile Include="Extensions\ImageExtention.cs" />
+    <Compile Include="Extensions\FileStreamExtension.cs" />
+    <Compile Include="Extensions\ImageHandler.cs" />
     <Compile Include="Extensions\DirectoryExtension.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
-    <Compile Include="Extensions\GeneralExtention.cs" />
+    <Compile Include="Extensions\GeneralExtension.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Ogg\OggFile.cs" />
