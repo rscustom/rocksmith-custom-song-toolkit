@@ -21,27 +21,38 @@ namespace RocksmithToolkitGUI.Config
             InitializeComponent();
             loading = true;
             try {
-                SetupStoredConfigValues();
                 PopulateAppIdCombo(general_defaultappid_RS2012, GameVersion.RS2012);
                 PopulateAppIdCombo(general_defaultappid_RS2014, GameVersion.RS2014);
                 PopulateEnumCombo(general_defaultgameversion, typeof(GameVersion));
                 PopulateEnumCombo(converter_source, typeof(GamePlatform));
                 PopulateEnumCombo(converter_target, typeof(GamePlatform));
                 PopulateRampUp();
+                LoadAndSetupConfiguration(this.Controls);                
             } catch { /*For mono compatibility*/ }
             loading = false;
         }
 
-        private void SetupStoredConfigValues() {
-            general_usebeta.Checked = ConfigRepository.Instance().GetBoolean(general_usebeta.Name);
-            general_defaultauthor.Text = ConfigRepository.Instance()[general_defaultauthor.Name];
-            general_rs1path.Text = ConfigRepository.Instance()[general_rs1path.Name];
-            general_rs2014path.Text = ConfigRepository.Instance()[general_rs2014path.Name];
-            creator_structured.Checked = ConfigRepository.Instance().GetBoolean(creator_structured.Name);
-            creator_scrollspeed.Value = ConfigRepository.Instance().GetDecimal(creator_scrollspeed.Name);
-            ddc_phraselength.Value = ConfigRepository.Instance().GetDecimal(ddc_phraselength.Name);
-            ddc_removesustain.Checked = ConfigRepository.Instance().GetBoolean(ddc_removesustain.Name);
-            creator_useacronyms.Checked = ConfigRepository.Instance().GetBoolean(creator_useacronyms.Name);
+        private void LoadAndSetupConfiguration(ControlCollection controls) {
+            foreach (var control in controls) {
+                if (control is TextBox || control is CueTextBox) {
+                    var tb = (TextBox)control;
+                    tb.Text = ConfigRepository.Instance()[tb.Name];
+                } else if (control is ComboBox) {
+                    var cb  = (ComboBox)control;
+                    var value = ConfigRepository.Instance()[cb.Name];
+                    if (!String.IsNullOrEmpty(cb.ValueMember))
+                        cb.SelectedValue = value;
+                    else
+                        cb.SelectedItem = value;
+                } else if (control is CheckBox) {
+                    var ch = (CheckBox)control;
+                    ch.Checked = ConfigRepository.Instance().GetBoolean(ch.Name);
+                } else if (control is NumericUpDown) {
+                    var nud = (NumericUpDown)control;
+                    nud.Value = ConfigRepository.Instance().GetDecimal(nud.Name);
+                } else if (control is GroupBox)
+                    LoadAndSetupConfiguration(((GroupBox)control).Controls);
+            }
         }
 
         private void PopulateAppIdCombo(ComboBox combo, GameVersion gameVersion) {
@@ -49,14 +60,12 @@ namespace RocksmithToolkitGUI.Config
             combo.DataSource = appIdList;
             combo.DisplayMember = "DisplayName";
             combo.ValueMember = "AppId";
-            combo.SelectedValue = ConfigRepository.Instance()[combo.Name];
         }
 
         private void PopulateEnumCombo(ComboBox combo, Type typeEnum) {
             var enumList = Enum.GetNames(typeEnum).ToList<string>();
             enumList.Remove("None");
             combo.DataSource = enumList;
-            combo.SelectedItem = ConfigRepository.Instance()[combo.Name];
         }
 
         private void PopulateRampUp() {
