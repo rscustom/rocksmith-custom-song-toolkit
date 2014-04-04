@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml.Serialization;
 using RocksmithToolkitLib;
 
-namespace RocksmithToolkitLib.DLCPackage {
+namespace RocksmithToolkitLib {
     public class SongAppId {
         [XmlAttribute("Version")]
         public GameVersion GameVersion { get; set; }

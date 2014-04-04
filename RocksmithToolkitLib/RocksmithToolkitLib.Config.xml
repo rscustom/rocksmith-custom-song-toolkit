@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ArrayOfConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Config Key="general_usebeta" Value="true" />
+  <Config Key="general_replacerepo" Value="false" />
   <Config Key="general_urllastestrelease" Value="http://www.rscustom.net/builds/latest" />
   <Config Key="general_urllastestbuild" Value="http://www.rscustom.net/builds/latest_test" />
   <Config Key="general_defaultappid_RS2012" Value="206102"  />

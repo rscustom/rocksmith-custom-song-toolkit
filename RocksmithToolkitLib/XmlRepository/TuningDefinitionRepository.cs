@@ -8,7 +8,7 @@ using System.Reflection;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Sng;
 
-namespace RocksmithToolkitLib.DLCPackage {
+namespace RocksmithToolkitLib {
     public class TuningDefinitionRepository : XmlRepository<TuningDefinition>
     {
         private static readonly Lazy<TuningDefinitionRepository> instance = new Lazy<TuningDefinitionRepository>(() => new TuningDefinitionRepository());
@@ -17,7 +17,7 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public static TuningDefinitionRepository Instance() { return instance.Value; }
 
-        public TuningDefinitionRepository() : base(FILENAME) { }
+        public TuningDefinitionRepository() : base(FILENAME, new TuningComparer()) { }
 
         public IEnumerable<TuningDefinition> Select(GameVersion gameVersion)
         {
@@ -60,6 +60,25 @@ namespace RocksmithToolkitLib.DLCPackage {
         public TuningDefinition SelectForBass(int[] tuningStrings, GameVersion gameVersion)
         {
             return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
+        }
+    }
+
+    internal class TuningComparer : IEqualityComparer<TuningDefinition>
+    {
+        public bool Equals(TuningDefinition x, TuningDefinition y)
+        {
+            if (x == null || y == null)
+                return false;
+
+            return (x.GameVersion == y.GameVersion && x.Tuning == y.Tuning);
+        }
+
+        public int GetHashCode(TuningDefinition obj)
+        {
+            if (Object.ReferenceEquals(obj, null))
+                return 0;
+
+            return obj.GameVersion.GetHashCode() ^ obj.GameVersion.GetHashCode() + obj.Tuning.GetHashCode();
         }
     }
 }

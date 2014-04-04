@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Reflection;
 
-namespace RocksmithToolkitLib.DLCPackage {
+namespace RocksmithToolkitLib {
     public class ConfigRepository : XmlRepository<Config> {
         private static readonly Lazy<ConfigRepository> instance = new Lazy<ConfigRepository>(() => new ConfigRepository());
 
@@ -14,7 +14,7 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public static ConfigRepository Instance() { return instance.Value; }
 
-        public ConfigRepository() : base(FILENAME) { }
+        public ConfigRepository() : base(FILENAME, new ConfigComparer()) { }
 
         public Config Select(string configKey)
         {
@@ -70,6 +70,25 @@ namespace RocksmithToolkitLib.DLCPackage {
 
         public decimal GetDecimal(string configKey) {
             return Convert.ToDecimal(List.FirstOrDefault<Config>(s => s.Key == configKey).Value);
+        }
+    }
+
+    internal class ConfigComparer : IEqualityComparer<Config>
+    {
+        public bool Equals(Config x, Config y)
+        {
+            if (x == null || y == null)
+                return false;
+
+            return (x.Key == y.Key);
+        }
+
+        public int GetHashCode(Config obj)
+        {
+            if (Object.ReferenceEquals(obj, null))
+                return 0;
+
+            return obj.Key.GetHashCode() ^ obj.Key.GetHashCode();
         }
     }
 }

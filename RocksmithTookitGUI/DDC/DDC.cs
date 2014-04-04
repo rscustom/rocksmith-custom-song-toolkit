@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.IO;
 using Ookii.Dialogs;
 using System.Diagnostics;
+using RocksmithToolkitLib;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.Manifest;

@@ -15,6 +15,10 @@ namespace RocksmithToolkitUpdater
 {
     public partial class AutoUpdater : Form
     {
+        private const string APP_RSGUI = "RocksmithToolkitGUI.exe";
+        private const string APP_RSLIB = "RocksmithToolkitLib.dll";
+        private const string APP_CSZIP = "ICSharpCode.SharpZipLib.dll";
+
         private WebClient webClient;
         private Stopwatch sw = new Stopwatch();
         private BackgroundWorker bWorker = new BackgroundWorker();
@@ -24,6 +28,24 @@ namespace RocksmithToolkitUpdater
             get { return Path.GetDirectoryName(Application.ExecutablePath); }
         }
 
+        private string _fileUrl = String.Empty;
+        private string FileUrl {
+            get {
+                if (String.IsNullOrEmpty(_fileUrl))
+                    _fileUrl = (string)AssemblyCaller.Call(Path.Combine(workDir, APP_RSLIB), "RocksmithToolkitLib.ToolkitVersionOnline", "GetFileUrl", null, new object[] { true });
+                return _fileUrl;
+            }
+        }
+
+        private bool? _replaceRepo = null;
+        private bool ReplaceRepo {
+            get {
+                if (_replaceRepo == null)
+                    _replaceRepo = (bool)AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), "RocksmithToolkitLib.ConfigRepository", "GetBoolean", new object[] { "general_replacerepo" });
+                return (bool)_replaceRepo;
+            }
+        }
+
         public AutoUpdater() {
             InitializeComponent();
             //System.Diagnostics.Debugger.Launch();
@@ -31,7 +53,7 @@ namespace RocksmithToolkitUpdater
         }
 
         private void UpdateToolkit() {
-            var url = GetFileUrl();
+            var url = FileUrl;
             var downloadUri = new Uri(url);
             localFile = Path.Combine(workDir, Path.GetFileName(downloadUri.LocalPath));
             
@@ -104,7 +126,7 @@ namespace RocksmithToolkitUpdater
         }
 
         public void ExtractFile(string output) {
-            AssemblyCaller.Call(Path.Combine(workDir, "ICSharpCode.SharpZipLib.dll"), "ICSharpCode.SharpZipLib.Zip.FastZip", "ExtractZip", new Type[] { typeof(string), typeof(string), typeof(string) }, new object[] { localFile, output, null });
+            AssemblyCaller.Call(Path.Combine(workDir, APP_CSZIP), "ICSharpCode.SharpZipLib.Zip.FastZip", "ExtractZip", new Type[] { typeof(string), typeof(string), typeof(string) }, new object[] { localFile, output, null });
         }
 
         private void StartToolkitGUI(object sender, RunWorkerCompletedEventArgs e)
@@ -112,14 +134,10 @@ namespace RocksmithToolkitUpdater
             string toolkitRootPath = Path.GetDirectoryName(Application.ExecutablePath);
             
             Process updaterProcess = new Process();
-            updaterProcess.StartInfo.FileName = Path.Combine(toolkitRootPath, "RocksmithToolkitGUI.exe");
+            updaterProcess.StartInfo.FileName = Path.Combine(toolkitRootPath, APP_RSGUI);
             updaterProcess.StartInfo.WorkingDirectory = toolkitRootPath;
             updaterProcess.Start();
             Application.Exit();
-        }
-
-        private string GetFileUrl() {
-            return (string)AssemblyCaller.Call(Path.Combine(workDir, "RocksmithToolkitLib.dll"), "RocksmithToolkitLib.ToolkitVersionOnline", "GetFileUrl", null, new object[] { true });
         }
 
         public void MoveFiles(string sourceDir, string destDir)
@@ -138,12 +156,36 @@ namespace RocksmithToolkitUpdater
                 MoveFiles(dir.FullName, od);
             }
 
-            // UPDATE FILES
+            // REPLACE FILES
             foreach (var file in files)
             {
                 var of = Path.Combine(destDir, file.Name);
-                File.Copy(file.FullName, of, true);
+                if (!ReplaceRepo && (file.Name.StartsWith("RocksmithToolkitLib.") && file.Name.EndsWith(".xml")))
+                    MergeXmlRepository(file.FullName, of);
+                else
+                    File.Copy(file.FullName, of, true);
             }
+        }
+
+        private void MergeXmlRepository(string sourceFile, string destFile) {
+            var repo = String.Empty;
+
+            switch (Path.GetFileName(sourceFile))
+	        {
+                case "RocksmithToolkitLib.Config.xml":
+                    repo = "ConfigRepository";
+                    break;
+                case "RocksmithToolkitLib.SongAppId.xml":
+                    repo = "SongAppIdRepository";
+                    break;
+                case "RocksmithToolkitLib.TuningDefinition.xml":
+                    repo = "TuningDefinitionRepository";
+                    break;
+                
+	        }
+
+            if (!String.IsNullOrEmpty(repo))
+                AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), String.Format("RocksmithToolkitLib.{0}", repo), "Merge", new object[] { sourceFile, destFile });
         }
 
         private void ShowCurrentOperation(string message) {

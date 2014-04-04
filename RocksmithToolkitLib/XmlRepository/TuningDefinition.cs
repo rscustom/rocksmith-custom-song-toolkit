@@ -7,7 +7,7 @@ using RocksmithToolkitLib;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Sng2014HSL;
 
-namespace RocksmithToolkitLib.DLCPackage {
+namespace RocksmithToolkitLib {
     public class TuningDefinition {
         [XmlAttribute("Version")]
         public GameVersion GameVersion { get; set; }
