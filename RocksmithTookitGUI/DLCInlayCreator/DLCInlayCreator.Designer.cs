@@ -40,6 +40,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.Frets24Checkbox = new System.Windows.Forms.CheckBox();
             this.gbInfo = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.inlayTemplateCombo = new System.Windows.Forms.ComboBox();
             this.picColored = new System.Windows.Forms.PictureBox();
             this.picInlay = new System.Windows.Forms.PictureBox();
             this.picIcon = new System.Windows.Forms.PictureBox();
@@ -57,8 +59,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.loadCGMButton = new System.Windows.Forms.Button();
             this.gbInlayType = new System.Windows.Forms.GroupBox();
             this.inlayTypeCombo = new System.Windows.Forms.ComboBox();
-            this.inlayTemplateCombo = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.inlayNameTextbox = new RocksmithToolkitGUI.CueTextBox();
             this.gbInfo.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -80,7 +80,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.appIdCombo.Location = new System.Drawing.Point(228, 15);
             this.appIdCombo.Margin = new System.Windows.Forms.Padding(2);
             this.appIdCombo.Name = "appIdCombo";
-            this.appIdCombo.Size = new System.Drawing.Size(266, 21);
+            this.appIdCombo.Size = new System.Drawing.Size(263, 21);
             this.appIdCombo.TabIndex = 7;
             // 
             // label5
@@ -144,7 +144,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.gbInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbInfo.Location = new System.Drawing.Point(3, 47);
             this.gbInfo.Name = "gbInfo";
-            this.gbInfo.Size = new System.Drawing.Size(501, 41);
+            this.gbInfo.Size = new System.Drawing.Size(498, 41);
             this.gbInfo.TabIndex = 72;
             this.gbInfo.TabStop = false;
             this.gbInfo.Text = "Info";
@@ -165,10 +165,33 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.groupBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.groupBox2.Location = new System.Drawing.Point(3, 94);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(501, 176);
+            this.groupBox2.Size = new System.Drawing.Size(498, 176);
             this.groupBox2.TabIndex = 83;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Guitar Customization";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label2.Location = new System.Drawing.Point(5, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(84, 13);
+            this.label2.TabIndex = 82;
+            this.label2.Text = "Saved template:";
+            // 
+            // inlayTemplateCombo
+            // 
+            this.inlayTemplateCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.inlayTemplateCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.inlayTemplateCombo.FormattingEnabled = true;
+            this.inlayTemplateCombo.Location = new System.Drawing.Point(6, 42);
+            this.inlayTemplateCombo.Margin = new System.Windows.Forms.Padding(2);
+            this.inlayTemplateCombo.Name = "inlayTemplateCombo";
+            this.inlayTemplateCombo.Size = new System.Drawing.Size(186, 21);
+            this.inlayTemplateCombo.TabIndex = 2;
+            this.inlayTemplateCombo.SelectedIndexChanged += new System.EventHandler(this.inlayTemplateCombo_SelectedIndexChanged);
             // 
             // picColored
             // 
@@ -221,7 +244,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             this.updateProgress.Location = new System.Drawing.Point(3, 312);
             this.updateProgress.Name = "updateProgress";
-            this.updateProgress.Size = new System.Drawing.Size(501, 10);
+            this.updateProgress.Size = new System.Drawing.Size(498, 10);
             this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.updateProgress.TabIndex = 84;
             this.updateProgress.Visible = false;
@@ -328,7 +351,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             this.inlayGenerateButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.inlayGenerateButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.inlayGenerateButton.Location = new System.Drawing.Point(328, 276);
+            this.inlayGenerateButton.Location = new System.Drawing.Point(326, 276);
             this.inlayGenerateButton.Name = "inlayGenerateButton";
             this.inlayGenerateButton.Size = new System.Drawing.Size(176, 29);
             this.inlayGenerateButton.TabIndex = 13;
@@ -357,7 +380,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.gbInlayType.Size = new System.Drawing.Size(192, 41);
             this.gbInlayType.TabIndex = 73;
             this.gbInlayType.TabStop = false;
-            this.gbInlayType.Text = "Inlay Type";
+            this.gbInlayType.Text = "Type";
             // 
             // inlayTypeCombo
             // 
@@ -370,29 +393,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.inlayTypeCombo.Name = "inlayTypeCombo";
             this.inlayTypeCombo.Size = new System.Drawing.Size(181, 21);
             this.inlayTypeCombo.TabIndex = 1;
-            // 
-            // inlayTemplateCombo
-            // 
-            this.inlayTemplateCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.inlayTemplateCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.inlayTemplateCombo.FormattingEnabled = true;
-            this.inlayTemplateCombo.Location = new System.Drawing.Point(11, 42);
-            this.inlayTemplateCombo.Margin = new System.Windows.Forms.Padding(2);
-            this.inlayTemplateCombo.Name = "inlayTemplateCombo";
-            this.inlayTemplateCombo.Size = new System.Drawing.Size(181, 21);
-            this.inlayTemplateCombo.TabIndex = 2;
-            this.inlayTemplateCombo.SelectedIndexChanged += new System.EventHandler(this.inlayTemplateCombo_SelectedIndexChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label2.Location = new System.Drawing.Point(13, 27);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(84, 13);
-            this.label2.TabIndex = 82;
-            this.label2.Text = "Saved template:";
             // 
             // inlayNameTextbox
             // 
