@@ -110,8 +110,6 @@ namespace RocksmithToolkitGUI
             if (onlineVersion != null)
                 if (ToolkitVersion.commit != "nongit")
                     updateButton.Visible = updateButton.Enabled = onlineVersion.UpdateAvailable;
-
-            updateButton.Visible = updateButton.Enabled = true;
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
