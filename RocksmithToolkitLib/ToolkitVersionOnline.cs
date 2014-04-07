@@ -23,30 +23,28 @@ namespace RocksmithToolkitLib
         [JsonProperty("update")]
         public bool UpdateAvailable { get; set; }
 
+        [JsonProperty("commits")]
+        public string[] CommitMessages { get; set; }
+
         [JsonIgnore]
         public DateTime Date {
             get {
-                DateTime dateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+                DateTime dateTime = new DateTime(1970,1,1,0,0,0,0,DateTimeKind.Utc);
                 dateTime = dateTime.AddSeconds(UnixTimestamp).ToLocalTime();
                 return dateTime;
             }
         }
 
-        public static bool HasNewVersion() {
+        public static ToolkitVersionOnline Load() {
             var url = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.commit);
-
+            
             // GET ONLINE VERSION
             var tvo = new ToolkitVersionOnline();
             var wc = new WebClient();
             var versionJson = wc.DownloadString(url);
             tvo = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionJson);
 
-            // COMPARE ONLINE AND LOCAL
-            if (ToolkitVersion.commit != "nongit")
-                if (tvo.UpdateAvailable)
-                    return true;
-
-            return false;
+            return tvo;
         }
 
         public static string GetFileUrl(bool addExtension = false) {

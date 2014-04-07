@@ -15,11 +15,8 @@ namespace RocksmithToolkitGUI
 {
     public partial class MainForm : Form
     {
-        private const string APP_UPDATER = "RocksmithToolkitUpdater.exe";
-        private const string APP_UPDATING = "RocksmithToolkitUpdating.exe";
-
         internal BackgroundWorker bWorker = new BackgroundWorker();
-        private bool NewVersionAvailable = false;
+        private ToolkitVersionOnline onlineVersion = null;
 
         public static bool IsInDesignMode
         {
@@ -29,12 +26,6 @@ namespace RocksmithToolkitGUI
                     return true;
 
                 return false;
-            }
-        }
-
-        private string RootDirectory {
-            get {
-                return Path.GetDirectoryName(Application.ExecutablePath);
             }
         }
 
@@ -104,14 +95,8 @@ namespace RocksmithToolkitGUI
         {
             try
             {
-                // DELETE OLD UPDATER APP IF EXISTS
-                var updatingApp = Path.Combine(RootDirectory, APP_UPDATING);
-                if (File.Exists(updatingApp))
-                    File.Delete(updatingApp);
-
                 // CHECK FOR NEW AVAILABLE VERSION AND ENABLE UPDATE
-                if (ToolkitVersionOnline.HasNewVersion())
-                    NewVersionAvailable = true;
+                onlineVersion = ToolkitVersionOnline.Load();
             }
             catch (WebException) { /* Do nothing on 404 */ }
             catch (Exception ex)
@@ -122,7 +107,11 @@ namespace RocksmithToolkitGUI
 
         private void EnableUpdate(object sender, RunWorkerCompletedEventArgs e)
         {
-            updateButton.Visible = updateButton.Enabled = NewVersionAvailable;            
+            if (onlineVersion != null)
+                if (ToolkitVersion.commit != "nongit")
+                    updateButton.Visible = updateButton.Enabled = onlineVersion.UpdateAvailable;
+
+            updateButton.Visible = updateButton.Enabled = true;
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -181,20 +170,12 @@ namespace RocksmithToolkitGUI
             }
         }
 
-        private void updateButton_Click(object sender, EventArgs e) {
-            var updaterApp = Path.Combine(RootDirectory, APP_UPDATER);
-            var updatingApp = Path.Combine(RootDirectory, APP_UPDATING);
-
-            // COPY TO NOT LOCK PROCESS ON UPDATE
-            if (File.Exists(updaterApp)) {
-                File.Copy(updaterApp, updatingApp, true);
-            }                
-
-            // START AUTO UPDATE
-            GeneralExtensions.RunExternalExecutable(updatingApp);
-            
-            // EXIT TOOLKIT
-            Application.Exit();
+        private void updateButton_Click(object sender, EventArgs e)
+        {
+            using (var u = new UpdateForm()) {
+                u.Init(onlineVersion);
+                u.ShowDialog();
+            }
         }
 
         private void configurationToolStripMenuItem_Click(object sender, EventArgs e) {
