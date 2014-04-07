@@ -40,6 +40,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.general_defaultappid_RS2012 = new System.Windows.Forms.ComboBox();
             this.gbGeneral = new System.Windows.Forms.GroupBox();
+            this.general_replacerepo = new System.Windows.Forms.CheckBox();
             this.rs2014PathButton = new System.Windows.Forms.Button();
             this.rs1PathButton = new System.Windows.Forms.Button();
             this.general_rs2014path = new RocksmithToolkitGUI.CueTextBox();
@@ -62,7 +63,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.converter_source = new System.Windows.Forms.ComboBox();
             this.closeConfigButton = new System.Windows.Forms.Button();
-            this.general_replacerepo = new System.Windows.Forms.CheckBox();
+            this.gbAutoUpdate = new System.Windows.Forms.GroupBox();
             this.gbCreator.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
@@ -70,18 +71,19 @@
             this.gbDDC.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).BeginInit();
             this.gbConverter.SuspendLayout();
+            this.gbAutoUpdate.SuspendLayout();
             this.SuspendLayout();
             // 
             // general_usebeta
             // 
             this.general_usebeta.AutoSize = true;
             this.general_usebeta.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.general_usebeta.Location = new System.Drawing.Point(377, 18);
+            this.general_usebeta.Location = new System.Drawing.Point(12, 19);
             this.general_usebeta.Name = "general_usebeta";
             this.general_usebeta.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.general_usebeta.Size = new System.Drawing.Size(128, 17);
+            this.general_usebeta.Size = new System.Drawing.Size(111, 17);
             this.general_usebeta.TabIndex = 2;
-            this.general_usebeta.Text = "Auto-update use beta";
+            this.general_usebeta.Text = "Use beta releases";
             this.general_usebeta.UseVisualStyleBackColor = true;
             this.general_usebeta.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -227,7 +229,7 @@
             // 
             // gbGeneral
             // 
-            this.gbGeneral.Controls.Add(this.general_replacerepo);
+            this.gbGeneral.Controls.Add(this.gbAutoUpdate);
             this.gbGeneral.Controls.Add(this.rs2014PathButton);
             this.gbGeneral.Controls.Add(this.rs1PathButton);
             this.gbGeneral.Controls.Add(this.general_rs2014path);
@@ -238,7 +240,6 @@
             this.gbGeneral.Controls.Add(this.general_defaultauthor);
             this.gbGeneral.Controls.Add(this.label4);
             this.gbGeneral.Controls.Add(this.general_defaultappid_RS2014);
-            this.gbGeneral.Controls.Add(this.general_usebeta);
             this.gbGeneral.Controls.Add(this.label2);
             this.gbGeneral.Controls.Add(this.general_defaultappid_RS2012);
             this.gbGeneral.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
@@ -250,6 +251,18 @@
             this.gbGeneral.TabIndex = 14;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
+            // 
+            // general_replacerepo
+            // 
+            this.general_replacerepo.AutoSize = true;
+            this.general_replacerepo.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.general_replacerepo.Location = new System.Drawing.Point(13, 42);
+            this.general_replacerepo.Name = "general_replacerepo";
+            this.general_replacerepo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.general_replacerepo.Size = new System.Drawing.Size(110, 17);
+            this.general_replacerepo.TabIndex = 3;
+            this.general_replacerepo.Text = "Reset repositories";
+            this.general_replacerepo.UseVisualStyleBackColor = true;
             // 
             // rs2014PathButton
             // 
@@ -263,7 +276,7 @@
             // 
             // rs1PathButton
             // 
-            this.rs1PathButton.Location = new System.Drawing.Point(473, 89);
+            this.rs1PathButton.Location = new System.Drawing.Point(473, 90);
             this.rs1PathButton.Name = "rs1PathButton";
             this.rs1PathButton.Size = new System.Drawing.Size(34, 23);
             this.rs1PathButton.TabIndex = 6;
@@ -297,7 +310,7 @@
             this.general_rs1path.Cue = "Rocksmith path";
             this.general_rs1path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.general_rs1path.ForeColor = System.Drawing.Color.Gray;
-            this.general_rs1path.Location = new System.Drawing.Point(122, 91);
+            this.general_rs1path.Location = new System.Drawing.Point(122, 92);
             this.general_rs1path.Name = "general_rs1path";
             this.general_rs1path.Size = new System.Drawing.Size(345, 20);
             this.general_rs1path.TabIndex = 5;
@@ -518,17 +531,17 @@
             this.closeConfigButton.UseVisualStyleBackColor = false;
             this.closeConfigButton.Click += new System.EventHandler(this.closeConfigButton_Click);
             // 
-            // general_replacerepo
+            // gbAutoUpdate
             // 
-            this.general_replacerepo.AutoSize = true;
-            this.general_replacerepo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.general_replacerepo.Location = new System.Drawing.Point(395, 43);
-            this.general_replacerepo.Name = "general_replacerepo";
-            this.general_replacerepo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.general_replacerepo.Size = new System.Drawing.Size(110, 17);
-            this.general_replacerepo.TabIndex = 3;
-            this.general_replacerepo.Text = "Reset repositories";
-            this.general_replacerepo.UseVisualStyleBackColor = true;
+            this.gbAutoUpdate.Controls.Add(this.general_replacerepo);
+            this.gbAutoUpdate.Controls.Add(this.general_usebeta);
+            this.gbAutoUpdate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbAutoUpdate.Location = new System.Drawing.Point(377, 10);
+            this.gbAutoUpdate.Name = "gbAutoUpdate";
+            this.gbAutoUpdate.Size = new System.Drawing.Size(129, 77);
+            this.gbAutoUpdate.TabIndex = 99;
+            this.gbAutoUpdate.TabStop = false;
+            this.gbAutoUpdate.Text = "Auto-update";
             // 
             // GeneralConfig
             // 
@@ -552,6 +565,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).EndInit();
             this.gbConverter.ResumeLayout(false);
             this.gbConverter.PerformLayout();
+            this.gbAutoUpdate.ResumeLayout(false);
+            this.gbAutoUpdate.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -593,5 +608,6 @@
         private System.Windows.Forms.Button rs2014PathButton;
         private System.Windows.Forms.Button rs1PathButton;
         private System.Windows.Forms.CheckBox general_replacerepo;
+        private System.Windows.Forms.GroupBox gbAutoUpdate;
     }
 }
