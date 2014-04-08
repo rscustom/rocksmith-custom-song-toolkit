@@ -60,7 +60,8 @@ namespace RocksmithToolkitLib.DLCPackage
         #region RS2014 only
 
         public List<Tone2014> TonesRS2014 { get; set; }
-
+        public float? PreviewVolume { get; set; }
+        
         // Cache art image conversion
         public List<DDSConvertedFile> ArtFiles { get; set; }
 
@@ -87,6 +88,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         // Fill Package Data
                         data.Name = attr.DLCKey;
                         data.Volume = attr.SongVolume;
+                        data.PreviewVolume = (attr.PreviewVolume != null) ? (float)attr.PreviewVolume : data.Volume;
 
                         // Fill SongInfo
                         data.SongInfo = new SongInfo();

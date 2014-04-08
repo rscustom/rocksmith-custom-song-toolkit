@@ -50,6 +50,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public List<Tone2014> Tones { get; set; }
         public string InputEvent { get; set; } //Vocals only
         public float SongVolume { get; set; } //Customs only (to easy platform conversion) its float!
+        public float? PreviewVolume { get; set; } //Customs only like above
 
         public Attributes2014() {}
 
@@ -86,6 +87,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             SongEvent = String.Format("Play_{0}", info.Name);
             SongXml = songXmlUrn;
             SongVolume = info.Volume;
+            PreviewVolume = (info.PreviewVolume != null) ? info.PreviewVolume : SongVolume;
                 
             // Only for Vocal
             if (IsVocal)

@@ -643,7 +643,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 AudioPath = BasePath.AbsoluteTo(info.OggPath);
             platformPC.Checked = !String.IsNullOrEmpty(info.OggPath);
 
-            volumeBox.Value = Decimal.Round((decimal)info.Volume, 2);
+            songVolumeBox.Value = Decimal.Round((decimal)info.Volume, 2);
+            previewVolumeBox.Value = (info.PreviewVolume != null) ? Decimal.Round((decimal)info.PreviewVolume, 2) : songVolumeBox.Value;
 
             //if (platformXBox360.Checked)
             //    rbuttonSignatureLIVE.Checked = info.SignatureType == PackageMagic.LIVE;
@@ -669,13 +670,23 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void Song_Volume_Tip(object sender, EventArgs e)
+        private void songVolumeBox_ValueChanged(object sender, EventArgs e)
         {
+            previewVolumeBox.Value = songVolumeBox.Value;
+            ShowVolumeTip();
+        }
+
+        private void previewVolumeBox_ValueChanged(object sender, EventArgs e)
+        {
+            ShowVolumeTip();
+        }
+
+        private void ShowVolumeTip() {
             ToolTip tt = new ToolTip();
             tt.IsBalloon = true;
             tt.InitialDelay = 0;
             tt.ShowAlways = true;
-            tt.SetToolTip(volumeBox, "HIGHER 0,-1,-2,-3,..., AVERAGE -12 ,...,-16,-17 LOWER");
+            tt.SetToolTip(songVolumeBox, "HIGHER 0,-1,-2,-3,..., AVERAGE -12 ,...,-16,-17 LOWER");
         }
 
         private DLCPackageData GetPackageData()
@@ -824,7 +835,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //{
             //    licenses.Add(new XBox360License() { ID = Convert.ToInt64(xboxLicense0IDTB.Text.Trim(), 16), Bit = 1, Flag = 1 });
             //}
-            
+
+            var songVol = (float)songVolumeBox.Value;
+            var previewVol = (!String.IsNullOrEmpty(audioPreviewPath)) ? (float)songVolumeBox.Value : songVol;
+
             var data = new DLCPackageData
             {
                 GameVersion = CurrentGameVersion,
@@ -852,7 +866,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Arrangements = arrangements,
                 Tones = tones,
                 TonesRS2014 = tonesRS2014,
-                Volume = (float)volumeBox.Value,
+                Volume = songVol,
+                PreviewVolume = previewVol,
                 SignatureType = PackageMagic.CON,
                 PackageVersion = PackageVersion
             };
@@ -1147,6 +1162,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             platformMAC.Enabled = CurrentGameVersion == GameVersion.RS2014;
             platformMAC.Checked = CurrentGameVersion == GameVersion.RS2014;
 
+            // Song preview volume RS2014 only
+            previewVolumeBox.Enabled = CurrentGameVersion == GameVersion.RS2014;
+            
             // AudioTB
             switch (CurrentGameVersion)
             {
