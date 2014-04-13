@@ -16,7 +16,8 @@ using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitGUI.DLCInlayCreator
 {
-    public partial class DLCInlayCreator : UserControl {
+    public partial class DLCInlayCreator : UserControl
+    {
         #region Properties
 
         private const string MESSAGEBOX_CAPTION = "DLC Inlay Creator";
@@ -27,26 +28,30 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         private string Author = String.Empty;
         private string IconFile = String.Empty;
         private string InlayFile = String.Empty;
-        
+
         private BackgroundWorker bwGenerate = new BackgroundWorker();
         private StringBuilder errorsFound;
         private string dlcSavePath;
-        
-        private string workDir {
+
+        private string workDir
+        {
             get { return Path.GetDirectoryName(Application.ExecutablePath); }
         }
 
-        private string InlayName {
+        private string InlayName
+        {
             get { return inlayNameTextbox.Text; }
             set { inlayNameTextbox.Text = value; }
         }
 
-        private bool Frets24 {
+        private bool Frets24
+        {
             get { return Frets24Checkbox.Checked; }
             set { Frets24Checkbox.Checked = value; }
         }
 
-        private bool Colored {
+        private bool Colored
+        {
             get { return ColoredCheckbox.Checked; }
             set { ColoredCheckbox.Checked = value; }
         }
@@ -77,10 +82,12 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 InlayName = ConfigRepository.Instance()["cgm_inlayname"];
                 Frets24 = ConfigRepository.Instance().GetBoolean("cgm_24frets");
                 Colored = ConfigRepository.Instance().GetBoolean("cgm_coloredinlay");
-            } catch { /*For mono compatibility*/ }
+            }
+            catch { /*For mono compatibility*/ }
         }
 
-        private void PopulateInlayTypeCombo() {
+        private void PopulateInlayTypeCombo()
+        {
             var enumList = Enum.GetNames(typeof(InlayType)).ToList<string>();
             inlayTypeCombo.DataSource = enumList;
         }
@@ -96,7 +103,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             appIdCombo.SelectedValue = songAppId.AppId;
         }
 
-        private void PopulateInlayTemplateCombo() {
+        private void PopulateInlayTemplateCombo()
+        {
             var templateList = Directory.EnumerateFiles(Path.Combine(workDir, "cgm"));
             inlayTemplateCombo.Items.Clear();
             inlayTemplateCombo.Items.Add("Select template");
@@ -105,7 +113,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             inlayTemplateCombo.SelectedIndex = 0;
         }
 
-        private void plataform_CheckedChanged(object sender, EventArgs e) {
+        private void plataform_CheckedChanged(object sender, EventArgs e)
+        {
             appIdCombo.Enabled = platformPC.Checked || platformMAC.Checked;
         }
 
@@ -124,7 +133,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
         private void picIcon_Click(object sender, EventArgs e)
         {
-            using (var ofd = new OpenFileDialog()) {
+            using (var ofd = new OpenFileDialog())
+            {
                 ofd.Title = "Select a valid PNG 512x512 image file";
                 ofd.Filter = "Image file 512x512 (*.png)|*.png";
                 ofd.FilterIndex = 1;
@@ -143,7 +153,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
         private void picInlay_Click(object sender, EventArgs e)
         {
-            using (var ofd = new OpenFileDialog()) {
+            using (var ofd = new OpenFileDialog())
+            {
                 ofd.Title = "Select a valid PNG 1024x512 image file";
                 ofd.Filter = "Image file 1024x512 (*.png)|*.png";
                 ofd.FilterIndex = 1;
@@ -160,12 +171,14 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             }
         }
 
-        private void inlayNameTextbox_Leave(object sender, EventArgs e) {
+        private void inlayNameTextbox_Leave(object sender, EventArgs e)
+        {
             TextBox textbox = (TextBox)sender;
             textbox.Text = textbox.Text.Trim().GetValidName();
         }
 
-        private void FlipX_Changed(object sender, EventArgs e) {
+        private void FlipX_Changed(object sender, EventArgs e)
+        {
             if (String.IsNullOrEmpty(InlayFile))
                 DefaultResourceToFile();
 
@@ -173,7 +186,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             picInlay.ImageLocation = InlayFile;
         }
 
-        private void FlipY_Changed(object sender, EventArgs e) {
+        private void FlipY_Changed(object sender, EventArgs e)
+        {
             if (String.IsNullOrEmpty(InlayFile))
                 DefaultResourceToFile();
 
@@ -181,7 +195,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             picInlay.ImageLocation = InlayFile;
         }
 
-        private void DefaultResourceToFile() {
+        private void DefaultResourceToFile()
+        {
             // Icon
             using (var iconStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_icon))
             {
@@ -197,10 +212,12 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             }
         }
 
-        private void loadCGMButton_Click(object sender, EventArgs e) {
+        private void loadCGMButton_Click(object sender, EventArgs e)
+        {
             var customCGM = String.Empty;
 
-            using (var ofd = new OpenFileDialog()) {
+            using (var ofd = new OpenFileDialog())
+            {
                 ofd.Title = "Select a CGM file";
                 ofd.Filter = "CGM file (*.cgm)|*.cgm";
                 ofd.FilterIndex = 1;
@@ -214,13 +231,16 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             LoadCGM(customCGM);
         }
 
-        private void inlayTemplateCombo_SelectedIndexChanged(object sender, EventArgs e) {
+        private void inlayTemplateCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
             if (inlayTemplateCombo.SelectedIndex != 0)
                 LoadCGM(Path.Combine(workDir, "cgm", inlayTemplateCombo.SelectedItem + ".cgm"));
         }
 
-        private void LoadCGM(string customCGM) {
-            if (!String.IsNullOrEmpty(customCGM)) {
+        private void LoadCGM(string customCGM)
+        {
+            if (!String.IsNullOrEmpty(customCGM))
+            {
                 // Unpack CGM file (7z file format)
                 var unpackedFolder = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(customCGM));
 
@@ -231,10 +251,14 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 GeneralExtensions.RunExternalExecutable(APP_7Z, true, true, true, args);
 
                 var errorMessage = string.Format("Template {0} can't be loaded, maybe doesn't exists or is corrupted.", customCGM);
-                if (!Directory.Exists(unpackedFolder)) {
+                if (!Directory.Exists(unpackedFolder))
+                {
                     MessageBox.Show(errorMessage, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+
+                // Setup inlay pre-definition
+                Frets24Checkbox.Checked = ColoredCheckbox.Checked = chkFlipX.Checked = chkFlipY.Checked = false;
 
                 // Open the setup.smb INI file
                 Configuration iniConfig = Configuration.Load(Path.Combine(unpackedFolder, "setup.smb"), ParseFlags.IgnoreComments);
@@ -244,18 +268,14 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 Frets24 = iniConfig["Setup"]["24frets"].GetValue<bool>();
                 Colored = iniConfig["Setup"]["coloredinlay"].GetValue<bool>();
 
-                // Setup inlay pre-definition
-                Frets24Checkbox.Checked = ColoredCheckbox.Checked = chkFlipX.Checked = chkFlipY.Checked = false;
-                Frets24Checkbox.Checked = Frets24;
-                ColoredCheckbox.Checked = Colored;
-
                 // Convert the dds files to png
                 var iconFile = Path.Combine(unpackedFolder, "icon.dds");
                 GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, String.Format(" -out png \"{0}\"", iconFile));
                 var inlayFile = Path.Combine(unpackedFolder, "inlay.dds");
                 GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, String.Format(" -out png \"{0}\"", inlayFile));
 
-                if (!File.Exists(iconFile) || !File.Exists(inlayFile)) {
+                if (!File.Exists(iconFile) || !File.Exists(inlayFile))
+                {
                     MessageBox.Show(errorMessage, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
@@ -266,14 +286,16 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             }
         }
 
-        private void saveCGMButton_Click(object sender, EventArgs e) {
+        private void saveCGMButton_Click(object sender, EventArgs e)
+        {
             var saveFile = String.Empty;
 
-            using (var sfd = new SaveFileDialog()) {
+            using (var sfd = new SaveFileDialog())
+            {
                 sfd.Title = "Select a location to store your CGM file";
                 sfd.Filter = "CGM file (*.cgm)|*.cgm";
                 sfd.InitialDirectory = Path.Combine(workDir, "cgm");
-                
+
                 if (sfd.ShowDialog() != DialogResult.OK) return;
                 saveFile = sfd.FileName;
             }
@@ -283,7 +305,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             if (Directory.Exists(tmpWorkDir))
                 DirectoryExtension.SafeDelete(tmpWorkDir);
-            
+
             if (!Directory.Exists(tmpWorkDir))
                 Directory.CreateDirectory(tmpWorkDir);
 
@@ -292,7 +314,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             GeneralExtensions.RunExternalExecutable(APP_NVDXT, true, true, true, iconArgs);
             var inlayArgs = String.Format(" -file \"{0}\" -output \"{1}\" -prescale 1024 512 -quality_highest -max -32 dxt5 -dxt5 -overwrite -alpha", InlayFile, Path.Combine(tmpWorkDir, Path.GetFileNameWithoutExtension(InlayFile) + ".dds"));
             GeneralExtensions.RunExternalExecutable(APP_NVDXT, true, true, true, inlayArgs);
-            
+
             // Create setup.smb
             var iniFile = Path.Combine(tmpWorkDir, "setup.smb");
             Configuration iniCFG = new Configuration();
@@ -314,17 +336,20 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // Delete temp work dir
             if (Directory.Exists(tmpWorkDir))
                 DirectoryExtension.SafeDelete(tmpWorkDir);
-            
-            if (MessageBox.Show("CGM template was saved." + Environment.NewLine + "You want to open the folder in which the template was saved?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes) {
+
+            if (MessageBox.Show("CGM template was saved." + Environment.NewLine + "You want to open the folder in which the template was saved?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+            {
                 Process.Start(Path.GetDirectoryName(Path.GetDirectoryName(saveFile)));
             }
 
             PopulateInlayTemplateCombo();
         }
 
-        private void inlayGenerateButton_Click(object sender, EventArgs e) {
+        private void inlayGenerateButton_Click(object sender, EventArgs e)
+        {
             dlcSavePath = workDir;
-            using (var ofd = new SaveFileDialog()) {
+            using (var ofd = new SaveFileDialog())
+            {
                 ofd.FileName = InlayName.GetValidName();
                 ofd.Filter = "Custom Inlay DLC (*.*)|*.*";
                 ofd.InitialDirectory = dlcSavePath;
@@ -348,13 +373,17 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             // Generate
             if (Path.GetFileName(dlcSavePath).Contains(" ") && platformPS3.Checked)
-                if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn")) {
+                if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn"))
+                {
                     MessageBox.Show(String.Format("PS3 package name can't support space character due to encryption limitation. {0} Spaces will be automatic removed for your PS3 package name.", Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                } else {
+                }
+                else
+                {
                     ConfigRepository.Instance()["creator_ps3pkgnamewarn"] = true.ToString();
                 }
 
-            if (!bwGenerate.IsBusy && packageData != null) {
+            if (!bwGenerate.IsBusy && packageData != null)
+            {
                 updateProgress.Visible = true;
                 currentOperationLabel.Visible = true;
                 inlayGenerateButton.Enabled = false;
@@ -362,7 +391,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             }
         }
 
-        private void GeneratePackage(object sender, DoWorkEventArgs e) {
+        private void GeneratePackage(object sender, DoWorkEventArgs e)
+        {
             var packageData = e.Argument as DLCPackageData;
             errorsFound = new StringBuilder();
 
@@ -380,42 +410,54 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             int progress = 0;
 
             if (platformPC.Checked)
-                try {
+                try
+                {
                     bwGenerate.ReportProgress(progress, "Generating PC package");
                     RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, GameVersion.RS2014), DLCPackageType.Inlay);
                     progress += step;
                     bwGenerate.ReportProgress(progress);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     errorsFound.AppendLine(String.Format("Error generate PC package: {0}", ex.Message));
                 }
 
             if (platformMAC.Checked)
-                try {
+                try
+                {
                     bwGenerate.ReportProgress(progress, "Generating Mac package");
                     RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Mac, GameVersion.RS2014), DLCPackageType.Inlay);
                     progress += step;
                     bwGenerate.ReportProgress(progress);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     errorsFound.AppendLine(String.Format("Error generate Mac package: {0}", ex.Message));
                 }
 
             if (platformXBox360.Checked)
-                try {
+                try
+                {
                     bwGenerate.ReportProgress(progress, "Generating XBox 360 package");
                     RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.XBox360, GameVersion.RS2014), DLCPackageType.Inlay);
                     progress += step;
                     bwGenerate.ReportProgress(progress);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     errorsFound.AppendLine(String.Format("Error generate XBox 360 package: {0}", ex.Message));
                 }
 
             if (platformPS3.Checked)
-                try {
+                try
+                {
                     bwGenerate.ReportProgress(progress, "Generating PS3 package");
                     RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.PS3, GameVersion.RS2014), DLCPackageType.Inlay);
                     progress += step;
                     bwGenerate.ReportProgress(progress);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     errorsFound.AppendLine(String.Format("Error generate PS3 package: {0}. {1}PS3 package require 'JAVA x86' (32 bits) installed on your machine to generate properly.", ex.Message, Environment.NewLine));
                 }
 
@@ -424,7 +466,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             e.Result = "generate";
         }
 
-        private void ProgressChanged(object sender, ProgressChangedEventArgs e) {
+        private void ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
             if (e.ProgressPercentage <= updateProgress.Maximum)
                 updateProgress.Value = e.ProgressPercentage;
             else
@@ -433,8 +476,10 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             ShowCurrentOperation(e.UserState as string);
         }
 
-        private void ProcessCompleted(object sender, RunWorkerCompletedEventArgs e) {
-            switch (Convert.ToString(e.Result)) {
+        private void ProcessCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            switch (Convert.ToString(e.Result))
+            {
                 case "generate":
                     var message = "Package was generated.";
                     if (errorsFound.Length > 0)
@@ -442,7 +487,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
                     message += Environment.NewLine + "You want to open the folder in which the package was generated?";
 
-                    if (MessageBox.Show(message, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes) {
+                    if (MessageBox.Show(message, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    {
                         Process.Start(Path.GetDirectoryName(dlcSavePath));
                     }
 
@@ -455,7 +501,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             currentOperationLabel.Visible = false;
         }
 
-        private void ShowCurrentOperation(string message) {
+        private void ShowCurrentOperation(string message)
+        {
             currentOperationLabel.Text = message;
             currentOperationLabel.Refresh();
         }
