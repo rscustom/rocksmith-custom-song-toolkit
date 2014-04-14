@@ -420,7 +420,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.Controls.Add(this.gbInfo);
             this.Name = "DLCInlayCreator";
             this.Size = new System.Drawing.Size(507, 405);
-            this.Load += new System.EventHandler(this.ctrlCGM_Load);
+            this.Load += new System.EventHandler(this.DLCInlayCreator_Load);
+            this.Disposed += new System.EventHandler(this.DLCInlayCreator_Dispose);  
             this.gbInfo.ResumeLayout(false);
             this.gbInfo.PerformLayout();
             this.groupBox2.ResumeLayout(false);
