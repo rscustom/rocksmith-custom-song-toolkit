@@ -74,6 +74,16 @@ namespace RocksmithToolkitLib.Extensions
             return name;
         }
 
+        public static string GetValidInlayName(this string value, bool allowSpace = true)
+        {
+            if (!Char.IsLetter(value.FirstOrDefault()))
+            {
+                MessageBox.Show("You will have better luck if the \r\ninlay name begins with a alpha character.", "Inlay Name Checker", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return value;
+            }
+            return GetValidName(value, allowSpace);
+        }
+
         public static string StripPlatformEndName(this string value) {
             if (value.EndsWith(new Platform(GamePlatform.Pc, GameVersion.None).GetPathName()[2]) ||
                 value.EndsWith(new Platform(GamePlatform.Mac, GameVersion.None).GetPathName()[2]) ||
