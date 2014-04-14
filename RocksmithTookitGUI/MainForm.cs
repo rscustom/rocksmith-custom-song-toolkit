@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Reflection;
@@ -89,6 +90,9 @@ namespace RocksmithToolkitGUI
         private void MainForm_Load(object sender, EventArgs e) {
             // Show only by 'Configuration' click
             tabControl1.TabPages.Remove(GeneralConfigTab);
+  
+            // position main form at top center of screen to avoid having to reposition on low res displays
+            this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2, 0);
         }
 
         private void CheckForUpdate(object sender, DoWorkEventArgs e)
