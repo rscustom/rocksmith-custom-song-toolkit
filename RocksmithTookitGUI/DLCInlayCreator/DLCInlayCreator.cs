@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Reflection;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Text;
-using Ookii.Dialogs;
 using SharpConfig;
-using RocksmithToolkitGUI.Properties;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
