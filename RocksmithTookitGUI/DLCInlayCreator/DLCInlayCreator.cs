@@ -64,9 +64,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             bwGenerate.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
             bwGenerate.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ProcessCompleted);
             bwGenerate.WorkerReportsProgress = true;
-
-            picIcon.Image = Image.FromStream(new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_icon));
-            picInlay.Image = Image.FromStream(new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_inlay));
         }
 
         private void DLCInlayCreator_Load(object sender, EventArgs e)
@@ -176,18 +173,12 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
         private void FlipX_Changed(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(InlayFile))
-                DefaultResourceToFile();
-
             GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, String.Format("-overwrite -xflip \"{0}\"", InlayFile));
             picInlay.ImageLocation = InlayFile;
         }
 
         private void FlipY_Changed(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(InlayFile))
-                DefaultResourceToFile();
-
             GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, String.Format("-overwrite -yflip \"{0}\"", InlayFile));
             picInlay.ImageLocation = InlayFile;
         }
@@ -210,7 +201,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 // Icon Resource
                 using (var iconStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_icon))
                 {
-                IconFile = GeneralExtensions.GetTempFileName(".png");
                     iconStream.WriteFile(IconFile);
                 }
 
@@ -349,7 +339,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // Create setup.smb
             var iniFile = Path.Combine(tmpWorkDir, "setup.smb");
             Configuration iniCFG = new Configuration();
-            iniCFG.Categories.Add(new SettingCategory("Setup"));
 
             // sharpconfig.dll automatically creates a new [General] section in the INI file
             iniCFG.Categories["General"].Settings.Add(new Setting("author", String.IsNullOrEmpty(Author) ? "CGM" : Author));
