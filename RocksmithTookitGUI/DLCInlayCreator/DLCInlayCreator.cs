@@ -73,7 +73,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             picInlay.Image = Image.FromStream(new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_inlay));
         }
 
-        private void ctrlCGM_Load(object sender, EventArgs e)
+        private void DLCInlayCreator_Load(object sender, EventArgs e)
         {
             try
             {
