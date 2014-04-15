@@ -168,7 +168,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         private void inlayNameTextbox_Leave(object sender, EventArgs e)
         {
             TextBox textbox = (TextBox)sender;
-            textbox.Text = textbox.Text.Trim().GetValidInlayName();
+            textbox.Text = textbox.Text.Trim().GetValidName();
         }
 
         private void FlipX_Changed(object sender, EventArgs e)
@@ -207,14 +207,12 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 // Inlay Resource
                 using (var iconStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_inlay))
                 {
-                    InlayFile = Path.Combine(defaultDir, "inlay.png");
                     iconStream.WriteFile(InlayFile);
                 }
             }
+
             picIcon.ImageLocation = IconFile;
             picInlay.ImageLocation = InlayFile;
-
-
         }
 
         private void loadCGMButton_Click(object sender, EventArgs e)
@@ -526,12 +524,11 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             currentOperationLabel.Text = message;
             currentOperationLabel.Refresh();
         }
+
         public void DLCInlayCreator_Dispose(object sender, EventArgs e)
         {
             if (Directory.Exists(defaultDir))
                 DirectoryExtension.SafeDelete(defaultDir);
         }
-
-
     }
 }

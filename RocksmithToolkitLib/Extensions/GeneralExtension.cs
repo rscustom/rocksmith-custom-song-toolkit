@@ -63,25 +63,19 @@ namespace RocksmithToolkitLib.Extensions
             return name;
         }
 
-        public static string GetValidName(this string value, bool allowSpace = true)
+        public static string GetValidName(this string value, bool allowSpace = true, bool allowStartsWithNumber = false)
         {
             string name = String.Empty;
             if (!String.IsNullOrEmpty(value))
             {
                 Regex rgx = new Regex((allowSpace) ? "[^a-zA-Z0-9\\-_ ]" : "[^a-zA-Z0-9\\-_]");
                 name = rgx.Replace(value, "");
+
+                Regex rgx2 = new Regex(@"^[\d]*\s*");
+                if (!allowStartsWithNumber)
+                    name = rgx2.Replace(name, "");
             }
             return name;
-        }
-
-        public static string GetValidInlayName(this string value, bool allowSpace = true)
-        {
-            if (!Char.IsLetter(value.FirstOrDefault()))
-            {
-                MessageBox.Show("You will have better luck if the \r\ninlay name begins with a alpha character.", "Inlay Name Checker", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return value;
-            }
-            return GetValidName(value, allowSpace);
         }
 
         public static string StripPlatformEndName(this string value) {
