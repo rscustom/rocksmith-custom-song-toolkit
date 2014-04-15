@@ -570,7 +570,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     else if (aggContent.Contains("\"macos\""))
                         return new Platform(GamePlatform.Mac, GameVersion.RS2014);
                     else
-                        return new Platform(GamePlatform.Pc, GameVersion.None);
+                        return new Platform(GamePlatform.Pc, GameVersion.RS2014); // Because appid.appid have only in RS2014
                 } else if (Directory.Exists(Path.Combine(fullPath, ROOT_XBox360))) {
                     // XBOX 2012/2014
                     var hTxt = Directory.GetFiles(fullPath, "*.txt", SearchOption.TopDirectoryOnly)[0];
