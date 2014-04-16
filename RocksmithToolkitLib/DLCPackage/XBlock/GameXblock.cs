@@ -76,6 +76,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                 case DLCPackageType.Lesson:
                     throw new NotImplementedException("Lesson package type not implemented yet :(");
                 case DLCPackageType.Inlay:
+                    dlcName = info.Inlay.DLCSixName;
                     var inlayEntity = new Entity2014();
 
                     inlayEntity.Id = info.Inlay.Id.ToLowerId();
@@ -87,9 +88,9 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                     if (platform.IsConsole)
                         inlayEntity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsonDB.GetDescription(), String.Format("guitar_{0}", dlcName)) } });
                     else
-                        inlayEntity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsanDB.GetDescription(), String.Format("guitar_{0}", dlcName)) } });
+                        inlayEntity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsanDB.GetDescription(), "guitars") } });
                     inlayEntity.Properties.Add(new Property2014() { Name = "Manifest", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), String.Format("guitar_{0}", dlcName)) } });
-                    inlayEntity.Properties.Add(new Property2014() { Name = "PreviewArt", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("inlay_{0}", dlcName)) } });
+                    inlayEntity.Properties.Add(new Property2014() { Name = "PreviewArt", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("reward_inlay_{0}", dlcName)) } });
                     inlayEntity.Properties.Add(new Property2014() { Name = "DecorativeInlays", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.GamebryoSceneGraph.GetDescription(), dlcName) } });
 
                     game.EntitySet.Add(inlayEntity);

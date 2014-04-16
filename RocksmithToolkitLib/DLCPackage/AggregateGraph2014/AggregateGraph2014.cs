@@ -270,7 +270,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
         }
 
         private void InlayAggregateGraph(DLCPackageData info, DLCPackageType dlcType) {
-            var dlcName = info.Name.ToLower();
+            var dlcName = info.Inlay.DLCSixName;
             
             // Xblock
             var xbl = new GraphItem();
@@ -288,50 +288,50 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             // JsonDB
             JsonDB = new List<GraphItem>();
             var json = new GraphItem();
-            json.Name = dlcName;
+            json.Name = String.Format("guitar_{0}", dlcName);
             json.Canonical = currentPlatform.IsConsole ? CANONICAL_MANIFEST_CONSOLE : String.Format(CANONICAL_MANIFEST_PC, dlcName);
             json.RelPathDirectory = json.Canonical;
             json.Tag = new List<string>();
             json.Tag.Add(TagValue.Database.GetDescription());
             json.Tag.Add(TagValue.JsonDB.GetDescription());
             json.UUID = IdGenerator.Guid();
-            json.RelPathFile = String.Format("guitar_{0}.json", json.Name);
+            json.RelPathFile = String.Format("dlc_{0}.json", json.Name);
             JsonDB.Add(json);
 
             if (currentPlatform.IsConsole) {
                 // HsonDB - One file for each manifest (Xbox360 / PS3 only)
                 HsonDB = new List<GraphItem>();
                 var hson = new GraphItem();
-                hson.Name = dlcName;
+                hson.Name = String.Format("dlc_guitar_{0}", dlcName);
                 hson.Canonical = CANONICAL_MANIFEST_CONSOLE;
                 hson.RelPathDirectory = hson.Canonical;
                 hson.Tag = new List<string>();
                 hson.Tag.Add(TagValue.Database.GetDescription());
                 hson.Tag.Add(TagValue.HsonDB.GetDescription());
                 hson.UUID = IdGenerator.Guid();
-                hson.RelPathFile = String.Format("guitar_{0}.hson", json.Name);
+                hson.RelPathFile = String.Format("{0}.hson", hson.Name);
                 HsonDB.Add(hson);
             } else {
                 // HsanDB - One file for all manifest (PC / Mac)
                 var hsan = new GraphItem();
-                hsan.Name = String.Format("{0}", dlcName);
+                hsan.Name = "guitars";
                 hsan.Canonical = String.Format(CANONICAL_MANIFEST_PC, dlcName);
                 hsan.RelPathDirectory = hsan.Canonical;
                 hsan.Tag = new List<string>();
                 hsan.Tag.Add(TagValue.Database.GetDescription());
                 hsan.Tag.Add(TagValue.HsanDB.GetDescription());
                 hsan.UUID = IdGenerator.Guid();
-                hsan.RelPathFile = String.Format("{0}.hsan", hsan.Name);
+                hsan.RelPathFile = String.Format("dlc_{0}.hsan", dlcName);
                 HsanDB = hsan;
             }
 
             ImageArt = new List<GraphItemLLID>();
 
             // Inlay Icon (DDS)
-            var aArtArray = new string[] { String.Format("reward_inlay_{0}_512.dds", dlcName), 
-                                           String.Format("reward_inlay_{0}_256.dds", dlcName),
-                                           String.Format("reward_inlay_{0}_128.dds", dlcName), 
-                                           String.Format("reward_inlay_{0}_64.dds", dlcName) };
+            var aArtArray = new string[] { String.Format("reward_inlay_{0}_512", dlcName), 
+                                           String.Format("reward_inlay_{0}_256", dlcName),
+                                           String.Format("reward_inlay_{0}_128", dlcName), 
+                                           String.Format("reward_inlay_{0}_64", dlcName) };
 
             foreach (var icon in aArtArray) {
                 var iconDDS = new GraphItemLLID();
@@ -344,7 +344,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 iconDDS.UUID = IdGenerator.Guid();
                 iconDDS.LLID = Guid.Parse(IdGenerator.LLID());
                 iconDDS.Name = icon;
-                iconDDS.RelPathFile = icon;
+                iconDDS.RelPathFile = String.Format("{0}.dds", iconDDS.Name);
                 iconDDS.LogPathFile = iconDDS.RelPathFile;
                 ImageArt.Add(iconDDS);
             }

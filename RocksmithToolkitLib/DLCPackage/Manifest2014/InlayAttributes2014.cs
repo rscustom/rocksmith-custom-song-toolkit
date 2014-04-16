@@ -26,7 +26,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
         public InlayAttributes2014(DLCPackageData info)
         {
-            var dlcName = info.Name.ToLower();
+            var dlcName = info.Inlay.DLCSixName;
 
             DLC = true;
             LocName = Name = info.Name;

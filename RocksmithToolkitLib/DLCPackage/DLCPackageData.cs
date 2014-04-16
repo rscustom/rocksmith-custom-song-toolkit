@@ -304,6 +304,7 @@ namespace RocksmithToolkitLib.DLCPackage
     }
 
     public class InlayData {
+        public string DLCSixName { get; set; }
         public string InlayPath { get; set; }
         public string IconPath { get; set; }
         public Guid Id { get; set; }

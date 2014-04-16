@@ -17,9 +17,9 @@ namespace RocksmithToolkitLib.DLCPackage
             string nFileName, n1, n2, n2a, n2b;
 
             if (info.Inlay.Frets24) {
-                nFileName = String.Format("inlay_24fret_{0}.dds", info.Name.ToLower());
+                nFileName = String.Format("inlay_24fret_{0}.dds", info.Inlay.DLCSixName);
             } else {
-                nFileName = String.Format("inlay_{0}.dds", info.Name.ToLower());
+                nFileName = String.Format("inlay_{0}.dds", info.Inlay.DLCSixName);
             }
             
             // Magic HEX strings to make the nif file

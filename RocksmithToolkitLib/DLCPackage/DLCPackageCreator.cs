@@ -524,7 +524,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private static void GenerateRS2014InlayPsarc(MemoryStream output, DLCPackageData info, Platform platform) {
-            var dlcName = info.Name.ToLower();
+            var dlcName = info.Inlay.DLCSixName;
 
             {
                 var packPsarc = new PSARC.PSARC();
@@ -630,9 +630,12 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifestStreamList.Add(manifestStream);
                         manifest.Serialize(manifestStream);
                         manifestStream.Seek(0, SeekOrigin.Begin);
-                        var jsonPathPC = "manifests/songs_dlc_{0}/guitar_{0}.json";
-                        var jsonPathConsole = "manifests/songs_dlc/guitar_{0}.json";
+                        var jsonPathPC = "manifests/songs_dlc_{0}/dlc_guitar_{0}.json";
+                        var jsonPathConsole = "manifests/songs_dlc/dlc_guitar_{0}.json";
                         packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName), manifestStream);
+
+                        var jsonCommon = "manifests/guitars/guitar_{0}.json";
+                        packPsarc.AddEntry(String.Format(jsonCommon, dlcName), manifestStream);
 
                         // MANIFEST HEADER
                         var attributeHeaderDictionary = new Dictionary<string, InlayAttributes2014> { { "Attributes", attribute } };
@@ -640,9 +643,13 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
                         manifestHeader.Serialize(manifestHeaderStream);
                         manifestHeaderStream.Seek(0, SeekOrigin.Begin);
-                        var hsanPathPC = "manifests/songs_dlc_{0}/{0}.hsan";
-                        var hsonPathConsole = "manifests/songs_dlc/guitar_{0}.hson";
+                        var hsanPathPC = "manifests/songs_dlc_{0}/dlc_{0}.hsan";
+                        var hsonPathConsole = "manifests/songs_dlc/dlc_guitar_{0}.hson";
                         packPsarc.AddEntry(String.Format((platform.IsConsole ? hsonPathConsole : hsanPathPC), dlcName), manifestHeaderStream);
+                        
+                        var hsanCommon = "manifests/guitars/guitars.hsan";
+                        packPsarc.AddEntry(hsanCommon, manifestHeaderStream);
+                        
 
                         // XBLOCK
                         GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform, DLCPackageType.Inlay);

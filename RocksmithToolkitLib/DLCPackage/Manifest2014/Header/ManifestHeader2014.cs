@@ -11,7 +11,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
     {
         public Dictionary<string, Dictionary<string, T>> Entries { get; set; }
         public String ModelName { get; set; }
-        public int IterationVersion { get; set; }
+        public int? IterationVersion { get; set; }
         public String InsertRoot { get; set; }
 
         public ManifestHeader2014() { }
