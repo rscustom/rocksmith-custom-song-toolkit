@@ -382,7 +382,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             packageData.Inlay.IconPath = IconFile;
             packageData.Inlay.Frets24 = Frets24;
             packageData.Inlay.Colored = Colored;
-            packageData.Inlay.DLCSixName = "kvtqts"; // GeneralExtensions.RandomName(6);
+            packageData.Inlay.DLCSixName = GeneralExtensions.RandomName(6);
 
             packageData.Name = InlayName;
             packageData.AppId = appIdCombo.SelectedValue.ToString();
