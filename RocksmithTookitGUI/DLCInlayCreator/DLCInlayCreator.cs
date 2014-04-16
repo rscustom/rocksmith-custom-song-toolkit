@@ -382,7 +382,9 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             packageData.Inlay.IconPath = IconFile;
             packageData.Inlay.Frets24 = Frets24;
             packageData.Inlay.Colored = Colored;
+
             packageData.Name = InlayName;
+            packageData.AppId = appIdCombo.SelectedValue.ToString();
 
             // Saving for later
             ConfigRepository.Instance()["cgm_inlayname"] = InlayName;

@@ -381,7 +381,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         // APP ID
                         if (!platform.IsConsole)
                         {
-                            GenerateAppId(appIdStream, info.AppId);
+                            GenerateAppId(appIdStream, info.AppId, platform);
                             packPsarc.AddEntry("appid.appid", appIdStream);
                         }
 
@@ -600,7 +600,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         // APP ID
                         if (!platform.IsConsole) {
-                            GenerateAppId(appIdStream, info.AppId);
+                            GenerateAppId(appIdStream, info.AppId, platform);
                             packPsarc.AddEntry("appid.appid", appIdStream);
                         }
 
@@ -701,7 +701,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     // APP ID
                     if (platform.platform == GamePlatform.Pc)
                     {
-                        GenerateAppId(appIdStream, info.AppId);
+                        GenerateAppId(appIdStream, info.AppId, platform);
                         packPsarc.AddEntry("APP_ID", appIdStream);
                     }
 
@@ -947,10 +947,11 @@ namespace RocksmithToolkitLib.DLCPackage
             output.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void GenerateAppId(Stream output, string appId)
+        private static void GenerateAppId(Stream output, string appId, Platform platform)
         {
             var writer = new StreamWriter(output);
-            writer.Write(appId ?? "206113");
+            var defaultAppId = (platform.version == GameVersion.RS2012) ? "206113" : "248750";
+            writer.Write(appId ?? defaultAppId);
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
         }
