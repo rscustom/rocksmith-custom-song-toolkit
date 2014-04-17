@@ -199,12 +199,16 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 Directory.CreateDirectory(defaultDir);
 
                 // Icon Resource
-                var iconStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_icon);               
-                iconStream.WriteFile(IconFile);
+                using (var iconStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_icon))
+                {
+                    iconStream.WriteFile(IconFile);
+                }
 
                 // Inlay Resource
-                var inlayStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_inlay);
-                inlayStream.WriteFile(InlayFile);
+                using (var inlayStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_inlay))
+                {
+                    inlayStream.WriteFile(InlayFile);
+                }
             }
 
             picIcon.ImageLocation = IconFile;
