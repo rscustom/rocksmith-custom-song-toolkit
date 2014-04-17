@@ -199,16 +199,12 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 Directory.CreateDirectory(defaultDir);
 
                 // Icon Resource
-                using (var iconStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_icon))
-                {
-                    iconStream.WriteFile(IconFile);
-                }
+                var iconStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_icon);               
+                iconStream.WriteFile(IconFile);
 
                 // Inlay Resource
-                using (var iconStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_inlay))
-                {
-                    iconStream.WriteFile(InlayFile);
-                }
+                var inlayStream = new MemoryStream(RocksmithToolkitLib.Properties.Resources.cgm_default_inlay);
+                inlayStream.WriteFile(InlayFile);
             }
 
             picIcon.ImageLocation = IconFile;
@@ -359,8 +355,12 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             {
                 Process.Start(Path.GetDirectoryName(saveFile));
             }
-
-            PopulateInlayTemplateCombo();
+            
+            if (Path.GetDirectoryName(saveFile) == Path.Combine(workDir, "cgm"))
+            {
+                inlayTemplateCombo.Items.Add(Path.GetFileNameWithoutExtension(saveFile));
+                inlayTemplateCombo.SelectedIndex = (inlayTemplateCombo.Items.Count - 1);
+            }
         }
 
         private void inlayGenerateButton_Click(object sender, EventArgs e)
