@@ -215,4 +215,17 @@
   <SongAppId Version="RS2014" AppId="271467" Name="Matchbox Twenty - She's So Mean" />
   <SongAppId Version="RS2014" AppId="271468" Name="Matchbox Twenty - Unwell" />
   <SongAppId Version="RS2014" AppId="271469" Name="Matchbox Twenty Song Pack" />
+  <SongAppId Version="RS2014" AppId="271470" Name="AFI - Totalimmortal" />
+  <SongAppId Version="RS2014" AppId="271471" Name="AFI - Girl's Not Grey" />
+  <SongAppId Version="RS2014" AppId="271472" Name="AFI - Miss Murder" />
+  <SongAppId Version="RS2014" AppId="271473" Name="AFI - Silver and Cold" />
+  <SongAppId Version="RS2014" AppId="271474" Name="AFI Song Pack" />
+  <SongAppId Version="RS2014" AppId="271475" Name="Bob Dylan - Just Like a Woman" />
+  <SongAppId Version="RS2014" AppId="271476" Name="Bob Dylan - Like a Rolling Stone" />
+  <SongAppId Version="RS2014" AppId="271477" Name="Bob Dylan - Subterranean Homesick Blues" />
+  <SongAppId Version="RS2014" AppId="271478" Name="Bob Dylan Song Pack" />
+  <SongAppId Version="RS2014" AppId="271489" Name="Garbage - Stupid Girl" />
+  <SongAppId Version="RS2014" AppId="271490" Name="Garbage - I Think I'm Paranoid" />
+  <SongAppId Version="RS2014" AppId="271491" Name="Garbage - Only Happy When It Rains" />
+  <SongAppId Version="RS2014" AppId="271492" Name="Garbage Song Pack" />
 </ArrayOfSongAppId>
