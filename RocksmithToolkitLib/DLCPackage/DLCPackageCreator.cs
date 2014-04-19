@@ -568,7 +568,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         ddsfiles.Add(new DDSConvertedFile() { sizeX = 1024, sizeY = 512, sourceFile = inlayPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
 
                         // Convert to DDS
-                        ToDDS(ddsfiles);
+                        ToDDS(ddsfiles, DLCPackageType.Inlay);
                         
                         // Save for reuse
                         info.ArtFiles = ddsfiles;
@@ -934,7 +934,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 case DLCPackageType.Lesson:
                     throw new NotImplementedException("Lesson package type not implemented yet :(");
                 case DLCPackageType.Inlay:
-                    args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -quality_highest -max -32 dxt5 -dxt5 -overwrite -forcewrite -alpha";
+                    // CRITICAL - DO NOT CHANGE ARGS
+                    args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -quality_highest -max -dxt5 -nomipmap -alpha -overwrite -forcewrite";
                     break;
             }
 
@@ -949,7 +950,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var writer = new StreamWriter(output);
             writer.WriteLine(String.Format("Toolkit version: {0}", ToolkitVersion.version));
             if (!String.IsNullOrEmpty(author))
-                writer.Write(String.Format("Package Author:  {0}", author));
+                writer.Write(String.Format("Package Author:  {0}", "CSC"));
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
         }
