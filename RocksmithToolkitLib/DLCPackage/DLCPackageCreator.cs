@@ -950,7 +950,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var writer = new StreamWriter(output);
             writer.WriteLine(String.Format("Toolkit version: {0}", ToolkitVersion.version));
             if (!String.IsNullOrEmpty(author))
-                writer.Write(String.Format("Package Author:  {0}", "CSC"));
+                writer.Write(String.Format("Package Author:  {0}", author));
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
         }
