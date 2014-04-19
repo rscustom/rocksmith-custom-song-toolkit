@@ -33,10 +33,10 @@ namespace RocksmithToolkitLib {
                 if (Exists(configKey)) {
                     Config conf = List.FirstOrDefault<Config>(s => s.Key == configKey);
                     conf.Value = value;
-                    Save();
                 } else {
-                    this.Add(new Config(){ Key = configKey, Value = value });
+                    this.Add(new Config() { Key = configKey, Value = value });
                 }
+                Save(true);
             }
         }
 
