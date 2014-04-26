@@ -168,7 +168,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         private void inlayNameTextbox_Leave(object sender, EventArgs e)
         {
             TextBox textbox = (TextBox)sender;
-            textbox.Text = textbox.Text.Trim().GetValidName();
+            textbox.Text = textbox.Text.Trim().GetValidName(true, false);
         }
 
         private void FlipX_Changed(object sender, EventArgs e)
@@ -372,7 +372,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             dlcSavePath = Path.Combine(workDir, "cgm");
             using (var ofd = new SaveFileDialog())
             {
-                ofd.FileName = InlayName.GetValidName();
+                ofd.FileName = InlayName.GetValidName(true, false);
                 ofd.Filter = "Custom Inlay DLC (*.*)|*.*";
                 ofd.InitialDirectory = dlcSavePath;
 

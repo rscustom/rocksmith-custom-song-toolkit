@@ -62,8 +62,8 @@ namespace RocksmithToolkitLib.Extensions
             }
             return name;
         }
-
-        public static string GetValidName(this string value, bool allowSpace = true, bool allowStartsWithNumber = false)
+        // One policy for default parameters if we need additioanall filter we jusst enable it.
+        public static string GetValidName(this string value, bool allowSpace = true, bool allowStartsWithNumber = true)
         {
             string name = String.Empty;
             if (!String.IsNullOrEmpty(value))
