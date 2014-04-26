@@ -27,7 +27,7 @@ namespace RocksmithToolkitLib {
             String[] notesNames = new String[] { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
             String[] notesNamesHi = new String[] { "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" };
             for (Byte s = 0; s < 6; s++)
-                Notes.Add(Sng2014FileWriter.GetMidiNote(tuning.ToShortArray(), s, 0, isBass));
+                Notes.Add(Sng2014FileWriter.GetMidiNote(tuning.ToShortArray(), s, 0, isBass, 0));
             foreach (var mNote in Notes)
                 if(inBem) NoteNames.Add(notesNamesHi[mNote % 12]); //oct = mNote / 12 - 1
                 else NoteNames.Add(notesNames[mNote % 12]); //oct = mNote / 12 - 1

@@ -188,7 +188,8 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                         var mNote = Sng2014FileWriter.GetMidiNote(tuning,
                             (Byte)lvl.Notes[i].String,
                             (Byte)lvl.Notes[i].Fret,
-                            song.Arrangement == "Bass");
+                            song.Arrangement == "Bass",
+                            song.Capo);
 
                         midiNotes.Add(new Showlight() { Time = lvl.Notes[i].Time, Note = mNote });
                     }
@@ -199,7 +200,8 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
                         int mNote = Sng2014FileWriter.getChordNote(tuning,
                             lvl.Chords[i], song.ChordTemplates,
-                            song.Arrangement == "Bass");
+                            song.Arrangement == "Bass",
+                            song.Capo);
 
                         chordNotes.Add(new Showlight() { Time = lvl.Chords[i].Time, Note = mNote });
                     }
