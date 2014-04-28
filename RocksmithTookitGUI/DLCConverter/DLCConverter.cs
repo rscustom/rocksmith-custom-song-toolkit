@@ -56,7 +56,8 @@ namespace RocksmithToolkitGUI.DLCConverter
 
         private void DLCConverter_Load(object sender, EventArgs e) {
             try {
-                // Fill source combo            
+                // Fill source combo
+                
                 var sourcePlatform = Enum.GetNames(typeof(GamePlatform)).ToList<string>();
                 sourcePlatform.Remove("None");
                 platformSourceCombo.DataSource = sourcePlatform;

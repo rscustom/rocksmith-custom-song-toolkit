@@ -91,8 +91,10 @@ namespace RocksmithToolkitGUI.Config
 
                 if (control is ComboBox) {
                     var combo = ((ComboBox)control);
-                    if (combo.SelectedValue != null)
+                    if (!String.IsNullOrEmpty(combo.ValueMember))
                         value = combo.SelectedValue.ToString();
+                    else
+                        value = combo.SelectedItem.ToString();
                 } else if (control is CheckBox) {
                     value = ((CheckBox)control).Checked.ToString();
                 } else if (control is NumericUpDown) {
@@ -105,7 +107,7 @@ namespace RocksmithToolkitGUI.Config
         }
 
         private void closeConfigButton_Click(object sender, EventArgs e) {
-            ((MainForm)ParentForm).EnableConfig = false;
+            ((MainForm)ParentForm).ReloadControls();
         }
 
         private void rs1PathButton_Click(object sender, EventArgs e)
