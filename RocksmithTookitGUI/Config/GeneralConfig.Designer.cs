@@ -493,6 +493,7 @@
             this.general_rs2014path.Name = "general_rs2014path";
             this.general_rs2014path.Size = new System.Drawing.Size(345, 20);
             this.general_rs2014path.TabIndex = 7;
+            this.general_rs2014path.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // general_rs1path
             // 
@@ -503,6 +504,7 @@
             this.general_rs1path.Name = "general_rs1path";
             this.general_rs1path.Size = new System.Drawing.Size(345, 20);
             this.general_rs1path.TabIndex = 5;
+            this.general_rs1path.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // general_defaultauthor
             // 
@@ -513,6 +515,7 @@
             this.general_defaultauthor.Name = "general_defaultauthor";
             this.general_defaultauthor.Size = new System.Drawing.Size(250, 20);
             this.general_defaultauthor.TabIndex = 4;
+            this.general_defaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // creator_scrollspeed
             // 

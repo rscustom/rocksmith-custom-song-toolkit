@@ -31,7 +31,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             DLC = true;
             LocName = Name = info.Name;
             DecorativeInlays = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.GamebryoSceneGraph.GetDescription(), dlcName);
-            ManifestUrn = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), String.Format("guitar_{0}", dlcName));
+            ManifestUrn = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), String.Format("dlc_guitar_{0}", dlcName));
             PreviewArt = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("reward_inlay_{0}", dlcName));
             PersistentID = info.Inlay.Id.ToString().Replace("-", "").ToUpper();
         }

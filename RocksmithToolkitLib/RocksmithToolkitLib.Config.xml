@@ -18,7 +18,7 @@
   <Config Key="ddc_removesustain" Value="false" />
   <Config Key="converter_source" Value="Pc" />
   <Config Key="converter_target" Value="XBox360" />
-  <Config Key="cgm_inlayname" Value="Custom Inlay" />
+  <Config Key="cgm_inlayname" Value="Default Inlay" />
   <Config Key="cgm_24frets" Value="false" />
-  <Config Key="cgm_coloredinlay" Value="false" />
+  <Config Key="cgm_coloredinlay" Value="true" />
 </ArrayOfConfig>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,10 +26,11 @@ using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.Showlight;
 
+
 namespace RocksmithToolkitLib.DLCPackage
 {
     public enum DLCPackageType { Song = 0, Lesson = 1, Inlay = 2 }
-    public enum InlayType { Guitar = 0 }
+    public enum ModType { Guitar = 0, Expansion = 1 }
 
     public static class DLCPackageCreator {
         #region CONSTANT
@@ -525,7 +527,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void GenerateRS2014InlayPsarc(MemoryStream output, DLCPackageData info, Platform platform) {
             var dlcName = info.Inlay.DLCSixName;
-
+// TODO updateProgress remotely from here 
             {
                 var packPsarc = new PSARC.PSARC();
 
@@ -644,7 +646,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifestHeader.Serialize(manifestHeaderStream);
                         manifestHeaderStream.Seek(0, SeekOrigin.Begin);
                         var hsanPathPC = "manifests/songs_dlc_{0}/dlc_{0}.hsan";
-                        var hsonPathConsole = "manifests/songs_dlc/dlc_guitar_{0}.hson";
+                        var hsonPathConsole = "manifests/songs_dlc/dlc_{0}.hson";
                         packPsarc.AddEntry(String.Format((platform.IsConsole ? hsonPathConsole : hsanPathPC), dlcName), manifestHeaderStream);
                         
                         var hsanCommon = "manifests/guitars/guitars.hsan";

@@ -281,40 +281,40 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             xbl.Tag.Add(TagValue.EmergentWorld.GetDescription());
             xbl.Tag.Add(TagValue.XWorld.GetDescription());
             xbl.UUID = IdGenerator.Guid();
-            xbl.RelPathFile = String.Format("{0}.xblock", xbl.Name);
+            xbl.RelPathFile = String.Format("guitar_{0}.xblock", dlcName);
             GameXblock = xbl;
 
             
             // JsonDB
             JsonDB = new List<GraphItem>();
             var json = new GraphItem();
-            json.Name = String.Format("guitar_{0}", dlcName);
+            json.Name = String.Format("dlc_guitar_{0}", dlcName);
             json.Canonical = currentPlatform.IsConsole ? CANONICAL_MANIFEST_CONSOLE : String.Format(CANONICAL_MANIFEST_PC, dlcName);
             json.RelPathDirectory = json.Canonical;
             json.Tag = new List<string>();
             json.Tag.Add(TagValue.Database.GetDescription());
             json.Tag.Add(TagValue.JsonDB.GetDescription());
             json.UUID = IdGenerator.Guid();
-            json.RelPathFile = String.Format("dlc_{0}.json", json.Name);
+            json.RelPathFile = String.Format("dlc_guitar_{0}.json", dlcName);
             JsonDB.Add(json);
 
             if (currentPlatform.IsConsole) {
                 // HsonDB - One file for each manifest (Xbox360 / PS3 only)
                 HsonDB = new List<GraphItem>();
                 var hson = new GraphItem();
-                hson.Name = String.Format("dlc_guitar_{0}", dlcName);
+                hson.Name = String.Format("dlc_{0}", dlcName);
                 hson.Canonical = CANONICAL_MANIFEST_CONSOLE;
                 hson.RelPathDirectory = hson.Canonical;
                 hson.Tag = new List<string>();
                 hson.Tag.Add(TagValue.Database.GetDescription());
                 hson.Tag.Add(TagValue.HsonDB.GetDescription());
                 hson.UUID = IdGenerator.Guid();
-                hson.RelPathFile = String.Format("{0}.hson", hson.Name);
+                hson.RelPathFile = String.Format("dlc_{0}.hson", dlcName);
                 HsonDB.Add(hson);
             } else {
                 // HsanDB - One file for all manifest (PC / Mac)
                 var hsan = new GraphItem();
-                hsan.Name = "guitars";
+                hsan.Name = String.Format("dlc_{0}", dlcName); 
                 hsan.Canonical = String.Format(CANONICAL_MANIFEST_PC, dlcName);
                 hsan.RelPathDirectory = hsan.Canonical;
                 hsan.Tag = new List<string>();

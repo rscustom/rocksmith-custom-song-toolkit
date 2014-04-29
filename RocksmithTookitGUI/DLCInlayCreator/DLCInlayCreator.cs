@@ -35,6 +35,12 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             get { return Path.GetDirectoryName(Application.ExecutablePath); }
         }
 
+        private string Author
+        {
+            get { return authorTextbox.Text; }
+            set { authorTextbox.Text = value; }
+        }
+
         private string InlayName
         {
             get { return inlayNameTextbox.Text; }
@@ -82,8 +88,9 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
         private void PopulateInlayTypeCombo()
         {
-            var enumList = Enum.GetNames(typeof(InlayType)).ToList<string>();
+            var enumList = Enum.GetNames(typeof(ModType)).ToList<string>();
             inlayTypeCombo.DataSource = enumList;
+            inlayTypeCombo.SelectedIndex = 0;
         }
 
         private void PopulateAppIdCombo()
@@ -103,7 +110,12 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             inlayTemplateCombo.Items.Clear();
             inlayTemplateCombo.Items.Add("Select template");
             foreach (var template in templateList)
-                inlayTemplateCombo.Items.Add(Path.GetFileNameWithoutExtension(template));
+            {
+                if (Path.GetExtension(template).ToLower() == ".cgm")
+                {
+                    inlayTemplateCombo.Items.Add(Path.GetFileNameWithoutExtension(template));
+                }
+            }
             inlayTemplateCombo.SelectedIndex = 0;
         }
 

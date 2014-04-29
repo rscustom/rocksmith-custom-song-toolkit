@@ -25,9 +25,10 @@ namespace RocksmithToolkitLib.Extensions
             return (obj.IndexOfAny(chars) >= 0);
         }
 
-        public static string GetDescription(this object value) {
+        public static string GetDescription(this object value)
+        {
             FieldInfo fi = value.GetType().GetField(value.ToString());
-            
+
             DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             if (attributes != null && attributes.Length > 0)
@@ -36,7 +37,8 @@ namespace RocksmithToolkitLib.Extensions
                 return value.ToString();
         }
 
-        public static string[] SelectLines(this string[] content, string value) {
+        public static string[] SelectLines(this string[] content, string value)
+        {
             return (from j in content
                     where j.Contains(value)
                     select j).ToArray<string>();
@@ -62,8 +64,8 @@ namespace RocksmithToolkitLib.Extensions
             }
             return name;
         }
-        // One policy for default parameters if we need additioanall filter we jusst enable it.
-        public static string GetValidName(this string value, bool allowSpace = true, bool allowStartsWithNumber = true)
+
+        public static string GetValidName(this string value, bool allowSpace = true, bool allowStartsWithNumber = false, bool underscoreSpace = false, bool frets24 = false)
         {
             string name = String.Empty;
             if (!String.IsNullOrEmpty(value))
@@ -72,13 +74,31 @@ namespace RocksmithToolkitLib.Extensions
                 name = rgx.Replace(value, "");
 
                 Regex rgx2 = new Regex(@"^[\d]*\s*");
-                if (!allowStartsWithNumber)
-                    name = rgx2.Replace(name, "");
+                if (!allowStartsWithNumber) name = rgx2.Replace(name, "");           
+               
+                if (frets24)
+                {
+                    if (name.Contains("24"))
+                    {
+                        name = name.Replace("_24_", "_");
+                        name = name.Replace("_24", "");
+                        name = name.Replace("24_", "");
+                        name = name.Replace(" 24 ", " ");
+                        name = name.Replace("24 ", " ");
+                        name = name.Replace(" 24", " ");
+                        name = name.Replace("24", "");
+                    }
+                    name = name.Trim() + " 24";
+                }
+                
+                if (underscoreSpace) name = name.Replace(" ", "_");
             }
-            return name;
+            
+            return name.Trim();
         }
 
-        public static string StripPlatformEndName(this string value) {
+        public static string StripPlatformEndName(this string value)
+        {
             if (value.EndsWith(new Platform(GamePlatform.Pc, GameVersion.None).GetPathName()[2]) ||
                 value.EndsWith(new Platform(GamePlatform.Mac, GameVersion.None).GetPathName()[2]) ||
                 value.EndsWith(new Platform(GamePlatform.XBox360, GameVersion.None).GetPathName()[2]) ||
@@ -99,9 +119,9 @@ namespace RocksmithToolkitLib.Extensions
         public static string Acronym(this string value)
         {
             var v = Regex.Split(value, @"[\W\s]+").Where(r => !string.IsNullOrEmpty(r)).ToArray();
-            if(v.Length > 1)
+            if (v.Length > 1)
                 return string.Join(string.Empty, v.Select(s => s[0])).ToUpper();
-            else 
+            else
                 return value.GetValidName();
         }
 
@@ -128,7 +148,7 @@ namespace RocksmithToolkitLib.Extensions
             {
                 byte[] mime = mimeByteHeaderList[extension];
                 byte[] file = File.ReadAllBytes(fileName);
-                
+
                 bool r = file.Take(mime.Length).SequenceEqual(mime);
                 if (!r)
                     File.Move(fileName, Path.ChangeExtension(fileName, ".invalid"));
@@ -139,7 +159,8 @@ namespace RocksmithToolkitLib.Extensions
                 return false;
         }
 
-        public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null) {
+        public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null)
+        {
             string toolkitRootPath = Path.GetDirectoryName(Application.ExecutablePath);
 
             var rootPath = (toolkitRootFolder) ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
@@ -148,7 +169,8 @@ namespace RocksmithToolkitLib.Extensions
             startInfo.FileName = (toolkitRootFolder) ? Path.Combine(rootPath, exeFileName) : exeFileName;
             startInfo.WorkingDirectory = rootPath;
 
-            if (runInBackground) {
+            if (runInBackground)
+            {
                 startInfo.CreateNoWindow = true;
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
@@ -165,14 +187,15 @@ namespace RocksmithToolkitLib.Extensions
                 process.WaitForExit();
 
             var output = String.Empty;
-                
+
             if (runInBackground)
                 output = process.StandardOutput.ReadToEnd();
 
             return output;
         }
 
-        public static string RandomName(int iLen) {
+        public static string RandomName(int iLen)
+        {
             var builder = new StringBuilder(iLen);
 
             for (int i = 0; i < iLen; i++)
@@ -181,31 +204,37 @@ namespace RocksmithToolkitLib.Extensions
             return builder.ToString();
         }
 
-        public static long RandomLong(long lMin, long lMax) {
+        public static long RandomLong(long lMin, long lMax)
+        {
             return lMin + randomNumber.Next() % (lMax - lMin);
         }
 
-        public static string ToHex(this string inputString) {
+        public static string ToHex(this string inputString)
+        {
             byte[] bArray = Encoding.Default.GetBytes(inputString);
             var hexString = BitConverter.ToString(bArray);
             hexString = hexString.Replace("-", "");
             return hexString;
         }
 
-        public static byte[] ToByteArray(this string hexString) {
+        public static byte[] ToByteArray(this string hexString)
+        {
             return Enumerable.Range(0, hexString.Length)
                     .Where(x => x % 2 == 0)
                     .Select(x => Convert.ToByte(hexString.Substring(x, 2), 16))
                     .ToArray();
         }
 
-        public static string ToLowerId(this Guid guid) {
+        public static string ToLowerId(this Guid guid)
+        {
             return guid.ToString().Replace("-", "").ToLower();
         }
 
-        public static byte[] ImageToBytes(this Image image, ImageFormat format) {
+        public static byte[] ImageToBytes(this Image image, ImageFormat format)
+        {
             byte[] xret = null;
-            using (MemoryStream ms = new MemoryStream()) {
+            using (MemoryStream ms = new MemoryStream())
+            {
                 image.Save(ms, format);
                 xret = ms.ToArray();
             }
@@ -222,12 +251,15 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
-        public static string GetTempFileName(string extension = ".tmp") {
+        public static string GetTempFileName(string extension = ".tmp")
+        {
             return Path.ChangeExtension(Path.GetTempFileName(), extension);
         }
 
-        public static T Copy<T>(T value) {
-            using (MemoryStream stream = new MemoryStream()) {
+        public static T Copy<T>(T value)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
                 DataContractSerializer dcs = new DataContractSerializer(typeof(T));
                 dcs.WriteObject(stream, value);
                 stream.Position = 0;
@@ -235,8 +267,10 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
-        public static T DeepCopy<T>(object value) {
-            using (MemoryStream memoryStream = new MemoryStream()) {
+        public static T DeepCopy<T>(object value)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
                 binaryFormatter.Serialize(memoryStream, value);
                 memoryStream.Seek(0, SeekOrigin.Begin);
