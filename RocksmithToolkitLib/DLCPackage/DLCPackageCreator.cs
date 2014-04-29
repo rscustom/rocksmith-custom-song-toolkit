@@ -636,9 +636,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         var jsonPathConsole = "manifests/songs_dlc/dlc_guitar_{0}.json";
                         packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName), manifestStream);
 
-                        var jsonCommon = "manifests/guitars/guitar_{0}.json";
-                        packPsarc.AddEntry(String.Format(jsonCommon, dlcName), manifestStream);
-
                         // MANIFEST HEADER
                         var attributeHeaderDictionary = new Dictionary<string, InlayAttributes2014> { { "Attributes", attribute } };
                         var manifestHeader = new ManifestHeader2014<InlayAttributes2014>(platform, DLCPackageType.Inlay);
@@ -649,10 +646,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         var hsonPathConsole = "manifests/songs_dlc/dlc_{0}.hson";
                         packPsarc.AddEntry(String.Format((platform.IsConsole ? hsonPathConsole : hsanPathPC), dlcName), manifestHeaderStream);
                         
-                        var hsanCommon = "manifests/guitars/guitars.hsan";
-                        packPsarc.AddEntry(hsanCommon, manifestHeaderStream);
-                        
-
                         // XBLOCK
                         GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform, DLCPackageType.Inlay);
                         game.SerializeXml(xblockStream);

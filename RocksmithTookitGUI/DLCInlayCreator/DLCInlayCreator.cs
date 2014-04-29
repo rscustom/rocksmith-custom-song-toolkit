@@ -197,7 +197,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
         private void DefaultResourceToFile()
         {
-            Author = GeneralExtensions.Acronym(ConfigRepository.Instance()["general_defaultauthor"]);
+            Author = ConfigRepository.Instance()["general_defaultauthor"];
             InlayName = ConfigRepository.Instance()["cgm_inlayname"];
             Frets24 = ConfigRepository.Instance().GetBoolean("cgm_24frets");
             Colored = ConfigRepository.Instance().GetBoolean("cgm_coloredinlay");
@@ -242,7 +242,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 customCGM = ofd.FileName;
             }
-
+            inlayTemplateCombo.SelectedIndex = 0;
             LoadCGM(customCGM);
         }
 
@@ -286,14 +286,14 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 // allow for backward compatiblity with old *.cgm files
                 try
                 {
-                    // Author = iniConfig["General"]["author"].Value;
+                    Author = iniConfig["General"]["author"].Value;
                     InlayName = iniConfig["General"]["inlayname"].Value;
                     Frets24 = iniConfig["General"]["24frets"].GetValue<bool>();
                     Colored = iniConfig["General"]["colored"].GetValue<bool>();
                 }
                 catch
                 {
-                    // Author = iniConfig["Setup"]["creatorname"].Value;
+                    Author = iniConfig["Setup"]["creatorname"].Value;
                     InlayName = iniConfig["Setup"]["guitarname"].Value;
                     Frets24 = iniConfig["Setup"]["24frets"].GetValue<bool>();
                     Colored = iniConfig["Setup"]["coloredinlay"].GetValue<bool>();
@@ -326,7 +326,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 sfd.Title = "Select a location to store your CGM file";
                 sfd.Filter = "CGM file (*.cgm)|*.cgm";
                 sfd.InitialDirectory = Path.Combine(workDir, "cgm");
-                sfd.FileName = inlayNameTextbox.Text.Replace(" ", "_") + "_" + Author.Replace(" ", "_") + ".cgm";
+                sfd.FileName = InlayName.GetValidName(true, false, true, Frets24) + "_" + GeneralExtensions.Acronym(Author) + ".cgm";
                 if (sfd.ShowDialog() != DialogResult.OK) return;
                 saveFile = sfd.FileName;
             }
@@ -351,7 +351,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             Configuration iniCFG = new Configuration();
 
             // sharpconfig.dll automatically creates a new [General] section in the INI file
-            iniCFG.Categories["General"].Settings.Add(new Setting("author", String.IsNullOrEmpty(Author) ? "CGM" : Author));
+            iniCFG.Categories["General"].Settings.Add(new Setting("author", String.IsNullOrEmpty(Author) ? "CSC" : Author));
             iniCFG.Categories["General"].Settings.Add(new Setting("inlayname", InlayName));
             iniCFG.Categories["General"].Settings.Add(new Setting("24frets", Convert.ToString(Convert.ToInt32(Frets24))));
             iniCFG.Categories["General"].Settings.Add(new Setting("colored", Convert.ToString(Convert.ToInt32(Colored))));
@@ -371,7 +371,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             {
                 Process.Start(Path.GetDirectoryName(saveFile));
             }
-            
+
             if (Path.GetDirectoryName(saveFile) == Path.Combine(workDir, "cgm"))
             {
                 inlayTemplateCombo.Items.Add(Path.GetFileNameWithoutExtension(saveFile));
@@ -381,12 +381,13 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
         private void inlayGenerateButton_Click(object sender, EventArgs e)
         {
-            dlcSavePath = Path.Combine(workDir, "cgm");
+            // dlcSavePath = Path.Combine(workDir, "cgm");
             using (var ofd = new SaveFileDialog())
             {
-                ofd.FileName = InlayName.GetValidName(true, false);
+                ofd.FileName = InlayName.GetValidName(true, false, true, Frets24).ToLower();
                 ofd.Filter = "Custom Inlay DLC (*.*)|*.*";
-                ofd.InitialDirectory = dlcSavePath;
+                ofd.InitialDirectory = ConfigRepository.Instance()["general_rs2014path"];
+                // ofd.InitialDirectory = dlcSavePath;
 
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
@@ -399,6 +400,9 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             packageData.Inlay.Frets24 = Frets24;
             packageData.Inlay.Colored = Colored;
             packageData.Inlay.DLCSixName = GeneralExtensions.RandomName(6);
+
+            // CRITICAL - 24 fret inlays have naming dependencies
+            if (Frets24) packageData.Inlay.DLCSixName = String.Format("24fret_{0}", packageData.Inlay.DLCSixName);
 
             packageData.Name = InlayName;
             packageData.AppId = appIdCombo.SelectedValue.ToString();
@@ -515,6 +519,9 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
         private void ProcessCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            updateProgress.Visible = false;
+            currentOperationLabel.Visible = false;
+
             switch (Convert.ToString(e.Result))
             {
                 case "generate":
@@ -549,5 +556,29 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             if (Directory.Exists(defaultDir))
                 DirectoryExtension.SafeDelete(defaultDir);
         }
+
+        private void DescriptionDDC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // inlay creator help link
+            string link = "http://goo.gl/pJxMuz";
+            Process.Start(link);
+        }
+
+        private void inlayTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (inlayTypeCombo.SelectedIndex)
+            {
+                case 0:
+                    expansionMod1.Visible = false;
+                    break;
+
+                case 1:
+                    expansionMod1.Location = new Point(11, 140);
+                    expansionMod1.Size = new Size(500, 300);
+                    expansionMod1.Visible = true;
+                    break;
+            }
+        }
+
     }
 }

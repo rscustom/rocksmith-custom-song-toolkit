@@ -93,7 +93,6 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                     inlayEntity.Properties.Add(new Property2014() { Name = "PreviewArt", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("reward_inlay_{0}", dlcName)) } });
 // 
                     inlayEntity.Properties.Add(new Property2014() { Name = "DecorativeInlays", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.GamebryoSceneGraph.GetDescription(), dlcName) } });
-
                     game.EntitySet.Add(inlayEntity);
                     break;
             }
