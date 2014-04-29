@@ -21,7 +21,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         private const string APP_7Z = "7za.exe";
         private const string APP_NVDXT = "nvdxt.exe";
 
-        private string Author = String.Empty;
         private string IconFile = String.Empty;
         private string InlayFile = String.Empty;
 
@@ -180,7 +179,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         private void inlayNameTextbox_Leave(object sender, EventArgs e)
         {
             TextBox textbox = (TextBox)sender;
-            textbox.Text = textbox.Text.Trim().GetValidName(true, false);
+            textbox.Text = textbox.Text.Trim().GetValidName(true, false, false, Frets24);
         }
 
         private void FlipX_Changed(object sender, EventArgs e)
@@ -392,7 +391,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
             }
-
             DLCPackageData packageData = new DLCPackageData();
             packageData.Inlay = new InlayData();
             packageData.Inlay.InlayPath = InlayFile;
@@ -540,9 +538,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                     inlayGenerateButton.Enabled = true;
                     break;
             }
-
-            updateProgress.Visible = false;
-            currentOperationLabel.Visible = false;
         }
 
         private void ShowCurrentOperation(string message)
