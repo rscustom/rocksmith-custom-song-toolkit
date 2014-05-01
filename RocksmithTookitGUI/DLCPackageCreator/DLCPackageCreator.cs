@@ -258,7 +258,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public void arrangementAddButton_Click(object sender = null, EventArgs e = null)
         {
             Arrangement arrangement;
-            using (var form = new ArrangementForm(GetToneNames(), (DLCPackageCreator)this, CurrentGameVersion))
+            using (var form = new ArrangementForm((DLCPackageCreator)this, CurrentGameVersion))
             {
                 if (DialogResult.OK != form.ShowDialog())
                 {
@@ -893,7 +893,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (ArrangementLB.SelectedItem != null)
             {
                 var arrangement = (Arrangement)ArrangementLB.SelectedItem;
-                using (var form = new ArrangementForm(arrangement, GetToneNames(), (DLCPackageCreator)this, CurrentGameVersion) { Text = "Edit Arrangement" })
+                using (var form = new ArrangementForm(arrangement, (DLCPackageCreator)this, CurrentGameVersion) { Text = "Edit Arrangement" })
                 {
                     if (DialogResult.OK != form.ShowDialog())
                     {
@@ -937,7 +937,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 dynamic firstTone = TonesLB.Items[0];
                 foreach (var item in ArrangementLB.Items.OfType<Arrangement>())
-                    if (tone.Name.Equals(item.ToneBase))
+                    if (tone.Name.Equals(item.ToneBase) && String.IsNullOrEmpty(item.ToneB))
                         item.ToneBase = firstTone.Name;
                 ArrangementLB.Refresh();
             }

@@ -22,6 +22,43 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private DLCPackageCreator parentControl = null;
         private GameVersion currentGameVersion;
 
+        public Arrangement Arrangement {
+            get
+            {
+                return arrangement;
+            }
+            private set
+            {
+                arrangement = value;
+
+                //Song XML File
+                XmlFilePath.Text = arrangement.SongXml.File;
+
+                //Arrangment Information
+                arrangementTypeCombo.SelectedItem = arrangement.ArrangementType;
+                arrangementNameCombo.SelectedItem = arrangement.Name;
+
+                TuningDefinition tuning = TuningDefinitionRepository.Instance().Select(arrangement.Tuning, currentGameVersion);
+                if (tuning != null)
+                    tuningComboBox.SelectedItem = tuning;
+                frequencyTB.Text = (arrangement.TuningPitch > 0) ? arrangement.TuningPitch.ToString() : "440";
+
+                var scrollSpeed = arrangement.ScrollSpeed;
+                if (scrollSpeed == 0)
+                    scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
+                scrollSpeedTrackBar.Value = scrollSpeed;
+                UpdateScrollSpeedDisplay();
+                
+                Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
+                BonusCheckBox.Checked = arrangement.BonusArr;
+                RouteMask = arrangement.RouteMask;
+
+                //DLC ID
+                PersistentId.Text = arrangement.Id.ToString().Replace("-", "").ToUpper();
+                MasterId.Text = arrangement.MasterId.ToString();
+            }
+        }
+
         private RouteMask RouteMask {
             get {
                 if (routeMaskLeadRadio.Checked)
@@ -52,17 +89,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        public ArrangementForm(IEnumerable<string> toneNames, DLCPackageCreator control, GameVersion gameVersion)
+        public ArrangementForm(DLCPackageCreator control, GameVersion gameVersion)
             : this(new Arrangement
             {
                 SongFile = new SongFile { File = "" },
                 SongXml = new SongXML { File = "" },
                 ArrangementType = ArrangementType.Guitar
-            }, toneNames, control, gameVersion)
+            }, control, gameVersion)
         {
         }
 
-        public ArrangementForm(Arrangement arrangement, IEnumerable<string> toneNames, DLCPackageCreator control, GameVersion gameVersion)
+        public ArrangementForm(Arrangement arrangement, DLCPackageCreator control, GameVersion gameVersion)
         {
             InitializeComponent();
             currentGameVersion = gameVersion;
@@ -113,11 +150,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 // Tone Selector
                 gbTone.Enabled = selectedType != ArrangementType.Vocal;
-                toneBCombo.Enabled = currentGameVersion == GameVersion.RS2014;
-                toneCCombo.Enabled = currentGameVersion == GameVersion.RS2014;
-                toneDCombo.Enabled = currentGameVersion == GameVersion.RS2014;
-
-                SequencialToneComboEnabling();
 
                 // Arrangement ID
                 MasterId.Enabled = selectedType != ArrangementType.Vocal;
@@ -142,19 +174,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 tuningEditButton.Enabled = selectedType != ArrangementType.Vocal && selectedTuning != null;
             };
 
-            FillToneCombo(toneBaseCombo, toneNames, true);
-            FillToneCombo(toneBCombo, toneNames, false);
-            FillToneCombo(toneCCombo, toneNames, false);
-            FillToneCombo(toneDCombo, toneNames, false);
-
             var scrollSpeed = arrangement.ScrollSpeed;
             if (scrollSpeed == 0)
                 scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
             scrollSpeedTrackBar.Value = scrollSpeed;
             UpdateScrollSpeedDisplay();
+            parentControl = control;
+
+            //Tones setup
+            SetupTones(arrangement);
             
             Arrangement = arrangement;
-            parentControl = control;
         }
 
         private void UpdateRouteMaskPath(ArrangementType arrangementType, ArrangementName arrangementName)
@@ -186,6 +216,46 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tuningComboBox.Refresh();
         }
 
+        private void SetTuningCombo(TuningStrings tuningStrings, bool isBass = false) {
+            //Detect tuning
+            TuningDefinition tuning = TuningDefinitionRepository.Instance().SelectAny(tuningStrings, currentGameVersion);
+            //Create tuning
+            if (tuning == null) {
+                using (var form = new TuningForm()) {
+                    tuning = new TuningDefinition();
+                    tuning.Tuning = tuningStrings;
+                    tuning.Custom = true;
+                    tuning.GameVersion = currentGameVersion;
+                    tuning.Name = tuning.UIName = tuning.NameFromStrings(tuningStrings, isBass);
+
+                    form.Tuning = tuning;
+                    form.IsBass = isBass;
+                    if (DialogResult.OK != form.ShowDialog()) {
+                        return;
+                    }
+
+                    FillTuningCombo();
+                }
+            }
+            //Set tuning
+            tuningComboBox.SelectedItem = tuning;
+        }
+
+        private void UpdateCentOffset() 
+        {
+            var value = frequencyTB.Text;
+            if (!String.IsNullOrEmpty(value)) {
+                double freq = 440;
+                var isValid = Double.TryParse(value, out freq);
+                if (isValid && freq > 0) {
+                    string noteName;
+                    TuningFrequency.Frequency2Note(freq, out noteName);
+                    centOffsetDisplay.Text = String.Format("{0:0.00}", TuningFrequency.Frequency2Cents(freq));
+                    noteDisplay.Text = noteName;
+                }
+            }
+        }
+
         private void FillToneCombo(ComboBox combo, IEnumerable<string> toneNames, bool isBase)
         {
             combo.Items.Clear();
@@ -197,58 +267,82 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             combo.SelectedIndex = 0;
         }
+        /// <summary>
+        /// Fill toneCombo with autotone values or BaseOnly.
+        /// Get tones, fill combo, select tones.
+        /// </summary>
+        /// <param name="arr"></param>
+        private void SetupTones(Arrangement arr)
+        {
+            var toneNames = new List<string>();
+            disableTonesCheckbox.Checked = false;
+            if (!String.IsNullOrEmpty(arr.ToneBase))
+                if (parentControl.TonesLB.Items.Count == 1 && parentControl.TonesLB.Items[0].ToString() == "Default")
+                    parentControl.TonesLB.Items.Clear();
+            toneNames.AddRange(parentControl.TonesLB.Items.OfType<Tone2014>().Select(t => t.Name));
+
+            //Check if autotone tones are present and add if not.
+            if (!toneNames.Contains(arr.ToneBase))
+                if (!String.IsNullOrEmpty(arr.ToneBase))
+                    toneNames.Add(arr.ToneBase);
+            if (!toneNames.Contains(arr.ToneA))
+                if (!String.IsNullOrEmpty(arr.ToneA))
+                    toneNames.Add(arr.ToneA);
+            if (!toneNames.Contains(arr.ToneB))
+                if (!String.IsNullOrEmpty(arr.ToneB))
+                    toneNames.Add(arr.ToneB);
+            if (!toneNames.Contains(arr.ToneC))
+                if (!String.IsNullOrEmpty(arr.ToneC))
+                    toneNames.Add(arr.ToneC);
+            if (!toneNames.Contains(arr.ToneD))
+                if (!String.IsNullOrEmpty(arr.ToneD))
+                    toneNames.Add(arr.ToneD);
+
+            // FILL TONE COMBO
+            FillToneCombo(toneBaseCombo, toneNames, true);
+            FillToneCombo(toneBCombo, toneNames, false);
+            FillToneCombo(toneCCombo, toneNames, false);
+            FillToneCombo(toneDCombo, toneNames, false);
+
+            // SELECTING TONES
+            toneBaseCombo.Enabled = true;
+            if (!String.IsNullOrEmpty(arr.ToneBase))
+            {
+                toneBaseCombo.SelectedItem = arr.ToneBase;
+                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == arr.ToneBase))
+                    parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(arr.ToneBase));
+            }
+            if (!String.IsNullOrEmpty(arr.ToneB))
+            {
+                toneBCombo.SelectedItem = arr.ToneB;
+                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == arr.ToneB))
+                    parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(arr.ToneB));
+            }
+
+            if (!String.IsNullOrEmpty(arr.ToneC))
+            {
+                toneCCombo.SelectedItem = arr.ToneC;
+                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == arr.ToneC))
+                    parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(arr.ToneC));
+            }
+
+            if (!String.IsNullOrEmpty(arr.ToneD))
+            {
+                toneDCombo.SelectedItem = arr.ToneD;
+                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == arr.ToneD))
+                    parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(arr.ToneD));
+            }
+
+            // If have ToneBase and ToneB is setup it's because auto tone are setup in EoF, so, disable edit to prevent errors.
+            disableTonesCheckbox.Checked = (!String.IsNullOrEmpty(arr.ToneBase) && !String.IsNullOrEmpty(arr.ToneB));
+        }
 
         private void SequencialToneComboEnabling() {
-            toneCCombo.Enabled = toneBCombo.SelectedIndex > 0;
-            toneDCombo.Enabled = toneCCombo.SelectedIndex > 0;
+            toneCCombo.Enabled = !String.IsNullOrEmpty((string)toneBCombo.SelectedItem) && toneBCombo.SelectedIndex > 0;
+            toneDCombo.Enabled = !String.IsNullOrEmpty((string)toneCCombo.SelectedItem) && toneCCombo.SelectedIndex > 0;
         }
 
-        public Arrangement Arrangement
-        {
-            get
-            {
-                return arrangement;
-            }
-            private set
-            {
-                arrangement = value;
-
-                //Song XML File
-                XmlFilePath.Text = arrangement.SongXml.File;
-                //Arrangment Information
-                arrangementTypeCombo.SelectedItem = arrangement.ArrangementType;
-                arrangementNameCombo.SelectedItem = arrangement.Name;
-                TuningDefinition tuning = TuningDefinitionRepository.Instance().Select(arrangement.Tuning, currentGameVersion);
-                if (tuning != null)
-                    tuningComboBox.SelectedItem = tuning;
-                frequencyTB.Text = (arrangement.TuningPitch > 0) ? arrangement.TuningPitch.ToString() : "440";
-
-                var scrollSpeed = arrangement.ScrollSpeed;
-                if (scrollSpeed == 0)
-                    scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
-                scrollSpeedTrackBar.Value = scrollSpeed;
-                UpdateScrollSpeedDisplay();
-                
-                Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
-                BonusCheckBox.Checked = arrangement.BonusArr;
-                RouteMask = arrangement.RouteMask;
-                //Tone Selector
-                toneBaseCombo.SelectedItem = arrangement.ToneBase;
-                if (toneBaseCombo.SelectedItem == null && toneBaseCombo.Items.Count > 0)
-                    toneBaseCombo.SelectedItem = toneBaseCombo.Items[0];
-                toneBCombo.SelectedItem = arrangement.ToneB;
-                toneCCombo.SelectedItem = arrangement.ToneC;
-                toneDCombo.SelectedItem = arrangement.ToneD;
-                
-                // If have ToneBase and ToneB is setup it's because auto tone are setup in EoF, so, disable edit to prevent errors.
-                disableTonesCheckbox.Checked = ((toneBaseCombo.SelectedItem != null && !String.IsNullOrEmpty(toneBaseCombo.SelectedItem.ToString())) && (toneBCombo.SelectedItem != null && !String.IsNullOrEmpty(toneBCombo.SelectedItem.ToString()))); ;
-
-                //DLC ID
-                PersistentId.Text = arrangement.Id.ToString().Replace("-", "").ToUpper();
-                MasterId.Text = arrangement.MasterId.ToString();
-            }
-        }
-
+        #region UI events with helpers
         private void songXmlBrowseButton_Click(object sender, EventArgs e)
         {
             using (var ofd = new OpenFileDialog())
@@ -334,121 +428,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         Picked.Checked = xmlSong.ArrangementProperties.BassPick == 1;
                         if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Bass;
                     }
-                        
+                    //Tones setup
                     if (currentGameVersion == GameVersion.RS2014)
                     {
-                        // TONES
-                        if (xmlSong.Tones != null && xmlSong.Tones.Count() > 0 && xmlSong.ToneBase != null)
-                        {
-                            // FILL TONE COMBO
-                            List<string> toneNames = new List<string>();
+                        Arrangement.ToneBase = xmlSong.ToneBase;
+                        Arrangement.ToneA = xmlSong.ToneA;
+                        Arrangement.ToneB = xmlSong.ToneB;                        
+                        Arrangement.ToneC = xmlSong.ToneC;
+                        Arrangement.ToneD = xmlSong.ToneD;
+                        Arrangement.ToneMultiplayer = null;
 
-                            if (parentControl.TonesLB.Items.Count == 1 && parentControl.TonesLB.Items[0].ToString() == "Default")
-                                parentControl.TonesLB.Items.Clear();
-                            else
-                                toneNames.AddRange(parentControl.TonesLB.Items.OfType<Tone2014>().Select(t => t.Name));
-
-                            if (!toneNames.Contains(xmlSong.ToneBase))
-                                toneNames.Add(xmlSong.ToneBase);
-                            if (!toneNames.Contains(xmlSong.ToneB))
-                                toneNames.Add(xmlSong.ToneB);
-                            if (!toneNames.Contains(xmlSong.ToneC))
-                                if (!String.IsNullOrEmpty(xmlSong.ToneC))
-                                    toneNames.Add(xmlSong.ToneC);
-                            if (!toneNames.Contains(xmlSong.ToneD))
-                                if (!String.IsNullOrEmpty(xmlSong.ToneD))
-                                    toneNames.Add(xmlSong.ToneD);
-
-                            FillToneCombo(toneBaseCombo, toneNames, true);
-                            FillToneCombo(toneBCombo, toneNames, false);
-                            FillToneCombo(toneCCombo, toneNames, false);
-                            FillToneCombo(toneDCombo, toneNames, false);
-
-                            // SELECTING TONES
-                            toneBaseCombo.SelectedItem = xmlSong.ToneBase;
-                            if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == xmlSong.ToneBase))
-                                parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(xmlSong.ToneBase));
-
-                            toneBCombo.SelectedItem = xmlSong.ToneB;
-                            if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == xmlSong.ToneB))
-                                parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(xmlSong.ToneB));
-
-                            if (!String.IsNullOrEmpty(xmlSong.ToneC))
-                            {
-                                toneCCombo.Enabled = true;
-                                toneCCombo.SelectedItem = xmlSong.ToneC;
-                                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == xmlSong.ToneC))
-                                    parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(xmlSong.ToneC));
-                            }
-
-                            if (!String.IsNullOrEmpty(xmlSong.ToneD))
-                            {
-                                toneDCombo.Enabled = true;
-                                toneDCombo.SelectedItem = xmlSong.ToneD;
-                                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == xmlSong.ToneD))
-                                    parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(xmlSong.ToneD));
-                            }
-
-                            // If have ToneBase and ToneB is setup it's because auto tone are setup in EoF, so, disable edit to prevent errors.
-                            disableTonesCheckbox.Checked = (!String.IsNullOrEmpty(xmlSong.ToneBase) && !String.IsNullOrEmpty(xmlSong.ToneB));
-                        }
-                        else
-                        {
-                            disableTonesCheckbox.Checked = false;
-
-                            toneBaseCombo.Enabled = true;
-                            if (xmlSong.ToneBase != null)
-                                toneBaseCombo.SelectedItem = xmlSong.ToneBase;
-                            else
-                                toneBaseCombo.SelectedIndex = 0;
-
-                            if (xmlSong.ToneB != null)
-                                toneBCombo.SelectedItem = xmlSong.ToneB;
-                            else
-                                toneBCombo.SelectedIndex = 0;
-
-                            if (xmlSong.ToneC != null)
-                                toneCCombo.SelectedItem = xmlSong.ToneC;
-                            else
-                                toneBCombo.SelectedIndex = 0;
-
-                            if (xmlSong.ToneD != null)
-                                toneDCombo.SelectedItem = xmlSong.ToneD;
-                            else
-                                toneBCombo.SelectedIndex = 0;
-
-                            SequencialToneComboEnabling();
-                        }
+                        SetupTones(Arrangement);
                     }
                 }
             } catch (Exception ex) {
                 MessageBox.Show("Unable to get information from the arrangement XML. \nYour version of the EoF is up to date? \n" + ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-
-        private void SetTuningCombo(TuningStrings tuningStrings, bool isBass = false) {
-            //Detect tuning
-            TuningDefinition tuning = TuningDefinitionRepository.Instance().SelectAny(tuningStrings, currentGameVersion);
-            //Create tuning
-            if (tuning == null) {
-                using (var form = new TuningForm()) {
-                    tuning = new TuningDefinition();
-                    tuning.Tuning = tuningStrings;
-                    tuning.Custom = true;
-                    tuning.GameVersion = currentGameVersion;
-                    tuning.Name = tuning.UIName = tuning.NameFromStrings(tuningStrings, isBass);
-
-                    form.Tuning = tuning;
-                    form.IsBass = isBass;
-                    if (DialogResult.OK != form.ShowDialog()) {
-                        return;
-                    }
-
-                    FillTuningCombo();
-                }
-            }
-            //Set tuning
-            tuningComboBox.SelectedItem = tuning;
         }
 
         private void addArrangementButton_Click(object sender, EventArgs e)
@@ -495,7 +490,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arrangement.BonusArr = BonusCheckBox.Checked;
 
             //ToneSelector
-            //TODO if tone not exist - create empty Tone instance and add it to tonesLB, used for autotone.
             arrangement.ToneBase = toneBaseCombo.SelectedItem.ToString();
             arrangement.ToneA = (toneBCombo.SelectedItem != null) ? toneBaseCombo.SelectedItem.ToString() : ""; //Only need if have more than one tone
             arrangement.ToneB = (toneBCombo.SelectedItem != null) ? toneBCombo.SelectedItem.ToString() : "";
@@ -505,7 +499,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //Gameplay Path
             arrangement.RouteMask = RouteMask;
             
-            // DLC ID
+            // DLC IDs
             Guid guid;
             if (Guid.TryParse(PersistentId.Text, out guid) == false)
                 PersistentId.Focus();
@@ -535,20 +529,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void frequencyTB_TextChanged(object sender, EventArgs e) {
             UpdateCentOffset();
-        }
-
-        private void UpdateCentOffset() {
-            var value = frequencyTB.Text;
-            if (!String.IsNullOrEmpty(value)) {
-                double freq = 440;
-                var isValid = Double.TryParse(value, out freq);
-                if (isValid && freq > 0) {
-                    string noteName;
-                    TuningFrequency.Frequency2Note(freq, out noteName);
-                    centOffsetDisplay.Text = String.Format("{0:0.00}", TuningFrequency.Frequency2Cents(freq));
-                    noteDisplay.Text = noteName;
-                }
-            }
         }
 
         private void ToneComboEnabled(bool enabled) {
@@ -588,7 +568,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 if (oldUIName != form.Tuning.UIName)
                 {
-                    // Update tone slots if name are changed
+                    // Update LB slots if name are changed
                     for (int i = 0; i < parentControl.ArrangementLB.Items.Count; i++)
                     {
                         var arrangement = (Arrangement)parentControl.ArrangementLB.Items[i];
@@ -614,5 +594,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeedTrackBar.Value) / 10);
         }
+        #endregion
     }
 }
