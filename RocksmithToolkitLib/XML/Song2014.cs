@@ -205,9 +205,15 @@ namespace RocksmithToolkitLib.Xml {
             Sections = (attr != null) ? SongSection.Parse(attr.Sections) : SongSection.Parse(sngData.Sections);
 
             //Can be obtained from manifest or sng file (sng preferred)
-            ChordTemplates = SongChordTemplate2014.Parse(sngData.Chords); // Only SNG have all ChordTemplates, manifest have only chord templates with name
             Phrases = SongPhrase.Parse(sngData.Phrases);
             PhraseIterations = SongPhraseIteration2014.Parse(sngData.PhraseIterations);
+
+            //Can be obtained from manifest or sng file (combined preferred)
+            ChordTemplates = SongChordTemplate2014.Parse(sngData.Chords); // Only SNG have all ChordTemplates, manifest have only chord templates with name
+            if (attr != null)
+            {
+                SongChordTemplate2014.AddChordIds(ChordTemplates, attr.ChordTemplates); // Only manifest has chordIds
+            }
 
             //Only in SNG
             Ebeats = SongEbeat.Parse(sngData.BPMs);
@@ -406,6 +412,8 @@ namespace RocksmithToolkitLib.Xml {
         [XmlAttribute("finger5")]
         public sbyte Finger5 { get; set; }
 
+        public int? ChordId { get; set; }
+
         internal static SongChordTemplate2014[] Parse(List<DLCPackage.Manifest.ChordTemplate> cteamplateList) {
             var chordTemplates = new SongChordTemplate2014[cteamplateList.Count];
             for (int i = 0; i < cteamplateList.Count; i++) {
@@ -423,6 +431,7 @@ namespace RocksmithToolkitLib.Xml {
                 sct2014.Fret3 = (sbyte)cteamplateList[i].Frets[3];
                 sct2014.Fret4 = (sbyte)cteamplateList[i].Frets[4];
                 sct2014.Fret5 = (sbyte)cteamplateList[i].Frets[5];
+                sct2014.ChordId = cteamplateList[i].ChordId;
                 chordTemplates[i] = sct2014;
             }
             return chordTemplates;
@@ -445,6 +454,7 @@ namespace RocksmithToolkitLib.Xml {
                 sct2014.Fret3 = (sbyte)chordSection.Chords[i].Frets[3];
                 sct2014.Fret4 = (sbyte)chordSection.Chords[i].Frets[4];
                 sct2014.Fret5 = (sbyte)chordSection.Chords[i].Frets[5];
+                sct2014.ChordId = null;
                 
                 // Parse chord mask
                 var mask = chordSection.Chords[i].Mask;
@@ -457,6 +467,23 @@ namespace RocksmithToolkitLib.Xml {
                 }
 
                 chordTemplates[i] = sct2014;
+            }
+            return chordTemplates;
+        }
+
+        internal static SongChordTemplate2014[] AddChordIds(SongChordTemplate2014[] chordTemplates, List<DLCPackage.Manifest.ChordTemplate> ctemplateList)
+        {
+            for (int i = 0; i < ctemplateList.Count; i++)
+            {
+                var ct = ctemplateList[i];
+                var matchingChord = chordTemplates.First(sct =>
+                    sct.Fret0 == ct.Frets[0] &&
+                    sct.Fret1 == ct.Frets[1] &&
+                    sct.Fret2 == ct.Frets[2] &&
+                    sct.Fret3 == ct.Frets[3] &&
+                    sct.Fret4 == ct.Frets[4] &&
+                    sct.Fret5 == ct.Frets[5]);
+                matchingChord.ChordId = ct.ChordId;
             }
             return chordTemplates;
         }
