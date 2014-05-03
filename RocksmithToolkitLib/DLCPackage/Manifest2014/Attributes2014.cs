@@ -105,7 +105,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
                 // BONUS ARRANGEMENT
                 ArrangementProperties.BonusArr = Convert.ToInt32(arrangement.BonusArr);
-                
+
                 if (arrangement.Name == Sng.ArrangementName.Combo)
                 { //Exclusive condition
                     if (arrangement.RouteMask == DLCPackage.RouteMask.Lead)
@@ -134,7 +134,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
                 Phrases = new List<Phrase>();
                 manifestFunctions.GeneratePhraseData(this, SongContent);
-                
+
                 Sections = new List<Section>();
                 manifestFunctions.GenerateSectionData(this, SongContent);
 
@@ -144,29 +144,47 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 //SongPartition  -- Generated in DLCPackageCreator after this constructor
 
                 //Techniques     -- //TODO: MISSING GENERATE
-                Tone_A = arrangement.ToneA;
-                Tone_B = arrangement.ToneB;
-                Tone_Base = arrangement.ToneBase;
-                Tone_C = arrangement.ToneC;
-                Tone_D = arrangement.ToneD;
-                Tone_Multiplayer = arrangement.ToneMultiplayer;
 
+                //Fix for Dead tones
+                var it = info.TonesRS2014;
                 Tones = new List<Tone2014>();
-                if (!String.IsNullOrEmpty(arrangement.ToneA))
-                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_A));
-                if (!String.IsNullOrEmpty(arrangement.ToneB))
-                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_B));
-                if (!String.IsNullOrEmpty(arrangement.ToneBase))
-                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_Base));
-                if (!String.IsNullOrEmpty(arrangement.ToneC))
-                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_C));
-                if (!String.IsNullOrEmpty(arrangement.ToneD))
-                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_D));
-                if (!String.IsNullOrEmpty(arrangement.ToneMultiplayer))
-                    Tones.Add(info.TonesRS2014.SingleOrDefault(t => t.Name == Tone_Multiplayer));
+
+                Tone_A = GetToneName(arrangement.ToneA, it);
+                Tone_B = GetToneName(arrangement.ToneB, it);
+                Tone_Base = GetToneName(arrangement.ToneBase, it);
+                Tone_C = GetToneName(arrangement.ToneC, it);
+                Tone_D = GetToneName(arrangement.ToneD, it);
+                Tone_Multiplayer = GetToneName(arrangement.ToneMultiplayer, it);
             }
 
             #endregion
+        }
+        /// <summary>
+        /// Gets name of tone and add it to Tones list at once.
+        /// </summary>
+        /// <param name="arrTone"></param>
+        /// <param name="it"></param>
+        /// <returns></returns>
+        private string GetToneName(string arrTone, List<Tone2014> it)
+        {
+            string Default = "Default";            
+            string ToneName = "";
+
+            if(!String.IsNullOrEmpty(arrTone))
+            {
+                var matchedTone = it.SingleOrDefault(t => t.Name == arrTone);
+                if (matchedTone.GearList.IsNull())
+                    ToneName = Default;
+                else
+                {
+                    if (!Tones.Contains(matchedTone))
+                    {
+                        Tones.Add(matchedTone);
+                    }
+                    ToneName = arrTone;
+                }
+            }
+            return ToneName;
         }
     }
 }

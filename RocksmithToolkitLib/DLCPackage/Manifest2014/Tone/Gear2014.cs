@@ -38,5 +38,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
                 myPropInfo.SetValue(this, value, null);
             }
         }
+        public bool IsNull()
+        {
+            return ReferenceEquals(Amp, null) && ReferenceEquals(Cabinet, null);
+        }
     }
 }

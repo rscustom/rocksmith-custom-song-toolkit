@@ -43,7 +43,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (toneControl1.Tone.PedalList.Count == 0) return;
                     break;
                 case GameVersion.RS2014:
-                    if (toneControl1.Tone.GearList.Amp == null) return;
+                    if (toneControl1.Tone.GearList.IsNull()) return;
                     break;
             }
             Saved = true;
