@@ -65,7 +65,7 @@ namespace RocksmithToolkitLib.Extensions
             return name;
         }
 
-        public static string GetValidName(this string value, bool allowSpace = true, bool allowStartsWithNumber = false, bool underscoreSpace = false, bool frets24 = false)
+        public static string GetValidName(this string value, bool allowSpace = false, bool allowStartsWithNumber = false, bool underscoreSpace = false, bool frets24 = false)
         {
             string name = String.Empty;
             if (!String.IsNullOrEmpty(value))
@@ -122,15 +122,15 @@ namespace RocksmithToolkitLib.Extensions
             if (v.Length > 1)
                 return string.Join(string.Empty, v.Select(s => s[0])).ToUpper();
             else
-                return value.GetValidName();
+                return value.GetValidName(false, true);
         }
 
         public static string GetShortName(string Format, string Artist, string Title, string Version, bool Acronym)
         {
             if (!Acronym)
-                return String.Format(Format, Artist.GetValidName(true), Title.GetValidName(true), Version.GetValidName(true)).Replace(" ", "-");
+                return String.Format(Format, Artist.GetValidName(true, true), Title.GetValidName(true, true), Version.GetValidName(true, true)).Replace(" ", "-");
             else
-                return String.Format(Format, Artist.Acronym(), Title.GetValidName(true), Version.GetValidName(true)).Replace(" ", "-");
+                return String.Format(Format, Artist.Acronym(), Title.GetValidName(true, true), Version.GetValidName(true, true)).Replace(" ", "-");
         }
 
         public static bool IsValidPSARC(this string fileName)
