@@ -575,6 +575,5 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                     break;
             }
         }
-
     }
 }
