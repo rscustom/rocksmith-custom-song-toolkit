@@ -562,18 +562,19 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
         private void inlayTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (inlayTypeCombo.SelectedIndex)
-            {
-                case 0:
-                    expansionMod1.Visible = false;
-                    break;
+            // TODO: Expansion not finished :(
+            //switch (inlayTypeCombo.SelectedIndex)
+            //{
+            //    case 0:
+            //        expansionMod1.Visible = false;
+            //        break;
 
-                case 1:
-                    expansionMod1.Location = new Point(11, 140);
-                    expansionMod1.Size = new Size(500, 300);
-                    expansionMod1.Visible = true;
-                    break;
-            }
+            //    case 1:
+            //        expansionMod1.Location = new Point(11, 140);
+            //        expansionMod1.Size = new Size(500, 300);
+            //        expansionMod1.Visible = true;
+            //        break;
+            //}
         }
     }
 }
