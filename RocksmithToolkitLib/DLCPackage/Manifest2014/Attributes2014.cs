@@ -173,6 +173,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             if(!String.IsNullOrEmpty(arrTone))
             {
                 var matchedTone = it.SingleOrDefault(t => t.Name == arrTone);
+                if (ReferenceEquals(matchedTone, null))
+                    return ToneName;
+
                 if (matchedTone.GearList.IsNull())
                     ToneName = Default;
                 else

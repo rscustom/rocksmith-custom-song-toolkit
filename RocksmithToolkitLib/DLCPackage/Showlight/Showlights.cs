@@ -120,50 +120,49 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         {
             if (ShowlightList.Count == 0) return ShowlightList;
 
+            //Setup Stage Fog Color
             if (ShowlightList[0].Time > 10.0F) {
                 ShowlightList.Insert(0, new Showlight() { Note = getFogNote(ShowlightList[0].Note), Time = 10.0F });
             }
-
-            if (ShowlightList[0].Note < 24 || ShowlightList[0].Note > 35) {
+            else if (ShowlightList[0].Note < 24 || ShowlightList[0].Note > 35) {
                 ShowlightList[0].Note = getFogNote(ShowlightList[0].Note);
             }
-
+            //Setup Stage lights
             //Additional fix for stage lights
-            for (var i = 1; i+1 <= ShowlightList.Count; i++)
+            for (var i = 1; i + 1 <= ShowlightList.Count; i++)
             {
-                try
+
+                //if current is last, add new one n=n t=t+1
+                if (i + 1 == ShowlightList.Count)
                 {
-                    //if current is last, add new one n=66 t=i-1.t
-                    if (i + 1 == ShowlightList.Count)
+                    var objectToAdd = new Showlight()
                     {
-                        var objectToAdd = new Showlight()
-                        {
-                            Note = ShowlightList[i].Note,
-                            Time = ShowlightList[i].Time + 1
-                        };
-                        
-                        ShowlightList.Add(objectToAdd);
-                    }
+                        Note = ShowlightList[i].Note,
+                        Time = ShowlightList[i].Time + 1
+                    };
 
-                    if (ShowlightList[i].Note == ShowlightList[i + 1].Note) // if next note is current
-                        ShowlightList.Remove(ShowlightList[i + 1]);
+                    ShowlightList.Add(objectToAdd);
                 }
-                catch {}
-                //Fog Color for, every: note < 24 replace to its eq from 1 oct
 
-                if (ShowlightList[i].Note < 24)
-                {
-                    ShowlightList[i].Note = getFogNote(ShowlightList[i].Note);
-                    continue;
-                }
+                if (ShowlightList[i].Note == ShowlightList[i + 1].Note) // if next note is current
+                    ShowlightList.Remove(ShowlightList[i + 1]);
+
+                //Fog Color for, every: Solo, every 30% of the song
+                //if (ShowlightList[i].Note < 24)
+                //{
+                //    ShowlightList[i].Note = getFogNote(ShowlightList[i].Note);
+                //    continue;
+                //}
 
                 //For all notes > 67 || note in range [36..41] translate it to Beam\spotlight, range [42..59]
-                if (ShowlightList[i].Note > 35 && ShowlightList[i].Note < 42 || ShowlightList[i].Note > 67)
+                if (ShowlightList[i].Note < 24 || ShowlightList[i].Note > 35 && ShowlightList[i].Note < 42 || ShowlightList[i].Note > 67)
                 {
                     ShowlightList[i].Note = getBeamNote(ShowlightList[i].Note);
                     continue;
                 }
             }
+            //Forced laser effect for last note
+            ShowlightList[ShowlightList.Count - 1].Note = 66;
 
             return ShowlightList;
         }
