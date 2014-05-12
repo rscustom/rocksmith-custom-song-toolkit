@@ -1,0 +1,544 @@
+//--------------------------------------
+//--- 010 Editor v5.0 Binary Template
+//
+// FileName: Rocksmith2014SNG.bt
+// File: Rocksmith 2014 SNG File Format
+// Author: Zephyrix
+// Revision: 3
+// Purpose: Research
+//--------------------------------------
+
+//typedef struct {
+//    long FirstBeat : 1;
+//    long EvenMeasure : 1;
+//    long Unk_0 : 30;
+//} MeasureMask;
+
+typedef struct 
+{
+    float Time;
+    short Measure;
+    short Beat;
+    long PhraseIteration;
+    // no more bits found in any lessons
+    // bit 0 = first beat of measure
+    // bit 1 = even measure (starting with 0)
+    //struct MeasureMask Mask;
+    long Mask;
+} 
+BPM;
+
+typedef struct
+{
+    long Count;
+    BPM BPMs[Count];
+} 
+BPM_SECTION;
+
+typedef struct
+{
+    byte Solo;
+    byte Disparity;
+    byte Ignore;
+    byte Padding;
+    long MaxDifficulty;
+    long PhraseIterationLinks;
+    char Name[32];
+}
+PHRASE;
+
+typedef struct
+{
+    long Count;
+    PHRASE Phrases[Count];
+}
+PHRASE_SECTION;
+
+typedef struct
+{
+    ulong Mask;
+    byte Frets[6] <format=decimal>;
+    byte Fingers[6] <format=decimal>;
+    long Notes[6] <format=decimal>;
+    char Name[32];
+}
+CHORD;
+
+typedef struct
+{
+    long Count;
+    CHORD Chords[Count];
+}
+CHORD_SECTION;
+
+typedef struct
+{
+    float Time;
+    float Step;
+    short Unk3_0;
+    byte Unk4_0;
+    // FIXME TODO how is Unk5 calculated
+    // not mentioned in XML:
+    // step 1-1-0, unk5 0-45-0
+    // step 2-0,   unk5 0-45
+    // step 1-0,   unk5 0-45
+    // step 1,     unk5 0
+    // step 2-2-0  unk5 0-38-0
+    // weezer chordnote bend:
+    // step 1.5-1-1.5-1.5, unk5 0-0-1-0
+    byte Unk5;
+}
+BEND_DATA32;
+
+typedef struct
+{
+    BEND_DATA32 BendData32[32];
+    long UsedCount;
+}
+BEND_DATA;
+
+typedef struct
+{
+    long Count;
+    BEND_DATA32 BendData[Count];
+}
+BEND_DATA_SECTION;
+
+typedef struct
+{
+    ulong NoteMask[6];
+    BEND_DATA BendData[6];
+    byte SlideTo[6];
+    byte SlideUnpitchTo[6];
+    short Vibrato[6];
+}
+CHORD_NOTES;
+
+typedef struct
+{
+    long Count;
+    CHORD_NOTES ChordNotes[Count];
+}
+CHORD_NOTES_SECTION;
+
+//WIP state for SYMBOLS
+typedef struct
+{
+    float Time;
+    long Note;
+    float Length;
+    char Lyric[48];
+}
+VOCAL;
+
+typedef struct
+{
+    long Count;
+    VOCAL Vocals[Count];
+}
+VOCAL_SECTION;
+
+typedef struct
+{
+    long Unk1_ID;
+    long Unk2;
+    long Unk3;
+    long Unk4;
+    long Unk5;
+    long Unk6;
+    long Unk7;
+    long Unk8;
+}
+SYMBOLS_HEADER;
+
+typedef struct
+{
+    long Count;
+    SYMBOLS_HEADER SymbolsHeader[Count];
+}
+SYMBOLS_HEADER_SECTION;
+
+typedef struct
+{
+    byte Font[128];
+    long FontpathLength;
+    long Unk1_0;
+    // 1024
+    long Width;
+    // 512
+    long Height;
+}
+SYMBOLS_TEXTURE;
+
+typedef struct
+{
+    long Count;
+    SYMBOLS_TEXTURE SymbolsTextures[Count];
+}
+SYMBOLS_TEXTURE_SECTION;
+//==========================================================
+typedef struct
+{
+    float yMin;
+    float xMin;
+    float yMax;
+    float xMax;
+}
+RECT;
+
+typedef struct
+{
+    // UTF-8
+    char Text[12] <format=hex>;
+    // (y0, x0, y1, x1) || coordinates in procentage, related to texture size.
+    RECT Rect_Outter;
+    RECT Rect_Inner;
+}
+SYMBOL_DEFINITION;
+
+typedef struct
+{
+    long Count;
+    SYMBOL_DEFINITION SymbolDefinitions[Count];
+}
+SYMBOL_DEFINITION_SECTION;
+//==========================================================
+
+typedef struct
+{
+    long PhraseId;
+    float StartTime;
+    float NextPhraseTime;
+    // difficulty levels for Easy, Medium, Hard
+    long Difficulty[3];
+}
+PHRASE_ITERATION;
+
+typedef struct
+{
+    long Count;
+    PHRASE_ITERATION PhraseIterations[Count];
+}
+PHRASE_ITERATION_SECTION;
+
+// no RS2 SNG is using this
+typedef struct
+{
+    long PhraseId;
+    long Difficulty;
+    long Empty;
+    byte LevelJump;
+    short Redundant;
+    byte Padding;
+}
+PHRASE_EXTRA_INFO_BY_LEVEL;
+
+typedef struct
+{
+    long Count;
+    PHRASE_EXTRA_INFO_BY_LEVEL PhraseExtraInfoByLevel[Count];
+}
+PHRASE_EXTRA_INFO_BY_LEVEL_SECTION;
+
+typedef struct
+{
+    long LevelBreak;
+    long PhraseCount;
+    long NLD_Phrase[PhraseCount];
+}
+N_LINKED_DIFFICULTY;
+
+typedef struct
+{
+    long Count;
+    N_LINKED_DIFFICULTY NLinkedDifficulties[Count];
+}
+N_LINKED_DIFFICULTY_SECTION;
+
+// no RS2 SNG is using this
+typedef struct
+{
+    float Time;
+    char ActionName[256];
+}
+ACTION;
+
+typedef struct
+{
+    long Count;
+    ACTION Actions[Count];
+}
+ACTION_SECTION;
+
+//this one used
+typedef struct
+{
+    float Time;
+    char EventName[256];
+}
+EVENT;
+
+typedef struct
+{
+    long Count;
+    EVENT Events[Count];
+}
+EVENT_SECTION;
+
+typedef struct
+{
+    float Time;
+    long ToneId;
+}
+TONE;
+
+typedef struct
+{
+    long Count;
+    TONE Tones[Count];
+}
+TONE_SECTION;
+
+typedef struct
+{
+    float Time;
+    long DnaId;
+}
+DNA;
+
+typedef struct
+{
+    long Count;
+    DNA Dnas[Count];
+}
+DNA_SECTION;
+
+typedef struct
+{
+    char Name[32];
+    long Number;
+    float StartTime;
+    float EndTime;
+    long StartPhraseIterationId;
+    long EndPhraseIterationId;
+    // one per each Arrangement
+    byte StringMask[36];
+}
+SECTION;
+
+typedef struct
+{
+    long Count;
+    SECTION Sections[Count];
+}
+SECTIONS;
+
+typedef struct
+{
+    float StartBeatTime;
+    float EndBeatTime;
+    // sometimes Unk3-4 is garbage, probably unused (many times StartBeatTime)
+    float Unk3_FirstNoteTime;
+    // sometimes start time, sometimes later (first?) beat time
+    float Unk4_LastNoteTime;
+    byte FretId;
+    byte Padding[3];
+    long Width;
+    long PhraseIterationId;
+}
+ANCHOR;
+
+typedef struct
+{
+    long Count;
+    ANCHOR Anchors[Count];
+}
+ANCHOR_SECTION;
+
+typedef struct
+{
+    float BeatTime;
+    byte FretId;
+    // all lessons have these always set to zero
+    long Unk2_0;
+    short Unk3_0;
+    byte Unk4_0;
+}
+ANCHOR_EXTENSION;
+
+typedef struct
+{
+    long Count;
+    ANCHOR_EXTENSION AnchorExtensions[Count];
+}
+ANCHOR_EXTENSION_SECTION;
+
+typedef struct
+{
+    long ChordId;
+    float StartTime;
+    float EndTime;
+    float Unk3_FirstNoteTime;
+    float Unk4_LastNoteTime;
+}
+FINGERPRINT;
+
+typedef struct
+{
+    long Count;
+    FINGERPRINT Fingerprints[Count];
+}
+FINGERPRINT_SECTION;
+
+// NoteMask:
+// NOTE_MASK_UNDEFINED = 0x0
+// NOTE_MASK_CHORD = 0x2
+// NOTE_MASK_OPEN = 0x4
+// NOTE_MASK_FRETHANDMUTE = 0x8
+// NOTE_MASK_TREMOLO = 0x10
+// NOTE_MASK_HARMONIC = 0x20
+// NOTE_MASK_PALMMUTE = 0x40
+// NOTE_MASK_SLAP = 0x80
+// NOTE_MASK_PLUCK = 0x100
+// NOTE_MASK_HAMMERON = 0x200
+// NOTE_MASK_PULLOFF = 0x400
+// NOTE_MASK_SLIDE = 0x800
+// NOTE_MASK_BEND = 0x1000
+// NOTE_MASK_SUSTAIN = 0x2000
+// NOTE_MASK_TAP = 0x4000
+// NOTE_MASK_PINCHHARMONIC = 0x8000
+// NOTE_MASK_VIBRATO = 0x10000
+// NOTE_MASK_MUTE = 0x20000
+// NOTE_MASK_IGNORE = 0x40000
+// NOTE_MASK_HIGHDENSITY = 0x200000
+// NOTE_MASK_SLIDEUNPITCHEDTO = 0x400000
+// NOTE_MASK_DOUBLESTOP = 0x2000000
+// NOTE_MASK_ACCENT = 0x4000000
+// NOTE_MASK_PARENT = 0x8000000
+// NOTE_MASK_CHILD = 0x10000000
+// NOTE_MASK_ARPEGGIO = 0x20000000
+// NOTE_MASK_POP = 0x100
+// NOTE_MASK_STRUM = 0x80000000
+
+typedef struct
+{
+    ulong NoteMask;
+    ulong NoteFlags;
+    // TODO not clear which attributes are significant, but Time certainly is
+    ulong Hash;
+    float Time;
+    byte StringIndex;
+    byte FretId;
+    byte AnchorFretId;
+    byte AnchorWidth;
+    long ChordId;
+    long ChordNotesId;
+    long PhraseId;
+    long PhraseIterationId;
+    short FingerPrintId[2];
+    // -1 if last/first note in iteration
+    short NextIterNote;
+    short PrevIterNote;
+    short ParentPrevNote;
+    byte SlideTo;
+    byte SlideUnpitchTo;
+    byte LeftHand;
+    byte Tap;
+    byte PickDirection;
+    byte Slap;
+    byte Pluck;
+    short Vibrato;
+    float Sustain;
+    float MaxBend;
+    BEND_DATA_SECTION BendData;
+}
+NOTES;
+
+typedef struct
+{
+    long Count;
+    // notes and chords
+    NOTES Notes[Count];
+}
+NOTES_SECTION;
+
+typedef struct
+{
+    long Difficulty;
+    ANCHOR_SECTION Anchors;
+    // TODO so far used for slides: slideTo is FretId at Time+Sustain time
+    ANCHOR_EXTENSION_SECTION AnchorExtensions;
+    FINGERPRINT_SECTION Fingerprints1;
+    FINGERPRINT_SECTION Fingerprints2;
+    NOTES_SECTION Notes_ChordNotes;
+
+    long PhraseCount;
+    float AverageNotesPerIteration[PhraseCount];
+    long PhraseIterationCount1;
+    long NotesInIteration1[PhraseIterationCount1];
+    long PhraseIterationCount2;
+    long NotesInIteration2[PhraseIterationCount2];
+}
+ARRANGEMENT;
+
+typedef struct
+{
+    long Count;
+    ARRANGEMENT Arrangements[Count] <optimize=false>;
+}
+ARRANGEMENT_SECTION;
+
+typedef struct
+{
+    // 100k
+    double MaxScore;
+    double MaxNotesAndChords;
+    // ge_baccents_lsn50, ge_e14_rchords4 show that this count is without example riff
+    // for songs it will be always the same value
+    double Unk3_MaxNotesAndChords;
+    // MaxScore / MaxNotesAndChords
+    double PointsPerNote;
+    float FirstBeatLength;
+    // <offset>-10.0</offset> => 10.0
+    float StartTime;
+    // -1 for none (<capo>0</capo>)
+    byte CapoFretId;
+    char LastConversionDateTime[32];
+    // <part>, mostly 1, higher number used only by multipart lessons?
+    short Part;
+    float SongLength;
+    // 6 even for bass
+    long StringCount;
+    short Tuning[StringCount];
+    // TODO why two copies?
+    float Unk11_FirstNoteTime;
+    float Unk12_FirstNoteTime;
+    long MaxDifficulty;
+}
+METADATA;
+
+struct SNG{
+    BPM_SECTION BPMs;
+    PHRASE_SECTION Phrases;
+    CHORD_SECTION Chords;
+    CHORD_NOTES_SECTION Chord_notes;
+
+    VOCAL_SECTION Vocals;
+    // skipped if Vocals count is zero
+    if(Vocals.Count > 0){
+        SYMBOLS_HEADER_SECTION SymbolsHeader;
+        SYMBOLS_TEXTURE_SECTION SymbolsTexture;
+        SYMBOL_DEFINITION_SECTION SymbolsDefinition;
+    }
+
+    PHRASE_ITERATION_SECTION PhraseIterations;
+    PHRASE_EXTRA_INFO_BY_LEVEL_SECTION PhraseExtraInfo;
+    N_LINKED_DIFFICULTY_SECTION NLD;
+    ACTION_SECTION Actions;
+    EVENT_SECTION Events;
+    TONE_SECTION Tones;
+    DNA_SECTION DNAs;
+    SECTIONS Sections;
+    ARRANGEMENT_SECTION Arrangements_Difficulties;
+    METADATA Metadata;
+} file;
