@@ -398,7 +398,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             {
                 ofd.FileName = InlayName.GetValidName(true, false, true, Frets24).ToLower();
                 ofd.Filter = "Custom Inlay DLC (*.*)|*.*";
-                ofd.InitialDirectory = ConfigRepository.Instance()["general_rs2014path"];
                 ofd.InitialDirectory = dlcSavePath;
 
                 if (ofd.ShowDialog() != DialogResult.OK) return;

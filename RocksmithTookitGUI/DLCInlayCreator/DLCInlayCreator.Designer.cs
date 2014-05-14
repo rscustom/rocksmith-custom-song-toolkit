@@ -69,8 +69,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.authorTextbox = new RocksmithToolkitGUI.CueTextBox();
             this.expansionMod1 = new RocksmithToolkitGUI.DLCInlayCreator.ExpansionMod();
             this.inlayNameTextbox = new RocksmithToolkitGUI.CueTextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.gbInfo.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInlay)).BeginInit();
