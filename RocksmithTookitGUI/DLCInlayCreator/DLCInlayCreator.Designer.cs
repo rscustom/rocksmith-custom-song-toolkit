@@ -42,6 +42,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.keyboardDescArrLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -82,8 +84,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // appIdCombo
             // 
-            this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.appIdCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.appIdCombo.FormattingEnabled = true;
             this.appIdCombo.Location = new System.Drawing.Point(204, 30);
@@ -209,12 +211,32 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Guitar Inlay";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label7.Location = new System.Drawing.Point(202, 162);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(32, 15);
+            this.label7.TabIndex = 90;
+            this.label7.Text = "Inlay";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label6.Location = new System.Drawing.Point(123, 162);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(30, 15);
+            this.label6.TabIndex = 75;
+            this.label6.Text = "Icon";
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(276, 166);
+            this.label3.Location = new System.Drawing.Point(269, 166);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(110, 13);
             this.label3.TabIndex = 89;
@@ -244,8 +266,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // inlayTemplateCombo
             // 
-            this.inlayTemplateCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.inlayTemplateCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.inlayTemplateCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.inlayTemplateCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.inlayTemplateCombo.FormattingEnabled = true;
@@ -335,11 +357,11 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             this.currentOperationLabel.AutoSize = true;
             this.currentOperationLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.currentOperationLabel.Location = new System.Drawing.Point(2, 370);
+            this.currentOperationLabel.Location = new System.Drawing.Point(3, 368);
             this.currentOperationLabel.Name = "currentOperationLabel";
-            this.currentOperationLabel.Size = new System.Drawing.Size(16, 13);
+            this.currentOperationLabel.Size = new System.Drawing.Size(71, 13);
             this.currentOperationLabel.TabIndex = 85;
-            this.currentOperationLabel.Text = "...";
+            this.currentOperationLabel.Text = "Generating ...";
             this.currentOperationLabel.Visible = false;
             // 
             // gbPlatform
@@ -494,6 +516,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.expansionMod1.Name = "expansionMod1";
             this.expansionMod1.Size = new System.Drawing.Size(137, 41);
             this.expansionMod1.TabIndex = 90;
+            this.expansionMod1.Visible = false;
             // 
             // inlayNameTextbox
             // 

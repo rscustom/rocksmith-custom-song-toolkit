@@ -381,13 +381,25 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
         private void inlayGenerateButton_Click(object sender, EventArgs e)
         {
-            // dlcSavePath = Path.Combine(workDir, "cgm");
+            // put inlays in proper directory
+            if (Directory.Exists(ConfigRepository.Instance()["general_rs2014path"]))
+            {
+                dlcSavePath = Path.Combine(ConfigRepository.Instance()["general_rs2014path"], "dlc", "Inlays");
+            }
+            else
+            {
+                dlcSavePath = Path.Combine(workDir, "cgm", "dlc", "Inlays");
+            }
+
+            if (!Directory.Exists(dlcSavePath))
+                Directory.CreateDirectory(dlcSavePath);
+
             using (var ofd = new SaveFileDialog())
             {
                 ofd.FileName = InlayName.GetValidName(true, false, true, Frets24).ToLower();
                 ofd.Filter = "Custom Inlay DLC (*.*)|*.*";
                 ofd.InitialDirectory = ConfigRepository.Instance()["general_rs2014path"];
-                // ofd.InitialDirectory = dlcSavePath;
+                ofd.InitialDirectory = dlcSavePath;
 
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
@@ -412,6 +424,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             ConfigRepository.Instance()["cgm_coloredinlay"] = Colored.ToString();
 
             // Generate
+            OverwriteExistingPackage();
+
             if (Path.GetFileName(dlcSavePath).Contains(" ") && platformPS3.Checked)
                 if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn"))
                 {
@@ -503,7 +517,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             // Cache cleanup so we don't serialize or reuse data that could be changed
             packageData.CleanCache();
-            e.Result = "generate";
+
+            if (numPlatforms != 0) e.Result = "generate";
         }
 
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -539,6 +554,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                     inlayGenerateButton.Enabled = true;
                     break;
             }
+            this.Focus();
+            inlayGenerateButton.Enabled = true;
         }
 
         private void ShowCurrentOperation(string message)
@@ -576,5 +593,46 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             //        break;
             //}
         }
+
+        private void OverwriteExistingPackage()
+        {
+            var packageArray = new string[,]
+                {
+                        {platformPC.Checked.ToString(), String.Format("{0}_p.psarc", dlcSavePath)},
+                        {platformMAC.Checked.ToString(), String.Format("{0}_m.psarc", dlcSavePath)},
+                        {platformXBox360.Checked.ToString(), String.Format("{0}_xbox", dlcSavePath)},
+                        {platformPS3.Checked.ToString(), String.Format("{0}_ps3", dlcSavePath)}
+                };
+
+            for (int i = 0; i < packageArray.GetUpperBound(0); i++)
+            {
+                if (packageArray[i, 0] == "True")
+                {
+                    if (File.Exists(packageArray[i, 1]))
+                    {
+                        if (MessageBox.Show("The package \"" + Path.GetFileName(packageArray[i, 1]) + "\" already exists." + Environment.NewLine + "Would you like to overwrite the file?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    platformPC.Checked = false;
+                                    break;
+                                case 1:
+                                    platformMAC.Checked = false;
+                                    break;
+                                case 2:
+                                    platformXBox360.Checked = false;
+                                    break;
+                                case 3:
+                                    platformPS3.Checked = false;
+                                    break;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

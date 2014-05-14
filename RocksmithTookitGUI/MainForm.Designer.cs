@@ -277,7 +277,7 @@
             this.dlcInlayCreatorControl.Location = new System.Drawing.Point(16, 6);
             this.dlcInlayCreatorControl.MinimumSize = new System.Drawing.Size(530, 380);
             this.dlcInlayCreatorControl.Name = "dlcInlayCreatorControl";
-            this.dlcInlayCreatorControl.Size = new System.Drawing.Size(530, 380);
+            this.dlcInlayCreatorControl.Size = new System.Drawing.Size(530, 552);
             this.dlcInlayCreatorControl.TabIndex = 4;
             // 
             // sngConverterTab
