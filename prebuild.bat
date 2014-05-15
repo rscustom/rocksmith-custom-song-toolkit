@@ -23,7 +23,7 @@ if exist "%solution%\.git\HEAD" (
 :: *.cs files in Unicode
 echo Reading ToolkitVersion.cs_dist...
 set origstr=00000000
-chcp 65001>null
+rem chcp 65001>null
 for /f "tokens=* delims=" %%i in ('type "%toolkitver%_dist"') do (
 	set str=%%i
 	set newstr=!str:%origstr%=%rev%!
