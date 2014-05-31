@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using RocksmithToolkitLib.DLCPackage;
+using RocksmithToolkitLib.DLCPackage.Tone;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Extensions;
@@ -19,6 +20,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     public partial class ArrangementForm : Form
     {
         private Arrangement arrangement;
+        private TuningStrings TuningStrings = null;
         private DLCPackageCreator parentControl = null;
         private GameVersion currentGameVersion;
 
@@ -37,10 +39,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 //Arrangment Information
                 arrangementTypeCombo.SelectedItem = arrangement.ArrangementType;
                 arrangementNameCombo.SelectedItem = arrangement.Name;
-
-                TuningDefinition tuning = TuningDefinitionRepository.Instance().Select(arrangement.Tuning, currentGameVersion);
-                if (tuning != null)
-                    tuningComboBox.SelectedItem = tuning;
+                if (!ReferenceEquals(arrangement.TuningStrings, null))
+                    SetTuningCombo(arrangement.TuningStrings, arrangement.ArrangementType == ArrangementType.Bass);
                 frequencyTB.Text = (arrangement.TuningPitch > 0) ? arrangement.TuningPitch.ToString() : "440";
 
                 var scrollSpeed = arrangement.ScrollSpeed;
@@ -157,6 +157,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 
                 // Tuning Edit
                 tuningEditButton.Enabled = selectedType != ArrangementType.Vocal;
+
+                // Vocal Edit
+                vocalEdit.Enabled = selectedType == ArrangementType.Vocal;
             };
 
             arrangementNameCombo.SelectedValueChanged += (sender, e) =>
@@ -216,9 +219,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tuningComboBox.Refresh();
         }
 
-        private void SetTuningCombo(TuningStrings tuningStrings, bool isBass = false) {
+        private void SetTuningCombo(TuningStrings tuningStrings, bool isBass = false) 
+        {
             //Detect tuning
             TuningDefinition tuning = TuningDefinitionRepository.Instance().SelectAny(tuningStrings, currentGameVersion);
+
             //Create tuning
             if (tuning == null) {
                 using (var form = new TuningForm()) {
@@ -274,29 +279,46 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         /// <param name="arr"></param>
         private void SetupTones(Arrangement arr)
         {
-            var toneNames = new List<string>();
             disableTonesCheckbox.Checked = false;
+            bool isRS2014 = parentControl.CurrentGameVersion == GameVersion.RS2014;
+
             if (!String.IsNullOrEmpty(arr.ToneBase))
                 if (parentControl.TonesLB.Items.Count == 1 && parentControl.TonesLB.Items[0].ToString() == "Default")
                     parentControl.TonesLB.Items.Clear();
-            toneNames.AddRange(parentControl.TonesLB.Items.OfType<Tone2014>().Select(t => t.Name));
 
-            //Check if autotone tones are present and add if not.
-            if (!toneNames.Contains(arr.ToneBase))
-                if (!String.IsNullOrEmpty(arr.ToneBase))
-                    toneNames.Add(arr.ToneBase);
-            if (!toneNames.Contains(arr.ToneA))
-                if (!String.IsNullOrEmpty(arr.ToneA))
-                    toneNames.Add(arr.ToneA);
-            if (!toneNames.Contains(arr.ToneB))
-                if (!String.IsNullOrEmpty(arr.ToneB))
-                    toneNames.Add(arr.ToneB);
-            if (!toneNames.Contains(arr.ToneC))
-                if (!String.IsNullOrEmpty(arr.ToneC))
-                    toneNames.Add(arr.ToneC);
-            if (!toneNames.Contains(arr.ToneD))
-                if (!String.IsNullOrEmpty(arr.ToneD))
-                    toneNames.Add(arr.ToneD);
+            var toneItems = parentControl.TonesLB.Items;
+            var toneNames = new List<string>();
+            if (isRS2014)
+                toneNames.AddRange(parentControl.TonesLB.Items.OfType<Tone2014>().Select(t => t.Name));
+            else
+                toneNames.AddRange(parentControl.TonesLB.Items.OfType<Tone>().Select(t => t.Name));
+
+            //Check if autotone tones are present and add it's if not.
+            if (!toneNames.Contains(arr.ToneBase) && !String.IsNullOrEmpty(arr.ToneBase))
+            {
+                toneItems.Add(parentControl.CreateNewTone(arr.ToneBase));
+                toneNames.Add(arr.ToneBase);
+            }
+            if (!toneNames.Contains(arr.ToneA) && !String.IsNullOrEmpty(arr.ToneA))
+            {
+                toneItems.Add(parentControl.CreateNewTone(arr.ToneA));
+                toneNames.Add(arr.ToneA);
+            }
+            if (!toneNames.Contains(arr.ToneB) && !String.IsNullOrEmpty(arr.ToneB))
+            {
+                toneItems.Add(parentControl.CreateNewTone(arr.ToneB));
+                toneNames.Add(arr.ToneB);
+            }
+            if (!toneNames.Contains(arr.ToneC) && !String.IsNullOrEmpty(arr.ToneC))
+            {
+                toneItems.Add(parentControl.CreateNewTone(arr.ToneC));
+                toneNames.Add(arr.ToneC);
+            }
+            if (!toneNames.Contains(arr.ToneD) && !String.IsNullOrEmpty(arr.ToneD))
+            {
+                toneItems.Add(parentControl.CreateNewTone(arr.ToneD));
+                toneNames.Add(arr.ToneD);
+            }
 
             // FILL TONE COMBO
             FillToneCombo(toneBaseCombo, toneNames, true);
@@ -307,31 +329,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // SELECTING TONES
             toneBaseCombo.Enabled = true;
             if (!String.IsNullOrEmpty(arr.ToneBase))
-            {
                 toneBaseCombo.SelectedItem = arr.ToneBase;
-                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == arr.ToneBase))
-                    parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(arr.ToneBase));
-            }
             if (!String.IsNullOrEmpty(arr.ToneB))
-            {
                 toneBCombo.SelectedItem = arr.ToneB;
-                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == arr.ToneB))
-                    parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(arr.ToneB));
-            }
-
             if (!String.IsNullOrEmpty(arr.ToneC))
-            {
                 toneCCombo.SelectedItem = arr.ToneC;
-                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == arr.ToneC))
-                    parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(arr.ToneC));
-            }
-
             if (!String.IsNullOrEmpty(arr.ToneD))
-            {
                 toneDCombo.SelectedItem = arr.ToneD;
-                if (!parentControl.TonesLB.Items.OfType<Tone2014>().Any(t => t.Name == arr.ToneD))
-                    parentControl.TonesLB.Items.Add(parentControl.CreateNewTone(arr.ToneD));
-            }
 
             // If have ToneBase and ToneB is setup it's because auto tone are setup in EoF, so, disable edit to prevent errors.
             disableTonesCheckbox.Checked = (!String.IsNullOrEmpty(arr.ToneBase) && !String.IsNullOrEmpty(arr.ToneB));
@@ -402,11 +406,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear ?? String.Empty;
 
                     //Setup tuning
-                    SetTuningCombo(xmlSong.Tuning);
+                    TuningStrings = xmlSong.Tuning;
+                    SetTuningCombo(TuningStrings);                    
 
                     // SONG AND ARRANGEMENT INFO / ROUTE MASK
                     string arr = xmlSong.Arrangement;
-                    bool Edit = routeMaskNoneRadio.Checked;
+                    bool Edit = routeMaskNoneRadio.Checked;//TODO: move to global and use in arr form
                     if (arr.ToLower().Contains("guitar") || arr.ToLower().Contains("lead") || arr.ToLower().Contains("rhythm") || arr.ToLower().Contains("combo"))
                     {
                         arrangementTypeCombo.SelectedItem = ArrangementType.Guitar;
@@ -477,6 +482,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // Tuning
             arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
+            arrangement.TuningStrings = TuningStrings;
             arrangement.TuningPitch = 440;
             var value = frequencyTB.Text;
             if (!String.IsNullOrEmpty(value)) {
@@ -545,6 +551,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             ToneComboEnabled(enabled);
             if (enabled)
                 SequencialToneComboEnabling();
+        }
+
+        private void vocalEdit_Click(object sender, EventArgs e)
+        {
         }
 
         private void tuningEditButton_Click(object sender, EventArgs e) {

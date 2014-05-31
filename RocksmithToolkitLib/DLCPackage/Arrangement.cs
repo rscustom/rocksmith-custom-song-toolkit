@@ -36,6 +36,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public int ArrangementSort { get; set; }
         public ArrangementName Name { get; set; }
         public string Tuning { get; set; }
+        public TuningStrings TuningStrings { get; set; }
         public double TuningPitch { get; set; }
         public int ScrollSpeed { get; set; }
         public PluckedType PluckedType { get; set; }
@@ -100,6 +101,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 TuningDefinitionRepository.Instance().Add(tuning, true);
             }
             this.Tuning = tuning.UIName;
+            this.TuningStrings = tuning.Tuning;
+
             if (attr.CentOffset != null)
                 this.TuningPitch = attr.CentOffset.Cents2Frequency();
 

@@ -35,7 +35,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         
         #region Properties
 
-        private GameVersion CurrentGameVersion {
+        public GameVersion CurrentGameVersion {
             get {
                 if (RS2014.Checked)
                     return GameVersion.RS2014;
@@ -507,6 +507,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillPackageCreatorForm(info, dlcLoadPath);
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+			this.Focus();
         }
 
         public void dlcImportButton_Click(object sender = null, EventArgs e = null) {

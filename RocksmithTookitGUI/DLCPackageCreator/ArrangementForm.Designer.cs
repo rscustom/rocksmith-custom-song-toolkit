@@ -55,6 +55,7 @@
             this.gbDLCId = new System.Windows.Forms.GroupBox();
             this.gbXmlDefinition = new System.Windows.Forms.GroupBox();
             this.gbArrInfo = new System.Windows.Forms.GroupBox();
+            this.vocalEdit = new System.Windows.Forms.Button();
             this.tuningEditButton = new System.Windows.Forms.Button();
             this.BonusCheckBox = new System.Windows.Forms.CheckBox();
             this.gbTuningPitch = new System.Windows.Forms.GroupBox();
@@ -113,7 +114,7 @@
             this.arrangementTypeCombo.Location = new System.Drawing.Point(54, 18);
             this.arrangementTypeCombo.Margin = new System.Windows.Forms.Padding(2);
             this.arrangementTypeCombo.Name = "arrangementTypeCombo";
-            this.arrangementTypeCombo.Size = new System.Drawing.Size(152, 21);
+            this.arrangementTypeCombo.Size = new System.Drawing.Size(119, 21);
             this.arrangementTypeCombo.TabIndex = 2;
             // 
             // label1
@@ -387,6 +388,7 @@
             // 
             // gbArrInfo
             // 
+            this.gbArrInfo.Controls.Add(this.vocalEdit);
             this.gbArrInfo.Controls.Add(this.tuningEditButton);
             this.gbArrInfo.Controls.Add(this.BonusCheckBox);
             this.gbArrInfo.Controls.Add(this.gbTuningPitch);
@@ -405,6 +407,17 @@
             this.gbArrInfo.TabIndex = 45;
             this.gbArrInfo.TabStop = false;
             this.gbArrInfo.Text = "Arrangement Information";
+            // 
+            // vocalEdit
+            // 
+            this.vocalEdit.Enabled = false;
+            this.vocalEdit.Location = new System.Drawing.Point(178, 17);
+            this.vocalEdit.Name = "vocalEdit";
+            this.vocalEdit.Size = new System.Drawing.Size(28, 23);
+            this.vocalEdit.TabIndex = 2;
+            this.vocalEdit.Text = "...";
+            this.vocalEdit.UseVisualStyleBackColor = true;
+            this.vocalEdit.Click += new System.EventHandler(this.vocalEdit_Click);
             // 
             // tuningEditButton
             // 
@@ -712,5 +725,6 @@
         private System.Windows.Forms.CheckBox BonusCheckBox;
         private System.Windows.Forms.CheckBox disableTonesCheckbox;
         private System.Windows.Forms.Button tuningEditButton;
+        private System.Windows.Forms.Button vocalEdit;
     }
 }
