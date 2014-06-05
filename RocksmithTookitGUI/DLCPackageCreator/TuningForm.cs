@@ -21,6 +21,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     {
         public bool IsBass = false;
         public bool EditMode = false;
+        public bool AddNew = false;
 
         private TuningDefinition tuning;
         public TuningDefinition Tuning {
@@ -124,7 +125,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (EditMode) {
                 // Update tuning by strings
-                TuningDefinition t = (IsBass) ? TuningDefinitionRepository.Instance().Select(tuning.Tuning, tuning.GameVersion) : TuningDefinitionRepository.Instance().SelectForBass(tuning.Tuning, tuning.GameVersion);
+                TuningDefinition t = (IsBass) ? TuningDefinitionRepository.Instance().SelectForBass(tuning.Tuning, tuning.GameVersion) : TuningDefinitionRepository.Instance().Select(tuning.Tuning, tuning.GameVersion);
                 if (t != null) {
                     t.UIName = Tuning.UIName;
                     t.Name = Tuning.Name;
@@ -147,6 +148,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void uiNameTB_TextChanged(object sender, EventArgs e) {
             TextBox name = (TextBox)sender;
             nameTB.Text = name.Text.GetValidName(false);
+        }
+
+        private void StateAdd_CheckedChanged(object sender, EventArgs e)
+        {
+            AddNew = StateAdd.Checked;
         }
     }
 }

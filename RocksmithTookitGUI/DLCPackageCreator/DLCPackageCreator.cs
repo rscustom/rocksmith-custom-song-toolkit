@@ -279,7 +279,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (ArrangementLB.SelectedItem != null)
                 ArrangementLB.Items.Remove(ArrangementLB.SelectedItem);
         }
-
+        //TODO: allow to choose audio for each arrangement separately. #Lessons, #Multitracks
         private void openAudioButton_Click(object sender, EventArgs e)
         {
             using (var ofd = new OpenFileDialog())
@@ -552,8 +552,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
             
             // LOAD DATA
-            var info = DLCPackageData.LoadFromFile(unpackedDir, packagePlatform);
-            info.PackageVersion = "1";
+            var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform);
+            info.PackageVersion = "1"; //TODO: add PackageVersion to "toolkit.version" File and use it
             switch (packagePlatform.platform)
             {
                 case GamePlatform.Pc:
@@ -665,8 +665,30 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             break;
                     }
                 }
-                
+                if (arrangement.ArrangementType != ArrangementType.Vocal)
+                {
+                    try
+                    {
+                        //Load tunig from Arrangement
+                        var tuning = TuningDefinitionRepository.Instance().SelectAny(arrangement.TuningStrings, CurrentGameVersion);
+                        if (tuning == null)
+                        {
+                            tuning = new TuningDefinition();
+                            tuning.Tuning = arrangement.TuningStrings;
+                            tuning.Custom = true;
+                            tuning.GameVersion = CurrentGameVersion;
+                            tuning.Name = tuning.UIName = arrangement.Tuning;
+                            if (String.IsNullOrEmpty(tuning.Name))
+                            {
+                                tuning.Name = tuning.UIName = tuning.NameFromStrings(arrangement.TuningStrings, arrangement.ArrangementType == ArrangementType.Bass);
+                            }
 
+                            TuningDefinitionRepository.Instance().Add(tuning, true);
+                        }
+                        tuning = null; //Cleanup after
+                    }
+                    catch { /* Handle old types of *.dlc.xml */ }
+                }
                 ArrangementLB.Items.Add(arrangement);
             }
         }

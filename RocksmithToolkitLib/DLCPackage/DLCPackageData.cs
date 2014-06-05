@@ -67,7 +67,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public string LyricsTex { get; set; }
 
-        public static DLCPackageData LoadFromFile(string unpackedDir, Platform targetPlatform) {
+        public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform) {
             //Load files
             var jsonFiles = Directory.GetFiles(unpackedDir, "*.json", SearchOption.AllDirectories);
             var data = new DLCPackageData();

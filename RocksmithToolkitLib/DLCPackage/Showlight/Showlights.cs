@@ -73,7 +73,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                     return false;
                 
                 return (x.Note == y.Note && x.Time == y.Time) || 
-                       (x.Note == y.Note && x.Time + .500D > y.Time);
+                       (x.Note == y.Note && x.Time + 2.0D > y.Time);
             }
 
             public int GetHashCode(Showlight obj)
@@ -147,12 +147,12 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                 if (ShowlightList[i].Note == ShowlightList[i + 1].Note) // if next note is current
                     ShowlightList.Remove(ShowlightList[i + 1]);
 
-                //Fog Color for, every: Solo, every 30% of the song
-                //if (ShowlightList[i].Note < 24)
-                //{
-                //    ShowlightList[i].Note = getFogNote(ShowlightList[i].Note);
-                //    continue;
-                //}
+                //Fog Color for, every: Solo, every 30% of the song. NO EFFECT.
+                if (ShowlightList[i].Note > 23 && ShowlightList[i].Note < 36)
+                {
+                    ShowlightList[i].Note = getBeamNote(ShowlightList[i].Note);
+                    continue;
+                }
 
                 //For all notes > 67 || note in range [36..41] translate it to Beam\spotlight, range [42..59]
                 if (ShowlightList[i].Note < 24 || ShowlightList[i].Note > 35 && ShowlightList[i].Note < 42 || ShowlightList[i].Note > 67)
@@ -161,7 +161,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                     continue;
                 }
             }
-            //Forced laser effect for last note
+            //Forced laser effect for last note (we probablty couldn't see it)
             ShowlightList[ShowlightList.Count - 1].Note = 66;
 
             return ShowlightList;

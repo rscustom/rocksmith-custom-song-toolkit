@@ -108,7 +108,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void ConvertPackageRebuilding(string unpackedDir, string targetFileName, Platform targetPlatform, string appId)
         {
-            var data = DLCPackageData.LoadFromFile(unpackedDir, targetPlatform);
+            var data = DLCPackageData.LoadFromFolder(unpackedDir, targetPlatform);
             if (!targetPlatform.IsConsole)
                 data.AppId = appId;
 

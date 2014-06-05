@@ -45,6 +45,7 @@
             this.nameTB = new RocksmithToolkitGUI.CueTextBox();
             this.uiNameTB = new RocksmithToolkitGUI.CueTextBox();
             this.noteLabel = new System.Windows.Forms.Label();
+            this.StateAdd = new System.Windows.Forms.CheckBox();
             this.gbTuning.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -240,10 +241,22 @@
             this.noteLabel.TabIndex = 23;
             this.noteLabel.Text = "If a bass tuning, recommended to added strings 4 and 5 ...";
             // 
+            // StateAdd
+            // 
+            this.StateAdd.AutoSize = true;
+            this.StateAdd.Location = new System.Drawing.Point(22, 137);
+            this.StateAdd.Name = "StateAdd";
+            this.StateAdd.Size = new System.Drawing.Size(118, 17);
+            this.StateAdd.TabIndex = 24;
+            this.StateAdd.Text = "Add as new Tuning";
+            this.StateAdd.UseVisualStyleBackColor = true;
+            this.StateAdd.CheckedChanged += new System.EventHandler(this.StateAdd_CheckedChanged);
+            // 
             // TuningForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(310, 167);
+            this.Controls.Add(this.StateAdd);
             this.Controls.Add(this.noteLabel);
             this.Controls.Add(this.uiNameTB);
             this.Controls.Add(this.gbTuning);
@@ -281,5 +294,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label noteLabel;
+        private System.Windows.Forms.CheckBox StateAdd;
     }
 }
