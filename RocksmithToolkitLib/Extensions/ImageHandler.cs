@@ -82,5 +82,27 @@ namespace RocksmithToolkitLib.Extensions
             else
                 return false;
         }
+
+        public static Int32 Size2IntX(string imageSize)
+        {
+            string xSize = imageSize.Split(new[] { "x" }, StringSplitOptions.None)[0];
+            return Int32.Parse(xSize);
+        }
+
+        public static Int32 Size2IntY(string imageSize)
+        {
+            string ySize = imageSize.Split(new[] { "x" }, StringSplitOptions.None)[1];
+            return Int32.Parse(ySize);
+        }
+
+        public static Image PreSizeImage(string picPngPath, string imageSize)
+        {
+            if (picPngPath == null) return null;
+
+            // resize image
+            Image img = new Bitmap(Image.FromFile(picPngPath), Size2IntX(imageSize), Size2IntY(imageSize));
+            return img;
+        }
+
     }
 }

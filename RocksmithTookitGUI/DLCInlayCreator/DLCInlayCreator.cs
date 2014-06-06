@@ -11,17 +11,16 @@ using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
 
+
 namespace RocksmithToolkitGUI.DLCInlayCreator
 {
     public partial class DLCInlayCreator : UserControl
     {
         #region Properties
 
-        private const string MESSAGEBOX_CAPTION = "DLC Inlay Creator";
-        private const string APP_TOPNG = "topng.exe";
-        private const string APP_7Z = "7za.exe";
-        private const string APP_NVDXT = "nvdxt.exe";
+        public static string GlobalTitlePlatform; // used by IntroScreensCreator
 
+        private const string MESSAGEBOX_CAPTION = "DLC Inlay Creator";
         private string IconFile = String.Empty;
         private string InlayFile = String.Empty;
 
@@ -124,19 +123,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             appIdCombo.Enabled = platformPC.Checked || platformMAC.Checked;
         }
 
-        private void platformTargetCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            AppIdVisibilty();
-        }
-
-        private void AppIdVisibilty()
-        {
-            if (platformPC.Checked || platformMAC.Checked)
-                appIdCombo.Enabled = true;
-            else if (!platformPC.Checked && !platformMAC.Checked)
-                appIdCombo.Enabled = false;
-        }
-
         private void picIcon_Click(object sender, EventArgs e)
         {
             using (var ofd = new OpenFileDialog())
@@ -185,13 +171,13 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
         private void FlipX_Changed(object sender, EventArgs e)
         {
-            GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, String.Format("-overwrite -xflip \"{0}\"", InlayFile));
+            ExternalApps.PngFlipX(InlayFile);
             picInlay.ImageLocation = InlayFile;
         }
 
         private void FlipY_Changed(object sender, EventArgs e)
         {
-            GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, String.Format("-overwrite -yflip \"{0}\"", InlayFile));
+            ExternalApps.PngFlipY(InlayFile);
             picInlay.ImageLocation = InlayFile;
         }
 
@@ -266,8 +252,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 if (Directory.Exists(unpackedFolder))
                     DirectoryExtension.SafeDelete(unpackedFolder);
 
-                var args = String.Format(" x \"{0}\" -o\"{1}\"", customCGM, unpackedFolder);
-                GeneralExtensions.RunExternalExecutable(APP_7Z, true, true, true, args);
+                ExternalApps.ExtractZip(customCGM, unpackedFolder);
 
                 var errorMessage = string.Format("Template {0} can't be loaded, maybe doesn't exists or is corrupted.", customCGM);
                 if (!Directory.Exists(unpackedFolder))
@@ -301,9 +286,9 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
                 // Convert the dds files to png
                 var iconFile = Path.Combine(unpackedFolder, "icon.dds");
-                GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, String.Format(" -out png \"{0}\"", iconFile));
+                ExternalApps.Dds2Png(iconFile);
                 var inlayFile = Path.Combine(unpackedFolder, "inlay.dds");
-                GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, String.Format(" -out png \"{0}\"", inlayFile));
+                ExternalApps.Dds2Png(inlayFile);
 
                 if (!File.Exists(iconFile) || !File.Exists(inlayFile))
                 {
@@ -341,10 +326,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 Directory.CreateDirectory(tmpWorkDir);
 
             // Convert PNG to DDS
-            var iconArgs = String.Format(" -file \"{0}\" -output \"{1}\" -prescale 512 512 -quality_highest -max -32 dxt5 -dxt5 -overwrite -alpha", IconFile, Path.Combine(tmpWorkDir, "icon.dds"));
-            GeneralExtensions.RunExternalExecutable(APP_NVDXT, true, true, true, iconArgs);
-            var inlayArgs = String.Format(" -file \"{0}\" -output \"{1}\" -prescale 1024 512 -quality_highest -max -32 dxt5 -dxt5 -overwrite -alpha", InlayFile, Path.Combine(tmpWorkDir, "inlay.dds"));
-            GeneralExtensions.RunExternalExecutable(APP_NVDXT, true, true, true, inlayArgs);
+            ExternalApps.Png2Dds(IconFile, Path.Combine(tmpWorkDir, "icon.dds"), 512, 512);
+            ExternalApps.Png2Dds(InlayFile, Path.Combine(tmpWorkDir, "inlay.dds"), 1024, 512);
 
             // Create setup.smb
             var iniFile = Path.Combine(tmpWorkDir, "setup.smb");
@@ -352,7 +335,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             // sharpconfig.dll automatically creates a new [General] section in the INI file
             iniCFG.Categories["General"].Settings.Add(new Setting("author", String.IsNullOrEmpty(Author) ? "CSC" : Author));
-            iniCFG.Categories["General"].Settings.Add(new Setting("inlayname", InlayName));
+            iniCFG.Categories["General"].Settings.Add(new Setting("inlayname", String.IsNullOrEmpty(InlayName) ? "null" : InlayName));
             iniCFG.Categories["General"].Settings.Add(new Setting("24frets", Convert.ToString(Convert.ToInt32(Frets24))));
             iniCFG.Categories["General"].Settings.Add(new Setting("colored", Convert.ToString(Convert.ToInt32(Colored))));
             iniCFG.Categories["General"].Settings.Add(new Setting("cscvers", ToolkitVersion.version.Replace("-00000000", "")));
@@ -360,8 +343,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             iniCFG.Save(iniFile);
 
             // Pack file into a .cgm file (7zip file format)
-            var zipArgs = String.Format(" a \"{0}\" \"{1}\\*\"", saveFile, tmpWorkDir);
-            GeneralExtensions.RunExternalExecutable(APP_7Z, true, true, true, zipArgs);
+            ExternalApps.InjectZip(tmpWorkDir, saveFile, false, true);
 
             // Delete temp work dir
             if (Directory.Exists(tmpWorkDir))
@@ -569,38 +551,21 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 DirectoryExtension.SafeDelete(defaultDir);
         }
 
-        private void DescriptionDDC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void helpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             // inlay creator help link
             string link = "http://goo.gl/pJxMuz";
             Process.Start(link);
         }
 
-        private void inlayTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // TODO: Expansion not finished :(
-            //switch (inlayTypeCombo.SelectedIndex)
-            //{
-            //    case 0:
-            //        expansionMod1.Visible = false;
-            //        break;
-
-            //    case 1:
-            //        expansionMod1.Location = new Point(11, 140);
-            //        expansionMod1.Size = new Size(500, 300);
-            //        expansionMod1.Visible = true;
-            //        break;
-            //}
-        }
-
         private void OverwriteExistingPackage()
         {
             var packageArray = new string[,]
                 {
-                        {platformPC.Checked.ToString(), String.Format("{0}_p.psarc", dlcSavePath)},
-                        {platformMAC.Checked.ToString(), String.Format("{0}_m.psarc", dlcSavePath)},
-                        {platformXBox360.Checked.ToString(), String.Format("{0}_xbox", dlcSavePath)},
-                        {platformPS3.Checked.ToString(), String.Format("{0}_ps3", dlcSavePath)}
+                    {platformPC.Checked.ToString(), String.Format("{0}_p.psarc", dlcSavePath)},
+                    {platformMAC.Checked.ToString(), String.Format("{0}_m.psarc", dlcSavePath)},
+                    {platformXBox360.Checked.ToString(), String.Format("{0}_xbox", dlcSavePath)},
+                    {platformPS3.Checked.ToString(), String.Format("{0}_ps3", dlcSavePath)}
                 };
 
             for (int i = 0; i < packageArray.GetUpperBound(0); i++)
@@ -631,6 +596,44 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                     }
                 }
             }
+        }
+
+        private void inlayTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (inlayTypeCombo.SelectedIndex)
+            {
+                case 0: // Guitar Inlays
+                    gbRbPlatform.Visible = false;
+                    introScreensCreator1.Visible = false;
+                    break;
+
+                // TODO: add Xbox360 and PS3 support
+                case 1: // Intro Screens 
+                    introScreensCreator1.LoadIntroScreens();
+                    introScreensCreator1.Location = new Point(0, 45);
+                    introScreensCreator1.Size = new Size(507, 450);
+                    gbRbPlatform.Location = new Point(201, 0);
+                    rbPc.Checked = true; // initializes GlogalTitlePlatform
+                    gbRbPlatform.Visible = true;
+                    introScreensCreator1.Visible = true;
+                    break;
+            }
+        }
+
+        private void radioPlatform_CheckedChanged(object sender, EventArgs e)
+        {
+            GlobalTitlePlatform = null;
+            if (rbXbox360.Checked || rbPs3.Checked)
+            {
+                MessageBox.Show("Only PC and Mac platforms are supported at this time." + Environment.NewLine +
+                   "Beta testers needed for Xbox360 and PS3 platforms." + Environment.NewLine +
+                "Contact us through http://goo.gl/pJxMuz.", "Custom Intro Screens", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                rbPs3.Checked = false;
+                rbXbox360.Checked = false;
+                return;
+            }
+            if (rbPc.Checked) GlobalTitlePlatform = "Pc";
+            if (rbMac.Checked) GlobalTitlePlatform = "Mac";
         }
 
     }

@@ -7,7 +7,7 @@ namespace RocksmithToolkitLib
 { 
     public class ToolkitVersion 
     { 
-        public static string commit = "00000000"; 
+        public static string commit = "e483488a"; 
         public static string version 
         { 
             get 

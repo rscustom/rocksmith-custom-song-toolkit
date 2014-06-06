@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="DLCPackage\InlayNif.cs" />
     <Compile Include="DLCPackage\Manifest2014\InlayAttributes2014.cs" />
+    <Compile Include="Extensions\ExternalApps.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
     <Compile Include="ToolkitVersionOnline.cs" />
     <Compile Include="DLCPackage\DLCPackageConverter.cs" />

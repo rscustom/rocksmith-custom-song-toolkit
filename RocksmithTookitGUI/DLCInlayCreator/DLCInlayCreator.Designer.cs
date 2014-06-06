@@ -66,8 +66,13 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.loadCGMButton = new System.Windows.Forms.Button();
             this.gbInlayType = new System.Windows.Forms.GroupBox();
             this.inlayTypeCombo = new System.Windows.Forms.ComboBox();
+            this.gbRbPlatform = new System.Windows.Forms.GroupBox();
+            this.rbPs3 = new System.Windows.Forms.RadioButton();
+            this.rbXbox360 = new System.Windows.Forms.RadioButton();
+            this.rbMac = new System.Windows.Forms.RadioButton();
+            this.rbPc = new System.Windows.Forms.RadioButton();
+            this.introScreensCreator1 = new RocksmithToolkitGUI.DLCInlayCreator.IntroScreensCreator();
             this.authorTextbox = new RocksmithToolkitGUI.CueTextBox();
-            this.expansionMod1 = new RocksmithToolkitGUI.DLCInlayCreator.ExpansionMod();
             this.inlayNameTextbox = new RocksmithToolkitGUI.CueTextBox();
             this.gbInfo.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -78,6 +83,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             ((System.ComponentModel.ISupportInitialize)(this.picColored)).BeginInit();
             this.gbPlatform.SuspendLayout();
             this.gbInlayType.SuspendLayout();
+            this.gbRbPlatform.SuspendLayout();
             this.SuspendLayout();
             // 
             // appIdCombo
@@ -291,7 +297,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.helpLink.TabStop = true;
             this.helpLink.Text = "http://goo.gl/pJxMuz";
             this.helpLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.helpLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DescriptionDDC_LinkClicked);
+            this.helpLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpLink_LinkClicked);
             // 
             // picInlay
             // 
@@ -486,8 +492,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // inlayTypeCombo
             // 
-            this.inlayTypeCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.inlayTypeCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.inlayTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.inlayTypeCombo.FormattingEnabled = true;
             this.inlayTypeCombo.Location = new System.Drawing.Point(10, 15);
@@ -496,6 +502,77 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.inlayTypeCombo.Size = new System.Drawing.Size(170, 21);
             this.inlayTypeCombo.TabIndex = 1;
             this.inlayTypeCombo.SelectedIndexChanged += new System.EventHandler(this.inlayTypeCombo_SelectedIndexChanged);
+            // 
+            // gbRbPlatform
+            // 
+            this.gbRbPlatform.Controls.Add(this.rbPs3);
+            this.gbRbPlatform.Controls.Add(this.rbXbox360);
+            this.gbRbPlatform.Controls.Add(this.rbMac);
+            this.gbRbPlatform.Controls.Add(this.rbPc);
+            this.gbRbPlatform.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbRbPlatform.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbRbPlatform.Location = new System.Drawing.Point(75, 457);
+            this.gbRbPlatform.Name = "gbRbPlatform";
+            this.gbRbPlatform.Size = new System.Drawing.Size(300, 41);
+            this.gbRbPlatform.TabIndex = 94;
+            this.gbRbPlatform.TabStop = false;
+            this.gbRbPlatform.Text = "Platform:";
+            this.gbRbPlatform.Visible = false;
+            // 
+            // rbPs3
+            // 
+            this.rbPs3.AutoSize = true;
+            this.rbPs3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.rbPs3.Location = new System.Drawing.Point(236, 18);
+            this.rbPs3.Name = "rbPs3";
+            this.rbPs3.Size = new System.Drawing.Size(45, 17);
+            this.rbPs3.TabIndex = 3;
+            this.rbPs3.Text = "PS3";
+            this.rbPs3.UseVisualStyleBackColor = true;
+            this.rbPs3.CheckedChanged += new System.EventHandler(this.radioPlatform_CheckedChanged);
+            // 
+            // rbXbox360
+            // 
+            this.rbXbox360.AutoSize = true;
+            this.rbXbox360.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.rbXbox360.Location = new System.Drawing.Point(147, 18);
+            this.rbXbox360.Name = "rbXbox360";
+            this.rbXbox360.Size = new System.Drawing.Size(68, 17);
+            this.rbXbox360.TabIndex = 2;
+            this.rbXbox360.Text = "XBox360";
+            this.rbXbox360.UseVisualStyleBackColor = true;
+            this.rbXbox360.CheckedChanged += new System.EventHandler(this.radioPlatform_CheckedChanged);
+            // 
+            // rbMac
+            // 
+            this.rbMac.AutoSize = true;
+            this.rbMac.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.rbMac.Location = new System.Drawing.Point(78, 18);
+            this.rbMac.Name = "rbMac";
+            this.rbMac.Size = new System.Drawing.Size(48, 17);
+            this.rbMac.TabIndex = 1;
+            this.rbMac.Text = "MAC";
+            this.rbMac.UseVisualStyleBackColor = true;
+            this.rbMac.CheckedChanged += new System.EventHandler(this.radioPlatform_CheckedChanged);
+            // 
+            // rbPc
+            // 
+            this.rbPc.AutoSize = true;
+            this.rbPc.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.rbPc.Location = new System.Drawing.Point(18, 18);
+            this.rbPc.Name = "rbPc";
+            this.rbPc.Size = new System.Drawing.Size(39, 17);
+            this.rbPc.TabIndex = 0;
+            this.rbPc.Text = "PC";
+            this.rbPc.UseVisualStyleBackColor = true;
+            this.rbPc.CheckedChanged += new System.EventHandler(this.radioPlatform_CheckedChanged);
+            // 
+            // introScreensCreator1
+            // 
+            this.introScreensCreator1.Location = new System.Drawing.Point(209, 399);
+            this.introScreensCreator1.Name = "introScreensCreator1";
+            this.introScreensCreator1.Size = new System.Drawing.Size(166, 52);
+            this.introScreensCreator1.TabIndex = 91;
             // 
             // authorTextbox
             // 
@@ -506,15 +583,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.authorTextbox.Name = "authorTextbox";
             this.authorTextbox.Size = new System.Drawing.Size(188, 20);
             this.authorTextbox.TabIndex = 72;
-            // 
-            // expansionMod1
-            // 
-            this.expansionMod1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.expansionMod1.Location = new System.Drawing.Point(173, 405);
-            this.expansionMod1.Name = "expansionMod1";
-            this.expansionMod1.Size = new System.Drawing.Size(137, 41);
-            this.expansionMod1.TabIndex = 90;
-            this.expansionMod1.Visible = false;
             // 
             // inlayNameTextbox
             // 
@@ -527,37 +595,18 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.inlayNameTextbox.TabIndex = 6;
             this.inlayNameTextbox.Leave += new System.EventHandler(this.inlayNameTextbox_Leave);
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label6.Location = new System.Drawing.Point(123, 162);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(30, 15);
-            this.label6.TabIndex = 75;
-            this.label6.Text = "Icon";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label7.Location = new System.Drawing.Point(202, 162);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(32, 15);
-            this.label7.TabIndex = 90;
-            this.label7.Text = "Inlay";
-            // 
             // DLCInlayCreator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.gbRbPlatform);
+            this.Controls.Add(this.introScreensCreator1);
             this.Controls.Add(this.gbInfo);
             this.Controls.Add(this.updateProgress);
             this.Controls.Add(this.currentOperationLabel);
             this.Controls.Add(this.saveCGMButton);
             this.Controls.Add(this.inlayGenerateButton);
             this.Controls.Add(this.loadCGMButton);
-            this.Controls.Add(this.expansionMod1);
             this.Controls.Add(this.gbPlatform);
             this.Controls.Add(this.gbInlayType);
             this.Controls.Add(this.groupBox2);
@@ -577,6 +626,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.gbPlatform.ResumeLayout(false);
             this.gbPlatform.PerformLayout();
             this.gbInlayType.ResumeLayout(false);
+            this.gbRbPlatform.ResumeLayout(false);
+            this.gbRbPlatform.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -612,15 +663,20 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         private ComboBox inlayTemplateCombo;
         private Label label2;
         private Label label1;
-        private CueTextBox authorTextbox;
         private Label label3;
         private LinkLabel helpLink;
-        private ExpansionMod expansionMod1;
         private ProgressBar updateProgress;
         private Label label4;
         private Label keyboardDescArrLabel;
         private Label label7;
         private Label label6;
+        private IntroScreensCreator introScreensCreator1;
+        public CueTextBox authorTextbox;
+        public GroupBox gbRbPlatform;
+        public RadioButton rbPs3;
+        public RadioButton rbXbox360;
+        public RadioButton rbMac;
+        public RadioButton rbPc;
 
     }
 }

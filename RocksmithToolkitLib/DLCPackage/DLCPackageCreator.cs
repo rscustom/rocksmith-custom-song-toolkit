@@ -30,7 +30,7 @@ using RocksmithToolkitLib.DLCPackage.Showlight;
 namespace RocksmithToolkitLib.DLCPackage
 {
     public enum DLCPackageType { Song = 0, Lesson = 1, Inlay = 2 }
-    public enum ModType { Guitar = 0, Expansion = 1 }
+    public enum ModType {Custom_Guitar_Inlays = 0, Custom_Intro_Screens = 1 }
 
     public static class DLCPackageCreator {
         #region CONSTANT
