@@ -42,11 +42,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (!ReferenceEquals(arrangement.TuningStrings, null))
                     SetTuningCombo(arrangement.TuningStrings, arrangement.ArrangementType == ArrangementType.Bass);
                 frequencyTB.Text = (arrangement.TuningPitch > 0) ? arrangement.TuningPitch.ToString() : "440";
-
+                
+                //Update it only here
                 var scrollSpeed = arrangement.ScrollSpeed;
                 if (scrollSpeed == 0)
                     scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
-                scrollSpeedTrackBar.Value = scrollSpeed;
+                scrollSpeedTrackBar.Value = Math.Min(scrollSpeed, scrollSpeedTrackBar.Maximum);
                 UpdateScrollSpeedDisplay();
                 
                 Picked.Checked = arrangement.PluckedType == PluckedType.Picked;
@@ -177,11 +178,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 tuningEditButton.Enabled = selectedType != ArrangementType.Vocal && selectedTuning != null;
             };
 
-            var scrollSpeed = arrangement.ScrollSpeed;
-            if (scrollSpeed == 0)
-                scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
-            scrollSpeedTrackBar.Value = scrollSpeed;
-            UpdateScrollSpeedDisplay();
             parentControl = control;
 
             //Tones setup

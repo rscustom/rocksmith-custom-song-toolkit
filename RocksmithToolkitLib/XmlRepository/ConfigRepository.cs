@@ -69,7 +69,7 @@ namespace RocksmithToolkitLib {
         }
 
         public decimal GetDecimal(string configKey) {
-            return Convert.ToDecimal(List.FirstOrDefault<Config>(s => s.Key == configKey).Value);
+            return Convert.ToDecimal(List.FirstOrDefault<Config>(s => s.Key == configKey).Value.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 
