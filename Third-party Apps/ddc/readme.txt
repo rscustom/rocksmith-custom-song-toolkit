@@ -1,5 +1,5 @@
 -------------------------------------------------------------
--- DDC v2.2 (c) 2013, by Chlipouni
+-- DDC v2.4 (c) 2013, by Chlipouni
 -------------------------------------------------------------
 
 DDC is a command line tool conceived to add Dynamic Difficulty Levels on Custom Downloadable Contents.
@@ -13,24 +13,25 @@ Use :
 - Open a Windows command-line interpreter
 - Execute the "ddc.exe" tool with the following parameters :
 
-  C:\ddc_v2.2>ddc.exe
+  C:\ddc_v2.4>ddc.exe
   -----------------------------------------------------------------------
-  -- D Y N A M I C   D I F F I C U L T Y   C R E A T O R   v 2.2       --
+  -- D Y N A M I C   D I F F I C U L T Y   C R E A T O R   v 2.4       --
   -----------------------------------------------------------------------
-  ddc.exe <arrangement> [-l <phraseLength>] [-s {Y | N}] [-m <ramp-up>] [-p {Y | N}] [-t {Y | N}]
-
+  ddc.exe <arrangement> [-l <phrase length>] [-s {Y | N}] [-c <config file>] [-m <ramp-up model>] [-p {Y | N}] [-t {Y | N}]
+  
   Parameters :
   ------------
     <arrangement>      : XML arrangement input file (mandatory)
-    -l <phraseLength>  : Length of phrases in number of measures (optional; default : 2)
+    -l <phrase length> : Length of phrases in number of measures (optional; default : 2)
     -s {Y | N}         : Remove sustain for notes with length < 1/4 of measure (optional; default : N)
-    -m <ramp-up>       : XML file with the specific ramp-up model to apply (optional; default : internal ramp-up model)
+    -c <config file>   : Configuration file to use for adjustment of internal parameters (optional; default : internal configuration)
+    -m <ramp-up model> : XML file with the specific ramp-up model to apply (optional; default : internal ramp-up model)
     -p {Y | N}         : Preserve the XML file name, so existing content is overwritten (optional; default : N)
     -t {Y | N}         : Trace the DDC process and generate log files (optional; default : Y)
 
   Example :
   ------------
-  C:\mySongs>C:\ddc_v2.2\ddc.exe "PART REAL_GUITAR.xml" -l 4 -s Y
+  C:\mySongs>C:\ddc_v2.4\ddc.exe "PART REAL_GUITAR.xml" -l 4 -s Y
 
 Result Files :
 --------------
