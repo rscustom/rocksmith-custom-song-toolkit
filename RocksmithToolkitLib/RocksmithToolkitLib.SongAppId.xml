@@ -173,12 +173,12 @@
   <SongAppId Version="RS2014" AppId="271428" Name="R.E.M. - Everybody Hurts" />
   <SongAppId Version="RS2014" AppId="271429" Name="R.E.M. - The One I Love" />
   <SongAppId Version="RS2014" AppId="271430" Name="R.E.M. - Shiny, Happy People" />
-   <SongAppId Version="RS2014" AppId="271432" Name="STRAIGHTENER - From Noon Till Dawn" />
+  <SongAppId Version="RS2014" AppId="271432" Name="STRAIGHTENER - From Noon Till Dawn" />
   <SongAppId Version="RS2014" AppId="271433" Name="STRAIGHTENER - ROCKSTEADY" />
   <SongAppId Version="RS2014" AppId="271438" Name="RIZE - PARADOX Taiso" />
   <SongAppId Version="RS2014" AppId="271439" Name="ACIDMAN - Shinsekai" />
   <SongAppId Version="RS2014" AppId="271440" Name="The Birthday - stupid" />
- <SongAppId Version="RS2014" AppId="271441" Name="Boston - Hitch A Ride" />
+  <SongAppId Version="RS2014" AppId="271441" Name="Boston - Hitch A Ride" />
   <SongAppId Version="RS2014" AppId="271442" Name="Boston - Don't Look Back" />
   <SongAppId Version="RS2014" AppId="271443" Name="Boston - Foreplay/Long Time" />
   <SongAppId Version="RS2014" AppId="271445" Name="The Doors - Light My Fire" />
@@ -229,4 +229,39 @@
   <SongAppId Version="RS2014" AppId="271490" Name="Garbage - I Think I'm Paranoid" />
   <SongAppId Version="RS2014" AppId="271491" Name="Garbage - Only Happy When It Rains" />
   <SongAppId Version="RS2014" AppId="271492" Name="Garbage Song Pack" />
+  <SongAppId Version="RS2014" AppId="271497" Name="Everclear - Father of Mine" />
+  <SongAppId Version="RS2014" AppId="271498" Name="Silverchair - Tomorrow" />
+  <SongAppId Version="RS2014" AppId="271499" Name="Spin Doctors - Two Princes" />
+  <SongAppId Version="RS2014" AppId="294900" Name="Alter Bridge - Rise Today" />
+  <SongAppId Version="RS2014" AppId="294901" Name="Alter Bridge - Ties That Bind" />
+  <SongAppId Version="RS2014" AppId="294902" Name="Alter Bridge - Blackbird" />
+  <SongAppId Version="RS2014" AppId="294903" Name="Alter Bridge - Isolation" />
+  <SongAppId Version="RS2014" AppId="294904" Name="Alter Bridge Song Pack" />
+  <SongAppId Version="RS2014" AppId="294905" Name="311 - Amber" />
+  <SongAppId Version="RS2014" AppId="294906" Name="311 - Beautiful Disaster" />
+  <SongAppId Version="RS2014" AppId="294907" Name="311 - Down" />
+  <SongAppId Version="RS2014" AppId="294908" Name="311 Song Pack" />
+  <SongAppId Version="RS2014" AppId="294909" Name="Mastodon - Black Tongue" />
+  <SongAppId Version="RS2014" AppId="294910" Name="Mastodon - Oblivion" />
+  <SongAppId Version="RS2014" AppId="294911" Name="Mastodon - Colony Of Birchmen" />
+  <SongAppId Version="RS2014" AppId="294912" Name="Mastodon Song Pack" />
+  <SongAppId Version="RS2014" AppId="294913" Name="Cake - The Distance" />
+  <SongAppId Version="RS2014" AppId="294914" Name="Cake - I Will Survive" />
+  <SongAppId Version="RS2014" AppId="294915" Name="Cake - Never There" />
+  <SongAppId Version="RS2014" AppId="294916" Name="Cake - Short Skirt/Long Jacket" />
+  <SongAppId Version="RS2014" AppId="294917" Name="Cake - Stickshifts And Safetybelts" />
+  <SongAppId Version="RS2014" AppId="294918" Name="Cake Song Pack" />
+  <SongAppId Version="RS2014" AppId="294919" Name="Slash feat. Myles Kennedy and The Conspirators - Anastasia" />
+  <SongAppId Version="RS2014" AppId="294920" Name="Slash featuring Myles Kennedy - Back From Cali" />
+  <SongAppId Version="RS2014" AppId="294921" Name="Slash feat. Myles Kennedy and The Conspirators - You’re a Lie" />
+  <SongAppId Version="RS2014" AppId="294922" Name="Slash Song Pack" />  
+  <SongAppId Version="RS2014" AppId="294923" Name="Sum 41 - We’re All to Blame" />
+  <SongAppId Version="RS2014" AppId="294924" Name="Sum 41 - Fat Lip" />
+  <SongAppId Version="RS2014" AppId="294925" Name="Sum 41 - In Too Deep" />
+  <SongAppId Version="RS2014" AppId="294926" Name="Sum 41 - Still Waiting" />
+  <SongAppId Version="RS2014" AppId="294927" Name="Sum 41 - The Hell Song" />
+  <SongAppId Version="RS2014" AppId="294928" Name="Sum 41 Song Pack" />
+  <SongAppId Version="RS2014" AppId="294929" Name="Bill Withers - Ain’t No Sunshine" />
+  <SongAppId Version="RS2014" AppId="294930" Name="Roy Buchanan - Sweet Dreams" />
+  <SongAppId Version="RS2014" AppId="294931" Name="James Gang - Funk #49" />
 </ArrayOfSongAppId>
