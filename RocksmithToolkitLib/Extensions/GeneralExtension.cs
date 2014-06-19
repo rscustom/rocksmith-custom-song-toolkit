@@ -66,7 +66,9 @@ namespace RocksmithToolkitLib.Extensions
         }
 
         public static string GetValidSortName(this string value)
-        {
+        {        
+            if (String.IsNullOrEmpty(value)) 
+                return value;
             if (value.ToLowerInvariant().StartsWith("the "))
             {
                 return value.Remove(0, 4);
