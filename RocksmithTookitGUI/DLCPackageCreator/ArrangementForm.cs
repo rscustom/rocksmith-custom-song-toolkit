@@ -21,6 +21,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     {
         private Arrangement arrangement;
         private DLCPackageCreator parentControl = null;
+        private Song2014 xmlSong = null;
         private GameVersion currentGameVersion;
         public bool EditMode = false;
 
@@ -392,7 +393,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 XmlFilePath.Text = ofd.FileName;
             }
             try {
-                Song2014 xmlSong = null;
                 bool isVocal = false;
                 try {
                     xmlSong = Song2014.LoadFromFile(XmlFilePath.Text);
@@ -429,41 +429,38 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         return;
                     } 
 
-                    // SONG INFO
-                    if (String.IsNullOrEmpty(parentControl.SongTitle)) parentControl.SongTitle = xmlSong.Title ?? String.Empty;
-                    if (String.IsNullOrEmpty(parentControl.SongTitleSort)) parentControl.SongTitleSort = xmlSong.SongNameSort ?? parentControl.SongTitle;
-                    if (String.IsNullOrEmpty(parentControl.DLCName)) parentControl.DLCName = parentControl.SongTitleSort;
-                    if (String.IsNullOrEmpty(parentControl.AverageTempo)) parentControl.AverageTempo = Math.Round(xmlSong.AverageTempo).ToString() ?? String.Empty;
-                    if (String.IsNullOrEmpty(parentControl.Artist)) parentControl.Artist = xmlSong.ArtistName ?? String.Empty;
-                    if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = xmlSong.ArtistNameSort ?? parentControl.Artist;
-                    if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = xmlSong.AlbumName ?? String.Empty;
-                    if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear ?? String.Empty;
-
                     //Setup tuning
                     SetTuningCombo(xmlSong.Tuning);                    
 
                     // SONG AND ARRANGEMENT INFO / ROUTE MASK
-                    string arr = xmlSong.Arrangement;
-                    if (arr.ToLower().Contains("guitar") || arr.ToLower().Contains("lead") || arr.ToLower().Contains("rhythm") || arr.ToLower().Contains("combo"))
+                    BonusCheckBox.Checked = Equals(xmlSong.ArrangementProperties.BonusArr, 1);
+                    if (EditMode)
                     {
-                        arrangementTypeCombo.SelectedItem = ArrangementType.Guitar;
-                        if (EditMode & arr.ToLower().Contains("guitar 22") || arr.ToLower().Contains("lead") || arr.ToLower().Contains("combo"))
+                        string arr = xmlSong.Arrangement.ToLowerInvariant();
+                        if (arr.Contains("guitar") || arr.Contains("lead") || arr.Contains("rhythm") || arr.Contains("combo"))
                         {
-                            arrangementNameCombo.SelectedItem = ArrangementName.Lead;
-                            if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Lead;
+                            arrangementTypeCombo.SelectedItem = ArrangementType.Guitar;
+
+                            if (arr.Contains("guitar 22") || arr.Contains("lead") || arr.Contains("combo") || Equals(xmlSong.ArrangementProperties.PathLead, 1))
+                            {
+                                arrangementNameCombo.SelectedItem = ArrangementName.Lead;
+                                if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Lead;
+                            }
+                            if (arr.Contains("guitar") || arr.Contains("rhythm") || Equals(xmlSong.ArrangementProperties.PathRhythm, 1))
+                            {
+                                arrangementNameCombo.SelectedItem = ArrangementName.Rhythm;
+                                if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Rhythm;
+                            }
+
                         }
-                        if (EditMode & arr.ToLower().Contains("guitar") || arr.ToLower().Contains("rhythm"))
+                        if (arr.Contains("bass"))
                         {
-                            arrangementNameCombo.SelectedItem = ArrangementName.Rhythm;
-                            if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Rhythm;
+                            arrangementTypeCombo.SelectedItem = ArrangementType.Bass;
+
+                            SetTuningCombo(xmlSong.Tuning, true);                            
+                            Picked.Checked = Equals(xmlSong.ArrangementProperties.BassPick, 1);
+                            if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Bass;
                         }
-                    }
-                    if (arr.ToLower().Contains("bass"))
-                    {
-                        SetTuningCombo(xmlSong.Tuning, true);
-                        arrangementTypeCombo.SelectedItem = ArrangementType.Bass;
-                        Picked.Checked = xmlSong.ArrangementProperties.BassPick == 1;
-                        if (currentGameVersion == GameVersion.RS2014) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Bass;
                     }
                     //Tones setup
                     if (currentGameVersion == GameVersion.RS2014)
@@ -507,11 +504,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             
             //Song XML File
             arrangement.SongXml.File = xmlfilepath;
-            
+
+            // SONG INFO
+            if (String.IsNullOrEmpty(parentControl.SongTitle)) parentControl.SongTitle = xmlSong.Title ?? String.Empty;
+            if (String.IsNullOrEmpty(parentControl.SongTitleSort)) parentControl.SongTitleSort = xmlSong.SongNameSort.GetValidSortName() ?? parentControl.SongTitle.GetValidSortName();
+            if (String.IsNullOrEmpty(parentControl.DLCName)) parentControl.DLCName = parentControl.SongTitleSort;
+            if (String.IsNullOrEmpty(parentControl.AverageTempo)) parentControl.AverageTempo = Math.Round(xmlSong.AverageTempo).ToString() ?? String.Empty;
+            if (String.IsNullOrEmpty(parentControl.Artist)) parentControl.Artist = xmlSong.ArtistName ?? String.Empty;
+            if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = xmlSong.ArtistNameSort.GetValidSortName() ?? parentControl.Artist.GetValidSortName();
+            if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = xmlSong.AlbumName ?? String.Empty;
+            if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear ?? String.Empty;
+
             //Arrangment Information
             arrangement.Name = (ArrangementName)arrangementNameCombo.SelectedItem;
             arrangement.ArrangementType = (ArrangementType)arrangementTypeCombo.SelectedItem;
-
+            arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
+            arrangement.PluckedType = Picked.Checked ? PluckedType.Picked : PluckedType.NotPicked;
+            arrangement.BonusArr = BonusCheckBox.Checked;
+            
             // Tuning
             arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
             arrangement.TuningPitch = 440;
@@ -521,11 +531,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Double.TryParse(value, out freq);
                 arrangement.TuningPitch = freq;
             }
-
-            arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
-            arrangement.PluckedType = Picked.Checked ? PluckedType.Picked : PluckedType.NotPicked;
-            arrangement.BonusArr = BonusCheckBox.Checked;
-
+            
             //ToneSelector
             arrangement.ToneBase = toneBaseCombo.SelectedItem.ToString();
             arrangement.ToneA = (toneBCombo.SelectedItem != null) ? toneBaseCombo.SelectedItem.ToString() : ""; //Only need if have more than one tone

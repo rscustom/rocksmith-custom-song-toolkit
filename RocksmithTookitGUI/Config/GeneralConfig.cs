@@ -27,6 +27,7 @@ namespace RocksmithToolkitGUI.Config
                 PopulateEnumCombo(converter_source, typeof(GamePlatform));
                 PopulateEnumCombo(converter_target, typeof(GamePlatform));
                 PopulateRampUp();
+                PopulateConfigDDC();
                 LoadAndSetupConfiguration(this.Controls);                
             } catch { /*For mono compatibility*/ }
             loading = false;
@@ -74,11 +75,25 @@ namespace RocksmithToolkitGUI.Config
                 foreach (var xml in Directory.EnumerateFiles(@".\ddc\", "*.xml", SearchOption.AllDirectories)) {
                     var name = Path.GetFileNameWithoutExtension(xml);
                     if (name.StartsWith("user_"))
-                        name = name.Substring(5, name.Length - 5);
+                        name = name.Remove(0, 5);
                     ddc_rampup.Items.Add(name);
+                    ddc_rampup.SelectedItem = ConfigRepository.Instance()[ddc_rampup.Name];
+                }
+            }
+        }
 
-                    var storedRampup = ConfigRepository.Instance()[ddc_rampup.Name];
-                    ddc_rampup.SelectedItem = storedRampup;
+        private void PopulateConfigDDC()
+        {
+            if (Directory.Exists(@".\ddc\"))
+            {
+                ddc_config.Items.Clear();
+                foreach (var xml in Directory.EnumerateFiles(@".\ddc\", "*.cfg", SearchOption.AllDirectories))
+                {
+                    var name = Path.GetFileNameWithoutExtension(xml);
+                    if (name.StartsWith("user_"))
+                        name = name.Remove(0, 5);
+                    ddc_config.Items.Add(name);
+                    ddc_config.SelectedItem = ConfigRepository.Instance()[ddc_config.Name];
                 }
             }
         }

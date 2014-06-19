@@ -254,11 +254,12 @@
             // 
             // ddcControl
             // 
+            this.ddcControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ddcControl.KeepLog = false;
-            this.ddcControl.Location = new System.Drawing.Point(6, 6);
+            this.ddcControl.Location = new System.Drawing.Point(3, 3);
             this.ddcControl.MinimumSize = new System.Drawing.Size(530, 380);
             this.ddcControl.Name = "ddcControl";
-            this.ddcControl.Size = new System.Drawing.Size(530, 380);
+            this.ddcControl.Size = new System.Drawing.Size(536, 558);
             this.ddcControl.TabIndex = 3;
             // 
             // dlcInlayCreatorTab
@@ -371,7 +372,7 @@
             // 
             this.GeneralConfigTab.Controls.Add(this.generalConfigControl);
             this.GeneralConfigTab.Location = new System.Drawing.Point(4, 22);
-            this.GeneralConfigTab.Name = "GeneralConfigTabControl";
+            this.GeneralConfigTab.Name = "GeneralConfigTab";
             this.GeneralConfigTab.Padding = new System.Windows.Forms.Padding(3);
             this.GeneralConfigTab.Size = new System.Drawing.Size(542, 564);
             this.GeneralConfigTab.TabIndex = 9;
@@ -380,7 +381,8 @@
             // 
             // generalConfigControl
             // 
-            this.generalConfigControl.Location = new System.Drawing.Point(8, 6);
+            this.generalConfigControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.generalConfigControl.Location = new System.Drawing.Point(3, 3);
             this.generalConfigControl.Name = "generalConfigControl";
             this.generalConfigControl.Size = new System.Drawing.Size(521, 419);
             this.generalConfigControl.TabIndex = 7;
@@ -445,6 +447,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

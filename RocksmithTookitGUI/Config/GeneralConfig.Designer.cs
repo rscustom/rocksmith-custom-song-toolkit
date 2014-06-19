@@ -31,6 +31,7 @@
             this.general_usebeta = new System.Windows.Forms.CheckBox();
             this.gbCreator = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.creator_scrollspeed = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.creator_useacronyms = new System.Windows.Forms.CheckBox();
@@ -39,19 +40,26 @@
             this.label2 = new System.Windows.Forms.Label();
             this.general_defaultappid_RS2012 = new System.Windows.Forms.ComboBox();
             this.gbGeneral = new System.Windows.Forms.GroupBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.gbAutoUpdate = new System.Windows.Forms.GroupBox();
             this.general_replacerepo = new System.Windows.Forms.CheckBox();
             this.rs2014PathButton = new System.Windows.Forms.Button();
             this.rs1PathButton = new System.Windows.Forms.Button();
+            this.general_rs2014path = new RocksmithToolkitGUI.CueTextBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.general_rs1path = new RocksmithToolkitGUI.CueTextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.general_defaultauthor = new RocksmithToolkitGUI.CueTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.general_defaultappid_RS2014 = new System.Windows.Forms.ComboBox();
             this.gbDDC = new System.Windows.Forms.GroupBox();
+            this.ddc_phraselength = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.ddc_removesustain = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.ddc_config = new System.Windows.Forms.ComboBox();
             this.ddc_rampup = new System.Windows.Forms.ComboBox();
             this.gbConverter = new System.Windows.Forms.GroupBox();
             this.converter_target = new System.Windows.Forms.ComboBox();
@@ -59,20 +67,14 @@
             this.label8 = new System.Windows.Forms.Label();
             this.converter_source = new System.Windows.Forms.ComboBox();
             this.closeConfigButton = new System.Windows.Forms.Button();
-            this.ddc_phraselength = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
-            this.general_rs2014path = new RocksmithToolkitGUI.CueTextBox();
-            this.general_rs1path = new RocksmithToolkitGUI.CueTextBox();
-            this.general_defaultauthor = new RocksmithToolkitGUI.CueTextBox();
-            this.creator_scrollspeed = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
-            this.label12 = new System.Windows.Forms.Label();
             this.gbCreator.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
             this.gbGeneral.SuspendLayout();
             this.gbAutoUpdate.SuspendLayout();
             this.gbDDC.SuspendLayout();
-            this.gbConverter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
+            this.gbConverter.SuspendLayout();
             this.SuspendLayout();
             // 
             // general_usebeta
@@ -115,6 +117,37 @@
             this.groupBox1.TabIndex = 45;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Arrangement";
+            // 
+            // creator_scrollspeed
+            // 
+            this.creator_scrollspeed.DecimalPlaces = 1;
+            this.creator_scrollspeed.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_scrollspeed.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Location = new System.Drawing.Point(117, 15);
+            this.creator_scrollspeed.Maximum = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.creator_scrollspeed.Name = "creator_scrollspeed";
+            this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
+            this.creator_scrollspeed.TabIndex = 10;
+            this.creator_scrollspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.creator_scrollspeed.Value = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label1
             // 
@@ -223,6 +256,16 @@
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label12.Location = new System.Drawing.Point(119, 88);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(169, 13);
+            this.label12.TabIndex = 100;
+            this.label12.Text = "Will be written inside the package.";
+            // 
             // gbAutoUpdate
             // 
             this.gbAutoUpdate.Controls.Add(this.general_replacerepo);
@@ -267,6 +310,17 @@
             this.rs1PathButton.UseVisualStyleBackColor = true;
             this.rs1PathButton.Click += new System.EventHandler(this.rs1PathButton_Click);
             // 
+            // general_rs2014path
+            // 
+            this.general_rs2014path.Cue = "Rocksmith 2014 path";
+            this.general_rs2014path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_rs2014path.ForeColor = System.Drawing.Color.Gray;
+            this.general_rs2014path.Location = new System.Drawing.Point(122, 128);
+            this.general_rs2014path.Name = "general_rs2014path";
+            this.general_rs2014path.Size = new System.Drawing.Size(345, 20);
+            this.general_rs2014path.TabIndex = 7;
+            this.general_rs2014path.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -277,6 +331,17 @@
             this.label11.Size = new System.Drawing.Size(111, 13);
             this.label11.TabIndex = 50;
             this.label11.Text = "Rocksmith 2014 path:";
+            // 
+            // general_rs1path
+            // 
+            this.general_rs1path.Cue = "Rocksmith path";
+            this.general_rs1path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_rs1path.ForeColor = System.Drawing.Color.Gray;
+            this.general_rs1path.Location = new System.Drawing.Point(122, 104);
+            this.general_rs1path.Name = "general_rs1path";
+            this.general_rs1path.Size = new System.Drawing.Size(345, 20);
+            this.general_rs1path.TabIndex = 5;
+            this.general_rs1path.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label10
             // 
@@ -299,6 +364,17 @@
             this.label9.Size = new System.Drawing.Size(87, 13);
             this.label9.TabIndex = 47;
             this.label9.Text = "Package Author:";
+            // 
+            // general_defaultauthor
+            // 
+            this.general_defaultauthor.Cue = "Author";
+            this.general_defaultauthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_defaultauthor.ForeColor = System.Drawing.Color.Gray;
+            this.general_defaultauthor.Location = new System.Drawing.Point(122, 67);
+            this.general_defaultauthor.Name = "general_defaultauthor";
+            this.general_defaultauthor.Size = new System.Drawing.Size(250, 20);
+            this.general_defaultauthor.TabIndex = 4;
+            this.general_defaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label4
             // 
@@ -327,15 +403,43 @@
             this.gbDDC.Controls.Add(this.ddc_phraselength);
             this.gbDDC.Controls.Add(this.ddc_removesustain);
             this.gbDDC.Controls.Add(this.label6);
+            this.gbDDC.Controls.Add(this.label13);
             this.gbDDC.Controls.Add(this.label5);
+            this.gbDDC.Controls.Add(this.ddc_config);
             this.gbDDC.Controls.Add(this.ddc_rampup);
             this.gbDDC.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbDDC.Location = new System.Drawing.Point(2, 253);
             this.gbDDC.Name = "gbDDC";
-            this.gbDDC.Size = new System.Drawing.Size(516, 73);
+            this.gbDDC.Size = new System.Drawing.Size(516, 109);
             this.gbDDC.TabIndex = 15;
             this.gbDDC.TabStop = false;
             this.gbDDC.Text = "DDC";
+            // 
+            // ddc_phraselength
+            // 
+            this.ddc_phraselength.Location = new System.Drawing.Point(123, 81);
+            this.ddc_phraselength.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+            this.ddc_phraselength.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.ddc_phraselength.Name = "ddc_phraselength";
+            this.ddc_phraselength.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.ddc_phraselength.Size = new System.Drawing.Size(52, 20);
+            this.ddc_phraselength.TabIndex = 14;
+            this.ddc_phraselength.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ddc_phraselength.ThousandsSeparator = true;
+            this.ddc_phraselength.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.ddc_phraselength.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // ddc_removesustain
             // 
@@ -354,11 +458,22 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label6.Location = new System.Drawing.Point(11, 45);
+            this.label6.Location = new System.Drawing.Point(12, 83);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(75, 13);
             this.label6.TabIndex = 47;
             this.label6.Text = "Phrase length:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label13.Location = new System.Drawing.Point(11, 52);
+            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(59, 13);
+            this.label13.TabIndex = 46;
+            this.label13.Text = "Config File:";
             // 
             // label5
             // 
@@ -370,6 +485,19 @@
             this.label5.Size = new System.Drawing.Size(56, 13);
             this.label5.TabIndex = 46;
             this.label5.Text = "Rampage:";
+            // 
+            // ddc_config
+            // 
+            this.ddc_config.AllowDrop = true;
+            this.ddc_config.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddc_config.FormattingEnabled = true;
+            this.ddc_config.Location = new System.Drawing.Point(122, 49);
+            this.ddc_config.MinimumSize = new System.Drawing.Size(20, 0);
+            this.ddc_config.Name = "ddc_config";
+            this.ddc_config.Size = new System.Drawing.Size(171, 21);
+            this.ddc_config.Sorted = true;
+            this.ddc_config.TabIndex = 13;
+            this.ddc_config.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // ddc_rampup
             // 
@@ -391,7 +519,7 @@
             this.gbConverter.Controls.Add(this.label8);
             this.gbConverter.Controls.Add(this.converter_source);
             this.gbConverter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbConverter.Location = new System.Drawing.Point(2, 332);
+            this.gbConverter.Location = new System.Drawing.Point(2, 368);
             this.gbConverter.Name = "gbConverter";
             this.gbConverter.Size = new System.Drawing.Size(516, 45);
             this.gbConverter.TabIndex = 50;
@@ -450,113 +578,13 @@
             // 
             this.closeConfigButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.closeConfigButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeConfigButton.Location = new System.Drawing.Point(403, 383);
+            this.closeConfigButton.Location = new System.Drawing.Point(403, 430);
             this.closeConfigButton.Name = "closeConfigButton";
             this.closeConfigButton.Size = new System.Drawing.Size(116, 29);
             this.closeConfigButton.TabIndex = 18;
             this.closeConfigButton.Text = "Close";
             this.closeConfigButton.UseVisualStyleBackColor = false;
             this.closeConfigButton.Click += new System.EventHandler(this.closeConfigButton_Click);
-            // 
-            // ddc_phraselength
-            // 
-            this.ddc_phraselength.Location = new System.Drawing.Point(122, 43);
-            this.ddc_phraselength.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
-            this.ddc_phraselength.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.ddc_phraselength.Name = "ddc_phraselength";
-            this.ddc_phraselength.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.ddc_phraselength.Size = new System.Drawing.Size(52, 20);
-            this.ddc_phraselength.TabIndex = 14;
-            this.ddc_phraselength.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.ddc_phraselength.ThousandsSeparator = true;
-            this.ddc_phraselength.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.ddc_phraselength.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
-            // general_rs2014path
-            // 
-            this.general_rs2014path.Cue = "Rocksmith 2014 path";
-            this.general_rs2014path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_rs2014path.ForeColor = System.Drawing.Color.Gray;
-            this.general_rs2014path.Location = new System.Drawing.Point(122, 128);
-            this.general_rs2014path.Name = "general_rs2014path";
-            this.general_rs2014path.Size = new System.Drawing.Size(345, 20);
-            this.general_rs2014path.TabIndex = 7;
-            this.general_rs2014path.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
-            // general_rs1path
-            // 
-            this.general_rs1path.Cue = "Rocksmith path";
-            this.general_rs1path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_rs1path.ForeColor = System.Drawing.Color.Gray;
-            this.general_rs1path.Location = new System.Drawing.Point(122, 104);
-            this.general_rs1path.Name = "general_rs1path";
-            this.general_rs1path.Size = new System.Drawing.Size(345, 20);
-            this.general_rs1path.TabIndex = 5;
-            this.general_rs1path.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
-            // general_defaultauthor
-            // 
-            this.general_defaultauthor.Cue = "Author";
-            this.general_defaultauthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_defaultauthor.ForeColor = System.Drawing.Color.Gray;
-            this.general_defaultauthor.Location = new System.Drawing.Point(122, 67);
-            this.general_defaultauthor.Name = "general_defaultauthor";
-            this.general_defaultauthor.Size = new System.Drawing.Size(250, 20);
-            this.general_defaultauthor.TabIndex = 4;
-            this.general_defaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
-            // creator_scrollspeed
-            // 
-            this.creator_scrollspeed.DecimalPlaces = 1;
-            this.creator_scrollspeed.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_scrollspeed.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Location = new System.Drawing.Point(117, 15);
-            this.creator_scrollspeed.Maximum = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.creator_scrollspeed.Name = "creator_scrollspeed";
-            this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
-            this.creator_scrollspeed.TabIndex = 10;
-            this.creator_scrollspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.creator_scrollspeed.Value = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label12.Location = new System.Drawing.Point(119, 88);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(169, 13);
-            this.label12.TabIndex = 100;
-            this.label12.Text = "Will be written inside the package.";
             // 
             // GeneralConfig
             // 
@@ -572,16 +600,16 @@
             this.gbCreator.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).EndInit();
             this.gbGeneral.ResumeLayout(false);
             this.gbGeneral.PerformLayout();
             this.gbAutoUpdate.ResumeLayout(false);
             this.gbAutoUpdate.PerformLayout();
             this.gbDDC.ResumeLayout(false);
             this.gbDDC.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).EndInit();
             this.gbConverter.ResumeLayout(false);
             this.gbConverter.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -625,5 +653,7 @@
         private System.Windows.Forms.CheckBox general_replacerepo;
         private System.Windows.Forms.GroupBox gbAutoUpdate;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.ComboBox ddc_config;
     }
 }

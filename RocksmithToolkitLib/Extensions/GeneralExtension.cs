@@ -65,6 +65,15 @@ namespace RocksmithToolkitLib.Extensions
             return name;
         }
 
+        public static string GetValidSortName(this string value)
+        {
+            if (value.ToLowerInvariant().StartsWith("the "))
+            {
+                return value.Remove(0, 4);
+            }
+            else return value;
+        }
+
         public static string GetValidName(this string value, bool allowSpace = false, bool allowStartsWithNumber = false, bool underscoreSpace = false, bool frets24 = false)
         {
             string name = String.Empty;

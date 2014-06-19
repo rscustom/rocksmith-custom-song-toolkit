@@ -144,15 +144,7 @@ namespace RocksmithToolkitGUI
             configurationToolStripMenuItem.Enabled = false;
 
             // Remove all tabs
-            tabControl1.TabPages.Remove(dlcPackageCreatorTab);
-            tabControl1.TabPages.Remove(dlcPackerUnpackerTab);
-            tabControl1.TabPages.Remove(dlcConverterTab);
-            tabControl1.TabPages.Remove(DDCTab);
-            tabControl1.TabPages.Remove(dlcInlayCreatorTab);
-            tabControl1.TabPages.Remove(sngConverterTab);
-            tabControl1.TabPages.Remove(oggConverterTab);
-            tabControl1.TabPages.Remove(sngToTabConverterTab);
-            tabControl1.TabPages.Remove(zigProConverterTab);
+            tabControl1.TabPages.Clear();
 
             // Add config
             if (!tabControl1.TabPages.Contains(GeneralConfigTab))
@@ -162,6 +154,7 @@ namespace RocksmithToolkitGUI
         public void ReloadControls() {
             this.Controls.Clear();
             InitializeComponent();
+            tabControl1.TabPages.Remove(GeneralConfigTab);
         }
     }
 }

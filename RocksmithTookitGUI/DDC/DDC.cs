@@ -25,6 +25,7 @@ namespace RocksmithToolkitGUI.DDC
         // 0 - fpath 1 - name
         internal Dictionary<string, string> DLCdb = new Dictionary<string,string>();
         internal Dictionary<string, string> RampMdlsDb = new Dictionary<string,string>();
+        internal Dictionary<string, string> ConfigsDb = new Dictionary<string, string>();
         internal static string AppWD = Application.StartupPath;
         internal Color EnabledColor = System.Drawing.Color.Green;
         internal Color DisabledColor = Color.Tomato;
@@ -70,12 +71,14 @@ namespace RocksmithToolkitGUI.DDC
 
             try {
                 PopMDLs();
+                PopCFGs();
                 SetDefaultFromConfig();
             } catch { /*For mono compatibility*/ }
         }
 
         private void SetDefaultFromConfig() {
             ramUpMdlsCbox.SelectedItem = ConfigRepository.Instance()["ddc_rampup"];
+            ConfigFilesCbx.SelectedItem = ConfigRepository.Instance()["ddc_config"]; 
             phaseLenNum.Value = ConfigRepository.Instance().GetDecimal("ddc_phraselength");
             delsustainsBT.Checked = ConfigRepository.Instance().GetBoolean("ddc_removesustain");
         }
@@ -105,11 +108,12 @@ namespace RocksmithToolkitGUI.DDC
                         case ".edat":  // PS3
                         case "":       // XBox 360
                             {
-                                string filePath = Path.GetDirectoryName(file.Value),
-                                newName = String.Format("{0}_{1}{2}", 
-                                file.Key.StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD", ""), isNDD ? "_NDD" : "DD", file.Value.GetPlatform().GetPathName()[2]);
-                                if (CleanProcess && File.Exists(file.Value) && !Path.GetFileNameWithoutExtension(file.Value).GetValidName(false).Equals(newName))
-                                    File.Delete(file.Value);
+                                string filePath = file.Value,
+                                newName = String.Format("{0}_{1}{2}",
+                                file.Key.StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD", ""), isNDD ? "_NDD" : "DD", filePath.GetPlatform().GetPathName()[2]);
+                                
+                                if (CleanProcess && File.Exists(filePath) && !Path.GetFileNameWithoutExtension(filePath).GetValidName(false).Equals(newName))
+                                    File.Delete(filePath);
                             }
                             break;
                     } 
@@ -143,11 +147,12 @@ namespace RocksmithToolkitGUI.DDC
 
             var step = (int)Math.Round(1.0 / DLCdb.Count() * 100, 0);
             int result = -1, progress = 0;
-            string remSUS = String.Empty, rampPath = String.Empty;
+            string remSUS = String.Empty, rampPath = String.Empty, cfgPath = String.Empty;
 
             this.Invoke(new MethodInvoker(() => {
                     remSUS = IsREMsus();
                     rampPath = GetRampUpMdl();
+                    cfgPath = GetConfig();
             }));
 
             bw.ReportProgress(progress);
@@ -158,14 +163,14 @@ namespace RocksmithToolkitGUI.DDC
                 string consoleOutput = String.Empty;
                 switch (Path.GetExtension(file.Value)) {
                     case ".xml":   // Arrangement
-                        result = ApplyDD(file.Value, remSUS, rampPath, out consoleOutput, CleanProcess, KeepLog);
+                        result = ApplyDD(file.Value, remSUS, rampPath, cfgPath, out consoleOutput, CleanProcess, KeepLog);
                         errorsFound.AppendLine(consoleOutput);
                         break;
                     case ".psarc": // PC / Mac (RS2014)
                     case ".dat":   // PC (RS1)
                     case ".edat":  // PS3
                     case "":       // XBox 360
-                        result = ApplyPackageDD(file.Value, remSUS, rampPath, out consoleOutput);
+                        result = ApplyPackageDD(file.Value, remSUS, rampPath, cfgPath, out consoleOutput, KeepLog);
                         errorsFound.AppendLine(consoleOutput);
                         break;
                 }                
@@ -180,7 +185,7 @@ namespace RocksmithToolkitGUI.DDC
             e.Result = result;
         }
 
-        private int ApplyDD(string file, string remSUS, string rampPath, out string consoleOutput, bool cleanProcess = false, bool keepLog = false)
+        private int ApplyDD(string file, string remSUS, string rampPath, string cfgPath, out string consoleOutput, bool cleanProcess = false, bool keepLog = false)
         {
             var startInfo = new ProcessStartInfo();
 
@@ -189,7 +194,7 @@ namespace RocksmithToolkitGUI.DDC
             startInfo.Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}{4}{5}", 
                                                 Path.GetFileName(file),
                                                 (UInt16)phaseLenNum.Value, 
-                                                remSUS, rampPath, 
+                                                remSUS, rampPath, cfgPath, 
                                                 cleanProcess ? " -p Y" : " -p N",
                                                 keepLog ? " -t Y" : " -t N" 
             );
@@ -207,7 +212,7 @@ namespace RocksmithToolkitGUI.DDC
             }
         }
 
-        private int ApplyPackageDD(string file, string remSUS, string rampPath, out string consoleOutputPkg)
+        private int ApplyPackageDD(string file, string remSUS, string rampPath, string cfgPath, out string consoleOutputPkg, bool keepLog = false)
         {
             int singleResult = -1;
             bool exitedByError = false;
@@ -225,7 +230,7 @@ namespace RocksmithToolkitGUI.DDC
                 if (Path.GetFileNameWithoutExtension(xml).ToLower().Contains("showlight"))
                     continue;
 
-                singleResult = ApplyDD(xml, remSUS, rampPath, out consoleOutputPkg, true, false);
+                singleResult = ApplyDD(xml, remSUS, rampPath, cfgPath, out consoleOutputPkg, true, keepLog);
 
                 // UPDATE MANIFEST (RS2014) for update
                 if (platform.version == RocksmithToolkitLib.GameVersion.RS2014) {
@@ -265,8 +270,28 @@ namespace RocksmithToolkitGUI.DDC
             
             if (!exitedByError)
             {
+                var logFiles = Directory.GetFiles(unpackedDir, "*.log", SearchOption.AllDirectories);
                 var newName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_{1}{2}", 
-                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD",""), isNDD ? "NDD" :  "DD", platform.GetPathName()[2]));
+                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD", ""), 
+                    isNDD ? "NDD" :  "DD", platform.GetPathName()[2]));
+                if (keepLog)
+                {
+                    string clogDir = Path.Combine(Path.GetDirectoryName(newName), "DDC_Log");
+                    string plogDir = Path.Combine(clogDir, Path.GetFileNameWithoutExtension(newName).StripPlatformEndName().Replace("_DD", "").Replace("_NDD", ""));
+
+                    if (!Directory.Exists(clogDir)) Directory.CreateDirectory(clogDir);
+                    DirectoryExtension.SafeDelete(plogDir); Directory.CreateDirectory(plogDir);
+                    foreach (var logFile in logFiles)
+                    {
+                        File.Move(logFile, Path.Combine(plogDir, Path.GetFileName(logFile)));
+                    }
+                }
+                else
+                {
+                    foreach (var logFile in logFiles)
+                        if(File.Exists(logFile))
+                            File.Delete(logFile);
+                }
                 Packer.Pack(unpackedDir, newName, true, platform);
                 DirectoryExtension.SafeDelete(unpackedDir);
             }
@@ -291,6 +316,14 @@ namespace RocksmithToolkitGUI.DDC
         {
             if (ramUpMdlsCbox.Text.Trim().Length > 0)
                 return String.Format(" -m \"{0}\"", Path.GetFullPath(RampMdlsDb[ramUpMdlsCbox.Text]));
+            else
+                return "";
+        }
+
+        private string GetConfig()
+        {
+            if (ConfigFilesCbx.Text.Trim().Length > 0)
+                return String.Format(" -c \"{0}\"", Path.GetFullPath(ConfigsDb[ConfigFilesCbx.Text]));
             else
                 return "";
         }
@@ -373,6 +406,36 @@ namespace RocksmithToolkitGUI.DDC
             }
         }
 
+        private void ConfigFilesBtn_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new VistaOpenFileDialog())
+            {
+                ofd.Filter = "DDC Config file (*.cfg)|*.cfg";
+                ofd.CheckFileExists = true;
+                ofd.CheckPathExists = true;
+                ofd.Multiselect = true;
+                ofd.ReadOnlyChecked = true;
+                ofd.RestoreDirectory = true;
+
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+
+                foreach (var file in ofd.FileNames)
+                {
+                    var name = Path.GetFileNameWithoutExtension(file);
+                    Directory.CreateDirectory(@".\ddc\ucfg\");
+                    var path = String.Format(@".\ddc\ucfg\user_{0}.cfg", name);
+                    if (!ConfigFilesCbx.Items.Contains(name))
+                    {
+                        try { File.Copy(file, path, true); }
+                        catch { }
+                        ConfigFilesCbx.Items.Add(name);
+                    }
+                    ConfigFilesCbx.SelectedIndex = ConfigFilesCbx.FindStringExact(name);
+                }
+            }
+        }
+
         /// <summary>
         /// Optimized for Opera, Google Chrome and Firefox.
         /// </summary>
@@ -422,12 +485,30 @@ namespace RocksmithToolkitGUI.DDC
                 foreach (var mdl in Directory.EnumerateFiles(@".\ddc\", "*.xml", SearchOption.AllDirectories))
                 {
                     var name = Path.GetFileNameWithoutExtension(mdl);
-                    if (name.StartsWith("user_")) name = name.Substring(5, name.Length - 5);
+                    if (name.StartsWith("user_")) name = name.Remove(0, 5);
                     ramUpMdlsCbox.Items.Add(name);
                     ramUpMdlsCbox.SelectedIndex = ramUpMdlsCbox.FindStringExact("ddc_default");
                     RampMdlsDb.Add(name, Path.GetFullPath(mdl));
                 }
                 ramUpMdlsCbox.Refresh();
+            }
+        }
+
+        private void PopCFGs()
+        {
+            if (Directory.Exists(@".\ddc\"))
+            {
+                ConfigFilesCbx.Items.Clear();
+                ConfigsDb.Clear();
+                foreach (var cfg in Directory.EnumerateFiles(@".\ddc\", "*.cfg", SearchOption.AllDirectories))
+                {
+                    var name = Path.GetFileNameWithoutExtension(cfg);
+                    if (name.StartsWith("user_")) name = name.Remove(0, 5);
+                    ConfigFilesCbx.Items.Add(name);
+                    ConfigFilesCbx.SelectedIndex = ConfigFilesCbx.FindStringExact("ddc_default");
+                    ConfigsDb.Add(name, Path.GetFullPath(cfg));
+                }
+                ConfigFilesCbx.Refresh();
             }
         }
 
@@ -457,6 +538,11 @@ namespace RocksmithToolkitGUI.DDC
         private void ramUpMdlsCbox_DropDown(object sender, EventArgs e)
         {
             PopMDLs();
+        }
+
+        private void ConfigFilesCbx_DropDown(object sender, EventArgs e)
+        {
+            PopCFGs();
         }
 
         private void deleteArrBT_Click(object sender, EventArgs e)
