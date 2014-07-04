@@ -98,50 +98,73 @@ namespace dlcconverter
                     packageFilter = "*.edat";
 
                 var sourcePackages = (arguments.Input.IsDirectory()) ? Directory.EnumerateFiles(arguments.Input, packageFilter, SearchOption.TopDirectoryOnly) : new string[] { arguments.Input };
-                
+
+                Console.WriteLine(String.Format("Found {0} DLCs in {1}", sourcePackages.Count(), arguments.Input));
+                int count = 1;
                 foreach (var sourcePackage in sourcePackages)
                 {
-                    var alertMessage = String.Format("Source package '{0}' seems to be not {1} platform, the conversion can't be work.", Path.GetFileName(sourcePackage), arguments.SourcePlatform.platform);
-                    if (arguments.SourcePlatform.platform != GamePlatform.PS3)
+                    try
                     {
-                        if (!Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(arguments.SourcePlatform.GetPathName()[2]))
+                        Console.WriteLine("-----------------------------------------------------------------");
+                        Console.WriteLine(String.Format("Processing DLC [" + count + " / " + sourcePackages.Count() + "] '{0}' ...", Path.GetFileName(sourcePackage)));
+
+                        var alertMessage = String.Format("Source package '{0}' seems to be not {1} platform, the conversion can't be work.", Path.GetFileName(sourcePackage), arguments.SourcePlatform.platform);
+                        if (arguments.SourcePlatform.platform != GamePlatform.PS3)
                         {
-                            Console.WriteLine(alertMessage);
-                            Console.WriteLine("Force try to convert this package? [Y] Yes, [N] No.");
-                            ConsoleKeyInfo key = Console.ReadKey(true);
-                            if (key.Key == ConsoleKey.Y)
-                                Console.WriteLine("Ok, trying convert...");
-                            else
-                                continue;
+                            if (!Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(arguments.SourcePlatform.GetPathName()[2]))
+                            {
+                                Console.WriteLine(alertMessage);
+                                Console.WriteLine("Force try to convert this package? [Y] Yes, [N] No.");
+                                ConsoleKeyInfo key = Console.ReadKey(true);
+                                if (key.Key == ConsoleKey.Y)
+                                    Console.WriteLine("Ok, trying convert...");
+                                else
+                                    continue;
+                            }
                         }
+                        else if (arguments.SourcePlatform.platform == GamePlatform.PS3)
+                        {
+                            if (!(Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(arguments.SourcePlatform.GetPathName()[2] + ".psarc")))
+                            {
+                                Console.WriteLine(alertMessage);
+                                Console.WriteLine("Force try to convert this package? [Y] Yes, [N] No.");
+                                ConsoleKeyInfo key = Console.ReadKey(true);
+                                if (key.Key == ConsoleKey.Y)
+                                    Console.WriteLine("Ok, trying convert...");
+                                else
+                                    continue;
+                            }
+                        }
+
+                        // CONVERT
+                        var output = DLCPackageConverter.Convert(sourcePackage, arguments.SourcePlatform, arguments.TargetPlatform, arguments.AppId);
+                        if (!String.IsNullOrEmpty(output))
+                        {
+                            // This should not happen..
+                            Console.WriteLine(output);
+                        }
+                        else
+                        {
+                            Console.WriteLine(String.Format("DLC {0} converted from '{1}' to '{2}'.", Path.GetFileName(sourcePackage), arguments.SourcePlatform.platform, arguments.TargetPlatform.platform));                     
+                        }
+
+                        count++;
+                    } catch (Exception e) {
+                        Console.WriteLine(String.Format("ERROR: Couldn't convert DLC because of error '{0}' - skip file '{1}'", e.Message, Path.GetFileName(sourcePackage)));
                     }
-                    else if (arguments.SourcePlatform.platform == GamePlatform.PS3)
+                    finally
                     {
-                        if (!(Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(arguments.SourcePlatform.GetPathName()[2] + ".psarc")))
-                        {
-                            Console.WriteLine(alertMessage);
-                            Console.WriteLine("Force try to convert this package? [Y] Yes, [N] No.");
-                            ConsoleKeyInfo key = Console.ReadKey(true);
-                            if (key.Key == ConsoleKey.Y)
-                                Console.WriteLine("Ok, trying convert...");
-                            else
-                                continue;
-                        }
-                    }
+                        Console.WriteLine("-----------------------------------------------------------------");
+                    }   
+                } 
 
-                    // CONVERT
-                    var output = DLCPackageConverter.Convert(sourcePackage, arguments.SourcePlatform, arguments.TargetPlatform, arguments.AppId);
-                    if (!String.IsNullOrEmpty(output))
-                        Console.WriteLine(output);
-                }
-
-                Console.WriteLine(String.Format("DLC was converted from '{0}' to '{1}'.", arguments.SourcePlatform.platform, arguments.TargetPlatform.platform));
             }
-            catch (OptionException ex)
+            catch (Exception ex)
             {
                 ShowHelpfulError(ex.Message);
                 return 1;
             }
+            
 
             return 0;
         }
