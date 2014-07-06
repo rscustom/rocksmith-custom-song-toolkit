@@ -10,6 +10,7 @@ using RocksmithToolkitLib;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Sng;
 using System.Text;
+using System.Collections;
 
 namespace dlcconverter
 {
@@ -99,14 +100,16 @@ namespace dlcconverter
 
                 var sourcePackages = (arguments.Input.IsDirectory()) ? Directory.EnumerateFiles(arguments.Input, packageFilter, SearchOption.TopDirectoryOnly) : new string[] { arguments.Input };
 
-                Console.WriteLine(String.Format("Found {0} DLCs in {1}", sourcePackages.Count(), arguments.Input));
-                int count = 1;
+                Console.WriteLine(String.Format("Found '{0}' DLCs in '{1}'", sourcePackages.Count(), arguments.Input));
+                int dlcCount = 1;
+                int dlcSuccessfulCount = 0;
+                List<string> dlcErrorList = new List<string>();
                 foreach (var sourcePackage in sourcePackages)
                 {
                     try
                     {
                         Console.WriteLine("-----------------------------------------------------------------");
-                        Console.WriteLine(String.Format("Processing DLC [" + count + " / " + sourcePackages.Count() + "] '{0}' ...", Path.GetFileName(sourcePackage)));
+                        Console.WriteLine(String.Format("Processing DLC [" + dlcCount + " / " + sourcePackages.Count() + "] '{0}' ...", Path.GetFileName(sourcePackage)));
 
                         var alertMessage = String.Format("Source package '{0}' seems to be not {1} platform, the conversion can't be work.", Path.GetFileName(sourcePackage), arguments.SourcePlatform.platform);
                         if (arguments.SourcePlatform.platform != GamePlatform.PS3)
@@ -148,16 +151,29 @@ namespace dlcconverter
                             Console.WriteLine(String.Format("DLC {0} converted from '{1}' to '{2}'.", Path.GetFileName(sourcePackage), arguments.SourcePlatform.platform, arguments.TargetPlatform.platform));                     
                         }
 
-                        count++;
+                        dlcSuccessfulCount++;
                     } catch (Exception e) {
+                        
                         Console.WriteLine(String.Format("ERROR: Couldn't convert DLC because of error '{0}' - skip file '{1}'", e.Message, Path.GetFileName(sourcePackage)));
+                        dlcErrorList.Add(Path.GetFullPath(sourcePackage));
                     }
                     finally
                     {
                         Console.WriteLine("-----------------------------------------------------------------");
+                        dlcCount++;
                     }   
-                } 
+                }
 
+                Console.WriteLine(String.Format("'{0}' DLCs sucessful processed.", dlcSuccessfulCount));
+                if (dlcErrorList.Count > 0)
+                {
+                    Console.WriteLine(String.Format("'{0}' DLCs processed with errors:", dlcErrorList.Count));
+                    dlcErrorList.ForEach(delegate(String fileName)
+                    {
+                        Console.WriteLine(fileName);
+                    });
+                }
+                
             }
             catch (Exception ex)
             {
