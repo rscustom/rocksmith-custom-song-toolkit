@@ -223,7 +223,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         private static void readString(string From, Byte[] To) {
             var bytes = Encoding.UTF8.GetBytes(From);
-            System.Buffer.BlockCopy(bytes, 0, To, 0, bytes.Length);
+            System.Buffer.BlockCopy(bytes, 0, To, 0, Math.Min(To.Length, bytes.Length));
         }
 
         private void parseChords(Song2014 xml, Sng2014File sng, Int16[] tuning, bool bass) {
