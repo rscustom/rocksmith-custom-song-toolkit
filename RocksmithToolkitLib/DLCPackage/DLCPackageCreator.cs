@@ -377,7 +377,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     using (var xblockStream = new MemoryStream())
                     {
                         // TOOLKIT VERSION
-                        GenerateToolkitVersion(toolkitVersionStream);
+                        GenerateToolkitVersion(toolkitVersionStream, info.PackageVersion);
                         packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
 
                         // APP ID
@@ -938,14 +938,17 @@ namespace RocksmithToolkitLib.DLCPackage
                 GeneralExtensions.RunExternalExecutable("nvdxt.exe", true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
         }
 
-        private static void GenerateToolkitVersion(Stream output)
+        private static void GenerateToolkitVersion(Stream output, string version = null)
         {
             var author = ConfigRepository.Instance()["general_defaultauthor"];
 
             var writer = new StreamWriter(output);
             writer.WriteLine(String.Format("Toolkit version: {0}", ToolkitVersion.version));
             if (!String.IsNullOrEmpty(author))
-                writer.Write(String.Format("Package Author:  {0}", author));
+                writer.WriteLine(String.Format("Package Author:  {0}", author));
+            if (!String.IsNullOrEmpty(version))
+                writer.Write(String.Format("Package Version:  {0}", version));
+
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
         }
