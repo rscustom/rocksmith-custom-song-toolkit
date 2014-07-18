@@ -544,6 +544,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             
             //Gameplay Path
             arrangement.RouteMask = RouteMask;
+
+            //Xml data cleanup
+            xmlSong = null;
             
             // DLC IDs
             Guid guid;
