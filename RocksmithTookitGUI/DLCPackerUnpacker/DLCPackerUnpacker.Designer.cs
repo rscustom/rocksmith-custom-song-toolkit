@@ -35,6 +35,7 @@
             this.repackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.gameVersionCombo = new System.Windows.Forms.ComboBox();
+            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.decodeAudioCheckbox = new System.Windows.Forms.CheckBox();
             this.updateSngCheckBox = new System.Windows.Forms.CheckBox();
@@ -44,7 +45,6 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.currentOperationLabel = new System.Windows.Forms.Label();
             this.updateProgress = new System.Windows.Forms.ProgressBar();
-            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -123,6 +123,16 @@
             this.gameVersionCombo.TabIndex = 42;
             this.gameVersionCombo.SelectedIndexChanged += new System.EventHandler(this.gameVersionCombo_SelectedIndexChanged);
             // 
+            // AppIdTB
+            // 
+            this.AppIdTB.Cue = "APP ID";
+            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
+            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
+            this.AppIdTB.Name = "AppIdTB";
+            this.AppIdTB.Size = new System.Drawing.Size(93, 20);
+            this.AppIdTB.TabIndex = 41;
+            // 
             // appIdCombo
             // 
             this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -188,9 +198,9 @@
             this.extractSongXmlCheckBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.extractSongXmlCheckBox.Location = new System.Drawing.Point(18, 42);
             this.extractSongXmlCheckBox.Name = "extractSongXmlCheckBox";
-            this.extractSongXmlCheckBox.Size = new System.Drawing.Size(107, 17);
+            this.extractSongXmlCheckBox.Size = new System.Drawing.Size(86, 17);
             this.extractSongXmlCheckBox.TabIndex = 16;
-            this.extractSongXmlCheckBox.Text = "Extract Song Xml";
+            this.extractSongXmlCheckBox.Text = "SNG to XML";
             this.extractSongXmlCheckBox.UseVisualStyleBackColor = true;
             // 
             // groupBox3
@@ -224,16 +234,6 @@
             this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.updateProgress.TabIndex = 0;
             this.updateProgress.Visible = false;
-            // 
-            // AppIdTB
-            // 
-            this.AppIdTB.Cue = "APP ID";
-            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
-            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
-            this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(93, 20);
-            this.AppIdTB.TabIndex = 41;
             // 
             // DLCPackerUnpacker
             // 

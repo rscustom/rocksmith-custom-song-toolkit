@@ -20,9 +20,10 @@ namespace RocksmithToolkitLib.Xml
                 v.Time = sngData.Vocals.Vocals[i].Time;
                 v.Note = sngData.Vocals.Vocals[i].Note;
                 v.Length = sngData.Vocals.Vocals[i].Length;
-                v.Lyric = sngData.Vocals.Vocals[i].Lyric.ToNullTerminatedAscii();
+                v.Lyric = sngData.Vocals.Vocals[i].Lyric.ToNullTerminatedUTF8();
                 Vocal[i] = v;
             }
+            Count = Vocal.Length;
         }
 
         [XmlAttribute("count")]

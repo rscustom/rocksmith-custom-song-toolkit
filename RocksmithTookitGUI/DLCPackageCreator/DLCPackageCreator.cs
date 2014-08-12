@@ -162,7 +162,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public string PackageVersion
         {
-            get { return packageVersionTB.Text; }
+            get { return packageVersionTB.Text.GetValidVersion(); }
             set { packageVersionTB.Text = value; }
         }
 
@@ -553,7 +553,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             
             // LOAD DATA
             var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform);
-            info.PackageVersion = "1"; //TODO: add PackageVersion to "toolkit.version" File and use it
+
             switch (packagePlatform.platform)
             {
                 case GamePlatform.Pc:
@@ -586,7 +586,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             platformXBox360.Checked = info.XBox360;
             platformPS3.Checked = info.PS3;
 
-            PackageVersion = info.PackageVersion;
+            PackageVersion = info.PackageVersion.GetValidVersion();
 
             TonesLB.Items.Clear();
             switch (CurrentGameVersion) {
@@ -892,7 +892,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Volume = songVol,
                 PreviewVolume = previewVol,
                 SignatureType = PackageMagic.CON,
-                PackageVersion = PackageVersion
+                PackageVersion = PackageVersion.GetValidVersion()
             };
 
             return data;
@@ -1248,6 +1248,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void ShowCurrentOperation(string message) {
             currentOperationLabel.Text = message;
             currentOperationLabel.Refresh();
+        }
+
+        private void ArtistSortTB_TextChanged(object sender, EventArgs e)
+        {
+            ArtistSortTB.Text = ArtistSortTB.Text.GetValidSortName();
+        }
+        // Crunches here :)
+        private void packageVersionTB_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsDigit(e.KeyChar))
+            { }
+            else if (e.KeyChar == Char.Parse("."))
+            { }
+            else if (e.KeyChar == (int)Keys.Back)
+            { }
+            else e.Handled = true;
         }
     }
 }

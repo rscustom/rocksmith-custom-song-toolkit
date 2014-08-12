@@ -171,9 +171,15 @@ namespace RocksmithToolkitLib.DLCPackage
                 data.OggPreviewPath = newPreviewFileName;
             }
 
+            //AppID
             var appidFile = Directory.GetFiles(unpackedDir, "*.appid", SearchOption.AllDirectories);
             if (appidFile.Length > 0)
                 data.AppId = File.ReadAllText(appidFile[0]);
+
+            //Package version
+            var versionFile = Directory.GetFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories);
+            if (versionFile.Length > 0)
+                data.PackageVersion = GeneralExtensions.ReadPackageVersion(versionFile[0]);
 
             return data;
         }
@@ -248,7 +254,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var OggFiles = Directory.GetFiles(unpackedDir, "*_fixed.ogg", SearchOption.AllDirectories);
             if(OggFiles.Count() <= 0)
                 throw new InvalidDataException("Audio files not found.");
-
+            //TODO: read names from bnk and rename.
             var a0 = new FileInfo(OggFiles[0]);
             FileInfo b0 = null;
             if (OggFiles.Count() == 2){
@@ -288,6 +294,11 @@ namespace RocksmithToolkitLib.DLCPackage
             var appidFile = Directory.GetFiles(unpackedDir, "*.appid", SearchOption.AllDirectories);
             if (appidFile.Length > 0)
                 File.Move(appidFile[0], Path.Combine(outdir, KIT, Path.GetFileName(appidFile[0])));
+
+            //Move toolkit.version
+            var toolkitVersion = Directory.GetFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories);
+            if (toolkitVersion.Length > 0)
+                File.Move(toolkitVersion[0], Path.Combine(outdir, KIT, Path.GetFileName(toolkitVersion[0])));
 
             //Remove old folder
             DirectoryExtension.SafeDelete(unpackedDir);

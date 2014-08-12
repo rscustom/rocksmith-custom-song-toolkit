@@ -52,6 +52,33 @@ namespace RocksmithToolkitLib.Extensions
             return v;
         }
 
+        public static string ReadPackageVersion(string filePath)
+        {
+            var info = File.OpenText(filePath);
+            string packageVersion = "1";
+            string line;
+            //3 lines
+            while ((line = info.ReadLine()) != null)
+            {
+                if (line.Contains("Package Version:"))
+                    packageVersion = line.Split(':')[1].Trim();
+            }
+
+            return packageVersion.GetValidVersion();
+        }
+
+        public static string GetValidVersion(this string value)
+        {
+            if (!String.IsNullOrEmpty(value))
+            {
+                Regex rgx = new Regex(@"^[\d\.]*");
+                var match = rgx.Match(value);
+                if (match.Success)
+                    return match.Value.Trim();
+            }
+            return "1";
+        }
+
         public static string GetValidSongName(this string value, string songTitle)
         {
             string name = String.Empty;
@@ -81,7 +108,7 @@ namespace RocksmithToolkitLib.Extensions
             string name = String.Empty;
             if (!String.IsNullOrEmpty(value))
             {
-                Regex rgx = new Regex((allowSpace) ? "[^a-zA-Z0-9\\-_ ]" : "[^a-zA-Z0-9\\-_]");
+                Regex rgx = new Regex((allowSpace) ? "[^a-zA-Z0-9\\-_. ]" : "[^a-zA-Z0-9\\-_.");
                 name = rgx.Replace(value, "");
 
                 Regex rgx2 = new Regex(@"^[\d]*\s*");
@@ -127,6 +154,11 @@ namespace RocksmithToolkitLib.Extensions
             return Encoding.ASCII.GetString(bytes).TrimEnd('\0');
         }
 
+        public static string ToNullTerminatedUTF8(this Byte[] bytes)
+        {
+            return Encoding.UTF8.GetString(bytes).TrimEnd('\0');
+        }
+
         public static string Acronym(this string value)
         {
             var v = Regex.Split(value, @"[\W\s]+").Where(r => !string.IsNullOrEmpty(r)).ToArray();
@@ -139,9 +171,9 @@ namespace RocksmithToolkitLib.Extensions
         public static string GetShortName(string Format, string Artist, string Title, string Version, bool Acronym)
         {
             if (!Acronym)
-                return String.Format(Format, Artist.GetValidName(true, true), Title.GetValidName(true, true), Version.GetValidName(true, true)).Replace(" ", "-");
+                return String.Format(Format, Artist.GetValidName(true, true), Title.GetValidName(true, true), Version.GetValidName(true, true)).Replace(" ", "-").Replace(".", "_");
             else
-                return String.Format(Format, Artist.Acronym(), Title.GetValidName(true, true), Version.GetValidName(true, true)).Replace(" ", "-");
+                return String.Format(Format, Artist.Acronym(), Title.GetValidName(true, true), Version.GetValidName(true, true)).Replace(" ", "-").Replace(".", "_");
         }
 
         public static bool IsValidPSARC(this string fileName)
