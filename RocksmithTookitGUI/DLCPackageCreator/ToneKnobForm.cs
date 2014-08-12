@@ -42,9 +42,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 numericControl.Minimum = (decimal)knob.MinValue;
                 numericControl.Maximum = (decimal)knob.MaxValue;
                 numericControl.Increment = (decimal)knob.ValueStep;                
-                numericControl.Value = (decimal)pedal.KnobValues[knob.Key];
+                numericControl.Value = Math.Min((decimal)pedal.KnobValues[knob.Key], numericControl.Maximum);
                 numericControl.ValueChanged += (obj, args) =>
-                    pedal.KnobValues[knob.Key] = (float)numericControl.Value;
+                    pedal.KnobValues[knob.Key] = (float)Math.Min(numericControl.Value, numericControl.Maximum);
             }
         }
 
