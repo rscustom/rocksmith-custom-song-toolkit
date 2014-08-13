@@ -108,7 +108,7 @@ namespace RocksmithToolkitLib.Extensions
             string name = String.Empty;
             if (!String.IsNullOrEmpty(value))
             {
-                Regex rgx = new Regex((allowSpace) ? "[^a-zA-Z0-9\\-_. ]" : "[^a-zA-Z0-9\\-_.");
+                Regex rgx = new Regex((allowSpace) ? "[^a-zA-Z0-9\\-_. ]" : "[^a-zA-Z0-9\\-_.]");
                 name = rgx.Replace(value, "");
 
                 Regex rgx2 = new Regex(@"^[\d]*\s*");
