@@ -745,7 +745,7 @@ namespace RocksmithToolkitLib.Xml {
             var bendValues = new List<BendValue>();
 
             for (var i = 0; i < bendData.Length; i++) {
-                if (bendData[i].Time > 0 && bendData[i].Step > 0) {
+                if (bendData[i].Time > 0 && bendData[i].Step >= 0) {
                     var bend = new BendValue();
                     bend.Time = bendData[i].Time;
                     bend.Step = bendData[i].Step;
