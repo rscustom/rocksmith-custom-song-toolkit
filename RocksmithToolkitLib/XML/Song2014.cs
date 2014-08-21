@@ -476,14 +476,15 @@ namespace RocksmithToolkitLib.Xml {
             for (int i = 0; i < ctemplateList.Count; i++)
             {
                 var ct = ctemplateList[i];
-                var matchingChord = chordTemplates.First(sct =>
+                var matchingChord = chordTemplates.FirstOrDefault(sct =>
                     sct.Fret0 == ct.Frets[0] &&
                     sct.Fret1 == ct.Frets[1] &&
                     sct.Fret2 == ct.Frets[2] &&
                     sct.Fret3 == ct.Frets[3] &&
                     sct.Fret4 == ct.Frets[4] &&
                     sct.Fret5 == ct.Frets[5]);
-                matchingChord.ChordId = ct.ChordId;
+                if (matchingChord != null)
+                    matchingChord.ChordId = ct.ChordId;
             }
             return chordTemplates;
         }
