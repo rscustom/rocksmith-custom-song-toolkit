@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using RocksmithToolkitLib.Sng;
 
 namespace RocksmithToolkitLib.SngToTab
@@ -28,7 +23,7 @@ namespace RocksmithToolkitLib.SngToTab
 
         public void Apply(TabFile tabFile)
         {
-            tabFile.AppendLine(" TITLE: " + Title + Environment.NewLine);
+            tabFile.AppendLine("TITLE: " + Title + Environment.NewLine);
             if (Artist != "DUMMY")
                 tabFile.AppendLine("ARTIST: " + Artist + Environment.NewLine);
             tabFile.AppendLine("LENGTH: " + Length + Environment.NewLine);

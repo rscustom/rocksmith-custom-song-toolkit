@@ -12,9 +12,11 @@ using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.Sng;
 
-namespace RocksmithToolkitLib.Xml {
+namespace RocksmithToolkitLib.Xml
+{
     [XmlRoot("song", Namespace = "", IsNullable = false)]
-    public class Song2014 {
+    public class Song2014
+    {
         [XmlAttribute("version")] // RS2014 is 7 or above
         public string Version { get; set; }
 
@@ -50,7 +52,7 @@ namespace RocksmithToolkitLib.Xml {
 
         [XmlElement("capo")]
         public Byte Capo { get; set; }
-        
+
         [XmlElement("artistName")]
         public string ArtistName { get; set; }
 
@@ -147,11 +149,13 @@ namespace RocksmithToolkitLib.Xml {
 
         public Song2014() { }
 
-        public Song2014(Sng2014HSL.Sng sngData, Attributes2014 attr = null) {
+        public Song2014(Sng2014HSL.Sng sngData, Attributes2014 attr = null)
+        {
             Version = "7";
             CrowdSpeed = "1";
 
-            if (attr != null) {
+            if (attr != null)
+            {
                 // If manifest is passed, fill general song information
                 Title = attr.SongName;
                 Arrangement = ((ArrangementName)attr.ArrangementType).ToString();
@@ -168,7 +172,7 @@ namespace RocksmithToolkitLib.Xml {
                 AlbumName = attr.AlbumName;
                 AlbumNameSort = attr.AlbumNameSort;
                 AlbumYear = Convert.ToString(attr.SongYear) ?? "";
-                AlbumArt = attr.AlbumArt;                
+                AlbumArt = attr.AlbumArt;
                 ArrangementProperties = attr.ArrangementProperties;
                 LastConversionDateTime = attr.LastConversionDateTime;
 
@@ -177,20 +181,25 @@ namespace RocksmithToolkitLib.Xml {
                 ToneB = attr.Tone_B;
                 ToneC = attr.Tone_C;
                 ToneD = attr.Tone_D;
-            } else {
+            }
+            else
+            {
                 Part = sngData.Metadata.Part;
                 SongLength = sngData.Metadata.SongLength;
                 Tuning = new TuningStrings(sngData.Metadata.Tuning);
                 Capo = (sngData.Metadata.CapoFretId >= 0) ? sngData.Metadata.CapoFretId : (byte)0;
-                LastConversionDateTime = sngData.Metadata.LastConversionDateTime.ToNullTerminatedAscii();                
+                LastConversionDateTime = sngData.Metadata.LastConversionDateTime.ToNullTerminatedAscii();
             }
 
             Tones = (attr != null) ? SongTone2014.Parse(sngData.Tones, attr) : SongTone2014.Parse(sngData.Tones);
-            if (attr == null) { // Fix tones slots for fake tone names if manifest was not entered
-                foreach (var tone in Tones) {
+            if (attr == null)
+            { // Fix tones slots for fake tone names if manifest was not entered
+                foreach (var tone in Tones)
+                {
                     if (tone.Name.EndsWith("_0"))
                         ToneBase = tone.Name;
-                    if (tone.Name.EndsWith("_1")) {
+                    if (tone.Name.EndsWith("_1"))
+                    {
                         ToneA = ToneBase;
                         ToneB = tone.Name;
                     }
@@ -200,7 +209,7 @@ namespace RocksmithToolkitLib.Xml {
                         ToneD = tone.Name;
                 }
             }
-            
+
             //Sections can be obtained from manifest or sng file (manifest preferred)
             Sections = (attr != null) ? SongSection.Parse(attr.Sections) : SongSection.Parse(sngData.Sections);
 
@@ -228,21 +237,25 @@ namespace RocksmithToolkitLib.Xml {
             FretHandMuteTemplates = new SongFretHandMuteTemplate[0];
         }
 
-        public static Song2014 LoadFromFile(string xmlSongRS2014File) {
+        public static Song2014 LoadFromFile(string xmlSongRS2014File)
+        {
             using (var reader = new StreamReader(xmlSongRS2014File))
             {
                 return new XmlStreamingDeserializer<Song2014>(reader).Deserialize();
             }
         }
 
-        public void Serialize(Stream stream) {
+        public void Serialize(Stream stream, bool omitXmlDeclaration = true)
+        {
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
 
-            using (var writer = XmlWriter.Create(stream, new XmlWriterSettings {
+            using (var writer = XmlWriter.Create(stream, new XmlWriterSettings
+            {
                 Indent = true,
-                OmitXmlDeclaration = true
-            })) {
+                OmitXmlDeclaration = omitXmlDeclaration
+            }))
+            {
                 new XmlSerializer(typeof(Song2014)).Serialize(writer, this, ns);
             }
 
@@ -251,7 +264,8 @@ namespace RocksmithToolkitLib.Xml {
         }
     }
 
-    public class SongArrangementProperties2014 : SongArrangementProperties {
+    public class SongArrangementProperties2014 : SongArrangementProperties
+    {
         [JsonProperty("bonusArr")]
         [XmlAttribute("bonusArr")]
         public Int32 BonusArr { get; set; }
@@ -273,22 +287,25 @@ namespace RocksmithToolkitLib.Xml {
         public Int32 RouteMask { get; set; }
     }
 
-    public class SongPhraseIteration2014 : SongPhraseIteration {
+    public class SongPhraseIteration2014 : SongPhraseIteration
+    {
         [XmlAttribute("variation")]
         public string Variation { get; set; }
 
         [XmlArray("heroLevels")]
         [XmlArrayItem("heroLevel")]
         public HeroLevel[] HeroLevels { get; set; }
-        
-        public static SongPhraseIteration2014[] Parse(Sng2014HSL.PhraseIterationSection piSection) {
+
+        public static SongPhraseIteration2014[] Parse(Sng2014HSL.PhraseIterationSection piSection)
+        {
             var piter = new SongPhraseIteration2014[piSection.Count];
-            for (int i = 0; i < piSection.Count; i++) {
+            for (int i = 0; i < piSection.Count; i++)
+            {
                 var pi = new SongPhraseIteration2014();
                 pi.PhraseId = piSection.PhraseIterations[i].PhraseId;
                 pi.Time = piSection.PhraseIterations[i].StartTime;
                 pi.Variation = "";
-                if (!piSection.PhraseIterations[i].Difficulty.SequenceEqual(new Int32[] { 0,0,0 }))
+                if (!piSection.PhraseIterations[i].Difficulty.SequenceEqual(new Int32[] { 0, 0, 0 }))
                     pi.HeroLevels = HeroLevel.Parse(piSection.PhraseIterations[i]);
                 piter[i] = pi;
             }
@@ -297,16 +314,19 @@ namespace RocksmithToolkitLib.Xml {
     }
 
     [XmlType("heroLevels")]
-    public class HeroLevel {        
+    public class HeroLevel
+    {
         [XmlAttribute("difficulty")]
         public Byte Difficulty { get; set; }
 
         [XmlAttribute("hero")]
         public int Hero { get; set; }
 
-        internal static HeroLevel[] Parse(DLCPackage.Manifest.PhraseIteration phraseIteration) {
+        internal static HeroLevel[] Parse(DLCPackage.Manifest.PhraseIteration phraseIteration)
+        {
             var heroLevels = new HeroLevel[3];
-            for (var i = 0; i < heroLevels.Length; i++) {
+            for (var i = 0; i < heroLevels.Length; i++)
+            {
                 var hero = new HeroLevel();
                 hero.Hero = i + 1;
                 hero.Difficulty = (byte)phraseIteration.MaxScorePerDifficulty[i];
@@ -315,9 +335,11 @@ namespace RocksmithToolkitLib.Xml {
             return heroLevels;
         }
 
-        internal static HeroLevel[] Parse(Sng2014HSL.PhraseIteration phraseIteration) {
+        internal static HeroLevel[] Parse(Sng2014HSL.PhraseIteration phraseIteration)
+        {
             var heroLevels = new HeroLevel[3];
-            for(var i = 0; i < heroLevels.Length; i++) {
+            for (var i = 0; i < heroLevels.Length; i++)
+            {
                 var hero = new HeroLevel();
                 hero.Hero = i + 1;
                 hero.Difficulty = (byte)phraseIteration.Difficulty[i];
@@ -328,7 +350,8 @@ namespace RocksmithToolkitLib.Xml {
     }
 
     [XmlType("newLinkedDiffs")]
-    public class SongNewLinkedDiff {
+    public class SongNewLinkedDiff
+    {
         [XmlAttribute("levelBreak")]
         public Int32 LevelBreak { get; set; }
 
@@ -341,9 +364,11 @@ namespace RocksmithToolkitLib.Xml {
         [XmlElement("nld_phrase")]
         public List<SongNld_phrase> Nld_phrase { get; set; }
 
-        public static SongNewLinkedDiff[] Parse(Sng2014HSL.NLinkedDifficultySection nlinkedDifficultySection) {
+        public static SongNewLinkedDiff[] Parse(Sng2014HSL.NLinkedDifficultySection nlinkedDifficultySection)
+        {
             var newLinkedDiff = new SongNewLinkedDiff[nlinkedDifficultySection.Count];
-            for (int i = 0; i < nlinkedDifficultySection.Count; i++) {
+            for (int i = 0; i < nlinkedDifficultySection.Count; i++)
+            {
                 var nld = new SongNewLinkedDiff();
                 nld.LevelBreak = nlinkedDifficultySection.NLinkedDifficulties[i].LevelBreak;
                 nld.PhraseCount = nlinkedDifficultySection.NLinkedDifficulties[i].PhraseCount;
@@ -356,11 +381,13 @@ namespace RocksmithToolkitLib.Xml {
     }
 
     [XmlType("nld_phrase")]
-    public class SongNld_phrase {
+    public class SongNld_phrase
+    {
         [XmlAttribute("id")]
         public Int32 Id { get; set; }
 
-        internal static List<SongNld_phrase> Parse(int[] nldp) {
+        internal static List<SongNld_phrase> Parse(int[] nldp)
+        {
             var songNldp = new List<SongNld_phrase>();
             foreach (var n in nldp)
                 songNldp.Add(new SongNld_phrase() { Id = n });
@@ -368,7 +395,7 @@ namespace RocksmithToolkitLib.Xml {
         }
     }
 
-    public class SongChordTemplate2014 
+    public class SongChordTemplate2014
     {
         [XmlAttribute("displayName")]
         public string DisplayName { get; set; }
@@ -414,9 +441,11 @@ namespace RocksmithToolkitLib.Xml {
 
         public int? ChordId { get; set; }
 
-        internal static SongChordTemplate2014[] Parse(List<DLCPackage.Manifest.ChordTemplate> cteamplateList) {
+        internal static SongChordTemplate2014[] Parse(List<DLCPackage.Manifest.ChordTemplate> cteamplateList)
+        {
             var chordTemplates = new SongChordTemplate2014[cteamplateList.Count];
-            for (int i = 0; i < cteamplateList.Count; i++) {
+            for (int i = 0; i < cteamplateList.Count; i++)
+            {
                 var sct2014 = new SongChordTemplate2014();
                 sct2014.ChordName = sct2014.DisplayName = cteamplateList[i].ChordName;
                 sct2014.Finger0 = (sbyte)cteamplateList[i].Fingers[0];
@@ -437,9 +466,11 @@ namespace RocksmithToolkitLib.Xml {
             return chordTemplates;
         }
 
-        internal static SongChordTemplate2014[] Parse(Sng2014HSL.ChordSection chordSection) {
+        internal static SongChordTemplate2014[] Parse(Sng2014HSL.ChordSection chordSection)
+        {
             var chordTemplates = new SongChordTemplate2014[chordSection.Count];
-            for (int i = 0; i < chordSection.Count; i++) {
+            for (int i = 0; i < chordSection.Count; i++)
+            {
                 var sct2014 = new SongChordTemplate2014();
                 sct2014.ChordName = sct2014.DisplayName = chordSection.Chords[i].Name.ToNullTerminatedAscii();
                 sct2014.Finger0 = (sbyte)chordSection.Chords[i].Fingers[0];
@@ -455,13 +486,16 @@ namespace RocksmithToolkitLib.Xml {
                 sct2014.Fret4 = (sbyte)chordSection.Chords[i].Frets[4];
                 sct2014.Fret5 = (sbyte)chordSection.Chords[i].Frets[5];
                 sct2014.ChordId = null;
-                
+
                 // Parse chord mask
                 var mask = chordSection.Chords[i].Mask;
-                if ((mask & Sng2014HSL.Sng2014FileWriter.CHORD_MASK_ARPEGGIO) != 0) {
+                if ((mask & Sng2014HSL.Sng2014FileWriter.CHORD_MASK_ARPEGGIO) != 0)
+                {
                     mask &= ~Sng2014HSL.Sng2014FileWriter.CHORD_MASK_ARPEGGIO;
                     sct2014.DisplayName += "-arp";
-                } else if ((mask & Sng2014HSL.Sng2014FileWriter.CHORD_MASK_NOP) != 0) {
+                }
+                else if ((mask & Sng2014HSL.Sng2014FileWriter.CHORD_MASK_NOP) != 0)
+                {
                     mask &= ~Sng2014HSL.Sng2014FileWriter.CHORD_MASK_NOP;
                     sct2014.DisplayName += "-nop";
                 }
@@ -476,20 +510,22 @@ namespace RocksmithToolkitLib.Xml {
             for (int i = 0; i < ctemplateList.Count; i++)
             {
                 var ct = ctemplateList[i];
-                var matchingChord = chordTemplates.First(sct =>
+                var matchingChord = chordTemplates.FirstOrDefault(sct =>
                     sct.Fret0 == ct.Frets[0] &&
                     sct.Fret1 == ct.Frets[1] &&
                     sct.Fret2 == ct.Frets[2] &&
                     sct.Fret3 == ct.Frets[3] &&
                     sct.Fret4 == ct.Frets[4] &&
                     sct.Fret5 == ct.Frets[5]);
-                matchingChord.ChordId = ct.ChordId;
+                if (matchingChord != null)
+                    matchingChord.ChordId = ct.ChordId;
             }
             return chordTemplates;
         }
     }
 
-    public class SongLevel2014 {
+    public class SongLevel2014
+    {
         [XmlAttribute("difficulty")]
         public Int32 Difficulty { get; set; }
 
@@ -509,9 +545,11 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArrayItem("handShape")]
         public SongHandShape[] HandShapes { get; set; }
 
-        internal static SongLevel2014[] Parse(Sng2014HSL.Sng sngData) {
+        internal static SongLevel2014[] Parse(Sng2014HSL.Sng sngData)
+        {
             var levels = new SongLevel2014[sngData.Arrangements.Count];
-            for (var i = 0; i < sngData.Arrangements.Count; i++) {
+            for (var i = 0; i < sngData.Arrangements.Count; i++)
+            {
                 var level = new SongLevel2014();
                 level.Difficulty = sngData.Arrangements.Arrangements[i].Difficulty;
                 level.Notes = SongNote2014.Parse(sngData.Arrangements.Arrangements[i].Notes);
@@ -605,10 +643,12 @@ namespace RocksmithToolkitLib.Xml {
         [XmlArrayItem("bendValue")]
         public BendValue[] BendValues { get; set; }
 
-        internal static SongNote2014[] Parse(Sng2014HSL.NotesSection notesSection) {
+        internal static SongNote2014[] Parse(Sng2014HSL.NotesSection notesSection)
+        {
             var notes = new List<SongNote2014>();
-            
-            for (var i = 0; i < notesSection.Count; i++) {
+
+            for (var i = 0; i < notesSection.Count; i++)
+            {
                 if (notesSection.Notes[i].ChordId != -1)
                     continue; //Skip chord notes (get only single notes)
 
@@ -640,7 +680,8 @@ namespace RocksmithToolkitLib.Xml {
             return notes.ToArray();
         }
 
-        internal void parseNoteMask(uint p) {
+        internal void parseNoteMask(uint p)
+        {
             //Setup default non 0 values
             var notSetup = unchecked((sbyte)-1);
 
@@ -650,8 +691,8 @@ namespace RocksmithToolkitLib.Xml {
             this.SlideUnpitchTo = notSetup;
             this.Tap = (byte)0;
             this.Slap = notSetup;
-            this.Pluck = notSetup;            
-            
+            this.Pluck = notSetup;
+
             // Remove flags from markers (complex techniques will be setup later)
             if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SINGLE) != 0)
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SINGLE;
@@ -665,65 +706,80 @@ namespace RocksmithToolkitLib.Xml {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SUSTAIN;
             if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLIDEUNPITCHEDTO) != 0)
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLIDEUNPITCHEDTO;
-            
+
             // Setup boolean techniques and remove flag (can be override later)
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT;
                 this.LinkNext = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_BEND) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_BEND) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_BEND;
                 this.Bend = 1; //Will be setup later
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PLUCK) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PLUCK) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PLUCK;
                 this.Pluck = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLAP) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLAP) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLAP;
                 this.Slap = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TAP) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TAP) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TAP;
                 this.Tap = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_VIBRATO) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_VIBRATO) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_VIBRATO;
                 this.Vibrato = 1;
-            }            
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT) != 0) {
+            }
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT;
                 this.Accent = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HAMMERON) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HAMMERON) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HAMMERON;
                 this.HammerOn = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PULLOFF) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PULLOFF) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PULLOFF;
                 this.PullOff = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HARMONIC) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HARMONIC) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HARMONIC;
                 this.Harmonic = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE;
                 this.PalmMute = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TREMOLO) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TREMOLO) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TREMOLO;
                 this.Tremolo = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PINCHHARMONIC) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PINCHHARMONIC) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PINCHHARMONIC;
                 this.HarmonicPinch = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_RIGHTHAND) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_RIGHTHAND) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_RIGHTHAND;
                 this.RightHand = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE;
                 this.Ignore = 1;
             }
@@ -731,7 +787,8 @@ namespace RocksmithToolkitLib.Xml {
     }
 
     [XmlType("bendValues")]
-    public class BendValue {
+    public class BendValue
+    {
         [XmlAttribute("time")]
         public float Time { get; set; }
 
@@ -741,11 +798,14 @@ namespace RocksmithToolkitLib.Xml {
         [XmlAttribute("unk5")]
         public Byte Unk5 { get; set; }
 
-        internal static BendValue[] Parse(Sng2014HSL.BendData32[] bendData) {
+        internal static BendValue[] Parse(Sng2014HSL.BendData32[] bendData)
+        {
             var bendValues = new List<BendValue>();
 
-            for (var i = 0; i < bendData.Length; i++) {
-                if (bendData[i].Time > 0 && bendData[i].Step >= 0) {
+            for (var i = 0; i < bendData.Length; i++)
+            {
+                if (bendData[i].Time > 0 && bendData[i].Step >= 0)
+                {
                     var bend = new BendValue();
                     bend.Time = bendData[i].Time;
                     bend.Step = bendData[i].Step;
@@ -758,7 +818,8 @@ namespace RocksmithToolkitLib.Xml {
         }
     }
 
-    public class SongChord2014 {
+    public class SongChord2014
+    {
         [XmlAttribute("time")]
         public Single Time { get; set; }
 
@@ -792,45 +853,52 @@ namespace RocksmithToolkitLib.Xml {
         [XmlElement("chordNote")]
         public SongNote2014[] ChordNotes { get; set; }
 
-        internal static SongChord2014[] Parse(Sng2014HSL.Sng sngData, Sng2014HSL.NotesSection notesSection) {
+        internal static SongChord2014[] Parse(Sng2014HSL.Sng sngData, Sng2014HSL.NotesSection notesSection)
+        {
             var chords = new List<SongChord2014>();
-            
-            for (var i = 0; i < notesSection.Count; i++) {
+
+            for (var i = 0; i < notesSection.Count; i++)
+            {
                 if (notesSection.Notes[i].ChordId == -1)
                     continue; //Skip single notes (get only chord notes)
 
                 var chord = new SongChord2014();
                 chord.ChordId = notesSection.Notes[i].ChordId;
                 chord.Time = notesSection.Notes[i].Time;
-                
+
                 // TECHNIQUES
                 chord.parseChordMask(notesSection.Notes[i], notesSection.Notes[i].NoteMask);
 
                 // CHORD NOTES (WITHOUT TECHNIQUES) + NOT HIGH DENSITY
-                if (chord.HighDensity != 1) {
+                if (chord.HighDensity != 1)
+                {
                     chord.ParseChordNotes(sngData.Chords.Chords[chord.ChordId]);
                 }
 
                 // CHORD NOTES (WITH TECHNIQUES)
                 var cnId = notesSection.Notes[i].ChordNotesId;
-                if (cnId != -1) {
+                if (cnId != -1)
+                {
                     if (sngData.ChordNotes.ChordNotes.Length > cnId)
                         chord.ParseChordNotes(sngData.Chords.Chords[chord.ChordId], sngData.ChordNotes.ChordNotes[cnId]);
                 }
-                
+
                 chords.Add(chord);
             }
 
             return chords.ToArray();
         }
 
-        private void ParseChordNotes(Sng2014HSL.Chord template, Sng2014HSL.ChordNotes chordNotes = null) {
+        private void ParseChordNotes(Sng2014HSL.Chord template, Sng2014HSL.ChordNotes chordNotes = null)
+        {
             var notes = new List<SongNote2014>();
             var notSetup = unchecked((sbyte)-1);
 
-            for (var i = 0; i < 6; i++) {
+            for (var i = 0; i < 6; i++)
+            {
                 if ((chordNotes != null && chordNotes.NoteMask[i] != 0) || //notes with techniques
-                    (chordNotes == null && template.Frets[i] != 255)) { // Notes without techniques
+                    (chordNotes == null && template.Frets[i] != 255))
+                { // Notes without techniques
 
                     var cnote = new SongNote2014();
 
@@ -843,7 +911,8 @@ namespace RocksmithToolkitLib.Xml {
                     cnote.Slap = notSetup;
                     cnote.Pluck = notSetup;
 
-                    if ((chordNotes != null && chordNotes.NoteMask[i] != 0)) {
+                    if ((chordNotes != null && chordNotes.NoteMask[i] != 0))
+                    {
                         // SETUP FROM OWN PROPERTIES
                         cnote.parseNoteMask(chordNotes.NoteMask[i]);
                         cnote.SlideTo = (sbyte)chordNotes.SlideTo[i];
@@ -856,7 +925,7 @@ namespace RocksmithToolkitLib.Xml {
                                 if (cnote.Bend < bend.Step)
                                     cnote.Bend = (byte)Math.Round(bend.Step);
                     }
-                    
+
                     // BASIC INFO
                     cnote.Time = this.Time;
                     cnote.Fret = (sbyte)template.Frets[i];
@@ -870,7 +939,8 @@ namespace RocksmithToolkitLib.Xml {
             this.ChordNotes = notes.ToArray();
         }
 
-        private void parseChordMask(Sng2014HSL.Notes notes, uint p) {
+        private void parseChordMask(Sng2014HSL.Notes notes, uint p)
+        {
             // Remove flags from know techniques
             if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_CHORD) != 0)
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_CHORD;
@@ -884,7 +954,8 @@ namespace RocksmithToolkitLib.Xml {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ARPEGGIO;
 
             this.Strum = "down";
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_STRUM) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_STRUM) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_STRUM;
                 this.Strum = "up"; //TODO: Wrong, need research about it later
             }
@@ -893,40 +964,49 @@ namespace RocksmithToolkitLib.Xml {
                 return;
 
             // Setup techniques and remove flags
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT;
                 this.LinkNext = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT;
                 this.Accent = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_FRETHANDMUTE) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_FRETHANDMUTE) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_FRETHANDMUTE;
                 this.FretHandMute = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HIGHDENSITY) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HIGHDENSITY) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HIGHDENSITY;
                 this.HighDensity = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE;
                 this.Ignore = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE) != 0) {
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE) != 0)
+            {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE;
                 this.PalmMute = 1;
             }
         }
     }
 
-    public class SongAnchor2014 : SongAnchor {
+    public class SongAnchor2014 : SongAnchor
+    {
         [XmlAttribute("width")]
         public Single Width { get; set; }
 
-        internal static SongAnchor2014[] Parse(Sng2014HSL.AnchorSection anchorSection) {
+        internal static SongAnchor2014[] Parse(Sng2014HSL.AnchorSection anchorSection)
+        {
             var anchors = new SongAnchor2014[anchorSection.Count];
-            for (var i = 0; i < anchorSection.Count; i++) {
+            for (var i = 0; i < anchorSection.Count; i++)
+            {
                 var anchor = new SongAnchor2014();
                 anchor.Time = anchorSection.Anchors[i].StartBeatTime;
                 anchor.Fret = anchorSection.Anchors[i].FretId;
@@ -938,7 +1018,8 @@ namespace RocksmithToolkitLib.Xml {
     }
 
     [XmlType("tone")]
-    public class SongTone2014 {
+    public class SongTone2014
+    {
         [XmlAttribute("time")]
         public float Time { get; set; }
 
@@ -948,16 +1029,20 @@ namespace RocksmithToolkitLib.Xml {
         [XmlAttribute("name")]
         public string Name { get; set; }
 
-        internal static SongTone2014[] Parse(Sng2014HSL.ToneSection toneSection, Attributes2014 attr = null) {
+        internal static SongTone2014[] Parse(Sng2014HSL.ToneSection toneSection, Attributes2014 attr = null)
+        {
             var tones = new SongTone2014[toneSection.Count];
-            for (var i = 0; i < toneSection.Count; i++) {
+            for (var i = 0; i < toneSection.Count; i++)
+            {
                 var tone = new SongTone2014();
                 tone.Id = toneSection.Tones[i].ToneId;
                 tone.Time = toneSection.Tones[i].Time;
 
-                if (attr != null) {
+                if (attr != null)
+                {
                     // Get tone name
-                    switch (tone.Id) {
+                    switch (tone.Id)
+                    {
                         case 0:
                             tone.Name = attr.Tone_A;
                             break;
@@ -974,9 +1059,10 @@ namespace RocksmithToolkitLib.Xml {
                             tone.Name = "importedtone_" + tone.Id;
                             break;
                     }
-                } else
+                }
+                else
                     tone.Name = "importedtone_" + tone.Id;
-                    
+
                 tones[i] = tone;
             }
             return tones;

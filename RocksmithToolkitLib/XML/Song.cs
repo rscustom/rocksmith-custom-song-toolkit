@@ -105,59 +105,71 @@ namespace RocksmithToolkitLib.Xml
 
         #region Old techniques
         //# RS1 old song xml have no arrangement properties
-        private bool HasArrangementProperties {
-            get {
+        private bool HasArrangementProperties
+        {
+            get
+            {
                 return ArrangementProperties != null;
             }
         }
 
-        public bool HasPowerChords() {
+        public bool HasPowerChords()
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.PowerChords == 1;
             else
                 return Levels.Any(c => c.Chords == null ? false : HasPowerChords(c.Chords));
         }
-        private bool HasPowerChords(SongChord[] songChord) {
+        private bool HasPowerChords(SongChord[] songChord)
+        {
             return true; //Pending (old song xml only)
         }
 
-        public bool HasBarChords() {
+        public bool HasBarChords()
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.BarreChords == 1;
             else
                 return Levels.Any(c => c.Chords == null ? false : HasBarChords(c.Chords));
         }
-        private bool HasBarChords(SongChord[] songChord) {
+        private bool HasBarChords(SongChord[] songChord)
+        {
             return true; //Pending (old song xml only)
         }
 
-        public bool HasOpenChords() {
+        public bool HasOpenChords()
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.OpenChords == 1;
             else
                 return Levels.Any(c => c.Chords == null ? false : HasOpenChords(c.Chords));
         }
-        private bool HasOpenChords(SongChord[] songChord) {
+        private bool HasOpenChords(SongChord[] songChord)
+        {
             return true; //Pending (old song xml only)
         }
 
-        public bool HasDoubleStops() {
+        public bool HasDoubleStops()
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.DoubleStops == 1;
             else
                 return Levels.Any(c => c.Chords == null ? false : HasDoubleStops(c.Chords));
         }
-        private bool HasDoubleStops(SongChord[] songChord) {
+        private bool HasDoubleStops(SongChord[] songChord)
+        {
             return true; //Pending (old song xml only)
         }
 
-        public bool HasDropDPowerChords() {
+        public bool HasDropDPowerChords()
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.DropDPower == 1;
             else
                 return Levels.Any(c => c.Chords == null ? false : HasDropDPowerChords(c.Chords));
         }
-        private bool HasDropDPowerChords(SongChord[] songChord) {
+        private bool HasDropDPowerChords(SongChord[] songChord)
+        {
             return true; //Pending (old song xml only)
         }
 
@@ -193,21 +205,24 @@ namespace RocksmithToolkitLib.Xml
                 return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Hopo > 0);
         }
 
-        public bool HasFretHandMutes() {
+        public bool HasFretHandMutes()
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.FretHandMutes == 1;
             else
                 return false; //No definition in old XML
         }
 
-        public bool HasPrebends() { //Identify only bend, no definition in old XML
+        public bool HasPrebends()
+        { //Identify only bend, no definition in old XML
             if (HasArrangementProperties)
                 return ArrangementProperties.Bends == 1;
             else
                 return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Bend > 0);
         }
 
-        public bool HasVibrato() {
+        public bool HasVibrato()
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.Vibrato == 1;
             else
@@ -243,21 +258,24 @@ namespace RocksmithToolkitLib.Xml
                 return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Tremolo > 0);
         }
 
-        public bool HasTwoFingerPlucking() {
+        public bool HasTwoFingerPlucking()
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.TwoFingerPicking == 1;
             else
                 return false; //No definition in old XML
         }
 
-        public bool HasFifthsAndOctaves() {
+        public bool HasFifthsAndOctaves()
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.FifthsAndOctaves == 1;
             else
                 return false; //No definition in old XML
         }
 
-        public bool HasSyncopation() {
+        public bool HasSyncopation()
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.Syncopation == 1;
             else
@@ -266,20 +284,41 @@ namespace RocksmithToolkitLib.Xml
 
         #endregion
 
-        public static Song LoadFromFile(string xmlSongFile) {
+        public static Song LoadFromFile(string xmlSongFile)
+        {
             Song XmlSong = null;
 
-            using (var reader = new StreamReader(xmlSongFile)) {
+            using (var reader = new StreamReader(xmlSongFile))
+            {
                 var serializer = new XmlSerializer(typeof(Song));
                 XmlSong = (Song)serializer.Deserialize(reader);
             }
 
             return XmlSong;
         }
+
+        public void Serialize(Stream stream, bool omitXmlDeclaration = false)
+        {
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+
+            using (var writer = XmlWriter.Create(stream, new XmlWriterSettings
+            {
+                Indent = true,
+                OmitXmlDeclaration = omitXmlDeclaration
+            }))
+            {
+                new XmlSerializer(typeof(Song)).Serialize(writer, this, ns);
+            }
+
+            stream.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
+        }
     }
 
     [XmlType("arrangementProperties")]
-    public class SongArrangementProperties {
+    public class SongArrangementProperties
+    {
         [JsonProperty("represent")]
         [XmlAttribute("represent")]
         public Int32 Represent { get; set; }
@@ -390,7 +429,8 @@ namespace RocksmithToolkitLib.Xml
     }
 
     [XmlType("tuning")]
-    public class TuningStrings {
+    public class TuningStrings
+    {
         [JsonProperty("string0")]
         [XmlAttribute("string0")]
         public Int32 String0 { get; set; }
@@ -417,7 +457,8 @@ namespace RocksmithToolkitLib.Xml
 
         public TuningStrings() { }
 
-        public TuningStrings(short[] stringArray) {
+        public TuningStrings(short[] stringArray)
+        {
             String0 = stringArray[0];
             String1 = stringArray[1];
             String2 = stringArray[2];
@@ -428,11 +469,13 @@ namespace RocksmithToolkitLib.Xml
                 String5 = stringArray[5];
         }
 
-        public int[] ToArray() {
+        public int[] ToArray()
+        {
             Int32[] strings = { String0, String1, String2, String3, String4, String5 };
             return strings;
         }
-        public Int16[] ToShortArray() {
+        public Int16[] ToShortArray()
+        {
             Int16[] strings = { (Int16)String0, (Int16)String1, (Int16)String2, (Int16)String3, (Int16)String4, (Int16)String5 };
             return strings;
         }
@@ -452,19 +495,21 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlAttribute("ignore")]
         public Byte Ignore { get; set; }
-        
+
         [XmlAttribute("maxDifficulty")]
         public Int32 MaxDifficulty { get; set; }
 
         [XmlAttribute("name")]
         public string Name { get; set; }
-        
+
         [XmlAttribute("solo")]
         public Byte Solo { get; set; }
 
-        internal static SongPhrase[] Parse(List<DLCPackage.Manifest.Phrase> phraseList) {
+        internal static SongPhrase[] Parse(List<DLCPackage.Manifest.Phrase> phraseList)
+        {
             var phrases = new SongPhrase[phraseList.Count];
-            for (int i = 0; i < phraseList.Count; i++) {
+            for (int i = 0; i < phraseList.Count; i++)
+            {
                 var phrase = new SongPhrase();
                 //phrase.Disparity = 0;
                 //phrase.Ignore = 0;
@@ -476,9 +521,11 @@ namespace RocksmithToolkitLib.Xml
             return phrases;
         }
 
-        public static SongPhrase[] Parse(Sng2014HSL.PhraseSection sngPhraseSection) {
+        public static SongPhrase[] Parse(Sng2014HSL.PhraseSection sngPhraseSection)
+        {
             var phrases = new SongPhrase[sngPhraseSection.Count];
-            for (int i = 0; i < sngPhraseSection.Count; i++) {
+            for (int i = 0; i < sngPhraseSection.Count; i++)
+            {
                 var phrase = new SongPhrase();
                 phrase.Disparity = sngPhraseSection.Phrases[i].Disparity;
                 phrase.Ignore = sngPhraseSection.Phrases[i].Ignore;
@@ -529,9 +576,11 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("difficulty")]
         public Int32 Difficulty { get; set; }
 
-        internal static SongPhraseProperty[] Parse(Sng2014HSL.PhraseExtraInfoByLevelSection phraseExtraInfoByLevelSection) {
+        internal static SongPhraseProperty[] Parse(Sng2014HSL.PhraseExtraInfoByLevelSection phraseExtraInfoByLevelSection)
+        {
             var phraseProperties = new SongPhraseProperty[phraseExtraInfoByLevelSection.Count];
-            for (var i = 0; i < phraseExtraInfoByLevelSection.Count; i++) {
+            for (var i = 0; i < phraseExtraInfoByLevelSection.Count; i++)
+            {
                 var spp = new SongPhraseProperty();
                 spp.PhraseId = phraseExtraInfoByLevelSection.PhraseExtraInfoByLevel[i].PhraseId;
                 spp.Redundant = phraseExtraInfoByLevelSection.PhraseExtraInfoByLevel[i].Redundant;
@@ -549,7 +598,7 @@ namespace RocksmithToolkitLib.Xml
     {
         [XmlAttribute("chordName")]
         public string ChordName { get; set; }
-        
+
         [XmlAttribute("fret0")]
         public Int32 Fret0 { get; set; }
 
@@ -603,9 +652,11 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("measure")]
         public Int16 Measure { get; set; }
 
-        internal static SongEbeat[] Parse(Sng2014HSL.BpmSection bpmSection) {
+        internal static SongEbeat[] Parse(Sng2014HSL.BpmSection bpmSection)
+        {
             var songEbeats = new SongEbeat[bpmSection.Count];
-            for (var i = 0; i < bpmSection.Count; i++) {
+            for (var i = 0; i < bpmSection.Count; i++)
+            {
                 var sEbeat = new SongEbeat();
                 sEbeat.Time = bpmSection.BPMs[i].Time;
                 sEbeat.Measure = -1;
@@ -629,9 +680,11 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("startTime")]
         public Single StartTime { get; set; }
 
-        internal static SongSection[] Parse(List<DLCPackage.Manifest.Section> manifestSectionList) {
+        internal static SongSection[] Parse(List<DLCPackage.Manifest.Section> manifestSectionList)
+        {
             var songSections = new SongSection[manifestSectionList.Count];
-            for (int i = 0; i < manifestSectionList.Count; i++) {
+            for (int i = 0; i < manifestSectionList.Count; i++)
+            {
                 var songSection = new SongSection();
                 songSection.Name = manifestSectionList[i].Name;
                 songSection.Number = manifestSectionList[i].Number;
@@ -641,9 +694,11 @@ namespace RocksmithToolkitLib.Xml
             return songSections;
         }
 
-        internal static SongSection[] Parse(Sng2014HSL.SectionSection sectionSection) {
+        internal static SongSection[] Parse(Sng2014HSL.SectionSection sectionSection)
+        {
             var songSections = new SongSection[sectionSection.Count];
-            for (int i = 0; i < sectionSection.Count; i++) {
+            for (int i = 0; i < sectionSection.Count; i++)
+            {
                 var songSection = new SongSection();
                 songSection.Name = sectionSection.Sections[i].Name.ToNullTerminatedAscii();
                 songSection.Number = sectionSection.Sections[i].Number;
@@ -651,7 +706,7 @@ namespace RocksmithToolkitLib.Xml
                 songSections[i] = songSection;
             }
             return songSections;
-        }        
+        }
     }
 
     [XmlType("event")]
@@ -663,9 +718,11 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("code")]
         public string Code { get; set; }
 
-        internal static SongEvent[] Parse(Sng2014HSL.EventSection eventSection) {
+        internal static SongEvent[] Parse(Sng2014HSL.EventSection eventSection)
+        {
             var songEvents = new SongEvent[eventSection.Count];
-            for (var i = 0; i < eventSection.Count; i++) {
+            for (var i = 0; i < eventSection.Count; i++)
+            {
                 var sevent = new SongEvent();
                 sevent.Code = eventSection.Events[i].EventName.ToNullTerminatedAscii();
                 sevent.Time = eventSection.Events[i].Time;
@@ -704,7 +761,7 @@ namespace RocksmithToolkitLib.Xml
 
     [XmlType("note")]
     public class SongNote
-    {       
+    {
         [XmlAttribute("ignore")]
         public Byte Ignore { get; set; }
 
@@ -805,11 +862,12 @@ namespace RocksmithToolkitLib.Xml
 
         [XmlAttribute("endTime")]
         public Single EndTime { get; set; }
-        
+
         [XmlAttribute("startTime")]
         public Single StartTime { get; set; }
 
-        internal static SongHandShape[] Parse(Sng2014HSL.Arrangement arrangement) {
+        internal static SongHandShape[] Parse(Sng2014HSL.Arrangement arrangement)
+        {
             var count = arrangement.Fingerprints1.Count + arrangement.Fingerprints2.Count;
 
             var fprints = new List<Sng2014HSL.Fingerprint>();
@@ -818,7 +876,8 @@ namespace RocksmithToolkitLib.Xml
             fprints = fprints.OrderBy(e => e.StartTime).ToList<Sng2014HSL.Fingerprint>();
 
             var hshapes = new SongHandShape[count];
-            for (var i = 0; i < count; i++) {
+            for (var i = 0; i < count; i++)
+            {
                 var hs = new SongHandShape();
                 hs.StartTime = fprints[i].StartTime;
                 hs.EndTime = fprints[i].EndTime;
@@ -828,5 +887,6 @@ namespace RocksmithToolkitLib.Xml
 
             return hshapes;
         }
+
     }
 }

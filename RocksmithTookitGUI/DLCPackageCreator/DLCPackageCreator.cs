@@ -162,7 +162,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public string PackageVersion
         {
-            get { return packageVersionTB.Text.GetValidVersion(); }
+            get { return packageVersionTB.Text; }
             set { packageVersionTB.Text = value; }
         }
 
@@ -586,7 +586,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             platformXBox360.Checked = info.XBox360;
             platformPS3.Checked = info.PS3;
 
-            PackageVersion = info.PackageVersion.GetValidVersion();
+            PackageVersion = info.PackageVersion;
 
             TonesLB.Items.Clear();
             switch (CurrentGameVersion) {
@@ -773,6 +773,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             if (String.IsNullOrEmpty(PackageVersion))
                 PackageVersion = "1";
+            if (!PackageVersion.Equals(PackageVersion.GetValidVersion()))
+            {
+                MessageBox.Show(String.Format("Package verion field contain invalid characters!\n" +
+                                              "Please replace this: {0}\n" +
+                                              "By something like this: 1 or 2.1 or 2.2.1",
+                                              PackageVersion), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                packageVersionTB.Focus();
+                return null;
+            }
 
             //Album Art validation (alert only)
             if (String.IsNullOrEmpty(AlbumArtPath) || !File.Exists(AlbumArtPath))

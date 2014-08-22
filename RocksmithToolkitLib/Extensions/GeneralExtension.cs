@@ -64,7 +64,7 @@ namespace RocksmithToolkitLib.Extensions
                     packageVersion = line.Split(':')[1].Trim();
             }
 
-            return packageVersion.GetValidVersion();
+            return packageVersion;
         }
 
         public static string GetValidVersion(this string value)
