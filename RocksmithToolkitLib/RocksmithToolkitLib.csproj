@@ -90,6 +90,13 @@
     <Compile Include="DLCPackage\Manifest2014\InlayAttributes2014.cs" />
     <Compile Include="Extensions\ExternalApps.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
+    <Compile Include="SngToTab\Sng2Tab.cs" />
+    <Compile Include="Song2014ToTab\Rs1Converter.cs" />
+    <Compile Include="Song2014ToTab\NonClosingStream.cs" />
+    <Compile Include="Song2014ToTab\PsarcBrowser.cs" />
+    <Compile Include="Song2014ToTab\Rs2014Converter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ToolkitVersionOnline.cs" />
     <Compile Include="DLCPackage\DLCPackageConverter.cs" />
     <Compile Include="DLCPackage\SongPartition.cs" />

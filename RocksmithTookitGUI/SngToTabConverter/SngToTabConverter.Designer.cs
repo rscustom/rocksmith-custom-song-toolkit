@@ -28,14 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SngToTabConverter));
             this.difficultyAll = new System.Windows.Forms.RadioButton();
             this.difficultyMax = new System.Windows.Forms.RadioButton();
             this.convertButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbOutput = new System.Windows.Forms.GroupBox();
+            this.rbSongList = new System.Windows.Forms.RadioButton();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.rbAsciiTab = new System.Windows.Forms.RadioButton();
+            this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
+            this.gbOutput.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // difficultyAll
@@ -69,7 +78,7 @@
             // 
             this.convertButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.convertButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.convertButton.Location = new System.Drawing.Point(154, 90);
+            this.convertButton.Location = new System.Drawing.Point(80, 112);
             this.convertButton.Name = "convertButton";
             this.convertButton.Size = new System.Drawing.Size(105, 23);
             this.convertButton.TabIndex = 24;
@@ -79,6 +88,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.gbOutput);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
@@ -86,19 +96,76 @@
             this.groupBox1.Controls.Add(this.convertButton);
             this.groupBox1.Controls.Add(this.difficultyAll);
             this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(400, 137);
+            this.groupBox1.Size = new System.Drawing.Size(383, 174);
             this.groupBox1.TabIndex = 25;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Convert SNG to ASCI Tablature plain text:";
+            this.groupBox1.Text = "Convert CDLC Archive:";
+            // 
+            // gbOutput
+            // 
+            this.gbOutput.Controls.Add(this.rbSongList);
+            this.gbOutput.Controls.Add(this.pictureBox1);
+            this.gbOutput.Controls.Add(this.rbAsciiTab);
+            this.gbOutput.Location = new System.Drawing.Point(264, 19);
+            this.gbOutput.Name = "gbOutput";
+            this.gbOutput.Size = new System.Drawing.Size(99, 135);
+            this.gbOutput.TabIndex = 39;
+            this.gbOutput.TabStop = false;
+            this.gbOutput.Text = "Output To:";
+            // 
+            // rbSongList
+            // 
+            this.rbSongList.AutoSize = true;
+            this.rbSongList.ForeColor = System.Drawing.Color.Black;
+            this.rbSongList.Location = new System.Drawing.Point(12, 93);
+            this.rbSongList.Name = "rbSongList";
+            this.rbSongList.Size = new System.Drawing.Size(66, 17);
+            this.rbSongList.TabIndex = 41;
+            this.rbSongList.Text = "SongList";
+            this.toolTip1.SetToolTip(this.rbSongList, "Create a text file that contains archive song info.");
+            this.rbSongList.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(34, 22);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 40;
+            this.pictureBox1.TabStop = false;
+            // 
+            // rbAsciiTab
+            // 
+            this.rbAsciiTab.AutoSize = true;
+            this.rbAsciiTab.Checked = true;
+            this.rbAsciiTab.ForeColor = System.Drawing.Color.Black;
+            this.rbAsciiTab.Location = new System.Drawing.Point(12, 65);
+            this.rbAsciiTab.Name = "rbAsciiTab";
+            this.rbAsciiTab.Size = new System.Drawing.Size(74, 17);
+            this.rbAsciiTab.TabIndex = 38;
+            this.rbAsciiTab.TabStop = true;
+            this.rbAsciiTab.Text = "ASCII Tab";
+            this.rbAsciiTab.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label3.Location = new System.Drawing.Point(17, 141);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(227, 13);
+            this.label3.TabIndex = 37;
+            this.label3.Text = "Now Compatible with RS1 and RS2014 CDLC.";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label2.Location = new System.Drawing.Point(39, 74);
+            this.label2.Location = new System.Drawing.Point(29, 76);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(229, 13);
             this.label2.TabIndex = 26;
@@ -109,30 +176,23 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(39, 36);
+            this.label1.Location = new System.Drawing.Point(29, 38);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(196, 13);
             this.label1.TabIndex = 25;
             this.label1.Text = "One file with last level including all notes";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label3.Location = new System.Drawing.Point(122, 116);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(165, 13);
-            this.label3.TabIndex = 37;
-            this.label3.Text = "Compatible only with Rocksmith 1";
             // 
             // SngToTabConverter
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox1);
             this.Name = "SngToTabConverter";
-            this.Size = new System.Drawing.Size(406, 145);
+            this.Size = new System.Drawing.Size(410, 205);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.gbOutput.ResumeLayout(false);
+            this.gbOutput.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -146,6 +206,12 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox gbOutput;
+        private System.Windows.Forms.RadioButton rbAsciiTab;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.RadioButton rbSongList;
+        private System.Windows.Forms.ToolTip toolTip1;
+
 
     }
 }

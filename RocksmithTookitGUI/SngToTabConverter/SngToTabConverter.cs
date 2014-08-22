@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.IO;
-using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.SngToTab;
-using Ookii.Dialogs;
-using RocksmithToolkitLib.DLCPackage;
-using System.Reflection;
-using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.Song2014ToTab;
+using RocksmithToolkitLib.Xml;
+
 
 namespace RocksmithToolkitGUI.SngToTabConverter
 {
@@ -27,82 +21,119 @@ namespace RocksmithToolkitGUI.SngToTabConverter
 
         private void convertButton_Click(object sender, EventArgs e)
         {
-            IList<string> sourceFileNames;
-            string savePath;
-            bool max = difficultyMax.Checked;
-            bool all = difficultyAll.Checked;
+            IList<string> sourceFilePaths;
+            string outputDir;
+            bool allDif = difficultyAll.Checked;
 
             // Input file(s)
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Multiselect = true;
-                ofd.Filter = "Rocksmith 1 DLC Package (.dat)|*.dat";
+                ofd.Title = "Select a CDLC file to convert";
+                ofd.Filter = "RS1 (*.dat, *.sng, *.xml) or RS2014 (*.psarc) files|*.dat;*.sng;*.xml;*.psarc";
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
-                sourceFileNames = ofd.FileNames;
+                sourceFilePaths = ofd.FileNames;
             }
 
-            // Output path
-            using (var fbd = new VistaFolderBrowserDialog())
+            // Output Dir
+            using (var fbd = new FolderBrowserDialog())
             {
+                // fbd.SelectedPath = "d:\\temp"; // for debugging
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
-                savePath = fbd.SelectedPath;
+                outputDir = fbd.SelectedPath;
             }
 
-            foreach (string inputFile in sourceFileNames)
+            Cursor.Current = Cursors.WaitCursor;
+            foreach (string inputFilePath in sourceFilePaths)
             {
-                if (Path.GetExtension(inputFile) == ".sng")
-                    Convert(inputFile, savePath, all);
-                else
-                    ExtractBeforeConvert(inputFile, savePath, all);
-            }
+                string fileExtension = Path.GetExtension(inputFilePath).ToLower();
 
-            MessageBox.Show("The conversion is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void Convert(string inputFile, string savePath, bool all)
-        {
-            SngFile sngFile = new SngFile(inputFile);
-
-            if (String.IsNullOrEmpty(sngFile.Metadata.Arrangement))
-                return; // Vocal
-
-            int maxDifficulty = Common.getMaxDifficulty(sngFile);
-
-            int[] difficulties;
-            if (all)
-                difficulties = Enumerable.Range(0, maxDifficulty + 1).ToArray();
-            else // if (max)
-                difficulties = new int[] { maxDifficulty };
-
-            foreach (int d in difficulties)
-            {
-                TabFile tabFile = new TabFile(sngFile, d);
-
-                var outputFileName = (sngFile != null && sngFile.Metadata != null) ? String.Format("{0} - ", sngFile.Metadata.SongTitle) : "";
-                outputFileName += Path.GetFileNameWithoutExtension(inputFile);
-                outputFileName += (difficulties.Length != 1) ? String.Format(" (level {0:00}).txt", d) : ".txt";
-                var outputFilePath = Path.Combine(savePath, outputFileName);
-
-                using (TextWriter tw = new StreamWriter(outputFilePath))
+                switch (fileExtension)
                 {
-                    tw.Write(tabFile.ToString());
+                    case ".xml":
+                        var fileName = Path.GetFileNameWithoutExtension(inputFilePath);
+                        var splitPoint = fileName.LastIndexOf('_');
+                        var arrangement = fileName.Substring(splitPoint + 1);
+                        // exclude files for vocals and showlights 
+                        if (arrangement.ToLower() == "vocals" || arrangement.ToLower() == "showlights")
+                        {
+                            MessageBox.Show(inputFilePath + Environment.NewLine + Environment.NewLine +
+                                "Conversion not supported at this time!", MESSAGEBOX_CAPTION,
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            break;
+                        }
+
+                        Song rs1Song;
+                        using (var obj = new Rs1Converter())
+                            rs1Song = obj.XmlToSong(inputFilePath);
+
+                        string sngFilePath;
+                        using (var obj = new Rs1Converter())
+                            sngFilePath = obj.SongToSngFilePath(rs1Song, outputDir);
+
+                        using (var obj = new Sng2Tab())
+                            obj.Convert(sngFilePath, outputDir, allDif);
+
+                        if (File.Exists(sngFilePath)) File.Delete(sngFilePath);
+                        break;
+
+                    case ".dat":
+                        using (var obj = new Sng2Tab())
+                            obj.ExtractBeforeConvert(inputFilePath, outputDir, allDif);
+                        break;
+
+                    case ".sng":
+                        using (var obj = new Sng2Tab())
+                            obj.Convert(inputFilePath, outputDir, allDif);
+                        break;
+
+                    case ".psarc":
+                        if (rbSongList.Checked)
+                        {
+                            using (var obj = new Rs2014Converter())
+                                obj.PsarcSongList(inputFilePath, outputDir, true);
+                        }
+                        else if (rbAsciiTab.Checked)
+                        {
+                            int songCount = 0;
+                            using (var obj = new Rs2014Converter())
+                                songCount = obj.PsarcSongList(inputFilePath, outputDir, false);
+
+                            if (songCount > 10)  // use unpack method
+                            {
+                                if (MessageBox.Show("This archive contains " + songCount + " songs." + Environment.NewLine +
+    "It may take a long time to extract and convert this data." + Environment.NewLine +
+    "Do you want to continue?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No) return;
+
+                                using (var obj = new Rs2014Converter())
+                                    obj.ExtractBeforeConvert(inputFilePath, outputDir, allDif);
+                            }
+                            else  // use memory method
+                            {
+                                using (var obj = new Rs2014Converter())
+                                    obj.PsarcAllToSong2014(inputFilePath, outputDir, allDif);
+                            }
+                        }
+                        break;
+                }
+
+                if (!rbAsciiTab.Checked && fileExtension != ".psarc")
+                {
+                    MessageBox.Show("Only ASCII Tab is supported for RS1 CDLC.", MESSAGEBOX_CAPTION,
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
+                    rbAsciiTab.Checked = true;
                 }
             }
+
+            Cursor.Current = Cursors.Default;
+            if (MessageBox.Show("The conversion is complete.." + Environment.NewLine +
+                "Would you like to open the folder?", MESSAGEBOX_CAPTION,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                Process.Start(outputDir);
         }
 
-        private void ExtractBeforeConvert(string inputFile, string savePath, bool all) {
-            string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Packer.Unpack(inputFile, appDir);
-            string unpackedDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(inputFile) + String.Format("_{0}", Packer.GetPlatform(inputFile).platform.ToString()));
-            string[] sngFiles = Directory.GetFiles(unpackedDir, "*.sng", SearchOption.AllDirectories);
-
-            foreach (var sng in sngFiles) {
-                Convert(sng, savePath, all);
-            }
-
-            DirectoryExtension.SafeDelete(unpackedDir);
-        }
     }
 }
