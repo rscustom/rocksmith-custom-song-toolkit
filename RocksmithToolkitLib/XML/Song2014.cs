@@ -758,6 +758,11 @@ namespace RocksmithToolkitLib.Xml
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HARMONIC;
                 this.Harmonic = 1;
             }
+            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_MUTE) != 0)
+            {
+                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_MUTE;
+                this.Mute = 1;
+            }
             if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE) != 0)
             {
                 p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE;
