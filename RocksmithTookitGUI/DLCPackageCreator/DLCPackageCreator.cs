@@ -23,6 +23,7 @@ using RocksmithToolkitLib.DLCPackage.Tone;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using X360.STFS;
 using Ookii.Dialogs;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -574,6 +575,195 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillPackageCreatorForm(info, unpackedDir);
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Focus();
+        }
+
+        public void dlcLowTuningBassFix(object sender = null, EventArgs e = null, Boolean quick = false)
+        {
+            string sourcePackage;
+            string savePath;
+            Console.WriteLine(quick);
+            // GET PATH
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Select one DLC to import";
+
+                var filter = CurrentRocksmithTitle + " PC/Mac Package (*.psarc)|*.psarc|";
+                filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*|";
+                filter += CurrentRocksmithTitle + " PS3 Package (*.edat)|*.edat";
+                ofd.Filter = filter;
+
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+                sourcePackage = ofd.FileName;
+            }
+
+  
+            if (!sourcePackage.IsValidPSARC())
+            {
+                MessageBox.Show(String.Format("File '{0}' isn't valid. File extension was changed to '.invalid'", Path.GetFileName(sourcePackage)), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+            if (!quick)
+            {
+                using (var fbd = new VistaFolderBrowserDialog())
+                {
+                    fbd.Description = "Select folder to save project artifacts";
+                    fbd.UseDescriptionForTitle = true;
+
+                    if (fbd.ShowDialog() != DialogResult.OK)
+                        return;
+                    savePath = fbd.SelectedPath;
+                }
+            }
+            else
+            {
+                savePath = new FileInfo(sourcePackage).Directory.FullName;
+            }
+
+            Console.WriteLine("save path = " + savePath);
+            // UNPACK
+            var unpackedDir = Packer.Unpack(sourcePackage, savePath, true, true, false);
+            var packagePlatform = sourcePackage.GetPlatform();
+
+            // REORGANIZE
+            var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
+            if (structured)
+                unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
+
+            // LOAD DATA
+            var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform);
+            info.PackageVersion = "1"; //TODO: add PackageVersion to "toolkit.version" File and use it
+            switch (packagePlatform.platform)
+            {
+                case GamePlatform.Pc:
+                    info.Pc = true;
+                    break;
+                case GamePlatform.Mac:
+                    info.Mac = true;
+                    break;
+                case GamePlatform.XBox360:
+                    info.XBox360 = true;
+                    break;
+                case GamePlatform.PS3:
+                    info.PS3 = true;
+                    break;
+            }
+
+
+            //apply bass fix.
+            for (int i = 0; i < info.Arrangements.Count; i++ )
+            {
+                Arrangement arr = info.Arrangements[i];
+                if (arr.ArrangementType == ArrangementType.Bass)
+                {
+                    Console.WriteLine("pitch ==" + arr.TuningPitch);
+                    if (arr.TuningPitch == 220.0)
+                    {
+                        MessageBox.Show("This song is already at 220hz pitch (bass fixed applied already?)",
+                            MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    else
+                    {
+                        arr.TuningPitch = 220.0;
+                    }
+
+
+                    XmlSerializer deserializer = new XmlSerializer(typeof(Song2014));
+                    TextReader xmlReader = new StreamReader(arr.SongXml.File);
+                    Song2014 songXml = (Song2014) deserializer.Deserialize(xmlReader);
+                    xmlReader.Close();
+
+                 
+
+                    //forget if this is by reference or by value... so we'll do it the crappy long way.
+                    arr.TuningStrings.String0 = arr.TuningStrings.String0 + 12;
+                    songXml.Tuning.String0 = arr.TuningStrings.String0;
+                    arr.TuningStrings.String1 = arr.TuningStrings.String1 + 12;
+                    songXml.Tuning.String1 = arr.TuningStrings.String1;
+                    arr.TuningStrings.String2 = arr.TuningStrings.String2 + 12;
+                    songXml.Tuning.String2 = arr.TuningStrings.String2;
+                    arr.TuningStrings.String3 = arr.TuningStrings.String3 + 12;
+                    songXml.Tuning.String3 = arr.TuningStrings.String3;
+
+                    if (arr.TuningStrings.String4 != 0)
+                    {
+                        arr.TuningStrings.String4 = arr.TuningStrings.String4 + 12;
+                        songXml.Tuning.String5 = arr.TuningStrings.String5;
+                    }
+
+                    if (arr.TuningStrings.String5 != 0)
+                    {
+                        arr.TuningStrings.String5 = arr.TuningStrings.String5 + 12;
+                        songXml.Tuning.String5 = arr.TuningStrings.String5;
+                    }
+
+                    XmlSerializer serializer = new XmlSerializer(typeof(Song2014));
+                    TextWriter textWriter = new StreamWriter(arr.SongXml.File);
+                    serializer.Serialize(textWriter, songXml);
+                    textWriter.Close();
+
+                }
+            }
+
+
+            if (info == null)
+            {
+                MessageBox.Show("An error as occured. DLC Package Data could not be loaded properly.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (CurrentGameVersion == GameVersion.RS2012)
+            {
+                try
+                {
+                    OggFile.VerifyHeaders(AudioPath);
+                }
+                catch (InvalidDataException ex)
+                {
+                    MessageBox.Show(ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            if (!quick)
+            {
+
+                using (var ofd = new SaveFileDialog())
+                {
+                    ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                    ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
+                    if (ofd.ShowDialog() != DialogResult.OK) return;
+                    dlcSavePath = ofd.FileName;
+                }
+
+            }
+            else
+            {
+                dlcSavePath = savePath + '\\' + Path.GetFileNameWithoutExtension(sourcePackage) + "_bassfix";
+            }
+
+            if (Path.GetFileName(dlcSavePath).Contains(" ") && platformPS3.Checked)
+                if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn"))
+                {
+                    MessageBox.Show(String.Format("PS3 package name can't support space character due to encryption limitation. {0} Spaces will be automatic removed for your PS3 package name.", Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    ConfigRepository.Instance()["creator_ps3pkgnamewarn"] = true.ToString();
+                }
+
+            if (!bwGenerate.IsBusy && info != null)
+            {
+                updateProgress.Visible = true;
+                currentOperationLabel.Visible = true;
+                dlcGenerateButton.Enabled = false;
+                bwGenerate.RunWorkerAsync(info);
+            }
+
+
             this.Focus();
         }
 

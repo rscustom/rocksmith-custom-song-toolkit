@@ -35,6 +35,7 @@
             this.repackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.gameVersionCombo = new System.Windows.Forms.ComboBox();
+            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.decodeAudioCheckbox = new System.Windows.Forms.CheckBox();
             this.updateSngCheckBox = new System.Windows.Forms.CheckBox();
@@ -44,12 +45,16 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.currentOperationLabel = new System.Windows.Forms.Label();
             this.updateProgress = new System.Windows.Forms.ProgressBar();
-            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
+            this.customFixesGroupBox = new System.Windows.Forms.GroupBox();
+            this.lowTuningBassFixButton = new System.Windows.Forms.Button();
+            this.quickBassFixBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.customFixesGroupBox.SuspendLayout();
             this.SuspendLayout();
+            this.dlcPackageCreatorControl = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator();
             // 
             // unpackButton
             // 
@@ -122,6 +127,16 @@
             this.gameVersionCombo.Size = new System.Drawing.Size(93, 21);
             this.gameVersionCombo.TabIndex = 42;
             this.gameVersionCombo.SelectedIndexChanged += new System.EventHandler(this.gameVersionCombo_SelectedIndexChanged);
+            // 
+            // AppIdTB
+            // 
+            this.AppIdTB.Cue = "APP ID";
+            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
+            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
+            this.AppIdTB.Name = "AppIdTB";
+            this.AppIdTB.Size = new System.Drawing.Size(93, 20);
+            this.AppIdTB.TabIndex = 41;
             // 
             // appIdCombo
             // 
@@ -225,19 +240,41 @@
             this.updateProgress.TabIndex = 0;
             this.updateProgress.Visible = false;
             // 
-            // AppIdTB
+            // customFixesGroupBox
             // 
-            this.AppIdTB.Cue = "APP ID";
-            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
-            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
-            this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(93, 20);
-            this.AppIdTB.TabIndex = 41;
+            this.customFixesGroupBox.Controls.Add(this.quickBassFixBox);
+            this.customFixesGroupBox.Controls.Add(this.lowTuningBassFixButton);
+            this.customFixesGroupBox.Location = new System.Drawing.Point(13, 224);
+            this.customFixesGroupBox.Name = "customFixesGroupBox";
+            this.customFixesGroupBox.Size = new System.Drawing.Size(384, 54);
+            this.customFixesGroupBox.TabIndex = 20;
+            this.customFixesGroupBox.TabStop = false;
+            this.customFixesGroupBox.Text = "Custom Fixes";
+            // 
+            // lowTuningBassFixButton
+            // 
+            this.lowTuningBassFixButton.Location = new System.Drawing.Point(97, 19);
+            this.lowTuningBassFixButton.Name = "lowTuningBassFixButton";
+            this.lowTuningBassFixButton.Size = new System.Drawing.Size(281, 23);
+            this.lowTuningBassFixButton.TabIndex = 0;
+            this.lowTuningBassFixButton.Text = "Patch Low Bass Tuning Fix";
+            this.lowTuningBassFixButton.UseVisualStyleBackColor = true;
+            this.lowTuningBassFixButton.Click += new System.EventHandler(this.lowTuningBassFixButton_Click);
+            // 
+            // quickBassFixBox
+            // 
+            this.quickBassFixBox.AutoSize = true;
+            this.quickBassFixBox.Location = new System.Drawing.Point(13, 23);
+            this.quickBassFixBox.Name = "quickBassFixBox";
+            this.quickBassFixBox.Size = new System.Drawing.Size(70, 17);
+            this.quickBassFixBox.TabIndex = 1;
+            this.quickBassFixBox.Text = "Quick Fix";
+            this.quickBassFixBox.UseVisualStyleBackColor = true;
             // 
             // DLCPackerUnpacker
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.customFixesGroupBox);
             this.Controls.Add(this.currentOperationLabel);
             this.Controls.Add(this.updateProgress);
             this.Controls.Add(this.groupBox3);
@@ -245,7 +282,7 @@
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "DLCPackerUnpacker";
-            this.Size = new System.Drawing.Size(400, 266);
+            this.Size = new System.Drawing.Size(400, 293);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -253,6 +290,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.customFixesGroupBox.ResumeLayout(false);
+            this.customFixesGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,5 +315,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label currentOperationLabel;
         private System.Windows.Forms.ProgressBar updateProgress;
+        private System.Windows.Forms.GroupBox customFixesGroupBox;
+        private System.Windows.Forms.Button lowTuningBassFixButton;
+        private DLCPackageCreator.DLCPackageCreator dlcPackageCreatorControl;
+        private System.Windows.Forms.CheckBox quickBassFixBox;
     }
 }
