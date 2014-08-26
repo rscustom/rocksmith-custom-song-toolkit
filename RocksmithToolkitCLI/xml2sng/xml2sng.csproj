@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
-      <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
+      <Project>{2231c13a-14f6-478a-96d7-d1d3e1094cd6}</Project>
       <Name>RocksmithToolkitLib</Name>
     </ProjectReference>
   </ItemGroup>

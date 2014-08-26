@@ -45,10 +45,16 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.currentOperationLabel = new System.Windows.Forms.Label();
             this.updateProgress = new System.Windows.Forms.ProgressBar();
+            this.customFixesGroupBox = new System.Windows.Forms.GroupBox();
+            this.deleteSourceFileCheckBox = new System.Windows.Forms.CheckBox();
+            this.quickBassFixBox = new System.Windows.Forms.CheckBox();
+            this.lowTuningBassFixButton = new System.Windows.Forms.Button();
+            this.dlcPackageCreatorControl = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.customFixesGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // unpackButton
@@ -235,9 +241,73 @@
             this.updateProgress.TabIndex = 0;
             this.updateProgress.Visible = false;
             // 
+            // customFixesGroupBox
+            // 
+            this.customFixesGroupBox.Controls.Add(this.deleteSourceFileCheckBox);
+            this.customFixesGroupBox.Controls.Add(this.quickBassFixBox);
+            this.customFixesGroupBox.Controls.Add(this.lowTuningBassFixButton);
+            this.customFixesGroupBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.customFixesGroupBox.Location = new System.Drawing.Point(13, 224);
+            this.customFixesGroupBox.Name = "customFixesGroupBox";
+            this.customFixesGroupBox.Size = new System.Drawing.Size(384, 72);
+            this.customFixesGroupBox.TabIndex = 20;
+            this.customFixesGroupBox.TabStop = false;
+            this.customFixesGroupBox.Text = "Custom Fixes (RS 2014)";
+            // 
+            // deleteSourceFileCheckBox
+            // 
+            this.deleteSourceFileCheckBox.AutoSize = true;
+            this.deleteSourceFileCheckBox.ForeColor = System.Drawing.Color.Black;
+            this.deleteSourceFileCheckBox.Location = new System.Drawing.Point(13, 46);
+            this.deleteSourceFileCheckBox.Name = "deleteSourceFileCheckBox";
+            this.deleteSourceFileCheckBox.Size = new System.Drawing.Size(113, 17);
+            this.deleteSourceFileCheckBox.TabIndex = 2;
+            this.deleteSourceFileCheckBox.Text = "Delete Source File";
+            this.deleteSourceFileCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // quickBassFixBox
+            // 
+            this.quickBassFixBox.AutoSize = true;
+            this.quickBassFixBox.ForeColor = System.Drawing.Color.Black;
+            this.quickBassFixBox.Location = new System.Drawing.Point(13, 23);
+            this.quickBassFixBox.Name = "quickBassFixBox";
+            this.quickBassFixBox.Size = new System.Drawing.Size(70, 17);
+            this.quickBassFixBox.TabIndex = 1;
+            this.quickBassFixBox.Text = "Quick Fix";
+            this.quickBassFixBox.UseVisualStyleBackColor = true;
+            // 
+            // lowTuningBassFixButton
+            // 
+            this.lowTuningBassFixButton.Location = new System.Drawing.Point(128, 10);
+            this.lowTuningBassFixButton.Name = "lowTuningBassFixButton";
+            this.lowTuningBassFixButton.Size = new System.Drawing.Size(250, 56);
+            this.lowTuningBassFixButton.TabIndex = 0;
+            this.lowTuningBassFixButton.Text = "Patch Low Bass Tuning Fix";
+            this.lowTuningBassFixButton.UseVisualStyleBackColor = true;
+            this.lowTuningBassFixButton.Click += new System.EventHandler(this.lowTuningBassFixButton_Click);
+            // 
+            // dlcPackageCreatorControl
+            // 
+            this.dlcPackageCreatorControl.Album = "";
+            this.dlcPackageCreatorControl.AlbumYear = "";
+            this.dlcPackageCreatorControl.AppId = "";
+            this.dlcPackageCreatorControl.Artist = "";
+            this.dlcPackageCreatorControl.ArtistSort = "";
+            this.dlcPackageCreatorControl.AverageTempo = "";
+            this.dlcPackageCreatorControl.CurrentGameVersion = RocksmithToolkitLib.GameVersion.RS2014;
+            this.dlcPackageCreatorControl.DLCName = "";
+            this.dlcPackageCreatorControl.Location = new System.Drawing.Point(0, 0);
+            this.dlcPackageCreatorControl.Name = "dlcPackageCreatorControl";
+            this.dlcPackageCreatorControl.PackageVersion = "";
+            this.dlcPackageCreatorControl.Size = new System.Drawing.Size(507, 571);
+            this.dlcPackageCreatorControl.SongTitle = "";
+            this.dlcPackageCreatorControl.SongTitleSort = "";
+            this.dlcPackageCreatorControl.TabIndex = 0;
+            // 
             // DLCPackerUnpacker
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.customFixesGroupBox);
             this.Controls.Add(this.currentOperationLabel);
             this.Controls.Add(this.updateProgress);
             this.Controls.Add(this.groupBox3);
@@ -245,7 +315,7 @@
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "DLCPackerUnpacker";
-            this.Size = new System.Drawing.Size(400, 266);
+            this.Size = new System.Drawing.Size(400, 308);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -253,6 +323,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.customFixesGroupBox.ResumeLayout(false);
+            this.customFixesGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,5 +348,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label currentOperationLabel;
         private System.Windows.Forms.ProgressBar updateProgress;
+        private System.Windows.Forms.GroupBox customFixesGroupBox;
+        protected System.Windows.Forms.Button lowTuningBassFixButton;
+        private DLCPackageCreator.DLCPackageCreator dlcPackageCreatorControl;
+        private System.Windows.Forms.CheckBox quickBassFixBox;
+        private System.Windows.Forms.CheckBox deleteSourceFileCheckBox;
     }
 }

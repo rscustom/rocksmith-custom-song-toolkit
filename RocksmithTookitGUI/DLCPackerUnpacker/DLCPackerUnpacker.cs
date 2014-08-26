@@ -58,6 +58,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             bwUnpack.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
             bwUnpack.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ProcessCompleted);
             bwUnpack.WorkerReportsProgress = true;
+
         }
 
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
@@ -270,5 +271,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             currentOperationLabel.Text = message;
             currentOperationLabel.Refresh();
         }
+
+        private void lowTuningBassFixButton_Click(object sender, EventArgs e)
+        {
+            dlcPackageCreatorControl.dlcLowTuningBassFix(sender, e, lowTuningBassFixButton, quickBassFixBox.Checked, deleteSourceFileCheckBox.Checked);
+        }
+
+    
     }
 }
