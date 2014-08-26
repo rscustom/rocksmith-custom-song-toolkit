@@ -273,19 +273,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             currentOperationLabel.Refresh();
         }
 
-        /**
-         * Fixes B Standard and below tuning issues for bass. This is done by adjusting the pitch for the arrangement to 220hz,
-         * while raising the tuning 12 steps to offset the ptich change.
-         * This function is meant for fast and easy, one "click" fixes to PSARC's/packed CDLC.
-         * The CDLC will be unpacked, edited, and then repacked with '_bass_fixed' appended to the file name.
-         * 
-         **/
-
         private void lowTuningBassFixButton_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(quickBassFixBox.Checked);
-      
-            dlcPackageCreatorControl.dlcLowTuningBassFix(null,null, quickBassFixBox.Checked);
+            dlcPackageCreatorControl.dlcLowTuningBassFix(null,null, quickBassFixBox.Checked, deleteSourceFileCheckBox.Checked);
         }
 
     
