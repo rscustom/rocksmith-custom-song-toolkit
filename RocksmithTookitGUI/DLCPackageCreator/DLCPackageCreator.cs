@@ -608,7 +608,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 if (ofd.ShowDialog() != DialogResult.OK)
                 {
-                    lowTuningBassFixButton.Enabled = false;
+                    lowTuningBassFixButton.Enabled = true;
                     return;
                 }
                 sourcePackage = ofd.FileName;
@@ -631,7 +631,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     if (fbd.ShowDialog() != DialogResult.OK)
                     {
-                        lowTuningBassFixButton.Enabled = false;
+                        lowTuningBassFixButton.Enabled = true;
                         return;
                     }
                     saveWorkingDirectoryPath = fbd.SelectedPath;
@@ -734,7 +734,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
                     if (ofd.ShowDialog() != DialogResult.OK)
                     {
-                        lowTuningBassFixButton.Enabled = false;
+                        lowTuningBassFixButton.Enabled = true;
                         return;
                     } 
                     dlcSavePath = ofd.FileName;
@@ -774,7 +774,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (!bwGenerate.IsBusy && info != null)
             {
-                lowTuningBassFixButton.Enabled = true;
+                
                 //Generate CDLC
                 bwGenerate.RunWorkerAsync(info);
             }
