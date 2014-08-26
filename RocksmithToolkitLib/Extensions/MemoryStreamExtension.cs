@@ -200,10 +200,10 @@ namespace RocksmithToolkitLib.Extensions
 
                 } while (count > 0);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Position = initialPosition;
-                throw e;
+                throw;
             }
         }
 

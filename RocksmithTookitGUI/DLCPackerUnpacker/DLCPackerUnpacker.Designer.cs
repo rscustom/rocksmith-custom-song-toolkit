@@ -50,6 +50,7 @@
             this.quickBassFixBox = new System.Windows.Forms.CheckBox();
             this.lowTuningBassFixButton = new System.Windows.Forms.Button();
             this.dlcPackageCreatorControl = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator();
+
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -204,9 +205,9 @@
             this.extractSongXmlCheckBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.extractSongXmlCheckBox.Location = new System.Drawing.Point(18, 42);
             this.extractSongXmlCheckBox.Name = "extractSongXmlCheckBox";
-            this.extractSongXmlCheckBox.Size = new System.Drawing.Size(107, 17);
+            this.extractSongXmlCheckBox.Size = new System.Drawing.Size(86, 17);
             this.extractSongXmlCheckBox.TabIndex = 16;
-            this.extractSongXmlCheckBox.Text = "Extract Song Xml";
+            this.extractSongXmlCheckBox.Text = "SNG to XML";
             this.extractSongXmlCheckBox.UseVisualStyleBackColor = true;
             // 
             // groupBox3
@@ -241,6 +242,7 @@
             this.updateProgress.TabIndex = 0;
             this.updateProgress.Visible = false;
             // 
+
             // customFixesGroupBox
             // 
             this.customFixesGroupBox.Controls.Add(this.deleteSourceFileCheckBox);

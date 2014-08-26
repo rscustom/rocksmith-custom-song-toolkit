@@ -554,7 +554,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             
             // LOAD DATA
             var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform);
-            info.PackageVersion = "1"; //TODO: add PackageVersion to "toolkit.version" File and use it
+
             switch (packagePlatform.platform)
             {
                 case GamePlatform.Pc:
@@ -970,6 +970,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             if (String.IsNullOrEmpty(PackageVersion))
                 PackageVersion = "1";
+            if (!PackageVersion.Equals(PackageVersion.GetValidVersion()))
+            {
+                MessageBox.Show(String.Format("Package verion field contain invalid characters!\n" +
+                                              "Please replace this: {0}\n" +
+                                              "By something like this: 1 or 2.1 or 2.2.1",
+                                              PackageVersion), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                packageVersionTB.Focus();
+                return null;
+            }
 
             //Album Art validation (alert only)
             if (String.IsNullOrEmpty(AlbumArtPath) || !File.Exists(AlbumArtPath))
@@ -1089,7 +1098,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Volume = songVol,
                 PreviewVolume = previewVol,
                 SignatureType = PackageMagic.CON,
-                PackageVersion = PackageVersion
+                PackageVersion = PackageVersion.GetValidVersion()
             };
 
             return data;
@@ -1445,6 +1454,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void ShowCurrentOperation(string message) {
             currentOperationLabel.Text = message;
             currentOperationLabel.Refresh();
+        }
+
+        private void ArtistSortTB_TextChanged(object sender, EventArgs e)
+        {
+            ArtistSortTB.Text = ArtistSortTB.Text.GetValidSortName();
+        }
+        // Crunches here :)
+        private void packageVersionTB_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsDigit(e.KeyChar))
+            { }
+            else if (e.KeyChar == Char.Parse("."))
+            { }
+            else if (e.KeyChar == (int)Keys.Back)
+            { }
+            else e.Handled = true;
         }
     }
 }

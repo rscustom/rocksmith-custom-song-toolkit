@@ -15,8 +15,9 @@ namespace RocksmithToolkitLib.Sng
     public enum ArrangementType { Guitar, Bass, Vocal };
     public enum InstrumentTuning { [Description("E Standard")] Standard, [Description("Drop D")] DropD, [Description("Eb")] EFlat, [Description("Open G")] OpenG };
     public enum PluckedType : int { NotPicked, Picked };
-    
-    public static class InstrumentTuningExtensions {
+
+    public static class InstrumentTuningExtensions
+    {
 
         private static readonly int[] StandardOffsets = { 0, 0, 0, 0, 0, 0 };
         private static readonly int[] DropDOffsets = { -2, 0, 0, 0, 0, 0 };
@@ -68,7 +69,7 @@ namespace RocksmithToolkitLib.Sng
         public Single Time { get; set; }
         public Object Entity { get; set; }
     }
-    
+
     public static class SngFileWriter
     {
         public static void Write(string inputFile, string outputFile, ArrangementType arrangementType, Platform platform)
@@ -89,7 +90,14 @@ namespace RocksmithToolkitLib.Sng
                 {
                     var serializer = new XmlSerializer(typeof(Song));
                     var song = (Song)serializer.Deserialize(reader);
-                    WriteRocksmithSngFile(song, InstrumentTuningExtensions.GetTuningByOffsets(song.Tuning.ToArray()), arrangementType, outputFile, bitConverter);
+
+                    // TODO: song.Tuning is null in toolkit generated RS1 Xml files
+                    // TODO: this is only a quick fix of the root problem
+                    var tuning = new int[] { 0, 0, 0, 0, 0, 0 };
+                    if (song.Tuning != null) tuning = song.Tuning.ToArray();
+
+                    WriteRocksmithSngFile(song, InstrumentTuningExtensions.GetTuningByOffsets(tuning), arrangementType, outputFile, bitConverter);
+
                 }
             }
         }
@@ -160,7 +168,7 @@ namespace RocksmithToolkitLib.Sng
 
                 // CHORD TEMPLATES
                 WriteRocksmithSngChordTemplates(w, rocksmithSong.ChordTemplates, tuning, arrangementType);
-                    
+
                 // FRET HAND MUTE TEMPLATE
                 WriteRocksmithSngFretHandMuteTemplates(w, rocksmithSong.FretHandMuteTemplates);
 
@@ -186,7 +194,7 @@ namespace RocksmithToolkitLib.Sng
                 WriteRocksmithSngSections(w, rocksmithSong.Sections, rocksmithSong.PhraseIterations, rocksmithSong.SongLength);
 
                 // LEVELS
-                WriteRocksmithSngLevels(w, rocksmithSong.Levels, rocksmithSong.SongLength, iterationInfo, arrangementType);                   
+                WriteRocksmithSngLevels(w, rocksmithSong.Levels, rocksmithSong.SongLength, iterationInfo, arrangementType);
 
                 // SONG META DATA
                 WriteRocksmithSngMetaDetails(w, rocksmithSong, tuning, iterationInfo);
@@ -205,12 +213,14 @@ namespace RocksmithToolkitLib.Sng
                 {
                     endTime = rocksmithSong.PhraseIterations[i + 1].Time;
                 }
-                info.Add(new PhraseIterationInfo {
-                    IterationId = i, 
-                    PhraseId = iteration.PhraseId, 
+                info.Add(new PhraseIterationInfo
+                {
+                    IterationId = i,
+                    PhraseId = iteration.PhraseId,
                     MaxDifficulty = phrase.MaxDifficulty,
                     StartTime = iteration.Time,
-                    EndTime = endTime });
+                    EndTime = endTime
+                });
             }
             return info;
         }
@@ -384,7 +394,7 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(new byte[32 - name.Length]);
             }
         }
-        
+
         // NO EXAMPLES IN ROCKSMITH?
         private static void WriteRocksmithSngFretHandMuteTemplates(EndianBinaryWriter w, SongFretHandMuteTemplate[] fretHandMuteTemplates)
         {
@@ -439,7 +449,7 @@ namespace RocksmithToolkitLib.Sng
             {
                 // phrase id
                 w.Write(phraseProperty.PhraseId);
-                
+
                 // difficulty
                 w.Write(phraseProperty.Difficulty);
 
@@ -746,7 +756,7 @@ namespace RocksmithToolkitLib.Sng
                 {
                     var note = notes.OrderByDescending(n => n.Time).First();
                     lastNote = note.Time + note.Sustain + .1f;
-                 }
+                }
                 var chords = (level.Chords == null) ? null : level.Chords.Where(chord => chord.Time >= startTime && chord.Time < endTime);
                 if (chords != null && chords.Count() > 0)
                 {
@@ -916,7 +926,7 @@ namespace RocksmithToolkitLib.Sng
 
                 // string tag
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).String : -1);
-                    
+
                 // fret tag
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Fret : (sbyte)-1);
 
@@ -930,10 +940,10 @@ namespace RocksmithToolkitLib.Sng
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Sustain : 0);
 
                 // bend
-                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Bend : (byte) 0);
+                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Bend : (byte)0);
 
                 // slideTo
-                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).SlideTo : (sbyte) -1);
+                w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).SlideTo : (sbyte)-1);
 
                 // tremolo
                 w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Tremolo : new byte());
@@ -949,10 +959,10 @@ namespace RocksmithToolkitLib.Sng
                     w.Write(new byte());//unknownB
 
                     //Bass only - Slap
-                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Slap : (sbyte) -1);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Slap : (sbyte)-1);
 
                     //Bass only - Pluck
-                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Pluck : (sbyte) -1);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? ((SongNote)notesChords[i].Entity).Pluck : (sbyte)-1);
                 }
 
                 // hopo
@@ -970,7 +980,7 @@ namespace RocksmithToolkitLib.Sng
                 // high density chord
                 if (arrangementType == ArrangementType.Bass)
                 {
-                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? new byte() : (byte) ((SongChord)notesChords[i].Entity).HighDensity);
+                    w.Write(notesChords[i].Entity.GetType() == typeof(SongNote) ? new byte() : (byte)((SongChord)notesChords[i].Entity).HighDensity);
                     w.Write(new byte());
                     w.Write((byte)140);
                     w.Write(new byte());
@@ -1032,7 +1042,7 @@ namespace RocksmithToolkitLib.Sng
 
             // points per note
             w.Write((double)((float)(100000f / (float)totalNotes)));
-      
+
             // song beat timing
             if (s.Ebeats.Length < 2)
                 throw new InvalidDataException("Song must contain at least 2 beats");
@@ -1066,7 +1076,7 @@ namespace RocksmithToolkitLib.Sng
             {
                 w.Write(Convert.ToByte(c));
             }
-            w.Write(new byte[64 -title.Length]); // pad to 64 bytes
+            w.Write(new byte[64 - title.Length]); // pad to 64 bytes
 
             // arrangement
             var arrangement = s.Arrangement;
@@ -1119,11 +1129,11 @@ namespace RocksmithToolkitLib.Sng
             float firstChord = s.Levels.Min(level => level.Chords == null || level.Chords.Length == 0 ? float.MaxValue : level.Chords.Min(chord => chord.Time));
             float first = Math.Min(firstChord, firstNote);
             w.Write(first);
-            
+
             w.Write(first);
-            
+
             // max difficulty
-            int maxDifficulty = s.Levels.Length-1;
+            int maxDifficulty = s.Levels.Length - 1;
             w.Write(maxDifficulty);
 
             // unknown section

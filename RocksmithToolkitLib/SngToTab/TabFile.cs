@@ -50,7 +50,7 @@ namespace RocksmithToolkitLib.SngToTab
         }
 
         public int StringCount { get; private set; }
-        
+
         public int LineCount
         {
             get
@@ -66,14 +66,14 @@ namespace RocksmithToolkitLib.SngToTab
 
         // Output Buffer
         public List<string> Lines { get; protected set; }
-        
+
         public TabFile(SngFile sngFile, int maxDifficulty)
         {
             StringCount = 6;
 
             _measureQueue = new List<TabMeasure>();
             _currentMeasure = null;
-            Lines = new List<string>();
+            Lines = new List<string>(); // holds text stream
 
             // Create the tuning information table
             TuningInfos = new Dictionary<Tuning, TuningInfo>();
@@ -93,7 +93,7 @@ namespace RocksmithToolkitLib.SngToTab
              * iterated over in the correct order. Entities get sorted by time index (the SortedList key).
              * Multiple entities (of different types) can have the same time index and need to be processed in the
              * correct order, i.e. sections before measures and measures before notes/chords. */
-            SortedList<float, LinkedList<TabEntity>> entities = new SortedList<float,LinkedList<TabEntity>>();
+            SortedList<float, LinkedList<TabEntity>> entities = new SortedList<float, LinkedList<TabEntity>>();
 
             // Add SECTION entities
             foreach (SongSection s in sngFile.SongSections)
@@ -152,7 +152,7 @@ namespace RocksmithToolkitLib.SngToTab
             foreach (LinkedList<TabEntity> lle in entities.Values)
             {
                 foreach (TabEntity e in lle)
-                    e.Apply(this);
+                    e.Apply(this); // "this" contains a stream to make the tablature text
             }
             flushMeasureQueue(); // Don't forget, otherwise the last section's measures will be missing
         }

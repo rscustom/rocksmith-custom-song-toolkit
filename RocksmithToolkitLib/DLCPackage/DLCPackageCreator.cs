@@ -334,8 +334,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
 
                     //Lyrics Font Texture
-                    if (File.Exists(info.LyricsTex))
-                        packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricsTex, FileMode.Open, FileAccess.Read, FileShare.Read));
+                    //if (File.Exists(info.LyricsTex))
+                    //    packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricsTex, FileMode.Open, FileAccess.Read, FileShare.Read));
 
                     // AUDIO
                     var audioFile = info.OggPath;
@@ -507,8 +507,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         output.Seek(0, SeekOrigin.Begin);
                         output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
                     }
-                } catch (Exception ex) {
-                    throw ex;
+                } catch (Exception) {
+                    throw;
                 } finally {
                     // Dispose all objects
                     if (soundStream != null)
@@ -666,8 +666,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         output.Seek(0, SeekOrigin.Begin);
                         output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
                     }
-                } catch (Exception ex) {
-                    throw ex;
+                } catch (Exception) {
+                    throw;
                 } finally {
                     // Dispose all objects
                     if (rsenumerableRootStream != null)

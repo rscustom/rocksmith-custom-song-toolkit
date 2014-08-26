@@ -1,0 +1,582 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using RocksmithToolkitLib.DLCPackage;
+using RocksmithToolkitLib.Sng2014HSL;
+using RocksmithToolkitLib.SngToTab;
+using RocksmithToolkitLib.Xml;
+using System.IO;
+using RocksmithToolkitLib.Extensions;
+
+namespace RocksmithToolkitLib.Song2014ToTab
+{
+    public class Rs2014Converter : IDisposable
+    {
+        #region Song2014 to XML
+
+        /// <summary>
+        /// Convert RS2014 (Song2014) to XML file
+        /// </summary>
+        /// <param name="rs2014Song"></param>
+        /// <param name="outputDir"></param>
+        /// <returns>RS2014 XML file path</returns>
+        public string Song2014ToXml(Song2014 rs2014Song, string outputDir)
+        {
+            var outputFile = String.Format("{0}_{1}", rs2014Song.Title, rs2014Song.Arrangement);
+            outputFile = String.Format("{0}{1}", outputFile.GetValidName(false, true).ToLower(), "_rs2014.xml");
+            var outputPath = Path.Combine(outputDir, outputFile);
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+
+            using (var stream = File.OpenWrite(outputPath))
+            {
+                rs2014Song.Serialize(stream, false);
+            }
+
+            return outputPath;
+        }
+
+        #endregion
+
+        #region XML file to Song2014
+        /// <summary>
+        /// Convert XML file to RS2014 (Song2014)
+        /// </summary>
+        /// <param name="xmlFilePath"></param>
+        /// <returns>Song</returns>
+        public Song2014 XmlToSong2014(string xmlFilePath)
+        {
+            Song2014 song = Song2014.LoadFromFile(xmlFilePath);
+            return song;
+        }
+        #endregion
+
+        #region Song2014 to Song
+
+        public Song Song2014ToSong(Song2014 rs2014Song)
+        {
+            var rs1Song = new Song();
+            AddSongMetadata(rs2014Song, rs1Song);
+            AddElements(rs2014Song, rs1Song);
+            AddDifferences(rs2014Song, rs1Song);
+
+            return rs1Song;
+        }
+
+        private void AddSongMetadata(Song2014 rs2014Song, Song rs1Song)
+        {
+            // for consistency apply old naming method ;(
+            rs1Song.Title = String.Format("{0} - {1}", rs2014Song.Title, rs2014Song.Arrangement);
+            if (rs2014Song.Part > 1)
+                rs1Song.Title = String.Format("{0} {1}", rs1Song.Title, rs2014Song.Part);
+
+            rs1Song.Arrangement = rs2014Song.Arrangement;
+            rs1Song.Part = rs2014Song.Part;
+            rs1Song.Offset = rs2014Song.Offset;
+            rs1Song.SongLength = rs2014Song.SongLength;
+            rs1Song.StartBeat = rs2014Song.StartBeat;
+            rs1Song.AverageTempo = rs2014Song.AverageTempo;
+            rs1Song.Tuning = rs2014Song.Tuning;
+            rs1Song.Artist = rs2014Song.ArtistName;
+            rs1Song.AlbumName = rs2014Song.AlbumName;
+            rs1Song.AlbumYear = rs2014Song.AlbumYear;
+
+            // use correct LastConversionDateTime format
+            rs1Song.LastConversionDateTime = DateTime.Now.ToString("MM-dd-yy HH:mm");
+        }
+
+        private void AddElements(Song2014 rs2014Song, Song rs1Song)
+        {
+            // these elements have direct mapping
+            rs1Song.Phrases = rs2014Song.Phrases;
+            rs1Song.LinkedDiffs = rs2014Song.LinkedDiffs;
+            rs1Song.PhraseProperties = rs2014Song.PhraseProperties;
+            rs1Song.FretHandMuteTemplates = rs2014Song.FretHandMuteTemplates;
+            rs1Song.Ebeats = rs2014Song.Ebeats;
+            rs1Song.Sections = rs2014Song.Sections;
+            rs1Song.Events = rs2014Song.Events;
+
+        }
+
+        private void AddDifferences(Song2014 rs2014Song, Song rs1Song)
+        {
+            // there are slight mapping differences to account for in some elements
+            for (var i = 0; i < rs2014Song.PhraseProperties.Count(); i++)
+            {
+                // TODO: Verify this element accuracy
+                if (rs2014Song.PhraseProperties[i].Redundant == 256)
+                    // there may be a second phraseProperties[].redudant 
+                    rs1Song.PhraseProperties[i].Redundant = 0;
+            }
+
+            // add sufficient elements for phraseIterations
+            var phrases = new List<SongPhraseIteration>();
+            for (var i = 0; i < rs2014Song.PhraseIterations.Count(); i++)
+            {
+                phrases.Add(new SongPhraseIteration { PhraseId = i, Time = 0 });
+            }
+
+            if (rs2014Song.PhraseIterations.Count() > 0) // pop phraseIterations
+            {
+                rs1Song.PhraseIterations = phrases.ToArray();
+
+                for (var i = 0; i < rs2014Song.PhraseIterations.Count(); i++)
+                {
+                    rs1Song.PhraseIterations[i].PhraseId = rs2014Song.PhraseIterations[i].PhraseId;
+                    rs1Song.PhraseIterations[i].Time = rs2014Song.PhraseIterations[i].Time;
+                }
+            }
+
+            // add sufficient elements for chordTemplates
+            var chordTemplate = new List<SongChordTemplate>();
+            for (var i = 0; i < rs2014Song.ChordTemplates.Count(); i++)
+            {
+                chordTemplate.Add(new SongChordTemplate
+                    {
+                        ChordName = "C",
+                        Finger0 = 0,
+                        Finger1 = 0,
+                        Finger2 = 0,
+                        Finger3 = 0,
+                        Finger4 = 0,
+                        Finger5 = 0,
+                        Fret0 = 0,
+                        Fret1 = 0,
+                        Fret2 = 0,
+                        Fret3 = 0,
+                        Fret4 = 0,
+                        Fret5 = 0
+                    });
+            }
+
+            if (rs2014Song.ChordTemplates.Count() > 0) // pop chordTemplates
+            {
+                rs1Song.ChordTemplates = chordTemplate.ToArray();
+
+                for (var i = 0; i < rs2014Song.ChordTemplates.Count(); i++)
+                {
+                    rs1Song.ChordTemplates[i].ChordName = rs2014Song.ChordTemplates[i].ChordName;
+                    rs1Song.ChordTemplates[i].Finger0 = rs2014Song.ChordTemplates[i].Finger0;
+                    rs1Song.ChordTemplates[i].Finger1 = rs2014Song.ChordTemplates[i].Finger1;
+                    rs1Song.ChordTemplates[i].Finger2 = rs2014Song.ChordTemplates[i].Finger2;
+                    rs1Song.ChordTemplates[i].Finger3 = rs2014Song.ChordTemplates[i].Finger3;
+                    rs1Song.ChordTemplates[i].Finger4 = rs2014Song.ChordTemplates[i].Finger4;
+                    rs1Song.ChordTemplates[i].Finger5 = rs2014Song.ChordTemplates[i].Finger5;
+                    rs1Song.ChordTemplates[i].Fret0 = rs2014Song.ChordTemplates[i].Fret0;
+                    rs1Song.ChordTemplates[i].Fret1 = rs2014Song.ChordTemplates[i].Fret1;
+                    rs1Song.ChordTemplates[i].Fret2 = rs2014Song.ChordTemplates[i].Fret2;
+                    rs1Song.ChordTemplates[i].Fret3 = rs2014Song.ChordTemplates[i].Fret3;
+                    rs1Song.ChordTemplates[i].Fret4 = rs2014Song.ChordTemplates[i].Fret4;
+                    rs1Song.ChordTemplates[i].Fret5 = rs2014Song.ChordTemplates[i].Fret5;
+                }
+            }
+
+            // add sufficient elements for levels
+            var levels = new List<SongLevel>();
+            for (var i = 0; i < rs2014Song.Levels.Count(); i++)
+            {
+                levels.Add(new SongLevel
+                    {
+                        Anchors = new SongAnchor[rs2014Song.Levels[i].Anchors.Length],
+                        Chords = new SongChord[rs2014Song.Levels[i].Chords.Length],
+                        Difficulty = i,
+                        HandShapes = new SongHandShape[rs2014Song.Levels[i].HandShapes.Length],
+                        Notes = new SongNote[rs2014Song.Levels[i].Notes.Length]
+                    });
+            }
+
+            if (rs2014Song.Levels.Count() > 0)
+            {
+                rs1Song.Levels = levels.ToArray();
+
+                var anchors = new List<SongAnchor>();
+                for (var i = 0; i < rs2014Song.Levels.Count(); i++)
+                {
+                    for (var j = 0; j < rs2014Song.Levels[i].Anchors.Count(); j++)
+                    {
+                        anchors.Add(new SongAnchor
+                            {
+                                Fret = 0,
+                                Time = 0
+                            });
+                    }
+                    rs1Song.Levels[i].Anchors = anchors.ToArray();
+                    anchors.Clear();
+                }
+            }
+
+            var chords = new List<SongChord>();
+            for (var i = 0; i < rs2014Song.Levels.Count(); i++)
+            {
+                for (var j = 0; j < rs2014Song.Levels[i].Chords.Count(); j++)
+                {
+                    chords.Add(new SongChord
+                        {
+                            Time = 0,
+                            HighDensity = 0x00,
+                            Ignore = 0x00,
+                            Strum = "down"
+                        });
+                }
+
+                if (rs2014Song.Levels[i].Chords.Count() > 0)
+                {
+                    rs1Song.Levels[i].Chords = chords.ToArray();
+                    chords.Clear();
+                }
+            }
+
+            var handShape = new List<SongHandShape>();
+            for (var i = 0; i < rs2014Song.Levels.Count(); i++)
+            {
+                for (var j = 0; j < rs2014Song.Levels[i].HandShapes.Count(); j++)
+                {
+                    handShape.Add(new SongHandShape
+                        {
+                            ChordId = 0,
+                            StartTime = 0,
+                            EndTime = 0
+                        });
+                }
+
+                if (rs2014Song.Levels[i].HandShapes.Count() > 0)
+                {
+                    rs1Song.Levels[i].HandShapes = handShape.ToArray();
+                    handShape.Clear();
+                }
+            }
+
+            var notes = new List<SongNote>();
+            for (var i = 0; i < rs2014Song.Levels.Count(); i++)
+            {
+                for (var j = 0; j < rs2014Song.Levels[i].Notes.Count(); j++)
+                {
+                    notes.Add(new SongNote
+                        {
+                            Time = 0,
+                            Bend = 0,
+                            Fret = 0,
+                            HammerOn = 0x00,
+                            Harmonic = 0x00,
+                            Hopo = 0x00,
+                            Ignore = 0x00,
+                            PalmMute = 0x00,
+                            Pluck = 0,
+                            PullOff = 0x00,
+                            Slap = 0x00,
+                            SlideTo = 0,
+                            String = 0,
+                            Sustain = 0x00,
+                            Tremolo = 0x00
+                        });
+                }
+
+                if (rs2014Song.Levels[i].Notes.Count() > 0)
+                {
+                    rs1Song.Levels[i].Notes = notes.ToArray();
+                    notes.Clear();
+                }
+            }
+
+
+            // populate elements
+            for (var i = 0; i < rs2014Song.Levels.Count(); i++)
+            {
+                rs1Song.Levels[i].Difficulty = rs2014Song.Levels[i].Difficulty;
+
+                for (var j = 0; j < rs2014Song.Levels[i].Anchors.Count(); j++)
+                {
+                    rs1Song.Levels[i].Anchors[j].Time = rs2014Song.Levels[i].Anchors[j].Time;
+                    rs1Song.Levels[i].Anchors[j].Fret = rs2014Song.Levels[i].Anchors[j].Fret;
+                }
+
+                for (var j = 0; j < rs2014Song.Levels[i].Chords.Count(); j++)
+                {
+                    rs1Song.Levels[i].Chords[j].Time = rs2014Song.Levels[i].Chords[j].Time;
+                    rs1Song.Levels[i].Chords[j].ChordId = rs2014Song.Levels[i].Chords[j].ChordId;
+                    rs1Song.Levels[i].Chords[j].HighDensity = rs2014Song.Levels[i].Chords[j].HighDensity;
+                    rs1Song.Levels[i].Chords[j].Ignore = rs2014Song.Levels[i].Chords[j].Ignore;
+                    rs1Song.Levels[i].Chords[j].Strum = rs2014Song.Levels[i].Chords[j].Strum;
+                }
+
+                for (var j = 0; j < rs2014Song.Levels[i].HandShapes.Count(); j++)
+                {
+                    rs1Song.Levels[i].HandShapes[j].ChordId = rs2014Song.Levels[i].HandShapes[j].ChordId;
+                    rs1Song.Levels[i].HandShapes[j].StartTime = rs2014Song.Levels[i].HandShapes[j].StartTime;
+                    rs1Song.Levels[i].HandShapes[j].EndTime = rs2014Song.Levels[i].HandShapes[j].EndTime;
+                }
+
+                for (var j = 0; j < rs2014Song.Levels[i].Notes.Count(); j++)
+                {
+                    rs1Song.Levels[i].Notes[j].Time = rs2014Song.Levels[i].Notes[j].Time;
+                    rs1Song.Levels[i].Notes[j].Bend = rs2014Song.Levels[i].Notes[j].Bend;
+                    rs1Song.Levels[i].Notes[j].Fret = rs2014Song.Levels[i].Notes[j].Fret;
+                    rs1Song.Levels[i].Notes[j].HammerOn = rs2014Song.Levels[i].Notes[j].HammerOn;
+                    rs1Song.Levels[i].Notes[j].Harmonic = rs2014Song.Levels[i].Notes[j].Harmonic;
+                    rs1Song.Levels[i].Notes[j].Hopo = rs2014Song.Levels[i].Notes[j].Hopo;
+                    rs1Song.Levels[i].Notes[j].Ignore = rs2014Song.Levels[i].Notes[j].Ignore;
+                    rs1Song.Levels[i].Notes[j].PalmMute = rs2014Song.Levels[i].Notes[j].PalmMute;
+                    rs1Song.Levels[i].Notes[j].Pluck = rs2014Song.Levels[i].Notes[j].Pluck;
+                    rs1Song.Levels[i].Notes[j].PullOff = rs2014Song.Levels[i].Notes[j].PullOff;
+                    rs1Song.Levels[i].Notes[j].Slap = rs2014Song.Levels[i].Notes[j].Slap;
+                    rs1Song.Levels[i].Notes[j].SlideTo = rs2014Song.Levels[i].Notes[j].SlideTo;
+                    rs1Song.Levels[i].Notes[j].String = rs2014Song.Levels[i].Notes[j].String;
+                    rs1Song.Levels[i].Notes[j].Sustain = rs2014Song.Levels[i].Notes[j].Sustain;
+                    rs1Song.Levels[i].Notes[j].Tremolo = rs2014Song.Levels[i].Notes[j].Tremolo;
+                }
+            }
+
+        }
+
+        #endregion
+
+        #region PSARC to SongList
+        /// <summary>
+        /// Count songs in PSARC file with option to
+        /// create a *.txt file that contains a
+        /// summary list of all songs and arrangements
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <param name="outputDir"></param>
+        /// <returns>int count of songs in PSARC</returns>
+        public int PsarcSongList(string inputPath, string outputDir, bool outputText)
+        {
+            var songInfo = String.Format("ARCHIVE  -  {0}  -  SONG LIST INFO", Path.GetFileName(inputPath));
+
+            songInfo += Environment.NewLine + Environment.NewLine;
+            songInfo += "[Song Identifier]  Artist - Title  (Album, Year)  {Arrangements}";
+            songInfo += Environment.NewLine;
+            songInfo += "----------------------------------------------------------------";
+            songInfo += Environment.NewLine + Environment.NewLine;
+
+            var browser = new PsarcBrowser(inputPath);
+            var songList = browser.GetSongList();
+            int songCount = 0;
+
+            foreach (var song in songList)
+            {
+                songInfo += String.Format("[{0}]  {1} - {2}  ({3}, {4})  {{{5}}}", song.Identifier,
+                                  song.Artist, song.Title, song.Album, song.Year,
+                                  string.Join(", ", song.Arrangements));
+                songInfo += Environment.NewLine;
+                songCount += 1;
+            }
+            songInfo += Environment.NewLine + Environment.NewLine;
+            songInfo += "End of Report";
+
+            if (outputText)
+            {
+                var outputFile = Path.GetFileNameWithoutExtension(inputPath).ToLower();
+                var outputPath = Path.Combine(outputDir, String.Format("{0}_songlist.txt", outputFile));
+
+                using (TextWriter tw = new StreamWriter(outputPath))
+                {
+                    tw.Write(songInfo);
+                }
+            }
+
+            return songCount;
+        }
+        #endregion
+
+        #region PSARC to Song2014 (for a specific arrangement)
+        /// <summary>
+        /// extract Song2014 from PSARC file for a specific
+        /// songId (short song title) and track (lead, rythum, bass)
+        /// defaults to the first songId and track if not specified
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <param name="songId"></param>
+        /// <param name="track"></param>
+        /// <returns>Song2014</returns>
+        public Song2014 PsarcToSong2014(string inputPath, string songId = null, string track = null)
+        {
+            // for testing
+            // inputPath = "D:\\Work\\rs1compatibilitydlc_p.psarc"
+            // songId = "hitme";
+            // track = "lead";
+
+            var browser = new PsarcBrowser(inputPath);
+            var songList = browser.GetSongList();
+
+            if (songId == null) // grab the first song.Identifier
+            {
+                songId = songList.FirstOrDefault().Identifier;
+            }
+            else // check if songId exists in song.Identifier
+            {
+                if (songList.FirstOrDefault(x => x.Identifier.Contains(songId)) == null)
+                {
+                    Console.WriteLine("Could not find songId: " + songId);
+                    return null;
+                }
+            }
+
+            if (track == null) // grab the first song.Arrangment
+            {
+                track = songList.FirstOrDefault().Arrangements[0];
+            }
+            else // check if track exists in song.Arrangments
+            {
+                if (songList.FirstOrDefault(x => x.Arrangements.Contains(track)) == null)
+                {
+                    Console.WriteLine("Could not find track: " + track);
+                    return null;
+                }
+            }
+
+            // push Song2014 into memory for this arragement
+            Song2014 arrangement = browser.GetArrangement(songId, track);
+            Console.WriteLine("Pushed To Memory: [{0}] {{{1}}}", songId, track);
+
+            return arrangement;
+        }
+
+        #endregion
+
+        #region PSARC to Song2014 to ASCII Tablature (loaded in memory)
+        /// <summary>
+        /// Load a PSARC file (all songs) into memory and
+        /// convert to Song2014 and then to ASCII Tablature
+        /// this method crashes for large multi song packs 
+        /// such as rs1compatibilitydlc_p.psarc file
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <param name="outputDir"></param>
+        /// <param name="allDif"></param>
+        public void PsarcAllToSong2014(string inputPath, string outputDir, bool allDif)
+        {
+            var browser = new PsarcBrowser(inputPath);
+            var songList = browser.GetSongList();
+
+            // collect all songs to convert
+            var toConvert = new List<SongInfo>();
+            toConvert = toConvert.Concat(songList).ToList();
+
+            foreach (var song in toConvert)
+            {
+                if (song == null) continue;
+                // convert all arrangements
+                var arrangements = song.Arrangements;
+                if (song.Arrangements != null && song.Arrangements.Count > 0)
+                    arrangements = arrangements.Intersect(song.Arrangements).ToList();
+
+                foreach (var arr in arrangements)
+                {
+                    if (arr == null) continue;
+                    // push Song2014 into memory for this arragement
+                    Song2014 rs2014Song;
+                    using (var obj = new Rs2014Converter())
+                        rs2014Song = browser.GetArrangement(song.Identifier, arr);
+                    Console.WriteLine("Pushed Song2014 To Memory: [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
+
+                    using (var obj = new Rs2014Converter())
+                        obj.Song2014ToAsciiTab(rs2014Song, outputDir, allDif);
+                    Console.WriteLine("Done Converting:  [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
+                }
+            }
+        }
+        #endregion
+
+        #region Unpack PSARC to Song2014 to ASCII Tablature
+        /// <summary>
+        /// Unpack PSARC to Song2014 to ASCII Tablature
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <param name="outputDir"></param>
+        /// <param name="allDif"></param>
+        public void ExtractBeforeConvert(string inputPath, string outputDir, bool allDif)
+        {
+            string sng2tabDir = Path.Combine(tmpWorkDir, "sng2tab");
+            Application.DoEvents();
+            Packer.Unpack(inputPath, sng2tabDir, false, true);
+            string unpackedDir = Path.Combine(sng2tabDir,
+                                              Path.GetFileNameWithoutExtension(inputPath) +
+                                              String.Format("_{0}", Packer.GetPlatform(inputPath).platform.ToString()));
+            Console.WriteLine("Unpacked file: {0}", inputPath);
+            Console.WriteLine("To directory: {0}", unpackedDir);
+
+            string[] xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
+
+            foreach (var xmlFilePath in xmlFiles)
+            {
+                // XML filenames are constructed as identifier_arrangement.xml
+                var fileName = Path.GetFileNameWithoutExtension(xmlFilePath);
+                var splitPoint = fileName.LastIndexOf('_');
+                // var identifier = fileName.Substring(0, splitPoint);
+                var arrangement = fileName.Substring(splitPoint + 1);
+
+                // exclude files for vocals and showlights 
+                if (arrangement.ToLower() == "vocals" || arrangement.ToLower() == "showlights")
+                    continue;
+
+                Song2014 rs2014Song;
+                using (var obj = new Rs2014Converter())
+                    rs2014Song = obj.XmlToSong2014(xmlFilePath);
+                Console.WriteLine("Converted Xml To Song2014: [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
+
+                using (var obj = new Rs2014Converter())
+                    obj.Song2014ToAsciiTab(rs2014Song, outputDir, allDif);
+                Console.WriteLine("Done Converting:  [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
+            }
+
+            DirectoryExtension.SafeDelete(sng2tabDir);
+        }
+        #endregion
+
+        #region Song2014 to ASCII Tablature
+        /// <summary>
+        /// Song2014 to ASCII Tablature
+        /// </summary>
+        /// <param name="rs2014Song"></param>
+        /// <param name="outputDir"></param>
+        /// <param name="allDif"></param>
+        public void Song2014ToAsciiTab(Song2014 rs2014Song, string outputDir, bool allDif)
+        {
+            // convert to Song
+            Song rs1Song;
+            using (var obj = new Rs2014Converter())
+                rs1Song = obj.Song2014ToSong(rs2014Song);
+            Console.WriteLine("Converted Song2014 To Song");
+
+            if (false) // write Xml files for debugging 
+            {
+                using (var obj = new Rs2014Converter())
+                    obj.Song2014ToXml(rs2014Song, outputDir);
+                using (var obj = new Rs1Converter())
+                    obj.SongToXml(rs1Song, outputDir);
+            }
+
+            // convert to SngFile
+            string rs1SngFilePath;
+            using (var obj = new Rs1Converter())
+                rs1SngFilePath = obj.SongToSngFilePath(rs1Song, outputDir);
+            Console.WriteLine("Converted Song To SngFile");
+
+            // convert to AsciiTab
+            using (var s2Tab = new Sng2Tab())
+                s2Tab.Convert(rs1SngFilePath, outputDir, allDif);
+            Console.WriteLine("Converted SngFile To AsciiTab");
+
+            if (File.Exists(rs1SngFilePath)) File.Delete(rs1SngFilePath);
+        }
+
+        private string tmpWorkDir
+        {
+            get { return Path.Combine(Path.GetTempPath()); }
+        }
+        #endregion
+
+        #region Song2014 to MusicXML Version 3.0
+        public void Song2014ToMusicXml(Song2014 rs2014Song, string outputDir, bool allDif)
+        {
+            // TODO: comming soon
+        }
+        #endregion
+
+        public void Dispose()
+        {
+        }
+
+     }
+}

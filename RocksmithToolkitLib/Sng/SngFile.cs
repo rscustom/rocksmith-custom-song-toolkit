@@ -522,7 +522,7 @@ namespace RocksmithToolkitLib.Sng
         public  Int32 Note { get; set; }
         public  float Length { get; set; }
         private  Byte[] _lyric; // len 32
-        public string Lyric { get { return _lyric.ToNullTerminatedAscii(); } }
+        public string Lyric { get { return _lyric.ToNullTerminatedUTF8(); } }
 
         public Vocal(BinaryReader br)
         {
