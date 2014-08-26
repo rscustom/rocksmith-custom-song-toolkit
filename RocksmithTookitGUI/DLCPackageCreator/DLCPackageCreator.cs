@@ -589,10 +589,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
          * quick - chooses directory of source file, uses source file name with "_bassfix" appended.
          * deleteSourceFile - deletes source file after extracting needed information and generating the file.
          **/   
-        public void dlcLowTuningBassFix(object sender = null, EventArgs e = null, Boolean quick = false, Boolean deleteSourceFile = false)
+        public void dlcLowTuningBassFix(object sender, EventArgs e, Button lowTuningBassFixButton,  Boolean quick = false, Boolean deleteSourceFile = false)
         {
             string sourcePackage;
             string saveWorkingDirectoryPath;
+
+            lowTuningBassFixButton.Enabled = false;
 
             // GET PATH
             using (var ofd = new OpenFileDialog())
@@ -605,7 +607,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 ofd.Filter = filter;
 
                 if (ofd.ShowDialog() != DialogResult.OK)
+                {
+                    lowTuningBassFixButton.Enabled = false;
                     return;
+                }
                 sourcePackage = ofd.FileName;
             }
 
@@ -625,7 +630,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     fbd.UseDescriptionForTitle = true;
 
                     if (fbd.ShowDialog() != DialogResult.OK)
+                    {
+                        lowTuningBassFixButton.Enabled = false;
                         return;
+                    }
                     saveWorkingDirectoryPath = fbd.SelectedPath;
                 }
             }
@@ -692,9 +700,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     for (int s = 0; s < strings.Length; s++)
                     {
                         strings[s] += 12;
-                        //Skip first 2 strings.
-                        if (s == 3)
-                            s = 5;
                     }
                     //Detect tuning
                     TuningDefinition tuning = TuningDefinitionRepository.Instance().SelectAny(new TuningStrings(strings), CurrentGameVersion);
@@ -727,7 +732,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                     ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
-                    if (ofd.ShowDialog() != DialogResult.OK) return;
+                    if (ofd.ShowDialog() != DialogResult.OK)
+                    {
+                        lowTuningBassFixButton.Enabled = false;
+                        return;
+                    } 
                     dlcSavePath = ofd.FileName;
                 }
             }
@@ -765,12 +774,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (!bwGenerate.IsBusy && info != null)
             {
-                updateProgress.Visible = true;
-                currentOperationLabel.Visible = true;
-                dlcGenerateButton.Enabled = false;
+                lowTuningBassFixButton.Enabled = true;
                 //Generate CDLC
                 bwGenerate.RunWorkerAsync(info);
-
             }
         }
     

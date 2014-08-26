@@ -18,7 +18,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private const string MESSAGEBOX_CAPTION = "DLC Packer/Unpacker";
         private BackgroundWorker bwRepack = new BackgroundWorker();
         private BackgroundWorker bwUnpack = new BackgroundWorker();
-        private BackgroundWorker lowTuningBassFixWorker = new BackgroundWorker();
         private StringBuilder errorsFound;
         private string savePath;
         
@@ -275,7 +274,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         private void lowTuningBassFixButton_Click(object sender, EventArgs e)
         {
-            dlcPackageCreatorControl.dlcLowTuningBassFix(null,null, quickBassFixBox.Checked, deleteSourceFileCheckBox.Checked);
+            dlcPackageCreatorControl.dlcLowTuningBassFix(sender, e, lowTuningBassFixButton, quickBassFixBox.Checked, deleteSourceFileCheckBox.Checked);
         }
 
     

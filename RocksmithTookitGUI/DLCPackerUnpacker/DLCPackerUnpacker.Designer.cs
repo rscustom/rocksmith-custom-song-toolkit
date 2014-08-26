@@ -50,7 +50,6 @@
             this.quickBassFixBox = new System.Windows.Forms.CheckBox();
             this.lowTuningBassFixButton = new System.Windows.Forms.Button();
             this.dlcPackageCreatorControl = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator();
-
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -242,22 +241,23 @@
             this.updateProgress.TabIndex = 0;
             this.updateProgress.Visible = false;
             // 
-
             // customFixesGroupBox
             // 
             this.customFixesGroupBox.Controls.Add(this.deleteSourceFileCheckBox);
             this.customFixesGroupBox.Controls.Add(this.quickBassFixBox);
             this.customFixesGroupBox.Controls.Add(this.lowTuningBassFixButton);
+            this.customFixesGroupBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.customFixesGroupBox.Location = new System.Drawing.Point(13, 224);
             this.customFixesGroupBox.Name = "customFixesGroupBox";
             this.customFixesGroupBox.Size = new System.Drawing.Size(384, 72);
             this.customFixesGroupBox.TabIndex = 20;
             this.customFixesGroupBox.TabStop = false;
-            this.customFixesGroupBox.Text = "Custom Fixes";
+            this.customFixesGroupBox.Text = "Custom Fixes (RS 2014)";
             // 
             // deleteSourceFileCheckBox
             // 
             this.deleteSourceFileCheckBox.AutoSize = true;
+            this.deleteSourceFileCheckBox.ForeColor = System.Drawing.Color.Black;
             this.deleteSourceFileCheckBox.Location = new System.Drawing.Point(13, 46);
             this.deleteSourceFileCheckBox.Name = "deleteSourceFileCheckBox";
             this.deleteSourceFileCheckBox.Size = new System.Drawing.Size(113, 17);
@@ -268,6 +268,7 @@
             // quickBassFixBox
             // 
             this.quickBassFixBox.AutoSize = true;
+            this.quickBassFixBox.ForeColor = System.Drawing.Color.Black;
             this.quickBassFixBox.Location = new System.Drawing.Point(13, 23);
             this.quickBassFixBox.Name = "quickBassFixBox";
             this.quickBassFixBox.Size = new System.Drawing.Size(70, 17);
@@ -348,7 +349,7 @@
         private System.Windows.Forms.Label currentOperationLabel;
         private System.Windows.Forms.ProgressBar updateProgress;
         private System.Windows.Forms.GroupBox customFixesGroupBox;
-        private System.Windows.Forms.Button lowTuningBassFixButton;
+        protected System.Windows.Forms.Button lowTuningBassFixButton;
         private DLCPackageCreator.DLCPackageCreator dlcPackageCreatorControl;
         private System.Windows.Forms.CheckBox quickBassFixBox;
         private System.Windows.Forms.CheckBox deleteSourceFileCheckBox;
