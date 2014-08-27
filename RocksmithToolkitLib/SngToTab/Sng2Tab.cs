@@ -34,10 +34,17 @@ namespace RocksmithToolkitLib.SngToTab
             {
                 TabFile tabFile = new TabFile(sngFile, d);
 
-                var outputFileName = (sngFile != null && sngFile.Metadata != null)
-                                         ? String.Format("{0}", sngFile.Metadata.SongTitle)
-                                         : "No Song Title";
+                var outputFileName = String.Empty;
+                if (sngFile != null && sngFile.Metadata != null)
+                    if (sngFile.Metadata.Artist == "DUMMY")
+                        outputFileName = String.Format("{0}", sngFile.Metadata.SongTitle);
+                    else
+                        outputFileName = String.Format("{0} - {1}", sngFile.Metadata.Artist, sngFile.Metadata.SongTitle);
+                else
+                    outputFileName = String.Format("{0}", "Unknown Song");
+
                 outputFileName += (difficulties.Length != 1) ? String.Format(" (level {0:00}).txt", d) : ".txt";
+                outputFileName = outputFileName.GetValidName(true);
                 var outputFilePath = Path.Combine(outputDir, outputFileName);
 
                 using (TextWriter tw = new StreamWriter(outputFilePath))
@@ -62,7 +69,7 @@ namespace RocksmithToolkitLib.SngToTab
                 Convert(sngFilePath, outputDir, allDif);
             }
 
-            DirectoryExtension.SafeDelete(sng2tabDir);
+          //  DirectoryExtension.SafeDelete(sng2tabDir);
         }
 
         public void Dispose()

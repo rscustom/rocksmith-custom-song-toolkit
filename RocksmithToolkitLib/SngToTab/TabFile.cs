@@ -148,7 +148,7 @@ namespace RocksmithToolkitLib.SngToTab
 
             // Now that the entity list has been build, iterate over it and Apply every single entity to this TabFile,
             // which will format the entity's data and add it to the TabFile's output buffer.
-            header.Apply(this);
+            header.Apply(this, maxDifficulty);
             foreach (LinkedList<TabEntity> lle in entities.Values)
             {
                 foreach (TabEntity e in lle)

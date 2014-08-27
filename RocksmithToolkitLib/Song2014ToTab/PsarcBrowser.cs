@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RocksmithToolkitLib.Xml;
@@ -67,19 +68,22 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 // exclude vocals from list
                 if (arrangement.ToLower() == "vocals" || arrangement.ToLower() == "jvocals")
                     continue;
-             
+
                 // exclude showlights from list
                 if (arrangement.ToLower() == "showlights" || arrangement.ToLower() == "jshowlights")
                     continue;
 
-                if (currentSong == null || currentSong.Identifier != identifier)
+                 if (currentSong == null || currentSong.Identifier != identifier)
                 {
                     // extract song info from the .json file
-                    // reverted to using original NonClosingStreamWrapper for NET40 compatibility
-                    using (var wrappedStream = new NonClosingStreamWrapper(entry.Data))
+                    using (var ms = new MemoryStream())
+                    using (var reader = new StreamReader(ms, new UTF8Encoding(), false, 1024))
                     {
-                        using (var reader = new StreamReader(wrappedStream))
+                        try
                         {
+                            entry.Data.CopyTo(ms);
+                            entry.Data.Position = 0;
+                            ms.Position = 0;
                             JObject o = JObject.Parse(reader.ReadToEnd());
                             var attributes = o["Entries"].First.Last["Attributes"];
                             var title = attributes["SongName"].ToString();
@@ -88,15 +92,20 @@ namespace RocksmithToolkitLib.Song2014ToTab
                             var year = attributes["SongYear"].ToString();
 
                             currentSong = new SongInfo()
-                                {
-                                    Title = attributes["SongName"].ToString(),
-                                    Artist = attributes["ArtistName"].ToString(),
-                                    Album = attributes["AlbumName"].ToString(),
-                                    Year = attributes["SongYear"].ToString(),
-                                    Identifier = identifier,
-                                    Arrangements = new List<string>()
-                                };
+                            {
+                                Title = attributes["SongName"].ToString(),
+                                Artist = attributes["ArtistName"].ToString(),
+                                Album = attributes["AlbumName"].ToString(),
+                                Year = attributes["SongYear"].ToString(),
+                                Identifier = identifier,
+                                Arrangements = new List<string>()
+                            };
                             songList.Add(currentSong);
+                        }
+                        catch (NullReferenceException)
+                        {
+                            // It appears the vocal arrangements don't contain all the track
+                            // information. Just ignore this.
                         }
                     }
                 }
@@ -134,16 +143,18 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 return null;
             }
 
-            // read out attributes from .json manifest
-            // reverted to using original NonClosingStreamWrapper for NET40 compatibility
+           // read out attributes from .json manifest
             Attributes2014 attr;
-            using (var wrappedStream = new NonClosingStreamWrapper(jsonFile.Data))
+            using (var ms = new MemoryStream())
+            using (var reader = new StreamReader(ms, new UTF8Encoding(), false, 1024))
             {
-                using (var reader = new StreamReader(wrappedStream))
-                {
-                    var manifest = JsonConvert.DeserializeObject<Manifest2014<Attributes2014>>(reader.ReadToEnd());
-                    attr = manifest.Entries.ToArray()[0].Value.ToArray()[0].Value;
-                }
+                jsonFile.Data.CopyTo(ms);
+                ms.Position = 0;
+                var manifest = JsonConvert.DeserializeObject<Manifest2014<Attributes2014>>(
+                    reader.ReadToEnd());
+                if (manifest == null)
+                    return null;
+                attr = manifest.Entries.ToArray()[0].Value.ToArray()[0].Value;
             }
 
             // get contents of .sng file
@@ -165,6 +176,15 @@ namespace RocksmithToolkitLib.Song2014ToTab
         public string Year { get; set; }
         public string Identifier { get; set; }
         public IList<string> Arrangements { get; set; }
+    }
+
+    /// <summary>
+    /// Struct containing short info about a single track.
+    /// </summary>
+    public class SongInfoShort
+    {
+        public string Identifier { get; set; }
+        public string Arrangement { get; set; }
     }
 
 }

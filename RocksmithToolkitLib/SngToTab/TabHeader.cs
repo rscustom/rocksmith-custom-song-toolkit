@@ -21,12 +21,12 @@ namespace RocksmithToolkitLib.SngToTab
             TuningInfo = tabFile.TuningInfos[(Tuning)sngFile.Metadata.Tuning];
         }
 
-        public void Apply(TabFile tabFile)
+        public void Apply(TabFile tabFile, int diff)
         {
             tabFile.AppendLine("TITLE: " + Title + Environment.NewLine);
             if (Artist != "DUMMY")
                 tabFile.AppendLine("ARTIST: " + Artist + Environment.NewLine);
-            tabFile.AppendLine("LENGTH: " + Length + Environment.NewLine);
+            tabFile.AppendLine("LENGTH: " + Length + String.Format(" (DIFFICULTY LEVEL {0})", diff) + Environment.NewLine);
             tabFile.AppendLine("TUNING: " + TuningInfo.Description + Environment.NewLine);
         }
     }

@@ -3,43 +3,50 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.IO;
+using RocksmithToolkitLib;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
-
 
 namespace RocksmithToolkitGUI.SngToTabConverter
 {
     public partial class SngToTabConverter : UserControl
     {
         private const string MESSAGEBOX_CAPTION = "SNG 2 Tab Converter";
+        private string outputDir;
+        private bool allDif;
+        private IList<SongInfo> songList;
 
         public SngToTabConverter()
         {
             InitializeComponent();
+
+            if (Directory.Exists(ConfigRepository.Instance()["general_rs2014path"]))
+                outputDir = Path.Combine(ConfigRepository.Instance()["general_rs2014path"], "dlc");
+            else
+                outputDir = Path.GetDirectoryName(Application.ExecutablePath);
         }
 
         private void convertButton_Click(object sender, EventArgs e)
         {
             IList<string> sourceFilePaths;
-            string outputDir;
-            bool allDif = difficultyAll.Checked;
+            allDif = difficultyAll.Checked;
 
             // Input file(s)
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Multiselect = true;
-                ofd.Title = "Select a CDLC file to convert";
+                ofd.Title = "Select RS1 and/or RS2014 CDLC files to convert";
                 ofd.Filter = "RS1 (*.dat, *.sng, *.xml) or RS2014 (*.psarc) files|*.dat;*.sng;*.xml;*.psarc";
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
                 sourceFilePaths = ofd.FileNames;
             }
 
-            // Output Dir
             using (var fbd = new FolderBrowserDialog())
             {
-                // fbd.SelectedPath = "d:\\temp"; // for debugging
+                fbd.SelectedPath = outputDir;
+                // fbd.SelectedPath = "D:\\Temp"; // for testing
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
                 outputDir = fbd.SelectedPath;
@@ -60,8 +67,8 @@ namespace RocksmithToolkitGUI.SngToTabConverter
                         if (arrangement.ToLower() == "vocals" || arrangement.ToLower() == "showlights")
                         {
                             MessageBox.Show(inputFilePath + Environment.NewLine + Environment.NewLine +
-                                "Conversion not supported at this time!", MESSAGEBOX_CAPTION,
-                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                            "Conversion not supported at this time!", MESSAGEBOX_CAPTION,
+                                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             break;
                         }
 
@@ -91,31 +98,60 @@ namespace RocksmithToolkitGUI.SngToTabConverter
 
                     case ".psarc":
                         if (rbSongList.Checked)
-                        {
                             using (var obj = new Rs2014Converter())
-                                obj.PsarcSongList(inputFilePath, outputDir, true);
-                        }
+                                obj.PsarcSongList(inputFilePath, outputDir);
+
                         else if (rbAsciiTab.Checked)
                         {
-                            int songCount = 0;
-                            using (var obj = new Rs2014Converter())
-                                songCount = obj.PsarcSongList(inputFilePath, outputDir, false);
-
-                            if (songCount > 10)  // use unpack method
+                            var fileInfo = new FileInfo(inputFilePath);
+                            if (fileInfo.Length / 1000 > 15000)
                             {
-                                if (MessageBox.Show("This archive contains " + songCount + " songs." + Environment.NewLine +
-    "It may take a long time to extract and convert this data." + Environment.NewLine +
-    "Do you want to continue?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No) return;
-
-                                using (var obj = new Rs2014Converter())
-                                    obj.ExtractBeforeConvert(inputFilePath, outputDir, allDif);
+                                if (MessageBox.Show(Path.GetFileName(inputFilePath) + " file size is " +
+                                    (fileInfo.Length / 1000).ToString("N00") + " KB" + Environment.NewLine +
+                                    "It may take a long time to extract and convert that much data." +
+                                     Environment.NewLine + Environment.NewLine + "Do you want to continue?", MESSAGEBOX_CAPTION,
+                                     MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No) return;
                             }
-                            else  // use memory method
+
+                            using (var obj = new Rs2014Converter())
+                                songList = obj.PsarcSongList(inputFilePath);
+
+                            if (songList.Count > 0) // popup selection list
                             {
+                                using (var form = new SongListForm())
+                                {
+                                    form.PopSongListBox(songList);
+
+                                    do // waiting for user selection
+                                        form.ShowDialog();
+                                    while (form.SongListShort == null);
+
+                                    this.Refresh();
+                                    Cursor.Current = Cursors.WaitCursor;
+
+                                    foreach (var song in form.SongListShort)
+                                    {
+                                        Song2014 rs2014Song;
+                                        using (var obj = new Rs2014Converter())
+                                            rs2014Song = obj.PsarcToSong2014(inputFilePath, song.Identifier, song.Arrangement);
+
+                                        using (var obj = new Rs2014Converter())
+                                            obj.Song2014ToAsciiTab(rs2014Song, outputDir, allDif);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // convert all songs and arrangements by memory method
                                 using (var obj = new Rs2014Converter())
-                                    obj.PsarcAllToSong2014(inputFilePath, outputDir, allDif);
+                                    obj.PsarcToAsciiTab(inputFilePath, outputDir, allDif);
+
+                                // covert all songs and arrangements by unpacking method
+                                // using (var obj = new Rs2014Converter())
+                                //    obj.ExtractBeforeConvert(inputFilePath, outputDir, allDif);
                             }
                         }
+
                         break;
                 }
 
@@ -124,16 +160,19 @@ namespace RocksmithToolkitGUI.SngToTabConverter
                     MessageBox.Show("Only ASCII Tab is supported for RS1 CDLC.", MESSAGEBOX_CAPTION,
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Information);
-                    rbAsciiTab.Checked = true;
                 }
             }
 
             Cursor.Current = Cursors.Default;
+
             if (MessageBox.Show("The conversion is complete.." + Environment.NewLine +
                 "Would you like to open the folder?", MESSAGEBOX_CAPTION,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                 Process.Start(outputDir);
         }
+
+
+
 
     }
 }

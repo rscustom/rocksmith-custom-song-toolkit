@@ -110,10 +110,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         }
         #endregion
 
-
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
 
     }
 }

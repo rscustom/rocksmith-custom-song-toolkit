@@ -52,7 +52,7 @@
             this.difficultyAll.AutoSize = true;
             this.difficultyAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.difficultyAll.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.difficultyAll.Location = new System.Drawing.Point(10, 56);
+            this.difficultyAll.Location = new System.Drawing.Point(13, 61);
             this.difficultyAll.Name = "difficultyAll";
             this.difficultyAll.Size = new System.Drawing.Size(128, 17);
             this.difficultyAll.TabIndex = 20;
@@ -66,7 +66,7 @@
             this.difficultyMax.Checked = true;
             this.difficultyMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.difficultyMax.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.difficultyMax.Location = new System.Drawing.Point(10, 19);
+            this.difficultyMax.Location = new System.Drawing.Point(13, 24);
             this.difficultyMax.Name = "difficultyMax";
             this.difficultyMax.Size = new System.Drawing.Size(186, 17);
             this.difficultyMax.TabIndex = 21;
@@ -78,7 +78,7 @@
             // 
             this.convertButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.convertButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.convertButton.Location = new System.Drawing.Point(80, 112);
+            this.convertButton.Location = new System.Drawing.Point(78, 112);
             this.convertButton.Name = "convertButton";
             this.convertButton.Size = new System.Drawing.Size(105, 23);
             this.convertButton.TabIndex = 24;
@@ -98,19 +98,19 @@
             this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(383, 174);
+            this.groupBox1.Size = new System.Drawing.Size(386, 169);
             this.groupBox1.TabIndex = 25;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Convert CDLC Archive:";
+            this.groupBox1.Text = "Convert CDLC Archives:";
             // 
             // gbOutput
             // 
             this.gbOutput.Controls.Add(this.rbSongList);
             this.gbOutput.Controls.Add(this.pictureBox1);
             this.gbOutput.Controls.Add(this.rbAsciiTab);
-            this.gbOutput.Location = new System.Drawing.Point(264, 19);
+            this.gbOutput.Location = new System.Drawing.Point(275, 19);
             this.gbOutput.Name = "gbOutput";
-            this.gbOutput.Size = new System.Drawing.Size(99, 135);
+            this.gbOutput.Size = new System.Drawing.Size(99, 123);
             this.gbOutput.TabIndex = 39;
             this.gbOutput.TabStop = false;
             this.gbOutput.Text = "Output To:";
@@ -119,7 +119,7 @@
             // 
             this.rbSongList.AutoSize = true;
             this.rbSongList.ForeColor = System.Drawing.Color.Black;
-            this.rbSongList.Location = new System.Drawing.Point(12, 93);
+            this.rbSongList.Location = new System.Drawing.Point(12, 90);
             this.rbSongList.Name = "rbSongList";
             this.rbSongList.Size = new System.Drawing.Size(66, 17);
             this.rbSongList.TabIndex = 41;
@@ -165,7 +165,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label2.Location = new System.Drawing.Point(29, 76);
+            this.label2.Location = new System.Drawing.Point(32, 81);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(229, 13);
             this.label2.TabIndex = 26;
@@ -176,7 +176,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(29, 38);
+            this.label1.Location = new System.Drawing.Point(32, 43);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(196, 13);
             this.label1.TabIndex = 25;
@@ -187,7 +187,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox1);
             this.Name = "SngToTabConverter";
-            this.Size = new System.Drawing.Size(410, 205);
+            this.Size = new System.Drawing.Size(413, 196);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.gbOutput.ResumeLayout(false);
