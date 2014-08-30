@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace RocksmithToolkitLib
 {
-    public class ToolkitVersion
+    public static class ToolkitVersion
     {
         public static string commit = "00000000";
         public static string version

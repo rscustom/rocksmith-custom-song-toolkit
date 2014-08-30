@@ -29,6 +29,7 @@ namespace RocksmithToolkitLib {
             return List.OfType<TuningDefinition>().Where(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()));
         }
 
+        [Obsolete("This function is deprecated due to low accuracy. Use SelectAny() instead.", true)]
         public TuningDefinition Select(string uiName, GameVersion gameVersion)
         {
             return List.FirstOrDefault<TuningDefinition>(s => s.UIName == uiName && s.GameVersion == gameVersion);
@@ -78,7 +79,7 @@ namespace RocksmithToolkitLib {
             if (Object.ReferenceEquals(obj, null))
                 return 0;
 
-            return obj.GameVersion.GetHashCode() ^ obj.GameVersion.GetHashCode() + obj.Tuning.GetHashCode();
+            return obj.GameVersion.GetHashCode() ^ obj.Tuning.GetHashCode();
         }
     }
 }

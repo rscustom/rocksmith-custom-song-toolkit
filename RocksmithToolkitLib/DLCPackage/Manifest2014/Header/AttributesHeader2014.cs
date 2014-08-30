@@ -118,7 +118,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 SongNameSort = info.SongInfo.SongDisplayNameSort;
                 SongYear = info.SongInfo.SongYear;
 
-                var tunDef = TuningDefinitionRepository.Instance().Select(arrangement.Tuning, platform.version);
+                var tunDef = TuningDefinitionRepository.Instance().Select(arrangement.TuningStrings, platform.version);
                 Tuning = tunDef.Tuning;
             }
         }

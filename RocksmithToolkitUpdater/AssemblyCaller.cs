@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
-using System.IO;
 
 namespace RocksmithToolkitUpdater
 {
@@ -22,7 +19,8 @@ namespace RocksmithToolkitUpdater
         // EXECUTE METHOD IN LIBS WITHOUT LOCK FILE
         private static object Call(string assemblyPath, string typeName, string method, Type[] paramTypes, bool createInstance, params object[] methodParams) {
             AppDomain domain = AppDomain.CreateDomain(UPDATER_DOMAIN);
-            AssemblyCaller assemblyCaller = (AssemblyCaller)domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(AssemblyCaller).FullName);
+            AssemblyCaller assemblyCaller = new AssemblyCaller();
+            assemblyCaller = (AssemblyCaller)domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(AssemblyCaller).FullName);
             object result = assemblyCaller.PrivateCall(assemblyPath, typeName, method, paramTypes, createInstance, methodParams);
             AppDomain.Unload(domain);
             return result;
@@ -30,7 +28,7 @@ namespace RocksmithToolkitUpdater
 
         private object PrivateCall(string assemblyPath, string typeName, string method, Type[] paramTypes, bool createInstance, params object[] methodParams)
         {
-            Assembly assembly = Assembly.Load(File.ReadAllBytes(assemblyPath));
+            Assembly assembly = Assembly.LoadFile(assemblyPath);
             Type compiledType = assembly.GetType(typeName);
             var istance = Activator.CreateInstance(compiledType);
             var bindingFlags = createInstance ? (BindingFlags.Public | BindingFlags.Instance) : (BindingFlags.Public | BindingFlags.Static);

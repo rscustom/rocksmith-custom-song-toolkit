@@ -22,23 +22,26 @@ namespace RocksmithToolkitLib {
         /// <summary>
         /// Repository file name i.e.: RocksmithToolkitLib.SongAppId.xml
         /// </summary>
-        protected string FileName;
+        private string _fileName;
+        protected string FileName {
+            set{
+                _fileName = value;
+                FilePath = Path.Combine(Application.StartupPath, value);
+            }
+            get { return _fileName; }
+        }
 
         /// <summary>
         /// Comparer to be used on Merge by different types
         /// </summary>
         protected IEqualityComparer<T> Comparer;
+        
+        public string FilePath;
 
-        public string FilePath {
-            get {
-                return Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), FileName);
-            }
-        }
-
-        /// <summary>
+        /// <summary>                                                  (
         /// List of objects from *.xml file
         /// </summary>
-        public List<T> List { get; set; }
+        public List<T> List;
 
         protected XmlRepository(string fileName, IEqualityComparer<T> comparer) {
             FileName = fileName;
