@@ -1,7 +1,7 @@
 ﻿/*
  * inspired from RSTabExplorer by andulv (https://github.com/andulv/RSTabExplorer)
  * modded for Rocksmith 2014 Tab Converter by Holger Frydrych http://github/fholger/RocksmithToTab 
- * this version by Cozy1 for CSC Toolkit, VS2010 and NET40 compatibility
+ * this version customized for CSC Toolkit
  */
 
 using System;
@@ -11,9 +11,9 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage;
+using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Sng2014HSL;
 
 namespace RocksmithToolkitLib.Song2014ToTab
@@ -73,7 +73,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 if (arrangement.ToLower() == "showlights" || arrangement.ToLower() == "jshowlights")
                     continue;
 
-                 if (currentSong == null || currentSong.Identifier != identifier)
+                if (currentSong == null || currentSong.Identifier != identifier)
                 {
                     // extract song info from the .json file
                     using (var ms = new MemoryStream())
@@ -92,14 +92,14 @@ namespace RocksmithToolkitLib.Song2014ToTab
                             var year = attributes["SongYear"].ToString();
 
                             currentSong = new SongInfo()
-                            {
-                                Title = attributes["SongName"].ToString(),
-                                Artist = attributes["ArtistName"].ToString(),
-                                Album = attributes["AlbumName"].ToString(),
-                                Year = attributes["SongYear"].ToString(),
-                                Identifier = identifier,
-                                Arrangements = new List<string>()
-                            };
+                                {
+                                    Title = attributes["SongName"].ToString(),
+                                    Artist = attributes["ArtistName"].ToString(),
+                                    Album = attributes["AlbumName"].ToString(),
+                                    Year = attributes["SongYear"].ToString(),
+                                    Identifier = identifier,
+                                    Arrangements = new List<string>()
+                                };
                             songList.Add(currentSong);
                         }
                         catch (NullReferenceException)
@@ -128,7 +128,8 @@ namespace RocksmithToolkitLib.Song2014ToTab
             // In order to instantiate a Rocksmith Song2014 object, we need both
             // the binary .sng file and the attributes contained in the corresponding
             // .json manifest.
-            Console.WriteLine("GetArrangement called with identifier [{0}], arrangement {{{1}}}", identifier, arrangement);
+            Console.WriteLine("GetArrangement called with identifier [{0}], arrangement {{{1}}}", identifier,
+                              arrangement);
             var sngFile = archive.Entries.FirstOrDefault(x => x.Name == "songs/bin/generic/" +
                                                                         identifier + "_" + arrangement + ".sng");
             var jsonFile = archive.Entries.FirstOrDefault(x => x.Name.StartsWith("manifests/songs") &&
@@ -143,7 +144,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 return null;
             }
 
-           // read out attributes from .json manifest
+            // read out attributes from .json manifest
             Attributes2014 attr;
             using (var ms = new MemoryStream())
             using (var reader = new StreamReader(ms, new UTF8Encoding(), false, 1024))
@@ -162,7 +163,6 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
             return new Song2014(sng, attr);
         }
-
     }
 
     /// <summary>

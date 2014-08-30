@@ -1,6 +1,6 @@
 ﻿namespace RocksmithToolkitGUI.SngToTabConverter
 {
-    partial class SongListForm
+    partial class SongInfoForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SongListForm));
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SongInfoForm));
             this.gbSongList = new System.Windows.Forms.GroupBox();
             this.btnContinue = new System.Windows.Forms.Button();
             this.lstSongList = new System.Windows.Forms.ListBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.gbSongList.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -41,19 +43,19 @@
             this.gbSongList.Controls.Add(this.lstSongList);
             this.gbSongList.Location = new System.Drawing.Point(12, 12);
             this.gbSongList.Name = "gbSongList";
-            this.gbSongList.Size = new System.Drawing.Size(248, 196);
+            this.gbSongList.Size = new System.Drawing.Size(275, 196);
             this.gbSongList.TabIndex = 44;
             this.gbSongList.TabStop = false;
-            this.gbSongList.Text = "Select Song(s) and Arrangement(s) to Convert";
+            this.gbSongList.Text = "Select Songs to Convert";
             // 
             // btnContinue
             // 
             this.btnContinue.BackColor = System.Drawing.Color.LightSteelBlue;
             this.btnContinue.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnContinue.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnContinue.Location = new System.Drawing.Point(68, 157);
+            this.btnContinue.Location = new System.Drawing.Point(156, 162);
             this.btnContinue.Name = "btnContinue";
-            this.btnContinue.Size = new System.Drawing.Size(105, 23);
+            this.btnContinue.Size = new System.Drawing.Size(74, 23);
             this.btnContinue.TabIndex = 42;
             this.btnContinue.Text = "Continue";
             this.btnContinue.UseVisualStyleBackColor = false;
@@ -66,22 +68,34 @@
             this.lstSongList.Location = new System.Drawing.Point(13, 20);
             this.lstSongList.Name = "lstSongList";
             this.lstSongList.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.lstSongList.Size = new System.Drawing.Size(224, 121);
+            this.lstSongList.Size = new System.Drawing.Size(247, 134);
             this.lstSongList.TabIndex = 41;
+            this.toolTip1.SetToolTip(this.lstSongList, "Left Click to Select/Deselect Single Song\r\nRight Click to Select/Deselect All Son" +
+                    "gs");
+            this.lstSongList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lstSongList_MouseDown);
             // 
-            // SongListForm
+            // toolTip1
+            // 
+            this.toolTip1.AutomaticDelay = 100;
+            this.toolTip1.AutoPopDelay = 10000;
+            this.toolTip1.InitialDelay = 100;
+            this.toolTip1.ReshowDelay = 20;
+            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
+            // 
+            // SongInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(271, 225);
+            this.ClientSize = new System.Drawing.Size(299, 225);
+            this.ControlBox = false;
             this.Controls.Add(this.gbSongList);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "SongListForm";
+            this.Name = "SongInfoForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "SongInfo List";
+            this.Text = "Song List";
             this.gbSongList.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -92,5 +106,6 @@
         private System.Windows.Forms.GroupBox gbSongList;
         private System.Windows.Forms.Button btnContinue;
         private System.Windows.Forms.ListBox lstSongList;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

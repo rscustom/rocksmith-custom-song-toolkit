@@ -26,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-p
 		Third-party Apps\readme.txt = Third-party Apps\readme.txt
 		Third-party Apps\rebuilder.exe = Third-party Apps\rebuilder.exe
 		Third-party Apps\revorb.exe = Third-party Apps\revorb.exe
+		Third-party Apps\RocksmithToTab.exe = Third-party Apps\RocksmithToTab.exe
 		Third-party Apps\tool\sfk.exe = Third-party Apps\tool\sfk.exe
 		Third-party Apps\ww2ogg.exe = Third-party Apps\ww2ogg.exe
 	EndProjectSection

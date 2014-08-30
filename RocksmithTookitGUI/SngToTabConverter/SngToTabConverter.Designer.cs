@@ -35,6 +35,7 @@
             this.convertButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.gbOutput = new System.Windows.Forms.GroupBox();
+            this.rbGp5 = new System.Windows.Forms.RadioButton();
             this.rbSongList = new System.Windows.Forms.RadioButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.rbAsciiTab = new System.Windows.Forms.RadioButton();
@@ -98,22 +99,35 @@
             this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(386, 169);
+            this.groupBox1.Size = new System.Drawing.Size(387, 178);
             this.groupBox1.TabIndex = 25;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Convert CDLC Archives:";
             // 
             // gbOutput
             // 
+            this.gbOutput.Controls.Add(this.rbGp5);
             this.gbOutput.Controls.Add(this.rbSongList);
             this.gbOutput.Controls.Add(this.pictureBox1);
             this.gbOutput.Controls.Add(this.rbAsciiTab);
             this.gbOutput.Location = new System.Drawing.Point(275, 19);
             this.gbOutput.Name = "gbOutput";
-            this.gbOutput.Size = new System.Drawing.Size(99, 123);
+            this.gbOutput.Size = new System.Drawing.Size(99, 143);
             this.gbOutput.TabIndex = 39;
             this.gbOutput.TabStop = false;
             this.gbOutput.Text = "Output To:";
+            // 
+            // rbGp5
+            // 
+            this.rbGp5.AutoSize = true;
+            this.rbGp5.ForeColor = System.Drawing.Color.Black;
+            this.rbGp5.Location = new System.Drawing.Point(12, 115);
+            this.rbGp5.Name = "rbGp5";
+            this.rbGp5.Size = new System.Drawing.Size(69, 17);
+            this.rbGp5.TabIndex = 42;
+            this.rbGp5.Text = "GuitarPro";
+            this.toolTip1.SetToolTip(this.rbGp5, "Create a GuitarPro *.gp5 file from RS2014 CDLC");
+            this.rbGp5.UseVisualStyleBackColor = true;
             // 
             // rbSongList
             // 
@@ -124,7 +138,7 @@
             this.rbSongList.Size = new System.Drawing.Size(66, 17);
             this.rbSongList.TabIndex = 41;
             this.rbSongList.Text = "SongList";
-            this.toolTip1.SetToolTip(this.rbSongList, "Create a text file that contains archive song info.");
+            this.toolTip1.SetToolTip(this.rbSongList, "Create a text file that contains RS2014 CDLC song info");
             this.rbSongList.UseVisualStyleBackColor = true;
             // 
             // pictureBox1
@@ -148,6 +162,7 @@
             this.rbAsciiTab.TabIndex = 38;
             this.rbAsciiTab.TabStop = true;
             this.rbAsciiTab.Text = "ASCII Tab";
+            this.toolTip1.SetToolTip(this.rbAsciiTab, "Create a ASCII Tablature *.txt file from RS2014 CDLC");
             this.rbAsciiTab.UseVisualStyleBackColor = true;
             // 
             // label3
@@ -182,12 +197,19 @@
             this.label1.TabIndex = 25;
             this.label1.Text = "One file with last level including all notes";
             // 
+            // toolTip1
+            // 
+            this.toolTip1.AutomaticDelay = 100;
+            this.toolTip1.AutoPopDelay = 10000;
+            this.toolTip1.InitialDelay = 100;
+            this.toolTip1.ReshowDelay = 20;
+            // 
             // SngToTabConverter
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox1);
             this.Name = "SngToTabConverter";
-            this.Size = new System.Drawing.Size(413, 196);
+            this.Size = new System.Drawing.Size(420, 209);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.gbOutput.ResumeLayout(false);
@@ -211,6 +233,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.RadioButton rbSongList;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.RadioButton rbGp5;
 
 
     }

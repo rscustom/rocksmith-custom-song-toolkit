@@ -386,11 +386,6 @@ namespace RocksmithToolkitLib.Song2014ToTab
         /// <returns>Song2014</returns>
         public Song2014 PsarcToSong2014(string inputPath, string songId = null, string arrangement = null)
         {
-            // for testing
-            // inputPath = "D:\\Work\\rs1compatibilitydlc_p.psarc"
-            // songId = "hitme";
-            // track = "lead";
-
             var browser = new PsarcBrowser(inputPath);
             var songList = browser.GetSongList();
 
@@ -427,96 +422,6 @@ namespace RocksmithToolkitLib.Song2014ToTab
             return arrSong2014;
         }
 
-        #endregion
-
-        #region PSARC to Song2014 to ASCII Tablature (loaded in memory)
-        /// <summary>
-        /// Load a PSARC file (all songs) into memory and
-        /// convert to Song2014 and then to ASCII Tablature
-        /// this method crashes for large multi song packs 
-        /// such as rs1compatibilitydlc_p.psarc file
-        /// </summary>
-        /// <param name="inputPath"></param>
-        /// <param name="outputDir"></param>
-        /// <param name="allDif"></param>
-        public void PsarcToAsciiTab(string inputPath, string outputDir, bool allDif)
-        {
-            var browser = new PsarcBrowser(inputPath);
-            var songList = browser.GetSongList();
-
-            // collect all songs to convert
-            var toConvert = new List<SongInfo>();
-            toConvert = toConvert.Concat(songList).ToList();
-
-            foreach (var song in toConvert)
-            {
-                if (song == null) continue;
-                // convert all arrangements
-                var arrangements = song.Arrangements;
-                if (song.Arrangements != null && song.Arrangements.Count > 0)
-                    arrangements = arrangements.Intersect(song.Arrangements).ToList();
-
-                foreach (var arr in arrangements)
-                {
-                    if (arr == null) continue;
-                    // push Song2014 into memory for this arragement
-                    Song2014 rs2014Song;
-                    using (var obj = new Rs2014Converter())
-                        rs2014Song = browser.GetArrangement(song.Identifier, arr);
-                    Console.WriteLine("Pushed Song2014 To Memory: [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
-
-                    using (var obj = new Rs2014Converter())
-                        obj.Song2014ToAsciiTab(rs2014Song, outputDir, allDif);
-                    Console.WriteLine("Done Converting:  [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
-                }
-            }
-        }
-        #endregion
-
-        #region Unpack PSARC to Song2014 to ASCII Tablature
-        /// <summary>
-        /// Unpack PSARC to Song2014 to ASCII Tablature
-        /// </summary>
-        /// <param name="inputPath"></param>
-        /// <param name="outputDir"></param>
-        /// <param name="allDif"></param>
-        public void ExtractBeforeConvert(string inputPath, string outputDir, bool allDif)
-        {
-            string sng2tabDir = Path.Combine(tmpWorkDir, "sng2tab");
-            Application.DoEvents();
-            Packer.Unpack(inputPath, sng2tabDir, false, true);
-            string unpackedDir = Path.Combine(sng2tabDir,
-                                              Path.GetFileNameWithoutExtension(inputPath) +
-                                              String.Format("_{0}", Packer.GetPlatform(inputPath).platform.ToString()));
-            Console.WriteLine("Unpacked file: {0}", inputPath);
-            Console.WriteLine("To directory: {0}", unpackedDir);
-
-            string[] xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
-
-            foreach (var xmlFilePath in xmlFiles)
-            {
-                // XML filenames are constructed as identifier_arrangement.xml
-                var fileName = Path.GetFileNameWithoutExtension(xmlFilePath);
-                var splitPoint = fileName.LastIndexOf('_');
-                // var identifier = fileName.Substring(0, splitPoint);
-                var arrangement = fileName.Substring(splitPoint + 1);
-
-                // exclude files for vocals and showlights 
-                if (arrangement.ToLower() == "vocals" || arrangement.ToLower() == "showlights")
-                    continue;
-
-                Song2014 rs2014Song;
-                using (var obj = new Rs2014Converter())
-                    rs2014Song = obj.XmlToSong2014(xmlFilePath);
-                Console.WriteLine("Converted Xml To Song2014: [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
-
-                using (var obj = new Rs2014Converter())
-                    obj.Song2014ToAsciiTab(rs2014Song, outputDir, allDif);
-                Console.WriteLine("Done Converting:  [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
-            }
-
-            DirectoryExtension.SafeDelete(sng2tabDir);
-        }
         #endregion
 
         #region Song2014 to ASCII Tablature
@@ -561,6 +466,51 @@ namespace RocksmithToolkitLib.Song2014ToTab
             get { return Path.Combine(Path.GetTempPath()); }
         }
         #endregion
+
+        #region PSARC to Song2014 to GuitarPro *.gp5 file
+        /// <summary>
+        /// Load a PSARC file (all songs) into memory and
+        /// convert to Song2014 and then to GuitarPro *.gp5 file
+        /// not good for large multi song packs 
+        /// such as rs1compatibilitydlc_p.psarc file
+        /// </summary>
+        /// <param name="inputFilePath"></param>
+        /// <param name="outputDir"></param>
+        /// <param name="allDif"></param>
+        public void PsarcToGp5(string inputPath, string outputDir, bool allDif)
+        {
+            var browser = new PsarcBrowser(inputPath);
+            var songList = browser.GetSongList();
+
+            // collect all songs to convert
+            var toConvert = new List<SongInfo>();
+            toConvert = toConvert.Concat(songList).ToList();
+
+            foreach (var song in toConvert)
+            {
+                if (song == null) continue;
+                // convert all arrangements
+                var arrangements = song.Arrangements;
+                if (song.Arrangements != null && song.Arrangements.Count > 0)
+                    arrangements = arrangements.Intersect(song.Arrangements).ToList();
+
+                foreach (var arr in arrangements)
+                {
+                    if (arr == null) continue;
+                    // push Song2014 into memory for this arragement
+                    Song2014 rs2014Song;
+                    using (var obj = new Rs2014Converter())
+                        rs2014Song = browser.GetArrangement(song.Identifier, arr);
+                    Console.WriteLine("Pushed Song2014 To Memory: [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
+
+                    // TODO:  Add support here
+
+                    Console.WriteLine("Done Converting:  [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
+                }
+            }
+        }
+        #endregion
+
 
         public void Dispose() { }
 

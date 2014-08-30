@@ -12,6 +12,18 @@ namespace RocksmithToolkitLib.Extensions
         private const string APP_7Z = "7za.exe";
         private const string APP_NVDXT = "nvdxt.exe";
         private const string APP_PACKER = "packer.exe";
+        private const string APP_GP5 = "RocksmithToTab.exe";
+
+        public static void Song2014ToGp5(string inputPath, string outputDir, string outputFormat = null, string songDiff = null, string songId = null, string songArr = null, string songSplit = null)
+        {
+            if (outputFormat != null) outputFormat = String.Format(" -f \"{0}\"", outputFormat);
+            if (songDiff != null) songDiff = String.Format(" -d {0}", songDiff);
+            if (songId != null) songId = String.Format(" -s \"{0}\"", songId);
+            if (songArr != null) songArr = String.Format(" -a \"{0}\"", songArr);
+            if (songSplit != null) songSplit = String.Format(" -t");
+            var cmdArgs = String.Format(" \"{0}\" -o \"{1}\"{2}{3}{4}{5}{6}", inputPath, outputDir, outputFormat, songDiff, songId, songArr, songSplit).TrimEnd();
+            GeneralExtensions.RunExternalExecutable(APP_GP5, true, false, true, cmdArgs);
+        }
 
 
         public static void Dds2Png(string sourcePath, string destinationPath = null)
