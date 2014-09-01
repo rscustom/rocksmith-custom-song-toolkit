@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DLCConverter));
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.platformTargetCombo = new System.Windows.Forms.ComboBox();
@@ -38,14 +38,13 @@
             this.platformSourceCombo = new System.Windows.Forms.ComboBox();
             this.convertButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Image = global::RocksmithToolkitGUI.Properties.Resources.brasil_logo;
             this.pictureBox2.Location = new System.Drawing.Point(158, 3);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(100, 103);
@@ -69,6 +68,16 @@
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Platform";
+            // 
+            // AppIdTB
+            // 
+            this.AppIdTB.Cue = "APP ID";
+            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
+            this.AppIdTB.Location = new System.Drawing.Point(8, 43);
+            this.AppIdTB.Name = "AppIdTB";
+            this.AppIdTB.Size = new System.Drawing.Size(74, 20);
+            this.AppIdTB.TabIndex = 50;
             // 
             // appIdCombo
             // 
@@ -149,16 +158,6 @@
             this.label3.Size = new System.Drawing.Size(183, 13);
             this.label3.TabIndex = 38;
             this.label3.Text = "Compatible only with Rocksmith 2014";
-            // 
-            // AppIdTB
-            // 
-            this.AppIdTB.Cue = "APP ID";
-            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
-            this.AppIdTB.Location = new System.Drawing.Point(8, 43);
-            this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(74, 20);
-            this.AppIdTB.TabIndex = 50;
             // 
             // DLCConverter
             // 

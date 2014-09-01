@@ -31,7 +31,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DLCInlayCreator));
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.chkFlipX = new System.Windows.Forms.CheckBox();
@@ -88,8 +87,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // appIdCombo
             // 
-            this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.appIdCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.appIdCombo.FormattingEnabled = true;
             this.appIdCombo.Location = new System.Drawing.Point(204, 30);
@@ -270,8 +269,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // inlayTemplateCombo
             // 
-            this.inlayTemplateCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.inlayTemplateCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.inlayTemplateCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.inlayTemplateCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.inlayTemplateCombo.FormattingEnabled = true;
@@ -332,7 +331,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // picFlipY
             // 
-            this.picFlipY.Image = ((System.Drawing.Image)(resources.GetObject("picFlipY.Image")));
+            this.picFlipY.Image = global::RocksmithToolkitGUI.Properties.Resources.flipYc;
             this.picFlipY.Location = new System.Drawing.Point(443, 15);
             this.picFlipY.Name = "picFlipY";
             this.picFlipY.Size = new System.Drawing.Size(16, 16);
@@ -492,8 +491,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // inlayTypeCombo
             // 
-            this.inlayTypeCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.inlayTypeCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.inlayTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.inlayTypeCombo.FormattingEnabled = true;
             this.inlayTypeCombo.Location = new System.Drawing.Point(10, 15);

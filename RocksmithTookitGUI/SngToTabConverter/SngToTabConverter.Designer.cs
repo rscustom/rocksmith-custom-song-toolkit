@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SngToTabConverter));
             this.difficultyAll = new System.Windows.Forms.RadioButton();
             this.difficultyMax = new System.Windows.Forms.RadioButton();
             this.convertButton = new System.Windows.Forms.Button();
@@ -143,7 +142,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Image = global::RocksmithToolkitGUI.Properties.Resources.music_edit;
             this.pictureBox1.Location = new System.Drawing.Point(34, 22);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(32, 32);
