@@ -26,7 +26,10 @@ namespace RocksmithToolkitLib.SngToTab
             tabFile.AppendLine("TITLE: " + Title + Environment.NewLine);
             if (Artist != "DUMMY")
                 tabFile.AppendLine("ARTIST: " + Artist + Environment.NewLine);
-            tabFile.AppendLine("LENGTH: " + Length + String.Format(" (DIFFICULTY LEVEL {0})", diff) + Environment.NewLine);
+            if (diff == 255)
+                tabFile.AppendLine("LENGTH: " + Length + " (MAXIMUM DIFFICULTY LEVEL)" + Environment.NewLine);
+            else
+                tabFile.AppendLine("LENGTH: " + Length + String.Format(" (DIFFICULTY LEVEL {0})", diff) + Environment.NewLine);
             tabFile.AppendLine("TUNING: " + TuningInfo.Description + Environment.NewLine);
         }
     }

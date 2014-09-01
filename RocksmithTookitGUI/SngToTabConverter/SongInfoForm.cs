@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
+using RocksmithToTabLib;
 using RocksmithToolkitLib.Song2014ToTab;
 
 namespace RocksmithToolkitGUI.SngToTabConverter
@@ -31,7 +31,7 @@ namespace RocksmithToolkitGUI.SngToTabConverter
         {
             lstSongList.Items.Clear();
             foreach (var song in songList)
-                lstSongList.Items.Add(song.Artist + " - " + song.Title + " - @@ - " +
+                lstSongList.Items.Add(song.Artist + " - " + song.Title + " - _ - " +
                                      song.Identifier);
         }
 
@@ -45,7 +45,7 @@ namespace RocksmithToolkitGUI.SngToTabConverter
                 foreach (var selectedItem in lstSongList.SelectedItems)
                 {
                     string[] lstItemArray = selectedItem.ToString().Split(new string[] { " - " }, StringSplitOptions.None);
-                    var arrangement = lstItemArray[2];
+                    var arrangement = (lstItemArray[2] == "_") ? null : lstItemArray[2];
                     var identifier = lstItemArray[3];
                     var currentInfo = new SongInfoShort()
                         {

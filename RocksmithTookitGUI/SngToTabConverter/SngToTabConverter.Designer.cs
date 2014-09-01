@@ -120,7 +120,7 @@
             // 
             this.rbGp5.AutoSize = true;
             this.rbGp5.ForeColor = System.Drawing.Color.Black;
-            this.rbGp5.Location = new System.Drawing.Point(12, 115);
+            this.rbGp5.Location = new System.Drawing.Point(12, 91);
             this.rbGp5.Name = "rbGp5";
             this.rbGp5.Size = new System.Drawing.Size(69, 17);
             this.rbGp5.TabIndex = 42;
@@ -132,7 +132,7 @@
             // 
             this.rbSongList.AutoSize = true;
             this.rbSongList.ForeColor = System.Drawing.Color.Black;
-            this.rbSongList.Location = new System.Drawing.Point(12, 90);
+            this.rbSongList.Location = new System.Drawing.Point(12, 117);
             this.rbSongList.Name = "rbSongList";
             this.rbSongList.Size = new System.Drawing.Size(66, 17);
             this.rbSongList.TabIndex = 41;

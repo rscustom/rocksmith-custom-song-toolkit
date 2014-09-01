@@ -28,7 +28,8 @@ namespace RocksmithToolkitLib.SngToTab
             if (allDif)
                 difficulties = Enumerable.Range(0, maxDifficulty + 1).ToArray();
             else // if (max)
-                difficulties = new int[] { maxDifficulty };
+                //  difficulties = new int[] { maxDifficulty };
+                difficulties = new int[] { 255 };
 
             foreach (int d in difficulties)
             {
@@ -43,7 +44,7 @@ namespace RocksmithToolkitLib.SngToTab
                 else
                     outputFileName = String.Format("{0}", "Unknown Song");
 
-                outputFileName += (difficulties.Length != 1) ? String.Format(" (level {0:00}).txt", d) : ".txt";
+                outputFileName += (difficulties.Length != 1) ? String.Format(" (level {0:D2}).txt", d) : ".txt";
                 outputFileName = outputFileName.GetValidName(true);
                 var outputFilePath = Path.Combine(outputDir, outputFileName);
 
@@ -69,7 +70,7 @@ namespace RocksmithToolkitLib.SngToTab
                 Convert(sngFilePath, outputDir, allDif);
             }
 
-          //  DirectoryExtension.SafeDelete(sng2tabDir);
+            DirectoryExtension.SafeDelete(sng2tabDir);
         }
 
         public void Dispose()

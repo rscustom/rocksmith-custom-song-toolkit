@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.IO;
+using RocksmithToTabLib;
 using RocksmithToolkitLib;
-using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.DLCPackage.Manifest;
 
 
 namespace RocksmithToolkitGUI.SngToTabConverter
@@ -38,9 +37,14 @@ namespace RocksmithToolkitGUI.SngToTabConverter
             // Input file(s)
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Multiselect = true;
+                if (rbAsciiTab.Checked)
+                    ofd.Filter = "RS1 (*.dat, *.sng, *.xml) or RS2014 (*.psarc) files|*.dat;*.sng;*.xml;*.psarc";
+                else
+                    ofd.Filter = "RS2014 (*.psarc) files|*.psarc";
+
                 ofd.Title = "Select RS1 and/or RS2014 CDLC files to convert";
-                ofd.Filter = "RS1 (*.dat, *.sng, *.xml) or RS2014 (*.psarc) files|*.dat;*.sng;*.xml;*.psarc";
+                ofd.Multiselect = true;
+
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
                 sourceFilePaths = ofd.FileNames;
@@ -48,6 +52,8 @@ namespace RocksmithToolkitGUI.SngToTabConverter
 
             using (var fbd = new FolderBrowserDialog())
             {
+                fbd.Description = "Select a folder for storing converted files.";
+                fbd.ShowNewFolderButton = true;
                 fbd.SelectedPath = outputDir;
                 // fbd.SelectedPath = "D:\\Temp"; // for testing
                 if (fbd.ShowDialog() != DialogResult.OK)
@@ -70,7 +76,7 @@ namespace RocksmithToolkitGUI.SngToTabConverter
                         if (arrangement.ToLower() == "vocals" || arrangement.ToLower() == "showlights")
                         {
                             MessageBox.Show(inputFilePath + Environment.NewLine + Environment.NewLine +
-                                            "Conversion not supported at this time!", MESSAGEBOX_CAPTION,
+                                            "Conversion of vocals and/or showlights is not supported at this time!", MESSAGEBOX_CAPTION,
                                             MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             break;
                         }
@@ -114,10 +120,10 @@ namespace RocksmithToolkitGUI.SngToTabConverter
                             if (MessageBox.Show(Path.GetFileName(inputFilePath) + " file size is " +
                                                 (fileInfo.Length / 1000).ToString("N00") + " KB" + Environment.NewLine +
                                                 "It may take a long time to extract and convert that much data." +
-                                                Environment.NewLine + Environment.NewLine +
-                                                "Do you want to continue?", MESSAGEBOX_CAPTION,
-                                                MessageBoxButtons.YesNo, MessageBoxIcon.Information) ==
-                                DialogResult.No) return;
+                                                Environment.NewLine + Environment.NewLine + "Do you want to continue?",
+                                                MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo,
+                                                MessageBoxIcon.Information) == DialogResult.No)
+                                return;
                         }
 
                         using (var obj = new Rs2014Converter())
@@ -150,74 +156,56 @@ namespace RocksmithToolkitGUI.SngToTabConverter
                             break;
                         }
 
-                        // convert to *.gp5 file(s)
-                        // TODO: optimize process by using dll
-
+                        // convert to *.gp5 file(s) optimized code for dll usage
                         if (!allDif && songList.Count == 1)
-                            ExternalApps.Song2014ToGp5(inputFilePath, outputDir, "gp5");
+                            using (var obj = new Gp5Converter())
+                                obj.PsarcToGp5(inputFilePath, outputDir);
 
                         else if (!allDif && songList.Count > 1)
                         {
                             using (var form = new SongInfoForm())
                             {
-                                form.PopSongOnly(songList);
+                                form.PopSongOnly(songList); //  songs only (merge all arrangements into single GP file)
+                                //  form.PopSongInfo(songList); // choose songs and arrangements
 
                                 do // waiting for user selection(s)
                                     form.ShowDialog();
-                                while (form.SongListShort == null);
+                                while (form.SongListShort.Count == 0);
 
                                 this.Refresh();
+                                if (form.SongListShort[0].Identifier == "User Aborted") break;
+
                                 Cursor.Current = Cursors.WaitCursor;
 
-                                foreach (var song in form.SongListShort)
-                                    ExternalApps.Song2014ToGp5(inputFilePath,
-                                        outputDir, "gp5", null, song.Identifier);
+                                using (var obj = new Gp5Converter())
+                                    obj.PsarcToGp5(inputFilePath, outputDir, form.SongListShort);
                             }
                         }
 
-                        // give user the option to select specific arrangements
+                        // give user the option to select specific songs and arrangements
                         else if (allDif)
                         {
                             using (var form = new SongInfoForm())
                             {
-                                form.PopSongInfo(songList);
+                                form.PopSongInfo(songList); // choose songs and arrangements
 
                                 do // waiting for user selection(s)
                                     form.ShowDialog();
-                                while (form.SongListShort == null);
+                                while (form.SongListShort.Count == 0);
 
                                 this.Refresh();
+                                if (form.SongListShort[0].Identifier == "User Aborted") break;
+
                                 Cursor.Current = Cursors.WaitCursor;
 
-                                foreach (var song in form.SongListShort)
-                                {
-                                    Song2014 rs2014Song;
-                                    using (var obj = new Rs2014Converter())
-                                        rs2014Song = obj.PsarcToSong2014(inputFilePath, song.Identifier, song.Arrangement);
+                                using (var obj = new Gp5Converter())
+                                    obj.PsarcToGp5(inputFilePath, outputDir, form.SongListShort, "gp5", true);
 
-                                    var mf = new ManifestFunctions(GameVersion.RS2014);
-                                    int maxDiff = mf.GetMaxDifficulty(rs2014Song); // for the arrangement
-
-                                    for (int diffLevel = 0; diffLevel <= maxDiff; diffLevel++)
-                                        ExternalApps.Song2014ToGp5(inputFilePath, outputDir, "gp5",
-                                                                   diffLevel.ToString(), song.Identifier,
-                                                                   song.Arrangement, "-t");
-                                }
                             }
                         }
-                        else
-                            Console.WriteLine("Unknown user combination for converting to *.gp5");
-
-                        Console.WriteLine("allDif: " + allDif + "   songList.Count: " + songList.Count);
-                        Refresh();
                         break;
                 }
-
-                if (!rbAsciiTab.Checked && fileExtension != ".psarc")
-                    MessageBox.Show("Only ASCII Tab is supported for RS1 CDLC.", MESSAGEBOX_CAPTION,
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Information);
-
+                Refresh();
             }
 
             Cursor.Current = Cursors.Default;

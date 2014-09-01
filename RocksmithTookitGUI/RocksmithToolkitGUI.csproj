@@ -65,6 +65,10 @@
     <Reference Include="PSTaskDialog">
       <HintPath>..\lib\PSTaskDialog\PSTaskDialog.dll</HintPath>
     </Reference>
+    <Reference Include="RocksmithToTabLib, Version=0.9.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Third-party Apps\RocksmithToTabLib.dll</HintPath>
+    </Reference>
     <Reference Include="SharpConfig">
       <HintPath>..\lib\SharpConfig\SharpConfig.dll</HintPath>
     </Reference>
@@ -303,6 +307,7 @@
     <EmbeddedResource Include="ZiggyProEditorConverter\ConverterInput.resx">
       <DependentUpon>ConverterInput.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>

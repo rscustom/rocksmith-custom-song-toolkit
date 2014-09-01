@@ -67,6 +67,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="RocksmithToTabLib">
+      <HintPath>..\Third-party Apps\RocksmithToTabLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -91,10 +94,8 @@
     <Compile Include="Extensions\ExternalApps.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
     <Compile Include="SngToTab\Sng2Tab.cs" />
+    <Compile Include="Song2014ToTab\Gp5Converter.cs" />
     <Compile Include="Song2014ToTab\Rs1Converter.cs" />
-    <Compile Include="Song2014ToTab\PsarcBrowser.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
     <Compile Include="Song2014ToTab\Rs2014Converter.cs">
       <SubType>Code</SubType>
     </Compile>

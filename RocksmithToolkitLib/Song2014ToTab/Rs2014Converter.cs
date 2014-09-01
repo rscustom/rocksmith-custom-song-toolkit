@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.Xml;
 using System.IO;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToTabLib;
+
 
 namespace RocksmithToolkitLib.Song2014ToTab
 {
     public class Rs2014Converter : IDisposable
     {
+        public void Dispose() { }
+
+
         #region Song2014 to XML
 
         /// <summary>
@@ -38,6 +41,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         #endregion
 
         #region XML file to Song2014
+
         /// <summary>
         /// Convert XML file to RS2014 (Song2014)
         /// </summary>
@@ -48,6 +52,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             Song2014 song = Song2014.LoadFromFile(xmlFilePath);
             return song;
         }
+
         #endregion
 
         #region Song2014 to Song
@@ -330,21 +335,22 @@ namespace RocksmithToolkitLib.Song2014ToTab
         #endregion
 
         #region PSARC to SongList
+
         /// <summary>
         /// create SongInfo List from PSARC file 
         /// with option to output to *.txt file
         /// </summary>
-        /// <param name="inputPath"></param>
+        /// <param name="inputFilePath"></param>
         /// <param name="outputDir is optional"></param>
         /// <returns>SongInfo List</returns>
-        public IList<SongInfo> PsarcSongList(string inputPath, string outputDir = null)
+        public IList<SongInfo> PsarcSongList(string inputFilePath, string outputDir = null)
         {
-            var browser = new PsarcBrowser(inputPath);
+            var browser = new PsarcBrowser(inputFilePath);
             var songList = browser.GetSongList();
 
             if (outputDir != null)
             {
-                var songInfo = String.Format("ARCHIVE  -  {0}  -  SONG LIST INFO", Path.GetFileName(inputPath));
+                var songInfo = String.Format("ARCHIVE  -  {0}  -  SONG LIST INFO", Path.GetFileName(inputFilePath));
                 songInfo += Environment.NewLine + Environment.NewLine;
                 songInfo += "[Song Identifier]  Artist - Title  (Album, Year)  {Arrangements}";
                 songInfo += Environment.NewLine;
@@ -354,14 +360,14 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 foreach (var song in songList)
                 {
                     songInfo += String.Format("[{0}]  {1} - {2}  ({3}, {4})  {{{5}}}", song.Identifier,
-                                      song.Artist, song.Title, song.Album, song.Year,
-                                      string.Join(", ", song.Arrangements));
+                                              song.Artist, song.Title, song.Album, song.Year,
+                                              string.Join(", ", song.Arrangements));
                     songInfo += Environment.NewLine;
                 }
                 songInfo += Environment.NewLine + Environment.NewLine;
                 songInfo += "End of Report";
 
-                var outputFile = Path.GetFileNameWithoutExtension(inputPath).ToLower();
+                var outputFile = Path.GetFileNameWithoutExtension(inputFilePath).ToLower();
                 var outputPath = Path.Combine(outputDir, String.Format("{0}_songlist.txt", outputFile));
 
                 using (TextWriter tw = new StreamWriter(outputPath))
@@ -372,21 +378,23 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
             return songList;
         }
+
         #endregion
 
         #region PSARC to Song2014 (for a specific song and/or arrangement)
+
         /// <summary>
         /// extract Song2014 from PSARC file for a specific
         /// songId (short song title) and arrangement (lead, rythum, bass)
         /// defaults to the first songId and arrangement if not specified
         /// </summary>
-        /// <param name="inputPath"></param>
+        /// <param name="inputFilePath"></param>
         /// <param name="songId"></param>
         /// <param name="arrangement"></param>
         /// <returns>Song2014</returns>
-        public Song2014 PsarcToSong2014(string inputPath, string songId = null, string arrangement = null)
+        public Song2014 PsarcToSong2014(string inputFilePath, string songId = null, string arrangement = null)
         {
-            var browser = new PsarcBrowser(inputPath);
+            var browser = new PsarcBrowser(inputFilePath);
             var songList = browser.GetSongList();
 
             if (songId == null) // grab the first song.Identifier
@@ -425,6 +433,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         #endregion
 
         #region Song2014 to ASCII Tablature
+
         /// <summary>
         /// Song2014 to ASCII Tablature
         /// </summary>
@@ -465,54 +474,9 @@ namespace RocksmithToolkitLib.Song2014ToTab
         {
             get { return Path.Combine(Path.GetTempPath()); }
         }
+
         #endregion
 
-        #region PSARC to Song2014 to GuitarPro *.gp5 file
-        /// <summary>
-        /// Load a PSARC file (all songs) into memory and
-        /// convert to Song2014 and then to GuitarPro *.gp5 file
-        /// not good for large multi song packs 
-        /// such as rs1compatibilitydlc_p.psarc file
-        /// </summary>
-        /// <param name="inputFilePath"></param>
-        /// <param name="outputDir"></param>
-        /// <param name="allDif"></param>
-        public void PsarcToGp5(string inputPath, string outputDir, bool allDif)
-        {
-            var browser = new PsarcBrowser(inputPath);
-            var songList = browser.GetSongList();
-
-            // collect all songs to convert
-            var toConvert = new List<SongInfo>();
-            toConvert = toConvert.Concat(songList).ToList();
-
-            foreach (var song in toConvert)
-            {
-                if (song == null) continue;
-                // convert all arrangements
-                var arrangements = song.Arrangements;
-                if (song.Arrangements != null && song.Arrangements.Count > 0)
-                    arrangements = arrangements.Intersect(song.Arrangements).ToList();
-
-                foreach (var arr in arrangements)
-                {
-                    if (arr == null) continue;
-                    // push Song2014 into memory for this arragement
-                    Song2014 rs2014Song;
-                    using (var obj = new Rs2014Converter())
-                        rs2014Song = browser.GetArrangement(song.Identifier, arr);
-                    Console.WriteLine("Pushed Song2014 To Memory: [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
-
-                    // TODO:  Add support here
-
-                    Console.WriteLine("Done Converting:  [{0}] {{{1}}}", rs2014Song.Title, rs2014Song.Arrangement);
-                }
-            }
-        }
-        #endregion
-
-
-        public void Dispose() { }
 
     }
 }
