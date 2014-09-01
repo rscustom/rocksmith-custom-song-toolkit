@@ -67,7 +67,7 @@
     </Reference>
     <Reference Include="RocksmithToTabLib, Version=0.9.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Third-party Apps\RocksmithToTabLib.dll</HintPath>
+      <HintPath>..\lib\RocksmithToTabLib\RocksmithToTabLib.dll</HintPath>
     </Reference>
     <Reference Include="SharpConfig">
       <HintPath>..\lib\SharpConfig\SharpConfig.dll</HintPath>

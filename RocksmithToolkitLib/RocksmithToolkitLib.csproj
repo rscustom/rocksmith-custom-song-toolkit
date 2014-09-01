@@ -67,8 +67,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RocksmithToTabLib">
-      <HintPath>..\Third-party Apps\RocksmithToTabLib.dll</HintPath>
+    <Reference Include="RocksmithToTabLib, Version=0.9.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\RocksmithToTabLib\RocksmithToTabLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
