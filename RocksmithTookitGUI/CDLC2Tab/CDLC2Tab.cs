@@ -10,19 +10,24 @@ using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
 
 
-namespace RocksmithToolkitGUI.SngToTabConverter
+namespace RocksmithToolkitGUI.CDLC2Tab
 {
-    public partial class SngToTabConverter : UserControl
+    public partial class CDLC2Tab : UserControl
     {
-        private const string MESSAGEBOX_CAPTION = "SNG 2 Tab Converter";
+        private const string MESSAGEBOX_CAPTION = "CDLC 2 Tab Converter";
         private string outputDir;
         private bool allDif;
         private IList<SongInfo> songList;
 
-        public SngToTabConverter()
+        public CDLC2Tab()
         {
             InitializeComponent();
+            InitOutputDir();  
+        }
 
+        private void InitOutputDir()
+        {
+            // set initial outputDir location
             if (Directory.Exists(ConfigRepository.Instance()["general_rs2014path"]))
                 outputDir = Path.Combine(ConfigRepository.Instance()["general_rs2014path"], "dlc");
             else
@@ -72,14 +77,9 @@ namespace RocksmithToolkitGUI.SngToTabConverter
                         var fileName = Path.GetFileNameWithoutExtension(inputFilePath);
                         var splitPoint = fileName.LastIndexOf('_');
                         var arrangement = fileName.Substring(splitPoint + 1);
-                        // exclude files for vocals and showlights 
+                        // skip any files for vocals and/or showlights
                         if (arrangement.ToLower() == "vocals" || arrangement.ToLower() == "showlights")
-                        {
-                            MessageBox.Show(inputFilePath + Environment.NewLine + Environment.NewLine +
-                                            "Conversion of vocals and/or showlights is not supported at this time!", MESSAGEBOX_CAPTION,
-                                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             break;
-                        }
 
                         Song rs1Song;
                         using (var obj = new Rs1Converter())
@@ -215,6 +215,5 @@ namespace RocksmithToolkitGUI.SngToTabConverter
                 MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                 Process.Start(outputDir);
         }
-
     }
 }

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using RocksmithToTabLib;
 using RocksmithToolkitLib.Song2014ToTab;
 
-namespace RocksmithToolkitGUI.SngToTabConverter
+namespace RocksmithToolkitGUI.CDLC2Tab
 {
     public partial class SongInfoForm : Form
     {

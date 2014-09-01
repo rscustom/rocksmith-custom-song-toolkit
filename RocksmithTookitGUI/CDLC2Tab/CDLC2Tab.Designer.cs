@@ -1,6 +1,6 @@
-﻿namespace RocksmithToolkitGUI.SngToTabConverter
+﻿namespace RocksmithToolkitGUI.CDLC2Tab
 {
-    partial class SngToTabConverter
+    partial class CDLC2Tab
     {
         /// <summary> 
         /// Required designer variable.
@@ -78,9 +78,9 @@
             // 
             this.convertButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.convertButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.convertButton.Location = new System.Drawing.Point(78, 112);
+            this.convertButton.Location = new System.Drawing.Point(78, 108);
             this.convertButton.Name = "convertButton";
-            this.convertButton.Size = new System.Drawing.Size(105, 23);
+            this.convertButton.Size = new System.Drawing.Size(105, 27);
             this.convertButton.TabIndex = 24;
             this.convertButton.Text = "Convert";
             this.convertButton.UseVisualStyleBackColor = false;
@@ -203,11 +203,11 @@
             this.toolTip1.InitialDelay = 100;
             this.toolTip1.ReshowDelay = 20;
             // 
-            // SngToTabConverter
+            // CDLC2Tab
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox1);
-            this.Name = "SngToTabConverter";
+            this.Name = "CDLC2Tab";
             this.Size = new System.Drawing.Size(420, 209);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

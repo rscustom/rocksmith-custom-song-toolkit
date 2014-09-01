@@ -58,14 +58,14 @@
             this.sngConverterControl = new RocksmithToolkitGUI.SngConverter.SngConverter();
             this.oggConverterTab = new System.Windows.Forms.TabPage();
             this.oggConverterControl = new RocksmithToolkitGUI.OggConverter.OggConverter();
-            this.sngToTabConverterTab = new System.Windows.Forms.TabPage();
-            this.sngToTabConverter = new RocksmithToolkitGUI.SngToTabConverter.SngToTabConverter();
+            this.cdlcConverterTab = new System.Windows.Forms.TabPage();
             this.zigProConverterTab = new System.Windows.Forms.TabPage();
             this.ziggyConverterControl = new RocksmithToolkitGUI.ZiggyProEditorConverter.ConvertInput();
             this.GeneralConfigTab = new System.Windows.Forms.TabPage();
             this.generalConfigControl = new RocksmithToolkitGUI.Config.GeneralConfig();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.updateButton = new System.Windows.Forms.Button();
+            this.cdlC2Tab1 = new RocksmithToolkitGUI.CDLC2Tab.CDLC2Tab();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.dlcPackageCreatorTab.SuspendLayout();
@@ -75,7 +75,7 @@
             this.dlcInlayCreatorTab.SuspendLayout();
             this.sngConverterTab.SuspendLayout();
             this.oggConverterTab.SuspendLayout();
-            this.sngToTabConverterTab.SuspendLayout();
+            this.cdlcConverterTab.SuspendLayout();
             this.zigProConverterTab.SuspendLayout();
             this.GeneralConfigTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -94,7 +94,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(584, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(592, 24);
             this.menuStrip1.TabIndex = 15;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -104,20 +104,20 @@
             this.restartToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // restartToolStripMenuItem
             // 
             this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
-            this.restartToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.restartToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.restartToolStripMenuItem.Text = "Restart";
             this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -127,35 +127,35 @@
             this.helpToolStripMenuItem,
             this.aboutToolStripMenuItem1});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.aboutToolStripMenuItem.Text = "About";
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.helpToolStripMenuItem.Text = "Help";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem1
             // 
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(114, 22);
             this.aboutToolStripMenuItem1.Text = "About";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
             // configurationToolStripMenuItem
             // 
             this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
-            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(93, 20);
+            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
             this.configurationToolStripMenuItem.Text = "Configuration";
             this.configurationToolStripMenuItem.Click += new System.EventHandler(this.configurationToolStripMenuItem_Click);
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.dlcPackageCreatorTab);
             this.tabControl1.Controls.Add(this.dlcPackerUnpackerTab);
             this.tabControl1.Controls.Add(this.dlcConverterTab);
@@ -163,10 +163,10 @@
             this.tabControl1.Controls.Add(this.dlcInlayCreatorTab);
             this.tabControl1.Controls.Add(this.sngConverterTab);
             this.tabControl1.Controls.Add(this.oggConverterTab);
-            this.tabControl1.Controls.Add(this.sngToTabConverterTab);
+            this.tabControl1.Controls.Add(this.cdlcConverterTab);
             this.tabControl1.Controls.Add(this.zigProConverterTab);
             this.tabControl1.Controls.Add(this.GeneralConfigTab);
-            this.tabControl1.Location = new System.Drawing.Point(17, 93);
+            this.tabControl1.Location = new System.Drawing.Point(17, 100);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(8);
             this.tabControl1.MinimumSize = new System.Drawing.Size(550, 590);
             this.tabControl1.Name = "tabControl1";
@@ -188,14 +188,25 @@
             // 
             // dlcPackageCreatorControl
             // 
-            this.dlcPackageCreatorControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dlcPackageCreatorControl.Album = "";
+            this.dlcPackageCreatorControl.AlbumYear = "";
+            this.dlcPackageCreatorControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dlcPackageCreatorControl.AppId = "";
+            this.dlcPackageCreatorControl.Artist = "";
+            this.dlcPackageCreatorControl.ArtistSort = "";
+            this.dlcPackageCreatorControl.AverageTempo = "";
+            this.dlcPackageCreatorControl.CurrentGameVersion = RocksmithToolkitLib.GameVersion.RS2014;
+            this.dlcPackageCreatorControl.DLCName = "";
             this.dlcPackageCreatorControl.Location = new System.Drawing.Point(16, 6);
             this.dlcPackageCreatorControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcPackageCreatorControl.MinimumSize = new System.Drawing.Size(520, 555);
             this.dlcPackageCreatorControl.Name = "dlcPackageCreatorControl";
-            this.dlcPackageCreatorControl.Size = new System.Drawing.Size(630, 600);
+            this.dlcPackageCreatorControl.PackageVersion = "";
+            this.dlcPackageCreatorControl.Size = new System.Drawing.Size(870, 1045);
+            this.dlcPackageCreatorControl.SongTitle = "";
+            this.dlcPackageCreatorControl.SongTitleSort = "";
             this.dlcPackageCreatorControl.TabIndex = 0;
             // 
             // dlcPackerUnpackerTab
@@ -205,7 +216,7 @@
             this.dlcPackerUnpackerTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcPackerUnpackerTab.Name = "dlcPackerUnpackerTab";
             this.dlcPackerUnpackerTab.Padding = new System.Windows.Forms.Padding(2);
-            this.dlcPackerUnpackerTab.Size = new System.Drawing.Size(542, 564);
+            this.dlcPackerUnpackerTab.Size = new System.Drawing.Size(192, 74);
             this.dlcPackerUnpackerTab.TabIndex = 1;
             this.dlcPackerUnpackerTab.Text = "Packer/Unpacker";
             this.dlcPackerUnpackerTab.UseVisualStyleBackColor = true;
@@ -213,10 +224,10 @@
             // dlcPackerUnpackerControl
             // 
             this.dlcPackerUnpackerControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(58, 60);
+            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(-117, 34);
             this.dlcPackerUnpackerControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
-            this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(419, 574);
+            this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(419, 524);
             this.dlcPackerUnpackerControl.TabIndex = 1;
             // 
             // dlcConverterTab
@@ -234,7 +245,8 @@
             // dlcConverterControl
             // 
             this.dlcConverterControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dlcConverterControl.Location = new System.Drawing.Point(70, 30);
+            this.dlcConverterControl.AppId = "";
+            this.dlcConverterControl.Location = new System.Drawing.Point(58, 45);
             this.dlcConverterControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcConverterControl.Name = "dlcConverterControl";
             this.dlcConverterControl.Size = new System.Drawing.Size(419, 270);
@@ -295,13 +307,13 @@
             // 
             // sngConverterControl
             // 
-            this.sngConverterControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.sngConverterControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.sngConverterControl.Location = new System.Drawing.Point(18, 24);
             this.sngConverterControl.Margin = new System.Windows.Forms.Padding(4);
             this.sngConverterControl.MinimumSize = new System.Drawing.Size(494, 307);
             this.sngConverterControl.Name = "sngConverterControl";
-            this.sngConverterControl.Size = new System.Drawing.Size(503, 307);
+            this.sngConverterControl.Size = new System.Drawing.Size(844, 307);
             this.sngConverterControl.TabIndex = 4;
             // 
             // oggConverterTab
@@ -318,34 +330,24 @@
             // 
             // oggConverterControl
             // 
-            this.oggConverterControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.oggConverterControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.oggConverterControl.Location = new System.Drawing.Point(18, 24);
             this.oggConverterControl.Margin = new System.Windows.Forms.Padding(4);
             this.oggConverterControl.MinimumSize = new System.Drawing.Size(498, 122);
             this.oggConverterControl.Name = "oggConverterControl";
-            this.oggConverterControl.Size = new System.Drawing.Size(498, 204);
+            this.oggConverterControl.Size = new System.Drawing.Size(848, 204);
             this.oggConverterControl.TabIndex = 5;
             // 
-            // sngToTabConverterTab
+            // cdlcConverterTab
             // 
-            this.sngToTabConverterTab.Controls.Add(this.sngToTabConverter);
-            this.sngToTabConverterTab.Location = new System.Drawing.Point(4, 22);
-            this.sngToTabConverterTab.Name = "sngToTabConverterTab";
-            this.sngToTabConverterTab.Padding = new System.Windows.Forms.Padding(3);
-            this.sngToTabConverterTab.Size = new System.Drawing.Size(542, 564);
-            this.sngToTabConverterTab.TabIndex = 7;
-            this.sngToTabConverterTab.Text = "Sng2Tab";
-            this.sngToTabConverterTab.UseVisualStyleBackColor = true;
-            // 
-            // sngToTabConverter
-            // 
-            this.sngToTabConverter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.sngToTabConverter.Location = new System.Drawing.Point(65, 20);
-            this.sngToTabConverter.Name = "sngToTabConverter";
-            this.sngToTabConverter.Size = new System.Drawing.Size(522, 282);
-            this.sngToTabConverter.TabIndex = 6;
+            this.cdlcConverterTab.Controls.Add(this.cdlC2Tab1);
+            this.cdlcConverterTab.Location = new System.Drawing.Point(4, 22);
+            this.cdlcConverterTab.Name = "cdlcConverterTab";
+            this.cdlcConverterTab.Size = new System.Drawing.Size(542, 564);
+            this.cdlcConverterTab.TabIndex = 10;
+            this.cdlcConverterTab.Text = "CDLC 2 Tab";
+            this.cdlcConverterTab.UseVisualStyleBackColor = true;
             // 
             // zigProConverterTab
             // 
@@ -360,12 +362,12 @@
             // 
             // ziggyConverterControl
             // 
-            this.ziggyConverterControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ziggyConverterControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.ziggyConverterControl.Location = new System.Drawing.Point(18, 24);
             this.ziggyConverterControl.MinimumSize = new System.Drawing.Size(483, 111);
             this.ziggyConverterControl.Name = "ziggyConverterControl";
-            this.ziggyConverterControl.Size = new System.Drawing.Size(483, 111);
+            this.ziggyConverterControl.Size = new System.Drawing.Size(833, 111);
             this.ziggyConverterControl.TabIndex = 7;
             // 
             // GeneralConfigTab
@@ -374,7 +376,7 @@
             this.GeneralConfigTab.Location = new System.Drawing.Point(4, 22);
             this.GeneralConfigTab.Name = "GeneralConfigTab";
             this.GeneralConfigTab.Padding = new System.Windows.Forms.Padding(3);
-            this.GeneralConfigTab.Size = new System.Drawing.Size(542, 564);
+            this.GeneralConfigTab.Size = new System.Drawing.Size(192, 74);
             this.GeneralConfigTab.TabIndex = 9;
             this.GeneralConfigTab.Text = "General Config";
             this.GeneralConfigTab.UseVisualStyleBackColor = true;
@@ -384,7 +386,7 @@
             this.generalConfigControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.generalConfigControl.Location = new System.Drawing.Point(3, 3);
             this.generalConfigControl.Name = "generalConfigControl";
-            this.generalConfigControl.Size = new System.Drawing.Size(521, 419);
+            this.generalConfigControl.Size = new System.Drawing.Size(186, 68);
             this.generalConfigControl.TabIndex = 7;
             // 
             // pictureBox1
@@ -413,10 +415,17 @@
             this.updateButton.Visible = false;
             this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
             // 
+            // cdlC2Tab1
+            // 
+            this.cdlC2Tab1.Location = new System.Drawing.Point(58, 19);
+            this.cdlC2Tab1.Name = "cdlC2Tab1";
+            this.cdlC2Tab1.Size = new System.Drawing.Size(420, 209);
+            this.cdlC2Tab1.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(584, 694);
+            this.ClientSize = new System.Drawing.Size(592, 694);
             this.Controls.Add(this.updateButton);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBox1);
@@ -441,7 +450,7 @@
             this.dlcInlayCreatorTab.ResumeLayout(false);
             this.sngConverterTab.ResumeLayout(false);
             this.oggConverterTab.ResumeLayout(false);
-            this.sngToTabConverterTab.ResumeLayout(false);
+            this.cdlcConverterTab.ResumeLayout(false);
             this.zigProConverterTab.ResumeLayout(false);
             this.GeneralConfigTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -471,7 +480,6 @@
         private System.Windows.Forms.TabPage dlcInlayCreatorTab;
         private System.Windows.Forms.TabPage sngConverterTab;
         private System.Windows.Forms.TabPage oggConverterTab;
-        private System.Windows.Forms.TabPage sngToTabConverterTab;
         private System.Windows.Forms.TabPage zigProConverterTab;
         private System.Windows.Forms.TabPage GeneralConfigTab;
         private DLCPackageCreator.DLCPackageCreator dlcPackageCreatorControl;
@@ -481,9 +489,10 @@
         private DLCInlayCreator.DLCInlayCreator dlcInlayCreatorControl;
         private SngConverter.SngConverter sngConverterControl;
         private OggConverter.OggConverter oggConverterControl;
-        private SngToTabConverter.SngToTabConverter sngToTabConverter;
         private ZiggyProEditorConverter.ConvertInput ziggyConverterControl;
         private Config.GeneralConfig generalConfigControl;
+        private System.Windows.Forms.TabPage cdlcConverterTab;
+        private CDLC2Tab.CDLC2Tab cdlC2Tab1;
     }
 }
 
