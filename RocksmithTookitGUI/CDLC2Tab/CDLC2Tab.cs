@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.IO;
@@ -22,16 +23,28 @@ namespace RocksmithToolkitGUI.CDLC2Tab
         public CDLC2Tab()
         {
             InitializeComponent();
-            InitOutputDir();  
+            InitOutputDir();
         }
 
         private void InitOutputDir()
         {
-            // set initial outputDir location
-            if (Directory.Exists(ConfigRepository.Instance()["general_rs2014path"]))
-                outputDir = Path.Combine(ConfigRepository.Instance()["general_rs2014path"], "dlc");
-            else
-                outputDir = Path.GetDirectoryName(Application.ExecutablePath);
+            if (!MainForm.IsInDesignMode)
+                // set initial outputDir location
+                if (Directory.Exists(ConfigRepository.Instance()["general_rs2014path"]))
+                    outputDir = Path.Combine(ConfigRepository.Instance()["general_rs2014path"], "dlc");
+                else
+                    outputDir = Path.GetDirectoryName(Application.ExecutablePath);
+        }
+
+        private void OpenFileDialog_FileLimit(object sender, CancelEventArgs e)
+        {
+            OpenFileDialog dlg = sender as OpenFileDialog;
+            if (dlg.FileNames.Length > 10)
+            {
+                MessageBox.Show("Exceeded conversion limit of 10 files per run.",
+                     MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                e.Cancel = true;
+            }
         }
 
         private void convertButton_Click(object sender, EventArgs e)
@@ -49,6 +62,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
 
                 ofd.Title = "Select RS1 and/or RS2014 CDLC files to convert";
                 ofd.Multiselect = true;
+                ofd.FileOk += OpenFileDialog_FileLimit; // Event handler
 
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
