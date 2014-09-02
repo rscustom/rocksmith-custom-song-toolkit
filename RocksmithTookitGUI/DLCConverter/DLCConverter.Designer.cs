@@ -89,7 +89,7 @@
             this.appIdCombo.Margin = new System.Windows.Forms.Padding(2);
             this.appIdCombo.Name = "appIdCombo";
             this.appIdCombo.Size = new System.Drawing.Size(301, 21);
-            this.appIdCombo.TabIndex = 49;
+            this.appIdCombo.TabIndex = 2;
             this.appIdCombo.SelectedIndexChanged += new System.EventHandler(this.appIdCombo_SelectedIndexChanged);
             // 
             // label2
@@ -112,7 +112,7 @@
             this.platformTargetCombo.Margin = new System.Windows.Forms.Padding(2);
             this.platformTargetCombo.Name = "platformTargetCombo";
             this.platformTargetCombo.Size = new System.Drawing.Size(130, 21);
-            this.platformTargetCombo.TabIndex = 45;
+            this.platformTargetCombo.TabIndex = 1;
             this.platformTargetCombo.SelectedIndexChanged += new System.EventHandler(this.platformTargetCombo_SelectedIndexChanged);
             // 
             // label1
@@ -135,16 +135,16 @@
             this.platformSourceCombo.Margin = new System.Windows.Forms.Padding(2);
             this.platformSourceCombo.Name = "platformSourceCombo";
             this.platformSourceCombo.Size = new System.Drawing.Size(130, 21);
-            this.platformSourceCombo.TabIndex = 43;
+            this.platformSourceCombo.TabIndex = 0;
             // 
             // convertButton
             // 
             this.convertButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.convertButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.convertButton.Location = new System.Drawing.Point(239, 204);
+            this.convertButton.Location = new System.Drawing.Point(240, 187);
             this.convertButton.Name = "convertButton";
             this.convertButton.Size = new System.Drawing.Size(159, 29);
-            this.convertButton.TabIndex = 32;
+            this.convertButton.TabIndex = 3;
             this.convertButton.Text = "Choose DLC to Convert";
             this.convertButton.UseVisualStyleBackColor = false;
             this.convertButton.Click += new System.EventHandler(this.convertButton_Click);
@@ -153,7 +153,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label3.Location = new System.Drawing.Point(113, 188);
+            this.label3.Location = new System.Drawing.Point(4, 187);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(183, 13);
             this.label3.TabIndex = 38;

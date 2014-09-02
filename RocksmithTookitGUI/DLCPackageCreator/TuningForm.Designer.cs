@@ -58,7 +58,7 @@
             this.okButton.Margin = new System.Windows.Forms.Padding(2);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(93, 23);
-            this.okButton.TabIndex = 1;
+            this.okButton.TabIndex = 0;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = false;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
@@ -157,7 +157,7 @@
             this.string5TB.Location = new System.Drawing.Point(238, 40);
             this.string5TB.Name = "string5TB";
             this.string5TB.Size = new System.Drawing.Size(40, 20);
-            this.string5TB.TabIndex = 16;
+            this.string5TB.TabIndex = 8;
             // 
             // string4TB
             // 
@@ -167,7 +167,7 @@
             this.string4TB.Location = new System.Drawing.Point(192, 40);
             this.string4TB.Name = "string4TB";
             this.string4TB.Size = new System.Drawing.Size(40, 20);
-            this.string4TB.TabIndex = 15;
+            this.string4TB.TabIndex = 7;
             // 
             // string3TB
             // 
@@ -177,7 +177,7 @@
             this.string3TB.Location = new System.Drawing.Point(146, 40);
             this.string3TB.Name = "string3TB";
             this.string3TB.Size = new System.Drawing.Size(40, 20);
-            this.string3TB.TabIndex = 14;
+            this.string3TB.TabIndex = 6;
             // 
             // string2TB
             // 
@@ -187,7 +187,7 @@
             this.string2TB.Location = new System.Drawing.Point(100, 40);
             this.string2TB.Name = "string2TB";
             this.string2TB.Size = new System.Drawing.Size(40, 20);
-            this.string2TB.TabIndex = 13;
+            this.string2TB.TabIndex = 5;
             // 
             // string1TB
             // 
@@ -197,7 +197,7 @@
             this.string1TB.Location = new System.Drawing.Point(54, 40);
             this.string1TB.Name = "string1TB";
             this.string1TB.Size = new System.Drawing.Size(40, 20);
-            this.string1TB.TabIndex = 12;
+            this.string1TB.TabIndex = 4;
             // 
             // string0TB
             // 
@@ -207,7 +207,7 @@
             this.string0TB.Location = new System.Drawing.Point(8, 40);
             this.string0TB.Name = "string0TB";
             this.string0TB.Size = new System.Drawing.Size(40, 20);
-            this.string0TB.TabIndex = 11;
+            this.string0TB.TabIndex = 3;
             // 
             // nameTB
             // 
@@ -217,7 +217,7 @@
             this.nameTB.Location = new System.Drawing.Point(158, 12);
             this.nameTB.Name = "nameTB";
             this.nameTB.Size = new System.Drawing.Size(140, 20);
-            this.nameTB.TabIndex = 8;
+            this.nameTB.TabIndex = 2;
             this.nameTB.TextChanged += new System.EventHandler(this.nameTB_TextChanged);
             // 
             // uiNameTB
@@ -228,7 +228,7 @@
             this.uiNameTB.Location = new System.Drawing.Point(14, 12);
             this.uiNameTB.Name = "uiNameTB";
             this.uiNameTB.Size = new System.Drawing.Size(140, 20);
-            this.uiNameTB.TabIndex = 10;
+            this.uiNameTB.TabIndex = 1;
             this.uiNameTB.TextChanged += new System.EventHandler(this.uiNameTB_TextChanged);
             // 
             // noteLabel
@@ -247,7 +247,7 @@
             this.StateAdd.Location = new System.Drawing.Point(22, 137);
             this.StateAdd.Name = "StateAdd";
             this.StateAdd.Size = new System.Drawing.Size(118, 17);
-            this.StateAdd.TabIndex = 24;
+            this.StateAdd.TabIndex = 9;
             this.StateAdd.Text = "Add as new Tuning";
             this.StateAdd.UseVisualStyleBackColor = true;
             this.StateAdd.CheckedChanged += new System.EventHandler(this.StateAdd_CheckedChanged);

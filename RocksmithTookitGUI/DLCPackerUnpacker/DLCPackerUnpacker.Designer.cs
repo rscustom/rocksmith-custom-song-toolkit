@@ -62,7 +62,7 @@
             this.unpackButton.Location = new System.Drawing.Point(6, 76);
             this.unpackButton.Name = "unpackButton";
             this.unpackButton.Size = new System.Drawing.Size(122, 23);
-            this.unpackButton.TabIndex = 9;
+            this.unpackButton.TabIndex = 2;
             this.unpackButton.Text = "Unpack";
             this.unpackButton.UseVisualStyleBackColor = true;
             this.unpackButton.Click += new System.EventHandler(this.unpackButton_Click);
@@ -73,7 +73,7 @@
             this.packButton.Location = new System.Drawing.Point(6, 76);
             this.packButton.Name = "packButton";
             this.packButton.Size = new System.Drawing.Size(122, 23);
-            this.packButton.TabIndex = 8;
+            this.packButton.TabIndex = 4;
             this.packButton.Text = "Pack";
             this.packButton.UseVisualStyleBackColor = true;
             this.packButton.Click += new System.EventHandler(this.packButton_Click);
@@ -94,7 +94,7 @@
             this.repackButton.Location = new System.Drawing.Point(101, 42);
             this.repackButton.Name = "repackButton";
             this.repackButton.Size = new System.Drawing.Size(285, 23);
-            this.repackButton.TabIndex = 12;
+            this.repackButton.TabIndex = 7;
             this.repackButton.Text = "Choose DLC";
             this.repackButton.UseVisualStyleBackColor = true;
             this.repackButton.Click += new System.EventHandler(this.repackButton_Click);
@@ -125,7 +125,7 @@
             this.gameVersionCombo.Margin = new System.Windows.Forms.Padding(2);
             this.gameVersionCombo.Name = "gameVersionCombo";
             this.gameVersionCombo.Size = new System.Drawing.Size(93, 21);
-            this.gameVersionCombo.TabIndex = 42;
+            this.gameVersionCombo.TabIndex = 5;
             this.gameVersionCombo.SelectedIndexChanged += new System.EventHandler(this.gameVersionCombo_SelectedIndexChanged);
             // 
             // AppIdTB
@@ -148,7 +148,7 @@
             this.appIdCombo.Margin = new System.Windows.Forms.Padding(2);
             this.appIdCombo.Name = "appIdCombo";
             this.appIdCombo.Size = new System.Drawing.Size(283, 21);
-            this.appIdCombo.TabIndex = 13;
+            this.appIdCombo.TabIndex = 6;
             this.appIdCombo.SelectedValueChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
             // decodeAudioCheckbox
@@ -158,7 +158,7 @@
             this.decodeAudioCheckbox.Location = new System.Drawing.Point(18, 19);
             this.decodeAudioCheckbox.Name = "decodeAudioCheckbox";
             this.decodeAudioCheckbox.Size = new System.Drawing.Size(94, 17);
-            this.decodeAudioCheckbox.TabIndex = 14;
+            this.decodeAudioCheckbox.TabIndex = 0;
             this.decodeAudioCheckbox.Text = "Decode Audio";
             this.decodeAudioCheckbox.UseVisualStyleBackColor = true;
             // 
@@ -169,7 +169,7 @@
             this.updateSngCheckBox.Location = new System.Drawing.Point(21, 42);
             this.updateSngCheckBox.Name = "updateSngCheckBox";
             this.updateSngCheckBox.Size = new System.Drawing.Size(87, 17);
-            this.updateSngCheckBox.TabIndex = 15;
+            this.updateSngCheckBox.TabIndex = 3;
             this.updateSngCheckBox.Text = "Update SNG";
             this.updateSngCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -204,7 +204,7 @@
             this.extractSongXmlCheckBox.Location = new System.Drawing.Point(18, 42);
             this.extractSongXmlCheckBox.Name = "extractSongXmlCheckBox";
             this.extractSongXmlCheckBox.Size = new System.Drawing.Size(86, 17);
-            this.extractSongXmlCheckBox.TabIndex = 16;
+            this.extractSongXmlCheckBox.TabIndex = 1;
             this.extractSongXmlCheckBox.Text = "SNG to XML";
             this.extractSongXmlCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -233,7 +233,7 @@
             // 
             // updateProgress
             // 
-            this.updateProgress.Location = new System.Drawing.Point(8, 191);
+            this.updateProgress.Location = new System.Drawing.Point(8, 240);
             this.updateProgress.Name = "updateProgress";
             this.updateProgress.Size = new System.Drawing.Size(389, 26);
             this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
@@ -246,9 +246,9 @@
             this.customFixesGroupBox.Controls.Add(this.quickBassFixBox);
             this.customFixesGroupBox.Controls.Add(this.lowTuningBassFixButton);
             this.customFixesGroupBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.customFixesGroupBox.Location = new System.Drawing.Point(13, 224);
+            this.customFixesGroupBox.Location = new System.Drawing.Point(8, 191);
             this.customFixesGroupBox.Name = "customFixesGroupBox";
-            this.customFixesGroupBox.Size = new System.Drawing.Size(384, 72);
+            this.customFixesGroupBox.Size = new System.Drawing.Size(389, 43);
             this.customFixesGroupBox.TabIndex = 20;
             this.customFixesGroupBox.TabStop = false;
             this.customFixesGroupBox.Text = "Custom Fixes (RS 2014)";
@@ -257,10 +257,10 @@
             // 
             this.deleteSourceFileCheckBox.AutoSize = true;
             this.deleteSourceFileCheckBox.ForeColor = System.Drawing.Color.Black;
-            this.deleteSourceFileCheckBox.Location = new System.Drawing.Point(13, 46);
+            this.deleteSourceFileCheckBox.Location = new System.Drawing.Point(82, 19);
             this.deleteSourceFileCheckBox.Name = "deleteSourceFileCheckBox";
             this.deleteSourceFileCheckBox.Size = new System.Drawing.Size(113, 17);
-            this.deleteSourceFileCheckBox.TabIndex = 2;
+            this.deleteSourceFileCheckBox.TabIndex = 9;
             this.deleteSourceFileCheckBox.Text = "Delete Source File";
             this.deleteSourceFileCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -268,20 +268,20 @@
             // 
             this.quickBassFixBox.AutoSize = true;
             this.quickBassFixBox.ForeColor = System.Drawing.Color.Black;
-            this.quickBassFixBox.Location = new System.Drawing.Point(13, 23);
+            this.quickBassFixBox.Location = new System.Drawing.Point(6, 19);
             this.quickBassFixBox.Name = "quickBassFixBox";
             this.quickBassFixBox.Size = new System.Drawing.Size(70, 17);
-            this.quickBassFixBox.TabIndex = 1;
+            this.quickBassFixBox.TabIndex = 8;
             this.quickBassFixBox.Text = "Quick Fix";
             this.quickBassFixBox.UseVisualStyleBackColor = true;
             // 
             // lowTuningBassFixButton
             // 
-            this.lowTuningBassFixButton.Location = new System.Drawing.Point(128, 10);
+            this.lowTuningBassFixButton.Location = new System.Drawing.Point(201, 15);
             this.lowTuningBassFixButton.Name = "lowTuningBassFixButton";
-            this.lowTuningBassFixButton.Size = new System.Drawing.Size(250, 56);
-            this.lowTuningBassFixButton.TabIndex = 0;
-            this.lowTuningBassFixButton.Text = "Patch Low Bass Tuning Fix";
+            this.lowTuningBassFixButton.Size = new System.Drawing.Size(184, 23);
+            this.lowTuningBassFixButton.TabIndex = 10;
+            this.lowTuningBassFixButton.Text = "Fix Low Bass Tuning";
             this.lowTuningBassFixButton.UseVisualStyleBackColor = true;
             this.lowTuningBassFixButton.Click += new System.EventHandler(this.lowTuningBassFixButton_Click);
             // 
