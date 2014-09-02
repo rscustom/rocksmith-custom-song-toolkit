@@ -22,18 +22,23 @@ namespace RocksmithToolkitGUI.CDLC2Tab
 
         public CDLC2Tab()
         {
-            InitializeComponent();
-            InitOutputDir();
+            try {
+                if (!MainForm.IsInDesignMode)
+                {
+                    InitializeComponent();
+                    InitOutputDir();
+                }
+            }
+            catch { /*For mono compatibility*/ }
         }
 
         private void InitOutputDir()
         {
-            if (!MainForm.IsInDesignMode)
-                // set initial outputDir location
-                if (Directory.Exists(ConfigRepository.Instance()["general_rs2014path"]))
-                    outputDir = Path.Combine(ConfigRepository.Instance()["general_rs2014path"], "dlc");
-                else
-                    outputDir = Path.GetDirectoryName(Application.ExecutablePath);
+            // set initial outputDir location
+            if (Directory.Exists(ConfigRepository.Instance()["general_rs2014path"]))
+                outputDir = Path.Combine(ConfigRepository.Instance()["general_rs2014path"], "dlc");
+            else
+                outputDir = Path.GetDirectoryName(Application.ExecutablePath);
         }
 
         private void OpenFileDialog_FileLimit(object sender, CancelEventArgs e)

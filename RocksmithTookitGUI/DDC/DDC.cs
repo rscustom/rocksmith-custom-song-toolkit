@@ -63,13 +63,13 @@ namespace RocksmithToolkitGUI.DDC
 
         private void DDC_Load(object sender, EventArgs e)
         {
-            if (!MainForm.IsInDesignMode)
-            {
-                FileVersionInfo vi = FileVersionInfo.GetVersionInfo(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ddc", "ddc.exe"));
-                ddcVersion.Text = String.Format("v{0}", vi.ProductVersion);
-            }
-
             try {
+                string ddcPath = Path.Combine(Application.StartupPath, "ddc", "ddc.exe");
+                if (!this.DesignMode && File.Exists(ddcPath))
+                {
+                    FileVersionInfo vi = FileVersionInfo.GetVersionInfo(ddcPath);
+                    ddcVersion.Text = String.Format("v{0}", vi.ProductVersion);
+                }
                 PopMDLs();
                 PopCFGs();
                 SetDefaultFromConfig();

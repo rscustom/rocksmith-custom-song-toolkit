@@ -315,6 +315,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "DLCPackerUnpacker";
             this.Size = new System.Drawing.Size(400, 308);
+            this.MinimumSize = new System.Drawing.Size(400, 308);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

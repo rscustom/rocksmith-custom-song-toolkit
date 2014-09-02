@@ -167,6 +167,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox2);
             this.Name = "DLCConverter";
+            this.MinimumSize = new System.Drawing.Size(400, 236);
             this.Size = new System.Drawing.Size(400, 236);
             this.Load += new System.EventHandler(this.DLCConverter_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();

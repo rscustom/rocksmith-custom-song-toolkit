@@ -222,9 +222,8 @@
             this.dlcPackerUnpackerTab.UseVisualStyleBackColor = true;
             // 
             // dlcPackerUnpackerControl
-            // 
-            this.dlcPackerUnpackerControl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(-117, 34);
+            //
+            this.dlcPackerUnpackerControl.Location = new System.Drawing.Point(58, 45);
             this.dlcPackerUnpackerControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcPackerUnpackerControl.Name = "dlcPackerUnpackerControl";
             this.dlcPackerUnpackerControl.Size = new System.Drawing.Size(419, 524);
