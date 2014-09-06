@@ -182,15 +182,16 @@
             this.DDCfilesDgw.AllowUserToResizeColumns = false;
             this.DDCfilesDgw.AllowUserToResizeRows = false;
             this.DDCfilesDgw.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+                                    | System.Windows.Forms.AnchorStyles.Right)));
+            this.DDCfilesDgw.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DDCfilesDgw.BackgroundColor = System.Drawing.SystemColors.Window;
             this.DDCfilesDgw.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.DDCfilesDgw.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.DDCfilesDgw.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
-            this.DDCfilesDgw.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DDCfilesDgw.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
             this.DDCfilesDgw.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.PathColnm,
-            this.TypeColnm});
+                                    this.PathColnm,
+                                    this.TypeColnm});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -203,7 +204,7 @@
             this.DDCfilesDgw.Location = new System.Drawing.Point(6, 19);
             this.DDCfilesDgw.Name = "DDCfilesDgw";
             this.DDCfilesDgw.RowHeadersWidth = 4;
-            this.DDCfilesDgw.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.DDCfilesDgw.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.EnableResizing;
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
@@ -220,19 +221,19 @@
             // 
             // PathColnm
             // 
-            this.PathColnm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.PathColnm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.PathColnm.HeaderText = "Path";
-            this.PathColnm.MinimumWidth = 80;
+            this.PathColnm.MinimumWidth = 340;
             this.PathColnm.Name = "PathColnm";
             this.PathColnm.ReadOnly = true;
             // 
             // TypeColnm
             // 
+            this.TypeColnm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.TypeColnm.HeaderText = "Type";
-            this.TypeColnm.MinimumWidth = 30;
+            this.TypeColnm.MinimumWidth = 40;
             this.TypeColnm.Name = "TypeColnm";
             this.TypeColnm.ReadOnly = true;
-            this.TypeColnm.Width = 50;
             // 
             // DDprogress
             // 
@@ -317,15 +318,15 @@
             // 
             this.phaseLenNum.Location = new System.Drawing.Point(94, 81);
             this.phaseLenNum.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
+                                    65536,
+                                    0,
+                                    0,
+                                    0});
             this.phaseLenNum.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+                                    2,
+                                    0,
+                                    0,
+                                    0});
             this.phaseLenNum.Name = "phaseLenNum";
             this.phaseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.phaseLenNum.Size = new System.Drawing.Size(52, 20);
@@ -333,10 +334,10 @@
             this.phaseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.phaseLenNum.ThousandsSeparator = true;
             this.phaseLenNum.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+                                    2,
+                                    0,
+                                    0,
+                                    0});
             // 
             // label5
             // 
@@ -437,7 +438,6 @@
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

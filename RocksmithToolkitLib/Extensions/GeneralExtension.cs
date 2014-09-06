@@ -96,11 +96,9 @@ namespace RocksmithToolkitLib.Extensions
         {        
             if (String.IsNullOrEmpty(value)) 
                 return value;
-            if (value.ToLowerInvariant().StartsWith("the "))
-            {
+            else if (value.ToUpperInvariant().StartsWith("THE "))
                 return value.Remove(0, 4);
-            }
-            else return value;
+            return value;
         }
 
         public static string GetValidName(this string value, bool allowSpace = false, bool allowStartsWithNumber = false, bool underscoreSpace = false, bool frets24 = false)
@@ -108,7 +106,7 @@ namespace RocksmithToolkitLib.Extensions
             string name = String.Empty;
             if (!String.IsNullOrEmpty(value))
             {
-                Regex rgx = new Regex((allowSpace) ? "[^a-zA-Z0-9\\-_. ]" : "[^a-zA-Z0-9\\-_.]");
+                Regex rgx = new Regex((allowSpace) ? "[^a-zA-Z0-9\\-_ ]" : "[^a-zA-Z0-9\\-_]");
                 name = rgx.Replace(value, "");
 
                 Regex rgx2 = new Regex(@"^[\d]*\s*");
@@ -171,9 +169,9 @@ namespace RocksmithToolkitLib.Extensions
         public static string GetShortName(string Format, string Artist, string Title, string Version, bool Acronym)
         {
             if (!Acronym)
-                return String.Format(Format, Artist.GetValidName(true, true), Title.GetValidName(true, true), Version.GetValidName(true, true)).Replace(" ", "-").Replace(".", "_");
+                return String.Format(Format, Artist.GetValidName(true, true), Title.GetValidName(true, true), Version).Replace(" ", "-");
             else
-                return String.Format(Format, Artist.Acronym(), Title.GetValidName(true, true), Version.GetValidName(true, true)).Replace(" ", "-").Replace(".", "_");
+                return String.Format(Format, Artist.Acronym(), Title.GetValidName(true, true), Version).Replace(" ", "-");
         }
 
         public static bool IsValidPSARC(this string fileName)

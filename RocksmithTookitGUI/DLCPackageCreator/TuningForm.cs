@@ -142,12 +142,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void nameTB_TextChanged(object sender, EventArgs e)
         {
             TextBox name = (TextBox)sender;
+            name.TextChanged -= nameTB_TextChanged;
             name.Text = name.Text.GetValidName(false);
+            name.TextChanged += nameTB_TextChanged;
         }
 
         private void uiNameTB_TextChanged(object sender, EventArgs e) {
             TextBox name = (TextBox)sender;
+            name.TextChanged -= uiNameTB_TextChanged;
             nameTB.Text = name.Text.GetValidName(false);
+            name.TextChanged += uiNameTB_TextChanged;
         }
 
         private void StateAdd_CheckedChanged(object sender, EventArgs e)

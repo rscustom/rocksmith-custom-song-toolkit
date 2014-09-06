@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
@@ -26,7 +27,7 @@ namespace RocksmithToolkitGUI.DDC
         internal Dictionary<string, string> DLCdb = new Dictionary<string,string>();
         internal Dictionary<string, string> RampMdlsDb = new Dictionary<string,string>();
         internal Dictionary<string, string> ConfigsDb = new Dictionary<string, string>();
-        internal static string AppWD = Application.StartupPath;
+        internal static string AppWD = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location); //crossplatform
         internal Color EnabledColor = System.Drawing.Color.Green;
         internal Color DisabledColor = Color.Tomato;
 

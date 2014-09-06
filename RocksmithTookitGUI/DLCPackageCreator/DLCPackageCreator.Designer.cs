@@ -179,7 +179,6 @@
             // cmbAppIds
             // 
             this.cmbAppIds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAppIds.ForeColor = System.Drawing.SystemColors.ControlText;
             this.cmbAppIds.Location = new System.Drawing.Point(207, 68);
             this.cmbAppIds.Margin = new System.Windows.Forms.Padding(2);
             this.cmbAppIds.Name = "cmbAppIds";
@@ -573,7 +572,7 @@
             this.previewVolumeBox.Name = "previewVolumeBox";
             this.previewVolumeBox.Size = new System.Drawing.Size(45, 20);
             this.previewVolumeBox.TabIndex = 15;
-            this.previewVolumeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.previewVolumeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.previewVolumeBox.Value = new decimal(new int[] {
             7,
             0,
@@ -678,7 +677,7 @@
             this.songVolumeBox.Name = "songVolumeBox";
             this.songVolumeBox.Size = new System.Drawing.Size(45, 20);
             this.songVolumeBox.TabIndex = 14;
-            this.songVolumeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.songVolumeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.songVolumeBox.Value = new decimal(new int[] {
             7,
             0,

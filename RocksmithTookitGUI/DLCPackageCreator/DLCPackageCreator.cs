@@ -316,7 +316,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             using (var ofd = new SaveFileDialog())
             {
-                ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion.Replace(".","_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                 ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
@@ -504,6 +504,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             catch (Exception se)
             {
                 MessageBox.Show("Can't load saved DLC because is not compatible with new DLC template format. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
             FillPackageCreatorForm(info, dlcLoadPath);
 
@@ -730,7 +731,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 using (var ofd = new SaveFileDialog())
                 {
-                    ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                    ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion.Replace(".","_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                     ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
                     if (ofd.ShowDialog() != DialogResult.OK)
                     {
@@ -1464,7 +1465,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void ArtistSortTB_TextChanged(object sender, EventArgs e)
         {
-            ArtistSortTB.Text = ArtistSortTB.Text.GetValidSortName();
+            ArtistSortTB.TextChanged -= ArtistSortTB_TextChanged;
+            var artist = ArtistSortTB.Text.ToUpperInvariant();
+            if(artist.StartsWith("THE ")){
+                ArtistSortTB.Text = artist.GetValidSortName();
+            }
+            ArtistSortTB.TextChanged += ArtistSortTB_TextChanged;
         }
         // Crunches here :)
         private void packageVersionTB_KeyPress(object sender, KeyPressEventArgs e)

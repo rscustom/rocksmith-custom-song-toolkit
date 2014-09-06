@@ -35,7 +35,7 @@ namespace RocksmithToolkitGUI
         {
             InitializeComponent();
 
-            if (args.Length > 0)
+            if (args.Length > 0 && File.Exists(args[0]))
                 LoadTemplate(args[0]);
 
             this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", ToolkitVersion.version);

@@ -6,6 +6,7 @@ using System.Reflection;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Properties;
+using RocksmithToolkitLib.Extensions;
 using System.Xml.Serialization;
 using System.Text;
 using System.Linq;
@@ -330,7 +331,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     if (iter.PhraseId == i)
                         links++;
                 p.PhraseIterationLinks = links;
-                readString(phrase.Name, p.Name);
+                readString(phrase.Name.GetValidName(), p.Name);
                 sng.Phrases.Phrases[i] = p;
             }
         }

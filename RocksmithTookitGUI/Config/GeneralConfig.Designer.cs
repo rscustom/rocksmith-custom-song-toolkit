@@ -123,30 +123,29 @@
             this.creator_scrollspeed.DecimalPlaces = 1;
             this.creator_scrollspeed.ForeColor = System.Drawing.SystemColors.ControlText;
             this.creator_scrollspeed.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
+                                    1,
+                                    0,
+                                    0,
+                                    65536});
             this.creator_scrollspeed.Location = new System.Drawing.Point(117, 15);
             this.creator_scrollspeed.Maximum = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
+                                    45,
+                                    0,
+                                    0,
+                                    65536});
             this.creator_scrollspeed.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.creator_scrollspeed.Name = "creator_scrollspeed";
             this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
             this.creator_scrollspeed.TabIndex = 11;
-            this.creator_scrollspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.creator_scrollspeed.Value = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
+                                    45,
+                                    0,
+                                    0,
+                                    65536});
             this.creator_scrollspeed.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label1
@@ -419,26 +418,25 @@
             // 
             this.ddc_phraselength.Location = new System.Drawing.Point(122, 67);
             this.ddc_phraselength.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
+                                    65536,
+                                    0,
+                                    0,
+                                    0});
             this.ddc_phraselength.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+                                    2,
+                                    0,
+                                    0,
+                                    0});
             this.ddc_phraselength.Name = "ddc_phraselength";
             this.ddc_phraselength.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.ddc_phraselength.Size = new System.Drawing.Size(52, 20);
             this.ddc_phraselength.TabIndex = 16;
-            this.ddc_phraselength.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.ddc_phraselength.ThousandsSeparator = true;
             this.ddc_phraselength.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+                                    2,
+                                    0,
+                                    0,
+                                    0});
             this.ddc_phraselength.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // ddc_removesustain
@@ -611,7 +609,6 @@
             this.gbConverter.ResumeLayout(false);
             this.gbConverter.PerformLayout();
             this.ResumeLayout(false);
-
         }
 
         #endregion

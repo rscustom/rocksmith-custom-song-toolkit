@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml.Serialization;
 using System.IO;
-using Newtonsoft.Json;
-using RocksmithToolkitLib.Xml;
-using System.ComponentModel;
-using System.Reflection;
-using RocksmithToolkitLib.Sng;
+using System.Linq;
+using System.Text.RegularExpressions;
+
 using RocksmithToolkitLib.DLCPackage.Manifest.Header;
+using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
@@ -284,7 +281,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 {
                     IterationCount = PhraseIterationCount(song, ind),
                     MaxDifficulty = y.MaxDifficulty,
-                    Name = y.Name
+                    Name = (string) y.Name.GetValidName()
                 });
                 ind++;
             }

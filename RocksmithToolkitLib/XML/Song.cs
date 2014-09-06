@@ -530,7 +530,7 @@ namespace RocksmithToolkitLib.Xml
                 phrase.Disparity = sngPhraseSection.Phrases[i].Disparity;
                 phrase.Ignore = sngPhraseSection.Phrases[i].Ignore;
                 phrase.MaxDifficulty = sngPhraseSection.Phrases[i].MaxDifficulty;
-                phrase.Name = sngPhraseSection.Phrases[i].Name.ToNullTerminatedAscii();
+                phrase.Name = sngPhraseSection.Phrases[i].Name.ToNullTerminatedAscii().GetValidName();
                 phrase.Solo = sngPhraseSection.Phrases[i].Solo;
                 phrases[i] = phrase;
             }
