@@ -72,7 +72,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 platform = predefinedPlatform;
                 
             var useCryptography = platform.version == GameVersion.RS2012; // Cryptography way is used only for PC in Rocksmith 1
-
             switch (platform.platform)
             {
                 case GamePlatform.Pc:
@@ -645,20 +644,25 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (isExternalFile)
                 name += String.Format("_{0}", platform.platform.ToString());
+            
+            var destpath = Path.Combine(path, name);
+            if (Directory.Exists(destpath) && isExternalFile)
+                        DirectoryExtension.SafeDelete(destpath);
 
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream);
             foreach (var entry in psarc.Entries)
             {
                 var fullfilename = Path.Combine(path, name, entry.Name);
+                var destfilepath = Path.GetDirectoryName(fullfilename);
                 entry.Data.Seek(0, SeekOrigin.Begin);
                 if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
                 {
-                    ExtractPSARC(fullfilename, Path.Combine(path, name), entry.Data, platform, false);
+                    ExtractPSARC(fullfilename, destpath, entry.Data, platform, false);
                 }
                 else
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(fullfilename));
+                    Directory.CreateDirectory(destfilepath);
                     using (var fileStream = File.Create(fullfilename))
                     {
                         entry.Data.CopyTo(fileStream);

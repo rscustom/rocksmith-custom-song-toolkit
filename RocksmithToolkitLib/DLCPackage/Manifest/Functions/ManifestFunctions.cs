@@ -164,7 +164,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             var mediumArray = new List<int>();
             var hardArray = new List<int>();
 
-            for (int i = 0; i < song.PhraseIterations.Count(); i++)
+            for (int i = 0; i < song.PhraseIterations.Length; i++)
             {
                 var pt = song.PhraseIterations[i];
                 
@@ -190,11 +190,11 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
             // Is not the way of official are calculated, but is a way to calculate unique values for custom
             // Can be rewrited with the correct way or a best way to get this value
-            var itCount = song.PhraseIterations.Count();
+            var itCount = song.PhraseIterations.Length;
 
-            attribute.SongDiffEasy = (easyArray.Count() > 0) ? easyArray.Average() / itCount : 0;
-            attribute.SongDiffMed = (easyArray.Count() > 0) ? mediumArray.Average() / itCount : 0;
-            attribute.SongDiffHard = (easyArray.Count() > 0) ? hardArray.Average() / itCount : 0;
+            attribute.SongDiffEasy = (easyArray.Count > 0) ? easyArray.Average() / itCount : 0;
+            attribute.SongDiffMed = (easyArray.Count > 0) ? mediumArray.Average() / itCount : 0;
+            attribute.SongDiffHard = (easyArray.Count > 0) ? hardArray.Average() / itCount : 0;
             attribute.SongDifficulty = attribute.SongDiffHard;
         }
 
@@ -281,7 +281,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 {
                     IterationCount = PhraseIterationCount(song, ind),
                     MaxDifficulty = y.MaxDifficulty,
-                    Name = (string) y.Name.GetValidName()
+                    Name = y.Name,
                 });
                 ind++;
             }
@@ -356,7 +356,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public int GetNoteCount(float startTime, float endTime, ICollection<SongNote> notes)
         {
             int count = 0;
-            for (int i = 0; i < notes.Count(); i++)
+            for (int i = 0; i < notes.Count; i++)
             {
                 if(notes.ElementAt(i).Time < endTime)
                 if (notes.ElementAt(i).Time >= startTime)
@@ -368,7 +368,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public int GetNoteCount2014(float startTime, float endTime, ICollection<SongNote2014> notes)
         {
             int count = 0;
-            for (int i = 0; i < notes.Count(); i++)
+            for (int i = 0; i < notes.Count; i++)
             {
                 if (notes.ElementAt(i).Time < endTime)
                     if (notes.ElementAt(i).Time >= startTime)
@@ -380,7 +380,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public int GetChordCount(float startTime, float endTime, ICollection<dynamic> chords)
         {
             int count = 0;
-            for (int i = 0; i < chords.Count(); i++)
+            for (int i = 0; i < chords.Count; i++)
             {
                 if (chords.ElementAt(i).Time < endTime)
                     if (chords.ElementAt(i).Time >= startTime)

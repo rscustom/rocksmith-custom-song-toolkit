@@ -440,7 +440,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             var graphPartList = GraphPart.GetGraphParts(File.ReadAllLines(agregateGraphFile));
 
             var json = GraphPart.WhereByValue(graphPartList, TagValue.JsonDB.GetDescription());
-            if (json.Count() > 0) {
+            if (json.Any()) {
                 aggregateGraph.JsonDB = new List<GraphItem>();
                 foreach (var j in json) {
                     aggregateGraph.JsonDB.Add(new GraphItem(j.UUID, GraphPart.WhereByUUID(graphPartList, j.UUID)));
@@ -452,14 +452,14 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 aggregateGraph.HsanDB = new GraphItem(hsan.UUID, GraphPart.WhereByUUID(graphPartList, hsan.UUID));
 
             var sng = GraphPart.WhereByValue(graphPartList, TagValue.MusicgameSong.GetDescription());
-            if (sng.Count() > 0) {
+            if (sng.Any()) {
                 aggregateGraph.MusicgameSong = new List<GraphItemLLID>();
                 foreach (var s in sng)
                     aggregateGraph.MusicgameSong.Add(new GraphItemLLID(s.UUID, GraphPart.WhereByUUID(graphPartList, s.UUID)));
             }
 
             var xml = GraphPart.WhereByValue(graphPartList, TagValue.XML.GetDescription());
-            if (xml.Count() > 0) {
+            if (xml.Any()) {
                 foreach (var x in xml) {
                     if (aggregateGraph.SongXml == null)
                         aggregateGraph.SongXml = new List<GraphItemLLID>();
@@ -472,14 +472,14 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             }
 
             var dds = GraphPart.WhereByValue(graphPartList, TagValue.Image.GetDescription());
-            if (dds.Count() > 0) {
+            if (dds.Any()) {
                 aggregateGraph.ImageArt = new List<GraphItemLLID>();
                 foreach (var d in dds)
                     aggregateGraph.ImageArt.Add(new GraphItemLLID(d.UUID, GraphPart.WhereByUUID(graphPartList, d.UUID)));
             }
 
             var bnk = GraphPart.WhereByValue(graphPartList, TagValue.WwiseSoundBank.GetDescription());
-            if (bnk.Count() > 0) {
+            if (bnk.Any()) {
                 aggregateGraph.Soundbank = new List<GraphItemLLID>();
                 foreach (var b in bnk)
                     aggregateGraph.Soundbank.Add(new GraphItemLLID(b.UUID, GraphPart.WhereByUUID(graphPartList, b.UUID)));

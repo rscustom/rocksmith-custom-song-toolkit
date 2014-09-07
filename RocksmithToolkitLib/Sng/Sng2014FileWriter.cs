@@ -331,7 +331,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     if (iter.PhraseId == i)
                         links++;
                 p.PhraseIterationLinks = links;
-                readString(phrase.Name.GetValidName(), p.Name);
+                readString(phrase.Name, p.Name);
                 sng.Phrases.Phrases[i] = p;
             }
         }

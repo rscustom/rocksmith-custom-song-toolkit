@@ -323,7 +323,7 @@ namespace RocksmithToolkitLib.PSARC
             }
             while (num < this.header.blockSize);
             BigEndianBinaryWriter bigEndianBinaryWriter = new BigEndianBinaryWriter(str);
-            this.header.TotalTOCSize = (uint)(32 + this.header.TOCEntrySize * (this.Entries.Count) + ((int)b * list.Count));
+            this.header.TotalTOCSize = (uint)(32 + this.header.TOCEntrySize * this.Entries.Count + (b * list.Count));
             this.Entries[0].Offset = (ulong)this.header.TotalTOCSize;
             for (int i = 1; i < this.Entries.Count; i++)
             {

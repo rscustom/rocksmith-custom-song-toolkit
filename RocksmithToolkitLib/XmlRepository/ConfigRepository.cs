@@ -18,7 +18,7 @@ namespace RocksmithToolkitLib {
 
         public Config Select(string configKey)
         {
-            if (List.OfType<Config>().Where(s => s.Key == configKey).Count() > 0)
+            if (List.OfType<Config>().Where(s => s.Key == configKey).Any())
                 return List.FirstOrDefault<Config>(s => s.Key == configKey);
             else
                 return List[0];
@@ -47,7 +47,7 @@ namespace RocksmithToolkitLib {
         }
 
         public bool Exists(string configKey) {
-            return List.OfType<Config>().Where(s => s.Key == configKey).Count() > 0;
+            return List.OfType<Config>().Where(s => s.Key == configKey).Any();
         }
 
         public bool ValueChanged(string configKey, object value) {            
