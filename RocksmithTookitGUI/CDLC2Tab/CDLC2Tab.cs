@@ -22,12 +22,12 @@ namespace RocksmithToolkitGUI.CDLC2Tab
 
         public CDLC2Tab()
         {
-            try {
+		    // needs to come first
+            InitializeComponent();
+            try
+            {
                 if (!MainForm.IsInDesignMode)
-                {
-                    InitializeComponent();
                     InitOutputDir();
-                }
             }
             catch { /*For mono compatibility*/ }
         }
