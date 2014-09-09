@@ -28,6 +28,7 @@ namespace RocksmithToolkitGUI.DDC
         internal Dictionary<string, string> RampMdlsDb = new Dictionary<string,string>();
         internal Dictionary<string, string> ConfigsDb = new Dictionary<string, string>();
         internal static string AppWD = AppDomain.CurrentDomain.BaseDirectory;
+        internal static string DdcBD = Path.Combine(AppWD, "ddc");
         internal Color EnabledColor = System.Drawing.Color.Green;
         internal Color DisabledColor = Color.Tomato;
 
@@ -202,14 +203,15 @@ namespace RocksmithToolkitGUI.DDC
             startInfo.UseShellExecute = false;
             startInfo.CreateNoWindow = true;
             startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
 
             using (var DDC = new Process()) {
                 DDC.StartInfo = startInfo;
                 DDC.Start();
                 consoleOutput = DDC.StandardOutput.ReadToEnd();
-                consoleOutput += DDC.StandardError.ReadToEnd();
-                DDC.WaitForExit(1000 * 60 * 15); //wait 15 minutes
-                return DDC.ExitCode;
+				consoleOutput += DDC.StandardError.ReadToEnd();
+				DDC.WaitForExit(1000 * 60 * 15); //wait 15 minutes
+				return DDC.ExitCode;
             }
         }
 
@@ -220,7 +222,7 @@ namespace RocksmithToolkitGUI.DDC
             consoleOutputPkg = String.Empty;
             var tmpDir = Path.GetTempPath();
             var platform = file.GetPlatform();
-            var unpackedDir = Packer.Unpack(file, tmpDir, false, true);
+            var unpackedDir = Packer.Unpack(file, tmpDir, false, true, false);
 
             var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
             foreach (var xml in xmlFiles)
@@ -476,11 +478,11 @@ namespace RocksmithToolkitGUI.DDC
 
         private void PopMDLs()
         {
-            if (Directory.Exists(@".\ddc\"))
+            if (Directory.Exists(DdcBD)) //@".\ddc\"
             {
                 ramUpMdlsCbox.Items.Clear();
                 RampMdlsDb.Clear();
-                foreach (var mdl in Directory.EnumerateFiles(@".\ddc\", "*.xml", SearchOption.AllDirectories))
+                foreach (var mdl in Directory.EnumerateFiles(DdcBD, "*.xml", SearchOption.AllDirectories))
                 {
                     var name = Path.GetFileNameWithoutExtension(mdl);
                     if (name.StartsWith("user_")) name = name.Remove(0, 5);
@@ -494,11 +496,11 @@ namespace RocksmithToolkitGUI.DDC
 
         private void PopCFGs()
         {
-            if (Directory.Exists(@".\ddc\"))
+            if (Directory.Exists(DdcBD))
             {
                 ConfigFilesCbx.Items.Clear();
                 ConfigsDb.Clear();
-                foreach (var cfg in Directory.EnumerateFiles(@".\ddc\", "*.cfg", SearchOption.AllDirectories))
+                foreach (var cfg in Directory.EnumerateFiles(DdcBD, "*.cfg", SearchOption.AllDirectories))
                 {
                     var name = Path.GetFileNameWithoutExtension(cfg);
                     if (name.StartsWith("user_")) name = name.Remove(0, 5);
