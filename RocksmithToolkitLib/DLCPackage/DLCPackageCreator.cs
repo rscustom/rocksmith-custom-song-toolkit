@@ -399,7 +399,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     // SOUNDBANK PREVIEW
                     var soundbankPreviewFileName = String.Format("song_{0}_preview", dlcName);
                     dynamic audioPreviewFileNameId;
-                    var previewVolume = (info.PreviewVolume != null) ? (float)info.PreviewVolume : info.Volume;
+                    var previewVolume = (float)(info.PreviewVolume ?? info.Volume);
                     if (!soundPreviewStream.Equals(soundStream))
                         audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, previewVolume, platform, true);
                     else

@@ -356,47 +356,47 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (platformPC.Checked)
                 try {
-                    bwGenerate.ReportProgress(progress, "Generating PC package");
-                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, CurrentGameVersion));
-                    progress += step;
-                    bwGenerate.ReportProgress(progress);
-                } catch (Exception ex) {
-                    errorsFound.AppendLine(String.Format("Error generate PC package: {0}", ex.Message));
-                }
+                bwGenerate.ReportProgress (progress, "Generating PC package");
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.Pc, CurrentGameVersion));
+                progress += step;
+                bwGenerate.ReportProgress (progress);
+            } catch (Exception ex) {
+                errorsFound.AppendLine (String.Format ("Error generate PC package: {0}{1}{0}", Environment.NewLine, ex.StackTrace));
+            }
 
             if (platformMAC.Checked)
                 try {
-                    bwGenerate.ReportProgress(progress, "Generating Mac package");                
-                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Mac, CurrentGameVersion));
-                    progress += step;
-                    bwGenerate.ReportProgress(progress);
-                } catch (Exception ex) {
-                    errorsFound.AppendLine(String.Format("Error generate Mac package: {0}", ex.Message));
-                }
+                bwGenerate.ReportProgress (progress, "Generating Mac package");                
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.Mac, CurrentGameVersion));
+                progress += step;
+                bwGenerate.ReportProgress (progress);
+            } catch (Exception ex) {
+                errorsFound.AppendLine (String.Format ("Error generate Mac package: {0}{1}{0}", Environment.NewLine, ex.StackTrace));
+            }
 
             if (platformXBox360.Checked)
                 try {
-                    bwGenerate.ReportProgress(progress, "Generating XBox 360 package");
-                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.XBox360, CurrentGameVersion));
-                    progress += step;
-                    bwGenerate.ReportProgress(progress);
-                } catch (Exception ex) {
-                    errorsFound.AppendLine(String.Format("Error generate XBox 360 package: {0}", ex.Message));
-                }
+                bwGenerate.ReportProgress (progress, "Generating XBox 360 package");
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.XBox360, CurrentGameVersion));
+                progress += step;
+                bwGenerate.ReportProgress (progress);
+            } catch (Exception ex) {
+                errorsFound.AppendLine (String.Format ("Error generate XBox 360 package: {0}{1}{0}", Environment.NewLine, ex.StackTrace));
+            }
 
             if (platformPS3.Checked)
                 try {
-                    bwGenerate.ReportProgress(progress, "Generating PS3 package");
-                    RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.PS3, CurrentGameVersion));
-                    progress += step;
-                    bwGenerate.ReportProgress(progress);
-                } catch (Exception ex) {
-                    errorsFound.AppendLine(String.Format("Error generate PS3 package: {0}. {1}PS3 package require 'JAVA x86' (32 bits) installed on your machine to generate properly.", ex.Message, Environment.NewLine));
-                }
+                bwGenerate.ReportProgress (progress, "Generating PS3 package");
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.PS3, CurrentGameVersion));
+                progress += step;
+                bwGenerate.ReportProgress (progress);
+            } catch (Exception ex) {
+                errorsFound.AppendLine (String.Format ("Error generate PS3 package: {0}{1}. {0}PS3 package require 'JAVA x86' (32 bits) installed on your machine to generate properly.{0}", Environment.NewLine, ex.StackTrace));
+            }
 
             // Cache cleanup so we don't serialize or reuse data that could be changed
-            packageData.CleanCache();
-            e.Result = "generate";
+            packageData.CleanCache ();
+            e.Result = (numPlatforms == 1 && errorsFound.Length > 0) ? "error" : "generate";
         }
 
         private void albumArtButton_Click(object sender, EventArgs e)
@@ -509,7 +509,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillPackageCreatorForm(info, dlcLoadPath);
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
-			this.Focus();
+            Parent.Focus();
         }
 
         public void dlcImportButton_Click(object sender = null, EventArgs e = null) {
@@ -538,7 +538,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             using (var fbd = new VistaFolderBrowserDialog()) {
                 fbd.Description = "Select folder to save project artifacts";
                 fbd.UseDescriptionForTitle = true;
-                
+                fbd.SelectedPath = Path.GetDirectoryName (sourcePackage);
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
                 savePath = fbd.SelectedPath;
@@ -576,7 +576,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillPackageCreatorForm(info, unpackedDir);
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            this.Focus();
+            Parent.Focus();
         }
 
 
@@ -889,7 +889,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                             TuningDefinitionRepository.Instance().Add(tuning, true);
                         }
-                        tuning = null; //Cleanup after
+                        // Populate Arrangement tuning info
+                        arrangement.Tuning = tuning.UIName;
+                        arrangement.TuningStrings = tuning.Tuning;
+                        //Cleanup
+                        tuning = null;
                     }
                     catch { /* Handle old types of *.dlc.xml */ }
                 }
@@ -1322,7 +1326,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void AppIdTB_TextChanged(object sender, EventArgs e) {
             var appId = ((TextBox)sender).Text.Trim();
-            SelectComboAppId(appId);
+            AppIdTB.TextChanged -= AppIdTB_TextChanged; 
+            SelectComboAppId (appId);
+            AppIdTB.TextChanged += AppIdTB_TextChanged;
         }
 
         private void SelectComboAppId(string appId) {
@@ -1441,21 +1447,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 case "generate":
                     var message = "Package was generated.";
                     if (errorsFound.Length > 0)
-                        message = String.Format("Package was generated with errors! See below: " + Environment.NewLine + errorsFound.ToString());
-
-                    message += Environment.NewLine + "You want to open the folder in which the package was generated?";
-
-                    if (MessageBox.Show(message, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes) {
-                        Process.Start(Path.GetDirectoryName(dlcSavePath));
+                        message = String.Format ("Package was generated with errors! See below: {0}(1}", Environment.NewLine, errorsFound);
+                    message += String.Format ("{0}You want to open the folder in which the package was generated?{0}", Environment.NewLine);
+                    if (MessageBox.Show (message, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes) {
+                        Process.Start (Path.GetDirectoryName (dlcSavePath));
                     }
-
-                    this.Focus();
-                    dlcGenerateButton.Enabled = true;
+                    break;
+                case "error":
+                    var message2 = String.Format ("Package generation failed. See below: {0}{1}{0}", Environment.NewLine, errorsFound);
+                    MessageBox.Show (message2, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
 
+            dlcGenerateButton.Enabled = true;
             updateProgress.Visible = false;
             currentOperationLabel.Visible = false;
+            Parent.Focus();
         }
 
         private void ShowCurrentOperation(string message) {

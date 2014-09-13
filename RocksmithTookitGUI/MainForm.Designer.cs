@@ -193,7 +193,8 @@
             this.dlcPackageCreatorControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.dlcPackageCreatorControl.AppId = "";
+            //DO NOT OWERRIDE, LAST ISSUED COMMIT 97ad84bf
+            this.dlcPackageCreatorControl.AppId = dlcPackageCreatorControl.AppId;
             this.dlcPackageCreatorControl.Artist = "";
             this.dlcPackageCreatorControl.ArtistSort = "";
             this.dlcPackageCreatorControl.AverageTempo = "";

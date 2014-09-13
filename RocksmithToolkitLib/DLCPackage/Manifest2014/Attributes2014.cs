@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -87,7 +87,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             SongEvent = String.Format("Play_{0}", info.Name);
             SongXml = songXmlUrn;
             SongVolume = info.Volume;
-            PreviewVolume = (info.PreviewVolume != null) ? info.PreviewVolume : SongVolume;
+            PreviewVolume = info.PreviewVolume ?? SongVolume;
                 
             // Only for Vocal
             if (IsVocal)
