@@ -23,7 +23,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
         {
             StreamWriter writer = new StreamWriter(str);
 
-            if (platform.platform == GamePlatform.XBox360 || platform.platform == GamePlatform.PS3)
+            if (platform.IsConsole)
             {
                 foreach (var x in SongFiles)
                     writer.WriteLine("<urn:uuid:{0}> <http://emergent.net/aweb/1.0/tag> \"{1}\".", x.UUID, platformPathNames[0]);

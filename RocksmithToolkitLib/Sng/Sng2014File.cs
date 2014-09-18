@@ -77,23 +77,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         public static void UnpackSng(Stream input, Stream output, Platform platform) {
-            EndianBitConverter conv;
-            
-            switch (platform.platform) {
-                case GamePlatform.Pc:
-                case GamePlatform.Mac:
-                    // Desktop
-                    conv = EndianBitConverter.Little;
-                    break;
-                case GamePlatform.XBox360:
-                case GamePlatform.PS3:
-                    // Console
-                    conv = EndianBitConverter.Big;
-                    break;
-                default:
-                    conv = EndianBitConverter.Little;
-                    break;
-            }
+            EndianBitConverter conv = platform.GetBitConverter;
 
             using (var decrypted = new MemoryStream())
             using (var br = new EndianBinaryReader(conv, input))
@@ -142,27 +126,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         public static void PackSng(Stream input, Stream output, Platform platform)
         {
-            EndianBitConverter conv;
-            Int32 platformHeader;
-
-            switch (platform.platform) {
-                case GamePlatform.Pc:
-                case GamePlatform.Mac:
-                // Desktop
-                    conv = EndianBitConverter.Little;
-                    platformHeader = 3;
-                    break;
-                case GamePlatform.XBox360:
-                case GamePlatform.PS3:
-                // Console
-                    conv = EndianBitConverter.Big;
-                    platformHeader = 1;
-                    break;
-                default:
-                    conv = EndianBitConverter.Little;
-                    platformHeader = 3;
-                    break;
-            }
+            EndianBitConverter conv = platform.GetBitConverter;
+            Int32 platformHeader = 3;
+            if(conv == EndianBitConverter.Big)
+                platformHeader = 1;
 
             using (EndianBinaryWriter w = new EndianBinaryWriter(conv, output)) {
                 w.Write((Int32) 0x4A);
@@ -223,12 +190,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private byte[] getChartData(Platform platform)
         {
             using (MemoryStream stream = new MemoryStream()) {
-                EndianBitConverter conv;
-                if (platform.platform == GamePlatform.Pc ||
-                    platform.platform == GamePlatform.Mac)
-                    conv = EndianBitConverter.Little;
-                else
-                    conv = EndianBitConverter.Big;
+                EndianBitConverter conv = platform.GetBitConverter;
 
                 // cached result
                 if (conv == EndianBitConverter.Little && chartLE != null)

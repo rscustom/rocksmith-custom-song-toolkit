@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using MiscUtil.Conversion;
+
 namespace RocksmithToolkitLib
 {
     public enum GamePlatform { Pc, Mac, XBox360, PS3, None };
@@ -35,6 +37,23 @@ namespace RocksmithToolkitLib
         public override int GetHashCode()
         {
             return this.platform.GetHashCode() + this.version.GetHashCode();
+        }
+
+        public EndianBitConverter GetBitConverter
+        {
+            get{
+                switch (platform)
+                {
+                    case GamePlatform.Pc:
+                    case GamePlatform.Mac:
+                        return EndianBitConverter.Little;
+                    case GamePlatform.XBox360:
+                    case GamePlatform.PS3:
+                        return EndianBitConverter.Big;
+                    default:
+                        return EndianBitConverter.Little;
+                }
+            }
         }
 
         public override string ToString() {

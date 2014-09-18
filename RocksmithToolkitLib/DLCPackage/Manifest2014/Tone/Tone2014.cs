@@ -80,9 +80,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
                         case GamePlatform.Pc:
                         case GamePlatform.Mac:
                         case GamePlatform.XBox360:
-                            return ReadFromPackage(filePath, platform);
                         case GamePlatform.PS3:
-                            throw new InvalidOperationException("PS3 platform is not supported at this time :(");
+                            return ReadFromPackage(filePath, platform);                   
                         default:
                             throw new NotSupportedException(String.Format("Unknown file extension exception '{0}'. File not supported.", toneExtension));
                     }

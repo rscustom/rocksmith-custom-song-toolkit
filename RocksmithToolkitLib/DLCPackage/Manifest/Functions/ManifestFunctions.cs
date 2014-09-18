@@ -281,7 +281,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 {
                     IterationCount = PhraseIterationCount(song, ind),
                     MaxDifficulty = y.MaxDifficulty,
-                    Name = y.Name,
+                    Name = y.Name
                 });
                 ind++;
             }

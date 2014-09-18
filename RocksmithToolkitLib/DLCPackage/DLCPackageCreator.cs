@@ -1004,7 +1004,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void WriteTmpFile(this Stream memoryStream, string fileName, Platform platform)
         {
-            if (platform.platform == GamePlatform.XBox360 || platform.platform == GamePlatform.PS3)
+            if (platform.IsConsole)
             {
                 string workDir = platform.platform == GamePlatform.XBox360 ? XBOX_WORKDIR : PS3_WORKDIR;
                 string filePath = Path.Combine(workDir, fileName);

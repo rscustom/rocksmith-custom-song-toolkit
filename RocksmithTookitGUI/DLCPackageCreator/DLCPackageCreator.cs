@@ -515,6 +515,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public void dlcImportButton_Click(object sender = null, EventArgs e = null) {
             string sourcePackage;
             string savePath;
+            string tmp = Path.GetTempPath();
 
             // GET PATH
             using (var ofd = new OpenFileDialog()) {
@@ -545,13 +546,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // UNPACK
-            var unpackedDir = Packer.Unpack(sourcePackage, savePath, true, true, false);
             var packagePlatform = sourcePackage.GetPlatform();
+            var unpackedDir = Packer.Unpack(sourcePackage, tmp, true, true, false);
+            savePath = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourcePackage));
+            DirectoryExtension.Move(unpackedDir, savePath);
 
             // REORGANIZE
             var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
             if (structured)
-                unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
+                unpackedDir = DLCPackageData.DoLikeProject(savePath);
+
             
             // LOAD DATA
             var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform);
@@ -857,7 +861,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             ArrangementLB.Items.Clear();
             foreach (var arrangement in info.Arrangements) {
                 arrangement.SongXml.File = BasePath.AbsoluteTo(arrangement.SongXml.File);
-
+                arrangement.CleanCache();
                 if (arrangement.ToneBase == null)
                 {
                     switch (CurrentGameVersion) {

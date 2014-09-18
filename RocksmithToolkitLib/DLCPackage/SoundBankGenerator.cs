@@ -10,6 +10,9 @@ using MiscUtil.IO;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
+    /// <summary>
+    /// RS1 SoundBank(.BNK) generator class
+    /// </summary>
     public static class SoundBankGenerator
     {
         private const string PLAY = "Play_";
@@ -79,9 +82,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     throw new InvalidOperationException("Unexpected game version value");
             }
 
-            var bitConverter = (platform.platform == GamePlatform.Pc || platform.platform == GamePlatform.Mac)
-                    ? (EndianBitConverter)EndianBitConverter.Little
-                    : (EndianBitConverter)EndianBitConverter.Big;
+            var bitConverter = platform.GetBitConverter;
 
             using (var bankStream = new MemoryStream(soundbank))
             using (var bankReader = new EndianBinaryReader(bitConverter, bankStream))
@@ -124,6 +125,9 @@ namespace RocksmithToolkitLib.DLCPackage
         }
     }
 
+    /// <summary>
+    /// RS2 SoundBank(.BNK) generator class
+    /// </summary>
     public static class SoundBankGenerator2014
     {
         private const string PLAY = "Play_";

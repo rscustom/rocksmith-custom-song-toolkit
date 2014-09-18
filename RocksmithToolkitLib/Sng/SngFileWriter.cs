@@ -76,10 +76,7 @@ namespace RocksmithToolkitLib.Sng
         {
             using (var reader = new StreamReader(inputFile))
             {
-                var bitConverter = platform.platform == GamePlatform.Pc
-                    ? (EndianBitConverter)EndianBitConverter.Little
-                    : (EndianBitConverter)EndianBitConverter.Big;
-
+                var bitConverter = platform.GetBitConverter;
                 if (arrangementType == ArrangementType.Vocal)
                 {
                     var serializer = new XmlSerializer(typeof(Vocals));
