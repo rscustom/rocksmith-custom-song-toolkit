@@ -86,10 +86,9 @@ namespace RocksmithToolkitGUI.CDLC2Tab
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            foreach (string inputFilePath in sourceFilePaths)
+            foreach (var inputFilePath in sourceFilePaths)
             {
                 string fileExtension = Path.GetExtension(inputFilePath).ToLower();
-
                 switch (fileExtension)
                 {
                     case ".xml":
@@ -99,31 +98,25 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                         // skip any files for vocals and/or showlights
                         if (arrangement.ToLower() == "vocals" || arrangement.ToLower() == "showlights")
                             break;
-
                         Song rs1Song;
                         using (var obj = new Rs1Converter())
                             rs1Song = obj.XmlToSong(inputFilePath);
-
                         string sngFilePath;
                         using (var obj = new Rs1Converter())
                             sngFilePath = obj.SongToSngFilePath(rs1Song, outputDir);
-
                         using (var obj = new Sng2Tab())
                             obj.Convert(sngFilePath, outputDir, allDif);
-
-                        if (File.Exists(sngFilePath)) File.Delete(sngFilePath);
+                        if (File.Exists(sngFilePath))
+                            File.Delete(sngFilePath);
                         break;
-
                     case ".dat":
                         using (var obj = new Sng2Tab())
                             obj.ExtractBeforeConvert(inputFilePath, outputDir, allDif);
                         break;
-
                     case ".sng":
                         using (var obj = new Sng2Tab())
                             obj.Convert(inputFilePath, outputDir, allDif);
                         break;
-
                     case ".psarc":
                         if (rbSongList.Checked)
                         {
@@ -131,97 +124,84 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                                 obj.PsarcSongList(inputFilePath, outputDir);
                             break;
                         }
-
                         var fileInfo = new FileInfo(inputFilePath);
                         // give user chance to abort big files
                         if (fileInfo.Length / 1000 > 15000)
                         {
-                            if (MessageBox.Show(Path.GetFileName(inputFilePath) + " file size is " +
-                                                (fileInfo.Length / 1000).ToString("N00") + " KB" + Environment.NewLine +
-                                                "It may take a long time to extract and convert that much data." +
-                                                Environment.NewLine + Environment.NewLine + "Do you want to continue?",
-                                                MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo,
-                                                MessageBoxIcon.Information) == DialogResult.No)
+                            if (MessageBox.Show(string.Format("{0} file size is {1:N00} KB{2}It may take a long time to extract and convert that much data.{2}{2}Do you want to continue?", Path.GetFileName(inputFilePath), (fileInfo.Length / 1000), Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
                                 return;
                         }
-
                         using (var obj = new Rs2014Converter())
                             songList = obj.PsarcSongList(inputFilePath);
-
                         if (rbAsciiTab.Checked)
                         {
                             using (var form = new SongInfoForm())
                             {
                                 form.PopSongInfo(songList);
-                                do // waiting for user selection(s)                               
+                                do
+                                    // waiting for user selection(s)                               
                                     form.ShowDialog();
                                 while (form.SongListShort.Count == 0);
-
                                 this.Refresh();
-                                if (form.SongListShort[0].Identifier == "User Aborted") break;
-
+                                if (form.SongListShort[0].Identifier == "User Aborted")
+                                    break;
                                 Cursor.Current = Cursors.WaitCursor;
                                 foreach (var song in form.SongListShort)
                                 {
                                     Song2014 rs2014Song;
                                     using (var obj = new Rs2014Converter())
-                                        rs2014Song = obj.PsarcToSong2014(inputFilePath, song.Identifier,
-                                                                         song.Arrangement);
-
-                                    using (var obj = new Rs2014Converter())
+                                    {
+                                        rs2014Song = obj.PsarcToSong2014(inputFilePath, song.Identifier, song.Arrangement);
                                         obj.Song2014ToAsciiTab(rs2014Song, outputDir, allDif);
+                                    }
                                 }
                             }
                             break;
                         }
-
                         // convert to *.gp5 file(s) optimized code for dll usage
                         if (!allDif && songList.Count == 1)
                             using (var obj = new Gp5Converter())
                                 obj.PsarcToGp5(inputFilePath, outputDir);
-
-                        else if (!allDif && songList.Count > 1)
-                        {
-                            using (var form = new SongInfoForm())
+                        else
+                            if (!allDif && songList.Count > 1)
                             {
-                                form.PopSongOnly(songList); //  songs only (merge all arrangements into single GP file)
-                                //  form.PopSongInfo(songList); // choose songs and arrangements
-
-                                do // waiting for user selection(s)
-                                    form.ShowDialog();
-                                while (form.SongListShort.Count == 0);
-
-                                this.Refresh();
-                                if (form.SongListShort[0].Identifier == "User Aborted") break;
-
-                                Cursor.Current = Cursors.WaitCursor;
-
-                                using (var obj = new Gp5Converter())
-                                    obj.PsarcToGp5(inputFilePath, outputDir, form.SongListShort);
+                                using (var form = new SongInfoForm())
+                                {
+                                    form.PopSongOnly(songList);
+                                    //  songs only (merge all arrangements into single GP file)
+                                    //  form.PopSongInfo(songList); // choose songs and arrangements
+                                    do
+                                        // waiting for user selection(s)
+                                        form.ShowDialog();
+                                    while (form.SongListShort.Count == 0);
+                                    this.Refresh();
+                                    if (form.SongListShort[0].Identifier == "User Aborted")
+                                        break;
+                                    Cursor.Current = Cursors.WaitCursor;
+                                    using (var obj = new Gp5Converter())
+                                        obj.PsarcToGp5(inputFilePath, outputDir, form.SongListShort);
+                                }
                             }
-                        }
-
-                        // give user the option to select specific songs and arrangements
-                        else if (allDif)
-                        {
-                            using (var form = new SongInfoForm())
-                            {
-                                form.PopSongInfo(songList); // choose songs and arrangements
-
-                                do // waiting for user selection(s)
-                                    form.ShowDialog();
-                                while (form.SongListShort.Count == 0);
-
-                                this.Refresh();
-                                if (form.SongListShort[0].Identifier == "User Aborted") break;
-
-                                Cursor.Current = Cursors.WaitCursor;
-
-                                using (var obj = new Gp5Converter())
-                                    obj.PsarcToGp5(inputFilePath, outputDir, form.SongListShort, "gp5", true);
-
-                            }
-                        }
+                            // give user the option to select specific songs and arrangements
+                            else
+                                if (allDif)
+                                {
+                                    using (var form = new SongInfoForm())
+                                    {
+                                        form.PopSongInfo(songList);
+                                        // choose songs and arrangements
+                                        do
+                                            // waiting for user selection(s)
+                                            form.ShowDialog();
+                                        while (form.SongListShort.Count == 0);
+                                        this.Refresh();
+                                        if (form.SongListShort[0].Identifier == "User Aborted")
+                                            break;
+                                        Cursor.Current = Cursors.WaitCursor;
+                                        using (var obj = new Gp5Converter())
+                                            obj.PsarcToGp5(inputFilePath, outputDir, form.SongListShort, "gp5", true);
+                                    }
+                                }
                         break;
                 }
                 Refresh();

@@ -442,6 +442,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         /// <param name="allDif"></param>
         public void Song2014ToAsciiTab(Song2014 rs2014Song, string outputDir, bool allDif)
         {
+            if (rs2014Song == null || String.IsNullOrEmpty(outputDir)) return;
             // convert to Song
             Song rs1Song;
             using (var obj = new Rs2014Converter())

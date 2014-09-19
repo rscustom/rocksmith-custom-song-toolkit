@@ -44,9 +44,9 @@ namespace RocksmithToolkitLib.SngToTab
                 else
                     outputFileName = String.Format("{0}", "Unknown Song");
 
-                outputFileName += (difficulties.Length != 1) ? String.Format(" (level {0:D2}).txt", d) : ".txt";
+                outputFileName += (difficulties.Length != 1) ? String.Format(" (level {0:D2})", d) : "";
                 outputFileName = outputFileName.GetValidName(true);
-                var outputFilePath = Path.Combine(outputDir, outputFileName);
+                var outputFilePath = Path.Combine(outputDir, outputFileName + ".txt");
 
                 using (TextWriter tw = new StreamWriter(outputFilePath))
                 {
@@ -62,7 +62,7 @@ namespace RocksmithToolkitLib.SngToTab
             Packer.Unpack(inputPath, sng2tabDir);
             string unpackedDir = Path.Combine(sng2tabDir,
                                               Path.GetFileNameWithoutExtension(inputPath) +
-                                              String.Format("_{0}", Packer.GetPlatform(inputPath).platform.ToString()));
+                                              String.Format("_{0}", inputPath.GetPlatform().platform.ToString()));
             string[] sngFiles = Directory.GetFiles(unpackedDir, "*.sng", SearchOption.AllDirectories);
 
             foreach (var sngFilePath in sngFiles)
