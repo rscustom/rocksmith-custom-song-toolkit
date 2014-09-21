@@ -76,6 +76,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     SectionUINames.Add("prechorus", "$[34296] Pre Chorus [1]");
                     SectionUINames.Add("preverse", "$[34297] Pre Verse [1]");
                     SectionUINames.Add("riff", "$[34298] Riff [1]");
+                    SectionUINames.Add("rifff", "$[34298] Riff [1]"); //incorrect name in some adverse cases
                     SectionUINames.Add("silence", "$[34299] Silence [1]");
                     SectionUINames.Add("solo", "$[34300] Solo [1]");
                     SectionUINames.Add("transition", "$[34301] Transition [1]");
