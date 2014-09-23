@@ -549,7 +549,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var packagePlatform = sourcePackage.GetPlatform();
             var unpackedDir = Packer.Unpack(sourcePackage, tmp, true, true, false);
             savePath = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourcePackage));
-            DirectoryExtension.Move(unpackedDir, savePath);
+            DirectoryExtension.Move(unpackedDir, savePath, true);
 
             // REORGANIZE
             var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
