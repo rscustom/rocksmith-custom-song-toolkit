@@ -73,19 +73,28 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             get
             {
-                var filter = "*.*";
+                var filter = CurrentOFDPackageFilter + "|";
+                filter += CurrentRocksmithTitle + " Song Manifest (*.json)|*.json";
+
+                return filter;
+            }
+        }
+
+        public string CurrentOFDPackageFilter
+        {
+            get
+            {
+                var filter = "All Files (*.*)|*.*";
                 switch (CurrentGameVersion)
                 {
                     case GameVersion.RS2014:
-                        filter = CurrentRocksmithTitle + " PC/Mac Package (*.psarc)|*.psarc|";
+                        filter  = CurrentRocksmithTitle + " PC/Mac Package (*.psarc)|*.psarc|";
                         filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*|";
-                        filter += CurrentRocksmithTitle + " PS3 Package (*.edat)|*.edat|";
-                        filter += CurrentRocksmithTitle + " Song Manifest (*.json)|*.json";
+                        filter += CurrentRocksmithTitle + " PS3 Package (*.edat)|*.edat";
                         break;
                     default:
-                        filter = CurrentRocksmithTitle + " PC/Mac Package (*.dat)|*.dat|";
-                        filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*|";
-                        filter += CurrentRocksmithTitle + " Song Manifest (*.json)|*.json";
+                        filter  = CurrentRocksmithTitle + " PC/Mac Package (*.dat)|*.dat|";
+                        filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*";
                         break;
                 }
                 return filter;
@@ -520,11 +529,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // GET PATH
             using (var ofd = new OpenFileDialog()) {
                 ofd.Title = "Select one DLC to import";
-
-                var filter = CurrentRocksmithTitle + " PC/Mac Package (*.psarc)|*.psarc|";
-                filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*|";
-                filter += CurrentRocksmithTitle + " PS3 Package (*.edat)|*.edat";
-                ofd.Filter = filter;
+                ofd.Filter = CurrentOFDPackageFilter;
 
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
@@ -606,11 +611,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Title = "Select one DLC to import";
-
-                var filter = CurrentRocksmithTitle + " PC/Mac Package (*.psarc)|*.psarc|";
-                filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*|";
-                filter += CurrentRocksmithTitle + " PS3 Package (*.edat)|*.edat";
-                ofd.Filter = filter;
+                ofd.Filter = CurrentOFDPackageFilter;
 
                 if (ofd.ShowDialog() != DialogResult.OK)
                 {
@@ -985,7 +986,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return null;
             }
             if (String.IsNullOrEmpty(PackageVersion))
+            {
                 PackageVersion = "1";
+            }
             if (!PackageVersion.Equals(PackageVersion.GetValidVersion()))
             {
                 MessageBox.Show(String.Format("Package verion field contain invalid characters!\n" +
@@ -1036,7 +1039,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
             }
-
+            //TODO: jVocals support
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal) > 1)
             {
@@ -1239,7 +1242,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     form.toneControl1.Tone = GeneralExtensions.Copy(tone);
                     form.ShowDialog();
                     
-					if (form.Saved)
+                    if (form.Saved)
                         TonesLB.Items[TonesLB.SelectedIndex] = form.toneControl1.Tone;
                 }
                 if (toneName != tone.Name)

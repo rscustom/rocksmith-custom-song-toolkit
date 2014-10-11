@@ -328,7 +328,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     info.ArtFiles = ddsfiles;
                 }
 
-                foreach (var dds in ddsfiles)
+                foreach (var dds in info.ArtFiles)
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
 
                 // AUDIO
@@ -573,7 +573,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         info.ArtFiles = ddsfiles;
                     }
 
-                    foreach (var dds in ddsfiles)
+                    foreach (var dds in info.ArtFiles)
                         if (dds.sizeX == 1024)
                             packPsarc.AddEntry(String.Format("assets/gameplay/inlay/inlay_{0}.dds", dlcName), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
                         else
@@ -785,7 +785,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     info.ArtFiles = ddsfiles;
                 }
 
-                albumArtStream = new FileStream(ddsfiles[0].destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+                albumArtStream = new FileStream(info.ArtFiles[0].destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 // AUDIO
                 var audioFile = info.OggPath;

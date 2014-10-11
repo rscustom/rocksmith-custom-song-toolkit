@@ -122,6 +122,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             using (var ofd = new OpenFileDialog())
             {
+                ofd.Filter = "All Files (*.*)|*.*";
                 ofd.Multiselect = true;
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
@@ -170,7 +171,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 progress += step;
                 bwUnpack.ReportProgress(progress);
             }
-
+            bwUnpack.ReportProgress(100);
             e.Result = "unpack";
         }
 
@@ -229,7 +230,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 else
                     errorsFound.AppendLine(String.Format("File '{0}' is not a valid package for desktop platform.", Path.GetFileName(sourceFileName)));
             }
-
+            bwRepack.ReportProgress(100);
             e.Result = "repack";
         }
 

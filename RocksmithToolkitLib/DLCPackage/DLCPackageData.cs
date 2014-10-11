@@ -124,12 +124,30 @@ namespace RocksmithToolkitLib.DLCPackage
                     data.Arrangements.Add(voc);
                 }
             }
-            // TODO: reuse ddsfiles
-            //Get Files
-            var ddsFiles = Directory.GetFiles(unpackedDir, "*_256.dds", SearchOption.AllDirectories);
-            if (ddsFiles.Length > 0)
-                data.AlbumArtPath = ddsFiles[0];
 
+            //Get DDS Files + hacky reuse if exist
+            var ddsFiles = Directory.GetFiles(unpackedDir, "*_*.dds", SearchOption.AllDirectories);
+            if (ddsFiles.Length > 0) {
+                var ddsFilesC = new List<DDSConvertedFile>();
+                foreach( var file in ddsFiles )
+                switch(Path.GetFileNameWithoutExtension(file).Split('_')[2]){
+
+                case "256":
+                    data.AlbumArtPath = file;
+                    ddsFilesC.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = file, destinationFile = file.CopyToTempFile(".dds") });
+                break;
+                
+                case "128":
+                    ddsFilesC.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = file, destinationFile = file.CopyToTempFile(".dds") });
+                break;
+                    
+                case "64":
+                    ddsFilesC.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = file, destinationFile = file.CopyToTempFile(".dds") });
+                break;
+                
+                } data.ArtFiles = ddsFilesC; //copy sourc files to dest.
+            }
+            //Get other files
             var sourceAudioFiles = Directory.GetFiles(unpackedDir, "*.wem", SearchOption.AllDirectories);
 
             var targetAudioFiles = new List<string>();
@@ -227,7 +245,7 @@ namespace RocksmithToolkitLib.DLCPackage
             SongName = attr.FullName.Split('_')[0];
             
             //Create dir sruct
-            outdir = Path.Combine(Path.GetDirectoryName(unpackedDir), String.Format("{0}_{1}", attr.ArtistNameSort.GetValidName(false), attr.SongNameSort.GetValidName(false)));
+            outdir = Path.Combine(Path.GetDirectoryName(unpackedDir), String.Format("{0}_{1}", attr.ArtistName.GetValidSortName(), attr.SongName.GetValidSortName()).Replace(" ","-"));
             eofdir = Path.Combine(outdir, EOF);
             kitdir = Path.Combine(outdir, KIT);
             attr = null; //dispose

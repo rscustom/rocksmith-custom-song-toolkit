@@ -142,7 +142,7 @@ namespace RocksmithToolkitGUI.DLCConverter
 
             // SOURCE            
             StringBuilder errorsFound = new StringBuilder();
-
+            Application.DoEvents();
             foreach (var sourcePackage in sourcePackages)
             {
                 if (!sourcePackage.IsValidPSARC())
@@ -174,6 +174,7 @@ namespace RocksmithToolkitGUI.DLCConverter
                 MessageBox.Show(String.Format("DLC was converted from '{0}' to '{1}'.", SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             else
                 MessageBox.Show(String.Format("DLC was converted from '{0}' to '{1}' with erros. See below: " + Environment.NewLine + errorsFound.ToString(), SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            ParentForm.Focus();
         }
     }
 }
