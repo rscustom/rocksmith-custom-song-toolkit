@@ -59,16 +59,8 @@
     <Reference Include="MiscUtil">
       <HintPath>..\lib\MiscUtil\MiscUtil.dll</HintPath>
     </Reference>
-    <Reference Include="NDesk.Options, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\NDesk\NDesk.Options.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RocksmithToTabLib, Version=0.9.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\RocksmithToTabLib\RocksmithToTabLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -80,12 +72,17 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="X360, Version=1.0.0.41, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\X360\X360.dll</HintPath>
-    </Reference>
     <Reference Include="zlib.net">
       <HintPath>..\lib\ZLib\zlib.net.dll</HintPath>
+    </Reference>
+    <Reference Include="NDesk.Options">
+      <HintPath>..\lib\NDesk\NDesk.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="RocksmithToTabLib">
+      <HintPath>..\lib\RocksmithToTabLib\RocksmithToTabLib.dll</HintPath>
+    </Reference>
+    <Reference Include="X360">
+      <HintPath>..\lib\X360\X360.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +220,7 @@
     <Compile Include="ZiggyProEditor\Tempo.cs" />
     <Compile Include="ZiggyProEditor\TimeSignature.cs" />
     <Compile Include="ZiggyProEditor\Track.cs" />
+    <Compile Include="DLCPackage\ToolkitInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\albumart.dds" />

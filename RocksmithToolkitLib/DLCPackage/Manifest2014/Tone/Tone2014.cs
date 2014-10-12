@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -67,7 +67,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
             List<Tone2014> tones = new List<Tone2014>();
 
             var toneExtension = Path.GetExtension(filePath);
-
             switch (toneExtension)
             {
                 case ".json":
@@ -81,7 +80,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
                         case GamePlatform.Mac:
                         case GamePlatform.XBox360:
                         case GamePlatform.PS3:
-                            return ReadFromPackage(filePath, platform);                   
+                            return ReadFromPackage(filePath, platform);
                         default:
                             throw new NotSupportedException(String.Format("Unknown file extension exception '{0}'. File not supported.", toneExtension));
                     }
@@ -126,7 +125,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 
         private static List<Tone2014> ReadFromPackage(string packagePath, Platform platform)
         {
-            if (packagePath.EndsWith("_prfldb") || packagePath.EndsWith("_profile"))
+            if( packagePath.EndsWith("_prfldb") || packagePath.EndsWith("_profile") )
                 return ReadFromProfile(packagePath);
             else
             {
@@ -139,7 +138,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
                 string[] toneManifestFiles = Directory.GetFiles(tmpDir, "*.json", SearchOption.AllDirectories);
 
                 foreach (var file in toneManifestFiles)
-                    tones.AddRange(ReadFromManifest(file));
+                    foreach( Tone2014 tone in ReadFromManifest(file) )
+                        if(tones.OfType<Tone2014>().All(a => a.Name != tone.Name))
+                            tones.Add(tone);
 
                 DirectoryExtension.SafeDelete(tmpDir);
 

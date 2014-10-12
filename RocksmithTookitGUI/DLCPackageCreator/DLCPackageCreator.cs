@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -1294,19 +1294,35 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Application.DoEvents();
                 if (CurrentGameVersion == GameVersion.RS2014)
                 {
-                    List<Tone2014> tones = Tone2014.Import(toneImportFile);
-                    foreach (Tone2014 tone in tones)
-                    {
-                        if (tone != null)
-                            if (!TonesLB.Items.OfType<Tone2014>().Any(t => t.Key == null || t.Key == tone.Key))
+                    List<Tone2014> tones2014 = Tone2014.Import(toneImportFile);
+                    //Popup ToneImportForm if tones > 1
+                    if( tones2014.Count > 1 )
+                        using( var importForm = new ToneImportForm())
+                        {
+                            importForm.Tone2014 = tones2014;
+                            importForm.PopList();
+                            if( importForm.ShowDialog() != DialogResult.OK )
+                                return;
+                            foreach(var tone in importForm.Tone2014.Where(t => !t.GearList.IsNull()) )
                                 TonesLB.Items.Add(tone);
-                    }
+                        }
+                    else if( tones2014.Count > 0 ) TonesLB.Items.Add( tones2014.FirstOrDefault(t => !t.GearList.IsNull()) );
                 }
                 else
                 {
                     List<Tone> tones = Tone.Import(toneImportFile);
-                    foreach (Tone tone in tones)
-                        TonesLB.Items.Add(tone);
+                    //Popup ToneImportForm if tones > 1
+                    if( tones.Count > 1 )
+                        using( var importForm = new ToneImportForm())
+                        {
+                            importForm.Tone = tones;
+                            importForm.PopList();
+                            if( importForm.ShowDialog() != DialogResult.OK )
+                                return;
+                            foreach(var tone in importForm.Tone.Where(t => t.PedalList.Count != 0) )
+                                TonesLB.Items.Add(tone);
+                        }
+                    else if( tones.Count > 0 ) TonesLB.Items.Add( tones.FirstOrDefault(t => t.PedalList.Count != 0) );
                 }
             }
             catch (Exception ex)

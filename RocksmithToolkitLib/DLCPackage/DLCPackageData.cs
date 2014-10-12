@@ -145,7 +145,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     ddsFilesC.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = file, destinationFile = file.CopyToTempFile(".dds") });
                 break;
                 
-                } data.ArtFiles = ddsFilesC; //copy sourc files to dest.
+                } data.ArtFiles = ddsFilesC;
             }
             //Get other files
             var sourceAudioFiles = Directory.GetFiles(unpackedDir, "*.wem", SearchOption.AllDirectories);
