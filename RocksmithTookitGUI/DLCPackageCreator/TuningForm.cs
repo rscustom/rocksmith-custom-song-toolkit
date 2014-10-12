@@ -125,7 +125,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (EditMode) {
                 // Update tuning by strings
-                TuningDefinition t = (IsBass) ? TuningDefinitionRepository.Instance().SelectForBass(tuning.Tuning, tuning.GameVersion) : TuningDefinitionRepository.Instance().Select(tuning.Tuning, tuning.GameVersion);
+                TuningDefinition t = TuningDefinitionRepository.Instance().SelectAny(tuning.Tuning, tuning.GameVersion);
                 if (t != null) {
                     t.UIName = Tuning.UIName;
                     t.Name = Tuning.Name;

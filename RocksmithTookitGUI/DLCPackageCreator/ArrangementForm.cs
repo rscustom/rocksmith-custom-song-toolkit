@@ -232,7 +232,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     tuning.Name = tuning.UIName = Arrangement.Tuning;
                     if (String.IsNullOrEmpty(tuning.Name))
                     {
-                        tuning.Name = tuning.UIName = tuning.NameFromStrings(tuningStrings, isBass);
+                        tuning.Name = tuning.UIName = tuning.NameFromStrings(tuningStrings, false);
                     }
 
                     form.Tuning = tuning;
@@ -242,7 +242,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                     tuning = form.Tuning;
                     //Update from xml definition
-                    tuning = (isBass) ? TuningDefinitionRepository.Instance().SelectForBass(tuning.Tuning, tuning.GameVersion) : TuningDefinitionRepository.Instance().Select(tuning.Tuning, tuning.GameVersion);
+                    tuning = TuningDefinitionRepository.Instance().SelectAny(tuning.Tuning, tuning.GameVersion);
 
                     FillTuningCombo();
                 }
@@ -637,7 +637,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 //Update from xml definition
                 tuning = form.Tuning;
-                tuning = (form.IsBass) ? TuningDefinitionRepository.Instance().SelectForBass(tuning.Tuning, tuning.GameVersion) : TuningDefinitionRepository.Instance().Select(tuning.Tuning, tuning.GameVersion);
+                tuning = TuningDefinitionRepository.Instance().SelectAny(tuning.Tuning, tuning.GameVersion);
                 
                 FillTuningCombo();
                 tuningComboBox.SelectedItem = tuning;

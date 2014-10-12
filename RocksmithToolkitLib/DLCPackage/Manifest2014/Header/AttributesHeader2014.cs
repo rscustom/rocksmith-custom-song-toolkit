@@ -129,7 +129,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                     }
                     tuning.Custom = true;
                     tuning.GameVersion = GameVersion.RS2014;
-                    TuningDefinitionRepository.Instance ().Add (tuning, true);
+                    TuningDefinitionRepository.Instance().Add(tuning, true);
                 }
                 Tuning = tuning.Tuning;
             }

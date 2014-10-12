@@ -37,10 +37,8 @@ namespace RocksmithToolkitLib {
 
         public TuningDefinition SelectAny(TuningStrings tuningStrings, GameVersion gameVersion)
         {
-        	var g = Select(tuningStrings,gameVersion);
-        	var b = SelectForBass(tuningStrings,gameVersion);
-        	if (ReferenceEquals(g, b)) return g;
-        	else return b;
+            var g = Select(tuningStrings,gameVersion);
+            return g; //Accurate compare, no mercy for bass.
         }
         //Tuning Strings + GameVersion
         public TuningDefinition Select(TuningStrings tuningStrings, GameVersion gameVersion)
