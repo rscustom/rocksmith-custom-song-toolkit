@@ -54,12 +54,12 @@ namespace RocksmithToolkitLib.Extensions
             return packageVersion;
         }
 
-        public static ToolkitInfo GetToolkitInfo(StreamReader reader)
+        public static DLCPackage.ToolkitInfo GetToolkitInfo(StreamReader reader)
         {
             if (reader == null)
                 return null;
 
-            var info = new ToolkitInfo();
+            var info = new DLCPackage.ToolkitInfo();
             string line = null;
             while ((line = reader.ReadLine()) != null)
             {
