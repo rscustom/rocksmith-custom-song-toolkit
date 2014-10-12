@@ -10,9 +10,10 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Drawing;
-using RocksmithToolkitLib.DLCPackage;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using RocksmithToolkitLib.DLCPackage;
+using RocksmithToTabLib;
 
 namespace RocksmithToolkitLib.Extensions
 {
