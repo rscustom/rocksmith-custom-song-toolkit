@@ -78,7 +78,11 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     SectionUINames.Add("riff", "$[34298] Riff [1]");
                     SectionUINames.Add("rifff", "$[34298] Riff [1]"); //incorrect name in some adverse cases
                     SectionUINames.Add("silence", "$[34299] Silence [1]");
+                    SectionUINames.Add("shifts", "$[34308] Shifts [1]");
+                    SectionUINames.Add("slides", "$[35872] Slides [1]");
                     SectionUINames.Add("solo", "$[34300] Solo [1]");
+                    SectionUINames.Add("tapping", "$[34305] Tapping [1]");
+                    SectionUINames.Add("taps", "$[34313] Taps [1]");
                     SectionUINames.Add("transition", "$[34301] Transition [1]");
                     SectionUINames.Add("vamp", "$[34302] Vamp [1]");
                     SectionUINames.Add("variation", "$[34303] Variation [1]");

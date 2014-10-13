@@ -231,25 +231,29 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void EncryptPS3EdatFiles(string songFileName, Platform platform)
         {
+            // Due to PS3 encryption limitation - replace spaces in fname with '_'
             if (Path.GetFileName(songFileName).Contains(" "))
-                songFileName = Path.Combine(Path.GetDirectoryName(songFileName), Path.GetFileName(songFileName).Replace(" ", "_")); // Due to PS3 encryption limitation
+                songFileName = Path.Combine(Path.GetDirectoryName(songFileName), Path.GetFileName(songFileName).Replace(" ", "_"));
 
             // Cleaning work dir
-            var junkFiles = Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".edat") || s.EndsWith(".bak"));
-            foreach(var junk in junkFiles)
+            var junkFiles = Directory.EnumerateFiles(PS3_WORKDIR, "*.*");
+            foreach (var junk in junkFiles)
                 File.Delete(junk);
 
-            if (platform.version == GameVersion.RS2014) {
+            if (platform.version == GameVersion.RS2014)
+            {
                 // Have only one file for RS2014 package, so can be rename that the user defined
                 if (FILES_PS3.Count == 1)
-                    if (File.Exists(FILES_PS3[0]))
-                    {
-                        var oldName = FILES_PS3[0].Clone().ToString();
-                        FILES_PS3[0] = Path.Combine(Path.GetDirectoryName(FILES_PS3[0]), Path.GetFileName(songFileName));
-                        File.Move(oldName, FILES_PS3[0]);
-                    }
-            }
+                if (File.Exists(FILES_PS3[0]))
+                {
+                    var oldName = FILES_PS3[0].Clone().ToString();
+                    FILES_PS3[0] = Path.Combine(Path.GetDirectoryName(FILES_PS3[0]), Path.GetFileName(songFileName));
 
+                    if( File.Exists(FILES_PS3[0]) )
+                        File.Delete(FILES_PS3[0]);
+                    File.Move(oldName, FILES_PS3[0]);
+                }
+            }
             string encryptResult = RijndaelEncryptor.EncryptPS3Edat();
 
             // Delete .psarc files
@@ -268,8 +272,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 if (File.Exists(encryptedFile))
                     File.Move(encryptedFile, userSavePath);
-            }
-            else
+            } else
             {
                 if (Directory.Exists(PS3_WORKDIR))
                     DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", songFileName));
@@ -930,7 +933,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -quality_highest -max -dxt5 -nomipmap -alpha -overwrite -forcewrite";
                     break;
             }
-
+            //TODO: there is an option to use NVTT lib: supports Win, Mac, Linux
             foreach (var item in filesToConvert)
                 GeneralExtensions.RunExternalExecutable("nvdxt.exe", true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
         }
@@ -942,9 +945,9 @@ namespace RocksmithToolkitLib.DLCPackage
             var writer = new StreamWriter(output);
             writer.WriteLine(String.Format("Toolkit version: {0}", ToolkitVersion.version));
             if (!String.IsNullOrEmpty(author))
-                writer.WriteLine(String.Format("Package Author:  {0}", author));
+                writer.WriteLine(String.Format("Package Author: {0}", author));
             if (!String.IsNullOrEmpty(version))
-                writer.Write(String.Format("Package Version:  {0}", version));
+                writer.Write(String.Format("Package Version: {0}", version));
 
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);

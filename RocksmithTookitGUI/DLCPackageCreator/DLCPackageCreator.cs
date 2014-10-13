@@ -1480,13 +1480,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 case "error":
                     var message2 = String.Format ("Package generation failed. See below: {0}{1}{0}", Environment.NewLine, errorsFound);
                     MessageBox.Show (message2, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Parent.Focus();
                     break;
             }
 
             dlcGenerateButton.Enabled = true;
             updateProgress.Visible = false;
             currentOperationLabel.Visible = false;
-            Parent.Focus();
         }
 
         private void ShowCurrentOperation(string message) {
