@@ -260,6 +260,49 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         #region PS3 EDAT Encrypt/Decrypt
+        private const string Flags = "0C",    //0x0c
+                             Type = "00", 
+                             Version = "03";  //02 or 03
+        private const string kLic = "CB4A06E85378CED307E63EFD1084C19D";
+        private const string ContentID = "UP0001-BLUS30670_00-RS001PACK0000003";
+        private static readonly string toolkitPath = Path.GetDirectoryName(Application.ExecutablePath);
+
+        /// <summary>
+        /// Ensure that we running JVM x86
+        /// </summary>
+        /// <returns></returns>
+        internal static bool IfJavaInstalled()
+        {
+            try {
+                using(var version = new Process()){
+                    version.StartInfo.FileName = "java";
+                    version.StartInfo.Arguments = "-version -d32";
+                    version.StartInfo.CreateNoWindow = true;
+                    version.StartInfo.UseShellExecute = false;
+                    // Java uses this output instead of stout.
+                    version.StartInfo.RedirectStandardError = true;
+                    version.Start();
+                    version.WaitForExit();
+
+                    // Get the output into a string
+                    var output = version.StandardError.ReadLine();
+                    if (!output.Contains("java version"))
+                        return false;
+                    // Parse java version and detect if it's good.
+                    var javaVer = output.Split('\"')[1].Split('.');
+                    int maj = int.Parse(javaVer[0]);
+                    int min = int.Parse(javaVer[1]);
+
+                    if(maj >0 && min >6)
+                        return true;
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// Encrypt using TrueAncestor Edat Rebuilder (files must be in "/edat" folder in application root directory)
@@ -267,6 +310,9 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <returns>Output message from execution</returns>
         public static string EncryptPS3Edat()
         {
+            if(!IfJavaInstalled())
+                return "No JDK or JRE is intsalled on your machine";
+
             string errors = string.Empty;
             var files = Directory.EnumerateFiles(Path.Combine(toolkitPath, "edat"), "*.psarc");
             foreach (var InFile in files)
@@ -285,6 +331,9 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <returns>Output message from execution</returns>
         public static string DecryptPS3Edat()
         {
+            if(!IfJavaInstalled())
+                return "No JDK or JRE is intsalled on your machine";
+
             string errors = string.Empty;
             var files = Directory.EnumerateFiles(Path.Combine(toolkitPath, "edat"), "*.edat");
             foreach (var InFile in files)
@@ -296,14 +345,8 @@ namespace RocksmithToolkitLib.DLCPackage
             }
             return String.IsNullOrEmpty(errors) ? "Decrypt all EDAT files successfully" : errors;
         }
-        private const string Flags = "0C", //0x0c
-                             Type = "00", 
-                             Version = "03";//02 or 03
-        private const string kLic = "CB4A06E85378CED307E63EFD1084C19D";
-        private const string ContentID = "UP0001-BLUS30670_00-RS001PACK0000003";
-        private static readonly string toolkitPath = Path.GetDirectoryName(Application.ExecutablePath);
 
-        private static string EdatCrypto(string command) 
+        internal static string EdatCrypto(string command) 
         {// Encrypt/decrypt using TrueAncestor Edat Rebuilder v1.4c
             string core = Path.Combine(toolkitPath, "tool/core.jar");
             string APP = "java";
@@ -320,10 +363,9 @@ namespace RocksmithToolkitLib.DLCPackage
             PS3Process.WaitForExit();
 
             string stdout = PS3Process.StandardError.ReadToEnd();
-            PS3Process.Close();
             //Improove me please
-            if (stdout.Contains("is not recognized"))
-                return "No JDK or JRE is intsalled on your machine";
+            if (!String.IsNullOrEmpty(stdout))
+                return String.Format("System error occured {0}\n", stdout);
             return "";
         }
 

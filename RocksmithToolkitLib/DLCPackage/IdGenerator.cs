@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
-    class IdGenerator
+    public static class IdGenerator
     {
         public static string LLID()
         {
