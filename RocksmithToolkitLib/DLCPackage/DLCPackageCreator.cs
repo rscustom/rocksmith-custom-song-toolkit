@@ -235,8 +235,8 @@ namespace RocksmithToolkitLib.DLCPackage
             if (Path.GetFileName(songFileName).Contains(" "))
                 songFileName = Path.Combine(Path.GetDirectoryName(songFileName), Path.GetFileName(songFileName).Replace(" ", "_"));
 
-            // Cleaning work dir
-            var junkFiles = Directory.EnumerateFiles(PS3_WORKDIR, "*.*");
+            // Cleaning work dir, beware ther is .psarcthat we need.
+            var junkFiles = Directory.EnumerateFiles(PS3_WORKDIR, "*.*").Where(e => !e.EndsWith(".psarc"));
             foreach (var junk in junkFiles)
                 File.Delete(junk);
 

@@ -1122,7 +1122,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 sng.Arrangements.Arrangements[i] = a;
             }
         }
-
+        /// <summary>
+        /// Sign notes with fret number. (each 8 notes)
+        /// </summary>
+        /// <param name="sng"></param>
+        /// <param name="notes"></param>
         private void numberNotes(Sng2014File sng, Notes[] notes)
         {
             // current phrase iteration
@@ -1136,7 +1140,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
 
                 // are we past phrase iteration boundary?
-                if (current.Time >= sng.PhraseIterations.PhraseIterations[p].NextPhraseTime) {
+                if (current.Time > sng.PhraseIterations.PhraseIterations[p].NextPhraseTime) {
                     // advance and re-run
                     // will be repeated through empty iterations
                     ++p;

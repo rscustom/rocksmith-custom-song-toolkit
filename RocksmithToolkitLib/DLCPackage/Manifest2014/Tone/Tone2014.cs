@@ -15,7 +15,7 @@ using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {
-    public class Tone2014
+    public class Tone2014: IEquatable<Tone2014>
     {
         public Gear2014 GearList { get; set; }
         public bool IsCustom { get; set; }
@@ -41,6 +41,18 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         public override string ToString()
         {
             return Name;
+        }
+
+        public bool Equals( Tone2014 other )
+        {
+            if(other == null) return false;
+            if(other.GearList.IsNull()) return false;
+            return this.Key == other.Key && 
+                   this.Name == other.Name && 
+                   this.Volume == other.Volume &&
+                   this.SortOrder == other.SortOrder &&
+                   this.ToneDescriptors == other.ToneDescriptors && 
+                   this.GearList.GetHashCode() == other.GearList.GetHashCode();
         }
 
         public void Serialize(string toneSavePath) {

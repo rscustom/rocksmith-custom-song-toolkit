@@ -119,7 +119,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var data = DLCPackageData.LoadFromFolder(unpackedDir, targetPlatform);
             if (!targetPlatform.IsConsole)
                 data.AppId = appId;
-            targetFileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", data.SongInfo.Artist, data.SongInfo.SongDisplayName, data.PackageVersion.Replace(".","_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+            targetFileName = Path.Combine(Path.GetDirectoryName(targetFileName), Path.GetFileNameWithoutExtension(targetFileName).Replace(".","_")); 
 
             //Build
             DLCPackageCreator.Generate(targetFileName, data, new Platform(targetPlatform.platform, GameVersion.RS2014));

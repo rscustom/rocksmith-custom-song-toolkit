@@ -126,7 +126,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             //Get DDS Files + hacky reuse if exist
-            var ddsFiles = Directory.GetFiles(unpackedDir, "*_*.dds", SearchOption.AllDirectories);
+            var ddsFiles = Directory.GetFiles(unpackedDir, "album_*.dds", SearchOption.AllDirectories);
             if (ddsFiles.Length > 0) {
                 var ddsFilesC = new List<DDSConvertedFile>();
                 foreach( var file in ddsFiles )
@@ -199,6 +199,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var versionFile = Directory.GetFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories);
             if (versionFile.Length > 0)
                 data.PackageVersion = GeneralExtensions.ReadPackageVersion(versionFile[0]);
+            else data.PackageVersion = "";
 
             return data;
         }
