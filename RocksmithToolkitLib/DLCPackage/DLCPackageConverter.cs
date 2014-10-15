@@ -29,24 +29,12 @@ namespace RocksmithToolkitLib.DLCPackage
             var needRebuildPackage = sourcePlatform.IsConsole != targetPlatform.IsConsole;
             var tmpDir = Path.GetTempPath();
 
-            var fileName = Path.GetFileNameWithoutExtension(sourcePackage);
-            if (sourcePlatform.platform == GamePlatform.PS3)
-                if (fileName.Contains(".psarc"))
-                    fileName = fileName.Substring(0, fileName.LastIndexOf("."));
-
             var unpackedDir = Packer.Unpack(sourcePackage, tmpDir, false, true, false, sourcePlatform);
 
             // DESTINATION
             var nameTemplate = (!targetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";
-
-            var packageName = Path.GetFileNameWithoutExtension(sourcePackage);
-            if (packageName.EndsWith(new Platform(GamePlatform.Pc, GameVersion.None).GetPathName()[2]) ||
-                    packageName.EndsWith(new Platform(GamePlatform.Mac, GameVersion.None).GetPathName()[2]) ||
-                    packageName.EndsWith(new Platform(GamePlatform.XBox360, GameVersion.None).GetPathName()[2]) ||
-                    packageName.EndsWith(new Platform(GamePlatform.PS3, GameVersion.None).GetPathName()[2] + ".psarc"))
-            {
-                packageName = packageName.Substring(0, packageName.LastIndexOf("_")).Replace(".","_").GetValidName(true, underscoreSpace:true);
-            }
+            var packageName = Path.GetFileNameWithoutExtension(sourcePackage).StripPlatformEndName();
+                packageName = packageName.Replace(".","_").GetValidName(true, underscoreSpace:true);
             var targetFileName = String.Format( nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), targetPlatform.GetPathName()[2] );
 
             // CONVERSION                
@@ -117,11 +105,12 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void ConvertPackageRebuilding(string unpackedDir, string targetFileName, Platform targetPlatform, string appId)
         {
             var data = DLCPackageData.LoadFromFolder(unpackedDir, targetPlatform);
+            // Update AppID
             if (!targetPlatform.IsConsole)
                 data.AppId = appId;
             targetFileName = Path.Combine(Path.GetDirectoryName(targetFileName), Path.GetFileNameWithoutExtension(targetFileName).Replace(".","_")); 
 
-            //Build
+            // Build
             DLCPackageCreator.Generate(targetFileName, data, new Platform(targetPlatform.platform, GameVersion.RS2014));
         }
     }

@@ -38,10 +38,10 @@ namespace RocksmithToolkitLib.DLCPackage
         private static readonly string XBOX_WORKDIR = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "xboxpackage");
         private static readonly string PS3_WORKDIR = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "edat");
 
-        private static readonly string[] PATH_PC = { "Windows", "Generic", "_p" };
-        private static readonly string[] PATH_MAC = { "Mac", "MacOS", "_m" };
+        private static readonly string[] PATH_PC   = { "Windows", "Generic", "_p" };
+        private static readonly string[] PATH_MAC  = { "Mac",     "MacOS",   "_m" };
         private static readonly string[] PATH_XBOX = { "XBox360", "XBox360", "_xbox" };
-        private static readonly string[] PATH_PS3 = { "PS3", "PS3", "_ps3" };
+        private static readonly string[] PATH_PS3  = { "PS3",     "PS3",     "_ps3" };
 
         private static List<string> FILES_XBOX = new List<string>();
         private static List<string> FILES_PS3 = new List<string>();
@@ -66,7 +66,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static string[] GetPathName(this Platform platform)
         {
-            switch (platform.platform)
+            return platform.platform.GetPathName();
+        }
+
+        public static string[] GetPathName(this GamePlatform gPlatform)
+        {
+            switch (gPlatform)
             {
                 case GamePlatform.Pc:
                     return PATH_PC;
