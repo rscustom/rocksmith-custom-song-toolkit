@@ -1,0 +1,100 @@
+App Description: MASS Manipulation of Rocksmith DLC Library 
+            e.g. 1. in Rocksmith in the Library each songs Album to contain a personal rating, if it has DD, instr avail
+            e.g. 2. each song to be sorted by Album and track no
+
+Version: v0.1.8 (10% done)
+Version History(release date):
+	0.1(12.08.2014) prototype, 
+	0.1.4(22.08.2014) populating the Read Folder - File.DB,
+	0.1.4.1(12.09.2014) fixed a solution folder issue when a folder includes another folder breaking the BUILD;
+	0.1.5(12.10.2014) Read + change + Rebuild
+	wip: 0.1.6(18.10.2014) (90%) Manage Import of Duplicates (upgrade to Access 2013 DB) 
+	wip: 0.1.7(30.10.2014) (10%) FORK from/on git
+	wip: 0.1.8(12.11.2014) (40%) New features: add/remove: DD, preview
+	tbr: 0.2.1 move import DB to Main.DB?
+	tbr: 0.2.2 ?move Access code to project? or from hardcoded to viewes
+	tbr: 0.2.3 save settings in Toolkit config
+	tbr: 0.2.4 use parameterized SQL everywhere (&/ integrate template DB into project or a SQL DB)
+	tbr: 0.3 Redesign stats
+	tbr: 0.4 Redesign MainDB+Edit Screen
+
+
+Date: 15.10.2014
+Document Name: Rocksmith DLC Management tool README
+				(fork of rocksmith-custom-song-toolkit)
+Document purpose: To describe the functionailities and the way to change, the NEW tab that enable MASS Manipulation of Rocksmith DLC Library
+					(DLC folder; including customs(CDLC), DLCs and songs embeded in the ready to ship version of Rocksmith 2014) 
+Legend:
+- to be implemented
++ done
+_ future release
+-- WIP
+{} old unimplemented feature
+
+IDE-Setup <old>
+1. Download Git Client and Visual Studio 2013 Desktop Edition
+2. Update Visual Studio, SQL, download HELP, and FORM-Controls-Object reference
+3. Create a new Tab and a new Menu Item
+4. Comment/fix regression Git issues
+5. Add New User Control &paste/create yr own assets(buttons..textboxes&logic)
+6. --Add new libraries (include)
+7. --Add controls to activate User Controls
+
+Main Features:
++1. Ability to Generate a Database with all DLC
+	Design description:
+		+ Read a preset folder and generate a list of DLCs
+			+ Save a hash id for each file to record version change/need to decompress 
+				{+ Initially the filesize stamp will be used}
+		+ Decompress all
+		+ Read(parse) the info file and populate a DB
+			+ If hash already exiting in DB don't populate Main DB
+			+If doesn't Exist check and then not/save it as New/Alternate
+			_ Add Audit trail DB for not importing old versions anymore
+		_ (future)Build CDLC(single container) of official RS2012 songs
+		+ Determine if no ORIGINAL, RS1DLC, DLC, CDLC, Bass, Rhythm, Lead, Vocals, Sections
+
++2. Ability to change metadata
+	+ Name
+		+ Add Album, Year, Version, Custom fields(Avail Instruments,Alternate Version, Multitrack)
+		+ Add Description (e.g. Bass only, too acoutic)
+		+ Keep&Add Comments
+		+ Keep&Add Rating (i.e. 1/10)
+		+ Keep&Add Album Order No.
+		+ Keep&Add Multitrack info
+		+ Keep&Add Grouping info (e.g. custom groups to be packaged out)
+		+ Keep&Add Beta/WIP tag
+			- These songs appear at the top of the sorted list as they will have 0 in front of the name (0Nirvana - Bleach - School v0.1 beta)
+	+ File & Song Name standardization
+	Design description:
+		+ UI for Automated and Manual operations
+		- Any changed file can be easily reverted back to the original setting
+		+ Repack the changed files
+
+-3. Ability to watch out for new Downloaded DLC and repackage them with:
+	- New App ID
+	- Convert to Mac & PS3
+	- FTP to PS3
+	Design description:
+		- Replicate functions already existng w a tweak
+		- Use a FTP external utility
+
++4. Ability to Repack all DLCs
+	-- ?Original files changed should also be packaged?
+		+ Ability to package songs by Groups(e.g. party songs, great bass, rating 10) :)
+
+
+_5. Future feastures
+	- Read the customforge.net website (Parse costonsforge.com and enrich the DB/Library w playthrough videos, yb preview, update required, release notes....)
+		- Reconcile the version no
+		- Keep Download links
+	- Help manage and create MultiTracks
+		- Based on a original track plus aaudicity track creat e a new version
+	- Manage Official DLCs
+		- Ability to create a package out of a list of Official DLCs
+			- Initially all DCLS will be manually matched & hardcoded as to the audio file name and the song title
+	- Flag files with no bass, no sections, no lyrics, no preview no DD, riff repeater..
+		- FIX when possible
+	- Show duplicates and solve conflicts
+	-- Audio Preview full track&preview track
+	-- Remove DD (arragement dependent..e.g. only bass)
