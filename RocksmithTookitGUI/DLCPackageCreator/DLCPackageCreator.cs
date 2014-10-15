@@ -429,7 +429,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        public void dlcSaveButton_Click(object sender = null, EventArgs e = null)
+        private void dlcSaveButton_Click(object sender, EventArgs e)
+        {
+            SaveTemplateFile();
+        }
+
+        public void SaveTemplateFile(string defaultSavePath = null)
         {
             var arrangements = ArrangementLB.Items.OfType<Arrangement>().ToList();
             var packageData = GetPackageData();
@@ -437,15 +442,26 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show("One or more fields are missing information.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            string fileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", ArtistSort, SongTitleSort, CurrentGameVersion.ToString(), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
             string dlcSavePath;
-            using (var ofd = new SaveFileDialog())
+            
+            if (!String.IsNullOrEmpty(defaultSavePath))
             {
-                ofd.SupportMultiDottedExtensions = true;
-                ofd.Filter = CurrentRocksmithTitle + " DLC Template (*.dlc.xml)|*.dlc.xml";
-                ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", ArtistSort, SongTitleSort, CurrentGameVersion.ToString(), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
-                if (DialogResult.OK != ofd.ShowDialog()) return;
-                dlcSavePath = ofd.FileName;
+                dlcSavePath = Path.Combine(defaultSavePath, fileName + ".dlc.xml");
             }
+            else
+            {
+                using (var ofd = new SaveFileDialog())
+                {
+                    ofd.SupportMultiDottedExtensions = true;
+                    ofd.Filter = CurrentRocksmithTitle + " DLC Template (*.dlc.xml)|*.dlc.xml";
+                    ofd.FileName = fileName;
+                    if (DialogResult.OK != ofd.ShowDialog()) return;
+                    dlcSavePath = ofd.FileName;
+                }
+            }
+
             var BasePath = Path.GetDirectoryName(dlcSavePath);
 
             //Make the paths relative
@@ -481,7 +497,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     arr.SongFile.File = BasePath.AbsoluteTo(arr.SongFile.File);
             }
 
-            MessageBox.Show(CurrentRocksmithTitle + " DLC Package template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (String.IsNullOrEmpty(defaultSavePath))
+                MessageBox.Show(CurrentRocksmithTitle + " DLC Package template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void dlcLoadButton_Click(object sender = null, EventArgs e = null)
@@ -584,6 +601,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // FILL PACKAGE CREATOR FORM
             FillPackageCreatorForm(info, unpackedDir);
+
+            // AUTO SAVE DLC TEMPLATE
+            SaveTemplateFile(unpackedDir);
 
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();

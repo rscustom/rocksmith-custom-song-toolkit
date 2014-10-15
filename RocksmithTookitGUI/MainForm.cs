@@ -83,7 +83,7 @@ namespace RocksmithToolkitGUI
                         dlcPackageCreatorControl.dlcLoadButton_Click();
                         break;
                     case Keys.S: //<< Save Template
-                        dlcPackageCreatorControl.dlcSaveButton_Click();
+                        dlcPackageCreatorControl.SaveTemplateFile();
                         break;
                     case Keys.I: //<< Import Template
                         dlcPackageCreatorControl.dlcImportButton_Click();
