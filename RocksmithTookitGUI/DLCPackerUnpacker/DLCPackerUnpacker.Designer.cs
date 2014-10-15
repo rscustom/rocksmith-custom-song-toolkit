@@ -224,7 +224,7 @@
             // 
             this.currentOperationLabel.AutoSize = true;
             this.currentOperationLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.currentOperationLabel.Location = new System.Drawing.Point(6, 221);
+            this.currentOperationLabel.Location = new System.Drawing.Point(6, 241);
             this.currentOperationLabel.Name = "currentOperationLabel";
             this.currentOperationLabel.Size = new System.Drawing.Size(16, 13);
             this.currentOperationLabel.TabIndex = 19;
@@ -233,7 +233,7 @@
             // 
             // updateProgress
             // 
-            this.updateProgress.Location = new System.Drawing.Point(8, 240);
+            this.updateProgress.Location = new System.Drawing.Point(8, 260);
             this.updateProgress.Name = "updateProgress";
             this.updateProgress.Size = new System.Drawing.Size(389, 26);
             this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
