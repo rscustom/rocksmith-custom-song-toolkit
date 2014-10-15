@@ -17,12 +17,15 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Extensions;
+using System.ComponentModel;
 
 namespace RocksmithToolkitGUI.DLCConverter
 {
     public partial class DLCConverter : UserControl
     {
         private const string MESSAGEBOX_CAPTION = "DLC Converter";
+        private BackgroundWorker bwConvert = new BackgroundWorker { WorkerReportsProgress = true };
+        private StringBuilder errorsFound;
 
         public string AppId
         {
@@ -72,6 +75,45 @@ namespace RocksmithToolkitGUI.DLCConverter
                 PopulateAppIdCombo(GameVersion.RS2014); //Supported game version
                 AppIdVisibilty();
             } catch { /*For mono compatibility*/ }
+
+            // Converter worker
+            bwConvert.DoWork += doConvert;
+            bwConvert.ProgressChanged += (se,ea) =>
+            {
+                if (ea.ProgressPercentage <= updateProgress.Maximum)
+                    updateProgress.Value = ea.ProgressPercentage;
+                else
+                    updateProgress.Value = updateProgress.Maximum;
+                ShowCurrentOperation(ea.UserState as string);
+            };
+            bwConvert.RunWorkerCompleted += ProcessCompleted;
+        }
+
+        private void ProcessCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            switch (Convert.ToString(e.Result))
+            {
+                case "done":
+                    if (errorsFound.Length <= 0)
+                        MessageBox.Show(
+                            String.Format("DLC was converted from '{0}' to '{1}'.\n", SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning
+                        );
+                    else
+                        MessageBox.Show(
+                            String.Format("DLC was converted from '{2}' to '{3}' with erros. See below: {0}{1}{0}", Environment.NewLine, errorsFound.ToString(), SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning
+                        );
+                    convertButton.Enabled = true;
+                break;
+            }
+
+            updateProgress.Visible = false;
+            currentOperationLabel.Visible = false;
+        }
+
+        private void ShowCurrentOperation(string message)
+        {
+            currentOperationLabel.Text = message;
+            currentOperationLabel.Refresh();
         }
 
         private void PopulateAppIdCombo(GameVersion gameVersion)
@@ -105,6 +147,50 @@ namespace RocksmithToolkitGUI.DLCConverter
                 AppId = ((SongAppId)appIdCombo.SelectedItem).AppId;
         }
 
+        private void doConvert(object sender, DoWorkEventArgs e)
+        {
+            // SOURCE
+            var sourceFileNames = e.Argument as string[];
+            errorsFound = new StringBuilder();
+            var step = (int)Math.Round(1.0 / sourceFileNames.Length * 100, 0);
+            int progress = 0;
+            foreach (var sourcePackage in sourceFileNames)
+            {
+                bwConvert.ReportProgress(progress, String.Format("Converting '{0}' to {1} platform.", Path.GetFileName(sourcePackage), TargetPlatform.platform.GetPathName()[0]));
+                if (!sourcePackage.IsValidPSARC())
+                {
+                    errorsFound.AppendLine(String.Format("File '{0}' isn't valid. File extension was changed to '.invalid'", Path.GetFileName(sourcePackage)));
+
+                    return;
+                }
+
+                var alertMessage = String.Format("Source package '{0}' seems to be not {1} platform, the conversion impossible.", Path.GetFileName(sourcePackage), SourcePlatform);
+                var haveCorrectName = Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2]);
+                if (SourcePlatform.platform == GamePlatform.PS3)
+                    haveCorrectName = Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2] + ".psarc");
+
+                if (!haveCorrectName)
+                {
+                    errorsFound.AppendLine(alertMessage);
+                    if (MessageBox.Show(alertMessage + Environment.NewLine + "Force try to convert this package?", MESSAGEBOX_CAPTION, MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
+                        continue;
+                }
+
+                try {
+                // CONVERT
+                var output = DLCPackageConverter.Convert(sourcePackage, SourcePlatform, TargetPlatform, AppId);
+                errorsFound.AppendLine(output);
+                }
+                catch(Exception ex) {
+                    errorsFound.AppendLine(String.Format("{0}\n{1}\n",ex.Message, ex.StackTrace));
+                }
+                progress += step;
+                bwConvert.ReportProgress(progress);
+            }
+            bwConvert.ReportProgress(100);
+            e.Result = "done";
+        }
+
         private void convertButton_Click(object sender, EventArgs e)
         {
             // VALIDATIONS
@@ -114,8 +200,6 @@ namespace RocksmithToolkitGUI.DLCConverter
             }
             
             // GET FILES
-            string[] sourcePackages;
-
             using (var ofd = new OpenFileDialog()) {
                 ofd.Title = "Select one DLC for platform conversion";
                 ofd.Multiselect = true;
@@ -137,44 +221,15 @@ namespace RocksmithToolkitGUI.DLCConverter
 
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
-                sourcePackages = ofd.FileNames;
-            }
-
-            // SOURCE            
-            StringBuilder errorsFound = new StringBuilder();
-            Application.DoEvents();
-            foreach (var sourcePackage in sourcePackages)
-            {
-                if (!sourcePackage.IsValidPSARC())
+                if (!bwConvert.IsBusy && ofd.FileNames.Length > 0)
                 {
-                    errorsFound.AppendLine(String.Format("File '{0}' isn't valid. File extension was changed to '.invalid'", Path.GetFileName(sourcePackage)));
-
-                    return;
+                    updateProgress.Value = 0;
+                    updateProgress.Visible = true;
+                    currentOperationLabel.Visible = true;
+                    convertButton.Enabled = false;
+                    bwConvert.RunWorkerAsync(ofd.FileNames);
                 }
-
-                var alertMessage = String.Format("Source package '{0}' seems to be not {1} platform, the conversion can't be work.", Path.GetFileName(sourcePackage), SourcePlatform);
-                var haveCorrectName = Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2]);
-                if (SourcePlatform.platform == GamePlatform.PS3)
-                    haveCorrectName = Path.GetFileNameWithoutExtension(sourcePackage).EndsWith(SourcePlatform.GetPathName()[2] + ".psarc");
-
-                if (!haveCorrectName)
-                {
-                    errorsFound.AppendLine(alertMessage);
-                    if (MessageBox.Show(alertMessage + Environment.NewLine + "Force try to convert this package?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                        continue;
-                }
-
-                // CONVERT
-                var output = DLCPackageConverter.Convert(sourcePackage, SourcePlatform, TargetPlatform, AppId);
-                if (!String.IsNullOrEmpty(output))
-                    errorsFound.AppendLine(output);
-            }
-
-            if (errorsFound.Length <= 0)
-                MessageBox.Show(String.Format("DLC was converted from '{0}' to '{1}'.", SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            else
-                MessageBox.Show(String.Format("DLC was converted from '{0}' to '{1}' with erros. See below: " + Environment.NewLine + errorsFound.ToString(), SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            ParentForm.Focus();
+            } ParentForm.Focus();
         }
     }
 }

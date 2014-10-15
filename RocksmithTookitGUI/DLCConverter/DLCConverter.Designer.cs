@@ -38,6 +38,8 @@
             this.platformSourceCombo = new System.Windows.Forms.ComboBox();
             this.convertButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.currentOperationLabel = new System.Windows.Forms.Label();
+            this.updateProgress = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -159,16 +161,38 @@
             this.label3.TabIndex = 38;
             this.label3.Text = "Compatible only with Rocksmith 2014";
             // 
+            // currentOperationLabel
+            // 
+            this.currentOperationLabel.AutoSize = true;
+            this.currentOperationLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.currentOperationLabel.Location = new System.Drawing.Point(11, 220);
+            this.currentOperationLabel.Name = "currentOperationLabel";
+            this.currentOperationLabel.Size = new System.Drawing.Size(16, 13);
+            this.currentOperationLabel.TabIndex = 19;
+            this.currentOperationLabel.Text = "...";
+            this.currentOperationLabel.Visible = false;
+            // 
+            // updateProgress
+            // 
+            this.updateProgress.Location = new System.Drawing.Point(8, 236);
+            this.updateProgress.Name = "updateProgress";
+            this.updateProgress.Size = new System.Drawing.Size(384, 26);
+            this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.updateProgress.TabIndex = 0;
+            this.updateProgress.Visible = false;
+            // 
             // DLCConverter
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.currentOperationLabel);
+            this.Controls.Add(this.updateProgress);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.convertButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox2);
             this.Name = "DLCConverter";
-            this.MinimumSize = new System.Drawing.Size(400, 236);
-            this.Size = new System.Drawing.Size(400, 236);
+            this.MinimumSize = new System.Drawing.Size(400, 279);
+            this.Size = new System.Drawing.Size(400, 279);
             this.Load += new System.EventHandler(this.DLCConverter_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -190,5 +214,7 @@
         private System.Windows.Forms.ComboBox appIdCombo;
         private CueTextBox AppIdTB;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label currentOperationLabel;
+        private System.Windows.Forms.ProgressBar updateProgress;
     }
 }

@@ -139,6 +139,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             if (!bwUnpack.IsBusy && sourceFileNames.Length > 0)
             {
+                updateProgress.Value = 0;
                 updateProgress.Visible = true;
                 currentOperationLabel.Visible = true;
                 unpackButton.Enabled = false;
@@ -187,6 +188,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                 if (!bwRepack.IsBusy && ofd.FileNames.Length > 0)
                 {
+                    updateProgress.Value = 0;
                     updateProgress.Visible = true;
                     currentOperationLabel.Visible = true;
                     repackButton.Enabled = false;
