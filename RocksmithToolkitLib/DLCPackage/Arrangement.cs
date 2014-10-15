@@ -40,6 +40,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public string Tuning { get; set; }
         public TuningStrings TuningStrings { get; set; }
         public double TuningPitch { get; set; }
+        public decimal CapoFret { get; set; }
         public int ScrollSpeed { get; set; }
         public PluckedType PluckedType { get; set; }
         // cache parsing results (speeds up generating for multiple platforms)
@@ -104,7 +105,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
             this.Tuning = tuning.UIName;
             this.TuningStrings = tuning.Tuning;
-
+            this.CapoFret = attr.CapoFret;
             if (attr.CentOffset != null)
                 this.TuningPitch = attr.CentOffset.Cents2Frequency();
 
@@ -137,14 +138,22 @@ namespace RocksmithToolkitLib.DLCPackage
             if (!String.IsNullOrEmpty(ToneD))
                 toneDesc += String.Format(", {0}", ToneD);
 
+            var capoInfo = String.Empty;
+            if (CapoFret > 0)
+                capoInfo = String.Format(", Capo Fret {0}", CapoFret);
+
+            var pitchInfo = String.Empty;
+            if(TuningPitch != 440.0)
+                pitchInfo = String.Format(": A{0}", TuningPitch);
+
             switch (ArrangementType)
             {
                 case ArrangementType.Bass:
-                    return String.Format("{0} [{1}] ({2})", ArrangementType, Tuning, toneDesc);
+                    return String.Format("{0} [{1}{2}{3}] ({4})", ArrangementType, Tuning, pitchInfo, capoInfo, toneDesc);
                 case ArrangementType.Vocal:
                     return String.Format("{0}", ArrangementType);
                 default:
-                    return String.Format("{0} - {1} [{2}] ({3})", ArrangementType, Name, Tuning, toneDesc);
+                    return String.Format("{0} - {1} [{2}{3}{4}] ({5})", ArrangementType, Name, Tuning, pitchInfo, capoInfo, toneDesc);
             }
         }
 

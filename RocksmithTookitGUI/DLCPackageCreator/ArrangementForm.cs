@@ -539,6 +539,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
             if (!ReferenceEquals(xmlSong, null))
                 Arrangement.TuningStrings = xmlSong.Tuning;
+            if (!ReferenceEquals(xmlSong, null))
+                Arrangement.CapoFret = xmlSong.Capo;
             Arrangement.TuningPitch = 440;
             var value = frequencyTB.Text;
             if (!String.IsNullOrEmpty(value)) {

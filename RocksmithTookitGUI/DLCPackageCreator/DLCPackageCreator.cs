@@ -370,7 +370,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 progress += step;
                 bwGenerate.ReportProgress (progress);
             } catch (Exception ex) {
-                errorsFound.AppendLine (String.Format ("Error generate PC package: {0}{1}{0}", Environment.NewLine, ex.StackTrace));
+                errorsFound.AppendLine (String.Format ("Error generate PC package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
             }
 
             if (platformMAC.Checked)
@@ -380,7 +380,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 progress += step;
                 bwGenerate.ReportProgress (progress);
             } catch (Exception ex) {
-                errorsFound.AppendLine (String.Format ("Error generate Mac package: {0}{1}{0}", Environment.NewLine, ex.StackTrace));
+                errorsFound.AppendLine (String.Format ("Error generate Mac package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
             }
 
             if (platformXBox360.Checked)
@@ -390,7 +390,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 progress += step;
                 bwGenerate.ReportProgress (progress);
             } catch (Exception ex) {
-                errorsFound.AppendLine (String.Format ("Error generate XBox 360 package: {0}{1}{0}", Environment.NewLine, ex.StackTrace));
+                errorsFound.AppendLine (String.Format ("Error generate XBox 360 package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
             }
 
             if (platformPS3.Checked)
@@ -899,6 +899,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     try
                     {
+                        var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);
+                        arrangement.CapoFret = songXml.Capo;
                         //Load tuning from Arrangement
                         var tuning = TuningDefinitionRepository.Instance().SelectAny(arrangement.TuningStrings, CurrentGameVersion);
                         if (tuning == null)
@@ -920,6 +922,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         arrangement.TuningStrings = tuning.Tuning;
                         //Cleanup
                         tuning = null;
+                        songXml = null;
                     }
                     catch { /* Handle old types of *.dlc.xml */ }
                 }
