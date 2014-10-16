@@ -34,22 +34,25 @@ namespace RocksmithToolkitGUI.DLCConverter
         }
 
         public Platform SourcePlatform {
-            get {
-                if (platformSourceCombo.Items.Count > 0)
-                    return new Platform(platformSourceCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
-                else
-                    return new Platform(GamePlatform.None, GameVersion.None);
-            }
+            get ; set;
+        }
+        void defineSourcePlatform()
+        {
+            if (platformSourceCombo.Items.Count > 0)
+                SourcePlatform = new Platform(platformSourceCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
+            else 
+                SourcePlatform = new Platform(GamePlatform.None, GameVersion.None);
         }
 
         public Platform TargetPlatform {
-            get {
-                if (platformTargetCombo.Items.Count > 0)
-                    return new Platform(platformTargetCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
-                else
-                    return new Platform(GamePlatform.None, GameVersion.None);
-            }
-
+            get ; set;
+        }
+        void defineTargetPlatform()
+        {
+            if (platformTargetCombo.Items.Count > 0)
+                TargetPlatform = new Platform(platformTargetCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
+            else 
+                TargetPlatform = new Platform(GamePlatform.None, GameVersion.None);
         }
 
         public DLCConverter()
@@ -179,7 +182,8 @@ namespace RocksmithToolkitGUI.DLCConverter
                 try {
                 // CONVERT
                 var output = DLCPackageConverter.Convert(sourcePackage, SourcePlatform, TargetPlatform, AppId);
-                errorsFound.AppendLine(output);
+                if(!String.IsNullOrEmpty(output))
+                    errorsFound.AppendLine(output);
                 }
                 catch(Exception ex) {
                     errorsFound.AppendLine(String.Format("{0}\n{1}\n",ex.Message, ex.StackTrace));
@@ -193,6 +197,8 @@ namespace RocksmithToolkitGUI.DLCConverter
 
         private void convertButton_Click(object sender, EventArgs e)
         {
+            defineSourcePlatform();
+            defineTargetPlatform();
             // VALIDATIONS
             if (SourcePlatform.Equals(TargetPlatform)) {
                 MessageBox.Show("The source and target platform should be different.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
