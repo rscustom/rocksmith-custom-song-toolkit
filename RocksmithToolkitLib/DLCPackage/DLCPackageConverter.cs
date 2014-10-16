@@ -34,7 +34,7 @@ namespace RocksmithToolkitLib.DLCPackage
             // DESTINATION
             var nameTemplate = (!targetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";
             var packageName = Path.GetFileNameWithoutExtension(sourcePackage).StripPlatformEndName();
-                packageName = packageName.Replace(".","_").GetValidName(true, underscoreSpace:true);
+                packageName = packageName.Replace(".","_");
             var targetFileName = String.Format( nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), targetPlatform.GetPathName()[2] );
 
             // CONVERSION                
@@ -108,7 +108,6 @@ namespace RocksmithToolkitLib.DLCPackage
             // Update AppID
             if (!targetPlatform.IsConsole)
                 data.AppId = appId;
-            targetFileName = Path.Combine(Path.GetDirectoryName(targetFileName), Path.GetFileNameWithoutExtension(targetFileName).Replace(".","_")); 
 
             // Build
             DLCPackageCreator.Generate(targetFileName, data, new Platform(targetPlatform.platform, GameVersion.RS2014));
