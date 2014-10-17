@@ -1,16 +1,23 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
-    class IdGenerator
+    public static class IdGenerator
     {
         public static string LLID()
         {
             return String.Format("{0}{1}{2}{3}-0000-0000-0000-000000000000",
                 GetHexRandomByte(), GetHexRandomByte(), GetHexRandomByte(), GetHexRandomByte()).ToLower();
+        }
+
+        public static Guid LLIDGuid()
+        {
+            Guid o;
+            System.Guid.TryParse (LLID (), out o);
+            return o;
         }
 
         public static string Id()

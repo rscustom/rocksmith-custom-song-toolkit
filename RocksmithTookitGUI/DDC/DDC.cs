@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
@@ -26,7 +27,8 @@ namespace RocksmithToolkitGUI.DDC
         internal Dictionary<string, string> DLCdb = new Dictionary<string,string>();
         internal Dictionary<string, string> RampMdlsDb = new Dictionary<string,string>();
         internal Dictionary<string, string> ConfigsDb = new Dictionary<string, string>();
-        internal static string AppWD = Application.StartupPath;
+        internal static string AppWD = AppDomain.CurrentDomain.BaseDirectory;
+        internal static string DdcBD = Path.Combine(AppWD, "ddc");
         internal Color EnabledColor = System.Drawing.Color.Green;
         internal Color DisabledColor = Color.Tomato;
 
@@ -63,13 +65,13 @@ namespace RocksmithToolkitGUI.DDC
 
         private void DDC_Load(object sender, EventArgs e)
         {
-            if (!MainForm.IsInDesignMode)
-            {
-                FileVersionInfo vi = FileVersionInfo.GetVersionInfo(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ddc", "ddc.exe"));
-                ddcVersion.Text = String.Format("v{0}", vi.ProductVersion);
-            }
-
             try {
+                string ddcPath = Path.Combine(AppWD, "ddc", "ddc.exe");
+                if (!this.DesignMode && File.Exists(ddcPath))
+                {
+                    FileVersionInfo vi = FileVersionInfo.GetVersionInfo(ddcPath);
+                    ddcVersion.Text = String.Format("v{0}", vi.ProductVersion);
+                }
                 PopMDLs();
                 PopCFGs();
                 SetDefaultFromConfig();
@@ -201,14 +203,15 @@ namespace RocksmithToolkitGUI.DDC
             startInfo.UseShellExecute = false;
             startInfo.CreateNoWindow = true;
             startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
 
             using (var DDC = new Process()) {
                 DDC.StartInfo = startInfo;
                 DDC.Start();
-                DDC.WaitForExit(30000000);
                 consoleOutput = DDC.StandardOutput.ReadToEnd();
-
-                return DDC.ExitCode;
+				consoleOutput += DDC.StandardError.ReadToEnd();
+				DDC.WaitForExit(1000 * 60 * 15); //wait 15 minutes
+				return DDC.ExitCode;
             }
         }
 
@@ -224,10 +227,10 @@ namespace RocksmithToolkitGUI.DDC
             var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
             foreach (var xml in xmlFiles)
             {
-                if (Path.GetFileNameWithoutExtension(xml).ToLower().Contains("vocal"))
+                if (Path.GetFileNameWithoutExtension(xml).ToUpperInvariant().Contains("VOCAL"))
                     continue;
 
-                if (Path.GetFileNameWithoutExtension(xml).ToLower().Contains("showlight"))
+                if (Path.GetFileNameWithoutExtension(xml).ToUpperInvariant().Contains("SHOWLIGHT"))
                     continue;
 
                 singleResult = ApplyDD(xml, remSUS, rampPath, cfgPath, out consoleOutputPkg, true, keepLog);
@@ -445,44 +448,41 @@ namespace RocksmithToolkitGUI.DDC
         {
             bool done = false;
             string link = "http://ddcreator.wordpress.com";
-            string arg0 = "";
-            Process[] processlist = Process.GetProcesses();
-            foreach (Process browser in processlist)
-            {                
-                string[] Browsers = new string[]{ "chrome", "opera", "firefox" };
-
-                foreach (var browserID in Browsers)
-                {
-                    if (browser.ProcessName.Equals(browserID))
-                    {
-                        if (browserID.IndexOf("opera") > 0)
-                            arg0 = "-newwindow ";
-
-                        browser.StartInfo.FileName = browser.MainModule.FileName;
-                        browser.StartInfo.Arguments = String.Format("{0}{1}", arg0, link);
-                        browser.Start();
-                        done = true;
-                        break;
-                    }
-                }
-
-                if (done)
-                    break;
-            }
-
-            if (!done)
+            string arg1 = "";
+            if(Environment.OSVersion.Platform == PlatformID.MacOSX){
                 Process.Start(link);
+            }
+            else {
+                    string[] Browsers = new string[]{ "chrome", "opera", "firefox" };
+                    foreach (var browserID in Browsers)
+                    {
+                        var browser = Process.GetProcessesByName(browserID)[0];
+                        if (browser.ProcessName.Equals(browserID))
+                        {
+                            if (browserID.Contains("opera"))
+                                arg1 = "-newwindow ";
+
+                            browser.StartInfo.FileName = browser.MainModule.FileName;
+                            browser.StartInfo.Arguments = String.Format("{0}{1}", arg1, link);
+                            browser.Start();
+                            done = true;
+                            break;
+                        }
+                    }
+                if (!done)
+                    Process.Start(link);
+            }
 
             this.DescriptionDDC.Links[DescriptionDDC.Links.IndexOf(e.Link)].Visited = true;
         }
 
         private void PopMDLs()
         {
-            if (Directory.Exists(@".\ddc\"))
+            if (Directory.Exists(DdcBD)) //@".\ddc\"
             {
                 ramUpMdlsCbox.Items.Clear();
                 RampMdlsDb.Clear();
-                foreach (var mdl in Directory.EnumerateFiles(@".\ddc\", "*.xml", SearchOption.AllDirectories))
+                foreach (var mdl in Directory.EnumerateFiles(DdcBD, "*.xml", SearchOption.AllDirectories))
                 {
                     var name = Path.GetFileNameWithoutExtension(mdl);
                     if (name.StartsWith("user_")) name = name.Remove(0, 5);
@@ -496,11 +496,11 @@ namespace RocksmithToolkitGUI.DDC
 
         private void PopCFGs()
         {
-            if (Directory.Exists(@".\ddc\"))
+            if (Directory.Exists(DdcBD))
             {
                 ConfigFilesCbx.Items.Clear();
                 ConfigsDb.Clear();
-                foreach (var cfg in Directory.EnumerateFiles(@".\ddc\", "*.cfg", SearchOption.AllDirectories))
+                foreach (var cfg in Directory.EnumerateFiles(DdcBD, "*.cfg", SearchOption.AllDirectories))
                 {
                     var name = Path.GetFileNameWithoutExtension(cfg);
                     if (name.StartsWith("user_")) name = name.Remove(0, 5);

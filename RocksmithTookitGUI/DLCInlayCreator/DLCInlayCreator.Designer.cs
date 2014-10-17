@@ -31,7 +31,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DLCInlayCreator));
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.chkFlipX = new System.Windows.Forms.CheckBox();
@@ -40,20 +39,22 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.Frets24Checkbox = new System.Windows.Forms.CheckBox();
             this.gbInfo = new System.Windows.Forms.GroupBox();
             this.keyboardDescArrLabel = new System.Windows.Forms.Label();
+            this.authorTextbox = new RocksmithToolkitGUI.CueTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.inlayTemplateCombo = new System.Windows.Forms.ComboBox();
-            this.helpLink = new System.Windows.Forms.LinkLabel();
             this.picInlay = new System.Windows.Forms.PictureBox();
             this.picIcon = new System.Windows.Forms.PictureBox();
+            this.inlayNameTextbox = new RocksmithToolkitGUI.CueTextBox();
             this.picFlipX = new System.Windows.Forms.PictureBox();
             this.picFlipY = new System.Windows.Forms.PictureBox();
             this.picColored = new System.Windows.Forms.PictureBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.helpLink = new System.Windows.Forms.LinkLabel();
             this.updateProgress = new System.Windows.Forms.ProgressBar();
             this.currentOperationLabel = new System.Windows.Forms.Label();
             this.gbPlatform = new System.Windows.Forms.GroupBox();
@@ -72,8 +73,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.rbMac = new System.Windows.Forms.RadioButton();
             this.rbPc = new System.Windows.Forms.RadioButton();
             this.introScreensCreator1 = new RocksmithToolkitGUI.DLCInlayCreator.IntroScreensCreator();
-            this.authorTextbox = new RocksmithToolkitGUI.CueTextBox();
-            this.inlayNameTextbox = new RocksmithToolkitGUI.CueTextBox();
             this.gbInfo.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInlay)).BeginInit();
@@ -88,8 +87,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // appIdCombo
             // 
-            this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.appIdCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.appIdCombo.FormattingEnabled = true;
             this.appIdCombo.Location = new System.Drawing.Point(204, 30);
@@ -114,7 +113,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.chkFlipX.Location = new System.Drawing.Point(357, 16);
             this.chkFlipX.Name = "chkFlipX";
             this.chkFlipX.Size = new System.Drawing.Size(15, 14);
-            this.chkFlipX.TabIndex = 10;
+            this.chkFlipX.TabIndex = 12;
             this.chkFlipX.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.chkFlipX.UseVisualStyleBackColor = true;
             this.chkFlipX.CheckedChanged += new System.EventHandler(this.FlipX_Changed);
@@ -126,7 +125,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.chkFlipY.Location = new System.Drawing.Point(422, 16);
             this.chkFlipY.Name = "chkFlipY";
             this.chkFlipY.Size = new System.Drawing.Size(15, 14);
-            this.chkFlipY.TabIndex = 11;
+            this.chkFlipY.TabIndex = 13;
             this.chkFlipY.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.chkFlipY.UseVisualStyleBackColor = true;
             this.chkFlipY.CheckedChanged += new System.EventHandler(this.FlipY_Changed);
@@ -137,7 +136,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.ColoredCheckbox.Location = new System.Drawing.Point(292, 16);
             this.ColoredCheckbox.Name = "ColoredCheckbox";
             this.ColoredCheckbox.Size = new System.Drawing.Size(15, 14);
-            this.ColoredCheckbox.TabIndex = 9;
+            this.ColoredCheckbox.TabIndex = 11;
             this.ColoredCheckbox.UseVisualStyleBackColor = true;
             // 
             // Frets24Checkbox
@@ -148,7 +147,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.Frets24Checkbox.Location = new System.Drawing.Point(214, 15);
             this.Frets24Checkbox.Name = "Frets24Checkbox";
             this.Frets24Checkbox.Size = new System.Drawing.Size(61, 17);
-            this.Frets24Checkbox.TabIndex = 8;
+            this.Frets24Checkbox.TabIndex = 10;
             this.Frets24Checkbox.Text = "24 frets";
             this.Frets24Checkbox.UseVisualStyleBackColor = true;
             // 
@@ -177,6 +176,16 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.keyboardDescArrLabel.TabIndex = 74;
             this.keyboardDescArrLabel.Text = "Will be written inside the package";
             // 
+            // authorTextbox
+            // 
+            this.authorTextbox.Cue = "Author";
+            this.authorTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.authorTextbox.ForeColor = System.Drawing.Color.Gray;
+            this.authorTextbox.Location = new System.Drawing.Point(10, 31);
+            this.authorTextbox.Name = "authorTextbox";
+            this.authorTextbox.Size = new System.Drawing.Size(188, 20);
+            this.authorTextbox.TabIndex = 6;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -191,13 +200,11 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.chkFlipX);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.chkFlipY);
             this.groupBox2.Controls.Add(this.inlayTemplateCombo);
-            this.groupBox2.Controls.Add(this.helpLink);
             this.groupBox2.Controls.Add(this.picInlay);
             this.groupBox2.Controls.Add(this.ColoredCheckbox);
             this.groupBox2.Controls.Add(this.picIcon);
@@ -213,7 +220,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.groupBox2.Size = new System.Drawing.Size(498, 184);
             this.groupBox2.TabIndex = 83;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Guitar Inlay";
+            this.groupBox2.Text = "Guitar Inlay:";
             // 
             // label7
             // 
@@ -234,17 +241,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.label6.Size = new System.Drawing.Size(30, 15);
             this.label6.TabIndex = 75;
             this.label6.Text = "Icon";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(269, 166);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(110, 13);
-            this.label3.TabIndex = 89;
-            this.label3.Text = "Help can be found at:";
             // 
             // label4
             // 
@@ -270,8 +266,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // inlayTemplateCombo
             // 
-            this.inlayTemplateCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.inlayTemplateCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.inlayTemplateCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.inlayTemplateCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.inlayTemplateCombo.FormattingEnabled = true;
@@ -279,25 +275,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.inlayTemplateCombo.Margin = new System.Windows.Forms.Padding(2);
             this.inlayTemplateCombo.Name = "inlayTemplateCombo";
             this.inlayTemplateCombo.Size = new System.Drawing.Size(190, 21);
-            this.inlayTemplateCombo.TabIndex = 2;
+            this.inlayTemplateCombo.TabIndex = 8;
             this.inlayTemplateCombo.SelectedIndexChanged += new System.EventHandler(this.inlayTemplateCombo_SelectedIndexChanged);
-            // 
-            // helpLink
-            // 
-            this.helpLink.AccessibleRole = System.Windows.Forms.AccessibleRole.Link;
-            this.helpLink.ActiveLinkColor = System.Drawing.Color.RosyBrown;
-            this.helpLink.AutoEllipsis = true;
-            this.helpLink.AutoSize = true;
-            this.helpLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.helpLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.helpLink.Location = new System.Drawing.Point(376, 164);
-            this.helpLink.Name = "helpLink";
-            this.helpLink.Size = new System.Drawing.Size(116, 15);
-            this.helpLink.TabIndex = 88;
-            this.helpLink.TabStop = true;
-            this.helpLink.Text = "http://goo.gl/pJxMuz";
-            this.helpLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.helpLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpLink_LinkClicked);
             // 
             // picInlay
             // 
@@ -321,6 +300,17 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.picIcon.TabStop = false;
             this.picIcon.Click += new System.EventHandler(this.picIcon_Click);
             // 
+            // inlayNameTextbox
+            // 
+            this.inlayNameTextbox.Cue = "Inlay Name";
+            this.inlayNameTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.inlayNameTextbox.ForeColor = System.Drawing.Color.Gray;
+            this.inlayNameTextbox.Location = new System.Drawing.Point(51, 63);
+            this.inlayNameTextbox.Name = "inlayNameTextbox";
+            this.inlayNameTextbox.Size = new System.Drawing.Size(147, 20);
+            this.inlayNameTextbox.TabIndex = 9;
+            this.inlayNameTextbox.Leave += new System.EventHandler(this.inlayNameTextbox_Leave);
+            // 
             // picFlipX
             // 
             this.picFlipX.Image = global::RocksmithToolkitGUI.Properties.Resources.flipXc;
@@ -332,7 +322,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // picFlipY
             // 
-            this.picFlipY.Image = ((System.Drawing.Image)(resources.GetObject("picFlipY.Image")));
+            this.picFlipY.Image = global::RocksmithToolkitGUI.Properties.Resources.flipYc;
             this.picFlipY.Location = new System.Drawing.Point(443, 15);
             this.picFlipY.Name = "picFlipY";
             this.picFlipY.Size = new System.Drawing.Size(16, 16);
@@ -347,6 +337,34 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.picColored.Size = new System.Drawing.Size(16, 16);
             this.picColored.TabIndex = 81;
             this.picColored.TabStop = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Black;
+            this.label3.Location = new System.Drawing.Point(272, 368);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(110, 13);
+            this.label3.TabIndex = 89;
+            this.label3.Text = "Help can be found at:";
+            // 
+            // helpLink
+            // 
+            this.helpLink.AccessibleRole = System.Windows.Forms.AccessibleRole.Link;
+            this.helpLink.ActiveLinkColor = System.Drawing.Color.RosyBrown;
+            this.helpLink.AutoEllipsis = true;
+            this.helpLink.AutoSize = true;
+            this.helpLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.helpLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.helpLink.Location = new System.Drawing.Point(379, 366);
+            this.helpLink.Name = "helpLink";
+            this.helpLink.Size = new System.Drawing.Size(116, 15);
+            this.helpLink.TabIndex = 88;
+            this.helpLink.TabStop = true;
+            this.helpLink.Text = "http://goo.gl/pJxMuz";
+            this.helpLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.helpLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpLink_LinkClicked);
             // 
             // updateProgress
             // 
@@ -450,7 +468,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.saveCGMButton.Location = new System.Drawing.Point(112, 313);
             this.saveCGMButton.Name = "saveCGMButton";
             this.saveCGMButton.Size = new System.Drawing.Size(97, 29);
-            this.saveCGMButton.TabIndex = 12;
+            this.saveCGMButton.TabIndex = 14;
             this.saveCGMButton.Text = "Save Template";
             this.saveCGMButton.UseVisualStyleBackColor = false;
             this.saveCGMButton.Click += new System.EventHandler(this.saveCGMButton_Click);
@@ -462,7 +480,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.inlayGenerateButton.Location = new System.Drawing.Point(326, 313);
             this.inlayGenerateButton.Name = "inlayGenerateButton";
             this.inlayGenerateButton.Size = new System.Drawing.Size(176, 29);
-            this.inlayGenerateButton.TabIndex = 13;
+            this.inlayGenerateButton.TabIndex = 15;
             this.inlayGenerateButton.Text = "Generate Package";
             this.inlayGenerateButton.UseVisualStyleBackColor = false;
             this.inlayGenerateButton.Click += new System.EventHandler(this.inlayGenerateButton_Click);
@@ -492,8 +510,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // inlayTypeCombo
             // 
-            this.inlayTypeCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.inlayTypeCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.inlayTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.inlayTypeCombo.FormattingEnabled = true;
             this.inlayTypeCombo.Location = new System.Drawing.Point(10, 15);
@@ -523,10 +541,10 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             this.rbPs3.AutoSize = true;
             this.rbPs3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.rbPs3.Location = new System.Drawing.Point(236, 18);
+            this.rbPs3.Location = new System.Drawing.Point(248, 18);
             this.rbPs3.Name = "rbPs3";
             this.rbPs3.Size = new System.Drawing.Size(45, 17);
-            this.rbPs3.TabIndex = 3;
+            this.rbPs3.TabIndex = 5;
             this.rbPs3.Text = "PS3";
             this.rbPs3.UseVisualStyleBackColor = true;
             this.rbPs3.CheckedChanged += new System.EventHandler(this.radioPlatform_CheckedChanged);
@@ -535,10 +553,10 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             this.rbXbox360.AutoSize = true;
             this.rbXbox360.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.rbXbox360.Location = new System.Drawing.Point(147, 18);
+            this.rbXbox360.Location = new System.Drawing.Point(150, 18);
             this.rbXbox360.Name = "rbXbox360";
             this.rbXbox360.Size = new System.Drawing.Size(68, 17);
-            this.rbXbox360.TabIndex = 2;
+            this.rbXbox360.TabIndex = 4;
             this.rbXbox360.Text = "XBox360";
             this.rbXbox360.UseVisualStyleBackColor = true;
             this.rbXbox360.CheckedChanged += new System.EventHandler(this.radioPlatform_CheckedChanged);
@@ -547,10 +565,10 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             this.rbMac.AutoSize = true;
             this.rbMac.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.rbMac.Location = new System.Drawing.Point(78, 18);
+            this.rbMac.Location = new System.Drawing.Point(74, 18);
             this.rbMac.Name = "rbMac";
             this.rbMac.Size = new System.Drawing.Size(48, 17);
-            this.rbMac.TabIndex = 1;
+            this.rbMac.TabIndex = 3;
             this.rbMac.Text = "MAC";
             this.rbMac.UseVisualStyleBackColor = true;
             this.rbMac.CheckedChanged += new System.EventHandler(this.radioPlatform_CheckedChanged);
@@ -559,10 +577,10 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             this.rbPc.AutoSize = true;
             this.rbPc.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.rbPc.Location = new System.Drawing.Point(18, 18);
+            this.rbPc.Location = new System.Drawing.Point(9, 18);
             this.rbPc.Name = "rbPc";
             this.rbPc.Size = new System.Drawing.Size(39, 17);
-            this.rbPc.TabIndex = 0;
+            this.rbPc.TabIndex = 2;
             this.rbPc.Text = "PC";
             this.rbPc.UseVisualStyleBackColor = true;
             this.rbPc.CheckedChanged += new System.EventHandler(this.radioPlatform_CheckedChanged);
@@ -574,38 +592,19 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.introScreensCreator1.Size = new System.Drawing.Size(166, 52);
             this.introScreensCreator1.TabIndex = 91;
             // 
-            // authorTextbox
-            // 
-            this.authorTextbox.Cue = "Author";
-            this.authorTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.authorTextbox.ForeColor = System.Drawing.Color.Gray;
-            this.authorTextbox.Location = new System.Drawing.Point(10, 31);
-            this.authorTextbox.Name = "authorTextbox";
-            this.authorTextbox.Size = new System.Drawing.Size(188, 20);
-            this.authorTextbox.TabIndex = 72;
-            // 
-            // inlayNameTextbox
-            // 
-            this.inlayNameTextbox.Cue = "Inlay Name";
-            this.inlayNameTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.inlayNameTextbox.ForeColor = System.Drawing.Color.Gray;
-            this.inlayNameTextbox.Location = new System.Drawing.Point(51, 63);
-            this.inlayNameTextbox.Name = "inlayNameTextbox";
-            this.inlayNameTextbox.Size = new System.Drawing.Size(147, 20);
-            this.inlayNameTextbox.TabIndex = 6;
-            this.inlayNameTextbox.Leave += new System.EventHandler(this.inlayNameTextbox_Leave);
-            // 
             // DLCInlayCreator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gbRbPlatform);
             this.Controls.Add(this.introScreensCreator1);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.gbInfo);
             this.Controls.Add(this.updateProgress);
             this.Controls.Add(this.currentOperationLabel);
             this.Controls.Add(this.saveCGMButton);
             this.Controls.Add(this.inlayGenerateButton);
+            this.Controls.Add(this.helpLink);
             this.Controls.Add(this.loadCGMButton);
             this.Controls.Add(this.gbPlatform);
             this.Controls.Add(this.gbInlayType);

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
+
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
@@ -94,7 +96,7 @@ namespace RocksmithToolkitLib.DLCPackage
             
             if (tuning == null) {
                 tuning = new TuningDefinition();
-                tuning.UIName = tuning.Name = tuning.NameFromStrings(song.Tuning, isBass);
+                tuning.UIName = tuning.Name = tuning.NameFromStrings(song.Tuning, false);
                 tuning.Custom = true;
                 tuning.GameVersion = GameVersion.RS2014;
                 tuning.Tuning = song.Tuning;

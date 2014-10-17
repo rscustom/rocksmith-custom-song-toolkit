@@ -231,25 +231,29 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void EncryptPS3EdatFiles(string songFileName, Platform platform)
         {
+            // Due to PS3 encryption limitation - replace spaces in fname with '_'
             if (Path.GetFileName(songFileName).Contains(" "))
-                songFileName = Path.Combine(Path.GetDirectoryName(songFileName), Path.GetFileName(songFileName).Replace(" ", "_")); // Due to PS3 encryption limitation
+                songFileName = Path.Combine(Path.GetDirectoryName(songFileName), Path.GetFileName(songFileName).Replace(" ", "_"));
 
-            // Cleaning work dir
-            var junkFiles = Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".edat") || s.EndsWith(".bak"));
-            foreach(var junk in junkFiles)
+            // Cleaning work dir, beware ther is .psarcthat we need.
+            var junkFiles = Directory.EnumerateFiles(PS3_WORKDIR, "*.*").Where(e => !e.EndsWith(".psarc"));
+            foreach (var junk in junkFiles)
                 File.Delete(junk);
 
-            if (platform.version == GameVersion.RS2014) {
+            if (platform.version == GameVersion.RS2014)
+            {
                 // Have only one file for RS2014 package, so can be rename that the user defined
                 if (FILES_PS3.Count == 1)
-                    if (File.Exists(FILES_PS3[0]))
-                    {
-                        var oldName = FILES_PS3[0].Clone().ToString();
-                        FILES_PS3[0] = Path.Combine(Path.GetDirectoryName(FILES_PS3[0]), Path.GetFileName(songFileName));
-                        File.Move(oldName, FILES_PS3[0]);
-                    }
-            }
+                if (File.Exists(FILES_PS3[0]))
+                {
+                    var oldName = FILES_PS3[0].Clone().ToString();
+                    FILES_PS3[0] = Path.Combine(Path.GetDirectoryName(FILES_PS3[0]), Path.GetFileName(songFileName));
 
+                    if( File.Exists(FILES_PS3[0]) )
+                        File.Delete(FILES_PS3[0]);
+                    File.Move(oldName, FILES_PS3[0]);
+                }
+            }
             string encryptResult = RijndaelEncryptor.EncryptPS3Edat();
 
             // Delete .psarc files
@@ -268,8 +272,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 if (File.Exists(encryptedFile))
                     File.Move(encryptedFile, userSavePath);
-            }
-            else
+            } else
             {
                 if (Directory.Exists(PS3_WORKDIR))
                     DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", songFileName));
@@ -291,237 +294,234 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void GenerateRS2014SongPsarc(MemoryStream output, DLCPackageData info, Platform platform)
         {
             var dlcName = info.Name.ToLower();
-            
-            {
-                var packPsarc = new PSARC.PSARC();
+            var packPsarc = new PSARC.PSARC();
 
-                // Stream objects
-                Stream soundStream = null,
-                       soundPreviewStream = null,
-                       rsenumerableRootStream = null,
-                       rsenumerableSongStream = null;
+            // Stream objects
+            Stream soundStream = null,
+                   soundPreviewStream = null,
+                   rsenumerableRootStream = null,
+                   rsenumerableSongStream = null;
 
-                try {
-                    // ALBUM ART
-                    var ddsfiles = info.ArtFiles;
+            try {
+                // ALBUM ART
+                var ddsfiles = info.ArtFiles;
 
-                    if (ddsfiles == null) {
-                        string albumArtPath;
-                        if (File.Exists(info.AlbumArtPath)) {
-                            albumArtPath = info.AlbumArtPath;
-                        } else {
-                            using (var albumArtStream = new MemoryStream(Resources.albumart2014_256))
-                            {
-                                albumArtPath = GeneralExtensions.GetTempFileName(".dds");
-                                albumArtStream.WriteFile(albumArtPath);
-                                TMPFILES_ART.Add(albumArtPath);
-                            }
+                if (ddsfiles == null) {
+                    string albumArtPath;
+                    if (File.Exists(info.AlbumArtPath)) {
+                        albumArtPath = info.AlbumArtPath;
+                    } else {
+                        using (var albumArtStream = new MemoryStream(Resources.albumart2014_256))
+                        {
+                            albumArtPath = GeneralExtensions.GetTempFileName(".dds");
+                            albumArtStream.WriteFile(albumArtPath);
+                            TMPFILES_ART.Add(albumArtPath);
                         }
-
-                        ddsfiles = new List<DDSConvertedFile>();
-                        ddsfiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-                        ddsfiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-                        ddsfiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-
-                        // Convert to DDS
-                        ToDDS(ddsfiles);
-
-                        // Save for reuse
-                        info.ArtFiles = ddsfiles;
                     }
 
-                    foreach (var dds in ddsfiles)
-                        packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
+                    ddsfiles = new List<DDSConvertedFile>();
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
 
-                    //Lyrics Font Texture
-                    if (File.Exists(info.LyricsTex))
-                        packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricsTex, FileMode.Open, FileAccess.Read, FileShare.Read));
+                    // Convert to DDS
+                    ToDDS(ddsfiles);
 
-                    // AUDIO
-                    var audioFile = info.OggPath;
-                    if (File.Exists(audioFile))
-                        if (platform.IsConsole != audioFile.GetAudioPlatform().IsConsole)
-                            soundStream = OggFile.ConvertAudioPlatform(audioFile);
-                        else
-                            soundStream = File.OpenRead(audioFile);
-                    else
-                        throw new InvalidOperationException(String.Format("Audio file '{0}' not found.", audioFile));
-
-                    // AUDIO PREVIEW
-                    var previewAudioFile = info.OggPreviewPath;
-                    if (File.Exists(previewAudioFile))
-                        if (platform.IsConsole != previewAudioFile.GetAudioPlatform().IsConsole)
-                            soundPreviewStream = OggFile.ConvertAudioPlatform(previewAudioFile);
-                        else
-                            soundPreviewStream = File.OpenRead(previewAudioFile);
-                    else
-                        soundPreviewStream = soundStream;
-
-                    // FLAT MODEL
-                    rsenumerableRootStream = new MemoryStream(Resources.rsenumerable_root);
-                    packPsarc.AddEntry("flatmodels/rs/rsenumerable_root.flat", rsenumerableRootStream);
-                    rsenumerableSongStream = new MemoryStream(Resources.rsenumerable_song);
-                    packPsarc.AddEntry("flatmodels/rs/rsenumerable_song.flat", rsenumerableSongStream);
-
-                    using (var toolkitVersionStream = new MemoryStream())
-                    using (var appIdStream = new MemoryStream())
-                    using (var packageListStream = new MemoryStream())
-                    using (var soundbankStream = new MemoryStream())
-                    using (var soundbankPreviewStream = new MemoryStream())
-                    using (var aggregateGraphStream = new MemoryStream())
-                    using (var manifestHeaderHSANStream = new MemoryStream())
-                    using (var manifestHeaderHSONStreamList = new DisposableCollection<Stream>())
-                    using (var manifestStreamList = new DisposableCollection<Stream>())
-                    using (var arrangementStream = new DisposableCollection<Stream>())
-                    using (var showlightStream = new MemoryStream())
-                    using (var xblockStream = new MemoryStream())
-                    {
-                        // TOOLKIT VERSION
-                        GenerateToolkitVersion(toolkitVersionStream, info.PackageVersion);
-                        packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
-
-                        // APP ID
-                        if (!platform.IsConsole)
-                        {
-                            GenerateAppId(appIdStream, info.AppId, platform);
-                            packPsarc.AddEntry("appid.appid", appIdStream);
-                        }
-
-                        if (platform.platform == GamePlatform.XBox360) {
-                            var packageListWriter = new StreamWriter(packageListStream);
-                            packageListWriter.Write(dlcName);
-                            packageListWriter.Flush();
-                            packageListStream.Seek(0, SeekOrigin.Begin);
-                            string packageList = "PackageList.txt";
-                            packageListStream.WriteTmpFile(packageList, platform);
-                        }
-                            
-                        // SOUNDBANK
-                        var soundbankFileName = String.Format("song_{0}", dlcName);
-                        var audioFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name, soundStream, soundbankStream, info.Volume, platform);
-                        packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);
-                        packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioFileNameId), soundStream);
-
-                        // SOUNDBANK PREVIEW
-                        var soundbankPreviewFileName = String.Format("song_{0}_preview", dlcName);
-                        dynamic audioPreviewFileNameId;
-                        var previewVolume = (info.PreviewVolume != null) ? (float)info.PreviewVolume : info.Volume;
-                        if (!soundPreviewStream.Equals(soundStream))
-                            audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, previewVolume, platform, true);
-                        else
-                            audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform, true, true);
-                        packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
-                        if (!soundPreviewStream.Equals(soundStream)) packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioPreviewFileNameId), soundPreviewStream);
-
-                        // AGGREGATE GRAPH
-                        var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", dlcName);
-                        var aggregateGraph = new AggregateGraph2014(info, platform);
-                        aggregateGraph.Serialize(aggregateGraphStream);
-                        aggregateGraphStream.Flush();
-                        aggregateGraphStream.Seek(0, SeekOrigin.Begin);
-                        packPsarc.AddEntry(aggregateGraphFileName, aggregateGraphStream); 
-
-                        var manifestHeader = new ManifestHeader2014<AttributesHeader2014>(platform);
-                        var songPartition = new SongPartition();
-                        var songPartitionCount = new SongPartition();
-
-                        foreach (var arrangement in info.Arrangements)
-                        {
-                            var arrangementFileName = songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower();
-
-                            // GAME SONG (SNG)
-                            UpdateToneDescriptors(info);
-                            GenerateSNG(arrangement, platform);
-                            var sngSongFile = File.OpenRead(arrangement.SongFile.File);
-                            arrangementStream.Add(sngSongFile);
-                            packPsarc.AddEntry(String.Format("songs/bin/{0}/{1}_{2}.sng", platform.GetPathName()[1].ToLower(), dlcName, arrangementFileName), sngSongFile);
-
-                            // XML SONG
-                            var xmlSongFile = File.OpenRead(arrangement.SongXml.File);
-                            arrangementStream.Add(xmlSongFile);
-                            packPsarc.AddEntry(String.Format("songs/arr/{0}_{1}.xml", dlcName, arrangementFileName), xmlSongFile);
-
-                            // MANIFEST
-                            var manifest = new Manifest2014<Attributes2014>();
-                            var attribute = new Attributes2014(arrangementFileName, arrangement, info, platform);
-                            if (arrangement.ArrangementType != Sng.ArrangementType.Vocal)
-                            {
-                                attribute.SongPartition = songPartitionCount.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
-                                if (attribute.SongPartition > 1)
-                                { // Make the second arrangement with the same arrangement type as ALTERNATE arrangement ingame
-                                    attribute.Representative = 0;
-                                    attribute.ArrangementProperties.Represent = 0;
-                                }
-                            }
-                            var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attribute } };
-                            manifest.Entries.Add(attribute.PersistentID, attributeDictionary);
-                            var manifestStream = new MemoryStream();
-                            manifestStreamList.Add(manifestStream);
-                            manifest.Serialize(manifestStream);
-                            manifestStream.Seek(0, SeekOrigin.Begin);
-
-                            var jsonPathPC = "manifests/songs_dlc_{0}/{0}_{1}.json";
-                            var jsonPathConsole = "manifests/songs_dlc/{0}_{1}.json";
-                            packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName, arrangementFileName), manifestStream);
-
-                            // MANIFEST HEADER
-                            var attributeHeaderDictionary = new Dictionary<string, AttributesHeader2014> { { "Attributes", new AttributesHeader2014(attribute) } };
-
-                            if (platform.IsConsole) {
-                                // One for each arrangements (Xbox360/PS3)
-                                manifestHeader = new ManifestHeader2014<AttributesHeader2014>(platform);
-                                manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
-                                var manifestHeaderStream = new MemoryStream();
-                                manifestHeaderHSONStreamList.Add(manifestHeaderStream);
-                                manifestHeader.Serialize(manifestHeaderStream);
-                                manifestStream.Seek(0, SeekOrigin.Begin);
-                                packPsarc.AddEntry(String.Format("manifests/songs_dlc/{0}_{1}.hson", dlcName, arrangementFileName), manifestHeaderStream);
-                            } else {
-                                // One for all arrangements (PC/Mac)
-                                manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
-                            }
-                        }
-
-                        if (!platform.IsConsole) {
-                            manifestHeader.Serialize(manifestHeaderHSANStream);
-                            manifestHeaderHSANStream.Seek(0, SeekOrigin.Begin);
-                            packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/songs_dlc_{0}.hsan", dlcName), manifestHeaderHSANStream);
-                        }
-
-                        // SHOWLIGHT
-                        Showlights showlight = new Showlights(info);
-                        showlight.Serialize(showlightStream);
-                        if(showlightStream.CanRead)
-                            packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
-
-                        // XBLOCK
-                        GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform);
-                        game.SerializeXml(xblockStream);
-                        xblockStream.Flush();
-                        xblockStream.Seek(0, SeekOrigin.Begin);
-                        packPsarc.AddEntry(String.Format("gamexblocks/nsongs/{0}.xblock", dlcName), xblockStream);
-
-                        // WRITE PACKAGE
-                        packPsarc.Write(output, !platform.IsConsole);
-                        output.Flush();
-                        output.Seek(0, SeekOrigin.Begin);
-                        output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
-                    }
-                } catch (Exception ex) {
-                    throw ex;
-                } finally {
-                    // Dispose all objects
-                    if (soundStream != null)
-                        soundStream.Dispose();
-                    if (soundPreviewStream != null)
-                        soundPreviewStream.Dispose();
-                    if (rsenumerableRootStream != null)
-                        rsenumerableRootStream.Dispose();
-                    if (rsenumerableSongStream != null)
-                        rsenumerableSongStream.Dispose();
-                    DeleteTmpFiles(TMPFILES_SNG);
-                    DeleteTmpFiles(TMPFILES_ART);
+                    // Save for reuse
+                    info.ArtFiles = ddsfiles;
                 }
+
+                foreach (var dds in info.ArtFiles)
+                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
+
+                // AUDIO
+                var audioFile = info.OggPath;
+                if (File.Exists(audioFile))
+                    if (platform.IsConsole != audioFile.GetAudioPlatform().IsConsole)
+                        soundStream = OggFile.ConvertAudioPlatform(audioFile);
+                    else
+                        soundStream = File.OpenRead(audioFile);
+                else
+                    throw new InvalidOperationException(String.Format("Audio file '{0}' not found.", audioFile));
+
+                // AUDIO PREVIEW
+                var previewAudioFile = info.OggPreviewPath;
+                if (File.Exists(previewAudioFile))
+                    if (platform.IsConsole != previewAudioFile.GetAudioPlatform().IsConsole)
+                        soundPreviewStream = OggFile.ConvertAudioPlatform(previewAudioFile);
+                    else
+                        soundPreviewStream = File.OpenRead(previewAudioFile);
+                else
+                    soundPreviewStream = soundStream;
+
+                // FLAT MODEL
+                rsenumerableRootStream = new MemoryStream(Resources.rsenumerable_root);
+                packPsarc.AddEntry("flatmodels/rs/rsenumerable_root.flat", rsenumerableRootStream);
+                rsenumerableSongStream = new MemoryStream(Resources.rsenumerable_song);
+                packPsarc.AddEntry("flatmodels/rs/rsenumerable_song.flat", rsenumerableSongStream);
+
+                using (var toolkitVersionStream = new MemoryStream())
+                using (var appIdStream = new MemoryStream())
+                using (var packageListStream = new MemoryStream())
+                using (var soundbankStream = new MemoryStream())
+                using (var soundbankPreviewStream = new MemoryStream())
+                using (var aggregateGraphStream = new MemoryStream())
+                using (var manifestHeaderHSANStream = new MemoryStream())
+                using (var manifestHeaderHSONStreamList = new DisposableCollection<Stream>())
+                using (var manifestStreamList = new DisposableCollection<Stream>())
+                using (var arrangementStream = new DisposableCollection<Stream>())
+                using (var showlightStream = new MemoryStream())
+                using (var xblockStream = new MemoryStream())
+                {
+                    // TOOLKIT VERSION
+                    GenerateToolkitVersion(toolkitVersionStream, info.PackageVersion);
+                    packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
+
+                    // APP ID
+                    if (!platform.IsConsole)
+                    {
+                        GenerateAppId(appIdStream, info.AppId, platform);
+                        packPsarc.AddEntry("appid.appid", appIdStream);
+                    }
+
+                    if (platform.platform == GamePlatform.XBox360) {
+                        var packageListWriter = new StreamWriter(packageListStream);
+                        packageListWriter.Write(dlcName);
+                        packageListWriter.Flush();
+                        packageListStream.Seek(0, SeekOrigin.Begin);
+                        string packageList = "PackageList.txt";
+                        packageListStream.WriteTmpFile(packageList, platform);
+                    }
+                        
+                    // SOUNDBANK
+                    var soundbankFileName = String.Format("song_{0}", dlcName);
+                    var audioFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name, soundStream, soundbankStream, info.Volume, platform);
+                    packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);
+                    packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioFileNameId), soundStream);
+
+                    // SOUNDBANK PREVIEW
+                    var soundbankPreviewFileName = String.Format("song_{0}_preview", dlcName);
+                    dynamic audioPreviewFileNameId;
+                    var previewVolume = (float)(info.PreviewVolume ?? info.Volume);
+                    if (!soundPreviewStream.Equals(soundStream))
+                        audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, previewVolume, platform, true);
+                    else
+                        audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform, true, true);
+                    packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
+                    if (!soundPreviewStream.Equals(soundStream)) packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioPreviewFileNameId), soundPreviewStream);
+
+                    // AGGREGATE GRAPH
+                    var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", dlcName);
+                    var aggregateGraph = new AggregateGraph2014(info, platform);
+                    aggregateGraph.Serialize(aggregateGraphStream);
+                    aggregateGraphStream.Flush();
+                    aggregateGraphStream.Seek(0, SeekOrigin.Begin);
+                    packPsarc.AddEntry(aggregateGraphFileName, aggregateGraphStream); 
+
+                    var manifestHeader = new ManifestHeader2014<AttributesHeader2014>(platform);
+                    var songPartition = new SongPartition();
+                    var songPartitionCount = new SongPartition();
+
+                    foreach (var arrangement in info.Arrangements)
+                    {
+                        var arrangementFileName = songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower();
+
+                        //Lyrics Font Texture & Definition
+                        //if (File.Exists(arrangement.FontFile))
+                        //    packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricsTex, FileMode.Open, FileAccess.Read, FileShare.Read));
+                        
+                        // GAME SONG (SNG)
+                        UpdateToneDescriptors(info);
+                        GenerateSNG(arrangement, platform);
+                        var sngSongFile = File.OpenRead(arrangement.SongFile.File);
+                        arrangementStream.Add(sngSongFile);
+                        packPsarc.AddEntry(String.Format("songs/bin/{0}/{1}_{2}.sng", platform.GetPathName()[1].ToLower(), dlcName, arrangementFileName), sngSongFile);
+
+                        // XML SONG
+                        var xmlSongFile = File.OpenRead(arrangement.SongXml.File);
+                        arrangementStream.Add(xmlSongFile);
+                        packPsarc.AddEntry(String.Format("songs/arr/{0}_{1}.xml", dlcName, arrangementFileName), xmlSongFile);
+
+                        // MANIFEST
+                        var manifest = new Manifest2014<Attributes2014>();
+                        var attribute = new Attributes2014(arrangementFileName, arrangement, info, platform);
+                        if (arrangement.ArrangementType != Sng.ArrangementType.Vocal)
+                        {
+                            attribute.SongPartition = songPartitionCount.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
+                            if (attribute.SongPartition > 1)
+                            { // Make the second arrangement with the same arrangement type as ALTERNATE arrangement ingame
+                                attribute.Representative = 0;
+                                attribute.ArrangementProperties.Represent = 0;
+                            }
+                        }
+                        var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attribute } };
+                        manifest.Entries.Add(attribute.PersistentID, attributeDictionary);
+                        var manifestStream = new MemoryStream();
+                        manifestStreamList.Add(manifestStream);
+                        manifest.Serialize(manifestStream);
+                        manifestStream.Seek(0, SeekOrigin.Begin);
+
+                        var jsonPathPC = "manifests/songs_dlc_{0}/{0}_{1}.json";
+                        var jsonPathConsole = "manifests/songs_dlc/{0}_{1}.json";
+                        packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName, arrangementFileName), manifestStream);
+
+                        // MANIFEST HEADER
+                        var attributeHeaderDictionary = new Dictionary<string, AttributesHeader2014> { { "Attributes", new AttributesHeader2014(attribute) } };
+
+                        if (platform.IsConsole) {
+                            // One for each arrangements (Xbox360/PS3)
+                            manifestHeader = new ManifestHeader2014<AttributesHeader2014>(platform);
+                            manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
+                            var manifestHeaderStream = new MemoryStream();
+                            manifestHeaderHSONStreamList.Add(manifestHeaderStream);
+                            manifestHeader.Serialize(manifestHeaderStream);
+                            manifestStream.Seek(0, SeekOrigin.Begin);
+                            packPsarc.AddEntry(String.Format("manifests/songs_dlc/{0}_{1}.hson", dlcName, arrangementFileName), manifestHeaderStream);
+                        } else {
+                            // One for all arrangements (PC/Mac)
+                            manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
+                        }
+                    }
+
+                    if (!platform.IsConsole) {
+                        manifestHeader.Serialize(manifestHeaderHSANStream);
+                        manifestHeaderHSANStream.Seek(0, SeekOrigin.Begin);
+                        packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/songs_dlc_{0}.hsan", dlcName), manifestHeaderHSANStream);
+                    }
+
+                    // SHOWLIGHT
+                    Showlights showlight = new Showlights(info);
+                    showlight.Serialize(showlightStream);
+                    if(showlightStream.CanRead)
+                        packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
+
+                    // XBLOCK
+                    GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform);
+                    game.SerializeXml(xblockStream);
+                    xblockStream.Flush();
+                    xblockStream.Seek(0, SeekOrigin.Begin);
+                    packPsarc.AddEntry(String.Format("gamexblocks/nsongs/{0}.xblock", dlcName), xblockStream);
+
+                    // WRITE PACKAGE
+                    packPsarc.Write(output, !platform.IsConsole);
+                    output.Flush();
+                    output.Seek(0, SeekOrigin.Begin);
+                    output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
+                }
+            } catch (Exception) {
+                throw;
+            } finally {
+                // Dispose all objects
+                if (soundStream != null)
+                    soundStream.Dispose();
+                if (soundPreviewStream != null)
+                    soundPreviewStream.Dispose();
+                if (rsenumerableRootStream != null)
+                    rsenumerableRootStream.Dispose();
+                if (rsenumerableSongStream != null)
+                    rsenumerableSongStream.Dispose();
+                DeleteTmpFiles(TMPFILES_SNG);
+                DeleteTmpFiles(TMPFILES_ART);
             }
         }
 
@@ -576,7 +576,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         info.ArtFiles = ddsfiles;
                     }
 
-                    foreach (var dds in ddsfiles)
+                    foreach (var dds in info.ArtFiles)
                         if (dds.sizeX == 1024)
                             packPsarc.AddEntry(String.Format("assets/gameplay/inlay/inlay_{0}.dds", dlcName), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
                         else
@@ -666,8 +666,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         output.Seek(0, SeekOrigin.Begin);
                         output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
                     }
-                } catch (Exception ex) {
-                    throw ex;
+                } catch (Exception) {
+                    throw;
                 } finally {
                     // Dispose all objects
                     if (rsenumerableRootStream != null)
@@ -788,7 +788,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     info.ArtFiles = ddsfiles;
                 }
 
-                albumArtStream = new FileStream(ddsfiles[0].destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+                albumArtStream = new FileStream(info.ArtFiles[0].destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 // AUDIO
                 var audioFile = info.OggPath;
@@ -933,7 +933,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -quality_highest -max -dxt5 -nomipmap -alpha -overwrite -forcewrite";
                     break;
             }
-
+            //TODO: there is an option to use NVTT lib: supports Win, Mac, Linux
             foreach (var item in filesToConvert)
                 GeneralExtensions.RunExternalExecutable("nvdxt.exe", true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
         }
@@ -945,9 +945,9 @@ namespace RocksmithToolkitLib.DLCPackage
             var writer = new StreamWriter(output);
             writer.WriteLine(String.Format("Toolkit version: {0}", ToolkitVersion.version));
             if (!String.IsNullOrEmpty(author))
-                writer.WriteLine(String.Format("Package Author:  {0}", author));
+                writer.WriteLine(String.Format("Package Author: {0}", author));
             if (!String.IsNullOrEmpty(version))
-                writer.Write(String.Format("Package Version:  {0}", version));
+                writer.Write(String.Format("Package Version: {0}", version));
 
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);
@@ -1007,7 +1007,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void WriteTmpFile(this Stream memoryStream, string fileName, Platform platform)
         {
-            if (platform.platform == GamePlatform.XBox360 || platform.platform == GamePlatform.PS3)
+            if (platform.IsConsole)
             {
                 string workDir = platform.platform == GamePlatform.XBox360 ? XBOX_WORKDIR : PS3_WORKDIR;
                 string filePath = Path.Combine(workDir, fileName);

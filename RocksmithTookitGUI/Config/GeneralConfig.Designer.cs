@@ -85,7 +85,7 @@
             this.general_usebeta.Name = "general_usebeta";
             this.general_usebeta.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.general_usebeta.Size = new System.Drawing.Size(111, 17);
-            this.general_usebeta.TabIndex = 2;
+            this.general_usebeta.TabIndex = 8;
             this.general_usebeta.Text = "Use beta releases";
             this.general_usebeta.UseVisualStyleBackColor = true;
             this.general_usebeta.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -123,30 +123,29 @@
             this.creator_scrollspeed.DecimalPlaces = 1;
             this.creator_scrollspeed.ForeColor = System.Drawing.SystemColors.ControlText;
             this.creator_scrollspeed.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
+                                    1,
+                                    0,
+                                    0,
+                                    65536});
             this.creator_scrollspeed.Location = new System.Drawing.Point(117, 15);
             this.creator_scrollspeed.Maximum = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
+                                    45,
+                                    0,
+                                    0,
+                                    65536});
             this.creator_scrollspeed.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                    1,
+                                    0,
+                                    0,
+                                    0});
             this.creator_scrollspeed.Name = "creator_scrollspeed";
             this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
-            this.creator_scrollspeed.TabIndex = 10;
-            this.creator_scrollspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.creator_scrollspeed.TabIndex = 11;
             this.creator_scrollspeed.Value = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
+                                    45,
+                                    0,
+                                    0,
+                                    65536});
             this.creator_scrollspeed.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label1
@@ -179,7 +178,7 @@
             this.creator_useacronyms.Name = "creator_useacronyms";
             this.creator_useacronyms.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_useacronyms.Size = new System.Drawing.Size(216, 17);
-            this.creator_useacronyms.TabIndex = 12;
+            this.creator_useacronyms.TabIndex = 13;
             this.creator_useacronyms.Text = "Use Acronym effect for long artist names";
             this.creator_useacronyms.UseVisualStyleBackColor = true;
             this.creator_useacronyms.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -192,7 +191,7 @@
             this.general_defaultgameversion.Margin = new System.Windows.Forms.Padding(2);
             this.general_defaultgameversion.Name = "general_defaultgameversion";
             this.general_defaultgameversion.Size = new System.Drawing.Size(120, 21);
-            this.general_defaultgameversion.TabIndex = 9;
+            this.general_defaultgameversion.TabIndex = 10;
             this.general_defaultgameversion.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // creator_structured
@@ -203,7 +202,7 @@
             this.creator_structured.Name = "creator_structured";
             this.creator_structured.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_structured.Size = new System.Drawing.Size(158, 17);
-            this.creator_structured.TabIndex = 11;
+            this.creator_structured.TabIndex = 12;
             this.creator_structured.Text = "Import Structured Packages";
             this.creator_structured.UseVisualStyleBackColor = true;
             this.creator_structured.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -227,7 +226,7 @@
             this.general_defaultappid_RS2012.Margin = new System.Windows.Forms.Padding(2);
             this.general_defaultappid_RS2012.Name = "general_defaultappid_RS2012";
             this.general_defaultappid_RS2012.Size = new System.Drawing.Size(250, 21);
-            this.general_defaultappid_RS2012.TabIndex = 0;
+            this.general_defaultappid_RS2012.TabIndex = 1;
             this.general_defaultappid_RS2012.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // gbGeneral
@@ -286,7 +285,7 @@
             this.general_replacerepo.Name = "general_replacerepo";
             this.general_replacerepo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.general_replacerepo.Size = new System.Drawing.Size(110, 17);
-            this.general_replacerepo.TabIndex = 3;
+            this.general_replacerepo.TabIndex = 9;
             this.general_replacerepo.Text = "Reset repositories";
             this.general_replacerepo.UseVisualStyleBackColor = true;
             // 
@@ -295,7 +294,7 @@
             this.rs2014PathButton.Location = new System.Drawing.Point(473, 126);
             this.rs2014PathButton.Name = "rs2014PathButton";
             this.rs2014PathButton.Size = new System.Drawing.Size(34, 23);
-            this.rs2014PathButton.TabIndex = 8;
+            this.rs2014PathButton.TabIndex = 7;
             this.rs2014PathButton.Text = "...";
             this.rs2014PathButton.UseVisualStyleBackColor = true;
             this.rs2014PathButton.Click += new System.EventHandler(this.rs2014PathButton_Click);
@@ -305,7 +304,7 @@
             this.rs1PathButton.Location = new System.Drawing.Point(473, 102);
             this.rs1PathButton.Name = "rs1PathButton";
             this.rs1PathButton.Size = new System.Drawing.Size(34, 23);
-            this.rs1PathButton.TabIndex = 6;
+            this.rs1PathButton.TabIndex = 5;
             this.rs1PathButton.Text = "...";
             this.rs1PathButton.UseVisualStyleBackColor = true;
             this.rs1PathButton.Click += new System.EventHandler(this.rs1PathButton_Click);
@@ -318,7 +317,7 @@
             this.general_rs2014path.Location = new System.Drawing.Point(122, 128);
             this.general_rs2014path.Name = "general_rs2014path";
             this.general_rs2014path.Size = new System.Drawing.Size(345, 20);
-            this.general_rs2014path.TabIndex = 7;
+            this.general_rs2014path.TabIndex = 6;
             this.general_rs2014path.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label11
@@ -340,7 +339,7 @@
             this.general_rs1path.Location = new System.Drawing.Point(122, 104);
             this.general_rs1path.Name = "general_rs1path";
             this.general_rs1path.Size = new System.Drawing.Size(345, 20);
-            this.general_rs1path.TabIndex = 5;
+            this.general_rs1path.TabIndex = 4;
             this.general_rs1path.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label10
@@ -373,7 +372,7 @@
             this.general_defaultauthor.Location = new System.Drawing.Point(122, 67);
             this.general_defaultauthor.Name = "general_defaultauthor";
             this.general_defaultauthor.Size = new System.Drawing.Size(250, 20);
-            this.general_defaultauthor.TabIndex = 4;
+            this.general_defaultauthor.TabIndex = 3;
             this.general_defaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label4
@@ -395,7 +394,7 @@
             this.general_defaultappid_RS2014.Margin = new System.Windows.Forms.Padding(2);
             this.general_defaultappid_RS2014.Name = "general_defaultappid_RS2014";
             this.general_defaultappid_RS2014.Size = new System.Drawing.Size(250, 21);
-            this.general_defaultappid_RS2014.TabIndex = 1;
+            this.general_defaultappid_RS2014.TabIndex = 2;
             this.general_defaultappid_RS2014.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // gbDDC
@@ -410,35 +409,34 @@
             this.gbDDC.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbDDC.Location = new System.Drawing.Point(2, 253);
             this.gbDDC.Name = "gbDDC";
-            this.gbDDC.Size = new System.Drawing.Size(516, 109);
+            this.gbDDC.Size = new System.Drawing.Size(516, 94);
             this.gbDDC.TabIndex = 15;
             this.gbDDC.TabStop = false;
             this.gbDDC.Text = "DDC";
             // 
             // ddc_phraselength
             // 
-            this.ddc_phraselength.Location = new System.Drawing.Point(123, 81);
+            this.ddc_phraselength.Location = new System.Drawing.Point(122, 67);
             this.ddc_phraselength.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
+                                    65536,
+                                    0,
+                                    0,
+                                    0});
             this.ddc_phraselength.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+                                    2,
+                                    0,
+                                    0,
+                                    0});
             this.ddc_phraselength.Name = "ddc_phraselength";
             this.ddc_phraselength.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.ddc_phraselength.Size = new System.Drawing.Size(52, 20);
-            this.ddc_phraselength.TabIndex = 14;
-            this.ddc_phraselength.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ddc_phraselength.TabIndex = 16;
             this.ddc_phraselength.ThousandsSeparator = true;
             this.ddc_phraselength.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+                                    2,
+                                    0,
+                                    0,
+                                    0});
             this.ddc_phraselength.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // ddc_removesustain
@@ -449,7 +447,7 @@
             this.ddc_removesustain.Name = "ddc_removesustain";
             this.ddc_removesustain.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ddc_removesustain.Size = new System.Drawing.Size(107, 17);
-            this.ddc_removesustain.TabIndex = 15;
+            this.ddc_removesustain.TabIndex = 17;
             this.ddc_removesustain.Text = "Remove sustains";
             this.ddc_removesustain.UseVisualStyleBackColor = true;
             this.ddc_removesustain.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -458,7 +456,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label6.Location = new System.Drawing.Point(12, 83);
+            this.label6.Location = new System.Drawing.Point(12, 69);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(75, 13);
             this.label6.TabIndex = 47;
@@ -468,7 +466,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label13.Location = new System.Drawing.Point(11, 52);
+            this.label13.Location = new System.Drawing.Point(11, 45);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(59, 13);
@@ -491,12 +489,12 @@
             this.ddc_config.AllowDrop = true;
             this.ddc_config.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddc_config.FormattingEnabled = true;
-            this.ddc_config.Location = new System.Drawing.Point(122, 49);
+            this.ddc_config.Location = new System.Drawing.Point(122, 42);
             this.ddc_config.MinimumSize = new System.Drawing.Size(20, 0);
             this.ddc_config.Name = "ddc_config";
             this.ddc_config.Size = new System.Drawing.Size(171, 21);
             this.ddc_config.Sorted = true;
-            this.ddc_config.TabIndex = 13;
+            this.ddc_config.TabIndex = 15;
             this.ddc_config.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // ddc_rampup
@@ -509,7 +507,7 @@
             this.ddc_rampup.Name = "ddc_rampup";
             this.ddc_rampup.Size = new System.Drawing.Size(171, 21);
             this.ddc_rampup.Sorted = true;
-            this.ddc_rampup.TabIndex = 13;
+            this.ddc_rampup.TabIndex = 14;
             this.ddc_rampup.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // gbConverter
@@ -519,7 +517,7 @@
             this.gbConverter.Controls.Add(this.label8);
             this.gbConverter.Controls.Add(this.converter_source);
             this.gbConverter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbConverter.Location = new System.Drawing.Point(2, 368);
+            this.gbConverter.Location = new System.Drawing.Point(2, 353);
             this.gbConverter.Name = "gbConverter";
             this.gbConverter.Size = new System.Drawing.Size(516, 45);
             this.gbConverter.TabIndex = 50;
@@ -536,7 +534,7 @@
             this.converter_target.Name = "converter_target";
             this.converter_target.Size = new System.Drawing.Size(120, 21);
             this.converter_target.Sorted = true;
-            this.converter_target.TabIndex = 17;
+            this.converter_target.TabIndex = 19;
             this.converter_target.SelectedIndexChanged += new System.EventHandler(this.ConfigurationChanged);
             this.converter_target.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -571,17 +569,17 @@
             this.converter_source.Name = "converter_source";
             this.converter_source.Size = new System.Drawing.Size(120, 21);
             this.converter_source.Sorted = true;
-            this.converter_source.TabIndex = 16;
+            this.converter_source.TabIndex = 18;
             this.converter_source.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // closeConfigButton
             // 
             this.closeConfigButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.closeConfigButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeConfigButton.Location = new System.Drawing.Point(403, 430);
+            this.closeConfigButton.Location = new System.Drawing.Point(403, 404);
             this.closeConfigButton.Name = "closeConfigButton";
             this.closeConfigButton.Size = new System.Drawing.Size(116, 29);
-            this.closeConfigButton.TabIndex = 18;
+            this.closeConfigButton.TabIndex = 0;
             this.closeConfigButton.Text = "Close";
             this.closeConfigButton.UseVisualStyleBackColor = false;
             this.closeConfigButton.Click += new System.EventHandler(this.closeConfigButton_Click);
@@ -611,7 +609,6 @@
             this.gbConverter.ResumeLayout(false);
             this.gbConverter.PerformLayout();
             this.ResumeLayout(false);
-
         }
 
         #endregion

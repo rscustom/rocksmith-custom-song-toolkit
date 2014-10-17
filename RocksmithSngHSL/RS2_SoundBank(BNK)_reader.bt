@@ -1,0 +1,195 @@
+//--------------------------------------
+//--- 010 Editor v5.0 Binary Template
+//
+// File: Wwise_RS2_SoundBank(BNK).bt
+// Author (of this file): L0FKA
+// Revision: 1
+// Purpose: research\educational
+// Version: PC version
+// Reference: wiki.xentax.com/index.php?title=Wwise_SoundBank_(*.bnk)
+//--------------------------------------
+/*
+"BKHD" BankHeader
+"DIDX" DataIndex
+"DATA" Data
+"ENVS" Environments*
+"FXPR" EffectsProduction
+"HIRC" Objects (Structure\Hierarchy)
+"STID" BankIDs
+"STMG" Settings*
+*/
+
+//Aslo exist initialization banks named init.bnk {BHKD, STMG, HIRC, ENVS}
+local string PLAY = "Play_";
+local string SONG = "Song_";
+local uint wem_count;
+
+typedef struct{   
+//common
+    char chunk_magic[4];
+    uint chunk_len <format=hex>;
+//chunk_data[chunk_len]
+    uint bnk_version;//91
+    uint soundbankID;
+    uint languageID;//0
+    uint hasFeedback;//0
+    Pad(chunk_len+8, 6*4);
+} chunk_bkhd;
+
+typedef struct{
+//common
+    char chunk_magic[4];
+    uint chunk_len <format=hex>;
+//chunk_data[chunk_len]
+    wem_count = chunk_len/12;
+    struct ENTRIES{
+      uint fileID;
+      uint fileOffset;//from DATA section
+      uint fileSize;
+    } wem[wem_count];                                                   
+} chunk_didx;
+
+//#include <WAVTemplateAdv.bt>
+typedef struct (uint len){
+    byte data[len];
+} RIFF <optimize=false>;
+
+typedef struct{
+//common
+    char chunk_magic[4];
+    uint chunk_len <format=hex>;
+//chunk_data[chunk_len]
+    RIFF chunk_data(chunk_len);//wem file size varies
+} chunk_data;
+
+typedef struct{
+//common
+    char chunk_magic[4];
+    uint chunk_len <format=hex>;
+    uint obj_num;
+    struct OBJ{
+        byte type; //1..20
+        uint data_chunk_len;
+        byte data_chunk[data_chunk_len];//There isbunch of cdata formats. skipped
+    } obj[obj_num]<optimize=false>;   
+} chunk_hirc;
+
+typedef struct{
+    uint soundbankID;
+    byte name_len;
+    char soundbankName[name_len];
+} names <optimize=false>;
+
+typedef struct{
+//common
+    char chunk_magic[4];
+    uint chunk_len <format=hex>;
+//chunk_data[chunk_len]
+    uint stringType;
+    uint numNames;
+    names Names[numNames];
+} chunk_stid;
+
+typedef struct{
+//common
+    char chunk_magic[4];
+    uint chunk_len <format=hex>;
+//chunk_data[chunk_len]
+    float volumeThreshold;
+    ushort maxVoiceInstances;
+    
+    uint numStateGroups;
+    struct state_chunk{
+        uint id;
+        uint def_trans_time_ms;
+        uint custom_truns_size;
+        struct ctime_trans{
+            uint id_state_from;
+            uint id_state_to;
+            uint time_ms;
+        } CTIME[custom_truns_size]<optimize=true>;
+    } STATE[numStateGroups]<optimize=false>; 
+    
+    uint numSwitchGroups;
+    struct switch_chunk{
+        uint id;
+        uint id_game_param;
+        uint points_num;
+        struct points{
+            float value_game_param;
+            uint switch_id;
+            uint curve_shape; //09 
+        } POINT[points_num]<optimize=false>;
+    } SWITCH[numSwitchGroups]<optimize=false>;
+    
+    uint numGameParams;
+    struct gparam_chunk{
+        uint gparam_id;
+        float def_val;
+    } GPARAM[numGameParams]<optimize=false>;    
+} chunk_stmg;
+
+//just for fun, skip it
+typedef struct(uint i){
+    ushort unk1[(i/2)/2];
+    ushort unk2[(i/2)/2];
+}UNK;
+
+typedef struct{
+//common
+    char chunk_magic[4];
+    uint chunk_len <format=hex>;
+//chunk_data[chunk_len]    
+    UNK unk1(chunk_len);
+} chunk_envs;
+
+byte[] Pad( uint len, uint sizef )
+{
+    if (len-sizef >0)
+        byte pad[len-sizef];    
+        return "";
+}
+
+// Read Header (Present in every .BNK)
+chunk_bkhd BKHD;
+
+// Read the file as a set of chunks
+local string tag;
+do
+{   // Read the chunk tag 
+    tag = ReadString(FTell(), 4);
+    if (Toaster(tag) < 0) { return -1; }
+} while (!FEof());
+
+uint Toaster(string magic)
+{
+    // See which chunk this is
+    if(!FEof())
+    switch( tag )
+    {
+      case "DIDX":
+        chunk_didx DIDX;
+        break;
+      case "STMG":
+        chunk_stmg STMG;
+        break;
+      case "DATA":
+        chunk_data DATA;
+        break;
+      case "HIRC":
+        chunk_hirc HIRC;
+        break;
+      case "STID":
+        chunk_stid STID;
+        break;
+      case "ENVS": //unanalized too
+        chunk_envs ENVS;
+        break;
+      case "FXPR": //rare, can't analyze
+        chunk_data FXPR;
+        break;
+      default: // NotImplementedEx()
+        return -1;
+        break;
+    } return 1;
+}

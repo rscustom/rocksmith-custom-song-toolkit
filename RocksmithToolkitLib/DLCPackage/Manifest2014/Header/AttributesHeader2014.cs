@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -107,19 +107,31 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 Representative = Convert.ToInt32(!arrangement.BonusArr);
                 RouteMask = (int)arrangement.RouteMask;
 
-                // TODO this is not quite it but much closer
+                // TODO use ManifestFunctions.GetSongDifficulty() method (fix generation alghorythm)
                 SongDiffEasy = SongContent.SongLength / NotesEasy;
                 SongDiffMed = SongContent.SongLength / NotesMedium;
                 SongDiffHard = SongContent.SongLength / NotesHard;
                 SongDifficulty = SongDiffHard;
-                
-                SongLength = (double?)Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
+
+                SongLength = (double?)Math.Round (SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
                 SongName = info.SongInfo.SongDisplayName;
                 SongNameSort = info.SongInfo.SongDisplayNameSort;
                 SongYear = info.SongInfo.SongYear;
 
-                var tunDef = TuningDefinitionRepository.Instance().Select(arrangement.Tuning, platform.version);
-                Tuning = tunDef.Tuning;
+                //Detect tuning
+                var tuning = TuningDefinitionRepository.Instance ().SelectAny (SongContent.Tuning, platform.version);
+                if (tuning == null) {
+                    tuning = new TuningDefinition ();
+                    tuning.Tuning = SongContent.Tuning;
+                    tuning.Name = tuning.UIName = arrangement.Tuning;
+                    if (String.IsNullOrEmpty (tuning.Name)) {
+                        tuning.Name = tuning.UIName = tuning.NameFromStrings (arrangement.TuningStrings, arrangement.ArrangementType == RocksmithToolkitLib.Sng.ArrangementType.Bass);
+                    }
+                    tuning.Custom = true;
+                    tuning.GameVersion = GameVersion.RS2014;
+                    TuningDefinitionRepository.Instance().Add(tuning, true);
+                }
+                Tuning = tuning.Tuning;
             }
         }
     }

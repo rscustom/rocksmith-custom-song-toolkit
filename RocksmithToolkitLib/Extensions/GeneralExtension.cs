@@ -10,9 +10,10 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Drawing;
-using RocksmithToolkitLib.DLCPackage;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using RocksmithToolkitLib.DLCPackage;
+using RocksmithToTabLib;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -33,8 +34,7 @@ namespace RocksmithToolkitLib.Extensions
 
             if (attributes != null && attributes.Length > 0)
                 return attributes[0].Description;
-            else
-                return value.ToString();
+            return value.ToString();
         }
 
         public static string[] SelectLines(this string[] content, string value)
@@ -44,36 +44,101 @@ namespace RocksmithToolkitLib.Extensions
                     select j).ToArray<string>();
         }
 
-        public static int ToInt32(this string value)
+        public static string ReadPackageVersion(string filePath)
         {
-            int v;
-            if (int.TryParse(value, out v) == false)
-                return -1;
-            return v;
+            string packageVersion = "1";
+            using (var info = File.OpenText(filePath))
+            {
+                packageVersion = GetToolkitInfo(info).PackageVersion ?? "1";
+            }
+            return packageVersion;
         }
 
+        public static DLCPackage.ToolkitInfo GetToolkitInfo(StreamReader reader)
+        {
+            if (reader == null)
+                return null;
+
+            var info = new DLCPackage.ToolkitInfo();
+            string line = null;
+            while ((line = reader.ReadLine()) != null)
+            {
+                // we need to decipher what this line contains;
+                // older toolkit versions just put a single line with the version number
+                // newer versions put several lines in the format "key : value"
+                var tokens = line.Split(new char[] { ':' });
+                // trim all tokens of surrounding whitespaces
+                for (int i = 0; i < tokens.Length; ++i)
+                    tokens[i] = tokens[i].Trim();
+
+                if (tokens.Length == 1)
+                {
+                    // this is probably just the version number
+                    info.ToolkitVersion = tokens[0];
+                }
+                if (tokens.Length == 2)
+                {
+                    // key/value attribute
+                    var key = tokens[0].ToLower();
+                    switch (key)
+                    {
+                        case "toolkit version":
+                            info.ToolkitVersion = tokens[1]; break;
+                        case "package author":
+                            info.PackageAuthor = tokens[1]; break;
+                        case "package version":
+                            info.PackageVersion = tokens[1]; break;
+                        default:
+                            Console.WriteLine("  Notice: Unknown key in toolkit.version: {0}", key);
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("  Notice: Unrecognized line in toolkit.version: {0}", line);
+                }
+            }
+            return info;
+        }
+
+        public static string GetValidVersion(this string value)
+        {
+            if (!String.IsNullOrEmpty(value))
+            {
+                Regex rgx = new Regex(@"^[\d\.]*");
+                var match = rgx.Match(value);
+                if (match.Success)
+                    return match.Value.Trim();
+            }
+            return "1";
+        }
+        /// <summary>
+        /// Format input string as valid SongKey name.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="songTitle"></param>
+        /// <returns>SongKey valid name</returns>
         public static string GetValidSongName(this string value, string songTitle)
         {
-            string name = String.Empty;
+            string songName = String.Empty;
             if (!String.IsNullOrEmpty(value))
             {
                 Regex rgx = new Regex("[^a-zA-Z0-9\\-]");
-                name = rgx.Replace(value, "");
-                if (name == songTitle)
-                    name = name + "Song";
+                songName = rgx.Replace(value, "");
+                //Avoid SongKey==SongTitle case
+                if (songName == songTitle)
+                    songName = songName + "Song";
             }
-            return name;
+            return songName;
         }
 
         public static string GetValidSortName(this string value)
         {        
-            if (String.IsNullOrEmpty(value)) 
+            if (String.IsNullOrEmpty(value))
                 return value;
-            if (value.ToLowerInvariant().StartsWith("the "))
-            {
+            if (value.ToUpperInvariant().StartsWith("THE "))
                 return value.Remove(0, 4);
-            }
-            else return value;
+            return value;
         }
 
         public static string GetValidName(this string value, bool allowSpace = false, bool allowStartsWithNumber = false, bool underscoreSpace = false, bool frets24 = false)
@@ -127,30 +192,33 @@ namespace RocksmithToolkitLib.Extensions
             return Encoding.ASCII.GetString(bytes).TrimEnd('\0');
         }
 
+        public static string ToNullTerminatedUTF8(this Byte[] bytes)
+        {
+            return Encoding.UTF8.GetString(bytes).TrimEnd('\0');
+        }
+
         public static string Acronym(this string value)
         {
             var v = Regex.Split(value, @"[\W\s]+").Where(r => !string.IsNullOrEmpty(r)).ToArray();
             if (v.Length > 1)
                 return string.Join(string.Empty, v.Select(s => s[0])).ToUpper();
-            else
-                return value.GetValidName(false, true);
+            return value.GetValidName(false, true);
         }
 
         public static string GetShortName(string Format, string Artist, string Title, string Version, bool Acronym)
         {
             if (!Acronym)
-                return String.Format(Format, Artist.GetValidName(true, true), Title.GetValidName(true, true), Version.GetValidName(true, true)).Replace(" ", "-");
-            else
-                return String.Format(Format, Artist.Acronym(), Title.GetValidName(true, true), Version.GetValidName(true, true)).Replace(" ", "-");
+                return String.Format(Format, Artist.GetValidName(true, true), Title.GetValidName(true, true), Version).Replace(" ", "-");
+            return String.Format(Format, Artist.Acronym(), Title.GetValidName(true, true), Version).Replace(" ", "-");
         }
 
         public static bool IsValidPSARC(this string fileName)
         {
             //Supported DLC Package types
             var mimeByteHeaderList = new Dictionary<string, byte[]>();
-            mimeByteHeaderList.Add(".psarc", ASCIIEncoding.ASCII.GetBytes("PSAR"));
-            mimeByteHeaderList.Add(".edat", ASCIIEncoding.ASCII.GetBytes("NPD"));
-            mimeByteHeaderList.Add("xbox", ASCIIEncoding.ASCII.GetBytes("CON"));
+            mimeByteHeaderList.Add(".psarc", Encoding.ASCII.GetBytes("PSAR"));
+            mimeByteHeaderList.Add(".edat", Encoding.ASCII.GetBytes("NPD"));
+            mimeByteHeaderList.Add("xbox", Encoding.ASCII.GetBytes("CON"));
 
             string extension = Path.GetExtension(fileName);
             if (string.IsNullOrEmpty(extension))
@@ -166,8 +234,7 @@ namespace RocksmithToolkitLib.Extensions
 
                 return r;
             }
-            else
-                return false;
+            return false;
         }
 
         public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null)
@@ -220,6 +287,14 @@ namespace RocksmithToolkitLib.Extensions
             return lMin + randomNumber.Next() % (lMax - lMin);
         }
 
+        public static int ToInt32(this string value)
+        {
+            int v;
+            if (!int.TryParse(value, out v))
+                return -1;
+            return v;
+        }
+
         public static string ToHex(this string inputString)
         {
             byte[] bArray = Encoding.Default.GetBytes(inputString);
@@ -265,6 +340,14 @@ namespace RocksmithToolkitLib.Extensions
         public static string GetTempFileName(string extension = ".tmp")
         {
             return Path.ChangeExtension(Path.GetTempFileName(), extension);
+        }
+
+        public static string CopyToTempFile(this string file, string extension = ".tmp")
+        {
+            var tmp = GetTempFileName(extension);
+            if(File.Exists(file))
+                File.Copy(file, tmp);
+            return tmp;
         }
 
         public static T Copy<T>(T value)

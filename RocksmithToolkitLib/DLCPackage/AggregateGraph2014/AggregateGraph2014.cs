@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -135,8 +135,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 xml.Tag.Add(TagValue.Application.GetDescription());
                 xml.Tag.Add(TagValue.XML.GetDescription());
                 xml.UUID = arrangement.SongXml.UUID;
-                xml.LLID = Guid.Parse(arrangement.SongXml.LLID);
-                xml.RelPathFile = String.Format("{0}.xml", xml.Name);
+                xml.LLID = IdGenerator.LLIDGuid ();
+                xml.RelPathFile = String.Format ("{0}.xml", xml.Name);
                 xml.LogPathFile = xml.RelPathFile;
                 SongXml.Add(xml);
 
@@ -152,8 +152,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 if (currentPlatform.IsConsole)
                     sng.Tag.Add(GraphItem.GetPlatformTagDescription(currentPlatform.platform));
                 sng.UUID = arrangement.SongFile.UUID;
-                sng.LLID = Guid.Parse(arrangement.SongFile.LLID);
-                sng.RelPathFile = String.Format("{0}.sng", sng.Name);
+                sng.LLID = IdGenerator.LLIDGuid ();
+                sng.RelPathFile = String.Format ("{0}.sng", sng.Name);
                 sng.LogPathFile = sng.RelPathFile;
                 MusicgameSong.Add(sng);
             }
@@ -184,7 +184,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 xml.Tag.Add(TagValue.Application.GetDescription());
                 xml.Tag.Add(TagValue.XML.GetDescription());
                 xml.UUID = IdGenerator.Guid();
-                xml.LLID = Guid.Parse(IdGenerator.LLID());
+                xml.LLID = IdGenerator.LLIDGuid ();
                 xml.RelPathFile = String.Format("{0}.xml", xml.Name);
                 xml.LogPathFile = xml.RelPathFile;
                 SongXml.Add(xml);
@@ -197,7 +197,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 aArtArray = new string[] { 
                     String.Format("album_{0}_256.dds", dlcName), 
                     String.Format("album_{0}_128.dds", dlcName), 
-                    String.Format("album_{0}_64.dds", dlcName) };
+                    String.Format ("album_{0}_64.dds", dlcName)
+                };
             ImageArt = new List<GraphItemLLID>();
             foreach (var album in aArtArray) {
                 var dds = new GraphItemLLID();
@@ -208,7 +209,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 dds.Tag.Add(TagValue.DDS.GetDescription());
                 dds.Tag.Add(TagValue.Image.GetDescription());
                 dds.UUID = IdGenerator.Guid();
-                dds.LLID = Guid.Parse(IdGenerator.LLID());
+                dds.LLID = IdGenerator.LLIDGuid ();
                 dds.Name = Path.GetFileNameWithoutExtension(album);
                 dds.RelPathFile = Path.GetFileName(album);
                 dds.LogPathFile = dds.RelPathFile;
@@ -226,7 +227,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 tex.Tag.Add(TagValue.DDS.GetDescription());
                 tex.Tag.Add(TagValue.Image.GetDescription());
                 tex.UUID = IdGenerator.Guid();
-                tex.LLID = Guid.Parse(IdGenerator.LLID());
+                tex.LLID = IdGenerator.LLIDGuid ();
                 tex.Name = String.Format("lyrics_{0}", dlcName);
                 tex.RelPathFile = tex.Name;
                 tex.LogPathFile = tex.RelPathFile;
@@ -244,7 +245,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             bnk.Tag.Add(TagValue.WwiseSoundBank.GetDescription());
             bnk.Tag.Add(GraphItem.GetPlatformTagDescription(currentPlatform.platform));
             bnk.UUID = IdGenerator.Guid();
-            bnk.LLID = Guid.Parse(IdGenerator.LLID());
+            bnk.LLID = IdGenerator.LLIDGuid ();
             bnk.Name = String.Format("song_{0}", dlcName);
             bnk.RelPathFile = String.Format("{0}.bnk", bnk.Name);
             bnk.LogPathFile = bnk.RelPathFile;
@@ -261,7 +262,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 bnkPreview.Tag.Add(TagValue.WwiseSoundBank.GetDescription());
                 bnkPreview.Tag.Add(GraphItem.GetPlatformTagDescription(currentPlatform.platform));
                 bnkPreview.UUID = IdGenerator.Guid();
-                bnkPreview.LLID = Guid.Parse(IdGenerator.LLID());
+                bnkPreview.LLID = IdGenerator.LLIDGuid ();
                 bnkPreview.Name = String.Format("song_{0}_preview", dlcName);
                 bnkPreview.RelPathFile = String.Format("{0}.bnk", bnkPreview.Name);
                 bnkPreview.LogPathFile = bnkPreview.RelPathFile;
@@ -331,7 +332,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             var aArtArray = new string[] { String.Format("reward_inlay_{0}_512", dlcName), 
                                            String.Format("reward_inlay_{0}_256", dlcName),
                                            String.Format("reward_inlay_{0}_128", dlcName), 
-                                           String.Format("reward_inlay_{0}_64", dlcName) };
+                String.Format ("reward_inlay_{0}_64", dlcName)
+            };
 
             foreach (var icon in aArtArray) {
                 var iconDDS = new GraphItemLLID();
@@ -342,7 +344,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 iconDDS.Tag.Add(TagValue.DDS.GetDescription());
                 iconDDS.Tag.Add(TagValue.Image.GetDescription());
                 iconDDS.UUID = IdGenerator.Guid();
-                iconDDS.LLID = Guid.Parse(IdGenerator.LLID());
+                iconDDS.LLID = IdGenerator.LLIDGuid ();
                 iconDDS.Name = icon;
                 iconDDS.RelPathFile = String.Format("{0}.dds", iconDDS.Name);
                 iconDDS.LogPathFile = iconDDS.RelPathFile;
@@ -358,7 +360,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             inlayDDS.Tag.Add(TagValue.DDS.GetDescription());
             inlayDDS.Tag.Add(TagValue.Image.GetDescription());
             inlayDDS.UUID = IdGenerator.Guid();
-            inlayDDS.LLID = Guid.Parse(IdGenerator.LLID());
+            inlayDDS.LLID = IdGenerator.LLIDGuid ();
             inlayDDS.Name = String.Format("inlay_{0}", dlcName);
             inlayDDS.RelPathFile = String.Format("{0}.dds", inlayDDS.Name);
             inlayDDS.LogPathFile = inlayDDS.RelPathFile;
@@ -373,7 +375,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             nif.Tag.Add(TagValue.Application.GetDescription());
             nif.Tag.Add(TagValue.GamebryoSceneGraph.GetDescription());
             nif.UUID = IdGenerator.Guid();
-            nif.LLID = Guid.Parse(IdGenerator.LLID());
+            nif.LLID = IdGenerator.LLIDGuid ();
             nif.Name = dlcName;
             nif.RelPathFile = String.Format("{0}.nif", dlcName);
             nif.LogPathFile = nif.RelPathFile;
@@ -440,7 +442,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             var graphPartList = GraphPart.GetGraphParts(File.ReadAllLines(agregateGraphFile));
 
             var json = GraphPart.WhereByValue(graphPartList, TagValue.JsonDB.GetDescription());
-            if (json.Count() > 0) {
+            if (json.Any()) {
                 aggregateGraph.JsonDB = new List<GraphItem>();
                 foreach (var j in json) {
                     aggregateGraph.JsonDB.Add(new GraphItem(j.UUID, GraphPart.WhereByUUID(graphPartList, j.UUID)));
@@ -452,14 +454,14 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 aggregateGraph.HsanDB = new GraphItem(hsan.UUID, GraphPart.WhereByUUID(graphPartList, hsan.UUID));
 
             var sng = GraphPart.WhereByValue(graphPartList, TagValue.MusicgameSong.GetDescription());
-            if (sng.Count() > 0) {
+            if (sng.Any()) {
                 aggregateGraph.MusicgameSong = new List<GraphItemLLID>();
                 foreach (var s in sng)
                     aggregateGraph.MusicgameSong.Add(new GraphItemLLID(s.UUID, GraphPart.WhereByUUID(graphPartList, s.UUID)));
             }
 
             var xml = GraphPart.WhereByValue(graphPartList, TagValue.XML.GetDescription());
-            if (xml.Count() > 0) {
+            if (xml.Any()) {
                 foreach (var x in xml) {
                     if (aggregateGraph.SongXml == null)
                         aggregateGraph.SongXml = new List<GraphItemLLID>();
@@ -472,14 +474,14 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             }
 
             var dds = GraphPart.WhereByValue(graphPartList, TagValue.Image.GetDescription());
-            if (dds.Count() > 0) {
+            if (dds.Any()) {
                 aggregateGraph.ImageArt = new List<GraphItemLLID>();
                 foreach (var d in dds)
                     aggregateGraph.ImageArt.Add(new GraphItemLLID(d.UUID, GraphPart.WhereByUUID(graphPartList, d.UUID)));
             }
 
             var bnk = GraphPart.WhereByValue(graphPartList, TagValue.WwiseSoundBank.GetDescription());
-            if (bnk.Count() > 0) {
+            if (bnk.Any()) {
                 aggregateGraph.Soundbank = new List<GraphItemLLID>();
                 foreach (var b in bnk)
                     aggregateGraph.Soundbank.Add(new GraphItemLLID(b.UUID, GraphPart.WhereByUUID(graphPartList, b.UUID)));

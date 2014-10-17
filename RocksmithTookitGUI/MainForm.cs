@@ -23,7 +23,8 @@ namespace RocksmithToolkitGUI
         {
             get
             {
-                if (Application.ExecutablePath.IndexOf("devenv.exe", StringComparison.OrdinalIgnoreCase) > -1)
+                if (Application.ExecutablePath.IndexOf("devenv.exe", StringComparison.OrdinalIgnoreCase) > -1
+                   || System.Diagnostics.Debugger.IsAttached)
                     return true;
 
                 return false;
@@ -34,7 +35,7 @@ namespace RocksmithToolkitGUI
         {
             InitializeComponent();
 
-            if (args.Length > 0)
+            if (args.Length > 0 && File.Exists(args[0]))
                 LoadTemplate(args[0]);
 
             this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", ToolkitVersion.version);
@@ -60,9 +61,9 @@ namespace RocksmithToolkitGUI
                 onlineVersion = ToolkitVersionOnline.Load();
             }
             catch (WebException) { /* Do nothing on 404 */ }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -82,7 +83,7 @@ namespace RocksmithToolkitGUI
                         dlcPackageCreatorControl.dlcLoadButton_Click();
                         break;
                     case Keys.S: //<< Save Template
-                        dlcPackageCreatorControl.dlcSaveButton_Click();
+                        dlcPackageCreatorControl.SaveTemplateFile();
                         break;
                     case Keys.I: //<< Import Template
                         dlcPackageCreatorControl.dlcImportButton_Click();

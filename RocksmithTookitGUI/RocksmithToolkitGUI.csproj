@@ -11,9 +11,8 @@
     <RootNamespace>RocksmithToolkitGUI</RootNamespace>
     <AssemblyName>RocksmithToolkitGUI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <StartupObject>RocksmithToolkitGUI.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -79,12 +78,13 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="X360, Version=1.0.0.41, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="RocksmithToTabLib">
+      <HintPath>..\lib\RocksmithToTabLib\RocksmithToTabLib.dll</HintPath>
+    </Reference>
+    <Reference Include="X360">
       <HintPath>..\lib\X360\X360.dll</HintPath>
     </Reference>
-    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="zlib.net">
       <HintPath>..\lib\ZLib\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -100,6 +100,12 @@
     </Compile>
     <Compile Include="DLCInlayCreator\IntroScreensCreator.Designer.cs">
       <DependentUpon>IntroScreensCreator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CDLC2Tab\SongInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CDLC2Tab\SongInfoForm.Designer.cs">
+      <DependentUpon>SongInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateForm.cs">
       <SubType>Form</SubType>
@@ -209,11 +215,11 @@
     <Compile Include="SngFileCreator\SngFileCreator.Designer.cs">
       <DependentUpon>SngFileCreator.cs</DependentUpon>
     </Compile>
-    <Compile Include="SngToTabConverter\SngToTabConverter.cs">
+    <Compile Include="CDLC2Tab\CDLC2Tab.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SngToTabConverter\SngToTabConverter.Designer.cs">
-      <DependentUpon>SngToTabConverter.cs</DependentUpon>
+    <Compile Include="CDLC2Tab\CDLC2Tab.Designer.cs">
+      <DependentUpon>CDLC2Tab.cs</DependentUpon>
     </Compile>
     <Compile Include="ZiggyProEditorConverter\ConverterInput.cs">
       <SubType>UserControl</SubType>
@@ -226,6 +232,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DLCInlayCreator\IntroScreensCreator.resx">
       <DependentUpon>IntroScreensCreator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CDLC2Tab\SongInfoForm.resx">
+      <DependentUpon>SongInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLCPackageCreator\ToneImportForm.resx">
+      <DependentUpon>ToneImportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateForm.resx">
       <DependentUpon>UpdateForm.cs</DependentUpon>
@@ -288,12 +300,15 @@
     <EmbeddedResource Include="SngFileCreator\SngFileCreator.resx">
       <DependentUpon>SngFileCreator.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SngToTabConverter\SngToTabConverter.resx">
-      <DependentUpon>SngToTabConverter.cs</DependentUpon>
+    <EmbeddedResource Include="CDLC2Tab\CDLC2Tab.resx">
+      <DependentUpon>CDLC2Tab.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ZiggyProEditorConverter\ConverterInput.resx">
       <DependentUpon>ConverterInput.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -306,6 +321,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="DLCPackageCreator\ToneImportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DLCPackageCreator\ToneImportForm.Designer.cs">
+      <DependentUpon>ToneImportForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -357,10 +378,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\colored.png" />
+    <None Include="Resources\brasil_logo.png" />
     <Content Include="Resources\ddc-512.png" />
     <None Include="Resources\guitar_256.png" />
     <None Include="Resources\flipXc.png" />
     <None Include="Resources\flipYc.png" />
+    <None Include="Resources\music_edit.png" />
     <Content Include="songcreator.ico" />
   </ItemGroup>
   <ItemGroup />

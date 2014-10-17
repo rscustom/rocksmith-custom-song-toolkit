@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DLCConverter));
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.platformTargetCombo = new System.Windows.Forms.ComboBox();
@@ -38,14 +38,13 @@
             this.platformSourceCombo = new System.Windows.Forms.ComboBox();
             this.convertButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Image = global::RocksmithToolkitGUI.Properties.Resources.brasil_logo;
             this.pictureBox2.Location = new System.Drawing.Point(158, 3);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(100, 103);
@@ -70,6 +69,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Platform";
             // 
+            // AppIdTB
+            // 
+            this.AppIdTB.Cue = "APP ID";
+            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
+            this.AppIdTB.Location = new System.Drawing.Point(8, 43);
+            this.AppIdTB.Name = "AppIdTB";
+            this.AppIdTB.Size = new System.Drawing.Size(74, 20);
+            this.AppIdTB.TabIndex = 50;
+            // 
             // appIdCombo
             // 
             this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -80,7 +89,7 @@
             this.appIdCombo.Margin = new System.Windows.Forms.Padding(2);
             this.appIdCombo.Name = "appIdCombo";
             this.appIdCombo.Size = new System.Drawing.Size(301, 21);
-            this.appIdCombo.TabIndex = 49;
+            this.appIdCombo.TabIndex = 2;
             this.appIdCombo.SelectedIndexChanged += new System.EventHandler(this.appIdCombo_SelectedIndexChanged);
             // 
             // label2
@@ -103,7 +112,7 @@
             this.platformTargetCombo.Margin = new System.Windows.Forms.Padding(2);
             this.platformTargetCombo.Name = "platformTargetCombo";
             this.platformTargetCombo.Size = new System.Drawing.Size(130, 21);
-            this.platformTargetCombo.TabIndex = 45;
+            this.platformTargetCombo.TabIndex = 1;
             this.platformTargetCombo.SelectedIndexChanged += new System.EventHandler(this.platformTargetCombo_SelectedIndexChanged);
             // 
             // label1
@@ -126,16 +135,16 @@
             this.platformSourceCombo.Margin = new System.Windows.Forms.Padding(2);
             this.platformSourceCombo.Name = "platformSourceCombo";
             this.platformSourceCombo.Size = new System.Drawing.Size(130, 21);
-            this.platformSourceCombo.TabIndex = 43;
+            this.platformSourceCombo.TabIndex = 0;
             // 
             // convertButton
             // 
             this.convertButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.convertButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.convertButton.Location = new System.Drawing.Point(239, 204);
+            this.convertButton.Location = new System.Drawing.Point(240, 187);
             this.convertButton.Name = "convertButton";
             this.convertButton.Size = new System.Drawing.Size(159, 29);
-            this.convertButton.TabIndex = 32;
+            this.convertButton.TabIndex = 3;
             this.convertButton.Text = "Choose DLC to Convert";
             this.convertButton.UseVisualStyleBackColor = false;
             this.convertButton.Click += new System.EventHandler(this.convertButton_Click);
@@ -144,21 +153,11 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label3.Location = new System.Drawing.Point(113, 188);
+            this.label3.Location = new System.Drawing.Point(4, 187);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(183, 13);
             this.label3.TabIndex = 38;
             this.label3.Text = "Compatible only with Rocksmith 2014";
-            // 
-            // AppIdTB
-            // 
-            this.AppIdTB.Cue = "APP ID";
-            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
-            this.AppIdTB.Location = new System.Drawing.Point(8, 43);
-            this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(74, 20);
-            this.AppIdTB.TabIndex = 50;
             // 
             // DLCConverter
             // 
@@ -168,6 +167,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox2);
             this.Name = "DLCConverter";
+            this.MinimumSize = new System.Drawing.Size(400, 236);
             this.Size = new System.Drawing.Size(400, 236);
             this.Load += new System.EventHandler(this.DLCConverter_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();

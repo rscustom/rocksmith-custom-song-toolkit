@@ -5,17 +5,15 @@ namespace RocksmithToolkitLib.Extensions
 {
     public static class DirectoryExtension
     {
-        public static void Move(string sourceDirName, string destDirName)
+        public static void Move(string sourceDirName, string destDirName, bool overwrite = false)
         {
             #region Validation checks
 
-            if (null == sourceDirName) { throw new ArgumentNullException("sourceDirName", "The source directory cannot be null."); }
-            if (null == destDirName) { throw new ArgumentNullException("destDirName", "The destination directory cannot be null."); }
+            if (String.IsNullOrWhiteSpace(sourceDirName)) { throw new ArgumentNullException("sourceDirName", "The source directory cannot be null."); }
+            if (String.IsNullOrWhiteSpace(destDirName)) { throw new ArgumentNullException("destDirName", "The destination directory cannot be null."); }
  
             sourceDirName = sourceDirName.Trim();
             destDirName = destDirName.Trim();
-
-            if ((sourceDirName.Length == 0) || (destDirName.Length == 0)) { throw new ArgumentException("sourceDirName or destDirName is a zero-length string."); }
 
             char[] invalidChars = System.IO.Path.GetInvalidPathChars();
             if (sourceDirName.Contains(invalidChars)) { throw new ArgumentException("The directory contains invalid path characters.", "sourceDirName"); }
@@ -25,16 +23,21 @@ namespace RocksmithToolkitLib.Extensions
             DirectoryInfo destDir = new DirectoryInfo(destDirName);
 
             if (!sourceDir.Exists) { throw new DirectoryNotFoundException("The path specified by sourceDirName is invalid: " + sourceDirName); }
-            if (destDir.Exists) { throw new IOException("The path specified by destDirName already exists: " + destDirName); }
+            if (!overwrite)
+                if (destDir.Exists) { throw new IOException("The path specified by destDirName already exists: " + destDirName); }
 
             #endregion
             
             if (sourceDir.Root.Name.Equals(destDir.Root.Name, StringComparison.InvariantCultureIgnoreCase))
             {
+                if (overwrite)
+                    SafeDelete(destDirName, true);
                 Directory.Move(sourceDirName, destDirName);
             }
             else
             {
+                if (overwrite)
+                    SafeDelete(destDirName, true);
                 Directory.CreateDirectory(destDirName);
 
                 FileInfo[] files = sourceDir.GetFiles();

@@ -23,8 +23,9 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         #region FIELDS
 
-        public const string ROOT_XBox360 = "Root";        
-        
+        public const string ROOT_XBox360 = "Root"; 
+        private static readonly string PS3_WORKDIR = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "edat");
+
         #endregion
 
         #region PACK
@@ -72,7 +73,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 platform = predefinedPlatform;
                 
             var useCryptography = platform.version == GameVersion.RS2012; // Cryptography way is used only for PC in Rocksmith 1
-
             switch (platform.platform)
             {
                 case GamePlatform.Pc:
@@ -450,12 +450,14 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void PackPS3(string sourcePath, string saveFileName, Platform platform, bool updateSng) {
             Pack2014(sourcePath, saveFileName, platform, updateSng);
 
-            var edatDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "edat");
-            if (!Directory.Exists(edatDir))
-                Directory.CreateDirectory(edatDir);
+            if (!Directory.Exists(PS3_WORKDIR))
+                Directory.CreateDirectory(PS3_WORKDIR);
+
+            foreach(var junk in Directory.EnumerateFiles(PS3_WORKDIR, "*.*"))
+                File.Delete(junk);
 
             var sourceCleanPackage = saveFileName + ".psarc";
-            var destCleanPackage = Path.Combine(edatDir, Path.GetFileName(saveFileName) + ".psarc");
+            var destCleanPackage = Path.Combine(PS3_WORKDIR, Path.GetFileName(saveFileName) + ".psarc");
             var encryptedPackage = destCleanPackage + ".edat";
 
             if (File.Exists(sourceCleanPackage))
@@ -474,11 +476,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void UnpackPS3Package(string sourceFileName, string savePath, Platform platform)
         {
-            var rootDir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "edat");
-            var outputFilename = Path.Combine(rootDir, Path.GetFileName(sourceFileName));
+            var outputFilename = Path.Combine(PS3_WORKDIR, Path.GetFileName(sourceFileName));
 
-            if (!Directory.Exists(rootDir))
-                Directory.CreateDirectory(rootDir);
+            if (!Directory.Exists(PS3_WORKDIR))
+                Directory.CreateDirectory(PS3_WORKDIR);
+            
+            foreach(var junk in Directory.EnumerateFiles(PS3_WORKDIR, "*.*"))
+                File.Delete(junk);
 
             if (File.Exists(sourceFileName))
                 File.Copy(sourceFileName, outputFilename, true);
@@ -490,7 +494,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (File.Exists(outputFilename))
                 File.Delete(outputFilename);
 
-            foreach (var fileName in Directory.EnumerateFiles(rootDir, "*.psarc.dat"))
+            foreach (var fileName in Directory.EnumerateFiles(PS3_WORKDIR, "*.psarc.dat"))
             {
                 using (var outputFileStream = File.OpenRead(fileName))
                 {
@@ -504,7 +508,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var outName = Path.GetFileNameWithoutExtension(sourceFileName);
             var outputDir = Path.Combine(savePath, outName.Substring(0, outName.LastIndexOf(".")) + String.Format("_{0}", platform.platform.ToString()));
 
-            foreach (var unpackedDir in Directory.EnumerateDirectories(rootDir))
+            foreach (var unpackedDir in Directory.EnumerateDirectories(PS3_WORKDIR))
                 if (Directory.Exists(unpackedDir))
                 {
                     if (Directory.Exists(outputDir))
@@ -645,20 +649,25 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (isExternalFile)
                 name += String.Format("_{0}", platform.platform.ToString());
+            
+            var destpath = Path.Combine(path, name);
+            if (Directory.Exists(destpath) && isExternalFile)
+                        DirectoryExtension.SafeDelete(destpath);
 
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream);
             foreach (var entry in psarc.Entries)
             {
                 var fullfilename = Path.Combine(path, name, entry.Name);
+                var destfilepath = Path.GetDirectoryName(fullfilename);
                 entry.Data.Seek(0, SeekOrigin.Begin);
                 if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
                 {
-                    ExtractPSARC(fullfilename, Path.Combine(path, name), entry.Data, platform, false);
+                    ExtractPSARC(fullfilename, destpath, entry.Data, platform, false);
                 }
                 else
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(fullfilename));
+                    Directory.CreateDirectory(destfilepath);
                     using (var fileStream = File.Create(fullfilename))
                     {
                         entry.Data.CopyTo(fileStream);

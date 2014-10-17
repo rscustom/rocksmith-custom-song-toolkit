@@ -12,5 +12,13 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             LLID = IdGenerator.LLID();
         }
         public string LLID { get; private set; }
+
+		Guid g;
+		public Guid LLIDGuid {
+			get {
+				Guid.TryParse (LLID, out g);
+				return g;
+			}
+		}
     }
 }

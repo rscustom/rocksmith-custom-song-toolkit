@@ -18,7 +18,7 @@ namespace RocksmithToolkitLib {
 
         public SongAppId Select(string appId, GameVersion gameVersion)
         {
-            if (List.OfType<SongAppId>().Where(s => s.AppId == appId && s.GameVersion == gameVersion).Count() > 0)
+            if (List.OfType<SongAppId>().Where(s => s.AppId == appId && s.GameVersion == gameVersion).Any())
                 return List.FirstOrDefault<SongAppId>(s => s.AppId == appId);
             else
                 return List[0];

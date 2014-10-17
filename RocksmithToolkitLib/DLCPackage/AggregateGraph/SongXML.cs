@@ -13,6 +13,14 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
         public SongXML()
         {
             LLID = IdGenerator.LLID();
+        }
+
+        Guid g;
+        public Guid LLIDGuid {
+            get {
+                Guid.TryParse (LLID, out g);
+                return g;
+            }
         }        
     }
 }

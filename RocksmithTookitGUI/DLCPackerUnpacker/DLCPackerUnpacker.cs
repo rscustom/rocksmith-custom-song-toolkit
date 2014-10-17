@@ -58,6 +58,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             bwUnpack.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
             bwUnpack.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ProcessCompleted);
             bwUnpack.WorkerReportsProgress = true;
+
         }
 
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
@@ -121,6 +122,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             using (var ofd = new OpenFileDialog())
             {
+                ofd.Filter = "All Files (*.*)|*.*";
                 ofd.Multiselect = true;
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
@@ -129,6 +131,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             using (var fbd = new VistaFolderBrowserDialog())
             {
+                fbd.SelectedPath = Path.GetDirectoryName(sourceFileNames[0]);
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
                 savePath = fbd.SelectedPath;
@@ -168,7 +171,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 progress += step;
                 bwUnpack.ReportProgress(progress);
             }
-
+            bwUnpack.ReportProgress(100);
             e.Result = "unpack";
         }
 
@@ -227,7 +230,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 else
                     errorsFound.AppendLine(String.Format("File '{0}' is not a valid package for desktop platform.", Path.GetFileName(sourceFileName)));
             }
-
+            bwRepack.ReportProgress(100);
             e.Result = "repack";
         }
 
@@ -270,5 +273,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             currentOperationLabel.Text = message;
             currentOperationLabel.Refresh();
         }
+
+        private void lowTuningBassFixButton_Click(object sender, EventArgs e)
+        {
+            dlcPackageCreatorControl.dlcLowTuningBassFix(sender, e, lowTuningBassFixButton, quickBassFixBox.Checked, deleteSourceFileCheckBox.Checked);
+        }
+
+    
     }
 }

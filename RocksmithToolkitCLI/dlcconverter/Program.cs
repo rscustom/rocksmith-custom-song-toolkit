@@ -85,7 +85,7 @@ namespace dlcconverter
                     return 1;
                 }
 
-                if ((arguments.TargetPlatform.platform == GamePlatform.Pc || arguments.TargetPlatform.platform == GamePlatform.Mac) && String.IsNullOrEmpty(arguments.AppId))
+                if ((!arguments.TargetPlatform.IsConsole) && String.IsNullOrEmpty(arguments.AppId))
                 {
                     ShowHelpfulError("'appid' is required for 'Pc' or 'Mac' target platform.");
                     return 1;

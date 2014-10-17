@@ -50,6 +50,7 @@
             this.cleanCheckbox = new System.Windows.Forms.CheckBox();
             this.ConfigFilesCbx = new System.Windows.Forms.ComboBox();
             this.ConfigFilesBtn = new System.Windows.Forms.Button();
+            this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.deleteArrBT = new System.Windows.Forms.Button();
@@ -57,12 +58,11 @@
             this.ddcVersion = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -94,7 +94,7 @@
             this.ProduceDDbt.Location = new System.Drawing.Point(397, 373);
             this.ProduceDDbt.Name = "ProduceDDbt";
             this.ProduceDDbt.Size = new System.Drawing.Size(125, 32);
-            this.ProduceDDbt.TabIndex = 7;
+            this.ProduceDDbt.TabIndex = 10;
             this.ProduceDDbt.Text = "Generate DD";
             this.ProduceDDbt.UseVisualStyleBackColor = false;
             this.ProduceDDbt.Click += new System.EventHandler(this.ProduceDDbt_Click);
@@ -117,7 +117,7 @@
             this.delsustainsBT.Location = new System.Drawing.Point(156, 84);
             this.delsustainsBT.Name = "delsustainsBT";
             this.delsustainsBT.Size = new System.Drawing.Size(107, 17);
-            this.delsustainsBT.TabIndex = 5;
+            this.delsustainsBT.TabIndex = 7;
             this.delsustainsBT.Text = "Remove sustains";
             this.delsustainsBT.UseVisualStyleBackColor = true;
             // 
@@ -182,31 +182,33 @@
             this.DDCfilesDgw.AllowUserToResizeColumns = false;
             this.DDCfilesDgw.AllowUserToResizeRows = false;
             this.DDCfilesDgw.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+                                    | System.Windows.Forms.AnchorStyles.Right)));
+            this.DDCfilesDgw.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DDCfilesDgw.BackgroundColor = System.Drawing.SystemColors.Window;
             this.DDCfilesDgw.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.DDCfilesDgw.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.DDCfilesDgw.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
-            this.DDCfilesDgw.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DDCfilesDgw.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.DDCfilesDgw.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.PathColnm,
-            this.TypeColnm});
+                                    this.PathColnm,
+                                    this.TypeColnm});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.NotSet;
             this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle1;
             this.DDCfilesDgw.GridColor = System.Drawing.SystemColors.AppWorkspace;
             this.DDCfilesDgw.Location = new System.Drawing.Point(6, 19);
             this.DDCfilesDgw.Name = "DDCfilesDgw";
             this.DDCfilesDgw.RowHeadersWidth = 4;
-            this.DDCfilesDgw.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.DDCfilesDgw.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.EnableResizing;
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.NotSet;
             this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.DDCfilesDgw.RowTemplate.ErrorText = "#####";
             this.DDCfilesDgw.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -220,19 +222,19 @@
             // 
             // PathColnm
             // 
-            this.PathColnm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.PathColnm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.PathColnm.HeaderText = "Path";
-            this.PathColnm.MinimumWidth = 80;
+            this.PathColnm.MinimumWidth = 340;
             this.PathColnm.Name = "PathColnm";
             this.PathColnm.ReadOnly = true;
             // 
             // TypeColnm
             // 
+            this.TypeColnm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.TypeColnm.HeaderText = "Type";
-            this.TypeColnm.MinimumWidth = 30;
+            this.TypeColnm.MinimumWidth = 40;
             this.TypeColnm.Name = "TypeColnm";
             this.TypeColnm.ReadOnly = true;
-            this.TypeColnm.Width = 50;
             // 
             // DDprogress
             // 
@@ -272,7 +274,7 @@
             this.keepLogfile.Location = new System.Drawing.Point(418, 84);
             this.keepLogfile.Name = "keepLogfile";
             this.keepLogfile.Size = new System.Drawing.Size(87, 17);
-            this.keepLogfile.TabIndex = 6;
+            this.keepLogfile.TabIndex = 9;
             this.keepLogfile.Text = "Generate log";
             this.keepLogfile.UseVisualStyleBackColor = true;
             this.keepLogfile.CheckStateChanged += new System.EventHandler(this.colorHiglight_CheckStateChanged);
@@ -284,7 +286,7 @@
             this.cleanCheckbox.Location = new System.Drawing.Point(280, 84);
             this.cleanCheckbox.Name = "cleanCheckbox";
             this.cleanCheckbox.Size = new System.Drawing.Size(123, 17);
-            this.cleanCheckbox.TabIndex = 6;
+            this.cleanCheckbox.TabIndex = 8;
             this.cleanCheckbox.Text = "Overwrite original file";
             this.cleanCheckbox.UseVisualStyleBackColor = true;
             this.cleanCheckbox.CheckStateChanged += new System.EventHandler(this.colorHiglight_CheckStateChanged);
@@ -299,7 +301,7 @@
             this.ConfigFilesCbx.Name = "ConfigFilesCbx";
             this.ConfigFilesCbx.Size = new System.Drawing.Size(341, 21);
             this.ConfigFilesCbx.Sorted = true;
-            this.ConfigFilesCbx.TabIndex = 2;
+            this.ConfigFilesCbx.TabIndex = 4;
             this.ConfigFilesCbx.DropDown += new System.EventHandler(this.ConfigFilesCbx_DropDown);
             // 
             // ConfigFilesBtn
@@ -308,10 +310,35 @@
             this.ConfigFilesBtn.Location = new System.Drawing.Point(441, 46);
             this.ConfigFilesBtn.Name = "ConfigFilesBtn";
             this.ConfigFilesBtn.Size = new System.Drawing.Size(64, 23);
-            this.ConfigFilesBtn.TabIndex = 3;
+            this.ConfigFilesBtn.TabIndex = 5;
             this.ConfigFilesBtn.Text = "Add";
             this.ConfigFilesBtn.UseVisualStyleBackColor = true;
             this.ConfigFilesBtn.Click += new System.EventHandler(this.ConfigFilesBtn_Click);
+            // 
+            // phaseLenNum
+            // 
+            this.phaseLenNum.Location = new System.Drawing.Point(94, 81);
+            this.phaseLenNum.Maximum = new decimal(new int[] {
+                                    65536,
+                                    0,
+                                    0,
+                                    0});
+            this.phaseLenNum.Minimum = new decimal(new int[] {
+                                    2,
+                                    0,
+                                    0,
+                                    0});
+            this.phaseLenNum.Name = "phaseLenNum";
+            this.phaseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.phaseLenNum.Size = new System.Drawing.Size(52, 20);
+            this.phaseLenNum.TabIndex = 6;
+            this.phaseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.phaseLenNum.ThousandsSeparator = true;
+            this.phaseLenNum.Value = new decimal(new int[] {
+                                    2,
+                                    0,
+                                    0,
+                                    0});
             // 
             // label5
             // 
@@ -388,31 +415,6 @@
             this.label3.TabIndex = 12;
             this.label3.Text = "Help can be found on:";
             // 
-            // phaseLenNum
-            // 
-            this.phaseLenNum.Location = new System.Drawing.Point(94, 81);
-            this.phaseLenNum.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
-            this.phaseLenNum.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.phaseLenNum.Name = "phaseLenNum";
-            this.phaseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.phaseLenNum.Size = new System.Drawing.Size(52, 20);
-            this.phaseLenNum.TabIndex = 4;
-            this.phaseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.phaseLenNum.ThousandsSeparator = true;
-            this.phaseLenNum.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            // 
             // DDC
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -433,11 +435,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).EndInit();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml.Serialization;
 using System.IO;
-using Newtonsoft.Json;
-using RocksmithToolkitLib.Xml;
-using System.ComponentModel;
-using System.Reflection;
-using RocksmithToolkitLib.Sng;
+using System.Linq;
+using System.Text.RegularExpressions;
+
 using RocksmithToolkitLib.DLCPackage.Manifest.Header;
+using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
@@ -79,8 +76,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     SectionUINames.Add("prechorus", "$[34296] Pre Chorus [1]");
                     SectionUINames.Add("preverse", "$[34297] Pre Verse [1]");
                     SectionUINames.Add("riff", "$[34298] Riff [1]");
+                    SectionUINames.Add("rifff", "$[34298] Riff [1]"); //incorrect name in some adverse cases
                     SectionUINames.Add("silence", "$[34299] Silence [1]");
+                    SectionUINames.Add("shifts", "$[34308] Shifts [1]");
+                    SectionUINames.Add("slides", "$[35872] Slides [1]");
                     SectionUINames.Add("solo", "$[34300] Solo [1]");
+                    SectionUINames.Add("tapping", "$[34305] Tapping [1]");
+                    SectionUINames.Add("taps", "$[34313] Taps [1]");
                     SectionUINames.Add("transition", "$[34301] Transition [1]");
                     SectionUINames.Add("vamp", "$[34302] Vamp [1]");
                     SectionUINames.Add("variation", "$[34303] Variation [1]");
@@ -167,7 +169,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             var mediumArray = new List<int>();
             var hardArray = new List<int>();
 
-            for (int i = 0; i < song.PhraseIterations.Count(); i++)
+            for (int i = 0; i < song.PhraseIterations.Length; i++)
             {
                 var pt = song.PhraseIterations[i];
                 
@@ -193,11 +195,11 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
             // Is not the way of official are calculated, but is a way to calculate unique values for custom
             // Can be rewrited with the correct way or a best way to get this value
-            var itCount = song.PhraseIterations.Count();
+            var itCount = song.PhraseIterations.Length;
 
-            attribute.SongDiffEasy = (easyArray.Count() > 0) ? easyArray.Average() / itCount : 0;
-            attribute.SongDiffMed = (easyArray.Count() > 0) ? mediumArray.Average() / itCount : 0;
-            attribute.SongDiffHard = (easyArray.Count() > 0) ? hardArray.Average() / itCount : 0;
+            attribute.SongDiffEasy = (easyArray.Count > 0) ? easyArray.Average() / itCount : 0;
+            attribute.SongDiffMed = (easyArray.Count > 0) ? mediumArray.Average() / itCount : 0;
+            attribute.SongDiffHard = (easyArray.Count > 0) ? hardArray.Average() / itCount : 0;
             attribute.SongDifficulty = attribute.SongDiffHard;
         }
 
@@ -359,7 +361,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public int GetNoteCount(float startTime, float endTime, ICollection<SongNote> notes)
         {
             int count = 0;
-            for (int i = 0; i < notes.Count(); i++)
+            for (int i = 0; i < notes.Count; i++)
             {
                 if(notes.ElementAt(i).Time < endTime)
                 if (notes.ElementAt(i).Time >= startTime)
@@ -371,7 +373,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public int GetNoteCount2014(float startTime, float endTime, ICollection<SongNote2014> notes)
         {
             int count = 0;
-            for (int i = 0; i < notes.Count(); i++)
+            for (int i = 0; i < notes.Count; i++)
             {
                 if (notes.ElementAt(i).Time < endTime)
                     if (notes.ElementAt(i).Time >= startTime)
@@ -383,7 +385,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public int GetChordCount(float startTime, float endTime, ICollection<dynamic> chords)
         {
             int count = 0;
-            for (int i = 0; i < chords.Count(); i++)
+            for (int i = 0; i < chords.Count; i++)
             {
                 if (chords.ElementAt(i).Time < endTime)
                     if (chords.ElementAt(i).Time >= startTime)

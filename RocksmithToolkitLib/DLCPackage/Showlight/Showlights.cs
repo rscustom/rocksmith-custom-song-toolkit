@@ -182,7 +182,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             {
                 foreach (var lvl in song.Levels)
                 {
-                    for (int i = 0; i + 1 <= lvl.Notes.Count(); i++)
+                    for (int i = 0; i + 1 <= lvl.Notes.Length; i++)
                     {
                         var mNote = Sng2014FileWriter.GetMidiNote(tuning,
                             (Byte)lvl.Notes[i].String,
@@ -192,7 +192,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
                         midiNotes.Add(new Showlight() { Time = lvl.Notes[i].Time, Note = mNote });
                     }
-                    for (int i = 0; i + 1 <= lvl.Chords.Count(); i++)
+                    for (int i = 0; i + 1 <= lvl.Chords.Length; i++)
                     {
                         if (lvl.Chords[i].HighDensity == 1)
                             continue; //speedhack

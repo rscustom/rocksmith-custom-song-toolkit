@@ -56,7 +56,7 @@ namespace RocksmithToolkitGUI.OggConverter
                     //fd.Multiselect = false;
                 }
                 fd.ShowDialog();
-                if (fd.FileNames.Count() <= 0) {
+                if (!fd.FileNames.Any()) {
                     MessageBox.Show("The selected directory has no valid file inside!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }

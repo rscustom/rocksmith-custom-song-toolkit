@@ -59,12 +59,7 @@
     <Reference Include="MiscUtil">
       <HintPath>..\lib\MiscUtil\MiscUtil.dll</HintPath>
     </Reference>
-    <Reference Include="NDesk.Options, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\NDesk\NDesk.Options.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Newtonsoft.Json">
       <HintPath>..\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -77,12 +72,17 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="X360, Version=1.0.0.41, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\X360\X360.dll</HintPath>
-    </Reference>
     <Reference Include="zlib.net">
       <HintPath>..\lib\ZLib\zlib.net.dll</HintPath>
+    </Reference>
+    <Reference Include="NDesk.Options">
+      <HintPath>..\lib\NDesk\NDesk.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="RocksmithToTabLib">
+      <HintPath>..\lib\RocksmithToTabLib\RocksmithToTabLib.dll</HintPath>
+    </Reference>
+    <Reference Include="X360">
+      <HintPath>..\lib\X360\X360.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +90,12 @@
     <Compile Include="DLCPackage\Manifest2014\InlayAttributes2014.cs" />
     <Compile Include="Extensions\ExternalApps.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
+    <Compile Include="SngToTab\Sng2Tab.cs" />
+    <Compile Include="Song2014ToTab\Gp5Converter.cs" />
+    <Compile Include="Song2014ToTab\Rs1Converter.cs" />
+    <Compile Include="Song2014ToTab\Rs2014Converter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ToolkitVersionOnline.cs" />
     <Compile Include="DLCPackage\DLCPackageConverter.cs" />
     <Compile Include="DLCPackage\SongPartition.cs" />
@@ -214,6 +220,7 @@
     <Compile Include="ZiggyProEditor\Tempo.cs" />
     <Compile Include="ZiggyProEditor\TimeSignature.cs" />
     <Compile Include="ZiggyProEditor\Track.cs" />
+    <Compile Include="DLCPackage\ToolkitInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\albumart.dds" />

@@ -93,7 +93,7 @@
             this.oggRocksmithBrowseButton.Margin = new System.Windows.Forms.Padding(2);
             this.oggRocksmithBrowseButton.Name = "oggRocksmithBrowseButton";
             this.oggRocksmithBrowseButton.Size = new System.Drawing.Size(56, 20);
-            this.oggRocksmithBrowseButton.TabIndex = 3;
+            this.oggRocksmithBrowseButton.TabIndex = 2;
             this.oggRocksmithBrowseButton.Text = "Browse";
             this.oggRocksmithBrowseButton.UseVisualStyleBackColor = true;
             this.oggRocksmithBrowseButton.Click += new System.EventHandler(this.oggRocksmithBrowseButton_Click);
@@ -132,7 +132,7 @@
             this.WEMConvertBrowseButton.Location = new System.Drawing.Point(416, 17);
             this.WEMConvertBrowseButton.Name = "WEMConvertBrowseButton";
             this.WEMConvertBrowseButton.Size = new System.Drawing.Size(55, 23);
-            this.WEMConvertBrowseButton.TabIndex = 5;
+            this.WEMConvertBrowseButton.TabIndex = 3;
             this.WEMConvertBrowseButton.Text = "Browse";
             this.WEMConvertBrowseButton.UseVisualStyleBackColor = true;
             this.WEMConvertBrowseButton.Click += new System.EventHandler(this.WEMConvertBrowseButton_Click_1);

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Enter file contents hereVersion: v0.1.6 (90% done)
 Version History:
 	0.1 prototype,
@@ -7,6 +8,21 @@ Version History:
 	wip: 0.1.6 Manage Import of Duplicates (upgrade to Access 2013 DB) 
 	tbr: 0.1.7-> FORK on git
 	tbr: 0.1.8 New features: DD, preview
+=======
+App Description: MASS Manipulation of Rocksmith DLC Library 
+            e.g. 1. in Rocksmith in the Library each songs Album to contain a personal rating, if it has DD, instr avail
+            e.g. 2. each song to be sorted by Album and track no
+
+Version: v0.1.8 (10% done)
+Version History(release date):
+	0.1(12.08.2014) prototype, 
+	0.1.4(22.08.2014) populating the Read Folder - File.DB,
+	0.1.4.1(12.09.2014) fixed a solution folder issue when a folder includes another folder breaking the BUILD;
+	0.1.5(12.10.2014) Read + change + Rebuild
+	wip: 0.1.6(18.10.2014) (90%) Manage Import of Duplicates (upgrade to Access 2013 DB) 
+	wip: 0.1.7(30.10.2014) (10%) FORK from/on git
+	wip: 0.1.8(12.11.2014) (40%) New features: add/remove: DD, preview
+>>>>>>> origin/master
 	tbr: 0.2.1 move import DB to Main.DB?
 	tbr: 0.2.2 ?move Access code to project? or from hardcoded to viewes
 	tbr: 0.2.3 save settings in Toolkit config

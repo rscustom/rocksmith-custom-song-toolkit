@@ -53,13 +53,17 @@
             this.toneBCombo = new System.Windows.Forms.ComboBox();
             this.lblToneA = new System.Windows.Forms.Label();
             this.gbDLCId = new System.Windows.Forms.GroupBox();
+            this.PersistentId = new RocksmithToolkitGUI.CueTextBox();
+            this.MasterId = new RocksmithToolkitGUI.CueTextBox();
             this.gbXmlDefinition = new System.Windows.Forms.GroupBox();
+            this.XmlFilePath = new RocksmithToolkitGUI.CueTextBox();
             this.gbArrInfo = new System.Windows.Forms.GroupBox();
             this.vocalEdit = new System.Windows.Forms.Button();
             this.tuningEditButton = new System.Windows.Forms.Button();
             this.BonusCheckBox = new System.Windows.Forms.CheckBox();
             this.gbTuningPitch = new System.Windows.Forms.GroupBox();
             this.noteDisplay = new System.Windows.Forms.Label();
+            this.frequencyTB = new RocksmithToolkitGUI.CueTextBox();
             this.centOffsetDisplay = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -71,10 +75,6 @@
             this.routeMaskBassRadio = new System.Windows.Forms.RadioButton();
             this.routeMaskRhythmRadio = new System.Windows.Forms.RadioButton();
             this.routeMaskLeadRadio = new System.Windows.Forms.RadioButton();
-            this.frequencyTB = new RocksmithToolkitGUI.CueTextBox();
-            this.XmlFilePath = new RocksmithToolkitGUI.CueTextBox();
-            this.PersistentId = new RocksmithToolkitGUI.CueTextBox();
-            this.MasterId = new RocksmithToolkitGUI.CueTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).BeginInit();
             this.gbTone.SuspendLayout();
             this.gbDLCId.SuspendLayout();
@@ -102,7 +102,7 @@
             this.addArrangementButton.Location = new System.Drawing.Point(291, 425);
             this.addArrangementButton.Name = "addArrangementButton";
             this.addArrangementButton.Size = new System.Drawing.Size(72, 29);
-            this.addArrangementButton.TabIndex = 20;
+            this.addArrangementButton.TabIndex = 22;
             this.addArrangementButton.Text = "Ok";
             this.addArrangementButton.UseVisualStyleBackColor = false;
             this.addArrangementButton.Click += new System.EventHandler(this.addArrangementButton_Click);
@@ -135,7 +135,7 @@
             this.cancelButton.Location = new System.Drawing.Point(369, 425);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(72, 29);
-            this.cancelButton.TabIndex = 21;
+            this.cancelButton.TabIndex = 23;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
@@ -149,7 +149,7 @@
             this.toneBaseCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneBaseCombo.Name = "toneBaseCombo";
             this.toneBaseCombo.Size = new System.Drawing.Size(134, 21);
-            this.toneBaseCombo.TabIndex = 12;
+            this.toneBaseCombo.TabIndex = 15;
             // 
             // scrollSpeedTrackBar
             // 
@@ -161,7 +161,7 @@
             this.scrollSpeedTrackBar.Name = "scrollSpeedTrackBar";
             this.scrollSpeedTrackBar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.scrollSpeedTrackBar.Size = new System.Drawing.Size(130, 23);
-            this.scrollSpeedTrackBar.TabIndex = 5;
+            this.scrollSpeedTrackBar.TabIndex = 9;
             this.scrollSpeedTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.scrollSpeedTrackBar.Value = 10;
             this.scrollSpeedTrackBar.ValueChanged += new System.EventHandler(this.scrollSpeedTrackBar_ValueChanged);
@@ -206,7 +206,7 @@
             this.Picked.Location = new System.Drawing.Point(54, 122);
             this.Picked.Name = "Picked";
             this.Picked.Size = new System.Drawing.Size(85, 17);
-            this.Picked.TabIndex = 7;
+            this.Picked.TabIndex = 8;
             this.Picked.Text = "Bass Picked";
             this.Picked.UseVisualStyleBackColor = true;
             // 
@@ -229,7 +229,7 @@
             this.arrangementNameCombo.Margin = new System.Windows.Forms.Padding(2);
             this.arrangementNameCombo.Name = "arrangementNameCombo";
             this.arrangementNameCombo.Size = new System.Drawing.Size(152, 21);
-            this.arrangementNameCombo.TabIndex = 3;
+            this.arrangementNameCombo.TabIndex = 4;
             // 
             // label6
             // 
@@ -250,7 +250,7 @@
             this.tuningComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.tuningComboBox.Name = "tuningComboBox";
             this.tuningComboBox.Size = new System.Drawing.Size(119, 21);
-            this.tuningComboBox.TabIndex = 4;
+            this.tuningComboBox.TabIndex = 5;
             // 
             // gbTone
             // 
@@ -278,7 +278,7 @@
             this.disableTonesCheckbox.Location = new System.Drawing.Point(72, 73);
             this.disableTonesCheckbox.Name = "disableTonesCheckbox";
             this.disableTonesCheckbox.Size = new System.Drawing.Size(266, 17);
-            this.disableTonesCheckbox.TabIndex = 45;
+            this.disableTonesCheckbox.TabIndex = 19;
             this.disableTonesCheckbox.Text = "Disable tone slot changes to prevent auto-tone fail.";
             this.disableTonesCheckbox.UseVisualStyleBackColor = true;
             this.disableTonesCheckbox.CheckedChanged += new System.EventHandler(this.disableTonesCheckbox_CheckedChanged);
@@ -303,7 +303,7 @@
             this.toneDCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneDCombo.Name = "toneDCombo";
             this.toneDCombo.Size = new System.Drawing.Size(134, 21);
-            this.toneDCombo.TabIndex = 17;
+            this.toneDCombo.TabIndex = 18;
             // 
             // label11
             // 
@@ -325,7 +325,7 @@
             this.toneCCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneCCombo.Name = "toneCCombo";
             this.toneCCombo.Size = new System.Drawing.Size(134, 21);
-            this.toneCCombo.TabIndex = 16;
+            this.toneCCombo.TabIndex = 17;
             this.toneCCombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
             // label9
@@ -348,7 +348,7 @@
             this.toneBCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneBCombo.Name = "toneBCombo";
             this.toneBCombo.Size = new System.Drawing.Size(134, 21);
-            this.toneBCombo.TabIndex = 14;
+            this.toneBCombo.TabIndex = 16;
             this.toneBCombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
             // lblToneA
@@ -374,6 +374,26 @@
             this.gbDLCId.TabStop = false;
             this.gbDLCId.Text = "Arrangement Identification";
             // 
+            // PersistentId
+            // 
+            this.PersistentId.Cue = "PersistentID";
+            this.PersistentId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.PersistentId.ForeColor = System.Drawing.Color.Gray;
+            this.PersistentId.Location = new System.Drawing.Point(156, 19);
+            this.PersistentId.Name = "PersistentId";
+            this.PersistentId.Size = new System.Drawing.Size(269, 20);
+            this.PersistentId.TabIndex = 21;
+            // 
+            // MasterId
+            // 
+            this.MasterId.Cue = "MasterID";
+            this.MasterId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.MasterId.ForeColor = System.Drawing.Color.Gray;
+            this.MasterId.Location = new System.Drawing.Point(6, 19);
+            this.MasterId.Name = "MasterId";
+            this.MasterId.Size = new System.Drawing.Size(144, 20);
+            this.MasterId.TabIndex = 20;
+            // 
             // gbXmlDefinition
             // 
             this.gbXmlDefinition.Controls.Add(this.XmlFilePath);
@@ -385,6 +405,16 @@
             this.gbXmlDefinition.TabIndex = 44;
             this.gbXmlDefinition.TabStop = false;
             this.gbXmlDefinition.Text = "Song XML File";
+            // 
+            // XmlFilePath
+            // 
+            this.XmlFilePath.Cue = "Song Xml File (*.xml)";
+            this.XmlFilePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.XmlFilePath.ForeColor = System.Drawing.Color.Gray;
+            this.XmlFilePath.Location = new System.Drawing.Point(10, 17);
+            this.XmlFilePath.Name = "XmlFilePath";
+            this.XmlFilePath.Size = new System.Drawing.Size(347, 20);
+            this.XmlFilePath.TabIndex = 0;
             // 
             // gbArrInfo
             // 
@@ -414,7 +444,7 @@
             this.vocalEdit.Location = new System.Drawing.Point(178, 17);
             this.vocalEdit.Name = "vocalEdit";
             this.vocalEdit.Size = new System.Drawing.Size(28, 23);
-            this.vocalEdit.TabIndex = 2;
+            this.vocalEdit.TabIndex = 3;
             this.vocalEdit.Text = "...";
             this.vocalEdit.UseVisualStyleBackColor = true;
             this.vocalEdit.Click += new System.EventHandler(this.vocalEdit_Click);
@@ -424,7 +454,7 @@
             this.tuningEditButton.Location = new System.Drawing.Point(178, 67);
             this.tuningEditButton.Name = "tuningEditButton";
             this.tuningEditButton.Size = new System.Drawing.Size(28, 23);
-            this.tuningEditButton.TabIndex = 2;
+            this.tuningEditButton.TabIndex = 6;
             this.tuningEditButton.Text = "...";
             this.tuningEditButton.UseVisualStyleBackColor = true;
             this.tuningEditButton.Click += new System.EventHandler(this.tuningEditButton_Click);
@@ -436,7 +466,7 @@
             this.BonusCheckBox.Location = new System.Drawing.Point(54, 99);
             this.BonusCheckBox.Name = "BonusCheckBox";
             this.BonusCheckBox.Size = new System.Drawing.Size(119, 17);
-            this.BonusCheckBox.TabIndex = 44;
+            this.BonusCheckBox.TabIndex = 7;
             this.BonusCheckBox.Text = "Bonus Arrangement";
             this.BonusCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -468,6 +498,19 @@
             this.noteDisplay.Size = new System.Drawing.Size(36, 13);
             this.noteDisplay.TabIndex = 48;
             this.noteDisplay.Text = "{note}";
+            // 
+            // frequencyTB
+            // 
+            this.frequencyTB.Cue = "";
+            this.frequencyTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.frequencyTB.ForeColor = System.Drawing.Color.Black;
+            this.frequencyTB.Location = new System.Drawing.Point(71, 17);
+            this.frequencyTB.MaxLength = 5;
+            this.frequencyTB.Name = "frequencyTB";
+            this.frequencyTB.Size = new System.Drawing.Size(44, 20);
+            this.frequencyTB.TabIndex = 10;
+            this.frequencyTB.Text = "440";
+            this.frequencyTB.TextChanged += new System.EventHandler(this.frequencyTB_TextChanged);
             // 
             // centOffsetDisplay
             // 
@@ -561,7 +604,7 @@
             this.routeMaskNoneRadio.Location = new System.Drawing.Point(322, 19);
             this.routeMaskNoneRadio.Name = "routeMaskNoneRadio";
             this.routeMaskNoneRadio.Size = new System.Drawing.Size(51, 17);
-            this.routeMaskNoneRadio.TabIndex = 11;
+            this.routeMaskNoneRadio.TabIndex = 14;
             this.routeMaskNoneRadio.TabStop = true;
             this.routeMaskNoneRadio.Text = "None";
             this.routeMaskNoneRadio.UseVisualStyleBackColor = true;
@@ -573,7 +616,7 @@
             this.routeMaskBassRadio.Location = new System.Drawing.Point(243, 19);
             this.routeMaskBassRadio.Name = "routeMaskBassRadio";
             this.routeMaskBassRadio.Size = new System.Drawing.Size(48, 17);
-            this.routeMaskBassRadio.TabIndex = 10;
+            this.routeMaskBassRadio.TabIndex = 13;
             this.routeMaskBassRadio.Text = "Bass";
             this.routeMaskBassRadio.UseVisualStyleBackColor = true;
             // 
@@ -584,7 +627,7 @@
             this.routeMaskRhythmRadio.Location = new System.Drawing.Point(156, 19);
             this.routeMaskRhythmRadio.Name = "routeMaskRhythmRadio";
             this.routeMaskRhythmRadio.Size = new System.Drawing.Size(61, 17);
-            this.routeMaskRhythmRadio.TabIndex = 9;
+            this.routeMaskRhythmRadio.TabIndex = 12;
             this.routeMaskRhythmRadio.Text = "Rhythm";
             this.routeMaskRhythmRadio.UseVisualStyleBackColor = true;
             // 
@@ -595,52 +638,9 @@
             this.routeMaskLeadRadio.Location = new System.Drawing.Point(72, 19);
             this.routeMaskLeadRadio.Name = "routeMaskLeadRadio";
             this.routeMaskLeadRadio.Size = new System.Drawing.Size(49, 17);
-            this.routeMaskLeadRadio.TabIndex = 8;
+            this.routeMaskLeadRadio.TabIndex = 11;
             this.routeMaskLeadRadio.Text = "Lead";
             this.routeMaskLeadRadio.UseVisualStyleBackColor = true;
-            // 
-            // frequencyTB
-            // 
-            this.frequencyTB.Cue = "";
-            this.frequencyTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.frequencyTB.ForeColor = System.Drawing.Color.Black;
-            this.frequencyTB.Location = new System.Drawing.Point(71, 17);
-            this.frequencyTB.MaxLength = 5;
-            this.frequencyTB.Name = "frequencyTB";
-            this.frequencyTB.Size = new System.Drawing.Size(44, 20);
-            this.frequencyTB.TabIndex = 20;
-            this.frequencyTB.Text = "440";
-            this.frequencyTB.TextChanged += new System.EventHandler(this.frequencyTB_TextChanged);
-            // 
-            // XmlFilePath
-            // 
-            this.XmlFilePath.Cue = "Song Xml File (*.xml)";
-            this.XmlFilePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.XmlFilePath.ForeColor = System.Drawing.Color.Gray;
-            this.XmlFilePath.Location = new System.Drawing.Point(10, 17);
-            this.XmlFilePath.Name = "XmlFilePath";
-            this.XmlFilePath.Size = new System.Drawing.Size(347, 20);
-            this.XmlFilePath.TabIndex = 0;
-            // 
-            // PersistentId
-            // 
-            this.PersistentId.Cue = "PersistentID";
-            this.PersistentId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.PersistentId.ForeColor = System.Drawing.Color.Gray;
-            this.PersistentId.Location = new System.Drawing.Point(156, 19);
-            this.PersistentId.Name = "PersistentId";
-            this.PersistentId.Size = new System.Drawing.Size(269, 20);
-            this.PersistentId.TabIndex = 19;
-            // 
-            // MasterId
-            // 
-            this.MasterId.Cue = "MasterID";
-            this.MasterId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.MasterId.ForeColor = System.Drawing.Color.Gray;
-            this.MasterId.Location = new System.Drawing.Point(6, 19);
-            this.MasterId.Name = "MasterId";
-            this.MasterId.Size = new System.Drawing.Size(144, 20);
-            this.MasterId.TabIndex = 18;
             // 
             // ArrangementForm
             // 

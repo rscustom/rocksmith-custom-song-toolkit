@@ -58,22 +58,22 @@ namespace RocksmithToolkitLib.DLCPackage
             0x17, 0x1C, 0xCA, 0x5D, 0x2A, 0x14, 0x2E, 0x3E,
             0x59, 0xDE, 0x7A, 0xDD, 0xA1, 0x8A, 0x3A, 0x30
         };
-        //metadata 
+        //metadata
         public static byte[] PCMetaDatKey = new byte[32] 
-		{
-			0x5F, 0xB0, 0x23, 0xEF, 0x19, 0xD5, 0xDC, 0x37,
-			0xAD, 0xDA, 0xC8, 0xF0, 0x17, 0xF8, 0x8F, 0x0E,
-			0x98, 0x18, 0xA3, 0xAC, 0x2F, 0x72, 0x46, 0x96, 
-			0xA5, 0x9D, 0xE2, 0xBF, 0x05, 0x25, 0x12, 0xEB
-		};
+        {
+            0x5F, 0xB0, 0x23, 0xEF, 0x19, 0xD5, 0xDC, 0x37,
+            0xAD, 0xDA, 0xC8, 0xF0, 0x17, 0xF8, 0x8F, 0x0E,
+            0x98, 0x18, 0xA3, 0xAC, 0x2F, 0x72, 0x46, 0x96,
+            0xA5, 0x9D, 0xE2, 0xBF, 0x05, 0x25, 0x12, 0xEB
+        };
         //profile and other cdr profile.json stuff common for RS2\RS1
-		public static byte[] PCSaveKey = new byte[32]
-		{
-			0x72, 0x8B, 0x36, 0x9E, 0x24, 0xED, 0x01, 0x34,
-			0x76, 0x85, 0x11, 0x02, 0x18, 0x12, 0xAF, 0xC0, 
-			0xA3, 0xC2, 0x5D, 0x02, 0x06, 0x5F, 0x16, 0x6B, 
-			0x4B, 0xCC, 0x58, 0xCD, 0x26, 0x44, 0xF2, 0x9E
-		};
+        public static byte[] PCSaveKey = new byte[32] 
+        {
+            0x72, 0x8B, 0x36, 0x9E, 0x24, 0xED, 0x01, 0x34,
+            0x76, 0x85, 0x11, 0x02, 0x18, 0x12, 0xAF, 0xC0,
+            0xA3, 0xC2, 0x5D, 0x02, 0x06, 0x5F, 0x16, 0x6B,
+            0x4B, 0xCC, 0x58, 0xCD, 0x26, 0x44, 0xF2, 0x9E
+        };
 
         #endregion
 
@@ -85,7 +85,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="outStream"></param>
         public static void DecryptProfile(Stream str, Stream outStream)
         {
-            var source = BigEndianBitConverter.Little;
+            var source = EndianBitConverter.Little;
             var dec = EndianBitConverter.Big;
 
             using (var decrypted = new MemoryStream())
@@ -98,7 +98,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 uint zLen = br.ReadUInt32(); //size
                 // baseStr.pos = 20
                 DecryptFile(br.BaseStream, decrypted, key);
-                
+
                 //unZip
                 int bSize = 1;
                 brDec.BaseStream.Position = 0;
@@ -171,7 +171,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     rij.IV = iv;
                 }
             }
-        }        
+        }
 
         public static void DecryptSngData(Stream input, Stream output, byte[] key)
         {
@@ -234,9 +234,9 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             rij.Padding = PaddingMode.None;
             rij.Mode = cipher;
-            rij.BlockSize = 128;	// byte[16]
+            rij.BlockSize = 128;    // byte[16]
             rij.IV = new byte[16];
-            rij.Key = key;			// byte[32]
+            rij.Key = key;          // byte[32]
         }
 
         private static void Crypto(Stream input, Stream output, ICryptoTransform transform, long len)
@@ -260,35 +260,113 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         #region PS3 EDAT Encrypt/Decrypt
+        private const string Flags = "0C",    //0x0c
+                             Type = "00", 
+                             Version = "03";  //02 or 03
+        private const string kLic = "CB4A06E85378CED307E63EFD1084C19D";
+        private const string ContentID = "UP0001-BLUS30670_00-RS001PACK0000003";
+        private static readonly string toolkitPath = Path.GetDirectoryName(Application.ExecutablePath);
 
         /// <summary>
-        /// Encrypt using TruAncestor Edat Rebuilder (files must be in "/edat" folder in application root directory)
+        /// Ensure that we running JVM x86
         /// </summary>
-        /// <returns>Output message from execution</returns>
-        public static string EncryptPS3Edat() { return EdatCrypto("ps3_encrypt.cmd"); }
+        /// <returns></returns>
+        internal static bool IfJavaInstalled()
+        {
+            try {
+                using(var version = new Process()){
+                    version.StartInfo.FileName = "java";
+                    version.StartInfo.Arguments = "-version -d32";
+                    version.StartInfo.CreateNoWindow = true;
+                    version.StartInfo.UseShellExecute = false;
+                    // Java uses this output instead of stout.
+                    version.StartInfo.RedirectStandardError = true;
+                    version.Start();
+                    version.WaitForExit();
+
+                    // Get the output into a string
+                    var output = version.StandardError.ReadLine();
+                    if (!output.Contains("java version"))
+                        return false;
+                    // Parse java version and detect if it's good.
+                    var javaVer = output.Split('\"')[1].Split('.');
+                    int maj = int.Parse(javaVer[0]);
+                    int min = int.Parse(javaVer[1]);
+
+                    if(maj >0 && min >6)
+                        return true;
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         /// <summary>
-        /// Decrypt using TruAncestor Edat Rebuilder (files must be in "/edat" folder in application root directory)
+        /// Encrypt using TrueAncestor Edat Rebuilder (files must be in "/edat" folder in application root directory)
         /// </summary>
         /// <returns>Output message from execution</returns>
-        public static string DecryptPS3Edat() { return EdatCrypto("ps3_decrypt.cmd"); }
+        public static string EncryptPS3Edat()
+        {
+            if(!IfJavaInstalled())
+                return "No JDK or JRE is intsalled on your machine";
 
-        private static string EdatCrypto(string command) {
-            // Encrypt/decrypt using TruAncestor Edat Rebuilder
-            string toolkitPath = Path.GetDirectoryName(Application.ExecutablePath);
-            string rebuilderApp = Path.Combine(toolkitPath, command);
+            string errors = string.Empty;
+            var files = Directory.EnumerateFiles(Path.Combine(toolkitPath, "edat"), "*.psarc");
+            foreach (var InFile in files)
+            {
+                string OutFile = InFile+".edat";
+                string command = String.Format("EncryptEDAT \"{0}\" \"{1}\" {2} {3} {4} {5} {6}",
+                    InFile, OutFile, kLic, ContentID, Flags, Type, Version);
+                errors += EdatCrypto(command);
+            }
+            return String.IsNullOrEmpty(errors) ? "Encrypt all EDAT files successfully" : errors;
+        }
+
+        /// <summary>
+        /// Decrypt using TrueAncestor Edat Rebuilder (files must be in "/edat" folder in application root directory)
+        /// </summary>
+        /// <returns>Output message from execution</returns>
+        public static string DecryptPS3Edat()
+        {
+            if(!IfJavaInstalled())
+                return "No JDK or JRE is intsalled on your machine";
+
+            string errors = string.Empty;
+            var files = Directory.EnumerateFiles(Path.Combine(toolkitPath, "edat"), "*.edat");
+            foreach (var InFile in files)
+            {
+                string OutFile = Path.ChangeExtension(InFile, ".dat");
+                string command = String.Format("DecryptFree \"{0}\" \"{1}\" {2}", 
+                    InFile, OutFile, kLic);
+                errors += EdatCrypto(command);
+            }
+            return String.IsNullOrEmpty(errors) ? "Decrypt all EDAT files successfully" : errors;
+        }
+
+        internal static string EdatCrypto(string command) 
+        {// Encrypt/decrypt using TrueAncestor Edat Rebuilder v1.4c
+            string core = Path.Combine(toolkitPath, "tool/core.jar");
+            string APP = "java";
 
             Process PS3Process = new Process();
-            PS3Process.StartInfo.FileName = rebuilderApp;
+            PS3Process.StartInfo.FileName = APP;
+            PS3Process.StartInfo.Arguments = String.Format("-cp \"{0}\" -Xms128m -Xmx1024m {1}", core, command);
             PS3Process.StartInfo.WorkingDirectory = toolkitPath;
             PS3Process.StartInfo.UseShellExecute = false;
             PS3Process.StartInfo.CreateNoWindow = true;
-            PS3Process.StartInfo.RedirectStandardOutput = true;
+            PS3Process.StartInfo.RedirectStandardError = true;
 
             PS3Process.Start();
             PS3Process.WaitForExit();
 
-            return PS3Process.StandardOutput.ReadToEnd();
+            string stdout = PS3Process.StandardError.ReadToEnd();
+            //Improove me please
+            if (!String.IsNullOrEmpty(stdout))
+                return String.Format("System error occured {0}\n", stdout);
+            return "";
         }
 
         #endregion
