@@ -144,6 +144,14 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 //SongPartition  -- Generated in DLCPackageCreator after this constructor
 
                 //Techniques     -- //TODO: MISSING GENERATE
+                /*
+                 Techniques: {
+                       DiffLevelID: {
+                           // 4 : 0,[6,9],[13],[12,15] // unpitchedSlides, tremolo, hopo
+                           PhraseIterationIndex: [TechID, TechID...]
+                       }
+                 }
+                 */
 
                 //Fix for Dead tones
                 var it = info.TonesRS2014;

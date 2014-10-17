@@ -56,16 +56,16 @@ namespace RocksmithToolkitLib.Sng2014HSL
             parseChordNotes(songXml, sngFile);
         }
 
-        public static Int32 GetMidiNote(Int16[] tuning, Byte str, Byte fret, bool bass, int capo) {
+        public static Int32 GetMidiNote(Int16[] tuning, Byte str, Byte fret, bool bass, int capo, bool template = false) {
             if (fret == unchecked((Byte) (-1)))
                 return -1;
             Int32 note = StandardMidiNotes[str] + tuning[str] + fret - (bass ? 12 : 0);
-            // catch unaccessible frets with capo
-            if (capo > 0 && fret != 0 && fret < capo) {
-                throw new InvalidDataException("Invalid XML data: Frets below capo fret are not playable");
+            // catch unaccessible frets with capo (sometimes there is unused templates, so let them be)
+            if (capo > 0 && fret != 0 && (!template && fret < capo)) {
+                    throw new InvalidDataException("Invalid XML data: Frets below capo fret are not playable");
             }
             // catch wrong capo template values
-            if (capo > 0 && fret == capo) {
+            if (capo > 0 && fret == capo && !template) {
                 throw new InvalidDataException("Invalid XML data: Capo frets should be defined as open strings");
             }
             // adjust note value for open strings with capo
@@ -86,7 +86,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         {
             if (handShape[crd.ChordId] != null)
             {
-                List<int> cNote = new List<int>();                
+                List<int> cNote = new List<int>();
                 cNote.AddRange(new int[]{
                     GetMidiNote(tuning, (Byte)0, (Byte)handShape[crd.ChordId].Fret0, bass, capo),
                     GetMidiNote(tuning, (Byte)1, (Byte)handShape[crd.ChordId].Fret1, bass, capo),
@@ -252,7 +252,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 c.Fingers[4] = (Byte)chord.Finger4;
                 c.Fingers[5] = (Byte)chord.Finger5;
                 for (Byte s = 0; s < 6; s++)
-                    c.Notes[s] = GetMidiNote(tuning, s, c.Frets[s], bass, xml.Capo);
+                    c.Notes[s] = GetMidiNote(tuning, s, c.Frets[s], bass, xml.Capo, template:true);
                 readString(chord.ChordName, c.Name);
                 sng.Chords.Chords[i] = c;
             }

@@ -245,7 +245,7 @@ namespace RocksmithToolkitLib.Xml
             }
         }
 
-        public void Serialize(Stream stream, bool omitXmlDeclaration = true)
+        public void Serialize(Stream stream, bool omitXmlDeclaration = false)
         {
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
@@ -253,7 +253,8 @@ namespace RocksmithToolkitLib.Xml
             using (var writer = XmlWriter.Create(stream, new XmlWriterSettings
             {
                 Indent = true,
-                OmitXmlDeclaration = omitXmlDeclaration
+                OmitXmlDeclaration = omitXmlDeclaration,
+                Encoding = new UTF8Encoding(false)
             }))
             {
                 new XmlSerializer(typeof(Song2014)).Serialize(writer, this, ns);
@@ -439,6 +440,7 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("finger5")]
         public sbyte Finger5 { get; set; }
 
+        [XmlIgnore]
         public int? ChordId { get; set; }
 
         internal static SongChordTemplate2014[] Parse(List<DLCPackage.Manifest.ChordTemplate> cteamplateList)
