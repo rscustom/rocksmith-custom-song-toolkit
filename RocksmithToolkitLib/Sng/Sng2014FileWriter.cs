@@ -99,7 +99,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 var cOut = new List<int>();
                 foreach (var c in cNote)
                     if (c > 0) cOut.Add(c);
-                //Return bass note
+                if(cOut.Count < 1)
+                    return 35;
+                //Return bass note for doublestops
                 if (cOut.Count < 3 && cOut[0] > cOut[1])
                     return cOut[1];
                 //Return most used note
