@@ -56,6 +56,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             parseChordNotes(songXml, sngFile);
         }
 
+        public static Int32 GetMidiNote(Int16[] tuning, Byte str, Byte fret, bool bass, int capo) {
+            return GetMidiNote( tuning, str, fret, bass, capo, false );
+        }
         public static Int32 GetMidiNote(Int16[] tuning, Byte str, Byte fret, bool bass, int capo, bool template = false) {
             if (fret == unchecked((Byte) (-1)))
                 return -1;

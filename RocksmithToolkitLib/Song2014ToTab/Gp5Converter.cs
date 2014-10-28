@@ -105,7 +105,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         static void ExportArrangement(Score score, Song2014 arrangement, int difficulty,
                string originalFile, ToolkitInfo toolkitInfo)
         {
-            var track = Converter.ConvertArrangement(arrangement, difficulty);
+            var track = Converter.ConvertArrangement(arrangement, arrangement.Part.ToString(), difficulty);
             score.Tracks.Add(track);
             score.Title = arrangement.Title;
             score.Artist = arrangement.ArtistName;
