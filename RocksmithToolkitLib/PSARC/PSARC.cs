@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using zlib;
 using System;
 using System.Collections.Generic;
@@ -69,9 +70,24 @@ namespace RocksmithToolkitLib.PSARC
                         byte[] array = reader.ReadBytes((int)zLenghts[num]);
                         if (num2 == 30938)
                         {
-                            ZOutputStream zOutputStream = new ZOutputStream(output);
-                            zOutputStream.Write(array, 0, array.Length);
-                            zOutputStream.Flush();
+                            try
+                            {
+                                ZOutputStream zOutputStream = new ZOutputStream(output);
+                                zOutputStream.Write(array, 0, array.Length);
+                                zOutputStream.Flush();
+                            }
+                            catch (Exception ex)
+                            {
+                                // TODO: Show file name with this error message
+                                // PSARC zlib error
+                                MessageBox.Show(new Form { TopMost = true },
+                                    @"CDLC contains a zlib.net exception." + 
+                                    Environment.NewLine + 
+                                    @"Repack the file to attempt a repair." + 
+                                    Environment.NewLine + ex.Message,
+                                    @"Warning: CDLC ZLIB Message", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+                            }
                         }
                         else
                         {
@@ -196,15 +212,15 @@ namespace RocksmithToolkitLib.PSARC
                     {
                         switch (b)
                         {
-                        case 2:
-                            array[num2] = (uint)bigEndianBinaryReaderTOC.ReadUInt16();
-                            break;
-                        case 3:
-                            array[num2] = bigEndianBinaryReaderTOC.ReadUInt24();
-                            break;
-                        case 4:
-                            array[num2] = bigEndianBinaryReaderTOC.ReadUInt32();
-                            break;
+                            case 2:
+                                array[num2] = (uint)bigEndianBinaryReaderTOC.ReadUInt16();
+                                break;
+                            case 3:
+                                array[num2] = bigEndianBinaryReaderTOC.ReadUInt24();
+                                break;
+                            case 4:
+                                array[num2] = bigEndianBinaryReaderTOC.ReadUInt32();
+                                break;
                         }
                         num2++;
                     }

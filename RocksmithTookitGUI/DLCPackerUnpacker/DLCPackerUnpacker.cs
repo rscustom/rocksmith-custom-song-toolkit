@@ -159,7 +159,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Application.DoEvents();
                 Platform platform = Packer.GetPlatform(sourceFileName);
                 bwUnpack.ReportProgress(progress, String.Format("Unpacking '{0}'", Path.GetFileName(sourceFileName)));
-                
+
+                // remove this exception handler for testing
                 try
                 {
                     Packer.Unpack(sourceFileName, savePath, decodeAudio, extractSongXml);
