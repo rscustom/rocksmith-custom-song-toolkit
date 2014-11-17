@@ -265,7 +265,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 Frets24Checkbox.Checked = ColoredCheckbox.Checked = chkFlipX.Checked = chkFlipY.Checked = false;
 
                 // Open the setup.smb INI file
-                Configuration iniConfig = Configuration.Load(Path.Combine(unpackedFolder, "setup.smb"), ParseFlags.IgnoreComments);
+                Configuration iniConfig = Configuration.LoadFromFile(Path.Combine(unpackedFolder, "setup.smb"));
 
                 // switch to new sharpconfig.dll ini file format with [General] section
                 // allow for backward compatiblity with old *.cgm files
@@ -334,12 +334,12 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             Configuration iniCFG = new Configuration();
 
             // sharpconfig.dll automatically creates a new [General] section in the INI file
-            iniCFG.Categories["General"].Settings.Add(new Setting("author", String.IsNullOrEmpty(Author) ? "CSC" : Author));
-            iniCFG.Categories["General"].Settings.Add(new Setting("inlayname", String.IsNullOrEmpty(InlayName) ? "null" : InlayName));
-            iniCFG.Categories["General"].Settings.Add(new Setting("24frets", Convert.ToString(Convert.ToInt32(Frets24))));
-            iniCFG.Categories["General"].Settings.Add(new Setting("colored", Convert.ToString(Convert.ToInt32(Colored))));
-            iniCFG.Categories["General"].Settings.Add(new Setting("cscvers", ToolkitVersion.version.Replace("-00000000", "")));
-            iniCFG.Categories["General"].Settings.Add(new Setting("modified", DateTime.Now.ToShortDateString()));
+            iniCFG["General"].Add(new Setting("author", String.IsNullOrEmpty(Author) ? "CSC" : Author));
+            iniCFG["General"].Add(new Setting("inlayname", String.IsNullOrEmpty(InlayName) ? "null" : InlayName));
+            iniCFG["General"].Add(new Setting("24frets", Convert.ToString(Convert.ToInt32(Frets24))));
+            iniCFG["General"].Add(new Setting("colored", Convert.ToString(Convert.ToInt32(Colored))));
+            iniCFG["General"].Add(new Setting("cscvers", ToolkitVersion.version.Replace("-00000000", "")));
+            iniCFG["General"].Add(new Setting("modified", DateTime.Now.ToShortDateString()));
             iniCFG.Save(iniFile);
 
             // Pack file into a .cgm file (7zip file format)

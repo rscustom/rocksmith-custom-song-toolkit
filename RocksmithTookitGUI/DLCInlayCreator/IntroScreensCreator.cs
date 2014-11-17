@@ -136,7 +136,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             ExternalApps.ExtractZip(srcPath, destPath);
 
             // Open the setup.smb INI file
-            Configuration iniConfig = Configuration.Load(Path.Combine(tmpUnzipDir, "setup.smb"), ParseFlags.IgnoreComments);
+            Configuration iniConfig = Configuration.LoadFromFile(Path.Combine(tmpUnzipDir, "setup.smb"));
             txtAuthor.Text = iniConfig["General"]["author"].Value;
             txtSeqName.Text = iniConfig["General"]["seqname"].Value;
             txtAuthor.ForeColor = Color.Black;
@@ -222,10 +222,10 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // Write ini file setup.smb
             var iniFile = Path.Combine(tmpZipDir, "setup.smb");
             Configuration iniCFG = new Configuration();
-            iniCFG.Categories["General"].Settings.Add(new Setting("author", String.IsNullOrEmpty(txtAuthor.Text) ? "CSC" : txtAuthor.Text));
-            iniCFG.Categories["General"].Settings.Add(new Setting("seqname", String.IsNullOrEmpty(txtSeqName.Text) ? "SystemSaved" : txtSeqName.Text));
-            iniCFG.Categories["General"].Settings.Add(new Setting("cscvers", ToolkitVersion.version));
-            iniCFG.Categories["General"].Settings.Add(new Setting("modified", DateTime.Now.ToShortDateString()));
+            iniCFG["General"].Add(new Setting("author", String.IsNullOrEmpty(txtAuthor.Text) ? "CSC" : txtAuthor.Text));
+            iniCFG["General"].Add(new Setting("seqname", String.IsNullOrEmpty(txtSeqName.Text) ? "SystemSaved" : txtSeqName.Text));
+            iniCFG["General"].Add(new Setting("cscvers", ToolkitVersion.version));
+            iniCFG["General"].Add(new Setting("modified", DateTime.Now.ToShortDateString()));
             iniCFG.Save(iniFile);
 
             // Zip intro sequence *.cis file
