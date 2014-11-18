@@ -71,7 +71,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
                 platform = predefinedPlatform;
-                
+
             var useCryptography = platform.version == GameVersion.RS2012; // Cryptography way is used only for PC in Rocksmith 1
             switch (platform.platform)
             {
@@ -83,9 +83,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     else
                     {
                         using (var inputFileStream = File.OpenRead(sourceFileName))
-                        using (var inputStream = new MemoryStream())
+                        using (var inputStream = new BufferedStream(new MemoryStream(), 4096))
                         {
-
                             if (useCryptography)
                                 RijndaelEncryptor.DecryptFile(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
                             else
@@ -123,7 +122,7 @@ namespace RocksmithToolkitLib.DLCPackage
             // EXTRACT XML FROM SNG
             if (extractSongXml && platform.version == GameVersion.RS2014) {
                 var sngFiles = Directory.GetFiles(unpackedDir, "*.sng", SearchOption.AllDirectories);
-                
+
                 foreach (var sngFile in sngFiles) {
                     var xmlOutput = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
                     xmlOutput = xmlOutput.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, platform.GetPathName()[1].ToLower()), "arr");
@@ -243,7 +242,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng)
         {
-            using (var psarcStream = new MemoryStream())
+            using(var psarcStream = new MemoryStream())
             {
                 var psarc = new PSARC.PSARC();
                 if (updateSng) UpdateSng2014(sourcePath, platform);
@@ -256,14 +255,14 @@ namespace RocksmithToolkitLib.DLCPackage
                 psarc.Write(psarcStream, platform.IsConsole ? false : true);
                 psarcStream.Flush();
                 psarcStream.Seek(0, SeekOrigin.Begin);
-                
+
                 if (Path.GetExtension(saveFileName) != ".psarc")
                     saveFileName += ".psarc";
 
                 using (var outputFileStream = File.Create(saveFileName))
                     psarcStream.CopyTo(outputFileStream);
 
-                foreach (var entry in psarc.Entries)
+                foreach (var entry in psarc.TOC)
                     entry.Data.Close();
             }
         }
@@ -277,7 +276,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 UpdateSng2014(sourcePath, platform);
 
             DLCPackageData songData = new DLCPackageData();
-            
+
             var packageRoot = Path.Combine(sourcePath, ROOT_XBox360);
 
             // If 'Root' directory doesn't exist the packing is a conversion process from another platform
@@ -303,11 +302,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 var directoryList = Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories);
                 var fileList = Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories);
-                
+
                 // MAKE THE XBOX360 EXPECTED STRUCTURE TO PACK WORK
                 var newPackageName = songTitle.GetValidSongName(songTitle).ToLower();
                 var newSongDir = Path.Combine(packageRoot, newPackageName);
-                
+
                 // Creating new directories
                 Directory.CreateDirectory(packageRoot);
                 Directory.CreateDirectory(newSongDir);
@@ -315,7 +314,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 // Create PackageList file
                 var packListFile = Path.Combine(packageRoot, "PackageList.txt");
                 File.WriteAllText(packListFile, newPackageName);
-                
+
                 // Move directories to new path
                 foreach (string dir in directoryList)
                     Directory.CreateDirectory(dir.Replace(sourcePath, newSongDir));
@@ -323,7 +322,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 // Move files to new path
                 foreach (string file in fileList)
                     File.Move(file, file.Replace(sourcePath, newSongDir));
-                
+
                 // Delete old empty directories
                 foreach (string emptyDir in directoryList)
                     DirectoryExtension.SafeDelete(emptyDir);
@@ -357,13 +356,13 @@ namespace RocksmithToolkitLib.DLCPackage
                                         songData.XBox360Licenses.Add(new XBox360License() { ID = id, Bit = bit, Flag = flag });
                                 }
                             }
-                            
+
                             string songInfo = xboxHeader[74];
-                            
+
                             int index = songInfo.IndexOf(" by ");
                             string songTitle = (index > 0) ? songInfo.Substring(0, index) : songInfo;
                             string songArtist = (index > 4) ? songInfo.Substring(index + 4) : songInfo;
-                                                        
+
                             if (!String.IsNullOrEmpty(songInfo))
                             {
                                 songData.SongInfo = new SongInfo();
@@ -376,7 +375,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         throw new InvalidDataException("XBox360 header file (.txt) not found or is invalid. " + Environment.NewLine +
                                                        "The file is in the same level at 'Root' folder along with the files: 'Content image.png' and 'Package image.png' and no other file .txt can be here.", ex);
-                    }                
+                    }
                 }
             }
 
@@ -480,7 +479,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (!Directory.Exists(PS3_WORKDIR))
                 Directory.CreateDirectory(PS3_WORKDIR);
-            
+
             foreach(var junk in Directory.EnumerateFiles(PS3_WORKDIR, "*.*"))
                 File.Delete(junk);
 
@@ -649,32 +648,36 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (isExternalFile)
                 name += String.Format("_{0}", platform.platform.ToString());
-            
+
             var destpath = Path.Combine(path, name);
             if (Directory.Exists(destpath) && isExternalFile)
                         DirectoryExtension.SafeDelete(destpath);
 
             var psarc = new PSARC.PSARC();
-            psarc.Read(inputStream);
-            foreach (var entry in psarc.Entries)
             {
-                var fullfilename = Path.Combine(path, name, entry.Name);
-                var destfilepath = Path.GetDirectoryName(fullfilename);
-                entry.Data.Seek(0, SeekOrigin.Begin);
-                if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
+                psarc.Read(inputStream, true);
+                foreach (var entry in psarc.TOC)
                 {
-                    ExtractPSARC(fullfilename, destpath, entry.Data, platform, false);
-                }
-                else
-                {
-                    Directory.CreateDirectory(destfilepath);
-                    using (var fileStream = File.Create(fullfilename))
+                    var fullfilename = Path.Combine(path, name, entry.Name);
+                    var destfilepath = Path.GetDirectoryName(fullfilename);
+                    psarc.InflateEntry(entry);
+                    entry.Data.Seek(0, SeekOrigin.Begin);
+                    if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
                     {
-                        entry.Data.CopyTo(fileStream);
-                        entry.Data.Seek(0, SeekOrigin.Begin);
-                        entry.Data.Close(); //allow tmp file to be deleted.
+                        ExtractPSARC(fullfilename, destpath, entry.Data, platform, false);
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(destfilepath);
+                        using (var fileStream = File.Create(fullfilename))
+                        {
+                            entry.Data.CopyTo(fileStream, 4096);
+                            entry.Data.Seek(0, SeekOrigin.Begin);
+                            entry.Data.Close(); //allow tmp file to be deleted.
+                        }
                     }
                 }
+                if(!String.IsNullOrEmpty(psarc.ErrMSG)) throw new InvalidDataException(psarc.ErrMSG);
             }
         }
 

@@ -42,20 +42,32 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <PreBuildEvent>"$(ProjectDir)../prebuild.sh" "$(ProjectDir).." "$(ProjectDir)ToolkitVersion.cs"</PreBuildEvent>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseMac|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\ReleaseMac\</OutputPath>
+    <PreBuildEvent>"$(ProjectDir)../prebuild.sh" "$(ProjectDir).." "$(ProjectDir)ToolkitVersion.cs"</PreBuildEvent>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\lib\ZLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="MiscUtil">
       <HintPath>..\lib\MiscUtil\MiscUtil.dll</HintPath>
     </Reference>
@@ -72,9 +84,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="zlib.net">
-      <HintPath>..\lib\ZLib\zlib.net.dll</HintPath>
-    </Reference>
     <Reference Include="NDesk.Options">
       <HintPath>..\lib\NDesk\NDesk.Options.dll</HintPath>
     </Reference>
@@ -262,7 +271,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <PreBuildEvent>CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'ReleaseMac'">

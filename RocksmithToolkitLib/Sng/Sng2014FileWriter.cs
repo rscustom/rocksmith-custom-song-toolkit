@@ -83,7 +83,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
         /// </summary>
         /// <param name="tuning"></param>
         /// <param name="crd"></param>
+        /// <param name = "handShape"></param>
         /// <param name="bass"></param>
+        /// <param name = "capo"></param>
         /// <returns></returns>
         public static Int32 getChordNote(Int16[] tuning, SongChord2014 crd, SongChordTemplate2014[] handShape, bool bass, int capo)
         {

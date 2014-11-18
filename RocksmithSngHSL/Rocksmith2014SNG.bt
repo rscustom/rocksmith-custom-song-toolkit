@@ -26,7 +26,7 @@ typedef struct
     //struct MeasureMask Mask;
     long Mask;
 } 
-BPM;
+BPM<size=16>;
 
 typedef struct
 {
@@ -45,7 +45,7 @@ typedef struct
     long PhraseIterationLinks;
     char Name[32];
 }
-PHRASE;
+PHRASE<size=44>;
 
 typedef struct
 {
@@ -62,12 +62,12 @@ typedef struct
     long Notes[6] <format=decimal>;
     char Name[32];
 }
-CHORD;
+CHORD<size=72>;
 
 typedef struct
 {
     long Count;
-    CHORD Chords[Count];
+    if(Count > 0) CHORD Chords[Count];
 }
 CHORD_SECTION;
 
@@ -88,19 +88,19 @@ typedef struct
     // step 1.5-1-1.5-1.5, unk5 0-0-1-0
     byte Unk5;
 }
-BEND_DATA32;
+BEND_DATA32<size=12>;
 
 typedef struct
 {
     BEND_DATA32 BendData32[32];
     long UsedCount;
 }
-BEND_DATA;
+BEND_DATA<size=388>;
 
 typedef struct
 {
     long Count;
-    BEND_DATA32 BendData[Count];
+    if(Count > 0) BEND_DATA32 BendData[Count];
 }
 BEND_DATA_SECTION;
 
@@ -112,12 +112,12 @@ typedef struct
     byte SlideUnpitchTo[6];
     short Vibrato[6];
 }
-CHORD_NOTES;
+CHORD_NOTES<size=2376>;
 
 typedef struct
 {
     long Count;
-    CHORD_NOTES ChordNotes[Count];
+    if(Count > 0) CHORD_NOTES ChordNotes[Count];
 }
 CHORD_NOTES_SECTION;
 
@@ -129,12 +129,12 @@ typedef struct
     float Length;
     char Lyric[48];
 }
-VOCAL;
+VOCAL<size=60>;
 
 typedef struct
 {
     long Count;
-    VOCAL Vocals[Count];
+    if(Count > 0) VOCAL Vocals[Count];
 }
 VOCAL_SECTION;
 
@@ -149,7 +149,7 @@ typedef struct
     long Unk7;
     long Unk8;
 }
-SYMBOLS_HEADER;
+SYMBOLS_HEADER<size=32>;
 
 typedef struct
 {
@@ -168,7 +168,7 @@ typedef struct
     // 512
     long Height;
 }
-SYMBOLS_TEXTURE;
+SYMBOLS_TEXTURE<size=144>;
 
 typedef struct
 {
@@ -184,17 +184,17 @@ typedef struct
     float yMax;
     float xMax;
 }
-RECT;
+RECT<size=16>;
 
 typedef struct
 {
     // UTF-8
     char Text[12] <format=hex>;
-    // (y0, x0, y1, x1) || coordinates in procentage, related to texture size.
+    // (y0, x0, y1, x1) && coordinates in procentage, related to texture size.
     RECT Rect_Outter;
     RECT Rect_Inner;
 }
-SYMBOL_DEFINITION;
+SYMBOL_DEFINITION<size=44>;
 
 typedef struct
 {
@@ -212,12 +212,12 @@ typedef struct
     // difficulty levels for Easy, Medium, Hard
     long Difficulty[3];
 }
-PHRASE_ITERATION;
+PHRASE_ITERATION<size=24>;
 
 typedef struct
 {
     long Count;
-    PHRASE_ITERATION PhraseIterations[Count];
+    if(Count > 0) PHRASE_ITERATION PhraseIterations[Count];
 }
 PHRASE_ITERATION_SECTION;
 
@@ -231,12 +231,12 @@ typedef struct
     short Redundant;
     byte Padding;
 }
-PHRASE_EXTRA_INFO_BY_LEVEL;
+PHRASE_EXTRA_INFO_BY_LEVEL<size=16>;
 
 typedef struct
 {
     long Count;
-    PHRASE_EXTRA_INFO_BY_LEVEL PhraseExtraInfoByLevel[Count];
+    if(Count > 0) PHRASE_EXTRA_INFO_BY_LEVEL PhraseExtraInfoByLevel[Count];
 }
 PHRASE_EXTRA_INFO_BY_LEVEL_SECTION;
 
@@ -251,7 +251,7 @@ N_LINKED_DIFFICULTY;
 typedef struct
 {
     long Count;
-    N_LINKED_DIFFICULTY NLinkedDifficulties[Count];
+    if(Count > 0) N_LINKED_DIFFICULTY NLinkedDifficulties[Count];
 }
 N_LINKED_DIFFICULTY_SECTION;
 
@@ -261,12 +261,13 @@ typedef struct
     float Time;
     char ActionName[256];
 }
-ACTION;
+ACTION<size=260>;
 
 typedef struct
 {
     long Count;
-    ACTION Actions[Count];
+    //long unk_Count;//unsure
+    if(Count > 0) ACTION Actions[Count];
 }
 ACTION_SECTION;
 
@@ -276,12 +277,12 @@ typedef struct
     float Time;
     char EventName[256];
 }
-EVENT;
+EVENT<size=260>;
 
 typedef struct
 {
     long Count;
-    EVENT Events[Count];
+    if(Count > 0) EVENT Events[Count];
 }
 EVENT_SECTION;
 
@@ -290,12 +291,12 @@ typedef struct
     float Time;
     long ToneId;
 }
-TONE;
+TONE<size=8>;
 
 typedef struct
 {
     long Count;
-    TONE Tones[Count];
+    if(Count > 0) TONE Tones[Count];
 }
 TONE_SECTION;
 
@@ -304,12 +305,12 @@ typedef struct
     float Time;
     long DnaId;
 }
-DNA;
+DNA<size=16>;
 
 typedef struct
 {
     long Count;
-    DNA Dnas[Count];
+    if(Count > 0) DNA Dnas[Count];
 }
 DNA_SECTION;
 
@@ -324,12 +325,12 @@ typedef struct
     // one per each Arrangement
     byte StringMask[36];
 }
-SECTION;
+SECTION<size=88>;
 
 typedef struct
 {
     long Count;
-    SECTION Sections[Count];
+    if(Count > 0) SECTION Sections[Count];
 }
 SECTIONS;
 
@@ -346,7 +347,7 @@ typedef struct
     long Width;
     long PhraseIterationId;
 }
-ANCHOR;
+ANCHOR<size=28>;
 
 typedef struct
 {
@@ -364,12 +365,12 @@ typedef struct
     short Unk3_0;
     byte Unk4_0;
 }
-ANCHOR_EXTENSION;
+ANCHOR_EXTENSION<size=12>;
 
 typedef struct
 {
     long Count;
-    ANCHOR_EXTENSION AnchorExtensions[Count];
+    if(Count > 0) ANCHOR_EXTENSION AnchorExtensions[Count];
 }
 ANCHOR_EXTENSION_SECTION;
 
@@ -381,12 +382,12 @@ typedef struct
     float Unk3_FirstNoteTime;
     float Unk4_LastNoteTime;
 }
-FINGERPRINT;
+FINGERPRINT<size=20>;
 
 typedef struct
 {
     long Count;
-    FINGERPRINT Fingerprints[Count];
+    if(Count > 0) FINGERPRINT Fingerprints[Count];
 }
 FINGERPRINT_SECTION;
 
@@ -452,13 +453,13 @@ typedef struct
     float MaxBend;
     BEND_DATA_SECTION BendData;
 }
-NOTES;
+NOTES<optimize=false>;
 
 typedef struct
 {
     long Count;
     // notes and chords
-    NOTES Notes[Count];
+    if(Count > 0) NOTES Notes[Count];
 }
 NOTES_SECTION;
 
@@ -495,7 +496,7 @@ typedef struct
     double MaxNotesAndChords;
     // ge_baccents_lsn50, ge_e14_rchords4 show that this count is without example riff
     // for songs it will be always the same value
-    double Unk3_MaxNotesAndChords;
+    double MaxNotesAndChords_Used;
     // MaxScore / MaxNotesAndChords
     double PointsPerNote;
     float FirstBeatLength;
@@ -515,8 +516,8 @@ typedef struct
     float Unk12_FirstNoteTime;
     long MaxDifficulty;
 }
-METADATA;
-
+METADATA<size=87>;
+LittleEndian();
 struct SNG{
     BPM_SECTION BPMs;
     PHRASE_SECTION Phrases;
@@ -540,5 +541,5 @@ struct SNG{
     DNA_SECTION DNAs;
     SECTIONS Sections;
     ARRANGEMENT_SECTION Arrangements_Difficulties;
-    METADATA Metadata;
-} file;
+    METADATA Metadata <open=true>;
+} file <open=true>;

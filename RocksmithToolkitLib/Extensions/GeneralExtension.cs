@@ -339,7 +339,7 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string GetTempFileName(string extension = ".tmp")
         {
-            return Path.ChangeExtension(Path.GetTempFileName(), extension);
+            return Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + extension);
         }
 
         public static string CopyToTempFile(this string file, string extension = ".tmp")

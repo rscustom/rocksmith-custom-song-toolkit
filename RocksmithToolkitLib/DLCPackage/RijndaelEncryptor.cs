@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using MiscUtil.Conversion;
 using MiscUtil.IO;
+using ICSharpCode.SharpZipLib.Zip.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -76,6 +78,43 @@ namespace RocksmithToolkitLib.DLCPackage
         };
 
         #endregion
+        /// <summary>
+        /// Unpacks zipped data.
+        /// </summary>
+        /// <param name="str">In Stream.</param>
+        /// <param name="outStream">Out stream.</param>
+        /// <param name = "bufSize">Buffer Size.</param>
+        /// <param name = "rewind">Manual control for stream seek position.</param>
+        public static void unZip(Stream str, Stream outStream, int bufSize = 4096, bool rewind = true)
+        {
+            using( var zStream = new InflaterInputStream(str, new Inflater(), bufSize) )
+            {
+                zStream.CopyTo(outStream, bufSize);
+                if(rewind){
+                    outStream.Position = 0;
+                    outStream.Flush();
+                }
+            }
+        }
+        public static void unZip(byte[] array, Stream outStream, int bufSize = 4096, bool rewind = true)
+        {
+            unZip(new MemoryStream(array), outStream, bufSize, rewind);
+        }
+
+        public static void Zip(Stream str, Stream outStream, bool rewind = true)
+        {
+            var zStream = new DeflaterOutputStream(outStream, new Deflater(9));
+            str.CopyTo(zStream);
+            zStream.Finish();
+            if(rewind){
+                outStream.Position = 0;
+                outStream.Flush();
+            }
+        }
+        public static void Zip(byte[] array, Stream outStream, bool rewind = true)
+        {
+            Zip(new MemoryStream(array), outStream, rewind);
+        }
 
         /// <summary>
         /// All profile stuff: crd (u play credentials), LocalProfiles.json and profiles themselves
@@ -88,37 +127,24 @@ namespace RocksmithToolkitLib.DLCPackage
             var source = EndianBitConverter.Little;
             var dec = EndianBitConverter.Big;
 
+            str.Position = 0;
             using (var decrypted = new MemoryStream())
-            using (EndianBinaryReader br = new EndianBinaryReader(source, str))
-            using (EndianBinaryReader brDec = new EndianBinaryReader(dec, decrypted))
+            using (var br = new EndianBinaryReader(source, str))
+            using (var brDec = new EndianBinaryReader(dec, decrypted))
             {
                 //EVAS + header
                 br.ReadBytes(16);
-                byte[] key = PCSaveKey;
-                uint zLen = br.ReadUInt32(); //size
-                // baseStr.pos = 20
-                DecryptFile(br.BaseStream, decrypted, key);
+                long zLen = br.ReadUInt32();
+                DecryptFile(br.BaseStream, decrypted, PCSaveKey);
 
                 //unZip
-                int bSize = 1;
-                brDec.BaseStream.Position = 0;
                 ushort xU = brDec.ReadUInt16();
-                //back to 0
-                brDec.BaseStream.Position -= 2;
+                brDec.BaseStream.Position -= sizeof(ushort);
                 if (xU == 30938)//LE 55928 //BE 30938
                 {
-                    var z = new zlib.ZInputStream(brDec.BaseStream);
-                    do
-                    {
-                        byte[] buf = new byte[bSize];
-                        z.read(buf, 0, bSize);
-                        outStream.Write(buf, 0, bSize);
-                    } while (outStream.Length < (long)zLen);
-                    z.Close();
-                }
+                    unZip(brDec.BaseStream, outStream);
+                }//endless loop if not
             }
-            outStream.Flush();
-            outStream.Position = 0;
         }
 
         public static void EncryptFile(Stream input, Stream output, byte[] key)
@@ -234,29 +260,29 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             rij.Padding = PaddingMode.None;
             rij.Mode = cipher;
-            rij.BlockSize = 128;    // byte[16]
+            rij.BlockSize = 128;
             rij.IV = new byte[16];
             rij.Key = key;          // byte[32]
         }
 
         private static void Crypto(Stream input, Stream output, ICryptoTransform transform, long len)
         {
+            int size;
             var buffer = new byte[512];
-            var cs = new CryptoStream(output, transform, CryptoStreamMode.Write);
-            for (long i = 0; i < len; i += buffer.Length)
-            {
-                int sz = (int)Math.Min(len - input.Position, buffer.Length);
-                input.Read(buffer, 0, sz);
-                cs.Write(buffer, 0, sz);
-            }
-            //Its need only for RS1, RS2 works fine w\o ?
             int pad = buffer.Length - (int)(len % buffer.Length);
-            if (pad > 0)
-                cs.Write(new byte[pad], 0, pad);
+            var decoder = new CryptoStream(output, transform, CryptoStreamMode.Write) ;
+            while( input.Position < len )
+            {
+                size = (int)Math.Min(len - input.Position, buffer.Length);
+                input.Read(buffer, 0, size);
+                decoder.Write(buffer, 0, size);
+            }
+            if(pad > 0)
+                decoder.Write(new byte[pad], 0, pad);
 
-            cs.Flush();
-            output.Flush();
+            decoder.Flush();
             output.Seek(0, SeekOrigin.Begin);
+            output.Flush();
         }
 
         #region PS3 EDAT Encrypt/Decrypt

@@ -26,7 +26,6 @@ using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.Showlight;
 
-
 namespace RocksmithToolkitLib.DLCPackage
 {
     public enum DLCPackageType { Song = 0, Lesson = 1, Inlay = 2 }

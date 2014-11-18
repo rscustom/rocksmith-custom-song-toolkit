@@ -10,7 +10,6 @@ using System.Xml.Serialization;
 using System.Text;
 using MiscUtil.IO;
 using MiscUtil.Conversion;
-using zlib;
 using DamienG.Security.Cryptography;
 
 namespace RocksmithToolkitLib.Sng2014HSL
@@ -63,7 +62,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         public static Sng2014File ReadSng(Stream input, Platform platform) 
         {
             Sng2014File sng = new Sng2014File();
-            
+
             using (var ms = new MemoryStream())
             using (var r = new BinaryReader(ms))
             {
@@ -95,18 +94,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 RijndaelEncryptor.DecryptSngData(br.BaseStream, decrypted, key);
 
                 //unZip
-                int bSize = 1;
                 uint zLen = brDec.ReadUInt32();
                 ushort xU = brDec.ReadUInt16();
                 brDec.BaseStream.Position -= 2;
                 if (xU == 55928) {//LE 55928 //BE 30938
-                    var z = new zlib.ZInputStream(brDec.BaseStream);
-                    do {
-                        byte[] buf = new byte[bSize];
-                        z.read(buf, 0, bSize);
-                        output.Write(buf, 0, bSize);
-                    } while (output.Length < (long)zLen);
-                    z.Close();
+                    RijndaelEncryptor.unZip(brDec.BaseStream, output);
                 }
             }
         }
@@ -131,33 +123,23 @@ namespace RocksmithToolkitLib.Sng2014HSL
             if(conv == EndianBitConverter.Big)
                 platformHeader = 1;
 
-            using (EndianBinaryWriter w = new EndianBinaryWriter(conv, output)) {
+            using( var w = new EndianBinaryWriter(conv, output) )
+            using( var zData = new MemoryStream() )
+            using( var plain = new MemoryStream() )
+            using( var encrypted = new MemoryStream() )
+            using( var encw = new EndianBinaryWriter(conv, plain) )
+            {
                 w.Write((Int32) 0x4A);
                 w.Write(platformHeader);
 
-                byte[] inputChartData = null;
-                using (var mStream = new MemoryStream())
-                {
-                    input.CopyTo(mStream);
-                    inputChartData = mStream.ToArray();
-                }
-
                 // pack with zlib
-                MemoryStream zData = new MemoryStream();
-                ZOutputStream zOut = new ZOutputStream(zData, zlib.zlibConst.Z_BEST_COMPRESSION);
-                zOut.Write(inputChartData, 0, inputChartData.Length);
-                zOut.finish();
-                byte[] packed = zData.ToArray();
+                RijndaelEncryptor.Zip(input, zData);
 
                 if (platformHeader == 3) {
-                    MemoryStream encrypted = new MemoryStream();
-                    MemoryStream plain = new MemoryStream();
-                    var encw = new EndianBinaryWriter(conv, plain);
-                    // write size of uncompressed data and packed data itself
-                    encw.Write((Int32)inputChartData.Length);
-                    encw.Write(packed);
+                    // write size of uncompressed data and packed data itself | already there
+                    encw.Write((Int32)input.Length);
+                    encw.Write(zData.ToArray());
                     encw.Flush();
-                    MemoryStream inputPlainStream = new MemoryStream(plain.ToArray());
 
                     // choose key
                     byte[] key;
@@ -169,16 +151,16 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             key = RijndaelEncryptor.SngKeyPC;
                             break;
                     }
-
                     // encrypt (writes 16B IV and encrypted data)
-                    RijndaelEncryptor.EncryptSngData(inputPlainStream, encrypted, key);
+                    plain.Position = 0;
+                    RijndaelEncryptor.EncryptSngData(plain, encrypted, key);
                     w.Write(encrypted.ToArray());
                     // append zero signature
                     w.Write(new Byte[56]);
                 } else {
                     // unencrypted and unsigned
-                    w.Write((Int32)inputChartData.Length);
-                    w.Write(packed);
+                    w.Write((Int32)input.Length);
+                    w.Write(zData.ToArray());
                 }
 
                 output.Flush();

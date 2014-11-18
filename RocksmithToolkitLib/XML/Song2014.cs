@@ -138,6 +138,19 @@ namespace RocksmithToolkitLib.Xml
         [XmlArray("events")]
         [XmlArrayItem("event")]
         public SongEvent[] Events { get; set; }
+        /*
+         * B is for Beat?
+         * "B0", "High pitch tick"
+         * "B1", "Low pitch tick"
+         * E is for Emotions?
+         * "E1", "Crowd happy"
+         * "E3", "Crowd wild"
+         * "E13", "Crowd rxtra wild?"
+         * D is for DNA?
+         * "D3", "???"
+         * "dna_riff", "???"
+         * "dna_chord", "???"
+         */
 
         [XmlArray("controls")]
         [XmlArrayItem("control")]
