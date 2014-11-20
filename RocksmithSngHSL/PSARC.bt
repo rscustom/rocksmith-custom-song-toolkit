@@ -1,0 +1,94 @@
+//--------------------------------------
+//--- 010 Editor v5.0.2 Binary Template
+//
+// File:PSARC.bt
+// Author: l0fka
+// Revision:
+// Purpose:
+//--------------------------------------
+BigEndian();
+typedef char ID[4];
+typedef ubyte uint40[5]<read=rUInt40>;
+string rUInt40(uint40 &r)
+{
+    local string s; 
+    local int64 out; local uint i;
+    for (i = 0; i != 5; ++i) {
+        out += ((uint64)r[i]) << (32 - i * 8);
+    }
+    SPrintf(s,"%Lu", out);
+    return s;
+}
+typedef enum<uint> {
+    LZ770 = 0x6C7A7820, //'lzx '
+    Deflate = 0x7A6C6962,//zlib
+    LZMA = 0x6C7A6D61    //lzma
+}
+cTYPE<format=hex>;
+
+//typedef enum<uint> {
+typedef struct {
+    BitfieldRightToLeft();    
+uint
+    IGNORECASE :1,
+    ABSOLUTEPATHS :1, 
+    TOC_ENCRYPTED :1;
+}
+cFLAG<size=4>;
+
+typedef struct {
+    local string name;
+    local int id;
+    
+    byte nameDigest_MD5[16];
+    uint32 blockSizeList_zIndex;
+    uint40 origSize_length;
+    uint40 startOffset;
+}
+TOC_ENTRY<size=30>;
+
+typedef struct {
+    ushort zLength;
+}
+ZLENGHTS<size=2>;
+
+typedef struct {
+    ID Magic;//PSAR
+    struct{
+        ushort Major, Minor;
+    }
+    Version;
+    cTYPE Compression;//zlib
+    uint TotalTOCSize;
+    uint TOCEntrySize;//30
+    uint NumFiles;//including NamesBlock.bin
+    uint BlockSize;//compression buffer size 64 default
+    cFLAG ArchiveFlags;
+}
+HEADER<size=32,open=true>;
+typedef struct {
+    local long blockSizes_len = tocSize-(header.NumFiles*header.TOCEntrySize);
+    local long blockSizes_num = blockSizes_len/(Log(header.BlockSize)/Log(256));
+    TOC_ENTRY Entry[header.NumFiles];
+    ZLENGHTS BlockSizeList[blockSizes_num];
+} TOC;
+typedef struct{
+    //Header
+    HEADER header;
+    //TOC
+    local long tocSize = header.TotalTOCSize-32;
+    TOC Table_Of_Contents;
+    //Data
+    if(header.ArchiveFlags.TOC_ENCRYPTED){
+        //Encrypted TOC
+        BYTE zData[FileSize()-header.TotalTOCSize];
+    } 
+    if(!header.ArchiveFlags.TOC_ENCRYPTED) {
+        //Plain TOC
+        BYTE zData[FileSize()-header.TotalTOCSize];
+    }
+}
+FILE<open=true>;
+
+if(FileNameGetExtension(GetFileName()) == ".psarc")
+    FILE file;
