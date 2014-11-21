@@ -173,8 +173,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             using (var psarcStream = new MemoryStream())
             using (var streamCollection = new DisposableCollection<Stream>())
-            using (var psarc = new PSARC.PSARC())
             {
+                var psarc = new PSARC.PSARC();
                 foreach (var x in Directory.EnumerateFiles(sourcePath))
                 {
                     var fileStream = File.OpenRead(x);
@@ -223,8 +223,8 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void PackInnerPC(Stream output, string directory)
         {
             using (var streamCollection = new DisposableCollection<Stream>())
-            using (var innerPsarc = new PSARC.PSARC())
             {
+                var innerPsarc = new PSARC.PSARC();
                 WalkThroughDirectory("", directory, (a, b) =>
                 {
                     var fileStream = File.OpenRead(b);
@@ -241,9 +241,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng)
         {
+            var psarc = new PSARC.PSARC();
             using(var psarcStream = new MemoryStream())
-            using(var psarc = new PSARC.PSARC())
             {
+
                 if (updateSng) UpdateSng2014(sourcePath, platform);
                 WalkThroughDirectory("", sourcePath, (a, b) =>
                 {
@@ -389,8 +390,8 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void PackInnerXBox360(string sourcePath, string directory)
         {
             using (var psarcStream = new MemoryStream())
-            using (var innerPsarc = new PSARC.PSARC())
             {
+                var innerPsarc = new PSARC.PSARC();
                 WalkThroughDirectory("", directory, (a, b) =>
                 {
                     var fileStream = File.OpenRead(b);
@@ -651,7 +652,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (Directory.Exists(destpath) && isExternalFile)
                         DirectoryExtension.SafeDelete(destpath);
 
-            using(var psarc = new PSARC.PSARC())
+            var psarc = new PSARC.PSARC();
             {
                 psarc.Read(inputStream, false);
                 foreach (var entry in psarc.TOC)

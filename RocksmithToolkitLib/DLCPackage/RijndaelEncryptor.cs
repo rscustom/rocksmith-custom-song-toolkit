@@ -1,4 +1,4 @@
-﻿﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,8 +8,9 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using MiscUtil.Conversion;
 using MiscUtil.IO;
-using ICSharpCode.SharpZipLib.Zip.Compression;
+using zlib;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using ICSharpCode.SharpZipLib.Zip.Compression;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -104,10 +105,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static long Zip(Stream str, Stream outStream, long plainLen, bool rewind = true)
         {
-            var deflater = new Deflater(9);
+            /*var deflater = new Deflater(9);
             var zStream = new DeflaterOutputStream(outStream, deflater);
 
-            int bytesRead;
             byte[] buffer = new byte[65536];
             while(str.Position < plainLen){
                 var size = (int)Math.Min(plainLen - str.Position, buffer.Length);
@@ -119,7 +119,22 @@ namespace RocksmithToolkitLib.DLCPackage
                 outStream.Position = 0;
                 outStream.Flush();
             }
-            return deflater.TotalOut;
+            return deflater.TotalOut;*/
+            //zlib works great, can't say that about SharpZipLib
+            var zOutputStream = new ZOutputStream(outStream, 9);
+
+            byte[] buffer = new byte[65536];
+            while(str.Position < plainLen){
+                var size = (int)Math.Min(plainLen - str.Position, buffer.Length);
+                str.Read(buffer, 0, size);
+                zOutputStream.Write(buffer, 0, size);
+            }
+            zOutputStream.finish();
+            if(rewind){
+                outStream.Position = 0;
+                outStream.Flush();
+            }
+            return zOutputStream.TotalOut;
         }
         public static long Zip(byte[] array, Stream outStream, long plainLen, bool rewind = true)
         {

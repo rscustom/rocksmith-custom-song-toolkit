@@ -102,7 +102,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     return;
                 saveFileName = sfd.FileName;
             }
-
+            Application.DoEvents();
             try
             {
                 var platform = sourcePath.GetPlatform();
