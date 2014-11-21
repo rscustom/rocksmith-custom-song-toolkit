@@ -133,7 +133,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 w.Write(platformHeader);
 
                 // pack with zlib
-                RijndaelEncryptor.Zip(input, zData);
+                RijndaelEncryptor.Zip(input, zData, input.Length);
 
                 if (platformHeader == 3) {
                     // write size of uncompressed data and packed data itself | already there

@@ -112,7 +112,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 //Return most used note
                 if (cOut.Count > 3)
                 {
-                    return cOut.Where(n => cOut.Any(t => t > n)).FirstOrDefault();
+                    return cOut.FirstOrDefault(n => cOut.Any(t => t > n));
                 }
                 //Return bass note [2]
                 else return cOut[0];

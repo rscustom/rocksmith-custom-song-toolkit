@@ -20,7 +20,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private BackgroundWorker bwUnpack = new BackgroundWorker();
         private StringBuilder errorsFound;
         private string savePath;
-        
+
         private bool decodeAudio {
             get { return decodeAudioCheckbox.Checked; }
         }
@@ -88,7 +88,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         {
             string sourcePath;
             string saveFileName;
-            
+
             using (var fbd = new VistaFolderBrowserDialog())
             {
                 if (fbd.ShowDialog() != DialogResult.OK)
@@ -153,7 +153,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             errorsFound = new StringBuilder();
             var step = (int)Math.Round(1.0 / sourceFileNames.Length * 100, 0);
             int progress = 0;
-            
+
             foreach (string sourceFileName in sourceFileNames)
             {
                 Application.DoEvents();
@@ -207,13 +207,13 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             var tmpDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
             var appId = AppIdTB.Text;
-            
+
             foreach (string sourceFileName in sourceFileNames)
             {
                 Application.DoEvents();
                 var platform = sourceFileName.GetPlatform();
                 bwRepack.ReportProgress(progress, String.Format("Updating '{0}'", Path.GetFileName(sourceFileName)));
-                
+
                 if (!platform.IsConsole)
                 {
                     try
@@ -282,6 +282,5 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             dlcPackageCreatorControl.dlcLowTuningBassFix(sender, e, lowTuningBassFixButton, quickBassFixBox.Checked, deleteSourceFileCheckBox.Checked);
         }
 
-    
     }
 }

@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -84,8 +84,9 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="str">In Stream.</param>
         /// <param name="outStream">Out stream.</param>
         /// <param name = "bufSize">Buffer Size.</param>
+        /// <param name = "lzma">Idetyfies that lzma packing used</param>
         /// <param name = "rewind">Manual control for stream seek position.</param>
-        public static void unZip(Stream str, Stream outStream, int bufSize = 4096, bool rewind = true)
+        public static void unZip(Stream str, Stream outStream, int bufSize = 1, bool lzma = false, bool rewind = true)
         {
             using( var zStream = new InflaterInputStream(str, new Inflater(), bufSize) )
             {
@@ -96,24 +97,33 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
         }
-        public static void unZip(byte[] array, Stream outStream, int bufSize = 4096, bool rewind = true)
+        public static void unZip(byte[] array, Stream outStream, int bufSize = 1, bool lzma = false, bool rewind = true)
         {
-            unZip(new MemoryStream(array), outStream, bufSize, rewind);
+            unZip(new MemoryStream(array), outStream, bufSize, lzma, rewind);
         }
 
-        public static void Zip(Stream str, Stream outStream, bool rewind = true)
+        public static long Zip(Stream str, Stream outStream, long plainLen, bool rewind = true)
         {
-            var zStream = new DeflaterOutputStream(outStream, new Deflater(9));
-            str.CopyTo(zStream);
+            var deflater = new Deflater(9);
+            var zStream = new DeflaterOutputStream(outStream, deflater);
+
+            int bytesRead;
+            byte[] buffer = new byte[65536];
+            while(str.Position < plainLen){
+                var size = (int)Math.Min(plainLen - str.Position, buffer.Length);
+                str.Read(buffer, 0, size);
+                zStream.Write(buffer, 0, size);
+            }
             zStream.Finish();
             if(rewind){
                 outStream.Position = 0;
                 outStream.Flush();
             }
+            return deflater.TotalOut;
         }
-        public static void Zip(byte[] array, Stream outStream, bool rewind = true)
+        public static long Zip(byte[] array, Stream outStream, long plainLen, bool rewind = true)
         {
-            Zip(new MemoryStream(array), outStream, rewind);
+            return Zip(new MemoryStream(array), outStream, plainLen, rewind);
         }
 
         /// <summary>
@@ -267,13 +277,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void Crypto(Stream input, Stream output, ICryptoTransform transform, long len)
         {
-            int size;
             var buffer = new byte[512];
             int pad = buffer.Length - (int)(len % buffer.Length);
             var decoder = new CryptoStream(output, transform, CryptoStreamMode.Write) ;
             while( input.Position < len )
             {
-                size = (int)Math.Min(len - input.Position, buffer.Length);
+                int size = (int)Math.Min(len - input.Position, buffer.Length);
                 input.Read(buffer, 0, size);
                 decoder.Write(buffer, 0, size);
             }

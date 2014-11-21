@@ -130,7 +130,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 var packageName = Path.GetFileNameWithoutExtension(packagePath).StripPlatformEndName();
 
                 var songFileName = String.Format("{0}{1}", Path.Combine(Path.GetDirectoryName(packagePath), packageName), platform.GetPathName()[2]);
-                                
+
                 switch (platform.platform)
                 {
                     case GamePlatform.Pc:
@@ -156,7 +156,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     case GamePlatform.PS3:
                         EncryptPS3EdatFiles(songFileName + ".psarc", platform);
                         break;
-                }                
+                }
             }
 
             FILES_XBOX.Clear();
@@ -188,7 +188,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static HeaderData GetSTFSHeader(this DLCPackageData info, GameVersion gameVersion, DLCPackageType dlcType) {
             HeaderData hd = new HeaderData();
-            
+
             string displayName = "Custom Package";
             switch (dlcType)
             {
@@ -215,7 +215,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     hd.PackageImageBinary = Resources.XBox360_DLC_image2014;
                     break;
             }
-            
+
             hd.Publisher = String.Format("Custom Song Creator Toolkit ({0} beta)", ToolkitVersion.version);
             hd.Title_Display = displayName;
             hd.Description = displayName;
@@ -336,7 +336,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
 
                 foreach (var dds in info.ArtFiles)
-                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
+                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 65536, FileOptions.DeleteOnClose));
 
                 // AUDIO
                 var audioFile = info.OggPath;
@@ -396,7 +396,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         string packageList = "PackageList.txt";
                         packageListStream.WriteTmpFile(packageList, platform);
                     }
-                        
+
                     // SOUNDBANK
                     var soundbankFileName = String.Format("song_{0}", dlcName);
                     var audioFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name, soundStream, soundbankStream, info.Volume, platform);
@@ -433,7 +433,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         //Lyrics Font Texture & Definition
                         //if (File.Exists(arrangement.FontFile))
                         //    packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricsTex, FileMode.Open, FileAccess.Read, FileShare.Read));
-                        
+
                         // GAME SONG (SNG)
                         UpdateToneDescriptors(info);
                         GenerateSNG(arrangement, platform);
@@ -870,8 +870,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     output.Seek(0, SeekOrigin.Begin);
                 }
             }
-            finally
-            {
+            finally {
             }
         }
 
@@ -900,9 +899,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 ToneGenerator.Generate(toneKey, tone, toneManifestStream, toneXblockStream, toneAggregateGraphStream);
                 GenerateTonePackageId(packageIdStream, toneKey);
                 tonePsarc.AddEntry(String.Format("Exports/Pedals/DLC_Tone_{0}.xblock", toneKey), toneXblockStream);
-                var x = (from pedal in tone.PedalList
-                         where pedal.Value.PedalKey.ToLower().Contains("bass")
-                         select pedal).Count();
+                var x = (tone.PedalList.Where(pedal => pedal.Value.PedalKey.ToLower().Contains("bass"))).Count();
                 tonePsarc.AddEntry(x > 0 ? "Manifests/tone_bass.manifest.json" : "Manifests/tone.manifest.json", toneManifestStream);
                 tonePsarc.AddEntry("AggregateGraph.nt", toneAggregateGraphStream);
                 tonePsarc.AddEntry("PACKAGE_ID", packageIdStream);

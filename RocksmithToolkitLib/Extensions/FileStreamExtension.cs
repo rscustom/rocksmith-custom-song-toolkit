@@ -8,14 +8,15 @@ namespace RocksmithToolkitLib.Extensions
 {
     public class TempFileStream : FileStream
     {
+        static int _buffer_size = 65536;
         public TempFileStream()
-            : base(Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.DeleteOnClose) { }
+            : base(Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.Read, _buffer_size, FileOptions.DeleteOnClose) { }
 
         public TempFileStream(FileAccess access)
-            : base(Path.GetTempFileName(), FileMode.Create, access, FileShare.Read, 4096, FileOptions.DeleteOnClose) { }
+            : base(Path.GetTempFileName(), FileMode.Create, access, FileShare.Read, _buffer_size, FileOptions.DeleteOnClose) { }
 
         public TempFileStream(FileAccess access, FileShare share)
-            : base(Path.GetTempFileName(), FileMode.Create, access, share, 4096, FileOptions.DeleteOnClose) { }
+            : base(Path.GetTempFileName(), FileMode.Create, access, share, _buffer_size, FileOptions.DeleteOnClose) { }
 
         public TempFileStream(FileAccess access, FileShare share, int bufferSize)
             : base(Path.GetTempFileName(), FileMode.Create, access, share, bufferSize, FileOptions.DeleteOnClose) { }

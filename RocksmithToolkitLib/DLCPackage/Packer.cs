@@ -83,7 +83,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     else
                     {
                         using (var inputFileStream = File.OpenRead(sourceFileName))
-                        using (var inputStream = new BufferedStream(new MemoryStream(), 4096))
+                        using (var inputStream = new MemoryStream())
                         {
                             if (useCryptography)
                                 RijndaelEncryptor.DecryptFile(inputFileStream, inputStream, RijndaelEncryptor.DLCKey);
@@ -173,9 +173,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             using (var psarcStream = new MemoryStream())
             using (var streamCollection = new DisposableCollection<Stream>())
+            using (var psarc = new PSARC.PSARC())
             {
-                var psarc = new PSARC.PSARC();
-
                 foreach (var x in Directory.EnumerateFiles(sourcePath))
                 {
                     var fileStream = File.OpenRead(x);
@@ -224,8 +223,8 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void PackInnerPC(Stream output, string directory)
         {
             using (var streamCollection = new DisposableCollection<Stream>())
+            using (var innerPsarc = new PSARC.PSARC())
             {
-                var innerPsarc = new PSARC.PSARC();
                 WalkThroughDirectory("", directory, (a, b) =>
                 {
                     var fileStream = File.OpenRead(b);
@@ -243,8 +242,8 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng)
         {
             using(var psarcStream = new MemoryStream())
+            using(var psarc = new PSARC.PSARC())
             {
-                var psarc = new PSARC.PSARC();
                 if (updateSng) UpdateSng2014(sourcePath, platform);
                 WalkThroughDirectory("", sourcePath, (a, b) =>
                 {
@@ -252,7 +251,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     psarc.AddEntry(a, fileStream);
                 });
 
-                psarc.Write(psarcStream, platform.IsConsole ? false : true);
+                psarc.Write(psarcStream, !platform.IsConsole);
                 psarcStream.Flush();
                 psarcStream.Seek(0, SeekOrigin.Begin);
 
@@ -390,9 +389,8 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void PackInnerXBox360(string sourcePath, string directory)
         {
             using (var psarcStream = new MemoryStream())
+            using (var innerPsarc = new PSARC.PSARC())
             {
-                var innerPsarc = new PSARC.PSARC();
-
                 WalkThroughDirectory("", directory, (a, b) =>
                 {
                     var fileStream = File.OpenRead(b);
@@ -401,10 +399,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 innerPsarc.Write(psarcStream, false);
                 psarcStream.Flush();
-                psarcStream.Seek(0, SeekOrigin.Begin);
 
                 using (var outputFileStream = File.Create(Path.Combine(sourcePath, Path.GetFileName(directory)) + ".psarc"))
                 {
+                    psarcStream.Seek(0, SeekOrigin.Begin);
                     psarcStream.CopyTo(outputFileStream);
                 }
             }
@@ -653,14 +651,14 @@ namespace RocksmithToolkitLib.DLCPackage
             if (Directory.Exists(destpath) && isExternalFile)
                         DirectoryExtension.SafeDelete(destpath);
 
-            var psarc = new PSARC.PSARC();
+            using(var psarc = new PSARC.PSARC())
             {
-                psarc.Read(inputStream, true);
+                psarc.Read(inputStream, false);
                 foreach (var entry in psarc.TOC)
                 {
                     var fullfilename = Path.Combine(path, name, entry.Name);
                     var destfilepath = Path.GetDirectoryName(fullfilename);
-                    psarc.InflateEntry(entry);
+                    //psarc.InflateEntry(entry); diisk killing machine :D
                     entry.Data.Seek(0, SeekOrigin.Begin);
                     if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
                     {
@@ -671,7 +669,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         Directory.CreateDirectory(destfilepath);
                         using (var fileStream = File.Create(fullfilename))
                         {
-                            entry.Data.CopyTo(fileStream, 4096);
+                            entry.Data.CopyTo(fileStream, 65536);
                             entry.Data.Seek(0, SeekOrigin.Begin);
                             entry.Data.Close(); //allow tmp file to be deleted.
                         }
