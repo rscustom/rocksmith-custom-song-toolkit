@@ -9,8 +9,6 @@ using System.Windows.Forms;
 using MiscUtil.Conversion;
 using MiscUtil.IO;
 using zlib;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
-using ICSharpCode.SharpZipLib.Zip.Compression;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -84,52 +82,52 @@ namespace RocksmithToolkitLib.DLCPackage
         /// </summary>
         /// <param name="str">In Stream.</param>
         /// <param name="outStream">Out stream.</param>
+        /// <param name = "plainLen">Data size after decompress.</param>
         /// <param name = "bufSize">Buffer Size.</param>
         /// <param name = "lzma">Idetyfies that lzma packing used</param>
         /// <param name = "rewind">Manual control for stream seek position.</param>
-        public static void unZip(Stream str, Stream outStream, int bufSize = 1, bool lzma = false, bool rewind = true)
+        public static void unZip(Stream str, Stream outStream, long plainLen, bool rewind = true)
         {
-            using( var zStream = new InflaterInputStream(str, new Inflater(), bufSize) )
+            var zOutputStream = new ZOutputStream(outStream);
             {
-                zStream.CopyTo(outStream, bufSize);
+                byte[] buffer = new byte[65536];
+                while(str.Position < plainLen)
+                {
+                    var size = (int)Math.Min(plainLen - str.Position, buffer.Length);
+                    str.Read(buffer, 0, size);
+                    zOutputStream.Write(buffer, 0, size);
+                }
                 if(rewind){
                     outStream.Position = 0;
                     outStream.Flush();
                 }
-            }
+            } zOutputStream.Flush();
         }
-        public static void unZip(byte[] array, Stream outStream, int bufSize = 1, bool lzma = false, bool rewind = true)
-        {
-            unZip(new MemoryStream(array), outStream, bufSize, lzma, rewind);
+        public static void unZip(byte[] array, Stream outStream, bool rewind = true)
+        {//implement here and there
+            var zOutputStream = new ZOutputStream(outStream);
+            {
+                zOutputStream.Write(array, 0, array.Length);
+                if(rewind){
+                    outStream.Position = 0;
+                    outStream.Flush();
+                }
+            } zOutputStream.Flush();
         }
 
         public static long Zip(Stream str, Stream outStream, long plainLen, bool rewind = true)
         {
-            /*var deflater = new Deflater(9);
-            var zStream = new DeflaterOutputStream(outStream, deflater);
-
+            /*zlib works great, can't say that about SharpZipLib*/
             byte[] buffer = new byte[65536];
-            while(str.Position < plainLen){
-                var size = (int)Math.Min(plainLen - str.Position, buffer.Length);
-                str.Read(buffer, 0, size);
-                zStream.Write(buffer, 0, size);
-            }
-            zStream.Finish();
-            if(rewind){
-                outStream.Position = 0;
-                outStream.Flush();
-            }
-            return deflater.TotalOut;*/
-            //zlib works great, can't say that about SharpZipLib
             var zOutputStream = new ZOutputStream(outStream, 9);
-
-            byte[] buffer = new byte[65536];
-            while(str.Position < plainLen){
+            while(str.Position < plainLen)
+            {
                 var size = (int)Math.Min(plainLen - str.Position, buffer.Length);
                 str.Read(buffer, 0, size);
                 zOutputStream.Write(buffer, 0, size);
             }
             zOutputStream.finish();
+            zOutputStream.Flush();
             if(rewind){
                 outStream.Position = 0;
                 outStream.Flush();
@@ -167,7 +165,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 brDec.BaseStream.Position -= sizeof(ushort);
                 if (xU == 30938)//LE 55928 //BE 30938
                 {
-                    unZip(brDec.BaseStream, outStream);
+                    unZip(brDec.BaseStream, outStream, zLen);
                 }//endless loop if not
             }
         }

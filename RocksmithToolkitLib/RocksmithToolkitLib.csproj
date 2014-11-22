@@ -95,9 +95,6 @@
     <Reference Include="zlib.net">
       <HintPath>..\lib\ZLib\zlib.net.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\lib\ZLib\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DLCPackage\InlayNif.cs" />

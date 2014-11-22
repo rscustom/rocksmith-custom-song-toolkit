@@ -34,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PostBuildEvent>xcopy /S /Y "$(SolutionDir)Third-party Apps" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>songcreator.ico</ApplicationIcon>
@@ -85,9 +86,6 @@
     </Reference>
     <Reference Include="X360">
       <HintPath>..\lib\X360\X360.dll</HintPath>
-    </Reference>
-    <Reference Include="zlib.net">
-      <HintPath>..\lib\ZLib\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

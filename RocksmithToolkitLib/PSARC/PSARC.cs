@@ -127,11 +127,6 @@ namespace RocksmithToolkitLib.PSARC
                                 tmpOut.Write(new byte[array.Length], 0, array.Length);
                             }
                         }
-                        else if (num2 == 1560281089)
-                        {
-                            throw new NotImplementedException("LZMA compression not supported.");
-                            //RijndaelEncryptor.unZip(array, tmpOut, lzma:true, rewind:false);
-                        }
                         else
                         {
                             tmpOut.Write(array, 0, array.Length);
@@ -203,7 +198,7 @@ namespace RocksmithToolkitLib.PSARC
                             zList.Add(new Tuple<byte[], int>(array_o, packed_len));
                         }
                         else
-                        {// Write plain. z = 0
+                        {// Write plain. z = 0 TODO: decrease chunk size and append small plain data next to it or 2 packed chunks.
                             zList.Add(new Tuple<byte[], int>(array_i, plain_len));
                         }
                     }

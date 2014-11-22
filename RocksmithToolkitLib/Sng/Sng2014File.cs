@@ -94,11 +94,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 RijndaelEncryptor.DecryptSngData(br.BaseStream, decrypted, key);
 
                 //unZip
-                uint zLen = brDec.ReadUInt32();
+                long zLen = brDec.ReadUInt32();
                 ushort xU = brDec.ReadUInt16();
                 brDec.BaseStream.Position -= 2;
                 if (xU == 55928) {//LE 55928 //BE 30938
-                    RijndaelEncryptor.unZip(brDec.BaseStream, output);
+                    RijndaelEncryptor.unZip(brDec.BaseStream, output, zLen);
                 }
             }
         }
