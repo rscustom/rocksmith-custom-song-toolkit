@@ -246,7 +246,7 @@ typedef struct
     long PhraseCount;
     long NLD_Phrase[PhraseCount];
 }
-N_LINKED_DIFFICULTY;
+N_LINKED_DIFFICULTY<optimize=false>;
 
 typedef struct
 {
@@ -305,7 +305,7 @@ typedef struct
     float Time;
     long DnaId;
 }
-DNA<size=16>;
+DNA<size=8>;
 
 typedef struct
 {
@@ -516,7 +516,7 @@ typedef struct
     float Unk12_FirstNoteTime;
     long MaxDifficulty;
 }
-METADATA<size=87>;
+METADATA<size=107>;
 LittleEndian();
 struct SNG{
     BPM_SECTION BPMs;

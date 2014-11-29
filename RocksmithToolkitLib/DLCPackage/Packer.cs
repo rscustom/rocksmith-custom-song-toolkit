@@ -641,39 +641,31 @@ namespace RocksmithToolkitLib.DLCPackage
             } 
         }
 
-        private static void ExtractPSARC(string filename, string path, Stream inputStream, Platform platform, bool isExternalFile = true)
+        private static void ExtractPSARC(string filename, string savePath, Stream inputStream, Platform platform, bool isExternalFile = true)
         {
-            string name = Path.GetFileNameWithoutExtension(filename);
-
+            string psarcFilename = Path.GetFileNameWithoutExtension(filename);
             if (isExternalFile)
-                name += String.Format("_{0}", platform.platform.ToString());
+                psarcFilename += String.Format("_{0}", platform.platform);
 
-            var destpath = Path.Combine(path, name);
+            var destpath = Path.Combine(savePath, psarcFilename);
             if (Directory.Exists(destpath) && isExternalFile)
-                        DirectoryExtension.SafeDelete(destpath);
+                DirectoryExtension.SafeDelete(destpath);
 
             var psarc = new PSARC.PSARC();
             {
-                psarc.Read(inputStream, false);
+                psarc.Read(inputStream, true);
                 foreach (var entry in psarc.TOC)
-                {
-                    var fullfilename = Path.Combine(path, name, entry.Name);
-                    var destfilepath = Path.GetDirectoryName(fullfilename);
-                    //psarc.InflateEntry(entry); diisk killing machine :D
-                    entry.Data.Seek(0, SeekOrigin.Begin);
+                {// custom InflateEntries
+                    var fullfilename = Path.Combine(destpath, entry.Name);
                     if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
                     {
                         ExtractPSARC(fullfilename, destpath, entry.Data, platform, false);
                     }
                     else
                     {
-                        Directory.CreateDirectory(destfilepath);
-                        using (var fileStream = File.Create(fullfilename))
-                        {
-                            entry.Data.CopyTo(fileStream, 65536);
-                            entry.Data.Seek(0, SeekOrigin.Begin);
-                            entry.Data.Close(); //allow tmp file to be deleted.
-                        }
+                        Directory.CreateDirectory(Path.GetDirectoryName(fullfilename));
+                        psarc.InflateEntry(entry, fullfilename);
+						if(entry.Data != null) entry.Data.Close();
                     }
                 }
                 if(!String.IsNullOrEmpty(psarc.ErrMSG)) throw new InvalidDataException(psarc.ErrMSG);

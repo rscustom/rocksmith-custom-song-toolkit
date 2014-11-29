@@ -11,6 +11,7 @@ using System.Text;
 using MiscUtil.IO;
 using MiscUtil.Conversion;
 using DamienG.Security.Cryptography;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {
@@ -81,7 +82,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
             using (var decrypted = new MemoryStream())
             using (var br = new EndianBinaryReader(conv, input))
             using (var brDec = new EndianBinaryReader(conv, decrypted)) {
-
                 byte[] key;
                 switch (platform.platform) {
                     case GamePlatform.Mac:
@@ -94,11 +94,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 RijndaelEncryptor.DecryptSngData(br.BaseStream, decrypted, key);
 
                 //unZip
-                long zLen = brDec.ReadUInt32();
+                long plainLen = brDec.ReadUInt32();
                 ushort xU = brDec.ReadUInt16();
                 brDec.BaseStream.Position -= 2;
                 if (xU == 55928) {//LE 55928 //BE 30938
-                    RijndaelEncryptor.unZip(brDec.BaseStream, output, zLen);
+                    RijndaelEncryptor.Unzip(decrypted, output, false);
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace RocksmithToolkitGUI
 {
     public partial class MainForm : Form
     {
-        internal BackgroundWorker bWorker = new BackgroundWorker();
+        internal BackgroundWorker bWorker;
         private ToolkitVersionOnline onlineVersion = null;
 
         public static bool IsInDesignMode
@@ -39,10 +39,18 @@ namespace RocksmithToolkitGUI
                 LoadTemplate(args[0]);
 
             this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", ToolkitVersion.version);
-
-            bWorker.DoWork += new DoWorkEventHandler(CheckForUpdate);
-            bWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(EnableUpdate);
-            bWorker.RunWorkerAsync();
+            if(Environment.OSVersion.Platform == PlatformID.MacOSX)
+            {// Disable updates for Mac (speedup) -1.5 secconds here
+                updateButton.Enabled = false;
+                updateButton.Text = "Updates Disabled";
+                updateButton.Visible = true;
+            } else
+            {
+                bWorker = new BackgroundWorker();
+                bWorker.DoWork += CheckForUpdate;
+                bWorker.RunWorkerCompleted += EnableUpdate;
+                bWorker.RunWorkerAsync();
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e) {
@@ -56,8 +64,7 @@ namespace RocksmithToolkitGUI
         private void CheckForUpdate(object sender, DoWorkEventArgs e)
         {
             try
-            {
-                // CHECK FOR NEW AVAILABLE VERSION AND ENABLE UPDATE
+            {// CHECK FOR NEW AVAILABLE VERSION AND ENABLE UPDATE
                 onlineVersion = ToolkitVersionOnline.Load();
             }
             catch (WebException) { /* Do nothing on 404 */ }

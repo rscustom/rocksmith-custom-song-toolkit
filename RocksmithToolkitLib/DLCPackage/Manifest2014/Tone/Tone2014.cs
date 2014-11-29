@@ -1,4 +1,4 @@
-﻿﻿﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -118,21 +118,21 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         
         private static List<Tone2014> ReadFromProfile(string profilePath)
         {
-        	List<Tone2014> tones = new List<Tone2014>();
-        	try {                
-        		using (var input = File.OpenRead(profilePath))
-				using (var outMS = new MemoryStream())
+            List<Tone2014> tones = new List<Tone2014>();
+            try {
+                using (var input = File.OpenRead(profilePath))
+                using (var outMS = new MemoryStream())
                 using (var br = new StreamReader(outMS))
                 {
-        			RijndaelEncryptor.DecryptProfile(input, outMS);
+                    RijndaelEncryptor.DecryptProfile(input, outMS);
                     JToken token = JObject.Parse(br.ReadToEnd());
                     foreach (var toon in token.SelectToken("CustomTones"))
                         tones.Add(toon.ToObject<Tone2014>());
-        		}
-        	}
-        	catch {
+                }
+            } catch {
                 throw new NotSupportedException("Unknown file format exception. File not supported.");
-        	}   return tones;
+            }
+            return tones;
         }
 
         private static List<Tone2014> ReadFromPackage(string packagePath, Platform platform)

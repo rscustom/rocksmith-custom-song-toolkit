@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Diagnostics;
+using System.IO;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 using MiscUtil.Conversion;
 using MiscUtil.IO;
 using zlib;
+using System.Linq;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -83,51 +82,38 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="str">In Stream.</param>
         /// <param name="outStream">Out stream.</param>
         /// <param name = "plainLen">Data size after decompress.</param>
-        /// <param name = "bufSize">Buffer Size.</param>
-        /// <param name = "lzma">Idetyfies that lzma packing used</param>
         /// <param name = "rewind">Manual control for stream seek position.</param>
-        public static void unZip(Stream str, Stream outStream, long plainLen, bool rewind = true)
+        public static void Unzip(Stream str, Stream outStream, bool rewind = true)
         {
-            var zOutputStream = new ZOutputStream(outStream);
+            int len;
+            var buffer = new byte[65536];
+            var zOutputStream = new ZInputStream(str);
+            while ((len = zOutputStream.read(buffer, 0, buffer.Length)) > 0)
             {
-                byte[] buffer = new byte[65536];
-                while(str.Position < plainLen)
-                {
-                    var size = (int)Math.Min(plainLen - str.Position, buffer.Length);
-                    str.Read(buffer, 0, size);
-                    zOutputStream.Write(buffer, 0, size);
-                }
-                if(rewind){
-                    outStream.Position = 0;
-                    outStream.Flush();
-                }
-            } zOutputStream.Flush();
+                outStream.Write(buffer, 0, len);
+            }
+            zOutputStream.Close(); buffer = null;
+            if (rewind) {
+                outStream.Position = 0;
+                outStream.Flush();
+            }
         }
-        public static void unZip(byte[] array, Stream outStream, bool rewind = true)
-        {//implement here and there
-            var zOutputStream = new ZOutputStream(outStream);
-            {
-                zOutputStream.Write(array, 0, array.Length);
-                if(rewind){
-                    outStream.Position = 0;
-                    outStream.Flush();
-                }
-            } zOutputStream.Flush();
+        public static void Unzip(byte[] array, Stream outStream, bool rewind = true)
+        {
+            Unzip(new MemoryStream(array), outStream,rewind);
         }
 
         public static long Zip(Stream str, Stream outStream, long plainLen, bool rewind = true)
         {
             /*zlib works great, can't say that about SharpZipLib*/
-            byte[] buffer = new byte[65536];
+            int len;
+            var buffer = new byte[65536];
             var zOutputStream = new ZOutputStream(outStream, 9);
-            while(str.Position < plainLen)
+            while ((len = str.Read(buffer, 0, buffer.Length)) > 0 && len < plainLen)
             {
-                var size = (int)Math.Min(plainLen - str.Position, buffer.Length);
-                str.Read(buffer, 0, size);
-                zOutputStream.Write(buffer, 0, size);
+                zOutputStream.Write(buffer, 0, len);
             }
-            zOutputStream.finish();
-            zOutputStream.Flush();
+            zOutputStream.finish(); buffer = null;
             if(rewind){
                 outStream.Position = 0;
                 outStream.Flush();
@@ -138,7 +124,6 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             return Zip(new MemoryStream(array), outStream, plainLen, rewind);
         }
-
         /// <summary>
         /// All profile stuff: crd (u play credentials), LocalProfiles.json and profiles themselves
         /// Good for RS2014 and RS1
@@ -157,7 +142,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 //EVAS + header
                 br.ReadBytes(16);
-                long zLen = br.ReadUInt32();
+                uint zLen = br.ReadUInt32();
                 DecryptFile(br.BaseStream, decrypted, PCSaveKey);
 
                 //unZip
@@ -165,7 +150,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 brDec.BaseStream.Position -= sizeof(ushort);
                 if (xU == 30938)//LE 55928 //BE 30938
                 {
-                    unZip(brDec.BaseStream, outStream, zLen);
+                    Unzip(brDec.BaseStream, outStream);
                 }//endless loop if not
             }
         }
@@ -222,10 +207,15 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
+        internal static byte[] SNGmagic = new byte[4]
+        { 0x4A, 0x00, 0x00, 0x00 };
         public static void DecryptSngData(Stream input, Stream output, byte[] key)
         {
             var reader = new BinaryReader(input);
-            reader.ReadBytes(8); //skip header
+            var header = reader.ReadBytes(4); //magic 0x4A in LE
+            reader.ReadBytes(4);//platform header
+            if (!header.SequenceEqual(SNGmagic))
+                throw new InvalidDataException("This is not valid SNG file to decrypt.");
             byte[] iv = reader.ReadBytes(16);
             using (var rij = new RijndaelManaged())
             {

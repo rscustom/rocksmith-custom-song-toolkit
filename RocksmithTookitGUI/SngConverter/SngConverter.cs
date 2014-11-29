@@ -11,6 +11,10 @@ using RocksmithToolkitLib;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.Extensions;
+using System.Xml.Linq;
+using System.Collections;
+using System.Threading;
 
 namespace RocksmithToolkitGUI.SngConverter
 {
@@ -87,8 +91,8 @@ namespace RocksmithToolkitGUI.SngConverter
         }
 
         private void packUnpackButton_Click(object sender, EventArgs e) {
+            List<string> badFiles = new List<string>();
             IList<string> sourceFileNames;
-            
             using (var ofd = new OpenFileDialog()) {
                 ofd.Multiselect = true;
                 if (ofd.ShowDialog() != DialogResult.OK)
@@ -96,36 +100,42 @@ namespace RocksmithToolkitGUI.SngConverter
                 sourceFileNames = ofd.FileNames;
             }
 
-            StringBuilder errorsFound = new StringBuilder();
+            var errorsFound = new StringBuilder();
             var message = (unpackRadio.Checked) ? "decrypted" : "encrypted";
-            
             foreach (string sourceFileName in sourceFileNames) {
                 Application.DoEvents();
-                
-                try {
-                    var outputFile = Path.Combine(Path.GetDirectoryName(sourceFileName), String.Format("{0}_{1}.sng", Path.GetFileNameWithoutExtension(sourceFileName), message));
 
+                var outputFile = Path.Combine(Path.GetDirectoryName(sourceFileName), String.Format("{0}_{1}.sng", Path.GetFileNameWithoutExtension(sourceFileName), message));
+                try {
                     // Pack/Unpack SNG
                     using (FileStream inputStream = new FileStream(sourceFileName, FileMode.Open, FileAccess.Read))
-                        using (FileStream outputStream = new FileStream(outputFile, FileMode.Create, FileAccess.ReadWrite)) {
-                            if (packRadio.Checked)
-                                Sng2014File.PackSng(inputStream, outputStream, PackerPlatform);
-                            else if (unpackRadio.Checked)
-                                Sng2014File.UnpackSng(inputStream, outputStream, PackerPlatform);
-                        }
-                } catch (FileNotFoundException ex) {
+                    using (FileStream outputStream = new FileStream(outputFile, FileMode.Create, FileAccess.ReadWrite)) {
+                        if (packRadio.Checked)
+                            Sng2014File.PackSng(inputStream, outputStream, PackerPlatform);
+                        else if (unpackRadio.Checked)
+                            Sng2014File.UnpackSng(inputStream, outputStream, PackerPlatform);
+                    }
+                }/* catch (FileNotFoundException ex) {
                     errorsFound.AppendLine(ex.Message);
                 } catch (DirectoryNotFoundException ex) {
                     errorsFound.AppendLine(ex.Message);
-                } catch (Exception ex) {
+                }*/catch (Exception ex) {
                     errorsFound.AppendLine(ex.Message);
+                    badFiles.Add(outputFile);
                 }
             }
+            if (badFiles.Count > 0)
+                foreach (var trash in badFiles) {
+                    try {
+                        File.Delete(trash);
+                    } catch { //Do nothing
+                    }
+                }
 
             if (errorsFound.Length <= 0)
                 MessageBox.Show(String.Format("File(s) was {0}.", message), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             else
-                MessageBox.Show(String.Format("File(s) was {0} with errors. See below: {0}{1}", errorsFound.ToString(), Environment.NewLine, errorsFound.ToString()), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(String.Format("File(s) was {0} with errors. See below: {1}{2}", message, errorsFound.ToString(), Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void browseManifestButton_Click(object sender, EventArgs e) {
@@ -167,7 +177,7 @@ namespace RocksmithToolkitGUI.SngConverter
                 using (FileStream outputStream = new FileStream(outputFile, FileMode.Create, FileAccess.ReadWrite))
                 {
                     dynamic xml = null;
-                    
+
                     if (ConverterArrangementType == ArrangementType.Vocal)
                         xml = new Vocals(sng);
                     else
@@ -192,7 +202,7 @@ namespace RocksmithToolkitGUI.SngConverter
         private void sng2xmlRadio_CheckedChanged(object sender, EventArgs e) {
             ConverterManifestFile = "";
             ConverterSngXmlFile = "";
-            
+
             var radio = ((RadioButton)sender);
 
             if (radio.Text.ToLower().StartsWith("sng")) {
