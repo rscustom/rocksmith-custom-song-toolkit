@@ -659,13 +659,14 @@ namespace RocksmithToolkitLib.DLCPackage
                     var fullfilename = Path.Combine(destpath, entry.Name);
                     if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
                     {
+                        psarc.InflateEntry(entry);
                         ExtractPSARC(fullfilename, destpath, entry.Data, platform, false);
                     }
                     else
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(fullfilename));
                         psarc.InflateEntry(entry, fullfilename);
-						if(entry.Data != null) entry.Data.Close();
+                        if(entry.Data != null) entry.Data.Close();
                     }
                 }
                 if(!String.IsNullOrEmpty(psarc.ErrMSG)) throw new InvalidDataException(psarc.ErrMSG);

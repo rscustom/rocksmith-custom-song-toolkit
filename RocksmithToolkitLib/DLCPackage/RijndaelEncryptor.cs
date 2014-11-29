@@ -106,12 +106,13 @@ namespace RocksmithToolkitLib.DLCPackage
         public static long Zip(Stream str, Stream outStream, long plainLen, bool rewind = true)
         {
             /*zlib works great, can't say that about SharpZipLib*/
-            int len;
             var buffer = new byte[65536];
             var zOutputStream = new ZOutputStream(outStream, 9);
-            while ((len = str.Read(buffer, 0, buffer.Length)) > 0 && len < plainLen)
+            while(str.Position < plainLen)
             {
-                zOutputStream.Write(buffer, 0, len);
+                var size = (int)Math.Min(plainLen - str.Position, buffer.Length);
+                str.Read(buffer, 0, size);
+                zOutputStream.Write(buffer, 0, size);
             }
             zOutputStream.finish(); buffer = null;
             if(rewind){
@@ -207,15 +208,12 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        internal static byte[] SNGmagic = new byte[4]
-        { 0x4A, 0x00, 0x00, 0x00 };
-        public static void DecryptSngData(Stream input, Stream output, byte[] key)
+        public static void DecryptSngData(Stream input, Stream output, byte[] key, EndianBitConverter conv)
         {
-            var reader = new BinaryReader(input);
-            var header = reader.ReadBytes(4); //magic 0x4A in LE
-            reader.ReadBytes(4);//platform header
-            if (!header.SequenceEqual(SNGmagic))
+            var reader = new EndianBinaryReader(conv, input);
+            if (0x4A != reader.ReadUInt32())
                 throw new InvalidDataException("This is not valid SNG file to decrypt.");
+            reader.ReadBytes(4);//platform header (bitfield? 001 - Compressed; 010 - Encrypted;)
             byte[] iv = reader.ReadBytes(16);
             using (var rij = new RijndaelManaged())
             {

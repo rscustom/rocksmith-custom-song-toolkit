@@ -99,7 +99,7 @@ namespace RocksmithToolkitGUI.DLCConverter
                 case "done":
                     if (errorsFound.Length <= 0)
                         MessageBox.Show(
-                            String.Format("DLC was converted from '{0}' to '{1}'.\n", SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning
+                            String.Format("DLC was converted from '{0}' to '{1}'.\n", SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information
                         );
                     else
                         MessageBox.Show(

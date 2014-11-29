@@ -1,4 +1,4 @@
-﻿﻿﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -249,10 +249,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 switch (CurrentGameVersion)
                 {
                     case GameVersion.RS2012:
-                        isUnique = !TonesLB.Items.OfType<Tone>().Any(n => n.Name == uniqueName);
+                        isUnique = TonesLB.Items.OfType<Tone>().All(n => n.Name != uniqueName);
                         break;
                     case GameVersion.RS2014:
-                        isUnique = !TonesLB.Items.OfType<Tone2014>().Any(n => n.Name == uniqueName);
+                        isUnique = TonesLB.Items.OfType<Tone2014>().All(n => n.Name != uniqueName);
                         break;
                 }
 
@@ -366,8 +366,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (platformPC.Checked)
                 try {
                 bwGenerate.ReportProgress (progress, "Generating PC package");
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.Pc, CurrentGameVersion));
-                progress += step;
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.Pc, CurrentGameVersion), pnum:numPlatforms);
+                progress += step; numPlatforms--;
                 bwGenerate.ReportProgress (progress);
             } catch (Exception ex) {
                 errorsFound.AppendLine (String.Format ("Error generate PC package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
@@ -375,9 +375,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (platformMAC.Checked)
                 try {
-                bwGenerate.ReportProgress (progress, "Generating Mac package");                
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.Mac, CurrentGameVersion));
-                progress += step;
+                bwGenerate.ReportProgress (progress, "Generating Mac package");
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.Mac, CurrentGameVersion), pnum:numPlatforms);
+                progress += step; numPlatforms--;
                 bwGenerate.ReportProgress (progress);
             } catch (Exception ex) {
                 errorsFound.AppendLine (String.Format ("Error generate Mac package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
@@ -386,8 +386,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (platformXBox360.Checked)
                 try {
                 bwGenerate.ReportProgress (progress, "Generating XBox 360 package");
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.XBox360, CurrentGameVersion));
-                progress += step;
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.XBox360, CurrentGameVersion), pnum:numPlatforms);
+                progress += step; numPlatforms--;
                 bwGenerate.ReportProgress (progress);
             } catch (Exception ex) {
                 errorsFound.AppendLine (String.Format ("Error generate XBox 360 package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
@@ -396,8 +396,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (platformPS3.Checked)
                 try {
                 bwGenerate.ReportProgress (progress, "Generating PS3 package");
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.PS3, CurrentGameVersion));
-                progress += step;
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate (dlcSavePath, packageData, new Platform (GamePlatform.PS3, CurrentGameVersion), pnum:numPlatforms);
+                progress += step; numPlatforms--;
                 bwGenerate.ReportProgress (progress);
             } catch (Exception ex) {
                 errorsFound.AppendLine (String.Format ("Error generate PS3 package: {0}{1}. {0}PS3 package require 'JAVA x86' (32 bits) installed on your machine to generate properly.{0}", Environment.NewLine, ex.StackTrace));
@@ -1494,7 +1494,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 case "generate":
                     var message = "Package was generated.";
                     if (errorsFound.Length > 0)
-                        message = String.Format ("Package was generated with errors! See below: {0}(1}", Environment.NewLine, errorsFound);
+                        message = String.Format ("Package was generated with errors! See below: {0}{1}", Environment.NewLine, errorsFound);
                     message += String.Format ("{0}You want to open the folder in which the package was generated?{0}", Environment.NewLine);
                     if (MessageBox.Show (message, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes) {
                         Process.Start (Path.GetDirectoryName (dlcSavePath));

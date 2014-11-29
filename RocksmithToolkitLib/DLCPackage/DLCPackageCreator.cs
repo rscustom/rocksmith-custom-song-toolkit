@@ -46,6 +46,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static List<string> FILES_PS3 = new List<string>();
         private static List<string> TMPFILES_SNG = new List<string>();
         private static List<string> TMPFILES_ART = new List<string>();
+        private static PSARC.PSARC packPsarc;
 
         private static void DeleteTmpFiles(List<string> files)
         {
@@ -89,7 +90,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PACKAGE
 
-        public static void Generate(string packagePath, DLCPackageData info, Platform platform, DLCPackageType dlcType = DLCPackageType.Song)
+        public static void Generate(string packagePath, DLCPackageData info, Platform platform, DLCPackageType dlcType = DLCPackageType.Song, int pnum = -1)
         {
             switch (platform.platform)
             {
@@ -111,7 +112,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         switch (dlcType)
 	                    {
                             case DLCPackageType.Song:
-                                GenerateRS2014SongPsarc(packPsarcStream, info, platform);
+                                GenerateRS2014SongPsarc(packPsarcStream, info, platform, pnum);
                                 break;
                             case DLCPackageType.Lesson:
                                 throw new NotImplementedException("Lesson package type not implemented yet :(");
@@ -128,7 +129,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
 
                 var packageName = Path.GetFileNameWithoutExtension(packagePath).StripPlatformEndName();
-
                 var songFileName = String.Format("{0}{1}", Path.Combine(Path.GetDirectoryName(packagePath), packageName), platform.GetPathName()[2]);
 
                 switch (platform.platform)
@@ -162,6 +162,9 @@ namespace RocksmithToolkitLib.DLCPackage
             FILES_XBOX.Clear();
             FILES_PS3.Clear();
             DeleteTmpFiles(TMPFILES_SNG);
+            if (pnum == 0) {
+                DeleteTmpFiles(TMPFILES_ART);
+            }
         }
 
         #region XBox360
@@ -295,10 +298,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region Generate PSARC RS2014
 
-        private static void GenerateRS2014SongPsarc(MemoryStream output, DLCPackageData info, Platform platform)
+        private static void GenerateRS2014SongPsarc(MemoryStream output, DLCPackageData info, Platform platform, int pnum = -1)
         {
             var dlcName = info.Name.ToLower();
-            var packPsarc = new PSARC.PSARC();
+            packPsarc = new PSARC.PSARC();
 
             // Stream objects
             Stream soundStream = null,
@@ -335,8 +338,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     info.ArtFiles = ddsfiles;
                 }
 
-                foreach (var dds in info.ArtFiles)
-                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 65536, FileOptions.DeleteOnClose));
+                foreach (var dds in info.ArtFiles) {
+                    packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
+                    TMPFILES_ART.Add(dds.destinationFile);
+                }
 
                 // AUDIO
                 var audioFile = info.OggPath;
@@ -512,7 +517,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     output.Seek(0, SeekOrigin.Begin);
                     output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
                 }
-            } catch (Exception) {
+            } catch {
                 throw;
             } finally {
                 // Dispose all objects
@@ -524,8 +529,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     rsenumerableRootStream.Dispose();
                 if (rsenumerableSongStream != null)
                     rsenumerableSongStream.Dispose();
+                if (pnum == 0)
+                    DeleteTmpFiles(TMPFILES_ART);
                 DeleteTmpFiles(TMPFILES_SNG);
-                DeleteTmpFiles(TMPFILES_ART);
             }
         }
 

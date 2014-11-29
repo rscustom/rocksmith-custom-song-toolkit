@@ -91,7 +91,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         key = RijndaelEncryptor.SngKeyPC;
                         break;
                 }
-                RijndaelEncryptor.DecryptSngData(br.BaseStream, decrypted, key);
+                RijndaelEncryptor.DecryptSngData(input, decrypted, key, conv);
 
                 //unZip
                 long plainLen = brDec.ReadUInt32();

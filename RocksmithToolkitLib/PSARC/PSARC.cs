@@ -426,6 +426,7 @@ namespace RocksmithToolkitLib.PSARC
             foreach (Entry current in this.TOC)
             {
                 _writer.Write(zStreams[current]);
+                current.Data.Close();
             }
             if (encrypt)
             {// Encrypt TOC
