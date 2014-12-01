@@ -2,18 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Windows.Forms;
+
 using X360.STFS;
 using X360.Other;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng2014HSL;
-using MiscUtil.IO;
-using MiscUtil.Conversion;
-using System.Windows.Forms;
-using System.Text.RegularExpressions;
-using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 
@@ -131,7 +127,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         continue;
 
                     var arrType = ArrangementType.Guitar;
-                    if (Path.GetFileNameWithoutExtension(xmlOutput).ToLower().Contains("vocal"))
+                    if (Path.GetFileName(xmlOutput).ToLower().Contains("vocal"))
                         arrType = ArrangementType.Vocal;
 
                     Attributes2014 att = null;
@@ -142,14 +138,13 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
 
                     var sngContent = Sng2014File.LoadFromFile(sngFile, platform);
-
                     using (FileStream outputStream = new FileStream(xmlOutput, FileMode.Create, FileAccess.ReadWrite)) {
                         dynamic xmlContent = null;
 
                         if (arrType == ArrangementType.Vocal)
                             xmlContent = new Vocals(sngContent);
                         else
-                            xmlContent = new Song2014(sngContent, att ?? null);
+                            xmlContent = new Song2014(sngContent, att);
 
                         xmlContent.Serialize(outputStream);
                     }
@@ -525,11 +520,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void DeleteFixedAudio(string sourcePath)
         {
-        	try {
+            try {
             foreach (var file in Directory.GetFiles(sourcePath, "*_fixed.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))
-            	if (File.Exists(file)) File.Delete(file);
-        	}
-        	catch (Exception ex){ throw new InvalidOperationException(String.Format("Can't delete garbage Audio files!\r\n {0}", ex)); }
+                if (File.Exists(file)) File.Delete(file);
+            }
+            catch (Exception ex){ throw new InvalidOperationException(String.Format("Can't delete garbage Audio files!\r\n {0}", ex)); }
         }
 
         private static void WalkThroughDirectory(string baseDir, string directory, Action<string, string> action) {
@@ -605,11 +600,11 @@ namespace RocksmithToolkitLib.DLCPackage
                 return new Platform(GamePlatform.None, GameVersion.None);
         }
 
-		/// <summary>
-		/// Gets platform from name ending
-		/// </summary>
-		/// <param name="fileName">Folder of File</param>
-		/// <returns>Platform(DetectedPlatform, RS2014 ? None)</returns>
+        /// <summary>
+        /// Gets platform from name ending
+        /// </summary>
+        /// <param name="fileName">Folder of File</param>
+        /// <returns>Platform(DetectedPlatform, RS2014 ? None)</returns>
         private static Platform TryGetPlatformByEndName(string fileName)
         {
             GamePlatform p = GamePlatform.None;
@@ -638,7 +633,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     default:
                         return new Platform(GamePlatform.Pc, v);
                 }
-            } 
+            }
         }
 
         private static void ExtractPSARC(string filename, string savePath, Stream inputStream, Platform platform, bool isExternalFile = true)
@@ -681,14 +676,14 @@ namespace RocksmithToolkitLib.DLCPackage
                     var sngFile = Path.Combine(songDirectory, "GRExports", platform.GetPathName()[1], Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
                     var arrType = ArrangementType.Guitar;
 
-                    if (Path.GetFileName(xmlFile).ToLower().IndexOf("vocal") >= 0) {
+                    if (Path.GetFileName(xmlFile).ToLower().Contains("vocal")) {
                         arrType = ArrangementType.Vocal;
                         SngFileWriter.Write(xmlFile, sngFile, arrType, platform);
                     } else {
                         Song song = Song.LoadFromFile(xmlFile);
 
                         if (!Enum.TryParse<ArrangementType>(song.Arrangement, out arrType))
-                            if (song.Arrangement.ToLower().IndexOf("bass") >= 0)
+                            if (song.Arrangement.ToLower().Contains("bass"))
                                 arrType = ArrangementType.Bass;
                     }
 

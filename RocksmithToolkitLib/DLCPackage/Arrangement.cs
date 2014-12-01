@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
 
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
@@ -78,7 +75,7 @@ namespace RocksmithToolkitLib.DLCPackage
             bool isBass = false;
             TuningDefinition tuning = null;
             switch ((ArrangementName)attr.ArrangementType)
-	        {
+            {
                 case ArrangementName.Lead:
                 case ArrangementName.Rhythm:
                 case ArrangementName.Combo:
@@ -93,8 +90,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 case ArrangementName.Vocals:
                     this.ArrangementType = Sng.ArrangementType.Vocal;
                     break;
-	        }
-            
+            }
+
             if (tuning == null) {
                 tuning = new TuningDefinition();
                 tuning.UIName = tuning.Name = tuning.NameFromStrings(song.Tuning, false);
@@ -125,7 +122,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
         }
-        
+
         public override string ToString()
         {
             var toneDesc = String.Empty;
@@ -151,7 +148,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 case ArrangementType.Bass:
                     return String.Format("{0} [{1}{2}{3}] ({4})", ArrangementType, Tuning, pitchInfo, capoInfo, toneDesc);
                 case ArrangementType.Vocal:
-                    return String.Format("{0}", ArrangementType);
+                    return String.Format("{0}", Name);//TODO: should be Type not Name.
                 default:
                     return String.Format("{0} - {1} [{2}{3}{4}] ({5})", ArrangementType, Name, Tuning, pitchInfo, capoInfo, toneDesc);
             }

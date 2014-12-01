@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +14,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
     public class Attributes2014 : AttributesHeader2014, IAttributes {
         public SongArrangementProperties2014 ArrangementProperties { get; set; }
         public int ArrangementSort { get; set; }
-        public int ArrangementType { get; set; }
+        public int? ArrangementType { get; set; }
         public string BlockAsset { get; set; }
         public Dictionary<string, Dictionary<string, object>> Chords { get; set; } //Problem in 3rd sublevel that can be a list or not
         public List<ChordTemplate> ChordTemplates { get; set; }
@@ -36,7 +36,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public float SongAverageTempo { get; set; }
         public string SongBank { get; set; }
         public string SongEvent { get; set; }
-        public float SongOffset { get; set; }
+        public float? SongOffset { get; set; }
         public int SongPartition { get; set; }
         public string SongXml { get; set; }
         public int TargetScore { get; set; }
@@ -61,21 +61,21 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             #region VARIABLES
 
             var dlcName = info.Name.ToLower();
-            
+
             var xblockUrn = String.Format(URN_TEMPLATE_SHORT, TagValue.EmergentWorld.GetDescription(), dlcName);
             var showlightUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format("{0}_showlights", dlcName));
             var songXmlUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format(AggregateGraph2014.NAME_ARRANGEMENT, dlcName, arrangementFileName));
             var songSngUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.NAME_ARRANGEMENT, dlcName, arrangementFileName));
 
             var manifestFunctions = new ManifestFunctions(platform.version);
-            
+
             #endregion
 
             #region FILL ATTRIBUTES
 
             ArrangementSort = arrangement.ArrangementSort;
             BlockAsset = xblockUrn;
-            manifestFunctions.GenerateDynamicVisualDensity(this, SongContent, arrangement);
+            manifestFunctions.GenerateDynamicVisualDensity(this, SongContent, arrangement, GameVersion.RS2014);//2.0 constant for vocs in RS2
             FullName = String.Format(AggregateGraph2014.NAME_ARRANGEMENT, info.Name, arrangement.Name);
             MasterID_PS3 = (IsVocal) ? -1 : arrangement.MasterId;
             MasterID_Xbox360 = (IsVocal) ? -1 : arrangement.MasterId;
@@ -88,7 +88,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             SongXml = songXmlUrn;
             SongVolume = info.Volume;
             PreviewVolume = info.PreviewVolume ?? SongVolume;
-                
+
             // Only for Vocal
             if (IsVocal)
                 InputEvent = "Play_Tone_Standard_Mic";
@@ -175,8 +175,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         /// <returns></returns>
         private string GetToneName(string arrTone, List<Tone2014> it)
         {
-            string Default = "Default";            
             string ToneName = "";
+            const string Default = "Default";
 
             if(!String.IsNullOrEmpty(arrTone))
             {

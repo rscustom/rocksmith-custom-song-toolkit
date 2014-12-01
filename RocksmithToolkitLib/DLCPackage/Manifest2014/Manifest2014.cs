@@ -47,9 +47,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public static Manifest2014<T> LoadFromFile(string manifestRS2014FilePath)
         {
             using (var reader = new StreamReader(manifestRS2014FilePath)) {
-                var manifest = new Manifest2014<T>();
-                manifest = JsonConvert.DeserializeObject<Manifest2014<T>>(reader.ReadToEnd());
-                return manifest;
+                return JsonConvert.DeserializeObject<Manifest2014<T>>(reader.ReadToEnd());
             }
         }
 

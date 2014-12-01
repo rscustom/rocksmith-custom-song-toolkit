@@ -27,7 +27,7 @@ namespace RocksmithToolkitLib.Extensions
                 if (destDir.Exists) { throw new IOException("The path specified by destDirName already exists: " + destDirName); }
 
             #endregion
-            
+
             if (sourceDir.Root.Name.Equals(destDir.Root.Name, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (overwrite)
@@ -57,7 +57,7 @@ namespace RocksmithToolkitLib.Extensions
                 Directory.Delete(sourceDirName, true);
             }
         }
-        
+
         public static void SafeDelete(string path, bool recursive = true)
         {
             try
@@ -69,15 +69,15 @@ namespace RocksmithToolkitLib.Extensions
         }
 
         /// <summary>
-        /// Returns rel paths..
+        /// Returns rel paths.
         /// </summary>
-        /// <param name="BasePath">Base folder</param>
-        /// <param name="ObjectPath">Full path to the File or Folder</param>
+        /// <param name="objectPath">Full path to the File or Folder</param>
+        /// <param name="basePath">Base folder</param>
         /// <returns>Convert to rel path "absolutePath"</returns>
-        public static string RelativeTo(this string BasePath, string ObjectPath)
+        public static string RelativeTo(this string objectPath, string basePath )
         {
-            string[] absoluteDirectories = BasePath.Split('\\');
-            string[] relativeDirectories = ObjectPath.Split('\\');
+            string[] absoluteDirectories = basePath.Split('\\');
+            string[] relativeDirectories = objectPath.Split('\\');
 
             //Get the shortest of the two paths
             int length = absoluteDirectories.Length < relativeDirectories.Length ? absoluteDirectories.Length : relativeDirectories.Length;
@@ -95,10 +95,10 @@ namespace RocksmithToolkitLib.Extensions
 
             //If we didn't find a common prefix then return wo results
             if (lastCommonRoot == -1)
-                return ObjectPath;
+                return objectPath;
 
             //Build up the relative path
-            System.Text.StringBuilder relativePath = new System.Text.StringBuilder();
+            var relativePath = new System.Text.StringBuilder();
 
             //Add on the ..
             for (index = lastCommonRoot + 1; index < absoluteDirectories.Length; index++)
@@ -113,7 +113,7 @@ namespace RocksmithToolkitLib.Extensions
             return relativePath.ToString();
         }
 
-        public static string AbsoluteTo(this string basePath, string relPath)
+        public static string AbsoluteTo(this string relPath, string basePath)
         {
             return Path.GetFullPath(Path.Combine(basePath, relPath));
         }

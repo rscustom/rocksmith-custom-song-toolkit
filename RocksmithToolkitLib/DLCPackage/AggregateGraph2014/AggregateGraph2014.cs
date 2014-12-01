@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,7 +51,6 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
         public List<GraphItemLLID> SongXml { get; set; }
         public GraphItemLLID ShowlightXml { get; set; }
         public List<GraphItemLLID> ImageArt { get; set; }
-        public GraphItemLLID LyricsTex { get; set; }
         public List<GraphItemLLID> Soundbank { get; set; }
         public GraphItem GameXblock { get; set; }
         public GraphItemLLID InlayNif { get; set; }
@@ -76,7 +75,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
         private void SongAggregateGraph(DLCPackageData info, DLCPackageType dlcType) {
             var dlcName = info.Name.ToLower();
             var songPartition = new SongPartition();
-            
+
             // Xblock
             var xbl = new GraphItem();
             xbl.Name = dlcName;
@@ -217,21 +216,20 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             }
 
             // Lyrics Font Texture
-            if (!String.IsNullOrEmpty(info.LyricsTex)) {
-                LyricsTex = new GraphItemLLID();
-                var tex = new GraphItemLLID();
-                tex.Canonical = String.Format(CANONICAL_MANIFEST_PC, dlcName);
-                tex.RelPathDirectory = tex.Canonical;
-                tex.LogPathDirectory = tex.Canonical;
-                tex.Tag = new List<string>();
-                tex.Tag.Add(TagValue.DDS.GetDescription());
-                tex.Tag.Add(TagValue.Image.GetDescription());
-                tex.UUID = IdGenerator.Guid();
-                tex.LLID = IdGenerator.LLIDGuid ();
-                tex.Name = String.Format("lyrics_{0}", dlcName);
-                tex.RelPathFile = tex.Name;
-                tex.LogPathFile = tex.RelPathFile;
-                LyricsTex = tex;
+            if (!String.IsNullOrEmpty(info.LyricArt)) {
+                var dds = new GraphItemLLID();
+                dds.Canonical = String.Format(CANONICAL_LYRIC, dlcName);
+                dds.RelPathDirectory = dds.Canonical;
+                dds.LogPathDirectory = dds.Canonical;
+                dds.Tag = new List<string>();
+                dds.Tag.Add(TagValue.DDS.GetDescription());
+                dds.Tag.Add(TagValue.Image.GetDescription());
+                dds.UUID = IdGenerator.Guid();
+                dds.LLID = IdGenerator.LLIDGuid ();
+                dds.Name = String.Format("lyrics_{0}", dlcName);
+                dds.RelPathFile = dds.Name;
+                dds.LogPathFile = dds.RelPathFile;
+                ImageArt.Add(dds);
             }
 
             // Soundbank
@@ -272,7 +270,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
 
         private void InlayAggregateGraph(DLCPackageData info, DLCPackageType dlcType) {
             var dlcName = info.Inlay.DLCSixName;
-            
+
             // Xblock
             var xbl = new GraphItem();
             xbl.Name = String.Format("guitar_{0}", dlcName);
@@ -285,7 +283,6 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             xbl.RelPathFile = String.Format("guitar_{0}.xblock", dlcName);
             GameXblock = xbl;
 
-            
             // JsonDB
             JsonDB = new List<GraphItem>();
             var json = new GraphItem();
@@ -430,10 +427,10 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             // InlayNif
             if (InlayNif != null)
                 InlayNif.Write(writer);
-            
+
             // Xblock
             GameXblock.Write(writer, true);
-            
+
             writer.Flush();
         }
 

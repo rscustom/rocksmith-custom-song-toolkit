@@ -1,30 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Drawing.Drawing2D;
-using System.Reflection;
 using System.Windows.Forms;
+
+using X360.IO;
 using X360.Other;
 using X360.STFS;
-using X360.IO;
-using RocksmithToolkitLib.Properties;
+
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.Ogg;
-using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.Showlight;
+using RocksmithToolkitLib.DLCPackage.XBlock;
+using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.Properties;
+using RocksmithToolkitLib.Ogg;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -343,6 +337,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     TMPFILES_ART.Add(dds.destinationFile);
                 }
 
+                // Lyric Art Texture
+                if (File.Exists(info.LyricArt))
+                    packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricArt, FileMode.Open, FileAccess.Read, FileShare.Read));
+
                 // AUDIO
                 var audioFile = info.OggPath;
                 if (File.Exists(audioFile))
@@ -435,10 +433,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         var arrangementFileName = songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower();
 
-                        //Lyrics Font Texture & Definition
-                        //if (File.Exists(arrangement.FontFile))
-                        //    packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricsTex, FileMode.Open, FileAccess.Read, FileShare.Read));
-
                         // GAME SONG (SNG)
                         UpdateToneDescriptors(info);
                         GenerateSNG(arrangement, platform);
@@ -454,7 +448,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         // MANIFEST
                         var manifest = new Manifest2014<Attributes2014>();
                         var attribute = new Attributes2014(arrangementFileName, arrangement, info, platform);
-                        if (arrangement.ArrangementType != Sng.ArrangementType.Vocal)
+                        if (arrangement.ArrangementType != ArrangementType.Vocal)
                         {
                             attribute.SongPartition = songPartitionCount.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
                             if (attribute.SongPartition > 1)
@@ -655,7 +649,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         var hsanPathPC = "manifests/songs_dlc_{0}/dlc_{0}.hsan";
                         var hsonPathConsole = "manifests/songs_dlc/dlc_{0}.hson";
                         packPsarc.AddEntry(String.Format((platform.IsConsole ? hsonPathConsole : hsanPathPC), dlcName), manifestHeaderStream);
-                        
+
                         // XBLOCK
                         GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform, DLCPackageType.Inlay);
                         game.SerializeXml(xblockStream);

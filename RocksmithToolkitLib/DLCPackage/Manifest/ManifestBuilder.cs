@@ -16,7 +16,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
     {
         public AggregateGraph.AggregateGraph AggregateGraph { get; set; }
         public Manifest Manifest { get; private set; }
-        
+
         public ManifestBuilder()
         {
             Manifest = new Manifest();
@@ -27,19 +27,19 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             var manifest = Manifest;
             manifest.Entries = new Dictionary<string, Dictionary<string, Attributes>>();
             bool firstarrangset = false;
-            
+
             Arrangement vocal = null;
             if (arrangements.Any<Arrangement>(a => a.ArrangementType == Sng.ArrangementType.Vocal))
                 vocal = arrangements.Single<Arrangement>(a => a.ArrangementType == Sng.ArrangementType.Vocal);
 
             var manifestFunctions = new ManifestFunctions(platform.version);
             var songPartition = new SongPartition();
-            
+
             foreach (var x in arrangements)
             {
                 var isVocal = x.ArrangementType == Sng.ArrangementType.Vocal;
                 var song = (isVocal) ? null : Song.LoadFromFile(x.SongXml.File);
-            
+
                 var attribute = new Attributes();
                 attribute.AlbumArt = String.Format("urn:llid:{0}", AggregateGraph.AlbumArt.LLID);
                 attribute.AlbumNameSort = attribute.AlbumName = songInfo.Album;
@@ -99,7 +99,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 attribute.Tuning = x.Tuning;
                 attribute.VocalsAssetId = x.ArrangementType == Sng.ArrangementType.Vocal ? "" : (vocal != null) ? String.Format("{0}|GRSong_{1}", vocal.Id, vocal.Name) : "";
                 attribute.ChordTemplates = new List<ChordTemplate>();
-                manifestFunctions.GenerateDynamicVisualDensity(attribute, song, x);
+                manifestFunctions.GenerateDynamicVisualDensity(attribute, song, x, GameVersion.RS2012);
 
                 if (!isVocal)
                 {
@@ -137,7 +137,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     if (song.HasPrebends()) AssociateTechniques(x, attribute, "Prebends");
                     attribute.Vibrato = song.HasVibrato();
                     if (song.HasVibrato()) AssociateTechniques(x, attribute, "Vibrato");
-                    
+
                     //Bass exclusive
                     attribute.TwoFingerPlucking = song.HasTwoFingerPlucking();
                     if (song.HasTwoFingerPlucking()) AssociateTechniques(x, attribute, "Plucking");
@@ -145,7 +145,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     if (song.HasFifthsAndOctaves()) AssociateTechniques(x, attribute, "Octave");
                     attribute.Syncopation = song.HasSyncopation();
                     if (song.HasSyncopation()) AssociateTechniques(x, attribute, "Syncopation");
-                    
+
                     #endregion
 
                     attribute.AverageTempo = songInfo.AverageTempo;

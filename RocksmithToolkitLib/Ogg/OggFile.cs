@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.IO;
-using RocksmithToolkitLib.Sng;
 using MiscUtil.Conversion;
 using MiscUtil.IO;
 using System.Diagnostics;
 
 namespace RocksmithToolkitLib.Ogg
 {
-    public static class OggFile
+    public static class OggFile//wwRIFF
     {
         public enum WwiseVersion { Wwise2010, Wwise2013, None };
-        
+
         #region RS1
 
         public static Stream ConvertOgg(string inputFile) {
@@ -90,7 +87,7 @@ namespace RocksmithToolkitLib.Ogg
                 default:
                     throw new InvalidOperationException("Wwise version not supported or invalid input file.");
             }
-            
+
             ww2oggProcess.StartInfo.UseShellExecute = false;
             ww2oggProcess.StartInfo.CreateNoWindow = true;
             ww2oggProcess.StartInfo.RedirectStandardOutput = true;
@@ -243,11 +240,11 @@ namespace RocksmithToolkitLib.Ogg
         #endregion
 
         #region HELPERS
-        
+
         public static void VerifyHeaders(this string inputFile)
         {
             var platform = inputFile.GetAudioPlatform();
-            EndianBitConverter bitConverter = platform.GetBitConverter;
+            var bitConverter = platform.GetBitConverter;
 
             using (var inputFileStream = File.Open(inputFile, FileMode.Open))
             using (var reader = new EndianBinaryReader(bitConverter, inputFileStream))
@@ -256,10 +253,10 @@ namespace RocksmithToolkitLib.Ogg
                 if (reader.ReadUInt32() != reader.BaseStream.Length - 8)
                     throw new InvalidDataException("The input OGG file appears to be truncated.");
 
-                if (System.Text.Encoding.ASCII.GetString(reader.ReadBytes(4)) != "WAVE")
+                if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "WAVE")
                     throw new InvalidDataException("Erorr reading input file - expected WAVE");
 
-                if (System.Text.Encoding.ASCII.GetString(reader.ReadBytes(4)) != "fmt ")
+                if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "fmt ")
                     throw new InvalidDataException("Error reading input file - expected fmt");
 
                 var fmtLength = reader.ReadUInt32();
@@ -269,7 +266,7 @@ namespace RocksmithToolkitLib.Ogg
                 if (fmtLength == 24)
                 {
                     if (reader.ReadUInt16() != 0xFFFF)
-                        throw new InvalidDataException("Error reading input file - expected fmt tag of 0xFFFF");
+                        throw new InvalidDataException("Error reading input file - expected Format Tag of 0xFFFF");
 
                     reader.BaseStream.Seek(14, SeekOrigin.Current);
 
@@ -278,7 +275,7 @@ namespace RocksmithToolkitLib.Ogg
 
                     reader.BaseStream.Seek(6, SeekOrigin.Current);
 
-                    if (System.Text.Encoding.ASCII.GetString(reader.ReadBytes(4)) != "vorb")
+                    if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "vorb")
                         throw new InvalidDataException("Error reading input file - expected vorb");
 
                     if (reader.ReadUInt32() != 42)
@@ -294,14 +291,14 @@ namespace RocksmithToolkitLib.Ogg
         }
 
         public static Platform GetAudioPlatform(this Stream input) {
-			using (var MS = new MemoryStream())
-			using (var reader = new BinaryReader(MS)) {
+            using (var MS = new MemoryStream())
+            using (var reader = new BinaryReader(MS)) {
                 input.Position = 0; input.CopyTo(MS);
                 MS.Position = 0; input.Position = 0;
-				string fileID = new string(reader.ReadChars(4));
-                if (fileID == "RIFF")
+                var fileID = new string(reader.ReadChars(4));
+                if (fileID == "RIFF")//LE
                     return new Platform(GamePlatform.Pc, GameVersion.None);
-                else if (fileID == "RIFX")
+                if (fileID == "RIFX")//BE
                     return new Platform(GamePlatform.XBox360, GameVersion.None);
             }
             return new Platform(GamePlatform.None, GameVersion.None);
@@ -315,14 +312,14 @@ namespace RocksmithToolkitLib.Ogg
 
         public static bool NeedsConversion(this Stream input) {
             var platform = input.GetAudioPlatform();
-            EndianBitConverter bitConverter = platform.GetBitConverter;
+            var bitConverter = platform.GetBitConverter;
 
             using (var MS = new MemoryStream())
             using (var reader = new EndianBinaryReader(bitConverter, MS)) {
-            	input.Position = 0; input.CopyTo(MS); 
+                input.Position = 0; input.CopyTo(MS); 
                 MS.Position = 0; input.Position = 0;
-            	reader.Seek(16, SeekOrigin.Begin);
-                if (reader.ReadUInt32() == 24)
+                reader.Seek(16, SeekOrigin.Begin);
+                if (reader.ReadUInt32() == 24)//fmtSize
                     return true;
             }
 

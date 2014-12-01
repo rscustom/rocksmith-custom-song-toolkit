@@ -86,9 +86,9 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
             var uuid = UUID.ToString().ToLower();
 
             base.Write(writer);
-            writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.llid.ToString(), LLID);
+            writer.WriteLine(GRAPHLINETEMPLATE, uuid, TagType.llid, LLID);
 
-            var line = String.Format(GRAPHLINETEMPLATE, uuid, TagType.logpath.ToString(), LogPath);
+            var line = String.Format(GRAPHLINETEMPLATE, uuid, TagType.logpath, LogPath);
             if (!lastLine)
                 writer.WriteLine(line);
             else
@@ -98,7 +98,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
 
     public class GraphItem {
         public static readonly string GRAPHLINETEMPLATE = "<urn:uuid:{0}> <http://" + "emergent.net/aweb/1.0/{1}> \"{2}\".";
-        
+
         public Guid UUID { get; set; }
         [Description("tag")]
         public List<string> Tag { get; set; }

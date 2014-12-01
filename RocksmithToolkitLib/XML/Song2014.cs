@@ -173,7 +173,7 @@ namespace RocksmithToolkitLib.Xml
                 Title = attr.SongName;
                 Arrangement = ((ArrangementName)attr.ArrangementType).ToString();
                 Part = (short)attr.SongPartition;
-                Offset = attr.SongOffset;
+                Offset = (float)attr.SongOffset;
                 CentOffset = Convert.ToString(attr.CentOffset);
                 SongLength = (float)attr.SongLength;
                 SongNameSort = attr.SongNameSort;

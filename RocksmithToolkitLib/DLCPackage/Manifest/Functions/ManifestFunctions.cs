@@ -96,7 +96,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         {
             if (song.PhraseIterations == null)
                 return;
-            
+
             for (int i = 0; i < song.PhraseIterations.Length; i++)
             {
                 var phraseIteration = song.PhraseIterations[i];
@@ -112,7 +112,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
                 if (gameVersion == GameVersion.RS2012)
                     phraseIt.MaxScorePerDifficulty = new List<float>();
-                
+
                 attribute.PhraseIterations.Add(phraseIt);
             }
 
@@ -172,7 +172,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             for (int i = 0; i < song.PhraseIterations.Length; i++)
             {
                 var pt = song.PhraseIterations[i];
-                
                 var hard = song.Phrases[pt.PhraseId].MaxDifficulty;
                 if (pt.HeroLevels != null)
                     foreach (var h in pt.HeroLevels)
@@ -318,14 +317,21 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     });
         }
 
-        public void GenerateDynamicVisualDensity(IAttributes attribute, dynamic song, Arrangement arrangement) {
+        public void GenerateDynamicVisualDensity(IAttributes attribute, dynamic song, Arrangement arrangement, GameVersion version) {
             if (arrangement.ArrangementType == ArrangementType.Vocal)
             {
-                attribute.DynamicVisualDensity = new List<float>{
+                if (version == GameVersion.RS2014)
+                    attribute.DynamicVisualDensity = new List<float> {
+                        2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f,
+                        2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f
+                    };
+                else
+                    attribute.DynamicVisualDensity = new List<float> {
                         4.5f, 4.3000001907348633f, 4.0999999046325684f, 3.9000000953674316f, 3.7000000476837158f,
                         3.5f, 3.2999999523162842f, 3.0999999046325684f, 2.9000000953674316f, 2.7000000476837158f,
                         2.5f, 2.2999999523162842f, 2.0999999046325684f,
-                        2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f};
+                        2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f
+                    };
             }
             else
             {

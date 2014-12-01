@@ -1,14 +1,13 @@
-﻿﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using System.Reflection;
+
 using Newtonsoft.Json;
+using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Extensions;
-using System.Reflection;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
 {
@@ -37,6 +36,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
         public double? DNA_Riffs { get; set; }
         public double? DNA_Solo { get; set; }
         public double? EasyMastery { get; set; }
+        public bool? JapaneseVocal { get; set; }
         public int LeaderboardChallengeRating { get; set; }
         public string ManifestUrn { get; set; }
         public int MasterID_RDV { get; set; }
@@ -79,6 +79,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
             //FILL ATTRIBUTES
             this.AlbumArt = albumUrn;
             ArrangementName = arrangement.Name.ToString();
+            if (arrangement.Name == Sng.ArrangementName.JVocals)
+                JapaneseVocal = true;
             DLC = true;
             DLCKey = info.Name;
             LeaderboardChallengeRating = 0;
