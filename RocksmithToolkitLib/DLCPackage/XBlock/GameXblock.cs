@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
 using System.IO;
+using System.Xml.Linq;
 using System.Xml.Serialization;
-using RocksmithToolkitLib.DLCPackage.Manifest;
+
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
+using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib;
 
 namespace RocksmithToolkitLib.DLCPackage.XBlock
 {
@@ -65,7 +65,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                         entity.Properties.Add(new Property2014() { Name = "AlbumArtSmall", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}_64", dlcName)) } });
                         entity.Properties.Add(new Property2014() { Name = "AlbumArtMedium", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}_128", dlcName)) } });
                         entity.Properties.Add(new Property2014() { Name = "AlbumArtLarge", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}_256", dlcName)) } });
-                        if (arrangement.ArrangementType == RocksmithToolkitLib.Sng.ArrangementType.Vocal && File.Exists(info.LyricArt))//last step is to find if this used in arrangement. usually its in SNG.TextureDef
+                        if (arrangement.ArrangementType == Sng.ArrangementType.Vocal && arrangement.CustomFont) // One per song
                             entity.Properties.Add(new Property2014() { Name = "LyricArt", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("lyrics_{0}", dlcName)) } });
                         else
                             entity.Properties.Add(new Property2014() { Name = "LyricArt", Set = new Set() { Value = "" } });

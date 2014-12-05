@@ -451,9 +451,9 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
             if (false) // write Xml files for debugging 
             {
-                using (var obj = new Rs2014Converter())
+                using (Rs2014Converter obj = new Rs2014Converter())
                     obj.Song2014ToXml(rs2014Song, outputDir);
-                using (var obj = new Rs1Converter())
+                using (Rs1Converter obj = new Rs1Converter())
                     obj.SongToXml(rs1Song, outputDir);
             }
 

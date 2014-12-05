@@ -496,7 +496,7 @@ typedef struct
     double MaxNotesAndChords;
     // ge_baccents_lsn50, ge_e14_rchords4 show that this count is without example riff
     // for songs it will be always the same value
-    double MaxNotesAndChords_Used;
+    double MaxNotesAndChords_Real;
     // MaxScore / MaxNotesAndChords
     double PointsPerNote;
     float FirstBeatLength;
@@ -517,7 +517,8 @@ typedef struct
     long MaxDifficulty;
 }
 METADATA<size=107>;
-LittleEndian();
+//LittleEndian();
+//BigEndian();
 struct SNG{
     BPM_SECTION BPMs;
     PHRASE_SECTION Phrases;

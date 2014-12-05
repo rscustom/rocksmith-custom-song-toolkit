@@ -84,6 +84,14 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PACKAGE
 
+        /// <summary>
+        /// Generates CDLC package into packagePath.
+        /// </summary>
+        /// <param name="packagePath">Package path.</param>
+        /// <param name="info">DLCPackageData.</param>
+        /// <param name="platform">Target platform.</param>
+        /// <param name="dlcType">Package type.</param>
+        /// <param name="pnum">Packages left. Used to control art cache.</param>
         public static void Generate(string packagePath, DLCPackageData info, Platform platform, DLCPackageType dlcType = DLCPackageType.Song, int pnum = -1)
         {
             switch (platform.platform)
@@ -338,8 +346,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
 
                 // Lyric Art Texture
-                if (File.Exists(info.LyricArt))
-                    packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricArt, FileMode.Open, FileAccess.Read, FileShare.Read));
+                if (File.Exists(info.LyricArtPath))
+                    packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricArtPath, FileMode.Open, FileAccess.Read, FileShare.Read));
 
                 // AUDIO
                 var audioFile = info.OggPath;
@@ -979,29 +987,30 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        public static void GenerateSNG(Arrangement arrangement, Platform platform) {
-            string sngFile = Path.ChangeExtension(arrangement.SongXml.File, ".sng");
+        public static void GenerateSNG(Arrangement arr, Platform platform) {
+            string sngFile = Path.ChangeExtension(arr.SongXml.File, ".sng");
             switch (platform.version)
             {
                 case GameVersion.RS2012:
-                    SngFileWriter.Write(arrangement.SongXml.File, sngFile, arrangement.ArrangementType, platform);
+                    SngFileWriter.Write(arr.SongXml.File, sngFile, arr.ArrangementType, platform);
                     break;
                 case GameVersion.RS2014:
-                    if (arrangement.Sng2014 == null) {
+                    if (arr.Sng2014 == null) {
                         // Sng2014File can be reused when generating for multiple platforms
                         // cache results
-                        arrangement.Sng2014 = Sng2014File.ConvertXML(arrangement.SongXml.File, arrangement.ArrangementType);
+                        // TODO: update dlcName in font texture from here.
+                        arr.Sng2014 = Sng2014File.ConvertXML(arr.SongXml.File, arr.ArrangementType, arr.FontSng);
                     }
-                    using (FileStream fs = new FileStream(sngFile, FileMode.Create))
-                        arrangement.Sng2014.WriteSng(fs, platform);
+                    using (var fs = new FileStream(sngFile, FileMode.Create))
+                        arr.Sng2014.WriteSng(fs, platform);
                     break;
                 default:
                     throw new InvalidOperationException("Unexpected game version value");
             }
 
-            if (arrangement.SongFile == null)
-                arrangement.SongFile = new SongFile { File = "" };
-            arrangement.SongFile.File = Path.GetFullPath(sngFile);
+            if (arr.SongFile == null)
+                arr.SongFile = new SongFile { File = "" };
+            arr.SongFile.File = Path.GetFullPath(sngFile);
 
             TMPFILES_SNG.Add(sngFile);
         }

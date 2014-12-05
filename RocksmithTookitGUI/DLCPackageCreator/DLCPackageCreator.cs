@@ -38,8 +38,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             get {
                 if (RS2014.Checked)
                     return GameVersion.RS2014;
-                else
-                    return GameVersion.RS2012; //Default
+                return GameVersion.RS2012; //Default
             }
             set {
                 switch (value) {
@@ -196,6 +195,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { audioPathTB.Text = value; }
         }
 
+        private string LyricArtPath
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         public DLCPackageCreator()
@@ -265,14 +270,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void arrangementAddButton_Click(object sender = null, EventArgs e = null)
         {
-            Arrangement arrangement;
-            using (var form = new ArrangementForm((DLCPackageCreator)this, CurrentGameVersion))
+            Arrangement arrangement = null;
+            using (var form = new ArrangementForm(this, CurrentGameVersion))
             {
-                if (DialogResult.OK != form.ShowDialog())
-                {
-                    return;
-                }
-                arrangement = form.Arrangement;
+                if (DialogResult.OK == form.ShowDialog())
+                    arrangement = form.Arrangement;
             }
             if (arrangement == null)
                 return;
@@ -304,13 +306,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (packageData == null) {
                 MessageBox.Show("One or more fields are missing information.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            try {
-                AudioPath.VerifyHeaders();
-            } catch (InvalidDataException ex) {
-                MessageBox.Show(ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -435,7 +430,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             string fileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", ArtistSort, SongTitleSort, CurrentGameVersion.ToString(), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
-            //string dlcSavePath;
 
             if (!String.IsNullOrEmpty(defaultSavePath))
             {
@@ -486,7 +480,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     arr.SongFile.File = arr.SongFile.File.AbsoluteTo(BasePath);
             }
 
-            if (String.IsNullOrEmpty(defaultSavePath))
+            if (String.IsNullOrEmpty(defaultSavePath))//if in GUI mode.
                 MessageBox.Show(CurrentRocksmithTitle + " DLC Package template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -522,6 +516,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             FillPackageCreatorForm(info, dlcLoadPath);
 
+            Application.DoEvents();
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();
         }
@@ -592,6 +587,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // AUTO SAVE DLC TEMPLATE
             SaveTemplateFile(unpackedDir);
 
+            Application.DoEvents();
             MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();
         }
@@ -848,6 +844,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Album art
             AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
 
+            // Lyric art
+            LyricArtPath = info.LyricArtPath.AbsoluteTo(BasePath);
+
             // Audio file
             if (!String.IsNullOrEmpty(info.OggPath))
                 AudioPath = info.OggPath.AbsoluteTo(BasePath);
@@ -875,7 +874,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
                 if (arrangement.ArrangementType != ArrangementType.Vocal)
-                {
+                {// Populate tuning info
                     try
                     {
                         var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);
@@ -1021,6 +1020,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 audioPathTB.Focus();
                 return null;
             }
+            try {
+                AudioPath.VerifyHeaders();
+            } catch (InvalidDataException ex) {
+                MessageBox.Show(ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
 
             string audioPreviewPath = null;
             if (CurrentGameVersion == GameVersion.RS2014)
@@ -1055,7 +1060,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.Vocals) > 1)
             {
                 MessageBox.Show("Error: Multiple Vocals arrangement found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //return null;
+                return null;
             }
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.JVocals) > 1)
             {
@@ -1116,6 +1121,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 },
 
                 AlbumArtPath = AlbumArtPath,
+                LyricArtPath = LyricArtPath,
                 OggPath = AudioPath,
                 OggPreviewPath = audioPreviewPath,
                 Arrangements = arrangements,
@@ -1148,7 +1154,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (ArrangementLB.SelectedItem != null)
             {
                 var arrangement = (Arrangement)ArrangementLB.SelectedItem;
-                using (var form = new ArrangementForm(arrangement, (DLCPackageCreator)this, CurrentGameVersion) { Text = "Edit Arrangement" })
+                using (var form = new ArrangementForm(arrangement, this, CurrentGameVersion) { Text = "Edit Arrangement" })
                 {
                     if (DialogResult.OK != form.ShowDialog())
                     {
@@ -1339,6 +1345,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             MessageBox.Show("Tone(s) was imported.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Parent.Focus();
         }
 
         private void plataform_CheckedChanged(object sender, EventArgs e)
@@ -1510,16 +1517,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             ArtistSortTB.TextChanged += ArtistSortTB_TextChanged;
         }
-        // HACK: can do better?
+
         private void packageVersionTB_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (char.IsDigit(e.KeyChar))
-            { }
-            else if (e.KeyChar == Char.Parse("."))
-            { }
-            else if (e.KeyChar == (int)Keys.Back)
-            { }
-            else e.Handled = true;
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != Char.Parse(".") && e.KeyChar != (int)Keys.Back)
+                e.Handled = true; 
         }
     }
 }

@@ -216,7 +216,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
             }
 
             // Lyrics Font Texture
-            if (!String.IsNullOrEmpty(info.LyricArt)) {
+            if (!String.IsNullOrEmpty(info.LyricArtPath)) {
                 var dds = new GraphItemLLID();
                 dds.Canonical = String.Format(CANONICAL_LYRIC, dlcName);
                 dds.RelPathDirectory = dds.Canonical;

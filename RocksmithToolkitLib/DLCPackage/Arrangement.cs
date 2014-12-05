@@ -40,6 +40,8 @@ namespace RocksmithToolkitLib.DLCPackage
         public decimal CapoFret { get; set; }
         public int ScrollSpeed { get; set; }
         public PluckedType PluckedType { get; set; }
+        public bool CustomFont { get; set; } //true for JVocals and custom fonts (planned)
+        public string FontSng { get; set; }
         // cache parsing results (speeds up generating for multiple platforms)
         public Sng2014File Sng2014 { get; set; }
         // Gameplay Path
@@ -72,7 +74,6 @@ namespace RocksmithToolkitLib.DLCPackage
             this.SongXml = new SongXML();
             this.SongXml.File = xmlSongFile;
 
-            bool isBass = false;
             TuningDefinition tuning = null;
             switch ((ArrangementName)attr.ArrangementType)
             {
@@ -85,7 +86,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 case ArrangementName.Bass:
                     this.ArrangementType = Sng.ArrangementType.Bass;
                     tuning = TuningDefinitionRepository.Instance().SelectForBass(song.Tuning, GameVersion.RS2014);
-                    isBass = true;
                     break;
                 case ArrangementName.Vocals:
                     this.ArrangementType = Sng.ArrangementType.Vocal;
@@ -148,7 +148,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 case ArrangementType.Bass:
                     return String.Format("{0} [{1}{2}{3}] ({4})", ArrangementType, Tuning, pitchInfo, capoInfo, toneDesc);
                 case ArrangementType.Vocal:
-                    return String.Format("{0}", Name);//TODO: should be Type not Name.
+                    return String.Format("{0}", ArrangementType);//TODO: should be ArrangementType not Name.
                 default:
                     return String.Format("{0} - {1} [{2}{3}{4}] ({5})", ArrangementType, Name, Tuning, pitchInfo, capoInfo, toneDesc);
             }

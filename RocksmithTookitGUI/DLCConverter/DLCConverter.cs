@@ -106,6 +106,7 @@ namespace RocksmithToolkitGUI.DLCConverter
                             String.Format("DLC was converted from '{2}' to '{3}' with erros. See below: {0}{1}{0}", Environment.NewLine, errorsFound.ToString(), SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning
                         );
                     convertButton.Enabled = true;
+                    Parent.Focus();
                 break;
             }
 
@@ -204,7 +205,7 @@ namespace RocksmithToolkitGUI.DLCConverter
                 MessageBox.Show("The source and target platform should be different.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             // GET FILES
             using (var ofd = new OpenFileDialog()) {
                 ofd.Title = "Select one DLC for platform conversion";
@@ -235,7 +236,7 @@ namespace RocksmithToolkitGUI.DLCConverter
                     convertButton.Enabled = false;
                     bwConvert.RunWorkerAsync(ofd.FileNames);
                 }
-            } ParentForm.Focus();
+            }
         }
     }
 }

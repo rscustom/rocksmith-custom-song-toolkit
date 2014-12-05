@@ -1,25 +1,24 @@
 using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Properties;
-using RocksmithToolkitLib.Extensions;
-using System.Xml.Serialization;
-using System.Text;
+using System.IO;
 using System.Linq;
+using System.Text;
+
+using RocksmithToolkitLib.Properties;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {
     public class Sng2014FileWriter {
         private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
 
-        public static Sng2014File ReadVocals(string xmlFile)
+        public static Sng2014File ReadVocals(string xmlFile, string cdata = null)
         {
-            var data = new MemoryStream(Resources.VOCALS_RS2);
-            var sng = new Sng2014File(data);
+            Sng2014File sng;
+            if(!String.IsNullOrEmpty(cdata))
+                sng = new Sng2014File(new FileStream(cdata, FileMode.Open));
+            else sng = new Sng2014File(new MemoryStream(Resources.VOCALS_RS2));
+
             var xml = Vocals.LoadFromFile(xmlFile);
             Sng2014FileWriter.parseVocals(xml, sng);
             return sng;
@@ -171,7 +170,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
             sng.Metadata.MaxDifficulty = getMaxDifficulty(xml);
             sng.Metadata.MaxNotesAndChords = NoteCount[2];
-            sng.Metadata.Unk3_MaxNotesAndChords = sng.Metadata.MaxNotesAndChords;
+            sng.Metadata.MaxNotesAndChords_Real = sng.Metadata.MaxNotesAndChords;//num unique notes+not ignored
             sng.Metadata.PointsPerNote = sng.Metadata.MaxScore / sng.Metadata.MaxNotesAndChords;
 
             sng.Metadata.FirstBeatLength = xml.Ebeats[1].Time - xml.Ebeats[0].Time;

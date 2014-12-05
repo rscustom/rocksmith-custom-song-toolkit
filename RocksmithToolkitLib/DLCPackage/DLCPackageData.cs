@@ -61,7 +61,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public List<Tone2014> TonesRS2014 { get; set; }
         public float? PreviewVolume { get; set; }
-        public string LyricArt { get; set; }
+        public string LyricArtPath { get; set; }
 
         // Cache art image conversion
         public List<DDSConvertedFile> ArtFiles { get; set; }
@@ -80,6 +80,24 @@ namespace RocksmithToolkitLib.DLCPackage
             //Arrangements / Tones
             data.Arrangements = new List<Arrangement>();
             data.TonesRS2014 = new List<Tone2014>();
+
+            //Source platform + audio files
+            var targetAudioFiles = new List<string>();
+            var sourceAudioFiles = Directory.GetFiles(unpackedDir, "*.wem", SearchOption.AllDirectories);
+            Platform sourcePlatform = new Platform(GamePlatform.Pc, GameVersion.None);
+
+            foreach (var file in sourceAudioFiles) {
+                var newFile = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
+                if (targetPlatform.IsConsole != (sourcePlatform = file.GetAudioPlatform()).IsConsole)
+                {
+                    OggFile.ConvertAudioPlatform(file, newFile);
+                    targetAudioFiles.Add(newFile);
+                }
+                else targetAudioFiles.Add(file);
+            }
+
+            if (!targetAudioFiles.Any())
+                throw new InvalidDataException("Audio files not found.");
 
             //Load files
             var jsonFiles = Directory.GetFiles(unpackedDir, "*.json", SearchOption.AllDirectories);
@@ -120,10 +138,19 @@ namespace RocksmithToolkitLib.DLCPackage
                     var voc = new Arrangement();
                     voc.Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals;
                     voc.ArrangementType = ArrangementType.Vocal;
+                    voc.ScrollSpeed = 20;
                     voc.SongXml = new SongXML { File = xmlFile };
                     voc.SongFile = new SongFile { File = "" };
-                    voc.Sng2014 = Sng2014HSL.Sng2014File.ConvertXML(xmlFile, ArrangementType.Vocal);
-                    voc.ScrollSpeed = 20;
+                    voc.CustomFont = attr.JapaneseVocal == true;
+                    // Get symbols stuff, write plain sng to disk.
+                    var fontSng = Directory.GetFiles(unpackedDir, xmlName + ".sng", SearchOption.AllDirectories)[0];
+                    var vocSng = Sng2014HSL.Sng2014File.LoadFromFile(fontSng, sourcePlatform);
+                    if (vocSng.IsCustomFont()) {
+                        voc.CustomFont = true;
+                        voc.FontSng = fontSng;
+                        vocSng.WriteChartData(fontSng, new Platform(GamePlatform.Pc, GameVersion.None));
+                    }
+                    voc.Sng2014 = Sng2014HSL.Sng2014File.ConvertXML(xmlFile, ArrangementType.Vocal, voc.FontSng);
 
                     // Adding Arrangement
                     data.Arrangements.Add(voc);
@@ -152,25 +179,9 @@ namespace RocksmithToolkitLib.DLCPackage
             // Lyric Art
             var LyricArt = Directory.GetFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories);
             if (LyricArt.Any())
-                data.LyricArt = LyricArt[0];
+                data.LyricArtPath = LyricArt[0];
 
             //Get other files
-            var sourceAudioFiles = Directory.GetFiles(unpackedDir, "*.wem", SearchOption.AllDirectories);
-
-            var targetAudioFiles = new List<string>();
-            foreach (var file in sourceAudioFiles) {
-                var newFile = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                if (targetPlatform.IsConsole != file.GetAudioPlatform().IsConsole)
-                {
-                    OggFile.ConvertAudioPlatform(file, newFile);
-                    targetAudioFiles.Add(newFile);
-                }
-                else targetAudioFiles.Add(file);
-            }
-
-            if (!targetAudioFiles.Any())
-                throw new InvalidDataException("Audio files not found.");
-
             string audioPath = null, audioPreviewPath = null;
             FileInfo a = new FileInfo(targetAudioFiles[0]);
             FileInfo b = null;
@@ -238,7 +249,11 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             CleanCache();
         }
-
+        /// <summary>
+        /// Transforms unpacked Song into project-like folder structure.
+        /// </summary>
+        /// <returns>Output folder path.</returns>
+        /// <param name="unpackedDir">Unpacked dir.</param>
         public static string DoLikeProject(string unpackedDir)
         {
             const string EOF = "EOF";
@@ -269,14 +284,18 @@ namespace RocksmithToolkitLib.DLCPackage
             Directory.CreateDirectory(kitdir);
 
             string[] xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
+            string[] sngFiles = Directory.GetFiles(unpackedDir, "*vocals.sng", SearchOption.AllDirectories);
             foreach (var json in jsonFiles)
             {
                 var Name = Path.GetFileNameWithoutExtension(json);
                 var xmlFile = xmlFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == Name);
+                var sngFile = sngFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == Name);
 
                 //Move all pair JSON\XML
                 File.Move(json,    Path.Combine(kitdir, Name + ".json"));
                 File.Move(xmlFile, Path.Combine(eofdir, Name + ".xml"));
+                if (Name.EndsWith("vocals", StringComparison.Ordinal))
+                    File.Move(sngFile, Path.Combine(kitdir, Name + ".sng"));
             }
 
             //Move all art_size.dds to KIT folder

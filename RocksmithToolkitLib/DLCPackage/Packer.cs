@@ -712,12 +712,18 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         var sngFile = Path.Combine(sngFolder, xmlName + ".sng");
                         var arrType = ArrangementType.Guitar;
-
                         if (Path.GetFileName(xmlFile).ToLower().Contains("vocal"))
                             arrType = ArrangementType.Vocal;
 
-                        using (FileStream fs = new FileStream(sngFile, FileMode.Create)) {
-                            Sng2014File sng = Sng2014File.ConvertXML(xmlFile, arrType);
+                        string fontSng = null;
+                        var vocSng = Sng2014File.LoadFromFile(sngFile, platform);
+                        if (File.Exists(sngFile) && arrType == ArrangementType.Vocal && vocSng.IsCustomFont()) {
+                            fontSng = Path.GetTempFileName(); 
+                            vocSng.WriteChartData(fontSng, new Platform(GamePlatform.Pc, GameVersion.None));
+                        }
+
+                        using (var fs = new FileStream(sngFile, FileMode.Create)) {
+                            Sng2014File sng = Sng2014File.ConvertXML(xmlFile, arrType, fontSng);
                             sng.WriteSng(fs, platform);
                         }
 
@@ -733,7 +739,6 @@ namespace RocksmithToolkitLib.DLCPackage
                                 shl.Count = shl.ShowlightList.Count;
                                 using (var fs = new FileStream(shlName, FileMode.Create))
                                     shl.Serialize(fs);
-                                noShowlights = false;
                             }
                         }
                     }

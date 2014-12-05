@@ -22,7 +22,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public string FullName { get; set; }
         public string LastConversionDateTime { get; set; }
         public int MasterID_PS3 { get; set; }
-        public int MasterID_Xbox360 { get; set; }
+        public int MasterID_XBox360 { get; set; }
         public int MaxPhraseDifficulty { get; set; }
         public List<PhraseIteration> PhraseIterations { get; set; }
         public List<Phrase> Phrases { get; set; }
@@ -78,7 +78,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             manifestFunctions.GenerateDynamicVisualDensity(this, SongContent, arrangement, GameVersion.RS2014);//2.0 constant for vocs in RS2
             FullName = String.Format(AggregateGraph2014.NAME_ARRANGEMENT, info.Name, arrangement.Name);
             MasterID_PS3 = (IsVocal) ? -1 : arrangement.MasterId;
-            MasterID_Xbox360 = (IsVocal) ? -1 : arrangement.MasterId;
+            MasterID_XBox360 = (IsVocal) ? -1 : arrangement.MasterId;
             PreviewBankPath = String.Format("song_{0}_preview.bnk", info.Name.ToLower());
             RelativeDifficulty = 0; //Always 0 in RS2014
             ShowlightsXML = showlightUrn;

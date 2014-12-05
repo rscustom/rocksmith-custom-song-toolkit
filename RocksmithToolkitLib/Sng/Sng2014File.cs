@@ -1,30 +1,27 @@
 using System;
-using System.IO;
 using System.Collections;
-using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
-using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.DLCPackage;
-using System.Xml.Serialization;
-using System.Text;
-using MiscUtil.IO;
-using MiscUtil.Conversion;
 using DamienG.Security.Cryptography;
+using MiscUtil.Conversion;
+using MiscUtil.IO;
+
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.DLCPackage;
+using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {
     public class Sng2014File : Sng {
         private bool consoleMode = !Environment.UserInteractive;
 
-        public static Sng2014File ConvertXML(string xmlPath, ArrangementType type)
+        public static Sng2014File ConvertXML(string xmlPath, ArrangementType type, string cdata = null)
         {
-            if (type != ArrangementType.Vocal) {
-                return Sng2014File.ConvertSong(xmlPath);
-            } else {
-                return Sng2014FileWriter.ReadVocals(xmlPath);
+            if (type == ArrangementType.Vocal) {
+                return Sng2014FileWriter.ReadVocals(xmlPath, cdata);
             }
+            return Sng2014File.ConvertSong(xmlPath);
         }
 
         public Sng2014File() { }
@@ -36,9 +33,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         // this is platform independent SNG object
         public static Sng2014File ConvertSong(string xmlFile) {
-            Song2014 song = Song2014.LoadFromFile(xmlFile);
+            var song = Song2014.LoadFromFile(xmlFile);
             var parser = new Sng2014FileWriter();
-            Sng2014File sng = new Sng2014File();
+            var sng = new Sng2014File();
             parser.ReadSong(song, sng);
             sng.NoteCount = parser.NoteCount;
             sng.DNACount = parser.DNACount;
@@ -49,15 +46,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
         /// Raw SNG data reader.
         /// </summary>
         /// <param name="inputFile">Packed and encrypted SNG file</param>
-        /// <returns></returns>
+        /// <returns><see cref="Sng2014File"/> exemplair.</returns>
+        /// <param name = "platform"></param>
         public static Sng2014File LoadFromFile(string inputFile, Platform platform) {
-            Sng2014File sng = null;
-
-            using (FileStream fs = new FileStream(inputFile, FileMode.Open)) {
-                sng = ReadSng(fs, platform);
+            using (var fs = new FileStream(inputFile, FileMode.Open)) {
+                return ReadSng(fs, platform);
             }
-
-            return sng;
         }
 
         public static Sng2014File ReadSng(Stream input, Platform platform) 
@@ -80,24 +74,30 @@ namespace RocksmithToolkitLib.Sng2014HSL
             EndianBitConverter conv = platform.GetBitConverter;
 
             using (var decrypted = new MemoryStream())
-            using (var br = new EndianBinaryReader(conv, input))
             using (var brDec = new EndianBinaryReader(conv, decrypted)) {
                 byte[] key;
                 switch (platform.platform) {
                     case GamePlatform.Mac:
                         key = RijndaelEncryptor.SngKeyMac;
                         break;
-                    default: //PC
+                    case GamePlatform.Pc: //PC
                         key = RijndaelEncryptor.SngKeyPC;
                         break;
+                    default:
+                        key = null;
+                        break;
                 }
-                RijndaelEncryptor.DecryptSngData(input, decrypted, key, conv);
-
+                if (key != null)
+                    RijndaelEncryptor.DecryptSngData(input, decrypted, key, conv);
+                else {
+                    input.CopyTo(decrypted);
+                    decrypted.Seek(8, SeekOrigin.Begin);
+                }
                 //unZip
                 long plainLen = brDec.ReadUInt32();
                 ushort xU = brDec.ReadUInt16();
-                brDec.BaseStream.Position -= 2;
-                if (xU == 55928) {//LE 55928 //BE 30938
+                decrypted.Position -= 2;
+                if (xU == 0x78DA || xU == 0xDA78) {//LE 55928 //BE 30938
                     RijndaelEncryptor.Unzip(decrypted, output, false);
                 }
             }
@@ -171,8 +171,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private byte[] chartBE = null;
         private byte[] getChartData(Platform platform)
         {
-            using (MemoryStream stream = new MemoryStream()) {
-                EndianBitConverter conv = platform.GetBitConverter;
+            using (var stream = new MemoryStream()) {
+                var conv = platform.GetBitConverter;
 
                 // cached result
                 if (conv == EndianBitConverter.Little && chartLE != null)
@@ -193,6 +193,19 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                 return data;
             }
+        }
+
+        public void WriteChartData(string outfile, Platform platform)
+        {
+            var data = getChartData(platform);
+            using (var fs = new FileStream(outfile, FileMode.Create)){
+                fs.Write(data, 0, data.Length);
+            }
+        }
+
+        public bool IsCustomFont()
+        {
+            return !this.SymbolsTexture.SymbolsTextures[0].Font.ToNullTerminatedUTF8().Contains("lyrics.dds");
         }
 
         public void Read(BinaryReader r) {

@@ -78,9 +78,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
 
             //FILL ATTRIBUTES
             this.AlbumArt = albumUrn;
-            ArrangementName = arrangement.Name.ToString();
-            if (arrangement.Name == Sng.ArrangementName.JVocals)
-                JapaneseVocal = true;
+            JapaneseVocal |= arrangement.Name == Sng.ArrangementName.JVocals;
+            ArrangementName = IsVocal ? Sng.ArrangementName.Vocals.ToString() : arrangement.Name.ToString(); //HACK: weird vocals stuff
             DLC = true;
             DLCKey = info.Name;
             LeaderboardChallengeRating = 0;

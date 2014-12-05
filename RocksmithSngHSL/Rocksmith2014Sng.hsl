@@ -160,14 +160,21 @@ struct SYMBOLS_TEXTURE_SECTION
     struct SYMBOLS_TEXTURE SymbolsTextures[Count];
 };
 
-// TODO how does rect work
+struct RECT
+{
+    float yMin;
+    float xMin;
+    float yMax;
+    float xMax;
+};
+
 struct SYMBOL_DEFINITION
 {
     // UTF-8
     char Text[12];
-    // (y0, x0, y1, x1)
-    float Rect1[4];
-    float Rect2[4];
+    // (y0, x0, y1, x1) && coordinates in procentage, related to texture size.
+    struct RECT Rect_Outter;
+    struct RECT Rect_Inner;
 };
 
 struct SYMBOL_DEFINITION_SECTION
@@ -440,7 +447,7 @@ struct METADATA
     double MaxNotesAndChords;
     // ge_baccents_lsn50, ge_e14_rchords4 show that this count is without example riff
     // for songs it will be always the same value
-    double Unk3_MaxNotesAndChords;
+    double MaxNotesAndChords_Real;
     // MaxScore / MaxNotesAndChords
     double PointsPerNote;
     float FirstBeatLength;
@@ -461,7 +468,8 @@ struct METADATA
     long MaxDifficulty;
 };
 
-struct SNG {
+struct SNG
+{
     struct BPM_SECTION BPMs;
     struct PHRASE_SECTION Phrases;
     struct CHORD_SECTION Chords;
