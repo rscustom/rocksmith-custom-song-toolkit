@@ -685,52 +685,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             for (int i = 0; i < info.Arrangements.Count; i++)
             {
                 Arrangement arr = info.Arrangements[i];
-                if (arr.ArrangementType == ArrangementType.Bass)
-                {
-                    if (arr.TuningPitch == 220.0)
-                    {
-                        MessageBox.Show("This song is already at 220hz pitch (bass fixed applied already?)",
-                            MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    Song2014 songXml;
-                    using (var reader = new StreamReader(arr.SongXml.File))
-                    {
-                        songXml = new XmlStreamingDeserializer<Song2014>(reader).Deserialize();
-                    }
-                    // Force 220Hz
-                    arr.TuningPitch = 220.0;
-                    songXml.CentOffset = "-1200.0";
-
-                    // Octave up for each string
-                    var strings = arr.TuningStrings.ToShortArray();
-                    for (int s = 0; s < strings.Length; s++)
-                    {
-                        strings[s] += 12;
-                    }
-
-                    //Detect tuning
-                    var tuning = TuningDefinitionRepository.Instance().SelectAny(new TuningStrings(strings), CurrentGameVersion);
-                    if (tuning == null)
-                    {
-                        tuning = new TuningDefinition();
-                        tuning.Tuning = new TuningStrings(strings);
-                        tuning.UIName = tuning.Name = tuning.NameFromStrings(tuning.Tuning, true, false) + "BassFix";
-                        tuning.Custom = true;
-                        tuning.GameVersion = GameVersion.RS2014;
-                        TuningDefinitionRepository.Instance().Add(tuning, true);
-                    }
-                    arr.TuningStrings = tuning.Tuning;
-                    arr.Tuning = tuning.Name;
-                    songXml.Tuning = tuning.Tuning;
-
-                    var ns = new XmlSerializerNamespaces();
-                    ns.Add("", "");
-                    var serializer = new XmlSerializer(typeof(Song2014));
-                    var textWriter = new StreamWriter(arr.SongXml.File);
-                    serializer.Serialize(textWriter, songXml, ns);
-                    textWriter.Close();
+                if (arr.ArrangementType == ArrangementType.Bass) {
+                    ApplyBassFix(arr);
                 }
             }
 
@@ -779,6 +735,43 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (!bwGenerate.IsBusy && info != null)
             {// Generate CDLC
                 bwGenerate.RunWorkerAsync(info);
+            }
+        }
+
+        public void ApplyBassFix(Arrangement arr)
+        {
+            if (arr.TuningPitch.Equals(220.0)) {
+                MessageBox.Show("This song is already at 220Hz pitch (bass fixed applied already?)", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            Song2014 songXml;
+            using (var reader = new StreamReader(arr.SongXml.File)) {
+                songXml = new XmlStreamingDeserializer<Song2014>(reader).Deserialize();
+            }
+            // Force 220Hz
+            arr.TuningPitch = 220.0;
+            songXml.CentOffset = "-1200.0";
+            // Octave up for each string
+            var strings = arr.TuningStrings.ToShortArray();
+            for (int s = 0; s < strings.Length; s++) {
+                if (strings[s] != 0)
+                    strings[s] += 12;
+            }
+            //Detect tuning
+            var tuning = TuningDefinitionRepository.Instance().SelectAny(new TuningStrings(strings), CurrentGameVersion);
+            if (tuning == null) {
+                tuning = new TuningDefinition();
+                tuning.Tuning = new TuningStrings(strings);
+                tuning.UIName = tuning.Name = tuning.NameFromStrings(tuning.Tuning, true, false);
+                tuning.Custom = true;
+                tuning.GameVersion = GameVersion.RS2014;
+                TuningDefinitionRepository.Instance().Add(tuning, true);
+            }
+            arr.TuningStrings = tuning.Tuning;
+            arr.Tuning = tuning.Name;
+            songXml.Tuning = tuning.Tuning;
+            using (var stream = File.OpenWrite(arr.SongXml.File)) {
+                songXml.Serialize(stream);
             }
         }
 
@@ -845,7 +838,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
 
             // Lyric art
-            LyricArtPath = info.LyricArtPath.AbsoluteTo(BasePath);
+            if (!String.IsNullOrEmpty(info.LyricArtPath))
+                LyricArtPath = info.LyricArtPath.AbsoluteTo(BasePath);
 
             // Audio file
             if (!String.IsNullOrEmpty(info.OggPath))

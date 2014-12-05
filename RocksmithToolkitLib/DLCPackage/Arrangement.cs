@@ -140,7 +140,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 capoInfo = String.Format(", Capo Fret {0}", CapoFret);
 
             var pitchInfo = String.Empty;
-            if(TuningPitch != 440.0)
+            if(!TuningPitch.Equals(440.0))
                 pitchInfo = String.Format(": A{0}", TuningPitch);
 
             switch (ArrangementType)
@@ -148,7 +148,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 case ArrangementType.Bass:
                     return String.Format("{0} [{1}{2}{3}] ({4})", ArrangementType, Tuning, pitchInfo, capoInfo, toneDesc);
                 case ArrangementType.Vocal:
-                    return String.Format("{0}", ArrangementType);//TODO: should be ArrangementType not Name.
+                    return String.Format("{0}", Name);
                 default:
                     return String.Format("{0} - {1} [{2}{3}{4}] ({5})", ArrangementType, Name, Tuning, pitchInfo, capoInfo, toneDesc);
             }
