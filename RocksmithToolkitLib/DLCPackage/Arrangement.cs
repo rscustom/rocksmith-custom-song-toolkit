@@ -57,6 +57,8 @@ namespace RocksmithToolkitLib.DLCPackage
         // DLC ID
         public Guid Id { get; set; }
         public int MasterId { get; set; }
+        // Motronome. Flags: 1 - this is metronome arrangement itself; 2 - generate such arrangement.
+        public Metronome Metronome { get; set; }
 
         public Arrangement()
         {
@@ -112,6 +114,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.PluckedType = (PluckedType)attr.ArrangementProperties.BassPick;
             this.RouteMask = (RouteMask)attr.ArrangementProperties.RouteMask;
             this.BonusArr = attr.ArrangementProperties.BonusArr == 1;
+            this.Metronome = (Metronome)attr.ArrangementProperties.Metronome;
             this.ToneBase = attr.Tone_Base;
             this.ToneMultiplayer = attr.Tone_Multiplayer;
             this.ToneA = attr.Tone_A;

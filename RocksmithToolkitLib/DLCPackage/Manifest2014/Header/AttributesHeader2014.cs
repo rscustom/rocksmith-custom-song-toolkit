@@ -8,6 +8,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Extensions;
+using System.Security.Principal;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
 {
@@ -40,6 +41,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
         public int LeaderboardChallengeRating { get; set; }
         public string ManifestUrn { get; set; }
         public int MasterID_RDV { get; set; }
+        public int? Metronome { get; set; }
         public double? MediumMastery { get; set; }
         public double? NotesEasy { get; set; }
         public double? NotesHard { get; set; }
@@ -94,7 +96,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
             {
                 AlbumName = AlbumNameSort = info.SongInfo.Album;
                 ArtistName = info.SongInfo.Artist;
-                CentOffset = arrangement.TuningPitch != 0 ? TuningFrequency.Frequency2Cents(arrangement.TuningPitch) : 0.0;
+                CentOffset = (!arrangement.TuningPitch.Equals(0)) ? TuningFrequency.Frequency2Cents(arrangement.TuningPitch) : 0.0;
                 ArtistNameSort = info.SongInfo.ArtistSort;
                 CapoFret = (arrangement.Sng2014.Metadata.CapoFretId == 0xFF) ? CapoFret = 0 : Convert.ToDecimal(arrangement.Sng2014.Metadata.CapoFretId);
                 DNA_Chords = arrangement.Sng2014.DNACount[(int) DNAId.Chord];
@@ -105,6 +107,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 NotesHard = arrangement.Sng2014.NoteCount[2];
                 EasyMastery = NotesEasy / NotesHard;
                 MediumMastery = NotesMedium / NotesHard;
+                Metronome = (int?)arrangement.Metronome;
                 Representative = Convert.ToInt32(!arrangement.BonusArr);
                 RouteMask = (int)arrangement.RouteMask;
 

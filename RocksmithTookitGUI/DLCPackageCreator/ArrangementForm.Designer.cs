@@ -75,6 +75,7 @@
             this.routeMaskBassRadio = new System.Windows.Forms.RadioButton();
             this.routeMaskRhythmRadio = new System.Windows.Forms.RadioButton();
             this.routeMaskLeadRadio = new System.Windows.Forms.RadioButton();
+            this.MetronomeCb = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).BeginInit();
             this.gbTone.SuspendLayout();
             this.gbDLCId.SuspendLayout();
@@ -157,7 +158,7 @@
             this.scrollSpeedTrackBar.Location = new System.Drawing.Point(40, 18);
             this.scrollSpeedTrackBar.Margin = new System.Windows.Forms.Padding(2);
             this.scrollSpeedTrackBar.Maximum = 45;
-            this.scrollSpeedTrackBar.Minimum = 10;
+            this.scrollSpeedTrackBar.Minimum = 5;
             this.scrollSpeedTrackBar.Name = "scrollSpeedTrackBar";
             this.scrollSpeedTrackBar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.scrollSpeedTrackBar.Size = new System.Drawing.Size(130, 23);
@@ -642,13 +643,24 @@
             this.routeMaskLeadRadio.Text = "Lead";
             this.routeMaskLeadRadio.UseVisualStyleBackColor = true;
             // 
+            // MetronomeCb
+            // 
+            this.MetronomeCb.AutoSize = true;
+            this.MetronomeCb.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.MetronomeCb.Location = new System.Drawing.Point(12, 425);
+            this.MetronomeCb.Name = "MetronomeCb";
+            this.MetronomeCb.Size = new System.Drawing.Size(209, 17);
+            this.MetronomeCb.TabIndex = 7;
+            this.MetronomeCb.Text = "Create Metronome Bonus Arrangement";
+            this.MetronomeCb.UseVisualStyleBackColor = true;
+            // 
             // ArrangementForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(450, 466);
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Controls.Add(this.gbGameplayPath);
             this.Controls.Add(this.gbArrInfo);
+            this.Controls.Add(this.MetronomeCb);
             this.Controls.Add(this.gbXmlDefinition);
             this.Controls.Add(this.gbDLCId);
             this.Controls.Add(this.gbTone);
@@ -658,6 +670,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ArrangementForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Arrangement";
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).EndInit();
             this.gbTone.ResumeLayout(false);
@@ -675,8 +688,9 @@
             this.gbGameplayPath.ResumeLayout(false);
             this.gbGameplayPath.PerformLayout();
             this.ResumeLayout(false);
-
+            this.PerformLayout();
         }
+        private System.Windows.Forms.CheckBox MetronomeCb;
         private RocksmithToolkitGUI.CueTextBox PersistentId;
         private RocksmithToolkitGUI.CueTextBox MasterId;
         private System.Windows.Forms.GroupBox gbDLCId;

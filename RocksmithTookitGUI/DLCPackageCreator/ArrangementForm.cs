@@ -54,6 +54,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 Picked.Checked = _arrangement.PluckedType == PluckedType.Picked;
                 BonusCheckBox.Checked = _arrangement.BonusArr;
+                MetronomeCb.Checked = _arrangement.Metronome == Metronome.Generate;
                 RouteMask = _arrangement.RouteMask;
 
                 //DLC ID
@@ -145,8 +146,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 gbTuningPitch.Enabled = selectedType != ArrangementType.Vocal && currentGameVersion == GameVersion.RS2014;
                 gbScrollSpeed.Enabled = selectedType != ArrangementType.Vocal;
                 Picked.Enabled = selectedType == ArrangementType.Bass;
-                Picked.Checked = selectedType != ArrangementType.Bass;
-                BonusCheckBox.Enabled = selectedType != ArrangementType.Vocal && currentGameVersion == GameVersion.RS2014;
+                BonusCheckBox.Enabled = gbTuningPitch.Enabled;
+                MetronomeCb.Enabled = gbTuningPitch.Enabled;
                 UpdateCentOffset();
 
                 // Gameplay Path
@@ -440,6 +441,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     // SONG AND ARRANGEMENT INFO / ROUTE MASK
                     BonusCheckBox.Checked = Equals(xmlSong.ArrangementProperties.BonusArr, 1);
+                    MetronomeCb.Checked = Equals(xmlSong.ArrangementProperties.Metronome, 2);
                     if (EditMode)
                     {
                         string arr = xmlSong.Arrangement.ToLowerInvariant();
@@ -547,6 +549,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Arrangement.ScrollSpeed = scrollSpeedTrackBar.Value;
             Arrangement.PluckedType = Picked.Checked ? PluckedType.Picked : PluckedType.NotPicked;
             Arrangement.BonusArr = BonusCheckBox.Checked;
+            Arrangement.Metronome = MetronomeCb.Checked ? Metronome.Generate : Metronome.None;
 
             // Tuning
             Arrangement.Tuning = tuningComboBox.SelectedItem.ToString();

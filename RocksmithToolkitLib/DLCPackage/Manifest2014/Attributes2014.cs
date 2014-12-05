@@ -106,6 +106,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 // BONUS ARRANGEMENT
                 ArrangementProperties.BonusArr = Convert.ToInt32(arrangement.BonusArr);
 
+                // Metronome
+                ArrangementProperties.Metronome = (int)arrangement.Metronome;
+
                 if (arrangement.Name == Sng.ArrangementName.Combo)
                 { //Exclusive condition
                     if (arrangement.RouteMask == DLCPackage.RouteMask.Lead)

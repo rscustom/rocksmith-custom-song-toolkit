@@ -112,7 +112,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     case GameVersion.RS2014:
                         switch (dlcType)
-	                    {
+                        {
                             case DLCPackageType.Song:
                                 GenerateRS2014SongPsarc(packPsarcStream, info, platform, pnum);
                                 break;
@@ -121,7 +121,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             case DLCPackageType.Inlay:
                                 GenerateRS2014InlayPsarc(packPsarcStream, info, platform);
                                 break;
-	                    }
+                        }
                         break;
                     case GameVersion.RS2012:
                         GeneratePsarcsForRS1(packPsarcStream, info, platform);
@@ -138,7 +138,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     case GamePlatform.Pc:
                     case GamePlatform.Mac:
                         switch (platform.version)
-	                    {
+                        {
                             // SAVE PACKAGE
                             case GameVersion.RS2014:
                                 using (FileStream fl = File.Create(songFileName + ".psarc"))
@@ -150,7 +150,7 @@ namespace RocksmithToolkitLib.DLCPackage
                                 break;
                             default:
                                 throw new InvalidOperationException("Unexpected game version value");
-	                    }
+                        }
                         break;
                     case GamePlatform.XBox360:
                         BuildXBox360Package(songFileName, info, FILES_XBOX, platform.version, dlcType);
@@ -300,7 +300,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region Generate PSARC RS2014
 
-        private static void GenerateRS2014SongPsarc(MemoryStream output, DLCPackageData info, Platform platform, int pnum = -1)
+        private static void GenerateRS2014SongPsarc(Stream output, DLCPackageData info, Platform platform, int pnum = -1)
         {
             var dlcName = info.Name.ToLower();
             packPsarc = new PSARC.PSARC();
@@ -404,7 +404,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         packageListWriter.Write(dlcName);
                         packageListWriter.Flush();
                         packageListStream.Seek(0, SeekOrigin.Begin);
-                        string packageList = "PackageList.txt";
+                        const string packageList = "PackageList.txt";
                         packageListStream.WriteTmpFile(packageList, platform);
                     }
 
@@ -472,8 +472,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifest.Serialize(manifestStream);
                         manifestStream.Seek(0, SeekOrigin.Begin);
 
-                        var jsonPathPC = "manifests/songs_dlc_{0}/{0}_{1}.json";
-                        var jsonPathConsole = "manifests/songs_dlc/{0}_{1}.json";
+                        const string jsonPathPC = "manifests/songs_dlc_{0}/{0}_{1}.json";
+                        const string jsonPathConsole = "manifests/songs_dlc/{0}_{1}.json";
                         packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName, arrangementFileName), manifestStream);
 
                         // MANIFEST HEADER
@@ -537,11 +537,11 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void GenerateRS2014InlayPsarc(MemoryStream output, DLCPackageData info, Platform platform) {
+        private static void GenerateRS2014InlayPsarc(Stream output, DLCPackageData info, Platform platform) {
             var dlcName = info.Inlay.DLCSixName;
 // TODO updateProgress remotely from here 
             {
-                var packPsarc = new PSARC.PSARC();
+                packPsarc = new PSARC.PSARC();
 
                 // Stream objects
                 Stream rsenumerableRootStream = null,
@@ -623,7 +623,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             packageListWriter.Write(dlcName);
                             packageListWriter.Flush();
                             packageListStream.Seek(0, SeekOrigin.Begin);
-                            string packageList = "PackageList.txt";
+                            const string packageList = "PackageList.txt";
                             packageListStream.WriteTmpFile(packageList, platform);
                         }
 
@@ -644,8 +644,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifestStreamList.Add(manifestStream);
                         manifest.Serialize(manifestStream);
                         manifestStream.Seek(0, SeekOrigin.Begin);
-                        var jsonPathPC = "manifests/songs_dlc_{0}/dlc_guitar_{0}.json";
-                        var jsonPathConsole = "manifests/songs_dlc/dlc_guitar_{0}.json";
+                        const string jsonPathPC = "manifests/songs_dlc_{0}/dlc_guitar_{0}.json";
+                        const string jsonPathConsole = "manifests/songs_dlc/dlc_guitar_{0}.json";
                         packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName), manifestStream);
 
                         // MANIFEST HEADER
@@ -654,8 +654,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
                         manifestHeader.Serialize(manifestHeaderStream);
                         manifestHeaderStream.Seek(0, SeekOrigin.Begin);
-                        var hsanPathPC = "manifests/songs_dlc_{0}/dlc_{0}.hsan";
-                        var hsonPathConsole = "manifests/songs_dlc/dlc_{0}.hson";
+                        const string hsanPathPC = "manifests/songs_dlc_{0}/dlc_{0}.hsan";
+                        const string hsonPathConsole = "manifests/songs_dlc/dlc_{0}.hson";
                         packPsarc.AddEntry(String.Format((platform.IsConsole ? hsonPathConsole : hsanPathPC), dlcName), manifestHeaderStream);
 
                         // XBLOCK

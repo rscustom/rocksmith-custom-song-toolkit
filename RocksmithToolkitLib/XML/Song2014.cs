@@ -284,6 +284,10 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("bonusArr")]
         public Int32 BonusArr { get; set; }
 
+        [JsonProperty("Metronome")]
+        [XmlAttribute("Metronome")]
+        public Int32 Metronome { get; set; }
+
         [JsonProperty("pathLead")]
         [XmlAttribute("pathLead")]
         public Int32 PathLead { get; set; }

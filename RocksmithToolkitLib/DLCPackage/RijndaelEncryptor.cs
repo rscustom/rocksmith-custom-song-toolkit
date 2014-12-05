@@ -312,7 +312,7 @@ namespace RocksmithToolkitLib.DLCPackage
             try {
                 using(var version = new Process()){
                     version.StartInfo.FileName = "java";
-                    version.StartInfo.Arguments = "-version -d32";
+                    version.StartInfo.Arguments = "-version";
                     version.StartInfo.CreateNoWindow = true;
                     version.StartInfo.UseShellExecute = false;
                     // Java uses this output instead of stout.
@@ -389,7 +389,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             Process PS3Process = new Process();
             PS3Process.StartInfo.FileName = APP;
-            PS3Process.StartInfo.Arguments = String.Format("-cp \"{0}\" -Xms128m -Xmx1024m {1}", core, command);
+            PS3Process.StartInfo.Arguments = String.Format("-cp \"{0}\" -Xms256m -Xmx1024m {1}", core, command);
             PS3Process.StartInfo.WorkingDirectory = toolkitPath;
             PS3Process.StartInfo.UseShellExecute = false;
             PS3Process.StartInfo.CreateNoWindow = true;

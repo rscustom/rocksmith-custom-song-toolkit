@@ -737,7 +737,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 bwGenerate.RunWorkerAsync(info);
             }
         }
-
+        //consider to move this to RocksmithToolkitLib
         public void ApplyBassFix(Arrangement arr)
         {
             if (arr.TuningPitch.Equals(220.0)) {
@@ -1049,6 +1049,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return null;
                 }
                 arr.SongFile.File = "";
+
             }
 
             if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.Vocals) > 1)

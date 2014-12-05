@@ -15,6 +15,7 @@ namespace RocksmithToolkitLib.Sng
     public enum ArrangementType { Guitar, Bass, Vocal };
     public enum InstrumentTuning { [Description("E Standard")] Standard, [Description("Drop D")] DropD, [Description("Eb")] EFlat, [Description("Open G")] OpenG };
     public enum PluckedType : int { NotPicked, Picked };
+    public enum Metronome { None, Itself, Generate };
 
     public static class InstrumentTuningExtensions
     {
