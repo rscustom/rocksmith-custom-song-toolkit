@@ -69,10 +69,10 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         {
             public bool Equals(Showlight x, Showlight y)
             {
-                if  (x == null || y == null)
-                    return false;
-                
-                return (x.Note == y.Note && x.Time == y.Time) || 
+                if  (x == null)
+                    return y == null;
+
+                return (x.Note == y.Note && x.Time.Equals(y.Time)) || 
                        (x.Note == y.Note && x.Time + 2.0D > y.Time);
             }
 
@@ -99,7 +99,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             }
 
             stream.Flush();
-            stream.Seek(0, SeekOrigin.Begin);            
+            stream.Seek(0, SeekOrigin.Begin);
         }
 
         private int getFogNote(int midiNote)

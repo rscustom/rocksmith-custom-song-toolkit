@@ -57,7 +57,7 @@ namespace RocksmithToolkitLib.DLCPackage
         // DLC ID
         public Guid Id { get; set; }
         public int MasterId { get; set; }
-        // Motronome. Flags: 1 - this is metronome arrangement itself; 2 - generate such arrangement.
+        // Motronome.
         public Metronome Metronome { get; set; }
 
         public Arrangement()
@@ -146,14 +146,18 @@ namespace RocksmithToolkitLib.DLCPackage
             if(!TuningPitch.Equals(440.0))
                 pitchInfo = String.Format(": A{0}", TuningPitch);
 
+            var metDesc = String.Empty;
+            if (Metronome == Metronome.Generate)
+                metDesc = " +Metronome";
+
             switch (ArrangementType)
             {
                 case ArrangementType.Bass:
-                    return String.Format("{0} [{1}{2}{3}] ({4})", ArrangementType, Tuning, pitchInfo, capoInfo, toneDesc);
+                    return String.Format("{0} [{1}{2}{3}] ({4}){5}", ArrangementType, Tuning, pitchInfo, capoInfo, toneDesc, metDesc);
                 case ArrangementType.Vocal:
                     return String.Format("{0}", Name);
                 default:
-                    return String.Format("{0} - {1} [{2}{3}{4}] ({5})", ArrangementType, Name, Tuning, pitchInfo, capoInfo, toneDesc);
+                    return String.Format("{0} - {1} [{2}{3}{4}] ({5}){6}", ArrangementType, Name, Tuning, pitchInfo, capoInfo, toneDesc, metDesc);
             }
         }
 

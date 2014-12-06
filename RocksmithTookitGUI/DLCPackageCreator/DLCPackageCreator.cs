@@ -308,6 +308,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show("One or more fields are missing information.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            //Generate metronome arrangemnts here
+            var mArr = new List<Arrangement>();
+            foreach (var arr in packageData.Arrangements) {
+                if (arr.Metronome == Metronome.Generate)
+                    mArr.Add(GenMetronomeArr(arr));
+            } packageData.Arrangements.AddRange(mArr);
 
             using (var ofd = new SaveFileDialog())
             {
@@ -744,10 +750,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show("This song is already at 220Hz pitch (bass fixed applied already?)", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            Song2014 songXml;
-            using (var reader = new StreamReader(arr.SongXml.File)) {
-                songXml = new XmlStreamingDeserializer<Song2014>(reader).Deserialize();
-            }
+            Song2014 songXml = Song2014.LoadFromFile(arr.SongXml.File);
             // Force 220Hz
             arr.TuningPitch = 220.0;
             songXml.CentOffset = "-1200.0";
@@ -856,6 +859,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             foreach (var arrangement in info.Arrangements) {
                 arrangement.SongXml.File = arrangement.SongXml.File.AbsoluteTo(BasePath);
                 arrangement.CleanCache();
+                if (arrangement.Metronome == Metronome.Itself)
+                    continue;
                 if (arrangement.ToneBase == null)
                 {
                     switch (CurrentGameVersion) {
@@ -1131,6 +1136,51 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             return data;
         }
 
+        public Arrangement GenMetronomeArr(Arrangement arr)
+        {
+            var mArr = GeneralExtensions.Copy<Arrangement>(arr);
+            var songXml = Song2014.LoadFromFile(mArr.SongXml.File);
+            var newXml = Path.GetTempFileName();
+            mArr.SongXml = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongXML{ File = newXml };
+            mArr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile{ File = "" };
+            mArr.CleanCache();
+            mArr.BonusArr = true;
+            mArr.Id = IdGenerator.Guid();
+            mArr.MasterId = RandomGenerator.NextInt();
+            mArr.Metronome = Metronome.Itself;
+            songXml.ArrangementProperties.Metronome = (int)Metronome.Itself;
+
+            var ebeats = songXml.Ebeats;
+            var songEvents = new RocksmithToolkitLib.Xml.SongEvent[ebeats.Length];
+            for (var i = 0; i < ebeats.Length; i++){
+                songEvents[i] = new RocksmithToolkitLib.Xml.SongEvent {
+                    Code = ebeats[i].Measure == -1 ? "B1" : "B0",
+                    Time = ebeats[i].Time
+                };
+            }
+            songXml.Events = songXml.Events.Union(songEvents, new EqSEvent()).OrderBy(x => x.Time).ToArray();
+            using (var stream = File.OpenWrite(mArr.SongXml.File)) {
+                songXml.Serialize(stream);
+            }
+            return mArr;
+        }
+        public class EqSEvent : IEqualityComparer<RocksmithToolkitLib.Xml.SongEvent>
+        {
+            public bool Equals(RocksmithToolkitLib.Xml.SongEvent x, RocksmithToolkitLib.Xml.SongEvent y)
+            {
+                if (x == null)
+                    return y == null;
+
+                return x.Code == y.Code && x.Time.Equals(y.Time);
+            }
+
+            public int GetHashCode(RocksmithToolkitLib.Xml.SongEvent obj)
+            {
+                if (ReferenceEquals(obj, null))
+                    return 0;
+                return obj.Code.GetHashCode()|obj.Time.GetHashCode();
+            }
+        }
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
         {
             if (cmbAppIds.SelectedItem != null)

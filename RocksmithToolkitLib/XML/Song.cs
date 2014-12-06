@@ -723,10 +723,10 @@ namespace RocksmithToolkitLib.Xml
             var songEvents = new SongEvent[eventSection.Count];
             for (var i = 0; i < eventSection.Count; i++)
             {
-                var sevent = new SongEvent();
-                sevent.Code = eventSection.Events[i].EventName.ToNullTerminatedAscii();
-                sevent.Time = eventSection.Events[i].Time;
-                songEvents[i] = sevent;
+                songEvents[i] = new SongEvent {
+                    Code = eventSection.Events[i].EventName.ToNullTerminatedAscii(),
+                    Time = eventSection.Events[i].Time
+                };
             }
             return songEvents;
         }

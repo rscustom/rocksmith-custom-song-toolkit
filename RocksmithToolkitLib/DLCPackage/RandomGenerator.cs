@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
-    class RandomGenerator
+    public static class RandomGenerator
     {
         private static readonly Random Instance = new Random();
         public static int NextInt()
