@@ -90,7 +90,10 @@ namespace RocksmithToolkitLib.PSARC
             }
         }
         #endregion
-        #region Helpers
+        #region Helpers Inflator/Deflator
+
+        public string ErrMSG;
+
         /// <summary>
         /// Inflates selected entry.
         /// </summary>
@@ -109,11 +112,13 @@ namespace RocksmithToolkitLib.PSARC
                     entry.Data = new FileStream(destfilepath, FileMode.Create, FileAccess.Write, FileShare.Read);
                 else
                     entry.Data = new TempFileStream();
+                
                 var data = entry.Data;
                 _reader.BaseStream.Position = (long)entry.Offset;
+
                 do
                 {
-                    // check for corrupt CDLC content and catch exception
+                    // check for corrupt CDLC content and catch exceptions
                     try
                     {
                         if (this.zBlocksSizeList[zChunkID] == 0)
@@ -137,14 +142,15 @@ namespace RocksmithToolkitLib.PSARC
                                 }
                                 catch (Exception ex)
                                 {
-                                    // skip... we can't "repair" it, but we can fill it with zeroes.
+                                    // corrupt CDLC zlib.net exception ... try to unpack
                                     if (String.IsNullOrEmpty(entry.Name))
                                         ErrMSG = String.Format(@"{1}CDLC contains a zlib exception.{1}Warning: {0}{1}", ex.Message, Environment.NewLine);
                                     else
                                         ErrMSG = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
 
                                     Console.Write(ErrMSG);
-                                    data.Write(new byte[array.Length], 0, array.Length);
+                                    // TODO: requires proper presizing of array length
+                                    // data.Write(new byte[array.Length], 0, array.Length);
                                 }
                             }
                             else
@@ -158,7 +164,7 @@ namespace RocksmithToolkitLib.PSARC
                     }
                     catch (Exception ex) // index is outside the bounds of the array 
                     {
-                        // truncated CDLC data ... but lets be nice and try to unpack                       
+                        // corrupt CDLC data length ... try to unpack                       
                         ErrMSG = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
                         Console.Write(ErrMSG + Environment.NewLine);
                         break;
@@ -317,7 +323,9 @@ namespace RocksmithToolkitLib.PSARC
             }
         }
         #endregion
-        public string ErrMSG;
+
+        #region Binary Reader/Writer
+
         private BigEndianBinaryReader _reader;
         public void Read(Stream psarc, bool lazy = false)
         {
@@ -379,10 +387,11 @@ namespace RocksmithToolkitLib.PSARC
                 this.zBlocksSizeList = zLengths.ToArray();
                 _reader.BaseStream.Flush();
                 _reader = new BigEndianBinaryReader(psarc);
+
                 // Validate psarc size
-                // if (psarc.Length < RequiredPsarcSize())
-                // lets be nice and try to unpack it instead
+                // if (psarc.Length < RequiredPsarcSize())                 
                 // throw new InvalidDataException("Truncated psarc.");
+                // try to unpack corrupt CDLC for now
 
                 if (this.header.CompressionMethod == 2053925218)//zlib (BE)
                 {   //Read Filenames
@@ -400,6 +409,7 @@ namespace RocksmithToolkitLib.PSARC
             }
             psarc.Flush();
         }
+
         private BigEndianBinaryWriter _writer;
         public void Write(Stream psarc, bool encrypt)
         {
@@ -489,5 +499,7 @@ namespace RocksmithToolkitLib.PSARC
             }
             psarc.Flush();
         }
+
+        #endregion
     }
 }
