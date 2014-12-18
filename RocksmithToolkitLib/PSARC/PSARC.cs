@@ -40,8 +40,9 @@ namespace RocksmithToolkitLib.PSARC
         }
         private uint[] zBlocksSizeList;
 
-        internal int bNum{
-            get{ return (int)Math.Log(this.header.blockSizeAlloc, byte.MaxValue + 1); }
+        internal int bNum
+        {
+            get { return (int)Math.Log(this.header.blockSizeAlloc, byte.MaxValue + 1); }
         }
 
         public PSARC()
@@ -49,7 +50,7 @@ namespace RocksmithToolkitLib.PSARC
             this.header = new PSARC.Header();
             this.TOC = new List<Entry>();
             this.TOC.Add(new Entry());
-            this.zBlocksSizeList = new uint[]{};
+            this.zBlocksSizeList = new uint[] { };
         }
         /// <summary>
         /// Checks if psarc is not turncated.
@@ -57,12 +58,12 @@ namespace RocksmithToolkitLib.PSARC
         /// <returns>The psarc size.</returns>
         private long RequiredPsarcSize()
         {
-            if(this.TOC.Count > 0)
+            if (this.TOC.Count > 0)
             {//get last_entry.offset+it's size
                 var last_entry = this.TOC[this.TOC.Count - 1];
                 var TotalLen = last_entry.Offset;
                 var zNum = this.zBlocksSizeList.Length - last_entry.zIndexBegin;
-                for( int z = 0; z < zNum; z++ )
+                for (int z = 0; z < zNum; z++)
                 {
                     var num = this.zBlocksSizeList[last_entry.zIndexBegin + z];
                     TotalLen += (num == 0) ? this.header.blockSizeAlloc : num;
@@ -80,11 +81,12 @@ namespace RocksmithToolkitLib.PSARC
         }
         protected virtual void Dispose(bool disposing)
         {
-            if(disposing){
+            if (disposing)
+            {
                 header = null;
                 TOC.Clear();
-                if(_reader != null) _reader.Dispose();
-                if(_writer != null) _writer.Dispose();
+                if (_reader != null) _reader.Dispose();
+                if (_writer != null) _writer.Dispose();
             }
         }
         #endregion
@@ -96,7 +98,7 @@ namespace RocksmithToolkitLib.PSARC
         /// <param name = "destfilepath">Destanation file used instead of the temp file.</param>
         public void InflateEntry(Entry entry, string destfilepath = "")
         {
-            if(entry.Length > 0)
+            if (entry.Length > 0)
             {// Decompress Entry
                 uint zChunkID = entry.zIndexBegin;
                 int blockSize = (int)this.header.blockSizeAlloc;
@@ -175,7 +177,7 @@ namespace RocksmithToolkitLib.PSARC
         /// <param name="name">Name with extension.</param>
         public void InflateEntry(string name)
         {
-            foreach(var entry in this.TOC.Where(t => t.Name.EndsWith(name, StringComparison.Ordinal)))
+            foreach (var entry in this.TOC.Where(t => t.Name.EndsWith(name, StringComparison.Ordinal)))
             {
                 this.InflateEntry(entry);
             }
@@ -254,11 +256,11 @@ namespace RocksmithToolkitLib.PSARC
             InflateEntry(toc);
             int index = 1;
             toc.Name = "NamesBlock.bin";
-            using( var bReader = new StreamReader(toc.Data, true) )
+            using (var bReader = new StreamReader(toc.Data, true))
             {
-                foreach(var name in bReader.ReadToEnd().Split('\n'))//0x0A
+                foreach (var name in bReader.ReadToEnd().Split('\n'))//0x0A
                 {
-                    if(index < this.TOC.Count)
+                    if (index < this.TOC.Count)
                         this.TOC[index].Name = name;
                     index++;
                 }
@@ -302,9 +304,10 @@ namespace RocksmithToolkitLib.PSARC
 
         void ParseTOC()
         {// Parse TOC Entries
-            for( int i = 0; i < this.header.numFiles; i++ )
+            for (int i = 0; i < this.header.numFiles; i++)
             {
-                this.TOC.Add(new Entry {
+                this.TOC.Add(new Entry
+                {
                     Id = i,
                     MD5 = _reader.ReadBytes(16),
                     zIndexBegin = _reader.ReadUInt32(),
@@ -321,7 +324,7 @@ namespace RocksmithToolkitLib.PSARC
             this.TOC.Clear();
             _reader = new BigEndianBinaryReader(psarc);
             this.header.MagicNumber = _reader.ReadUInt32();
-            if(this.header.MagicNumber == 1347633490)//PSAR (BE)
+            if (this.header.MagicNumber == 1347633490)//PSAR (BE)
             {
                 //Parse Header
                 this.header.VersionNumber = _reader.ReadUInt32();
@@ -334,20 +337,20 @@ namespace RocksmithToolkitLib.PSARC
                 //Read TOC
                 const int headerSize = 32;
                 int tocSize = (int)this.header.TotalTOCSize - headerSize;
-                if(this.header.archiveFlags == 4)//TOC_ENCRYPTED
+                if (this.header.archiveFlags == 4)//TOC_ENCRYPTED
                 {// Decrypt TOC
                     var tocStream = new MemoryStream();
-                    using( var decStream = new MemoryStream() )
+                    using (var decStream = new MemoryStream())
                     {
                         RijndaelEncryptor.DecryptPSARC(psarc, decStream, this.header.TotalTOCSize);
 
                         int bytesRead;
                         int decSize = 0;
                         var buffer = new byte[this.header.blockSizeAlloc];
-                        while((bytesRead = decStream.Read(buffer, 0, buffer.Length)) > 0)
+                        while ((bytesRead = decStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
                             decSize += bytesRead;
-                            if(decSize > tocSize) bytesRead = tocSize - (decSize - bytesRead);
+                            if (decSize > tocSize) bytesRead = tocSize - (decSize - bytesRead);
                             tocStream.Write(buffer, 0, bytesRead);
                         }
                     }
@@ -358,9 +361,9 @@ namespace RocksmithToolkitLib.PSARC
                 //Parse zBlocksSizeList
                 int zNum = (int)((tocSize - this.header.numFiles * this.header.TOCEntrySize) / bNum);
                 var zLengths = new uint[zNum];
-                for(int i = 0; i < zNum; i++)
+                for (int i = 0; i < zNum; i++)
                 {
-                    switch(bNum)
+                    switch (bNum)
                     {
                         case 2://64KB
                             zLengths[i] = _reader.ReadUInt16();
@@ -385,12 +388,12 @@ namespace RocksmithToolkitLib.PSARC
                 {   //Read Filenames
                     ReadManifest();
                     psarc.Seek(this.header.TotalTOCSize, SeekOrigin.Begin);
-                    if(!lazy)
+                    if (!lazy)
                     {// Read Data
                         InflateEntries();
                     }
                 }
-                else if(this.header.CompressionMethod == 1819962721)//lzma (BE)
+                else if (this.header.CompressionMethod == 1819962721)//lzma (BE)
                 {
                     throw new NotImplementedException("LZMA compression not supported.");
                 }

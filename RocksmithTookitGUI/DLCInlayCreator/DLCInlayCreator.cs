@@ -280,7 +280,15 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 {
                     Author = iniConfig["Setup"]["creatorname"].Value;
                     InlayName = iniConfig["Setup"]["guitarname"].Value;
+                    try
+                    {
+                        // skip exception for templates created with old v2.0.0.71b
                         Frets24 = iniConfig["Setup"]["24frets"].GetValue<bool>();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine("Exception: Incomplete INI file - " + e.Message);
+                    }
                     Colored = iniConfig["Setup"]["coloredinlay"].GetValue<bool>();
                 }
 

@@ -388,9 +388,6 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <PostBuildEvent>xcopy /S /Y "$(SolutionDir)Third-party Apps" "$(TargetDir)"</PostBuildEvent>
-  </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
@@ -404,8 +401,6 @@ xcopy /S /Y "$(SolutionDir)Third-party Apps")
 if $(ConfigurationName) == ReleaseMac (
 /bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)")
 </PostBuildEvent>
-  <PropertyGroup Condition="'$(Configuration)' == 'ReleaseMac'">
-    <PostBuildEvent>/bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
