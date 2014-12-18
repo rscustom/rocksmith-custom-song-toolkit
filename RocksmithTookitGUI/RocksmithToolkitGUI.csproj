@@ -394,7 +394,16 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-  </PropertyGroup>
+    <!-- be sure to address all build types in the PostBuildEvent -->
+    <PostBuildEvent>if $(ConfigurationName) == Debug (
+xcopy /S /Y "$(SolutionDir)Third-party Apps")
+
+if $(ConfigurationName) == Release (
+xcopy /S /Y "$(SolutionDir)Third-party Apps")
+
+if $(ConfigurationName) == ReleaseMac (
+/bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)")
+</PostBuildEvent>
   <PropertyGroup Condition="'$(Configuration)' == 'ReleaseMac'">
     <PostBuildEvent>/bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>

@@ -280,7 +280,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 {
                     Author = iniConfig["Setup"]["creatorname"].Value;
                     InlayName = iniConfig["Setup"]["guitarname"].Value;
-                    Frets24 = iniConfig["Setup"]["24frets"].GetValue<bool>();
+                        Frets24 = iniConfig["Setup"]["24frets"].GetValue<bool>();
                     Colored = iniConfig["Setup"]["coloredinlay"].GetValue<bool>();
                 }
 

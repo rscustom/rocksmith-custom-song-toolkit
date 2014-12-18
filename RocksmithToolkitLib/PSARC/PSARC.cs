@@ -111,36 +111,59 @@ namespace RocksmithToolkitLib.PSARC
                 _reader.BaseStream.Position = (long)entry.Offset;
                 do
                 {
-                    if (this.zBlocksSizeList[zChunkID] == 0)
-                    {// raw
-                        byte[] array = _reader.ReadBytes(blockSize);
-                        data.Write(array, 0, blockSize);
-                    }
-                    else
+                    // check for corrupt CDLC content and catch exception
+                    try
                     {
-                        var num = _reader.ReadUInt16();
-                        _reader.BaseStream.Position -= 2;
-
-                        byte[] array = _reader.ReadBytes((int)this.zBlocksSizeList[zChunkID]);
-                        if (num == zHeader)
-                        {// compressed
-                            try {
-                                RijndaelEncryptor.Unzip(array, data, false);
-                            }
-                            catch (Exception ex)
-                            {// skip... we can't "repair" it, but we can fill it with zeroes.
-                                ErrMSG = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}[2]", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
-                                Console.Write(ErrMSG);
-                                data.Write(new byte[array.Length], 0, array.Length);
-                            }
+                        if (this.zBlocksSizeList[zChunkID] == 0)
+                        {
+                            // raw
+                            byte[] array = _reader.ReadBytes(blockSize);
+                            data.Write(array, 0, blockSize);
                         }
                         else
-                        {// raw. used only after 0?
-                            data.Write(array, 0, array.Length);
+                        {
+                            var num = _reader.ReadUInt16();
+                            _reader.BaseStream.Position -= 2;
+
+                            byte[] array = _reader.ReadBytes((int)this.zBlocksSizeList[zChunkID]);
+                            if (num == zHeader)
+                            {
+                                // compressed
+                                try
+                                {
+                                    RijndaelEncryptor.Unzip(array, data, false);
+                                }
+                                catch (Exception ex)
+                                {
+                                    // skip... we can't "repair" it, but we can fill it with zeroes.
+                                    if (String.IsNullOrEmpty(entry.Name))
+                                        ErrMSG = String.Format(@"{1}CDLC contains a zlib exception.{1}Warning: {0}{1}", ex.Message, Environment.NewLine);
+                                    else
+                                        ErrMSG = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
+
+                                    Console.Write(ErrMSG);
+                                    data.Write(new byte[array.Length], 0, array.Length);
+                                }
+                            }
+                            else
+                            {
+                                // raw. used only after 0?
+                                data.Write(array, 0, array.Length);
+                            }
                         }
+                        zChunkID += 1;
+
                     }
-                    zChunkID += 1;
+                    catch (Exception ex) // index is outside the bounds of the array 
+                    {
+                        // truncated CDLC data ... but lets be nice and try to unpack                       
+                        ErrMSG = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
+                        Console.Write(ErrMSG + Environment.NewLine);
+                        break;
+                    }
+
                 }
+
                 while (data.Length < (long)entry.Length);
                 data.Seek(0, SeekOrigin.Begin);
                 data.Flush();
@@ -353,10 +376,12 @@ namespace RocksmithToolkitLib.PSARC
                 this.zBlocksSizeList = zLengths.ToArray();
                 _reader.BaseStream.Flush();
                 _reader = new BigEndianBinaryReader(psarc);
-                //Validate psarc size
-                if(psarc.Length < RequiredPsarcSize())
-                    throw new InvalidDataException("Turncated psarc.");
-                if(this.header.CompressionMethod == 2053925218)//zlib (BE)
+                // Validate psarc size
+                // if (psarc.Length < RequiredPsarcSize())
+                // lets be nice and try to unpack it instead
+                // throw new InvalidDataException("Truncated psarc.");
+
+                if (this.header.CompressionMethod == 2053925218)//zlib (BE)
                 {   //Read Filenames
                     ReadManifest();
                     psarc.Seek(this.header.TotalTOCSize, SeekOrigin.Begin);

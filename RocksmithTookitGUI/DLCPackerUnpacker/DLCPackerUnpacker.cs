@@ -167,7 +167,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 }
                 catch (Exception ex)
                 {
-                    errorsFound.AppendLine(String.Format("Error trying unpack file '{0}': {1}", Path.GetFileName(sourceFileName), ex.Message));
+                    errorsFound.AppendLine(String.Format("Error unpacking file '{0}': {1}", Path.GetFileName(sourceFileName), ex.Message));
                 }
 
                 progress += step;
