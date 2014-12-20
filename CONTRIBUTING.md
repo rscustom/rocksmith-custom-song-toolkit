@@ -32,3 +32,7 @@
   * While the issue should have details about what you're doing, make your commit message meaningful rather than something like "Fixes #1234"
   * A good commit message might be something like `Adds support for Drop D tuning (#1234)`
 * Submit a [pull request](https://help.github.com/articles/using-pull-requests) to the rscustom repository.
+
+## Code Style
+
+* Use spaces for indentation, and Windows line endings, enable unprintable symbols to make sure that you're doing fine.

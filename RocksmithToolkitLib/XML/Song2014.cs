@@ -11,6 +11,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.Sng;
+using System.Diagnostics.PerformanceData;
 
 namespace RocksmithToolkitLib.Xml
 {
@@ -156,6 +157,9 @@ namespace RocksmithToolkitLib.Xml
         [XmlArrayItem("control")]
         public SongControl[] Controls { get; set; }
 
+        [XmlElement("transcriptionTrack")]// DDC recuired node
+        public TranscriptionTrack2014 TranscriptionTrack { get; set; }
+
         [XmlArray("levels")]
         [XmlArrayItem("level", typeof(SongLevel2014))]
         public SongLevel2014[] Levels { get; set; }
@@ -248,6 +252,8 @@ namespace RocksmithToolkitLib.Xml
             PhraseProperties = SongPhraseProperty.Parse(sngData.PhraseExtraInfo);
             LinkedDiffs = new SongLinkedDiff[0];
             FretHandMuteTemplates = new SongFretHandMuteTemplate[0];
+            //ddc
+            TranscriptionTrack = TranscriptionTrack2014.GetDefault();
         }
 
         public static Song2014 LoadFromFile(string xmlSongRS2014File)
@@ -257,7 +263,7 @@ namespace RocksmithToolkitLib.Xml
                 return new XmlStreamingDeserializer<Song2014>(reader).Deserialize();
             }
         }
-
+        //TODO: write count attribute for all arrays
         public void Serialize(Stream stream, bool omitXmlDeclaration = false)
         {
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
@@ -540,6 +546,46 @@ namespace RocksmithToolkitLib.Xml
                     matchingChord.ChordId = ct.ChordId;
             }
             return chordTemplates;
+        }
+    }
+
+    public class TranscriptionTrack2014
+    {
+        [XmlAttribute("difficulty")]
+        public Int32 Difficulty { get; set; }
+
+        [XmlArray("notes")]
+        [XmlArrayItem("note")]
+        public SongNote2014[] Notes { get; set; }
+
+        [XmlArray("chords")]
+        [XmlArrayItem("chord")]
+        public SongChord2014[] Chords { get; set; }
+
+        //Something wrong
+        [XmlArray("anchors")]
+        [XmlArrayItem("anchor")]
+        public SongAnchor2014[] Anchors { get; set; }
+
+        [XmlArray("handShapes")]
+        [XmlArrayItem("handShape")]
+        public SongHandShape[] HandShapes { get; set; }
+
+        //DDC writes this idk why, It's not present in lessons.
+        [XmlArray("fretHandMutes")]
+        [XmlArrayItem("fretHandMute")]
+        public SongFretHandMuteTemplate[] FretHandMutes { get; set; }
+
+        internal static TranscriptionTrack2014 GetDefault()
+        {
+            var tt = new TranscriptionTrack2014();
+            tt.Difficulty = -1;
+            tt.Anchors = new SongAnchor2014[0];
+            tt.Chords = new SongChord2014[0];
+            tt.FretHandMutes = new SongFretHandMuteTemplate[0];
+            tt.HandShapes = new SongHandShape[0];
+            tt.Notes = new SongNote2014[0];
+            return tt;
         }
     }
 
@@ -916,7 +962,7 @@ namespace RocksmithToolkitLib.Xml
         private void ParseChordNotes(Sng2014HSL.Chord template, Sng2014HSL.ChordNotes chordNotes = null)
         {
             var notes = new List<SongNote2014>();
-            var notSetup = unchecked((sbyte)-1);
+            const sbyte notSetup = unchecked((sbyte)-1);
 
             for (var i = 0; i < 6; i++)
             {

@@ -39,7 +39,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // CONVERSION                
             if (needRebuildPackage)
-                ConvertPackageRebuilding(unpackedDir, targetFileName, targetPlatform, appId);
+                ConvertPackageRebuilding(unpackedDir, targetFileName, sourcePlatform, targetPlatform, appId);
             else
                 ConvertPackageForSimilarPlatform(unpackedDir, targetFileName, sourcePlatform, targetPlatform, appId);
 
@@ -102,9 +102,9 @@ namespace RocksmithToolkitLib.DLCPackage
             DirectoryExtension.SafeDelete(unpackedDir);
         }
 
-        private static void ConvertPackageRebuilding(string unpackedDir, string targetFileName, Platform targetPlatform, string appId)
+        private static void ConvertPackageRebuilding(string unpackedDir, string targetFileName, Platform sourcePlatform, Platform targetPlatform, string appId)
         {
-            var data = DLCPackageData.LoadFromFolder(unpackedDir, targetPlatform);
+            var data = DLCPackageData.LoadFromFolder(unpackedDir, targetPlatform, sourcePlatform);
             // Update AppID
             if (!targetPlatform.IsConsole)
                 data.AppId = appId;

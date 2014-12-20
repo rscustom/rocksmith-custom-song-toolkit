@@ -64,9 +64,13 @@ namespace RocksmithToolkitLib.DLCPackage
         public static string Unpack(string sourceFileName, string savePath, bool decodeAudio = false, bool extractSongXml = false, bool overwriteSongXml = true, Platform predefinedPlatform = null)
         {
             Platform platform = sourceFileName.GetPlatform();
-
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
                 platform = predefinedPlatform;
+
+            var fnameWithoutExt = Path.GetFileNameWithoutExtension(sourceFileName);
+            var unpackedDir = Path.Combine(savePath, String.Format("{0}_{1}", fnameWithoutExt, platform.platform));
+            if (Directory.Exists(unpackedDir))
+                DirectoryExtension.SafeDelete(unpackedDir);
 
             var useCryptography = platform.version == GameVersion.RS2012; // Cryptography way is used only for PC in Rocksmith 1
             switch (platform.platform)
@@ -100,11 +104,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     throw new InvalidOperationException("Platform not found :(");
             }
 
-            var fnameWithoutExt = Path.GetFileNameWithoutExtension(sourceFileName);
             if (platform.platform == GamePlatform.PS3)
                 fnameWithoutExt = fnameWithoutExt.Substring(0, fnameWithoutExt.LastIndexOf("."));
-
-            var unpackedDir = Path.Combine(savePath, String.Format("{0}_{1}", fnameWithoutExt, platform.platform));
 
             // DECODE AUDIO
             if (decodeAudio) {

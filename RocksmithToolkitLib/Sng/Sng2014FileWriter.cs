@@ -6,6 +6,8 @@ using System.Text;
 
 using RocksmithToolkitLib.Properties;
 using RocksmithToolkitLib.Xml;
+using MiscUtil.IO;
+using MiscUtil.Conversion;
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {
@@ -1112,7 +1114,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 // to mark otherwise unchanged notes
                 foreach (var n in a.Notes.Notes) {
                     MemoryStream data = sng.CopyStruct(n);
-                    BinaryReader r = new BinaryReader(data);
+                    var r = new EndianBinaryReader(EndianBitConverter.Little, data);
                     var ncopy = new Notes();
                     ncopy.read(r);
                     ncopy.NextIterNote = 0;

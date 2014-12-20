@@ -72,32 +72,17 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <returns>The DLCPackageData info.</returns>
         /// <param name="unpackedDir">Unpacked dir.</param>
         /// <param name="targetPlatform">Target platform.</param>
-        public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform) {
+        /// <param name = "sourcePlatform"></param>
+        public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform, Platform sourcePlatform = null) {
             var data = new DLCPackageData();
             data.GameVersion = GameVersion.RS2014;
             data.SignatureType = PackageMagic.CON;
+            if (sourcePlatform == null)
+                sourcePlatform = unpackedDir.GetPlatform();
 
             //Arrangements / Tones
             data.Arrangements = new List<Arrangement>();
             data.TonesRS2014 = new List<Tone2014>();
-
-            //Source platform + audio files
-            var targetAudioFiles = new List<string>();
-            var sourceAudioFiles = Directory.GetFiles(unpackedDir, "*.wem", SearchOption.AllDirectories);
-            Platform sourcePlatform = new Platform(GamePlatform.Pc, GameVersion.None);
-
-            foreach (var file in sourceAudioFiles) {
-                var newFile = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                if (targetPlatform.IsConsole != (sourcePlatform = file.GetAudioPlatform()).IsConsole)
-                {
-                    OggFile.ConvertAudioPlatform(file, newFile);
-                    targetAudioFiles.Add(newFile);
-                }
-                else targetAudioFiles.Add(file);
-            }
-
-            if (!targetAudioFiles.Any())
-                throw new InvalidDataException("Audio files not found.");
 
             //Load files
             var jsonFiles = Directory.GetFiles(unpackedDir, "*.json", SearchOption.AllDirectories);
@@ -182,6 +167,23 @@ namespace RocksmithToolkitLib.DLCPackage
                 data.LyricArtPath = LyricArt[0];
 
             //Get other files
+            //Audio files
+            var targetAudioFiles = new List<string>();
+            var sourceAudioFiles = Directory.GetFiles(unpackedDir, "*.wem", SearchOption.AllDirectories).ToArray();
+
+            foreach (var file in sourceAudioFiles) {
+                var newFile = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
+                if (targetPlatform.IsConsole != (sourcePlatform = file.GetAudioPlatform()).IsConsole)
+                {
+                    OggFile.ConvertAudioPlatform(file, newFile);
+                    targetAudioFiles.Add(newFile);
+                }
+                else targetAudioFiles.Add(file);
+            }
+
+            if (!targetAudioFiles.Any())
+                throw new InvalidDataException("Audio files not found.");
+
             string audioPath = null, audioPreviewPath = null;
             FileInfo a = new FileInfo(targetAudioFiles[0]);
             FileInfo b = null;

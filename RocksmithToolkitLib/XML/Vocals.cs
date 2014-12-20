@@ -33,14 +33,15 @@ namespace RocksmithToolkitLib.Xml
         public Vocal[] Vocal { get; set; }
 
         public static Vocals LoadFromFile(string xmlVocalFile) {
-            using (var reader = new StreamReader(xmlVocalFile))
+            using (var validXml = xmlVocalFile.StripIllegalXMLChars())
+            using (var reader = new StreamReader(validXml))
             {
                 return new XmlStreamingDeserializer<Vocals>(reader).Deserialize();
             }
         }
 
         public void Serialize(Stream stream) {
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            var ns = new XmlSerializerNamespaces();
             ns.Add("", "");
 
             using (var writer = XmlWriter.Create(stream, new XmlWriterSettings {

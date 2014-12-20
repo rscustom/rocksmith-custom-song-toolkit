@@ -59,7 +59,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             Sng2014File sng = new Sng2014File();
 
             using (var ms = new MemoryStream())
-            using (var r = new BinaryReader(ms))
+            using (var r = new EndianBinaryReader(platform.GetBitConverter, ms))
             {
                 UnpackSng(input, ms, platform);
                 ms.Flush();
@@ -74,13 +74,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
             EndianBitConverter conv = platform.GetBitConverter;
 
             using (var decrypted = new MemoryStream())
-            using (var brDec = new EndianBinaryReader(conv, decrypted)) {
+            using (var ebrDec = new EndianBinaryReader(conv, decrypted)) {
                 byte[] key;
                 switch (platform.platform) {
                     case GamePlatform.Mac:
                         key = RijndaelEncryptor.SngKeyMac;
                         break;
-                    case GamePlatform.Pc: //PC
+                    case GamePlatform.Pc:
                         key = RijndaelEncryptor.SngKeyPC;
                         break;
                     default:
@@ -94,8 +94,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     decrypted.Seek(8, SeekOrigin.Begin);
                 }
                 //unZip
-                long plainLen = brDec.ReadUInt32();
-                ushort xU = brDec.ReadUInt16();
+                long plainLen = ebrDec.ReadUInt32();
+                ushort xU = ebrDec.ReadUInt16();
                 decrypted.Position -= 2;
                 if (xU == 0x78DA || xU == 0xDA78) {//LE 55928 //BE 30938
                     RijndaelEncryptor.Unzip(decrypted, output, false);
@@ -104,7 +104,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         public Sng2014File(Stream data) {
-            BinaryReader r = new BinaryReader(data);
+            var r = new EndianBinaryReader(EndianBitConverter.Little,data);
             this.Read(r);
         }
 
@@ -180,7 +180,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 if (conv == EndianBitConverter.Big && chartBE != null)
                     return chartBE;
 
-                using (EndianBinaryWriter w = new EndianBinaryWriter(conv, stream)) {
+                using (var w = new EndianBinaryWriter(conv, stream)) {
                     this.Write(w);
                 }
                 stream.Flush();
@@ -208,7 +208,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             return !this.SymbolsTexture.SymbolsTextures[0].Font.ToNullTerminatedUTF8().Contains("lyrics.dds");
         }
 
-        public void Read(BinaryReader r) {
+        public void Read(EndianBinaryReader r) {
             this.BPMs = new BpmSection(); this.BPMs.read(r);
             this.Phrases = new PhraseSection(); this.Phrases.read(r);
             this.Chords = new ChordSection(); this.Chords.read(r);

@@ -560,6 +560,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var packagePlatform = sourcePackage.GetPlatform();
             var unpackedDir = Packer.Unpack(sourcePackage, tmp, true, true, false);
             savePath = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourcePackage));
+            // Same name xbox issue fix
+            if(packagePlatform.platform == GamePlatform.XBox360)
+                savePath += GamePlatform.XBox360.ToString();
             DirectoryExtension.Move(unpackedDir, savePath, true);
             unpackedDir = savePath;
 
@@ -569,7 +572,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 unpackedDir = DLCPackageData.DoLikeProject(savePath);
 
             // LOAD DATA
-            var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform);
+            var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform);
 
             switch (packagePlatform.platform)
             {
@@ -828,7 +831,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Application.DoEvents();
             AppIdTB.Text = info.AppId;
             SelectComboAppId(info.AppId);
-
+            if (AppIdTB.Text == "")
+                AppIdTB.Text = "248750"; //hardcoded for now
             AlbumTB.Text = info.SongInfo.Album;
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
             SongDisplayNameSortTB.Text = info.SongInfo.SongDisplayNameSort;
@@ -1415,7 +1419,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         private void SelectComboAppId(string appId) {
-            SongAppId songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);
+            var songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppIds.SelectedItem = songAppId;
         }

@@ -18,15 +18,14 @@ namespace RocksmithToolkitLib {
 
         public SongAppId Select(string appId, GameVersion gameVersion)
         {
-            if (List.OfType<SongAppId>().Where(s => s.AppId == appId && s.GameVersion == gameVersion).Any())
+            if (List.Any(s => s.AppId == appId && s.GameVersion == gameVersion))
                 return List.FirstOrDefault<SongAppId>(s => s.AppId == appId);
-            else
-                return List[0];
+            return List[0];
         }
 
         public IEnumerable<SongAppId> Select(GameVersion gameVersion)
         {
-            return List.OfType<SongAppId>().Where(s => s.GameVersion == gameVersion).OrderBy(s => s.Name);
+            return List.Where(s => s.GameVersion == gameVersion).OrderBy(s => s.Name);
         }
     }
 

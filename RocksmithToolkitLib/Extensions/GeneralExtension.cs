@@ -101,6 +101,20 @@ namespace RocksmithToolkitLib.Extensions
             return info;
         }
 
+        /// <summary>
+        /// Strips non-printable ASCII characters
+        /// </summary>
+        /// <param name="filePath">Full path to the File</param>
+        public static Stream StripIllegalXMLChars(this string filePath)
+        {
+            string tmpContents = File.ReadAllText(filePath);
+            string pattern = @"[^\x09\x0A\x0D\x20-\xD7FF\xE000-\xFFFD\x10000-x10FFFF]";
+
+            tmpContents = Regex.Replace(tmpContents, pattern, "", RegexOptions.IgnoreCase);
+
+            return new MemoryStream(new UTF8Encoding(false).GetBytes(tmpContents));
+        }
+
         public static string GetValidVersion(this string value)
         {
             if (!String.IsNullOrEmpty(value))

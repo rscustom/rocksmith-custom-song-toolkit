@@ -347,7 +347,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public static string EncryptPS3Edat()
         {
             if(!IfJavaInstalled())
-                return "No JDK or JRE is intsalled on your machine";
+                return "No JDK or JRE is installed on your machine";
 
             string errors = string.Empty;
             var files = Directory.EnumerateFiles(Path.Combine(toolkitPath, "edat"), "*.psarc");
@@ -368,7 +368,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public static string DecryptPS3Edat()
         {
             if(!IfJavaInstalled())
-                return "No JDK or JRE is intsalled on your machine";
+                return "No JDK or JRE is installed on your machine";
 
             string errors = string.Empty;
             var files = Directory.EnumerateFiles(Path.Combine(toolkitPath, "edat"), "*.edat");
@@ -399,9 +399,9 @@ namespace RocksmithToolkitLib.DLCPackage
             PS3Process.WaitForExit();
 
             string stdout = PS3Process.StandardError.ReadToEnd();
-            //Improove me please
+            //Improve me please
             if (!String.IsNullOrEmpty(stdout))
-                return String.Format("System error occured {0}\n", stdout);
+                return String.Format("System error occurred {0}\n", stdout);
             return "";
         }
 

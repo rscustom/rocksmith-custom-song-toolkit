@@ -8,7 +8,7 @@ namespace RocksmithToolkitLib.Extensions
 {
     public class TempFileStream : FileStream
     {
-        static int _buffer_size = 65536;
+        const int _buffer_size = 65536;
         public TempFileStream()
             : base(Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.Read, _buffer_size, FileOptions.DeleteOnClose) { }
 
@@ -24,37 +24,33 @@ namespace RocksmithToolkitLib.Extensions
 
     public class XmlStreamingDeserializer<T>
     {
-        static XmlSerializerNamespaces _ns;
-        XmlSerializer _serializer = new XmlSerializer(typeof(T));
+        //XmlSerializerNamespaces _ns;
+        XmlSerializer _serializer;
         XmlReader _reader;
 
-        static XmlStreamingDeserializer()
+        public XmlStreamingDeserializer()
         {
-            _ns = new XmlSerializerNamespaces();
-            _ns.Add("", "");
-        }
-
-        private XmlStreamingDeserializer()
-        {
+            //_ns = new XmlSerializerNamespaces();
+            //_ns.Add("", "");
             _serializer = new XmlSerializer(typeof(T));
         }
-        
+
         public XmlStreamingDeserializer(TextReader reader)
             : this(XmlReader.Create(reader))
         {
         }
-        
+
         public XmlStreamingDeserializer(XmlReader reader)
             : this()
         {
             _reader = reader;
         }
-        
+
         public void Close()
         {
             _reader.Close();
         }
-        
+
         public T Deserialize()
         {
             while (_reader.IsStartElement())
