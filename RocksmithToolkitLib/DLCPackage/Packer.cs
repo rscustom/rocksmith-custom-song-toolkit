@@ -606,7 +606,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// </summary>
         /// <param name="fileName">Folder of File</param>
         /// <returns>Platform(DetectedPlatform, RS2014 ? None)</returns>
-        private static Platform TryGetPlatformByEndName(string fileName)
+        public static Platform TryGetPlatformByEndName(string fileName)
         {
             GamePlatform p = GamePlatform.None;
             GameVersion v = GameVersion.RS2014;
@@ -695,10 +695,10 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void UpdateSng2014(string songDirectory, Platform platform)
+        private static void UpdateSng2014(string songDirectory, Platform targetPlatform)
         {
             var xmlFiles = Directory.GetFiles(Path.Combine(songDirectory, "songs", "arr"), "*_*.xml", SearchOption.AllDirectories);
-            var sngFolder = Path.Combine(songDirectory, "songs", "bin", platform.GetPathName()[1]); //-3 or more times re-calculation
+            var sngFolder = Path.Combine(songDirectory, "songs", "bin", targetPlatform.GetPathName()[1]); //-3 or more times re-calculation
             foreach (var xmlFile in xmlFiles)
             {
                 if (File.Exists(xmlFile))
@@ -716,20 +716,22 @@ namespace RocksmithToolkitLib.DLCPackage
                         if (Path.GetFileName(xmlFile).ToLower().Contains("vocal"))
                             arrType = ArrangementType.Vocal;
 
+                        // Handle custom fonts
                         string fontSng = null;
-                        var vocSng = Sng2014File.LoadFromFile(sngFile, platform);
-                        if (File.Exists(sngFile) && arrType == ArrangementType.Vocal && vocSng.IsCustomFont()) {
-                            fontSng = Path.GetTempFileName(); 
-                            vocSng.WriteChartData(fontSng, new Platform(GamePlatform.Pc, GameVersion.None));
+                        if (arrType == ArrangementType.Vocal) {
+                            var vocSng = Sng2014File.LoadFromFile(sngFile, TryGetPlatformByEndName(songDirectory));
+                            if(vocSng.IsCustomFont())
+                            {
+                                vocSng.WriteChartData((fontSng = Path.GetTempFileName()), new Platform(GamePlatform.Pc, GameVersion.None));
+                            }
                         }
 
                         using (var fs = new FileStream(sngFile, FileMode.Create)) {
-                            Sng2014File sng = Sng2014File.ConvertXML(xmlFile, arrType, fontSng);
-                            sng.WriteSng(fs, platform);
+                            var sng = Sng2014File.ConvertXML(xmlFile, arrType, fontSng);
+                            sng.WriteSng(fs, targetPlatform);
                         }
 
-                        if (xmlFiles.Any(x => Path.GetFileName(x).Contains(xmlName.Split('_')[0].ToLower() + "_showlights")))
-                            noShowlights = false;
+                        noShowlights &= !xmlFiles.Any(x => Path.GetFileName(x).Contains(xmlName.Split('_')[0].ToLower() + "_showlights"));
                         //Create Showlights
                         if (noShowlights && arrType != ArrangementType.Vocal)
                         {

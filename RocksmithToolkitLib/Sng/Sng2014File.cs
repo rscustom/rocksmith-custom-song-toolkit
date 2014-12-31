@@ -56,7 +56,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         public static Sng2014File ReadSng(Stream input, Platform platform) 
         {
-            Sng2014File sng = new Sng2014File();
+            var sng = new Sng2014File();
 
             using (var ms = new MemoryStream())
             using (var r = new EndianBinaryReader(platform.GetBitConverter, ms))
@@ -104,7 +104,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         }
 
         public Sng2014File(Stream data) {
-            var r = new EndianBinaryReader(EndianBitConverter.Little,data);
+            var r = new EndianBinaryReader(EndianBitConverter.Little, data);
             this.Read(r);
         }
 
