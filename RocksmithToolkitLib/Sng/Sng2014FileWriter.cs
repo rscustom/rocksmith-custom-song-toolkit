@@ -230,7 +230,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
         }
 
-        private static void readString(string From, Byte[] To) {
+        public static void readString(string From, Byte[] To) {
             var bytes = Encoding.UTF8.GetBytes(From);
             System.Buffer.BlockCopy(bytes, 0, To, 0, Math.Min(To.Length, bytes.Length));
         }

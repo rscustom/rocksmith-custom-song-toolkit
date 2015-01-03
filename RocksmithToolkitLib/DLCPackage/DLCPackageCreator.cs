@@ -41,6 +41,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static List<string> TMPFILES_SNG = new List<string>();
         private static List<string> TMPFILES_ART = new List<string>();
         private static PSARC.PSARC packPsarc;
+        private static string dlcName;
 
         private static void DeleteTmpFiles(List<string> files)
         {
@@ -302,7 +303,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void GenerateRS2014SongPsarc(Stream output, DLCPackageData info, Platform platform, int pnum = -1)
         {
-            var dlcName = info.Name.ToLower();
+            dlcName = info.Name.ToLower();
             packPsarc = new PSARC.PSARC();
 
             // Stream objects
@@ -538,7 +539,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private static void GenerateRS2014InlayPsarc(Stream output, DLCPackageData info, Platform platform) {
-            var dlcName = info.Inlay.DLCSixName;
+            dlcName = info.Inlay.DLCSixName;
 // TODO updateProgress remotely from here 
             {
                 packPsarc = new PSARC.PSARC();
@@ -1000,6 +1001,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         // cache results
                         // TODO: update dlcName in font texture from here.
                         arr.Sng2014 = Sng2014File.ConvertXML(arr.SongXml.File, arr.ArrangementType, arr.FontSng);
+                        arr.Sng2014.PopFontPath(dlcName);
                     }
                     using (var fs = new FileStream(sngFile, FileMode.Create))
                         arr.Sng2014.WriteSng(fs, platform);

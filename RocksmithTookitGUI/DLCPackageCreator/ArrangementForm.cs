@@ -622,6 +622,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void vocalEdit_Click(object sender, EventArgs e)
         {
+            if (!String.IsNullOrEmpty(parentControl.LyricArtPath) && String.IsNullOrEmpty(Arrangement.FontSng))
+                MessageBox.Show("FYI, there is alredy defined one custom font.\r\n", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            using (var form = new VocalsForm(Arrangement.FontSng, parentControl.LyricArtPath))
+            {
+                if (DialogResult.OK != form.ShowDialog()) {
+                    return;
+                }
+                Arrangement.FontSng = form.SngPath;
+                parentControl.LyricArtPath = form.ArtPath;
+                Arrangement.CustomFont = !String.IsNullOrEmpty(form.SngPath);
+            }
         }
 
         private void tuningEditButton_Click(object sender, EventArgs e) 

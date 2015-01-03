@@ -195,7 +195,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { audioPathTB.Text = value; }
         }
 
-        private string LyricArtPath
+        public string LyricArtPath
         {
             get;
             set;
@@ -470,6 +470,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     continue;
                 arr.SongXml.File = arr.SongXml.File.RelativeTo(BasePath);
                 arr.SongFile.File = "";
+                if (!String.IsNullOrEmpty(arr.FontSng))
+                    arr.FontSng = arr.FontSng.RelativeTo(BasePath);
             }
 
             using (var stm = XmlWriter.Create(dlcSavePath, new XmlWriterSettings{ CheckCharacters = true, Indent = true }))
@@ -482,8 +484,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 if (!String.IsNullOrEmpty(arr.SongXml.File))
                     arr.SongXml.File = arr.SongXml.File.AbsoluteTo(BasePath);
-                if(!String.IsNullOrEmpty(arr.SongFile.File))
+                if (!String.IsNullOrEmpty(arr.SongFile.File))
                     arr.SongFile.File = arr.SongFile.File.AbsoluteTo(BasePath);
+                if (!String.IsNullOrEmpty(arr.FontSng))
+                    arr.FontSng = arr.FontSng.AbsoluteTo(BasePath);
             }
 
             if (String.IsNullOrEmpty(defaultSavePath))//if in GUI mode.
@@ -831,7 +835,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Application.DoEvents();
             AppIdTB.Text = info.AppId;
             SelectComboAppId(info.AppId);
-            if (AppIdTB.Text == "")
+            if (String.IsNullOrEmpty(AppIdTB.Text))
                 AppIdTB.Text = "248750"; //hardcoded for now
             AlbumTB.Text = info.SongInfo.Album;
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
@@ -862,6 +866,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             ArrangementLB.Items.Clear();
             foreach (var arrangement in info.Arrangements) {
                 arrangement.SongXml.File = arrangement.SongXml.File.AbsoluteTo(BasePath);
+                if (!String.IsNullOrEmpty(arrangement.FontSng))
+                    arrangement.FontSng = arrangement.FontSng.AbsoluteTo(BasePath);
                 arrangement.CleanCache();
                 if (arrangement.Metronome == Metronome.Itself)
                     continue;
