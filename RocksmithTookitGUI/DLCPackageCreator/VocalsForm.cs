@@ -23,18 +23,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     {
         public string SngPath { get; set; }
         public string ArtPath { get; set; }
+        public bool IsCustom { get; set; }
 
-        public VocalsForm( string fontSng, string lyricArtPath )
+        public VocalsForm( string fontSng, string lyricArtPath, bool isCustom )
         {
             InitializeComponent();
             SngPathCTB.Text = SngPath = fontSng;
             ArtPathCTB.Text = ArtPath = lyricArtPath;
+            isCustomCB.Checked = IsCustom = isCustom;
         }
         
         void OkButton_Click(object sender, EventArgs e)
         {
-            if(File.Exists(SngPath) && File.Exists(ArtPath))
+            if(File.Exists(SngPath) && File.Exists(ArtPath) || !IsCustom)
             {
+                if (!IsCustom)
+                    SngPath = "";
                 this.DialogResult = DialogResult.OK;
                 Close();
             }
@@ -53,6 +57,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (f.ShowDialog() == DialogResult.OK)
                 {
                     ArtPath = f.FileName;
+                    IsCustom = true;
                 }
             }
         }
@@ -80,6 +85,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             var name = (TextBox)sender;
             ArtPath = name.Text;
+        }
+        
+        void IsCustomCB_CheckedChanged(object sender, EventArgs e)
+        {
+            IsCustom = isCustomCB.Checked;
         }
     }
 }

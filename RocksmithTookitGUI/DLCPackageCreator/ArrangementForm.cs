@@ -625,14 +625,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (!String.IsNullOrEmpty(parentControl.LyricArtPath) && String.IsNullOrEmpty(Arrangement.FontSng))
                 MessageBox.Show("FYI, there is alredy defined one custom font.\r\n", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-            using (var form = new VocalsForm(Arrangement.FontSng, parentControl.LyricArtPath))
+            using (var form = new VocalsForm(Arrangement.FontSng, parentControl.LyricArtPath, Arrangement.CustomFont))
             {
                 if (DialogResult.OK != form.ShowDialog()) {
                     return;
                 }
                 Arrangement.FontSng = form.SngPath;
                 parentControl.LyricArtPath = form.ArtPath;
-                Arrangement.CustomFont = !String.IsNullOrEmpty(form.SngPath);
+                Arrangement.CustomFont = form.IsCustom;
             }
         }
 

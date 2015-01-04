@@ -37,12 +37,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.label2 = new System.Windows.Forms.Label();
             this.artpathFD = new System.Windows.Forms.Button();
             this.sngpathFD = new System.Windows.Forms.Button();
+            this.isCustomCB = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // OkButton
             // 
             this.OkButton.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.OkButton.Location = new System.Drawing.Point(206, 143);
+            this.OkButton.Location = new System.Drawing.Point(207, 159);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);
             this.OkButton.TabIndex = 0;
@@ -53,7 +54,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // cancelBT
             // 
             this.cancelBT.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelBT.Location = new System.Drawing.Point(121, 143);
+            this.cancelBT.Location = new System.Drawing.Point(122, 159);
             this.cancelBT.Name = "cancelBT";
             this.cancelBT.Size = new System.Drawing.Size(75, 23);
             this.cancelBT.TabIndex = 1;
@@ -118,10 +119,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.sngpathFD.UseVisualStyleBackColor = true;
             this.sngpathFD.Click += new System.EventHandler(this.SngpathFD_Click);
             // 
+            // isCustomCB
+            // 
+            this.isCustomCB.Location = new System.Drawing.Point(12, 125);
+            this.isCustomCB.Name = "isCustomCB";
+            this.isCustomCB.Size = new System.Drawing.Size(104, 24);
+            this.isCustomCB.TabIndex = 7;
+            this.isCustomCB.Text = "Custom Font";
+            this.isCustomCB.UseVisualStyleBackColor = true;
+            this.isCustomCB.CheckedChanged += new System.EventHandler(this.IsCustomCB_CheckedChanged);
+            // 
             // VocalsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(292, 178);
+            this.ClientSize = new System.Drawing.Size(294, 191);
+            this.Controls.Add(this.isCustomCB);
             this.Controls.Add(this.sngpathFD);
             this.Controls.Add(this.artpathFD);
             this.Controls.Add(this.label2);
@@ -132,8 +144,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.Controls.Add(this.OkButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(300, 205);
-            this.MinimumSize = new System.Drawing.Size(300, 205);
+            this.MaximumSize = new System.Drawing.Size(300, 216);
+            this.MinimumSize = new System.Drawing.Size(300, 216);
             this.Name = "VocalsForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -142,6 +154,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+        private System.Windows.Forms.CheckBox isCustomCB;
         private System.Windows.Forms.Button sngpathFD;
         private System.Windows.Forms.Button artpathFD;
         private System.Windows.Forms.Label label2;

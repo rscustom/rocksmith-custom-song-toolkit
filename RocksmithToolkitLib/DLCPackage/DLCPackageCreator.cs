@@ -1001,7 +1001,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         // cache results
                         // TODO: update dlcName in font texture from here.
                         arr.Sng2014 = Sng2014File.ConvertXML(arr.SongXml.File, arr.ArrangementType, arr.FontSng);
-                        arr.Sng2014.PopFontPath(dlcName);
+                        if (arr.CustomFont)
+                            arr.Sng2014.PopFontPath(dlcName);
                     }
                     using (var fs = new FileStream(sngFile, FileMode.Create))
                         arr.Sng2014.WriteSng(fs, platform);
