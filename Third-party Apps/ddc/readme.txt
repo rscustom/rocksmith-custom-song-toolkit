@@ -1,5 +1,5 @@
 -------------------------------------------------------------
--- DDC v2.5 (c) 2013, by Chlipouni
+-- DDC v2.6 (c) 2013, by Chlipouni
 -------------------------------------------------------------
 
 DDC is a command line tool conceived to add Dynamic Difficulty Levels on Custom Downloadable Contents.
@@ -13,16 +13,16 @@ Use :
 - Open a Windows command-line interpreter
 - Execute the "ddc.exe" tool with the following parameters :
 
-  C:\ddc_v2.5>ddc.exe
+  C:\ddc_v2.6>ddc.exe
   -----------------------------------------------------------------------
-  -- D Y N A M I C   D I F F I C U L T Y   C R E A T O R   v 2.5       --
+  -- D Y N A M I C   D I F F I C U L T Y   C R E A T O R   v 2.6       --
   -----------------------------------------------------------------------
   ddc.exe <arrangement> [-l <phrase length>] [-s {Y | N}] [-c <config file>] [-m <ramp-up model>] [-p {Y | N}] [-t {Y | N}]
   
   Parameters :
   ------------
     <arrangement>      : XML arrangement input file (mandatory)
-    -l <phrase length> : Length of phrases in number of measures (optional; default : 2)
+    -l <phrase length> : Length of phrases in number of measures (optional; default : 4)
     -s {Y | N}         : Remove sustain for notes with length < 1/4 of measure (optional; default : N)
     -c <config file>   : Configuration file to use for adjustment of internal parameters (optional; default : internal configuration)
     -m <ramp-up model> : XML file with the specific ramp-up model to apply (optional; default : internal ramp-up model)
@@ -31,7 +31,7 @@ Use :
 
   Example :
   ------------
-  C:\mySongs>C:\ddc_v2.5\ddc.exe "PART REAL_GUITAR.xml" -l 4 -s Y
+  C:\mySongs>C:\ddc_v2.6\ddc.exe "PART REAL_GUITAR.xml" -l 3 -s Y
 
 Result Files :
 --------------

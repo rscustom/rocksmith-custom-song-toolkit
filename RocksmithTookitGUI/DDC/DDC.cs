@@ -29,8 +29,8 @@ namespace RocksmithToolkitGUI.DDC
         internal Dictionary<string, string> ConfigsDb = new Dictionary<string, string>();
         internal static string AppWD = AppDomain.CurrentDomain.BaseDirectory;
         internal static string DdcBD = Path.Combine(AppWD, "ddc");
-        internal Color EnabledColor = System.Drawing.Color.Green;
-        internal Color DisabledColor = Color.Tomato;
+        internal Color EnabledColor = Color.Green;
+        internal Color DisabledColor = Color.FromArgb(192, 64, 0);
 
         internal bool isNDD { get; set; }
 
@@ -113,12 +113,12 @@ namespace RocksmithToolkitGUI.DDC
                                 string filePath = file.Value,
                                 newName = String.Format("{0}_{1}{2}",
                                 file.Key.StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD", ""), isNDD ? "_NDD" : "DD", filePath.GetPlatform().GetPathName()[2]);
-                                
+
                                 if (CleanProcess && File.Exists(filePath) && !Path.GetFileNameWithoutExtension(filePath).GetValidName(false).Equals(newName))
                                     File.Delete(filePath);
                             }
                             break;
-                    } 
+                    }
 
                     Invoke(new MethodInvoker(() => { DelEntry(file.Value); }));
                 }
@@ -147,7 +147,7 @@ namespace RocksmithToolkitGUI.DDC
         {
             processOutput = String.Empty;
 
-            var step = (int)Math.Round(1.0 / DLCdb.Count() * 100, 0);
+            var step = (int)Math.Round(1.0 / DLCdb.Count * 100, 0);
             int result = -1, progress = 0;
             string remSUS = String.Empty, rampPath = String.Empty, cfgPath = String.Empty;
 
@@ -158,7 +158,7 @@ namespace RocksmithToolkitGUI.DDC
             }));
 
             bw.ReportProgress(progress);
-            
+
             StringBuilder errorsFound = new StringBuilder();
             foreach (var file in DLCdb)
             {
@@ -175,7 +175,7 @@ namespace RocksmithToolkitGUI.DDC
                         result = ApplyPackageDD(file.Value, remSUS, rampPath, cfgPath, out consoleOutput, KeepLog);
                         errorsFound.AppendLine(consoleOutput);
                         break;
-                }                
+                }
                 if (!String.IsNullOrEmpty(errorsFound.ToString())) {
                     processOutput = errorsFound.ToString();
                 }
@@ -193,12 +193,12 @@ namespace RocksmithToolkitGUI.DDC
 
             startInfo.FileName = Path.Combine(AppWD, "ddc", "ddc.exe");
             startInfo.WorkingDirectory = Path.GetDirectoryName(file);
-            startInfo.Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}{4}{5}", 
+            startInfo.Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}{4}{5}{6}",
                                                 Path.GetFileName(file),
-                                                (UInt16)phaseLenNum.Value, 
-                                                remSUS, rampPath, cfgPath, 
+                                                (UInt16)phaseLenNum.Value,
+                                                remSUS, rampPath, cfgPath,
                                                 cleanProcess ? " -p Y" : " -p N",
-                                                keepLog ? " -t Y" : " -t N" 
+                                                keepLog ? " -t Y" : " -t N"
             );
             startInfo.UseShellExecute = false;
             startInfo.CreateNoWindow = true;
@@ -209,9 +209,9 @@ namespace RocksmithToolkitGUI.DDC
                 DDC.StartInfo = startInfo;
                 DDC.Start();
                 consoleOutput = DDC.StandardOutput.ReadToEnd();
-				consoleOutput += DDC.StandardError.ReadToEnd();
-				DDC.WaitForExit(1000 * 60 * 15); //wait 15 minutes
-				return DDC.ExitCode;
+                consoleOutput += DDC.StandardError.ReadToEnd();
+                DDC.WaitForExit(1000 * 60 * 15); //wait 15 minutes
+                return DDC.ExitCode;
             }
         }
 
@@ -258,7 +258,7 @@ namespace RocksmithToolkitGUI.DDC
                         var manifest = new Manifest2014<Attributes2014>();
                         var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attr } };
                         manifest.Entries.Add(attr.PersistentID, attributeDictionary);
-                        manifest.SaveToFile(json[0]);                            
+                        manifest.SaveToFile(json[0]);
                     }
                 }
 
@@ -270,7 +270,7 @@ namespace RocksmithToolkitGUI.DDC
                 else if (singleResult == 2)
                     consoleOutputPkg = String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(xml), consoleOutputPkg);
             }
-            
+
             if (!exitedByError)
             {
                 var logFiles = Directory.GetFiles(unpackedDir, "*.log", SearchOption.AllDirectories);
@@ -389,7 +389,7 @@ namespace RocksmithToolkitGUI.DDC
                 ofd.Multiselect = true;
                 ofd.ReadOnlyChecked = true;
                 ofd.RestoreDirectory = true;
-                
+
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 

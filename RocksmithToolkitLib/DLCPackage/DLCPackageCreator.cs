@@ -999,7 +999,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (arr.Sng2014 == null) {
                         // Sng2014File can be reused when generating for multiple platforms
                         // cache results
-                        // TODO: update dlcName in font texture from here.
+                        //
                         arr.Sng2014 = Sng2014File.ConvertXML(arr.SongXml.File, arr.ArrangementType, arr.FontSng);
                         if (arr.CustomFont)
                             arr.Sng2014.PopFontPath(dlcName);

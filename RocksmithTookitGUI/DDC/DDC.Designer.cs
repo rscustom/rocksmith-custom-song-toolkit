@@ -335,7 +335,7 @@
             this.phaseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.phaseLenNum.ThousandsSeparator = true;
             this.phaseLenNum.Value = new decimal(new int[] {
-                                    2,
+                                    4,
                                     0,
                                     0,
                                     0});

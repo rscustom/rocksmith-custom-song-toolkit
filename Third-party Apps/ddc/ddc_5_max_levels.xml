@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<ddc>
-  <level maxCategory="4" maxSubCategory= "1" maxChordNotes="1"/>
-  <level maxCategory="4" maxSubCategory= "4" maxChordNotes="2"/>
-  <level maxCategory="4" maxSubCategory= "6" maxChordNotes="3"/>
-  <level maxCategory="4" maxSubCategory="10" maxChordNotes="4"/>
-  <level maxCategory="4" maxSubCategory="16" maxChordNotes="6"/>
-</ddc>
