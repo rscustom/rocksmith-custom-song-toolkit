@@ -2,10 +2,6 @@ version: "{build}"
 configuration: Release
 test: off
 
-environment:
-  deploy_key:
-    secure: bNTh5cjXMZHmoPXHAtyX6zgEN0D+WMI6eapYaQECX8V8WqwUFgDIdRcvQN1HAyp0
-
 build:
   verbosity: minimal
 
@@ -26,7 +22,10 @@ artifacts:
 
 notifications:
   - provider: Webhook
-    url: "http://www.rscustom.net/hook/$(deploy_key)"
+    url: "http://www.rscustom.net/hook/appveyor"
+    headers:
+      Authorization:
+        secure: NjVdRVVdkTGELbhe2ejYz/soldL9HWrzpaVcDpPM5tX0lYfFd0ld8Q2NowOfBiqxEKa1t7jgV6z8XO6B5g4nMM9rkqJwjzmrN8ZQbfIX7+Z2xokQo6A1ET4uadCfKrIOHPYBQyGaaimojJKJlq+Zzw+BsQD/OLDKf3u9q6MARyg=
     on_build_success: true
     on_build_failure: true
     on_build_status_changed: true
