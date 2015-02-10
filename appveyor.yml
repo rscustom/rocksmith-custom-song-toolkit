@@ -4,7 +4,7 @@ test: off
 
 environment:
   deploy_key:
-    secure: kDkj9vIGJ/5+UgQZlnTRqwkGZYQUyV1V/oU/PlkM4oleKCGdtmAr2QCeWIF6RbZU
+    secure: bNTh5cjXMZHmoPXHAtyX6zgEN0D+WMI6eapYaQECX8V8WqwUFgDIdRcvQN1HAyp0
 
 build:
   verbosity: minimal
