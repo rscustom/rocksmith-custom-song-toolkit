@@ -91,6 +91,97 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                     break;
             }
         }
+        /// <summary>
+        /// Generates the techniques.
+        /// </summary>
+        /// <remarks>
+        /// "Techniques" : {
+        ///     "DiffLevelID" : {//used to display which techs are set at current lvl.
+        ///         "SetionID" : [// > 0
+        ///             TechID, //required base tech for extended tech(?)
+        ///             TechID
+        ///         ]
+        ///     },
+        /// }
+        /// </remarks>
+        /// <param name="attribute">Attribute.</param>
+        /// <param name="song">Song.</param>
+        public void GenerateTechniques(Attributes2014 attribute, Song2014 song)
+        {
+            if (song.Sections == null)
+                return;
+
+            attribute.Techniques = new Dictionary<string, Dictionary<string, List<int>>>();
+            for( int l = 0, s = 0, sectionsL = song.Sections.Length, levelsL = song.Levels.Length; l < levelsL; l++, s = 0 )
+            {
+//                var shapes = song.Levels[l].HandShapes;
+//                var chords = song.Levels[l].Chords;
+                var notes = song.Levels[l].Notes;
+                var t = new List<int>();
+                var techs = new Dictionary<string, List<int>>();
+
+                foreach( var n in notes )
+                {//note should be in section range
+                    var starTime = song.Sections[s].StartTime;
+                    var endTime = song.Sections[Math.Min(s + 1, sectionsL - 1)].StartTime;
+
+                    if(n.Time > starTime && n.Time <= endTime)//in range
+                    {
+                        t.AddRange(getNoteTech(n));
+                    }
+                    else if(n.Time > endTime)//at next section
+                    {
+                        s++;
+                        if(t.Count > 0){
+                            techs.Add(s.ToString(), t.Distinct().ToList());
+                            t = new List<int>();
+                        }
+                    }
+                }
+                if(techs.Values.Count > 0)
+                    attribute.Techniques.Add(l.ToString(), techs.Distinct().ToDictionary(x => x.Key, x => x.Value));
+            }
+        }
+
+        static List<int> getNoteTech( SongNote2014 n)
+        {
+            var t = new List<int>();
+            if( 1 == n.Accent )
+                t.Add(0);
+            if( 1 == n.Bend )
+                t.Add(1);
+            if( 1 == n.Mute )
+                t.Add(2);
+            if( 1 == n.HammerOn )
+                t.Add(3);
+            if( 1 == n.Harmonic )
+                t.Add(4);
+            if( 1 == n.HarmonicPinch )
+                t.Add(5);
+            if( 1 == n.Hopo )
+                t.Add(6);
+            if( 1 == n.PalmMute )
+                t.Add(7);
+            if( 1 == n.Pluck )
+                t.Add(8);
+            if( 1 == n.PullOff )
+                t.Add(9);
+            if( 1 == n.Slap )
+                t.Add(10);
+            if( n.SlideTo > 0 )
+                t.Add(11);
+            if( n.SlideUnpitchTo > 0 )
+                t.Add(12);
+            if( n.Sustain > 0)
+                t.Add(13);
+            if( 1 == n.Tap )
+                t.Add(14);
+            if( 1 == n.Tremolo )
+                t.Add(15);
+            if( 1 == n.Vibrato )
+                t.Add(16);
+            return t;
+        }
 
         public void GeneratePhraseIterationsData(IAttributes attribute, dynamic song, GameVersion gameVersion)
         {
@@ -316,7 +407,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                         Frets = new List<int> { y.Fret0, y.Fret1, y.Fret2, y.Fret3, y.Fret4, y.Fret5 }
                     });
         }
-
+        //TODO: inverstigate on values 0.9 and lower, spotted in DLC
         public void GenerateDynamicVisualDensity(IAttributes attribute, dynamic song, Arrangement arrangement, GameVersion version) {
             if (arrangement.ArrangementType == ArrangementType.Vocal)
             {
@@ -369,8 +460,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             int count = 0;
             for (int i = 0; i < notes.Count; i++)
             {
-                if(notes.ElementAt(i).Time < endTime)
-                if (notes.ElementAt(i).Time >= startTime)
+                var n = notes.ElementAt(i).Time;
+                if(n < endTime &&
+                   n >= startTime)
                     count++;
             }
             return count;
@@ -381,9 +473,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             int count = 0;
             for (int i = 0; i < notes.Count; i++)
             {
-                if (notes.ElementAt(i).Time < endTime)
-                    if (notes.ElementAt(i).Time >= startTime)
-                        count++;
+                var n = notes.ElementAt(i).Time;
+                if(n < endTime &&
+                   n >= startTime)
+                    count++;
             }
             return count;
         }
@@ -393,9 +486,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             int count = 0;
             for (int i = 0; i < chords.Count; i++)
             {
-                if (chords.ElementAt(i).Time < endTime)
-                    if (chords.ElementAt(i).Time >= startTime)
-                        count++;
+                var ch = chords.ElementAt(i).Time;
+                if(ch < endTime &&
+                   ch >= startTime)
+                    count++;
             }
             return count;
         }

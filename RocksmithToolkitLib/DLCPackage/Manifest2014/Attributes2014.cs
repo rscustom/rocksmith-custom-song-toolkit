@@ -40,7 +40,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public int SongPartition { get; set; }
         public string SongXml { get; set; }
         public int TargetScore { get; set; }
-        public Dictionary<string, Dictionary<string, object>> Techniques { get; set; } //Problem in 3rd sublevel that can be a list or not
+        public Dictionary<string, Dictionary<string, List<int>>> Techniques { get; set; }
         public string Tone_A { get; set; }
         public string Tone_B { get; set; }
         public string Tone_Base { get; set; }
@@ -146,15 +146,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
                 //SongPartition  -- Generated in DLCPackageCreator after this constructor
 
-                //Techniques     -- //TODO: MISSING GENERATE
-                /*
-                 Techniques: {
-                       DiffLevelID: {
-                           // 4 : 0,[6,9],[13],[12,15] // unpitchedSlides, tremolo, hopo
-                           PhraseIterationIndex: [TechID, TechID...]
-                       }
-                 }
-                 */
+                //Techniques TODO: improove me
+                manifestFunctions.GenerateTechniques(this, SongContent);
 
                 //Fix for Dead tones
                 var it = info.TonesRS2014;
