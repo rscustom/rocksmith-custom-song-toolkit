@@ -108,7 +108,7 @@ namespace RocksmithToolkitLib.Extensions
         public static Stream StripIllegalXMLChars(this string filePath)
         {
             string tmpContents = File.ReadAllText(filePath);
-            string pattern = @"[^\x09\x0A\x0D\x20-\xD7FF\xE000-\xFFFD\x10000-x10FFFF]";
+            string pattern = @"[\x01-\x08\x0B-\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]";// XML1.1
 
             tmpContents = Regex.Replace(tmpContents, pattern, "", RegexOptions.IgnoreCase);
 
@@ -157,7 +157,7 @@ namespace RocksmithToolkitLib.Extensions
         }
 
         public static string GetValidSortName(this string value)
-        {        
+        {
             if (String.IsNullOrEmpty(value))
                 return value;
             if (value.ToUpperInvariant().StartsWith("THE "))
@@ -174,8 +174,8 @@ namespace RocksmithToolkitLib.Extensions
                 name = rgx.Replace(value, "");
 
                 Regex rgx2 = new Regex(@"^[\d]*\s*");
-                if (!allowStartsWithNumber) name = rgx2.Replace(name, "");           
-               
+                if (!allowStartsWithNumber) name = rgx2.Replace(name, "");
+
                 if (frets24)
                 {
                     if (name.Contains("24"))
@@ -190,10 +190,9 @@ namespace RocksmithToolkitLib.Extensions
                     }
                     name = name.Trim() + " 24";
                 }
-                
                 if (underscoreSpace) name = name.Replace(" ", "_");
             }
-            
+
             return name.Trim();
         }
 
