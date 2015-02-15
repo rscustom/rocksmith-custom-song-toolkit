@@ -24,7 +24,7 @@ namespace RocksmithToolkitLib.Ogg
             if (inputStream.NeedsConversion())
             {
                 var platform = inputStream.GetAudioPlatform();
-                EndianBitConverter bitConverter = platform.GetBitConverter;
+                var bitConverter = platform.GetBitConverter;
 
                 using (var outputFileStream = new MemoryStream())
                 using (var writer = new EndianBinaryWriter(bitConverter, outputFileStream))

@@ -20,7 +20,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private const string SONG = "Song_";
         private static readonly int[] bnkPCOffsets = { 0x2c, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
         private static readonly int[] bnkConsoleOffsets = { 0x7ec, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
-        
+
         public static IList<int> GetOffsets(this Platform platform) {
             switch (platform.version)
             {
@@ -132,8 +132,9 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         private const string PLAY = "Play_";
         private const string SONG = "Song_";
+        private static EndianBitConverter bitConverter;
 
-        private static uint HashString(String str)
+        private static uint HashString(String str)//FNV hash
         {
             char[] bytes = str.ToLower().ToCharArray();
             uint hash = 2166136261;
@@ -154,23 +155,22 @@ namespace RocksmithToolkitLib.DLCPackage
             w.Write(chunkData);
         }
 
-        private static byte[] Header(int id, int didxSize, Platform platform)
+        private static byte[] Header(int id, int didxSize, bool isConsole)
         {
             int soundbankVersion = 91;
             int soundbankID = id;
             int languageID = 0;
             int hasFeedback = 0;
 
-            var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
             using (var chunkStream = new MemoryStream())
-            using (EndianBinaryWriter chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
             {
                 chunk.Write(soundbankVersion);
                 chunk.Write(soundbankID);
                 chunk.Write(languageID);
                 chunk.Write(hasFeedback);
 
-                int alignSize = platform.IsConsole ? 2048 : 16;
+                int alignSize = isConsole ? 2048 : 16;
                 int dataSize = (int)chunkStream.Length;
                 int junkSize = 24 + didxSize;
                 int paddingSize = (dataSize + junkSize) % alignSize;
@@ -185,15 +185,14 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static byte[] DataIndex(int id, int len, Platform platform)
+        private static byte[] DataIndex(int id, int len)
         {
             int fileID = id;
             int fileOffset = 0;
             int fileSize = len;
 
-            var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
             using (var chunkStream = new MemoryStream())
-            using (EndianBinaryWriter chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
             {
                 chunk.Write(fileID);
                 chunk.Write(fileOffset);
@@ -205,7 +204,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private const byte HIERARCHY_SOUND = 2;
-        private static byte[] HierarchySound(int id, int fileid, int mixerid, float volume, bool preview, Platform platform)
+        private static byte[] HierarchySound(int id, int fileid, int mixerid, float volume, bool preview, bool isConsole)
         {
             int soundID = id;
             int pluginID = 262145;
@@ -216,7 +215,7 @@ namespace RocksmithToolkitLib.DLCPackage
             byte overrideParent = 0;
             byte numFX = 0;
             int parentBusID = RandomGenerator.NextInt();
-            int directParentID = (platform.IsConsole) ? 134217984 : 65536; // todo, changes on console
+            int directParentID = isConsole ? 134217984 : 65536; // todo, changes on console
             uint unkID1 = (preview) ? 4178100890 : 0;
             int mixerID = mixerid;
             byte priorityOverrideParent = 0;
@@ -247,9 +246,8 @@ namespace RocksmithToolkitLib.DLCPackage
             short rtpcList = 0;
             int feedbackBus = 0;
 
-            var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
             using (var chunkStream = new MemoryStream())
-            using (EndianBinaryWriter chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
             {
                 chunk.Write(soundID);
                 chunk.Write(pluginID);
@@ -297,7 +295,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private const byte HIERARCHY_ACTION = 3;
-        private static byte[] HierarchyAction(int id, int objid, int bankid, Platform platform)
+        private static byte[] HierarchyAction(int id, int objid, int bankid)
         {
             int actionID = id;
             short actionType = 1027;
@@ -308,9 +306,8 @@ namespace RocksmithToolkitLib.DLCPackage
             byte fadeCurve = 4;
             int soundbankID = bankid;
 
-            var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
             using (var chunkStream = new MemoryStream())
-            using (EndianBinaryWriter chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
             {
                 chunk.Write(actionID);
                 chunk.Write(actionType);
@@ -327,15 +324,14 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private const byte HIERARCHY_EVENT = 4;
-        private static byte[] HierarchyEvent(int id, string name, Platform platform)
+        private static byte[] HierarchyEvent(int id, string name)
         {
             uint eventID = HashString(PLAY + name);
             int numEvents = 1;
             int actionID = id;
 
-            var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
             using (var chunkStream = new MemoryStream())
-            using (EndianBinaryWriter chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
             {
                 chunk.Write(eventID);
                 chunk.Write(numEvents);
@@ -347,7 +343,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private const byte HIERARCHY_ACTORMIXER = 7;
-        private static byte[] HierarchyActorMixer(int id, int soundid, Platform platform)
+        private static byte[] HierarchyActorMixer(int id, int soundid)
         {
             int mixerID = id;
             byte overrideParent = 0;
@@ -378,9 +374,8 @@ namespace RocksmithToolkitLib.DLCPackage
             int numChild = 1;
             int child1 = soundid;
 
-            var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
             using (var chunkStream = new MemoryStream())
-            using (EndianBinaryWriter chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
             {
                 chunk.Write(mixerID);
                 chunk.Write(overrideParent);
@@ -416,24 +411,23 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static byte[] Hierarchy(int bankid, int soundid, int fileid, string name, float volume, bool preview, Platform platform)
+        private static byte[] Hierarchy(int bankid, int soundid, int fileid, string name, float volume, bool preview, bool isConsole)
         {
             int mixerID = 650605636;
             int actionID = RandomGenerator.NextInt();
 
             int numObjects = 0;
-            byte[] sound = HierarchySound(soundid, fileid, mixerID, volume, preview, platform);
+            byte[] sound = HierarchySound(soundid, fileid, mixerID, volume, preview, isConsole);
             numObjects++;
-            byte[] actormixer = HierarchyActorMixer(mixerID, soundid, platform);
+            byte[] actormixer = HierarchyActorMixer(mixerID, soundid);
             numObjects++;
-            byte[] action = HierarchyAction(actionID, soundid, bankid, platform);
+            byte[] action = HierarchyAction(actionID, soundid, bankid);
             numObjects++;
-            byte[] hevent = HierarchyEvent(actionID, name, platform);
+            byte[] hevent = HierarchyEvent(actionID, name);
             numObjects++;
 
-            var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
             using (var chunkStream = new MemoryStream())
-            using (EndianBinaryWriter chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
             {
                 chunk.Write(numObjects);
 
@@ -455,16 +449,15 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static byte[] StringID(int id, string name, Platform platform)
+        private static byte[] StringID(int id, string name)
         {
             int stringType = 1;
             int numNames = 1;
             int soundbankID = id;
             string soundbankName = SONG + name;
 
-            var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
             using (var chunkStream = new MemoryStream())
-            using (EndianBinaryWriter chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
             {
                 chunk.Write(stringType);
                 chunk.Write(numNames);
@@ -479,19 +472,18 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, float volume, Platform platform, bool preview = false, bool same = false)
         {
-            var bitConverter = platform.IsConsole ? (EndianBitConverter)EndianBitConverter.Big : (EndianBitConverter)EndianBitConverter.Little;
-            var audioReader = new EndianBinaryReader(bitConverter, audioStream);
+            bitConverter = platform.GetBitConverter;
             int soundbankID = RandomGenerator.NextInt();
             int fileID = same ? oldFileID : RandomGenerator.NextInt();
             int soundID = same ? oldSoundID : RandomGenerator.NextInt();
-            oldSoundID = soundID;
-            oldFileID = fileID;
-            
+            oldSoundID = soundID; oldFileID = fileID;
+
+            var audioReader = new EndianBinaryReader(bitConverter, audioStream);
             byte[] dataChunk = audioReader.ReadBytes(51200); // wwise is based on audio length, we'll just make it up
-            byte[] dataIndexChunk = DataIndex(fileID, dataChunk.Length, platform);
-            byte[] headerChunk = Header(soundbankID, dataIndexChunk.Length, platform);
-            byte[] stringIdChunk = StringID(soundbankID, soundbankName, platform);
-            byte[] hierarchyChunk = Hierarchy(soundbankID, soundID, fileID, soundbankName, volume, preview, platform);
+            byte[] dataIndexChunk = DataIndex(fileID, dataChunk.Length);
+            byte[] headerChunk = Header(soundbankID, dataIndexChunk.Length, platform.IsConsole);
+            byte[] stringIdChunk = StringID(soundbankID, soundbankName);
+            byte[] hierarchyChunk = Hierarchy(soundbankID, soundID, fileID, soundbankName, volume, preview, platform.IsConsole);
 
             var bankWriter = new EndianBinaryWriter(bitConverter, outStream);
             WriteChunk(bankWriter, "BKHD", headerChunk);
