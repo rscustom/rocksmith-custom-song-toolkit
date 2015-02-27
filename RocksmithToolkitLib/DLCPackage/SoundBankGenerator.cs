@@ -206,16 +206,16 @@ namespace RocksmithToolkitLib.DLCPackage
         private const byte HIERARCHY_SOUND = 2;
         private static byte[] HierarchySound(int id, int fileid, int mixerid, float volume, bool preview, bool isConsole)
         {
-            uint soundID = id;
-            uint pluginID = 262145;
-            uint streamType = 2;//enum<int>
-            uint fileID = fileid;
-            uint sourceID = fileid;
+            int soundID = id;
+            int pluginID = 262145;
+            int streamType = 2;//enum<int>
+            int fileID = fileid;
+            int sourceID = fileid;
             byte languageSpecific = 0;//soundType = {SFX, Voice}
             byte overrideParent = 0;
             byte numFX = 0;
-            uint parentBusID = RandomGenerator.NextInt();
-            uint directParentID = isConsole ? 134217984 : 65536; // todo, changes on console
+            int parentBusID = RandomGenerator.NextInt();
+            int directParentID = isConsole ? 134217984 : 65536; // todo, changes on console
             uint unkID1 = (preview) ? 4178100890 : 0;
             int mixerID = mixerid;
             byte priorityOverrideParent = 0;
@@ -249,16 +249,16 @@ namespace RocksmithToolkitLib.DLCPackage
             using (var chunkStream = new MemoryStream())
             using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
             {
-                chunk.Write(soundID);
-                chunk.Write(pluginID);
-                chunk.Write(streamType);
-                chunk.Write(fileID);
-                chunk.Write(sourceID);
+                chunk.Write((uint)soundID);
+                chunk.Write((uint)pluginID);
+                chunk.Write((uint)streamType);
+                chunk.Write((uint)fileID);
+                chunk.Write((uint)sourceID);
                 chunk.Write(languageSpecific);
                 chunk.Write(overrideParent);
                 chunk.Write(numFX);
-                chunk.Write(parentBusID);
-                chunk.Write(directParentID);
+                chunk.Write((uint)parentBusID);
+                chunk.Write((uint)directParentID);
                 chunk.Write(unkID1);
                 chunk.Write(mixerID);
                 chunk.Write(priorityOverrideParent);
