@@ -1,4 +1,7 @@
 version: "{build}"
+branches:
+  only:
+    - master
 configuration: Release
 test: off
 
