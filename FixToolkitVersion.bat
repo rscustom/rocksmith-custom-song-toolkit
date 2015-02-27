@@ -8,7 +8,7 @@ echo.Read the instructions included in the CONTRIBUTING.md file.
 echo.
 
 @echo on
-Copy .\RocksmithToolkitLib\ToolkitVersion.cs_dist .\RocksmithToolkitLib\ToolkitVersion.cs
+call prebuild.bat . RocksmithToolkitLib\ToolkitVersion.cs
 @echo off
 
 .\contributing.md >> CON

@@ -206,16 +206,16 @@ namespace RocksmithToolkitLib.DLCPackage
         private const byte HIERARCHY_SOUND = 2;
         private static byte[] HierarchySound(int id, int fileid, int mixerid, float volume, bool preview, bool isConsole)
         {
-            int soundID = id;
-            int pluginID = 262145;
-            int streamType = 2;
-            int sourceID = fileid;
-            int fileID = fileid;
-            byte languageSpecific = 0;
+            uint soundID = id;
+            uint pluginID = 262145;
+            uint streamType = 2;//enum<int>
+            uint fileID = fileid;
+            uint sourceID = fileid;
+            byte languageSpecific = 0;//soundType = {SFX, Voice}
             byte overrideParent = 0;
             byte numFX = 0;
-            int parentBusID = RandomGenerator.NextInt();
-            int directParentID = isConsole ? 134217984 : 65536; // todo, changes on console
+            uint parentBusID = RandomGenerator.NextInt();
+            uint directParentID = isConsole ? 134217984 : 65536; // todo, changes on console
             uint unkID1 = (preview) ? 4178100890 : 0;
             int mixerID = mixerid;
             byte priorityOverrideParent = 0;
@@ -252,8 +252,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 chunk.Write(soundID);
                 chunk.Write(pluginID);
                 chunk.Write(streamType);
-                chunk.Write(sourceID);
                 chunk.Write(fileID);
+                chunk.Write(sourceID);
                 chunk.Write(languageSpecific);
                 chunk.Write(overrideParent);
                 chunk.Write(numFX);
@@ -298,7 +298,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static byte[] HierarchyAction(int id, int objid, int bankid)
         {
             int actionID = id;
-            short actionType = 1027;
+            short actionType = 1027;//wrong
             int objectID = objid;
             byte isBus = 0;
             byte numParam = 0;
@@ -479,7 +479,7 @@ namespace RocksmithToolkitLib.DLCPackage
             oldSoundID = soundID; oldFileID = fileID;
 
             var audioReader = new EndianBinaryReader(bitConverter, audioStream);
-            byte[] dataChunk = audioReader.ReadBytes(51200); // wwise is based on audio length, we'll just make it up
+            byte[] dataChunk = audioReader.ReadBytes(51200); // wwise is based on audio length, we'll just make it up(prefethc lookup is 100ms)
             byte[] dataIndexChunk = DataIndex(fileID, dataChunk.Length);
             byte[] headerChunk = Header(soundbankID, dataIndexChunk.Length, platform.IsConsole);
             byte[] stringIdChunk = StringID(soundbankID, soundbankName);
