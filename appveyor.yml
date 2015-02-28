@@ -6,6 +6,7 @@ configuration: Release
 test: off
 
 build:
+  parallel: true
   verbosity: minimal
 
 after_build:
