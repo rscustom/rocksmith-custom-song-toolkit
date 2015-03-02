@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.Xml;
+using SongLevel = RocksmithToolkitLib.Xml.SongLevel;
 
 namespace RocksmithToolkitLib.Song2014ToTab
 {
@@ -109,6 +113,422 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 obj.Convert(inputFilePath, outputDir, allDif);
         }
         #endregion
+
+        #region RS1 Cast to RS2014 Song2014
+        /// <summary>
+        /// RS1 Song object cast as Song2014 object (converted)
+        /// add some default (missing) XML elements to object
+        /// </summary>
+        /// <param name="rsSong"></param>
+        public Song2014 AddElements(Song2014 rsSong)
+        {
+            // standard meta header data
+            rsSong.Version = "7";
+            rsSong.Offset = rsSong.Offset < 0 ? 0 : rsSong.Offset;
+            rsSong.CentOffset = "0";
+            rsSong.StartBeat = 0;
+            rsSong.Capo = 0;
+            rsSong.ArtistName = "Unknown Artist";
+            // rsSong.ArtistNameSort = "UnknownArtistSort";
+            rsSong.AlbumName = "Unknown Album";
+            // rsSong.AlbumNameSort = "UnknownAlbumSort";
+
+            rsSong.AlbumYear = "1964"; // DateTime.Now.ToString("yyyy");
+            rsSong.CrowdSpeed = "1";
+            rsSong.LastConversionDateTime = DateTime.Now.ToString();
+            rsSong.Tuning = new TuningStrings
+            {
+                String0 = 0,
+                String1 = 0,
+                String2 = 0,
+                String3 = 0,
+                String4 = 0,
+                String5 = 0
+            };
+
+            // more defaults used to produce RS2014 CDLC
+            rsSong.ToneBase = "Default";
+            rsSong.ToneA = "Default";
+            rsSong.ToneB = "";
+            rsSong.ToneC = "";
+            rsSong.ToneD = "";
+            rsSong.Tones = new SongTone2014[0];
+            rsSong.Events = new RocksmithToolkitLib.Xml.SongEvent[0];
+            rsSong.FretHandMuteTemplates = new SongFretHandMuteTemplate[0];
+            rsSong.ChordTemplates = new SongChordTemplate2014[0];
+            rsSong.PhraseProperties = new SongPhraseProperty[0];
+            rsSong.LinkedDiffs = new SongLinkedDiff[0];
+            rsSong.NewLinkedDiff = new SongNewLinkedDiff[0];
+
+            // default arrangment properties
+            rsSong.ArrangementProperties = new SongArrangementProperties2014
+            {
+                Represent = 1,
+                StandardTuning = 1,
+                NonStandardChords = 0,
+                BarreChords = 0,
+                PowerChords = 0,
+                DropDPower = 0,
+                OpenChords = 0,
+                FingerPicking = 0,
+                PickDirection = 0,
+                DoubleStops = 0,
+                PalmMutes = 0,
+                Harmonics = 0,
+                PinchHarmonics = 0,
+                Hopo = 0,
+                Tremolo = 0,
+                Slides = 0,
+                UnpitchedSlides = 0,
+                Bends = 0,
+                Tapping = 0,
+                Vibrato = 0,
+                FretHandMutes = 0,
+                SlapPop = 0,
+                TwoFingerPicking = 0,
+                FifthsAndOctaves = 0,
+                Syncopation = 0,
+                BassPick = 0,
+                Sustain = 0,
+                BonusArr = 0,
+                PathLead = rsSong.Arrangement == "Lead" ? 1 : 0,
+                PathRhythm = rsSong.Arrangement == "Rhythm" ? 1 : 0,
+                PathBass = rsSong.Arrangement == "Bass" ? 1 : 0,
+                RouteMask = 1
+            };
+
+            //if (rsSong.Arrangement.Contains("Combo"))
+            //    rsSong.ArrangementProperties.PathLead = 1;
+
+            return rsSong;
+        }
+        # endregion
+
+        #region Song to SSong2014
+        /// <summary>
+        /// Convert RS1 Song XML object to RS2014 Song2014 XML object
+        /// RS1 to RS2014 Mapping Method
+        /// </summary>
+        /// <param name="rsSong"></param>
+        /// <returns>Song2014</returns>
+        public Song2014 Convert(Song rsSong)
+        {
+            Song2014 rsSong2014 = new Song2014();
+
+            // Song to Song2014 Mapping
+            // metaheader elements 
+            rsSong2014.Version = "7";
+            rsSong2014.Title = FilterTitle(rsSong);
+            rsSong2014.Arrangement = rsSong.Arrangement;
+            rsSong2014.Part = rsSong.Part;
+            rsSong2014.Offset = rsSong.Offset < 0 ? 0 : rsSong.Offset;
+            rsSong2014.CentOffset = "0";
+            rsSong2014.SongLength = rsSong.SongLength;
+            rsSong2014.LastConversionDateTime = DateTime.Now.ToString("MM-dd-yy HH:mm");
+            rsSong2014.StartBeat = rsSong.Ebeats[0].Time;
+            // if RS1 CDLC Song XML originates from EOF it may
+            // already contain AverageTempo otherwise it gets calculated 
+            rsSong2014.AverageTempo = rsSong.AverageTempo == 0 ? AverageBPM(rsSong) : rsSong.AverageTempo;
+            rsSong2014.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
+            rsSong2014.Capo = 0;
+            // force user to complete information
+            // rsSong2014.ArtistName = "Unknown Artist";
+            // rsSong2014.AlbumName = "Unknown Album";
+            rsSong2014.AlbumYear = DateTime.Now.ToString("yyyy");
+            rsSong2014.CrowdSpeed = "1";
+
+            // default arrangment properties
+            rsSong2014.ArrangementProperties = new SongArrangementProperties2014
+            {
+                Represent = 1,
+                StandardTuning = 1,
+                NonStandardChords = 0,
+                BarreChords = 0,
+                PowerChords = 0,
+                DropDPower = 0,
+                OpenChords = 0,
+                FingerPicking = 0,
+                PickDirection = 0,
+                DoubleStops = 0,
+                PalmMutes = 0,
+                Harmonics = 0,
+                PinchHarmonics = 0,
+                Hopo = 0,
+                Tremolo = 0,
+                Slides = 0,
+                UnpitchedSlides = 0,
+                Bends = 0,
+                Tapping = 0,
+                Vibrato = 0,
+                FretHandMutes = 0,
+                SlapPop = 0,
+                TwoFingerPicking = 0,
+                FifthsAndOctaves = 0,
+                Syncopation = 0,
+                BassPick = 0,
+                Sustain = 0,
+                BonusArr = 0,
+                RouteMask = 1,
+                PathLead = rsSong2014.Arrangement == "Lead" ? 1 : 0,
+                PathRhythm = rsSong2014.Arrangement == "Rhythm" ? 1 : 0,
+                PathBass = rsSong2014.Arrangement == "Bass" ? 1 : 0
+            };
+
+            // convert combo arrangment to lead
+            if (rsSong.Arrangement.Contains("Combo"))
+                rsSong2014.ArrangementProperties.PathLead = 1;
+
+            // tone defaults used to produce RS2014 CDLC
+            rsSong2014.ToneBase = "Default";
+            rsSong2014.ToneA = "Default";
+            rsSong2014.ToneB = "";
+            rsSong2014.ToneC = "";
+            rsSong2014.ToneD = "";
+
+            // these elements have direct mappings
+            rsSong2014.Phrases = rsSong.Phrases;
+            // rsSong2014.LinkedDiffs = rsSong.LinkedDiffs;
+            rsSong2014.LinkedDiffs = new SongLinkedDiff[0]; // prevents hanging
+            // rsSong2014.PhraseProperties = rsSong.PhraseProperties;
+            rsSong2014.PhraseProperties = new SongPhraseProperty[0]; // prevents hanging
+            rsSong2014.FretHandMuteTemplates = rsSong.FretHandMuteTemplates;
+            rsSong2014.Ebeats = rsSong.Ebeats;
+            rsSong2014.Sections = rsSong.Sections;
+            rsSong2014.Events = rsSong.Events;
+
+            // these elements have no direct mapping
+            rsSong2014 = ConvertTones(rsSong, rsSong2014);
+            rsSong2014 = ConvertChordTemplates(rsSong, rsSong2014);
+            rsSong2014 = ConvertNewLinkedDiff(rsSong, rsSong2014);
+            rsSong2014 = ConvertLevels(rsSong, rsSong2014);
+            rsSong2014 = ConvertPhraseIterations(rsSong, rsSong2014);
+
+            return rsSong2014;
+        }
+
+        private string FilterTitle(Song rsSong)
+        {
+            string title = String.Empty;
+            int index = rsSong.Title.IndexOf(" Combo");
+            title = rsSong.Title.Substring(0, index);
+            return title;
+        }
+
+        private float AverageBPM(Song rsSong)
+        {
+            // a rough approximation of BPM based on ebeats and time
+            float beats = rsSong.Ebeats.Length;
+            float endTimeMins = rsSong.Ebeats[rsSong.Ebeats.Length - 1].Time / 60;
+            // float endTimeMins = rsSong.SongLength / 60;
+            float avgBPM = (float)Math.Round(beats / endTimeMins, 1);
+
+            return avgBPM;
+        }
+
+        private Song2014 ConvertTones(Song rsSong, Song2014 rsSong2014)
+        {
+            // no parallel element in RS1 so only initialiaze 
+            rsSong2014.Tones = new SongTone2014[0];
+            return rsSong2014;
+        }
+        private Song2014 ConvertChordTemplates(Song rsSong, Song2014 rsSong2014)
+        {
+            // add chordTemplates elements
+            var chordTemplate = new List<SongChordTemplate2014>();
+            foreach (var songChordTemplate in rsSong.ChordTemplates)
+            {
+                chordTemplate.Add(new SongChordTemplate2014
+                {
+                    ChordName = songChordTemplate.ChordName,
+                    DisplayName = songChordTemplate.ChordName,
+                    Finger0 = (sbyte)songChordTemplate.Finger0,
+                    Finger1 = (sbyte)songChordTemplate.Finger1,
+                    Finger2 = (sbyte)songChordTemplate.Finger2,
+                    Finger3 = (sbyte)songChordTemplate.Finger3,
+                    Finger4 = (sbyte)songChordTemplate.Finger4,
+                    Finger5 = (sbyte)songChordTemplate.Finger5,
+                    Fret0 = (sbyte)songChordTemplate.Fret0,
+                    Fret1 = (sbyte)songChordTemplate.Fret1,
+                    Fret2 = (sbyte)songChordTemplate.Fret2,
+                    Fret3 = (sbyte)songChordTemplate.Fret3,
+                    Fret4 = (sbyte)songChordTemplate.Fret4,
+                    Fret5 = (sbyte)songChordTemplate.Fret5
+                });
+            }
+            rsSong2014.ChordTemplates = chordTemplate.ToArray();
+            return rsSong2014;
+        }
+
+        private Song2014 ConvertNewLinkedDiff(Song rsSong, Song2014 rsSong2014)
+        {
+            // no parallel element in RS1 so only initialiaze 
+            rsSong2014.NewLinkedDiff = new SongNewLinkedDiff[0];
+            return rsSong2014;
+        }
+
+        private Song2014 ConvertLevels(Song rsSong, Song2014 rsSong2014)
+        {
+            // add levels elements
+            var levels = new List<SongLevel2014>();
+
+            foreach (var songLevel in rsSong.Levels)
+            {
+                var anchors = new List<SongAnchor2014>();
+                var notes = new List<SongNote2014>();
+                var chords = new List<SongChord2014>();
+                var handShapes = new List<SongHandShape>();
+
+                for (int anchorIndex = 0; anchorIndex < songLevel.Anchors.Length; anchorIndex++)
+                {
+                    var anchor = songLevel.Anchors[anchorIndex];
+                    anchors.Add(new SongAnchor2014 { Fret = anchor.Fret, Time = anchor.Time, Width = 4 });
+                }
+
+                for (int noteIndex = 0; noteIndex < songLevel.Notes.Length; noteIndex++)
+                {
+                    var songNote = songLevel.Notes[noteIndex];
+                    notes.Add(GetNoteInfo(songNote));
+                }
+
+                for (int chordIndex = 0; chordIndex < songLevel.Chords.Length; chordIndex++)
+                {
+                    // RS1 does not contain chordNotes so need to make them from chordtemplate
+                    List<SongNote2014> chordNotes = new List<SongNote2014>();
+                    var zChord = songLevel.Chords[chordIndex];
+                    var zChordId = zChord.ChordId;
+                    var zChordTemplate = rsSong.ChordTemplates[zChordId];
+
+                    if (zChordTemplate.Finger0 != -1) // finger > -1 is a string played                       
+                        chordNotes.Add(DecodeChordTemplate(zChord, 0, zChordTemplate.Fret0));
+
+                    if (zChordTemplate.Finger1 != -1)
+                        chordNotes.Add(DecodeChordTemplate(zChord, 1, zChordTemplate.Fret1));
+
+                    if (zChordTemplate.Finger2 != -1)
+                        chordNotes.Add(DecodeChordTemplate(zChord, 2, zChordTemplate.Fret2));
+
+                    if (zChordTemplate.Finger3 != -1)
+                        chordNotes.Add(DecodeChordTemplate(zChord, 3, zChordTemplate.Fret3));
+
+                    if (zChordTemplate.Finger4 != -1)
+                        chordNotes.Add(DecodeChordTemplate(zChord, 4, zChordTemplate.Fret4));
+
+                    if (zChordTemplate.Finger5 != -1)
+                        chordNotes.Add(DecodeChordTemplate(zChord, 5, zChordTemplate.Fret5));
+
+                    if (chordNotes.Any())
+                        chords.Add(new SongChord2014 { ChordId = zChord.ChordId, ChordNotes = chordNotes.ToArray(), HighDensity = zChord.HighDensity, Ignore = zChord.Ignore, Strum = zChord.Strum, Time = zChord.Time });
+
+                    // add chordNotes to songNotes for compatibility
+                    notes.AddRange(chordNotes);
+                }
+
+                // get rid of duplicate notes if any
+                var distinctNotes = notes.Distinct().ToList();
+
+                for (int shapeIndex = 0; shapeIndex < songLevel.HandShapes.Length; shapeIndex++)
+                {
+                    var handshape = songLevel.HandShapes[shapeIndex];
+                    handShapes.Add(new SongHandShape { ChordId = handshape.ChordId, EndTime = handshape.EndTime, StartTime = handshape.StartTime });
+                }
+
+                levels.Add(new SongLevel2014 { Anchors = anchors.ToArray(), Chords = chords.ToArray(), Difficulty = songLevel.Difficulty, HandShapes = handShapes.ToArray(), Notes = distinctNotes.ToArray() });
+            }
+
+            rsSong2014.Levels = levels.ToArray();
+
+            return rsSong2014;
+        }
+
+        private Song2014 ConvertPhraseIterations(Song rsSong, Song2014 rsSong2014)
+        {
+            var phraseIterations = new List<SongPhraseIteration2014>();
+            foreach (var songPhraseIteration in rsSong.PhraseIterations)
+            {
+                phraseIterations.Add(new SongPhraseIteration2014 { PhraseId = songPhraseIteration.PhraseId, Time = songPhraseIteration.Time });
+            }
+            rsSong2014.PhraseIterations = phraseIterations.ToArray();
+
+            return rsSong2014;
+        }
+
+        private SongNote2014 GetNoteInfo(SongNote songNote)
+        {
+            SongNote2014 songNote2014 = new SongNote2014();
+            songNote2014.Bend = (byte)songNote.Bend;
+            songNote2014.Fret = (sbyte)songNote.Fret;
+            songNote2014.HammerOn = (byte)songNote.HammerOn;
+            songNote2014.Harmonic = (byte)songNote.Harmonic;
+            songNote2014.Hopo = (byte)songNote.Hopo;
+            songNote2014.Ignore = (byte)songNote.Ignore;
+            songNote2014.PalmMute = (byte)songNote.PalmMute;
+            songNote2014.Pluck = (sbyte)songNote.Pluck;
+            songNote2014.PullOff = (byte)songNote.PullOff;
+            songNote2014.Slap = (sbyte)songNote.Slap;
+            songNote2014.SlideTo = (sbyte)songNote.SlideTo;
+            songNote2014.String = (byte)songNote.String;
+            songNote2014.Sustain = (float)songNote.Sustain;
+            songNote2014.Time = (float)songNote.Time;
+            songNote2014.Tremolo = (byte)songNote.Tremolo;
+            // initialize elements not present in RS1
+            songNote2014.LinkNext = 0;
+            songNote2014.Accent = 0;
+            songNote2014.LeftHand = -1;
+            songNote2014.Mute = 0;
+            songNote2014.HarmonicPinch = 0;
+            songNote2014.PickDirection = 0;
+            songNote2014.RightHand = -1;
+            songNote2014.SlideUnpitchTo = -1;
+            songNote2014.Tap = 0;
+            songNote2014.Vibrato = 0;
+
+            return songNote2014;
+        }
+
+        private SongNote2014 DecodeChordTemplate(SongChord songChord, int gString, int fret)
+        {
+            // RS2014
+            //<chord time="83.366" linkNext="0" accent="0" chordId="19" fretHandMute="0" highDensity="0" ignore="0" palmMute="0" hopo="0" strum="down">
+            //  <chordNote time="83.366" linkNext="0" accent="0" bend="0" fret="3" hammerOn="0" harmonic="0" hopo="0" ignore="0" leftHand="-1" mute="0" palmMute="0" pluck="-1" pullOff="0" slap="-1" slideTo="-1" string="4" sustain="0.000" tremolo="0" harmonicPinch="0" pickDirection="0" rightHand="-1" slideUnpitchTo="-1" tap="0" vibrato="0"/>
+            //  <chordNote time="83.366" linkNext="0" accent="0" bend="0" fret="3" hammerOn="0" harmonic="0" hopo="0" ignore="0" leftHand="-1" mute="0" palmMute="0" pluck="-1" pullOff="0" slap="-1" slideTo="-1" string="5" sustain="0.000" tremolo="0" harmonicPinch="0" pickDirection="0" rightHand="-1" slideUnpitchTo="-1" tap="0" vibrato="0"/>
+            //</chord>
+
+            // RS1
+            //<chord time="83.366" chordId="1" highDensity="0" ignore="0" strum="down"/>
+            //<chordTemplate chordName="A" finger0="-1" finger1="0" finger2="1" finger3="1" finger4="1" finger5="-1" fret0="-1" fret1="0" fret2="2" fret3="2" fret4="2" fret5="-1"/>
+
+            // finger > -1 is actual string
+
+            SongNote2014 songNote2014 = new SongNote2014();
+            songNote2014.Time = songChord.Time;
+            songNote2014.LinkNext = 0;
+            songNote2014.Accent = 0;
+            songNote2014.Bend = 0;
+            songNote2014.Fret = (sbyte)fret;
+            songNote2014.HammerOn = 0;
+            songNote2014.Hopo = 0;
+            songNote2014.Ignore = songChord.Ignore;
+            songNote2014.LeftHand = -1;
+            songNote2014.Mute = 0;
+            songNote2014.PalmMute = 0;
+            songNote2014.Pluck = -1;
+            songNote2014.PullOff = 0;
+            songNote2014.Slap = -1;
+            songNote2014.SlideTo = -1;
+            songNote2014.String = (byte)gString;
+            songNote2014.Sustain = 0.000f;
+            songNote2014.Tremolo = 0;
+            songNote2014.HarmonicPinch = 0;
+            songNote2014.PickDirection = 0;
+            songNote2014.RightHand = -1;
+            songNote2014.SlideUnpitchTo = -1;
+            songNote2014.Tap = 0;
+            songNote2014.Vibrato = 0;
+
+            return songNote2014;
+        }
+        # endregion
+
 
         public void Dispose() { }
 

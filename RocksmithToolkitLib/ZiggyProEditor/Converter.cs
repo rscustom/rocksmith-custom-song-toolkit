@@ -1,45 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
-using RsSong = RocksmithToolkitLib.Xml.Song;
-using Song = RocksmithToolkitLib.ZiggyProEditor.Song;
 using RocksmithToolkitLib.Xml;
 
+// compatibility upgrade for XML produced by ZiggyProEditor Version 70 (2.3.7.13)
+// for now the depricated code is just commented out .. confirmed working again
 namespace RocksmithToolkitLib.ZiggyProEditor
 {
     public class Converter
     {
         public void Convert(string inputFileName, string outputFileName)
         {
-            var deser = new XmlSerializer(typeof(Song));
-            Song zigSong;
+            var deser = new XmlSerializer(typeof(ZpeSong));
+            ZpeSong zigSong;
             using (FileStream stream = new FileStream(inputFileName, FileMode.Open))
             {
-                zigSong = (Song)deser.Deserialize(stream);
+                zigSong = (ZpeSong)deser.Deserialize(stream);
             }
 
+            if (zigSong.PueVersion != 46)
+                throw new Exception("Incompatable version of Ziggy Pro Editor XML");
+            
             var guitarTrack = GetTrack(zigSong);
             if (guitarTrack == null)
             {
                 throw new Exception("Couldn't find a guitar track");
             }
 
-            var rsSong = new RsSong();
+            var rsSong = new Song();
             AddSongMetadata(rsSong, zigSong);
             AddEbeats(rsSong, zigSong);
             AddNotes(rsSong, zigSong);
 
-            deser = new XmlSerializer(typeof(RsSong));
             using (FileStream stream = new FileStream(outputFileName, FileMode.Create))
             {
-                deser.Serialize(stream, rsSong);
+                rsSong.Serialize(stream, true);
             }
         }
 
-        private void AddSongMetadata(RsSong rsSong, Song zigSong)
+        private void AddSongMetadata(Song rsSong, ZpeSong zigSong)
         {
             rsSong.Arrangement = "Combo";
             rsSong.Artist = "Unknown Artist";
@@ -48,13 +51,44 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             rsSong.Part = 1;
             rsSong.LastConversionDateTime = DateTime.Now.ToString();
             rsSong.SongLength = zigSong.Length;
+
+            ZpeTempo tempo = zigSong.Tracks[0].Tempos[0];
+            float BPM = (float)Math.Round((float)60000000 / tempo.RawTempo, 3);
+            rsSong.AverageTempo = BPM;
+
+            ZpeTuning tuning = null;
+            for (int i = 0; i < zigSong.Tunings.Tuning.Count - 1; i++)
+            {
+                if (zigSong.Tunings.Tuning[i].IsGuitarTuning)
+                {
+                    tuning = zigSong.Tunings.Tuning[i];
+                    break;
+                }
+            }
+
+            if (tuning == null)
+                throw new Exception("ZPE XML does not contain guitar tuning");
+
+            rsSong.Tuning = new TuningStrings
+            {
+                String0 = tuning.E,
+                String1 = tuning.A,
+                String2 = tuning.D,
+                String3 = tuning.G,
+                String4 = tuning.B,
+                String5 = tuning.HighE
+            };
+  
         }
 
-        private void AddEbeats(RsSong rsSong, Song zigSong)
+        private void AddEbeats(Song rsSong, ZpeSong zigSong)
         {
             var ebeats = new List<SongEbeat>();
             var phrases = new List<SongPhraseIteration>();
-            var tempoTrack = zigSong.Tracks.Single(tr => "Tempo".Equals(tr.Name));
+
+            //  var tempoTrack = zigSong.Tracks.Single(tr => "Tempo".Equals(tr.Name));
+            ZpeTrack tempoTrack = zigSong.Tracks[0];
+
             var tempoIndex = 0;
             var tsIndex = 0;
             var tempo = tempoTrack.Tempos[0];
@@ -62,12 +96,18 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             float time = 0;
             int beat = 1;
             short measure = 1;
-            float secondsPerQuarter = tempo.SecondsPerBar / signature.Numerator;
-            var end = tempoTrack.MetaEvents.Single(ev => "EndOfTrack".Equals(ev.MetaType)).StartTime;
+            const int MU = 1000000;
+
+            // float secondsPerQuarter = tempo.SecondsPerBar / signature.Numerator;
+            float secondsPerQuarter = (float)tempo.RawTempo / MU;
+
+            // var end = tempoTrack.MetaEvents.Single(ev => "EndOfTrack".Equals(ev.MetaType)).StartTime;
+            Single end = zigSong.Length;
 
             while (time < end)
             {
                 ebeats.Add(new SongEbeat { Measure = (beat == 1) ? measure : (short)-1, Time = time });
+                // denominator already converted by ZPE
                 var delta = secondsPerQuarter * ((float)4 / signature.Denominator);
                 time += delta;
                 var changed = false;
@@ -82,18 +122,22 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                     changed = true;
                     tempo = tempoTrack.Tempos[++tempoIndex];
                     time = tempo.StartTime;
-                    secondsPerQuarter = tempo.SecondsPerBar / signature.Numerator;
+
+                    // secondsPerQuarter = tempo.SecondsPerBar / signature.Numerator;
+                    secondsPerQuarter = (float)tempo.RawTempo / MU;
                 }
                 if (changed || ++beat > signature.Numerator)
                 {
                     beat = 1;
                     ++measure;
                 }
+                // Console.WriteLine("Getting Ebeats for bar: " + measure);
             }
             rsSong.Ebeats = ebeats.ToArray();
 
-
             var guitarTrack = GetTrack(zigSong);
+            var difficultyCount = guitarTrack.Chords.GroupBy(chord => chord.Difficulty).Count();
+
             var firstNote = guitarTrack.Chords.Min(c => c.StartTime);
             var lastNote = guitarTrack.Chords.Max(c => c.EndTime);
             int measOffset = ebeats.Where(eb => eb.Measure != -1 && eb.Time <= firstNote).Last().Measure,
@@ -113,16 +157,17 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             }
             //end
             phrases.Add(new SongPhraseIteration { PhraseId = phraseId++, Time = lastNote + .001f });
+           // phrases.Add(new SongPhraseIteration { PhraseId = phraseId++, Time = end + .001f });
             rsSong.PhraseIterations = phrases.ToArray();
             rsSong.Phrases = phrases.Select(it =>
-                    new SongPhrase { MaxDifficulty = it.PhraseId == 0 || it.PhraseId == phrases.Count - 1 ? 0:3, Name = it.PhraseId == 0 ? "COUNT" : it.PhraseId == phrases.Count - 1 ? "END" : it.PhraseId.ToString() }).ToArray();
+                    new SongPhrase { MaxDifficulty = it.PhraseId == 0 || it.PhraseId == phrases.Count - 1 ? 0 : difficultyCount - 1, Name = it.PhraseId == 0 ? "COUNT" : it.PhraseId == phrases.Count - 1 ? "END" : it.PhraseId.ToString() }).ToArray();
             phrases.RemoveAt(0);
             phrases.RemoveAt(phrases.Count - 1);
             rsSong.Sections = phrases.Select(it =>
                     new SongSection { Name = "verse", Number = 1, StartTime = it.Time }).ToArray();
         }
 
-        private void AddNotes(RsSong rsSong, Song zigSong)
+        private void AddNotes(Song rsSong, ZpeSong zigSong)
         {
             int spread = 3;
             var notes = new Dictionary<string, List<SongNote>>();
@@ -132,6 +177,8 @@ namespace RocksmithToolkitLib.ZiggyProEditor
 
             var chordTemps = new Dictionary<string, Tuple<int, SongChordTemplate>>();
             var guitarTrack = GetTrack(zigSong);
+            var difficultyCount = guitarTrack.Chords.GroupBy(chord => chord.Difficulty).Count();
+            
             foreach (var group in guitarTrack.Chords.GroupBy(chord => chord.Difficulty))
             {
                 var gNotes = notes[group.Key] = new List<SongNote>();
@@ -143,6 +190,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                 int highFret = -1;
                 //bool lastWasChord = false;
                 SongAnchor curAnchor = null;
+                // dont see any tempo, time sig note or chord time adjustment here, why?
                 for (int i = 0; i < zChords.Count; i++)
                 {
                     var zChord = zChords[i];
@@ -162,7 +210,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                             {
                                 if (gAnchors.Count == 0 || gAnchors[gAnchors.Count - 1].Fret != minCFret)
                                 {
-                                    gAnchors.Add(new SongAnchor { Fret = Math.Min(19, minCFret), Time = zChord.StartTime });
+                                    gAnchors.Add(new SongAnchor { Fret = Math.Min(18, minCFret), Time = zChord.StartTime });
                                 }
                             }
                             else
@@ -174,7 +222,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                                 gAnchors.Add(curAnchor);
                                 if (curAnchor.Fret != minCFret)
                                 {
-                                    gAnchors.Add(new SongAnchor { Fret = Math.Min(19, minCFret), Time = zChord.StartTime });
+                                    gAnchors.Add(new SongAnchor { Fret = Math.Min(18, minCFret), Time = zChord.StartTime });
                                 }
                                 curAnchor = null;
                             }
@@ -220,7 +268,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                         {
                             if (curAnchor == null)
                             {
-                                curAnchor = new SongAnchor { Fret = Math.Min(19, (int)note.Fret), Time = note.Time };
+                                curAnchor = new SongAnchor { Fret = Math.Min(18, (int)note.Fret), Time = note.Time };
                                 highFret = note.Fret;
                             }
                             else if (note.Fret < curAnchor.Fret)
@@ -232,7 +280,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                                 else
                                 {
                                     gAnchors.Add(curAnchor);
-                                    curAnchor = new SongAnchor { Fret = Math.Min(19, (int)note.Fret), Time = note.Time };
+                                    curAnchor = new SongAnchor { Fret = Math.Min(18, (int)note.Fret), Time = note.Time };
                                     highFret = note.Fret;
                                 }
                             }
@@ -245,7 +293,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                                 else
                                 {
                                     gAnchors.Add(curAnchor);
-                                    curAnchor = new SongAnchor { Fret = Math.Min(19, (int)note.Fret), Time = note.Time };
+                                    curAnchor = new SongAnchor { Fret = Math.Min(18, (int)note.Fret), Time = note.Time };
                                     highFret = note.Fret;
                                 }
                             }
@@ -259,7 +307,20 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                 }
             }
 
-            rsSong.Levels = new SongLevel[]
+            if (difficultyCount == 1)
+            {
+                rsSong.Levels = new SongLevel[]
+                    {
+                         new SongLevel { Difficulty=0,
+                        Notes = notes["Easy"].ToArray() ,
+                        Chords =  chords["Easy"].ToArray() ,
+                        Anchors = anchors["Easy"].ToArray() ,
+                        HandShapes = handShapes["Easy"].ToArray()}  
+                     };
+            }
+            else
+            {
+                rsSong.Levels = new SongLevel[]
             {
                     new SongLevel { Difficulty=0,
                         Notes = notes["Easy"].ToArray() ,
@@ -282,6 +343,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
                         Anchors = anchors["Expert"].ToArray() ,
                         HandShapes = handShapes["Expert"].ToArray()  }
             };
+            }
             rsSong.ChordTemplates = chordTemps.Values.OrderBy(v => v.Item1).Select(v => v.Item2).ToArray();
         }
 
@@ -290,7 +352,7 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             return val > 0 ? val : int.MaxValue;
         }
 
-        private Tuple<int, SongChordTemplate> GetChordTemplate(Chord zChord, Dictionary<string, Tuple<int, SongChordTemplate>> chordTemps)
+        private Tuple<int, SongChordTemplate> GetChordTemplate(ZpeChord zChord, Dictionary<string, Tuple<int, SongChordTemplate>> chordTemps)
         {
             Tuple<int, SongChordTemplate> val;
             if (!chordTemps.TryGetValue(HashChord(zChord), out val))
@@ -310,10 +372,10 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             return val;
         }
 
-        private SongNote GetNote(Chord chord, Chord nextChord)
+        private SongNote GetNote(ZpeChord chord, ZpeChord nextChord)
         {
             SongNote note = new SongNote();
-            Note zNote = chord.Notes[0];
+            ZpeNote zNote = chord.Notes[0];
             note.Fret = (sbyte)zNote.Fret;
             note.String = (byte)zNote.StringNo;
             note.Bend = 0;
@@ -338,14 +400,14 @@ namespace RocksmithToolkitLib.ZiggyProEditor
             return note;
         }
 
-        string HashChord(Chord chord)
+        string HashChord(ZpeChord chord)
         {
             string hash = "";
             chord.Notes.OrderBy(n => n.StringNo).ToList().ForEach(ch => hash += ch.StringNo + "." + ch.Fret + ".");
             return hash;
         }
 
-        Track GetTrack(Song song)
+        ZpeTrack GetTrack(ZpeSong song)
         {
             var guitarTrack = song.Tracks.SingleOrDefault(tr => "PART REAL_GUITAR_22".Equals(tr.Name));
             if (guitarTrack == null)

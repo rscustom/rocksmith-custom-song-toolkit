@@ -1,30 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace RocksmithToolkitLib.ZiggyProEditor
 {
+    //<tempo startTime="0" startTick="0" rawTempo="591133" secondsPerWholeNote="5.91133" secondsPerTick="0.00123152708333333" />
+    
     [XmlRoot("tempo")]
-    public class Tempo
+    public class ZpeTempo
     {
         [XmlAttribute("startTime")]
-        public float StartTime {get;set;}
+        public float StartTime { get; set; }
 
         [XmlAttribute("startTick")]
-        public int StartTick {get;set;}
+        public long StartTick { get; set; }
 
+        // rawTempo is in units of micro Seconds Per Quater Note
         [XmlAttribute("rawTempo")]
-        public int RawTempo { get; set; }
+        public long RawTempo { get; set; }
 
-        [XmlAttribute("secondsPerQuarterNote")]
-        public float SecondsPerQuarterNote {get;set;}
+        // rawTempo / 100000
+        [XmlAttribute("secondsPerWholeNote")]
+        public float SecondsPerWholeNote { get; set; }
 
         [XmlAttribute("secondsPerTick")]
-        public float SecondsPerTick {get;set;}
+        public float SecondsPerTick { get; set; }
 
-        [XmlAttribute("secondsPerBar")]
-        public float SecondsPerBar {get;set;}
+        // depricated
+        //[XmlAttribute("secondsPerBar")]
+        //public float SecondsPerBar { get; set; }
+
+        //[XmlAttribute("secondsPerQuarterNote")]
+        //public float SecondsPerQuarterNote { get; set; }
+
+
     }
 }

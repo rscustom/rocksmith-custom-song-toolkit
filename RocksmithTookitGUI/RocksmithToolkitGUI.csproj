@@ -107,8 +107,20 @@
     <Compile Include="CDLC2Tab\SongInfoForm.Designer.cs">
       <DependentUpon>SongInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DLCPackageCreator\DLCPackageCreator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DLCPackageCreator\DLCPackageCreator.designer.cs">
+      <DependentUpon>DLCPackageCreator.cs</DependentUpon>
+    </Compile>
     <Compile Include="DLCPackageCreator\VocalsForm.Designer.cs">
       <DependentUpon>VocalsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UpdateForm.cs">
       <SubType>Form</SubType>
@@ -161,12 +173,6 @@
     <Compile Include="DLCPackageCreator\TuningForm.Designer.cs">
       <DependentUpon>TuningForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DLCPackageCreator\DLCPackageCreator.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="DLCPackageCreator\DLCPackageCreator.Designer.cs">
-      <DependentUpon>DLCPackageCreator.cs</DependentUpon>
-    </Compile>
     <Compile Include="DLCPackageCreator\ToneControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -198,12 +204,6 @@
     <Compile Include="HelpForm.Designer.cs">
       <DependentUpon>HelpForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="OggConverter\OggConverter.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -224,11 +224,11 @@
     <Compile Include="CDLC2Tab\CDLC2Tab.Designer.cs">
       <DependentUpon>CDLC2Tab.cs</DependentUpon>
     </Compile>
-    <Compile Include="ZiggyProEditorConverter\ConverterInput.cs">
+    <Compile Include="ZiggyProEditorConverter\ZpeConverter.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ZiggyProEditorConverter\ConverterInput.Designer.cs">
-      <DependentUpon>ConverterInput.cs</DependentUpon>
+    <Compile Include="ZiggyProEditorConverter\ZpeConverter.designer.cs">
+      <DependentUpon>ZpeConverter.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
@@ -239,11 +239,17 @@
     <EmbeddedResource Include="CDLC2Tab\SongInfoForm.resx">
       <DependentUpon>SongInfoForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DLCPackageCreator\DLCPackageCreator.resx">
+      <DependentUpon>DLCPackageCreator.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\ToneImportForm.resx">
       <DependentUpon>ToneImportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\VocalsForm.resx">
       <DependentUpon>VocalsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UpdateForm.resx">
       <DependentUpon>UpdateForm.cs</DependentUpon>
@@ -269,9 +275,6 @@
     <EmbeddedResource Include="DLCPackageCreator\TuningForm.resx">
       <DependentUpon>TuningForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DLCPackageCreator\DLCPackageCreator.resx">
-      <DependentUpon>DLCPackageCreator.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\ToneControl.resx">
       <DependentUpon>ToneControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -286,9 +289,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HelpForm.resx">
       <DependentUpon>HelpForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OggConverter\OggConverter.resx">
       <DependentUpon>OggConverter.cs</DependentUpon>
@@ -309,8 +309,8 @@
     <EmbeddedResource Include="CDLC2Tab\CDLC2Tab.resx">
       <DependentUpon>CDLC2Tab.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ZiggyProEditorConverter\ConverterInput.resx">
-      <DependentUpon>ConverterInput.cs</DependentUpon>
+    <EmbeddedResource Include="ZiggyProEditorConverter\ZpeConverter.resx">
+      <DependentUpon>ZpeConverter.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -334,7 +334,9 @@
     <Compile Include="DLCPackageCreator\ToneImportForm.Designer.cs">
       <DependentUpon>ToneImportForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DLCPackageCreator\VocalsForm.cs" />
+    <Compile Include="DLCPackageCreator\VocalsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\logo_small.png" />

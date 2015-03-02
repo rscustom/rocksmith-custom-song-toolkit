@@ -17,7 +17,6 @@ TestResults
 
 # Build results
 [Bb]in/
-[Oo]bj/
 [Dd]ebug/
 [Rr]elease/
 x64/
@@ -95,7 +94,6 @@ AppPackages/
 # Others
 [Oo]bj
 sql
-TestResults
 [Tt]est[Rr]esult*
 *.Cache
 *.resources
@@ -117,3 +115,4 @@ RocksmithToolkitLib/ToolkitVersion.cs
 __pycache__/
 *.py[cod]
 *.egg
+*.userprefs

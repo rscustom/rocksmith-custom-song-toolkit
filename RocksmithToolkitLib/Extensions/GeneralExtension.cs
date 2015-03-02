@@ -394,5 +394,14 @@ namespace RocksmithToolkitLib.Extensions
                 return (T)binaryFormatter.Deserialize(memoryStream);
             }
         }
+
+        public static bool IsBetween(float testValue, float minValue, float maxValue)
+        {
+            if (testValue >= minValue && testValue <= maxValue)
+                return true;
+
+            return false;
+        }
+
     }
 }

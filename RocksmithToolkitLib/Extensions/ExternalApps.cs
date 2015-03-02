@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Windows.Forms;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -12,19 +10,34 @@ namespace RocksmithToolkitLib.Extensions
         private const string APP_7Z = "7za.exe";
         private const string APP_NVDXT = "nvdxt.exe";
         private const string APP_PACKER = "packer.exe";
-        private const string APP_GP5 = "RocksmithToTab.exe";
+        private const string APP_OGGCUT = "oggCut.exe";
+        private const string APP_OGGDEC = "oggdec.exe";
+        private const string APP_OGGENC = "oggenc.exe";
 
-        public static void Song2014ToGp5(string inputPath, string outputDir, string outputFormat = null, string songDiff = null, string songId = null, string songArr = null, string songSplit = null)
+        public static void VerifyExternalApps()
         {
-            if (outputFormat != null) outputFormat = String.Format(" -f \"{0}\"", outputFormat);
-            if (songDiff != null) songDiff = String.Format(" -d {0}", songDiff);
-            if (songId != null) songId = String.Format(" -s \"{0}\"", songId);
-            if (songArr != null) songArr = String.Format(" -a \"{0}\"", songArr);
-            if (songSplit != null) songSplit = String.Format(" -t");
-            var cmdArgs = String.Format(" \"{0}\" -o \"{1}\"{2}{3}{4}{5}{6}", inputPath, outputDir, outputFormat, songDiff, songId, songArr, songSplit).TrimEnd();
-            GeneralExtensions.RunExternalExecutable(APP_GP5, true, false, true, cmdArgs);
-        }
+            // Verifying if third party app is in root application directory
+            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_TOPNG)))
+                throw new FileNotFoundException("topng.exe not found!");
 
+            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_7Z)))
+                throw new FileNotFoundException("7za.exe not found!");
+
+            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_NVDXT)))
+                throw new FileNotFoundException("nvdxt.exe not found!");
+
+            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_PACKER)))
+                throw new FileNotFoundException("packer.exe not found!");
+
+            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_OGGCUT)))
+                throw new FileNotFoundException("oggCut.exe not found!");
+
+            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_OGGDEC)))
+                throw new FileNotFoundException("oggdec.exe not found!");
+
+            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_OGGENC)))
+                throw new FileNotFoundException("oggenc.exe not found!");
+        }
 
         public static void Dds2Png(string sourcePath, string destinationPath = null)
         {
@@ -97,5 +110,54 @@ namespace RocksmithToolkitLib.Extensions
             }
 
         }
+
+        public static void Wav2Ogg(string sourcePath, string destinationPath, int qualityFactor)
+        {
+            if (destinationPath == null)
+                destinationPath = String.Format("{0}", Path.ChangeExtension(sourcePath, "ogg"));
+
+            var cmdArgs = String.Format(" -r -q {2} -R 48000 \"{0}\" -o \"{1}\"", sourcePath, destinationPath, Convert.ToString(qualityFactor ));
+
+            GeneralExtensions.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
+        }
+
+        public static void Ogg2Preview(string sourcePath, string destinationPath, long msStart = 4000)
+        {
+            var cmdArgs = String.Format(" -s {2} -l 30000 \"{0}\" \"{1}\"", sourcePath, destinationPath, msStart);
+
+            GeneralExtensions.RunExternalExecutable(APP_OGGCUT, true, false, true, cmdArgs);
+        }
+
+        public static void Ogg2Wav(string sourcePath, string destinationPath)
+        {
+            var cmdArgs = String.Format(" -o \"{1}\" \"{0}\"", sourcePath, destinationPath);
+
+            GeneralExtensions.RunExternalExecutable(APP_OGGDEC, true, false, true, cmdArgs);
+        }
+
+        public static void Preview2Wav(string sourcePath)
+        {
+            var dirName = Path.GetDirectoryName(sourcePath);
+            var fileName = Path.GetFileNameWithoutExtension(sourcePath);
+            var dirFileName = Path.Combine(dirName, fileName);
+            var srcPath = String.Format("{0}_{1}.ogg", dirFileName, "preview");
+            var destPath = Path.ChangeExtension(srcPath, ".wav");
+
+            var cmdArgs = String.Format(" -o \"{1}\" \"{0}\"", srcPath, destPath);
+
+            GeneralExtensions.RunExternalExecutable(APP_OGGDEC, true, false, true, cmdArgs);
+        }
+
+        public static void Wav2Wem(string wwiseCliPath)
+        {
+            var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
+            var templateDir = "Wwise\\Template";
+            var templatePath = Path.Combine(appRootDir, templateDir, "Template.wproj");
+
+            var cmdArgs = String.Format(" \"{0}\" -GenerateSoundBanks", templatePath);
+
+            GeneralExtensions.RunExternalExecutable(wwiseCliPath, true, false, true, cmdArgs);
+        }
+
     }
 }

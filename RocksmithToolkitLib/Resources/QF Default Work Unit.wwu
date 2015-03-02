@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{2FDC82EC-0D5B-44CB-ADC5-E10F7F1DAEEB}" SchemaVersion="62">
+	<InteractiveMusic>
+		<WorkUnit Name="Default Work Unit" ID="{2FDC82EC-0D5B-44CB-ADC5-E10F7F1DAEEB}" PersistMode="Standalone">
+			<ChildrenList>
+				<MusicSegment Name="Audio" ID="{9A5E8125-2D2A-45C8-80AE-F1A8F4DC453F}" ShortID="374793532">
+					<PropertyList>
+						<Property Name="EndPosition" Type="Real64" Value="90000.4583333333" />
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4277464A-3A5F-42DC-A9D9-FCC25874C62B}" />
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicTrack Name="Audio" ID="{A50845FC-A55E-45B6-AAF4-5F044931843F}" ShortID="296443560">
+							<PropertyList>
+								<Property Name="IsStreamingEnabled" Type="bool">
+									<ValueList>
+										<Value>True</Value>
+									</ValueList>
+								</Property>
+								<Property Name="IsZeroLantency" Type="bool">
+									<ValueList>
+										<Value>True</Value>
+									</ValueList>
+								</Property>
+								<Property Name="OverrideConversion" Type="bool" Value="True" />
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4277464A-3A5F-42DC-A9D9-FCC25874C62B}" />
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Audio" ID="{A0883E6F-EF76-4C16-8174-3DB7908BF0FC}" ShortID="144151451">
+									<Language>SFX</Language>
+									<AudioFile>Audio.wav</AudioFile>
+								</AudioFileSource>
+							</ChildrenList>
+							<ConversionInfo>
+								<CustomConversion CreatedFrom="{53A9DE0F-3F4F-4B59-8614-3F9E3C7358FC}">
+									<Conversion Name="Vorbis Quality High (Custom)" ID="{3903FDF4-1BB1-4AF2-917E-1ECD52C2D7AA}">
+										<PropertyList>
+											<Property Name="Channels" Type="int32">
+												<ValueList>
+													<Value Platform="XboxOne">4</Value>
+													<Value Platform="VitaSW">4</Value>
+													<Value Platform="Windows">1</Value>
+													<Value Platform="Wii">4</Value>
+													<Value Platform="WiiUSW">4</Value>
+													<Value Platform="Xbox360">4</Value>
+													<Value Platform="3DS">4</Value>
+													<Value Platform="PS3">4</Value>
+													<Value Platform="iOS">4</Value>
+													<Value Platform="PS4">4</Value>
+													<Value Platform="Mac">4</Value>
+													<Value Platform="Android">4</Value>
+													<Value Platform="VitaHW">4</Value>
+												</ValueList>
+											</Property>
+											<Property Name="LRMix" Type="Real64">
+												<ValueList>
+													<Value Platform="XboxOne">0</Value>
+													<Value Platform="VitaSW">0</Value>
+													<Value Platform="Windows">0</Value>
+													<Value Platform="Wii">0</Value>
+													<Value Platform="WiiUSW">0</Value>
+													<Value Platform="Xbox360">0</Value>
+													<Value Platform="3DS">0</Value>
+													<Value Platform="PS3">0</Value>
+													<Value Platform="iOS">0</Value>
+													<Value Platform="PS4">0</Value>
+													<Value Platform="Mac">0</Value>
+													<Value Platform="Android">0</Value>
+													<Value Platform="VitaHW">0</Value>
+												</ValueList>
+											</Property>
+											<Property Name="SampleRate" Type="int32">
+												<ValueList>
+													<Value Platform="XboxOne">0</Value>
+													<Value Platform="VitaSW">0</Value>
+													<Value Platform="Windows">48000</Value>
+													<Value Platform="Wii">0</Value>
+													<Value Platform="WiiUSW">0</Value>
+													<Value Platform="Xbox360">0</Value>
+													<Value Platform="3DS">0</Value>
+													<Value Platform="PS3">0</Value>
+													<Value Platform="iOS">0</Value>
+													<Value Platform="PS4">0</Value>
+													<Value Platform="Mac">0</Value>
+													<Value Platform="Android">0</Value>
+													<Value Platform="VitaHW">0</Value>
+												</ValueList>
+											</Property>
+										</PropertyList>
+										<ConversionPluginInfoList>
+											<ConversionPluginInfo Platform="XboxOne">
+												<ConversionPlugin Name="" ID="{92487DB2-0EBE-4B6D-8C08-6125BAB091A7}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="VitaSW">
+												<ConversionPlugin Name="" ID="{9FB2538E-3A05-4B33-AF6B-605D9C8AD15B}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="Windows">
+												<ConversionPlugin Name="" ID="{16CBF7A0-064A-459C-B8F8-BFB66099C9CE}" PluginName="Vorbis" CompanyID="0" PluginID="4">
+													<PropertyList>
+														<Property Name="QualityFactor" Type="Real32" Value="%QF1%" />
+														<Property Name="SeekTableGranularity" Type="int32" Value="4" />
+													</PropertyList>
+												</ConversionPlugin>
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="Wii">
+												<ConversionPlugin Name="" ID="{5FD351CF-B631-4D2E-AA14-451D8026042E}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="WiiUSW">
+												<ConversionPlugin Name="" ID="{E13FCE45-FE4C-4971-B706-73CACB6AC6CE}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="Xbox360">
+												<ConversionPlugin Name="" ID="{8B7D8721-C02F-4799-8DE8-66A0ABD47910}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="3DS">
+												<ConversionPlugin Name="" ID="{72617067-B6D7-4F0A-8BBF-1B47F5F23C6A}" PluginName="ADPCM" CompanyID="0" PluginID="5" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="PS3">
+												<ConversionPlugin Name="" ID="{0F61A0AB-9DA6-4AAF-946D-AE793B9376F1}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="iOS">
+												<ConversionPlugin Name="" ID="{A7237DF7-7334-4119-BBB1-8203DD6103C9}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="PS4">
+												<ConversionPlugin Name="" ID="{30E63AF5-59D3-4A7B-8F82-FADF5C8A8A78}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="Mac">
+												<ConversionPlugin Name="" ID="{E1670F46-5A7B-48FE-91AC-1A9A84668928}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="Android">
+												<ConversionPlugin Name="" ID="{262E7934-E9E5-42D6-8D96-85E9BDAB3954}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="VitaHW">
+												<ConversionPlugin Name="" ID="{09BA5C9C-D0FC-43BB-8813-8754D4F17211}" PluginName="PCM" CompanyID="0" PluginID="1" />
+											</ConversionPluginInfo>
+										</ConversionPluginInfoList>
+									</Conversion>
+								</CustomConversion>
+							</ConversionInfo>
+							<SequenceList>
+								<MusicTrackSequence Name="" ID="{5B95AE73-FE0A-4693-A856-7CDEAD669416}">
+									<ClipList>
+										<MusicClip Name="Audio" ID="{B1CCA5E7-6328-49A0-831E-90D4CEC675CE}">
+											<PropertyList>
+												<Property Name="EndTrimOffset" Type="Real64" Value="90000.4583333333" />
+												<Property Name="FadeInMode" Type="int16" Value="0" />
+												<Property Name="FadeOutMode" Type="int16" Value="0" />
+											</PropertyList>
+											<AudioSourceRef Name="Audio" ID="{A0883E6F-EF76-4C16-8174-3DB7908BF0FC}" />
+										</MusicClip>
+									</ClipList>
+								</MusicTrackSequence>
+							</SequenceList>
+						</MusicTrack>
+					</ChildrenList>
+					<ConversionInfo>
+						<ConversionRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" />
+					</ConversionInfo>
+					<CueList>
+						<MusicCue Name="Entry Cue" ID="{4264F0EB-7DAB-4039-BD9F-1EBDEB40645B}" />
+						<MusicCue Name="Exit Cue" ID="{BF1F5B43-A896-4094-A8F8-6E9C33E2F072}">
+							<PropertyList>
+								<Property Name="CueType" Type="int16" Value="1" />
+								<Property Name="TimeMs" Type="Real64" Value="90000.4583333333" />
+							</PropertyList>
+						</MusicCue>
+					</CueList>
+				</MusicSegment>
+				<MusicSegment Name="Audio_preview" ID="{AB37D819-2019-4122-9586-55967B588366}" ShortID="417177274">
+					<PropertyList>
+						<Property Name="EndPosition" Type="Real64" Value="29997.3333333333" />
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4277464A-3A5F-42DC-A9D9-FCC25874C62B}" />
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicTrack Name="Audio_preview" ID="{E6E02755-E2B4-4F5A-8CD6-FA4C65DDAAE5}" ShortID="835626271">
+							<PropertyList>
+								<Property Name="IsStreamingEnabled" Type="bool">
+									<ValueList>
+										<Value>True</Value>
+									</ValueList>
+								</Property>
+								<Property Name="IsZeroLantency" Type="bool">
+									<ValueList>
+										<Value>True</Value>
+									</ValueList>
+								</Property>
+								<Property Name="OverrideConversion" Type="bool" Value="True" />
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4277464A-3A5F-42DC-A9D9-FCC25874C62B}" />
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Audio_preview" ID="{F8E2583A-E1D8-4DED-B1CA-DA495B9E8B87}" ShortID="309608343">
+									<Language>SFX</Language>
+									<AudioFile>Audio_preview.wav</AudioFile>
+								</AudioFileSource>
+							</ChildrenList>
+							<ConversionInfo>
+								<CustomConversion CreatedFrom="{53A9DE0F-3F4F-4B59-8614-3F9E3C7358FC}">
+									<Conversion Name="Vorbis Quality High (Custom)" ID="{6B662B31-D748-4385-AD51-19B26EFE75E4}">
+										<PropertyList>
+											<Property Name="Channels" Type="int32">
+												<ValueList>
+													<Value Platform="XboxOne">4</Value>
+													<Value Platform="VitaSW">4</Value>
+													<Value Platform="Windows">1</Value>
+													<Value Platform="Wii">4</Value>
+													<Value Platform="WiiUSW">4</Value>
+													<Value Platform="Xbox360">4</Value>
+													<Value Platform="3DS">4</Value>
+													<Value Platform="PS3">4</Value>
+													<Value Platform="iOS">4</Value>
+													<Value Platform="PS4">4</Value>
+													<Value Platform="Mac">4</Value>
+													<Value Platform="Android">4</Value>
+													<Value Platform="VitaHW">4</Value>
+												</ValueList>
+											</Property>
+											<Property Name="LRMix" Type="Real64">
+												<ValueList>
+													<Value Platform="XboxOne">0</Value>
+													<Value Platform="VitaSW">0</Value>
+													<Value Platform="Windows">0</Value>
+													<Value Platform="Wii">0</Value>
+													<Value Platform="WiiUSW">0</Value>
+													<Value Platform="Xbox360">0</Value>
+													<Value Platform="3DS">0</Value>
+													<Value Platform="PS3">0</Value>
+													<Value Platform="iOS">0</Value>
+													<Value Platform="PS4">0</Value>
+													<Value Platform="Mac">0</Value>
+													<Value Platform="Android">0</Value>
+													<Value Platform="VitaHW">0</Value>
+												</ValueList>
+											</Property>
+											<Property Name="SampleRate" Type="int32">
+												<ValueList>
+													<Value Platform="XboxOne">0</Value>
+													<Value Platform="VitaSW">0</Value>
+													<Value Platform="Windows">48000</Value>
+													<Value Platform="Wii">0</Value>
+													<Value Platform="WiiUSW">0</Value>
+													<Value Platform="Xbox360">0</Value>
+													<Value Platform="3DS">0</Value>
+													<Value Platform="PS3">0</Value>
+													<Value Platform="iOS">0</Value>
+													<Value Platform="PS4">0</Value>
+													<Value Platform="Mac">0</Value>
+													<Value Platform="Android">0</Value>
+													<Value Platform="VitaHW">0</Value>
+												</ValueList>
+											</Property>
+										</PropertyList>
+										<ConversionPluginInfoList>
+											<ConversionPluginInfo Platform="XboxOne">
+												<ConversionPlugin Name="" ID="{4BA808A8-A05D-4CD7-B99E-1A028CC9D54A}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="VitaSW">
+												<ConversionPlugin Name="" ID="{F9A5711E-FBB5-4403-BDDB-6034000A23C0}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="Windows">
+												<ConversionPlugin Name="" ID="{A820679E-C63D-4FA3-8338-A1B758796AB0}" PluginName="Vorbis" CompanyID="0" PluginID="4">
+													<PropertyList>
+														<Property Name="QualityFactor" Type="Real32" Value="%QF2%" />
+														<Property Name="SeekTableGranularity" Type="int32" Value="4" />
+													</PropertyList>
+												</ConversionPlugin>
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="Wii">
+												<ConversionPlugin Name="" ID="{9CB5C19E-8393-4E50-83CE-9A110C6157AF}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="WiiUSW">
+												<ConversionPlugin Name="" ID="{711BEC37-871F-423B-9ED2-56B0A6B419BC}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="Xbox360">
+												<ConversionPlugin Name="" ID="{2CB33835-7BD9-4FEF-B479-73F17BDE187B}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="3DS">
+												<ConversionPlugin Name="" ID="{5E6D7131-A1D0-492B-842A-613A870BB012}" PluginName="ADPCM" CompanyID="0" PluginID="5" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="PS3">
+												<ConversionPlugin Name="" ID="{5CB59187-D23D-42FA-A6E6-7793E01B5603}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="iOS">
+												<ConversionPlugin Name="" ID="{8172D438-443D-4C47-A081-3637961A9995}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="PS4">
+												<ConversionPlugin Name="" ID="{B28EF99B-0516-4241-BE15-6DFFBAD87B47}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="Mac">
+												<ConversionPlugin Name="" ID="{C5B734A6-15D4-4002-B8F7-C6871D47394A}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="Android">
+												<ConversionPlugin Name="" ID="{A8611E76-969E-4C6D-8CC3-E87466E54ECA}" PluginName="Vorbis" CompanyID="0" PluginID="4" />
+											</ConversionPluginInfo>
+											<ConversionPluginInfo Platform="VitaHW">
+												<ConversionPlugin Name="" ID="{CFC9E14D-7ED5-46C1-A863-164EF5486FB9}" PluginName="PCM" CompanyID="0" PluginID="1" />
+											</ConversionPluginInfo>
+										</ConversionPluginInfoList>
+									</Conversion>
+								</CustomConversion>
+							</ConversionInfo>
+							<SequenceList>
+								<MusicTrackSequence Name="" ID="{45A057E3-D26F-40A5-879C-75302D92D0A2}">
+									<ClipList>
+										<MusicClip Name="Audio_preview" ID="{D9E39494-203E-4462-ACC5-5C3993E81556}">
+											<PropertyList>
+												<Property Name="EndTrimOffset" Type="Real64" Value="29997.3333333333" />
+												<Property Name="FadeInMode" Type="int16" Value="0" />
+												<Property Name="FadeOutMode" Type="int16" Value="0" />
+											</PropertyList>
+											<AudioSourceRef Name="Audio_preview" ID="{F8E2583A-E1D8-4DED-B1CA-DA495B9E8B87}" />
+										</MusicClip>
+									</ClipList>
+								</MusicTrackSequence>
+							</SequenceList>
+						</MusicTrack>
+					</ChildrenList>
+					<ConversionInfo>
+						<ConversionRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" />
+					</ConversionInfo>
+					<CueList>
+						<MusicCue Name="Entry Cue" ID="{F2148C9D-FBCC-4B94-850F-4F4BAB8ADA45}" />
+						<MusicCue Name="Exit Cue" ID="{D928144B-286B-45E2-96BC-4B3B058321DC}">
+							<PropertyList>
+								<Property Name="CueType" Type="int16" Value="1" />
+								<Property Name="TimeMs" Type="Real64" Value="29997.3333333333" />
+							</PropertyList>
+						</MusicCue>
+					</CueList>
+				</MusicSegment>
+			</ChildrenList>
+		</WorkUnit>
+	</InteractiveMusic>
+</WwiseDocument>

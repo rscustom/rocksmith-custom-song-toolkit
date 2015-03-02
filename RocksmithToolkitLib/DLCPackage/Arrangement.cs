@@ -10,7 +10,8 @@ using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
-    public enum RouteMask : int {
+    public enum RouteMask : int
+    {
         // Used for lessons or for display only in song list
         None = 0,
         Lead = 1,
@@ -19,7 +20,8 @@ namespace RocksmithToolkitLib.DLCPackage
         Bass = 4
     }
 
-    public enum DNAId : int {
+    public enum DNAId : int
+    {
         None = 0,
         Solo = 1,
         Riff = 2,
@@ -94,7 +96,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     break;
             }
 
-            if (tuning == null) {
+            if (tuning == null)
+            {
                 tuning = new TuningDefinition();
                 tuning.UIName = tuning.Name = tuning.NameFromStrings(song.Tuning, false);
                 tuning.Custom = true;
@@ -143,7 +146,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 capoInfo = String.Format(", Capo Fret {0}", CapoFret);
 
             var pitchInfo = String.Empty;
-            if(!TuningPitch.Equals(440.0))
+            if (!TuningPitch.Equals(440.0))
                 pitchInfo = String.Format(": A{0}", TuningPitch);
 
             var metDesc = String.Empty;
