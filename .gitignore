@@ -17,6 +17,7 @@ TestResults
 
 # Build results
 [Bb]in/
+[Oo]bj/
 [Dd]ebug/
 [Rr]elease/
 x64/
