@@ -45,11 +45,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return GameVersion.RS2012;
                 if (rbConvert.Checked)
                     return GameVersion.None;
-     
-                // this is a work around for dlc.xml files that are 
-                // malformed and/or do not contain game version info 
-                // throw new InvalidDataException("Game version is missing or is not selected.");
-                return GameVersion.RS2014; // defaults
+
+                throw new InvalidDataException("Game version is missing or is not selected.");
             }
             set
             {
@@ -851,8 +848,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void FillPackageCreatorForm(DLCPackageData info, string filesBaseDir)
         {
-            RS2012.Checked = info.GameVersion == GameVersion.RS2012;
-            RS2014.Checked = info.GameVersion == GameVersion.RS2014;
+            // some dlc.xml do not contain GameVersion info so use AppId to determine version
+            RS2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
+            RS2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
 
             platformPC.Checked = info.Pc;
             platformMAC.Checked = info.Mac;
@@ -985,7 +983,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                     catch { /* Handle old types of *.dlc.xml */ }
                 }
-                 
+
                 arrangementLB.Items.Add(arrangement);
             }
 
