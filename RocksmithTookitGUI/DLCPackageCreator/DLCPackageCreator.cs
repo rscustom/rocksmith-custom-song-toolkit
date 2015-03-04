@@ -850,8 +850,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             RS2012.Checked = info.GameVersion == GameVersion.RS2012;
             RS2014.Checked = info.GameVersion == GameVersion.RS2014;
-            rbConvert.Checked = info.GameVersion == GameVersion.RS2014;
-
+   
             platformPC.Checked = info.Pc;
             platformMAC.Checked = info.Mac;
             platformXBox360.Checked = info.XBox360;
@@ -1646,7 +1645,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // Import Package RS2014 only
-            dlcImportButton.Enabled = CurrentGameVersion != GameVersion.RS2012;
+            dlcImportButton.Enabled = CurrentGameVersion == GameVersion.RS2014;
         }
 
         private void PopulateAppIdCombo()
