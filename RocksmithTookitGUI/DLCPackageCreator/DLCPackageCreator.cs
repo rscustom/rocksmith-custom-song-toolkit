@@ -45,8 +45,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return GameVersion.RS2012;
                 if (rbConvert.Checked)
                     return GameVersion.None;
-
-                throw new Exception("No game version selected.");
+     
+                // this is a work around for dlc.xml files that are 
+                // malformed and/or do not contain game version info 
+                // throw new InvalidDataException("Game version is missing or is not selected.");
+                return GameVersion.RS2014; // defaults
             }
             set
             {
@@ -621,7 +624,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var unpackedDir = Packer.Unpack(sourcePackage, tmp, true, true, false);
             savePath = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourcePackage));
             // Same name xbox issue fix
-            if(packagePlatform.platform == GamePlatform.XBox360)
+            if (packagePlatform.platform == GamePlatform.XBox360)
                 savePath += GamePlatform.XBox360.ToString();
             DirectoryExtension.Move(unpackedDir, savePath, true);
             unpackedDir = savePath;
@@ -850,7 +853,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             RS2012.Checked = info.GameVersion == GameVersion.RS2012;
             RS2014.Checked = info.GameVersion == GameVersion.RS2014;
-   
+
             platformPC.Checked = info.Pc;
             platformMAC.Checked = info.Mac;
             platformXBox360.Checked = info.XBox360;
@@ -919,7 +922,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 LyricArtPath = info.LyricArtPath.AbsoluteTo(BasePath);
 
             // Audio file
-			if (!String.IsNullOrEmpty(info.OggPath))//TODO: empty since last commit
+            if (!String.IsNullOrEmpty(info.OggPath))//TODO: empty since last commit
                 AudioPath = info.OggPath.AbsoluteTo(BasePath);
             platformPC.Checked = !String.IsNullOrEmpty(info.OggPath);
 
@@ -982,8 +985,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                     catch { /* Handle old types of *.dlc.xml */ }
                 }
+                 
                 arrangementLB.Items.Add(arrangement);
             }
+
         }
 
         private void songVolumeBox_ValueChanged(object sender, EventArgs e)
@@ -1117,7 +1122,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 ExternalApps.VerifyExternalApps(); // for testing
-				var audioPathNoExt = Path.Combine(Path.GetDirectoryName(AudioPath), Path.GetFileNameWithoutExtension(AudioPath));
+                var audioPathNoExt = Path.Combine(Path.GetDirectoryName(AudioPath), Path.GetFileNameWithoutExtension(AudioPath));
                 var oggPath = String.Format(audioPathNoExt + ".ogg");
                 var wavPath = String.Format(audioPathNoExt + ".wav");
                 var wemPath = String.Format(audioPathNoExt + ".wem");
@@ -1597,7 +1602,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 control.Items.Insert(newIndex, item);
                 control.SelectedIndex = index;
-            } else {
+            }
+            else
+            {
                 control.Items.Insert(index, item);
                 control.SelectedIndex = index;
             }
