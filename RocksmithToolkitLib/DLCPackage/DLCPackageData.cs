@@ -94,6 +94,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 var xmlFile = Directory.GetFiles(unpackedDir, xmlName + ".xml", SearchOption.AllDirectories)[0];
 
                 if (attr.Phrases != null)
+                {
                     if (data.SongInfo == null)
                     {
                         // Fill Package Data
