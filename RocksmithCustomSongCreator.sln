@@ -44,7 +44,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sng2014", "RocksmithToolkit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithToolkitUpdater", "RocksmithToolkitUpdater\RocksmithToolkitUpdater.csproj", "{4404D0DD-017E-4CC5-8302-3C150FDF06E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "packagecreator", "RocksmithToolkitCLI\packagecreator\packagecreator.csproj", "{0030DCFD-79C4-48C1-A43C-93FA315059E7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtistFolderCreator", "RocksmithToolkitCLI\ArtistFolderCreator\ArtistFolderCreator.csproj", "{E742753F-9DC3-4AB7-B129-DC11EB2302CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageCreator", "RocksmithToolkitCLI\PackageCreator\PackageCreator.csproj", "{ED268869-387A-477E-A652-C6E47BE2AC02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -242,21 +244,38 @@ Global
 		{4404D0DD-017E-4CC5-8302-3C150FDF06E7}.ReleaseMac|Mixed Platforms.Build.0 = Release|x86
 		{4404D0DD-017E-4CC5-8302-3C150FDF06E7}.ReleaseMac|x86.ActiveCfg = Release|x86
 		{4404D0DD-017E-4CC5-8302-3C150FDF06E7}.ReleaseMac|x86.Build.0 = Release|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.Debug|x86.ActiveCfg = Debug|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.Debug|x86.Build.0 = Debug|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.Release|Any CPU.ActiveCfg = Release|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.Release|Mixed Platforms.Build.0 = Release|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.Release|x86.ActiveCfg = Release|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.Release|x86.Build.0 = Release|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.ReleaseMac|Any CPU.ActiveCfg = ReleaseMac|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.ReleaseMac|Mixed Platforms.ActiveCfg = ReleaseMac|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.ReleaseMac|Mixed Platforms.Build.0 = ReleaseMac|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.ReleaseMac|x86.ActiveCfg = ReleaseMac|x86
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7}.ReleaseMac|x86.Build.0 = ReleaseMac|x86
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Debug|x86.ActiveCfg = Debug|x86
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Debug|x86.Build.0 = Debug|x86
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Release|x86.ActiveCfg = Release|x86
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.Release|x86.Build.0 = Release|x86
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.ReleaseMac|Any CPU.ActiveCfg = Release|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.ReleaseMac|Any CPU.Build.0 = Release|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.ReleaseMac|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.ReleaseMac|Mixed Platforms.Build.0 = Release|Any CPU
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA}.ReleaseMac|x86.ActiveCfg = Release|Any CPU
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.Debug|x86.ActiveCfg = Debug|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.Debug|x86.Build.0 = Debug|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.Release|Any CPU.ActiveCfg = Release|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.Release|Mixed Platforms.Build.0 = Release|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.Release|x86.ActiveCfg = Release|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.Release|x86.Build.0 = Release|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.ReleaseMac|Any CPU.ActiveCfg = Release|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.ReleaseMac|Mixed Platforms.ActiveCfg = Release|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.ReleaseMac|Mixed Platforms.Build.0 = Release|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.ReleaseMac|x86.ActiveCfg = Release|x86
+		{ED268869-387A-477E-A652-C6E47BE2AC02}.ReleaseMac|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -270,6 +289,7 @@ Global
 		{63FB3334-1E7E-42D7-A025-744BC387AAD6} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{972BC97A-B70A-4007-B915-952CC3606A2A} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{8FDBC548-DEBF-46D6-A933-33C8D72F33AB} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
-		{0030DCFD-79C4-48C1-A43C-93FA315059E7} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
+		{E742753F-9DC3-4AB7-B129-DC11EB2302CA} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
+		{ED268869-387A-477E-A652-C6E47BE2AC02} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 	EndGlobalSection
 EndGlobal

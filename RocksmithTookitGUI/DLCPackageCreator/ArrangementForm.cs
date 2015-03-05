@@ -530,20 +530,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         Arrangement.ToneMultiplayer = null;
 
                         SetupTones(Arrangement);
-
-                        //Apply bass Fix, refactor me.
-                        if (bassFix)
-                        {
-                            bassFix = false;
-                            Arrangement.SongXml.File = XmlFilePath.Text;
-                            parentControl.ApplyBassFix(Arrangement);
-                            frequencyTB.Text = Arrangement.TuningPitch.ToString();
-                            UpdateCentOffset();
-                            SetTuningCombo(Arrangement.TuningStrings);
-                        }
                     }
 
-                    // save cast (converted) RS1 to RS2014 Song2014 XML
+                    //Apply bass Fix, refactor me. 
+                    if (bassFix)
+                    {
+                        bassFix = false;
+                        Arrangement.SongXml.File = XmlFilePath.Text;
+                        parentControl.ApplyBassFix(Arrangement);
+                        frequencyTB.Text = Arrangement.TuningPitch.ToString();
+                        UpdateCentOffset();
+                        SetTuningCombo(Arrangement.TuningStrings);
+                    }
+
+                    // save converted RS1 to RS2014 Song2014 XML
                     if (version == GameVersion.None)
                     {
                         var srcDir = Path.GetDirectoryName(XmlFilePath.Text);

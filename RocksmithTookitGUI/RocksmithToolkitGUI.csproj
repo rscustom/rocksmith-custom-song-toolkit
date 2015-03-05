@@ -345,6 +345,10 @@
     <None Include="Resources\pick.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RocksmithToolkitCLI\ArtistFolderCreator\ArtistFolderCreator.csproj">
+      <Project>{E742753F-9DC3-4AB7-B129-DC11EB2302CA}</Project>
+      <Name>ArtistFolderCreator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitCLI\devtools\devtools.csproj">
       <Project>{63FB3334-1E7E-42D7-A025-744BC387AAD6}</Project>
       <Name>devtools</Name>
@@ -353,9 +357,9 @@
       <Project>{972BC97A-B70A-4007-B915-952CC3606A2A}</Project>
       <Name>dlcconverter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitCLI\packagecreator\packagecreator.csproj">
-      <Project>{0030DCFD-79C4-48C1-A43C-93FA315059E7}</Project>
-      <Name>packagecreator</Name>
+    <ProjectReference Include="..\RocksmithToolkitCLI\PackageCreator\PackageCreator.csproj">
+      <Project>{ED268869-387A-477E-A652-C6E47BE2AC02}</Project>
+      <Name>PackageCreator</Name>
     </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitCLI\packer\packer.csproj">
       <Project>{822D185A-28A3-4AE0-A811-800E968AA2E7}</Project>

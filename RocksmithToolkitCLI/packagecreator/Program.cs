@@ -41,20 +41,22 @@ namespace packagecreator
         {
             return new OptionSet
             {
-                { "h|?|help", "Show this help message and exit\r\n", v => outputArguments.ShowHelp = v != null },
-                { "p|package", "Usage: Drag/Drop a directory " +
-                  "that contains the following CDLC ready files onto the executable:\r\n" +
-                  "Song2014.xml [lead, rhythm, combo, and/or bass]\r\n"+
-                  "Song2014.json [arrangments] (optional)\r\n"+
-                  "Vocals.xml (optional)\r\nAlbumArt256.dds\r\nAudio.wem\r\nAudio_preview.wem (optional, recommended)\r\n", v => { if (v != null) outputArguments.Package = true; }},                
-                { "i|input=", "The input directory (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
-                { "o|output=", "The output directory (defualt = input directory)", v => outputArguments.Output = v },
-                { "f|platform=", "Platform to pack package [Pc, Mac, XBox360, PS3] (default = Pc)", v => outputArguments.SetPlatform(v) },
-                { "v|version=", "Version of the Rocksmith Game [RS2012 or RS2014] (defualt = RS2014)", v => outputArguments.SetVersion(v) },
-                { "a|appid=", "App ID of the Rocksmith DLC (defualt = RS2014)", v => { if (v != null) outputArguments.AppId = v; }},
-                { "r|revision=", "Revision of the CDLC package [1, 2.3] (default = 1)", v => { if (v != null) outputArguments.Revision = v; }},
-                { "q|quality=", "Quality of audio  [4 to 9] (defualt = 4)", v => { if (v != null) outputArguments.Quality = v; }},
-                { "d|decibels=", "Audio volume in decibels [HIGHER -1, AVERAGE -12, -16 LOWER] (default = -12)", v => outputArguments.Output = v }
+                { "p|packagecreator", "Usage: Drag/Drop a root directory " +
+                  "that contains songname subfolders that each contain CDLC ready files onto the executable application icon:\r\n" +                 
+                  "RS2014 *.json [lead, rhythm, combos, bass]\r\n"+
+                  "RS2014 *.xml [lead, rhythm, combos, bass]\r\n"+
+                  "RS2014 Vocals.xml and Vocals.json (optional)\r\nAlbumArt256.dds\r\n" + 
+                  "Wwise 2013 Audio.wem\r\nWwise 2013 Audio_preview.wem\r\n", v => { if (v != null) outputArguments.Package = true; }},                
+                { "-|--------------", "Alternate Command Line Usage is shown below:\r\n", v => { if (v != null) outputArguments.Package = true; }},                
+                { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
+                { "i|input=", "Input directory (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
+                { "o|output=", "Output directory", v => outputArguments.Output = v },
+                { "f|platform=", "Package Platform [Pc, Mac, XBox360, PS3]", v => outputArguments.SetPlatform(v) },
+                { "v|version=", "Rocksmith Game Version [RS2014]", v => outputArguments.SetVersion(v) },
+                { "a|appid=", "Rocksmith APP ID", v => { if (v != null) outputArguments.AppId = v; }},
+                { "r|revision=", "CDLC Revision [1 to 9, or 1.0 to 9.9]", v => { if (v != null) outputArguments.Revision = v; }},
+                { "q|quality=", "Audio Quality [4 to 9]", v => { if (v != null) outputArguments.Quality = v; }},
+                { "d|decibels=", "Audio Volume [HIGHER -1, AVERAGE -12, -16 LOWER]", v => outputArguments.Output = v }
             };
         }
 
@@ -93,9 +95,9 @@ namespace packagecreator
             Console.ForegroundColor = ConsoleColor.Green;
 
 #if (DEBUG)
-            // give the progie some dumby directory to work on for testing
-            args = new string[] { "--input=D:\\Temp\\Test", "--output=D:\\Temp" }; //, "platform=Pc", "version=RS2014" };
-           // args = new string[] { "D:\\Temp\\Test" };
+    // give the progie some dumby directory to work on for testing
+    // args = new string[] { "--input=D:\\Temp\\Test", "--output=D:\\Temp" }; //, "platform=Pc", "version=RS2014" };
+            args = new string[] { "D:\\Temp\\Test" };
 #endif
 
             var arguments = DefaultArguments();
@@ -113,7 +115,13 @@ namespace packagecreator
                         if (args[0].IsDirectory())
                         {
                             srcDirs = args;
-                            arguments.Output = Path.GetDirectoryName(args[0]);
+                            if (srcDirs.Length == 1)
+                            {
+                                srcDirs = Directory.GetDirectories(srcDirs[0]);
+                                arguments.Output = Path.GetDirectoryName(srcDirs[0]);
+                            }
+                            else
+                                arguments.Output = Path.GetDirectoryName(args[0]);
                         }
                     }
                     catch (Exception ex)
@@ -164,39 +172,41 @@ namespace packagecreator
                 Console.WriteLine(@"Initializing Package Creator CLI ...");
                 Console.WriteLine("");
 
-                foreach (string srcDir in srcDirs)
+                var songCount = srcDirs.Length;
+                for (int i = 0; i < songCount; i++)
                 {
-                    Console.WriteLine(@"Parsing CDLC Package Data from Input Directory: " + Path.GetFileName(srcDir));
+                    Console.WriteLine(@"Parsing Input Directory (" + (i + 1) + @"/" + songCount + @") for CDLC Package Data: " + Path.GetFileName(srcDirs[i]));
+
                     try
                     {
                         // get package data
-                        DLCPackageData packageData = DLCPackageData.LoadFromFolder(srcDir, arguments.Platform, arguments.Platform);
+                        DLCPackageData packageData = DLCPackageData.LoadFromFolder(srcDirs[i], arguments.Platform, arguments.Platform);
                         packageData.AppId = arguments.AppId;
                         packageData.PackageVersion = arguments.Revision;
-                        packageData.Name = Path.GetFileName(srcDir).GetValidName();
+                        packageData.Name = Path.GetFileName(srcDirs[i]).GetValidName();
                         packageData.Volume = packageData.Volume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.Volume;
                         packageData.PreviewVolume = packageData.PreviewVolume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.PreviewVolume;
 
-                        // convert combo arrangements to rhythm or lead so game recognizes each properly
-                        var comboCount = 1;
-                        for (int arrIndex = 0; arrIndex < packageData.Arrangements.Count; arrIndex++)
-                        {
-                            if (packageData.Arrangements[arrIndex].Name == ArrangementName.Combo)
-                            {
-                                if (comboCount == 1)
-                                    packageData.Arrangements[arrIndex].Name = ArrangementName.Rhythm;
-                                if (comboCount == 2)
-                                    packageData.Arrangements[arrIndex].Name = ArrangementName.Lead;
-                                if (comboCount > 2)
-                                    throw new Exception("Too many Combo arrangements");
-                                comboCount++;
-                            }
-                        }
+                        //// convert combo arrangements to rhythm or lead so game recognizes each properly
+                        //var comboCount = 1;
+                        //for (int arrIndex = 0; arrIndex < packageData.Arrangements.Count; arrIndex++)
+                        //{
+                        //    if (packageData.Arrangements[arrIndex].Name == ArrangementName.Combo)
+                        //    {
+                        //        if (comboCount == 1)
+                        //            packageData.Arrangements[arrIndex].Name = ArrangementName.Rhythm;
+                        //        if (comboCount == 2)
+                        //            packageData.Arrangements[arrIndex].Name = ArrangementName.Lead;
+                        //        if (comboCount > 2)
+                        //            throw new Exception("Too many Combo arrangements");
+                        //        comboCount++;
+                        //    }
+                        //}
 
                         // generate CDLC file name
                         var artist = packageData.SongInfo.ArtistSort;
                         var title = packageData.SongInfo.SongDisplayNameSort;
-                        // var destDir = Path.Combine(arguments.Output, Path.GetFileName(srcDir).GetValidName());
+                        // var destDir = Path.Combine(arguments.Output, Path.GetFileName(srcDirs[i]).GetValidName());
                         var fileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", artist, title, arguments.Revision.Replace(".", "_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                         var destPath = Path.Combine(arguments.Output, fileName);
                         var fullFileName = String.Format("{0}{1}.psarc", fileName, DLCPackageCreator.GetPathName(arguments.Platform)[2]);
@@ -209,7 +219,7 @@ namespace packagecreator
                     catch (Exception ex)
                     {
                         Console.WriteLine("");
-                        Console.WriteLine(String.Format("Packaging error!\nDirectory: {0}\n{1}\n{2}", srcDir, ex.Message, ex.InnerException));
+                        Console.WriteLine(String.Format("Packaging error!\nDirectory: {0}\n{1}\n{2}", srcDirs[i], ex.Message, ex.InnerException));
                         Console.ReadLine();
                     }
                 }
@@ -219,7 +229,7 @@ namespace packagecreator
                 Console.ReadLine();
                 return 0; // success
             }
-            catch (OptionException ex)
+            catch (Exception ex)
             {
                 ShowHelpfulError(ex.Message);
                 return 1; // failure
