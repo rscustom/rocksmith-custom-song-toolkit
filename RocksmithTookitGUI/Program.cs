@@ -22,9 +22,11 @@ namespace RocksmithToolkitGUI
         {
             log = LogManager.GetCurrentClassLogger();
 
-            log.Info("Version: {0}", RocksmithToolkitLib.ToolkitVersion.version);
-            log.Info("OS: {0}", Environment.OSVersion.ToString());
-            log.Info("Command: {0}", Environment.CommandLine.ToString());
+			log.Info(
+                String.Format("Version: {0}\r\n ", RocksmithToolkitLib.ToolkitVersion.version) +
+                String.Format("OS: {0}\r\n ", Environment.OSVersion) +
+                String.Format("Command: {0}", Environment.CommandLine)
+			);
 
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
