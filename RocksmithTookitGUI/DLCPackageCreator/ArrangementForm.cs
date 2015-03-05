@@ -532,6 +532,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         SetupTones(Arrangement);
                     }
 
+                    // applies to both 2012 and 2014 ???
                     //Apply bass Fix, refactor me. 
                     if (bassFix)
                     {
