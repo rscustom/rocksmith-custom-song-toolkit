@@ -530,18 +530,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         Arrangement.ToneMultiplayer = null;
 
                         SetupTones(Arrangement);
-                    }
 
-                    // applies to both 2012 and 2014 ???
-                    //Apply bass Fix, refactor me. 
-                    if (bassFix)
-                    {
-                        bassFix = false;
-                        Arrangement.SongXml.File = XmlFilePath.Text;
-                        parentControl.ApplyBassFix(Arrangement);
-                        frequencyTB.Text = Arrangement.TuningPitch.ToString();
-                        UpdateCentOffset();
-                        SetTuningCombo(Arrangement.TuningStrings);
+                        //Apply bass Fix, refactor me. 
+                        if (bassFix)
+                        {
+                            bassFix = false;
+                            Arrangement.SongXml.File = XmlFilePath.Text;
+                            parentControl.ApplyBassFix(Arrangement);
+                            frequencyTB.Text = Arrangement.TuningPitch.ToString();
+                            UpdateCentOffset();
+                            SetTuningCombo(Arrangement.TuningStrings);
+                        }
                     }
 
                     // save converted RS1 to RS2014 Song2014 XML

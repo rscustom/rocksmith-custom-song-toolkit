@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Artist Folder Creator")]
 [assembly: AssemblyDescription("RocksmithToolkit CDLC Artist Folder Creator command line")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Rocksmith Custom Song Project")]
+[assembly: AssemblyCompany("Rocksmith Custom Song Tookit CLI")]
 [assembly: AssemblyProduct("ArtistFolderCreator")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright ©  2015 CST Developer Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 // Setting ComVisible to false makes the types in this assembly not visible 
