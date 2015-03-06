@@ -22,4 +22,5 @@
   <Config Key="cgm_inlayname" Value="Default Inlay" />
   <Config Key="cgm_24frets" Value="false" />
   <Config Key="cgm_coloredinlay" Value="true" />
+<!--<Config Key="first_time" Value="true" /> determine if we launched toolkit at first time-->
 </ArrayOfConfig>

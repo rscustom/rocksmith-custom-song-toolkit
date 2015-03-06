@@ -234,34 +234,6 @@ namespace RocksmithToolkitGUI.DDC
                     continue;
 
                 singleResult = ApplyDD(xml, remSUS, rampPath, cfgPath, out consoleOutputPkg, true, keepLog);
-
-                // UPDATE MANIFEST (RS2014) for update
-                if (platform.version == RocksmithToolkitLib.GameVersion.RS2014) {
-                    var json = Directory.GetFiles(unpackedDir, String.Format("*{0}.json", Path.GetFileNameWithoutExtension(xml)), SearchOption.AllDirectories);
-                    if (json.Length > 0) {
-                        Attributes2014 attr = Manifest2014<Attributes2014>.LoadFromFile(json[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
-                        Song2014 xmlContent = Song2014.LoadFromFile(xml);
-
-                        var manifestFunctions = new ManifestFunctions(platform.version);
-
-                        attr.PhraseIterations = new List<PhraseIteration>();
-                        manifestFunctions.GeneratePhraseIterationsData(attr, xmlContent, platform.version);
-
-                        attr.Phrases = new List<Phrase>();
-                        manifestFunctions.GeneratePhraseData(attr, xmlContent);
-
-                        attr.Sections = new List<Section>();
-                        manifestFunctions.GenerateSectionData(attr, xmlContent);
-
-                        attr.MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(xmlContent);
-
-                        var manifest = new Manifest2014<Attributes2014>();
-                        var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attr } };
-                        manifest.Entries.Add(attr.PersistentID, attributeDictionary);
-                        manifest.SaveToFile(json[0]);
-                    }
-                }
-
                 if (singleResult == 1)
                 {
                     exitedByError = true;
@@ -295,7 +267,8 @@ namespace RocksmithToolkitGUI.DDC
                         if(File.Exists(logFile))
                             File.Delete(logFile);
                 }
-                Packer.Pack(unpackedDir, newName, true, platform);
+
+                Packer.Pack(unpackedDir, newName, true, platform, true);
                 DirectoryExtension.SafeDelete(unpackedDir);
             }
             return singleResult;
@@ -447,8 +420,8 @@ namespace RocksmithToolkitGUI.DDC
         private void DescriptionDDC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             bool done = false;
-            const string link = "http://ddcreator.wordpress.com";
             string arg1 = "";
+            const string link = "http://ddcreator.wordpress.com";
             if(Environment.OSVersion.Platform == PlatformID.MacOSX){
                 Process.Start(link);
             }

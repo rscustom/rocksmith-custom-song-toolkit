@@ -26,7 +26,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PACK
 
-        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null)
+        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null, bool updateManifest = false)
         {
             DeleteFixedAudio(sourcePath);
             Platform platform = sourcePath.GetPlatform();
@@ -40,13 +40,13 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (platform.version == GameVersion.RS2012)
                         PackPC(sourcePath, saveFileName, true, updateSng);
                     else if (platform.version == GameVersion.RS2014)
-                        Pack2014(sourcePath, saveFileName, platform, updateSng);
+                        Pack2014(sourcePath, saveFileName, platform, updateSng, updateManifest);
                     break;
                 case GamePlatform.XBox360:
-                    PackXBox360(sourcePath, saveFileName, platform, updateSng);
+                    PackXBox360(sourcePath, saveFileName, platform, updateSng, updateManifest);
                     break;
                 case GamePlatform.PS3:
-                    PackPS3(sourcePath, saveFileName, platform, updateSng);
+                    PackPS3(sourcePath, saveFileName, platform, updateSng, updateManifest);
                     break;
                 case GamePlatform.None:
                     throw new InvalidOperationException(String.Format("Invalid directory structure of package. {0}Directory: {1}", Environment.NewLine, sourcePath));
@@ -244,13 +244,16 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PC/MAC 2014
 
-        private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng)
+        private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng, bool updateManifest)
         {
             using(var psarc = new PSARC.PSARC())
             using(var psarcStream = new MemoryStream())
             {
+                if (updateSng) 
+                    UpdateSng2014(sourcePath, platform);
+                if (updateManifest)
+                    UpdateManifest2014(sourcePath, platform);
 
-                if (updateSng) UpdateSng2014(sourcePath, platform);
                 WalkThroughDirectory("", sourcePath, (a, b) =>
                 {
                     var fileStream = File.OpenRead(b);
@@ -273,9 +276,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region XBox 360
 
-        private static void PackXBox360(string sourcePath, string saveFileName, Platform platform, bool updateSng) {
+        private static void PackXBox360(string sourcePath, string saveFileName, Platform platform, bool updateSng, bool updateManifest)
+        {
             if (updateSng && platform.version == GameVersion.RS2014)
+            {
                 UpdateSng2014(sourcePath, platform);
+                UpdateManifest2014(sourcePath, platform);
+            }
 
             var songData = new DLCPackageData();
             var packageRoot = Path.Combine(sourcePath, ROOT_XBox360);
@@ -446,8 +453,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PS3
 
-        private static void PackPS3(string sourcePath, string saveFileName, Platform platform, bool updateSng) {
-            Pack2014(sourcePath, saveFileName, platform, updateSng);
+        private static void PackPS3(string sourcePath, string saveFileName, Platform platform, bool updateSng, bool updateManifest)
+        {
+            Pack2014(sourcePath, saveFileName, platform, updateSng, updateManifest);
 
             if (!Directory.Exists(PS3_WORKDIR))
                 Directory.CreateDirectory(PS3_WORKDIR);
@@ -773,6 +781,49 @@ namespace RocksmithToolkitLib.DLCPackage
                 return false;
             }
             return true;
+        }
+
+        private static void UpdateManifest2014(string songDirectory, Platform platform)
+        {
+            // UPDATE MANIFEST (RS2014)
+            if (platform.version == GameVersion.RS2014)
+            {
+                var xmlFiles = Directory.EnumerateFiles(songDirectory, "*.xml", SearchOption.AllDirectories);
+                var jsonFiles = Directory.EnumerateFiles(songDirectory, "*.json", SearchOption.AllDirectories);
+                foreach (var xml in xmlFiles)
+                {
+                    var xmlName = Path.GetFileNameWithoutExtension(xml);
+                    if (xmlName.ToUpperInvariant().Contains("SHOWLIGHT"))
+                        continue;
+                    if (xmlName.ToUpperInvariant().Contains("VOCAL"))
+                        continue;//TODO: Re-generate vocals manifest.
+
+                    string json = jsonFiles.Where(name => Path.GetFileNameWithoutExtension(name) == xmlName).FirstOrDefault();
+                    if (!String.IsNullOrEmpty(json))
+                    {
+                        var xmlContent = Song2014.LoadFromFile(xml);
+                        var manifest = new Manifest2014<Attributes2014>();
+                        var attr = Manifest2014<Attributes2014>.LoadFromFile(json).Entries.First().Value.First().Value;
+
+                        var manifestFunctions = new ManifestFunctions(platform.version);
+
+                        attr.PhraseIterations = new List<Manifest.PhraseIteration>();
+                        manifestFunctions.GeneratePhraseIterationsData(attr, xmlContent, platform.version);
+
+                        attr.Phrases = new List<Manifest.Phrase>();
+                        manifestFunctions.GeneratePhraseData(attr, xmlContent);
+
+                        attr.Sections = new List<Manifest.Section>();
+                        manifestFunctions.GenerateSectionData(attr, xmlContent);
+
+                        attr.MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(xmlContent);
+
+                        var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attr } };
+                        manifest.Entries.Add(attr.PersistentID, attributeDictionary);
+                        manifest.SaveToFile(json);
+                    }
+                }
+            }
         }
 
         #endregion

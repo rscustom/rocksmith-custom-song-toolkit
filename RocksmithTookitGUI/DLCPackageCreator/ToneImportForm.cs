@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿using System;
+﻿﻿﻿﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using RocksmithToTabLib;
@@ -14,13 +14,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             InitializeComponent();
         }
-        
-        ~ToneImportForm()
+
+        ~ToneImportForm()//GC unmnaged memory only, TODO: switch to Dispose() pattern
         {
             Tone2014 = null;
             Tone = null;
         }
-        
+
         public List<Tone2014> Tone2014;
         public List<Tone> Tone;
 
