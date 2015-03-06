@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Linq;
 using System.IO;
 using System.Xml.Serialization;
 using RocksmithToolkitLib.Xml;
@@ -12,20 +11,19 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 {
     /*
      * * * * * * * * * Color sheme * * * * * * * * * * * * * * * * * * 
-     * 24(C) = Green; 25(C#)= Dark Red(G like)
-     * 26(D) = Medium Turquoise(C# like); 27(D#) = Brown(A like)
-     * 28(E) = Blue(D# like); 29(F) = LtGreen(B like)
-     * 30(F#) = Purple(E like); 31(G) = Dark LtGreen(C# like)
-     * 32(G#) = Dark Orange; 33(A) = Yellow(A# like)
-     * 34(A#) = LtBlue(D like); 35(B) = Dark Violet(F like)
+     * Fog midi notes: 24-35 (color cheme isn't natural)
+     * 24(C)  = Green;                     25(C#) = Dark Red(G like)
+     * 26(D)  = Medium Turquoise(C# like); 27(D#) = Brown(A like)
+     * 28(E)  = Blue(D# like);             29(F)  = LtGreen(B like)
+     * 30(F#) = Purple(E like);            31(G)  = Dark LtGreen(C# like)
+     * 32(G#) = Dark Orange;               33(A)  = Yellow(A# like)
+     * 34(A#) = LtBlue(D like);            35(B)  = Dark Violet(F like)
      * 
-     * Fog midi notes : 24-35 (color cheme not natural)
      * Unknown: 36-41
      * (?)Spotlights/colors/effects: 42-59
      * (?)Laser lights: 66-67
      * 
-     * Need define Fog Color + stage lights before Venue shows (Time = 0-10)
-     * 
+     * Need to define Fog Color + stage lights before Venue shows up (Time = 0-10)
      */
 
     [XmlRoot("showlights", Namespace = "", IsNullable = false)]

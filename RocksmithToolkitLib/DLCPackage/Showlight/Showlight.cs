@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using RocksmithToolkitLib.Xml;
+﻿using System.Xml.Serialization;
 
 namespace RocksmithToolkitLib.DLCPackage.Showlight
 {
@@ -13,6 +7,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
     {
         [XmlAttribute("time")]
         public float Time { get; set; }
+
         [XmlAttribute("note")]
         public int Note { get; set; }
     }
