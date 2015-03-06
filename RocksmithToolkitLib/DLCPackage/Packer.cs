@@ -237,7 +237,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng)
         {
-            var psarc = new PSARC.PSARC();
+            using(var psarc = new PSARC.PSARC())
             using(var psarcStream = new MemoryStream())
             {
 
@@ -257,9 +257,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 using (var outputFileStream = File.Create(saveFileName))
                     psarcStream.CopyTo(outputFileStream);
-
-                foreach (var entry in psarc.TOC)
-                    entry.Data.Close();
             }
         }
 

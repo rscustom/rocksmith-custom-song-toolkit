@@ -84,6 +84,9 @@ namespace RocksmithToolkitLib.PSARC
             if (disposing)
             {
                 header = null;
+                foreach (var entry in TOC)
+                    if (entry.Data != null)
+                        entry.Data.Close();
                 TOC.Clear();
                 if (_reader != null) _reader.Dispose();
                 if (_writer != null) _writer.Dispose();
