@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
 using NDesk.Options;
+using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
-using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib;
 
 namespace packagecreator
 {
@@ -41,7 +40,7 @@ namespace packagecreator
         {
             return new OptionSet
             {
-                { "p|packagecreator", "Usage: Drag/Drop a root directory " +
+                { "p|PackageCreator", "Usage: Drag/Drop a root directory " +
                   "that contains songname subfolders that each contain CDLC ready files onto the executable application icon:\r\n" +                 
                   "RS2014 *.json [lead, rhythm, combos, bass]\r\n"+
                   "RS2014 *.xml [lead, rhythm, combos, bass]\r\n"+
@@ -187,7 +186,8 @@ namespace packagecreator
                         packageData.Volume = packageData.Volume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.Volume;
                         packageData.PreviewVolume = packageData.PreviewVolume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.PreviewVolume;
 
-                        //// convert combo arrangements to rhythm or lead so game recognizes each properly
+                        // depricated - combos show up as bonus arrangements
+                        // convert combo arrangements to rhythm or lead so game recognizes each properly
                         //var comboCount = 1;
                         //for (int arrIndex = 0; arrIndex < packageData.Arrangements.Count; arrIndex++)
                         //{
