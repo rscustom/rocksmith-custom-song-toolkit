@@ -58,9 +58,9 @@ namespace RocksmithToolkitGUI.DDC
         public DDC()
         {
             InitializeComponent();
-            this.bw.DoWork += new DoWorkEventHandler(bw_DoWork);
-            this.bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
-            this.bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_Completed);
+            this.bw.DoWork += bw_DoWork;
+            this.bw.ProgressChanged += bw_ProgressChanged;
+            this.bw.RunWorkerCompleted += bw_Completed;
             this.bw.WorkerReportsProgress = true;
         }
 
@@ -70,8 +70,8 @@ namespace RocksmithToolkitGUI.DDC
                 string ddcPath = Path.Combine(AppWD, "ddc", "ddc.exe");
                 if (!this.DesignMode && File.Exists(ddcPath))
                 {
-                    FileVersionInfo vi = FileVersionInfo.GetVersionInfo(ddcPath);
-                    ddcVersion.Text = String.Format("v{0}", vi.ProductVersion);
+                    var vi = FileVersionInfo.GetVersionInfo(ddcPath).ProductVersion;
+                    ddcVersion.Text = String.Format("v{0}", vi);
                 }
                 PopMDLs();
                 PopCFGs();
@@ -95,7 +95,7 @@ namespace RocksmithToolkitGUI.DDC
                 {
                     switch (Path.GetExtension(file.Value))
                     {
-                        case ".xml":   // Arrangement
+                        case ".xml": // Arrangement
                             {
                                 string filePath = Path.GetDirectoryName(file.Value),
                                 ddcArrXML = Path.Combine(filePath, String.Format("DDC_{0}.xml", file.Key)),
@@ -121,7 +121,7 @@ namespace RocksmithToolkitGUI.DDC
                             break;
                     }
 
-                    Invoke(new MethodInvoker(() => { DelEntry(file.Value); }));
+                    Invoke(new MethodInvoker(() => DelEntry (file.Value)));
                 }
 
                 DLCdb.Clear();
@@ -225,12 +225,11 @@ namespace RocksmithToolkitGUI.DDC
             var platform = file.GetPlatform();
             var unpackedDir = Packer.Unpack(file, tmpDir, false, true, false);
 
-            var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
+            var xmlFiles = Directory.EnumerateFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
             foreach (var xml in xmlFiles)
             {
                 if (Path.GetFileNameWithoutExtension(xml).ToUpperInvariant().Contains("VOCAL"))
                     continue;
-
                 if (Path.GetFileNameWithoutExtension(xml).ToUpperInvariant().Contains("SHOWLIGHT"))
                     continue;
 
@@ -274,7 +273,7 @@ namespace RocksmithToolkitGUI.DDC
 
             if (!exitedByError)
             {
-                var logFiles = Directory.GetFiles(unpackedDir, "*.log", SearchOption.AllDirectories);
+                var logFiles = Directory.EnumerateFiles(unpackedDir, "*.log", SearchOption.AllDirectories);
                 var newName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_{1}{2}", 
                     Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD", ""), 
                     isNDD ? "NDD" :  "DD", platform.GetPathName()[2]));
@@ -448,7 +447,7 @@ namespace RocksmithToolkitGUI.DDC
         private void DescriptionDDC_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             bool done = false;
-            string link = "http://ddcreator.wordpress.com";
+            const string link = "http://ddcreator.wordpress.com";
             string arg1 = "";
             if(Environment.OSVersion.Platform == PlatformID.MacOSX){
                 Process.Start(link);
