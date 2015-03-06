@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -141,17 +141,16 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
                 return ReadFromProfile(packagePath);
             else
             {
-                List<Tone2014> tones = new List<Tone2014>();
+                var tones = new List<Tone2014>();
                 string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string tmpDir = Path.Combine(appDir, Path.GetFileNameWithoutExtension(packagePath) 
-                              + String.Format("_{0}", platform.platform.ToString()));
+                string tmpDir = Path.Combine(appDir, String.Format("{0}_{1}", Path.GetFileNameWithoutExtension(packagePath), platform.platform));
 
                 Packer.Unpack(packagePath, appDir);
-                string[] toneManifestFiles = Directory.GetFiles(tmpDir, "*.json", SearchOption.AllDirectories);
 
+                var toneManifestFiles = Directory.EnumerateFiles(tmpDir, "*.json", SearchOption.AllDirectories);
                 foreach (var file in toneManifestFiles)
                     foreach( Tone2014 tone in ReadFromManifest(file) )
-                        if(tones.OfType<Tone2014>().All(a => a.Name != tone.Name))
+                        if( tones.All(a => a.Name != tone.Name) )
                             tones.Add(tone);
 
                 DirectoryExtension.SafeDelete(tmpDir);

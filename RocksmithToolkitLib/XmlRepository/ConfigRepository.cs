@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.IO;
-using System.Xml.Serialization;
-using System.Reflection;
 
 namespace RocksmithToolkitLib {
     public class ConfigRepository : XmlRepository<Config> {
-        private static readonly Lazy<ConfigRepository> instance = new Lazy<ConfigRepository>(() => new ConfigRepository());
-
         private const string FILENAME = "RocksmithToolkitLib.Config.xml";
+        private static readonly Lazy<ConfigRepository> instance = new Lazy<ConfigRepository>(() => new ConfigRepository());
 
         public static ConfigRepository Instance() { return instance.Value; }
 
@@ -18,10 +13,7 @@ namespace RocksmithToolkitLib {
 
         public Config Select(string configKey)
         {
-            if (List.OfType<Config>().Where(s => s.Key == configKey).Any())
-                return List.FirstOrDefault<Config>(s => s.Key == configKey);
-            else
-                return List[0];
+            return List.Any(s => s.Key == configKey) ? List.FirstOrDefault<Config>(s => s.Key == configKey) : List[0];
         }
 
         public string this[string configKey]
@@ -47,10 +39,10 @@ namespace RocksmithToolkitLib {
         }
 
         public bool Exists(string configKey) {
-            return List.OfType<Config>().Where(s => s.Key == configKey).Any();
+            return List.Any(s => s.Key == configKey);
         }
 
-        public bool ValueChanged(string configKey, object value) {            
+        public bool ValueChanged(string configKey, object value) {
             if (Exists(configKey)) {
                 Config conf = List.FirstOrDefault<Config>(s => s.Key == configKey);
                 if (conf.Value.Equals(value))
@@ -77,8 +69,8 @@ namespace RocksmithToolkitLib {
     {
         public bool Equals(Config x, Config y)
         {
-            if (x == null || y == null)
-                return false;
+            if (x == null)
+                return y == null;
 
             return (x.Key == y.Key);
         }

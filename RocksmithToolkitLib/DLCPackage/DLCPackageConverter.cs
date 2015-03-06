@@ -64,7 +64,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             // Replace aggregate graph values
-            var aggregateFile = Directory.GetFiles(unpackedDir, "*.nt", SearchOption.AllDirectories)[0];
+            var aggregateFile = Directory.EnumerateFiles(unpackedDir, "*.nt", SearchOption.AllDirectories).FirstOrDefault();
             var aggregateGraphText = File.ReadAllText(aggregateFile);
             // Tags
             aggregateGraphText = Regex.Replace(aggregateGraphText, GraphItem.GetPlatformTagDescription(sourcePlatform.platform), GraphItem.GetPlatformTagDescription(targetPlatform.platform), RegexOptions.Multiline);

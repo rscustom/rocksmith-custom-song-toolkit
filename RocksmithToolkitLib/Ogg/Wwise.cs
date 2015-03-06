@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using RocksmithToolkitLib.Extensions;
+using System.Linq;
 
 namespace RocksmithToolkitLib.Ogg
 {
@@ -33,12 +34,12 @@ namespace RocksmithToolkitLib.Ogg
                 else
                     programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Audiokinetic\\Wwise v2013.2.2 build 4828");
 
-                string[] pathWwiseCli = Directory.GetFiles(programsDir, "WwiseCLI.exe", SearchOption.AllDirectories);
+                var pathWwiseCli = Directory.EnumerateFiles(programsDir, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
 
-                if (String.IsNullOrEmpty(Path.GetFileName(pathWwiseCli[0])))
+                if (String.IsNullOrEmpty(Path.GetFileName(pathWwiseCli)))
                     throw new FileNotFoundException("Could not find WwiseCLI.exe");
 
-                return pathWwiseCli[0];
+                return pathWwiseCli;
             }
             catch (Exception ex)
             {
@@ -79,7 +80,7 @@ namespace RocksmithToolkitLib.Ogg
 
  
             string resString = String.Empty;
-            var resName = "RocksmithToolkitLib.Resources.QF Default Work Unit.wwu";
+            const string resName = "RocksmithToolkitLib.Resources.QF Default Work Unit.wwu";
             Assembly assem = Assembly.GetExecutingAssembly();
             string[] names = assem.GetManifestResourceNames();
             var stream = assem.GetManifestResourceStream(resName);
@@ -105,25 +106,25 @@ namespace RocksmithToolkitLib.Ogg
 
         public static void GetWwiseFiles(string destinationPath)
         {
+            const string wemDir = @"Wwise\Template\.cache\Windows\SFX";
             var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
-            var wemDir = @"Wwise\Template\.cache\Windows\SFX";
             var wemPath = Path.Combine(appRootDir, wemDir);
+            var wemPathInfo = new DirectoryInfo(wemPath);
 
-            if (!Directory.Exists(wemPath))
+            if (!wemPathInfo.Exists)
                 throw new FileNotFoundException("Could not find Wwise template .cache Windows SFX directory");
 
-            var destPreviewPath = Path.Combine(Path.GetDirectoryName(destinationPath), Path.GetFileName(destinationPath).Substring(0, Path.GetFileName(destinationPath).Length - 4) + "_preview.wem");
-
-            string[] srcPaths = Directory.GetFiles(wemPath, "*.wem", SearchOption.TopDirectoryOnly);
-            if (srcPaths.Length != 2)
+            var srcPaths = wemPathInfo.EnumerateFiles("*.wem", SearchOption.TopDirectoryOnly);
+            if (srcPaths.Count() != 2)
                 throw new Exception("Did not find converted Wem audio and preview files");
 
-            foreach (string srcPath in srcPaths)
+            var destPreviewPath = Path.Combine(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + "_preview.wem");
+            foreach (var srcPath in srcPaths)
             {
-                if (srcPath.Contains("_preview_"))
-                    File.Copy(srcPath, destPreviewPath, true);
+                if (srcPath.Name.Contains("_preview_"))
+                    File.Copy(srcPath.FullName, destPreviewPath, true);
                 else
-                    File.Copy(srcPath, destinationPath, true);
+                    File.Copy(srcPath.FullName, destinationPath, true);
             }
         }
 

@@ -144,7 +144,7 @@ namespace RocksmithToolkitUpdater
         {
             var source = new DirectoryInfo(sourceDir);
 
-            var files = source.GetFiles("*.*", SearchOption.TopDirectoryOnly);
+            var files = source.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
             var directories = source.GetDirectories();
 
             // CREATE DEST DIRECTORIES IF NOT EXISTS

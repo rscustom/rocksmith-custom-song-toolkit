@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 
 namespace ArtistFolderCreator
 {
@@ -46,8 +47,8 @@ namespace ArtistFolderCreator
                 const string destDir = "dlc";
 
                 // iterate through files *.psarc
-                var cdlcFiles = Directory.GetFiles(srcDir, "*.psarc", SearchOption.AllDirectories);
-                if (cdlcFiles.Length <= 0)
+                var cdlcFiles = Directory.EnumerateFiles(srcDir, "*.psarc", SearchOption.AllDirectories);
+                if (!cdlcFiles.Any())
                     return ShowHelpfulError("Can not find any CDLC *.psarc files");
 
                 foreach (var cdlcFile in cdlcFiles)
@@ -63,8 +64,8 @@ namespace ArtistFolderCreator
                     Console.WriteLine(@"Parsing folder: " + srcDir);
                     Console.WriteLine(@"Looking for songs by: " + artistName);
 
-                    var artistNameFiles = Directory.GetFiles(srcDir, String.Format("{0}_*.psarc", artistName), SearchOption.AllDirectories);
-                    if (artistNameFiles.Length <= 0)
+                    var artistNameFiles = Directory.EnumerateFiles(srcDir, String.Format("{0}_*.psarc", artistName), SearchOption.AllDirectories);
+                    if (!artistNameFiles.Any())
                         return ShowHelpfulError("Can not find any artist named song files");
 
                     foreach (var artistNameFile in artistNameFiles)
@@ -127,4 +128,3 @@ namespace ArtistFolderCreator
     }
 
 }
-

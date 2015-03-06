@@ -57,14 +57,11 @@ namespace RocksmithToolkitLib.SngToTab
 
         public void ExtractBeforeConvert(string inputPath, string outputDir, bool allDif)
         {
-            string sng2tabDir = Path.Combine(tmpWorkDir, "sng2tab");
             // unpacker creates the sng2tabDir directory if it doesn't exist
-            Packer.Unpack(inputPath, sng2tabDir);
-            string unpackedDir = Path.Combine(sng2tabDir,
-                                              Path.GetFileNameWithoutExtension(inputPath) +
-                                              String.Format("_{0}", inputPath.GetPlatform().platform.ToString()));
-            string[] sngFiles = Directory.GetFiles(unpackedDir, "*.sng", SearchOption.AllDirectories);
+            string sng2tabDir = Path.Combine(tmpWorkDir, "sng2tab");
+            string unpackedDir = Packer.Unpack(inputPath, sng2tabDir);
 
+            var sngFiles = Directory.EnumerateFiles(unpackedDir, "*.sng", SearchOption.AllDirectories);
             foreach (var sngFilePath in sngFiles)
             {
                 Convert(sngFilePath, outputDir, allDif);
