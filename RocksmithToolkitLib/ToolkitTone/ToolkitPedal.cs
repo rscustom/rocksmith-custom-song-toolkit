@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 
 namespace RocksmithToolkitLib.ToolkitTone
 {
@@ -77,7 +78,7 @@ namespace RocksmithToolkitLib.ToolkitTone
                 };
             }
             else {
-                return new DLCPackage.Tone.Pedal
+                return new Pedal
                 {
                     PedalKey = Key,
                     KnobValues = Knobs.ToDictionary(k => k.Key, k => (decimal)k.DefaultValue)

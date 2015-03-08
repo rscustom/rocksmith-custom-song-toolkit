@@ -114,97 +114,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         }
         #endregion
 
-        #region RS1 Cast to RS2014 Song2014
-        /// <summary>
-        /// RS1 Song object cast as Song2014 object (converted)
-        /// add some default (missing) XML elements to object
-        /// </summary>
-        /// <param name="rsSong"></param>
-        public Song2014 AddElements(Song2014 rsSong)
-        {
-            // standard meta header data
-            rsSong.Version = "7";
-            rsSong.Offset = rsSong.Offset < 0 ? 0 : rsSong.Offset;
-            rsSong.CentOffset = "0";
-            rsSong.StartBeat = 0;
-            rsSong.Capo = 0;
-            rsSong.ArtistName = "Unknown Artist";
-            // rsSong.ArtistNameSort = "UnknownArtistSort";
-            rsSong.AlbumName = "Unknown Album";
-            // rsSong.AlbumNameSort = "UnknownAlbumSort";
-
-            rsSong.AlbumYear = "1964"; // DateTime.Now.ToString("yyyy");
-            rsSong.CrowdSpeed = "1";
-            rsSong.LastConversionDateTime = DateTime.Now.ToString();
-            rsSong.Tuning = new TuningStrings
-            {
-                String0 = 0,
-                String1 = 0,
-                String2 = 0,
-                String3 = 0,
-                String4 = 0,
-                String5 = 0
-            };
-
-            // more defaults used to produce RS2014 CDLC
-            rsSong.ToneBase = "Default";
-            rsSong.ToneA = "Default";
-            rsSong.ToneB = "";
-            rsSong.ToneC = "";
-            rsSong.ToneD = "";
-            rsSong.Tones = new SongTone2014[0];
-            rsSong.Events = new RocksmithToolkitLib.Xml.SongEvent[0];
-            rsSong.FretHandMuteTemplates = new SongFretHandMuteTemplate[0];
-            rsSong.ChordTemplates = new SongChordTemplate2014[0];
-            rsSong.PhraseProperties = new SongPhraseProperty[0];
-            rsSong.LinkedDiffs = new SongLinkedDiff[0];
-            rsSong.NewLinkedDiff = new SongNewLinkedDiff[0];
-
-            // default arrangment properties
-            rsSong.ArrangementProperties = new SongArrangementProperties2014
-            {
-                Represent = 1,
-                StandardTuning = 1,
-                NonStandardChords = 0,
-                BarreChords = 0,
-                PowerChords = 0,
-                DropDPower = 0,
-                OpenChords = 0,
-                FingerPicking = 0,
-                PickDirection = 0,
-                DoubleStops = 0,
-                PalmMutes = 0,
-                Harmonics = 0,
-                PinchHarmonics = 0,
-                Hopo = 0,
-                Tremolo = 0,
-                Slides = 0,
-                UnpitchedSlides = 0,
-                Bends = 0,
-                Tapping = 0,
-                Vibrato = 0,
-                FretHandMutes = 0,
-                SlapPop = 0,
-                TwoFingerPicking = 0,
-                FifthsAndOctaves = 0,
-                Syncopation = 0,
-                BassPick = 0,
-                Sustain = 0,
-                BonusArr = 0,
-                PathLead = rsSong.Arrangement == "Lead" ? 1 : 0,
-                PathRhythm = rsSong.Arrangement == "Rhythm" ? 1 : 0,
-                PathBass = rsSong.Arrangement == "Bass" ? 1 : 0,
-                RouteMask = 1
-            };
-
-            //if (rsSong.Arrangement.Contains("Combo"))
-            //    rsSong.ArrangementProperties.PathLead = 1;
-
-            return rsSong;
-        }
-        # endregion
-
-        #region Song to SSong2014
+        #region Song to Song2014
         /// <summary>
         /// Convert RS1 Song XML object to RS2014 Song2014 XML object
         /// RS1 to RS2014 Mapping Method
@@ -217,6 +127,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
             // Song to Song2014 Mapping
             // metaheader elements 
+            // TODO: get general info from RS1 song.manifest.json file
             rsSong2014.Version = "7";
             rsSong2014.Title = FilterTitle(rsSong);
             rsSong2014.Arrangement = rsSong.Arrangement;
@@ -229,7 +140,10 @@ namespace RocksmithToolkitLib.Song2014ToTab
             // if RS1 CDLC Song XML originates from EOF it may
             // already contain AverageTempo otherwise it gets calculated 
             rsSong2014.AverageTempo = rsSong.AverageTempo == 0 ? AverageBPM(rsSong) : rsSong.AverageTempo;
+            
+            // TODO: get tuning from RS1 tone.manifest.json file
             rsSong2014.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
+            
             rsSong2014.Capo = 0;
             // force user to complete information
             // rsSong2014.ArtistName = "Unknown Artist";
@@ -529,6 +443,33 @@ namespace RocksmithToolkitLib.Song2014ToTab
         }
         # endregion
 
+        #region Song XML File to Song2014 XML File
+
+        public Song2014 SongFile2Song2014File(string songFilePath, bool overWrite)
+        {
+            Song2014 song2014 = new Song2014();
+            using (var obj = new Rs1Converter())
+                song2014 = obj.Convert(Song.LoadFromFile(songFilePath));
+
+            if (!overWrite)
+            {
+                var srcDir = Path.GetDirectoryName(songFilePath);
+                var srcName = Path.GetFileNameWithoutExtension(songFilePath);
+                var backupSrcPath = String.Format("{0}_{1}.xml", Path.Combine(srcDir, srcName), "RS1");
+
+                // backup original RS1 file
+                File.Copy(songFilePath, backupSrcPath);
+            }
+
+            // write converted RS1 file
+            using (FileStream stream = new FileStream(songFilePath, FileMode.Create))
+                song2014.Serialize(stream, true);
+
+            return song2014;
+
+        }
+
+        #endregion
 
         public void Dispose() { }
 

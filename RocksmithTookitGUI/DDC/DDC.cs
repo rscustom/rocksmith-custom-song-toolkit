@@ -11,6 +11,7 @@ using System.IO;
 using Ookii.Dialogs;
 using System.Diagnostics;
 using RocksmithToolkitLib;
+using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.Manifest;

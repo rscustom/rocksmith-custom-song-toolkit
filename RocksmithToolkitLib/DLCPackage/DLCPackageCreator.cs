@@ -19,6 +19,7 @@ using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Properties;
 using RocksmithToolkitLib.Ogg;
+using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -898,7 +899,7 @@ namespace RocksmithToolkitLib.DLCPackage
             output.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void GenerateTonePsarc(Stream output, string toneKey, Tone.Tone tone) {
+        private static void GenerateTonePsarc(Stream output, string toneKey, Tone tone) {
             var tonePsarc = new PSARC.PSARC();
 
             using (var packageIdStream = new MemoryStream())

@@ -99,6 +99,13 @@
   <ItemGroup>
     <Compile Include="DLCPackage\InlayNif.cs" />
     <Compile Include="DLCPackage\Manifest2014\InlayAttributes2014.cs" />
+    <Compile Include="DLCPackage\Manifest\Manifest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DLCPackage\Manifest\ManifestGeneric.cs" />
+    <Compile Include="DLCPackage\Manifest\Tone\Manifest.cs" />
+    <Compile Include="DLCPackage\Manifest\Tone\Pedal.cs" />
+    <Compile Include="DLCPackage\Manifest\Tone\Tone.cs" />
     <Compile Include="Extensions\ExternalApps.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
     <Compile Include="Ogg\Wwise.cs" />
@@ -146,9 +153,6 @@
     <Compile Include="DLCPackage\AggregateGraph\SoundBank.cs" />
     <Compile Include="DLCPackage\AggregateGraph\XBlock.cs" />
     <Compile Include="DLCPackage\Arrangement.cs" />
-    <Compile Include="DLCPackage\Tone\Manifest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DLCPackage\XBlock\Entity2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Attributes2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Header\AttributesHeader2014.cs" />
@@ -160,7 +164,6 @@
     <Compile Include="DLCPackage\Manifest\ManifestBuilder.cs" />
     <Compile Include="DLCPackage\Manifest\Attributes.cs" />
     <Compile Include="DLCPackage\Manifest\ChordTemplate.cs" />
-    <Compile Include="DLCPackage\Manifest\Manifest.cs" />
     <Compile Include="DLCPackage\Manifest\Phrase.cs" />
     <Compile Include="DLCPackage\Manifest\PhraseIteration.cs" />
     <Compile Include="DLCPackage\Manifest\Section.cs" />
@@ -217,8 +220,6 @@
     <Compile Include="XML\Song.cs" />
     <Compile Include="DLCPackage\SoundBankGenerator.cs" />
     <Compile Include="DLCPackage\ToneGenerator.cs" />
-    <Compile Include="DLCPackage\Tone\Pedal.cs" />
-    <Compile Include="DLCPackage\Tone\Tone.cs" />
     <Compile Include="DLCPackage\XBlock\Entity.cs" />
     <Compile Include="DLCPackage\XBlock\GameXblock.cs" />
     <Compile Include="DLCPackage\XBlock\Property.cs" />
