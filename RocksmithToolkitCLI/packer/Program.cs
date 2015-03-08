@@ -26,6 +26,7 @@ namespace packer
         public bool Build;
         public bool DecodeOGG;
         public bool UpdateSng;
+        public bool UpdateManifest;
         public bool ExtractSongXml;
         public Platform Platform;
     }
@@ -55,6 +56,7 @@ namespace packer
                 { "v|version=", "Version of the Rocksmith Game [RS2012 or RS2014]", v => outputArguments.SetVersion(v) },
                 { "ogg|decodeogg", "Decode ogg file when unpack a song (default is true)", v => { if (v != null) outputArguments.DecodeOGG = true; }},
                 { "sng|updatesng", "Recreate SNG files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateSng = true; }},
+                { "jsn|updatejsn", "Updates manifest files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateManifest = true; }},
                 { "xml|extractxml", "Extract Song Xml files from SNG when unpack a song (default is false)", v => { if (v != null) outputArguments.ExtractSongXml = true; }}
             };
         }
@@ -193,32 +195,32 @@ namespace packer
                 // PACK A FOLDER TO A PACKAGE
                 if (arguments.Pack)
                 {
-                	if (!arguments.Input[0].IsDirectory())
+                    if (!arguments.Input[0].IsDirectory())
                     {
                         ShowHelpfulError("The 'input' argument in 'pack' command must be a directory.");
                         return 1;
                     }
 
                     var srcFiles = arguments.Input;
-					foreach (string srcFileName in srcFiles)
-					{
-	                    try
-						{
-							if (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version != GameVersion.None)
-                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, arguments.Platform);
+                    foreach (string srcFileName in srcFiles)
+                    {
+                        try
+                        {
+                            if (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version != GameVersion.None)
+                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, arguments.Platform, arguments.UpdateManifest);
                             else
-                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng);
+                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, updateManifest: arguments.UpdateManifest);
 
-							Console.WriteLine("Packing is complete.");
-	                        return 0;
-	                    }
-	                    catch (Exception ex)
-	                    {
-							Console.WriteLine(String.Format("Packing error!\nFile: {0}\n{1}\n{2}", srcFileName, ex.Message, ex.InnerException));
-	                        return 1;
-	                    }
-					}
-                }
+                                Console.WriteLine("Packing is complete.");
+                                return 0;
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(String.Format("Packing error!\nFile: {0}\n{1}\n{2}", srcFileName, ex.Message, ex.InnerException));
+                                return 1;
+                            }
+                        }
+                    }
 
                 // UNPACK A PACKAGE FILE
                 if (arguments.Unpack)
@@ -232,9 +234,9 @@ namespace packer
                     var srcFiles = new List<string>();
                     
                     foreach (var name in arguments.Input) {
-                    	if(name.IsDirectory())
+                        if(name.IsDirectory())
                             srcFiles.AddRange(Directory.EnumerateFiles(Path.GetFullPath(name), "*.psarc", SearchOption.AllDirectories));
-                    	if(File.Exists(name))
+                        if(File.Exists(name))
                             srcFiles.Add(name);
                     }
 
@@ -253,7 +255,7 @@ namespace packer
                         }
                         catch (Exception ex)
                         {
-							Console.WriteLine(String.Format("Unpacking error!\nFile: {0}\n{1}\n{2}", srcFileName, ex.Message, ex.InnerException));
+                            Console.WriteLine(String.Format("Unpacking error!\nFile: {0}\n{1}\n{2}", srcFileName, ex.Message, ex.InnerException));
                             return 1;
                         }
                     }
