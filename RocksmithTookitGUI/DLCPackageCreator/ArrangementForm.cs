@@ -7,7 +7,6 @@ using System.IO;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using RocksmithToolkitLib.DLCPackage;
-using RocksmithToolkitLib.DLCPackage.Tone;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Extensions;
@@ -408,12 +407,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 XmlFilePath.Text = ofd.FileName;
             }
+
+            LoadArrangment(XmlFilePath.Text);
+        }
+
+        public void LoadArrangment(string xmlFilePath)
+        {
             try
             {
                 bool isVocal = false;
                 try
                 {
-                    xmlSong = Song2014.LoadFromFile(XmlFilePath.Text);
+                    xmlSong = Song2014.LoadFromFile(xmlFilePath);
                 }
                 catch (Exception ex)
                 {
@@ -453,7 +458,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     {
                         using (var obj = new Rs1Converter())
                         {
-                            // xmlSong = obj.AddElements(xmlSong); // XmlFilePath.Text
                             xmlSong = null;
                             xmlSong = obj.Convert(Song.LoadFromFile(XmlFilePath.Text));
                         }

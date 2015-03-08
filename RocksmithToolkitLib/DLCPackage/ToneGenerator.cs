@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.XBlock;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
     public class ToneGenerator
     {
-        public static void Generate(string toneKey, Tone.Tone tone, Stream outManifest, Stream outXblock, Stream aggregateGraph)
+        public static void Generate(string toneKey, Tone tone, Stream outManifest, Stream outXblock, Stream aggregateGraph)
         {
             var id = IdGenerator.Guid().ToString().Replace("-", "");
             if (string.IsNullOrEmpty(tone.Name))
@@ -24,9 +25,9 @@ namespace RocksmithToolkitLib.DLCPackage
             generateAggregateGraph(toneKey, aggregateGraph);
         }
 
-        private static void generateManifest(Stream outManifest, Tone.Tone tone)
+        private static void generateManifest(Stream outManifest, Tone tone)
         {
-            var manifest = new Tone.Manifest();
+            var manifest = new Manifest.Tone.Manifest();
             manifest.Entries.Add(tone);
             var data = JsonConvert.SerializeObject(manifest, Formatting.Indented);
             var writer = new StreamWriter(outManifest);
@@ -35,7 +36,7 @@ namespace RocksmithToolkitLib.DLCPackage
             outManifest.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void generateXBlock(string toneKey, Stream outXblock, Tone.Tone tone)
+        private static void generateXBlock(string toneKey, Stream outXblock, Tone tone)
         {
             var game = new GameXblock<Entity>();
             var entity = new Entity

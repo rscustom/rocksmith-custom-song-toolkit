@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.ToolkitTone;
-using RocksmithToolkitLib.DLCPackage.Tone;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator

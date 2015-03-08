@@ -11,12 +11,12 @@ using System.Xml;
 using System.Xml.Serialization;
 
 using Ookii.Dialogs;
+using RocksmithToolkitLib.Song2014ToTab;
 using X360.STFS;
 
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
-using RocksmithToolkitLib.DLCPackage.Tone;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Sng;
@@ -102,7 +102,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 string filter;
                 switch (CurrentGameVersion)
                 {
-                    case GameVersion.None:
+                    // case GameVersion.None:
                     case GameVersion.RS2014:
                         filter = CurrentRocksmithTitle + " PC/Mac Package (*.psarc)|*.psarc|";
                         filter += CurrentRocksmithTitle + " XBox360 Package (*.*)|*.*|";
@@ -576,6 +576,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show("Can't load DLC Template because it's not compatible with new DLC Template format. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            // use AppId to determine GameVersion for dlc.xml
+            RS2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
+            RS2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
+
             FillPackageCreatorForm(info, dlcLoadPath);
 
             Application.DoEvents();
@@ -600,11 +605,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 sourcePackage = ofd.FileName;
             }
 
-            if (!sourcePackage.IsValidPSARC())
-            {
-                MessageBox.Show(String.Format("File '{0}' isn't valid. File extension was changed to '.invalid'", Path.GetFileName(sourcePackage)), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            if (CurrentGameVersion == GameVersion.RS2014)
+                if (!sourcePackage.IsValidPSARC())
+                {
+                    MessageBox.Show(String.Format("Invalid File Exception:  File '{0}' can not be used by current process.", Path.GetFileName(sourcePackage)), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
             using (var fbd = new VistaFolderBrowserDialog())
             {
@@ -620,6 +626,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var packagePlatform = sourcePackage.GetPlatform();
             var unpackedDir = Packer.Unpack(sourcePackage, tmp, true, true, false);
             savePath = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourcePackage));
+    
             // Same name xbox issue fix
             if (packagePlatform.platform == GamePlatform.XBox360)
                 savePath += GamePlatform.XBox360.ToString();
@@ -628,11 +635,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // REORGANIZE
             var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
-            if (structured)
+            if (structured && CurrentGameVersion == GameVersion.RS2014)
                 unpackedDir = DLCPackageData.DoLikeProject(savePath);
 
             // LOAD DATA
-            var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform);
+            DLCPackageData info = null;  // DLCPackageData specific to RS2
+            if (CurrentGameVersion == GameVersion.RS2014)
+                info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform);
+            else
+                info = DLCPackageData.RS1LoadFromFolder(unpackedDir, packagePlatform, rbConvert.Checked);
+
 
             switch (packagePlatform.platform)
             {
@@ -653,11 +665,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // FILL PACKAGE CREATOR FORM
             FillPackageCreatorForm(info, unpackedDir);
 
+            // TODO: this code is depreicated not sure why it is here
             // AUTO SAVE DLC TEMPLATE
-            SaveTemplateFile(unpackedDir);
-
-            Application.DoEvents();
-            MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //SaveTemplateFile(unpackedDir);
+            //Application.DoEvents();
+            //MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
             Parent.Focus();
         }
 
@@ -848,10 +861,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void FillPackageCreatorForm(DLCPackageData info, string filesBaseDir)
         {
-            // some dlc.xml do not contain GameVersion info so use AppId to determine version
-            RS2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
-            RS2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
-
             platformPC.Checked = info.Pc;
             platformMAC.Checked = info.Mac;
             platformXBox360.Checked = info.XBox360;
@@ -896,6 +905,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var BasePath = Path.GetDirectoryName(filesBaseDir);
 
             // Song INFO
+            // TODO: add routemask (lead, rhythum, bass, none
             DlcNameTB.Text = info.Name;
 
             PopulateAppIdCombo();
@@ -934,9 +944,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             foreach (var arrangement in info.Arrangements)
             {
                 arrangement.SongXml.File = arrangement.SongXml.File.AbsoluteTo(BasePath);
+
                 if (!String.IsNullOrEmpty(arrangement.FontSng))
                     arrangement.FontSng = arrangement.FontSng.AbsoluteTo(BasePath);
+
                 arrangement.CleanCache();
+
                 if (arrangement.Metronome == Metronome.Itself)
                     continue;
                 if (arrangement.ToneBase == null)
@@ -1649,8 +1662,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     break;
             }
 
-            // Import Package RS2014 only
-            dlcImportButton.Enabled = CurrentGameVersion == GameVersion.RS2014;
+            // Import Package
+            //  dlcImportButton.Enabled = CurrentGameVersion == GameVersion.RS2014;
         }
 
         private void PopulateAppIdCombo()

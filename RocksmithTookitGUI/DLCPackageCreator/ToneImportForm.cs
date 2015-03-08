@@ -4,8 +4,7 @@ using System.Windows.Forms;
 using RocksmithToTabLib;
 using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
-using RocksmithToolkitLib.DLCPackage.Tone;
-using System.Linq;
+﻿﻿﻿﻿﻿﻿using System.Linq;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {

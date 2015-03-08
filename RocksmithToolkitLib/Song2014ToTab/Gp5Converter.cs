@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using RocksmithToTabLib;
 using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using RocksmithToolkitLib.Xml;
 
 

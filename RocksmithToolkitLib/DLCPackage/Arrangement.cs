@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-
-using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Sng;
@@ -77,23 +75,104 @@ namespace RocksmithToolkitLib.DLCPackage
 
             this.SongXml = new SongXML();
             this.SongXml.File = xmlSongFile;
-
             TuningDefinition tuning = null;
-            switch ((ArrangementName)attr.ArrangementType)
+
+            if (attr.InputEvent == "CONVERT") // RS1
             {
-                case ArrangementName.Lead:
-                case ArrangementName.Rhythm:
-                case ArrangementName.Combo:
-                    this.ArrangementType = Sng.ArrangementType.Guitar;
-                    tuning = TuningDefinitionRepository.Instance().Select(song.Tuning, GameVersion.RS2014);
-                    break;
-                case ArrangementName.Bass:
-                    this.ArrangementType = Sng.ArrangementType.Bass;
-                    tuning = TuningDefinitionRepository.Instance().SelectForBass(song.Tuning, GameVersion.RS2014);
-                    break;
-                case ArrangementName.Vocals:
-                    this.ArrangementType = Sng.ArrangementType.Vocal;
-                    break;
+                // TODO: Get tuning from song.manifest.json
+                if (song.Tuning == null)
+                    song.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
+
+                switch (song.Arrangement)
+                {
+                    case "Lead":
+                        this.RouteMask = RouteMask.Lead;
+                        this.ArrangementType = Sng.ArrangementType.Guitar;
+                        tuning = TuningDefinitionRepository.Instance().Select(song.Tuning, GameVersion.RS2012);
+                        break;
+                    case "Rhythm":
+                        this.RouteMask = RouteMask.Rhythm;
+                        this.ArrangementType = Sng.ArrangementType.Guitar;
+                        tuning = TuningDefinitionRepository.Instance().Select(song.Tuning, GameVersion.RS2012);
+                        break;
+                    case "Combo":
+                        if (song.Part == 1)
+                            this.RouteMask = RouteMask.Rhythm;
+                        if (song.Part == 2)
+                            this.RouteMask = RouteMask.Lead;
+
+                        this.ArrangementType = Sng.ArrangementType.Guitar;
+                        tuning = TuningDefinitionRepository.Instance().Select(song.Tuning, GameVersion.RS2012);
+                        break;
+                    case "Bass":
+                        this.RouteMask = RouteMask.Bass;
+                        this.ArrangementType = Sng.ArrangementType.Bass;
+                        tuning = TuningDefinitionRepository.Instance().SelectForBass(song.Tuning, GameVersion.RS2012);
+                        break;
+                    case "Vocals":
+                        this.ArrangementType = Sng.ArrangementType.Vocal;
+                        break;
+                }
+
+                if (song.CentOffset != null)
+                    this.TuningPitch = Convert.ToDouble(song.CentOffset).Cents2Frequency();
+                else
+                    this.TuningPitch = 440;
+
+                this.CapoFret = song.Capo;
+                this.ArrangementSort = 0;
+                this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), song.Arrangement);
+                this.BonusArr = false; // (song.Part > 1);
+                // this.ScrollSpeed = 2;
+                this.ToneBase = song.ToneBase;
+                // this.ToneMultiplayer = song;
+                this.ToneA = song.ToneA;
+                this.ToneB = song.ToneB;
+                this.ToneC = song.ToneC;
+                this.ToneD = song.ToneD;
+                // TODO: Confirm valid and working for RS1->RS2
+                // may want to get new IDs everytime to avoid conflicts
+                 this.Id = IdGenerator.Guid();
+                this.MasterId = RandomGenerator.NextInt();
+            }
+            else // RS2
+            {
+                switch ((ArrangementName)attr.ArrangementType)
+                {
+                    case ArrangementName.Lead:
+                    case ArrangementName.Rhythm:
+                    case ArrangementName.Combo:
+                        this.ArrangementType = Sng.ArrangementType.Guitar;
+                        tuning = TuningDefinitionRepository.Instance().Select(song.Tuning, GameVersion.RS2014);
+                        break;
+                    case ArrangementName.Bass:
+                        this.ArrangementType = Sng.ArrangementType.Bass;
+                        tuning = TuningDefinitionRepository.Instance().SelectForBass(song.Tuning, GameVersion.RS2014);
+                        break;
+                    case ArrangementName.Vocals:
+                        this.ArrangementType = Sng.ArrangementType.Vocal;
+                        break;
+                }
+
+                if (attr.CentOffset != null)
+                    this.TuningPitch = attr.CentOffset.Cents2Frequency();
+                this.CapoFret = attr.CapoFret;
+                this.ArrangementSort = attr.ArrangementSort;
+                this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
+                this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last() * 10);
+                this.PluckedType = (PluckedType)attr.ArrangementProperties.BassPick;
+                this.RouteMask = (RouteMask)attr.ArrangementProperties.RouteMask;
+                this.BonusArr = attr.ArrangementProperties.BonusArr == 1;
+                this.Metronome = (Metronome)attr.ArrangementProperties.Metronome;
+                this.ToneBase = attr.Tone_Base;
+                this.ToneMultiplayer = attr.Tone_Multiplayer;
+                this.ToneA = attr.Tone_A;
+                this.ToneB = attr.Tone_B;
+                this.ToneC = attr.Tone_C;
+                this.ToneD = attr.Tone_D;
+
+                this.Id = Guid.Parse(attr.PersistentID);
+                this.MasterId = attr.MasterID_RDV;
             }
 
             if (tuning == null)
@@ -101,32 +180,16 @@ namespace RocksmithToolkitLib.DLCPackage
                 tuning = new TuningDefinition();
                 tuning.UIName = tuning.Name = tuning.NameFromStrings(song.Tuning, false);
                 tuning.Custom = true;
-                tuning.GameVersion = GameVersion.RS2014;
+                if (attr != null)
+                    tuning.GameVersion = GameVersion.RS2014;
+                else
+                    tuning.GameVersion = GameVersion.RS2012;
+
                 tuning.Tuning = song.Tuning;
                 TuningDefinitionRepository.Instance().Add(tuning, true);
             }
             this.Tuning = tuning.UIName;
             this.TuningStrings = tuning.Tuning;
-            this.CapoFret = attr.CapoFret;
-            if (attr.CentOffset != null)
-                this.TuningPitch = attr.CentOffset.Cents2Frequency();
-
-            this.ArrangementSort = attr.ArrangementSort;
-            this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
-            this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last() * 10);
-            this.PluckedType = (PluckedType)attr.ArrangementProperties.BassPick;
-            this.RouteMask = (RouteMask)attr.ArrangementProperties.RouteMask;
-            this.BonusArr = attr.ArrangementProperties.BonusArr == 1;
-            this.Metronome = (Metronome)attr.ArrangementProperties.Metronome;
-            this.ToneBase = attr.Tone_Base;
-            this.ToneMultiplayer = attr.Tone_Multiplayer;
-            this.ToneA = attr.Tone_A;
-            this.ToneB = attr.Tone_B;
-            this.ToneC = attr.Tone_C;
-            this.ToneD = attr.Tone_D;
-
-            this.Id = Guid.Parse(attr.PersistentID);
-            this.MasterId = attr.MasterID_RDV;
         }
 
         public override string ToString()

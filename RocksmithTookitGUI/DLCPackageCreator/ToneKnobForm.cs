@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using RocksmithToolkitLib.ToolkitTone;
-using Pedal = RocksmithToolkitLib.DLCPackage.Tone.Pedal;
+using Pedal = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Pedal;
 using System.Text.RegularExpressions;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator

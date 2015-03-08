@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using RocksmithToolkitLib.Sng2014HSL;
+using RocksmithToolkitLib.Song2014ToTab;
 using X360.STFS;
 
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
@@ -12,6 +14,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Sng;
+using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -53,7 +56,154 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region RS1 only
 
-        public List<Tone.Tone> Tones { get; set; }
+        public List<Tone> Tones { get; set; }
+
+        // load RS1 CDLC into PackageCreator
+        public static DLCPackageData RS1LoadFromFolder(string unpackedDir, Platform targetPlatform, bool convert)
+        {
+            var sourcePlatform = unpackedDir.GetPlatform();
+            var data = new DLCPackageData();
+
+            data.GameVersion = (convert ? GameVersion.RS2014 : GameVersion.RS2012);
+            data.SignatureType = PackageMagic.CON;
+
+            //Load song manifest data
+            var songsManifestJson = Directory.GetFiles(unpackedDir, "songs.manifest.json", SearchOption.AllDirectories);
+
+            if (songsManifestJson.Length < 1)
+                throw new DataException("No songs.manifest.json file found.");
+            if (songsManifestJson.Length > 1)
+                throw new DataException("More than one songs.manifest.json file found.");
+
+            // arrangements and tones data
+            data.Arrangements = new List<Arrangement>();
+            data.Tones = new List<Tone>();
+
+            // Fill song data as best we can given it is not exact match
+            var attr = ManifestGeneric<Attributes>.LoadFromFile(songsManifestJson[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
+            data.Name = attr.SongKey;
+            // Fill SongInfo
+            data.SongInfo = new SongInfo();
+            data.SongInfo.SongDisplayName = attr.SongName;
+            data.SongInfo.SongDisplayNameSort = attr.SongNameSort;
+            data.SongInfo.Album = attr.AlbumName;
+            data.SongInfo.SongYear = (attr.SongYear == 0 ? 2012 : attr.SongYear);
+            data.SongInfo.Artist = attr.ArtistName;
+            data.SongInfo.ArtistSort = attr.ArtistNameSort;
+            data.SongInfo.AverageTempo = 0; // will calculate later
+
+            //Load tone manifest data
+            var toneManifestJson = Directory.GetFiles(unpackedDir, "tone.manifest.json", SearchOption.AllDirectories);
+            if (toneManifestJson.Length < 1)
+                throw new DataException("No tone.manifest.json file found.");
+            if (toneManifestJson.Length > 1)
+                throw new DataException("More than one tone.manifest.json file found.");
+
+            var tone = Manifest.Tone.Manifest.LoadFromFile(toneManifestJson[0]);
+            data.Volume = -12; // tone.Entries[0].Volume;
+            data.PreviewVolume = data.Volume;
+
+            // TODO: convert Tones RS1 -> RS2
+            //foreach (var jsonTone in attr.Tones)
+            //{
+            //    if (jsonTone == null) continue;
+            //    var key = jsonTone.Key;
+            //    if (data.TonesRS2014.All(t => t.Key != key))
+            //        data.TonesRS2014.Add(jsonTone);
+            //}
+
+            // Adding Arrangement
+            var xmlFiles = Directory.GetFiles(unpackedDir, "*_*.xml", SearchOption.AllDirectories);
+            if (xmlFiles.Length <= 0)
+                throw new DataException("Can not find any XML arrangement files");
+
+            foreach (var xmlFile in xmlFiles)
+                if (xmlFile.ToLower().Contains("_vocals"))
+                {
+                    var voc = new Arrangement();
+                    voc.Name = ArrangementName.Vocals;
+                    voc.ArrangementType = ArrangementType.Vocal;
+                    voc.ScrollSpeed = 20;
+                    voc.SongXml = new SongXML {File = xmlFile};
+                    voc.SongFile = new SongFile {File = ""};
+                    voc.CustomFont = false;
+
+                    // Adding Arrangement
+                    data.Arrangements.Add(voc);
+                }
+                else
+                {
+                    if (convert) // RS1 -> RS2
+                        using (var obj = new Rs1Converter())
+                            obj.SongFile2Song2014File(xmlFile, true);
+
+                    var attrCast = new Attributes2014 {InputEvent = "CONVERT"};
+
+                    data.Arrangements.Add(new Arrangement(attrCast, xmlFile));
+                }
+
+            //Get Album Artwork DDS Files
+            var artFiles = Directory.GetFiles(unpackedDir, "*.dds", SearchOption.AllDirectories);
+            if (artFiles.Length < 1)
+                throw new DataException("No Album Artwork file found.");
+            if (artFiles.Length > 1)
+                throw new DataException("More than one Album Artwork file found.");
+
+            var targetArtFiles = new List<DDSConvertedFile>();
+            data.AlbumArtPath = artFiles[0];
+            targetArtFiles.Add(new DDSConvertedFile() {sizeX = 256, sizeY = 256, sourceFile = artFiles[0], destinationFile = artFiles[0].CopyToTempFile(".dds")});
+            data.ArtFiles = targetArtFiles;
+
+            //Audio files
+            var targetAudioFiles = new List<string>();
+            var audioFiles = Directory.GetFiles(unpackedDir, "*.ogg", SearchOption.AllDirectories);
+            if (audioFiles.Length < 1)
+                throw new DataException("No Audio file found.");
+            if (audioFiles.Length > 2)
+                throw new DataException("Too many Audio files found.");
+
+            int i;
+            for (i = 0; i < audioFiles.Length; i++)
+            {
+                if (convert && audioFiles[i].Contains("_fixed.ogg")) // use it
+                    break;
+                if (!convert && !audioFiles[i].Contains("_fixed.ogg"))
+                    break;
+            }
+
+            if (targetPlatform.IsConsole != (sourcePlatform = audioFiles[i].GetAudioPlatform()).IsConsole)
+            {
+                var newFile = Path.Combine(Path.GetDirectoryName(audioFiles[i]), String.Format("{0}_cap.ogg", Path.GetFileNameWithoutExtension(audioFiles[i])));
+                OggFile.ConvertAudioPlatform(audioFiles[i], newFile);
+                audioFiles[i] = newFile;
+            }
+
+            targetAudioFiles.Add(audioFiles[i]);
+
+            if (!targetAudioFiles.Any())
+                throw new DataException("Audio file not found.");
+
+            FileInfo a = new FileInfo(audioFiles[i]);
+            data.OggPath = a.FullName;
+
+            //AppID
+            if (!convert)
+            {
+                var appidFile = Directory.GetFiles(unpackedDir, "*APP_ID*", SearchOption.AllDirectories);
+                if (appidFile.Length > 0)
+                    data.AppId = File.ReadAllText(appidFile[0]);
+            }
+            else
+                data.AppId = "248750";
+
+            //Package version
+            var versionFile = Directory.GetFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories);
+            if (versionFile.Length > 0)
+                data.PackageVersion = GeneralExtensions.ReadPackageVersion(versionFile[0]);
+            else data.PackageVersion = "1";
+
+            return data;
+        }
 
         #endregion
 
@@ -99,8 +249,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         // Fill Package Data
                         data.Name = attr.DLCKey;
-                        data.Volume = attr.SongVolume;
-                        data.PreviewVolume = (float)(attr.PreviewVolume ?? data.Volume);
+                        data.Volume = (attr.SongVolume == 0 ? -12 : attr.SongVolume);
+                        data.PreviewVolume = (attr.PreviewVolume ?? data.Volume);
 
                         // Fill SongInfo
                         data.SongInfo = new SongInfo();
@@ -125,36 +275,34 @@ namespace RocksmithToolkitLib.DLCPackage
                     // Adding Arrangement
                     data.Arrangements.Add(new Arrangement(attr, xmlFile));
                 }
-                else
+                else if (xmlFile.ToLower().Contains("_vocals"))
                 {
-                    if (File.Exists(Path.Combine(unpackedDir, xmlName + ".xml")))
+                    var voc = new Arrangement();
+                    voc.Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals;
+                    voc.ArrangementType = ArrangementType.Vocal;
+                    voc.ScrollSpeed = 20;
+                    voc.SongXml = new SongXML { File = xmlFile };
+                    voc.SongFile = new SongFile { File = "" };
+                    voc.CustomFont = attr.JapaneseVocal == true;
+
+                    // Get symbols stuff from _vocals.xml
+                    var fontSng = Path.Combine(unpackedDir, xmlName + ".sng");
+                    var vocSng = Sng2014FileWriter.ReadVocals(xmlFile);
+
+                    if (vocSng.IsCustomFont())
                     {
-                        var voc = new Arrangement();
-                        voc.Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals;
-                        voc.ArrangementType = ArrangementType.Vocal;
-                        voc.ScrollSpeed = 20;
-                        voc.SongXml = new SongXML { File = xmlFile };
-                        voc.SongFile = new SongFile { File = "" };
-                        voc.CustomFont = attr.JapaneseVocal == true;
-
-                        // Get symbols stuff from _vocals.xml
-                        var fontSng = Path.Combine(unpackedDir, xmlName + ".sng");
-                        var vocSng = Sng2014FileWriter.ReadVocals(xmlFile);
-
-                        if (vocSng.IsCustomFont())
-                        {
-                            voc.CustomFont = true;
-                            voc.FontSng = fontSng;
-                            vocSng.WriteChartData(fontSng, new Platform(GamePlatform.Pc, GameVersion.None));
-                        }
-
-                        voc.Sng2014 = Sng2014File.ConvertXML(xmlFile, ArrangementType.Vocal, voc.FontSng);
-
-                        // Adding Arrangement
-                        data.Arrangements.Add(voc);
+                        voc.CustomFont = true;
+                        voc.FontSng = fontSng;
+                        vocSng.WriteChartData(fontSng, new Platform(GamePlatform.Pc, GameVersion.None));
                     }
+
+                    voc.Sng2014 = Sng2014File.ConvertXML(xmlFile, ArrangementType.Vocal, voc.FontSng);
+
+                    // Adding Arrangement
+                    data.Arrangements.Add(voc);
                 }
             }
+
 
             //Get DDS Files + hacky reuse if exist
             var ddsFiles = Directory.GetFiles(unpackedDir, "album_*.dds", SearchOption.AllDirectories);

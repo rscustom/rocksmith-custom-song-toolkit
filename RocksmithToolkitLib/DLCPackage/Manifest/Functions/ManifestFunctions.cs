@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 using RocksmithToolkitLib.DLCPackage.Manifest.Header;
-using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 
-namespace RocksmithToolkitLib.DLCPackage.Manifest
+namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 {
     public class ManifestFunctions
     {
