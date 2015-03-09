@@ -30,20 +30,20 @@ namespace RocksmithToolkitLib.Ogg
             try
             {
                 if (Environment.OSVersion.Version.Major >= 6)
-                    programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Audiokinetic\\Wwise v2013.2.2 build 4828");
+                    programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Audiokinetic");
                 else
-                    programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Audiokinetic\\Wwise v2013.2.2 build 4828");
+                    programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Audiokinetic");
 
                 var pathWwiseCli = Directory.EnumerateFiles(programsDir, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
 
                 if (String.IsNullOrEmpty(Path.GetFileName(pathWwiseCli)))
-                    throw new FileNotFoundException("Could not find WwiseCLI.exe");
+                    throw new FileNotFoundException("Could not find WwiseCLI.exe" + Environment.NewLine + "Please confirm that it is installed.");
 
                 return pathWwiseCli;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(new Form { TopMost = true }, @"Could not find WwiseCLI.exe or Audiokinetic directory  ", @"Exception: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(new Form { TopMost = true }, @"Could not find WwiseCLI.exe or Audiokinetic directory.  " + Environment.NewLine + @"Please confirm that it is installed.", @"Exception: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Application.Exit();
                 Environment.Exit(-1);
@@ -64,7 +64,11 @@ namespace RocksmithToolkitLib.Ogg
                 File.Delete(Path.Combine(templateDir, "Template.Administrator.validationcache"));
 
             if (Directory.Exists(Path.Combine(templateDir, ".cache")))
+            {
                 Directory.Delete(Path.Combine(templateDir, ".cache"), true);
+                // newer version of Wwise requires full .cache path be present so recreate it
+                Directory.CreateDirectory(Path.Combine(templateDir, ".cache\\Windows\\SFX"));
+            }
 
             // cleanup gives new hex value to WEM files
             if (Directory.Exists(Path.Combine(templateDir, "GeneratedSoundBanks")))

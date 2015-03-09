@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-
+using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using X360.STFS;
 using X360.Other;
 using RocksmithToolkitLib.Sng;

@@ -124,8 +124,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     voc.Name = ArrangementName.Vocals;
                     voc.ArrangementType = ArrangementType.Vocal;
                     voc.ScrollSpeed = 20;
-                    voc.SongXml = new SongXML {File = xmlFile};
-                    voc.SongFile = new SongFile {File = ""};
+                    voc.SongXml = new SongXML { File = xmlFile };
+                    voc.SongFile = new SongFile { File = "" };
                     voc.CustomFont = false;
 
                     // Adding Arrangement
@@ -137,7 +137,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         using (var obj = new Rs1Converter())
                             obj.SongFile2Song2014File(xmlFile, true);
 
-                    var attrCast = new Attributes2014 {InputEvent = "CONVERT"};
+                    var attrCast = new Attributes2014 { InputEvent = "CONVERT" };
 
                     data.Arrangements.Add(new Arrangement(attrCast, xmlFile));
                 }
@@ -151,7 +151,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var targetArtFiles = new List<DDSConvertedFile>();
             data.AlbumArtPath = artFiles[0];
-            targetArtFiles.Add(new DDSConvertedFile() {sizeX = 256, sizeY = 256, sourceFile = artFiles[0], destinationFile = artFiles[0].CopyToTempFile(".dds")});
+            targetArtFiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = artFiles[0], destinationFile = artFiles[0].CopyToTempFile(".dds") });
             data.ArtFiles = targetArtFiles;
 
             //Audio files
@@ -236,7 +236,7 @@ namespace RocksmithToolkitLib.DLCPackage
             data.TonesRS2014 = new List<Tone2014>();
 
             //Load files
-            var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories);
+            var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray() ;
             foreach (var json in jsonFiles)
             {
                 var attr = Manifest2014<Attributes2014>.LoadFromFile(json).Entries.ToArray()[0].Value.ToArray()[0].Value;
@@ -303,9 +303,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
 
-
-            //Get DDS Files + hacky reuse if exist
-            var ddsFiles = Directory.EnumerateFiles(unpackedDir, "album_*.dds", SearchOption.AllDirectories);
+            //Get DDS Files
+            var ddsFiles = Directory.EnumerateFiles(unpackedDir, "album_*.dds", SearchOption.AllDirectories).ToArray();
             if (ddsFiles.Any())
             {
                 var ddsFilesC = new List<DDSConvertedFile>();
@@ -325,8 +324,9 @@ namespace RocksmithToolkitLib.DLCPackage
                             break;
                     } data.ArtFiles = ddsFilesC;
             }
+
             // Lyric Art
-            var LyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories);
+            var LyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).ToArray();
             if (LyricArt.Any())
                 data.LyricArtPath = LyricArt.FirstOrDefault();
 
@@ -383,12 +383,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
             //AppID
             var appidFile = Directory.EnumerateFiles(unpackedDir, "*.appid", SearchOption.AllDirectories).FirstOrDefault();
-            if (appidFile.Any())
+            if (appidFile != null)
                 data.AppId = File.ReadAllText(appidFile);
 
             //Package version
             var versionFile = Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).FirstOrDefault();
-            if (versionFile.Any())
+            if (versionFile != null)
                 data.PackageVersion = GeneralExtensions.ReadPackageVersion(versionFile);
             else data.PackageVersion = "1";
 
@@ -478,11 +478,11 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             //Move all art_size.dds to KIT folder
-            var ArtFiles = Directory.EnumerateFiles(unpackedDir, "album_*_*.dds", SearchOption.AllDirectories);
+            var ArtFiles = Directory.EnumerateFiles(unpackedDir, "album_*_*.dds", SearchOption.AllDirectories).ToArray();
             if (ArtFiles.Any())
                 foreach (var art in ArtFiles)
                     File.Move(art, Path.Combine(kitdir, Path.GetFileName(art)));
-            var LyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories);
+            var LyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).ToArray();
             if (LyricArt.Any())
                 foreach (var art in LyricArt)
                     File.Move(art, Path.Combine(kitdir, Path.GetFileName(art)));
@@ -537,12 +537,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
             //Move Appid for correct template generation.
             var appidFile = Directory.EnumerateFiles(unpackedDir, "*.appid", SearchOption.AllDirectories).FirstOrDefault();
-            if (appidFile.Any())
+            if (appidFile != null)
                 File.Move(appidFile, Path.Combine(kitdir, Path.GetFileName(appidFile)));
 
             //Move toolkit.version
             var toolkitVersion = Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).FirstOrDefault();
-            if (toolkitVersion.Any())
+            if (toolkitVersion != null)
                 File.Move(toolkitVersion, Path.Combine(kitdir, Path.GetFileName(toolkitVersion)));
 
             //Remove old folder

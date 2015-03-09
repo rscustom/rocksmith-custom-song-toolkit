@@ -108,6 +108,8 @@
     <Compile Include="DLCPackage\Manifest\Tone\Tone.cs" />
     <Compile Include="Extensions\ExternalApps.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
+    <Compile Include="JSON\Song.cs" />
+    <Compile Include="JSON\Tone.cs" />
     <Compile Include="Ogg\Wwise.cs" />
     <Compile Include="SngToTab\Sng2Tab.cs" />
     <Compile Include="Song2014ToTab\Gp5Converter.cs" />
@@ -260,6 +262,7 @@
     <None Include="Resources\XBox360_DLC_image2014.png" />
     <None Include="Resources\cgm_default_icon.png" />
     <None Include="Resources\cgm_default_inlay.png" />
+    <Content Include="JSON\ReadMe.txt" />
     <Content Include="RocksmithToolkitLib.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
