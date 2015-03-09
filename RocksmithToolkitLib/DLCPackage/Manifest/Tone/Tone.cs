@@ -10,7 +10,8 @@ using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {
-    public class Tone {
+    public class Tone
+    {
         #region Tone Import Types
 
         //If-else block for detecting which key it is.
@@ -47,8 +48,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         {
             return Name;
         }
-
-        public void Serialize(string toneSavePath) {
+ 
+ public void Serialize(string toneSavePath) {
             var serializer = new DataContractSerializer(typeof(Tone));
             using (var stm = XmlWriter.Create(toneSavePath, new XmlWriterSettings() { CheckCharacters = true, Indent = true })) {
                 serializer.WriteObject(stm, this);

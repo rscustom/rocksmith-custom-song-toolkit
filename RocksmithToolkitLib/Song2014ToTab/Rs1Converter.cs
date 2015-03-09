@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.SngToTab;
@@ -13,7 +14,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
 {
     public class Rs1Converter : IDisposable
     {
-        #region XML file to Song
+        #region Song XML file to Song Object
         /// <summary>
         /// Convert XML file to RS1 (Song)
         /// </summary>
@@ -26,14 +27,16 @@ namespace RocksmithToolkitLib.Song2014ToTab
         }
         #endregion
 
-        #region Song to XML file
+        #region SongG Object to SONG Xml file
+    
         /// <summary>
-        /// Convert RS1 (Song) to XML file
+        /// Convert RS1 Song Object to RS1 Song Xml file
         /// </summary>
         /// <param name="rs1Song"></param>
         /// <param name="outputDir"></param>
-        /// <returns>RS1 XML file path</returns>
-        public string SongToXml(Song rs1Song, string outputDir)
+        /// <param name="overWrite"></param>
+        /// <returns></returns>
+        public string SongToXml(Song rs1Song, string outputDir, bool overWrite)
         {
             // apply consistent file naming
             var title = rs1Song.Title;
@@ -48,7 +51,9 @@ namespace RocksmithToolkitLib.Song2014ToTab
             var outputFile = String.Format("{0}_{1}", title, arrangement);
             outputFile = String.Format("{0}{1}", outputFile.GetValidName(false, true), "_Rs1.xml");
             var outputPath = Path.Combine(outputDir, outputFile);
-            if (File.Exists(outputPath)) File.Delete(outputPath);
+
+            if (File.Exists(outputPath) && overWrite)
+                File.Delete(outputPath);
 
             using (var stream = File.OpenWrite(outputPath))
             {
@@ -59,9 +64,9 @@ namespace RocksmithToolkitLib.Song2014ToTab
         }
         #endregion
 
-        #region Song to SngFile
+        #region Song Object to SngFile Object
         /// <summary>
-        /// Converts Song to SngFile
+        /// Converts RS1 Song Object to RS1 SngFile Object
         /// </summary>
         /// <param name="rs1Song"></param>
         /// <returns>SngFile</returns>
@@ -75,7 +80,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
         #region Song to SngFilePath
         /// <summary>
-        /// Converts Song to *.sng file
+        /// Converts RS1 Song Object to *.sng File
         /// </summary>
         /// <param name="rs1Song"></param>
         /// <returns>Path to binary *.sng file</returns>
@@ -83,7 +88,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         {
             string rs1XmlPath;
             using (var obj = new Rs1Converter())
-                rs1XmlPath = obj.SongToXml(rs1Song, outputDir);
+                rs1XmlPath = obj.SongToXml(rs1Song, outputDir, true);
 
             ArrangementType arrangementType;
             if (rs1Song.Arrangement.ToLower() == "bass")
@@ -116,10 +121,11 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
         #region Song to Song2014
         /// <summary>
-        /// Convert RS1 Song XML object to RS2014 Song2014 XML object
+        /// Convert RS1 Song Object to RS2 Song2014 Object
         /// RS1 to RS2014 Mapping Method
         /// </summary>
         /// <param name="rsSong"></param>
+        /// <param name="srcPath"></param>
         /// <returns>Song2014</returns>
         public Song2014 Convert(Song rsSong)
         {
@@ -140,11 +146,12 @@ namespace RocksmithToolkitLib.Song2014ToTab
             // if RS1 CDLC Song XML originates from EOF it may
             // already contain AverageTempo otherwise it gets calculated 
             rsSong2014.AverageTempo = rsSong.AverageTempo == 0 ? AverageBPM(rsSong) : rsSong.AverageTempo;
-            
+
             // TODO: get tuning from RS1 tone.manifest.json file
             rsSong2014.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-            
+
             rsSong2014.Capo = 0;
+            // TODO: get song info from RS1 song.manifest.json file
             // force user to complete information
             // rsSong2014.ArtistName = "Unknown Artist";
             // rsSong2014.AlbumName = "Unknown Album";
@@ -443,9 +450,9 @@ namespace RocksmithToolkitLib.Song2014ToTab
         }
         # endregion
 
-        #region Song XML File to Song2014 XML File
+        #region Song Xml File to Song2014 XML File
 
-        public Song2014 SongFile2Song2014File(string songFilePath, bool overWrite)
+        public string SongFile2Song2014File(string songFilePath, bool overWrite)
         {
             Song2014 song2014 = new Song2014();
             using (var obj = new Rs1Converter())
@@ -465,8 +472,19 @@ namespace RocksmithToolkitLib.Song2014ToTab
             using (FileStream stream = new FileStream(songFilePath, FileMode.Create))
                 song2014.Serialize(stream, true);
 
-            return song2014;
+            return songFilePath;
+        }
 
+        #endregion
+
+
+        #region RS1 Tone.Manifest.Json to Song2014
+
+        public Song2014 Tone2Song2014(Tone jsonTone)
+        {
+            Song2014 rsSong2014 = new Song2014();
+
+            return rsSong2014;
         }
 
         #endregion

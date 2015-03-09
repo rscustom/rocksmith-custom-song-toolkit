@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -626,7 +627,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var packagePlatform = sourcePackage.GetPlatform();
             var unpackedDir = Packer.Unpack(sourcePackage, tmp, true, true, false);
             savePath = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourcePackage));
-    
+
             // Same name xbox issue fix
             if (packagePlatform.platform == GamePlatform.XBox360)
                 savePath += GamePlatform.XBox360.ToString();
@@ -644,7 +645,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform);
             else
                 info = DLCPackageData.RS1LoadFromFolder(unpackedDir, packagePlatform, rbConvert.Checked);
-
 
             switch (packagePlatform.platform)
             {
@@ -670,7 +670,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //SaveTemplateFile(unpackedDir);
             //Application.DoEvents();
             //MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
+
             Parent.Focus();
         }
 
@@ -1470,11 +1470,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void toneImportButton_Click(object sender, EventArgs e)
         {
-            ImportTone();
-        }
-
-        private void ImportTone()
-        {
             string toneImportFile;
             using (var ofd = new OpenFileDialog())
             {
@@ -1484,6 +1479,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 toneImportFile = ofd.FileName;
             }
 
+            ImportTone(toneImportFile);
+        }
+
+        private void ImportTone(string toneImportFile)
+        {
             try
             {
                 Application.DoEvents();

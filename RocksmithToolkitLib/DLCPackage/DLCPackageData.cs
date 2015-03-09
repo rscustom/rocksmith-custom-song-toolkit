@@ -63,25 +63,35 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             var sourcePlatform = unpackedDir.GetPlatform();
             var data = new DLCPackageData();
+            data.Tones = new List<Tone>();
+            data.Arrangements = new List<Arrangement>();
 
             data.GameVersion = (convert ? GameVersion.RS2014 : GameVersion.RS2012);
             data.SignatureType = PackageMagic.CON;
+            // set general defualt volumes
+            data.Volume = -7;
+            data.PreviewVolume = data.Volume;
+
+            //Load tone manifest data
+            var toneManifestJson = Directory.GetFiles(unpackedDir, "tone.manifest.json", SearchOption.AllDirectories);
+            if (toneManifestJson.Length < 1)
+                throw new DataException("No tone.manifest.json file found.");
+            if (toneManifestJson.Length > 1)
+                throw new DataException("More than one tone.manifest.json file found.");
+
+            data.Tones = Tone.Import(toneManifestJson[0]);
 
             //Load song manifest data
             var songsManifestJson = Directory.GetFiles(unpackedDir, "songs.manifest.json", SearchOption.AllDirectories);
-
             if (songsManifestJson.Length < 1)
                 throw new DataException("No songs.manifest.json file found.");
             if (songsManifestJson.Length > 1)
                 throw new DataException("More than one songs.manifest.json file found.");
 
-            // arrangements and tones data
-            data.Arrangements = new List<Arrangement>();
-            data.Tones = new List<Tone>();
-
-            // Fill song data as best we can given it is not exact match
+            // get song data as best we can given it is not exact match
             var attr = ManifestGeneric<Attributes>.LoadFromFile(songsManifestJson[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
             data.Name = attr.SongKey;
+
             // Fill SongInfo
             data.SongInfo = new SongInfo();
             data.SongInfo.SongDisplayName = attr.SongName;
@@ -92,27 +102,7 @@ namespace RocksmithToolkitLib.DLCPackage
             data.SongInfo.ArtistSort = attr.ArtistNameSort;
             data.SongInfo.AverageTempo = 0; // will calculate later
 
-            //Load tone manifest data
-            var toneManifestJson = Directory.GetFiles(unpackedDir, "tone.manifest.json", SearchOption.AllDirectories);
-            if (toneManifestJson.Length < 1)
-                throw new DataException("No tone.manifest.json file found.");
-            if (toneManifestJson.Length > 1)
-                throw new DataException("More than one tone.manifest.json file found.");
-
-            var tone = Manifest.Tone.Manifest.LoadFromFile(toneManifestJson[0]);
-            data.Volume = -12; // tone.Entries[0].Volume;
-            data.PreviewVolume = data.Volume;
-
-            // TODO: convert Tones RS1 -> RS2
-            //foreach (var jsonTone in attr.Tones)
-            //{
-            //    if (jsonTone == null) continue;
-            //    var key = jsonTone.Key;
-            //    if (data.TonesRS2014.All(t => t.Key != key))
-            //        data.TonesRS2014.Add(jsonTone);
-            //}
-
-            // Adding Arrangement
+            // Adding Xml Arrangement
             var xmlFiles = Directory.GetFiles(unpackedDir, "*_*.xml", SearchOption.AllDirectories);
             if (xmlFiles.Length <= 0)
                 throw new DataException("Can not find any XML arrangement files");
@@ -133,13 +123,13 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
                 else
                 {
+                    // TODO: may be good spot to convert tones
                     if (convert) // RS1 -> RS2
                         using (var obj = new Rs1Converter())
                             obj.SongFile2Song2014File(xmlFile, true);
 
-                    var attrCast = new Attributes2014 { InputEvent = "CONVERT" };
-
-                    data.Arrangements.Add(new Arrangement(attrCast, xmlFile));
+                    var attrFake = new Attributes2014 { InputEvent = "CONVERT" };
+                    data.Arrangements.Add(new Arrangement(attrFake, xmlFile));
                 }
 
             //Get Album Artwork DDS Files
@@ -236,7 +226,7 @@ namespace RocksmithToolkitLib.DLCPackage
             data.TonesRS2014 = new List<Tone2014>();
 
             //Load files
-            var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray() ;
+            var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray();
             foreach (var json in jsonFiles)
             {
                 var attr = Manifest2014<Attributes2014>.LoadFromFile(json).Entries.ToArray()[0].Value.ToArray()[0].Value;
@@ -427,6 +417,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             CleanCache();
         }
+
         /// <summary>
         /// Transforms unpacked Song into project-like folder structure.
         /// </summary>

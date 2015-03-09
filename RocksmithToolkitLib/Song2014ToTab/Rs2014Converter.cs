@@ -23,12 +23,13 @@ namespace RocksmithToolkitLib.Song2014ToTab
         /// <param name="rs2014Song"></param>
         /// <param name="outputDir"></param>
         /// <returns>RS2014 XML file path</returns>
-        public string Song2014ToXml(Song2014 rs2014Song, string outputDir)
+        public string Song2014ToXml(Song2014 rs2014Song, string outputDir, bool overWrite)
         {
             var outputFile = String.Format("{0}_{1}", rs2014Song.Title, rs2014Song.Arrangement);
             outputFile = String.Format("{0}{1}", outputFile.GetValidName(false, true).ToLower(), "_rs2014.xml");
             var outputPath = Path.Combine(outputDir, outputFile);
-            if (File.Exists(outputPath)) File.Delete(outputPath);
+            if (File.Exists(outputPath) && overWrite)
+                File.Delete(outputPath);
 
             using (var stream = File.OpenWrite(outputPath))
             {
@@ -449,13 +450,13 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 rs1Song = obj.Song2014ToSong(rs2014Song);
             Console.WriteLine("Converted Song2014 To Song");
 
-            if (false) // write Xml files for debugging 
-            {
-                using (Rs2014Converter obj = new Rs2014Converter())
-                    obj.Song2014ToXml(rs2014Song, outputDir);
-                using (Rs1Converter obj = new Rs1Converter())
-                    obj.SongToXml(rs1Song, outputDir);
-            }
+            //if (false) // write Xml files for debugging 
+            //{
+            //    using (Rs2014Converter obj = new Rs2014Converter())
+            //        obj.Song2014ToXml(rs2014Song, outputDir, true);
+            //    using (Rs1Converter obj = new Rs1Converter())
+            //        obj.SongToXml(rs1Song, outputDir, true);
+            //}
 
             // convert to SngFile
             string rs1SngFilePath;
