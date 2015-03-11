@@ -66,7 +66,8 @@ namespace RocksmithToolkitLib.Ogg
             if (Directory.Exists(Path.Combine(templateDir, ".cache")))
             {
                 Directory.Delete(Path.Combine(templateDir, ".cache"), true);
-                // newer version of Wwise requires full .cache path be present so recreate it
+                // TODO: fix this for newer versions
+                // Wwise requires full .cache path be present???
                 Directory.CreateDirectory(Path.Combine(templateDir, ".cache\\Windows\\SFX"));
             }
 

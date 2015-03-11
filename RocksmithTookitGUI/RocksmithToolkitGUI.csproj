@@ -357,9 +357,9 @@
       <Project>{972BC97A-B70A-4007-B915-952CC3606A2A}</Project>
       <Name>dlcconverter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitCLI\PackageCreator\packagecreator.csproj">
+    <ProjectReference Include="..\RocksmithToolkitCLI\PackageCreator\PackageCreator.csproj">
       <Project>{ED268869-387A-477E-A652-C6E47BE2AC02}</Project>
-      <Name>packagecreator</Name>
+      <Name>PackageCreator</Name>
     </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitCLI\packer\packer.csproj">
       <Project>{822D185A-28A3-4AE0-A811-800E968AA2E7}</Project>

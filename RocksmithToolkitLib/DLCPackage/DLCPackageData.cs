@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.Song2014ToTab;
+using RocksmithToolkitLib.Xml;
 using X360.STFS;
 
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
@@ -68,8 +69,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             data.GameVersion = (convert ? GameVersion.RS2014 : GameVersion.RS2012);
             data.SignatureType = PackageMagic.CON;
-            // set general defualt volumes
-            data.Volume = -7;
+            // set general default volumes
+            data.Volume = -6; // - 7 default a little too quite
             data.PreviewVolume = data.Volume;
 
             //Load tone manifest data
@@ -79,7 +80,8 @@ namespace RocksmithToolkitLib.DLCPackage
             if (toneManifestJson.Length > 1)
                 throw new DataException("More than one tone.manifest.json file found.");
 
-            data.Tones = Tone.Import(toneManifestJson[0]);
+            List<Tone> tones = Tone.Import(toneManifestJson[0]);
+            data.Tones = tones;
 
             //Load song manifest data
             var songsManifestJson = Directory.GetFiles(unpackedDir, "songs.manifest.json", SearchOption.AllDirectories);
@@ -123,10 +125,36 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
                 else
                 {
-                    // TODO: may be good spot to convert tones
                     if (convert) // RS1 -> RS2
-                        using (var obj = new Rs1Converter())
-                            obj.SongFile2Song2014File(xmlFile, true);
+                    {
+                        Song2014 rsSong2014 = new Song2014();
+                        Song rsSong = new Song();
+                        List<Tone2014> tones2014 = new List<Tone2014>();
+
+                        using (var obj1 = new Rs1Converter())
+                        {
+                            rsSong = obj1.XmlToSong(xmlFile);
+                            rsSong2014 = obj1.SongToSong2014(rsSong);
+
+                            foreach (var tone in tones)
+                            {
+                                tones2014.Add(obj1.ToneToTone2014(tone));
+                                rsSong2014.ToneBase = tone.Name;
+                                rsSong2014.ToneA = tone.Name;
+
+                                //if (Path.GetFileNameWithoutExtension(xmlFile).ToUpper().Contains("COMBO1"))
+                                //    rsSong2014.Arrangement = "Rhythm";
+                                //if (Path.GetFileNameWithoutExtension(xmlFile).ToUpper().Contains("COMBO2"))
+                                //    rsSong2014.Arrangement = "Lead";
+                            }
+                            
+                            data.TonesRS2014 = new List<Tone2014>();
+                            data.TonesRS2014 = tones2014;
+                        }
+
+                        using (var obj2 = new Rs2014Converter())
+                            obj2.Song2014ToXml(rsSong2014, xmlFile, true);
+                    }
 
                     var attrFake = new Attributes2014 { InputEvent = "CONVERT" };
                     data.Arrangements.Add(new Arrangement(attrFake, xmlFile));
@@ -256,6 +284,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     // Adding Tones
                     foreach (var jsonTone in attr.Tones)
                     {
+
                         if (jsonTone == null) continue;
                         var key = jsonTone.Key;
                         if (data.TonesRS2014.All(t => t.Key != key))

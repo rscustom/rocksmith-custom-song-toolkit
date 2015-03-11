@@ -21,15 +21,20 @@ namespace RocksmithToolkitLib.Song2014ToTab
         /// Convert RS2014 (Song2014) to XML file
         /// </summary>
         /// <param name="rs2014Song"></param>
-        /// <param name="outputDir"></param>
+        /// <param name="outputPath"></param>
+        /// <param name="overWrite"></param>
         /// <returns>RS2014 XML file path</returns>
-        public string Song2014ToXml(Song2014 rs2014Song, string outputDir, bool overWrite)
+        public string Song2014ToXml(Song2014 rs2014Song, string outputPath, bool overWrite)
         {
-            var outputFile = String.Format("{0}_{1}", rs2014Song.Title, rs2014Song.Arrangement);
-            outputFile = String.Format("{0}{1}", outputFile.GetValidName(false, true).ToLower(), "_rs2014.xml");
-            var outputPath = Path.Combine(outputDir, outputFile);
             if (File.Exists(outputPath) && overWrite)
                 File.Delete(outputPath);
+            else
+            {
+                var outputDir = Path.GetDirectoryName(outputPath);
+                var outputFile = String.Format("{0}_{1}", rs2014Song.Title, rs2014Song.Arrangement);
+                outputFile = String.Format("{0}{1}", outputFile.GetValidName(false, true).ToLower(), "_rs2014.xml");
+                outputPath = Path.Combine(outputDir, outputFile);
+            }
 
             using (var stream = File.OpenWrite(outputPath))
             {

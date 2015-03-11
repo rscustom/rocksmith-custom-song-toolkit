@@ -930,7 +930,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region COMMON
 
-        private static void ToDDS(List<DDSConvertedFile> filesToConvert, DLCPackageType dlcType = DLCPackageType.Song)
+        public static void ToDDS(List<DDSConvertedFile> filesToConvert, DLCPackageType dlcType = DLCPackageType.Song)
         {
             string args = null;
             switch (dlcType) {

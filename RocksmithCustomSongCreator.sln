@@ -46,7 +46,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithToolkitUpdater", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtistFolderCreator", "RocksmithToolkitCLI\ArtistFolderCreator\ArtistFolderCreator.csproj", "{E742753F-9DC3-4AB7-B129-DC11EB2302CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "packagecreator", "RocksmithToolkitCLI\PackageCreator\packagecreator.csproj", "{ED268869-387A-477E-A652-C6E47BE2AC02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageCreator", "RocksmithToolkitCLI\PackageCreator\PackageCreator.csproj", "{ED268869-387A-477E-A652-C6E47BE2AC02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

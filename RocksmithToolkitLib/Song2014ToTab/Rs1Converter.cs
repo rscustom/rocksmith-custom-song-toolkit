@@ -27,8 +27,8 @@ namespace RocksmithToolkitLib.Song2014ToTab
         }
         #endregion
 
-        #region SongG Object to SONG Xml file
-    
+        #region Song Object to Song Xml file
+
         /// <summary>
         /// Convert RS1 Song Object to RS1 Song Xml file
         /// </summary>
@@ -36,7 +36,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         /// <param name="outputDir"></param>
         /// <param name="overWrite"></param>
         /// <returns></returns>
-        public string SongToXml(Song rs1Song, string outputDir, bool overWrite)
+        public string SongToXml(Song rs1Song, string outputDir)
         {
             // apply consistent file naming
             var title = rs1Song.Title;
@@ -52,7 +52,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             outputFile = String.Format("{0}{1}", outputFile.GetValidName(false, true), "_Rs1.xml");
             var outputPath = Path.Combine(outputDir, outputFile);
 
-            if (File.Exists(outputPath) && overWrite)
+            if (File.Exists(outputPath))
                 File.Delete(outputPath);
 
             using (var stream = File.OpenWrite(outputPath))
@@ -88,7 +88,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         {
             string rs1XmlPath;
             using (var obj = new Rs1Converter())
-                rs1XmlPath = obj.SongToXml(rs1Song, outputDir, true);
+                rs1XmlPath = obj.SongToXml(rs1Song, outputDir);
 
             ArrangementType arrangementType;
             if (rs1Song.Arrangement.ToLower() == "bass")
@@ -127,7 +127,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         /// <param name="rsSong"></param>
         /// <param name="srcPath"></param>
         /// <returns>Song2014</returns>
-        public Song2014 Convert(Song rsSong)
+        public Song2014 SongToSong2014(Song rsSong)
         {
             Song2014 rsSong2014 = new Song2014();
 
@@ -138,7 +138,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             rsSong2014.Title = FilterTitle(rsSong);
             rsSong2014.Arrangement = rsSong.Arrangement;
             rsSong2014.Part = rsSong.Part;
-            rsSong2014.Offset = rsSong.Offset < 0 ? 0 : rsSong.Offset;
+            rsSong2014.Offset = rsSong.Offset;
             rsSong2014.CentOffset = "0";
             rsSong2014.SongLength = rsSong.SongLength;
             rsSong2014.LastConversionDateTime = DateTime.Now.ToString("MM-dd-yy HH:mm");
@@ -152,7 +152,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
             rsSong2014.Capo = 0;
             // TODO: get song info from RS1 song.manifest.json file
-            // force user to complete information
+            // force user to complete information or fills in when imported
             // rsSong2014.ArtistName = "Unknown Artist";
             // rsSong2014.AlbumName = "Unknown Album";
             rsSong2014.AlbumYear = DateTime.Now.ToString("yyyy");
@@ -194,10 +194,6 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 PathRhythm = rsSong2014.Arrangement == "Rhythm" ? 1 : 0,
                 PathBass = rsSong2014.Arrangement == "Bass" ? 1 : 0
             };
-
-            // convert combo arrangment to lead
-            if (rsSong.Arrangement.Contains("Combo"))
-                rsSong2014.ArrangementProperties.PathLead = 1;
 
             // tone defaults used to produce RS2014 CDLC
             rsSong2014.ToneBase = "Default";
@@ -456,7 +452,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         {
             Song2014 song2014 = new Song2014();
             using (var obj = new Rs1Converter())
-                song2014 = obj.Convert(Song.LoadFromFile(songFilePath));
+                song2014 = obj.SongToSong2014(Song.LoadFromFile(songFilePath));
 
             if (!overWrite)
             {
@@ -477,14 +473,153 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
         #endregion
 
+        #region RS1 Tone to RS2 Tone2014
 
-        #region RS1 Tone.Manifest.Json to Song2014
-
-        public Song2014 Tone2Song2014(Tone jsonTone)
+        public Tone2014 ToneToTone2014(Tone rs1Tone)
         {
-            Song2014 rsSong2014 = new Song2014();
+            Tone2014 tone2014 = new Tone2014();
+            Pedal2014 amp = new Pedal2014();
+            Pedal2014 cabinet = new Pedal2014();
+            Pedal2014 prepedal1 = new Pedal2014();
+            Pedal2014 rack1 = new Pedal2014();
+            Pedal2014 rack2 = new Pedal2014();
+            tone2014.ToneDescriptors = new List<string>();
+            tone2014.Name = rs1Tone.Name;
+            tone2014.Key = rs1Tone.Key ?? "";
+            tone2014.Volume = rs1Tone.Volume;
+            tone2014.IsCustom = true;
+            tone2014.NameSeparator = " - ";
+            tone2014.SortOrder = 0;
 
-            return rsSong2014;
+            // setup tone approximation conversions based on rs1Tone.Name
+            // based on some real tone combinations found in RS2 CDLC
+
+            if (rs1Tone.Name.ToUpper().Contains(" LEAD"))
+            {
+                tone2014.ToneDescriptors.Add("$[35724]LEAD");
+                amp.Type = "Amps";
+                amp.Category = "Amp";
+                amp.PedalKey = "Amp_AT120";
+                cabinet.Type = "Cabinets";
+                cabinet.Category = "Dynamic_Cone";
+                cabinet.PedalKey = "Cab_OrangePPC412_57_Cone";
+                rack1.Type = "Racks";
+                rack1.Category = "Filter";
+                rack1.PedalKey = "Rack_StudioEQ";
+                prepedal1.Type = "Pedals";
+                prepedal1.Category = "Distortion";
+                prepedal1.PedalKey = "Pedal_GermaniumDrive";
+
+                tone2014.GearList = new Gear2014()
+                {
+                    Amp = amp,
+                    Cabinet = cabinet,
+                    Rack1 = rack1,
+                    PrePedal1 = prepedal1
+                };
+            }
+
+            if (rs1Tone.Name.ToUpper().Contains(" DIS"))
+            {
+                tone2014.ToneDescriptors.Add("$[35722]DISTORTION");
+                amp.Type = "Amps";
+                amp.Category = "Amp";
+                amp.PedalKey = "Amp_GB100";
+                cabinet.Type = "Cabinets";
+                cabinet.Category = "Dynamic_Cone";
+                cabinet.PedalKey = "Cab_GB412CMKIII_57_Cone";
+                rack1.Type = "Racks";
+                rack1.Category = "Filter";
+                rack1.PedalKey = "Rack_StudioEQ";
+                rack2.Type = "Racks";
+                rack2.Category = "Reverb";
+                rack2.PedalKey = "Rack_StudioVerb";
+                prepedal1.Type = "Pedals";
+                prepedal1.Category = "Distortion";
+                prepedal1.PedalKey = "Pedal_GermaniumDrive";
+
+                tone2014.GearList = new Gear2014()
+                {
+                    Amp = amp,
+                    Cabinet = cabinet,
+                    Rack1 = rack1,
+                    Rack2 = rack2,
+                    PrePedal1 = prepedal1
+                };
+            }
+
+            if (rs1Tone.Name.ToUpper().Contains(" CLEAN"))
+            {
+                tone2014.ToneDescriptors.Add("$[35720]CLEAN");
+                amp.Type = "Amps";
+                amp.Category = "Amp";
+                amp.PedalKey = "Amp_TW40";
+                cabinet.Type = "Cabinets";
+                cabinet.Category = "Dynamic_Cone";
+                cabinet.PedalKey = "Cab_TW112C_57_Cone";
+                rack1.Type = "Racks";
+                rack1.Category = "Filter";
+                rack1.PedalKey = "Rack_StudioEQ";
+
+                tone2014.GearList = new Gear2014()
+                {
+                    Amp = amp,
+                    Cabinet = cabinet,
+                    Rack1 = rack1
+                };
+            }
+
+            if (rs1Tone.Name.ToUpper().Contains(" ACOUSTIC"))
+            {
+                tone2014.ToneDescriptors.Add("$[35721]ACOUSTIC");
+                amp.Type = "Amps";
+                amp.Category = "Amp";
+                amp.PedalKey = "Amp_TW40";
+                cabinet.Type = "Cabinets";
+                cabinet.Category = "Dynamic_Cone";
+                cabinet.PedalKey = "Cab_GB412CMKIII_57_Cone";
+                rack1.Type = "Racks";
+                rack1.Category = "Filter";
+                rack1.PedalKey = "Rack_StudioEQ";
+                rack2.Type = "Racks";
+                rack2.Category = "Dynamics";
+                rack2.PedalKey = "Rack_StudioCompressor";
+                prepedal1.Type = "Pedals";
+                prepedal1.Category = "Filter";
+                prepedal1.PedalKey = "Pedal_AcousticEmulator";
+
+                tone2014.GearList = new Gear2014()
+                {
+                    Amp = amp,
+                    Cabinet = cabinet,
+                    Rack1 = rack1,
+                    Rack2 = rack2,
+                    PrePedal1 = prepedal1
+                };
+            }
+
+            if (rs1Tone.Name.ToUpper().Contains(" BASS"))
+            {
+                tone2014.ToneDescriptors.Add("$[35715]BASS");
+                amp.Type = "Amps";
+                amp.Category = "Amp";
+                amp.PedalKey = "Bass_Amp_CH300B";
+                cabinet.Type = "Cabinets";
+                cabinet.Category = "Dynamic_Cone";
+                cabinet.PedalKey = "Bass_Cab_BT410BC_57_Cone";
+                rack1.Type = "Racks";
+                rack1.Category = "Filter";
+                rack1.PedalKey = "Rack_StudioEQ";
+
+                tone2014.GearList = new Gear2014()
+                {
+                    Amp = amp,
+                    Cabinet = cabinet,
+                    Rack1 = rack1
+                };
+            }
+
+            return tone2014;
         }
 
         #endregion

@@ -459,7 +459,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         using (var obj = new Rs1Converter())
                         {
                             xmlSong = null;
-                            xmlSong = obj.Convert(Song.LoadFromFile(XmlFilePath.Text));
+                            xmlSong = obj.SongToSong2014(Song.LoadFromFile(XmlFilePath.Text));
                         }
                         currentGameVersion = GameVersion.RS2014;
                     }

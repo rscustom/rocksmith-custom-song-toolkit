@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace packagecreator.Properties {
+namespace PackageCreator.Properties {
     using System;
     
     

@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NDesk.Options;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
 
-namespace packagecreator
+namespace PackageCreator
 {
     // TODO: include functionality for RS2012
     internal class Arguments
@@ -94,8 +96,8 @@ namespace packagecreator
             Console.ForegroundColor = ConsoleColor.Green;
 
 #if (DEBUG)
-    // give the progie some dumby directory to work on for testing
-    // args = new string[] { "--input=D:\\Temp\\Test", "--output=D:\\Temp" }; //, "platform=Pc", "version=RS2014" };
+            // give the progie some dumby directory to work on for testing
+            // args = new string[] { "--input=D:\\Temp\\Test", "--output=D:\\Temp" }; //, "platform=Pc", "version=RS2014" };
             args = new string[] { "D:\\Temp\\Test" };
 #endif
 
@@ -178,6 +180,10 @@ namespace packagecreator
 
                     try
                     {
+                        // check Album Artwork
+                        if (arguments.Platform.version == GameVersion.RS2014)
+                            CheckAlbumArt(srcDirs[i]);
+
                         // get package data
                         DLCPackageData packageData = DLCPackageData.LoadFromFolder(srcDirs[i], arguments.Platform, arguments.Platform);
                         packageData.AppId = arguments.AppId;
@@ -261,6 +267,86 @@ namespace packagecreator
 
             return isDirectory;
         }
+
+        private static void CheckAlbumArt(string srcDir)
+        {
+            // iterate through unpacked cdlc src folder and find artwork
+            var ddsFilesPath = Directory.GetFiles(srcDir, "album_*.dds", SearchOption.AllDirectories);
+
+            if (!ddsFilesPath.Any())
+            {
+                Console.WriteLine(@"Did not find any album artwork in:" + Environment.NewLine + srcDir);
+                Console.WriteLine("");
+                Console.ReadLine();
+            }
+
+            try
+            {
+                bool is64 = false, is128 = false, is256 = false;
+                string albumArtPath = String.Empty;
+
+                foreach (var ddsFile in ddsFilesPath)
+                {
+                    if (ddsFile.Contains("_64"))
+                        is64 = true;
+                    if (ddsFile.Contains("_128"))
+                        is128 = true;
+                    if (ddsFile.Contains("_256"))
+                    {
+                        is256 = true;
+                        albumArtPath = ddsFile;
+                    }
+                }
+
+                // do not update psarc if album artwork if already valid
+                if (is64 && is128 && is256)
+                {
+                    Console.WriteLine(@"Artwork is valid.");
+                    Console.WriteLine("");
+                    return;
+                }
+
+                if (String.IsNullOrEmpty(albumArtPath))
+                    albumArtPath = ddsFilesPath[0];
+
+                Console.WriteLine(@"Repairing album artwork using: " + Path.GetFileName(albumArtPath));
+                var ddsFiles = new List<DDSConvertedFile>();
+
+                if (!albumArtPath.Contains("_64"))
+                    ddsFiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                if (!albumArtPath.Contains("_128"))
+                    ddsFiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                if (!albumArtPath.Contains("_256"))
+                    ddsFiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+
+                // Convert to correct dds file sizes
+                DLCPackageCreator.ToDDS(ddsFiles);
+
+                var albumArtDir = Path.GetDirectoryName(albumArtPath);
+                var albumArtName = Path.GetFileNameWithoutExtension(albumArtPath);
+                var nameParts = albumArtName.Split('_');
+                var dlcName = String.Format("album_{0}", nameParts[1]);
+                var ddsPartialPath = Path.Combine(albumArtDir, dlcName);
+
+                foreach (var dds in ddsFiles)
+                {
+                    var destAlbumArtPath = String.Format("{0}_{1}.dds", ddsPartialPath, dds.sizeX);
+                    if (!File.Exists(dds.destinationFile))
+                        Console.WriteLine(@"Could not repair: " + destAlbumArtPath);
+
+                    File.Copy(dds.destinationFile, destAlbumArtPath);
+                    // delete temp artwork file
+                    File.Delete(dds.destinationFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                Console.ReadLine();
+            }
+        }
+
+
 
     }
 }

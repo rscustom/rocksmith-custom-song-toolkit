@@ -88,7 +88,7 @@ namespace RocksmithToolkitLib.ToolkitTone
 
         public static IList<ToolkitPedal> LoadFromResource(GameVersion gameVersion)
         {
-            var pedalsJson = Encoding.ASCII.GetString((gameVersion == GameVersion.RS2014) ? Properties.Resources.pedals2014 : Properties.Resources.pedals);
+            var pedalsJson = Encoding.ASCII.GetString((gameVersion != GameVersion.RS2012) ? Properties.Resources.pedals2014 : Properties.Resources.pedals);
             return JsonConvert.DeserializeObject<IList<ToolkitPedal>>(pedalsJson);
         }
     }
