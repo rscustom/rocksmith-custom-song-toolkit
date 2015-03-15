@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -466,11 +467,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     else
                         MessageBox.Show("You are using a old version of EoF application, please update first.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
+                    // TODO: fix error checking logic for new types of conversion
                     if (currentGameVersion != version && version != GameVersion.None)
                     {
-                        MessageBox.Show(String.Format("Please choose valid Rocksmith {0} arrangement file!", currentGameVersion));
-                        XmlFilePath.Text = "";
-                        return;
+                        Debug.WriteLine(String.Format("Please choose valid Rocksmith {0} arrangement file!", currentGameVersion));
+                        //XmlFilePath.Text = "";
+                        //return;
                     }
 
                     // Setup tuning

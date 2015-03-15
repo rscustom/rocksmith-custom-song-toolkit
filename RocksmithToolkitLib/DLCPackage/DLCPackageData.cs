@@ -62,10 +62,7 @@ namespace RocksmithToolkitLib.DLCPackage
         // load RS1 CDLC into PackageCreator
         public static DLCPackageData RS1LoadFromFolder(string unpackedDir, Platform targetPlatform, bool convert)
         {
-            var sourcePlatform = unpackedDir.GetPlatform();
             var data = new DLCPackageData();
-            data.Tones = new List<Tone>();
-            data.Arrangements = new List<Arrangement>();
 
             data.GameVersion = (convert ? GameVersion.RS2014 : GameVersion.RS2012);
             data.SignatureType = PackageMagic.CON;
@@ -80,7 +77,16 @@ namespace RocksmithToolkitLib.DLCPackage
             if (toneManifestJson.Length > 1)
                 throw new DataException("More than one tone.manifest.json file found.");
 
-            List<Tone> tones = Tone.Import(toneManifestJson[0]);
+            List<Tone> tones = new List<Tone>();
+            var toneManifest = Manifest.Tone.Manifest.LoadFromFile(toneManifestJson[0]);
+
+            for (int tmIndex = 0; tmIndex < toneManifest.Entries.Count(); tmIndex++)
+            {
+                var tmData = toneManifest.Entries[tmIndex];
+                tones.Add(tmData);
+            }
+
+            data.Tones = new List<Tone>();
             data.Tones = tones;
 
             //Load song manifest data
@@ -90,26 +96,39 @@ namespace RocksmithToolkitLib.DLCPackage
             if (songsManifestJson.Length > 1)
                 throw new DataException("More than one songs.manifest.json file found.");
 
-            // get song data as best we can given it is not exact match
-            var attr = ManifestGeneric<Attributes>.LoadFromFile(songsManifestJson[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
-            data.Name = attr.SongKey;
+            List<Attributes> arr = new List<Attributes>();
+            var songsManifest = Manifest.Manifest.LoadFromFile(songsManifestJson[0]).Entries.ToArray();
+
+            for (int smIndex = 0; smIndex < songsManifest.Count(); smIndex++)
+            {
+                var smData = songsManifest[smIndex].Value.ToArray()[0].Value;
+                arr.Add(smData);
+            }
+
+            if (arr.FirstOrDefault() == null)
+                throw new DataException("songs.manifest.json file did not parse correctly.");
 
             // Fill SongInfo
             data.SongInfo = new SongInfo();
-            data.SongInfo.SongDisplayName = attr.SongName;
-            data.SongInfo.SongDisplayNameSort = attr.SongNameSort;
-            data.SongInfo.Album = attr.AlbumName;
-            data.SongInfo.SongYear = (attr.SongYear == 0 ? 2012 : attr.SongYear);
-            data.SongInfo.Artist = attr.ArtistName;
-            data.SongInfo.ArtistSort = attr.ArtistNameSort;
-            data.SongInfo.AverageTempo = 0; // will calculate later
+            data.SongInfo.SongDisplayName = arr.FirstOrDefault().SongName;
+            data.SongInfo.SongDisplayNameSort = arr.FirstOrDefault().SongNameSort;
+            data.SongInfo.Album = arr.FirstOrDefault().AlbumName;
+            data.SongInfo.SongYear = (arr.FirstOrDefault().SongYear == 0 ? 2012 : arr.FirstOrDefault().SongYear);
+            data.SongInfo.Artist = arr.FirstOrDefault().ArtistName;
+            data.SongInfo.ArtistSort = arr.FirstOrDefault().ArtistNameSort;
+            data.Name = arr.FirstOrDefault().SongKey;
 
             // Adding Xml Arrangement
             var xmlFiles = Directory.GetFiles(unpackedDir, "*_*.xml", SearchOption.AllDirectories);
             if (xmlFiles.Length <= 0)
                 throw new DataException("Can not find any XML arrangement files");
 
+            data.Arrangements = new List<Arrangement>();
+            data.TonesRS2014 = new List<Tone2014>();
+            List<Tone2014> tones2014 = new List<Tone2014>();
+
             foreach (var xmlFile in xmlFiles)
+            {
                 if (xmlFile.ToLower().Contains("_vocals"))
                 {
                     var voc = new Arrangement();
@@ -129,36 +148,51 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         Song2014 rsSong2014 = new Song2014();
                         Song rsSong = new Song();
-                        List<Tone2014> tones2014 = new List<Tone2014>();
 
                         using (var obj1 = new Rs1Converter())
                         {
                             rsSong = obj1.XmlToSong(xmlFile);
                             rsSong2014 = obj1.SongToSong2014(rsSong);
+                            bool foundToneForArrangment = false;
+                            // displayname = title
 
-                            foreach (var tone in tones)
+                            // matchup song.manifest, tone.manifest, and song.xml tone and xml
+                            foreach (var arrangement in arr)
                             {
-                                tones2014.Add(obj1.ToneToTone2014(tone));
-                                rsSong2014.ToneBase = tone.Name;
-                                rsSong2014.ToneA = tone.Name;
-
-                                //if (Path.GetFileNameWithoutExtension(xmlFile).ToUpper().Contains("COMBO1"))
-                                //    rsSong2014.Arrangement = "Rhythm";
-                                //if (Path.GetFileNameWithoutExtension(xmlFile).ToUpper().Contains("COMBO2"))
-                                //    rsSong2014.Arrangement = "Lead";
+                                if (rsSong.Part == arrangement.SongPartition)
+                                {
+                                    foreach (var tone in tones)
+                                    {
+                                        if (arrangement.EffectChainName == tone.Key)
+                                        {
+                                            // TODO: fix RS1 xml Title format in unpacker
+                                            // apply RS2 type tone naming and fix data
+                                            rsSong2014.Arrangement = arrangement.ArrangementName;
+                                            rsSong2014.Title = arrangement.DisplayName;
+                                            rsSong2014.ToneBase = tone.Key;
+                                            rsSong2014.ToneA = tone.Key;
+                                            tones2014.Add(obj1.ToneToTone2014(tone));
+                                            foundToneForArrangment = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (foundToneForArrangment) break;
                             }
-                            
-                            data.TonesRS2014 = new List<Tone2014>();
-                            data.TonesRS2014 = tones2014;
                         }
+                        
+                        data.TonesRS2014 = tones2014;
+                        data.SongInfo.AverageTempo = (int)rsSong2014.AverageTempo;
 
                         using (var obj2 = new Rs2014Converter())
                             obj2.Song2014ToXml(rsSong2014, xmlFile, true);
                     }
 
+                    // TODO: clean up
                     var attrFake = new Attributes2014 { InputEvent = "CONVERT" };
                     data.Arrangements.Add(new Arrangement(attrFake, xmlFile));
                 }
+            }
 
             //Get Album Artwork DDS Files
             var artFiles = Directory.GetFiles(unpackedDir, "*.dds", SearchOption.AllDirectories);
@@ -189,6 +223,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     break;
             }
 
+            var sourcePlatform = unpackedDir.GetPlatform();
             if (targetPlatform.IsConsole != (sourcePlatform = audioFiles[i].GetAudioPlatform()).IsConsole)
             {
                 var newFile = Path.Combine(Path.GetDirectoryName(audioFiles[i]), String.Format("{0}_cap.ogg", Path.GetFileNameWithoutExtension(audioFiles[i])));
@@ -219,6 +254,9 @@ namespace RocksmithToolkitLib.DLCPackage
             if (versionFile.Length > 0)
                 data.PackageVersion = GeneralExtensions.ReadPackageVersion(versionFile[0]);
             else data.PackageVersion = "1";
+
+            if (convert)
+                data.Tones = null;
 
             return data;
         }

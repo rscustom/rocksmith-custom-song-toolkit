@@ -135,7 +135,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             // metaheader elements 
             // TODO: get general info from RS1 song.manifest.json file
             rsSong2014.Version = "7";
-            rsSong2014.Title = FilterTitle(rsSong);
+            rsSong2014.Title = rsSong.Title; // FilterTitle(rsSong.Title);
             rsSong2014.Arrangement = rsSong.Arrangement;
             rsSong2014.Part = rsSong.Part;
             rsSong2014.Offset = rsSong.Offset;
@@ -151,7 +151,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             rsSong2014.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
 
             rsSong2014.Capo = 0;
-            // TODO: get song info from RS1 song.manifest.json file
+            // get song info from RS1 song.manifest.json file
             // force user to complete information or fills in when imported
             // rsSong2014.ArtistName = "Unknown Artist";
             // rsSong2014.AlbumName = "Unknown Album";
@@ -204,16 +204,16 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
             // these elements have direct mappings
             rsSong2014.Phrases = rsSong.Phrases;
-            // rsSong2014.LinkedDiffs = rsSong.LinkedDiffs;
+            //rsSong2014.LinkedDiffs = rsSong.LinkedDiffs;
             rsSong2014.LinkedDiffs = new SongLinkedDiff[0]; // prevents hanging
-            // rsSong2014.PhraseProperties = rsSong.PhraseProperties;
+            //rsSong2014.PhraseProperties = rsSong.PhraseProperties;
             rsSong2014.PhraseProperties = new SongPhraseProperty[0]; // prevents hanging
             rsSong2014.FretHandMuteTemplates = rsSong.FretHandMuteTemplates;
             rsSong2014.Ebeats = rsSong.Ebeats;
             rsSong2014.Sections = rsSong.Sections;
             rsSong2014.Events = rsSong.Events;
 
-            // these elements have no direct mapping
+            // these elements have no direct mapping, order is important
             rsSong2014 = ConvertTones(rsSong, rsSong2014);
             rsSong2014 = ConvertChordTemplates(rsSong, rsSong2014);
             rsSong2014 = ConvertNewLinkedDiff(rsSong, rsSong2014);
@@ -223,12 +223,12 @@ namespace RocksmithToolkitLib.Song2014ToTab
             return rsSong2014;
         }
 
-        private string FilterTitle(Song rsSong)
+        private string FilterTitle(string title)
         {
-            string title = String.Empty;
-            int index = rsSong.Title.IndexOf(" Combo");
-            title = rsSong.Title.Substring(0, index);
-            return title;
+            string filteredTitle = String.Empty;
+            int index = title.IndexOf(" Combo");
+            filteredTitle = title.Substring(0, index);
+            return filteredTitle;
         }
 
         private float AverageBPM(Song rsSong)
@@ -254,6 +254,10 @@ namespace RocksmithToolkitLib.Song2014ToTab
             var chordTemplate = new List<SongChordTemplate2014>();
             foreach (var songChordTemplate in rsSong.ChordTemplates)
             {
+                // this causes code to crash
+                // if (String.IsNullOrEmpty(songChordTemplate.ChordName))
+                //     continue;
+
                 chordTemplate.Add(new SongChordTemplate2014
                 {
                     ChordName = songChordTemplate.ChordName,
@@ -272,6 +276,11 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     Fret5 = (sbyte)songChordTemplate.Fret5
                 });
             }
+
+            // get rid of duplicate chords if any
+            // this seems to cause problems
+            // chordTemplate = chordTemplate.Distinct().ToList();
+
             rsSong2014.ChordTemplates = chordTemplate.ToArray();
             return rsSong2014;
         }
@@ -315,6 +324,10 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     var zChordId = zChord.ChordId;
                     var zChordTemplate = rsSong.ChordTemplates[zChordId];
 
+                    // this is ok no code crash
+                    //if (String.IsNullOrEmpty(zChordTemplate.ChordName))
+                    //    continue;
+
                     if (zChordTemplate.Finger0 != -1) // finger > -1 is a string played                       
                         chordNotes.Add(DecodeChordTemplate(zChord, 0, zChordTemplate.Fret0));
 
@@ -334,14 +347,16 @@ namespace RocksmithToolkitLib.Song2014ToTab
                         chordNotes.Add(DecodeChordTemplate(zChord, 5, zChordTemplate.Fret5));
 
                     if (chordNotes.Any())
+                    {
                         chords.Add(new SongChord2014 { ChordId = zChord.ChordId, ChordNotes = chordNotes.ToArray(), HighDensity = zChord.HighDensity, Ignore = zChord.Ignore, Strum = zChord.Strum, Time = zChord.Time });
-
-                    // add chordNotes to songNotes for compatibility
-                    notes.AddRange(chordNotes);
+                        // add chordNotes to songNotes for compatibility
+                        notes.AddRange(chordNotes);
+                    }
                 }
 
                 // get rid of duplicate notes if any
-                var distinctNotes = notes.Distinct().ToList();
+                // this seems to cause problems
+                // notes = notes.Distinct().ToList();
 
                 for (int shapeIndex = 0; shapeIndex < songLevel.HandShapes.Length; shapeIndex++)
                 {
@@ -349,7 +364,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     handShapes.Add(new SongHandShape { ChordId = handshape.ChordId, EndTime = handshape.EndTime, StartTime = handshape.StartTime });
                 }
 
-                levels.Add(new SongLevel2014 { Anchors = anchors.ToArray(), Chords = chords.ToArray(), Difficulty = songLevel.Difficulty, HandShapes = handShapes.ToArray(), Notes = distinctNotes.ToArray() });
+                levels.Add(new SongLevel2014 { Anchors = anchors.ToArray(), Chords = chords.ToArray(), Difficulty = songLevel.Difficulty, HandShapes = handShapes.ToArray(), Notes = notes.ToArray() });
             }
 
             rsSong2014.Levels = levels.ToArray();
@@ -362,7 +377,8 @@ namespace RocksmithToolkitLib.Song2014ToTab
             var phraseIterations = new List<SongPhraseIteration2014>();
             foreach (var songPhraseIteration in rsSong.PhraseIterations)
             {
-                phraseIterations.Add(new SongPhraseIteration2014 { PhraseId = songPhraseIteration.PhraseId, Time = songPhraseIteration.Time });
+                // HeroLevels set to null -> prevent some hangs
+                phraseIterations.Add(new SongPhraseIteration2014 { PhraseId = songPhraseIteration.PhraseId, HeroLevels = null, Time = songPhraseIteration.Time });
             }
             rsSong2014.PhraseIterations = phraseIterations.ToArray();
 
@@ -372,16 +388,24 @@ namespace RocksmithToolkitLib.Song2014ToTab
         private SongNote2014 GetNoteInfo(SongNote songNote)
         {
             SongNote2014 songNote2014 = new SongNote2014();
+
             songNote2014.Bend = (byte)songNote.Bend;
+            if (songNote.Bend > 0) 
+            {
+                var bendValues = new List<BendValue>();
+                bendValues.Add(new BendValue { Step = songNote.Bend, Time = (float)Math.Round((songNote.Sustain * .333 / songNote.Bend) + songNote.Time, 3), Unk5 = 0 });
+                songNote2014.BendValues = bendValues.ToArray();
+            }
+
             songNote2014.Fret = (sbyte)songNote.Fret;
             songNote2014.HammerOn = (byte)songNote.HammerOn;
             songNote2014.Harmonic = (byte)songNote.Harmonic;
             songNote2014.Hopo = (byte)songNote.Hopo;
             songNote2014.Ignore = (byte)songNote.Ignore;
             songNote2014.PalmMute = (byte)songNote.PalmMute;
-            songNote2014.Pluck = (sbyte)songNote.Pluck;
+            songNote2014.Pluck = (sbyte)songNote.Pluck; // -1; // EOF is non-compliant
             songNote2014.PullOff = (byte)songNote.PullOff;
-            songNote2014.Slap = (sbyte)songNote.Slap;
+            songNote2014.Slap = (sbyte)songNote.Slap; //  -1; // EOF is non-compliant
             songNote2014.SlideTo = (sbyte)songNote.SlideTo;
             songNote2014.String = (byte)songNote.String;
             songNote2014.Sustain = (float)songNote.Sustain;
@@ -484,17 +508,46 @@ namespace RocksmithToolkitLib.Song2014ToTab
             Pedal2014 rack1 = new Pedal2014();
             Pedal2014 rack2 = new Pedal2014();
             tone2014.ToneDescriptors = new List<string>();
-            tone2014.Name = rs1Tone.Name;
-            tone2014.Key = rs1Tone.Key ?? "";
+            tone2014.Name = rs1Tone.Key ?? rs1Tone.Name;
+            tone2014.Key = rs1Tone.Key ?? rs1Tone.Name;
             tone2014.Volume = rs1Tone.Volume;
             tone2014.IsCustom = true;
             tone2014.NameSeparator = " - ";
             tone2014.SortOrder = 0;
 
-            // setup tone approximation conversions based on rs1Tone.Name
-            // based on some real tone combinations found in RS2 CDLC
+            // setup some possible tone approximation conversions
+            // no direct mapping for RS1 -> RS2 Tones
+            // TODO: figure out better method / mapping
+            if (tone2014.Key.ToUpper().Contains("_OD") ||
+                tone2014.Key.ToUpper().Contains("_COMBO"))
+            {
+                tone2014.ToneDescriptors.Add("$[35716]OVERDRIVE");
+                amp.Type = "Amps";
+                amp.Category = "Amp";
+                amp.PedalKey = "Amp_MarshallJTM45";
+                cabinet.Type = "Cabinets";
+                cabinet.Category = "Dynamic_Cone";
+                cabinet.PedalKey = "Cab_Marshall1936_57_Cone";
+                rack1.Type = "Racks";
+                rack1.Category = "Filter";
+                rack1.PedalKey = "Rack_StudioEQ";
+                rack2.Type = "Racks";
+                rack2.Category = "Reverb";
+                rack2.PedalKey = "Rack_StudioVerb";
+                prepedal1.Type = "Pedals";
+                prepedal1.Category = "Distortion";
+                prepedal1.PedalKey = "Pedal_SuperDrive";
 
-            if (rs1Tone.Name.ToUpper().Contains(" LEAD"))
+                tone2014.GearList = new Gear2014()
+                {
+                    Amp = amp,
+                    Cabinet = cabinet,
+                    Rack1 = rack1,
+                    Rack2 = rack2,
+                    PrePedal1 = prepedal1
+                };
+            }
+            else if (tone2014.Key.ToUpper().Contains("_LEAD"))
             {
                 tone2014.ToneDescriptors.Add("$[35724]LEAD");
                 amp.Type = "Amps";
@@ -518,8 +571,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     PrePedal1 = prepedal1
                 };
             }
-
-            if (rs1Tone.Name.ToUpper().Contains(" DIS"))
+            else if (tone2014.Key.ToUpper().Contains("_DIS"))
             {
                 tone2014.ToneDescriptors.Add("$[35722]DISTORTION");
                 amp.Type = "Amps";
@@ -547,8 +599,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     PrePedal1 = prepedal1
                 };
             }
-
-            if (rs1Tone.Name.ToUpper().Contains(" CLEAN"))
+            else if (tone2014.Key.ToUpper().Contains("_CLEAN"))
             {
                 tone2014.ToneDescriptors.Add("$[35720]CLEAN");
                 amp.Type = "Amps";
@@ -568,8 +619,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     Rack1 = rack1
                 };
             }
-
-            if (rs1Tone.Name.ToUpper().Contains(" ACOUSTIC"))
+            else if (tone2014.Key.ToUpper().Contains("_ACOU"))
             {
                 tone2014.ToneDescriptors.Add("$[35721]ACOUSTIC");
                 amp.Type = "Amps";
@@ -597,8 +647,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     PrePedal1 = prepedal1
                 };
             }
-
-            if (rs1Tone.Name.ToUpper().Contains(" BASS"))
+            else if (tone2014.Key.ToUpper().Contains("_BASS"))
             {
                 tone2014.ToneDescriptors.Add("$[35715]BASS");
                 amp.Type = "Amps";
@@ -616,6 +665,34 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     Amp = amp,
                     Cabinet = cabinet,
                     Rack1 = rack1
+                };
+            }
+            else // acoustic is better than nothing, right.
+            {
+                tone2014.ToneDescriptors.Add("$[35721]ACOUSTIC");
+                amp.Type = "Amps";
+                amp.Category = "Amp";
+                amp.PedalKey = "Amp_TW40";
+                cabinet.Type = "Cabinets";
+                cabinet.Category = "Dynamic_Cone";
+                cabinet.PedalKey = "Cab_GB412CMKIII_57_Cone";
+                rack1.Type = "Racks";
+                rack1.Category = "Filter";
+                rack1.PedalKey = "Rack_StudioEQ";
+                rack2.Type = "Racks";
+                rack2.Category = "Dynamics";
+                rack2.PedalKey = "Rack_StudioCompressor";
+                prepedal1.Type = "Pedals";
+                prepedal1.Category = "Filter";
+                prepedal1.PedalKey = "Pedal_AcousticEmulator";
+
+                tone2014.GearList = new Gear2014()
+                {
+                    Amp = amp,
+                    Cabinet = cabinet,
+                    Rack1 = rack1,
+                    Rack2 = rack2,
+                    PrePedal1 = prepedal1
                 };
             }
 
