@@ -915,7 +915,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var BasePath = Path.GetDirectoryName(filesBaseDir);
 
             // Song INFO
-            // TODO: add routemask (lead, rhythum, bass, none
             DlcNameTB.Text = info.Name;
 
             PopulateAppIdCombo();
@@ -969,12 +968,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         case GameVersion.RS2012:
                             arrangement.ToneBase = info.Tones[0].Name;
                             break;
+
                         case GameVersion.None:
                         case GameVersion.RS2014:
                             arrangement.ToneBase = info.TonesRS2014[0].Name;
                             break;
                     }
                 }
+
                 if (arrangement.ArrangementType != ArrangementType.Vocal)
                 {
                     // Populate tuning info
@@ -1013,8 +1014,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 arrangementLB.Items.Add(arrangement);
             }
-           
-            userChanges = CurrentGameVersion == GameVersion.None ? 1 : 0;
+
+            // forces RS1 XML to be updated
+            userChanges = CurrentGameVersion == GameVersion.RS2014 ? 0 : 1;
         }
 
         private void songVolumeBox_ValueChanged(object sender, EventArgs e)
@@ -1314,7 +1316,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var songXml = Song.LoadFromFile(arr.SongXml.File);
                 arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
                 songXml.Title = info.SongInfo.SongDisplayName;
-
+                songXml.AlbumName = info.SongInfo.Album;
+                songXml.AlbumYear = info.SongInfo.SongYear.ToString();
+                songXml.ArtistName = info.SongInfo.Artist;
+                songXml.AverageTempo = info.SongInfo.AverageTempo;
+                songXml.Title = info.SongInfo.SongDisplayName;
+ 
                 using (var stream = File.OpenWrite(arr.SongXml.File))
                 {
                     songXml.Serialize(stream);

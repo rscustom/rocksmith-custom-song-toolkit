@@ -103,7 +103,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                             rs1Song = obj.XmlToSong(inputFilePath);
                         string sngFilePath;
                         using (var obj = new Rs1Converter())
-                            sngFilePath = obj.SongToSngFilePath(rs1Song, outputDir);
+                            sngFilePath = obj.SongToSngFilePath(rs1Song, Path.Combine( outputDir, Path.GetFileName(inputFilePath)));
                         using (var obj = new Sng2Tab())
                             obj.Convert(sngFilePath, outputDir, allDif);
                         if (File.Exists(sngFilePath))

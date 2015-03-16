@@ -98,6 +98,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DLCPackage\Arrangement.cs" />
     <Compile Include="DLCPackage\DLCPackageCreator.cs" />
     <Compile Include="DLCPackage\InlayNif.cs" />
     <Compile Include="DLCPackage\Manifest2014\InlayAttributes2014.cs" />
@@ -153,7 +154,6 @@
     <Compile Include="DLCPackage\AggregateGraph\SongXML.cs" />
     <Compile Include="DLCPackage\AggregateGraph\SoundBank.cs" />
     <Compile Include="DLCPackage\AggregateGraph\XBlock.cs" />
-    <Compile Include="DLCPackage\Arrangement.cs" />
     <Compile Include="DLCPackage\XBlock\Entity2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Attributes2014.cs" />
     <Compile Include="DLCPackage\Manifest2014\Header\AttributesHeader2014.cs" />

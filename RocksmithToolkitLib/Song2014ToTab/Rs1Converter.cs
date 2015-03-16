@@ -30,34 +30,27 @@ namespace RocksmithToolkitLib.Song2014ToTab
         #region Song Object to Song Xml file
 
         /// <summary>
-        /// Convert RS1 Song Object to RS1 Song Xml file
+        /// Convert RS1 Song Object to XML file
         /// </summary>
-        /// <param name="rs1Song"></param>
-        /// <param name="outputDir"></param>
+        /// <param name="rsSong"></param>
+        /// <param name="outputPath"></param>
         /// <param name="overWrite"></param>
-        /// <returns></returns>
-        public string SongToXml(Song rs1Song, string outputDir)
+        /// <returns>RS Song XML file path</returns>
+        public string SongToXml(Song rsSong, string outputPath, bool overWrite)
         {
-            // apply consistent file naming
-            var title = rs1Song.Title;
-            var arrangement = rs1Song.Arrangement;
-            int posOfLastDash = rs1Song.Title.LastIndexOf(" - ");
-            if (posOfLastDash != -1)
-            {
-                title = rs1Song.Title.Substring(0, posOfLastDash);
-                arrangement = rs1Song.Title.Substring(posOfLastDash + 3);
-            }
-
-            var outputFile = String.Format("{0}_{1}", title, arrangement);
-            outputFile = String.Format("{0}{1}", outputFile.GetValidName(false, true), "_Rs1.xml");
-            var outputPath = Path.Combine(outputDir, outputFile);
-
-            if (File.Exists(outputPath))
+            if (File.Exists(outputPath) && overWrite)
                 File.Delete(outputPath);
+            else
+            {
+                var outputDir = Path.GetDirectoryName(outputPath);
+                var outputFile = String.Format("{0}_{1}", rsSong.Title, rsSong.Arrangement);
+                outputFile = String.Format("{0}{1}", outputFile.GetValidName(false, true).ToLower(), "_rs1.xml");
+                outputPath = Path.Combine(outputDir, outputFile);
+            }
 
             using (var stream = File.OpenWrite(outputPath))
             {
-                rs1Song.Serialize(stream, false); ;
+                rsSong.Serialize(stream, false);
             }
 
             return outputPath;
@@ -83,12 +76,13 @@ namespace RocksmithToolkitLib.Song2014ToTab
         /// Converts RS1 Song Object to *.sng File
         /// </summary>
         /// <param name="rs1Song"></param>
+        /// <param name="outputPath"></param>
         /// <returns>Path to binary *.sng file</returns>
-        public string SongToSngFilePath(Song rs1Song, string outputDir)
+        public string SongToSngFilePath(Song rs1Song, string outputPath)
         {
             string rs1XmlPath;
             using (var obj = new Rs1Converter())
-                rs1XmlPath = obj.SongToXml(rs1Song, outputDir);
+                rs1XmlPath = obj.SongToXml(rs1Song, outputPath, true);
 
             ArrangementType arrangementType;
             if (rs1Song.Arrangement.ToLower() == "bass")
@@ -129,13 +123,13 @@ namespace RocksmithToolkitLib.Song2014ToTab
         /// <returns>Song2014</returns>
         public Song2014 SongToSong2014(Song rsSong)
         {
+            // Song to Song2014 Mapping
             Song2014 rsSong2014 = new Song2014();
 
-            // Song to Song2014 Mapping
-            // metaheader elements 
-            // TODO: get general info from RS1 song.manifest.json file
+            // song info parsed and loaded later from 
+            // RS1 song.manifest.json file by RS1LoadFromFolder
             rsSong2014.Version = "7";
-            rsSong2014.Title = rsSong.Title; // FilterTitle(rsSong.Title);
+            rsSong2014.Title = rsSong.Title;
             rsSong2014.Arrangement = rsSong.Arrangement;
             rsSong2014.Part = rsSong.Part;
             rsSong2014.Offset = rsSong.Offset;
@@ -147,15 +141,12 @@ namespace RocksmithToolkitLib.Song2014ToTab
             // already contain AverageTempo otherwise it gets calculated 
             rsSong2014.AverageTempo = rsSong.AverageTempo == 0 ? AverageBPM(rsSong) : rsSong.AverageTempo;
 
-            // TODO: get tuning from RS1 tone.manifest.json file
-            rsSong2014.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-
+            // tuning parsed from RS1 song.manifest.json file by RS1LoadFromFolder
+            rsSong2014.Tuning = rsSong.Tuning == null ? new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 } : rsSong.Tuning;
             rsSong2014.Capo = 0;
-            // get song info from RS1 song.manifest.json file
-            // force user to complete information or fills in when imported
-            // rsSong2014.ArtistName = "Unknown Artist";
-            // rsSong2014.AlbumName = "Unknown Album";
-            rsSong2014.AlbumYear = DateTime.Now.ToString("yyyy");
+            rsSong2014.ArtistName = rsSong.ArtistName;
+            rsSong2014.AlbumName = rsSong.AlbumName;
+            rsSong2014.AlbumYear = rsSong.AlbumYear;
             rsSong2014.CrowdSpeed = "1";
 
             // default arrangment properties
@@ -189,7 +180,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 BassPick = 0,
                 Sustain = 0,
                 BonusArr = 0,
-                RouteMask = 1,
+                RouteMask = rsSong2014.Arrangement == "Lead" ? 1 : (rsSong2014.Arrangement == "Rhythm" ? 2 : 4),
                 PathLead = rsSong2014.Arrangement == "Lead" ? 1 : 0,
                 PathRhythm = rsSong2014.Arrangement == "Rhythm" ? 1 : 0,
                 PathBass = rsSong2014.Arrangement == "Bass" ? 1 : 0
@@ -223,15 +214,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             return rsSong2014;
         }
 
-        private string FilterTitle(string title)
-        {
-            string filteredTitle = String.Empty;
-            int index = title.IndexOf(" Combo");
-            filteredTitle = title.Substring(0, index);
-            return filteredTitle;
-        }
-
-        private float AverageBPM(Song rsSong)
+        public float AverageBPM(Song rsSong)
         {
             // a rough approximation of BPM based on ebeats and time
             float beats = rsSong.Ebeats.Length;
@@ -390,7 +373,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             SongNote2014 songNote2014 = new SongNote2014();
 
             songNote2014.Bend = (byte)songNote.Bend;
-            if (songNote.Bend > 0) 
+            if (songNote.Bend > 0)
             {
                 var bendValues = new List<BendValue>();
                 bendValues.Add(new BendValue { Step = songNote.Bend, Time = (float)Math.Round((songNote.Sustain * .333 / songNote.Bend) + songNote.Time, 3), Unk5 = 0 });
@@ -508,7 +491,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             Pedal2014 rack1 = new Pedal2014();
             Pedal2014 rack2 = new Pedal2014();
             tone2014.ToneDescriptors = new List<string>();
-            tone2014.Name = rs1Tone.Key ?? rs1Tone.Name;
+            tone2014.Name = rs1Tone.Name ?? rs1Tone.Key;
             tone2014.Key = rs1Tone.Key ?? rs1Tone.Name;
             tone2014.Volume = rs1Tone.Volume;
             tone2014.IsCustom = true;
@@ -517,7 +500,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
             // setup some possible tone approximation conversions
             // no direct mapping for RS1 -> RS2 Tones
-            // TODO: figure out better method / mapping
+            // TODO: figure out better method for tone mapping
             if (tone2014.Key.ToUpper().Contains("_OD") ||
                 tone2014.Key.ToUpper().Contains("_COMBO"))
             {
