@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,10 +8,8 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Serialization;
 
 using Ookii.Dialogs;
-using RocksmithToolkitLib.Song2014ToTab;
 using X360.STFS;
 
 using RocksmithToolkitLib;
@@ -21,7 +18,6 @@ using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.ToolkitTone;
 using RocksmithToolkitLib.Xml;
 using Control = System.Windows.Forms.Control;
 
@@ -346,7 +342,23 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             using (var ofd = new SaveFileDialog())
             {
-                ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion.Replace(".", "_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                var versionPrefix = String.Empty;
+                switch (CurrentGameVersion)
+                {
+                    case GameVersion.RS2012:
+                        versionPrefix = "r"; // RS2012 CDLC
+                        break;
+                    case GameVersion.None:
+                        versionPrefix = "c"; // Converted RS1 CDLC
+                        break;
+                    default:
+                        versionPrefix = "v"; // RS2014 CDLC
+                        break;
+                }
+
+                var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
+         
+                ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                 ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
@@ -1149,7 +1161,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (CurrentGameVersion != GameVersion.RS2012)
             {
-                ExternalApps.VerifyExternalApps(); // for testing
+                // ExternalApps.VerifyExternalApps(); // for testing
                 var audioPathNoExt = Path.Combine(Path.GetDirectoryName(AudioPath), Path.GetFileNameWithoutExtension(AudioPath));
                 var oggPath = String.Format(audioPathNoExt + ".ogg");
                 var wavPath = String.Format(audioPathNoExt + ".wav");
@@ -1321,7 +1333,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.ArtistName = info.SongInfo.Artist;
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
                 songXml.Title = info.SongInfo.SongDisplayName;
- 
+
                 using (var stream = File.OpenWrite(arr.SongXml.File))
                 {
                     songXml.Serialize(stream);

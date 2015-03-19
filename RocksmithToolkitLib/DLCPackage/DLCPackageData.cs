@@ -121,14 +121,14 @@ namespace RocksmithToolkitLib.DLCPackage
             data.Name = attr.FirstOrDefault().SongKey;
 
             // Adding Xml Arrangement
-            var xmlFiles = Directory.GetFiles(unpackedDir, "*_*.xml", SearchOption.AllDirectories);
+            var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
             if (xmlFiles.Length <= 0)
                 throw new DataException("Can not find any XML arrangement files");
 
             List<Tone2014> tones2014 = new List<Tone2014>();
             foreach (var xmlFile in xmlFiles)
             {
-                if (xmlFile.ToLower().Contains("_vocals"))
+                if (xmlFile.ToLower().Contains("vocals"))
                 {
                     var voc = new Arrangement();
                     voc.Name = ArrangementName.Vocals;
@@ -145,6 +145,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     Attributes2014 attr2014 = new Attributes2014();
                     Song rsSong = new Song();
+                    bool foundToneForArrangement = false;
 
                     using (var obj1 = new Rs1Converter())
                     {
@@ -153,7 +154,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
 
                     // matchup songs.manifest, tone.manifest, and Song xml
-                    bool foundToneForArrangment = false;
                     foreach (var arrangement in attr) // songs.manifest
                     {
                         if (rsSong.Part == arrangement.SongPartition)
@@ -167,8 +167,10 @@ namespace RocksmithToolkitLib.DLCPackage
                                             tones2014.Add(obj1.ToneToTone2014(tone));
 
                                     // load attr2014 with RS1 mapped values for use by Arrangement()
-                                    attr2014.Tone_Base = tone.Name; // tone.Key;
-                                    attr2014.Tone_A = tone.Name; // tone.Key;
+                                    // mod for ToneDescriptor which uses tone.key
+                                    tone.Name = tone.Key ?? tone.Name;
+                                    attr2014.Tone_Base = tone.Name;
+                                    attr2014.Tone_A = tone.Name;
                                     attr2014.ArrangementName = arrangement.ArrangementName;
                                     attr2014.CentOffset = 0;
                                     attr2014.DynamicVisualDensity = new List<float>() { 2 };
@@ -183,44 +185,62 @@ namespace RocksmithToolkitLib.DLCPackage
                                         attr2014.ArrangementType = 0;
                                         attr2014.ArrangementProperties.RouteMask = 1;
                                     }
-
-                                    if (arrangement.ArrangementName.ToLower().Contains("rhythm"))
+                                    else if (arrangement.ArrangementName.ToLower().Contains("rhythm"))
                                     {
                                         attr2014.ArrangementType = 1;
                                         attr2014.ArrangementProperties.RouteMask = 2;
                                     }
-
-                                    if (arrangement.ArrangementName.ToLower().Contains("combo"))
+                                    else if (arrangement.ArrangementName.ToLower().Contains("combo"))
                                     {
                                         attr2014.ArrangementType = 2;
                                         attr2014.ArrangementProperties.RouteMask = arrangement.EffectChainName.ToLower().Contains("lead") ? 1 : 2;
                                     }
-
-                                    if (arrangement.ArrangementName.ToLower().Contains("bass"))
+                                    else if (arrangement.ArrangementName.ToLower().Contains("bass"))
                                     {
                                         attr2014.ArrangementType = 3;
                                         attr2014.ArrangementProperties.RouteMask = 4;
                                     }
+                                    else
+                                    {
+                                        // some RS1 CDLC do not have a valid ArrangementName
+                                        if (rsSong.Arrangement.ToLower().Contains("guitar"))
+                                        {
+                                            attr2014.ArrangementName = "Lead";
+                                            attr2014.ArrangementType = 0;
+                                            attr2014.ArrangementProperties.RouteMask = 1;
+                                        }
+                                        else if (rsSong.Arrangement.ToLower().Contains("bass"))
+                                        {
+                                            attr2014.ArrangementName = "Bass";
+                                            attr2014.ArrangementType = 3;
+                                            attr2014.ArrangementProperties.RouteMask = 4;
+                                        }
+                                        else // default to rhythm
+                                        {
+                                            attr2014.ArrangementName = "Rhythm";
+                                            attr2014.ArrangementType = 1;
+                                            attr2014.ArrangementProperties.RouteMask = 2;
+                                        }
+                                    }
 
                                     if (arrangement.Tuning == "E Standard")
                                         rsSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-
-                                    if (arrangement.Tuning == "DropD")
+                                    else if (arrangement.Tuning == "DropD")
                                         rsSong.Tuning = new TuningStrings { String0 = -2, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-
-                                    if (arrangement.Tuning == "OpenG")
+                                    else if (arrangement.Tuning == "OpenG")
                                         rsSong.Tuning = new TuningStrings { String0 = -2, String1 = -2, String2 = 0, String3 = 0, String4 = 0, String5 = -2 };
-
-                                    if (arrangement.Tuning == "EFlat")
+                                    else if (arrangement.Tuning == "EFlat")
                                         rsSong.Tuning = new TuningStrings { String0 = -1, String1 = -1, String2 = -1, String3 = -1, String4 = -1, String5 = -1 };
+                                    else // default to standard tuning
+                                        rsSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
 
-                                    foundToneForArrangment = true;
+                                    foundToneForArrangement = true;
                                     break;
                                 }
                             }
                         }
 
-                        if (foundToneForArrangment) break;
+                        if (foundToneForArrangement) break;
                     }
 
                     // write the tones to file

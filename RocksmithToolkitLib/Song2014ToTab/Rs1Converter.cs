@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
@@ -8,7 +7,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.Xml;
-using SongLevel = RocksmithToolkitLib.Xml.SongLevel;
+
 
 namespace RocksmithToolkitLib.Song2014ToTab
 {
@@ -237,9 +236,9 @@ namespace RocksmithToolkitLib.Song2014ToTab
             var chordTemplate = new List<SongChordTemplate2014>();
             foreach (var songChordTemplate in rsSong.ChordTemplates)
             {
-                // this causes code to crash
+                // this could cause hangs
                 // if (String.IsNullOrEmpty(songChordTemplate.ChordName))
-                //     continue;
+                //    continue;                
 
                 chordTemplate.Add(new SongChordTemplate2014
                 {
@@ -491,8 +490,9 @@ namespace RocksmithToolkitLib.Song2014ToTab
             Pedal2014 rack1 = new Pedal2014();
             Pedal2014 rack2 = new Pedal2014();
             tone2014.ToneDescriptors = new List<string>();
-            tone2014.Name = rs1Tone.Name ?? rs1Tone.Key;
-            tone2014.Key = rs1Tone.Key ?? rs1Tone.Name;
+            // use Tone Key for better conversion
+            tone2014.Name = rs1Tone.Key ?? rs1Tone.Name;
+            tone2014.Key = rs1Tone.Key ?? "Default";
             tone2014.Volume = rs1Tone.Volume;
             tone2014.IsCustom = true;
             tone2014.NameSeparator = " - ";

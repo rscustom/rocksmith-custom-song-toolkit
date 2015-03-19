@@ -243,6 +243,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             for (int i = 0; i < sng.Chords.Count; i++) {
                 var chord = xml.ChordTemplates[i];
                 var c = new Chord();
+                // TODO: skip if DisplayName == null
                 if (chord.DisplayName.EndsWith("arp"))
                     c.Mask |= CHORD_MASK_ARPEGGIO;
                 else if (chord.DisplayName.EndsWith("nop"))

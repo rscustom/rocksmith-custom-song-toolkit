@@ -7,7 +7,7 @@ using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
 
-namespace PackageCreator
+namespace packagecreator
 {
     // TODO: include functionality for RS2012
     internal class Arguments
@@ -127,7 +127,7 @@ namespace PackageCreator
                     }
                     catch (Exception ex)
                     {
-                        ShowHelpfulError("Fatal Error: " + ex.Message);
+                        ShowHelpfulError( ex.Message + "  Check that RootFolder structure has SubFolder(s).");
                         return 1; // failure
                     }
                 }

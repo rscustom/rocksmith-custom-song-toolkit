@@ -515,7 +515,9 @@ namespace RocksmithToolkitLib.Xml
             for (int i = 0; i < cteamplateList.Count; i++)
             {
                 var sct2014 = new SongChordTemplate2014();
-                sct2014.ChordName = sct2014.DisplayName = cteamplateList[i].ChordName;
+                sct2014.ChordName =  cteamplateList[i].ChordName;
+                // split getting funky RS1 -> RS2 results when combined
+                sct2014.DisplayName = cteamplateList[i].ChordName;
                 sct2014.Finger0 = (sbyte)cteamplateList[i].Fingers[0];
                 sct2014.Finger1 = (sbyte)cteamplateList[i].Fingers[1];
                 sct2014.Finger2 = (sbyte)cteamplateList[i].Fingers[2];

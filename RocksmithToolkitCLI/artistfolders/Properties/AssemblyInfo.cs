@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Artist Folder Creator")]
-[assembly: AssemblyDescription("RocksmithToolkit CDLC Artist Folder Creator command line")]
+[assembly: AssemblyTitle("Rocksmith Toolkit Artist Folder Creator")]
+[assembly: AssemblyDescription("Creates CDLC Artist Folders")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rocksmith Custom Song Tookit CLI")]
-[assembly: AssemblyProduct("ArtistFolderCreator")]
+[assembly: AssemblyProduct("artistfolders")]
 [assembly: AssemblyCopyright("Copyright ©  2015 CST Developer Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
