@@ -70,13 +70,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public Arrangement(Attributes2014 attr, string xmlSongFile)
         {
-                var song = Song2014.LoadFromFile(xmlSongFile);
+            var song = Song2014.LoadFromFile(xmlSongFile);
 
-                this.SongFile = new SongFile();
-                this.SongFile.File = "";
+            this.SongFile = new SongFile();
+            this.SongFile.File = "";
 
-                this.SongXml = new SongXML();
-                this.SongXml.File = xmlSongFile;
+            this.SongXml = new SongXML();
+            this.SongXml.File = xmlSongFile;
 
             TuningDefinition tuning = null;
             switch ((ArrangementName)attr.ArrangementType)
@@ -120,7 +120,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.Metronome = (Metronome)attr.ArrangementProperties.Metronome;
             this.ToneBase = attr.Tone_Base;
             this.ToneMultiplayer = attr.Tone_Multiplayer;
-            this.ToneA = attr.Tone_A;
+            this.ToneA = attr.Tone_A; // String.IsNullOrEmpty(attr.Tone_A) ? attr.Tone_Base : attr.Tone_A;
             this.ToneB = attr.Tone_B;
             this.ToneC = attr.Tone_C;
             this.ToneD = attr.Tone_D;
@@ -134,6 +134,8 @@ namespace RocksmithToolkitLib.DLCPackage
             var toneDesc = String.Empty;
             if (!String.IsNullOrEmpty(ToneBase))
                 toneDesc = ToneBase;
+            //if (!String.IsNullOrEmpty(ToneA))
+            //    toneDesc += String.Format(", {0}", ToneA);
             if (!String.IsNullOrEmpty(ToneB))
                 toneDesc += String.Format(", {0}", ToneB);
             if (!String.IsNullOrEmpty(ToneC))

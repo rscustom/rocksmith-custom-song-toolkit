@@ -12,7 +12,8 @@ using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest
 {
-    public class Attributes2014 : AttributesHeader2014, IAttributes {
+    public class Attributes2014 : AttributesHeader2014, IAttributes
+    {
         public SongArrangementProperties2014 ArrangementProperties { get; set; }
         public int ArrangementSort { get; set; }
         public int? ArrangementType { get; set; }
@@ -53,7 +54,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public float SongVolume { get; set; } //Customs only (to easy platform conversion) its float!
         public float? PreviewVolume { get; set; } //Customs only like above
 
-        public Attributes2014() {}
+        public Attributes2014() { }
 
         public Attributes2014(string arrangementFileName, Arrangement arrangement, DLCPackageData info, Platform platform)
             : base(arrangementFileName, arrangement, info, platform)
@@ -148,15 +149,15 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 //SongPartition  -- Generated in DLCPackageCreator after this constructor
 
                 //Techniques TODO: improove me
-                try {
+                try
+                {
                     manifestFunctions.GenerateTechniques(this, SongContent);
                 }
-                catch {}
+                catch { }
 
                 //Fix for Dead tones
                 var it = info.TonesRS2014;
                 Tones = new List<Tone2014>();
-
                 Tone_A = GetToneName(arrangement.ToneA, it);
                 Tone_B = GetToneName(arrangement.ToneB, it);
                 Tone_Base = GetToneName(arrangement.ToneBase, it);
@@ -178,9 +179,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             string ToneName = "";
             const string Default = "Default";
 
-            if(!String.IsNullOrEmpty(arrTone))
+            if (!String.IsNullOrEmpty(arrTone))
             {
-                var matchedTone = it.SingleOrDefault(t => t.Name == arrTone);
+                // recognize that ToneBase name alpha case mismatches do exist and process it     
+                var matchedTone = it.SingleOrDefault(t => t.Name.ToLower() == arrTone.ToLower());
                 if (ReferenceEquals(matchedTone, null))
                     return ToneName;
 

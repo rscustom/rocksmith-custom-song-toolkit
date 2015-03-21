@@ -37,7 +37,8 @@ namespace RocksmithToolkitLib {
                                                        NoteNames[3], NoteNames[4], NoteNames[5]);
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             //return (Custom) ? String.Format("{0} (custom)", UIName) : UIName;
             return UIName;
         }

@@ -78,20 +78,21 @@
             // 
             // toneControl1
             // 
-            this.toneControl1.Location = new System.Drawing.Point(10, 11);
+            this.toneControl1.Location = new System.Drawing.Point(13, 12);
+            this.toneControl1.MinimumSize = new System.Drawing.Size(513, 301);
             this.toneControl1.Name = "toneControl1";
-            this.toneControl1.Size = new System.Drawing.Size(513, 300);
-            this.toneControl1.TabIndex = 0;
+            this.toneControl1.Size = new System.Drawing.Size(513, 301);
+            this.toneControl1.TabIndex = 4;
             this.toneControl1.Tone = null;
             // 
             // ToneForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(543, 369);
+            this.Controls.Add(this.toneControl1);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.loadButton);
             this.Controls.Add(this.okButton);
-            this.Controls.Add(this.toneControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;

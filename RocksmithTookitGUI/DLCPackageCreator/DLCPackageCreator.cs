@@ -29,7 +29,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private BackgroundWorker bwGenerate = new BackgroundWorker();
         private StringBuilder errorsFound;
         private string dlcSavePath;
-        private int userChanges;
+        private int userChangesToInputControls;
 
         #region Properties
 
@@ -357,7 +357,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
-         
+
                 ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                 ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
@@ -371,7 +371,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (arr.Metronome == Metronome.Generate)
                     mArr.Add(GenMetronomeArr(arr));
 
-                if (userChanges > 0 && arr.ArrangementType != ArrangementType.Vocal)
+                if (userChangesToInputControls > 0 && arr.ArrangementType != ArrangementType.Vocal)
                     UpdateXml(arr, packageData);
             }
 
@@ -1028,7 +1028,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // forces RS1 XML to be updated
-            userChanges = CurrentGameVersion == GameVersion.RS2014 ? 0 : 1;
+            userChangesToInputControls = CurrentGameVersion == GameVersion.RS2014 ? 0 : 1;
         }
 
         private void songVolumeBox_ValueChanged(object sender, EventArgs e)
@@ -1311,6 +1311,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.ArtistNameSort = info.SongInfo.ArtistSort;
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
                 songXml.Title = info.SongInfo.SongDisplayName;
+                songXml.Tuning = arr.TuningStrings; 
                 songXml.ToneBase = arr.ToneBase;
                 songXml.ToneA = arr.ToneA;
                 songXml.ToneB = arr.ToneB;
@@ -1333,6 +1334,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.ArtistName = info.SongInfo.Artist;
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
                 songXml.Title = info.SongInfo.SongDisplayName;
+                songXml.Tuning = arr.TuningStrings; 
 
                 using (var stream = File.OpenWrite(arr.SongXml.File))
                 {
@@ -1503,7 +1505,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (tonesLB.SelectedItem != null)
             {
                 dynamic tone = tonesLB.SelectedItem;
-                var toneName = tone.Name;
+                string toneName = tone.Name;
+
                 using (var form = new ToneForm())
                 {
                     var currentGameVersion = CurrentGameVersion != GameVersion.RS2012 ? GameVersion.RS2014 : GameVersion.RS2012;
@@ -1514,34 +1517,37 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     form.ShowDialog();
 
                     if (form.Saved)
-                        tonesLB.Items[tonesLB.SelectedIndex] = form.toneControl1.Tone;
+                    {
+                        tone = form.toneControl1.Tone;
+                        tonesLB.Items[tonesLB.SelectedIndex] = tone;
+                    }
                 }
+
                 if (toneName != tone.Name)
                 {
                     // Update tone slots if name are changed
                     for (int i = 0; i < arrangementLB.Items.Count; i++)
                     {
                         var arrangement = (Arrangement)arrangementLB.Items[i];
-                        var toneSlotsAffected = false;
+                        if (arrangement.ArrangementType == ArrangementType.Vocal)
+                            continue;
 
-                        if (toneName.Equals(arrangement.ToneBase))
-                        {
+                        // recognize that ToneBase alpha case mismatches do exist and process it     
+                        if (toneName.ToLower() == arrangement.ToneBase.ToLower())
+                        {                            
                             arrangement.ToneBase = tone.Name;
-                            if (CurrentGameVersion != GameVersion.RS2012)
-                                arrangement.ToneA = tone.Name;
+                            arrangement.ToneA = tone.Name;
                         }
-                        if (CurrentGameVersion != GameVersion.RS2012)
-                        {
-                            if (toneName.Equals(arrangement.ToneB))
-                                arrangement.ToneB = tone.Name;
-                            if (toneName.Equals(arrangement.ToneC))
-                                arrangement.ToneC = tone.Name;
-                            if (toneName.Equals(arrangement.ToneD))
-                                arrangement.ToneD = tone.Name;
-                        }
+                        if (toneName.ToLower() == arrangement.ToneB.ToLower())
+                            arrangement.ToneB = tone.Name;
+                        if (toneName.ToLower() == arrangement.ToneC.ToLower())
+                            arrangement.ToneC = tone.Name;
+                        if (toneName.ToLower() == arrangement.ToneD.ToLower())
+                            arrangement.ToneD = tone.Name;
 
-                        if (toneSlotsAffected)
-                            arrangementLB.Items[i] = arrangement;
+                        // force update to tone in arragement
+                        arrangementLB.Items[i] = arrangement;
+
                     }
                 }
             }
@@ -1886,7 +1892,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void InputControls_OnChange(object sender, EventArgs e)
         {
-            userChanges++;
+            userChangesToInputControls++;
         }
 
 

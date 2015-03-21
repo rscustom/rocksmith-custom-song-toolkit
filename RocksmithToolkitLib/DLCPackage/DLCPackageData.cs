@@ -4,6 +4,8 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
@@ -59,7 +61,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public List<Tone> Tones { get; set; }
 
-        // load RS1 CDLC into PackageCreator
+        // Load RS1 CDLC into PackageCreator
         public static DLCPackageData RS1LoadFromFolder(string unpackedDir, Platform targetPlatform, bool convert)
         {
             var data = new DLCPackageData();
@@ -69,29 +71,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
             data.GameVersion = (convert ? GameVersion.RS2014 : GameVersion.RS2012);
             data.SignatureType = PackageMagic.CON;
-            // set general default volumes
+            // set default volumes
             data.Volume = (float)-5.5; // - 7 default a little too quite
             data.PreviewVolume = data.Volume;
 
-            //Load tone manifest data
-            var toneManifestJson = Directory.GetFiles(unpackedDir, "tone.manifest.json", SearchOption.AllDirectories);
-            if (toneManifestJson.Length < 1)
-                throw new DataException("No tone.manifest.json file found.");
-            if (toneManifestJson.Length > 1)
-                throw new DataException("More than one tone.manifest.json file found.");
-
-            List<Tone> tones = new List<Tone>();
-            var toneManifest = Manifest.Tone.Manifest.LoadFromFile(toneManifestJson[0]);
-
-            for (int tmIndex = 0; tmIndex < toneManifest.Entries.Count(); tmIndex++)
-            {
-                var tmData = toneManifest.Entries[tmIndex];
-                tones.Add(tmData);
-            }
-
-            data.Tones = tones;
-
-            //Load song manifest data
+            //Load song manifest
             var songsManifestJson = Directory.GetFiles(unpackedDir, "songs.manifest.json", SearchOption.AllDirectories);
             if (songsManifestJson.Length < 1)
                 throw new DataException("No songs.manifest.json file found.");
@@ -120,7 +104,43 @@ namespace RocksmithToolkitLib.DLCPackage
             data.SongInfo.ArtistSort = attr.FirstOrDefault().ArtistNameSort;
             data.Name = attr.FirstOrDefault().SongKey;
 
-            // Adding Xml Arrangement
+            //Load tone manifest
+            var toneManifestJson = Directory.GetFiles(unpackedDir, "tone.manifest.json", SearchOption.AllDirectories);
+            if (toneManifestJson.Length < 1)
+                throw new DataException("No tone.manifest.json file found.");
+
+            // toolkit produces multiple tone.manifest.json files when packing RS1 CDLC files
+            // rather than change toolkit behavior just merge manifest files for now
+            if (toneManifestJson.Length > 1)
+            {
+                var mergeSettings = new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Union };
+                JObject toneObject1 = new JObject();
+
+                foreach (var tone in toneManifestJson)
+                {
+                    JObject toneObject2 = JObject.Parse(File.ReadAllText(tone));
+                    //(toneObject1.SelectToken("Entries") as JArray).Merge(toneObject2.SelectToken("Entries"));
+                    toneObject1.Merge(toneObject2, mergeSettings);
+                }
+
+                toneManifestJson = new string[1];
+                toneManifestJson[0] = Path.Combine(unpackedDir, "merged.tone.manifest");
+                string json = JsonConvert.SerializeObject(toneObject1, Formatting.Indented);
+                File.WriteAllText(toneManifestJson[0], json);
+            }
+
+            List<Tone> tones = new List<Tone>();
+            var toneManifest = Manifest.Tone.Manifest.LoadFromFile(toneManifestJson[0]);
+
+            for (int tmIndex = 0; tmIndex < toneManifest.Entries.Count(); tmIndex++)
+            {
+                var tmData = toneManifest.Entries[tmIndex];
+                tones.Add(tmData);
+            }
+
+            data.Tones = tones;
+
+            // Load xml arrangements
             var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
             if (xmlFiles.Length <= 0)
                 throw new DataException("Can not find any XML arrangement files");
@@ -167,10 +187,10 @@ namespace RocksmithToolkitLib.DLCPackage
                                             tones2014.Add(obj1.ToneToTone2014(tone));
 
                                     // load attr2014 with RS1 mapped values for use by Arrangement()
-                                    // mod for ToneDescriptor which uses tone.key
+                                    // ToneDescriptor will use tone.key for consistent naming
                                     tone.Name = tone.Key ?? tone.Name;
                                     attr2014.Tone_Base = tone.Name;
-                                    attr2014.Tone_A = tone.Name;
+                                    // attr2014.Tone_A = tone.Name;
                                     attr2014.ArrangementName = arrangement.ArrangementName;
                                     attr2014.CentOffset = 0;
                                     attr2014.DynamicVisualDensity = new List<float>() { 2 };
@@ -393,7 +413,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     // Adding Tones
                     foreach (var jsonTone in attr.Tones)
                     {
-
                         if (jsonTone == null) continue;
                         var key = jsonTone.Key;
                         if (data.TonesRS2014.All(t => t.Key != key))

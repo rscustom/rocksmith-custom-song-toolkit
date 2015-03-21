@@ -770,10 +770,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         var tone = info.Tones[i];
                         var tonePsarcStream = new MemoryStream();
+                        // TODO: generate single tone.manifest.json file that has multiple tones
+                        // currently generating multiple tone.manifest.json files
                         toneStreams.Add(tonePsarcStream);
-
                         var toneKey = info.Name + "_" + tone.Name == null ? "Default" : tone.Name.Replace(' ', '_');
-
                         GenerateTonePsarc(tonePsarcStream, toneKey, tone);
                         string toneEntry = String.Format("DLC_Tone_{0}.psarc", toneKey);
                         packPsarc.AddEntry(toneEntry, tonePsarcStream);

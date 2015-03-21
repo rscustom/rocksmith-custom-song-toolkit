@@ -44,6 +44,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tuningComboBox = new System.Windows.Forms.ComboBox();
             this.gbTone = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.toneACombo = new System.Windows.Forms.ComboBox();
             this.disableTonesCheckbox = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.toneDCombo = new System.Windows.Forms.ComboBox();
@@ -100,7 +102,7 @@
             // 
             this.addArrangementButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.addArrangementButton.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.addArrangementButton.Location = new System.Drawing.Point(291, 425);
+            this.addArrangementButton.Location = new System.Drawing.Point(291, 440);
             this.addArrangementButton.Name = "addArrangementButton";
             this.addArrangementButton.Size = new System.Drawing.Size(72, 29);
             this.addArrangementButton.TabIndex = 22;
@@ -133,7 +135,7 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.cancelButton.Location = new System.Drawing.Point(369, 425);
+            this.cancelButton.Location = new System.Drawing.Point(369, 440);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(72, 29);
             this.cancelButton.TabIndex = 23;
@@ -146,10 +148,10 @@
             this.toneBaseCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toneBaseCombo.ForeColor = System.Drawing.SystemColors.ControlText;
             this.toneBaseCombo.FormattingEnabled = true;
-            this.toneBaseCombo.Location = new System.Drawing.Point(72, 19);
+            this.toneBaseCombo.Location = new System.Drawing.Point(54, 20);
             this.toneBaseCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneBaseCombo.Name = "toneBaseCombo";
-            this.toneBaseCombo.Size = new System.Drawing.Size(134, 21);
+            this.toneBaseCombo.Size = new System.Drawing.Size(152, 21);
             this.toneBaseCombo.TabIndex = 15;
             // 
             // scrollSpeedTrackBar
@@ -255,6 +257,8 @@
             // 
             // gbTone
             // 
+            this.gbTone.Controls.Add(this.label8);
+            this.gbTone.Controls.Add(this.toneACombo);
             this.gbTone.Controls.Add(this.disableTonesCheckbox);
             this.gbTone.Controls.Add(this.label10);
             this.gbTone.Controls.Add(this.toneDCombo);
@@ -267,20 +271,45 @@
             this.gbTone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbTone.Location = new System.Drawing.Point(6, 267);
             this.gbTone.Name = "gbTone";
-            this.gbTone.Size = new System.Drawing.Size(435, 96);
+            this.gbTone.Padding = new System.Windows.Forms.Padding(0);
+            this.gbTone.Size = new System.Drawing.Size(435, 113);
             this.gbTone.TabIndex = 42;
             this.gbTone.TabStop = false;
             this.gbTone.Text = "Tone Selector";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label8.Location = new System.Drawing.Point(7, 48);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(45, 13);
+            this.label8.TabIndex = 57;
+            this.label8.Text = "Tone A:";
+            // 
+            // toneACombo
+            // 
+            this.toneACombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toneACombo.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.toneACombo.FormattingEnabled = true;
+            this.toneACombo.Location = new System.Drawing.Point(54, 45);
+            this.toneACombo.Margin = new System.Windows.Forms.Padding(2);
+            this.toneACombo.Name = "toneACombo";
+            this.toneACombo.Size = new System.Drawing.Size(152, 21);
+            this.toneACombo.TabIndex = 56;
+            // 
             // disableTonesCheckbox
             // 
-            this.disableTonesCheckbox.AutoSize = true;
             this.disableTonesCheckbox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.disableTonesCheckbox.Location = new System.Drawing.Point(72, 73);
+            this.disableTonesCheckbox.Location = new System.Drawing.Point(10, 71);
             this.disableTonesCheckbox.Name = "disableTonesCheckbox";
-            this.disableTonesCheckbox.Size = new System.Drawing.Size(266, 17);
+            this.disableTonesCheckbox.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.disableTonesCheckbox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.disableTonesCheckbox.Size = new System.Drawing.Size(196, 39);
             this.disableTonesCheckbox.TabIndex = 19;
-            this.disableTonesCheckbox.Text = "Disable tone slot changes to prevent auto-tone fail.";
+            this.disableTonesCheckbox.Text = "If checked, tone slots are disabled to prevent auto-tone failure.";
+            this.disableTonesCheckbox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.disableTonesCheckbox.UseVisualStyleBackColor = true;
             this.disableTonesCheckbox.CheckedChanged += new System.EventHandler(this.disableTonesCheckbox_CheckedChanged);
             // 
@@ -288,7 +317,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label10.Location = new System.Drawing.Point(217, 50);
+            this.label10.Location = new System.Drawing.Point(221, 72);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(46, 13);
@@ -300,17 +329,17 @@
             this.toneDCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toneDCombo.ForeColor = System.Drawing.SystemColors.ControlText;
             this.toneDCombo.FormattingEnabled = true;
-            this.toneDCombo.Location = new System.Drawing.Point(291, 47);
+            this.toneDCombo.Location = new System.Drawing.Point(270, 69);
             this.toneDCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneDCombo.Name = "toneDCombo";
-            this.toneDCombo.Size = new System.Drawing.Size(134, 21);
+            this.toneDCombo.Size = new System.Drawing.Size(152, 21);
             this.toneDCombo.TabIndex = 18;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label11.Location = new System.Drawing.Point(217, 25);
+            this.label11.Location = new System.Drawing.Point(221, 47);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(45, 13);
@@ -322,10 +351,10 @@
             this.toneCCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toneCCombo.ForeColor = System.Drawing.SystemColors.ControlText;
             this.toneCCombo.FormattingEnabled = true;
-            this.toneCCombo.Location = new System.Drawing.Point(291, 22);
+            this.toneCCombo.Location = new System.Drawing.Point(270, 44);
             this.toneCCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneCCombo.Name = "toneCCombo";
-            this.toneCCombo.Size = new System.Drawing.Size(134, 21);
+            this.toneCCombo.Size = new System.Drawing.Size(152, 21);
             this.toneCCombo.TabIndex = 17;
             this.toneCCombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
@@ -333,7 +362,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label9.Location = new System.Drawing.Point(6, 50);
+            this.label9.Location = new System.Drawing.Point(221, 23);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(45, 13);
@@ -345,10 +374,10 @@
             this.toneBCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toneBCombo.ForeColor = System.Drawing.SystemColors.ControlText;
             this.toneBCombo.FormattingEnabled = true;
-            this.toneBCombo.Location = new System.Drawing.Point(72, 47);
+            this.toneBCombo.Location = new System.Drawing.Point(270, 19);
             this.toneBCombo.Margin = new System.Windows.Forms.Padding(2);
             this.toneBCombo.Name = "toneBCombo";
-            this.toneBCombo.Size = new System.Drawing.Size(134, 21);
+            this.toneBCombo.Size = new System.Drawing.Size(152, 21);
             this.toneBCombo.TabIndex = 16;
             this.toneBCombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
@@ -356,7 +385,7 @@
             // 
             this.lblToneA.AutoSize = true;
             this.lblToneA.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblToneA.Location = new System.Drawing.Point(6, 22);
+            this.lblToneA.Location = new System.Drawing.Point(7, 23);
             this.lblToneA.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblToneA.Name = "lblToneA";
             this.lblToneA.Size = new System.Drawing.Size(34, 13);
@@ -368,7 +397,7 @@
             this.gbDLCId.Controls.Add(this.PersistentId);
             this.gbDLCId.Controls.Add(this.MasterId);
             this.gbDLCId.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbDLCId.Location = new System.Drawing.Point(6, 369);
+            this.gbDLCId.Location = new System.Drawing.Point(6, 386);
             this.gbDLCId.Name = "gbDLCId";
             this.gbDLCId.Size = new System.Drawing.Size(435, 47);
             this.gbDLCId.TabIndex = 33;
@@ -647,7 +676,7 @@
             // 
             this.MetronomeCb.AutoSize = true;
             this.MetronomeCb.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.MetronomeCb.Location = new System.Drawing.Point(12, 425);
+            this.MetronomeCb.Location = new System.Drawing.Point(16, 447);
             this.MetronomeCb.Name = "MetronomeCb";
             this.MetronomeCb.Size = new System.Drawing.Size(209, 17);
             this.MetronomeCb.TabIndex = 7;
@@ -657,7 +686,7 @@
             // ArrangementForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(450, 466);
+            this.ClientSize = new System.Drawing.Size(450, 481);
             this.Controls.Add(this.gbGameplayPath);
             this.Controls.Add(this.gbArrInfo);
             this.Controls.Add(this.MetronomeCb);
@@ -689,6 +718,7 @@
             this.gbGameplayPath.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
         private System.Windows.Forms.CheckBox MetronomeCb;
         private RocksmithToolkitGUI.CueTextBox PersistentId;
@@ -741,5 +771,7 @@
         private System.Windows.Forms.CheckBox disableTonesCheckbox;
         private System.Windows.Forms.Button tuningEditButton;
         private System.Windows.Forms.Button vocalEdit;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox toneACombo;
     }
 }
