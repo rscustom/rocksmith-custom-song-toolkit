@@ -60,7 +60,7 @@
             this.gbXmlDefinition = new System.Windows.Forms.GroupBox();
             this.XmlFilePath = new RocksmithToolkitGUI.CueTextBox();
             this.gbArrInfo = new System.Windows.Forms.GroupBox();
-            this.vocalEdit = new System.Windows.Forms.Button();
+            this.typeEdit = new System.Windows.Forms.Button();
             this.tuningEditButton = new System.Windows.Forms.Button();
             this.BonusCheckBox = new System.Windows.Forms.CheckBox();
             this.gbTuningPitch = new System.Windows.Forms.GroupBox();
@@ -448,7 +448,7 @@
             // 
             // gbArrInfo
             // 
-            this.gbArrInfo.Controls.Add(this.vocalEdit);
+            this.gbArrInfo.Controls.Add(this.typeEdit);
             this.gbArrInfo.Controls.Add(this.tuningEditButton);
             this.gbArrInfo.Controls.Add(this.BonusCheckBox);
             this.gbArrInfo.Controls.Add(this.gbTuningPitch);
@@ -468,16 +468,16 @@
             this.gbArrInfo.TabStop = false;
             this.gbArrInfo.Text = "Arrangement Information";
             // 
-            // vocalEdit
+            // typeEdit
             // 
-            this.vocalEdit.Enabled = false;
-            this.vocalEdit.Location = new System.Drawing.Point(178, 17);
-            this.vocalEdit.Name = "vocalEdit";
-            this.vocalEdit.Size = new System.Drawing.Size(28, 23);
-            this.vocalEdit.TabIndex = 3;
-            this.vocalEdit.Text = "...";
-            this.vocalEdit.UseVisualStyleBackColor = true;
-            this.vocalEdit.Click += new System.EventHandler(this.vocalEdit_Click);
+            this.typeEdit.Enabled = false;
+            this.typeEdit.Location = new System.Drawing.Point(178, 17);
+            this.typeEdit.Name = "typeEdit";
+            this.typeEdit.Size = new System.Drawing.Size(28, 23);
+            this.typeEdit.TabIndex = 3;
+            this.typeEdit.Text = "...";
+            this.typeEdit.UseVisualStyleBackColor = true;
+            this.typeEdit.Click += new System.EventHandler(this.typeEdit_Click);
             // 
             // tuningEditButton
             // 
@@ -718,7 +718,6 @@
             this.gbGameplayPath.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
         private System.Windows.Forms.CheckBox MetronomeCb;
         private RocksmithToolkitGUI.CueTextBox PersistentId;
@@ -770,7 +769,7 @@
         private System.Windows.Forms.CheckBox BonusCheckBox;
         private System.Windows.Forms.CheckBox disableTonesCheckbox;
         private System.Windows.Forms.Button tuningEditButton;
-        private System.Windows.Forms.Button vocalEdit;
+        private System.Windows.Forms.Button typeEdit;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox toneACombo;
     }

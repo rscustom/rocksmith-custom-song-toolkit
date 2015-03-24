@@ -365,7 +365,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 if (arr.Metronome == Metronome.Generate)
                     mArr.Add(GenMetronomeArr(arr));
-/*
+/* TODO: disabled for now
                 if (userChangesToInputControls > 0 && arr.ArrangementType != ArrangementType.Vocal)
                     UpdateXml(arr, packageData);
 */            }
@@ -496,7 +496,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void SaveTemplateFile(string defaultSavePath = null)
         {
-            var arrangements = arrangementLB.Items.OfType<Arrangement>().ToList();
+            //var arrangements = arrangementLB.Items.OfType<Arrangement>().ToList();
             var packageData = GetPackageData();
             if (packageData == null)
             {
@@ -533,6 +533,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 packageData.OggPath = audioPath.RelativeTo(BasePath);
             if (!String.IsNullOrEmpty(audioPreviewPath))
                 packageData.OggPreviewPath = audioPreviewPath.RelativeTo(BasePath);
+            if (!String.IsNullOrEmpty(packageData.LyricArtPath))
+                packageData.LyricArtPath = packageData.LyricArtPath.RelativeTo(BasePath);
 
             foreach (var arr in packageData.Arrangements)
             {
@@ -560,12 +562,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     arr.FontSng = arr.FontSng.AbsoluteTo(BasePath);
             }
 
+            if (!String.IsNullOrEmpty(packageData.LyricArtPath))
+                packageData.LyricArtPath = packageData.LyricArtPath.AbsoluteTo(BasePath);
+
             if (String.IsNullOrEmpty(defaultSavePath))//if in GUI mode.
                 MessageBox.Show(CurrentRocksmithTitle + " DLC Package template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void dlcLoadButton_Click(object sender = null, EventArgs e = null)
-        {
+        {//TODO: issue with gameversion
             string dlcLoadPath;
             using (var ofd = new OpenFileDialog())
             {

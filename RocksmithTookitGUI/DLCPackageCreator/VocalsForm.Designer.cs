@@ -132,7 +132,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // VocalsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(294, 191);
+            this.ClientSize = new System.Drawing.Size(299, 191);
             this.Controls.Add(this.isCustomCB);
             this.Controls.Add(this.sngpathFD);
             this.Controls.Add(this.artpathFD);
@@ -144,8 +144,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.Controls.Add(this.OkButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(300, 216);
-            this.MinimumSize = new System.Drawing.Size(300, 216);
+            this.MaximumSize = new System.Drawing.Size(315, 229);
+            this.MinimumSize = new System.Drawing.Size(315, 229);
             this.Name = "VocalsForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -153,6 +153,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.Text = "Vocals Form";
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
         private System.Windows.Forms.CheckBox isCustomCB;
         private System.Windows.Forms.Button sngpathFD;

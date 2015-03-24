@@ -131,7 +131,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             using (var fbd = new VistaFolderBrowserDialog())
             {
-                fbd.SelectedPath = Path.GetDirectoryName(sourceFileNames[0]);
+                fbd.SelectedPath = Path.GetDirectoryName(sourceFileNames[0]) + Path.DirectorySeparatorChar;
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
                 savePath = fbd.SelectedPath;

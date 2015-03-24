@@ -118,69 +118,69 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 arrangementTypeCombo.Items.Add(val);
 
             arrangementTypeCombo.SelectedValueChanged += (sender, e) =>
+            {
+                // Selecting defaults
+                var selectedType = ((ArrangementType)((ComboBox)sender).SelectedItem);
+
+                switch (selectedType)
                 {
-                    // Selecting defaults
-                    var selectedType = ((ArrangementType)((ComboBox)sender).SelectedItem);
+                    case ArrangementType.Bass:
+                        arrangementNameCombo.Items.Clear();
+                        arrangementNameCombo.Items.Add(ArrangementName.Bass);
+                        arrangementNameCombo.SelectedItem = ArrangementName.Bass;
+                        break;
+                    case ArrangementType.Vocal:
+                        arrangementNameCombo.Items.Clear();
+                        arrangementNameCombo.Items.Add(ArrangementName.Vocals);
+                        arrangementNameCombo.Items.Add(ArrangementName.JVocals);
+                        arrangementNameCombo.SelectedItem = ArrangementName.Vocals;
+                        break;
+                    default:
+                        arrangementNameCombo.Items.Clear();
+                        arrangementNameCombo.Items.Add(ArrangementName.Combo);
+                        arrangementNameCombo.Items.Add(ArrangementName.Lead);
+                        arrangementNameCombo.Items.Add(ArrangementName.Rhythm);
+                        arrangementNameCombo.SelectedItem = ArrangementName.Lead;
+                        break;
+                }
 
-                    switch (selectedType)
-                    {
-                        case ArrangementType.Bass:
-                            arrangementNameCombo.Items.Clear();
-                            arrangementNameCombo.Items.Add(ArrangementName.Bass);
-                            arrangementNameCombo.SelectedItem = ArrangementName.Bass;
-                            break;
-                        case ArrangementType.Vocal:
-                            arrangementNameCombo.Items.Clear();
-                            arrangementNameCombo.Items.Add(ArrangementName.Vocals);
-                            arrangementNameCombo.Items.Add(ArrangementName.JVocals);
-                            arrangementNameCombo.SelectedItem = ArrangementName.Vocals;
-                            break;
-                        default:
-                            arrangementNameCombo.Items.Clear();
-                            arrangementNameCombo.Items.Add(ArrangementName.Combo);
-                            arrangementNameCombo.Items.Add(ArrangementName.Lead);
-                            arrangementNameCombo.Items.Add(ArrangementName.Rhythm);
-                            arrangementNameCombo.SelectedItem = ArrangementName.Lead;
-                            break;
-                    }
+                var selectedArrangementName = (ArrangementName)arrangementNameCombo.SelectedItem;
 
-                    var selectedArrangementName = (ArrangementName)arrangementNameCombo.SelectedItem;
+                // Disabling options that are not meant for Arrangement Types
+                // Arrangement Information
+                arrangementNameCombo.Enabled = selectedType != ArrangementType.Bass;
+                tuningComboBox.Enabled = selectedType != ArrangementType.Vocal;
+                gbTuningPitch.Enabled = selectedType != ArrangementType.Vocal && currentGameVersion != GameVersion.RS2012;
+                gbScrollSpeed.Enabled = selectedType != ArrangementType.Vocal;
+                Picked.Enabled = selectedType == ArrangementType.Bass;
+                BonusCheckBox.Enabled = gbTuningPitch.Enabled;
+                MetronomeCb.Enabled = gbTuningPitch.Enabled;
+                UpdateCentOffset();
 
-                    // Disabling options that are not meant for Arrangement Types
-                    // Arrangement Information
-                    arrangementNameCombo.Enabled = selectedType != ArrangementType.Bass;
-                    tuningComboBox.Enabled = selectedType != ArrangementType.Vocal;
-                    gbTuningPitch.Enabled = selectedType != ArrangementType.Vocal && currentGameVersion != GameVersion.RS2012;
-                    gbScrollSpeed.Enabled = selectedType != ArrangementType.Vocal;
-                    Picked.Enabled = selectedType == ArrangementType.Bass;
-                    BonusCheckBox.Enabled = gbTuningPitch.Enabled;
-                    MetronomeCb.Enabled = gbTuningPitch.Enabled;
-                    UpdateCentOffset();
+                // Gameplay Path
+                UpdateRouteMaskPath(selectedType, selectedArrangementName);
 
-                    // Gameplay Path
-                    UpdateRouteMaskPath(selectedType, selectedArrangementName);
+                // Tone Selector
+                gbTone.Enabled = selectedType != ArrangementType.Vocal;
 
-                    // Tone Selector
-                    gbTone.Enabled = selectedType != ArrangementType.Vocal;
+                // Arrangement ID
+                MasterId.Enabled = true;
+                PersistentId.Enabled = true;
 
-                    // Arrangement ID
-                    MasterId.Enabled = true;
-                    PersistentId.Enabled = true;
+                // Tuning Edit
+                tuningEditButton.Enabled = selectedType != ArrangementType.Vocal;
 
-                    // Tuning Edit
-                    tuningEditButton.Enabled = selectedType != ArrangementType.Vocal;
-
-                    // Vocal Edit
-                    vocalEdit.Enabled = selectedType == ArrangementType.Vocal;
-                };
+                // Vocal Edit
+                typeEdit.Enabled = selectedType == ArrangementType.Vocal;
+            };
 
             arrangementNameCombo.SelectedValueChanged += (sender, e) =>
-                {
-                    var selectedType = ((ArrangementType)arrangementTypeCombo.SelectedItem);
-                    var selectedArrangementName = ((ArrangementName)((ComboBox)sender).SelectedItem);
+            {
+                var selectedType = ((ArrangementType)arrangementTypeCombo.SelectedItem);
+                var selectedArrangementName = ((ArrangementName)((ComboBox)sender).SelectedItem);
 
-                    UpdateRouteMaskPath(selectedType, selectedArrangementName);
-                };
+                UpdateRouteMaskPath(selectedType, selectedArrangementName);
+            };
 
             tuningComboBox.SelectedValueChanged += (sender, e) =>
             {
@@ -692,8 +692,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 SequencialToneComboEnabling();
         }
 
-        private void vocalEdit_Click(object sender, EventArgs e)
+        private void typeEdit_Click(object sender, EventArgs e)
         {
+            if (Arrangement.ArrangementType == ArrangementType.Vocal)// (ArrangementType)arrangementTypeCombo.SelectedItem)
+            {
+                vocalEdit_Click(sender, e);
+            }
+            else if (Arrangement.ArrangementType != ArrangementType.Vocal)
+            {//Extra options like personal Audio file. #multitracks
+                //guitarEdit_Click(sender, e);
+            }
+        }
+
+        private void vocalEdit_Click(object sender, EventArgs e)
+        {//TODO: wrong behaviour with this warning message
             if (!String.IsNullOrEmpty(parentControl.LyricArtPath) && String.IsNullOrEmpty(Arrangement.FontSng))
                 MessageBox.Show("FYI, there is alredy defined one custom font.\r\n", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
@@ -767,8 +779,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         #endregion
-
-
 
     }
 }
