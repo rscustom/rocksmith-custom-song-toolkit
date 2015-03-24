@@ -83,7 +83,6 @@
             this.dlcImportButton = new System.Windows.Forms.Button();
             this.currentOperationLabel = new System.Windows.Forms.Label();
             this.updateProgress = new System.Windows.Forms.ProgressBar();
-            this.resetButton = new System.Windows.Forms.Button();
             this.gbPlatofmr.SuspendLayout();
             this.gbFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.audioQualityBox)).BeginInit();
@@ -756,6 +755,7 @@
             this.rbConvert.TabIndex = 3;
             this.rbConvert.Text = "Convert";
             this.rbConvert.UseVisualStyleBackColor = true;
+            this.rbConvert.CheckedChanged += new System.EventHandler(this.GameVersion_CheckedChanged);
             // 
             // dlcImportButton
             // 
@@ -789,22 +789,9 @@
             this.updateProgress.TabIndex = 999;
             this.updateProgress.Visible = false;
             // 
-            // resetButton
-            // 
-            this.resetButton.BackColor = System.Drawing.SystemColors.Control;
-            this.resetButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.resetButton.Location = new System.Drawing.Point(327, 503);
-            this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(55, 29);
-            this.resetButton.TabIndex = 1000;
-            this.resetButton.Text = "Reset";
-            this.resetButton.UseVisualStyleBackColor = false;
-            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
-            // 
             // DLCPackageCreator
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.resetButton);
             this.Controls.Add(this.currentOperationLabel);
             this.Controls.Add(this.updateProgress);
             this.Controls.Add(this.dlcImportButton);
@@ -895,7 +882,6 @@
         private NumericUpDownFixed previewVolumeBox;
         private System.Windows.Forms.Label label7;
         private NumericUpDownFixed audioQualityBox;
-        private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.RadioButton rbConvert;
     }
 }

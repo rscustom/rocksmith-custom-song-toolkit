@@ -32,7 +32,7 @@ namespace pedalgen
 
         static void Main(string[] args)
         {
-            GeneratePedalsRS2014(@"W:\MUSICA\ROCKSMITH\RS2014_UNPACKED\gears_Pc2014\manifests\gears"); return;
+            //GeneratePedalsRS2014(@"W:\MUSICA\ROCKSMITH\RS2014_UNPACKED\gears_Pc2014\manifests\gears"); return;
             var arguments = new Arguments();
             var options = GetOptions(arguments);
 
