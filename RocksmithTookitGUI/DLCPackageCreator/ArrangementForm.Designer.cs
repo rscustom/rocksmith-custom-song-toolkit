@@ -701,6 +701,7 @@
             this.Name = "ArrangementForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Arrangement";
+            this.Load += new System.EventHandler(this.ArrangementForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).EndInit();
             this.gbTone.ResumeLayout(false);
             this.gbTone.PerformLayout();
@@ -718,6 +719,7 @@
             this.gbGameplayPath.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
         private System.Windows.Forms.CheckBox MetronomeCb;
         private RocksmithToolkitGUI.CueTextBox PersistentId;

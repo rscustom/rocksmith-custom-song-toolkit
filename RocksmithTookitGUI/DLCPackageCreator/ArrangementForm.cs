@@ -203,6 +203,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             EditMode = routeMaskNoneRadio.Checked;
         }
 
+
         private void UpdateRouteMaskPath(ArrangementType arrangementType, ArrangementName arrangementName)
         {
             gbGameplayPath.Enabled = arrangementType != ArrangementType.Vocal && currentGameVersion != GameVersion.RS2012;
@@ -527,7 +528,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     // SONG AND ARRANGEMENT INFO / ROUTE MASK
                     BonusCheckBox.Checked = Equals(xmlSong.ArrangementProperties.BonusArr, 1);
                     MetronomeCb.Checked = Equals(xmlSong.ArrangementProperties.Metronome, 2);
-                    if (EditMode)
+                    if (!EditMode)
                     {
                         string arr = xmlSong.Arrangement.ToLowerInvariant();
                         if (arr.Contains("guitar") || arr.Contains("lead") || arr.Contains("rhythm") || arr.Contains("combo"))
@@ -821,6 +822,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         #endregion
+
+        private void ArrangementForm_Load(object sender, EventArgs e)
+        {
+            // disallow changing XML file name when in edit mode
+            if (EditMode)
+                songXmlBrowseButton.Enabled = false;
+        }
 
     }
 }

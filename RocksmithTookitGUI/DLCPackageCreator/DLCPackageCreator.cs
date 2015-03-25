@@ -305,6 +305,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var arrangement = (Arrangement)arrangementLB.SelectedItem;
                 using (var form = new ArrangementForm(arrangement, this, CurrentGameVersion) { Text = "Edit Arrangement" })
                 {
+                    form.EditMode = true;
+                    
                     if (DialogResult.OK != form.ShowDialog())
                     {
                         return;
@@ -319,6 +321,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Arrangement arrangement = null;
             using (var form = new ArrangementForm(this, CurrentGameVersion))
             {
+                form.EditMode = false;
+
                 if (DialogResult.OK == form.ShowDialog())
                     arrangement = form.Arrangement;
             }
@@ -384,12 +388,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var mArr = new List<Arrangement>();
             foreach (var arr in packageData.Arrangements)
             {
+                // make a backup of the original XML here
+                File.Copy(arr.SongXml.File, Path.ChangeExtension(arr.SongXml.File, "org.xml"));
+             
                 if (arr.Metronome == Metronome.Generate)
                     mArr.Add(GenMetronomeArr(arr));
-/* TODO: disabled for now
+
+                //  TODO: re enabled for testing 
                 if (userChangesToInputControls > 0 && arr.ArrangementType != ArrangementType.Vocal)
                     UpdateXml(arr, packageData);
-*/            }
+            }
 
             packageData.Arrangements.AddRange(mArr);
 
@@ -897,6 +905,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arr.Tuning = tuning.Name;
             songXml.Tuning = tuning.Tuning;
 
+            // make a backup of the original XML here
+            File.Copy(arr.SongXml.File, Path.ChangeExtension(arr.SongXml.File, "prebassfix.xml"));
             File.Delete(arr.SongXml.File);
             using (var stream = File.OpenWrite(arr.SongXml.File))
             {
@@ -1327,11 +1337,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-                arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
+               // arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
+                arr.CleanCache();
                 arr.Id = IdGenerator.Guid();
                 arr.MasterId = RandomGenerator.NextInt();
-                arr.CleanCache();
-
+ 
                 songXml.AlbumName = info.SongInfo.Album;
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
                 songXml.ArtistName = info.SongInfo.Artist;
@@ -1374,7 +1384,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public Arrangement GenMetronomeArr(Arrangement arr)
         {
             var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-            arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
+            // arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
             arr.CleanCache();
             arr.BonusArr = true;
             arr.Id = IdGenerator.Guid();
