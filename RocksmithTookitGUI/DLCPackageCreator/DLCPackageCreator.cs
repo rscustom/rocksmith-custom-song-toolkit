@@ -896,6 +896,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arr.TuningStrings = tuning.Tuning;
             arr.Tuning = tuning.Name;
             songXml.Tuning = tuning.Tuning;
+
+            File.Delete(arr.SongXml.File);
             using (var stream = File.OpenWrite(arr.SongXml.File))
             {
                 songXml.Serialize(stream);
@@ -1321,13 +1323,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void UpdateXml(Arrangement arr, DLCPackageData info)
         {
-            // update xml with user modified DLCPackageData info
-            if (CurrentGameVersion == GameVersion.None || CurrentGameVersion == GameVersion.RS2014)
+            // update xml with user modified DLCPackageData info                                               
+            if (CurrentGameVersion != GameVersion.RS2012)
             {
                 var songXml = Song2014.LoadFromFile(arr.SongXml.File);
                 arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
                 arr.Id = IdGenerator.Guid();
                 arr.MasterId = RandomGenerator.NextInt();
+                arr.CleanCache();
 
                 songXml.AlbumName = info.SongInfo.Album;
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
@@ -1342,6 +1345,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.ToneC = arr.ToneC;
                 songXml.ToneD = arr.ToneD;
 
+                File.Delete(arr.SongXml.File);
                 using (var stream = File.OpenWrite(arr.SongXml.File))
                 {
                     songXml.Serialize(stream);
@@ -1351,7 +1355,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion == GameVersion.RS2012)
             {
                 var songXml = Song.LoadFromFile(arr.SongXml.File);
-                arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
                 songXml.Title = info.SongInfo.SongDisplayName;
                 songXml.AlbumName = info.SongInfo.Album;
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
@@ -1360,6 +1363,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.Title = info.SongInfo.SongDisplayName;
                 songXml.Tuning = arr.TuningStrings;
 
+                File.Delete(arr.SongXml.File);
                 using (var stream = File.OpenWrite(arr.SongXml.File))
                 {
                     songXml.Serialize(stream);
@@ -1369,16 +1373,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public Arrangement GenMetronomeArr(Arrangement arr)
         {
-            var mArr = GeneralExtensions.Copy<Arrangement>(arr);
-            var songXml = Song2014.LoadFromFile(mArr.SongXml.File);
-            var newXml = Path.GetTempFileName();
-            mArr.SongXml = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongXML { File = newXml };
-            mArr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
-            mArr.CleanCache();
-            mArr.BonusArr = true;
-            mArr.Id = IdGenerator.Guid();
-            mArr.MasterId = RandomGenerator.NextInt();
-            mArr.Metronome = Metronome.Itself;
+            var songXml = Song2014.LoadFromFile(arr.SongXml.File);
+            arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
+            arr.CleanCache();
+            arr.BonusArr = true;
+            arr.Id = IdGenerator.Guid();
+            arr.MasterId = RandomGenerator.NextInt();
+            arr.Metronome = Metronome.Itself;
             songXml.ArrangementProperties.Metronome = (int)Metronome.Itself;
 
             var ebeats = songXml.Ebeats;
@@ -1392,11 +1393,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 };
             }
             songXml.Events = songXml.Events.Union(songEvents, new EqSEvent()).OrderBy(x => x.Time).ToArray();
-            using (var stream = File.OpenWrite(mArr.SongXml.File))
+
+            File.Delete(arr.SongXml.File);
+            using (var stream = File.OpenWrite(arr.SongXml.File))
             {
                 songXml.Serialize(stream);
             }
-            return mArr;
+
+            return arr;
         }
         public class EqSEvent : IEqualityComparer<RocksmithToolkitLib.Xml.SongEvent>
         {
