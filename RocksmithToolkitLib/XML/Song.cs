@@ -428,36 +428,37 @@ namespace RocksmithToolkitLib.Xml
         public Int32 Sustain { get; set; }
     }
 
+    // stay consistent SNG TuningStrings data stored as Int16 (short)
     [XmlType("tuning")]
     public class TuningStrings
     {
         [JsonProperty("string0")]
         [XmlAttribute("string0")]
-        public Int32 String0 { get; set; }
+        public Int16 String0 { get; set; }
 
         [JsonProperty("string1")]
         [XmlAttribute("string1")]
-        public Int32 String1 { get; set; }
+        public Int16 String1 { get; set; }
 
         [JsonProperty("string2")]
         [XmlAttribute("string2")]
-        public Int32 String2 { get; set; }
+        public Int16 String2 { get; set; }
 
         [JsonProperty("string3")]
         [XmlAttribute("string3")]
-        public Int32 String3 { get; set; }
+        public Int16 String3 { get; set; }
 
         [JsonProperty("string4")]
         [XmlAttribute("string4")]
-        public Int32 String4 { get; set; }
+        public Int16 String4 { get; set; }
 
         [JsonProperty("string5")]
         [XmlAttribute("string5")]
-        public Int32 String5 { get; set; }
+        public Int16 String5 { get; set; }
 
         public TuningStrings() { }
 
-        public TuningStrings(short[] stringArray)
+        public TuningStrings(Int16[] stringArray)
         {
             String0 = stringArray[0];
             String1 = stringArray[1];
@@ -469,20 +470,15 @@ namespace RocksmithToolkitLib.Xml
                 String5 = stringArray[5];
         }
 
-        public int[] ToArray()
+        public Int16[] ToArray()
         {
-            Int32[] strings = { String0, String1, String2, String3, String4, String5 };
-            return strings;
-        }
-        public Int16[] ToShortArray()
-        {
-            Int16[] strings = { (Int16)String0, (Int16)String1, (Int16)String2, (Int16)String3, (Int16)String4, (Int16)String5 };
+            Int16[] strings = { String0, String1, String2, String3, String4, String5 };
             return strings;
         }
 
-        public int[] ToBassArray()
+        public Int16[] ToBassArray()
         {
-            Int32[] strings = { String0, String1, String2, String3, 0, 0 };
+            Int16[] strings = { String0, String1, String2, String3, 0, 0 };
             return strings;
         }
     }
@@ -723,7 +719,8 @@ namespace RocksmithToolkitLib.Xml
             var songEvents = new SongEvent[eventSection.Count];
             for (var i = 0; i < eventSection.Count; i++)
             {
-                songEvents[i] = new SongEvent {
+                songEvents[i] = new SongEvent
+                {
                     Code = eventSection.Events[i].EventName.ToNullTerminatedAscii(),
                     Time = eventSection.Events[i].Time
                 };

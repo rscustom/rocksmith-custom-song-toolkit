@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Xml.Serialization;
-using System.Reflection;
+using System.Linq;
+using System.Windows.Forms;
 using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.Sng;
 
-namespace RocksmithToolkitLib {
+
+namespace RocksmithToolkitLib
+{
     public class TuningDefinitionRepository : XmlRepository<TuningDefinition>
     {
         private static readonly Lazy<TuningDefinitionRepository> instance = new Lazy<TuningDefinitionRepository>(() => new TuningDefinitionRepository());
 
         private const string FILENAME = "RocksmithToolkitLib.TuningDefinition.xml";
 
-        public static TuningDefinitionRepository Instance() { return instance.Value; }
+        // this load method is producing unexpected results 
+        // custom tunings are being added undesirably to memory
+        public static TuningDefinitionRepository Instance()
+        {
+            return instance.Value;
+        }
 
-        public TuningDefinitionRepository() : base(FILENAME, new TuningComparer()) { }
+        public TuningDefinitionRepository()
+            : base(FILENAME, new TuningComparer())
+        {
+        }
 
         public IEnumerable<TuningDefinition> Select(GameVersion gameVersion)
         {
@@ -37,9 +44,10 @@ namespace RocksmithToolkitLib {
 
         public TuningDefinition SelectAny(TuningStrings tuningStrings, GameVersion gameVersion)
         {
-            var g = Select(tuningStrings,gameVersion);
+            var g = Select(tuningStrings, gameVersion);
             return g; //Accurate compare, no mercy for bass.
         }
+
         //Tuning Strings + GameVersion
         public TuningDefinition Select(TuningStrings tuningStrings, GameVersion gameVersion)
         {
@@ -51,15 +59,33 @@ namespace RocksmithToolkitLib {
             return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings.ToBassArray()) && s.GameVersion == gameVersion);
         }
 
-        public TuningDefinition Select(int[] tuningStrings, GameVersion gameVersion)
+        public TuningDefinition Select(Int16[] tuningStrings, GameVersion gameVersion)
         {
             return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
         }
 
-        public TuningDefinition SelectForBass(int[] tuningStrings, GameVersion gameVersion)
+        public TuningDefinition SelectForBass(Int16[] tuningStrings, GameVersion gameVersion)
         {
             return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
         }
+
+        // produce expected results the good old fashioned way
+        public static List<TuningDefinition> LoadTuningDefinitions(GameVersion gameVersion)
+        {
+            string tdFilePath = Path.Combine(Application.StartupPath, FILENAME);
+           return TuningDefinition.LoadFile(tdFilePath, gameVersion);
+        }
+        
+        public static void SaveFile(TuningDefinition customTuningDefinition)
+        {
+            string tdFilePath = Path.Combine(Application.StartupPath, FILENAME);
+ 
+            if (File.Exists(tdFilePath))
+                File.Delete(tdFilePath);
+
+         }
+
+
     }
 
     internal class TuningComparer : IEqualityComparer<TuningDefinition>
@@ -81,3 +107,5 @@ namespace RocksmithToolkitLib {
         }
     }
 }
+
+

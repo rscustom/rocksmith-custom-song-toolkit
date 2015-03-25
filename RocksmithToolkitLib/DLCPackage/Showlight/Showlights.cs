@@ -174,7 +174,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             // If vocals
             if (song.Phrases == null || song.Tuning == null) return null;
             //Generate ShowlightList
-            var tuning = song.Tuning.ToShortArray();
+            var tuning = song.Tuning.ToArray();
 
             if (song.Levels != null)
             {

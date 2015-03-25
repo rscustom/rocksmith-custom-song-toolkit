@@ -293,6 +293,27 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             return uniqueName;
         }
 
+        private void ArrangementLB_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            arrangementEditButton_Click(sender, e);
+        }
+
+        private void arrangementEditButton_Click(object sender, EventArgs e)
+        {
+            if (arrangementLB.SelectedItem != null)
+            {
+                var arrangement = (Arrangement)arrangementLB.SelectedItem;
+                using (var form = new ArrangementForm(arrangement, this, CurrentGameVersion) { Text = "Edit Arrangement" })
+                {
+                    if (DialogResult.OK != form.ShowDialog())
+                    {
+                        return;
+                    }
+                }
+                arrangementLB.Items[arrangementLB.SelectedIndex] = arrangement;
+            }
+        }
+
         public void arrangementAddButton_Click(object sender = null, EventArgs e = null)
         {
             Arrangement arrangement = null;
@@ -855,7 +876,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arr.TuningPitch = 220.0;
             songXml.CentOffset = "-1200.0";
             // Octave up for each string
-            var strings = arr.TuningStrings.ToShortArray();
+            Int16[] strings = arr.TuningStrings.ToArray();
             for (int s = 0; s < strings.Length; s++)
             {
                 if (strings[s] != 0)
@@ -994,8 +1015,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     {
                         var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);
                         arrangement.CapoFret = songXml.Capo;
+
                         //Load tuning from Arrangement
-                        var tuning = TuningDefinitionRepository.Instance().SelectAny(arrangement.TuningStrings, CurrentGameVersion);
+                        var tuning = new TuningDefinition();
+                        if (arrangement.ArrangementType == ArrangementType.Bass)
+                            tuning = TuningDefinitionRepository.Instance().SelectForBass(songXml.Tuning, CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014);
+                        else
+                            tuning = TuningDefinitionRepository.Instance().Select(songXml.Tuning, CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014);
+
                         if (tuning == null)
                         {
                             tuning = new TuningDefinition();
@@ -1003,13 +1030,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             tuning.Custom = true;
                             tuning.GameVersion = CurrentGameVersion;
                             tuning.Name = tuning.UIName = arrangement.Tuning;
-                            if (String.IsNullOrEmpty(tuning.Name))
-                            {
-                                tuning.Name = tuning.UIName = tuning.NameFromStrings(arrangement.TuningStrings, arrangement.ArrangementType == ArrangementType.Bass);
-                            }
 
-                            TuningDefinitionRepository.Instance().Add(tuning, true);
+                            if (String.IsNullOrEmpty(tuning.Name))
+                                tuning.Name = tuning.UIName = tuning.NameFromStrings(arrangement.TuningStrings, arrangement.ArrangementType == ArrangementType.Bass);
                         }
+
                         // Populate Arrangement tuning info
                         arrangement.Tuning = tuning.UIName;
                         arrangement.TuningStrings = tuning.Tuning;
@@ -1310,7 +1335,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.ArtistNameSort = info.SongInfo.ArtistSort;
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
                 songXml.Title = info.SongInfo.SongDisplayName;
-                songXml.Tuning = arr.TuningStrings; 
+                songXml.Tuning = arr.TuningStrings;
                 songXml.ToneBase = arr.ToneBase;
                 songXml.ToneA = arr.ToneA;
                 songXml.ToneB = arr.ToneB;
@@ -1333,7 +1358,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.ArtistName = info.SongInfo.Artist;
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
                 songXml.Title = info.SongInfo.SongDisplayName;
-                songXml.Tuning = arr.TuningStrings; 
+                songXml.Tuning = arr.TuningStrings;
 
                 using (var stream = File.OpenWrite(arr.SongXml.File))
                 {
@@ -1395,27 +1420,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (cmbAppIds.SelectedItem != null)
             {
                 AppIdTB.Text = ((SongAppId)cmbAppIds.SelectedItem).AppId;
-            }
-        }
-
-        private void ArrangementLB_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            arrangementEditButton_Click(sender, e);
-        }
-
-        private void arrangementEditButton_Click(object sender, EventArgs e)
-        {
-            if (arrangementLB.SelectedItem != null)
-            {
-                var arrangement = (Arrangement)arrangementLB.SelectedItem;
-                using (var form = new ArrangementForm(arrangement, this, CurrentGameVersion) { Text = "Edit Arrangement" })
-                {
-                    if (DialogResult.OK != form.ShowDialog())
-                    {
-                        return;
-                    }
-                }
-                arrangementLB.Items[arrangementLB.SelectedIndex] = arrangement;
             }
         }
 
@@ -1949,9 +1953,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             userChangesToInputControls++;
         }
-
-
-
 
     }
 }

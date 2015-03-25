@@ -41,12 +41,12 @@ namespace Xml2Sng
 
             var tuningValues = new []
             {
-                int.Parse(match.Groups[1].Value),
-                int.Parse(match.Groups[2].Value),
-                int.Parse(match.Groups[3].Value),
-                int.Parse(match.Groups[4].Value),
-                int.Parse(match.Groups[5].Value),
-                int.Parse(match.Groups[6].Value)
+                Int16.Parse(match.Groups[1].Value),
+                Int16.Parse(match.Groups[2].Value),
+                Int16.Parse(match.Groups[3].Value),
+                Int16.Parse(match.Groups[4].Value),
+                Int16.Parse(match.Groups[5].Value),
+                Int16.Parse(match.Groups[6].Value)
             };
 
             var supportedTuning = Enum.GetValues(typeof(InstrumentTuning))

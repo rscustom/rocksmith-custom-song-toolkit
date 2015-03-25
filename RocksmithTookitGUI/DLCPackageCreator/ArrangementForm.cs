@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using System.Xml.Linq;
-using System.Xml.XPath;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Sng;
@@ -15,6 +12,7 @@ using RocksmithToolkitLib;
 using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
+
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -106,17 +104,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 ArrangementType = ArrangementType.Guitar
             }, control, gameVersion)
         {
+            Console.WriteLine("Debug");
         }
 
         public ArrangementForm(Arrangement arrangement, DLCPackageCreator control, GameVersion gameVersion)
         {
             InitializeComponent();
-            currentGameVersion = gameVersion;
-            FillTuningCombo();
+            currentGameVersion = gameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014;
+
+            FillTuningCombo(arrangement.ArrangementType, currentGameVersion);
 
             foreach (var val in Enum.GetValues(typeof(ArrangementType)))
                 arrangementTypeCombo.Items.Add(val);
 
+            // this is a giant EH - careful
             arrangementTypeCombo.SelectedValueChanged += (sender, e) =>
             {
                 // Selecting defaults
@@ -172,16 +173,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 // Vocal Edit
                 typeEdit.Enabled = selectedType == ArrangementType.Vocal;
+
+                // Update tuningComboBox
+                if (selectedType != ArrangementType.Vocal)
+                    FillTuningCombo(selectedType, currentGameVersion);
+
             };
 
+            // this EH may cause serious brain damage
             arrangementNameCombo.SelectedValueChanged += (sender, e) =>
             {
                 var selectedType = ((ArrangementType)arrangementTypeCombo.SelectedItem);
                 var selectedArrangementName = ((ArrangementName)((ComboBox)sender).SelectedItem);
-
                 UpdateRouteMaskPath(selectedType, selectedArrangementName);
             };
 
+            // this EH may cause serious brain damage
             tuningComboBox.SelectedValueChanged += (sender, e) =>
             {
                 // Selecting defaults
@@ -192,7 +199,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             parentControl = control;
             SetupTones(arrangement);
-            Arrangement = arrangement;
+            Arrangement = arrangement; // total update by SET action
             EditMode = routeMaskNoneRadio.Checked;
         }
 
@@ -211,54 +218,97 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             routeMaskBassRadio.Checked = arrangementType == ArrangementType.Bass;
         }
 
-        private void FillTuningCombo()
+        private void FillTuningCombo(ArrangementType arrangementType, GameVersion gameVersion)
         {
-            TuningDefinition firstTuning = null;
             tuningComboBox.Items.Clear();
-            foreach (var tuning in TuningDefinitionRepository.Instance().Select(currentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014))
+            var tuningDefinitions = TuningDefinitionRepository.LoadTuningDefinitions(gameVersion);
+            // LINQ method produces unexpected results on subsequent calls
+            // foreach (var tuning in TuningDefinitionRepository.Instance().Select(gameVersion))
+            foreach (var tuning in tuningDefinitions)
             {
-                tuningComboBox.Items.Add(tuning);
-                if (firstTuning == null)
-                    firstTuning = tuning;
+                if (arrangementType == ArrangementType.Guitar)
+                    tuningComboBox.Items.Add(tuning);
+                if (arrangementType == ArrangementType.Bass)
+                    tuningComboBox.Items.Add(TuningDefinition.Convert2Bass(tuning));
             }
-            tuningComboBox.SelectedItem = firstTuning;
+
+            tuningComboBox.SelectedIndex = 0;
             tuningComboBox.Refresh();
         }
 
-        private void SetTuningCombo(TuningStrings tuningStrings, bool isBass = false)
+        private void ShowTuningForm(ArrangementType selectedType, TuningDefinition tuning)
         {
-            //Detect tuning
-            TuningDefinition tuning = TuningDefinitionRepository.Instance().SelectAny(tuningStrings, (currentGameVersion == GameVersion.RS2012) ? GameVersion.RS2012 : GameVersion.RS2014);
-
-            //Create tuning
             if (tuning == null)
             {
-                using (var form = new TuningForm())
+                MessageBox.Show("Pick a tuning definition to start editing.\r\n (Current tuning is Null)", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            TuningDefinition formTuning = new TuningDefinition();
+            bool addNew = false;
+            using (var form = new TuningForm())
+            {
+                form.Tuning = tuning;
+                form.IsBass = selectedType == ArrangementType.Bass;
+
+                if (DialogResult.OK != form.ShowDialog())
+                    return;
+
+                // prevent any further SET calls to form.Tuning
+                formTuning = form.Tuning;
+                addNew = form.AddNew;
+            }
+
+            if (tuning.UIName != formTuning.UIName)
+            {
+                // Update LB slots if tuning name is changed
+                for (int i = 0; i < parentControl.arrangementLB.Items.Count; i++)
                 {
-                    tuning = new TuningDefinition();
-                    tuning.Tuning = tuningStrings;
-                    tuning.Custom = true;
-                    tuning.GameVersion = (currentGameVersion == GameVersion.RS2012) ? GameVersion.RS2012 : GameVersion.RS2014;
-                    tuning.Name = tuning.UIName = Arrangement.Tuning;
-                    if (String.IsNullOrEmpty(tuning.Name))
-                    {
-                        tuning.Name = tuning.UIName = tuning.NameFromStrings(tuningStrings, false);
-                    }
+                    var selectedArrangement = (Arrangement)parentControl.arrangementLB.Items[i];
 
-                    form.Tuning = tuning;
-                    form.IsBass = false;
-                    if (DialogResult.OK != form.ShowDialog())
+                    if (tuning.UIName.Equals(selectedArrangement.Tuning))
                     {
-                        return;
+                        selectedArrangement.Tuning = formTuning.UIName;
+                        parentControl.arrangementLB.Items[i] = selectedArrangement;
                     }
-                    //Update from xml definition
-                    tuning = TuningDefinitionRepository.Instance().SelectAny(form.Tuning.Tuning, tuning.GameVersion);
-
-                    FillTuningCombo();
                 }
             }
-            //Set tuning
-            tuningComboBox.SelectedItem = tuning;
+
+            // TODO: figure out logic behind unexpected LINQ behaviors
+            // tuningComboBox list is being updated with custom tuning info
+            // so refilling the combobox is required to produce the expected results
+            // for now using old fashioned non-LINQ method
+            FillTuningCombo(selectedType, currentGameVersion);
+
+            int foundTuning = -1;
+            tuningComboBox.SelectedIndex = -1;
+            for (int tcbIndex = 0; tcbIndex < tuningComboBox.Items.Count; tcbIndex++)
+            {
+                tuningComboBox.SelectedIndex = tcbIndex;
+                tuning = (TuningDefinition)tuningComboBox.Items[tcbIndex];
+                if (TuningDefinition.TuningEquals(tuning.Tuning, formTuning.Tuning))
+                {
+                    foundTuning = tcbIndex;
+                    break;
+                }
+            }
+
+            // add the custom tuning to tuningComboBox
+
+            if (foundTuning == -1)
+            {
+                formTuning.Custom = true;
+                tuningComboBox.Items.Add(formTuning);
+                tuningComboBox.SelectedIndex = tuningComboBox.Items.Count - 1;
+
+                if (addNew)
+                    SaveTuningDefinition(formTuning);
+            }
+            else
+                tuningComboBox.SelectedIndex = foundTuning;
+
+            tuningComboBox.Refresh();
+            Arrangement.TuningStrings = formTuning.Tuning; // forces SET update
         }
 
         private void UpdateCentOffset()
@@ -295,6 +345,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 combo.SelectedItem = lastTone;
             }
         }
+
         /// <summary>
         /// Fill toneCombo with autotone values or BaseOnly.
         /// Get tones, fill combo, select tones.
@@ -410,11 +461,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 XmlFilePath.Text = ofd.FileName;
             }
 
-            LoadArrangment(XmlFilePath.Text);
-        }
+            string xmlFilePath = XmlFilePath.Text;
 
-        public void LoadArrangment(string xmlFilePath)
-        {
             try
             {
                 bool isVocal = false;
@@ -476,14 +524,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         //return;
                     }
 
-                    // Setup tuning
-                    SetTuningCombo(xmlSong.Tuning);
-                    Arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
-                    Arrangement.TuningStrings = xmlSong.Tuning;
-                    Arrangement.CapoFret = xmlSong.Capo;
-                    frequencyTB.Text = Arrangement.TuningPitch.ToString();
-                    UpdateCentOffset();
-
                     // SONG AND ARRANGEMENT INFO / ROUTE MASK
                     BonusCheckBox.Checked = Equals(xmlSong.ArrangementProperties.BonusArr, 1);
                     MetronomeCb.Checked = Equals(xmlSong.ArrangementProperties.Metronome, 2);
@@ -497,17 +537,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             if (arr.Contains("combo"))
                             {
                                 arrangementNameCombo.SelectedItem = ArrangementName.Combo;
-                                if (currentGameVersion != GameVersion.RS2012) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Lead;
+                                if (currentGameVersion != GameVersion.RS2012) RouteMask = RouteMask.Lead;
                             }
                             else if (arr.Contains("guitar_22") || arr.Contains("lead") || Equals(xmlSong.ArrangementProperties.PathLead, 1))
                             {
                                 arrangementNameCombo.SelectedItem = ArrangementName.Lead;
-                                if (currentGameVersion != GameVersion.RS2012) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Lead;
+                                if (currentGameVersion != GameVersion.RS2012) RouteMask = RouteMask.Lead;
                             }
                             else if (arr.Contains("guitar") || arr.Contains("rhythm") || Equals(xmlSong.ArrangementProperties.PathRhythm, 1))
                             {
                                 arrangementNameCombo.SelectedItem = ArrangementName.Rhythm;
-                                if (currentGameVersion != GameVersion.RS2012) RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Rhythm;
+                                if (currentGameVersion != GameVersion.RS2012) RouteMask = RouteMask.Rhythm;
                             }
 
                         }
@@ -519,13 +559,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             Picked.Checked = Equals(xmlSong.ArrangementProperties.BassPick, 1);
                             if (currentGameVersion != GameVersion.RS2012)
                             {
-                                RouteMask = RocksmithToolkitLib.DLCPackage.RouteMask.Bass;
+                                RouteMask = RouteMask.Bass;
                                 //Low tuning fix for bass, If lowstring is B and bass fix not applied
                                 if (xmlSong.Tuning.String0 < -4 && this.frequencyTB.Text == "440")
                                     bassFix |= MessageBox.Show("Your tuning is too low, would you like to apply \"Low Tuning Fix?\"\n" + "Note, that this won't work if you re-save arangement in EOF.\n", "Low Tuning Fix Required!", MessageBoxButtons.YesNo) == DialogResult.Yes;
                             }
                         }
                     }
+
                     //Tones setup
                     if (currentGameVersion != GameVersion.RS2012)
                     {
@@ -544,11 +585,43 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             bassFix = false;
                             Arrangement.SongXml.File = XmlFilePath.Text;
                             parentControl.ApplyBassFix(Arrangement);
-                            frequencyTB.Text = Arrangement.TuningPitch.ToString();
-                            UpdateCentOffset();
-                            SetTuningCombo(Arrangement.TuningStrings);
                         }
                     }
+
+                    // Setup tuning
+                    var selectedType = new ArrangementType();
+                    if (xmlSong.Arrangement.ToLower() == "bass")
+                        selectedType = ArrangementType.Bass;
+                    else
+                        selectedType = ArrangementType.Bass;
+
+                    FillTuningCombo(selectedType, currentGameVersion);
+
+                    // find tuning in tuningComboBox list and make selection
+                    int foundTuning = -1;
+                    for (int tcbIndex = 0; tcbIndex < tuningComboBox.Items.Count; tcbIndex++)
+                    {
+                        tuningComboBox.SelectedIndex = tcbIndex;
+                        TuningDefinition tuning = (TuningDefinition)tuningComboBox.Items[tcbIndex];
+                        if (TuningDefinition.TuningEquals(tuning.Tuning, xmlSong.Tuning))
+                        {
+                            foundTuning = tcbIndex;
+                            break;
+                        }
+                    }
+
+                    if (foundTuning == -1)
+                        ShowTuningForm(selectedType, new TuningDefinition() { Tuning = xmlSong.Tuning, Custom = true, GameVersion = currentGameVersion });
+                    else
+                        tuningComboBox.SelectedIndex = foundTuning;
+
+                    tuningComboBox.Refresh();
+
+                    Arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
+                    Arrangement.TuningStrings = xmlSong.Tuning;
+                    Arrangement.CapoFret = xmlSong.Capo;
+                    frequencyTB.Text = Arrangement.TuningPitch.ToString();
+                    UpdateCentOffset();
 
                     // save converted RS1 to RS2014 Song2014 XML
                     if (version == GameVersion.None)
@@ -623,6 +696,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             TuningDefinition tuning = (TuningDefinition)tuningComboBox.SelectedItem;
             Arrangement.Tuning = tuning.UIName;
             Arrangement.TuningStrings = tuning.Tuning;
+
             // TODO: Add capo selection to arrangement form
             if (!ReferenceEquals(xmlSong, null))
                 Arrangement.CapoFret = xmlSong.Capo;
@@ -726,46 +800,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var selectedType = ((ArrangementType)((ComboBox)arrangementTypeCombo).SelectedItem);
             TuningDefinition tuning = (TuningDefinition)tuningComboBox.SelectedItem;
 
-            if (tuning == null)
-            {
-                MessageBox.Show("At least one tuning definition is needed to edit.\r\n (Current tuning is Null)", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            using (var form = new TuningForm())
-            {
-                form.Tuning = tuning;
-                form.IsBass = selectedType == ArrangementType.Bass;
-                form.EditMode = true;
-
-                var oldUIName = tuning.UIName.Clone().ToString(); //Important to set it here
-                if (DialogResult.OK != form.ShowDialog())
-                {
-                    return;
-                }
-
-                if (oldUIName != form.Tuning.UIName && !form.AddNew)
-                {
-                    // Update LB slots if tuning name are changed
-                    for (int i = 0; i < parentControl.arrangementLB.Items.Count; i++)
-                    {
-                        var selectedArrangement = (Arrangement)parentControl.arrangementLB.Items[i];
-
-                        if (oldUIName.Equals(selectedArrangement.Tuning))
-                        {
-                            selectedArrangement.Tuning = form.Tuning.UIName;
-                            parentControl.arrangementLB.Items[i] = selectedArrangement;
-                        }
-                    }
-                }
-                //Update from xml definition
-                tuning = form.Tuning;
-                tuning = TuningDefinitionRepository.Instance().SelectAny(tuning.Tuning, tuning.GameVersion);
-
-                FillTuningCombo();
-                tuningComboBox.SelectedItem = tuning;
-                Arrangement.TuningStrings = tuning.Tuning;
-            }
+            ShowTuningForm(selectedType, tuning);
         }
 
         private void scrollSpeedTrackBar_ValueChanged(object sender, EventArgs e)
@@ -776,6 +811,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void UpdateScrollSpeedDisplay()
         {
             scrollSpeedDisplay.Text = String.Format("Scroll speed: {0:#.0}", Math.Truncate((decimal)scrollSpeedTrackBar.Value) / 10);
+        }
+
+        private void SaveTuningDefinition(TuningDefinition formTuning)
+        {
+            // can mess up the TuningDefinition.xml file on multiple adds
+            TuningDefinitionRepository.Instance().Add(formTuning, true);
+            TuningDefinitionRepository.Instance().Save(true);
         }
 
         #endregion

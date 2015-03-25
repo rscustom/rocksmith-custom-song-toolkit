@@ -20,13 +20,13 @@ namespace RocksmithToolkitLib.Sng
     public static class InstrumentTuningExtensions
     {
 
-        private static readonly int[] StandardOffsets = { 0, 0, 0, 0, 0, 0 };
-        private static readonly int[] DropDOffsets = { -2, 0, 0, 0, 0, 0 };
-        private static readonly int[] EFlatOffsets = { -1, -1, -1, -1, -1, -1 };
-        private static readonly int[] OpenGOffsets = { -2, -2, 0, 0, 0, -2 };
-        private static readonly int[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
+        private static readonly Int16[] StandardOffsets = { 0, 0, 0, 0, 0, 0 };
+        private static readonly Int16[] DropDOffsets = { -2, 0, 0, 0, 0, 0 };
+        private static readonly Int16[] EFlatOffsets = { -1, -1, -1, -1, -1, -1 };
+        private static readonly Int16[] OpenGOffsets = { -2, -2, 0, 0, 0, -2 };
+        private static readonly Int16[] StandardMidiNotes = { 40, 45, 50, 55, 59, 64 };
 
-        public static IList<int> GetOffsets(this InstrumentTuning tuning)
+        public static IList<Int16> GetOffsets(this InstrumentTuning tuning)
         {
             switch (tuning)
             {
@@ -43,7 +43,7 @@ namespace RocksmithToolkitLib.Sng
             }
         }
 
-        public static InstrumentTuning GetTuningByOffsets(int[] strings)
+        public static InstrumentTuning GetTuningByOffsets(Int16[] strings)
         {
             if (Enumerable.SequenceEqual(strings, DropDOffsets))
                 return InstrumentTuning.DropD;
@@ -91,7 +91,7 @@ namespace RocksmithToolkitLib.Sng
 
                     // TODO: song.Tuning is null in toolkit generated RS1 Xml files
                     // TODO: this is only a quick fix of the root problem
-                    var tuning = new int[] { 0, 0, 0, 0, 0, 0 };
+                    var tuning = new Int16[] { 0, 0, 0, 0, 0, 0 };
                     if (song.Tuning != null) tuning = song.Tuning.ToArray();
 
                     WriteRocksmithSngFile(song, InstrumentTuningExtensions.GetTuningByOffsets(tuning), arrangementType, outputFile, bitConverter);

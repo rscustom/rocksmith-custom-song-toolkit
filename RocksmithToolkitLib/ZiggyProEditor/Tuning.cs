@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
@@ -28,22 +29,22 @@ namespace RocksmithToolkitLib.ZiggyProEditor
         public bool IsBassTuning { get; set; }
 
         [XmlAttribute("E")]
-        public int E { get; set; }
+        public Int16 E { get; set; }
 
         [XmlAttribute("A")]
-        public int A { get; set; }
+        public Int16 A { get; set; }
 
         [XmlAttribute("D")]
-        public int D { get; set; }
+        public Int16 D { get; set; }
 
         [XmlAttribute("G")]
-        public int G { get; set; }
+        public Int16 G { get; set; }
 
         [XmlAttribute("B")]
-        public int B { get; set; }
+        public Int16 B { get; set; }
 
         [XmlAttribute("HighE")]
-        public int HighE { get; set; }
+        public Int16 HighE { get; set; }
     }
 
 }
