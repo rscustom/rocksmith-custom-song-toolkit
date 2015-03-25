@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.songXmlBrowseButton = new System.Windows.Forms.Button();
-            this.addArrangementButton = new System.Windows.Forms.Button();
+            this.OkButton = new System.Windows.Forms.Button();
             this.arrangementTypeCombo = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -98,17 +98,17 @@
             this.songXmlBrowseButton.UseVisualStyleBackColor = true;
             this.songXmlBrowseButton.Click += new System.EventHandler(this.songXmlBrowseButton_Click);
             // 
-            // addArrangementButton
+            // OkButton
             // 
-            this.addArrangementButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addArrangementButton.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.addArrangementButton.Location = new System.Drawing.Point(291, 440);
-            this.addArrangementButton.Name = "addArrangementButton";
-            this.addArrangementButton.Size = new System.Drawing.Size(72, 29);
-            this.addArrangementButton.TabIndex = 22;
-            this.addArrangementButton.Text = "Ok";
-            this.addArrangementButton.UseVisualStyleBackColor = false;
-            this.addArrangementButton.Click += new System.EventHandler(this.addArrangementButton_Click);
+            this.OkButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OkButton.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.OkButton.Location = new System.Drawing.Point(291, 440);
+            this.OkButton.Name = "OkButton";
+            this.OkButton.Size = new System.Drawing.Size(72, 29);
+            this.OkButton.TabIndex = 22;
+            this.OkButton.Text = "Ok";
+            this.OkButton.UseVisualStyleBackColor = false;
+            this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // arrangementTypeCombo
             // 
@@ -694,7 +694,7 @@
             this.Controls.Add(this.gbDLCId);
             this.Controls.Add(this.gbTone);
             this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.addArrangementButton);
+            this.Controls.Add(this.OkButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -730,7 +730,7 @@
 
         private CueTextBox XmlFilePath;
         private System.Windows.Forms.Button songXmlBrowseButton;
-        private System.Windows.Forms.Button addArrangementButton;
+        private System.Windows.Forms.Button OkButton;
         private System.Windows.Forms.ComboBox arrangementTypeCombo;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button cancelButton;

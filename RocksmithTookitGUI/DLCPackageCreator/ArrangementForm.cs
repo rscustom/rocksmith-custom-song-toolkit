@@ -647,15 +647,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void addArrangementButton_Click(object sender, EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
             //Validations
             var xmlfilepath = XmlFilePath.Text;
             if (!File.Exists(xmlfilepath))
-            {
-                XmlFilePath.Focus();
-                return;
-            }
+                if (MessageBox.Show("Xml Arrangement file path is not valid.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
+                {
+                    XmlFilePath.Focus();
+                    return;
+                }
 
             if (currentGameVersion != GameVersion.RS2012)
             {
@@ -827,7 +828,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             // disallow changing XML file name when in edit mode
             if (EditMode)
+            {
                 songXmlBrowseButton.Enabled = false;
+                XmlFilePath.Enabled = false;
+            }
         }
 
     }
