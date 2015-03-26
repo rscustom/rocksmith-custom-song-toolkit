@@ -306,7 +306,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 using (var form = new ArrangementForm(arrangement, this, CurrentGameVersion) { Text = "Edit Arrangement" })
                 {
                     form.EditMode = true;
-                    
+
                     if (DialogResult.OK != form.ShowDialog())
                     {
                         return;
@@ -388,9 +388,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var mArr = new List<Arrangement>();
             foreach (var arr in packageData.Arrangements)
             {
-                // make a backup of the original XML here
-                File.Copy(arr.SongXml.File, Path.ChangeExtension(arr.SongXml.File, "org.xml"));
-             
+                // processing order is important
+                if (userChangesToInputControls > 0 && arr.ArrangementType != ArrangementType.Vocal)
+                    File.Copy(arr.SongXml.File, Path.ChangeExtension(arr.SongXml.File, "EOF.xml"));
+
                 if (arr.Metronome == Metronome.Generate)
                     mArr.Add(GenMetronomeArr(arr));
 
@@ -1231,8 +1232,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 if (AudioPath.Substring(AudioPath.Length - 4).ToLower() == ".wem" && !File.Exists(wemPreviewPath))
-                {//TODO: test if no Wwise
-                    OggFile.ConvertAudioPlatform(AudioPath, oggPath);
+                {
+                    OggFile.Revorb(AudioPath, oggPath, Path.GetDirectoryName(Application.ExecutablePath), OggFile.WwiseVersion.Wwise2013);
                     ExternalApps.Ogg2Wav(oggPath, wavPath);
                     ExternalApps.Ogg2Preview(oggPath, oggPreviewPath);
                     ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
@@ -1337,11 +1338,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-               // arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
+                // arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
                 arr.CleanCache();
                 arr.Id = IdGenerator.Guid();
                 arr.MasterId = RandomGenerator.NextInt();
- 
+
                 songXml.AlbumName = info.SongInfo.Album;
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
                 songXml.ArtistName = info.SongInfo.Artist;

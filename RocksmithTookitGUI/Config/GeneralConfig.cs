@@ -20,7 +20,8 @@ namespace RocksmithToolkitGUI.Config
         {
             InitializeComponent();
             loading = true;
-            try {
+            try
+            {
                 PopulateAppIdCombo(general_defaultappid_RS2012, GameVersion.RS2012);
                 PopulateAppIdCombo(general_defaultappid_RS2014, GameVersion.RS2014);
                 PopulateEnumCombo(general_defaultgameversion, typeof(GameVersion));
@@ -28,51 +29,67 @@ namespace RocksmithToolkitGUI.Config
                 PopulateEnumCombo(converter_target, typeof(GamePlatform));
                 PopulateRampUp();
                 PopulateConfigDDC();
-                LoadAndSetupConfiguration(this.Controls);                
-            } catch { /*For mono compatibility*/ }
+                LoadAndSetupConfiguration(this.Controls);
+            }
+            catch { /*For mono compatibility*/ }
             loading = false;
         }
 
-        private void LoadAndSetupConfiguration(ControlCollection controls) {
-            foreach (var control in controls) {
-                if (control is TextBox || control is CueTextBox) {
+        private void LoadAndSetupConfiguration(ControlCollection controls)
+        {
+            foreach (var control in controls)
+            {
+                if (control is TextBox || control is CueTextBox)
+                {
                     var tb = (TextBox)control;
                     tb.Text = ConfigRepository.Instance()[tb.Name];
-                } else if (control is ComboBox) {
-                    var cb  = (ComboBox)control;
+                }
+                else if (control is ComboBox)
+                {
+                    var cb = (ComboBox)control;
                     var value = ConfigRepository.Instance()[cb.Name];
                     if (!String.IsNullOrEmpty(cb.ValueMember))
                         cb.SelectedValue = value;
                     else
                         cb.SelectedItem = value;
-                } else if (control is CheckBox) {
+                }
+                else if (control is CheckBox)
+                {
                     var ch = (CheckBox)control;
                     ch.Checked = ConfigRepository.Instance().GetBoolean(ch.Name);
-                } else if (control is NumericUpDown) {
+                }
+                else if (control is NumericUpDown)
+                {
                     var nud = (NumericUpDown)control;
                     nud.Value = ConfigRepository.Instance().GetDecimal(nud.Name);
-                } else if (control is GroupBox)
+                }
+                else if (control is GroupBox)
                     LoadAndSetupConfiguration(((GroupBox)control).Controls);
             }
         }
 
-        private void PopulateAppIdCombo(ComboBox combo, GameVersion gameVersion) {
+        private void PopulateAppIdCombo(ComboBox combo, GameVersion gameVersion)
+        {
             var appIdList = SongAppIdRepository.Instance().Select(gameVersion).ToArray();
             combo.DataSource = appIdList;
             combo.DisplayMember = "DisplayName";
             combo.ValueMember = "AppId";
         }
 
-        private void PopulateEnumCombo(ComboBox combo, Type typeEnum) {
+        private void PopulateEnumCombo(ComboBox combo, Type typeEnum)
+        {
             var enumList = Enum.GetNames(typeEnum).ToList<string>();
             enumList.Remove("None");
             combo.DataSource = enumList;
         }
 
-        private void PopulateRampUp() {
-            if (Directory.Exists(@".\ddc\")) {
+        private void PopulateRampUp()
+        {
+            if (Directory.Exists(@".\ddc\"))
+            {
                 ddc_rampup.Items.Clear();
-                foreach (var xml in Directory.EnumerateFiles(@".\ddc\", "*.xml", SearchOption.AllDirectories)) {
+                foreach (var xml in Directory.EnumerateFiles(@".\ddc\", "*.xml", SearchOption.AllDirectories))
+                {
                     var name = Path.GetFileNameWithoutExtension(xml);
                     if (name.StartsWith("user_"))
                         name = name.Remove(0, 5);
@@ -98,21 +115,28 @@ namespace RocksmithToolkitGUI.Config
             }
         }
 
-        private void ConfigurationChanged(object sender, EventArgs e) {
-            if (!loading) {
+        private void ConfigurationChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
                 Control control = (Control)sender;
                 var key = control.Name;
                 var value = control.Text;
 
-                if (control is ComboBox) {
+                if (control is ComboBox)
+                {
                     var combo = ((ComboBox)control);
                     if (!String.IsNullOrEmpty(combo.ValueMember))
                         value = combo.SelectedValue.ToString();
                     else
                         value = combo.SelectedItem.ToString();
-                } else if (control is CheckBox) {
+                }
+                else if (control is CheckBox)
+                {
                     value = ((CheckBox)control).Checked.ToString();
-                } else if (control is NumericUpDown) {
+                }
+                else if (control is NumericUpDown)
+                {
                     value = ((NumericUpDown)control).Value.ToString();
                 }
 
@@ -121,7 +145,8 @@ namespace RocksmithToolkitGUI.Config
             }
         }
 
-        private void closeConfigButton_Click(object sender, EventArgs e) {
+        private void closeConfigButton_Click(object sender, EventArgs e)
+        {
             ((MainForm)ParentForm).ReloadControls();
         }
 
@@ -146,6 +171,22 @@ namespace RocksmithToolkitGUI.Config
                 var rs2014Path = fbd.SelectedPath;
                 general_rs2014path.Text = rs2014Path;
                 ConfigRepository.Instance()[general_rs2014path.Name] = rs2014Path;
+            }
+        }
+
+        private void WwisePathButton_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Select Wwise CLI File";
+                ofd.Filter = "WwiseCLI.exe File (*.exe)|*.exe";
+
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+
+                var wwisePath = ofd.FileName;
+                general_wwisepath.Text = wwisePath;
+                ConfigRepository.Instance()[general_wwisepath.Name] = wwisePath;
             }
         }
     }

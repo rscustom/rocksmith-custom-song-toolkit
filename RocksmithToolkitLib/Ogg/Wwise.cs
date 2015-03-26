@@ -26,28 +26,38 @@ namespace RocksmithToolkitLib.Ogg
 
         public static string GetWwisePath()
         {
-            string programsDir = String.Empty;
+            // Audiokinect Wwise might not be installed in the default location ;<
+            // so added Wwise location to toolkit configuration menu
             try
             {
-                if (Environment.OSVersion.Version.Major >= 6)
-                    programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Audiokinetic");
-                else
-                    programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Audiokinetic");
-
-                var pathWwiseCli = Directory.EnumerateFiles(programsDir, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
-
-                if (String.IsNullOrEmpty(Path.GetFileName(pathWwiseCli)))
-                    throw new FileNotFoundException("Could not find WwiseCLI.exe" + Environment.NewLine + "Please confirm that it is installed.");
-
-                return pathWwiseCli;
+                return ConfigRepository.Instance()["general_wwisepath"];
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(new Form { TopMost = true }, @"Could not find WwiseCLI.exe or Audiokinetic directory.  " + Environment.NewLine + @"Please confirm that it is installed.", @"Exception: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                try
+                {
+                    var programsDir = String.Empty;
 
-                Application.Exit();
-                Environment.Exit(-1);
-                return null;
+                    if (Environment.OSVersion.Version.Major >= 6)
+                        programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Audiokinetic");
+                    else
+                        programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Audiokinetic");
+
+                    var pathWwiseCli = Directory.EnumerateFiles(programsDir, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
+
+                    if (String.IsNullOrEmpty(Path.GetFileName(pathWwiseCli)))
+                        throw new FileNotFoundException("Could not find WwiseCLI.exe in " + programsDir + Environment.NewLine + "Please confirm that Build 4828 is installed.");
+
+                    return pathWwiseCli;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(new Form { TopMost = true }, @"Could not find WwiseCLI.exe or Audiokinetic directory.  " + Environment.NewLine + @"Please confirm that it is installed and selected in the CST configuration menu.", @"Exception: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    Application.Exit();
+                    Environment.Exit(-1);
+                    return null;
+                }
             }
         }
 
@@ -83,7 +93,7 @@ namespace RocksmithToolkitLib.Ogg
             File.Copy(sourcePath, Path.Combine(orgSfxDir, "Audio.wav"), true);
             File.Copy(sourcePreviewWave, Path.Combine(orgSfxDir, "Audio_preview.wav"), true);
 
- 
+
             string resString = String.Empty;
             const string resName = "RocksmithToolkitLib.Resources.QF Default Work Unit.wwu";
             Assembly assem = Assembly.GetExecutingAssembly();

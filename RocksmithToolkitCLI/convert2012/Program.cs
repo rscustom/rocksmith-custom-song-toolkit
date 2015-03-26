@@ -175,16 +175,6 @@ namespace convert2012
                 audioPath = wemPath;
             }
 
-            if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".wem" && !File.Exists(wemPreviewPath))
-            {//TODO: test if no Wwise
-                OggFile.ConvertAudioPlatform(audioPath, oggPath);
-                ExternalApps.Ogg2Wav(oggPath, wavPath);
-                ExternalApps.Ogg2Preview(oggPath, oggPreviewPath);
-                ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
-                Wwise.Convert2Wem(wavPath, wemPath, 4); // default audio quality = 4
-                audioPath = wemPath;
-            }
-
             info.OggPath = audioPath;
             info.OggPreviewPath = audioPreviewPath;
 
