@@ -266,6 +266,18 @@ namespace RocksmithToolkitLib.Xml
             TranscriptionTrack = TranscriptionTrack2014.GetDefault();
         }
 
+        public static List<string> LoadXmlComments(string xmlSongRS2014File)
+        {
+            XDocument xml = XDocument.Load(xmlSongRS2014File);
+            var commentNodes = from n in xml.Descendants("song") where n.NodeType == XmlNodeType.Comment select n;
+        
+            foreach (XNode node in commentNodes )
+            {
+                Console.WriteLine("Comment:" + node);
+            }
+            return null;
+        }
+
         public static Song2014 LoadFromFile(string xmlSongRS2014File)
         {
             using (var reader = new StreamReader(xmlSongRS2014File))

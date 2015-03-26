@@ -46,6 +46,10 @@ namespace convert2012
 
             // iterate through cdlc folders and find *.dat files
             var cdlcFilesPaths = Directory.GetFiles(srcDir, "*.dat", SearchOption.AllDirectories);
+            var cdlcSaveDir = Path.Combine(Path.GetDirectoryName(cdlcFilesPaths[0]), "Converted CDLC");
+           
+            if (!Directory.Exists(cdlcSaveDir))
+                Directory.CreateDirectory(cdlcSaveDir);
 
             foreach (var cdlcFilePath in cdlcFilesPaths)
             {
@@ -82,9 +86,9 @@ namespace convert2012
 
                     // Repack
                     var cdlcVersion = "c1"; // conversion 1
-                    var cdlcSavePath = GeneralExtensions.GetShortName("{0}_{1}_{2}", info.SongInfo.Artist, info.SongInfo.SongDisplayName, cdlcVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
-                    cdlcSavePath = Path.Combine(Path.GetDirectoryName(unpackedDirPath), cdlcSavePath);
-                    Console.WriteLine(@"Repacking as RS2014 CDLC: " + Path.GetFileName(cdlcSavePath) + @".psarc");
+                    var cdlcFileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", info.SongInfo.Artist, info.SongInfo.SongDisplayName, cdlcVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                    var cdlcSavePath = Path.Combine(cdlcSaveDir, cdlcFileName);
+                    Console.WriteLine(@"Repacking as RS2014 CDLC: " + cdlcFileName + @".psarc");
                     Console.WriteLine("");
                     DLCPackageCreator.Generate(cdlcSavePath, info, new Platform(GamePlatform.Pc, GameVersion.RS2014), pnum: 1);
 
@@ -99,6 +103,7 @@ namespace convert2012
 
             Console.WriteLine();
             Console.WriteLine(@"Done Processing CDLC Folder ...");
+            Console.WriteLine(@"Converted CDLC Saved To: " + cdlcSaveDir);
             Console.WriteLine();
             Console.WriteLine(@"Press any key to continue ...");
             Console.Read();
@@ -108,7 +113,6 @@ namespace convert2012
         public static void UpdateXml(Arrangement arr, DLCPackageData info)
         {
             // update xml with user modified DLCPackageData info                                               
-
             var songXml = Song2014.LoadFromFile(arr.SongXml.File);
             arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
             arr.Id = IdGenerator.Guid();
@@ -215,10 +219,8 @@ namespace convert2012
                 DLCPackageCreator.ToDDS(ddsFiles);
 
                 var albumArtDir = Path.GetDirectoryName(albumArtPath);
-                var albumArtName = Path.GetFileNameWithoutExtension(albumArtPath);
-                var nameParts = albumArtName.Split('_');
-                var dlcName = String.Format("album_{0}", nameParts[1]);
-                var ddsPartialPath = Path.Combine(albumArtDir, dlcName);
+                var albumArtName = String.Format("album_{0}", info.Name.ToLower().Replace("_", "").GetValidName());
+                var ddsPartialPath = Path.Combine(albumArtDir, albumArtName);
 
                 foreach (var dds in ddsFiles)
                 {

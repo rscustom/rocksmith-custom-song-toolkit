@@ -14,8 +14,11 @@ namespace RocksmithToolkitLib
 
         private const string FILENAME = "RocksmithToolkitLib.TuningDefinition.xml";
 
-        // this load method is producing unexpected results 
-        // custom tunings are being added undesirably to memory
+        // TODO: consider changing FirstOrDefualt to SingleOrDefault so that
+        // error is thrown if the same tuning appears in the database more than once
+
+        // this load method is producing unexpected results if used to fill combobox 
+        // custom tunings are being added and referenced undesirably in memory
         public static TuningDefinitionRepository Instance()
         {
             return instance.Value;
@@ -73,17 +76,17 @@ namespace RocksmithToolkitLib
         public static List<TuningDefinition> LoadTuningDefinitions(GameVersion gameVersion)
         {
             string tdFilePath = Path.Combine(Application.StartupPath, FILENAME);
-           return TuningDefinition.LoadFile(tdFilePath, gameVersion);
+            return TuningDefinition.LoadFile(tdFilePath, gameVersion);
         }
-        
+
         public static void SaveFile(TuningDefinition customTuningDefinition)
         {
             string tdFilePath = Path.Combine(Application.StartupPath, FILENAME);
- 
+
             if (File.Exists(tdFilePath))
                 File.Delete(tdFilePath);
 
-         }
+        }
 
 
     }

@@ -242,7 +242,7 @@ namespace RocksmithToolkitLib.DLCPackage
                                             attr2014.ArrangementProperties.RouteMask = 2;
                                         }
                                     }
-
+                                     
                                     if (arrangement.Tuning == "E Standard")
                                         rsSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
                                     else if (arrangement.Tuning == "DropD")

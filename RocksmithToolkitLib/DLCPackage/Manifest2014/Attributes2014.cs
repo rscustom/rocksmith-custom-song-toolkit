@@ -182,7 +182,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
             if (!String.IsNullOrEmpty(arrTone))
             {
                 // recognize that ToneBase name alpha case mismatches do exist and process it     
-                var matchedTone = it.SingleOrDefault(t => t.Name.ToLower() == arrTone.ToLower());
+                // take the first if there are multiple matches so error is not thrown
+                var matchedTone = it.FirstOrDefault(t => t.Name.ToLower() == arrTone.ToLower());
                 if (ReferenceEquals(matchedTone, null))
                     return ToneName;
 

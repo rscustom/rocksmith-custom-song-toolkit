@@ -127,7 +127,7 @@ namespace packagecreator
                     }
                     catch (Exception ex)
                     {
-                        ShowHelpfulError( ex.Message + "  Check that RootFolder structure has SubFolder(s).");
+                        ShowHelpfulError(ex.Message + "  Check that RootFolder structure has SubFolder(s).");
                         return 1; // failure
                     }
                 }
@@ -180,9 +180,6 @@ namespace packagecreator
 
                     try
                     {
-                        // check Album Artwork
-                        if (arguments.Platform.version == GameVersion.RS2014)
-                            CheckAlbumArt(srcDirs[i]);
 
                         // get package data
                         DLCPackageData packageData = DLCPackageData.LoadFromFolder(srcDirs[i], arguments.Platform, arguments.Platform);
@@ -192,22 +189,9 @@ namespace packagecreator
                         packageData.Volume = packageData.Volume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.Volume;
                         packageData.PreviewVolume = packageData.PreviewVolume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.PreviewVolume;
 
-                        // depricated - combos show up as bonus arrangements
-                        // convert combo arrangements to rhythm or lead so game recognizes each properly
-                        //var comboCount = 1;
-                        //for (int arrIndex = 0; arrIndex < packageData.Arrangements.Count; arrIndex++)
-                        //{
-                        //    if (packageData.Arrangements[arrIndex].Name == ArrangementName.Combo)
-                        //    {
-                        //        if (comboCount == 1)
-                        //            packageData.Arrangements[arrIndex].Name = ArrangementName.Rhythm;
-                        //        if (comboCount == 2)
-                        //            packageData.Arrangements[arrIndex].Name = ArrangementName.Lead;
-                        //        if (comboCount > 2)
-                        //            throw new Exception("Too many Combo arrangements");
-                        //        comboCount++;
-                        //    }
-                        //}
+                        // check Album Artwork
+                        if (arguments.Platform.version == GameVersion.RS2014)
+                            CheckAlbumArt(srcDirs[i], packageData.Name);
 
                         // generate CDLC file name
                         var artist = packageData.SongInfo.ArtistSort;
@@ -268,7 +252,7 @@ namespace packagecreator
             return isDirectory;
         }
 
-        private static void CheckAlbumArt(string srcDir)
+        private static void CheckAlbumArt(string srcDir, string dlcName)
         {
             // iterate through unpacked cdlc src folder and find artwork
             var ddsFilesPath = Directory.GetFiles(srcDir, "album_*.dds", SearchOption.AllDirectories);
@@ -323,10 +307,8 @@ namespace packagecreator
                 DLCPackageCreator.ToDDS(ddsFiles);
 
                 var albumArtDir = Path.GetDirectoryName(albumArtPath);
-                var albumArtName = Path.GetFileNameWithoutExtension(albumArtPath);
-                var nameParts = albumArtName.Split('_');
-                var dlcName = String.Format("album_{0}", nameParts[1]);
-                var ddsPartialPath = Path.Combine(albumArtDir, dlcName);
+                var albumArtName = String.Format("album_{0}", dlcName.ToLower().Replace("_", "").GetValidName());
+                var ddsPartialPath = Path.Combine(albumArtDir, albumArtName);
 
                 foreach (var dds in ddsFiles)
                 {
