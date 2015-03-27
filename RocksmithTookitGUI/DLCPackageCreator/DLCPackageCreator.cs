@@ -1232,7 +1232,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 if (AudioPath.Substring(AudioPath.Length - 4).ToLower() == ".wem" && !File.Exists(wemPreviewPath))
-                {
+                {//TODO: test if no Wwise
                     OggFile.Revorb(AudioPath, oggPath, Path.GetDirectoryName(Application.ExecutablePath), OggFile.WwiseVersion.Wwise2013);
                     ExternalApps.Ogg2Wav(oggPath, wavPath);
                     ExternalApps.Ogg2Preview(oggPath, oggPreviewPath);
@@ -1332,9 +1332,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             return data;
         }
 
+        /// <summary>
+        /// Updates the xml with user modified DLCPackageData info
+        /// </summary>
+        /// <param name="arr">Arrangement</param>
+        /// <param name="info">DLCPackageData Info.</param>
         public void UpdateXml(Arrangement arr, DLCPackageData info)
         {
-            // update xml with user modified DLCPackageData info                                               
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 var songXml = Song2014.LoadFromFile(arr.SongXml.File);

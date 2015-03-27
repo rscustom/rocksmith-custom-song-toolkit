@@ -174,6 +174,10 @@ namespace RocksmithToolkitLib.Xml
         [XmlArrayItem("level", typeof(SongLevel2014))]
         public SongLevel2014[] Levels { get; set; }
 
+        [XmlIgnore]
+        [JsonIgnore]
+        static IEnumerable<XComment> commentNodes;
+
         public Song2014() { }
 
         public Song2014(Sng2014HSL.Sng sngData, Attributes2014 attr = null)
@@ -266,20 +270,33 @@ namespace RocksmithToolkitLib.Xml
             TranscriptionTrack = TranscriptionTrack2014.GetDefault();
         }
 
-        public static List<string> LoadXmlComments(string xmlSongRS2014File)
+        /// <summary>
+        /// Loads the xml comments, like EOF and DDC, to keep track of its versions.
+        /// </summary>
+        /// <param name="xmlSongRS2014File">Xml file path.</param>
+        static void LoadXmlComments(string xmlSongRS2014File)
         {
-            XDocument xml = XDocument.Load(xmlSongRS2014File);
-            var commentNodes = from n in xml.Descendants("song") where n.NodeType == XmlNodeType.Comment select n;
-        
-            foreach (XNode node in commentNodes )
+            var xml = XDocument.Load(xmlSongRS2014File);
+            commentNodes = xml.DescendantNodes().OfType<XComment>();
+        }
+
+        /// <summary>
+        /// Writes the EOF\DDC xml comments.
+        /// </summary>
+        /// <param name="song">Xml stream.</param>
+        static void FixXmlComments(Stream song)
+        {
+            var xml = XDocument.Load(song); song.Position = 0;
+            if(commentNodes != null)
             {
-                Console.WriteLine("Comment:" + node);
+                xml.AddFirst(commentNodes);
+                xml.Save(song); song.Position = 0;
             }
-            return null;
         }
 
         public static Song2014 LoadFromFile(string xmlSongRS2014File)
         {
+            LoadXmlComments(xmlSongRS2014File);
             using (var reader = new StreamReader(xmlSongRS2014File))
             {
                 return new XmlStreamingDeserializer<Song2014>(reader).Deserialize();
@@ -288,7 +305,7 @@ namespace RocksmithToolkitLib.Xml
 
         public void Serialize(Stream stream, bool omitXmlDeclaration = false)
         {
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            var ns = new XmlSerializerNamespaces();
             ns.Add("", "");
 
             var song = new MemoryStream();
@@ -300,42 +317,39 @@ namespace RocksmithToolkitLib.Xml
             }))
             {
                 new XmlSerializer(typeof(Song2014)).Serialize(writer, this, ns);
+                song.Position = 0;
             }
             FixArrayAttribs(song);
-            song.Position = 0;
-            song.CopyTo(stream);
+            FixXmlComments(song);
 
-            stream.Flush();
-            stream.Seek(0, SeekOrigin.Begin);
+            stream = new MemoryStream(song.ToArray());
         }
 
         /// <summary>
         /// Writes count attribute for choosed nodes.
         /// </summary>
         /// <param name="xml">Xml stream.</param>
-        private static void FixArrayAttribs(Stream xml)
+        static void FixArrayAttribs(Stream xml)
         {
             string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs",
                 "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes"/*DDC*/,
                 "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes"
             };
 
-            xml.Position = 0;
-            var doc = XDocument.Load(xml);
+            var doc = XDocument.Load(xml); xml.Position = 0;
             foreach (var n in anodes) {
-                var es = doc.Descendants(n);
-                if(es.Count() > 0)
-                foreach (var e in es)
-                {
-                    var ret = e.Attribute("count");
-                    if(ret == null)
-                        e.Add(new XAttribute("count", e.Elements().Count()));
-                    else
-                        ret.SetValue(e.Elements().Count());
-                }
+                var es = doc.Descendants(n).ToArray();
+                if(es.Any())
+                    foreach( var e in es )
+                    {
+                        var ret = e.Attribute("count");
+                        if(ret == null)
+                            e.Add(new XAttribute("count", e.Elements().Count()));
+                        else
+                            ret.SetValue(e.Elements().Count());
+                    }
             }
-            xml.Position = 0;
-            doc.Save(xml);
+            doc.Save(xml); xml.Position = 0;
         }
     }
 
