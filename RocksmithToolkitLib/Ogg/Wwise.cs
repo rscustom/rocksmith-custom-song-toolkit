@@ -19,7 +19,8 @@ namespace RocksmithToolkitLib.Ogg
                 GetWwiseFiles(destinationPath);
             }
             catch (Exception ex)
-            {//overrided ex, can't get real ex/msg, use log + throw;
+            {
+                //overrided ex, can't get real ex/msg, use log + throw;
                 throw new Exception("Wwise audio file conversion failed: " + ex.Message);
             }
         }

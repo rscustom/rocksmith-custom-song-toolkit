@@ -15,6 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pcdecrypt", "RocksmithToolk
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-party Apps", "{17ADB8C7-17DF-4BE3-8460-3E342F334B53}"
 	ProjectSection(SolutionItems) = preProject
+		Third-party Apps\tool\core.jar = Third-party Apps\tool\core.jar
 		Third-party Apps\nvdxt.exe = Third-party Apps\nvdxt.exe
 		Third-party Apps\packed_codebooks.bin = Third-party Apps\packed_codebooks.bin
 		Third-party Apps\packed_codebooks_aoTuV_603.bin = Third-party Apps\packed_codebooks_aoTuV_603.bin

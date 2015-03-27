@@ -17,6 +17,10 @@ namespace RocksmithToolkitLib.Xml
     [XmlRoot("song", Namespace = "", IsNullable = false)]
     public class Song2014
     {
+        [XmlIgnore]
+        [JsonIgnore]
+        static IEnumerable<XComment> commentNodes;
+
         [XmlAttribute("version")] // RS2014 is 7 or above
         public string Version { get; set; }
 
@@ -174,10 +178,6 @@ namespace RocksmithToolkitLib.Xml
         [XmlArrayItem("level", typeof(SongLevel2014))]
         public SongLevel2014[] Levels { get; set; }
 
-        [XmlIgnore]
-        [JsonIgnore]
-        static IEnumerable<XComment> commentNodes;
-
         public Song2014() { }
 
         public Song2014(Sng2014HSL.Sng sngData, Attributes2014 attr = null)
@@ -276,27 +276,43 @@ namespace RocksmithToolkitLib.Xml
         /// <param name="xmlSongRS2014File">Xml file path.</param>
         static void LoadXmlComments(string xmlSongRS2014File)
         {
-            var xml = XDocument.Load(xmlSongRS2014File);
-            commentNodes = xml.DescendantNodes().OfType<XComment>();
+            try
+            {
+                // this fails if there are no comments
+                var xml = XDocument.Load(xmlSongRS2014File);
+                commentNodes = xml.DescendantNodes().OfType<XComment>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("This XML Arrangement has no comments: " + ex.Message);
+            }
+
         }
 
-        /// <summary>
-        /// Writes the EOF\DDC xml comments.
-        /// </summary>
-        /// <param name="song">Xml stream.</param>
+        ///<summary>
+        ///Writes the EOF\DDC xml comments.
+        ///</summary>
+        ///<param name="song">Xml stream.</param>
         static void FixXmlComments(Stream song)
         {
-            var xml = XDocument.Load(song); song.Position = 0;
-            if(commentNodes != null)
+            if (commentNodes != null)
             {
-                xml.AddFirst(commentNodes);
-                xml.Save(song); song.Position = 0;
+                song.Position = 0;
+                var xml = XDocument.Load(song);
+                // check for arrangment that have no comments
+                if (xml != null) 
+                {
+                    xml.AddFirst(commentNodes);
+                    xml.Save(song);
+                    song.Position = 0;
+                }
             }
         }
 
         public static Song2014 LoadFromFile(string xmlSongRS2014File)
         {
             LoadXmlComments(xmlSongRS2014File);
+
             using (var reader = new StreamReader(xmlSongRS2014File))
             {
                 return new XmlStreamingDeserializer<Song2014>(reader).Deserialize();
@@ -305,7 +321,7 @@ namespace RocksmithToolkitLib.Xml
 
         public void Serialize(Stream stream, bool omitXmlDeclaration = false)
         {
-            var ns = new XmlSerializerNamespaces();
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
 
             var song = new MemoryStream();
@@ -317,40 +333,73 @@ namespace RocksmithToolkitLib.Xml
             }))
             {
                 new XmlSerializer(typeof(Song2014)).Serialize(writer, this, ns);
-                song.Position = 0;
             }
+
             FixArrayAttribs(song);
             FixXmlComments(song);
-
-            stream = new MemoryStream(song.ToArray());
+            // process crashes badly if these next lines are removed
+            song.Position = 0;
+            song.CopyTo(stream);
+            stream.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
+            // part of root element is missing error
+            // stream = new MemoryStream(song.ToArray());
         }
 
         /// <summary>
         /// Writes count attribute for choosed nodes.
         /// </summary>
         /// <param name="xml">Xml stream.</param>
-        static void FixArrayAttribs(Stream xml)
+        private static void FixArrayAttribs(Stream xml)
         {
             string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs",
                 "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes"/*DDC*/,
                 "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes"
             };
 
-            var doc = XDocument.Load(xml); xml.Position = 0;
-            foreach (var n in anodes) {
-                var es = doc.Descendants(n).ToArray();
-                if(es.Any())
-                    foreach( var e in es )
+            xml.Position = 0;
+            var doc = XDocument.Load(xml);
+            foreach (var n in anodes)
+            {
+                var es = doc.Descendants(n);
+                if (es.Count() > 0)
+                    foreach (var e in es)
                     {
                         var ret = e.Attribute("count");
-                        if(ret == null)
+                        if (ret == null)
                             e.Add(new XAttribute("count", e.Elements().Count()));
                         else
                             ret.SetValue(e.Elements().Count());
                     }
             }
-            doc.Save(xml); xml.Position = 0;
+            xml.Position = 0;
+            doc.Save(xml);
         }
+
+        // TODO: Disabled for now ... root element is missing error
+        //        static void FixArrayAttribs(Stream xml)
+        //        {
+        //            string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs",
+        //"phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes"/*DDC*/,
+        //"ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes"
+        //};
+        //            var doc = XDocument.Load(xml); xml.Position = 0;
+        //            foreach (var n in anodes)
+        //            {
+        //                var es = doc.Descendants(n).ToArray();
+        //                if (es.Any())
+        //                    foreach (var e in es)
+        //                    {
+        //                        var ret = e.Attribute("count");
+        //                        if (ret == null)
+        //                            e.Add(new XAttribute("count", e.Elements().Count()));
+        //                        else
+        //                            ret.SetValue(e.Elements().Count());
+        //                    }
+        //            }
+        //            doc.Save(xml); xml.Position = 0;
+        //        }
+
     }
 
     public class SongArrangementProperties2014 : SongArrangementProperties
@@ -541,7 +590,7 @@ namespace RocksmithToolkitLib.Xml
             for (int i = 0; i < cteamplateList.Count; i++)
             {
                 var sct2014 = new SongChordTemplate2014();
-                sct2014.ChordName =  cteamplateList[i].ChordName;
+                sct2014.ChordName = cteamplateList[i].ChordName;
                 // split getting funky RS1 -> RS2 results when combined
                 sct2014.DisplayName = cteamplateList[i].ChordName;
                 sct2014.Finger0 = (sbyte)cteamplateList[i].Fingers[0];

@@ -491,8 +491,8 @@ namespace RocksmithToolkitLib.Song2014ToTab
             Pedal2014 rack2 = new Pedal2014();
             tone2014.ToneDescriptors = new List<string>();
             // use Tone Key for better conversion
-            tone2014.Name = rs1Tone.Key ?? rs1Tone.Name;
-            tone2014.Key = rs1Tone.Key ?? "Default";
+            tone2014.Name = rs1Tone.Name ?? "default";
+            tone2014.Key = rs1Tone.Key ?? "DEFAULT";
             tone2014.Volume = rs1Tone.Volume;
             tone2014.IsCustom = true;
             tone2014.NameSeparator = " - ";
@@ -500,9 +500,12 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
             // setup some possible tone approximation conversions
             // no direct mapping for RS1 -> RS2 Tones
+            // look here IEnumerable<ToneDescriptor> List()
             // TODO: figure out better method for tone mapping
-            if (tone2014.Key.ToUpper().Contains("_OD") ||
-                tone2014.Key.ToUpper().Contains("_COMBO"))
+            if (tone2014.Key.ToUpper().Contains("_COMBO"))
+                tone2014.Key = "Combo_OD";
+
+            if (tone2014.Key.ToUpper().Contains("_OD"))
             {
                 tone2014.ToneDescriptors.Add("$[35716]OVERDRIVE");
                 amp.Type = "Amps";
@@ -650,8 +653,12 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     Rack1 = rack1
                 };
             }
-            else // acoustic is better than nothing, right.
+            else // default acoustic is better than nothing, right
             {
+                // this is fix for bad RS1 CDLC tones
+                tone2014.Name = "default_acoustic";
+                tone2014.Key =  "DEFAULT_ACOUSTIC";
+                //
                 tone2014.ToneDescriptors.Add("$[35721]ACOUSTIC");
                 amp.Type = "Amps";
                 amp.Category = "Amp";

@@ -9,7 +9,7 @@ using RocksmithToolkitLib.DLCPackage.XBlock;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
-    public class ToneGenerator //RS1 only
+    public class ToneGenerator // RS1 only
     {
         public static void Generate(string toneKey, Tone tone, Stream outManifest, Stream outXblock, Stream aggregateGraph)
         {

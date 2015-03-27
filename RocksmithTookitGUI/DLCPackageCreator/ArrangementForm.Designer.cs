@@ -160,7 +160,7 @@
             this.scrollSpeedTrackBar.Location = new System.Drawing.Point(40, 18);
             this.scrollSpeedTrackBar.Margin = new System.Windows.Forms.Padding(2);
             this.scrollSpeedTrackBar.Maximum = 45;
-            this.scrollSpeedTrackBar.Minimum = 10;
+            this.scrollSpeedTrackBar.Minimum = 5;
             this.scrollSpeedTrackBar.Name = "scrollSpeedTrackBar";
             this.scrollSpeedTrackBar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.scrollSpeedTrackBar.Size = new System.Drawing.Size(130, 23);

@@ -230,6 +230,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             songVolumeBox.MouseEnter += songVolumeBox_MouseEnter;
             previewVolumeBox.MouseEnter += songVolumeBox_MouseEnter;
             AddOnChangeHandlerToInputControls();
+            this.Disposed += DlcPackageCreator_Dispose;
+
 
             try
             {
@@ -1232,7 +1234,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 if (AudioPath.Substring(AudioPath.Length - 4).ToLower() == ".wem" && !File.Exists(wemPreviewPath))
-                {//TODO: test if no Wwise
+                {
                     OggFile.Revorb(AudioPath, oggPath, Path.GetDirectoryName(Application.ExecutablePath), OggFile.WwiseVersion.Wwise2013);
                     ExternalApps.Ogg2Wav(oggPath, wavPath);
                     ExternalApps.Ogg2Preview(oggPath, oggPreviewPath);
@@ -1335,8 +1337,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         /// <summary>
         /// Updates the xml with user modified DLCPackageData info
         /// </summary>
-        /// <param name="arr">Arrangement</param>
-        /// <param name="info">DLCPackageData Info.</param>
+        /// <param name="arr"></param>
+        /// <param name="info"></param>
         public void UpdateXml(Arrangement arr, DLCPackageData info)
         {
             if (CurrentGameVersion != GameVersion.RS2012)
@@ -1971,6 +1973,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void InputControls_OnChange(object sender, EventArgs e)
         {
             userChangesToInputControls++;
+        }
+
+        private void DlcPackageCreator_Dispose(object sender, EventArgs e)
+        {
+            // TODO: drive is running low on space either get a bigger drive or
+            // cleanup all toolkit leftovers *.tmp and *.dds files from the temp folder
+            var tmpDir = Path.GetTempPath();
+            // List<string> tmpFiles = new List<string>();
+            string[] extensions = { ".tmp", ".dds" };
+            foreach (string tmpFile in Directory.EnumerateFiles(tmpDir, "*.*", SearchOption.TopDirectoryOnly)
+                .Where(s => extensions.Any(ext => ext == Path.GetExtension(s))))
+            {
+                File.Delete(tmpFile);
+                // tmpFiles.Add(tmpFile);
+            }
         }
 
     }
