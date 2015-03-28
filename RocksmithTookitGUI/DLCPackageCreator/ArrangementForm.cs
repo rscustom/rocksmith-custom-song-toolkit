@@ -470,6 +470,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 try
                 {
                     xmlSong = Song2014.LoadFromFile(xmlFilePath);
+                    Arrangement.XmlComments = Song2014.ReadXmlComments(xmlFilePath);
                 }
                 catch (Exception ex)
                 {

@@ -386,20 +386,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dlcSavePath = ofd.FileName;
             }
 
-            //Generate metronome arrangemnts here
+            //Generate metronome arrangemnts and update Xml arrangements song info
             var mArr = new List<Arrangement>();
             foreach (var arr in packageData.Arrangements)
             {
-                // processing order is important
-                if (userChangesToInputControls > 0 && arr.ArrangementType != ArrangementType.Vocal)
-                    File.Copy(arr.SongXml.File, Path.ChangeExtension(arr.SongXml.File, "EOF.xml"));
-
                 if (arr.Metronome == Metronome.Generate)
                     mArr.Add(GenMetronomeArr(arr));
 
-                //  TODO: re enabled for testing 
                 if (userChangesToInputControls > 0 && arr.ArrangementType != ArrangementType.Vocal)
                     UpdateXml(arr, packageData);
+
+                if (arr.ArrangementType != ArrangementType.Vocal)
+                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
             }
 
             packageData.Arrangements.AddRange(mArr);
@@ -908,8 +906,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arr.Tuning = tuning.Name;
             songXml.Tuning = tuning.Tuning;
 
-            // make a backup of the original XML here
-            File.Copy(arr.SongXml.File, Path.ChangeExtension(arr.SongXml.File, "prebassfix.xml"));
             File.Delete(arr.SongXml.File);
             using (var stream = File.OpenWrite(arr.SongXml.File))
             {
@@ -1167,10 +1163,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (String.IsNullOrEmpty(AlbumArtPath) || !File.Exists(AlbumArtPath))
             {
                 var diagResult = MessageBox.
-                    Show("Warning: Album Art file not found!" + Environment.NewLine +
-                    "If you click 'Yes' default album art will be defined." + Environment.NewLine +
-                    "Else you click 'No' you want to select the Album Art File.",
-                    MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                    Show("Album Artwork not found." + Environment.NewLine +
+                    "Default album art will be used." + Environment.NewLine +
+                    "Click 'Yes' to continue or 'No' to select Album Artwork.",
+                    MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (diagResult == DialogResult.No)
                 {

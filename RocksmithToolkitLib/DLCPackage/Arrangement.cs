@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-
+using System.Xml.Linq;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
@@ -61,6 +62,8 @@ namespace RocksmithToolkitLib.DLCPackage
         public int MasterId { get; set; }
         // Motronome.
         public Metronome Metronome { get; set; }
+        // preserve EOF and DDS comments
+        public IEnumerable<XComment> XmlComments { get; set; }
 
         public Arrangement()
         {
@@ -105,6 +108,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 tuning.Tuning = song.Tuning;
                 TuningDefinitionRepository.Instance().Add(tuning, true);
             }
+
             this.Tuning = tuning.UIName;
             this.TuningStrings = tuning.Tuning;
             this.CapoFret = attr.CapoFret;
@@ -127,6 +131,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
+
+            this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
         }
 
         public override string ToString()

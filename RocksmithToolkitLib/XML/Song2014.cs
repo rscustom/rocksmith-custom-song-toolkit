@@ -17,10 +17,6 @@ namespace RocksmithToolkitLib.Xml
     [XmlRoot("song", Namespace = "", IsNullable = false)]
     public class Song2014
     {
-        [XmlIgnore]
-        [JsonIgnore]
-        static IEnumerable<XComment> commentNodes;
-
         [XmlAttribute("version")] // RS2014 is 7 or above
         public string Version { get; set; }
 
@@ -142,6 +138,7 @@ namespace RocksmithToolkitLib.Xml
         [XmlArray("events")]
         [XmlArrayItem("event")]
         public SongEvent[] Events { get; set; }
+
         /*
          * B is for Beat?
          * "B0", "High pitch tick"
@@ -171,14 +168,16 @@ namespace RocksmithToolkitLib.Xml
         [XmlArrayItem("control")]
         public SongControl[] Controls { get; set; }
 
-        [XmlElement("transcriptionTrack")]// DDC recuired node
+        [XmlElement("transcriptionTrack")] // DDC recuired node
         public TranscriptionTrack2014 TranscriptionTrack { get; set; }
 
         [XmlArray("levels")]
         [XmlArrayItem("level", typeof(SongLevel2014))]
         public SongLevel2014[] Levels { get; set; }
 
-        public Song2014() { }
+        public Song2014()
+        {
+        }
 
         public Song2014(Sng2014HSL.Sng sngData, Attributes2014 attr = null)
         {
@@ -224,7 +223,8 @@ namespace RocksmithToolkitLib.Xml
 
             Tones = (attr != null) ? SongTone2014.Parse(sngData.Tones, attr) : SongTone2014.Parse(sngData.Tones);
             if (attr == null)
-            { // Fix tones slots for fake tone names if manifest was not entered
+            {
+                // Fix tones slots for fake tone names if manifest was not entered
                 foreach (var tone in Tones)
                 {
                     if (tone.Name.EndsWith("_0"))
@@ -271,48 +271,45 @@ namespace RocksmithToolkitLib.Xml
         }
 
         /// <summary>
-        /// Loads the xml comments, like EOF and DDC, to keep track of its versions.
+        /// Reads the xml comments, like EOF and DDC, to keep track of its versions.
         /// </summary>
         /// <param name="xmlSongRS2014File">Xml file path.</param>
-        static void LoadXmlComments(string xmlSongRS2014File)
+        public static IEnumerable<XComment> ReadXmlComments(string xmlSongRS2014File)
         {
+            IEnumerable<XComment> commentNodes = new List<XComment>();
             try
             {
-                // this fails if there are no comments
+                // this could fail if there are no comments
                 var xml = XDocument.Load(xmlSongRS2014File);
                 commentNodes = xml.DescendantNodes().OfType<XComment>();
             }
             catch (Exception ex)
             {
+                commentNodes = null;
                 Console.WriteLine("This XML Arrangement has no comments: " + ex.Message);
             }
-
+            return commentNodes;
         }
 
         ///<summary>
-        ///Writes the EOF\DDC xml comments.
+        ///Write the EOF\DDC xml comments.
         ///</summary>
         ///<param name="song">Xml stream.</param>
-        static void FixXmlComments(Stream song)
+        public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null)
         {
-            if (commentNodes != null)
+            if (commentNodes != null && commentNodes.Any())
             {
-                song.Position = 0;
-                var xml = XDocument.Load(song);
-                // check for arrangment that have no comments
-                if (xml != null) 
-                {
-                    xml.AddFirst(commentNodes);
-                    xml.Save(song);
-                    song.Position = 0;
-                }
+                XDocument xml = XDocument.Load(xmlSongRS2014File);
+                // reverse order of stored comments (original order)
+                foreach (var commentNode in commentNodes.Reverse())
+                    xml.Element("song").AddFirst(new XComment(commentNode));
+
+                xml.Save(xmlSongRS2014File);
             }
         }
 
         public static Song2014 LoadFromFile(string xmlSongRS2014File)
         {
-            LoadXmlComments(xmlSongRS2014File);
-
             using (var reader = new StreamReader(xmlSongRS2014File))
             {
                 return new XmlStreamingDeserializer<Song2014>(reader).Deserialize();
@@ -325,25 +322,16 @@ namespace RocksmithToolkitLib.Xml
             ns.Add("", "");
 
             var song = new MemoryStream();
-            using (var writer = XmlWriter.Create(song, new XmlWriterSettings
-            {
-                Indent = true,
-                OmitXmlDeclaration = omitXmlDeclaration,
-                Encoding = new UTF8Encoding(false)
-            }))
+            using (var writer = XmlWriter.Create(song, new XmlWriterSettings { Indent = true, OmitXmlDeclaration = omitXmlDeclaration, Encoding = new UTF8Encoding(false) }))
             {
                 new XmlSerializer(typeof(Song2014)).Serialize(writer, this, ns);
             }
 
             FixArrayAttribs(song);
-            FixXmlComments(song);
-            // process crashes badly if these next lines are removed
             song.Position = 0;
             song.CopyTo(stream);
             stream.Flush();
             stream.Seek(0, SeekOrigin.Begin);
-            // part of root element is missing error
-            // stream = new MemoryStream(song.ToArray());
         }
 
         /// <summary>
@@ -352,10 +340,7 @@ namespace RocksmithToolkitLib.Xml
         /// <param name="xml">Xml stream.</param>
         private static void FixArrayAttribs(Stream xml)
         {
-            string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs",
-                "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes"/*DDC*/,
-                "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes"
-            };
+            string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs", "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes" /*DDC*/, "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes" };
 
             xml.Position = 0;
             var doc = XDocument.Load(xml);
@@ -375,31 +360,6 @@ namespace RocksmithToolkitLib.Xml
             xml.Position = 0;
             doc.Save(xml);
         }
-
-        // TODO: Disabled for now ... root element is missing error
-        //        static void FixArrayAttribs(Stream xml)
-        //        {
-        //            string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs",
-        //"phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes"/*DDC*/,
-        //"ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes"
-        //};
-        //            var doc = XDocument.Load(xml); xml.Position = 0;
-        //            foreach (var n in anodes)
-        //            {
-        //                var es = doc.Descendants(n).ToArray();
-        //                if (es.Any())
-        //                    foreach (var e in es)
-        //                    {
-        //                        var ret = e.Attribute("count");
-        //                        if (ret == null)
-        //                            e.Add(new XAttribute("count", e.Elements().Count()));
-        //                        else
-        //                            ret.SetValue(e.Elements().Count());
-        //                    }
-        //            }
-        //            doc.Save(xml); xml.Position = 0;
-        //        }
-
     }
 
     public class SongArrangementProperties2014 : SongArrangementProperties
