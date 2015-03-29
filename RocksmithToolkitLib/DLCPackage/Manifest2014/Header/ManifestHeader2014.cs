@@ -52,9 +52,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
 
         public static ManifestHeader2014<T> LoadFromFile(string manifestHeader2014FilePath) {
             using (var reader = new StreamReader(manifestHeader2014FilePath)) {
-                var manifest = new ManifestHeader2014<T>();
-                manifest = JsonConvert.DeserializeObject<ManifestHeader2014<T>>(reader.ReadToEnd());
-                return manifest;
+                return JsonConvert.DeserializeObject<ManifestHeader2014<T>>(reader.ReadToEnd());
             }
         }
     }

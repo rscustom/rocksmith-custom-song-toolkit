@@ -56,7 +56,8 @@ namespace RocksmithToolkitLib
             }
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return String.Format("{0}_{1}", version, platform);
         }
     }

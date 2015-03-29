@@ -15,18 +15,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pcdecrypt", "RocksmithToolk
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-party Apps", "{17ADB8C7-17DF-4BE3-8460-3E342F334B53}"
 	ProjectSection(SolutionItems) = preProject
-		Third-party Apps\tool\core.jar = Third-party Apps\tool\core.jar
+		Third-party Apps\7za.exe = Third-party Apps\7za.exe
 		Third-party Apps\nvdxt.exe = Third-party Apps\nvdxt.exe
+		Third-party Apps\oggCut.exe = Third-party Apps\oggCut.exe
+		Third-party Apps\oggdec.exe = Third-party Apps\oggdec.exe
+		Third-party Apps\oggenc.exe = Third-party Apps\oggenc.exe
+		Third-party Apps\PackageCreatorCLI.bat = Third-party Apps\PackageCreatorCLI.bat
 		Third-party Apps\packed_codebooks.bin = Third-party Apps\packed_codebooks.bin
 		Third-party Apps\packed_codebooks_aoTuV_603.bin = Third-party Apps\packed_codebooks_aoTuV_603.bin
-		Third-party Apps\ps3_decrypt.cmd = Third-party Apps\ps3_decrypt.cmd
-		Third-party Apps\ps3_decrypt.config = Third-party Apps\ps3_decrypt.config
-		Third-party Apps\ps3_encrypt.cmd = Third-party Apps\ps3_encrypt.cmd
-		Third-party Apps\ps3_encrypt.config = Third-party Apps\ps3_encrypt.config
+		Third-party Apps\PackerCLI.bat = Third-party Apps\PackerCLI.bat
 		Third-party Apps\readme.txt = Third-party Apps\readme.txt
-		Third-party Apps\rebuilder.exe = Third-party Apps\rebuilder.exe
 		Third-party Apps\revorb.exe = Third-party Apps\revorb.exe
-		Third-party Apps\tool\sfk.exe = Third-party Apps\tool\sfk.exe
+		Third-party Apps\topng.exe = Third-party Apps\topng.exe
+		Third-party Apps\UnpackerCLI.bat = Third-party Apps\UnpackerCLI.bat
 		Third-party Apps\ww2ogg.exe = Third-party Apps\ww2ogg.exe
 	EndProjectSection
 EndProject
@@ -49,6 +50,25 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "artistfolders", "RocksmithToolkitCLI\artistfolders\artistfolders.csproj", "{E742753F-9DC3-4AB7-B129-DC11EB2302CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "convert2012", "RocksmithToolkitCLI\convert2012\convert2012.csproj", "{FE4E3BDA-2942-4009-9F42-07ECEF8DE350}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tool", "tool", "{8BDB8985-CC6B-4479-A9A7-0489836D87CD}"
+	ProjectSection(SolutionItems) = preProject
+		Third-party Apps\tool\core.jar = Third-party Apps\tool\core.jar
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ddc", "ddc", "{CB7159F6-4CF1-4296-A7EA-BCC4127C0441}"
+	ProjectSection(SolutionItems) = preProject
+		Third-party Apps\ddc\ddc.exe = Third-party Apps\ddc\ddc.exe
+		Third-party Apps\ddc\ddc_chords_protector.xml = Third-party Apps\ddc\ddc_chords_protector.xml
+		Third-party Apps\ddc\ddc_chords_remover.xml = Third-party Apps\ddc\ddc_chords_remover.xml
+		Third-party Apps\ddc\ddc_dd_remover.xml = Third-party Apps\ddc\ddc_dd_remover.xml
+		Third-party Apps\ddc\ddc_default.cfg = Third-party Apps\ddc\ddc_default.cfg
+		Third-party Apps\ddc\ddc_default.xml = Third-party Apps\ddc\ddc_default.xml
+		Third-party Apps\ddc\ddc_keep_all_levels.cfg = Third-party Apps\ddc\ddc_keep_all_levels.cfg
+		Third-party Apps\ddc\ddc_merge_all_levels.cfg = Third-party Apps\ddc\ddc_merge_all_levels.cfg
+		Third-party Apps\ddc\license.txt = Third-party Apps\ddc\license.txt
+		Third-party Apps\ddc\readme.txt = Third-party Apps\ddc\readme.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -311,5 +331,7 @@ Global
 		{ED268869-387A-477E-A652-C6E47BE2AC02} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{E742753F-9DC3-4AB7-B129-DC11EB2302CA} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{FE4E3BDA-2942-4009-9F42-07ECEF8DE350} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
+		{8BDB8985-CC6B-4479-A9A7-0489836D87CD} = {17ADB8C7-17DF-4BE3-8460-3E342F334B53}
+		{CB7159F6-4CF1-4296-A7EA-BCC4127C0441} = {17ADB8C7-17DF-4BE3-8460-3E342F334B53}
 	EndGlobalSection
 EndGlobal

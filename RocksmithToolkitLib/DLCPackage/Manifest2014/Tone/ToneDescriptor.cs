@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.Xml;
-using System.IO;
-using System.Reflection;
-using RocksmithToolkitLib.Sng;
+﻿using System.Collections.Generic;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {

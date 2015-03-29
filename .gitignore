@@ -95,6 +95,7 @@ AppPackages/
 # Others
 [Oo]bj
 sql
+TestResults
 [Tt]est[Rr]esult*
 *.Cache
 *.resources
