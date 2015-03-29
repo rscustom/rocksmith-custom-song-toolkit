@@ -303,6 +303,8 @@ namespace RocksmithToolkitLib.Xml
                 // reverse order of stored comments (original order)
                 foreach (var commentNode in commentNodes.Reverse())
                     xml.Element("song").AddFirst(new XComment(commentNode));
+                // this looks nicers but does not match the EOF original
+                // xml.Element("song").AddBeforeSelf(new XComment(commentNode));
 
                 xml.Save(xmlSongRS2014File);
             }

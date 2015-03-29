@@ -230,8 +230,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             songVolumeBox.MouseEnter += songVolumeBox_MouseEnter;
             previewVolumeBox.MouseEnter += songVolumeBox_MouseEnter;
             AddOnChangeHandlerToInputControls();
-            this.Disposed += DlcPackageCreator_Dispose;
-
 
             try
             {
@@ -1969,21 +1967,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void InputControls_OnChange(object sender, EventArgs e)
         {
             userChangesToInputControls++;
-        }
-
-        private void DlcPackageCreator_Dispose(object sender, EventArgs e)
-        {
-            // TODO: drive is running low on space either get a bigger drive or
-            // cleanup all toolkit leftovers *.tmp and *.dds files from the temp folder
-            var tmpDir = Path.GetTempPath();
-            // List<string> tmpFiles = new List<string>();
-            string[] extensions = { ".tmp", ".dds" };
-            foreach (string tmpFile in Directory.EnumerateFiles(tmpDir, "*.*", SearchOption.TopDirectoryOnly)
-                .Where(s => extensions.Any(ext => ext == Path.GetExtension(s))))
-            {
-                File.Delete(tmpFile);
-                // tmpFiles.Add(tmpFile);
-            }
         }
 
     }

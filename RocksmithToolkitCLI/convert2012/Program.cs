@@ -47,7 +47,7 @@ namespace convert2012
             // iterate through cdlc folders and find *.dat files
             var cdlcFilesPaths = Directory.GetFiles(srcDir, "*.dat", SearchOption.AllDirectories);
             var cdlcSaveDir = Path.Combine(Path.GetDirectoryName(cdlcFilesPaths[0]), "Converted CDLC");
-           
+
             if (!Directory.Exists(cdlcSaveDir))
                 Directory.CreateDirectory(cdlcSaveDir);
 
@@ -78,6 +78,7 @@ namespace convert2012
 
                     foreach (var arr in info.Arrangements)
                     {
+                        Console.WriteLine(@"Converting XML Arrangement: " + arr.ArrangementType);
                         arr.SongFile.File = "";
 
                         if (arr.ArrangementType != ArrangementType.Vocal)

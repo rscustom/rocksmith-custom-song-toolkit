@@ -657,7 +657,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             {
                 // this is fix for bad RS1 CDLC tones
                 tone2014.Name = "default_acoustic";
-                tone2014.Key =  "DEFAULT_ACOUSTIC";
+                tone2014.Key = "DEFAULT_ACOUSTIC";
                 //
                 tone2014.ToneDescriptors.Add("$[35721]ACOUSTIC");
                 amp.Type = "Amps";
