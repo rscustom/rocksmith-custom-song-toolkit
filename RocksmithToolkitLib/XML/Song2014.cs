@@ -342,7 +342,7 @@ namespace RocksmithToolkitLib.Xml
         /// <param name="xml">Xml stream.</param>
         private static void FixArrayAttribs(Stream xml)
         {
-            string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs", "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes" /*DDC*/, "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes" };
+            string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs", "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes" /*DDC*/, "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes", "tones" };
 
             xml.Position = 0;
             var doc = XDocument.Load(xml);
