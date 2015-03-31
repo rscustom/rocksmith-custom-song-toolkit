@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Xml.Linq;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
@@ -63,6 +66,7 @@ namespace RocksmithToolkitLib.DLCPackage
         // Motronome.
         public Metronome Metronome { get; set; }
         // preserve EOF and DDS comments
+    [IgnoreDataMember] // required for SaveTemplate feature
         public IEnumerable<XComment> XmlComments { get; set; }
 
         public Arrangement()

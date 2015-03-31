@@ -491,7 +491,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             Pedal2014 rack2 = new Pedal2014();
             tone2014.ToneDescriptors = new List<string>();
             // use Tone Key for better conversion
-            tone2014.Name = rs1Tone.Name ?? "default";
+            tone2014.Name = rs1Tone.Name ?? "Default";
             tone2014.Key = rs1Tone.Key ?? "DEFAULT";
             tone2014.Volume = rs1Tone.Volume;
             tone2014.IsCustom = true;
@@ -633,7 +633,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     PrePedal1 = prepedal1
                 };
             }
-            else if (tone2014.Key.ToUpper().Contains("_BASS"))
+            else if (tone2014.Key.ToUpper().Contains("BASS"))
             {
                 tone2014.ToneDescriptors.Add("$[35715]BASS");
                 amp.Type = "Amps";
@@ -656,7 +656,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             else // default acoustic is better than nothing, right
             {
                 // this is fix for bad RS1 CDLC tones
-                tone2014.Name = "default_acoustic";
+                tone2014.Name = "Default_acoustic";
                 tone2014.Key = "DEFAULT_ACOUSTIC";
                 //
                 tone2014.ToneDescriptors.Add("$[35721]ACOUSTIC");

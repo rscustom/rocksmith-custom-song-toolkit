@@ -53,16 +53,16 @@ namespace convert2012
 
             foreach (var cdlcFilePath in cdlcFilesPaths)
             {
+                // Unpack
+                Console.WriteLine(@"Unpacking: " + Path.GetFileName(cdlcFilePath));
+                var unpackedDirPath = Path.Combine(Path.GetDirectoryName(cdlcFilePath), String.Format("{0}_Pc", Path.GetFileNameWithoutExtension(cdlcFilePath)));
+                var unpackedDest = Path.GetDirectoryName(cdlcFilePath);
+
+                if (Directory.Exists(unpackedDirPath))
+                    DirectoryExtension.SafeDelete(unpackedDirPath);
+
                 try
                 {
-                    // Unpack
-                    Console.WriteLine(@"Unpacking: " + Path.GetFileName(cdlcFilePath));
-                    var unpackedDirPath = Path.Combine(Path.GetDirectoryName(cdlcFilePath), String.Format("{0}_Pc", Path.GetFileNameWithoutExtension(cdlcFilePath)));
-                    var unpackedDest = Path.GetDirectoryName(cdlcFilePath);
-
-                    if (Directory.Exists(unpackedDirPath))
-                        DirectoryExtension.SafeDelete(unpackedDirPath);
-
                     Packer.Unpack(cdlcFilePath, unpackedDest, true, true);
 
                     // Load Package Data
@@ -78,7 +78,7 @@ namespace convert2012
 
                     foreach (var arr in info.Arrangements)
                     {
-                        Console.WriteLine(@"Converting XML Arrangement: " + arr.ArrangementType);
+                        Console.WriteLine(@"Converting XML Arrangement: " + arr);
                         arr.SongFile.File = "";
 
                         if (arr.ArrangementType != ArrangementType.Vocal)
@@ -92,19 +92,20 @@ namespace convert2012
                     Console.WriteLine(@"Repacking as RS2014 CDLC: " + cdlcFileName + @".psarc");
                     Console.WriteLine("");
                     DLCPackageCreator.Generate(cdlcSavePath, info, new Platform(GamePlatform.Pc, GameVersion.RS2014), pnum: 1);
-
                     DirectoryExtension.SafeDelete(unpackedDirPath);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Exception: " + ex.Message);
-                    Console.ReadLine();
+                    Console.WriteLine(@"Conversion could not be completed: " + ex.Message);
+                    Console.WriteLine();
                 }
             }
 
             Console.WriteLine();
             Console.WriteLine(@"Done Processing CDLC Folder ...");
             Console.WriteLine(@"Converted CDLC Saved To: " + cdlcSaveDir);
+            Console.WriteLine(@"Remember ... CDLC Arrangements, Tones, Volumes, etc");
+            Console.WriteLine(@"can be modified using the toolkit GUI, Creator tab");
             Console.WriteLine();
             Console.WriteLine(@"Press any key to continue ...");
             Console.Read();
@@ -136,7 +137,6 @@ namespace convert2012
             {
                 songXml.Serialize(stream);
             }
-
         }
 
         private static DLCPackageData ConvertAudio(DLCPackageData info)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -104,8 +105,8 @@ namespace RocksmithToolkitLib.DLCPackage
             data.SongInfo.ArtistSort = attr.FirstOrDefault().ArtistNameSort;
             data.Name = attr.FirstOrDefault().SongKey;
 
-            //Load tone manifest
-            var toneManifestJson = Directory.GetFiles(unpackedDir, "tone.manifest.json", SearchOption.AllDirectories);
+            //Load tone manifest, even poorly formed tone_bass.manifest.json
+            var toneManifestJson = Directory.GetFiles(unpackedDir, "*tone*.manifest.json", SearchOption.AllDirectories);
             if (toneManifestJson.Length < 1)
                 throw new DataException("No tone.manifest.json file found.");
 
@@ -148,7 +149,11 @@ namespace RocksmithToolkitLib.DLCPackage
             List<Tone2014> tones2014 = new List<Tone2014>();
             foreach (var xmlFile in xmlFiles)
             {
-                if (xmlFile.ToLower().Contains("vocals"))
+                if (xmlFile.ToLower().Contains("metadata")) // skip DF file
+                    continue;
+
+                // some poorly formed RS1 CDLC use just "vocal"
+                if (xmlFile.ToLower().Contains("vocal"))
                 {
                     var voc = new Arrangement();
                     voc.Name = ArrangementName.Vocals;
@@ -173,22 +178,68 @@ namespace RocksmithToolkitLib.DLCPackage
                         data.SongInfo.AverageTempo = (int)obj1.AverageBPM(rsSong);
                     }
 
-                    // matchup songs.manifest, tone.manifest, and Song xml
-                    foreach (var arrangement in attr) // songs.manifest
+                    // matchup rsSong, songs.manifest, and tone.manifest files
+                    foreach (var arrangement in attr)
                     {
-                        if (rsSong.Part == arrangement.SongPartition)
+                        // apply best guesstimate matching, RS1 CDLC are very inconsistent
+                        // TODO: improve accuracy possibly by matching .xblock data
+                        string xmlArr = rsSong.Arrangement.ToLowerInvariant();
+                        // var matchLead = Regex.Match(xmlArr.ToLower(), "^lead$", RegexOptions.IgnoreCase);
+                        // if(matchLead.Success)
+
+                        if (xmlArr.ToLower().Contains("guitar") && !xmlArr.ToLower().Equals("lead") && !xmlArr.ToLower().Equals("rhythm") && !xmlArr.ToLower().Equals("combo") && !xmlArr.ToLower().Equals("bass"))
+                        {
+                            if (xmlArr.ToUpper().Equals("PART REAL_GUITAR_22")) // 
+                            {
+                                if (arrangement.ArrangementName.ToLower().Contains("combo"))
+                                    rsSong.Arrangement = arrangement.ArrangementName = "Rhythm";
+                                else
+                                    rsSong.Arrangement = arrangement.ArrangementName = "Lead";
+                            }
+                            else
+                            {
+                                if (arrangement.ArrangementName.ToLower().Contains("combo"))
+                                    rsSong.Arrangement = arrangement.ArrangementName = "Rhythm";
+                                else
+                                    rsSong.Arrangement = arrangement.ArrangementName = "Lead";
+                            }
+                        }
+
+                        if (xmlArr.ToLower().Contains("lead") && arrangement.ArrangementName.ToLower().Contains("rhythm"))
+                            rsSong.Arrangement = arrangement.ArrangementName = "Lead";
+
+                        if (xmlArr.ToLower().Contains("rhythm") && arrangement.ArrangementName.ToLower().Contains("lead"))
+                            rsSong.Arrangement = arrangement.ArrangementName = "Rhythm";
+
+                        if (xmlArr.ToLower().Contains("lead"))
+                            if (!arrangement.ArrangementName.ToLower().Contains("lead"))
+                                continue;
+                        if (xmlArr.ToLower().Contains("rhythm"))
+                            if (!arrangement.ArrangementName.ToLower().Contains("rhythm"))
+                                continue;
+                        if (xmlArr.ToLower().Contains("combo"))
+                            if (!arrangement.ArrangementName.ToLower().Contains("combo"))
+                                continue;
+                        if (xmlArr.ToLower().Contains("bass"))
+                            if (!arrangement.ArrangementName.ToLower().Contains("bass"))
+                                continue;
+
+                        // if (rsSong.Part == arrangement.SongPartition) // this is inaccurate for some
                         {
                             foreach (var tone in tones) // tone.manifest
                             {
-                                if (arrangement.EffectChainName == tone.Key)
+                                if (String.IsNullOrEmpty(arrangement.EffectChainName))
+                                    arrangement.EffectChainName = "Default";
+
+                                if (arrangement.EffectChainName.ToLower() == tone.Key.ToLower() || tones.Count == 1) // ok
                                 {
                                     if (convert)
                                         using (var obj1 = new Rs1Converter())
                                             tones2014.Add(obj1.ToneToTone2014(tone));
 
                                     // load attr2014 with RS1 mapped values for use by Arrangement()
-                                    // ToneDescriptor will use tone.key for consistent naming
-                                    tone.Name = tone.Key ?? tone.Name;
+                                    // ToneDescriptor will always use tone.key for consistent naming
+                                    tone.Name = String.IsNullOrEmpty(tone.Key) ? tone.Name : tone.Key;
                                     attr2014.Tone_Base = tone.Name;
                                     // attr2014.Tone_A = tone.Name;
                                     attr2014.ArrangementName = arrangement.ArrangementName;
@@ -242,7 +293,7 @@ namespace RocksmithToolkitLib.DLCPackage
                                             attr2014.ArrangementProperties.RouteMask = 2;
                                         }
                                     }
-                                     
+
                                     if (arrangement.Tuning == "E Standard")
                                         rsSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
                                     else if (arrangement.Tuning == "DropD")
@@ -260,8 +311,12 @@ namespace RocksmithToolkitLib.DLCPackage
                             }
                         }
 
-                        if (foundToneForArrangement) break;
+                        if (foundToneForArrangement)
+                            break;
                     }
+
+                    if (!foundToneForArrangement)
+                        Console.WriteLine(@"Could not determine the arrangement tone pairing");
 
                     // write the tones to file
                     using (var obj1 = new Rs1Converter())
@@ -279,7 +334,15 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
 
                     // Adding Song Arrangement
-                    data.Arrangements.Add(new Arrangement(attr2014, xmlFile));
+                    try
+                    {
+                        data.Arrangements.Add(new Arrangement(attr2014, xmlFile));
+                    }
+                    catch (Exception ex)
+                    {
+                        // mainly for the benifit of convert2012 CLI users
+                        Console.WriteLine(@"This CDLC could not be auto converted." + Environment.NewLine + "You can still try manually adding the arrangements and assests." + Environment.NewLine + ex.Message);
+                    }
                 }
             }
 
