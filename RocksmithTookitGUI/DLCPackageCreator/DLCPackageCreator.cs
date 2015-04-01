@@ -786,90 +786,91 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // UNPACK
-            var unpackedDir = Packer.Unpack(sourcePackage, saveWorkingDirectoryPath, true, true, false);
-            var packagePlatform = sourcePackage.GetPlatform();
+                var unpackedDir = Packer.Unpack(sourcePackage, saveWorkingDirectoryPath, true, true, false);
+                var packagePlatform = sourcePackage.GetPlatform();
 
-            // REORGANIZE
-            var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
-            if (structured && !quick)
-                unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
+                // REORGANIZE
+                var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
+                if (structured && !quick)
+                    unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
 
-            // LOAD DATA
-            var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform);
+                // LOAD DATA
+                var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform);
 
-            switch (packagePlatform.platform)
-            {
-                case GamePlatform.Pc:
-                    info.Pc = true;
-                    break;
-                case GamePlatform.Mac:
-                    info.Mac = true;
-                    break;
-                case GamePlatform.XBox360:
-                    info.XBox360 = true;
-                    break;
-                case GamePlatform.PS3:
-                    info.PS3 = true;
-                    break;
-            }
-
-            //apply bass fix.
-            for (int i = 0; i < info.Arrangements.Count; i++)
-            {
-                Arrangement arr = info.Arrangements[i];
-                if (arr.ArrangementType == ArrangementType.Bass)
+                switch (packagePlatform.platform)
                 {
-                    ApplyBassFix(arr);
+                    case GamePlatform.Pc:
+                        info.Pc = true;
+                        break;
+                    case GamePlatform.Mac:
+                        info.Mac = true;
+                        break;
+                    case GamePlatform.XBox360:
+                        info.XBox360 = true;
+                        break;
+                    case GamePlatform.PS3:
+                        info.PS3 = true;
+                        break;
                 }
-            }
 
-            if (!quick)
-            {
-                using (var ofd = new SaveFileDialog())
+                //apply bass fix.
+                for (int i = 0; i < info.Arrangements.Count; i++)
                 {
-                    ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion.Replace(".", "_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
-                    ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
-                    if (ofd.ShowDialog() != DialogResult.OK)
+                    Arrangement arr = info.Arrangements[i];
+                    if (arr.ArrangementType == ArrangementType.Bass)
                     {
-                        lowTuningBassFixButton.Enabled = true;
-                        return;
+                        ApplyBassFix(arr);
                     }
-                    dlcSavePath = ofd.FileName;
                 }
-            }
-            else
-            {
-                dlcSavePath = Path.Combine(saveWorkingDirectoryPath, Path.GetFileNameWithoutExtension(sourcePackage) + "_bassfix");
-            }
 
-            if (Path.GetFileName(dlcSavePath).Contains(" ") && platformPS3.Checked)
-                if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn"))
+                if (!quick)
                 {
-                    MessageBox.Show(String.Format("PS3 package name can't support space character due to encryption limitation. {0} Spaces will be automatic removed for your PS3 package name.", Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    using (var ofd = new SaveFileDialog())
+                    {
+                        ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion.Replace(".", "_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                        ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
+                        if (ofd.ShowDialog() != DialogResult.OK)
+                        {
+                            lowTuningBassFixButton.Enabled = true;
+                            return;
+                        }
+                        dlcSavePath = ofd.FileName;
+                    }
                 }
                 else
                 {
-                    ConfigRepository.Instance()["creator_ps3pkgnamewarn"] = true.ToString();
+                    dlcSavePath = Path.Combine(saveWorkingDirectoryPath, Path.GetFileNameWithoutExtension(sourcePackage) + "_bassfix");
                 }
 
-            if (deleteSourceFile)
-            {
-                try
-                {
-                    File.Delete(sourcePackage);
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(ex.Message);
-                    MessageBox.Show("Denied rights needed to delete source package, or an error occured. Package still may exist. Try running as Administrator.");
-                }
-            }
+                if (Path.GetFileName(dlcSavePath).Contains(" ") && platformPS3.Checked)
+                    if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn"))
+                    {
+                        MessageBox.Show(String.Format("PS3 package name can't support space character due to encryption limitation. {0} Spaces will be automatic removed for your PS3 package name.", Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        ConfigRepository.Instance()["creator_ps3pkgnamewarn"] = true.ToString();
+                    }
 
-            if (!bwGenerate.IsBusy && info != null)
-            {// Generate CDLC
-                bwGenerate.RunWorkerAsync(info);
-            }
-        }
+                if (deleteSourceFile)
+                {
+                    try
+                    {
+                        File.Delete(sourcePackage);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.Message);
+                        MessageBox.Show("Denied rights needed to delete source package, or an error occured. Package still may exist. Try running as Administrator.");
+                    }
+                }
+
+                if (!bwGenerate.IsBusy && info != null)
+                {// Generate CDLC
+                    bwGenerate.RunWorkerAsync(info);
+                }
+         }
+
         //consider to move this to RocksmithToolkitLib
         public void ApplyBassFix(Arrangement arr)
         {

@@ -112,6 +112,7 @@
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
     <Compile Include="Ogg\Wwise.cs" />
     <Compile Include="SngToTab\Sng2Tab.cs" />
+    <Compile Include="Sng\Constants.cs" />
     <Compile Include="Song2014ToTab\Gp5Converter.cs" />
     <Compile Include="Song2014ToTab\Rs1Converter.cs" />
     <Compile Include="Song2014ToTab\Rs2014Converter.cs">

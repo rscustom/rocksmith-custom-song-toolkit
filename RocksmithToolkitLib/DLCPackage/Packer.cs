@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -19,7 +20,7 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         #region FIELDS
 
-        public const string ROOT_XBox360 = "Root"; 
+        public const string ROOT_XBox360 = "Root";
         private static readonly string PS3_WORKDIR = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "edat");
 
         #endregion
@@ -34,7 +35,8 @@ namespace RocksmithToolkitLib.DLCPackage
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
                 platform = predefinedPlatform;
 
-            switch (platform.platform) {
+            switch (platform.platform)
+            {
                 case GamePlatform.Pc:
                 case GamePlatform.Mac:
                     if (platform.version == GameVersion.RS2012)
@@ -57,7 +59,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region UNPACK
 
-        public static string Unpack(string sourceFileName, string savePath, Platform predefinedPlatform) {
+        public static string Unpack(string sourceFileName, string savePath, Platform predefinedPlatform)
+        {
             return Unpack(sourceFileName, savePath, false, false, true, predefinedPlatform);
         }
 
@@ -117,19 +120,23 @@ namespace RocksmithToolkitLib.DLCPackage
                 fnameWithoutExt = fnameWithoutExt.Substring(0, fnameWithoutExt.LastIndexOf("."));
 
             // DECODE AUDIO
-            if (decodeAudio) {
+            if (decodeAudio)
+            {
                 var audioFiles = Directory.EnumerateFiles(unpackedDir, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
-                foreach (var file in audioFiles) {
+                foreach (var file in audioFiles)
+                {
                     var outputAudioFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
                     OggFile.Revorb(file, outputAudioFileName, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(file).GetWwiseVersion());
                 }
             }
 
             // EXTRACT XML FROM SNG
-            if (extractSongXml && platform.version == GameVersion.RS2014) {
+            if (extractSongXml && platform.version == GameVersion.RS2014)
+            {
                 var sngFiles = Directory.EnumerateFiles(unpackedDir, "*.sng", SearchOption.AllDirectories);
 
-                foreach (var sngFile in sngFiles) {
+                foreach (var sngFile in sngFiles)
+                {
                     var xmlOutput = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
                     xmlOutput = xmlOutput.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, platform.GetPathName()[1].ToLower()), "arr");
 
@@ -141,14 +148,16 @@ namespace RocksmithToolkitLib.DLCPackage
                         arrType = ArrangementType.Vocal;
 
                     Attributes2014 att = null;
-                    if (arrType != ArrangementType.Vocal) {
+                    if (arrType != ArrangementType.Vocal)
+                    {
                         var jsonFiles = Directory.EnumerateFiles(unpackedDir, String.Format("{0}.json", Path.GetFileNameWithoutExtension(sngFile)), SearchOption.AllDirectories).FirstOrDefault();
                         if (jsonFiles.Any() && !String.IsNullOrEmpty(jsonFiles))
                             att = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles).Entries.ToArray()[0].Value.ToArray()[0].Value;
                     }
 
                     var sngContent = Sng2014File.LoadFromFile(sngFile, platform);
-                    using (var outputStream = new FileStream(xmlOutput, FileMode.Create, FileAccess.ReadWrite)) {
+                    using (var outputStream = new FileStream(xmlOutput, FileMode.Create, FileAccess.ReadWrite))
+                    {
                         dynamic xmlContent = null;
 
                         if (arrType == ArrangementType.Vocal)
@@ -246,10 +255,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng, bool updateManifest)
         {
-            using(var psarc = new PSARC.PSARC())
-            using(var psarcStream = new MemoryStream())
+            using (var psarc = new PSARC.PSARC())
+            using (var psarcStream = new MemoryStream())
             {
-                if (updateSng) 
+                if (updateSng)
                     UpdateSng2014(sourcePath, platform);
                 if (updateManifest)
                     UpdateManifest2014(sourcePath, platform);
@@ -344,7 +353,8 @@ namespace RocksmithToolkitLib.DLCPackage
             IEnumerable<string> xboxHeaderFiles = Directory.EnumerateFiles(sourcePath, "*.txt", SearchOption.TopDirectoryOnly);
             if (xboxHeaderFiles.Count() == 1)
             {
-                foreach (var file in xboxHeaderFiles) {                
+                foreach (var file in xboxHeaderFiles)
+                {
                     try
                     {
                         string[] xboxHeader = File.ReadAllLines(file);
@@ -460,7 +470,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (!Directory.Exists(PS3_WORKDIR))
                 Directory.CreateDirectory(PS3_WORKDIR);
 
-            foreach(var junk in Directory.EnumerateFiles(PS3_WORKDIR, "*.*"))
+            foreach (var junk in Directory.EnumerateFiles(PS3_WORKDIR, "*.*"))
                 File.Delete(junk);
 
             var sourceCleanPackage = saveFileName + ".psarc";
@@ -472,7 +482,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var outputMessage = RijndaelEncryptor.EncryptPS3Edat();
 
-            if (outputMessage.IndexOf("Encrypt all EDAT files successfully") > 0) {
+            if (outputMessage.IndexOf("Encrypt all EDAT files successfully") > 0)
+            {
                 if (File.Exists(destCleanPackage))
                     File.Delete(destCleanPackage);
 
@@ -488,7 +499,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (!Directory.Exists(PS3_WORKDIR))
                 Directory.CreateDirectory(PS3_WORKDIR);
 
-            foreach(var junk in Directory.EnumerateFiles(PS3_WORKDIR, "*.*"))
+            foreach (var junk in Directory.EnumerateFiles(PS3_WORKDIR, "*.*"))
                 File.Delete(junk);
 
             if (File.Exists(sourceFileName))
@@ -534,7 +545,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void DeleteFixedAudio(string sourcePath)
         {
-            try 
+            try
             {
                 foreach (var file in Directory.EnumerateFiles(sourcePath, "*_fixed.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))
                     if (File.Exists(file)) File.Delete(file);
@@ -556,9 +567,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static Platform GetPlatform(this string fullPath)
         {//TODO: validate Files by MIME type.
-            if (File.Exists(fullPath)) {
+            if (File.Exists(fullPath))
+            {
                 // Get PLATFORM by Extension + Get PLATFORM by pkg EndName
-                switch (Path.GetExtension(fullPath)) {
+                switch (Path.GetExtension(fullPath))
+                {
                     case ".dat":
                         return new Platform(GamePlatform.Pc, GameVersion.RS2012);
                     case "":
@@ -575,10 +588,13 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 var fullPathInfo = new DirectoryInfo(fullPath);
                 // GET PLATFORM BY PACKAGE ROOT DIRECTORY
-                if (File.Exists(Path.Combine(fullPath, "APP_ID"))) {
+                if (File.Exists(Path.Combine(fullPath, "APP_ID")))
+                {
                     // PC 2012
                     return new Platform(GamePlatform.Pc, GameVersion.RS2012);
-                } else if (File.Exists(Path.Combine(fullPath, "appid.appid"))) {
+                }
+                else if (File.Exists(Path.Combine(fullPath, "appid.appid")))
+                {
                     // PC / MAC 2014
                     var agg = fullPathInfo.EnumerateFiles("*.nt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
                     var aggContent = File.ReadAllText(agg);
@@ -589,7 +605,9 @@ namespace RocksmithToolkitLib.DLCPackage
                         return new Platform(GamePlatform.Mac, GameVersion.RS2014);
                     else
                         return new Platform(GamePlatform.Pc, GameVersion.RS2014); // Because appid.appid have only in RS2014
-                } else if (Directory.Exists(Path.Combine(fullPath, ROOT_XBox360))) {
+                }
+                else if (Directory.Exists(Path.Combine(fullPath, ROOT_XBox360)))
+                {
                     // XBOX 2012/2014
                     var hTxt = fullPathInfo.EnumerateFiles("*.txt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
                     var hTxtContent = File.ReadAllText(hTxt);
@@ -600,11 +618,14 @@ namespace RocksmithToolkitLib.DLCPackage
                         return new Platform(GamePlatform.XBox360, GameVersion.RS2014);
                     else
                         return new Platform(GamePlatform.XBox360, GameVersion.None);
-                } else {
+                }
+                else
+                {
                     // PS3 2012/2014
                     var agg = fullPathInfo.EnumerateFiles("*.nt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
 
-                    if (agg.Length > 0) {
+                    if (agg.Length > 0)
+                    {
                         var aggContent = File.ReadAllText(agg);
 
                         if (aggContent.Contains("\"PS3\""))
@@ -616,8 +637,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
                     else
                         return TryGetPlatformByEndName(fullPath);
-                } 
-            } else
+                }
+            }
+            else
                 return new Platform(GamePlatform.None, GameVersion.None);
         }
 
@@ -634,7 +656,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (Directory.Exists(fileName))
             {// Pc, Mac, XBox360, PS3
-                string platformString = Path.GetFileNameWithoutExtension(fileName).Substring(pIndex+1);
+                string platformString = Path.GetFileNameWithoutExtension(fileName).Substring(pIndex + 1);
                 bool isValid = Enum.TryParse(platformString, true, out p);
                 if (isValid) return new Platform(p, v);
                 else return new Platform(GamePlatform.None, GameVersion.None);
@@ -642,7 +664,8 @@ namespace RocksmithToolkitLib.DLCPackage
             else
             {//_p, _m, _ps3, _xbox
                 string platformString = pIndex > -1 ? Path.GetFileNameWithoutExtension(fileName).Substring(pIndex) : "";
-                switch (platformString.ToLower()) {
+                switch (platformString.ToLower())
+                {
                     case "_p":
                         return new Platform(GamePlatform.Pc, v);
                     case "_m":
@@ -668,39 +691,46 @@ namespace RocksmithToolkitLib.DLCPackage
                 DirectoryExtension.SafeDelete(destpath);
 
             var psarc = new PSARC.PSARC();
-            {
-                psarc.Read(inputStream, true);
-                foreach (var entry in psarc.TOC)
-                {// custom InflateEntries
-                    var fullfilename = Path.Combine(destpath, entry.Name);
-                    if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
-                    {
-                        psarc.InflateEntry(entry);
-                        ExtractPSARC(fullfilename, destpath, entry.Data, platform, false);
-                    }
-                    else
-                    {
-                        Directory.CreateDirectory(Path.GetDirectoryName(fullfilename));
-                        psarc.InflateEntry(entry, fullfilename);
-                        if(entry.Data != null) entry.Data.Close();
-                    }
+            psarc.Read(inputStream, true);
+            foreach (var entry in psarc.TOC)
+            {// custom InflateEntries
+                var fullfilename = Path.Combine(destpath, entry.Name);
+
+                if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
+                {
+                    psarc.InflateEntry(entry);
+                    ExtractPSARC(fullfilename, destpath, entry.Data, platform, false);
                 }
-                if(!String.IsNullOrEmpty(psarc.ErrMSG)) throw new InvalidDataException(psarc.ErrMSG);
+                else
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(fullfilename));
+                    psarc.InflateEntry(entry, fullfilename);
+                    if (entry.Data != null)
+                        entry.Data.Close();
+                }
+
+                if (!String.IsNullOrEmpty(psarc.ErrMSG)) throw new InvalidDataException(psarc.ErrMSG);
             }
         }
 
-        private static void UpdateSng(string songDirectory, Platform platform) {
+        private static void UpdateSng(string songDirectory, Platform platform)
+        {
             var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, @"GR\Behaviors\Songs"));
 
-            foreach (var xmlFile in xmlFiles) {
-                if (File.Exists(xmlFile) && Path.GetExtension(xmlFile) == ".xml") {
+            foreach (var xmlFile in xmlFiles)
+            {
+                if (File.Exists(xmlFile) && Path.GetExtension(xmlFile) == ".xml")
+                {
                     var sngFile = Path.Combine(songDirectory, "GRExports", platform.GetPathName()[1], Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
                     var arrType = ArrangementType.Guitar;
 
-                    if (Path.GetFileName(xmlFile).ToLower().Contains("vocal")) {
+                    if (Path.GetFileName(xmlFile).ToLower().Contains("vocal"))
+                    {
                         arrType = ArrangementType.Vocal;
                         SngFileWriter.Write(xmlFile, sngFile, arrType, platform);
-                    } else {
+                    }
+                    else
+                    {
                         Song song = Song.LoadFromFile(xmlFile);
 
                         if (!Enum.TryParse<ArrangementType>(song.Arrangement, out arrType))
@@ -709,7 +739,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
 
                     SngFileWriter.Write(xmlFile, sngFile, arrType, platform);
-                } else {
+                }
+                else
+                {
                     throw new ArgumentException(String.Format("'{0}' is not a valid XML file.", xmlFile));
                 }
             }
@@ -738,15 +770,17 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         // Handle custom fonts
                         string fontSng = null;
-                        if (arrType == ArrangementType.Vocal) {
+                        if (arrType == ArrangementType.Vocal)
+                        {
                             var vocSng = Sng2014File.LoadFromFile(sngFile, TryGetPlatformByEndName(songDirectory));
-                            if(vocSng.IsCustomFont())
+                            if (vocSng.IsCustomFont())
                             {
                                 vocSng.WriteChartData((fontSng = Path.GetTempFileName()), new Platform(GamePlatform.Pc, GameVersion.None));
                             }
                         }
 
-                        using (var fs = new FileStream(sngFile, FileMode.Create)) {
+                        using (var fs = new FileStream(sngFile, FileMode.Create))
+                        {
                             var sng = Sng2014File.ConvertXML(xmlFile, arrType, fontSng);
                             sng.WriteSng(fs, targetPlatform);
                         }

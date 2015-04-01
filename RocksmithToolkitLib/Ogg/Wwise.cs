@@ -29,36 +29,32 @@ namespace RocksmithToolkitLib.Ogg
         {
             // Audiokinect Wwise might not be installed in the default location ;<
             // so added Wwise location to toolkit configuration menu
+            if (!String.IsNullOrEmpty(ConfigRepository.Instance()["general_wwisepath"]))
+                return ConfigRepository.Instance()["general_wwisepath"];
+
             try
             {
-                return ConfigRepository.Instance()["general_wwisepath"];
+                var programsDir = String.Empty;
+
+                if (Environment.OSVersion.Version.Major >= 6)
+                    programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Audiokinetic");
+                else
+                    programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Audiokinetic");
+
+                var pathWwiseCli = Directory.EnumerateFiles(programsDir, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
+
+                if (String.IsNullOrEmpty(Path.GetFileName(pathWwiseCli)))
+                    throw new FileNotFoundException("Could not find WwiseCLI.exe in " + programsDir + Environment.NewLine + "Please confirm that Build 4828 is installed.");
+
+                return pathWwiseCli;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                try
-                {
-                    var programsDir = String.Empty;
+                MessageBox.Show(new Form { TopMost = true }, @"Could not find WwiseCLI.exe or Audiokinetic directory.  " + Environment.NewLine + @"Please confirm that it is installed and selected in the CST configuration menu.", @"Exception: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    if (Environment.OSVersion.Version.Major >= 6)
-                        programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Audiokinetic");
-                    else
-                        programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Audiokinetic");
-
-                    var pathWwiseCli = Directory.EnumerateFiles(programsDir, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
-
-                    if (String.IsNullOrEmpty(Path.GetFileName(pathWwiseCli)))
-                        throw new FileNotFoundException("Could not find WwiseCLI.exe in " + programsDir + Environment.NewLine + "Please confirm that Build 4828 is installed.");
-
-                    return pathWwiseCli;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(new Form { TopMost = true }, @"Could not find WwiseCLI.exe or Audiokinetic directory.  " + Environment.NewLine + @"Please confirm that it is installed and selected in the CST configuration menu.", @"Exception: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    Application.Exit();
-                    Environment.Exit(-1);
-                    return null;
-                }
+                Application.Exit();
+                Environment.Exit(-1);
+                return null;
             }
         }
 

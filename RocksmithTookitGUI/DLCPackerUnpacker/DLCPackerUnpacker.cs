@@ -282,5 +282,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             dlcPackageCreatorControl.dlcLowTuningBassFix(sender, e, lowTuningBassFixButton, quickBassFixBox.Checked, deleteSourceFileCheckBox.Checked);
         }
 
+
     }
 }

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
+using CON = RocksmithToolkitLib.Sng.Constants;
 
 namespace RocksmithToolkitLib.Xml
 {
@@ -601,14 +602,14 @@ namespace RocksmithToolkitLib.Xml
 
                 // Parse chord mask
                 var mask = chordSection.Chords[i].Mask;
-                if ((mask & Sng2014HSL.Sng2014FileWriter.CHORD_MASK_ARPEGGIO) != 0)
+                if ((mask & CON.CHORD_MASK_ARPEGGIO) != 0)
                 {
-                    mask &= ~Sng2014HSL.Sng2014FileWriter.CHORD_MASK_ARPEGGIO;
+                    mask &= ~CON.CHORD_MASK_ARPEGGIO;
                     sct2014.DisplayName += "-arp";
                 }
-                else if ((mask & Sng2014HSL.Sng2014FileWriter.CHORD_MASK_NOP) != 0)
+                else if ((mask & CON.CHORD_MASK_NOP) != 0)
                 {
-                    mask &= ~Sng2014HSL.Sng2014FileWriter.CHORD_MASK_NOP;
+                    mask &= ~CON.CHORD_MASK_NOP;
                     sct2014.DisplayName += "-nop";
                 }
 
@@ -846,98 +847,98 @@ namespace RocksmithToolkitLib.Xml
             this.Pluck = notSetup;
 
             // Remove flags from markers (complex techniques will be setup later)
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SINGLE) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SINGLE;
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_OPEN) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_OPEN;
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_LEFTHAND) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_LEFTHAND;
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLIDE) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLIDE;
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SUSTAIN) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SUSTAIN;
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLIDEUNPITCHEDTO) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLIDEUNPITCHEDTO;
+            if ((p & CON.NOTE_MASK_SINGLE) != 0)
+                p &= ~CON.NOTE_MASK_SINGLE;
+            if ((p & CON.NOTE_MASK_OPEN) != 0)
+                p &= ~CON.NOTE_MASK_OPEN;
+            if ((p & CON.NOTE_MASK_LEFTHAND) != 0)
+                p &= ~CON.NOTE_MASK_LEFTHAND;
+            if ((p & CON.NOTE_MASK_SLIDE) != 0)
+                p &= ~CON.NOTE_MASK_SLIDE;
+            if ((p & CON.NOTE_MASK_SUSTAIN) != 0)
+                p &= ~CON.NOTE_MASK_SUSTAIN;
+            if ((p & CON.NOTE_MASK_SLIDEUNPITCHEDTO) != 0)
+                p &= ~CON.NOTE_MASK_SLIDEUNPITCHEDTO;
 
             // Setup boolean techniques and remove flag (can be override later)
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT) != 0)
+            if ((p & CON.NOTE_MASK_PARENT) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT;
+                p &= ~CON.NOTE_MASK_PARENT;
                 this.LinkNext = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_BEND) != 0)
+            if ((p & CON.NOTE_MASK_BEND) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_BEND;
+                p &= ~CON.NOTE_MASK_BEND;
                 this.Bend = 1; //Will be setup later
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PLUCK) != 0)
+            if ((p & CON.NOTE_MASK_PLUCK) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PLUCK;
+                p &= ~CON.NOTE_MASK_PLUCK;
                 this.Pluck = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLAP) != 0)
+            if ((p & CON.NOTE_MASK_SLAP) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SLAP;
+                p &= ~CON.NOTE_MASK_SLAP;
                 this.Slap = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TAP) != 0)
+            if ((p & CON.NOTE_MASK_TAP) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TAP;
+                p &= ~CON.NOTE_MASK_TAP;
                 this.Tap = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_VIBRATO) != 0)
+            if ((p & CON.NOTE_MASK_VIBRATO) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_VIBRATO;
+                p &= ~CON.NOTE_MASK_VIBRATO;
                 this.Vibrato = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT) != 0)
+            if ((p & CON.NOTE_MASK_ACCENT) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT;
+                p &= ~CON.NOTE_MASK_ACCENT;
                 this.Accent = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HAMMERON) != 0)
+            if ((p & CON.NOTE_MASK_HAMMERON) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HAMMERON;
+                p &= ~CON.NOTE_MASK_HAMMERON;
                 this.HammerOn = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PULLOFF) != 0)
+            if ((p & CON.NOTE_MASK_PULLOFF) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PULLOFF;
+                p &= ~CON.NOTE_MASK_PULLOFF;
                 this.PullOff = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HARMONIC) != 0)
+            if ((p & CON.NOTE_MASK_HARMONIC) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HARMONIC;
+                p &= ~CON.NOTE_MASK_HARMONIC;
                 this.Harmonic = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_MUTE) != 0)
+            if ((p & CON.NOTE_MASK_MUTE) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_MUTE;
+                p &= ~CON.NOTE_MASK_MUTE;
                 this.Mute = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE) != 0)
+            if ((p & CON.NOTE_MASK_PALMMUTE) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE;
+                p &= ~CON.NOTE_MASK_PALMMUTE;
                 this.PalmMute = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TREMOLO) != 0)
+            if ((p & CON.NOTE_MASK_TREMOLO) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_TREMOLO;
+                p &= ~CON.NOTE_MASK_TREMOLO;
                 this.Tremolo = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PINCHHARMONIC) != 0)
+            if ((p & CON.NOTE_MASK_PINCHHARMONIC) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PINCHHARMONIC;
+                p &= ~CON.NOTE_MASK_PINCHHARMONIC;
                 this.HarmonicPinch = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_RIGHTHAND) != 0)
+            if ((p & CON.NOTE_MASK_RIGHTHAND) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_RIGHTHAND;
+                p &= ~CON.NOTE_MASK_RIGHTHAND;
                 this.RightHand = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE) != 0)
+            if ((p & CON.NOTE_MASK_IGNORE) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE;
+                p &= ~CON.NOTE_MASK_IGNORE;
                 this.Ignore = 1;
             }
         }
@@ -1099,21 +1100,21 @@ namespace RocksmithToolkitLib.Xml
         private void parseChordMask(Sng2014HSL.Notes notes, uint p)
         {
             // Remove flags from know techniques
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_CHORD) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_CHORD;
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_CHORDNOTES) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_CHORDNOTES;
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SUSTAIN) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_SUSTAIN;
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_DOUBLESTOP) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_DOUBLESTOP;
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ARPEGGIO) != 0)
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ARPEGGIO;
+            if ((p & CON.NOTE_MASK_CHORD) != 0)
+                p &= ~CON.NOTE_MASK_CHORD;
+            if ((p & CON.NOTE_MASK_CHORDNOTES) != 0)
+                p &= ~CON.NOTE_MASK_CHORDNOTES;
+            if ((p & CON.NOTE_MASK_SUSTAIN) != 0)
+                p &= ~CON.NOTE_MASK_SUSTAIN;
+            if ((p & CON.NOTE_MASK_DOUBLESTOP) != 0)
+                p &= ~CON.NOTE_MASK_DOUBLESTOP;
+            if ((p & CON.NOTE_MASK_ARPEGGIO) != 0)
+                p &= ~CON.NOTE_MASK_ARPEGGIO;
 
             this.Strum = "down";
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_STRUM) != 0)
+            if ((p & CON.NOTE_MASK_STRUM) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_STRUM;
+                p &= ~CON.NOTE_MASK_STRUM;
                 this.Strum = "up"; //TODO: Wrong, need research about it later
             }
 
@@ -1121,34 +1122,34 @@ namespace RocksmithToolkitLib.Xml
                 return;
 
             // Setup techniques and remove flags
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT) != 0)
+            if ((p & CON.NOTE_MASK_PARENT) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PARENT;
+                p &= ~CON.NOTE_MASK_PARENT;
                 this.LinkNext = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT) != 0)
+            if ((p & CON.NOTE_MASK_ACCENT) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_ACCENT;
+                p &= ~CON.NOTE_MASK_ACCENT;
                 this.Accent = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_FRETHANDMUTE) != 0)
+            if ((p & CON.NOTE_MASK_FRETHANDMUTE) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_FRETHANDMUTE;
+                p &= ~CON.NOTE_MASK_FRETHANDMUTE;
                 this.FretHandMute = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HIGHDENSITY) != 0)
+            if ((p & CON.NOTE_MASK_HIGHDENSITY) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_HIGHDENSITY;
+                p &= ~CON.NOTE_MASK_HIGHDENSITY;
                 this.HighDensity = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE) != 0)
+            if ((p & CON.NOTE_MASK_IGNORE) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_IGNORE;
+                p &= ~CON.NOTE_MASK_IGNORE;
                 this.Ignore = 1;
             }
-            if ((p & Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE) != 0)
+            if ((p & CON.NOTE_MASK_PALMMUTE) != 0)
             {
-                p &= ~Sng2014HSL.Sng2014FileWriter.NOTE_MASK_PALMMUTE;
+                p &= ~CON.NOTE_MASK_PALMMUTE;
                 this.PalmMute = 1;
             }
         }

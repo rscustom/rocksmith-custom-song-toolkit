@@ -152,8 +152,6 @@ namespace RocksmithToolkitLib.PSARC
                                         ErrMSG = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
 
                                     Console.Write(ErrMSG);
-                                    // TODO: requires proper presizing of array length
-                                    // data.Write(new byte[array.Length], 0, array.Length);
                                 }
                             }
                             else

@@ -224,7 +224,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             if (!arrangement.ArrangementName.ToLower().Contains("bass"))
                                 continue;
 
-                        // if (rsSong.Part == arrangement.SongPartition) // this is inaccurate for some
+                        if (rsSong.Part == arrangement.SongPartition || tones.Count == 1) // this is inaccurate for some
                         {
                             foreach (var tone in tones) // tone.manifest
                             {

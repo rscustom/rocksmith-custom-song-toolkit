@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
-
 using RocksmithToolkitLib.Properties;
 using RocksmithToolkitLib.Xml;
 using MiscUtil.IO;
 using MiscUtil.Conversion;
+using CON = RocksmithToolkitLib.Sng.Constants;
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {
@@ -269,9 +268,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 var c = new Chord();
                 // TODO: skip if DisplayName == null
                 if (chord.DisplayName.EndsWith("arp"))
-                    c.Mask |= CHORD_MASK_ARPEGGIO;
+                    c.Mask |= CON.CHORD_MASK_ARPEGGIO;
                 else if (chord.DisplayName.EndsWith("nop"))
-                    c.Mask |= CHORD_MASK_NOP;
+                    c.Mask |= CON.CHORD_MASK_NOP;
                 c.Frets[0] = (Byte)chord.Fret0;
                 c.Frets[1] = (Byte)chord.Fret1;
                 c.Frets[2] = (Byte)chord.Fret2;
@@ -495,7 +494,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 var tn = xml.Tones[i];
                 var t = new Tone();
                 t.Time = tn.Time;
-                // fix for undefined tone name
+                // fix for undefined tone name (tone name should be shorter)
                 if (xml.ToneBase.ToLower().Contains(tn.Name.ToLower()))
                     t.ToneId = 0;
                 if (xml.ToneA.ToLower().Contains(tn.Name.ToLower()))
@@ -630,127 +629,71 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 sng.Sections.Sections[i] = s;
             }
-        }
-
-        #region CONSTANTS
-
-        // more constants: RocksmithSngHSL/RocksmithSng_constants.txt
-        // unknown constant
-        public const UInt32 NOTE_TURNING_BPM_TEMPO = 0x00000004;
-
-        // chord template Mask (displayName ends with "arp" or "nop")
-        public const UInt32 CHORD_MASK_ARPEGGIO = 0x00000001;
-        public const UInt32 CHORD_MASK_NOP = 0x00000002;
-
-        // NoteFlags:
-        public const UInt32 NOTE_FLAGS_NUMBERED = 0x00000001;
-
-        // NoteMask:
-        public const UInt32 NOTE_MASK_UNDEFINED = 0x0;
-        // missing - not used in lessons/songs            0x01
-        public const UInt32 NOTE_MASK_CHORD = 0x02;
-        public const UInt32 NOTE_MASK_OPEN = 0x04;
-        public const UInt32 NOTE_MASK_FRETHANDMUTE = 0x08;
-        public const UInt32 NOTE_MASK_TREMOLO = 0x10;
-        public const UInt32 NOTE_MASK_HARMONIC = 0x20;
-        public const UInt32 NOTE_MASK_PALMMUTE = 0x40;
-        public const UInt32 NOTE_MASK_SLAP = 0x80;
-        public const UInt32 NOTE_MASK_PLUCK = 0x0100;
-        public const UInt32 NOTE_MASK_POP = 0x0100;
-        public const UInt32 NOTE_MASK_HAMMERON = 0x0200;
-        public const UInt32 NOTE_MASK_PULLOFF = 0x0400;
-        public const UInt32 NOTE_MASK_SLIDE = 0x0800;
-        public const UInt32 NOTE_MASK_BEND = 0x1000;
-        public const UInt32 NOTE_MASK_SUSTAIN = 0x2000;
-        public const UInt32 NOTE_MASK_TAP = 0x4000;
-        public const UInt32 NOTE_MASK_PINCHHARMONIC = 0x8000;
-        public const UInt32 NOTE_MASK_VIBRATO = 0x010000;
-        public const UInt32 NOTE_MASK_MUTE = 0x020000;
-        public const UInt32 NOTE_MASK_IGNORE = 0x040000;   // ignore=1
-        public const UInt32 NOTE_MASK_LEFTHAND = 0x00080000;
-        public const UInt32 NOTE_MASK_RIGHTHAND = 0x00100000;
-        public const UInt32 NOTE_MASK_HIGHDENSITY = 0x200000;
-        public const UInt32 NOTE_MASK_SLIDEUNPITCHEDTO = 0x400000;
-        public const UInt32 NOTE_MASK_SINGLE = 0x00800000; // single note
-        public const UInt32 NOTE_MASK_CHORDNOTES = 0x01000000; // has chordnotes exported
-        public const UInt32 NOTE_MASK_DOUBLESTOP = 0x02000000;
-        public const UInt32 NOTE_MASK_ACCENT = 0x04000000;
-        public const UInt32 NOTE_MASK_PARENT = 0x08000000; // linkNext=1
-        public const UInt32 NOTE_MASK_CHILD = 0x10000000; // note after linkNext=1
-        public const UInt32 NOTE_MASK_ARPEGGIO = 0x20000000;
-        // missing - not used in lessons/songs            0x40000000
-        public const UInt32 NOTE_MASK_STRUM = 0x80000000; // handShape defined at chord time
-
-        public const UInt32 NOTE_MASK_ARTICULATIONS_RH = 0x0000C1C0;
-        public const UInt32 NOTE_MASK_ARTICULATIONS_LH = 0x00020628;
-        public const UInt32 NOTE_MASK_ARTICULATIONS = 0x0002FFF8;
-        public const UInt32 NOTE_MASK_ROTATION_DISABLED = 0x0000C1E0;
-
-        #endregion
+        }        
 
         private UInt32 parseNoteMask(SongNote2014 note, bool single)
         {
             if (note == null)
-                return NOTE_MASK_UNDEFINED;
+                return CON.NOTE_MASK_UNDEFINED;
 
             // single note
             UInt32 mask = 0;
 
             if (single)
-                mask |= NOTE_MASK_SINGLE;
+                mask |= CON.NOTE_MASK_SINGLE;
 
             if (note.Fret == 0)
-                mask |= NOTE_MASK_OPEN;
+                mask |= CON.NOTE_MASK_OPEN;
 
             if (note.LinkNext != 0)
-                mask |= NOTE_MASK_PARENT;
+                mask |= CON.NOTE_MASK_PARENT;
 
             if (note.Accent != 0)
-                mask |= NOTE_MASK_ACCENT;
+                mask |= CON.NOTE_MASK_ACCENT;
             if (note.Bend != 0)
-                mask |= NOTE_MASK_BEND;
+                mask |= CON.NOTE_MASK_BEND;
             if (note.HammerOn != 0)
-                mask |= NOTE_MASK_HAMMERON;
+                mask |= CON.NOTE_MASK_HAMMERON;
             if (note.Harmonic != 0)
-                mask |= NOTE_MASK_HARMONIC;
+                mask |= CON.NOTE_MASK_HARMONIC;
 
             // TODO seems to have no effect
             // hopo = 0
 
             if (single && note.Ignore != 0)
-                mask |= NOTE_MASK_IGNORE;
+                mask |= CON.NOTE_MASK_IGNORE;
             if (single && note.LeftHand != -1)
-                mask |= NOTE_MASK_LEFTHAND;
+                mask |= CON.NOTE_MASK_LEFTHAND;
             if (note.Mute != 0)
-                mask |= NOTE_MASK_MUTE;
+                mask |= CON.NOTE_MASK_MUTE;
             if (note.PalmMute != 0)
-                mask |= NOTE_MASK_PALMMUTE;
+                mask |= CON.NOTE_MASK_PALMMUTE;
             if (note.Pluck != -1)
-                mask |= NOTE_MASK_PLUCK;
+                mask |= CON.NOTE_MASK_PLUCK;
             if (note.PullOff != 0)
-                mask |= NOTE_MASK_PULLOFF;
+                mask |= CON.NOTE_MASK_PULLOFF;
             if (note.Slap != -1)
-                mask |= NOTE_MASK_SLAP;
+                mask |= CON.NOTE_MASK_SLAP;
             if (note.SlideTo != -1)
-                mask |= NOTE_MASK_SLIDE;
+                mask |= CON.NOTE_MASK_SLIDE;
             if (note.Sustain != 0)
-                mask |= NOTE_MASK_SUSTAIN;
+                mask |= CON.NOTE_MASK_SUSTAIN;
             if (note.Tremolo != 0)
-                mask |= NOTE_MASK_TREMOLO;
+                mask |= CON.NOTE_MASK_TREMOLO;
             if (note.HarmonicPinch != 0)
-                mask |= NOTE_MASK_PINCHHARMONIC;
+                mask |= CON.NOTE_MASK_PINCHHARMONIC;
 
             // TODO seems to have no effect
             // pickDirection = 0
 
             if (note.RightHand != -1)
-                mask |= NOTE_MASK_RIGHTHAND;
+                mask |= CON.NOTE_MASK_RIGHTHAND;
             if (note.SlideUnpitchTo != -1)
-                mask |= NOTE_MASK_SLIDEUNPITCHEDTO;
+                mask |= CON.NOTE_MASK_SLIDEUNPITCHEDTO;
             if (note.Tap != 0)
-                mask |= NOTE_MASK_TAP;
+                mask |= CON.NOTE_MASK_TAP;
             if (note.Vibrato != 0)
-                mask |= NOTE_MASK_VIBRATO;
+                mask |= CON.NOTE_MASK_VIBRATO;
 
             return mask;
         }
@@ -800,33 +743,33 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         private void parseChord(Song2014 xml, Sng2014File sng, SongChord2014 chord, Notes n, Int32 chordNotesId)
         {
-            n.NoteMask |= NOTE_MASK_CHORD;
+            n.NoteMask |= CON.NOTE_MASK_CHORD;
             if (chordNotesId != -1)
             {
                 // there should always be a STRUM too => handshape at chord time
                 // probably even for chordNotes which are not exported to SNG
-                n.NoteMask |= NOTE_MASK_CHORDNOTES;
+                n.NoteMask |= CON.NOTE_MASK_CHORDNOTES;
             }
 
             if (chord.LinkNext != 0)
-                n.NoteMask |= NOTE_MASK_PARENT;
+                n.NoteMask |= CON.NOTE_MASK_PARENT;
 
             if (chord.Accent != 0)
-                n.NoteMask |= NOTE_MASK_ACCENT;
+                n.NoteMask |= CON.NOTE_MASK_ACCENT;
             if (chord.FretHandMute != 0)
-                n.NoteMask |= NOTE_MASK_FRETHANDMUTE;
+                n.NoteMask |= CON.NOTE_MASK_FRETHANDMUTE;
             if (chord.HighDensity != 0)
-                n.NoteMask |= NOTE_MASK_HIGHDENSITY;
+                n.NoteMask |= CON.NOTE_MASK_HIGHDENSITY;
             if (chord.Ignore != 0)
-                n.NoteMask |= NOTE_MASK_IGNORE;
+                n.NoteMask |= CON.NOTE_MASK_IGNORE;
             if (chord.PalmMute != 0)
-                n.NoteMask |= NOTE_MASK_PALMMUTE;
+                n.NoteMask |= CON.NOTE_MASK_PALMMUTE;
             // TODO does not seem to have a mask or any effect
             // if (chord.Hopo != 0)
             //     n.NoteMask |= ;
 
             // numbering will be set later
-            //n.NoteFlags = NOTE_FLAGS_NUMBERED;
+            //n.NoteFlags = CON.NOTE_FLAGS_NUMBERED;
 
             n.Time = chord.Time;
             n.StringIndex = unchecked((Byte)(-1));
@@ -863,14 +806,14 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
 
             if (n.Sustain > 0)
-                n.NoteMask |= NOTE_MASK_SUSTAIN;
+                n.NoteMask |= CON.NOTE_MASK_SUSTAIN;
 
             int cnt = 0;
             for (int str = 0; str < 6; str++)
                 if (sng.Chords.Chords[chord.ChordId].Frets[str] != 255)
                     ++cnt;
             if (cnt == 2)
-                n.NoteMask |= NOTE_MASK_DOUBLESTOP;
+                n.NoteMask |= CON.NOTE_MASK_DOUBLESTOP;
 
             // there are only zeros for all chords in lessons
             //n.Vibrato = 0;
@@ -1083,7 +1026,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             n.FingerPrintId[0] = id;
                             // add STRUM to chords
                             if (fp1[id].StartTime == n.Time && n.ChordId != -1)
-                                n.NoteMask |= NOTE_MASK_STRUM;
+                                n.NoteMask |= CON.NOTE_MASK_STRUM;
                             if (fp1[id].Unk3_FirstNoteTime == 0)
                                 fp1[id].Unk3_FirstNoteTime = n.Time;
 
@@ -1099,8 +1042,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             n.FingerPrintId[1] = id;
                             // add STRUM to chords
                             if (fp2[id].StartTime == n.Time && n.ChordId != -1)
-                                n.NoteMask |= NOTE_MASK_STRUM;
-                            n.NoteMask |= NOTE_MASK_ARPEGGIO;
+                                n.NoteMask |= CON.NOTE_MASK_STRUM;
+                            n.NoteMask |= CON.NOTE_MASK_ARPEGGIO;
                             if (fp2[id].Unk3_FirstNoteTime == 0)
                                 fp2[id].Unk3_FirstNoteTime = n.Time;
 
@@ -1204,10 +1147,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     }
 
                     var prev = a.Notes.Notes[j - prvnote]; //this will be either the first note of piter, or the last note on the same string at previous timestamp
-                    if ((prev.NoteMask & NOTE_MASK_PARENT) != 0)
+                    if ((prev.NoteMask & CON.NOTE_MASK_PARENT) != 0)
                     {
                         n.ParentPrevNote = (short)(prev.NextIterNote - 1);
-                        n.NoteMask |= NOTE_MASK_CHILD; //set the ParentPrevNote# = the matched Note#//add CHILD flag
+                        n.NoteMask |= CON.NOTE_MASK_CHILD; //set the ParentPrevNote# = the matched Note#//add CHILD flag
                     }
                 }
 
@@ -1300,7 +1243,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     if ((current.ChordId == -1 && notes[i].FretId == current.FretId) ||
                         (current.ChordId != -1 && notes[i].ChordId == current.ChordId))
                     {
-                        if ((notes[i].NoteFlags & NOTE_FLAGS_NUMBERED) != 0)
+                        if ((notes[i].NoteFlags & CON.NOTE_FLAGS_NUMBERED) != 0)
                         {
                             repeat = true;
                             break;
@@ -1310,7 +1253,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                 // change
                 if (!repeat)
-                    current.NoteFlags |= NOTE_FLAGS_NUMBERED;
+                    current.NoteFlags |= CON.NOTE_FLAGS_NUMBERED;
             }
         }
     }
