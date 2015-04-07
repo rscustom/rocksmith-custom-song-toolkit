@@ -16,8 +16,8 @@ TestResults
 *.sln.docstates
 
 # Build results
-# [Bb]in/
-# [Oo]bj/
+[Bb]in/
+[Oo]bj/
 [Dd]ebug/
 [Rr]elease/
 x64/
