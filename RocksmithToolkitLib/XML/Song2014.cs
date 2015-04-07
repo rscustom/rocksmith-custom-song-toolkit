@@ -170,7 +170,7 @@ namespace RocksmithToolkitLib.Xml
         [XmlArrayItem("control")]
         public SongControl[] Controls { get; set; }
 
-        [XmlElement("transcriptionTrack")] // DDC recuired node
+        [XmlElement("transcriptionTrack")] // DDC required node
         public TranscriptionTrack2014 TranscriptionTrack { get; set; }
 
         [XmlArray("levels")]
