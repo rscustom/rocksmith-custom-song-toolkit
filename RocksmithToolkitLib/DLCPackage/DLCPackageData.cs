@@ -234,14 +234,17 @@ namespace RocksmithToolkitLib.DLCPackage
                                 if (arrangement.EffectChainName.ToLower() == tone.Key.ToLower() || tones.Count == 1) // ok
                                 {
                                     if (convert)
+                                    {
                                         using (var obj1 = new Rs1Converter())
                                             tones2014.Add(obj1.ToneToTone2014(tone));
 
+                                        // added for consistent naming
+                                        tone.Name = tones2014[tones2014.Count - 1].Name;
+                                        tone.Key = tones2014[tones2014.Count - 1].Key;
+                                    }
+
                                     // load attr2014 with RS1 mapped values for use by Arrangement()
-                                    // ToneDescriptor will always use tone.key for consistent naming
-                                    tone.Name = String.IsNullOrEmpty(tone.Key) ? tone.Name : tone.Key;
                                     attr2014.Tone_Base = tone.Name;
-                                    // attr2014.Tone_A = tone.Name;
                                     attr2014.ArrangementName = arrangement.ArrangementName;
                                     attr2014.CentOffset = 0;
                                     attr2014.DynamicVisualDensity = new List<float>() { 2 };

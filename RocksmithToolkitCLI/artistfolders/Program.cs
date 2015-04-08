@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net.Mime;
 using System.Reflection;
 using System.Linq;
 
@@ -15,7 +16,8 @@ namespace ArtistFolderCreator
 
 #if (DEBUG)
             // give the progie some dumby file to work on
-            args = new string[] { "D:\\Temp\\Test" };
+           // args = new string[] { "D:\\Temp\\Test" };
+            args = new string[] { "-u" };
 #endif
 
             // catch if there are no cmd line arguments
@@ -30,6 +32,9 @@ namespace ArtistFolderCreator
                 Console.WriteLine(@"   Copies 'Artist-Name_Song-Name_v1_p.psarc' files to ArtistName folders.");
                 Console.WriteLine();
                 Console.WriteLine(@" - Usage: Drag/Drop CDLC song file folder onto the console executable icon.");
+                Console.WriteLine();
+                Console.WriteLine(@" - AltUsage: Put application into dlc folder with all artist folders and run from");
+                Console.WriteLine(@"   command window with switch: '-u' to undo, i.e. put all songs back into dlc folder");
                 Console.Read();
                 return 0;
             }
@@ -38,7 +43,24 @@ namespace ArtistFolderCreator
             if (args.GetLength(0) > 1)
                 return ShowHelpfulError("Too many CDLC folders dropped onto the execuatable.\r\nOne at time ... please.");
 
-            if (IsDirectory(args[0]))
+            if (args[0] == "-u")
+            {
+                Console.WriteLine(@"Undoing Artist Folder Sort ...");
+                Console.WriteLine();
+                string appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var cdlcFiles = Directory.EnumerateFiles(appPath, "*.psarc", SearchOption.AllDirectories);
+
+                if (!cdlcFiles.Any())
+                    return ShowHelpfulError("Can not find any CDLC *.psarc files");
+
+                foreach (var cdlcFile in cdlcFiles)
+                    File.Copy(cdlcFile, Path.Combine(appPath, Path.GetFileName(cdlcFile)));
+
+                Console.WriteLine(@"All songs files have been returned to:");
+                Console.WriteLine(appPath);                
+            }
+
+            else if (IsDirectory(args[0]))
             {
                 Console.WriteLine(@"Initializing Artist Folder Creator CLI ...");
                 Console.WriteLine();
