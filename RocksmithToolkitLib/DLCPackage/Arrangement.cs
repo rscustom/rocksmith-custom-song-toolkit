@@ -66,7 +66,7 @@ namespace RocksmithToolkitLib.DLCPackage
         // Motronome.
         public Metronome Metronome { get; set; }
         // preserve EOF and DDS comments
-    [IgnoreDataMember] // required for SaveTemplate feature
+        [IgnoreDataMember] // required for SaveTemplate feature
         public IEnumerable<XComment> XmlComments { get; set; }
 
         public Arrangement()
@@ -126,17 +126,38 @@ namespace RocksmithToolkitLib.DLCPackage
             this.RouteMask = (RouteMask)attr.ArrangementProperties.RouteMask;
             this.BonusArr = attr.ArrangementProperties.BonusArr == 1;
             this.Metronome = (Metronome)attr.ArrangementProperties.Metronome;
-            this.ToneBase = attr.Tone_Base;
             this.ToneMultiplayer = attr.Tone_Multiplayer;
-            this.ToneA = attr.Tone_A; // String.IsNullOrEmpty(attr.Tone_A) ? attr.Tone_Base : attr.Tone_A;
-            this.ToneB = attr.Tone_B;
-            this.ToneC = attr.Tone_C;
-            this.ToneD = attr.Tone_D;
-
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
-
             this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
+
+            if (attr.Tones == null) // RS2012
+            {
+                this.ToneBase = attr.Tone_Base;
+                this.ToneA = attr.Tone_A;
+                this.ToneB = attr.Tone_B;
+                this.ToneC = attr.Tone_C;
+                this.ToneD = attr.Tone_D;
+            }
+            else // RS2014 or Converter RS2012
+            {
+                // verify xml Tone_ exists in tone.manifest.json
+                foreach (var jsonTone in attr.Tones)
+                {
+                    if (jsonTone == null)
+                        continue;
+                    if (jsonTone.Name == attr.Tone_Base)
+                        this.ToneBase = attr.Tone_Base;
+                    if (jsonTone.Name == attr.Tone_A)
+                        this.ToneA = attr.Tone_A;
+                    if (jsonTone.Name == attr.Tone_B)
+                        this.ToneB = attr.Tone_B;
+                    if (jsonTone.Name == attr.Tone_C)
+                        this.ToneC = attr.Tone_C;
+                    if (jsonTone.Name == attr.Tone_D)
+                        this.ToneD = attr.Tone_D;
+                }
+            }
         }
 
         public override string ToString()
@@ -144,8 +165,9 @@ namespace RocksmithToolkitLib.DLCPackage
             var toneDesc = String.Empty;
             if (!String.IsNullOrEmpty(ToneBase))
                 toneDesc = ToneBase;
-            //if (!String.IsNullOrEmpty(ToneA))
-            //    toneDesc += String.Format(", {0}", ToneA);
+            // do not initially display duplicate ToneA in Arrangements listbox
+            if (!String.IsNullOrEmpty(ToneA) && ToneBase != ToneA)
+                toneDesc += String.Format(", {0}", ToneA);
             if (!String.IsNullOrEmpty(ToneB))
                 toneDesc += String.Format(", {0}", ToneB);
             if (!String.IsNullOrEmpty(ToneC))
