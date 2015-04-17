@@ -300,7 +300,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void toneNameBox_Leave(object sender, EventArgs e)
         {
             TextBox control = (TextBox)sender;
-            control.Text = control.Text.Trim().GetValidName();
+            control.Text = control.Text.Trim().GetValidName(true);
         }
 
     }
