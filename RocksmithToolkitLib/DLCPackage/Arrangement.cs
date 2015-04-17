@@ -141,20 +141,21 @@ namespace RocksmithToolkitLib.DLCPackage
             }
             else // RS2014 or Converter RS2012
             {
-                // verify xml Tone_ exists in tone.manifest.json
+                // verify the xml Tone_ exists in tone.manifest.json
                 foreach (var jsonTone in attr.Tones)
                 {
                     if (jsonTone == null)
                         continue;
-                    if (jsonTone.Name == attr.Tone_Base)
+
+                    if (jsonTone.Name.ToLower() == attr.Tone_Base.ToLower())
                         this.ToneBase = attr.Tone_Base;
-                    if (jsonTone.Name == attr.Tone_A)
+                    if (jsonTone.Name.ToLower() == attr.Tone_A.ToLower())
                         this.ToneA = attr.Tone_A;
-                    if (jsonTone.Name == attr.Tone_B)
+                    if (jsonTone.Name.ToLower() == attr.Tone_B.ToLower())
                         this.ToneB = attr.Tone_B;
-                    if (jsonTone.Name == attr.Tone_C)
+                    if (jsonTone.Name.ToLower() == attr.Tone_C.ToLower())
                         this.ToneC = attr.Tone_C;
-                    if (jsonTone.Name == attr.Tone_D)
+                    if (jsonTone.Name.ToLower() == attr.Tone_D.ToLower())
                         this.ToneD = attr.Tone_D;
                 }
             }

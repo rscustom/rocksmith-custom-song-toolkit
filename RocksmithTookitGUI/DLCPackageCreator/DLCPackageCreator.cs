@@ -1542,6 +1542,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 if (toneName != tone.Name)
                 {
+
                     // Update tone slots if name are changed
                     for (int i = 0; i < arrangementLB.Items.Count; i++)
                     {
@@ -1549,21 +1550,51 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         if (arrangement.ArrangementType == ArrangementType.Vocal)
                             continue;
 
+                        var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);
+                        Int32 toneId = 0;
+
                         // recognize that ToneBase alpha case mismatches do exist and process it     
                         if (toneName.ToLower() == arrangement.ToneBase.ToLower())
-                        {
                             arrangement.ToneBase = tone.Name;
+                        if (toneName.ToLower() == arrangement.ToneA.ToLower())
                             arrangement.ToneA = tone.Name;
-                        }
                         if (toneName.ToLower() == arrangement.ToneB.ToLower())
+                        {
                             arrangement.ToneB = tone.Name;
+                            toneId = 1;
+                        }
                         if (toneName.ToLower() == arrangement.ToneC.ToLower())
+                        {
                             arrangement.ToneC = tone.Name;
+                            toneId = 2;
+                        }
                         if (toneName.ToLower() == arrangement.ToneD.ToLower())
+                        {
                             arrangement.ToneD = tone.Name;
+                            toneId = 3;
+                        }
+
+                        // update tone name and tone id and accomadate EOF Tone naming descrepencies
+                        foreach (var xmlTone in songXml.Tones)
+                        {
+                            if (xmlTone.Name.ToLower() == toneName.ToLower() ||
+                                toneName.ToLower().Contains(xmlTone.Name.ToLower()))
+                            {
+                                xmlTone.Name = tone.Name;
+                                xmlTone.Id = toneId;
+                            }
+                        }
 
                         // force update to tone in arragement
                         arrangementLB.Items[i] = arrangement;
+
+                        // save changes to xml
+                        File.Delete(arrangement.SongXml.File);
+                        using (var stream = File.OpenWrite(arrangement.SongXml.File))
+                        {
+                            songXml.Serialize(stream);
+                        }
+
                     }
                 }
             }

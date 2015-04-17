@@ -3,12 +3,16 @@ using System.Windows.Forms;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 
+
+
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class ToneForm : Form
     {
         public bool Saved = false;
         public GameVersion CurrentGameVersion;
+        private DLCPackageCreator parentControl = null;
+
 
         private string CurrentOFDFilter
         {
@@ -48,6 +52,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void loadButton_Click(object sender, EventArgs e)
         {
             string toneSavePath;
+
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Filter = CurrentOFDFilter;

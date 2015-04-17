@@ -78,7 +78,7 @@
             // 
             // toneControl1
             // 
-            this.toneControl1.Location = new System.Drawing.Point(12, 12);
+            this.toneControl1.Location = new System.Drawing.Point(13, 12);
             this.toneControl1.MinimumSize = new System.Drawing.Size(513, 301);
             this.toneControl1.Name = "toneControl1";
             this.toneControl1.Size = new System.Drawing.Size(513, 301);
@@ -110,6 +110,8 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.Button saveButton;
+
         public ToneControl toneControl1;
-     }
+
+    }
 }

@@ -595,7 +595,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (xmlSong.Arrangement.ToLower() == "bass")
                         selectedType = ArrangementType.Bass;
                     else
-                        selectedType = ArrangementType.Bass;
+                        selectedType = ArrangementType.Guitar;
 
                     FillTuningCombo(selectedType, currentGameVersion);
 
