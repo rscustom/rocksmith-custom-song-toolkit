@@ -292,23 +292,36 @@ namespace RocksmithToolkitLib.Xml
             return commentNodes;
         }
 
-        ///<summary>
-        ///Write the EOF\DDC xml comments.
-        ///</summary>
-        ///<param name="song">Xml stream.</param>
+        /// <summary>
+        /// Write the EOF\DDC xml comments.
+        /// </summary>
+        /// <param name="xmlSongRS2014File"></param>
+        /// <param name="toolkitVersion"></param>
+        /// <param name="commentNodes"></param>
         public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null)
         {
+            bool cstComment = false;
+            XDocument xml = XDocument.Load(xmlSongRS2014File);
+
             if (commentNodes != null && commentNodes.Any())
             {
-                XDocument xml = XDocument.Load(xmlSongRS2014File);
                 // reverse order of stored comments (original order)
                 foreach (var commentNode in commentNodes.Reverse())
-                    xml.Element("song").AddFirst(new XComment(commentNode));
-                // this looks nicers but does not match the EOF original
-                // xml.Element("song").AddBeforeSelf(new XComment(commentNode));
-
-                xml.Save(xmlSongRS2014File);
+                {
+                    // xml.Element("song").AddFirst(new XComment(commentNode));
+                    // this looks nicers but does not match the EOF original
+                    // it is used to distinguish XML that is modified by toolkit
+                    xml.Element("song").AddBeforeSelf(new XComment(commentNode));
+                    if (commentNode.ToString().Contains(" CST v"))
+                        cstComment = true;
+                }
             }
+
+            if (!cstComment)
+                xml.Element("song").AddBeforeSelf(new XComment(" CST v" + ToolkitVersion.version + " "));
+
+            if (commentNodes != null && commentNodes.Any() || !cstComment)
+                xml.Save(xmlSongRS2014File);
         }
 
         public static Song2014 LoadFromFile(string xmlSongRS2014File)

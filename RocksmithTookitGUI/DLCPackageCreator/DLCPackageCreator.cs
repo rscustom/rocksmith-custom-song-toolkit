@@ -397,7 +397,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     UpdateXml(arr, packageData);
 
                 if (arr.ArrangementType != ArrangementType.Vocal)
-                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
+                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments );
             }
 
             packageData.Arrangements.AddRange(mArr);
