@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -293,7 +294,7 @@ namespace RocksmithToolkitLib.Xml
         }
 
         /// <summary>
-        /// Write the EOF\DDC xml comments.
+        /// Write the CST\EOF\DDC xml comments.
         /// </summary>
         /// <param name="xmlSongRS2014File"></param>
         /// <param name="toolkitVersion"></param>
@@ -1194,8 +1195,9 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("time")]
         public float Time { get; set; }
 
+        [DefaultValue(-1)]
         [XmlAttribute("id")]
-        public Int32 Id { get; set; }
+        public Int32 Id { get; set; } // could be optional/unused paramenter
 
         [XmlAttribute("name")]
         public string Name { get; set; }

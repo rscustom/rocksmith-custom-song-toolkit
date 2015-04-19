@@ -397,7 +397,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     UpdateXml(arr, packageData);
 
                 if (arr.ArrangementType != ArrangementType.Vocal)
-                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments );
+                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
             }
 
             packageData.Arrangements.AddRange(mArr);
@@ -1548,6 +1548,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             arrangement.ToneBase = tone.Name;
                         if (CurrentGameVersion != GameVersion.RS2012)
                         {
+                            // determine correct tone.id
                             Int32 toneId = 0;
                             if (toneName.ToLower() == arrangement.ToneA.ToLower())
                                 arrangement.ToneA = tone.Name;
@@ -1570,18 +1571,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);
 
                             // update tone name and tone id and accomadate EOF Tone naming descrepencies
-                            foreach (var xmlTone in songXml.Tones)
+                            if (songXml.Tones != null)
                             {
-                                if (xmlTone.Name.ToLower() == toneName.ToLower() || toneName.ToLower().Contains(xmlTone.Name.ToLower()))
+                                foreach (var xmlTone in songXml.Tones)
                                 {
-                                    xmlTone.Name = tone.Name;
-                                    xmlTone.Id = toneId;
+                                    if (xmlTone.Name.ToLower() == toneName.ToLower() || toneName.ToLower().Contains(xmlTone.Name.ToLower()))
+                                    {
+                                        xmlTone.Name = tone.Name;
+                                        xmlTone.Id = toneId;
+                                    }
                                 }
-                            }
 
-                            // save changes to xml
-                            using (var stream = File.Open(arrangement.SongXml.File, FileMode.Create))
-                                songXml.Serialize(stream);
+                                // save changes to xml
+                                using (var stream = File.Open(arrangement.SongXml.File, FileMode.Create))
+                                    songXml.Serialize(stream);
+                            }
                         }
 
                         // force update to tone in arragement
@@ -1965,6 +1969,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             ArtistSortTB.TextChanged +=
                         new EventHandler(InputControls_OnChange);
             YearTB.TextChanged +=
+                        new EventHandler(InputControls_OnChange);
+            packageVersionTB.TextChanged +=
                         new EventHandler(InputControls_OnChange);
             AverageTempoTB.TextChanged +=
                         new EventHandler(InputControls_OnChange);
