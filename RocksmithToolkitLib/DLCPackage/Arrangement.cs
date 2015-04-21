@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -135,11 +136,13 @@ namespace RocksmithToolkitLib.DLCPackage
             if (attr.Tones == null) // RS2012
             {
                 this.ToneBase = attr.Tone_Base;
-                // these tone attributes should all be null
-                this.ToneA = attr.Tone_A;
-                this.ToneB = attr.Tone_B;
-                this.ToneC = attr.Tone_C;
-                this.ToneD = attr.Tone_D;                
+                if (attr.Tone_A != null || attr.Tone_B != null || attr.Tone_C != null || attr.Tone_D != null)
+                    throw new DataException("RS2012 CDLC has extraneous tone data.");
+                // these tone attributes should all be null for RS1 CDLC
+                //this.ToneA = attr.Tone_A;
+                //this.ToneB = attr.Tone_B;
+                //this.ToneC = attr.Tone_C;
+                //this.ToneD = attr.Tone_D;                
             }
             else // RS2014 or Converter RS2012
             {
@@ -165,7 +168,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         this.ToneC = attr.Tone_C;
                         toneId = 2;
-
                     }
                     if (jsonTone.Name.ToLower() == attr.Tone_D.ToLower())
                     {

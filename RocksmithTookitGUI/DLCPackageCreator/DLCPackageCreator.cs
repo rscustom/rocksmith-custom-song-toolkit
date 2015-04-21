@@ -386,21 +386,23 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dlcSavePath = ofd.FileName;
             }
 
-            //Generate metronome arrangemnts and update Xml arrangements song info
+            //Generate metronome arrangemnts here
             var mArr = new List<Arrangement>();
             foreach (var arr in packageData.Arrangements)
             {
                 if (arr.Metronome == Metronome.Generate)
                     mArr.Add(GenMetronomeArr(arr));
+            } packageData.Arrangements.AddRange(mArr);
 
+            // Update Xml arrangements song info
+            foreach (var arr in packageData.Arrangements)
+            {
                 if (userChangesToInputControls > 0 && arr.ArrangementType != ArrangementType.Vocal)
                     UpdateXml(arr, packageData);
 
                 if (arr.ArrangementType != ArrangementType.Vocal)
                     Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
             }
-
-            packageData.Arrangements.AddRange(mArr);
 
             if (Path.GetFileName(dlcSavePath).Contains(" ") && platformPS3.Checked)
                 if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn"))
@@ -1377,15 +1379,49 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
+        //public Arrangement GenMetronomeArr(Arrangement arr)
+        //{
+        //    var songXml = Song2014.LoadFromFile(arr.SongXml.File);
+        //    // arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
+        //    arr.CleanCache();
+        //    arr.BonusArr = true;
+        //    arr.Id = IdGenerator.Guid();
+        //    arr.MasterId = RandomGenerator.NextInt();
+        //    arr.Metronome = Metronome.Itself;
+        //    songXml.ArrangementProperties.Metronome = (int)Metronome.Itself;
+
+        //    var ebeats = songXml.Ebeats;
+        //    var songEvents = new RocksmithToolkitLib.Xml.SongEvent[ebeats.Length];
+        //    for (var i = 0; i < ebeats.Length; i++)
+        //    {
+        //        songEvents[i] = new RocksmithToolkitLib.Xml.SongEvent
+        //        {
+        //            Code = ebeats[i].Measure == -1 ? "B1" : "B0",
+        //            Time = ebeats[i].Time
+        //        };
+        //    }
+        //    songXml.Events = songXml.Events.Union(songEvents, new EqSEvent()).OrderBy(x => x.Time).ToArray();
+
+        //    File.Delete(arr.SongXml.File);
+        //    using (var stream = File.OpenWrite(arr.SongXml.File))
+        //    {
+        //        songXml.Serialize(stream);
+        //    }
+
+        //    return arr;
+        //}
         public Arrangement GenMetronomeArr(Arrangement arr)
         {
-            var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-            // arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
-            arr.CleanCache();
-            arr.BonusArr = true;
-            arr.Id = IdGenerator.Guid();
-            arr.MasterId = RandomGenerator.NextInt();
-            arr.Metronome = Metronome.Itself;
+            var mArr = GeneralExtensions.Copy<Arrangement>(arr);
+            var songXml = Song2014.LoadFromFile(mArr.SongXml.File);
+            var newXml = Path.GetTempFileName();
+            mArr.SongXml = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongXML { File = newXml };
+            mArr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
+            mArr.CleanCache();
+            mArr.BonusArr = true;
+            mArr.Id = IdGenerator.Guid();
+            mArr.MasterId = RandomGenerator.NextInt();
+            mArr.Metronome = Metronome.Itself;
             songXml.ArrangementProperties.Metronome = (int)Metronome.Itself;
 
             var ebeats = songXml.Ebeats;
@@ -1399,15 +1435,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 };
             }
             songXml.Events = songXml.Events.Union(songEvents, new EqSEvent()).OrderBy(x => x.Time).ToArray();
-
-            File.Delete(arr.SongXml.File);
-            using (var stream = File.OpenWrite(arr.SongXml.File))
+            using (var stream = File.OpenWrite(mArr.SongXml.File))
             {
                 songXml.Serialize(stream);
             }
-
-            return arr;
+            return mArr;
         }
+
         public class EqSEvent : IEqualityComparer<RocksmithToolkitLib.Xml.SongEvent>
         {
             public bool Equals(RocksmithToolkitLib.Xml.SongEvent x, RocksmithToolkitLib.Xml.SongEvent y)

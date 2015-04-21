@@ -1195,9 +1195,8 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("time")]
         public float Time { get; set; }
 
-        [DefaultValue(-1)]
         [XmlAttribute("id")]
-        public Int32 Id { get; set; } // could be optional/unused paramenter
+        public Int32 Id { get; set; }
 
         [XmlAttribute("name")]
         public string Name { get; set; }

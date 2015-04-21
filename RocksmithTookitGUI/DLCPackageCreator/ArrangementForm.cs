@@ -295,7 +295,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // add the custom tuning to tuningComboBox
-
             if (foundTuning == -1)
             {
                 formTuning.Custom = true;
@@ -421,9 +420,19 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void SequencialToneComboEnabling()
         {
-            toneBCombo.Enabled = !String.IsNullOrEmpty((string)toneACombo.SelectedItem) && toneACombo.SelectedIndex > 0;
-            toneCCombo.Enabled = !String.IsNullOrEmpty((string)toneBCombo.SelectedItem) && toneBCombo.SelectedIndex > 0;
-            toneDCombo.Enabled = !String.IsNullOrEmpty((string)toneCCombo.SelectedItem) && toneCCombo.SelectedIndex > 0;
+            if (currentGameVersion != GameVersion.RS2012)
+            {
+                toneBCombo.Enabled = !String.IsNullOrEmpty((string)toneACombo.SelectedItem) && toneACombo.SelectedIndex > 0;
+                toneCCombo.Enabled = !String.IsNullOrEmpty((string)toneBCombo.SelectedItem) && toneBCombo.SelectedIndex > 0;
+                toneDCombo.Enabled = !String.IsNullOrEmpty((string)toneCCombo.SelectedItem) && toneCCombo.SelectedIndex > 0;
+            }
+            else
+            {
+                toneACombo.Enabled = false;
+                toneBCombo.Enabled = false;
+                toneCCombo.Enabled = false;
+                toneDCombo.Enabled = false;
+            }
         }
 
         private bool isAlreadyAdded(string xmlPath)
