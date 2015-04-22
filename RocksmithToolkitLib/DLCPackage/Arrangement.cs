@@ -136,59 +136,69 @@ namespace RocksmithToolkitLib.DLCPackage
             if (attr.Tones == null) // RS2012
             {
                 this.ToneBase = attr.Tone_Base;
+
                 if (attr.Tone_A != null || attr.Tone_B != null || attr.Tone_C != null || attr.Tone_D != null)
                     throw new DataException("RS2012 CDLC has extraneous tone data.");
-                // these tone attributes should all be null for RS1 CDLC
-                //this.ToneA = attr.Tone_A;
-                //this.ToneB = attr.Tone_B;
-                //this.ToneC = attr.Tone_C;
-                //this.ToneD = attr.Tone_D;                
             }
             else // RS2014 or Converter RS2012
             {
+                // TODO: optimize using common Arrangment.cs method
                 // verify the xml Tone_ exists in tone.manifest.json
                 foreach (var jsonTone in attr.Tones)
                 {
                     if (jsonTone == null)
                         continue;
 
-                    // fix tone.id (may not be needed/used by game)
+                    // fix for tone.id (may not be needed/used by game)
                     Int32 toneId = 0;
 
+                    // cleanup the xml arrangment file too
                     if (jsonTone.Name.ToLower() == attr.Tone_Base.ToLower())
-                        this.ToneBase = attr.Tone_Base;
+                        this.ToneBase = song.ToneBase = attr.Tone_Base;
                     if (jsonTone.Name.ToLower() == attr.Tone_A.ToLower())
-                        this.ToneA = attr.Tone_A;
+                        this.ToneA = song.ToneA = attr.Tone_A;
                     if (jsonTone.Name.ToLower() == attr.Tone_B.ToLower())
                     {
-                        this.ToneB = attr.Tone_B;
+                        this.ToneB = song.ToneB = attr.Tone_B;
                         toneId = 1;
                     }
                     if (jsonTone.Name.ToLower() == attr.Tone_C.ToLower())
                     {
-                        this.ToneC = attr.Tone_C;
+                        this.ToneC = song.ToneC = attr.Tone_C;
                         toneId = 2;
                     }
                     if (jsonTone.Name.ToLower() == attr.Tone_D.ToLower())
                     {
-                        this.ToneD = attr.Tone_D;
+                        this.ToneD = song.ToneD = attr.Tone_D;
                         toneId = 3;
                     }
 
-                    // update tone name and tone id (not set by EOF)
+                    // update EOF tone name and set tone id
                     if (song.Tones != null)
                         foreach (var xmlTone in song.Tones)
+                        {
+                            // fix some old toolkit behavior
+                            if (xmlTone.Name == "ToneA")
+                                xmlTone.Name = attr.Tone_A;
+                            if (xmlTone.Name == "ToneB")
+                                xmlTone.Name = attr.Tone_B;
+                            if (xmlTone.Name == "ToneC")
+                                xmlTone.Name = attr.Tone_C;
+                            if (xmlTone.Name == "ToneD")
+                                xmlTone.Name = attr.Tone_D;
+
                             if (xmlTone.Name.ToLower() == jsonTone.Name.ToLower() || jsonTone.Name.ToLower().Contains(xmlTone.Name.ToLower()))
                             {
                                 xmlTone.Name = jsonTone.Name;
                                 xmlTone.Id = toneId;
                             }
+                        }
 
                     if (song.Tones == null && toneId > 0)
-                        throw new InvalidDataException("Custom tones were not set properly in EOF" + Environment.NewLine + "Please reauthor XML arrangement in EOF and fix custom tones.");
+                        throw new InvalidDataException("Custom tones were not set properly in EOF" + Environment.NewLine + "Please reauthor XML arrangement in EOF and fix custom tone consistency.");
                 }
 
-                // write changes to xml
+                // write changes to xml arrangement
                 using (var stream = File.Open(xmlSongFile, FileMode.Create))
                     song.Serialize(stream);
             }

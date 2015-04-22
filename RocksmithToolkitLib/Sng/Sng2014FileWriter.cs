@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -494,21 +495,30 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 var tn = xml.Tones[i];
                 var t = new Tone();
                 t.Time = tn.Time;
-                // fix for undefined tone name (tone name should be shorter)
-                if (xml.ToneBase.ToLower().Contains(tn.Name.ToLower()))
-                    t.ToneId = 0;
-                if (xml.ToneA.ToLower().Contains(tn.Name.ToLower()))
-                    t.ToneId = 0;
-                else if (xml.ToneB.ToLower().Contains(tn.Name.ToLower()))
-                    t.ToneId = 1;
-                else if (xml.ToneC.ToLower().Contains(tn.Name.ToLower()))
-                    t.ToneId = 2;
-                else if (xml.ToneD.ToLower().Contains(tn.Name.ToLower()))
-                    t.ToneId = 3;
-                else
-                    throw new InvalidDataException("Undefined tone name: " + tn.Name);
-                sng.Tones.Tones[i] = t;
-            };
+
+                try
+                {
+                    // fix for undefined tone name (tone name should be shorter)
+                    if (xml.ToneBase.ToLower().Contains(tn.Name.ToLower()))
+                        t.ToneId = 0;
+                    if (xml.ToneA.ToLower().Contains(tn.Name.ToLower()))
+                        t.ToneId = 0;
+                    else if (xml.ToneB.ToLower().Contains(tn.Name.ToLower()))
+                        t.ToneId = 1;
+                    else if (xml.ToneC.ToLower().Contains(tn.Name.ToLower()))
+                        t.ToneId = 2;
+                    else if (xml.ToneD.ToLower().Contains(tn.Name.ToLower()))
+                        t.ToneId = 3;
+                    else
+                        throw new InvalidDataException("Undefined tone name: " + tn.Name);
+                    
+                    sng.Tones.Tones[i] = t;
+                }
+                catch (Exception)
+                {
+                    throw new InvalidDataException(@"There is tone name error in XML Arrangment: " + xml.Arrangement + "  " + tn.Name + " is not properly defined.");
+                }
+            }
         }
 
         private static void parseVocals(Vocals xml, Sng2014File sng)
@@ -629,7 +639,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 sng.Sections.Sections[i] = s;
             }
-        }        
+        }
 
         private UInt32 parseNoteMask(SongNote2014 note, bool single)
         {

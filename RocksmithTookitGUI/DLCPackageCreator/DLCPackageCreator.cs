@@ -1223,7 +1223,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     if (!File.Exists(wavPreviewPath))
                     {
-                        ExternalApps.Wav2Ogg(AudioPath, oggPath, 4);
+                        ExternalApps.Wav2Ogg(AudioPath, oggPath, (int)audioQualityBox.Value); // 4
                         ExternalApps.Ogg2Preview(oggPath, oggPreviewPath);
                         ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                     }
@@ -1343,6 +1343,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 var songXml = Song2014.LoadFromFile(arr.SongXml.File);
                 arr.CleanCache();
+                // generate new ids
                 arr.Id = IdGenerator.Guid();
                 arr.MasterId = RandomGenerator.NextInt();
 
@@ -1353,11 +1354,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
                 songXml.Title = info.SongInfo.SongDisplayName;
                 songXml.Tuning = arr.TuningStrings;
-                songXml.ToneBase = arr.ToneBase;
-                songXml.ToneA = arr.ToneA;
-                songXml.ToneB = arr.ToneB;
-                songXml.ToneC = arr.ToneC;
-                songXml.ToneD = arr.ToneD;
+                if (!String.IsNullOrEmpty(arr.ToneBase)) songXml.ToneBase = arr.ToneBase;
+                if (!String.IsNullOrEmpty(arr.ToneA)) songXml.ToneA = arr.ToneA;
+                if (!String.IsNullOrEmpty(arr.ToneB)) songXml.ToneB = arr.ToneB;
+                if (!String.IsNullOrEmpty(arr.ToneC)) songXml.ToneC = arr.ToneC;
+                if (!String.IsNullOrEmpty(arr.ToneD)) songXml.ToneD = arr.ToneD;
 
                 using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                     songXml.Serialize(stream);
@@ -1379,37 +1380,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        //public Arrangement GenMetronomeArr(Arrangement arr)
-        //{
-        //    var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-        //    // arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
-        //    arr.CleanCache();
-        //    arr.BonusArr = true;
-        //    arr.Id = IdGenerator.Guid();
-        //    arr.MasterId = RandomGenerator.NextInt();
-        //    arr.Metronome = Metronome.Itself;
-        //    songXml.ArrangementProperties.Metronome = (int)Metronome.Itself;
-
-        //    var ebeats = songXml.Ebeats;
-        //    var songEvents = new RocksmithToolkitLib.Xml.SongEvent[ebeats.Length];
-        //    for (var i = 0; i < ebeats.Length; i++)
-        //    {
-        //        songEvents[i] = new RocksmithToolkitLib.Xml.SongEvent
-        //        {
-        //            Code = ebeats[i].Measure == -1 ? "B1" : "B0",
-        //            Time = ebeats[i].Time
-        //        };
-        //    }
-        //    songXml.Events = songXml.Events.Union(songEvents, new EqSEvent()).OrderBy(x => x.Time).ToArray();
-
-        //    File.Delete(arr.SongXml.File);
-        //    using (var stream = File.OpenWrite(arr.SongXml.File))
-        //    {
-        //        songXml.Serialize(stream);
-        //    }
-
-        //    return arr;
-        //}
         public Arrangement GenMetronomeArr(Arrangement arr)
         {
             var mArr = GeneralExtensions.Copy<Arrangement>(arr);
@@ -1569,7 +1539,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 if (toneName != tone.Name)
                 {
-
                     // Update tone slots if name are changed
                     for (int i = 0; i < arrangementLB.Items.Count; i++)
                     {
@@ -1577,34 +1546,45 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         if (arrangement.ArrangementType == ArrangementType.Vocal)
                             continue;
 
-                        // recognize that ToneBase alpha case mismatches do exist and process it     
-                        if (toneName.ToLower() == arrangement.ToneBase.ToLower())
-                            arrangement.ToneBase = tone.Name;
-                        if (CurrentGameVersion != GameVersion.RS2012)
+                        // TODO: optimize using common Arrangement.cs method
+                        if (CurrentGameVersion == GameVersion.RS2012)
                         {
+                            if (toneName.ToLower() == arrangement.ToneBase.ToLower())
+                                arrangement.ToneBase = tone.Name;
+                        }
+                        else
+                        {
+                            var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);
+
                             // determine correct tone.id
                             Int32 toneId = 0;
-                            if (toneName.ToLower() == arrangement.ToneA.ToLower())
-                                arrangement.ToneA = tone.Name;
-                            if (toneName.ToLower() == arrangement.ToneB.ToLower())
+                            // recognize that ToneBase alpha case mismatches do exist and process it                                 
+                            if (toneName.ToLower() == arrangement.ToneBase.ToLower())
+                                songXml.ToneBase = arrangement.ToneBase = tone.Name;
+
+                            if (!String.IsNullOrEmpty(arrangement.ToneA) &&
+                                toneName.ToLower() == arrangement.ToneA.ToLower())
+                                songXml.ToneA = arrangement.ToneA = tone.Name;
+                            if (!String.IsNullOrEmpty(arrangement.ToneB) &&
+                                toneName.ToLower() == arrangement.ToneB.ToLower())
                             {
-                                arrangement.ToneB = tone.Name;
+                                songXml.ToneB = arrangement.ToneB = tone.Name;
                                 toneId = 1;
                             }
-                            if (toneName.ToLower() == arrangement.ToneC.ToLower())
+                            if (!String.IsNullOrEmpty(arrangement.ToneC) &&
+                                toneName.ToLower() == arrangement.ToneC.ToLower())
                             {
-                                arrangement.ToneC = tone.Name;
+                                songXml.ToneC = arrangement.ToneC = tone.Name;
                                 toneId = 2;
                             }
-                            if (toneName.ToLower() == arrangement.ToneD.ToLower())
+                            if (!String.IsNullOrEmpty(arrangement.ToneD) &&
+                                toneName.ToLower() == arrangement.ToneD.ToLower())
                             {
-                                arrangement.ToneD = tone.Name;
+                                songXml.ToneD = arrangement.ToneD = tone.Name;
                                 toneId = 3;
                             }
 
-                            var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);
-
-                            // update tone name and tone id and accomadate EOF Tone naming descrepencies
+                            // update tone name and tone id and accomadate EOF custom tone differences
                             if (songXml.Tones != null)
                             {
                                 foreach (var xmlTone in songXml.Tones)
