@@ -516,7 +516,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 catch (Exception)
                 {
-                    throw new InvalidDataException(@"There is tone name error in XML Arrangment: " + xml.Arrangement + "  " + tn.Name + " is not properly defined.");
+                    throw new InvalidDataException(@"There is tone name error in XML Arrangment: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + "Use EOF to reauthor custom tones or Notepad to attempt manual repair." );
                 }
             }
         }

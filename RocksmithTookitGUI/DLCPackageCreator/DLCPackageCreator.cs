@@ -26,7 +26,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class DLCPackageCreator : UserControl
     {
-        public static readonly string MESSAGEBOX_CAPTION = "DLC Package Creator";
+        public static readonly string MESSAGEBOX_CAPTION = "CDLC Package Creator";
         private BackgroundWorker bwGenerate = new BackgroundWorker();
         private StringBuilder errorsFound;
         private string dlcSavePath;
@@ -381,7 +381,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
 
                 ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
-                ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
+                ofd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
             }
@@ -503,7 +503,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             if (String.IsNullOrEmpty(DlcNameTB.Text))
             {
-                MessageBox.Show("Fill the 'DLC Name' field first.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Fill the 'CDLC Name' field first.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DlcNameTB.Focus();
                 return;
             }
@@ -547,7 +547,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 using (var ofd = new SaveFileDialog())
                 {
                     ofd.SupportMultiDottedExtensions = true;
-                    ofd.Filter = CurrentRocksmithTitle + " DLC Template (*.dlc.xml)|*.dlc.xml";
+                    ofd.Filter = CurrentRocksmithTitle + " CDLC Template (*.dlc.xml)|*.dlc.xml";
                     ofd.FileName = fileName;
                     if (DialogResult.OK != ofd.ShowDialog()) return;
                     dlcSavePath = ofd.FileName;
@@ -598,7 +598,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 packageData.LyricArtPath = packageData.LyricArtPath.AbsoluteTo(BasePath);
 
             if (String.IsNullOrEmpty(defaultSavePath))//if in GUI mode.
-                MessageBox.Show(CurrentRocksmithTitle + " DLC Package template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(CurrentRocksmithTitle + " CDLC Package template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void dlcLoadButton_Click(object sender = null, EventArgs e = null)
@@ -607,7 +607,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             using (var ofd = new OpenFileDialog())
             {
                 ofd.SupportMultiDottedExtensions = true;
-                ofd.Filter = CurrentRocksmithTitle + " DLC Template (*.dlc.xml)|*.dlc.xml";
+                ofd.Filter = CurrentRocksmithTitle + " CDLC Template (*.dlc.xml)|*.dlc.xml";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcLoadPath = ofd.FileName;
             }
@@ -624,22 +624,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     info = new DataContractSerializer(typeof(DLCPackageData)).ReadObject(stm) as DLCPackageData;
                 }
-                if (info == null) throw new InvalidDataException("DLC Template Is Null");
+                if (info == null) throw new InvalidDataException("CDLC Template Is Null");
             }
             catch (Exception se)
             {
-                MessageBox.Show("Can't load DLC Template because it's not compatible with new DLC Template format. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Can't load CDLC Template because it's not compatible with new CDLC Template format. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // use AppId to determine GameVersion for dlc.xml
+            // use AppId to determine GameVersion of dlc.xml template
             RS2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
             RS2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
 
             FillPackageCreatorForm(info, dlcLoadPath);
 
             Application.DoEvents();
-            MessageBox.Show(CurrentRocksmithTitle + " DLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(CurrentRocksmithTitle + " CDLC Template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();
         }
 
@@ -652,7 +652,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // GET PATH
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Title = "Select one DLC to import";
+                ofd.Title = "Select a CDLC to import";
                 ofd.Filter = CurrentOFDPackageFilter;
 
                 if (ofd.ShowDialog() != DialogResult.OK)
@@ -720,10 +720,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillPackageCreatorForm(info, unpackedDir);
 
             // TODO: this code is depreicated for now
-            // AUTO SAVE DLC TEMPLATE
+            // AUTO SAVE CDLC TEMPLATE
             //SaveTemplateFile(unpackedDir);
             //Application.DoEvents();
-            //MessageBox.Show(CurrentRocksmithTitle + " DLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show(CurrentRocksmithTitle + " CDLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             Parent.Focus();
         }
@@ -752,7 +752,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // GET PATH
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Title = "Select one DLC to import";
+                ofd.Title = "Select a CDLC to import";
                 ofd.Filter = CurrentOFDPackageFilter;
 
                 if (ofd.ShowDialog() != DialogResult.OK)
@@ -832,7 +832,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 using (var ofd = new SaveFileDialog())
                 {
                     ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", ArtistSort, SongTitleSort, PackageVersion.Replace(".", "_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
-                    ofd.Filter = CurrentRocksmithTitle + " DLC (*.*)|*.*";
+                    ofd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
                     if (ofd.ShowDialog() != DialogResult.OK)
                     {
                         lowTuningBassFixButton.Enabled = true;
@@ -1113,7 +1113,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             if (DLCName == SongTitle)
             {
-                MessageBox.Show("Error: DLC name can't be the same of song name", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: CDLC name can't be the same of song name", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DlcNameTB.Focus();
                 return null;
             }
@@ -1614,7 +1614,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneImportFile;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Title = "Select DLC Song Package or Tone File or your Profile";
+                ofd.Title = "Select CDLC Song Package or Tone File or your Profile";
                 ofd.Filter = CurrentOFDToneImportFilter;
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneImportFile = ofd.FileName;
@@ -1667,7 +1667,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
-            MessageBox.Show("Tone(s) was imported.", "DLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Tone(s) was imported.", "CDLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();
         }
 
