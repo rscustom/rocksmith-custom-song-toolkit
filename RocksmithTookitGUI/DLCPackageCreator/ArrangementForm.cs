@@ -227,7 +227,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // foreach (var tuning in TuningDefinitionRepository.Instance().Select(gameVersion))
             foreach (var tuning in tuningDefinitions)
             {
-                if (arrangementType == ArrangementType.Guitar)
+                // need to populate for Vocals too even though not used
+                if (arrangementType != ArrangementType.Bass)
                     tuningComboBox.Items.Add(tuning);
                 if (arrangementType == ArrangementType.Bass)
                     tuningComboBox.Items.Add(TuningDefinition.Convert2Bass(tuning));

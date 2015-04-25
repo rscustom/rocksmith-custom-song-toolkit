@@ -397,7 +397,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Update Xml arrangements song info
             foreach (var arr in packageData.Arrangements)
             {
-                if (userChangesToInputControls > 0 && arr.ArrangementType != ArrangementType.Vocal)
+                if (userChangesToInputControls > 0)
                     UpdateXml(arr, packageData);
 
                 if (arr.ArrangementType != ArrangementType.Vocal)
@@ -1339,14 +1339,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         /// <param name="info"></param>
         public void UpdateXml(Arrangement arr, DLCPackageData info)
         {
+            // generate new ids
+            arr.Id = IdGenerator.Guid();
+            arr.MasterId = RandomGenerator.NextInt();
+     
+            if (arr.ArrangementType == ArrangementType.Vocal)
+                return;
+
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 var songXml = Song2014.LoadFromFile(arr.SongXml.File);
                 arr.CleanCache();
-                // generate new ids
-                arr.Id = IdGenerator.Guid();
-                arr.MasterId = RandomGenerator.NextInt();
-
                 songXml.AlbumName = info.SongInfo.Album;
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
                 songXml.ArtistName = info.SongInfo.Artist;
@@ -1363,8 +1366,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                     songXml.Serialize(stream);
             }
-
-            if (CurrentGameVersion == GameVersion.RS2012)
+            else
             {
                 var songXml = Song.LoadFromFile(arr.SongXml.File);
                 songXml.Title = info.SongInfo.SongDisplayName;
@@ -1378,7 +1380,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                     songXml.Serialize(stream);
             }
-        }
+       }
 
         public Arrangement GenMetronomeArr(Arrangement arr)
         {
