@@ -470,6 +470,13 @@ namespace RocksmithToolkitLib.Xml
                 String5 = stringArray[5];
         }
 
+        // TODO: depricate (only used by RocksmithToTabLib.dll) 
+        public Int16[] ToShortArray()
+        {
+            Int16[] strings = { String0, String1, String2, String3, String4, String5 };
+            return strings;
+        }
+
         public Int16[] ToArray()
         {
             Int16[] strings = { String0, String1, String2, String3, String4, String5 };
