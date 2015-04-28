@@ -10,8 +10,8 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         private static double A440 { get{ return 440D; } }
         private static double CentsInOctave { get { return 1200D; } }
-        
-        private static double ratio2Cents(double Ratio)
+
+        private static double Ratio2Cents(double Ratio)
         {
             return CentsInOctave * Math.Log(Ratio) / Math.Log(2);
         }
@@ -32,7 +32,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public static double Frequency2Cents(this double Freq, out double Cents)
         {
             double Ratio = Freq / A440;
-            Cents = ratio2Cents(Ratio);
+            Cents = Ratio2Cents(Ratio);
             return Math.Round(Cents, 2);
         }
 
@@ -41,7 +41,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var lnote = (Math.Log(frequency) - Math.Log(261.626)) / Math.Log(2) + 4.0;
             decimal oct = Math.Floor((decimal)lnote);
             var cents = CentsInOctave * (lnote - (double)oct);
-            
+
             var noteTable = new string[] { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
             string noteName = "";
             if (cents < 50) {

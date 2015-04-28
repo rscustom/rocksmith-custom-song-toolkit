@@ -701,6 +701,7 @@
             this.Name = "ArrangementForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Arrangement";
+            this.ShowIcon = false;
             this.Load += new System.EventHandler(this.ArrangementForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).EndInit();
             this.gbTone.ResumeLayout(false);

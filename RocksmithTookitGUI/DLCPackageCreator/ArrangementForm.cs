@@ -246,8 +246,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
-            TuningDefinition formTuning = new TuningDefinition();
-            bool addNew = false;
+            bool addNew;
+            TuningDefinition formTuning;
             using (var form = new TuningForm())
             {
                 form.Tuning = tuning;
@@ -288,7 +288,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 tuningComboBox.SelectedIndex = tcbIndex;
                 tuning = (TuningDefinition)tuningComboBox.Items[tcbIndex];
-                if (TuningDefinition.TuningEquals(tuning.Tuning, formTuning.Tuning))
+                if (tuning.Tuning == formTuning.Tuning)
                 {
                     foundTuning = tcbIndex;
                     break;
@@ -579,9 +579,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         }
                     }
 
-                    //Tones setup
                     if (currentGameVersion != GameVersion.RS2012)
                     {
+                        //Tones setup
                         Arrangement.ToneBase = xmlSong.ToneBase;
                         Arrangement.ToneA = xmlSong.ToneA;
                         Arrangement.ToneB = xmlSong.ToneB;
@@ -615,7 +615,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     {
                         tuningComboBox.SelectedIndex = tcbIndex;
                         TuningDefinition tuning = (TuningDefinition)tuningComboBox.Items[tcbIndex];
-                        if (TuningDefinition.TuningEquals(tuning.Tuning, xmlSong.Tuning))
+                        if (tuning.Tuning == xmlSong.Tuning)
                         {
                             foundTuning = tcbIndex;
                             break;
@@ -623,7 +623,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
 
                     if (foundTuning == -1)
-                        ShowTuningForm(selectedType, new TuningDefinition() { Tuning = xmlSong.Tuning, Custom = true, GameVersion = currentGameVersion });
+                        ShowTuningForm(selectedType, new TuningDefinition { Tuning = xmlSong.Tuning, Custom = true, GameVersion = currentGameVersion });
                     else
                         tuningComboBox.SelectedIndex = foundTuning;
 

@@ -10,6 +10,7 @@ using RocksmithToolkitLib.Sng;
 namespace RocksmithToolkitLibTest
 {
     [TestFixture]
+    [Ignore("Ignore this fixture")]
     public class SngFileTest
     {
         [Test]

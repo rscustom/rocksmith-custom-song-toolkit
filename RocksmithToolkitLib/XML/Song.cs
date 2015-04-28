@@ -430,7 +430,7 @@ namespace RocksmithToolkitLib.Xml
 
     // stay consistent SNG TuningStrings data stored as Int16 (short)
     [XmlType("tuning")]
-    public class TuningStrings
+    public class TuningStrings : IEquatable<TuningStrings>
     {
         [JsonProperty("string0")]
         [XmlAttribute("string0")]
@@ -470,24 +470,66 @@ namespace RocksmithToolkitLib.Xml
                 String5 = stringArray[5];
         }
 
-        // TODO: depricate (only used by RocksmithToTabLib.dll) 
+        [Obsolete("Depricated, please use regular ToArray() funtion.", true)]
         public Int16[] ToShortArray()
         {
-            Int16[] strings = { String0, String1, String2, String3, String4, String5 };
-            return strings;
+            return ToArray();
         }
 
         public Int16[] ToArray()
         {
-            Int16[] strings = { String0, String1, String2, String3, String4, String5 };
-            return strings;
+            return new Int16[] { String0, String1, String2, String3, String4, String5 };
         }
 
+        /// <summary>
+        /// Returns tuning strings array ommiting last 2 strings.
+        /// </summary>
+        /// <returns>The bass array.</returns>
         public Int16[] ToBassArray()
         {
-            Int16[] strings = { String0, String1, String2, String3, 0, 0 };
-            return strings;
+            return new Int16[] { String0, String1, String2, String3, 0, 0 };
         }
+
+        #region IEquatable implementation
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            var other = obj as TuningStrings;
+            return other != null && Equals(other);
+        }
+
+        public bool Equals(TuningStrings other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return this.ToArray().SequenceEqual(other.ToArray());
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = String0.GetHashCode();
+                hashCode = (hashCode*397) ^ String1.GetHashCode();
+                hashCode = (hashCode*397) ^ String2.GetHashCode();
+                hashCode = (hashCode*397) ^ String3.GetHashCode();
+                hashCode = (hashCode*397) ^ String4.GetHashCode();
+                hashCode = (hashCode*397) ^ String5.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(TuningStrings left, TuningStrings right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(TuningStrings left, TuningStrings right)
+        {
+            return !Equals(left, right);
+        }
+        #endregion
     }
 
     [XmlType("phrase")]

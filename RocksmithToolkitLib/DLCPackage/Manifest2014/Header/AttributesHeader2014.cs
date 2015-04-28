@@ -123,13 +123,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 SongYear = info.SongInfo.SongYear;
 
                 //Detect tuning
-                var tuning = TuningDefinitionRepository.Instance ().SelectAny (SongContent.Tuning, platform.version);
+                var tuning = TuningDefinitionRepository.Instance ().SelectAny(SongContent.Tuning, platform.version);
                 if (tuning == null) {
-                    tuning = new TuningDefinition ();
+                    tuning = new TuningDefinition();
                     tuning.Tuning = SongContent.Tuning;
                     tuning.Name = tuning.UIName = arrangement.Tuning;
-                    if (String.IsNullOrEmpty (tuning.Name)) {
-                        tuning.Name = tuning.UIName = tuning.NameFromStrings (arrangement.TuningStrings, arrangement.ArrangementType == RocksmithToolkitLib.Sng.ArrangementType.Bass);
+                    if (String.IsNullOrEmpty(tuning.Name)) {
+                        tuning.Name = tuning.UIName = tuning.NameFromStrings(arrangement.TuningStrings, arrangement.ArrangementType == ArrangementType.Bass);
                     }
                     tuning.Custom = true;
                     tuning.GameVersion = GameVersion.RS2014;

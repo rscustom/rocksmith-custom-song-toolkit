@@ -31,12 +31,12 @@ namespace RocksmithToolkitLib
 
         public IEnumerable<TuningDefinition> Select(GameVersion gameVersion)
         {
-            return List.OfType<TuningDefinition>().Where(s => s.GameVersion == gameVersion);
+            return List.Where(s => s.GameVersion == gameVersion);
         }
 
         public IEnumerable<TuningDefinition> Select(TuningStrings tuningStrings)
         {
-            return List.OfType<TuningDefinition>().Where(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()));
+            return List.Where(s => s.Tuning.Equals(tuningStrings));
         }
 
         [Obsolete("This function is deprecated due to low accuracy. Use SelectAny() instead.", true)]

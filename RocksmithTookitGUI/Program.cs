@@ -36,7 +36,7 @@ namespace RocksmithToolkitGUI
             var thread = System.Threading.Thread.CurrentThread;
             thread.CurrentCulture = ci;
             thread.CurrentUICulture = ci;
-
+#if !DEBUG
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
@@ -54,7 +54,7 @@ namespace RocksmithToolkitGUI
                     exception.ToString(),  exception.Message.ToString(), DateTime.Now.ToString("yyyy-MM-dd")), "Thread Exception catched!");
                 log.ErrorException(String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
             };
-
+#endif
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm(args));

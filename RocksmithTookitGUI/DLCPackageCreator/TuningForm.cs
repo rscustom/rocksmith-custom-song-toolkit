@@ -17,14 +17,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             get
             {
-                if (String.IsNullOrEmpty(uiNameTB.Text.Trim()))
+                if (String.IsNullOrWhiteSpace(uiNameTB.Text))
                 {
                     uiNameTB.Focus();
                     return null;
                 }
                 _tuning.UIName = uiNameTB.Text.Trim();
 
-                if (String.IsNullOrEmpty(nameTB.Text.Trim()))
+                if (String.IsNullOrWhiteSpace(nameTB.Text))
                 {
                     nameTB.Focus();
                     return null;
@@ -32,6 +32,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 _tuning.Name = nameTB.Text.Trim();
 
                 _tuning.Tuning = new TuningStrings();
+
+                #region Parse fields
 
                 Int16 s0 = 0;
                 bool b0 = Int16.TryParse(string0TB.Text.Trim(), out s0);
@@ -87,7 +89,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 _tuning.Tuning.String5 = s5;
 
-             return _tuning;
+                #endregion
+
+                return _tuning;
             }
             set
             {
@@ -115,11 +119,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show("All fields are required!", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-
-            if (!IsBass && Tuning.Tuning.String4 == 0 && Tuning.Tuning.String5 == 0)
-                if (MessageBox.Show("Strings 4 and 5 are really 0 (B and E)?" + Environment.NewLine +
-                                    "We recommend add all strings to cover also guitar tuning to avoid two same tuning for different instruments." + Environment.NewLine +
-                                    "Cancel save and fix it now?", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            //in case it's bass and EOF won't wrote a tuning for last 2 strings...
+            //TODO: guess guitar tuning.
+            if (IsBass && Tuning.Tuning.String4 == 0 && Tuning.Tuning.String5 == 0)
+                if (MessageBox.Show(String.Format("Is strings 4 and 5 are really 0 (B and E)?{0}We recommend to fill all strings fields (to cover guitar tuning).{0}To avoid two same tuning for different instruments.{0}{0}Cancel save and fix it now?{0}",
+                    Environment.NewLine), DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     return;
 
             this.DialogResult = DialogResult.OK;
@@ -138,7 +142,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             TextBox name = (TextBox)sender;
             name.TextChanged -= uiNameTB_TextChanged;
-            nameTB.Text = name.Text.GetValidName(false);
+            nameTB.Text = name.Text.GetValidName(true);
             name.TextChanged += uiNameTB_TextChanged;
         }
 

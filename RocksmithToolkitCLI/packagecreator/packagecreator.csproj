@@ -33,10 +33,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MiscUtil">
       <HintPath>..\..\lib\MiscUtil\MiscUtil.dll</HintPath>
@@ -46,10 +42,6 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RocksmithToTabLib, Version=1.0.5412.34789, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\RocksmithToTabLib\RocksmithToTabLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -63,6 +55,9 @@
     </Reference>
     <Reference Include="zlib.net">
       <HintPath>..\..\lib\ZLib\zlib.net.dll</HintPath>
+    </Reference>
+    <Reference Include="RocksmithToTabLib">
+      <HintPath>..\..\lib\RocksmithToTabLib\RocksmithToTabLib.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

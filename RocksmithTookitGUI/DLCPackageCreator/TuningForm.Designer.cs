@@ -234,12 +234,12 @@
             // noteLabel
             // 
             this.noteLabel.AutoSize = true;
-            this.noteLabel.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.noteLabel.ForeColor = System.Drawing.Color.LightSlateGray;
             this.noteLabel.Location = new System.Drawing.Point(12, 112);
             this.noteLabel.Name = "noteLabel";
-            this.noteLabel.Size = new System.Drawing.Size(281, 13);
+            this.noteLabel.Size = new System.Drawing.Size(219, 13);
             this.noteLabel.TabIndex = 23;
-            this.noteLabel.Text = "If a bass tuning, recommended to added strings 4 and 5 ...";
+            this.noteLabel.Text = "If a bass tuning, fill strings 4 and 5 manually...";
             // 
             // StateAdd
             // 

@@ -31,12 +31,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
         public void ReadSong(Song2014 songXml, Sng2014File sngFile)
         {
             Int16[] tuning = {
-                (Int16) songXml.Tuning.String0,
-                (Int16) songXml.Tuning.String1,
-                (Int16) songXml.Tuning.String2,
-                (Int16) songXml.Tuning.String3,
-                (Int16) songXml.Tuning.String4,
-                (Int16) songXml.Tuning.String5,
+                songXml.Tuning.String0,
+                songXml.Tuning.String1,
+                songXml.Tuning.String2,
+                songXml.Tuning.String3,
+                songXml.Tuning.String4,
+                songXml.Tuning.String5,
             };
             parseEbeats(songXml, sngFile);
             parsePhrases(songXml, sngFile);
@@ -272,6 +272,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     c.Mask |= CON.CHORD_MASK_ARPEGGIO;
                 else if (chord.DisplayName.EndsWith("nop"))
                     c.Mask |= CON.CHORD_MASK_NOP;
+
                 c.Frets[0] = (Byte)chord.Fret0;
                 c.Frets[1] = (Byte)chord.Fret1;
                 c.Frets[2] = (Byte)chord.Fret2;

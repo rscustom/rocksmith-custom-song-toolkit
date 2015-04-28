@@ -28,12 +28,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var knob = sortedKnobs[i];
                 var label = new Label();
                 tableLayoutPanel.Controls.Add(label, 0, i);
-                var name = knob.Name;
-                var niceName = nameParser.Match(name);
-                if(niceName != null && niceName.Groups.Count > 1) {
-                    name = niceName.Groups[1].Value;
+                if (knob.Name != null)
+                {
+                    var name = knob.Name;
+                    var niceName = nameParser.Match(name);
+                    if(niceName.Groups.Count > 1) {
+                        name = niceName.Groups[1].Value;
+                    }
+                    label.Text = name;
                 }
-                label.Text = name;
                 label.Anchor = AnchorStyles.Left;
 
                 var numericControl = new NumericUpDownFixed();
