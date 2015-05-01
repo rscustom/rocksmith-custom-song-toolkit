@@ -791,7 +791,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         {
                             var shlName = Path.Combine(Path.GetDirectoryName(xmlFile), xmlName.Split('_')[0] + "_showlights.xml");
                             var shl = new RocksmithToolkitLib.DLCPackage.Showlight.Showlights();
-                            if (shl.PopShList(shl.FixShowlights(shl.Genegate(xmlFile).ShowlightList)))
+                            if (shl.PopShList(shl.FixShowlights(shl.Generate(xmlFile).ShowlightList)))
                             {
                                 shl.Count = shl.ShowlightList.Count;
                                 using (var fs = new FileStream(shlName, FileMode.Create))

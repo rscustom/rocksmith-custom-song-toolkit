@@ -57,7 +57,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                 {
                     showlightFile = Path.Combine(Path.GetDirectoryName(showlightFile), info.Name + "_showlights.xml");
 
-                    if (PopShList(Genegate(arrangement.SongXml.File).ShowlightList))
+                    if (PopShList(Generate(arrangement.SongXml.File).ShowlightList))
                         continue;
                 }
 
@@ -66,6 +66,26 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
             ShowlightList = FixShowlights(ShowlightList);
             Count = ShowlightList.Count;
+        }
+
+        class EqShowlight : IEqualityComparer<Showlight>
+        {
+            public bool Equals(Showlight x, Showlight y)
+            {
+                if  (x == null)
+                    return y == null;
+
+                return (x.Note == y.Note && x.Time.Equals(y.Time)) || 
+                       (x.Note == y.Note && x.Time + 2.0D > y.Time);
+            }
+
+            public int GetHashCode(Showlight obj)
+            {
+                if (Object.ReferenceEquals(obj, null))
+                    return 0;
+
+                return obj.Time.GetHashCode() ^ obj.Time.GetHashCode() + obj.Note.GetHashCode();
+            }
         }
 
         public void Serialize(Stream stream)
@@ -150,7 +170,11 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             return showlightList;
         }
 
-        public Showlights Genegate(string xmlFile)
+        /// <summary>
+        /// Poorly written sowlights generator, lots of things missing.
+        /// </summary>
+        /// <param name="xmlFile">Xml file.</param>
+        public Showlights Generate(string xmlFile)
         {
             var midiNotes = new List<Showlight>();
             var chordNotes = new List<Showlight>();
@@ -204,7 +228,8 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             else
             {
                 try {
-                    ShowlightList = list.Union(ShowlightList).OrderBy(x => x.Time).ToList();
+                    var comp = new EqShowlight();
+                    ShowlightList = list.Union(ShowlightList, comp).OrderBy(x => x.Time).ToList();
                     ShowlightList.TrimExcess();
                 }
                 catch {
