@@ -68,6 +68,9 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\lib\ZLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="MiscUtil">
       <HintPath>..\lib\MiscUtil\MiscUtil.dll</HintPath>
     </Reference>
@@ -242,7 +245,6 @@
     <None Include="Resources\albumart.dds" />
     <None Include="Resources\Console_soundbank.bnk" />
     <None Include="Resources\pedals2014.json" />
-    <EmbeddedResource Include="Resources\QF Default Work Unit.wwu" />
     <None Include="Resources\rsenumerable_guitar.flat" />
     <None Include="Resources\VOCALS_RS2.sng" />
     <None Include="Resources\PC_soundbank.bnk" />
