@@ -68,6 +68,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -79,13 +80,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AssertEx.cs" />
-    <Compile Include="SngFileTest.cs" />
+    <Compile Include="XmlRepository\TuningDefinitionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ToolkitTests.nunit" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RocksmithTookitGUI\RocksmithToolkitGUI.csproj">
+      <Project>{1a3dead6-14f3-43c3-b15c-a866d48fef61}</Project>
+      <Name>RocksmithToolkitGUI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
       <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
       <Name>RocksmithToolkitLib</Name>
