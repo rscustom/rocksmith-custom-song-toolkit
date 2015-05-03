@@ -760,7 +760,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     //Update Showlights
                     if (xmlName.ToLower().Contains("_showlights"))
-                        updateShl(xmlFile);
+                        UpdateShl(xmlFile);
                     else
                     {
                         var sngFile = Path.Combine(sngFolder, xmlName + ".sng");
@@ -790,10 +790,9 @@ namespace RocksmithToolkitLib.DLCPackage
                         if (noShowlights && arrType != ArrangementType.Vocal)
                         {
                             var shlName = Path.Combine(Path.GetDirectoryName(xmlFile), xmlName.Split('_')[0] + "_showlights.xml");
-                            var shl = new RocksmithToolkitLib.DLCPackage.Showlight.Showlights();
-                            if (shl.PopShList(shl.FixShowlights(shl.Generate(xmlFile).ShowlightList)))
+                            var shl = new Showlight.Showlights(xmlFile);
+                            if (shl.FixShowlights(shl))
                             {
-                                shl.Count = shl.ShowlightList.Count;
                                 using (var fs = new FileStream(shlName, FileMode.Create))
                                     shl.Serialize(fs);
                             }
@@ -803,18 +802,19 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
         }
-
-        internal static bool updateShl(string shlPath)
+        /// <summary>
+        /// Fixes showlights and updates existing xml.
+        /// </summary>
+        /// <param name="shlPath"></param>
+        /// <returns></returns>
+        internal static void UpdateShl(string shlPath)
         {
-            var shl = new RocksmithToolkitLib.DLCPackage.Showlight.Showlights();
-            if (shl.PopShList(shl.FixShowlights(shl.LoadFromFile(shlPath).ShowlightList)))
+            var shl = new Showlight.Showlights(shlPath);
+            if (shl.FixShowlights(shl))
             {
-                shl.Count = shl.ShowlightList.Count;
                 using (var fs = new FileStream(shlPath, FileMode.Create))
                     shl.Serialize(fs);
-                return false;
             }
-            return true;
         }
 
         private static void UpdateManifest2014(string songDirectory, Platform platform)

@@ -27,7 +27,8 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         {
             unchecked
             {
-                return (Time.GetHashCode() * 397) ^ Note;
+                //Force Equals on each same note element, because we need near equal case for the time.
+                return Note.GetHashCode();
             }
         }
 
@@ -35,13 +36,14 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Showlight) obj);
+            var other = obj as Showlight;
+            return other != null && Equals(other);
         }
         public bool Equals(Showlight other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Note == other.Note && Time.Equals(other.Time) || Time + 2.0D > other.Time;
+            return other.Note == Note && Time.Equals(other.Time) || Time + 2.0F > other.Time; //will work only if collection is ordered by time.
         }
 
         #endregion
