@@ -115,7 +115,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 
             return tones;
         }
-        
+
         private static List<Tone2014> ReadFromProfile(string profilePath)
         {
             List<Tone2014> tones = new List<Tone2014>();

@@ -87,14 +87,9 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
         private void GetShowlights(string showlightsfile)
         {
-            if (showlightsfile.ToLower().Contains("_showlights"))
-            {
-                FixShowlights(LoadFromFile(showlightsfile)); //song2014 only
-            }
-            else
-            {
-                FixShowlights(Generate(showlightsfile));
-            }
+            FixShowlights(showlightsfile.ToLower().Contains("_showlights")
+                ? LoadFromFile(showlightsfile)
+                : Generate(showlightsfile));
         }
 
         private int GetFogNote(int midiNote)
