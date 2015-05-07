@@ -298,6 +298,7 @@
             this.toneACombo.Name = "toneACombo";
             this.toneACombo.Size = new System.Drawing.Size(152, 21);
             this.toneACombo.TabIndex = 56;
+            this.toneACombo.SelectedIndexChanged += new System.EventHandler(this.toneCombo_SelectedIndexChanged);
             // 
             // disableTonesCheckbox
             // 
@@ -404,6 +405,26 @@
             this.gbDLCId.TabStop = false;
             this.gbDLCId.Text = "Arrangement Identification";
             // 
+            // PersistentId
+            // 
+            this.PersistentId.Cue = "PersistentID";
+            this.PersistentId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.PersistentId.ForeColor = System.Drawing.Color.Gray;
+            this.PersistentId.Location = new System.Drawing.Point(156, 19);
+            this.PersistentId.Name = "PersistentId";
+            this.PersistentId.Size = new System.Drawing.Size(269, 20);
+            this.PersistentId.TabIndex = 21;
+            // 
+            // MasterId
+            // 
+            this.MasterId.Cue = "MasterID";
+            this.MasterId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.MasterId.ForeColor = System.Drawing.Color.Gray;
+            this.MasterId.Location = new System.Drawing.Point(6, 19);
+            this.MasterId.Name = "MasterId";
+            this.MasterId.Size = new System.Drawing.Size(144, 20);
+            this.MasterId.TabIndex = 20;
+            // 
             // gbXmlDefinition
             // 
             this.gbXmlDefinition.Controls.Add(this.XmlFilePath);
@@ -415,6 +436,16 @@
             this.gbXmlDefinition.TabIndex = 44;
             this.gbXmlDefinition.TabStop = false;
             this.gbXmlDefinition.Text = "Song XML File";
+            // 
+            // XmlFilePath
+            // 
+            this.XmlFilePath.Cue = "Song Xml File (*.xml)";
+            this.XmlFilePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.XmlFilePath.ForeColor = System.Drawing.Color.Gray;
+            this.XmlFilePath.Location = new System.Drawing.Point(10, 17);
+            this.XmlFilePath.Name = "XmlFilePath";
+            this.XmlFilePath.Size = new System.Drawing.Size(347, 20);
+            this.XmlFilePath.TabIndex = 0;
             // 
             // gbArrInfo
             // 
@@ -498,6 +529,19 @@
             this.noteDisplay.Size = new System.Drawing.Size(36, 13);
             this.noteDisplay.TabIndex = 48;
             this.noteDisplay.Text = "{note}";
+            // 
+            // frequencyTB
+            // 
+            this.frequencyTB.Cue = "";
+            this.frequencyTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.frequencyTB.ForeColor = System.Drawing.Color.Black;
+            this.frequencyTB.Location = new System.Drawing.Point(71, 17);
+            this.frequencyTB.MaxLength = 5;
+            this.frequencyTB.Name = "frequencyTB";
+            this.frequencyTB.Size = new System.Drawing.Size(44, 20);
+            this.frequencyTB.TabIndex = 10;
+            this.frequencyTB.Text = "440";
+            this.frequencyTB.TextChanged += new System.EventHandler(this.frequencyTB_TextChanged);
             // 
             // centOffsetDisplay
             // 
@@ -640,49 +684,6 @@
             this.MetronomeCb.Text = "Create Metronome Bonus Arrangement";
             this.MetronomeCb.UseVisualStyleBackColor = true;
             // 
-            // frequencyTB
-            // 
-            this.frequencyTB.Cue = "";
-            this.frequencyTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.frequencyTB.ForeColor = System.Drawing.Color.Black;
-            this.frequencyTB.Location = new System.Drawing.Point(71, 17);
-            this.frequencyTB.MaxLength = 5;
-            this.frequencyTB.Name = "frequencyTB";
-            this.frequencyTB.Size = new System.Drawing.Size(44, 20);
-            this.frequencyTB.TabIndex = 10;
-            this.frequencyTB.Text = "440";
-            this.frequencyTB.TextChanged += new System.EventHandler(this.frequencyTB_TextChanged);
-            // 
-            // XmlFilePath
-            // 
-            this.XmlFilePath.Cue = "Song Xml File (*.xml)";
-            this.XmlFilePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.XmlFilePath.ForeColor = System.Drawing.Color.Gray;
-            this.XmlFilePath.Location = new System.Drawing.Point(10, 17);
-            this.XmlFilePath.Name = "XmlFilePath";
-            this.XmlFilePath.Size = new System.Drawing.Size(347, 20);
-            this.XmlFilePath.TabIndex = 0;
-            // 
-            // PersistentId
-            // 
-            this.PersistentId.Cue = "PersistentID";
-            this.PersistentId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.PersistentId.ForeColor = System.Drawing.Color.Gray;
-            this.PersistentId.Location = new System.Drawing.Point(156, 19);
-            this.PersistentId.Name = "PersistentId";
-            this.PersistentId.Size = new System.Drawing.Size(269, 20);
-            this.PersistentId.TabIndex = 21;
-            // 
-            // MasterId
-            // 
-            this.MasterId.Cue = "MasterID";
-            this.MasterId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.MasterId.ForeColor = System.Drawing.Color.Gray;
-            this.MasterId.Location = new System.Drawing.Point(6, 19);
-            this.MasterId.Name = "MasterId";
-            this.MasterId.Size = new System.Drawing.Size(144, 20);
-            this.MasterId.TabIndex = 20;
-            // 
             // ArrangementForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -699,9 +700,9 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ArrangementForm";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Arrangement";
-            this.ShowIcon = false;
             this.Load += new System.EventHandler(this.ArrangementForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).EndInit();
             this.gbTone.ResumeLayout(false);

@@ -108,7 +108,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (tuning == null)
             {
                 tuning = new TuningDefinition();
-                tuning.UIName = tuning.Name = tuning.NameFromStrings(song.Tuning, false);
+                tuning.UIName = tuning.Name = tuning.NameFromStrings(song.Tuning, this.ArrangementType == Sng.ArrangementType.Bass);
                 tuning.Custom = true;
                 tuning.GameVersion = GameVersion.RS2014;
                 tuning.Tuning = song.Tuning;

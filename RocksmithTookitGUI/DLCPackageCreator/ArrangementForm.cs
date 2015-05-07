@@ -44,6 +44,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (!String.IsNullOrEmpty(_arrangement.Tuning))
                     tuningComboBox.SelectedIndex = tuningComboBox.FindStringExact(_arrangement.Tuning);
                 frequencyTB.Text = (_arrangement.TuningPitch > 0) ? _arrangement.TuningPitch.ToString() : "440";
+                UpdateCentOffset();
 
                 //Update it only here
                 var scrollSpeed = _arrangement.ScrollSpeed;
@@ -156,7 +157,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Picked.Enabled = selectedType == ArrangementType.Bass;
                 BonusCheckBox.Enabled = gbTuningPitch.Enabled;
                 MetronomeCb.Enabled = gbTuningPitch.Enabled;
-                UpdateCentOffset();
 
                 // Gameplay Path
                 UpdateRouteMaskPath(selectedType, selectedArrangementName);
@@ -420,7 +420,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         private void SequencialToneComboEnabling()
-        {
+        {//TODO: handle not one-by-one enabilng disabling tone slots and use data from enabled one, confused about this one.
             if (currentGameVersion != GameVersion.RS2012)
             {
                 toneBCombo.Enabled = !String.IsNullOrEmpty((string)toneACombo.SelectedItem) && toneACombo.SelectedIndex > 0;
@@ -429,10 +429,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             else
             {
-                toneACombo.Enabled = false;
-                toneBCombo.Enabled = false;
-                toneCCombo.Enabled = false;
-                toneDCombo.Enabled = false;
+                toneACombo.Enabled = toneBCombo.Enabled = toneCCombo.Enabled = toneDCombo.Enabled = false;
             }
         }
 
