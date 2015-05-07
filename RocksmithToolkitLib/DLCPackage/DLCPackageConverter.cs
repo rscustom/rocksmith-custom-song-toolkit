@@ -37,7 +37,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 packageName = packageName.Replace(".","_");
             var targetFileName = String.Format( nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), targetPlatform.GetPathName()[2] );
 
-            // CONVERSION                
+            // CONVERSION
             if (needRebuildPackage)
                 ConvertPackageRebuilding(unpackedDir, targetFileName, sourcePlatform, targetPlatform, appId);
             else

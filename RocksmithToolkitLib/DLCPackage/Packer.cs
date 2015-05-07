@@ -78,8 +78,9 @@ namespace RocksmithToolkitLib.DLCPackage
             Platform platform = sourceFileName.GetPlatform();
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
                 platform = predefinedPlatform;
-
             var fnameWithoutExt = Path.GetFileNameWithoutExtension(sourceFileName);
+            if (platform.platform == GamePlatform.PS3)
+                fnameWithoutExt = fnameWithoutExt.Substring(0, fnameWithoutExt.LastIndexOf("."));
             var unpackedDir = Path.Combine(savePath, String.Format("{0}_{1}", fnameWithoutExt, platform.platform));
             if (Directory.Exists(unpackedDir))
                 DirectoryExtension.SafeDelete(unpackedDir);
@@ -115,9 +116,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 case GamePlatform.None:
                     throw new InvalidOperationException("Platform not found :(");
             }
-
-            if (platform.platform == GamePlatform.PS3)
-                fnameWithoutExt = fnameWithoutExt.Substring(0, fnameWithoutExt.LastIndexOf("."));
 
             // DECODE AUDIO
             if (decodeAudio)
