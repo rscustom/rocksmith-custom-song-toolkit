@@ -42,5 +42,21 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         {
             return ReferenceEquals(Amp, null) && ReferenceEquals(Cabinet, null);
         }
+        public int SlotsUsed()
+        {
+            int i = 0;
+            i += Amp != null ? 1 : 0;
+            i += Cabinet != null ? 1 : 0;
+
+            i += Rack1 != null ? 1 : 0; i += Rack2 != null ? 1 : 0;
+            i += Rack3 != null ? 1 : 0; i += Rack4 != null ? 1 : 0;
+
+            i += PrePedal1 != null ? 1 : 0; i += PrePedal2 != null ? 1 : 0;
+            i += PrePedal3 != null ? 1 : 0; i += PrePedal4 != null ? 1 : 0;
+
+            i += PostPedal1 != null ? 1 : 0; i += PostPedal2 != null ? 1 : 0;
+            i += PostPedal3 != null ? 1 : 0; i += PostPedal4 != null ? 1 : 0;
+            return i;
+        }
     }
 }

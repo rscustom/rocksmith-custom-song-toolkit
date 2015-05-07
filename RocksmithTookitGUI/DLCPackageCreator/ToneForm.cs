@@ -35,14 +35,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         private void okButton_Click(object sender, EventArgs e)
-        {
+        {//TODO: max 6 gears allowed, 2 nessesary and 4 extra.
             switch (CurrentGameVersion)
             {
                 case GameVersion.RS2012:
                     if (toneControl1.Tone.PedalList.Count == 0) return;
+                    if (toneControl1.Tone.PedalList.Count > 6) return;
                     break;
                 case GameVersion.RS2014:
                     if (toneControl1.Tone.GearList.IsNull()) return;
+                    if (toneControl1.Tone.GearList.SlotsUsed() > 6)
+                    {
+                        MessageBox.Show("Reached effects limit, Only 4 extra gears allowed.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
                     break;
             }
             Saved = true;

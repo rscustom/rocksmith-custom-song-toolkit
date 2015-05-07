@@ -43,18 +43,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
             return Name;
         }
 
-        public bool Equals( Tone2014 other )
-        {
-            if(other == null) return false;
-            if(other.GearList.IsNull()) return false;
-            return this.Key == other.Key && 
-                   this.Name == other.Name && 
-                   this.Volume == other.Volume &&
-                   this.SortOrder == other.SortOrder &&
-                   this.ToneDescriptors == other.ToneDescriptors && 
-                   this.GearList.GetHashCode() == other.GearList.GetHashCode();
-        }
-
         public void Serialize(string toneSavePath) {
             var serializer = new DataContractSerializer(typeof(Tone2014));
             using (var stm = XmlWriter.Create(toneSavePath, new XmlWriterSettings() { CheckCharacters = true, Indent = true })) {
@@ -71,6 +59,22 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
             }
             return tone;
         }
+
+        #region IEquatable implementation
+        //HACK: this won't work for LINQ, only for general: ==, !=, Equals() functions.
+        public bool Equals(Tone2014 other)
+        {
+            if (other == null) return false;
+            if (other.GearList.IsNull()) return false;
+            return this.Key == other.Key &&
+                   this.Name == other.Name &&
+                   this.Volume == other.Volume &&
+                   this.SortOrder == other.SortOrder &&
+                   this.ToneDescriptors == other.ToneDescriptors &&
+                   this.GearList.GetHashCode() == other.GearList.GetHashCode();
+        }
+
+        #endregion
 
         #region Tone Import
 

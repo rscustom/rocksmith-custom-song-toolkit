@@ -13,6 +13,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         [JsonProperty("Key")]
         public string PedalKey { get; set; }
         public string Category { get; set; }
+        public string Skin { get; set; }
+        public int? SkinIndex { get; set; }
 
         public Pedal2014()
         {

@@ -452,9 +452,9 @@
             this.descriptorLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.descriptorLabel.Location = new System.Drawing.Point(6, 51);
             this.descriptorLabel.Name = "descriptorLabel";
-            this.descriptorLabel.Size = new System.Drawing.Size(66, 13);
+            this.descriptorLabel.Size = new System.Drawing.Size(62, 13);
             this.descriptorLabel.TabIndex = 7;
-            this.descriptorLabel.Text = "Tone Name:";
+            this.descriptorLabel.Text = "Tone Type:";
             // 
             // descriptorCombo
             // 

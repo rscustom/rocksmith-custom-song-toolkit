@@ -21,6 +21,9 @@ namespace RocksmithToolkitLib.ToolkitTone
         public string Key { get; set; }
         public IList<ToolkitKnob> Knobs { get; set; }
         public bool Bass { get; set; }
+        public string Skin { get; set; }
+        public int? SkinIndex { get; set; }
+
 
         #region Not used for RS2014
         public bool AllowLoop { get; set; }
@@ -28,7 +31,7 @@ namespace RocksmithToolkitLib.ToolkitTone
         public bool AllowPre { get; set; }
         public bool Metal { get; set; }
         #endregion
-        
+
         public PedalType TypeEnum
         {
             get{
@@ -73,6 +76,8 @@ namespace RocksmithToolkitLib.ToolkitTone
                 {
                     PedalKey = Key,
                     KnobValues = Knobs.ToDictionary(k => k.Key, k => k.DefaultValue),
+                    Skin = Skin,
+                    SkinIndex = SkinIndex,
                     Category = Category,
                     Type = Type
                 };
