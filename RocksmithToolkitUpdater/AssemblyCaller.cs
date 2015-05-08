@@ -33,7 +33,9 @@ namespace RocksmithToolkitUpdater
             var istance = Activator.CreateInstance(compiledType);
             var bindingFlags = createInstance ? (BindingFlags.Public | BindingFlags.Instance) : (BindingFlags.Public | BindingFlags.Static);
             var methodInfo = (paramTypes == null) ? compiledType.GetMethod(method, bindingFlags) : compiledType.GetMethod(method, paramTypes);
-            return methodInfo.Invoke(istance, methodParams == null ? new object[] { new object() } : methodParams);
+            return methodInfo.Invoke(istance, methodParams ?? new object[] {
+                new object()
+            });
         }
     }
 }

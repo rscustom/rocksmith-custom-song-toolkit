@@ -56,17 +56,18 @@ namespace RocksmithToolkitUpdater
             var url = FileUrl;
             var downloadUri = new Uri(url);
             localFile = Path.Combine(workDir, Path.GetFileName(downloadUri.LocalPath));
-            
+
             // DOWNLOADING FILE
             DownloadFile(downloadUri, localFile);
         }
 
         public void DownloadFile(Uri downloadUri, string location) {
             using (webClient = new WebClient()) {
-                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
-                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                bWorker.DoWork += new DoWorkEventHandler(UnpackAndUpdate);
-                bWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(StartToolkitGUI);
+                webClient.DownloadFileCompleted += Completed;
+                webClient.DownloadProgressChanged += ProgressChanged;
+
+                bWorker.DoWork += UnpackAndUpdate;
+                bWorker.RunWorkerCompleted += StartToolkitGUI;
 
                 sw.Start();
                 webClient.DownloadFileAsync(downloadUri, location);
@@ -110,7 +111,7 @@ namespace RocksmithToolkitUpdater
                     var output = Path.Combine(workDir, "temp");
                     ExtractFile(output);
                     MoveFiles(output, workDir); 
-                    
+
                     // DELETE DOWNLOADED FILE
                     try
                     {
@@ -120,7 +121,7 @@ namespace RocksmithToolkitUpdater
                             Directory.Delete(output, true);
                     }
                     catch { /* Do nothing */ }
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
             }
         }
@@ -132,7 +133,7 @@ namespace RocksmithToolkitUpdater
         private void StartToolkitGUI(object sender, RunWorkerCompletedEventArgs e)
         {
             string toolkitRootPath = Path.GetDirectoryName(Application.ExecutablePath);
-            
+
             Process updaterProcess = new Process();
             updaterProcess.StartInfo.FileName = Path.Combine(toolkitRootPath, APP_RSGUI);
             updaterProcess.StartInfo.WorkingDirectory = toolkitRootPath;
@@ -181,7 +182,6 @@ namespace RocksmithToolkitUpdater
                 case "RocksmithToolkitLib.TuningDefinition.xml":
                     repo = "TuningDefinitionRepository";
                     break;
-                
 	        }
 
             if (!String.IsNullOrEmpty(repo))

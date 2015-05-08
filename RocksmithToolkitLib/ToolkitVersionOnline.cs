@@ -37,14 +37,10 @@ namespace RocksmithToolkitLib
 
         public static ToolkitVersionOnline Load() {
             var url = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.commit);
-            
-            // GET ONLINE VERSION
-            var tvo = new ToolkitVersionOnline();
-            var wc = new WebClient();
-            var versionJson = wc.DownloadString(url);
-            tvo = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionJson);
 
-            return tvo;
+            // GET ONLINE VERSION
+            var versionJson = new WebClient().DownloadString(url);
+            return JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionJson);
         }
 
         public static string GetFileUrl(bool addExtension = false) {
