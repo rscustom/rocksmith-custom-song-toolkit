@@ -1027,7 +1027,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     // Populate tuning info
                     try
                     {
-                        var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);
+                        var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);//not exist\mooved\etc, should check it instead of catch.
                         arrangement.CapoFret = songXml.Capo;
 
                         //Load tuning from Arrangement
@@ -1038,7 +1038,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             tuning = TuningDefinitionRepository.Instance().Select(songXml.Tuning, CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014);
 
                         if (tuning == null)
-                        {
+                        {//add it to database
                             tuning = new TuningDefinition();
                             tuning.Tuning = arrangement.TuningStrings;
                             tuning.Custom = true;
@@ -1200,14 +1200,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if(arr.Sng2014 == null)
                     {
                         var sections = Song2014.LoadFromFile(arr.SongXml.File).Sections;
-                        if(sections.Any(x => x.Name.ToLower() == "chorus"))
-                            chorusTime = (int)sections.First(x => x.Name.ToLower() == "chorus").StartTime;
+                        if (sections.Any(x => x.Name.ToLower() == "chorus"))
+                            chorusTime = (int)sections.First(x => x.Name.ToLower() == "chorus").StartTime * 1000;
+                        else
+                            chorusTime = (int)sections.First().StartTime * 1000;
                     }
                     else
                     {
                         var sections = arr.Sng2014.Sections.Sections;
-                        if(sections.Any(x => x.Name.ToString().ToLower() == "chorus"))
-                            chorusTime = (int)sections.First(x => x.Name.ToString().ToLower() == "chorus").StartTime;
+                        if (sections.Any(x => x.Name.ToString().ToLower() == "chorus"))
+                            chorusTime = (int)sections.First(x => x.Name.ToString().ToLower() == "chorus").StartTime * 1000;
+                        else
+                            chorusTime = (int)sections.First().StartTime * 1000;
                     }
                 }
             }
@@ -1262,7 +1266,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     if (!File.Exists(wavPreviewPath))
                     {
-                        ExternalApps.Wav2Ogg(AudioPath, oggPath, (int)audioQualityBox.Value); // 4
+                        if (!File.Exists(oggPath))
+                        {//may cause issues if you've got another guitar.ogg in folder, but it's extreamley rare.
+                            ExternalApps.Wav2Ogg(AudioPath, oggPath, (int)audioQualityBox.Value); // 4
+                        }
                         ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, chorusTime);
                         ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                     }
