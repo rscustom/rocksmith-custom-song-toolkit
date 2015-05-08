@@ -59,10 +59,11 @@ namespace RocksmithToolkitLib.Ogg
         }
 
         public static void LoadWwiseTemplate(string sourcePath, int audioQuality)
-        {
+        {//TODO: use packed template
             var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
             var templateDir = Path.Combine(appRootDir, "Wwise\\Template");
             var orgSfxDir = Path.Combine(appRootDir, templateDir, "Originals\\SFX");
+            //Unpack template here
 
             if (!Directory.Exists(orgSfxDir))
                 throw new FileNotFoundException("Could not find Wwise template originals SFX directory.\r\nReinstall Midi2RsXml to fix problem.");
@@ -107,11 +108,11 @@ namespace RocksmithToolkitLib.Ogg
 
             var workUnitPath = Path.Combine(templateDir, "Interactive Music Hierarchy", "Default Work Unit.wwu");
             resString = resString.Replace("%QF1%", Convert.ToString(audioQuality));
-            resString = resString.Replace("%QF2%", "4");
+            resString = resString.Replace("%QF2%", "4");//preview
             using (TextWriter tw = new StreamWriter(workUnitPath, false))
             {
                 tw.Write(resString);
-                tw.Close();
+                tw.Flush();
             }
         }
 
@@ -126,11 +127,12 @@ namespace RocksmithToolkitLib.Ogg
             if (!wemPathInfo.Exists)
                 throw new FileNotFoundException("Could not find Wwise template .cache Windows SFX directory");
 
-            var srcPaths = wemPathInfo.EnumerateFiles("*.wem", SearchOption.TopDirectoryOnly);
-            if (srcPaths.Count() != 2)
+            var srcPaths = wemPathInfo.EnumerateFiles("*.wem", SearchOption.TopDirectoryOnly).ToArray();
+            if (srcPaths.Length != 2)
                 throw new Exception("Did not find converted Wem audio and preview files");
 
-            var destPreviewPath = Path.Combine(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + "_preview.wem");
+            //var destPreviewPath = Path.Combine(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + "_preview.wem");
+            var destPreviewPath = string.Format("{0}_preview.wem", destinationPath.Substring(0, destinationPath.LastIndexOf(".")));
             foreach (var srcPath in srcPaths)
             {
                 if (srcPath.Name.Contains("_preview_"))

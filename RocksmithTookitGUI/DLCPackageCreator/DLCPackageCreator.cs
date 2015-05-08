@@ -1182,6 +1182,46 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 audioPathTB.Focus();
                 return null;
             }
+            int chorusTime = 4000;
+            var arrangements = arrangementLB.Items.OfType<Arrangement>().ToList();
+            foreach (Arrangement arr in arrangements)
+            {
+                if (!File.Exists(arr.SongXml.File))
+                {
+                    MessageBox.Show("Error: Song Xml File doesn't exist: " + arr.SongXml.File, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+                arr.SongFile.File = "";
+                if(arr.ArrangementType != ArrangementType.Vocal)
+                {
+                    if(chorusTime != 4000)
+                        continue;
+
+                    if(arr.Sng2014 == null)
+                    {
+                        var sections = Song2014.LoadFromFile(arr.SongXml.File).Sections;
+                        if(sections.Any(x => x.Name.ToLower() == "chorus"))
+                            chorusTime = (int)sections.First(x => x.Name.ToLower() == "chorus").StartTime;
+                    }
+                    else
+                    {
+                        var sections = arr.Sng2014.Sections.Sections;
+                        if(sections.Any(x => x.Name.ToString().ToLower() == "chorus"))
+                            chorusTime = (int)sections.First(x => x.Name.ToString().ToLower() == "chorus").StartTime;
+                    }
+                }
+            }
+
+            if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.Vocals) > 1)
+            {
+                MessageBox.Show("Error: Multiple Vocals arrangement found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.JVocals) > 1)
+            {
+                MessageBox.Show("Error: Multiple JVocals arrangement found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
 
             try
             {
@@ -1195,7 +1235,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             string audioPreviewPath = null;
-
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 // ExternalApps.VerifyExternalApps(); // for testing
@@ -1213,7 +1252,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     ExternalApps.Ogg2Wav(AudioPath, wavPath);
                     if (!File.Exists(oggPreviewPath))
                     {
-                        ExternalApps.Ogg2Preview(AudioPath, oggPreviewPath);
+                        ExternalApps.Ogg2Preview(AudioPath, oggPreviewPath, chorusTime);
                         ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                     }
                     AudioPath = wavPath;
@@ -1224,7 +1263,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (!File.Exists(wavPreviewPath))
                     {
                         ExternalApps.Wav2Ogg(AudioPath, oggPath, (int)audioQualityBox.Value); // 4
-                        ExternalApps.Ogg2Preview(oggPath, oggPreviewPath);
+                        ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, chorusTime);
                         ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                     }
                     Wwise.Convert2Wem(AudioPath, wemPath, (int)audioQualityBox.Value);
@@ -1235,34 +1274,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     OggFile.Revorb(AudioPath, oggPath, Path.GetDirectoryName(Application.ExecutablePath), OggFile.WwiseVersion.Wwise2013);
                     ExternalApps.Ogg2Wav(oggPath, wavPath);
-                    ExternalApps.Ogg2Preview(oggPath, oggPreviewPath);
+                    ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, chorusTime);
                     ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                     Wwise.Convert2Wem(wavPath, wemPath, (int)audioQualityBox.Value);
                     AudioPath = wemPath;
                 }
-            }
-
-            var arrangements = arrangementLB.Items.OfType<Arrangement>().ToList();
-            foreach (var arr in arrangements)
-            {
-                if (!File.Exists(arr.SongXml.File))
-                {
-                    MessageBox.Show("Error: Song Xml File doesn't exist: " + arr.SongXml.File, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return null;
-                }
-                arr.SongFile.File = "";
-
-            }
-
-            if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.Vocals) > 1)
-            {
-                MessageBox.Show("Error: Multiple Vocals arrangement found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-            if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.JVocals) > 1)
-            {
-                MessageBox.Show("Error: Multiple JVocals arrangement found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
             }
 
             var tones = new List<Tone>();
