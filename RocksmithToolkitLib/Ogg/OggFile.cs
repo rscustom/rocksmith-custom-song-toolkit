@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Text;
 using System.IO;
+using System.Windows.Forms;
 using MiscUtil.Conversion;
 using MiscUtil.IO;
 using System.Diagnostics;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.Ogg
 {
@@ -13,8 +15,10 @@ namespace RocksmithToolkitLib.Ogg
 
         #region RS1
 
-        public static Stream ConvertOgg(string inputFile) {
-            using (var inputFileStream = File.Open(inputFile, FileMode.Open)) {
+        public static Stream ConvertOgg(string inputFile)
+        {
+            using (var inputFileStream = File.Open(inputFile, FileMode.Open))
+            {
                 return ConvertOgg(inputFileStream);
             }
         }
@@ -123,8 +127,10 @@ namespace RocksmithToolkitLib.Ogg
 
         #region RS2014
 
-        public static void ConvertAudioPlatform(string inputFile, string outputFileName) {
-            using (var outputFileStream = File.Open(outputFileName, FileMode.Append)) {
+        public static void ConvertAudioPlatform(string inputFile, string outputFileName)
+        {
+            using (var outputFileStream = File.Open(outputFileName, FileMode.Append))
+            {
                 ConvertAudioPlatform(inputFile).CopyTo(outputFileStream);
             }
         }
@@ -237,6 +243,63 @@ namespace RocksmithToolkitLib.Ogg
             }
         }
 
+        /// <summary>
+        /// Convert ogg or wave audio files to Wwise 2013 wem audio, including preveiw wem file.
+        /// </summary>
+        /// <param name="audioPath"></param>
+        /// <param name="audioQuality"></param>
+        /// <param name="chorusTime"></param>
+        /// <returns></returns>
+        public static string Convert2Wem(string audioPath, int audioQuality = 4, long chorusTime = 4000)
+        {
+            // ExternalApps.VerifyExternalApps(); // for testing
+            var audioPathNoExt = Path.Combine(Path.GetDirectoryName(audioPath), Path.GetFileNameWithoutExtension(audioPath));
+            var oggPath = String.Format(audioPathNoExt + ".ogg");
+            var wavPath = String.Format(audioPathNoExt + ".wav");
+            var wemPath = String.Format(audioPathNoExt + ".wem");
+            var oggPreviewPath = String.Format(audioPathNoExt + "_preview.ogg");
+            var wavPreviewPath = String.Format(audioPathNoExt + "_preview.wav");
+            var wemPreviewPath = String.Format(audioPathNoExt + "_preview.wem");
+
+            if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".ogg")//RS1 old ogg was actually wwise
+            {
+                ExternalApps.Ogg2Wav(audioPath, wavPath);
+                if (!File.Exists(oggPreviewPath))
+                {
+                    ExternalApps.Ogg2Preview(audioPath, oggPreviewPath, chorusTime);
+                    ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
+                }
+                audioPath = wavPath;
+            }
+
+            if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".wav")
+            {
+                if (!File.Exists(wavPreviewPath))
+                {
+                    if (!File.Exists(oggPath))
+                    {//may cause issues if you've got another guitar.ogg in folder, but it's extreamley rare.
+                        ExternalApps.Wav2Ogg(audioPath, oggPath, audioQuality); // 4
+                    }
+                    ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, chorusTime);
+                    ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
+                }
+                Wwise.Convert2Wem(audioPath, wemPath, audioQuality);
+                audioPath = wemPath;
+            }
+
+            if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".wem" && !File.Exists(wemPreviewPath))
+            {
+                OggFile.Revorb(audioPath, oggPath, Path.GetDirectoryName(Application.ExecutablePath), OggFile.WwiseVersion.Wwise2013);
+                ExternalApps.Ogg2Wav(oggPath, wavPath);
+                ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, chorusTime);
+                ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
+                Wwise.Convert2Wem(wavPath, wemPath, audioQuality);
+                audioPath = wemPath;
+            }
+
+            return audioPath;
+        }
+
         #endregion
 
         #region HELPERS
@@ -284,15 +347,19 @@ namespace RocksmithToolkitLib.Ogg
             }
         }
 
-        public static Platform GetAudioPlatform(this string inputFile) {
-            using (var inputFileStream = File.Open(inputFile, FileMode.Open)) {
+        public static Platform GetAudioPlatform(this string inputFile)
+        {
+            using (var inputFileStream = File.Open(inputFile, FileMode.Open))
+            {
                 return inputFileStream.GetAudioPlatform();
             };
         }
 
-        public static Platform GetAudioPlatform(this Stream input) {
+        public static Platform GetAudioPlatform(this Stream input)
+        {
             using (var MS = new MemoryStream())
-            using (var reader = new BinaryReader(MS)) {
+            using (var reader = new BinaryReader(MS))
+            {
                 input.Position = 0; input.CopyTo(MS);
                 MS.Position = 0; input.Position = 0;
                 var fileID = new string(reader.ReadChars(4));
@@ -304,19 +371,23 @@ namespace RocksmithToolkitLib.Ogg
             return new Platform(GamePlatform.None, GameVersion.None);
         }
 
-        public static bool NeedsConversion(this string inputFile) {
-            using (var inputFileStream = File.Open(inputFile, FileMode.Open)) {
+        public static bool NeedsConversion(this string inputFile)
+        {
+            using (var inputFileStream = File.Open(inputFile, FileMode.Open))
+            {
                 return inputFileStream.NeedsConversion();
             }
         }
 
-        public static bool NeedsConversion(this Stream input) {
+        public static bool NeedsConversion(this Stream input)
+        {
             var platform = input.GetAudioPlatform();
             var bitConverter = platform.GetBitConverter;
 
             using (var MS = new MemoryStream())
-            using (var reader = new EndianBinaryReader(bitConverter, MS)) {
-                input.Position = 0; input.CopyTo(MS); 
+            using (var reader = new EndianBinaryReader(bitConverter, MS))
+            {
+                input.Position = 0; input.CopyTo(MS);
                 MS.Position = 0; input.Position = 0;
                 reader.Seek(16, SeekOrigin.Begin);
                 if (reader.ReadUInt32() == 24)//fmtSize

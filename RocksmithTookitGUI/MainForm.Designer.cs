@@ -57,7 +57,6 @@
             this.sngConverterTab = new System.Windows.Forms.TabPage();
             this.sngConverterControl = new RocksmithToolkitGUI.SngConverter.SngConverter();
             this.oggConverterTab = new System.Windows.Forms.TabPage();
-            this.oggConverterControl = new RocksmithToolkitGUI.OggConverter.OggConverter();
             this.cdlcConverterTab = new System.Windows.Forms.TabPage();
             this.cdlC2Tab1 = new RocksmithToolkitGUI.CDLC2Tab.CDLC2Tab();
             this.zigProConverterTab = new System.Windows.Forms.TabPage();
@@ -66,6 +65,7 @@
             this.generalConfigControl = new RocksmithToolkitGUI.Config.GeneralConfig();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.updateButton = new System.Windows.Forms.Button();
+            this.oggConverter1 = new RocksmithToolkitGUI.OggConverter.OggConverter();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.dlcPackageCreatorTab.SuspendLayout();
@@ -200,6 +200,7 @@
             this.dlcPackageCreatorControl.CurrentGameVersion = RocksmithToolkitLib.GameVersion.RS2014;
             this.dlcPackageCreatorControl.DLCName = "";
             this.dlcPackageCreatorControl.Location = new System.Drawing.Point(16, 6);
+            this.dlcPackageCreatorControl.LyricArtPath = null;
             this.dlcPackageCreatorControl.Margin = new System.Windows.Forms.Padding(4);
             this.dlcPackageCreatorControl.MinimumSize = new System.Drawing.Size(520, 555);
             this.dlcPackageCreatorControl.Name = "dlcPackageCreatorControl";
@@ -319,26 +320,15 @@
             // 
             // oggConverterTab
             // 
-            this.oggConverterTab.Controls.Add(this.oggConverterControl);
+            this.oggConverterTab.Controls.Add(this.oggConverter1);
             this.oggConverterTab.Location = new System.Drawing.Point(4, 22);
             this.oggConverterTab.Margin = new System.Windows.Forms.Padding(2);
             this.oggConverterTab.Name = "oggConverterTab";
             this.oggConverterTab.Padding = new System.Windows.Forms.Padding(2);
-            this.oggConverterTab.Size = new System.Drawing.Size(192, 74);
+            this.oggConverterTab.Size = new System.Drawing.Size(542, 564);
             this.oggConverterTab.TabIndex = 6;
             this.oggConverterTab.Text = "OGG";
             this.oggConverterTab.UseVisualStyleBackColor = true;
-            // 
-            // oggConverterControl
-            // 
-            this.oggConverterControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.oggConverterControl.Location = new System.Drawing.Point(18, 24);
-            this.oggConverterControl.Margin = new System.Windows.Forms.Padding(4);
-            this.oggConverterControl.MinimumSize = new System.Drawing.Size(498, 122);
-            this.oggConverterControl.Name = "oggConverterControl";
-            this.oggConverterControl.Size = new System.Drawing.Size(498, 204);
-            this.oggConverterControl.TabIndex = 5;
             // 
             // cdlcConverterTab
             // 
@@ -363,7 +353,7 @@
             this.zigProConverterTab.Location = new System.Drawing.Point(4, 22);
             this.zigProConverterTab.Margin = new System.Windows.Forms.Padding(2);
             this.zigProConverterTab.Name = "zigProConverterTab";
-            this.zigProConverterTab.Size = new System.Drawing.Size(542, 564);
+            this.zigProConverterTab.Size = new System.Drawing.Size(192, 74);
             this.zigProConverterTab.TabIndex = 8;
             this.zigProConverterTab.Text = "Ziggy Pro";
             this.zigProConverterTab.UseVisualStyleBackColor = true;
@@ -375,7 +365,7 @@
             this.ziggyConverterControl.Location = new System.Drawing.Point(16, 8);
             this.ziggyConverterControl.MinimumSize = new System.Drawing.Size(483, 111);
             this.ziggyConverterControl.Name = "ziggyConverterControl";
-            this.ziggyConverterControl.Size = new System.Drawing.Size(504, 296);
+            this.ziggyConverterControl.Size = new System.Drawing.Size(483, 296);
             this.ziggyConverterControl.TabIndex = 7;
             // 
             // GeneralConfigTab
@@ -422,6 +412,13 @@
             this.updateButton.UseVisualStyleBackColor = true;
             this.updateButton.Visible = false;
             this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
+            // 
+            // oggConverter1
+            // 
+            this.oggConverter1.Location = new System.Drawing.Point(20, 14);
+            this.oggConverter1.Name = "oggConverter1";
+            this.oggConverter1.Size = new System.Drawing.Size(496, 431);
+            this.oggConverter1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -489,11 +486,11 @@
         private DDC.DDC ddcControl;
         private DLCInlayCreator.DLCInlayCreator dlcInlayCreatorControl;
         private SngConverter.SngConverter sngConverterControl;
-        private OggConverter.OggConverter oggConverterControl;
         private ZiggyProEditorConverter.ZpeConverter ziggyConverterControl;
         private Config.GeneralConfig generalConfigControl;
         private System.Windows.Forms.TabPage cdlcConverterTab;
         private CDLC2Tab.CDLC2Tab cdlC2Tab1;
+        private OggConverter.OggConverter oggConverter1;
     }
 }
 

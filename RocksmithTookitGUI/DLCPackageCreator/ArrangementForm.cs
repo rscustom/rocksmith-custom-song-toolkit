@@ -838,9 +838,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (EditMode)
             {
                 songXmlBrowseButton.Enabled = false;
-                XmlFilePath.Enabled = false;
+                XmlFilePath.ReadOnly = true;
             }
         }
 
-    }
+  }
 }

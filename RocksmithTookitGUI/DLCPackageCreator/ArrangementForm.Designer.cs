@@ -55,13 +55,17 @@
             this.toneBCombo = new System.Windows.Forms.ComboBox();
             this.lblToneA = new System.Windows.Forms.Label();
             this.gbDLCId = new System.Windows.Forms.GroupBox();
+            this.PersistentId = new RocksmithToolkitGUI.CueTextBox();
+            this.MasterId = new RocksmithToolkitGUI.CueTextBox();
             this.gbXmlDefinition = new System.Windows.Forms.GroupBox();
+            this.XmlFilePath = new RocksmithToolkitGUI.CueTextBox();
             this.gbArrInfo = new System.Windows.Forms.GroupBox();
             this.typeEdit = new System.Windows.Forms.Button();
             this.tuningEditButton = new System.Windows.Forms.Button();
             this.BonusCheckBox = new System.Windows.Forms.CheckBox();
             this.gbTuningPitch = new System.Windows.Forms.GroupBox();
             this.noteDisplay = new System.Windows.Forms.Label();
+            this.frequencyTB = new RocksmithToolkitGUI.CueTextBox();
             this.centOffsetDisplay = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -74,10 +78,6 @@
             this.routeMaskRhythmRadio = new System.Windows.Forms.RadioButton();
             this.routeMaskLeadRadio = new System.Windows.Forms.RadioButton();
             this.MetronomeCb = new System.Windows.Forms.CheckBox();
-            this.frequencyTB = new RocksmithToolkitGUI.CueTextBox();
-            this.XmlFilePath = new RocksmithToolkitGUI.CueTextBox();
-            this.PersistentId = new RocksmithToolkitGUI.CueTextBox();
-            this.MasterId = new RocksmithToolkitGUI.CueTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.scrollSpeedTrackBar)).BeginInit();
             this.gbTone.SuspendLayout();
             this.gbDLCId.SuspendLayout();
@@ -443,7 +443,9 @@
             this.XmlFilePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.XmlFilePath.ForeColor = System.Drawing.Color.Gray;
             this.XmlFilePath.Location = new System.Drawing.Point(10, 17);
+            this.XmlFilePath.Multiline = true;
             this.XmlFilePath.Name = "XmlFilePath";
+            this.XmlFilePath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.XmlFilePath.Size = new System.Drawing.Size(347, 20);
             this.XmlFilePath.TabIndex = 0;
             // 
