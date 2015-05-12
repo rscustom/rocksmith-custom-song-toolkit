@@ -1,10 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rocksmith Toolkit Code Analysis Rules" Description="These rules focus on the most critical problems in your code, including potential security holes, application crashes, and other important logic and design errors. It is recommended to include this rule set in any custom rule set you create for your projects." ToolsVersion="10.0">
+<RuleSet Name="Rocksmith Toolkit Code Analysis Rules" Description="These rules focus on the most critical problems in your code, including potential security holes, application crashes, and other important logic and design errors. It is recommended to include this rule set in any custom rule set you create for your projects." ToolsVersion="14.0">
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1000" Action="Warning" />
     <Rule Id="CA1001" Action="Warning" />
+    <Rule Id="CA1002" Action="Warning" />
+    <Rule Id="CA1006" Action="Warning" />
     <Rule Id="CA1009" Action="Warning" />
     <Rule Id="CA1016" Action="Warning" />
+    <Rule Id="CA1018" Action="Warning" />
+    <Rule Id="CA1024" Action="Warning" />
+    <Rule Id="CA1032" Action="Warning" />
     <Rule Id="CA1033" Action="Warning" />
+    <Rule Id="CA1034" Action="Warning" />
+    <Rule Id="CA1036" Action="Warning" />
+    <Rule Id="CA1041" Action="Warning" />
+    <Rule Id="CA1044" Action="Warning" />
     <Rule Id="CA1049" Action="Warning" />
     <Rule Id="CA1060" Action="Warning" />
     <Rule Id="CA1061" Action="Warning" />
@@ -51,10 +61,17 @@
     <Rule Id="CA2212" Action="Warning" />
     <Rule Id="CA2213" Action="Warning" />
     <Rule Id="CA2214" Action="Warning" />
+    <Rule Id="CA2215" Action="Warning" />
     <Rule Id="CA2216" Action="Warning" />
+    <Rule Id="CA2218" Action="Warning" />
+    <Rule Id="CA2219" Action="Warning" />
     <Rule Id="CA2220" Action="Warning" />
+    <Rule Id="CA2224" Action="Warning" />
+    <Rule Id="CA2228" Action="Warning" />
     <Rule Id="CA2229" Action="Warning" />
+    <Rule Id="CA2231" Action="Warning" />
     <Rule Id="CA2232" Action="Warning" />
+    <Rule Id="CA2233" Action="Warning" />
     <Rule Id="CA2235" Action="Warning" />
     <Rule Id="CA2236" Action="Warning" />
     <Rule Id="CA2237" Action="Warning" />
