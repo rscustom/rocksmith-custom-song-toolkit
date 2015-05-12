@@ -314,7 +314,7 @@ namespace RocksmithToolkitLib.Xml
                     // this looks nicers but does not match the EOF original
                     // it is used to distinguish XML that is modified by toolkit
                     xml.Element("song").AddBeforeSelf(new XComment(commentNode));
-                    if (commentNode.ToString().Contains(cstVersion))
+                    if (commentNode.ToString().Contains(" CST v"))
                         cstComment = true;
                 }
             }
