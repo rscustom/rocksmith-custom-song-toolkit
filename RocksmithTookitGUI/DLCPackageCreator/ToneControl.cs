@@ -244,8 +244,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         case GameVersion.RS2014:
                             tone.GearList[pedalSlot] = null;
                             break;
-                        default:
-                            break;
                     }
                     knobSelectButton.Enabled = false;
                 }

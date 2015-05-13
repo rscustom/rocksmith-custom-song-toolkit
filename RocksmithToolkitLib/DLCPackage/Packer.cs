@@ -830,7 +830,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (xmlName.ToUpperInvariant().Contains("VOCAL"))
                         continue;//TODO: Re-generate vocals manifest.
 
-                    string json = jsonFiles.Where(name => Path.GetFileNameWithoutExtension(name) == xmlName).FirstOrDefault();
+                    string json = jsonFiles.FirstOrDefault(name => Path.GetFileNameWithoutExtension(name) == xmlName);
                     if (!String.IsNullOrEmpty(json))
                     {
                         var xmlContent = Song2014.LoadFromFile(xml);
