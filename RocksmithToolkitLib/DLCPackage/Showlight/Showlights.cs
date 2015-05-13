@@ -72,6 +72,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             var ns = new XmlSerializerNamespaces();
             ns.Add("", "");
 
+            FixShowlights(ShowlightList);
             Count = ShowlightList.Count;
             using (var writer = System.Xml.XmlWriter.Create(stream, new System.Xml.XmlWriterSettings {
                 Indent = true,
@@ -231,7 +232,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                     this.ShowlightList = list.OrderBy(x => x.Time).Union(this.ShowlightList).ToList();
                     this.ShowlightList.TrimExcess();
                 }
-                catch
+                catch (Exception)
                 {
                     return false;
                 }

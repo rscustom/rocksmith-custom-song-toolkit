@@ -28,7 +28,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             unchecked
             {
                 //Force Equals on each same note element, because we need near equal case for the time.
-                return Note.GetHashCode();
+                return 0; //Note.GetHashCode();
             }
         }
 
