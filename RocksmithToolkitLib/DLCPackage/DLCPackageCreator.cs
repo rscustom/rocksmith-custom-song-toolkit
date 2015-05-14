@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -517,14 +518,14 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifestHeaderHSANStream.Seek(0, SeekOrigin.Begin);
                         packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/songs_dlc_{0}.hsan", dlcName), manifestHeaderHSANStream);
                     }
-
+  
                     // SHOWLIGHT
                     Showlights showlight = new Showlights(info);
                     showlight.Serialize(showlightStream);
                     if (showlightStream.CanRead)
                         packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
-
-                    // XBLOCK
+ 
+                   // XBLOCK
                     GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform);
                     game.SerializeXml(xblockStream);
                     xblockStream.Flush();

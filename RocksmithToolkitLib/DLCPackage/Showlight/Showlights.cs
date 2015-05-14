@@ -108,16 +108,19 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
         private int GetFogNote(int midiNote)
         {
+            Console.WriteLine((midiNote % 12) + (12 * 2));
             return (midiNote % 12) + (12 * 2);
         }
 
         private int GetBeamNote(int midiNote)
         {
+            Console.WriteLine((midiNote % 12) + (12 * 4));
             return (midiNote % 12) + (12 * 4);
         }
 
         public bool FixShowlights(Showlights shl)
         {
+            Console.WriteLine(shl.ShowlightList.ToString());
             return FixShowlights(shl.ShowlightList);
         }
 

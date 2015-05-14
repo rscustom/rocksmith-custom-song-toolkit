@@ -1183,7 +1183,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return null;
             }
             int chorusTime = 4000;
+            int previewLength = 30000;
             var arrangements = arrangementLB.Items.OfType<Arrangement>().ToList();
+
             foreach (Arrangement arr in arrangements)
             {
                 if (!File.Exists(arr.SongXml.File))
@@ -1192,26 +1194,43 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return null;
                 }
                 arr.SongFile.File = "";
+
                 if (arr.ArrangementType != ArrangementType.Vocal)
                 {
                     if (chorusTime != 4000)
-                        continue;
+                        break;
 
-                    if (arr.Sng2014 == null)
+                    var songLength = Song2014.LoadFromFile(arr.SongXml.File).SongLength;
+                    if (songLength < 30)
+                    {
+                        previewLength = (int)songLength * 1000;
+                        chorusTime = 0;
+                        break;
+                    }
+
+                    if (arr.Sng2014 == null) // should always be true
                     {
                         var sections = Song2014.LoadFromFile(arr.SongXml.File).Sections;
+
                         if (sections.Any(x => x.Name.ToLower() == "chorus"))
                             chorusTime = (int)sections.First(x => x.Name.ToLower() == "chorus").StartTime * 1000;
                         else
                             chorusTime = (int)sections.First().StartTime * 1000;
+
+                        if ((chorusTime + 30000) > ((int)sections.Last().StartTime * 1000))
+                            chorusTime = (int)(sections.Last().StartTime - 30) * 1000;
                     }
-                    else
+                    else // in theory this condition should never be used
                     {
                         var sections = arr.Sng2014.Sections.Sections;
+
                         if (sections.Any(x => x.Name.ToString().ToLower() == "chorus"))
                             chorusTime = (int)sections.First(x => x.Name.ToString().ToLower() == "chorus").StartTime * 1000;
                         else
                             chorusTime = (int)sections.First().StartTime * 1000;
+
+                        if ((chorusTime + 30000) > ((int)sections.Last().StartTime * 1000))
+                            chorusTime = (int)(sections.Last().StartTime - 30) * 1000;
                     }
                 }
             }
@@ -1242,7 +1261,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 // impliment reusable audio to WEM conversion code
-                OggFile.Convert2Wem(AudioPath, (int)audioQualityBox.Value, chorusTime);
+                OggFile.Convert2Wem(AudioPath, (int)audioQualityBox.Value, previewLength, chorusTime);
                 var audioPathNoExt = Path.Combine(Path.GetDirectoryName(AudioPath), Path.GetFileNameWithoutExtension(AudioPath));
                 audioPreviewPath = String.Format(audioPathNoExt + "_preview.wem");
             }

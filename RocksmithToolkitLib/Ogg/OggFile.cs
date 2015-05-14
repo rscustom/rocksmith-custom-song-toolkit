@@ -248,9 +248,10 @@ namespace RocksmithToolkitLib.Ogg
         /// </summary>
         /// <param name="audioPath"></param>
         /// <param name="audioQuality"></param>
+        /// <param name="previewLength"></param>
         /// <param name="chorusTime"></param>
         /// <returns></returns>
-        public static string Convert2Wem(string audioPath, int audioQuality = 4, long chorusTime = 4000)
+        public static string Convert2Wem(string audioPath, int audioQuality = 4, long previewLength = 30000, long chorusTime = 4000)
         {
             // ExternalApps.VerifyExternalApps(); // for testing
             var audioPathNoExt = Path.Combine(Path.GetDirectoryName(audioPath), Path.GetFileNameWithoutExtension(audioPath));
@@ -266,7 +267,7 @@ namespace RocksmithToolkitLib.Ogg
                 ExternalApps.Ogg2Wav(audioPath, wavPath);
                 if (!File.Exists(oggPreviewPath))
                 {
-                    ExternalApps.Ogg2Preview(audioPath, oggPreviewPath, chorusTime);
+                    ExternalApps.Ogg2Preview(audioPath, oggPreviewPath, previewLength, chorusTime);
                     ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                 }
                 audioPath = wavPath;
