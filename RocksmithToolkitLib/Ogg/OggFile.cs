@@ -281,7 +281,7 @@ namespace RocksmithToolkitLib.Ogg
                     {//may cause issues if you've got another guitar.ogg in folder, but it's extreamley rare.
                         ExternalApps.Wav2Ogg(audioPath, oggPath, audioQuality); // 4
                     }
-                    ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, chorusTime);
+                    ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, previewLength, chorusTime);
                     ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                 }
                 Wwise.Convert2Wem(audioPath, wemPath, audioQuality);
@@ -292,7 +292,7 @@ namespace RocksmithToolkitLib.Ogg
             {
                 OggFile.Revorb(audioPath, oggPath, Path.GetDirectoryName(Application.ExecutablePath), OggFile.WwiseVersion.Wwise2013);
                 ExternalApps.Ogg2Wav(oggPath, wavPath);
-                ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, chorusTime);
+                ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, previewLength, chorusTime);
                 ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                 Wwise.Convert2Wem(wavPath, wemPath, audioQuality);
                 audioPath = wemPath;

@@ -40,6 +40,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.general_defaultappid_RS2012 = new System.Windows.Forms.ComboBox();
             this.gbGeneral = new System.Windows.Forms.GroupBox();
+            this.WwisePathButton = new System.Windows.Forms.Button();
+            this.general_wwisepath = new RocksmithToolkitGUI.CueTextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.gbAutoUpdate = new System.Windows.Forms.GroupBox();
             this.general_replacerepo = new System.Windows.Forms.CheckBox();
@@ -67,9 +70,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.converter_source = new System.Windows.Forms.ComboBox();
             this.closeConfigButton = new System.Windows.Forms.Button();
-            this.WwisePathButton = new System.Windows.Forms.Button();
-            this.general_wwisepath = new RocksmithToolkitGUI.CueTextBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.gbCreator.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
@@ -260,6 +260,37 @@
             this.gbGeneral.TabIndex = 14;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
+            // 
+            // WwisePathButton
+            // 
+            this.WwisePathButton.Location = new System.Drawing.Point(473, 158);
+            this.WwisePathButton.Name = "WwisePathButton";
+            this.WwisePathButton.Size = new System.Drawing.Size(34, 23);
+            this.WwisePathButton.TabIndex = 102;
+            this.WwisePathButton.Text = "...";
+            this.WwisePathButton.UseVisualStyleBackColor = true;
+            this.WwisePathButton.Click += new System.EventHandler(this.WwisePathButton_Click);
+            // 
+            // general_wwisepath
+            // 
+            this.general_wwisepath.Cue = "Wwise v2013.2.x build 48xx path (must be this build series)";
+            this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
+            this.general_wwisepath.Location = new System.Drawing.Point(122, 160);
+            this.general_wwisepath.Name = "general_wwisepath";
+            this.general_wwisepath.Size = new System.Drawing.Size(345, 20);
+            this.general_wwisepath.TabIndex = 101;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label14.Location = new System.Drawing.Point(11, 163);
+            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(66, 13);
+            this.label14.TabIndex = 103;
+            this.label14.Text = "Wwise path:";
             // 
             // label12
             // 
@@ -589,37 +620,6 @@
             this.closeConfigButton.Text = "Close";
             this.closeConfigButton.UseVisualStyleBackColor = false;
             this.closeConfigButton.Click += new System.EventHandler(this.closeConfigButton_Click);
-            // 
-            // WwisePathButton
-            // 
-            this.WwisePathButton.Location = new System.Drawing.Point(473, 158);
-            this.WwisePathButton.Name = "WwisePathButton";
-            this.WwisePathButton.Size = new System.Drawing.Size(34, 23);
-            this.WwisePathButton.TabIndex = 102;
-            this.WwisePathButton.Text = "...";
-            this.WwisePathButton.UseVisualStyleBackColor = true;
-            this.WwisePathButton.Click += new System.EventHandler(this.WwisePathButton_Click);
-            // 
-            // general_wwisepath
-            // 
-            this.general_wwisepath.Cue = "Wwise v2013.2.x build 48xx path (must be this build series)";
-            this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
-            this.general_wwisepath.Location = new System.Drawing.Point(122, 160);
-            this.general_wwisepath.Name = "general_wwisepath";
-            this.general_wwisepath.Size = new System.Drawing.Size(345, 20);
-            this.general_wwisepath.TabIndex = 101;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label14.Location = new System.Drawing.Point(11, 163);
-            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(102, 13);
-            this.label14.TabIndex = 103;
-            this.label14.Text = "WwiseCLI.exe path:";
             // 
             // GeneralConfig
             // 

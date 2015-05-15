@@ -176,18 +176,15 @@ namespace RocksmithToolkitGUI.Config
 
         private void WwisePathButton_Click(object sender, EventArgs e)
         {
-            using (var ofd = new OpenFileDialog())
+            using (var fbd = new VistaFolderBrowserDialog())
             {
-                ofd.Title = "Select Wwise CLI File";
-                ofd.Filter = "WwiseCLI.exe File (*.exe)|*.exe";
-
-                if (ofd.ShowDialog() != DialogResult.OK)
+                if (fbd.ShowDialog() != DialogResult.OK)
                     return;
-
-                var wwisePath = ofd.FileName;
+                var wwisePath = fbd.SelectedPath;
                 general_wwisepath.Text = wwisePath;
                 ConfigRepository.Instance()[general_wwisepath.Name] = wwisePath;
             }
         }
+
     }
 }

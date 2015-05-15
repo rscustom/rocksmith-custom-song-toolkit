@@ -27,35 +27,30 @@ namespace RocksmithToolkitLib.Ogg
 
         public static string GetWwisePath()
         {
+            string wwisePath;
+
             // Audiokinect Wwise might not be installed in the default location ;<
-            // so added Wwise location to toolkit configuration menu
+            // added custom Wwise install path to toolkit configuration menu
             if (!String.IsNullOrEmpty(ConfigRepository.Instance()["general_wwisepath"]))
-                return ConfigRepository.Instance()["general_wwisepath"];
+                wwisePath = ConfigRepository.Instance()["general_wwisepath"];
+            else
+                wwisePath = Environment.GetEnvironmentVariable("WWISEROOT");
 
-            try
-            {
-                var programsDir = String.Empty;
+            if (String.IsNullOrEmpty(wwisePath))
+                throw new FileNotFoundException("Could not find Audiokinect Wwise installation." + Environment.NewLine + "Please confirm that Wwise v2013.2.x build 48xx series is installed.");
 
-                if (Environment.OSVersion.Version.Major >= 6)
-                    programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Audiokinetic");
-                else
-                    programsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Audiokinetic");
+            // Wwise v2013.2.x build 48xx path (must be this build series)
+            if (!wwisePath.ToLower().Contains("v2013.2") || !wwisePath.ToLower().Contains("build 48"))
+                throw new FileNotFoundException("You have an incompatible version of Audiokinect Wwise installed." +
+                  Environment.NewLine + "Install Wwise v2013.2.x build 48xx series if you would like to use" +
+                  Environment.NewLine + " the toolkit OGG/WAV audio to Wwise WEM audio auto convert features.");
 
-                var pathWwiseCli = Directory.EnumerateFiles(programsDir, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
+            var pathWwiseCli = Directory.EnumerateFiles(wwisePath, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
 
-                if (String.IsNullOrEmpty(Path.GetFileName(pathWwiseCli)))
-                    throw new FileNotFoundException("Could not find WwiseCLI.exe in " + programsDir + Environment.NewLine + "Please confirm that Build 4828 is installed.");
+            if (!pathWwiseCli.Any())
+                throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwisePath + Environment.NewLine + "Please confirm that Wwise v2013.2.x build 48xx series is installed.");
 
-                return pathWwiseCli;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(new Form { TopMost = true }, @"Could not find WwiseCLI.exe or Audiokinetic directory.  " + Environment.NewLine + @"Please confirm that it is installed and selected in the CST configuration menu.", @"Exception: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                Application.Exit();
-                Environment.Exit(-1);
-                return null;
-            }
+            return pathWwiseCli;
         }
 
         public static void LoadWwiseTemplate(string sourcePath, int audioQuality)
