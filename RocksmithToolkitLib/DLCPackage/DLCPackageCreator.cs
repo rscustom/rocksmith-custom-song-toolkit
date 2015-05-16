@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-
+using System.Xml;
 using X360.IO;
 using X360.Other;
 using X360.STFS;
@@ -310,6 +310,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void GenerateRS2014SongPsarc(Stream output, DLCPackageData info, Platform platform, int pnum = -1)
         {
+            // TODO: Benchmark processes and optimize speed
             dlcName = info.Name.ToLower();
             packPsarc = new PSARC.PSARC();
 
@@ -454,6 +455,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     foreach (var arrangement in info.Arrangements)
                     {
+                        if (arrangement.ArrangementType == ArrangementType.ShowLight)
+                            continue;
+
                         var arrangementFileName = songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower();
 
                         // GAME SONG (SNG)
@@ -475,7 +479,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         {
                             attribute.SongPartition = songPartitionCount.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
                             if (attribute.SongPartition > 1)
-                            { // Make the second arrangement with the same arrangement type as ALTERNATE arrangement ingame
+                            {
+                                // Make the second arrangement with the same arrangement type as ALTERNATE arrangement ingame
                                 attribute.Representative = 0;
                                 attribute.ArrangementProperties.Represent = 0;
                             }
@@ -518,14 +523,21 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifestHeaderHSANStream.Seek(0, SeekOrigin.Begin);
                         packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/songs_dlc_{0}.hsan", dlcName), manifestHeaderHSANStream);
                     }
-  
-                    // SHOWLIGHT
-                    Showlights showlight = new Showlights(info);
-                    showlight.Serialize(showlightStream);
+
+                    // XML SHOWLIGHTS (GENERATE NEW or REUSE EXISTING)
+                    var shlArr = info.Arrangements.FirstOrDefault(ar => ar.ArrangementType == ArrangementType.ShowLight);
+                    if (shlArr != null )
+                        using (FileStream fs = File.OpenRead(shlArr.SongXml.File))
+                            fs.CopyTo(showlightStream);
+                    else
+                    {
+                        Showlights showlight = new Showlights(info);
+                        showlight.Serialize(showlightStream);
+                    }
                     if (showlightStream.CanRead)
                         packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
- 
-                   // XBLOCK
+
+                    // XBLOCK
                     GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform);
                     game.SerializeXml(xblockStream);
                     xblockStream.Flush();

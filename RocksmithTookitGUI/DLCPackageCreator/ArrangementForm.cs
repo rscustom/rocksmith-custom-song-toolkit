@@ -137,6 +137,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         arrangementNameCombo.Items.Add(ArrangementName.JVocals);
                         arrangementNameCombo.SelectedItem = ArrangementName.Vocals;
                         break;
+                    case ArrangementType.ShowLight:
+                        arrangementNameCombo.Items.Clear();
+                        arrangementNameCombo.Items.Add(ArrangementName.ShowLights);
+                        arrangementNameCombo.SelectedItem = ArrangementName.ShowLights;
+                        break;
                     default:
                         arrangementNameCombo.Items.Clear();
                         arrangementNameCombo.Items.Add(ArrangementName.Combo);
@@ -151,9 +156,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 // Disabling options that are not meant for Arrangement Types
                 // Arrangement Information
                 arrangementNameCombo.Enabled = selectedType != ArrangementType.Bass;
-                tuningComboBox.Enabled = selectedType != ArrangementType.Vocal;
-                gbTuningPitch.Enabled = selectedType != ArrangementType.Vocal && currentGameVersion != GameVersion.RS2012;
-                gbScrollSpeed.Enabled = selectedType != ArrangementType.Vocal;
+                tuningComboBox.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight);
+                gbTuningPitch.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight) && currentGameVersion != GameVersion.RS2012;
+                gbScrollSpeed.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight);
                 Picked.Enabled = selectedType == ArrangementType.Bass;
                 BonusCheckBox.Enabled = gbTuningPitch.Enabled;
                 MetronomeCb.Enabled = gbTuningPitch.Enabled;
@@ -162,20 +167,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 UpdateRouteMaskPath(selectedType, selectedArrangementName);
 
                 // Tone Selector
-                gbTone.Enabled = selectedType != ArrangementType.Vocal;
+                gbTone.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight);
 
                 // Arrangement ID
                 MasterId.Enabled = true;
                 PersistentId.Enabled = true;
 
                 // Tuning Edit
-                tuningEditButton.Enabled = selectedType != ArrangementType.Vocal;
+                tuningEditButton.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight);
 
                 // Vocal Edit
-                typeEdit.Enabled = selectedType == ArrangementType.Vocal;
+                typeEdit.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight);
 
                 // Update tuningComboBox
-                if (selectedType != ArrangementType.Vocal)
+                if ((selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight))
                     FillTuningCombo(selectedType, currentGameVersion);
 
             };
@@ -194,7 +199,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 // Selecting defaults
                 var selectedType = (ArrangementType)arrangementTypeCombo.SelectedItem;
                 var selectedTuning = (TuningDefinition)((ComboBox)sender).SelectedItem;
-                tuningEditButton.Enabled = selectedType != ArrangementType.Vocal && selectedTuning != null;
+                tuningEditButton.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight) && selectedTuning != null;
             };
 
             parentControl = control;
@@ -206,7 +211,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void UpdateRouteMaskPath(ArrangementType arrangementType, ArrangementName arrangementName)
         {
-            gbGameplayPath.Enabled = arrangementType != ArrangementType.Vocal && currentGameVersion != GameVersion.RS2012;
+            gbGameplayPath.Enabled = (arrangementType != ArrangementType.Vocal && arrangementType != ArrangementType.ShowLight) && currentGameVersion != GameVersion.RS2012;
 
             //Enabling
             routeMaskLeadRadio.Enabled = arrangementType == ArrangementType.Guitar && (arrangementName == ArrangementName.Combo || arrangementName == ArrangementName.Lead);
@@ -474,6 +479,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             try
             {
                 bool isVocal = false;
+                bool isShowlight = false;
                 try
                 {
                     xmlSong = Song2014.LoadFromFile(xmlFilePath);
@@ -483,6 +489,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     if (ex.InnerException.Message.ToLower().Contains("<vocals"))
                         isVocal = true;
+                    else if (ex.InnerException.Message.ToLower().Contains("<showlights"))
+                        isShowlight = true;
                     else
                     {
                         MessageBox.Show("Unable to get information from the arrangement XML. \nYour version of the EoF is up to date? \n" + ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -494,6 +502,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (isVocal)
                 {
                     arrangementTypeCombo.SelectedItem = ArrangementType.Vocal;
+                }
+                else if (isShowlight)
+                {
+                    arrangementTypeCombo.SelectedItem = ArrangementType.ShowLight;
                 }
                 else
                 {
@@ -668,7 +680,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (currentGameVersion != GameVersion.RS2012)
             {
-                if (!routeMaskLeadRadio.Checked && !routeMaskRhythmRadio.Checked && !routeMaskBassRadio.Checked && (ArrangementType)arrangementTypeCombo.SelectedItem != ArrangementType.Vocal)
+                if (!routeMaskLeadRadio.Checked && !routeMaskRhythmRadio.Checked && !routeMaskBassRadio.Checked && (ArrangementType)arrangementTypeCombo.SelectedItem != ArrangementType.Vocal && (ArrangementType)arrangementTypeCombo.SelectedItem != ArrangementType.ShowLight)
                 {
                     if (MessageBox.Show("You did not select a Gameplay Path for this arrangement.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Cancel)
                     {
@@ -842,5 +854,5 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-  }
+    }
 }

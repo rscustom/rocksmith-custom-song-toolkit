@@ -400,7 +400,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (userChangesToInputControls > 0)
                     UpdateXml(arr, packageData);
 
-                if (arr.ArrangementType != ArrangementType.Vocal)
+                if (arr.ArrangementType == ArrangementType.Guitar || arr.ArrangementType == ArrangementType.Bass)
                     Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
             }
 
@@ -1022,7 +1022,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
 
-                if (arrangement.ArrangementType != ArrangementType.Vocal)
+                if (arrangement.ArrangementType == ArrangementType.Bass || arrangement.ArrangementType == ArrangementType.Guitar)
                 {
                     // Populate tuning info
                     try
@@ -1195,7 +1195,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 arr.SongFile.File = "";
 
-                if (arr.ArrangementType != ArrangementType.Vocal)
+                if (arr.ArrangementType == ArrangementType.Bass || arr.ArrangementType == ArrangementType.Guitar)
                 {
                     if (chorusTime != 4000)
                         break;
@@ -1245,6 +1245,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show("Error: Multiple JVocals arrangement found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
+            if (arrangements.Count(x => x.ArrangementType == ArrangementType.ShowLight && x.Name == ArrangementName.ShowLights) > 1)
+            {
+                MessageBox.Show("Error: Multiple Showlights arrangements found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
 
             try
             {
@@ -1261,7 +1266,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 // impliment reusable audio to WEM conversion code
-                OggFile.Convert2Wem(AudioPath, (int)audioQualityBox.Value, previewLength, chorusTime);
+                AudioPath = OggFile.Convert2Wem(AudioPath, (int)audioQualityBox.Value, previewLength, chorusTime);
                 var audioPathNoExt = Path.Combine(Path.GetDirectoryName(AudioPath), Path.GetFileNameWithoutExtension(AudioPath));
                 audioPreviewPath = String.Format(audioPathNoExt + "_preview.wem");
             }
@@ -1345,6 +1350,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             arr.MasterId = RandomGenerator.NextInt();
 
             if (arr.ArrangementType == ArrangementType.Vocal)
+                return;
+            if (arr.ArrangementType == ArrangementType.ShowLight)
                 return;
 
             if (CurrentGameVersion != GameVersion.RS2012)
@@ -1547,6 +1554,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     {
                         var arrangement = (Arrangement)arrangementLB.Items[i];
                         if (arrangement.ArrangementType == ArrangementType.Vocal)
+                            continue;
+                        if (arrangement.ArrangementType == ArrangementType.ShowLight)
                             continue;
 
                         // TODO: optimize using common Arrangement.cs method

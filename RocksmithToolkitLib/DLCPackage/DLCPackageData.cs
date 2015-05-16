@@ -530,6 +530,20 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
 
+            //ShowLights XML
+            var xmlShowLights = Directory.EnumerateFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).FirstOrDefault();
+            if (!String.IsNullOrEmpty(xmlShowLights))
+            {
+                var shl = new Arrangement();
+                shl.ArrangementType = ArrangementType.ShowLight;
+                shl.Name = ArrangementName.ShowLights;
+                shl.SongXml = new SongXML { File = xmlShowLights };
+                shl.SongFile = new SongFile { File = "" };
+
+                // Adding ShowLights
+                data.Arrangements.Add(shl);
+            }
+
             //Get DDS Files
             var ddsFiles = Directory.EnumerateFiles(unpackedDir, "album_*.dds", SearchOption.AllDirectories).ToArray();
             if (ddsFiles.Any())
@@ -666,14 +680,18 @@ namespace RocksmithToolkitLib.DLCPackage
             const string KIT = "Toolkit";
             string outdir, eofdir, kitdir;
             string SongName = "SongName";
+            string songVersion = "v0";
 
             // Get name for a new folder
             var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray();
             var attr = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
+            var dirParts = unpackedDir.Split('_');
+            if (dirParts.Length > 3)
+                songVersion = dirParts[2];
             SongName = attr.FullName.Split('_')[0];
 
             //Create dir sruct
-            outdir = Path.Combine(Path.GetDirectoryName(unpackedDir), String.Format("{0}_{1}", attr.ArtistName.GetValidSortName(), attr.SongName.GetValidSortName()).Replace(" ", "-"));
+            outdir = Path.Combine(Path.GetDirectoryName(unpackedDir), String.Format("{0}_{1}_{2}", attr.ArtistName.GetValidSortName(), attr.SongName.GetValidSortName(), songVersion).Replace(" ", "-"));
             eofdir = Path.Combine(outdir, EOF);
             kitdir = Path.Combine(outdir, KIT);
             attr = null; //dispose
@@ -692,6 +710,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var xmlFiles = Directory.EnumerateFiles(unpackedDir, "*.xml", SearchOption.AllDirectories).ToArray();
             var sngFiles = Directory.EnumerateFiles(unpackedDir, "*vocals.sng", SearchOption.AllDirectories).ToArray();
+
             foreach (var json in jsonFiles)
             {
                 var Name = Path.GetFileNameWithoutExtension(json);
@@ -704,6 +723,11 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (Name.EndsWith("vocals", StringComparison.Ordinal))
                     File.Move(sngFile, Path.Combine(kitdir, Name + ".sng"));
             }
+
+            // move showlights.xml
+            var showlightPath = Directory.EnumerateFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).ToArray();
+            if (showlightPath.Any())
+                File.Move(showlightPath[0], Path.Combine(eofdir, Path.GetFileName(showlightPath[0])));
 
             //Move all art_size.dds to KIT folder
             var ArtFiles = Directory.EnumerateFiles(unpackedDir, "album_*_*.dds", SearchOption.AllDirectories).ToArray();

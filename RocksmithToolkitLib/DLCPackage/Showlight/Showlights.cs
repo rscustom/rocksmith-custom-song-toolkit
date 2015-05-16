@@ -59,6 +59,8 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             foreach (var arrangement in info.Arrangements) {
                 if (arrangement.ArrangementType == ArrangementType.Vocal)
                     continue;
+                if (arrangement.ArrangementType == ArrangementType.ShowLight)
+                    continue;
                 if (arrangement.SongXml.File == null)
                     continue;
 

@@ -64,13 +64,18 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
 
         public AttributesHeader2014() { }
 
-        public AttributesHeader2014(Attributes2014 attributes) {
+        public AttributesHeader2014(Attributes2014 attributes)
+        {
             foreach (PropertyInfo prop in attributes.GetType().GetProperties())
                 if (GetType().GetProperty(prop.Name) != null)
                     GetType().GetProperty(prop.Name).SetValue(this, prop.GetValue(attributes, null), null);
         }
 
-        public AttributesHeader2014(string arrangementFileName, Arrangement arrangement, DLCPackageData info, Platform platform) {
+        public AttributesHeader2014(string arrangementFileName, Arrangement arrangement, DLCPackageData info, Platform platform)
+        {
+            if (arrangement.ArrangementType == ArrangementType.ShowLight)
+                return;
+
             IsVocal = arrangement.ArrangementType == Sng.ArrangementType.Vocal;
             SongContent = (IsVocal) ? null : Song2014.LoadFromFile(arrangement.SongXml.File);
             var dlcName = info.Name.ToLower();
@@ -99,9 +104,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 CentOffset = (!arrangement.TuningPitch.Equals(0)) ? TuningFrequency.Frequency2Cents(arrangement.TuningPitch) : 0.0;
                 ArtistNameSort = info.SongInfo.ArtistSort;
                 CapoFret = (arrangement.Sng2014.Metadata.CapoFretId == 0xFF) ? CapoFret = 0 : Convert.ToDecimal(arrangement.Sng2014.Metadata.CapoFretId);
-                DNA_Chords = arrangement.Sng2014.DNACount[(int) DNAId.Chord];
-                DNA_Riffs = arrangement.Sng2014.DNACount[(int) DNAId.Riff];
-                DNA_Solo = arrangement.Sng2014.DNACount[(int) DNAId.Solo];
+                DNA_Chords = arrangement.Sng2014.DNACount[(int)DNAId.Chord];
+                DNA_Riffs = arrangement.Sng2014.DNACount[(int)DNAId.Riff];
+                DNA_Solo = arrangement.Sng2014.DNACount[(int)DNAId.Solo];
                 NotesEasy = arrangement.Sng2014.NoteCount[0];
                 NotesMedium = arrangement.Sng2014.NoteCount[1];
                 NotesHard = arrangement.Sng2014.NoteCount[2];
@@ -117,18 +122,20 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
                 SongDiffHard = SongContent.SongLength / NotesHard;
                 SongDifficulty = SongDiffHard;
 
-                SongLength = (double?)Math.Round (SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
+                SongLength = (double?)Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
                 SongName = info.SongInfo.SongDisplayName;
                 SongNameSort = info.SongInfo.SongDisplayNameSort;
                 SongYear = info.SongInfo.SongYear;
 
                 //Detect tuning
-                var tuning = TuningDefinitionRepository.Instance ().SelectAny(SongContent.Tuning, platform.version);
-                if (tuning == null) {
+                var tuning = TuningDefinitionRepository.Instance().SelectAny(SongContent.Tuning, platform.version);
+                if (tuning == null)
+                {
                     tuning = new TuningDefinition();
                     tuning.Tuning = SongContent.Tuning;
                     tuning.Name = tuning.UIName = arrangement.Tuning;
-                    if (String.IsNullOrEmpty(tuning.Name)) {
+                    if (String.IsNullOrEmpty(tuning.Name))
+                    {
                         tuning.Name = tuning.UIName = tuning.NameFromStrings(arrangement.TuningStrings, arrangement.ArrangementType == ArrangementType.Bass);
                     }
                     tuning.Custom = true;

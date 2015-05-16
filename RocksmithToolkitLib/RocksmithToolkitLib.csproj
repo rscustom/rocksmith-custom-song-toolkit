@@ -108,6 +108,7 @@
     <Compile Include="DLCPackage\Manifest\Tone\Manifest.cs" />
     <Compile Include="DLCPackage\Manifest\Tone\Pedal.cs" />
     <Compile Include="DLCPackage\Manifest\Tone\Tone.cs" />
+    <Compile Include="DLCPackage\Showlight\Showlights.cs" />
     <Compile Include="Extensions\ExternalApps.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
     <Compile Include="Ogg\Wwise.cs" />
@@ -129,7 +130,6 @@
     <Compile Include="DLCPackage\Manifest\IAttributes.cs" />
     <Compile Include="DLCPackage\Manifest\Functions\ManifestFunctions.cs" />
     <Compile Include="DLCPackage\Showlight\Showlight.cs" />
-    <Compile Include="DLCPackage\Showlight\Showlights.cs" />
     <Compile Include="DLCPackage\XBlock\IEntity.cs" />
     <Compile Include="DLCPackage\XBlock\ISet.cs">
       <SubType>Code</SubType>

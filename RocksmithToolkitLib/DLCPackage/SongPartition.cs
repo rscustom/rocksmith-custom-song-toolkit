@@ -38,6 +38,8 @@ namespace RocksmithToolkitLib.DLCPackage
             var name = arrangementName.ToString();
             if (arrangementType == ArrangementType.Vocal)
                 return name;
+            if (arrangementType == ArrangementType.ShowLight )
+                return name;
 
             var count = GetSongPartition(arrangementName, arrangementType);
             if (count > 1)

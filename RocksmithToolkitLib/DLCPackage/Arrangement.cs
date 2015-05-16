@@ -74,7 +74,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public Arrangement()
         {
             Id = IdGenerator.Guid();
-            MasterId = ArrangementType == Sng.ArrangementType.Vocal ? 1 : RandomGenerator.NextInt();
+            MasterId = (ArrangementType == ArrangementType.Vocal || ArrangementType == ArrangementType.ShowLight) ? 1 : RandomGenerator.NextInt();
         }
 
         public Arrangement(Attributes2014 attr, string xmlSongFile)
@@ -236,6 +236,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 case ArrangementType.Bass:
                     return String.Format("{0} [{1}{2}{3}] ({4}){5}", ArrangementType, Tuning, pitchInfo, capoInfo, toneDesc, metDesc);
                 case ArrangementType.Vocal:
+                    return String.Format("{0}", Name);
+                case ArrangementType.ShowLight:
                     return String.Format("{0}", Name);
                 default:
                     return String.Format("{0} - {1} [{2}{3}{4}] ({5}){6}", ArrangementType, Name, Tuning, pitchInfo, capoInfo, toneDesc, metDesc);

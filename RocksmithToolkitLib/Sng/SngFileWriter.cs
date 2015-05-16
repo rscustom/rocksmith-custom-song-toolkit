@@ -11,8 +11,8 @@ using System.ComponentModel;
 
 namespace RocksmithToolkitLib.Sng
 {
-    public enum ArrangementName : int { Lead = 0/* Single notes */, Rhythm /* Chords */, Combo /* Combo */, Bass, Vocals, JVocals };
-    public enum ArrangementType { Guitar, Bass, Vocal };
+    public enum ArrangementName : int { Lead = 0/* Single notes */, Rhythm /* Chords */, Combo /* Combo */, Bass, Vocals, JVocals, ShowLights };
+    public enum ArrangementType { Guitar, Bass, Vocal, ShowLight };
     public enum InstrumentTuning { [Description("E Standard")] Standard, [Description("Drop D")] DropD, [Description("Eb")] EFlat, [Description("Open G")] OpenG };
     public enum PluckedType : int { NotPicked, Picked };
     public enum Metronome { None, Itself, Generate };
