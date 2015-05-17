@@ -516,7 +516,7 @@ namespace RocksmithToolkitGUI.DDC
                 string file = e.Row.Cells["PathColnm"].Value.ToString();
                 string value = Path.GetFileNameWithoutExtension(file);
 
-                DLCdb?.Remove(value);
+                if (DLCdb != null) DLCdb.Remove(value);
             }
         }
 
@@ -542,7 +542,7 @@ namespace RocksmithToolkitGUI.DDC
                     string file = row.Cells["PathColnm"].Value.ToString();
                     string value = Path.GetFileNameWithoutExtension(file);
 
-                    DLCdb?.Remove(value);
+                    if (DLCdb != null) DLCdb.Remove(value);
                 }
 
                 FillDB();
