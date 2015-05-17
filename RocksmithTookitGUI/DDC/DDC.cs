@@ -21,13 +21,13 @@ namespace RocksmithToolkitGUI.DDC
 {
     public partial class DDC : UserControl
     {
-        private const string MESSAGEBOX_CAPTION = "Dynamic Difficulty Creator";
+        const string MESSAGEBOX_CAPTION = "Dynamic Difficulty Creator";
 
-        internal BackgroundWorker bw = new BackgroundWorker();
+        internal BackgroundWorker bw;
         // 0 - fpath 1 - name
-        internal Dictionary<string, string> DLCdb = new Dictionary<string,string>();
-        internal Dictionary<string, string> RampMdlsDb = new Dictionary<string,string>();
-        internal Dictionary<string, string> ConfigsDb = new Dictionary<string, string>();
+        internal Dictionary<string, string> DLCdb;
+        internal Dictionary<string, string> RampMdlsDb;
+        internal Dictionary<string, string> ConfigsDb;
         internal static string AppWD = AppDomain.CurrentDomain.BaseDirectory;
         internal static string DdcBD = Path.Combine(AppWD, "ddc");
         internal Color EnabledColor = Color.Green;
@@ -58,6 +58,12 @@ namespace RocksmithToolkitGUI.DDC
         public DDC()
         {
             InitializeComponent();
+            // Init fields
+            bw = new BackgroundWorker();
+            DLCdb = new Dictionary<string, string>();
+            RampMdlsDb = new Dictionary<string, string>();
+            ConfigsDb = new Dictionary<string, string>();
+            // Setup worker
             this.bw.DoWork += bw_DoWork;
             this.bw.ProgressChanged += bw_ProgressChanged;
             this.bw.RunWorkerCompleted += bw_Completed;
@@ -190,21 +196,23 @@ namespace RocksmithToolkitGUI.DDC
 
         private int ApplyDD(string file, string remSUS, string rampPath, string cfgPath, out string consoleOutput, bool cleanProcess = false, bool keepLog = false)
         {
-            var startInfo = new ProcessStartInfo();
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Path.Combine(AppWD, "ddc", "ddc.exe"),
+                WorkingDirectory = Path.GetDirectoryName(file),
+                Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}{4}{5}{6}",
+                    Path.GetFileName(file),
+                    (UInt16) phaseLenNum.Value,
+                    remSUS, rampPath, cfgPath,
+                    cleanProcess ? " -p Y" : " -p N",
+                    keepLog ? " -t Y" : " -t N"
+                    ),
+                UseShellExecute = false,
+                CreateNoWindow = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
 
-            startInfo.FileName = Path.Combine(AppWD, "ddc", "ddc.exe");
-            startInfo.WorkingDirectory = Path.GetDirectoryName(file);
-            startInfo.Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}{4}{5}{6}",
-                                                Path.GetFileName(file),
-                                                (UInt16)phaseLenNum.Value,
-                                                remSUS, rampPath, cfgPath,
-                                                cleanProcess ? " -p Y" : " -p N",
-                                                keepLog ? " -t Y" : " -t N"
-            );
-            startInfo.UseShellExecute = false;
-            startInfo.CreateNoWindow = true;
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
 
             using (var DDC = new Process()) {
                 DDC.StartInfo = startInfo;
@@ -263,9 +271,10 @@ namespace RocksmithToolkitGUI.DDC
                 }
                 else
                 {
-                    foreach (var logFile in logFiles)
-                        if(File.Exists(logFile))
-                            File.Delete(logFile);
+                    foreach (var logFile in logFiles.Where(File.Exists))
+                    {
+                        File.Delete(logFile);
+                    }
                 }
 
                 Packer.Pack(unpackedDir, newName, true, platform, true);
@@ -373,9 +382,12 @@ namespace RocksmithToolkitGUI.DDC
                     var path = String.Format(@".\ddc\umdls\user_{0}.xml", name);
                     if (!ramUpMdlsCbox.Items.Contains(name))
                     {
-                        try { File.Copy(file, path, true); }
+                        try
+                        {
+                            File.Copy(file, path, true);
+                            ramUpMdlsCbox.Items.Add(name);
+                        }
                         catch { }
-                        ramUpMdlsCbox.Items.Add(name);
                     }
                     ramUpMdlsCbox.SelectedIndex = ramUpMdlsCbox.FindStringExact(name);
                 }
@@ -426,13 +438,13 @@ namespace RocksmithToolkitGUI.DDC
                 Process.Start(link);
             }
             else {
-                    string[] Browsers = new string[]{ "chrome", "opera", "firefox" };
-                    foreach (var browserID in Browsers)
+                    string[] browsers = { "chrome", "opera", "firefox" };
+                    foreach (var name in browsers)
                     {
-                        var browser = Process.GetProcessesByName(browserID)[0];
-                        if (browser.ProcessName.Equals(browserID))
+                        var browser = Process.GetProcessesByName(name)[0];
+                        if (browser.ProcessName.Equals(name))
                         {
-                            if (browserID.Contains("opera"))
+                            if (name.Contains("opera"))
                                 arg1 = "-newwindow ";
 
                             browser.StartInfo.FileName = browser.MainModule.FileName;
@@ -503,8 +515,8 @@ namespace RocksmithToolkitGUI.DDC
 
                 string file = e.Row.Cells["PathColnm"].Value.ToString();
                 string value = Path.GetFileNameWithoutExtension(file);
-                if (DLCdb != null)
-                    DLCdb.Remove(value);
+
+                DLCdb?.Remove(value);
             }
         }
 
@@ -530,8 +542,7 @@ namespace RocksmithToolkitGUI.DDC
                     string file = row.Cells["PathColnm"].Value.ToString();
                     string value = Path.GetFileNameWithoutExtension(file);
 
-                    if (DLCdb != null)
-                        DLCdb.Remove(value);
+                    DLCdb?.Remove(value);
                 }
 
                 FillDB();
@@ -540,11 +551,8 @@ namespace RocksmithToolkitGUI.DDC
 
         private void colorHiglight_CheckStateChanged(object sender, EventArgs e)
         {
-            if (cleanCheckbox.Checked) cleanCheckbox.ForeColor = EnabledColor;
-            else cleanCheckbox.ForeColor = DisabledColor;
-
-            if (keepLogfile.Checked) keepLogfile.ForeColor = EnabledColor;
-            else keepLogfile.ForeColor = DisabledColor;
+            cleanCheckbox.ForeColor = cleanCheckbox.Checked ? EnabledColor : DisabledColor;
+            keepLogfile.ForeColor = keepLogfile.Checked ? EnabledColor : DisabledColor;
         }
 
         private void ramUpMdlsCbox_SelectedIndexChanged(object sender, EventArgs e) {
