@@ -98,7 +98,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     break;
                 case ArrangementName.Bass:
                     this.ArrangementType = Sng.ArrangementType.Bass;
-                    tuning = TuningDefinitionRepository.Instance().SelectForBass(song.Tuning, GameVersion.RS2014);
+                    // TODO: trying to fix bass tuning issue
+                    tuning = TuningDefinitionRepository.Instance().Select(song.Tuning, GameVersion.RS2014);
+                    // tuning = TuningDefinitionRepository.Instance().SelectForBass(song.Tuning, GameVersion.RS2014);
                     break;
                 case ArrangementName.Vocals:
                     this.ArrangementType = Sng.ArrangementType.Vocal;

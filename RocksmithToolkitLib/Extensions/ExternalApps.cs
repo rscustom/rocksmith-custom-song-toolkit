@@ -148,15 +148,12 @@ namespace RocksmithToolkitLib.Extensions
             GeneralExtensions.RunExternalExecutable(APP_OGGDEC, true, false, true, cmdArgs);
         }
 
-        public static void Wav2Wem(string wwiseCliPath)
+        public static void Wav2Wem(string wwiseCLIPath, string wwiseTemplateDir)
         {
-            var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
-            var templateDir = "Wwise\\Template";
-            var templatePath = Path.Combine(appRootDir, templateDir, "Template.wproj");
-
+            var templatePath = Path.Combine(wwiseTemplateDir, "Template.wproj");
             var cmdArgs = String.Format(" \"{0}\" -GenerateSoundBanks", templatePath);
 
-            GeneralExtensions.RunExternalExecutable(wwiseCliPath, true, false, true, cmdArgs);
+            GeneralExtensions.RunExternalExecutable(wwiseCLIPath, true, false, true, cmdArgs);
         }
 
     }

@@ -685,9 +685,9 @@ namespace RocksmithToolkitLib.DLCPackage
             // Get name for a new folder
             var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray();
             var attr = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
-            var dirParts = unpackedDir.Split('_');
-            if (dirParts.Length > 3)
-                songVersion = dirParts[2];
+            var fileNameParts = Path.GetFileNameWithoutExtension(unpackedDir).Split('_');
+            if (fileNameParts.Length > 3)
+                songVersion = fileNameParts[2];
             SongName = attr.FullName.Split('_')[0];
 
             //Create dir sruct

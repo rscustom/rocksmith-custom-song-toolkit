@@ -16,10 +16,10 @@ namespace RocksmithToolkitLib.Ogg
         {
             try
             {
-                var wwisePath = GetWwisePath();
-                LoadWwiseTemplate(sourcePath, audioQuality, wwisePath);
-                ExternalApps.Wav2Wem(wwisePath);
-                GetWwiseFiles(destinationPath);
+                var wwiseCLIPath = GetWwisePath();
+                var wwiseTemplateDir = LoadWwiseTemplate(sourcePath, audioQuality, wwiseCLIPath);
+                ExternalApps.Wav2Wem(wwiseCLIPath, wwiseTemplateDir);
+                GetWwiseFiles(destinationPath, wwiseTemplateDir);
             }
             catch (Exception ex)
             {
@@ -42,9 +42,9 @@ namespace RocksmithToolkitLib.Ogg
             if (String.IsNullOrEmpty(wwisePath))
                 throw new FileNotFoundException("Could not find Audiokinect Wwise installation." + Environment.NewLine + "Please confirm that Wwise v2013.2.x or v2014.1.x series are installed.");
 
-            // No support for v2015.1.x yet
+            // No support for v2015.1.x yet, code is expandable
             if (!wwisePath.ToLower().Contains("v2013.2"))
-            if (!wwisePath.ToLower().Contains("v2014.1"))
+                if (!wwisePath.ToLower().Contains("v2014.1"))
                     throw new FileNotFoundException("You have an incompatible version of Audiokinect Wwise installed." +
                     Environment.NewLine + "Install Wwise v2013.2.x or v2014.1.x series if you would like to use" +
                     Environment.NewLine + " the toolkit OGG/WAV audio to Wwise WEM audio auto convert features.");
@@ -52,31 +52,39 @@ namespace RocksmithToolkitLib.Ogg
             var pathWwiseCli = Directory.EnumerateFiles(wwisePath, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
 
             if (!pathWwiseCli.Any())
-                throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwisePath + Environment.NewLine + "Please confirm that Wwise v2013.2.x or v2014.1.x series are installed.");
+                throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwisePath + Environment.NewLine + "Please confirm that Wwise v2013.2.x or v2014.1.x series is installed.");
 
             return pathWwiseCli;
         }
 
-        public static void LoadWwiseTemplate(string sourcePath, int audioQuality, string wwisePath)
+        public static string LoadWwiseTemplate(string sourcePath, int audioQuality, string wwisePath)
         {
             var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
-            var templateDir = Path.Combine(appRootDir, "Wwise\\Template");
-            var orgSfxDir = Path.Combine(appRootDir, templateDir, "Originals\\SFX");
-            var packedTemplatePath1 = Path.Combine(appRootDir, "1Wwise.tar.bz2");
-            var packedTemplatePath2 = Path.Combine(appRootDir, "2Wwise.tar.bz2");
-            string resString = String.Empty;
-
+            var packedTemplatePath2013 = Path.Combine(appRootDir, "Wwise2013.tar.bz2");
+            var packedTemplatePath2014 = Path.Combine(appRootDir, "Wwise2014.tar.bz2");
+            var templateDir = String.Empty;
             //Unpack required template here, based on wwise version installed.
             if (wwisePath.ToLower().Contains("v2013.2"))
-                ExtractTemplate(packedTemplatePath1);
-            if (wwisePath.ToLower().Contains("v2014.1"))
-                ExtractTemplate(packedTemplatePath2);
+            {
+                ExtractTemplate(packedTemplatePath2013);
+                templateDir = Path.Combine(appRootDir, "Wwise2013\\Template");
+            }
+            else if (wwisePath.ToLower().Contains("v2014.1"))
+            {
+                ExtractTemplate(packedTemplatePath2014);
+                templateDir = Path.Combine(appRootDir, "Wwise2014\\Template");
+            }
+            // expandable to next new Wwise version here
+            else
+                throw new FileNotFoundException("Wwise path is incompatible.");
 
+            string resString = String.Empty;
             var workUnitPath = Path.Combine(templateDir, "Interactive Music Hierarchy", "Default Work Unit.wwu");
             using (var sr = new StreamReader(File.OpenRead(workUnitPath)))
             {
                 resString = sr.ReadToEnd();
             }
+
             resString = resString.Replace("%QF1%", Convert.ToString(audioQuality));
             resString = resString.Replace("%QF2%", "4");//preview
 
@@ -86,8 +94,9 @@ namespace RocksmithToolkitLib.Ogg
                 tw.Flush();
             }
 
+            var orgSfxDir = Path.Combine(templateDir, "Originals\\SFX");
             if (!Directory.Exists(orgSfxDir))
-                throw new FileNotFoundException("Could not find Wwise template originals SFX directory.\r\nReinstall Midi2RsXml to fix problem.");
+                throw new FileNotFoundException("Could not find Wwise template originals SFX directory.\r\nReinstall CST to fix problem.");
 
             var vcache = Directory.EnumerateFiles(templateDir, "Template.*.validationcache").FirstOrDefault();
             if (File.Exists(vcache))
@@ -113,11 +122,19 @@ namespace RocksmithToolkitLib.Ogg
 
             File.Copy(sourcePath, Path.Combine(orgSfxDir, "Audio.wav"), true);
             File.Copy(sourcePreviewWave, Path.Combine(orgSfxDir, "Audio_preview.wav"), true);
+
+            return templateDir;
         }
+
         // about 800ms here, not that slow.
         public static void ExtractTemplate(string packedTemplatePath)
         {
             var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
+            // speed up by only unpacking one time, also allows users to upgrade Wwise later
+            var wwiseFolder = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(packedTemplatePath));
+            if (Directory.Exists(Path.Combine(appRootDir, wwiseFolder)))
+                return;
+
             using (var packedTemplate = File.OpenRead(packedTemplatePath))
             using (var bz2 = new BZip2InputStream(packedTemplate))
             using (var tar = TarArchive.CreateInputTarArchive(bz2))
@@ -126,11 +143,10 @@ namespace RocksmithToolkitLib.Ogg
             }
         }
 
-        public static void GetWwiseFiles(string destinationPath)
+        public static void GetWwiseFiles(string destinationPath, string wwiseTemplateDir)
         {
-            const string wemDir = @"Wwise\Template\.cache\Windows\SFX";
-            var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
-            var wemPath = Path.Combine(appRootDir, wemDir);
+            const string wemDir = @".cache\Windows\SFX";
+            var wemPath = Path.Combine(wwiseTemplateDir, wemDir);
             var wemPathInfo = new DirectoryInfo(wemPath);
 
             if (!wemPathInfo.Exists)
