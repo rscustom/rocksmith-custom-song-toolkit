@@ -36,7 +36,9 @@ namespace RocksmithToolkitGUI
             var thread = System.Threading.Thread.CurrentThread;
             thread.CurrentCulture = ci;
             thread.CurrentUICulture = ci;
-#if true //can't figure out how disable this while debugging in IDE...
+            // can't figure out how disable this while debugging in IDE...
+            // how about like this ...
+#if !DEBUG
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {

@@ -42,7 +42,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // OkButton
             // 
-            this.OkButton.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.OkButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.OkButton.Location = new System.Drawing.Point(207, 159);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);
@@ -132,7 +132,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // VocalsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(299, 191);
+            this.ClientSize = new System.Drawing.Size(309, 197);
             this.Controls.Add(this.isCustomCB);
             this.Controls.Add(this.sngpathFD);
             this.Controls.Add(this.artpathFD);

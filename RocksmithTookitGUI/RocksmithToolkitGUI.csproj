@@ -107,6 +107,12 @@
     <Compile Include="CDLC2Tab\SongInfoForm.Designer.cs">
       <DependentUpon>SongInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DLCPackageCreator\ShowLightsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DLCPackageCreator\ShowLightsForm.Designer.cs">
+      <DependentUpon>ShowLightsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DLCPackageCreator\DLCPackageCreator.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -238,6 +244,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CDLC2Tab\SongInfoForm.resx">
       <DependentUpon>SongInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DLCPackageCreator\ShowLightsForm.resx">
+      <DependentUpon>ShowLightsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\DLCPackageCreator.resx">
       <DependentUpon>DLCPackageCreator.cs</DependentUpon>

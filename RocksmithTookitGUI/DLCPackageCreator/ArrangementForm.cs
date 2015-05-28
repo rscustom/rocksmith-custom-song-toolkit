@@ -176,8 +176,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 // Tuning Edit
                 tuningEditButton.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight);
 
-                // Vocal Edit
-                typeEdit.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight);
+                // Vocal/ShowLights Edit
+                typeEdit.Enabled = (selectedType == ArrangementType.Vocal || selectedType == ArrangementType.ShowLight);
 
                 // Update tuningComboBox
                 if ((selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight))
@@ -236,7 +236,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 //if (arrangementType != ArrangementType.Bass)
                 tuningComboBox.Items.Add(tuning);
                 //if (arrangementType == ArrangementType.Bass)
-               // tuningComboBox.Items.Add(TuningDefinition.Convert2Bass(tuning));
+                // tuningComboBox.Items.Add(TuningDefinition.Convert2Bass(tuning));
             }
 
             tuningComboBox.SelectedIndex = 0;
@@ -502,10 +502,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (isVocal)
                 {
                     arrangementTypeCombo.SelectedItem = ArrangementType.Vocal;
+                    _arrangement.ArrangementType = ArrangementType.Vocal;
                 }
                 else if (isShowlight)
                 {
                     arrangementTypeCombo.SelectedItem = ArrangementType.ShowLight;
+                    _arrangement.ArrangementType = ArrangementType.ShowLight;
                 }
                 else
                 {
@@ -790,12 +792,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void typeEdit_Click(object sender, EventArgs e)
         {
-            if (Arrangement.ArrangementType == ArrangementType.Vocal)// (ArrangementType)arrangementTypeCombo.SelectedItem)
-            {
+            if (_arrangement.ArrangementType == ArrangementType.Vocal) // (ArrangementType)arrangementTypeCombo.SelectedItem)
                 vocalEdit_Click(sender, e);
-            }
-            else if (Arrangement.ArrangementType != ArrangementType.Vocal)
-            {//Extra options like personal Audio file. #multitracks
+
+            else if (_arrangement.ArrangementType == ArrangementType.ShowLight)
+                showlightEdit_Click(sender, e);
+
+            else
+            {
+                //Extra options like personal Audio file. #multitracks
                 //guitarEdit_Click(sender, e);
             }
         }
@@ -814,6 +819,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Arrangement.FontSng = form.SngPath;
                 parentControl.LyricArtPath = form.ArtPath;
                 Arrangement.CustomFont = form.IsCustom;
+            }
+        }
+
+        private void showlightEdit_Click(object sender, EventArgs e)
+        {
+            using (var form = new ShowLightsForm(Arrangement.SongFile.File))
+            {
+                if (DialogResult.OK != form.ShowDialog())
+                    return;
+                if (!String.IsNullOrEmpty(form.ShowLightsPath))
+                    Arrangement.SongXml.File = XmlFilePath.Text = form.ShowLightsPath;
             }
         }
 

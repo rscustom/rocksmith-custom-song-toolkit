@@ -44,8 +44,8 @@
             this.string0TB = new RocksmithToolkitGUI.CueTextBox();
             this.nameTB = new RocksmithToolkitGUI.CueTextBox();
             this.uiNameTB = new RocksmithToolkitGUI.CueTextBox();
-            this.noteLabel = new System.Windows.Forms.Label();
             this.StateAdd = new System.Windows.Forms.CheckBox();
+            this.noteLabel = new System.Windows.Forms.Label();
             this.gbTuning.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -231,16 +231,6 @@
             this.uiNameTB.TabIndex = 1;
             this.uiNameTB.TextChanged += new System.EventHandler(this.uiNameTB_TextChanged);
             // 
-            // noteLabel
-            // 
-            this.noteLabel.AutoSize = true;
-            this.noteLabel.ForeColor = System.Drawing.Color.LightSlateGray;
-            this.noteLabel.Location = new System.Drawing.Point(12, 112);
-            this.noteLabel.Name = "noteLabel";
-            this.noteLabel.Size = new System.Drawing.Size(219, 13);
-            this.noteLabel.TabIndex = 23;
-            this.noteLabel.Text = "If a bass tuning, fill strings 4 and 5 manually...";
-            // 
             // StateAdd
             // 
             this.StateAdd.AutoSize = true;
@@ -251,6 +241,16 @@
             this.StateAdd.Text = "Add as new Tuning";
             this.StateAdd.UseVisualStyleBackColor = true;
             this.StateAdd.CheckedChanged += new System.EventHandler(this.StateAdd_CheckedChanged);
+            // 
+            // noteLabel
+            // 
+            this.noteLabel.AutoSize = true;
+            this.noteLabel.ForeColor = System.Drawing.Color.LightSlateGray;
+            this.noteLabel.Location = new System.Drawing.Point(7, 112);
+            this.noteLabel.Name = "noteLabel";
+            this.noteLabel.Size = new System.Drawing.Size(296, 13);
+            this.noteLabel.TabIndex = 23;
+            this.noteLabel.Text = "If a bass tuning, fill strings 4 and 5 to allow for use on guitar ...";
             // 
             // TuningForm
             // 
@@ -293,7 +293,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label noteLabel;
         private System.Windows.Forms.CheckBox StateAdd;
+        private System.Windows.Forms.Label noteLabel;
     }
 }
