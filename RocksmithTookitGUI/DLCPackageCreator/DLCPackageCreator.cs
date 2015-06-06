@@ -900,7 +900,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 tuning = new TuningDefinition();
                 tuning.Tuning = new TuningStrings(strings);
-                tuning.UIName = tuning.Name = tuning.NameFromStrings(tuning.Tuning, true, false);
+                tuning.UIName = tuning.Name = tuning.NameFromStrings(tuning.Tuning, false);
                 tuning.Custom = true;
                 tuning.GameVersion = GameVersion.RS2014;
                 TuningDefinitionRepository.Instance().Add(tuning, true);
@@ -1422,7 +1422,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             return mArr;
         }
 
-        public class EqSEvent : IEqualityComparer<RocksmithToolkitLib.Xml.SongEvent>
+        private class EqSEvent : IEqualityComparer<RocksmithToolkitLib.Xml.SongEvent>
         {
             public bool Equals(RocksmithToolkitLib.Xml.SongEvent x, RocksmithToolkitLib.Xml.SongEvent y)
             {

@@ -118,7 +118,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.PowerChords == 1;
             else
-                return Levels.Any(c => c.Chords == null ? false : HasPowerChords(c.Chords));
+                return Levels.Any(c => c.Chords != null && HasPowerChords(c.Chords));
         }
         private bool HasPowerChords(SongChord[] songChord)
         {
@@ -130,7 +130,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.BarreChords == 1;
             else
-                return Levels.Any(c => c.Chords == null ? false : HasBarChords(c.Chords));
+                return Levels.Any(c => c.Chords != null && HasBarChords(c.Chords));
         }
         private bool HasBarChords(SongChord[] songChord)
         {
@@ -142,7 +142,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.OpenChords == 1;
             else
-                return Levels.Any(c => c.Chords == null ? false : HasOpenChords(c.Chords));
+                return Levels.Any(c => c.Chords != null && HasOpenChords(c.Chords));
         }
         private bool HasOpenChords(SongChord[] songChord)
         {
@@ -154,7 +154,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.DoubleStops == 1;
             else
-                return Levels.Any(c => c.Chords == null ? false : HasDoubleStops(c.Chords));
+                return Levels.Any(c => c.Chords != null && HasDoubleStops(c.Chords));
         }
         private bool HasDoubleStops(SongChord[] songChord)
         {
@@ -166,7 +166,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.DropDPower == 1;
             else
-                return Levels.Any(c => c.Chords == null ? false : HasDropDPowerChords(c.Chords));
+                return Levels.Any(c => c.Chords != null && HasDropDPowerChords(c.Chords));
         }
         private bool HasDropDPowerChords(SongChord[] songChord)
         {
@@ -178,7 +178,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.Bends == 1;
             else
-                return Levels.Any(x => x.Notes == null ? false : x.Notes.Any(y => y.Bend > 0));
+                return Levels.Any(x => x.Notes != null && x.Notes.Any(y => y.Bend > 0));
         }
 
         public bool HasSlapAndPop()
@@ -186,7 +186,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.SlapPop == 1;
             else
-                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Pluck > 0 || y.Slap > 0);
+                return Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.Pluck > 0 || y.Slap > 0);
         }
 
         public bool HasHarmonics()
@@ -194,7 +194,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.Harmonics == 1;
             else
-                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Harmonic > 0);
+                return Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.Harmonic > 0);
         }
 
         public bool HasHOPOs()
@@ -202,7 +202,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.Hopo == 1;
             else
-                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Hopo > 0);
+                return Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.Hopo > 0);
         }
 
         public bool HasFretHandMutes()
@@ -218,7 +218,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.Bends == 1;
             else
-                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Bend > 0);
+                return Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.Bend > 0);
         }
 
         public bool HasVibrato()
@@ -234,7 +234,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.PalmMutes == 1;
             else
-                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.PalmMute > 0);
+                return Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.PalmMute > 0);
         }
 
         public bool HasSlides()
@@ -242,12 +242,12 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.Slides == 1;
             else
-                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.SlideTo >= 0);
+                return Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.SlideTo >= 0);
         }
 
         public bool HasSustain()
         {
-            return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Sustain > 0);
+            return Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.Sustain > 0);
         }
 
         public bool HasTremolo()
@@ -255,7 +255,7 @@ namespace RocksmithToolkitLib.Xml
             if (HasArrangementProperties)
                 return ArrangementProperties.Tremolo == 1;
             else
-                return Levels.SelectMany(x => x.Notes == null ? new SongNote[0] : x.Notes).Any(y => y.Tremolo > 0);
+                return Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.Tremolo > 0);
         }
 
         public bool HasTwoFingerPlucking()

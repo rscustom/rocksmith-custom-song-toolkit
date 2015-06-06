@@ -24,7 +24,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             else sng = new Sng2014File(new MemoryStream(Resources.VOCALS_RS2));
 
             var xml = Vocals.LoadFromFile(xmlFile);
-            Sng2014FileWriter.parseVocals(xml, sng);
+            parseVocals(xml, sng);
+
             return sng;
         }
 
@@ -42,8 +43,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             parsePhrases(songXml, sngFile);
             parseChords(songXml, sngFile, tuning, songXml.Arrangement == "Bass");
             // vocals use different parse function
-            sngFile.Vocals = new VocalSection();
-            sngFile.Vocals.Vocals = new Vocal[0];
+            sngFile.Vocals = new VocalSection { Vocals = new Vocal[0] };
             parsePhraseIterations(songXml, sngFile);
             parsePhraseExtraInfo(songXml, sngFile);
             parseNLD(songXml, sngFile);
@@ -67,7 +67,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
         {
             if (fret == unchecked((Byte)(-1)))
                 return -1;
-            Int32 note = StandardMidiNotes[str] + tuning[str] + fret - (bass ? 12 : 0);
             // catch unaccessible frets with capo (sometimes there is unused templates, so let them be)
             if (capo > 0 && fret != 0 && (!template && fret < capo))
             {
@@ -78,6 +77,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             {
                 throw new InvalidDataException("Invalid XML data: Capo frets should be defined as open strings");
             }
+            // get note value
+            Int32 note = StandardMidiNotes[str] + tuning[str] + fret - (bass ? 12 : 0);
             // adjust note value for open strings with capo
             if (capo > 0 && fret == 0)
             {
@@ -109,21 +110,14 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     GetMidiNote(tuning, (Byte)5, (Byte)handShape[crd.ChordId].Fret5, bass, capo)
                 });
                 //Cleanup for -1 notes
-                var cOut = new List<int>();
-                foreach (var c in cNote)
-                    if (c > 0) cOut.Add(c);
+                var cOut = cNote.Where(c => c > 0).ToList();
                 if (cOut.Count < 1)
                     return 35;
                 //Return bass note for doublestops
                 if (cOut.Count < 3 && cOut[0] > cOut[1])
                     return cOut[1];
                 //Return most used note
-                if (cOut.Count > 3)
-                {
-                    return cOut.FirstOrDefault(n => cOut.Any(t => t > n));
-                }
-                //Return bass note [2]
-                else return cOut[0];
+                return cOut.Count > 3 ? cOut.FirstOrDefault(n => cOut.Any(t => t > n)) : cOut[0];
             } return 35;
         }
 
@@ -203,14 +197,14 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.Metadata.Unk12_FirstNoteTime = first_note_time;
         }
 
-        private static Int32 getPhraseIterationId(Song2014 xml, float Time, bool end)
+        private static Int32 getPhraseIterationId(Song2014 xml, float time, bool end)
         {
             Int32 id = 0;
             while (id + 1 < xml.PhraseIterations.Length)
             {
-                if (!end && xml.PhraseIterations[id + 1].Time > Time)
+                if (!end && xml.PhraseIterations[id + 1].Time > time)
                     break;
-                if (end && xml.PhraseIterations[id + 1].Time >= Time)
+                if (end && xml.PhraseIterations[id + 1].Time >= time)
                     break;
                 ++id;
             }
@@ -340,13 +334,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 return cnsId[crc];
 
             // don't export chordnotes if there are no techniques
-            bool noTechniques = true;
-            foreach (var m in c.NoteMask)
-                if (m != 0)
-                {
-                    noTechniques = false;
-                    break;
-                }
+            bool noTechniques = c.NoteMask.All(m => m == 0);
             if (noTechniques)
                 return -1;
 
@@ -371,12 +359,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 p.Disparity = phrase.Disparity;
                 p.Ignore = phrase.Ignore;
                 p.MaxDifficulty = phrase.MaxDifficulty;
-                Int32 links = 0;
-                foreach (var iter in xml.PhraseIterations)
-                    if (iter.PhraseId == i)
-                        links++;
-                p.PhraseIterationLinks = links;
+                p.PhraseIterationLinks = xml.PhraseIterations.Count(iter => iter.PhraseId == i);
                 readString(phrase.Name, p.Name);
+
                 sng.Phrases.Phrases[i] = p;
             }
         }
@@ -512,7 +497,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         t.ToneId = 3;
                     else
                         throw new InvalidDataException("Undefined tone name: " + tn.Name);
-                    
+
                     sng.Tones.Tones[i] = t;
                 }
                 catch (Exception)

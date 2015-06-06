@@ -297,12 +297,11 @@ namespace RocksmithToolkitLib.Xml
         /// Write the CST\EOF\DDC xml comments.
         /// </summary>
         /// <param name="xmlSongRS2014File"></param>
-        /// <param name="toolkitVersion"></param>
         /// <param name="commentNodes"></param>
         public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null)
         {
             bool cstComment = false;
-            string cstVersion = " CST v" + ToolkitVersion.version + " ";
+            const string magic = " CST v";
             XDocument xml = XDocument.Load(xmlSongRS2014File);
 
             if (commentNodes != null && commentNodes.Any())
@@ -314,13 +313,13 @@ namespace RocksmithToolkitLib.Xml
                     // this looks nicers but does not match the EOF original
                     // it is used to distinguish XML that is modified by toolkit
                     xml.Element("song").AddBeforeSelf(new XComment(commentNode));
-                    if (commentNode.ToString().Contains(" CST v"))
+                    if (commentNode.ToString().Contains(magic))
                         cstComment = true;
                 }
             }
 
             if (!cstComment)
-                xml.Element("song").AddBeforeSelf(new XComment(cstVersion));
+                xml.Element("song").AddBeforeSelf(new XComment(magic + ToolkitVersion.version + " "));
 
             if (commentNodes != null && commentNodes.Any() || !cstComment)
                 xml.Save(xmlSongRS2014File);
@@ -360,7 +359,7 @@ namespace RocksmithToolkitLib.Xml
         {
             //string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs",
             //    "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes"/*DDC*/,
-            //    "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes"
+            //    "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes", "tones"
             //};
 
             string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs", "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes" /*DDC*/, "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes", "tones" };
@@ -369,8 +368,8 @@ namespace RocksmithToolkitLib.Xml
             var doc = XDocument.Load(xml);
             foreach (var n in anodes)
             {
-                var es = doc.Descendants(n);
-                if (es.Count() > 0)
+                var es = doc.Descendants(n).ToArray();
+                if (es.Any())
                     foreach (var e in es)
                     {
                         var ret = e.Attribute("count");
@@ -851,13 +850,13 @@ namespace RocksmithToolkitLib.Xml
         internal void parseNoteMask(uint p)
         {
             //Setup default non 0 values
-            var notSetup = unchecked((sbyte)-1);
+            const sbyte notSetup = unchecked((sbyte)-1);
 
             this.RightHand = notSetup;
             this.LeftHand = notSetup;
             this.SlideTo = notSetup;
             this.SlideUnpitchTo = notSetup;
-            this.Tap = (byte)0;
+            this.Tap = (Byte)0;
             this.Slap = notSetup;
             this.Pluck = notSetup;
 

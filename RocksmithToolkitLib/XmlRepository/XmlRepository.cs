@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.IO;
 using System.Xml.Serialization;
 using System.Windows.Forms;
@@ -10,19 +9,21 @@ using RocksmithToolkitLib.Extensions;
 namespace RocksmithToolkitLib {
     public abstract class XmlRepository<T> {
         #region Events
-        
+
         public delegate void OnSavingHandler();
         public delegate void OnSavedHandler();
-        
+
         public event OnSavingHandler OnSaving;
         public event OnSavedHandler OnSaved;
-        
+
         #endregion
+
+        #region Fields
 
         /// <summary>
         /// Repository file name i.e.: RocksmithToolkitLib.SongAppId.xml
         /// </summary>
-        private string _fileName;
+        string _fileName;
         protected string FileName {
             set{
                 _fileName = value;
@@ -35,13 +36,15 @@ namespace RocksmithToolkitLib {
         /// Comparer to be used on Merge by different types
         /// </summary>
         protected IEqualityComparer<T> Comparer;
-        
+
         public string FilePath;
 
         /// <summary>                                                  (
         /// List of objects from *.xml file
         /// </summary>
         public List<T> List;
+
+        #endregion
 
         protected XmlRepository(string fileName, IEqualityComparer<T> comparer) {
             FileName = fileName;
@@ -55,17 +58,17 @@ namespace RocksmithToolkitLib {
         /// </summary>
         public void Save(bool reload = false) {
             if (OnSaving != null)
-                this.OnSaving.Invoke();
+                OnSaving.Invoke();
 
             lock (List) {
                 using (FileStream writer = File.Create(FilePath)) {
-                    XmlSerializer serializer = new XmlSerializer(List.GetType());
+                    var serializer = new XmlSerializer(List.GetType());
                     serializer.Serialize(writer, List);
                 }
             }
 
             if (OnSaved != null)
-                this.OnSaved.Invoke();
+                OnSaved.Invoke();
 
             if (reload)
                 Load();
@@ -75,6 +78,7 @@ namespace RocksmithToolkitLib {
         /// Add item into object list
         /// </summary>
         /// <param name="value">object</param>
+        /// <param name = "reload"></param>
         public void Add(T value, bool reload = false) {
             List.Add(value);
             Save(reload);
@@ -115,7 +119,7 @@ namespace RocksmithToolkitLib {
             FileName = destinationFile;
             List = Activator.CreateInstance<List<T>>();
             Load();
-            
+
             // Merge source to destination
             List = List.Union<T>(sourceRepoList, Comparer).ToList<T>();
 

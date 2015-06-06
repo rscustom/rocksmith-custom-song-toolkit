@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.Windows.Forms;
 using System.Diagnostics;
 using RocksmithToolkitLib;
-using RocksmithToolkitLib.Extensions;
 using System.IO;
 using System.Net;
 using System.ComponentModel;
@@ -17,17 +12,13 @@ namespace RocksmithToolkitGUI
     public partial class MainForm : Form
     {
         internal BackgroundWorker bWorker;
-        private ToolkitVersionOnline onlineVersion = null;
+        private ToolkitVersionOnline onlineVersion;
 
         public static bool IsInDesignMode
         {
             get
             {
-                if (Application.ExecutablePath.IndexOf("devenv.exe", StringComparison.OrdinalIgnoreCase) > -1
-                   || System.Diagnostics.Debugger.IsAttached)
-                    return true;
-
-                return false;
+                return Application.ExecutablePath.IndexOf("devenv.exe", StringComparison.OrdinalIgnoreCase) > -1 || Debugger.IsAttached;
             }
         }
 
@@ -53,6 +44,12 @@ namespace RocksmithToolkitGUI
             }
         }
 
+        public override sealed string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
+        }
+
         private void MainForm_Load(object sender, EventArgs e) {
             // Show only by 'Configuration' click
             tabControl1.TabPages.Remove(GeneralConfigTab);
@@ -76,37 +73,36 @@ namespace RocksmithToolkitGUI
 
         private void EnableUpdate(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (onlineVersion != null)
-                if (ToolkitVersion.commit != "nongit")
-                    updateButton.Visible = updateButton.Enabled = onlineVersion.UpdateAvailable;
+            if (onlineVersion == null) return;
+            if (ToolkitVersion.commit != "nongit")
+                updateButton.Visible = updateButton.Enabled = onlineVersion.UpdateAvailable;
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.Shift) {
-                switch (e.KeyCode)
-	            {
-                    case Keys.O: //<< Open Template
-                        dlcPackageCreatorControl.dlcLoadButton_Click();
-                        break;
-                    case Keys.S: //<< Save Template
-                        dlcPackageCreatorControl.SaveTemplateFile();
-                        break;
-                    case Keys.I: //<< Import Template
-                        dlcPackageCreatorControl.dlcImportButton_Click();
-                        break;
-                    case Keys.G: //<< Generate Package
-                        dlcPackageCreatorControl.dlcGenerateButton_Click();
-                        break;
-                    case Keys.A: //<< Add Arrangement
-                        dlcPackageCreatorControl.arrangementAddButton_Click();
-                        break;
-                    case Keys.T: //<< Add Tone
-                        dlcPackageCreatorControl.toneAddButton_Click();
-                        break;
-                    default:
-                        break;
-	            }
+            if (!e.Control || !e.Shift) return;
+            switch (e.KeyCode)
+            {
+                case Keys.O: //<< Open Template
+                    dlcPackageCreatorControl.dlcLoadButton_Click();
+                    break;
+                case Keys.S: //<< Save Template
+                    dlcPackageCreatorControl.SaveTemplateFile();
+                    break;
+                case Keys.I: //<< Import Template
+                    dlcPackageCreatorControl.dlcImportButton_Click();
+                    break;
+                case Keys.G: //<< Generate Package
+                    dlcPackageCreatorControl.dlcGenerateButton_Click();
+                    break;
+                case Keys.A: //<< Add Arrangement
+                    dlcPackageCreatorControl.arrangementAddButton_Click();
+                    break;
+                case Keys.T: //<< Add Tone
+                    dlcPackageCreatorControl.toneAddButton_Click();
+                    break;
+                default:
+                    break;
             }
         }
 

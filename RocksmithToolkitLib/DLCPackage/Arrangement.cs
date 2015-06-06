@@ -86,7 +86,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             this.SongXml = new SongXML();
             this.SongXml.File = xmlSongFile;
-
+            //Tuning
             TuningDefinition tuning = null;
             switch ((ArrangementName)attr.ArrangementType)
             {
@@ -122,7 +122,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.CapoFret = attr.CapoFret;
             if (attr.CentOffset != null)
                 this.TuningPitch = attr.CentOffset.Cents2Frequency();
-
+            //Properties
             this.ArrangementSort = attr.ArrangementSort;
             this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
             this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last() * 10);
@@ -134,7 +134,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
             this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
-
+            //Tones
             if (attr.Tones == null) // RS2012
             {
                 this.ToneBase = attr.Tone_Base;
@@ -238,7 +238,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 case ArrangementType.Bass:
                     return String.Format("{0} [{1}{2}{3}] ({4}){5}", ArrangementType, Tuning, pitchInfo, capoInfo, toneDesc, metDesc);
                 case ArrangementType.Vocal:
-                    return String.Format("{0}", Name);
                 case ArrangementType.ShowLight:
                     return String.Format("{0}", Name);
                 default:

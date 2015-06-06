@@ -28,26 +28,52 @@ namespace RocksmithToolkitLib
         [XmlElement]
         public TuningStrings Tuning { get; set; }
 
-        public string NameFromStrings(TuningStrings tuning, bool isBass, bool flats = true)
+        static string NoteName(TuningStrings tuning, byte s, bool flats = false)
         {
-            String noteNames = String.Empty;
             String[] notesNamesHi = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
             String[] notesNamesLo = { "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" };
 
-            for (Byte s = 0; s < 6; s++)
+            var id = Sng2014FileWriter.GetMidiNote(tuning.ToArray(), s, 0, false, 0)%12;
+            return flats ? notesNamesLo[id] : notesNamesHi[id];
+        }
+        public string NameFromStrings(TuningStrings tuning, bool flats = true)
+        {
+            var t = tuning.ToArray();
+            var noteNames = String.Empty;
+            switch (GetTuningFamily(t))
             {
-                var mNote = Sng2014FileWriter.GetMidiNote(tuning.ToArray(), s, 0, isBass, 0);
-                if (flats)
-                    noteNames += notesNamesLo[mNote % 12]; //oct = mNote / 12 - 1
-                else
-                    noteNames += notesNamesHi[mNote % 12]; //oct = mNote / 12 - 1
+                case TuningFamily.Standard:
+                    noteNames = string.Format("{0} Standard", NoteName(tuning, 0, flats));
+                    break;
+                case TuningFamily.Drop:
+                    noteNames = string.Format("{0} Drop {1}", NoteName(tuning, 5, true), NoteName(tuning, 0, flats));
+                    break;
+                case TuningFamily.Open:
+                    break;
+                default:
+                    for (Byte s = 0; s < 6; s++)
+                        noteNames += NoteName(tuning, s, flats);
+                    break;
             }
             return noteNames;
         }
 
+        enum TuningFamily { None, Standard, Drop, Open }
+        static TuningFamily GetTuningFamily(Int16[] t)
+        {
+            if (t[1] != t[2] || t[2] != t[3] || t[3] != t[4] || t[4] != t[5]) return TuningFamily.None;
+            if (t[0] == t[1])
+                return TuningFamily.Standard;
+            if (t[0] + 2 == t[1])
+                return TuningFamily.Drop;
+            //if (false)
+            //{
+            //    return TuningFamily.Open;
+            //}
+            return TuningFamily.None;
+        }
         public override string ToString()
         {
-            //return (Custom) ? String.Format("{0} (custom)", UIName) : UIName;
             return UIName;
         }
 

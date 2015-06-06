@@ -19,9 +19,31 @@ namespace RocksmithToolkitLibTest
         [Test]
         public void NameFromStringsTest()
         {
+            string tName = string.Empty; 
             var t = new TuningDefinition();
-            var tName = t.NameFromStrings(new TuningStrings(new Int16[]{ 0, 0, 0, 0, 0, 0 }), false, false);
+            var Estd = new TuningStrings(new Int16[] { 0, 0, 0, 0, 0, 0 });
+            tName = t.NameFromStrings(Estd, false);
             Assert.AreEqual("E Standard", tName);
+
+            var Ebstd = new TuningStrings(new Int16[] { -1, -1, -1, -1, -1, -1 });
+            tName = t.NameFromStrings(Ebstd, true);
+            Assert.AreEqual("Eb Standard", tName);
+
+            var EbstdB = new TuningStrings(new Int16[] { -1, -1, -1, -1 }); //TODO: support bass
+            tName = t.NameFromStrings(EbstdB, true);
+            //Assert.AreEqual("Eb Standard", tName);
+
+            var Ccstd = new TuningStrings(new Int16[] { -3, -3, -3, -3, -3, -3 });
+            tName = t.NameFromStrings(Ccstd, false);
+            Assert.AreEqual("C# Standard", tName);
+
+            var DropEb = new TuningStrings(new Int16[] { -3, -1, -1, -1, -1, -1 });
+            tName = t.NameFromStrings(DropEb, true);
+            Assert.AreEqual("Eb Drop Db", tName);
+
+            var DropA = new TuningStrings(new Int16[] { 5, 7, 7, 7, 7, 7 });
+            tName = t.NameFromStrings(DropA, false);
+            Assert.AreEqual("B Drop A", tName);
         }
 
         [Test]

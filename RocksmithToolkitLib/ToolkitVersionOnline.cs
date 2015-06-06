@@ -1,14 +1,9 @@
-﻿using System; 
-using System.Collections.Generic; 
-using System.Linq; 
-using System.Text; 
-using System.Reflection;
+﻿using System;
 using System.Net;
 using Newtonsoft.Json;
-using RocksmithToolkitLib.DLCPackage;
 
-namespace RocksmithToolkitLib 
-{ 
+namespace RocksmithToolkitLib
+{
     public class ToolkitVersionOnline
     {
         [JsonProperty("revision")]
@@ -27,37 +22,41 @@ namespace RocksmithToolkitLib
         public string[] CommitMessages { get; set; }
 
         [JsonIgnore]
-        public DateTime Date {
-            get {
-                DateTime dateTime = new DateTime(1970,1,1,0,0,0,0,DateTimeKind.Utc);
+        public DateTime Date
+        {
+            get
+            {
+                var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                 dateTime = dateTime.AddSeconds(UnixTimestamp).ToLocalTime();
                 return dateTime;
             }
         }
-
-        public static ToolkitVersionOnline Load() {
+        /// <summary>
+        /// Get online version info based on current build
+        /// </summary>
+        /// <returns></returns>
+        public static ToolkitVersionOnline Load()
+        {
             var url = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.commit);
-
-            // GET ONLINE VERSION
             var versionJson = new WebClient().DownloadString(url);
+
             return JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionJson);
         }
 
-        public static string GetFileUrl(bool addExtension = false) {
+        public static string GetFileUrl(bool addExtension = false)
+        {
             var lastestBuild = ConfigRepository.Instance().GetBoolean("general_usebeta");
             var lastestReleaseUrl = ConfigRepository.Instance()["general_urllastestrelease"];
             var lastestBuildUrl = ConfigRepository.Instance()["general_urllastestbuild"];
 
-            var fileUrl = (lastestBuild) ? lastestBuildUrl : lastestReleaseUrl;
+            var fileUrl = lastestBuild ? lastestBuildUrl : lastestReleaseUrl;
 
-            if (addExtension)
-                if (Environment.OSVersion.Platform == PlatformID.MacOSX) {
-                    fileUrl += ".tar.gz";
-                } else {
-                    fileUrl += ".zip";
-                }
-
-            return fileUrl;
+            if (!addExtension) return fileUrl;
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+            {
+                return fileUrl + ".tar.gz";
+            }
+            return fileUrl + ".zip";
         }
-    } 
-} 
+    }
+}
