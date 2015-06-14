@@ -14,7 +14,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         public string PedalKey { get; set; }
         public string Category { get; set; }
         public string Skin { get; set; }
-        public int? SkinIndex { get; set; }
+        public float? SkinIndex { get; set; }
 
         public Pedal2014()
         {
