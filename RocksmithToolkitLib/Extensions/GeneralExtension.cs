@@ -249,7 +249,9 @@ namespace RocksmithToolkitLib.Extensions
             if (mimeByteHeaderList.ContainsKey(extension))
             {
                 byte[] mime = mimeByteHeaderList[extension];
-                byte[] file = File.ReadAllBytes(fileName);
+                byte[] file = new byte[] { 0, 0, 0, 0 };
+                using (FileStream fs = File.OpenRead(fileName))
+                    fs.Read(file, 0, mime.Length);
 
                 bool r = file.Take(mime.Length).SequenceEqual(mime);
                 if (!r)
