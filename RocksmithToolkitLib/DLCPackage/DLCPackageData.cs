@@ -486,13 +486,13 @@ namespace RocksmithToolkitLib.DLCPackage
                             // fix tones names that do not have the correct alphacase for cross matching
                             if (attr.Tone_Base.ToLower() == jsonTone.Name.ToLower() && attr.Tone_Base != jsonTone.Name)
                                 jsonTone.Name = attr.Tone_Base;
-                            if (attr.Tone_A.ToLower() == jsonTone.Name.ToLower() && attr.Tone_A != jsonTone.Name)
+                            if (attr.Tone_A != null && attr.Tone_A.ToLower() == jsonTone.Name.ToLower() && attr.Tone_A != jsonTone.Name)
                                 jsonTone.Name = attr.Tone_A;
-                            if (attr.Tone_B.ToLower() == jsonTone.Name.ToLower() && attr.Tone_B != jsonTone.Name)
+                            if (attr.Tone_B != null && attr.Tone_B.ToLower() == jsonTone.Name.ToLower() && attr.Tone_B != jsonTone.Name)
                                 jsonTone.Name = attr.Tone_B;
-                            if (attr.Tone_C.ToLower() == jsonTone.Name.ToLower() && attr.Tone_C != jsonTone.Name)
+                            if (attr.Tone_C != null && attr.Tone_C.ToLower() == jsonTone.Name.ToLower() && attr.Tone_C != jsonTone.Name)
                                 jsonTone.Name = attr.Tone_C;
-                            if (attr.Tone_D.ToLower() == jsonTone.Name.ToLower() && attr.Tone_D != jsonTone.Name)
+                            if (attr.Tone_D != null && attr.Tone_D.ToLower() == jsonTone.Name.ToLower() && attr.Tone_D != jsonTone.Name)
                                 jsonTone.Name = attr.Tone_D;
 
                             data.TonesRS2014.Add(jsonTone);
