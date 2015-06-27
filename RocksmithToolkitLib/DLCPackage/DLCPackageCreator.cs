@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using RocksmithToolkitLib.DLCPackage.Manifest2014;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using X360.IO;
 using X360.Other;
 using X360.STFS;
@@ -13,7 +16,6 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.Showlight;
 using RocksmithToolkitLib.DLCPackage.XBlock;
@@ -443,7 +445,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     // AGGREGATE GRAPH
                     var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", dlcName);
-                    var aggregateGraph = new AggregateGraph2014(info, platform);
+                    var aggregateGraph = new AggregateGraph2014.AggregateGraph2014(info, platform);
                     aggregateGraph.Serialize(aggregateGraphStream);
                     aggregateGraphStream.Flush();
                     aggregateGraphStream.Seek(0, SeekOrigin.Begin);
@@ -524,18 +526,26 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/songs_dlc_{0}.hsan", dlcName), manifestHeaderHSANStream);
                     }
 
-                    // XML SHOWLIGHTS (GENERATE NEW or REUSE EXISTING)
-                    var shlArr = info.Arrangements.FirstOrDefault(ar => ar.ArrangementType == ArrangementType.ShowLight);
-                    if (shlArr != null )
-                        using (FileStream fs = File.OpenRead(shlArr.SongXml.File))
-                            fs.CopyTo(showlightStream);
-                    else
+                    // XML SHOWLIGHTS (generate new, reuse existing, or turn off for debugging)
+                    if (info.Showlights)
                     {
-                        Showlights showlight = new Showlights(info);
-                        showlight.Serialize(showlightStream);
+                        var shlArr = info.Arrangements.FirstOrDefault(ar => ar.ArrangementType == ArrangementType.ShowLight);
+                        if (shlArr != null && shlArr.SongXml.File != null)
+                            using (FileStream fs = File.OpenRead(shlArr.SongXml.File))
+                                fs.CopyTo(showlightStream);
+                        else
+                        {
+                            Showlights showlight = new Showlights(info);
+                            showlight.Serialize(showlightStream);
+                            // write to file for debugging
+                            string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "DebugMe"));
+                            using (FileStream file = new FileStream(shlFilePath, FileMode.Create, FileAccess.Write))
+                                showlightStream.WriteTo(file);
+                        }
+
+                        if (showlightStream.CanRead)
+                            packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
                     }
-                    if (showlightStream.CanRead)
-                        packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
 
                     // XBLOCK
                     GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform);
@@ -678,7 +688,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         // AGGREGATE GRAPH
                         var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", dlcName);
-                        var aggregateGraph = new AggregateGraph2014(info, platform, DLCPackageType.Inlay);
+                        var aggregateGraph = new AggregateGraph2014.AggregateGraph2014(info, platform, DLCPackageType.Inlay);
                         aggregateGraph.Serialize(aggregateGraphStream);
                         aggregateGraphStream.Flush();
                         aggregateGraphStream.Seek(0, SeekOrigin.Begin);

@@ -2,8 +2,7 @@
 using System.Windows.Forms;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
-
-
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -21,9 +20,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 switch (CurrentGameVersion)
                 {
                     case GameVersion.RS2014:
-                        return "Rocksmith 2014 Tone Template (*.tone2014.xml)|*.tone2014.xml";
+                        return "Rocksmith 2014 Tone Template(*.tone2014.xml)|*.tone2014.xml|All XML Files (*.xml)|*.xml";
                     default:
-                        return "Rocksmith Tone Template (*.tone.xml)|*.tone.xml";
+                        return "Rocksmith Tone Template (*.tone.xml)|*.tone.xml|All XML Files (*.xml)|*.xml";
                 }
             }
         }
@@ -95,7 +94,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 ofd.Filter = CurrentOFDFilter;
                 ofd.AddExtension = true;
-                ofd.FileName = toneControl1.Tone.Name;
+                if (CurrentGameVersion != GameVersion.RS2012)
+                    ofd.FileName = String.Format("{0}.tone2014.xml", toneControl1.Tone.Name);
+                else
+                    ofd.FileName = String.Format("{0}.tone.xml", toneControl1.Tone.Name);
+
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneSavePath = ofd.FileName;
             }

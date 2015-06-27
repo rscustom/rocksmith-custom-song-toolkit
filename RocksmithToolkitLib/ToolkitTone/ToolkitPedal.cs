@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 
 namespace RocksmithToolkitLib.ToolkitTone
 {

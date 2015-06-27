@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.Xml;
@@ -54,7 +55,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public Sng2014File Sng2014 { get; set; }
         // Gameplay Path
         public RouteMask RouteMask { get; set; }
-        public bool BonusArr = false;
+        public bool BonusArr { get; set; } // = false;
         // Tone Selector
         public string ToneBase { get; set; }
         public string ToneMultiplayer { get; set; }

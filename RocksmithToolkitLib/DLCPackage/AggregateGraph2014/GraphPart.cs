@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using RocksmithToolkitLib.Extensions;
-using System.IO;
 
-namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
+namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014 {
     public class GraphPart {
         private const string URN_TEMPLATE = "<urn:uuid:{0}>";
         private const string TYPE_TEMPLATE = "<http://" + "emergent.net/aweb/1.0/{0}>";

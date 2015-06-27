@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RocksmithToolkitLib.DLCPackage.Manifest2014;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
+using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
 using X360.STFS;
-
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Sng;
@@ -30,6 +31,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public bool Mac { get; set; }
         public bool XBox360 { get; set; }
         public bool PS3 { get; set; }
+        public bool Showlights { get; set; }
 
         public string AppId { get; set; }
         public string Name { get; set; }
@@ -73,7 +75,7 @@ namespace RocksmithToolkitLib.DLCPackage
             data.GameVersion = (convert ? GameVersion.RS2014 : GameVersion.RS2012);
             data.SignatureType = PackageMagic.CON;
             // set default volumes
-            data.Volume = (float)-5.5; // - 7 default a little too quite
+            data.Volume = (float)-7.0; // - 7 default maybe too quite
             data.PreviewVolume = data.Volume;
 
             //Load song manifest
@@ -131,7 +133,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             List<Tone> tones = new List<Tone>();
-            var toneManifest = Manifest.Tone.Manifest.LoadFromFile(toneManifestJson[0]);
+            Manifest.Tone.Manifest toneManifest = Manifest.Tone.Manifest.LoadFromFile(toneManifestJson[0]);
 
             for (int tmIndex = 0; tmIndex < toneManifest.Entries.Count(); tmIndex++)
             {
@@ -141,15 +143,37 @@ namespace RocksmithToolkitLib.DLCPackage
 
             data.Tones = tones;
 
+            // Load AggregateGraph.nt 
+            var songDir = Path.Combine(unpackedDir, data.Name);
+            var aggFile = Directory.GetFiles(songDir, "*.nt", SearchOption.TopDirectoryOnly)[0];
+            List<AgGraphNt> aggGraphData = AggregateGraph.AggregateGraph.ReadFromFile(aggFile);
+
+            // Load Exports\Songs\*.xblock
+            var xblockDir = Path.Combine(unpackedDir, data.Name, "Exports\\Songs");
+            var xblockFile = Directory.GetFiles(xblockDir, "*.xblock", SearchOption.TopDirectoryOnly)[0];
+            // xblockFile = "D:\\Temp\\Mapping\\songs.xblock";
+            XblockX songsXblock = XblockX.LoadFromFile(xblockFile);
+
+            // var outputPath = "D:\\Temp\\Mapping\\songs2.xblock";
+            // using (var stream = File.OpenWrite(outputPath))
+            //    songsXblock.Serialize(stream, false);
+
+            // create project map for cross referencing arrangements with tones
+            var projectMap = AggregateGraph.AggregateGraph.ProjectMap(aggGraphData, songsXblock, toneManifest);
+
             // Load xml arrangements
             var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
             if (xmlFiles.Length <= 0)
                 throw new DataException("Can not find any XML arrangement files");
 
             List<Tone2014> tones2014 = new List<Tone2014>();
+            int partLead = 1;
+            int partRhythm = 1;
+            int partCombo = 1;
+            int partBass = 1;
             foreach (var xmlFile in xmlFiles)
             {
-                if (xmlFile.ToLower().Contains("metadata")) // skip DF file
+                if (xmlFile.ToLower().Contains("metadata")) // skip DeadFox file
                     continue;
 
                 // some poorly formed RS1 CDLC use just "vocal"
@@ -170,7 +194,15 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     Attributes2014 attr2014 = new Attributes2014();
                     Song rsSong = new Song();
-                    bool foundToneForArrangement = false;
+                    Song2014 rsSong2014 = new Song2014();
+
+                    // optimized tone matching effort using project mapping algo
+                    var result = projectMap.First(m => Path.GetFileName(m.SongXmlPath).ToLower() == Path.GetFileName(xmlFile).ToLower());
+                    if (result.Tones.Count != 1)
+                        throw new DataException("Invalid RS1 CDLC Tones Data");
+
+                    var arrangement = attr.First(s => s.SongXml.ToLower().Contains(result.LLID));
+                    var tone = tones.First(t => t.Key == result.Tones[0]);
 
                     using (var obj1 = new Rs1Converter())
                     {
@@ -178,159 +210,136 @@ namespace RocksmithToolkitLib.DLCPackage
                         data.SongInfo.AverageTempo = (int)obj1.AverageBPM(rsSong);
                     }
 
-                    // matchup rsSong, songs.manifest, and tone.manifest files
-                    foreach (var arrangement in attr)
+                    if (arrangement.Tuning == "E Standard")
+                        rsSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
+                    else if (arrangement.Tuning == "DropD")
+                        rsSong.Tuning = new TuningStrings { String0 = -2, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
+                    else if (arrangement.Tuning == "OpenG")
+                        rsSong.Tuning = new TuningStrings { String0 = -2, String1 = -2, String2 = 0, String3 = 0, String4 = 0, String5 = -2 };
+                    else if (arrangement.Tuning == "EFlat")
+                        rsSong.Tuning = new TuningStrings { String0 = -1, String1 = -1, String2 = -1, String3 = -1, String4 = -1, String5 = -1 };
+                    else // default to standard tuning
                     {
-                        // apply best guesstimate matching, RS1 CDLC are very inconsistent
-                        // TODO: improve accuracy possibly by matching .xblock data
-                        string xmlArr = rsSong.Arrangement.ToLowerInvariant();
-                        // var matchLead = Regex.Match(xmlArr.ToLower(), "^lead$", RegexOptions.IgnoreCase);
-                        // if(matchLead.Success)
-
-                        if (xmlArr.ToLower().Contains("guitar") && !xmlArr.ToLower().Equals("lead") && !xmlArr.ToLower().Equals("rhythm") && !xmlArr.ToLower().Equals("combo") && !xmlArr.ToLower().Equals("bass"))
-                        {
-                            if (xmlArr.ToUpper().Equals("PART REAL_GUITAR_22")) // 
-                            {
-                                if (arrangement.ArrangementName.ToLower().Contains("combo"))
-                                    rsSong.Arrangement = arrangement.ArrangementName = "Rhythm";
-                                else
-                                    rsSong.Arrangement = arrangement.ArrangementName = "Lead";
-                            }
-                            else
-                            {
-                                if (arrangement.ArrangementName.ToLower().Contains("combo"))
-                                    rsSong.Arrangement = arrangement.ArrangementName = "Rhythm";
-                                else
-                                    rsSong.Arrangement = arrangement.ArrangementName = "Lead";
-                            }
-                        }
-
-                        if (xmlArr.ToLower().Contains("lead") && arrangement.ArrangementName.ToLower().Contains("rhythm"))
-                            rsSong.Arrangement = arrangement.ArrangementName = "Lead";
-
-                        if (xmlArr.ToLower().Contains("rhythm") && arrangement.ArrangementName.ToLower().Contains("lead"))
-                            rsSong.Arrangement = arrangement.ArrangementName = "Rhythm";
-
-                        if (xmlArr.ToLower().Contains("lead"))
-                            if (!arrangement.ArrangementName.ToLower().Contains("lead"))
-                                continue;
-                        if (xmlArr.ToLower().Contains("rhythm"))
-                            if (!arrangement.ArrangementName.ToLower().Contains("rhythm"))
-                                continue;
-                        if (xmlArr.ToLower().Contains("combo"))
-                            if (!arrangement.ArrangementName.ToLower().Contains("combo"))
-                                continue;
-                        if (xmlArr.ToLower().Contains("bass"))
-                            if (!arrangement.ArrangementName.ToLower().Contains("bass"))
-                                continue;
-
-                        if (rsSong.Part == arrangement.SongPartition || tones.Count == 1) // this is inaccurate for some
-                        {
-                            foreach (var tone in tones) // tone.manifest
-                            {
-                                if (String.IsNullOrEmpty(arrangement.EffectChainName))
-                                    arrangement.EffectChainName = "Default";
-
-                                if (arrangement.EffectChainName.ToLower() == tone.Key.ToLower() || tones.Count == 1) // ok
-                                {
-                                    if (convert)
-                                    {
-                                        using (var obj1 = new Rs1Converter())
-                                            tones2014.Add(obj1.ToneToTone2014(tone));
-
-                                        // added for consistent naming
-                                        tone.Name = tones2014[tones2014.Count - 1].Name;
-                                        tone.Key = tones2014[tones2014.Count - 1].Key;
-                                    }
-
-                                    // load attr2014 with RS1 mapped values for use by Arrangement()
-                                    attr2014.Tone_Base = tone.Name;
-                                    attr2014.ArrangementName = arrangement.ArrangementName;
-                                    attr2014.CentOffset = 0;
-                                    attr2014.DynamicVisualDensity = new List<float>() { 2 };
-                                    attr2014.SongPartition = arrangement.SongPartition;
-                                    attr2014.PersistentID = IdGenerator.Guid().ToString();
-                                    attr2014.MasterID_RDV = RandomGenerator.NextInt();
-
-                                    attr2014.ArrangementProperties = new SongArrangementProperties2014();
-
-                                    if (arrangement.ArrangementName.ToLower().Contains("lead"))
-                                    {
-                                        attr2014.ArrangementType = 0;
-                                        attr2014.ArrangementProperties.RouteMask = 1;
-                                    }
-                                    else if (arrangement.ArrangementName.ToLower().Contains("rhythm"))
-                                    {
-                                        attr2014.ArrangementType = 1;
-                                        attr2014.ArrangementProperties.RouteMask = 2;
-                                    }
-                                    else if (arrangement.ArrangementName.ToLower().Contains("combo"))
-                                    {
-                                        attr2014.ArrangementType = 2;
-                                        attr2014.ArrangementProperties.RouteMask = arrangement.EffectChainName.ToLower().Contains("lead") ? 1 : 2;
-                                    }
-                                    else if (arrangement.ArrangementName.ToLower().Contains("bass"))
-                                    {
-                                        attr2014.ArrangementType = 3;
-                                        attr2014.ArrangementProperties.RouteMask = 4;
-                                    }
-                                    else
-                                    {
-                                        // some RS1 CDLC do not have a valid ArrangementName
-                                        if (rsSong.Arrangement.ToLower().Contains("guitar"))
-                                        {
-                                            attr2014.ArrangementName = "Lead";
-                                            attr2014.ArrangementType = 0;
-                                            attr2014.ArrangementProperties.RouteMask = 1;
-                                        }
-                                        else if (rsSong.Arrangement.ToLower().Contains("bass"))
-                                        {
-                                            attr2014.ArrangementName = "Bass";
-                                            attr2014.ArrangementType = 3;
-                                            attr2014.ArrangementProperties.RouteMask = 4;
-                                        }
-                                        else // default to rhythm
-                                        {
-                                            attr2014.ArrangementName = "Rhythm";
-                                            attr2014.ArrangementType = 1;
-                                            attr2014.ArrangementProperties.RouteMask = 2;
-                                        }
-                                    }
-
-                                    if (arrangement.Tuning == "E Standard")
-                                        rsSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-                                    else if (arrangement.Tuning == "DropD")
-                                        rsSong.Tuning = new TuningStrings { String0 = -2, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-                                    else if (arrangement.Tuning == "OpenG")
-                                        rsSong.Tuning = new TuningStrings { String0 = -2, String1 = -2, String2 = 0, String3 = 0, String4 = 0, String5 = -2 };
-                                    else if (arrangement.Tuning == "EFlat")
-                                        rsSong.Tuning = new TuningStrings { String0 = -1, String1 = -1, String2 = -1, String3 = -1, String4 = -1, String5 = -1 };
-                                    else // default to standard tuning
-                                        rsSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-
-                                    foundToneForArrangement = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (foundToneForArrangement)
-                            break;
+                        arrangement.Tuning = "E Standard";
+                        rsSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
                     }
 
-                    if (!foundToneForArrangement)
-                        Console.WriteLine(@"Could not determine the arrangement tone pairing");
-
-                    // write the tones to file
+                    // save/write the changes to xml file
                     using (var obj1 = new Rs1Converter())
                         obj1.SongToXml(rsSong, xmlFile, true);
 
-                    if (convert) // RS1 -> RS2
+                    if (convert)
                     {
-                        Song2014 rsSong2014 = new Song2014();
+                        using (var obj1 = new Rs1Converter())
+                            tones2014.Add(obj1.ToneToTone2014(tone));
+                    }
 
+                    // load attr2014 with RS1 mapped values for use by Arrangement()
+                    attr2014.Tone_Base = tone.Name;
+                    attr2014.ArrangementName = arrangement.ArrangementName;
+                    attr2014.CentOffset = 0;
+                    attr2014.DynamicVisualDensity = new List<float>() { 2 };
+                    attr2014.SongPartition = arrangement.SongPartition;
+                    attr2014.PersistentID = IdGenerator.Guid().ToString();
+                    attr2014.MasterID_RDV = RandomGenerator.NextInt();
+                    attr2014.ArrangementProperties = new SongArrangementProperties2014();
+
+                    // processing order is important - CAREFUL
+                    // RouteMask  None = 0, Lead = 1, Rhythm = 2, Any = 3, Bass = 4
+                    // XML file names are usually meaningless to arrangement determination                 
+
+                    if (arrangement.ArrangementName.ToLower().Contains("lead") ||
+                        rsSong.Arrangement.ToLower().Contains("lead"))
+                    {
+                        attr2014.ArrangementName = "Lead";
+                        attr2014.ArrangementType = (int)ArrangementType.Guitar;
+                        attr2014.ArrangementProperties.RouteMask = (int)RouteMask.Lead;
+                        attr2014.ArrangementProperties.PathLead = 1;
+                        attr2014.ArrangementProperties.PathRhythm = 0;
+                        attr2014.ArrangementProperties.PathBass = 0;
+                    }
+                    else if (arrangement.ArrangementName.ToLower().Contains("rhythm") ||
+                        rsSong.Arrangement.ToLower().Contains("rhythm"))
+                    // || rsSong.Arrangement.ToLower().Contains("guitar"))
+                    {
+                        attr2014.ArrangementName = "Rhythm";
+                        attr2014.ArrangementType = (int)ArrangementType.Guitar;
+                        attr2014.ArrangementProperties.RouteMask = (int)RouteMask.Rhythm;
+                        attr2014.ArrangementProperties.PathLead = 0;
+                        attr2014.ArrangementProperties.PathRhythm = 1;
+                        attr2014.ArrangementProperties.PathBass = 0;
+                    }
+                    else if (arrangement.ArrangementName.ToLower().Contains("combo") ||
+                        rsSong.Arrangement.ToLower().Contains("combo"))
+                    {
+                        attr2014.ArrangementName = "Combo";
+                        attr2014.ArrangementType = (int)ArrangementType.Guitar;
+                        attr2014.ArrangementProperties.RouteMask = arrangement.EffectChainName.ToLower().Contains("lead") ? (int)RouteMask.Lead : (int)RouteMask.Rhythm;
+                        attr2014.ArrangementProperties.PathLead = arrangement.EffectChainName.ToLower().Contains("lead") ? 1 : 0;
+                        attr2014.ArrangementProperties.PathRhythm = arrangement.EffectChainName.ToLower().Contains("lead") ? 0 : 1;
+                        attr2014.ArrangementProperties.PathBass = 0;
+                    }
+                    else if (arrangement.ArrangementName.ToLower().Contains("bass") ||
+                        rsSong.Arrangement.ToLower().Contains("bass"))
+                    {
+                        attr2014.ArrangementName = "Bass";
+                        attr2014.ArrangementType = (int)ArrangementType.Bass;
+                        attr2014.ArrangementProperties.RouteMask = (int)RouteMask.Bass;
+                        attr2014.ArrangementProperties.PathLead = 0;
+                        attr2014.ArrangementProperties.PathRhythm = 0;
+                        attr2014.ArrangementProperties.PathBass = 1;
+                    }
+                    else
+                    {
+                        // default to Lead arrangment
+                        attr2014.ArrangementName = "Lead";
+                        attr2014.ArrangementType = (int)ArrangementType.Guitar;
+                        attr2014.ArrangementProperties.RouteMask = (int)RouteMask.Lead;
+                        attr2014.ArrangementProperties.PathLead = 1;
+                        attr2014.ArrangementProperties.PathRhythm = 0;
+                        attr2014.ArrangementProperties.PathBass = 0;
+
+                        Console.WriteLine("RS1->RS2 CDLC Conversion defaulted to 'Lead' arrangment");
+                    }
+
+                    if (convert) // RS1 -> RS2 magic
+                    {
                         using (var obj1 = new Rs1Converter())
                             rsSong2014 = obj1.SongToSong2014(rsSong);
+
+                        // update ArrangementProperties
+                        rsSong2014.ArrangementProperties.RouteMask = attr2014.ArrangementProperties.RouteMask;
+                        rsSong2014.ArrangementProperties.PathLead = attr2014.ArrangementProperties.PathLead;
+                        rsSong2014.ArrangementProperties.PathRhythm = attr2014.ArrangementProperties.PathRhythm;
+                        rsSong2014.ArrangementProperties.PathBass = attr2014.ArrangementProperties.PathBass;
+                        rsSong2014.ArrangementProperties.StandardTuning = (arrangement.Tuning == "E Standard" ? 1 : 0);
+
+                        // <note time="58.366" linkNext="0" accent="0" bend="0" fret="7" hammerOn="0" harmonic="0" hopo="0" ignore="0" leftHand="-1" mute="0" palmMute="0" pluck="-1" pullOff="0" slap="-1" slideTo="-1" string="3" sustain="0.108" tremolo="0" harmonicPinch="0" pickDirection="0" rightHand="-1" slideUnpitchTo="-1" tap="0" vibrato="0" />
+                        if (rsSong2014.Levels.Any(sl => sl.Notes.Any(sln => sln.Bend != 0)))
+                            rsSong2014.ArrangementProperties.Bends = 1;
+                        if (rsSong2014.Levels.Any(sl => sl.Notes.Any(sln => sln.Hopo != 0)))
+                            rsSong2014.ArrangementProperties.Hopo = 1;
+                        if (rsSong2014.Levels.Any(sl => sl.Notes.Any(sln => sln.SlideTo != -1)))
+                            rsSong2014.ArrangementProperties.Slides = 1;
+                        if (rsSong2014.Levels.Any(sl => sl.Notes.Any(sln => sln.Sustain > 0)))
+                            rsSong2014.ArrangementProperties.Sustain = 1;
+
+                        // fixing times that are off
+                        var lastEbeatsTime = rsSong2014.Ebeats[rsSong2014.Ebeats.Length - 1].Time;
+                        var lastPhraseIterationsTime = rsSong2014.PhraseIterations[rsSong2014.PhraseIterations.Length - 1].Time;
+
+                        // tested ... not source of in game hangs
+                        // confirm last PhraseIterations time is less than last Ebeats time
+                        if (lastPhraseIterationsTime > lastEbeatsTime)
+                        {
+                            rsSong2014.PhraseIterations[rsSong2014.PhraseIterations.Length - 1].Time = lastEbeatsTime;
+                            rsSong2014.Sections[rsSong2014.Sections.Length - 1].StartTime = lastEbeatsTime;
+                        }
+
+                        // tested ... not source of in game hangs
+                        // confirm SongLength at least equals last Ebeats time
+                        if (rsSong2014.SongLength < lastEbeatsTime)
+                            rsSong2014.SongLength = lastEbeatsTime;
 
                         using (var obj2 = new Rs2014Converter())
                             obj2.Song2014ToXml(rsSong2014, xmlFile, true);
@@ -349,6 +358,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
 
+            // get rid of duplicate tones
+            tones2014 = tones2014.Where(p => p.Key != null)
+                .GroupBy(p => p.Key).Select(g => g.First()).ToList();
             data.TonesRS2014 = tones2014;
 
             //Get Album Artwork DDS Files

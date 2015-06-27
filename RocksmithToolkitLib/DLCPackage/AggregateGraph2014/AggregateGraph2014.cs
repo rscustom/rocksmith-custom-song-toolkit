@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
-using System.ComponentModel;
 using RocksmithToolkitLib.Extensions;
 
-namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
+namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
 {
     public class AggregateGraph2014 {
         #region Path/Names Template

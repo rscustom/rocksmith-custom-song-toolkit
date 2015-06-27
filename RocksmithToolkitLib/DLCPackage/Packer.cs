@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
+using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using X360.STFS;
 using X360.Other;
 using RocksmithToolkitLib.Sng;

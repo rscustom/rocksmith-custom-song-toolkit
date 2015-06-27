@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 
 using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using CON = RocksmithToolkitLib.Sng.Constants;

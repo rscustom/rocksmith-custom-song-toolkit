@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using RocksmithToolkitLib;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.ToolkitTone;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;

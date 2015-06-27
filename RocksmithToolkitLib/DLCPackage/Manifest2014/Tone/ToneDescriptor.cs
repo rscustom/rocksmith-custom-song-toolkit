@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
+namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Tone
 {
     public class ToneDescriptor
     {

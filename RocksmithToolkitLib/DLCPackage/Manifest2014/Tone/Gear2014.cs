@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Reflection;
 
-namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
+namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Tone
 {
     public class Gear2014
     {

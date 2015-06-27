@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.SngToTab;
@@ -113,6 +115,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         #endregion
 
         #region Song to Song2014
+
         /// <summary>
         /// Convert RS1 Song Object to RS2 Song2014 Object
         /// RS1 to RS2014 Mapping Method
@@ -148,7 +151,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             rsSong2014.AlbumYear = rsSong.AlbumYear;
             rsSong2014.CrowdSpeed = "1";
 
-            // default arrangment properties
+            // initialize arrangment properties
             rsSong2014.ArrangementProperties = new SongArrangementProperties2014
             {
                 Represent = 1,
@@ -179,36 +182,88 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 BassPick = 0,
                 Sustain = 0,
                 BonusArr = 0,
-                RouteMask = rsSong2014.Arrangement == "Lead" ? 1 : (rsSong2014.Arrangement == "Rhythm" ? 2 : 4),
-                PathLead = rsSong2014.Arrangement == "Lead" ? 1 : 0,
-                PathRhythm = rsSong2014.Arrangement == "Rhythm" ? 1 : 0,
-                PathBass = rsSong2014.Arrangement == "Bass" ? 1 : 0
+                RouteMask = 0,
+                PathLead = 0,
+                PathRhythm = 0,
+                PathBass = 0
             };
 
-            // tone defaults used to produce RS2014 CDLC
+            // initial SWAG based on RS1 arrangement element           
+            rsSong2014.ArrangementProperties.RouteMask = rsSong.Arrangement.ToLower().Contains("lead") ? 1
+                : (rsSong.Arrangement.ToLower().Contains("rhythm") ? 2
+                : (rsSong.Arrangement.ToLower().Contains("combo") ? 2 // may not always be true 
+                : (rsSong.Arrangement.ToLower().Contains("bass") ? 4 : 1))); //  but ok for now
+            rsSong2014.ArrangementProperties.PathLead = rsSong2014.ArrangementProperties.RouteMask == 1 ? 1 : 0;
+            rsSong2014.ArrangementProperties.PathRhythm = rsSong2014.ArrangementProperties.RouteMask == 1 ? 1 : 0;
+            rsSong2014.ArrangementProperties.PathBass = rsSong2014.ArrangementProperties.RouteMask == 1 ? 1 : 0;
+
+            // set tone defaults used to produce RS2014 CDLC
             rsSong2014.ToneBase = "Default";
-            rsSong2014.ToneA = "Default";
+            rsSong2014.ToneA = "";
             rsSong2014.ToneB = "";
             rsSong2014.ToneC = "";
             rsSong2014.ToneD = "";
 
             // these elements have direct mappings
             rsSong2014.Phrases = rsSong.Phrases;
-            //rsSong2014.LinkedDiffs = rsSong.LinkedDiffs;
-            rsSong2014.LinkedDiffs = new SongLinkedDiff[0]; // prevents hanging
-            //rsSong2014.PhraseProperties = rsSong.PhraseProperties;
-            rsSong2014.PhraseProperties = new SongPhraseProperty[0]; // prevents hanging
             rsSong2014.FretHandMuteTemplates = rsSong.FretHandMuteTemplates;
             rsSong2014.Ebeats = rsSong.Ebeats;
             rsSong2014.Sections = rsSong.Sections;
             rsSong2014.Events = rsSong.Events;
+            // these prevent in game hanging
+            rsSong2014.LinkedDiffs = new SongLinkedDiff[0];
+            rsSong2014.PhraseProperties = new SongPhraseProperty[0];
 
-            // these elements have no direct mapping, order is important
-            rsSong2014 = ConvertTones(rsSong, rsSong2014);
+            // these elements have no direct mapping, processing order is important
             rsSong2014 = ConvertChordTemplates(rsSong, rsSong2014);
-            rsSong2014 = ConvertNewLinkedDiff(rsSong, rsSong2014);
             rsSong2014 = ConvertLevels(rsSong, rsSong2014);
             rsSong2014 = ConvertPhraseIterations(rsSong, rsSong2014);
+            // these prevent in game hanging
+            rsSong2014.Tones = new SongTone2014[0];
+            rsSong2014.NewLinkedDiff = new SongNewLinkedDiff[0];
+            // tested ... not the source of in game hangs
+            // rsSong2014.TranscriptionTrack = TranscriptionTrack2014.GetDefault();
+
+            // tested ... confirmed this is a source of in game hangs
+            // check alignment of Sections time with Ebeats first beat of measure time 
+            // TODO: use LINQ
+            float fbomTime = 0;
+            float nfbomTime = 0;
+            foreach (var section in rsSong2014.Sections)
+            {
+                foreach (var ebeat in rsSong2014.Ebeats)
+                {
+                    // save Ebeats first beat of measure time
+                    if (ebeat.Measure != -1)
+                        fbomTime = ebeat.Time;
+                    else
+                        nfbomTime = ebeat.Time;
+
+                    if (section.Name.ToLower().Contains("noguitar") && ebeat.Time == section.StartTime)
+                    {
+                        // CRITICAL - fix Section noguitar time (matches EOF output)
+                        if (ebeat.Measure != -1)
+                        {
+                            section.StartTime = nfbomTime;
+                            Console.WriteLine("Applied fix to RS1->RS2 Section StartTime for: " + section.Name);
+                        }
+
+                        break;
+                    }
+
+                    // found a valid Section time
+                    if (ebeat.Measure != -1 && ebeat.Time == section.StartTime)
+                        break;
+
+                    // fix invalid Section time
+                    if (ebeat.Measure == -1 && ebeat.Time > section.StartTime)
+                    {
+                        section.StartTime = fbomTime;
+                        Console.WriteLine("Applied fix to RS1->RS2 Section StartTime for: " + section.Name);
+                        break;
+                    }
+                }
+            }
 
             return rsSong2014;
         }
@@ -224,53 +279,32 @@ namespace RocksmithToolkitLib.Song2014ToTab
             return avgBPM;
         }
 
-        private Song2014 ConvertTones(Song rsSong, Song2014 rsSong2014)
-        {
-            // no parallel element in RS1 so only initialiaze 
-            rsSong2014.Tones = new SongTone2014[0];
-            return rsSong2014;
-        }
         private Song2014 ConvertChordTemplates(Song rsSong, Song2014 rsSong2014)
         {
             // add chordTemplates elements
             var chordTemplate = new List<SongChordTemplate2014>();
             foreach (var songChordTemplate in rsSong.ChordTemplates)
             {
-                // this could cause hangs
-                // if (String.IsNullOrEmpty(songChordTemplate.ChordName))
-                //    continue;                
+                // tested ... not the source of game hangs
+                //if (String.IsNullOrEmpty(songChordTemplate.ChordName))
+                //    continue;
 
-                chordTemplate.Add(new SongChordTemplate2014
-                {
-                    ChordName = songChordTemplate.ChordName,
-                    DisplayName = songChordTemplate.ChordName,
-                    Finger0 = (sbyte)songChordTemplate.Finger0,
-                    Finger1 = (sbyte)songChordTemplate.Finger1,
-                    Finger2 = (sbyte)songChordTemplate.Finger2,
-                    Finger3 = (sbyte)songChordTemplate.Finger3,
-                    Finger4 = (sbyte)songChordTemplate.Finger4,
-                    Finger5 = (sbyte)songChordTemplate.Finger5,
-                    Fret0 = (sbyte)songChordTemplate.Fret0,
-                    Fret1 = (sbyte)songChordTemplate.Fret1,
-                    Fret2 = (sbyte)songChordTemplate.Fret2,
-                    Fret3 = (sbyte)songChordTemplate.Fret3,
-                    Fret4 = (sbyte)songChordTemplate.Fret4,
-                    Fret5 = (sbyte)songChordTemplate.Fret5
-                });
+                chordTemplate.Add(new SongChordTemplate2014 { ChordName = songChordTemplate.ChordName, DisplayName = songChordTemplate.ChordName, Finger0 = (sbyte)songChordTemplate.Finger0, Finger1 = (sbyte)songChordTemplate.Finger1, Finger2 = (sbyte)songChordTemplate.Finger2, Finger3 = (sbyte)songChordTemplate.Finger3, Finger4 = (sbyte)songChordTemplate.Finger4, Finger5 = (sbyte)songChordTemplate.Finger5, Fret0 = (sbyte)songChordTemplate.Fret0, Fret1 = (sbyte)songChordTemplate.Fret1, Fret2 = (sbyte)songChordTemplate.Fret2, Fret3 = (sbyte)songChordTemplate.Fret3, Fret4 = (sbyte)songChordTemplate.Fret4, Fret5 = (sbyte)songChordTemplate.Fret5 });
             }
 
+            // tested ... not the source of game hangs
             // get rid of duplicate chords if any
-            // this seems to cause problems
             // chordTemplate = chordTemplate.Distinct().ToList();
 
-            rsSong2014.ChordTemplates = chordTemplate.ToArray();
-            return rsSong2014;
-        }
+            // tested ... could be source of game hangs
+            if (chordTemplate.Count < 2 && String.IsNullOrEmpty(rsSong.ChordTemplates[0].ChordName))
+            {
+                Console.WriteLine("Applied fix to RS1->RS2 ChordTemplates conversion");
+                rsSong2014.ChordTemplates = new SongChordTemplate2014[0];
+            }
+            else
+                rsSong2014.ChordTemplates = chordTemplate.ToArray();
 
-        private Song2014 ConvertNewLinkedDiff(Song rsSong, Song2014 rsSong2014)
-        {
-            // no parallel element in RS1 so only initialiaze 
-            rsSong2014.NewLinkedDiff = new SongNewLinkedDiff[0];
             return rsSong2014;
         }
 
@@ -336,8 +370,8 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     }
                 }
 
+                // tested ... not the source of game hangs
                 // get rid of duplicate notes if any
-                // this seems to cause problems
                 // notes = notes.Distinct().ToList();
 
                 for (int shapeIndex = 0; shapeIndex < songLevel.HandShapes.Length; shapeIndex++)
@@ -370,12 +404,14 @@ namespace RocksmithToolkitLib.Song2014ToTab
         private SongNote2014 GetNoteInfo(SongNote songNote)
         {
             SongNote2014 songNote2014 = new SongNote2014();
-
             songNote2014.Bend = (byte)songNote.Bend;
+
+            // tested ... BendValue time causing in game hangs if off by 0.001f
             if (songNote.Bend > 0)
             {
                 var bendValues = new List<BendValue>();
-                bendValues.Add(new BendValue { Step = songNote.Bend, Time = (float)Math.Round((songNote.Sustain * .333 / songNote.Bend) + songNote.Time, 3), Unk5 = 0 });
+                // CRITICAL CALCULATION - DO NOT CHANGE - MULTIPLIER VALUE MUST BE 0.3333 TO ACHEIVE PROPER ACCURACY AND MATCH EOF OUTPUT
+                bendValues.Add(new BendValue { Step = songNote.Bend, Time = (float)Math.Round((songNote.Sustain * 0.3333 / songNote.Bend) + songNote.Time, 3), Unk5 = 0 });
                 songNote2014.BendValues = bendValues.ToArray();
             }
 
@@ -502,10 +538,10 @@ namespace RocksmithToolkitLib.Song2014ToTab
             // no direct mapping for RS1 -> RS2 Tones
             // look here IEnumerable<ToneDescriptor> List()
             // TODO: figure out better method for tone mapping
-            if (tone2014.Key.ToUpper().Contains("_COMBO"))
+            if (tone2014.Key.ToUpper().Contains("COMBO"))
                 tone2014.Key = "Combo_OD";
 
-            if (tone2014.Key.ToUpper().Contains("_OD"))
+            if (tone2014.Key.ToUpper().Contains("OD"))
             {
                 tone2014.ToneDescriptors.Add("$[35716]OVERDRIVE");
                 amp.Type = "Amps";
@@ -533,7 +569,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     PrePedal1 = prepedal1
                 };
             }
-            else if (tone2014.Key.ToUpper().Contains("_LEAD"))
+            else if (tone2014.Key.ToUpper().Contains("LEAD"))
             {
                 tone2014.ToneDescriptors.Add("$[35724]LEAD");
                 amp.Type = "Amps";
@@ -557,7 +593,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     PrePedal1 = prepedal1
                 };
             }
-            else if (tone2014.Key.ToUpper().Contains("_DIS"))
+            else if (tone2014.Key.ToUpper().Contains("DIS"))
             {
                 tone2014.ToneDescriptors.Add("$[35722]DISTORTION");
                 amp.Type = "Amps";
@@ -585,7 +621,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     PrePedal1 = prepedal1
                 };
             }
-            else if (tone2014.Key.ToUpper().Contains("_CLEAN"))
+            else if (tone2014.Key.ToUpper().Contains("CLEAN"))
             {
                 tone2014.ToneDescriptors.Add("$[35720]CLEAN");
                 amp.Type = "Amps";
@@ -605,7 +641,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     Rack1 = rack1
                 };
             }
-            else if (tone2014.Key.ToUpper().Contains("_ACOU"))
+            else if (tone2014.Key.ToUpper().Contains("ACOU"))
             {
                 tone2014.ToneDescriptors.Add("$[35721]ACOUSTIC");
                 amp.Type = "Amps";

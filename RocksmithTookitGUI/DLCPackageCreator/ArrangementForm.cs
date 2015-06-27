@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.IO;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib;

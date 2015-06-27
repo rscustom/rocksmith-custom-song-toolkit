@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 {
@@ -17,12 +19,15 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
             IterationVersion = 2;
         }
 
-        public static Manifest LoadFromFile(string manifestToneFile) {
+        public static Manifest LoadFromFile(string manifestToneFile)
+        {
             var manifest = new Manifest();
-            using (var reader = new StreamReader(manifestToneFile)) {                
-                manifest = JsonConvert.DeserializeObject<Manifest>(reader.ReadToEnd());                
+            using (var reader = new StreamReader(manifestToneFile))
+            {
+                manifest = JsonConvert.DeserializeObject<Manifest>(reader.ReadToEnd());
             }
             return manifest;
         }
+
     }
 }

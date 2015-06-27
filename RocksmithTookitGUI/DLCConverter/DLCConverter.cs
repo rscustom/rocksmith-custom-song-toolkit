@@ -10,7 +10,6 @@ using X360.STFS;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
-using RocksmithToolkitLib.DLCPackage.Manifest.Header;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Sng;
