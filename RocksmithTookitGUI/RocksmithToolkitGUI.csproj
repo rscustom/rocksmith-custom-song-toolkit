@@ -52,12 +52,6 @@
     <PostBuildEvent>/bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)"</PostBuildEvent>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\lib\ZLib\ICSharpCode.SharpZipLib.dll</HintPath>
