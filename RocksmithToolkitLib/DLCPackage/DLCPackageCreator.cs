@@ -538,7 +538,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             Showlights showlight = new Showlights(info);
                             showlight.Serialize(showlightStream);
                             // write to file for debugging
-                            string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "DebugMe"));
+                            string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "CST"));
                             using (FileStream file = new FileStream(shlFilePath, FileMode.Create, FileAccess.Write))
                                 showlightStream.WriteTo(file);
                         }

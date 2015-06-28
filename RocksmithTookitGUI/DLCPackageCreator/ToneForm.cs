@@ -10,6 +10,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     {
         public bool Saved = false;
         public GameVersion CurrentGameVersion;
+        public bool EditMode = false;
+
         //private DLCPackageCreator parentControl = null;
 
 
@@ -30,7 +32,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public ToneForm()
         {
             InitializeComponent();
-
         }
 
         private void okButton_Click(object sender, EventArgs e)

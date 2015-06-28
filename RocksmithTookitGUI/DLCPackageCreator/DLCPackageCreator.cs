@@ -1470,8 +1470,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public void toneAddButton_Click(object sender = null, EventArgs e = null)
         {
             var tone = CreateNewTone();
-            using (var form = new ToneForm())
+            using (var form = new ToneForm() { Text = "Add Tuning" })
             {
+                form.EditMode = false;
                 form.CurrentGameVersion = CurrentGameVersion;
                 form.toneControl1.CurrentGameVersion = CurrentGameVersion;
                 form.toneControl1.Init();
@@ -1551,8 +1552,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dynamic tone = tonesLB.SelectedItem;
                 string toneName = tone.Name;
 
-                using (var form = new ToneForm())
+                using (var form = new ToneForm() { Text = "Edit Tuning" })
                 {
+                    form.EditMode = true;
                     var currentGameVersion = CurrentGameVersion != GameVersion.RS2012 ? GameVersion.RS2014 : GameVersion.RS2012;
                     form.CurrentGameVersion = currentGameVersion;
                     form.toneControl1.CurrentGameVersion = currentGameVersion;
@@ -1588,7 +1590,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         {
                             var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);
 
-                            // determine correct tone.id
+                            // tested ... this reduces in game hangs
+                            // determine correct Tone.Id and update XML
                             Int32 toneId = 0;
                             // recognize that ToneBase alpha case mismatches do exist and process it                                 
                             if (toneName.ToLower() == arrangement.ToneBase.ToLower())

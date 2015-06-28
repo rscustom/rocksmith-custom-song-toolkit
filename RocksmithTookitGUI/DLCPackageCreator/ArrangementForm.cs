@@ -423,6 +423,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // If have ToneBase and ToneB is setup it's because auto tone are setup in EoF, so, disable edit to prevent errors.
             disableTonesCheckbox.Checked = (!String.IsNullOrEmpty(arr.ToneBase) && !String.IsNullOrEmpty(arr.ToneB));
+            if (disableTonesCheckbox.Checked && !EditMode)
+                disableTonesCheckbox.Enabled = false;
         }
 
         private void SequencialToneComboEnabling()
