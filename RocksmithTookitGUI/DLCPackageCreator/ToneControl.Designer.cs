@@ -476,6 +476,7 @@
             this.toneNameBox.Size = new System.Drawing.Size(143, 20);
             this.toneNameBox.TabIndex = 0;
             this.toneNameBox.Leave += new System.EventHandler(this.toneNameBox_Leave);
+            this.toneNameBox.MouseEnter += new System.EventHandler(this.toneNameBox_MouseEnter);
             // 
             // volumeBox
             // 

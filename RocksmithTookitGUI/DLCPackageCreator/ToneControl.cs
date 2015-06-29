@@ -302,6 +302,35 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             control.Text = control.Text.Trim().GetValidName(true);
         }
 
+        private void toneNameBox_MouseEnter(object sender, EventArgs e)
+        {
+            ToolTip tt = new ToolTip();
+            tt.IsBalloon = true;
+            tt.InitialDelay = 0;
+            tt.ShowAlways = true;
+            if (Parent.Text.Contains("Add"))
+            {
+                tt.SetToolTip(toneNameBox,
+                    "SPECIAL ALERT:" + Environment.NewLine +
+                    "If you are trying to Add a tone to an" + Environment.NewLine +
+                    "existing multi tone arrangement, then the  " + Environment.NewLine +
+                    "Tone Name MUST exactly match a Tone Name" + Environment.NewLine +
+                    "that is already used by the arrangement," + Environment.NewLine +
+                    "otherwise CDLC generation will fail.");
+            }
+            else
+            {
+                tt.SetToolTip(toneNameBox,
+                    "SPECIAL ALERT:" + Environment.NewLine +
+                    "If you are trying to Edit a tone for an " + Environment.NewLine +
+                    "existing multi tone arrangement, then" + Environment.NewLine +
+                    "you may choose any Tone Name and the  " + Environment.NewLine +
+                    "toolkit will update the arrangement.");
+            }
+        }
+
+
+
     }
 }
 
