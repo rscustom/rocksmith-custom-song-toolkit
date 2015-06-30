@@ -254,18 +254,13 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>IF $(ConfigurationName) == Debug (
-    CMD "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"
-)
-
-IF $(ConfigurationName) == Release (
-   START "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"
+    <PreBuildEvent>IF NOT $(ConfigurationName) == ReleaseMac (
+    CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"
 )
 
 IF $(ConfigurationName) == ReleaseMac (
     "$(ProjectDir)../prebuild.sh" "$(ProjectDir)" "$(ProjectDir)ToolkitVersion.cs"
-)
-</PreBuildEvent>
+)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

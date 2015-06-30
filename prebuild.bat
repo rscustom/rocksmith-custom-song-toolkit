@@ -1,13 +1,13 @@
 @echo off
 setlocal enabledelayedexpansion
-
+if errorlevel 1 goto BuildEventFailed
 
 set solution=%~1
 set toolkitver=%~2
 
 :: if problem passing CL from VS pre-build event then hard code
-::set solution=".\"
-::set toolkitver=".\RocksmithToolkitLib\ToolkitVersion.cs"
+:: set solution=".\"
+:: set toolkitver=".\RocksmithToolkitLib\ToolkitVersion.cs"
 
 ::git in 128 char range.
 echo Checking for .git\HEAD...
@@ -31,7 +31,8 @@ echo Reading ToolkitVersion.cs_dist...
 set origstr=00000000
 
 echo %toolkitver%_dist
-::chcp 65001>nul
+:: next line is required for VS2010 Pre-Build Event to work with WinXP
+chcp 65001>nul
 ::pause
 
 for /f "tokens=* delims=" %%i in ('type "%toolkitver%_dist"') do (
@@ -44,3 +45,7 @@ echo Writing ToolkitVersion.cs...
 move /y tempfile.txt "%toolkitver%"
 echo Done
 exit /b 0
+
+:BuildEventFailed
+echo Pre-Build Event Failed in prebuild.bat file
+pause
