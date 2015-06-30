@@ -1,8 +1,14 @@
 @echo off
 setlocal enabledelayedexpansion
 
+
 set solution=%~1
 set toolkitver=%~2
+
+:: if problem passing CL from VS pre-build event then hard code
+::set solution=".\"
+::set toolkitver=".\RocksmithToolkitLib\ToolkitVersion.cs"
+
 ::git in 128 char range.
 echo Checking for .git\HEAD...
 set rev=nongit
@@ -23,12 +29,17 @@ if exist "%solution%\.git\HEAD" (
 :: *.cs files in Unicode
 echo Reading ToolkitVersion.cs_dist...
 set origstr=00000000
-rem chcp 65001>nul
+
+echo %toolkitver%_dist
+::chcp 65001>nul
+::pause
+
 for /f "tokens=* delims=" %%i in ('type "%toolkitver%_dist"') do (
 	set str=%%i
 	set newstr=!str:%origstr%=%rev%!
 	echo !newstr! >> tempfile.txt
 )
+
 echo Writing ToolkitVersion.cs...
 move /y tempfile.txt "%toolkitver%"
 echo Done
