@@ -302,6 +302,7 @@ namespace RocksmithToolkitLib.Xml
         public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null)
         {
             bool cstComment = false;
+            // TODO: make this the full version string so that each rev gets commented
             const string magic = " CST v";
             XDocument xml = XDocument.Load(xmlSongRS2014File);
 

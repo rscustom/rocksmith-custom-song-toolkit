@@ -154,10 +154,6 @@ namespace RocksmithToolkitLib.DLCPackage
             // xblockFile = "D:\\Temp\\Mapping\\songs.xblock";
             XblockX songsXblock = XblockX.LoadFromFile(xblockFile);
 
-            // var outputPath = "D:\\Temp\\Mapping\\songs2.xblock";
-            // using (var stream = File.OpenWrite(outputPath))
-            //    songsXblock.Serialize(stream, false);
-
             // create project map for cross referencing arrangements with tones
             var projectMap = AggregateGraph.AggregateGraph.ProjectMap(aggGraphData, songsXblock, toneManifest);
 
@@ -167,10 +163,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 throw new DataException("Can not find any XML arrangement files");
 
             List<Tone2014> tones2014 = new List<Tone2014>();
-            int partLead = 1;
-            int partRhythm = 1;
-            int partCombo = 1;
-            int partBass = 1;
+
             foreach (var xmlFile in xmlFiles)
             {
                 if (xmlFile.ToLower().Contains("metadata")) // skip DeadFox file

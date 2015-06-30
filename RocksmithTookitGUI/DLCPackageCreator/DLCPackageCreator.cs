@@ -1552,7 +1552,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dynamic tone = tonesLB.SelectedItem;
                 string toneName = tone.Name;
 
-                using (var form = new ToneForm() { Text = "Edit Tuning" })
+                using (var form = new ToneForm() { Text = "Edit Tone" })
                 {
                     form.EditMode = true;
                     var currentGameVersion = CurrentGameVersion != GameVersion.RS2012 ? GameVersion.RS2014 : GameVersion.RS2012;
