@@ -66,10 +66,10 @@ namespace RocksmithToolkitLib.DLCPackage
         // DLC ID
         public Guid Id { get; set; }
         public int MasterId { get; set; }
-        // Motronome.
+        // Motronome
         public Metronome Metronome { get; set; }
         // preserve EOF and DDS comments
-        [IgnoreDataMember] // required for SaveTemplate feature
+        [IgnoreDataMember] // required for SaveTemplate feature to work
         public IEnumerable<XComment> XmlComments { get; set; }
 
         public Arrangement()
