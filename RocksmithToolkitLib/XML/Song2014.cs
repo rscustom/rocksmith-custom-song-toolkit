@@ -743,7 +743,7 @@ namespace RocksmithToolkitLib.Xml
         public Int32 Accent { get; set; }
 
         [XmlAttribute("bend")]
-        public Byte Bend { get; set; }
+        public float Bend { get; set; }
 
         [XmlAttribute("fret")]
         public SByte Fret { get; set; }
@@ -840,7 +840,7 @@ namespace RocksmithToolkitLib.Xml
                 if (notesSection.Notes[i].Pluck != 255) note.Pluck = (sbyte)notesSection.Notes[i].Pluck;
                 if (notesSection.Notes[i].Vibrato != 0) note.Vibrato = notesSection.Notes[i].Vibrato;
                 if (notesSection.Notes[i].Sustain != 0) note.Sustain = notesSection.Notes[i].Sustain;
-                if (notesSection.Notes[i].MaxBend != 0) note.Bend = (byte)notesSection.Notes[i].MaxBend;
+                if (notesSection.Notes[i].MaxBend != 0) note.Bend = notesSection.Notes[i].MaxBend;
                 note.BendValues = BendValue.Parse(notesSection.Notes[i].BendData.BendData);
 
                 notes.Add(note);
@@ -1097,7 +1097,7 @@ namespace RocksmithToolkitLib.Xml
                         if (cnote.BendValues != null && cnote.BendValues.Length > 0)
                             foreach (var bend in cnote.BendValues)
                                 if (cnote.Bend < bend.Step)
-                                    cnote.Bend = (byte)Math.Round(bend.Step);
+                                    cnote.Bend = bend.Step;
                     }
 
                     // BASIC INFO

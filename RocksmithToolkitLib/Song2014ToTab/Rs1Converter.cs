@@ -404,7 +404,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         private SongNote2014 GetNoteInfo(SongNote songNote)
         {
             SongNote2014 songNote2014 = new SongNote2014();
-            songNote2014.Bend = (byte)songNote.Bend;
+            songNote2014.Bend = (float)songNote.Bend;
 
             // tested ... BendValue time causing in game hangs if off by 0.001f
             if (songNote.Bend > 0)
