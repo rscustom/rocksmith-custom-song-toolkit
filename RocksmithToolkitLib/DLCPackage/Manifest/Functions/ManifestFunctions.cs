@@ -147,7 +147,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             var t = new List<int>();
             if( 1 == n.Accent )
                 t.Add(0);
-            if( 1 == n.Bend )
+            if( 0 != n.Bend )
                 t.Add(1);
             if( 1 == n.Mute )
                 t.Add(2);
