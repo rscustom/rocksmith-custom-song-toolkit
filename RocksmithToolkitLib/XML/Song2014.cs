@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 
 using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using CON = RocksmithToolkitLib.Sng.Constants;
@@ -300,28 +301,29 @@ namespace RocksmithToolkitLib.Xml
         /// <param name="commentNodes"></param>
         public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null)
         {
-            bool cstComment = false;
             const string magic = " CST v";
             XDocument xml = XDocument.Load(xmlSongRS2014File);
 
             if (commentNodes != null && commentNodes.Any())
             {
-                // reverse order of stored comments (original order)
+                // reverse order of stored comments is original order
                 foreach (var commentNode in commentNodes.Reverse())
                 {
                     // xml.Element("song").AddFirst(new XComment(commentNode));
                     // this looks nicers but does not match the EOF original
-                    // it is used to distinguish XML that is modified by toolkit
+                    // used to distinguish XML that is modified by toolkit
                     xml.Element("song").AddBeforeSelf(new XComment(commentNode));
+
+                    // remove previous version of toolkit magic
                     if (commentNode.ToString().Contains(magic))
-                        cstComment = true;
+                        xml.Element("song").Remove();
                 }
             }
 
-            if (!cstComment)
-                xml.Element("song").AddBeforeSelf(new XComment(magic + ToolkitVersion.version + " "));
+            // add current version of toolkit magic
+            xml.Element("song").AddBeforeSelf(new XComment(magic + ToolkitVersion.version + " "));
 
-            if (commentNodes != null && commentNodes.Any() || !cstComment)
+            if (commentNodes != null && commentNodes.Any())
                 xml.Save(xmlSongRS2014File);
         }
 

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using Newtonsoft.Json;
-using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 
-namespace RocksmithToolkitLib.DLCPackage.Manifest
+namespace RocksmithToolkitLib.DLCPackage.Manifest2014
 {
     public class Manifest2014<T>
     {

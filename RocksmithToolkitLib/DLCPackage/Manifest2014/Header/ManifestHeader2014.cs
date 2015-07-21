@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
+namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
 {
     public class ManifestHeader2014<T>
     {

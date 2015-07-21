@@ -58,6 +58,7 @@
             this.toneDuplicateButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkShowlights = new System.Windows.Forms.CheckBox();
             this.keyboardDescArrLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -68,6 +69,7 @@
             this.dlcImportButton = new System.Windows.Forms.Button();
             this.currentOperationLabel = new System.Windows.Forms.Label();
             this.updateProgress = new System.Windows.Forms.ProgressBar();
+            this.btnQuickAdd = new System.Windows.Forms.Button();
             this.previewVolumeBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.packageVersionTB = new RocksmithToolkitGUI.CueTextBox();
             this.DlcNameTB = new RocksmithToolkitGUI.CueTextBox();
@@ -128,9 +130,9 @@
             // 
             // arrangementRemoveButton
             // 
-            this.arrangementRemoveButton.Location = new System.Drawing.Point(400, 65);
+            this.arrangementRemoveButton.Location = new System.Drawing.Point(400, 64);
             this.arrangementRemoveButton.Name = "arrangementRemoveButton";
-            this.arrangementRemoveButton.Size = new System.Drawing.Size(91, 23);
+            this.arrangementRemoveButton.Size = new System.Drawing.Size(92, 23);
             this.arrangementRemoveButton.TabIndex = 23;
             this.arrangementRemoveButton.Text = "Remove";
             this.arrangementRemoveButton.UseVisualStyleBackColor = true;
@@ -138,9 +140,9 @@
             // 
             // arrangementAddButton
             // 
-            this.arrangementAddButton.Location = new System.Drawing.Point(400, 16);
+            this.arrangementAddButton.Location = new System.Drawing.Point(401, 39);
             this.arrangementAddButton.Name = "arrangementAddButton";
-            this.arrangementAddButton.Size = new System.Drawing.Size(91, 23);
+            this.arrangementAddButton.Size = new System.Drawing.Size(45, 23);
             this.arrangementAddButton.TabIndex = 21;
             this.arrangementAddButton.Text = "Add";
             this.arrangementAddButton.UseVisualStyleBackColor = true;
@@ -224,9 +226,9 @@
             // 
             // arrangementEditButton
             // 
-            this.arrangementEditButton.Location = new System.Drawing.Point(400, 40);
+            this.arrangementEditButton.Location = new System.Drawing.Point(447, 39);
             this.arrangementEditButton.Name = "arrangementEditButton";
-            this.arrangementEditButton.Size = new System.Drawing.Size(91, 23);
+            this.arrangementEditButton.Size = new System.Drawing.Size(45, 23);
             this.arrangementEditButton.TabIndex = 22;
             this.arrangementEditButton.Text = "Edit";
             this.arrangementEditButton.UseVisualStyleBackColor = true;
@@ -438,6 +440,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnQuickAdd);
+            this.groupBox1.Controls.Add(this.chkShowlights);
             this.groupBox1.Controls.Add(this.keyboardDescArrLabel);
             this.groupBox1.Controls.Add(this.arrangementLB);
             this.groupBox1.Controls.Add(this.arrangementAddButton);
@@ -450,6 +454,21 @@
             this.groupBox1.TabIndex = 80;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Arrangements";
+            // 
+            // chkShowlights
+            // 
+            this.chkShowlights.AutoSize = true;
+            this.chkShowlights.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkShowlights.Checked = true;
+            this.chkShowlights.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowlights.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkShowlights.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.chkShowlights.Location = new System.Drawing.Point(376, 89);
+            this.chkShowlights.Name = "chkShowlights";
+            this.chkShowlights.Size = new System.Drawing.Size(115, 17);
+            this.chkShowlights.TabIndex = 36;
+            this.chkShowlights.Text = "Include Showlights";
+            this.chkShowlights.UseVisualStyleBackColor = true;
             // 
             // keyboardDescArrLabel
             // 
@@ -576,6 +595,17 @@
             this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.updateProgress.TabIndex = 999;
             this.updateProgress.Visible = false;
+            // 
+            // btnQuickAdd
+            // 
+            this.btnQuickAdd.Location = new System.Drawing.Point(401, 14);
+            this.btnQuickAdd.Name = "btnQuickAdd";
+            this.btnQuickAdd.Size = new System.Drawing.Size(91, 23);
+            this.btnQuickAdd.TabIndex = 37;
+            this.btnQuickAdd.Text = "Quick Add";
+            this.btnQuickAdd.UseVisualStyleBackColor = true;
+            this.btnQuickAdd.Click += new System.EventHandler(this.btnQuickAdd_Click);
+            this.btnQuickAdd.MouseEnter += new System.EventHandler(this.btnQuickAdd_MouseEnter);
             // 
             // previewVolumeBox
             // 
@@ -885,5 +915,7 @@
         private System.Windows.Forms.Label label7;
         private NumericUpDownFixed audioQualityBox;
         private System.Windows.Forms.RadioButton rbConvert;
+        private System.Windows.Forms.CheckBox chkShowlights;
+        private System.Windows.Forms.Button btnQuickAdd;
     }
 }

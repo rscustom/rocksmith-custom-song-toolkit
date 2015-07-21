@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using RocksmithToolkitLib.Extensions;
 using System.IO;
 
-namespace RocksmithToolkitLib.DLCPackage.AggregateGraph {
+namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014 {
     public enum TagType
     {
         tag,

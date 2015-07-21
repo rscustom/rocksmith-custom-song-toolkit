@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 
 namespace RocksmithToolkitLib.ToolkitTone
 {
@@ -22,7 +23,7 @@ namespace RocksmithToolkitLib.ToolkitTone
         public IList<ToolkitKnob> Knobs { get; set; }
         public bool Bass { get; set; }
         public string Skin { get; set; }
-        public int? SkinIndex { get; set; }
+        public float? SkinIndex { get; set; }
 
 
         #region Not used for RS2014
@@ -72,7 +73,7 @@ namespace RocksmithToolkitLib.ToolkitTone
         {
             if (gameVersion == GameVersion.RS2014)
             {
-                return new DLCPackage.Manifest.Tone.Pedal2014
+                return new Pedal2014
                 {
                     PedalKey = Key,
                     KnobValues = Knobs.ToDictionary(k => k.Key, k => k.DefaultValue),

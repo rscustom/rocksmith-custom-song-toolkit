@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using RocksmithToTabLib;
-using RocksmithToolkitLib.Song2014ToTab;
+﻿﻿﻿﻿﻿using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
+﻿﻿﻿﻿﻿using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 ﻿﻿﻿﻿﻿﻿using System.Linq;
 

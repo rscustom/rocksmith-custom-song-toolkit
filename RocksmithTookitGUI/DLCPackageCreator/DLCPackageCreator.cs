@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Xml;
 
 using Ookii.Dialogs;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using X360.STFS;
 
 using RocksmithToolkitLib;
@@ -227,6 +228,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public DLCPackageCreator()
         {
             InitializeComponent();
+            arrangementLB.AllowDrop = true;
             audioQualityBox.MouseEnter += audioQualityBox_MouseEnter;
             rbConvert.MouseEnter += rbConvert_MouseEnter;
             songVolumeBox.MouseEnter += songVolumeBox_MouseEnter;
@@ -335,12 +337,27 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void arrangementRemoveButton_Click(object sender, EventArgs e)
         {
+            if (arrangementLB.SelectedItem == null)
+                return;
+
             if (MessageBox.Show("Are you sure to delete the selected arrangement?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 return;
 
-            if (arrangementLB.SelectedItem != null)
-                arrangementLB.Items.Remove(arrangementLB.SelectedItem);
+            // regenerate new showlights arrangement 
+            if (arrangementLB.SelectedItem.ToString().ToLower().Contains("showlight"))
+            {
+                var packageData = GetPackageData();
+                foreach (var arr in packageData.Arrangements)
+                    if (arr.ArrangementType == ArrangementType.ShowLight)
+                    {
+                        File.Delete(arr.SongXml.File);
+                        arr.SongXml.File = null; // forces regeneration of shl                        
+                    }
+            }
+
+            arrangementLB.Items.Remove(arrangementLB.SelectedItem);
         }
+
         //TODO: allow to choose audio for each arrangement separately. #Lessons, #Multitracks
         private void openAudioButton_Click(object sender, EventArgs e)
         {
@@ -385,6 +402,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
             }
+
+            // added on/off feature for debugging 
+            // showlights cause in game hanging for some RS1-RS2 conversions
+            packageData.Showlights = chkShowlights.Checked;
 
             //Generate metronome arrangemnts here
             var mArr = new List<Arrangement>();
@@ -621,20 +642,34 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             try
             {
                 using (var stm = new XmlTextReader(dlcLoadPath))
-                {
                     info = new DataContractSerializer(typeof(DLCPackageData)).ReadObject(stm) as DLCPackageData;
+
+                if (info == null) throw new InvalidDataException("CDLC Template is null");
+
+                // use AppId to determine GameVersion of dlc.xml template
+                RS2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
+                RS2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
+
+                if (RS2014.Checked)
+                {
+                    // check and fix the template compatablity if necessary
+                    var templateString = File.ReadAllText(dlcLoadPath);
+
+                    if (templateString.Contains("Manifest.Tone\">"))
+                    {
+                        templateString = templateString.Replace("Manifest.Tone\">", "Manifest2014.Tone\">");
+                        File.WriteAllText(dlcLoadPath, templateString, Encoding.UTF8);
+
+                        using (var stm = new XmlTextReader(dlcLoadPath))
+                            info = new DataContractSerializer(typeof(DLCPackageData)).ReadObject(stm) as DLCPackageData;
+                    }
                 }
-                if (info == null) throw new InvalidDataException("CDLC Template Is Null");
             }
             catch (Exception se)
             {
                 MessageBox.Show("Can't load CDLC Template because it's not compatible with new CDLC Template format. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            // use AppId to determine GameVersion of dlc.xml template
-            RS2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
-            RS2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
 
             FillPackageCreatorForm(info, dlcLoadPath);
 
@@ -1450,8 +1485,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public void toneAddButton_Click(object sender = null, EventArgs e = null)
         {
             var tone = CreateNewTone();
-            using (var form = new ToneForm())
+            using (var form = new ToneForm() { Text = "Add Tuning" })
             {
+                form.EditMode = false;
                 form.CurrentGameVersion = CurrentGameVersion;
                 form.toneControl1.CurrentGameVersion = CurrentGameVersion;
                 form.toneControl1.Init();
@@ -1531,8 +1567,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dynamic tone = tonesLB.SelectedItem;
                 string toneName = tone.Name;
 
-                using (var form = new ToneForm())
+                using (var form = new ToneForm() { Text = "Edit Tone" })
                 {
+                    form.EditMode = true;
                     var currentGameVersion = CurrentGameVersion != GameVersion.RS2012 ? GameVersion.RS2014 : GameVersion.RS2012;
                     form.CurrentGameVersion = currentGameVersion;
                     form.toneControl1.CurrentGameVersion = currentGameVersion;
@@ -1568,7 +1605,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         {
                             var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);
 
-                            // determine correct tone.id
+                            // tested ... this reduces in game hangs
+                            // determine correct Tone.Id and update XML
                             Int32 toneId = 0;
                             // recognize that ToneBase alpha case mismatches do exist and process it                                 
                             if (toneName.ToLower() == arrangement.ToneBase.ToLower())
@@ -2023,5 +2061,73 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             userChangesToInputControls++;
         }
 
+        private void btnQuickAdd_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Quick Add ... Multiselect Arrangments";
+                ofd.Filter = "Rocksmith Song Xml Files (*.xml)|*.xml";
+                ofd.Multiselect = true;
+                if (ofd.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                string[] xmlFilePaths = ofd.FileNames;
+                LoadArrangements(xmlFilePaths);
+            }
+        }
+        private void LoadArrangements(string[] filePaths)
+        {
+            foreach (var filePath in filePaths)
+            {
+                Arrangement arrangement = null;
+                using (var form = new ArrangementForm(this, CurrentGameVersion))
+                {
+                    form.EditMode = false;
+                    if (!form.LoadXmlArrangement(filePath))
+                        continue;
+
+                    form.LoadArrangementData(filePath);
+
+                    //if (!form.LoadArrangementData(filePath))
+                    //{
+                    //    MessageBox.Show(@"Unable load XML arrangement:" + Environment.NewLine + 
+                    //        Path.GetFileName(filePath), DLCPackageCreator.MESSAGEBOX_CAPTION, 
+                    //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //    continue;
+                    //}
+
+                    arrangement = form.Arrangement;
+                }
+
+                if (arrangement == null)
+                    return;
+
+                arrangementLB.Items.Add(arrangement);
+            }
+        }
+
+        private void btnQuickAdd_MouseEnter(object sender, EventArgs e)
+        {
+            tt.ToolTipTitle = "USAGE TIP:";
+            tt.ToolTipIcon = ToolTipIcon.Info;
+            tt.IsBalloon = true;
+            tt.InitialDelay = 0;
+            tt.ShowAlways = true;
+
+            tt.SetToolTip(btnQuickAdd,
+               "Add multiple arrangments quickly. Use the " + Environment.NewLine +
+               "file dialog to multiselect arrangements." + Environment.NewLine +
+               "The first arrangement selected will be used to" + Environment.NewLine +
+               "populated the song information on this form." + Environment.NewLine +
+               "Select the bass arrangement first if there is one. " + Environment.NewLine +
+               "Don't forget to update individual tuning, tone" + Environment.NewLine +
+               "and arrangement information using Edit later.");
+            tt.Show("", this, 20000); // show for 20 seconds
+        }
+
+
     }
+
 }

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.IO;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib;
@@ -422,6 +423,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // If have ToneBase and ToneB is setup it's because auto tone are setup in EoF, so, disable edit to prevent errors.
             disableTonesCheckbox.Checked = (!String.IsNullOrEmpty(arr.ToneBase) && !String.IsNullOrEmpty(arr.ToneB));
+            if (disableTonesCheckbox.Checked && !EditMode)
+                disableTonesCheckbox.Enabled = false;
         }
 
         private void SequencialToneComboEnabling()
@@ -466,15 +469,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return;
                 }
 
-                if (isAlreadyAdded(ofd.FileName))
-                {
-                    MessageBox.Show("This arrangement already added, please choose another one. ", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
                 XmlFilePath.Text = ofd.FileName;
+                string xmlFilePath = XmlFilePath.Text;
+                LoadXmlArrangement(xmlFilePath);
             }
+        }
 
-            string xmlFilePath = XmlFilePath.Text;
+        public bool LoadXmlArrangement(string xmlFilePath)
+        {
+            if (isAlreadyAdded(xmlFilePath))
+            {
+                MessageBox.Show(@"XML Arrangement: " + Path.GetFileName(xmlFilePath) + "   " + Environment.NewLine +
+                    @"has already been added.  Please choose a new file. ",
+                    DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
 
             try
             {
@@ -493,8 +502,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         isShowlight = true;
                     else
                     {
-                        MessageBox.Show("Unable to get information from the arrangement XML. \nYour version of the EoF is up to date? \n" + ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                        MessageBox.Show(@"Unable to get information from XML arrangement:  " + Environment.NewLine +
+                            Path.GetFileName(xmlFilePath) + Environment.NewLine +
+                            @"It may not be a valid arrangment or " + Environment.NewLine +
+                            @"your version of the EOF may be out of date." + Environment.NewLine +
+                            ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
                     }
                 }
 
@@ -537,7 +550,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         currentGameVersion = GameVersion.RS2014;
                     }
                     else
-                        MessageBox.Show("You are using a old version of EoF application, please update first.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Your version of EOF may be out of date, please update.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                     // TODO: fix error checking logic for new types of conversion
                     if (currentGameVersion != version && version != GameVersion.None)
@@ -633,10 +646,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         }
                     }
 
-                    if (foundTuning == -1)
+                    if (foundTuning == -1 && selectedType != ArrangementType.Bass)
                         ShowTuningForm(selectedType, new TuningDefinition { Tuning = xmlSong.Tuning, Custom = true, GameVersion = currentGameVersion });
                     else
-                        tuningComboBox.SelectedIndex = foundTuning;
+                    {
+                        if (selectedType == ArrangementType.Bass)
+                        {
+                            MessageBox.Show(@"Remember to set the correct tuning using Edit for" + Environment.NewLine +
+                                @"Bass Arrangement: " + Path.GetFileName(xmlFilePath),
+                                DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                            tuningComboBox.SelectedIndex = 0;
+                        }
+                        else
+                            tuningComboBox.SelectedIndex = foundTuning;
+                    }
 
                     tuningComboBox.Refresh();
 
@@ -664,9 +688,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to get information from the arrangement XML. \nYour version of the EoF is up to date? \n" + ex.Message,
-                                DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(@"Unable to get information from XML arrangement:  " + Environment.NewLine +
+                    Path.GetFileName(xmlFilePath) + Environment.NewLine +
+                    @"It may not be a valide arrangment or " + Environment.NewLine +
+                    @"your version of the EOF may be out of date." + Environment.NewLine +
+                    ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
             }
+            return true;
         }
 
         private void OkButton_Click(object sender, EventArgs e)
@@ -692,6 +721,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
+            LoadArrangementData(xmlfilepath);
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        public bool LoadArrangementData(string xmlfilepath)
+        {
             //Song XML File
             Arrangement.SongXml.File = xmlfilepath;
 
@@ -752,8 +788,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             else
                 Arrangement.MasterId = masterId;
 
-            DialogResult = DialogResult.OK;
-            Close();
+            return true;
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -872,3 +907,4 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
     }
 }
+

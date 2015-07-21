@@ -5,9 +5,11 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
+using RocksmithToolkitLib.DLCPackage.AggregateGraph2014;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib;
+using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage.XBlock
 {
@@ -20,10 +22,15 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
         [XmlArrayItem("entity")]
         public List<T> EntitySet { get; set; }
 
-        public static GameXblock<T> LoadFromFile(string xblockFile) {
+        // TODO: Fix this method ... throws error when <T> is <Entity>
+        // works when <T> is <Entity2014> but does not deserialize RS1 xblock completely
+        // Use XblockX.cs LoadFromFile method for now
+        public static GameXblock<T> LoadFromFile(string xblockFile)
+        {
             GameXblock<T> xblock = null;
 
-            using (var reader = new StreamReader(xblockFile)) {
+            using (var reader = new StreamReader(xblockFile))
+            {
                 var serializer = new XmlSerializer(typeof(GameXblock<T>));
                 xblock = (GameXblock<T>)serializer.Deserialize(reader);
             }
@@ -31,22 +38,26 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
             return xblock;
         }
 
-        public GameXblock() {
+        public GameXblock()
+        {
             EntitySet = new List<T>();
         }
 
         #region RS2014
 
-        public static GameXblock<Entity2014> Generate2014(DLCPackageData info, Platform platform, DLCPackageType dlcType = DLCPackageType.Song) {
+        public static GameXblock<Entity2014> Generate2014(DLCPackageData info, Platform platform, DLCPackageType dlcType = DLCPackageType.Song)
+        {
             GameXblock<Entity2014> game = new GameXblock<Entity2014>();
             game.EntitySet = new List<Entity2014>();
 
             var dlcName = info.Name.ToLower();
             var songPartition = new SongPartition();
 
-            switch (dlcType) {
+            switch (dlcType)
+            {
                 case DLCPackageType.Song:
-                    foreach (var arrangement in info.Arrangements) {
+                    foreach (var arrangement in info.Arrangements)
+                    {
                         var entity = new Entity2014();
                         var arrangementFileName = songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType);
 
@@ -57,11 +68,11 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
 
                         entity.Properties = new List<Property2014>();
                         if (platform.IsConsole)
-                            entity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsonDB.GetDescription(), String.Format(AggregateGraph2014.NAME_ARRANGEMENT, dlcName, arrangementFileName.ToLower())) } });
+                            entity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsonDB.GetDescription(), String.Format(AggregateGraph2014.AggregateGraph2014.NAME_ARRANGEMENT, dlcName, arrangementFileName.ToLower())) } });
                         else
                             entity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsanDB.GetDescription(), String.Format("songs_dlc_{0}", dlcName)) } });
-                        entity.Properties.Add(new Property2014() { Name = "Manifest", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), String.Format(AggregateGraph2014.NAME_ARRANGEMENT, dlcName, arrangementFileName.ToLower())) } });
-                        entity.Properties.Add(new Property2014() { Name = "SngAsset", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.NAME_ARRANGEMENT, dlcName, arrangementFileName.ToLower())) } });
+                        entity.Properties.Add(new Property2014() { Name = "Manifest", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), String.Format(AggregateGraph2014.AggregateGraph2014.NAME_ARRANGEMENT, dlcName, arrangementFileName.ToLower())) } });
+                        entity.Properties.Add(new Property2014() { Name = "SngAsset", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.MusicgameSong.GetDescription(), String.Format(AggregateGraph2014.AggregateGraph2014.NAME_ARRANGEMENT, dlcName, arrangementFileName.ToLower())) } });
                         entity.Properties.Add(new Property2014() { Name = "AlbumArtSmall", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}_64", dlcName)) } });
                         entity.Properties.Add(new Property2014() { Name = "AlbumArtMedium", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}_128", dlcName)) } });
                         entity.Properties.Add(new Property2014() { Name = "AlbumArtLarge", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}_256", dlcName)) } });
@@ -69,7 +80,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                             entity.Properties.Add(new Property2014() { Name = "LyricArt", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("lyrics_{0}", dlcName)) } });
                         else
                             entity.Properties.Add(new Property2014() { Name = "LyricArt", Set = new Set() { Value = "" } });
-                        entity.Properties.Add(new Property2014() { Name = "ShowLightsXMLAsset", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format(AggregateGraph2014.NAME_SHOWLIGHT, dlcName)) } });
+                        entity.Properties.Add(new Property2014() { Name = "ShowLightsXMLAsset", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format(AggregateGraph2014.AggregateGraph2014.NAME_SHOWLIGHT, dlcName)) } });
                         entity.Properties.Add(new Property2014() { Name = "SoundBank", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Audio.GetDescription(), TagValue.WwiseSoundBank.GetDescription(), String.Format("song_{0}", dlcName)) } });
                         entity.Properties.Add(new Property2014() { Name = "PreviewSoundBank", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Audio.GetDescription(), TagValue.WwiseSoundBank.GetDescription(), String.Format("song_{0}_preview", dlcName)) } });
 
@@ -94,7 +105,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                         inlayEntity.Properties.Add(new Property2014() { Name = "Header", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.HsanDB.GetDescription(), String.Format("dlc_{0}", dlcName)) } });
                     inlayEntity.Properties.Add(new Property2014() { Name = "Manifest", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Database.GetDescription(), TagValue.JsonDB.GetDescription(), String.Format("dlc_guitar_{0}", dlcName)) } });
                     inlayEntity.Properties.Add(new Property2014() { Name = "PreviewArt", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("reward_inlay_{0}", dlcName)) } });
-// 
+                    // 
                     inlayEntity.Properties.Add(new Property2014() { Name = "DecorativeInlays", Set = new Set() { Value = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.GamebryoSceneGraph.GetDescription(), dlcName) } });
                     game.EntitySet.Add(inlayEntity);
                     break;
@@ -103,7 +114,8 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
             return game;
         }
 
-        public void SerializeXml(Stream outStream) {
+        public void SerializeXml(Stream outStream)
+        {
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
             var serializer = new XmlSerializer(typeof(GameXblock<T>));
@@ -114,7 +126,8 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
 
         #region RS1
 
-        public void Serialize(Stream outStream) {
+        public void Serialize(Stream outStream)
+        {
             var document = new XDocument();
             var el = new XElement("entitySet");
             foreach (var x in EntitySet)
@@ -123,12 +136,14 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
             document.Save(outStream);
         }
 
-        public static void Generate(string dlcName, Manifest.Manifest manifest, AggregateGraph.AggregateGraph aggregateGraph, Stream outStream) {
+        public static void Generate(string dlcName, Manifest.Manifest manifest, AggregateGraph.AggregateGraph aggregateGraph, Stream outStream)
+        {
             var game = new GameXblock<Entity>();
             game.EntitySet = new List<Entity>();
             var ent = new Entity() { Id = IdGenerator.Guid().ToString().Replace("-", ""), Name = "SoundScene0", Iterations = 1, ModelName = "SoundScene", Properties = new List<Property>() { CreateMultiItemProperty("SoundBanks", new string[1] { aggregateGraph.SoundBank.Name + ".bnk" }) } };
             game.EntitySet.Add(ent);
-            foreach (var x in manifest.Entries) {
+            foreach (var x in manifest.Entries)
+            {
                 var entry = x.Value["Attributes"];
                 var entity = new Entity();
                 bool isVocal = entry.ArrangementName == "Vocals";
@@ -160,7 +175,8 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                 addProperty("ArrangementName", entry.ArrangementName);
                 addProperty("RepresentativeArrangement", entry.RepresentativeArrangement);
 
-                if (!isVocal && !String.IsNullOrEmpty(entry.VocalsAssetId)) {
+                if (!isVocal && !String.IsNullOrEmpty(entry.VocalsAssetId))
+                {
                     addProperty("VocalsAssetId", entry.VocalsAssetId.Split(new string[1] { "|" }, StringSplitOptions.RemoveEmptyEntries)[0]);
 
                     var dynVisDen = new List<object>();
@@ -177,7 +193,8 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                 addProperty("AlbumNameSort", entry.AlbumNameSort);
                 addProperty("SongYear", entry.SongYear);
 
-                if (!isVocal) {
+                if (!isVocal)
+                {
                     addProperty("RelativeDifficulty", entry.RelativeDifficulty);
                     addProperty("AverageTempo", entry.AverageTempo);//fix this
 
@@ -205,11 +222,13 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
             game.Serialize(outStream);
         }
 
-        private static Property CreateProperty(string name, string value) {
+        private static Property CreateProperty(string name, string value)
+        {
             return new Property() { Name = name, Set = new Set() { Value = value } };
         }
 
-        private static Property CreateMultiItemProperty(string name, IEnumerable<object> values) {
+        private static Property CreateMultiItemProperty(string name, IEnumerable<object> values)
+        {
             var prop = new Property() { Name = name };
             var multiItemSet = new MultiItemSet();
             multiItemSet.Values = new List<string>();

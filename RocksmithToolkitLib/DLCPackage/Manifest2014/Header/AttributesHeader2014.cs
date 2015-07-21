@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Reflection;
-
 using Newtonsoft.Json;
+using RocksmithToolkitLib.DLCPackage.AggregateGraph2014;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
-using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.Extensions;
-using System.Security.Principal;
 
-namespace RocksmithToolkitLib.DLCPackage.Manifest.Header
+namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
 {
     public class AttributesHeader2014
     {

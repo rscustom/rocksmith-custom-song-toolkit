@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.Xml;
@@ -54,7 +55,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public Sng2014File Sng2014 { get; set; }
         // Gameplay Path
         public RouteMask RouteMask { get; set; }
-        public bool BonusArr = false;
+        public bool BonusArr { get; set; } // = false;
         // Tone Selector
         public string ToneBase { get; set; }
         public string ToneMultiplayer { get; set; }
@@ -65,10 +66,10 @@ namespace RocksmithToolkitLib.DLCPackage
         // DLC ID
         public Guid Id { get; set; }
         public int MasterId { get; set; }
-        // Motronome.
+        // Motronome
         public Metronome Metronome { get; set; }
         // preserve EOF and DDS comments
-        [IgnoreDataMember] // required for SaveTemplate feature
+        [IgnoreDataMember] // required for SaveTemplate feature to work
         public IEnumerable<XComment> XmlComments { get; set; }
 
         public Arrangement()

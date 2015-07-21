@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Xml;
 using System.IO;
 using System.Reflection;
@@ -13,9 +12,9 @@ using System.Globalization;
 using Newtonsoft.Json.Linq;
 using RocksmithToolkitLib.Extensions;
 
-namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
+namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Tone
 {
-    public class Tone2014: IEquatable<Tone2014>
+    public class Tone2014 : IEquatable<Tone2014>
     {
         public Gear2014 GearList { get; set; }
         public bool IsCustom { get; set; }
@@ -43,20 +42,33 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
             return Name;
         }
 
-        public void Serialize(string toneSavePath) {
+        public void Serialize(string toneSavePath)
+        {
             var serializer = new DataContractSerializer(typeof(Tone2014));
-            using (var stm = XmlWriter.Create(toneSavePath, new XmlWriterSettings() { CheckCharacters = true, Indent = true })) {
+            using (var stm = XmlWriter.Create(toneSavePath, new XmlWriterSettings() { CheckCharacters = true, Indent = true }))
+            {
                 serializer.WriteObject(stm, this);
             }
         }
 
         public static Tone2014 LoadFromXmlTemplateFile(string toneTemplateFilePath)
         {
+            // fix the file header if it is bad
+            var toneTemplateString = File.ReadAllText(toneTemplateFilePath);
+            if (toneTemplateString.Contains("Manifest.Tone"))
+                if (toneTemplateString.Contains("<Tone2014"))
+                {
+                    toneTemplateString = toneTemplateString.Replace("Manifest.Tone", "Manifest2014.Tone");
+                    // File.WriteAllText(toneTemplateFilePath, toneTemplateString, Encoding.UTF8);
+                }
+
             Tone2014 tone = null;
             var serializer = new DataContractSerializer(typeof(Tone2014));
-            using (var stm = new XmlTextReader(toneTemplateFilePath)) {
+
+            //using (var stm = new XmlTextReader(toneTemplateFilePath))
+            using (var stm = XmlReader.Create(new StringReader(toneTemplateString)))
                 tone = (Tone2014)serializer.ReadObject(stm);
-            }
+
             return tone;
         }
 
@@ -123,7 +135,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         private static List<Tone2014> ReadFromProfile(string profilePath)
         {
             List<Tone2014> tones = new List<Tone2014>();
-            try {
+            try
+            {
                 using (var input = File.OpenRead(profilePath))
                 using (var outMS = new MemoryStream())
                 using (var br = new StreamReader(outMS))
@@ -133,7 +146,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
                     foreach (var toon in token.SelectToken("CustomTones"))
                         tones.Add(toon.ToObject<Tone2014>());
                 }
-            } catch {
+            }
+            catch
+            {
                 throw new NotSupportedException("Unknown file format exception. File not supported.");
             }
             return tones;
@@ -141,7 +156,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 
         private static List<Tone2014> ReadFromPackage(string packagePath, Platform platform)
         {
-            if( packagePath.EndsWith("_prfldb") || packagePath.EndsWith("_profile") )
+            if (packagePath.EndsWith("_prfldb") || packagePath.EndsWith("_profile"))
                 return ReadFromProfile(packagePath);
             else
             {
@@ -153,8 +168,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 
                 var toneManifestFiles = Directory.EnumerateFiles(tmpDir, "*.json", SearchOption.AllDirectories);
                 foreach (var file in toneManifestFiles)
-                    foreach( Tone2014 tone in ReadFromManifest(file) )
-                        if( tones.All(a => a.Name != tone.Name) )
+                    foreach (Tone2014 tone in ReadFromManifest(file))
+                        if (tones.All(a => a.Name != tone.Name))
                             tones.Add(tone);
 
                 DirectoryExtension.SafeDelete(tmpDir);
@@ -166,7 +181,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         #endregion
     }
 
-    public class FloatToString: JsonConverter
+    public class FloatToString : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

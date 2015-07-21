@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Xml.Serialization;
+using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Sng2014HSL;
@@ -21,8 +22,9 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
      * 34(A#) = LtBlue(D like);            35(B)  = Dark Violet(F like)
      * 
      * Unknown: 36-41
-     * (?)Spotlights/colors/effects: 42-59
-     * (?)Laser lights: 66-67
+     * (?) Spotlights/colors/effects: 42-59
+     * TODO: (?) Game hangs caused by 60-62
+     * (?) Laser lights: 66-67
      * 
      * Need to define Fog Color + stage lights before Venue shows up (Time = 0-10)
      */
@@ -50,22 +52,31 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         public Showlights(DLCPackageData info)
             : this()
         {
-            if (info.Arrangements.Any(a => a.ArrangementType == ArrangementType.Bass))
+            // using max difficulty level and
+            // arrangement with most notes and chords for good results
+            // bass arrangement usually has few chords so not much use 
+            int maxArrNdx = 0;
+            int maxNoteChordCount = 0;
+            for (int i = 0; i < info.Arrangements.Count; i++)
             {
-                DoTheThing(info, info.Arrangements.First(ar => ar.ArrangementType == ArrangementType.Bass));
-                return;
+                if (info.Arrangements[i].ArrangementType == ArrangementType.Vocal)
+                    continue;
+                if (info.Arrangements[i].ArrangementType == ArrangementType.ShowLight)
+                    continue;
+                if (info.Arrangements[i].SongXml.File == null)
+                    continue;
+                // use max difficulty level with most notes and chords
+                var song = Song2014.LoadFromFile(info.Arrangements[i].SongXml.File);
+                var mf = new ManifestFunctions(GameVersion.RS2014);
+                int maxDif = mf.GetMaxDifficulty(song);
+                int noteCount = song.Levels[maxDif].Notes.Count();
+                int chordCount = song.Levels[maxDif].Chords.Count();
+                int noteChordCount = noteCount + chordCount;
+                if (noteChordCount > maxNoteChordCount)
+                    maxArrNdx = i;
             }
 
-            foreach (var arrangement in info.Arrangements) {
-                if (arrangement.ArrangementType == ArrangementType.Vocal)
-                    continue;
-                if (arrangement.ArrangementType == ArrangementType.ShowLight)
-                    continue;
-                if (arrangement.SongXml.File == null)
-                    continue;
-
-                DoTheThing(info, arrangement);
-            }
+            DoTheThing(info, info.Arrangements[maxArrNdx]);
         }
 
         private void DoTheThing(DLCPackageData info, Arrangement arrangement)
@@ -89,10 +100,12 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
             FixShowlights(ShowlightList);
             Count = ShowlightList.Count;
-            using (var writer = System.Xml.XmlWriter.Create(stream, new System.Xml.XmlWriterSettings {
+            using (var writer = System.Xml.XmlWriter.Create(stream, new System.Xml.XmlWriterSettings
+            {
                 Indent = true,
                 OmitXmlDeclaration = false,
-                Encoding = new UTF8Encoding(false) }))
+                Encoding = new UTF8Encoding(false)
+            }))
             {
                 new XmlSerializer(typeof(Showlights)).Serialize(writer, this, ns);
             }
@@ -103,42 +116,39 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
         private void GetShowlights(string showlightsfile)
         {
-            PopShList(showlightsfile.ToLower().Contains("_showlights")
-                ? LoadFromFile(showlightsfile)
-                : Generate(showlightsfile));
+            PopShList(showlightsfile.ToLower().Contains("_showlights") ?
+                LoadFromFile(showlightsfile) : Generate(showlightsfile));
         }
 
         private int GetFogNote(int midiNote)
         {
-            Console.WriteLine((midiNote % 12) + (12 * 2));
+            // Console.WriteLine("GetFogNote: " + (midiNote % 12) + (12 * 2));
             return (midiNote % 12) + (12 * 2);
         }
 
         private int GetBeamNote(int midiNote)
         {
-            Console.WriteLine((midiNote % 12) + (12 * 4));
+            // Console.WriteLine("GetBeamNote: " + (midiNote % 12) + (12 * 4));
             return (midiNote % 12) + (12 * 4);
         }
 
         public bool FixShowlights(Showlights shl)
         {
-            Console.WriteLine(shl.ShowlightList.ToString());
+            // Console.WriteLine("FixShowlights: " + shl.ShowlightList.ToString());
             return FixShowlights(shl.ShowlightList);
         }
 
-        /* Add to list logic
-         * if (i+1 == List.Count) List.Add(objectToAdd);
-         * else List.Insert(i+1, objectToAdd);
-         */
         public bool FixShowlights(List<Showlight> showlightList)
         {
             if (showlightList.Count == 0) return true;
 
             //Setup Stage Fog Color
-            if (showlightList[0].Time > 10.0F) {
+            if (showlightList[0].Time > 10.0F)
+            {
                 showlightList.Insert(0, new Showlight { Note = GetFogNote(showlightList[0].Note), Time = 10.0F });
             }
-            else if (showlightList[0].Note < 24 || showlightList[0].Note > 35) {
+            else if (showlightList[0].Note < 24 || showlightList[0].Note > 35)
+            {
                 showlightList[0].Note = GetFogNote(showlightList[0].Note);
             }
             //Setup Stage lights
@@ -168,13 +178,17 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                     continue;
                 }
 
+                // TODO: notes 42 to 65 range? cause RS1->RS2 in game hangs
                 //For all notes > 67 || note in range [36..41] translate it to Beam\spotlight, range [42..59]
-                if (showlightList[i].Note < 24 || showlightList[i].Note > 35 && showlightList[i].Note < 42 || showlightList[i].Note > 67)
+                if (showlightList[i].Note < 24 ||
+                    showlightList[i].Note > 35 && showlightList[i].Note < 42 ||
+                    showlightList[i].Note > 67)
                 {
                     showlightList[i].Note = GetBeamNote(showlightList[i].Note);
                     continue;//useless for now
                 }
             }
+
             //Forced laser effect for last note (we probablty couldn't see it)
             showlightList[showlightList.Count - 1].Note = 66;
 
@@ -182,7 +196,8 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         }
 
         /// <summary>
-        /// Poorly written sowlights generator, lots of things missing.
+        /// Showlights Generator Rev2
+        /// max difficulty with most notes and chords
         /// </summary>
         /// <param name="xmlFile">Xml file.</param>
         public Showlights Generate(string xmlFile)
@@ -197,30 +212,22 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
 
             if (song.Levels != null)
             {
-                foreach (var lvl in song.Levels)
+                var mf = new ManifestFunctions(GameVersion.RS2014);
+                int maxDif = mf.GetMaxDifficulty(song);
+
+                for (int i = 0; i < song.Levels[maxDif].Notes.Length; i++)
                 {
-                    for (int i = 0; i + 1 <= lvl.Notes.Length; i++)
-                    {
-                        var mNote = Sng2014FileWriter.GetMidiNote(tuning,
-                            (Byte)lvl.Notes[i].String,
-                            (Byte)lvl.Notes[i].Fret,
-                            song.Arrangement == "Bass",
-                            song.Capo);
+                    var mNote = Sng2014FileWriter.GetMidiNote(tuning, (Byte)song.Levels[maxDif].Notes[i].String, (Byte)song.Levels[maxDif].Notes[i].Fret, song.Arrangement == "Bass", song.Capo);
+                    midiNotes.Add(new Showlight { Time = song.Levels[maxDif].Notes[i].Time, Note = mNote });
+                }
 
-                        midiNotes.Add(new Showlight { Time = lvl.Notes[i].Time, Note = mNote });
-                    }
-                    for (int i = 0; i + 1 <= lvl.Chords.Length; i++)
-                    {
-                        if (lvl.Chords[i].HighDensity == 1)
-                            continue; //speedhack
+                for (int i = 0; i < song.Levels[maxDif].Chords.Length; i++)
+                {
+                    if (song.Levels[maxDif].Chords[i].HighDensity == 1)
+                        continue; //speedhack
 
-                        int mNote = Sng2014FileWriter.getChordNote(tuning,
-                            lvl.Chords[i], song.ChordTemplates,
-                            song.Arrangement == "Bass",
-                            song.Capo);
-
-                        chordNotes.Add(new Showlight { Time = lvl.Chords[i].Time, Note = mNote });
-                    }
+                    int mNote = Sng2014FileWriter.getChordNote(tuning, song.Levels[maxDif].Chords[i], song.ChordTemplates, song.Arrangement == "Bass", song.Capo);
+                    chordNotes.Add(new Showlight { Time = song.Levels[maxDif].Chords[i].Time, Note = mNote });
                 }
             }
 
@@ -265,5 +272,8 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
                 return new Extensions.XmlStreamingDeserializer<Showlights>(reader).Deserialize();
             }
         }
+
     }
 }
+
+

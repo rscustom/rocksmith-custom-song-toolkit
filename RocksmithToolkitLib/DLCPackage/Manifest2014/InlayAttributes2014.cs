@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
-using RocksmithToolkitLib.DLCPackage.Manifest.Header;
-using RocksmithToolkitLib.DLCPackage.AggregateGraph;
+using RocksmithToolkitLib.DLCPackage.AggregateGraph2014;
 using RocksmithToolkitLib.Extensions;
 
-namespace RocksmithToolkitLib.DLCPackage.Manifest
+namespace RocksmithToolkitLib.DLCPackage.Manifest2014
 {
     public class InlayAttributes2014 {
         private static readonly string URN_TEMPLATE = "urn:{0}:{1}:{2}";

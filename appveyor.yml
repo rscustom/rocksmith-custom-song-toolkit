@@ -20,8 +20,8 @@ install:
 
 after_build:
   - rem Code signing
-  - ps: Start-FileDownload $env:cert_url
-  - signtool sign /v /f selfsigned.pfx /p %cert_pass% /t http://timestamp.verisign.com/scripts/timstamp.dll "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\Release\RocksmithToolkitGUI.exe" "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\Release\RocksmithToolkitUpdater.exe"
+  - ps: if ($env:cert_url) { Start-FileDownload $env:cert_url }
+  - if defined cert_url signtool sign /v /f selfsigned.pfx /p %cert_pass% /t http://timestamp.verisign.com/scripts/timstamp.dll "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\Release\RocksmithToolkitGUI.exe" "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\Release\RocksmithToolkitUpdater.exe"
   - rem Windows package
   - 7z a Windows.zip %APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\Release\*
   - rem Mac package

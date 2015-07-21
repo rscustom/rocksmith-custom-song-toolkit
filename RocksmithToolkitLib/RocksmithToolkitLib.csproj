@@ -32,7 +32,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseMac|x86'">
     <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\x86\ReleaseMac\</OutputPath>
+    <OutputPath>bin\ReleaseMac\</OutputPath>
     <PreBuildEvent>"$(ProjectDir)../prebuild.sh" "$(ProjectDir).." "$(ProjectDir)ToolkitVersion.cs"</PreBuildEvent>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
@@ -79,6 +79,7 @@
     <Compile Include="DLCPackage\Manifest\Tone\Pedal.cs" />
     <Compile Include="DLCPackage\Manifest\Tone\Tone.cs" />
     <Compile Include="DLCPackage\Showlight\Showlights.cs" />
+    <Compile Include="DLCPackage\XBlock\XblockX.cs" />
     <Compile Include="Extensions\ExternalApps.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
     <Compile Include="Ogg\Wwise.cs" />
@@ -248,15 +249,18 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <PreBuildEvent>CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'ReleaseMac'">
-    <PreBuildEvent>"$(ProjectDir)../prebuild.sh" "$(ProjectDir).." "$(ProjectDir)ToolkitVersion.cs"</PreBuildEvent>
-  </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>IF NOT $(ConfigurationName) == ReleaseMac (
+    CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"
+)
+
+IF $(ConfigurationName) == ReleaseMac (
+    "$(ProjectDir)../prebuild.sh" "$(ProjectDir)" "$(ProjectDir)ToolkitVersion.cs"
+)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

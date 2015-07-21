@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NDesk.Options;
 using RocksmithToolkitLib.DLCPackage;
+using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.Sng2014HSL;
 using MiscUtil.Conversion;
 using RocksmithToolkitLib;

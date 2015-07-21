@@ -25,7 +25,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
         public List<object> ExclusiveBuild { get; set; }
         public bool IsDLC { get; set; }
         public bool IsPreviewOnlyItem { get; set; }
-        public string Key { get; set; }
+        public string Key { get; set; } // aka EffectChainName in song.manifest
         public string Name { get; set; }
         public Dictionary<string, Pedal> PedalList { get; set; }
         public string PersistentID { get; set; }

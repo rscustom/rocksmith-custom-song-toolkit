@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
@@ -31,5 +32,6 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                 x.Serialize(el);
             element.Add(el);
         }
+
     }
 }
