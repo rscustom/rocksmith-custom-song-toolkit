@@ -297,7 +297,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             // chordTemplate = chordTemplate.Distinct().ToList();
 
             // tested ... could be source of game hangs
-            if (chordTemplate.Count < 2 && String.IsNullOrEmpty(rsSong.ChordTemplates[0].ChordName))
+            if (rsSong.ChordTemplates == null)
             {
                 Console.WriteLine("Applied fix to RS1->RS2 ChordTemplates conversion");
                 rsSong2014.ChordTemplates = new SongChordTemplate2014[0];
@@ -517,7 +517,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
         #region RS1 Tone to RS2 Tone2014
 
-        public Tone2014 ToneToTone2014(Tone rs1Tone)
+        public Tone2014 ToneToTone2014(Tone rs1Tone, Song rs1Song)
         {
             Tone2014 tone2014 = new Tone2014();
             Pedal2014 amp = new Pedal2014();
@@ -682,18 +682,12 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 rack1.Category = "Filter";
                 rack1.PedalKey = "Rack_StudioEQ";
 
-                tone2014.GearList = new Gear2014()
-                {
-                    Amp = amp,
-                    Cabinet = cabinet,
-                    Rack1 = rack1
-                };
+                tone2014.GearList = new Gear2014() { Amp = amp, Cabinet = cabinet, Rack1 = rack1 };
             }
-            else // default acoustic is better than nothing, right
+            else // default acoustic is better than nothing
             {
                 // this is fix for bad RS1 CDLC tones
-                tone2014.Name = "Default_acoustic";
-                tone2014.Key = "DEFAULT_ACOUSTIC";
+                tone2014.Key = "DEFAULT";
                 //
                 tone2014.ToneDescriptors.Add("$[35721]ACOUSTIC");
                 amp.Type = "Amps";
