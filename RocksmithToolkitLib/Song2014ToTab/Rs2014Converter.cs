@@ -319,7 +319,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                 for (var j = 0; j < rs2014Song.Levels[i].Notes.Count(); j++)
                 {
                     rs1Song.Levels[i].Notes[j].Time = rs2014Song.Levels[i].Notes[j].Time;
-                    rs1Song.Levels[i].Notes[j].Bend = rs2014Song.Levels[i].Notes[j].Bend;
+                    rs1Song.Levels[i].Notes[j].Bend = (int)rs2014Song.Levels[i].Notes[j].Bend;
                     rs1Song.Levels[i].Notes[j].Fret = rs2014Song.Levels[i].Notes[j].Fret;
                     rs1Song.Levels[i].Notes[j].HammerOn = rs2014Song.Levels[i].Notes[j].HammerOn;
                     rs1Song.Levels[i].Notes[j].Harmonic = rs2014Song.Levels[i].Notes[j].Harmonic;
