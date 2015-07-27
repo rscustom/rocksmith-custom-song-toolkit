@@ -24,12 +24,18 @@ local string PLAY = "Play_";
 local string SONG = "Song_";
 local uint wem_count;
 
-typedef struct{   
+// bool
+typedef byte bool <read=b>;
+string b( bool &r ){
+    return r > 0 ? "true" : "false";
+}
+
+typedef struct{
 //common
     char chunk_magic[4];
     uint chunk_len <format=hex>;
 //chunk_data[chunk_len]
-    uint bnk_version;//91
+    uint bnk_version;//91=RS2014, 56=RS1
     uint soundbankID;
     uint languageID;//0
     uint hasFeedback;//0
@@ -46,7 +52,7 @@ typedef struct{
       uint fileID;
       uint fileOffset;//from DATA section
       uint fileSize;
-    } wem[wem_count];                                                   
+    } wem[wem_count];
 } chunk_didx;
 
 //#include <WAVTemplateAdv.bt>
@@ -62,16 +68,239 @@ typedef struct{
     RIFF chunk_data(chunk_len);//wem file size varies
 } chunk_data;
 
+typedef enum<byte>{
+    Voice_Volume = 00,
+    Voice_Pitch = 02,
+    Voice_LowPassFilter = 03,
+    Bus_Volume = 04
+} stType;
+typedef struct{
+    uint32 settingsID;
+    byte settingsNum; 
+    stType settingType[settingsNum];
+    float settingValue[settingsNum];
+} chunk_1;
+
+typedef enum<uint32>{
+    Emedded = 0,
+    Streamed = 1,
+    Prefetched = 2//zero latency
+} aType;
+typedef enum<byte>{
+    SFX = 0,
+    Voice = 1
+} sType;
+typedef enum<byte>{//Bitmask
+    BypassEffect0 = 1,
+    BypassEffect1 = 2,
+    BypassEffect2 = 4,
+    BypassEffect3 = 8,
+    BypassAll = 16
+} mType;
+typedef enum<byte>{
+/* General Settings, Advanced Settings, Playback Priority, Motion, Positioning*/
+    GSV_Volume = 00,
+    GSV_Pitch = 02h,
+    GSV_LowPassFilter = 03h,
+    ASPP_Priority = 05h,
+    /*
+    00 = General Settings: Voice: Volume, float
+    02 = General Settings: Voice: Pitch, float
+    03 = General Settings: Voice: Low-pass filter, float
+    05 = Advanced Settings: Playback Priority: Priority, float
+    06 = Advanced Settings: Playback Priority: Offset priority by ... at max distance, float
+
+    07: whether to Loop, given as uint32 = number of loops, or infinite if the value is 0
+    08 = Motion: Audio to Motion Settings: Motion Volume Offset, float
+    0B = Positioning: 2D: Panner X-coordinate, float
+    0C = Positioning: 2D: Panner X-coordinate, float
+    0D = Positioning: Center %, float
+    12 = General Settings: User-Defined Auxiliary Sends: Bus #0 Volume, float
+    13 = General Settings: User-Defined Auxiliary Sends: Bus #1 Volume, float
+    14 = General Settings: User-Defined Auxiliary Sends: Bus #2 Volume, float
+    15 = General Settings: User-Defined Auxiliary Sends: Bus #3 Volume, float
+    16 = General Settings: Game-Defined Auxiliary Sends: Volume, float
+    17 = General Settings: Output Bus: Volume, float
+    18 = General Settings: Output Bus: Low-pass filter, float*/
+} pType<format=hex>;
+typedef struct{
+
+typedef enum<ubyte>{
+    GO_SwitchTrigger = 01h,
+    Global = 02h,//padded
+    GO_Ref = 03h,//referenced object id
+    GO_State = 04h,
+    All = 05h,
+    AllNotRef = 09h
+} actScope;
+typedef enum<ubyte>{
+    Stop = 01h,
+    Pause = 02h,
+    Resume = 03h,
+    Play = 04h,
+    Trigger = 05h,
+    Mute = 06h,
+    UnMute = 07h,
+    SetVoicePitch = 08h,
+    ResetVoicePitch = 09h,
+    SetVoiceVolume = 0Ah,
+    ResetVoiceVolume = 0Bh,
+    SetBusVolume = 0Ch,
+    ResetBusVolume = 0Dh,
+    SetVoiceLowpassFilter = 0Eh,
+    ResetVoiceLowpassFilter = 0Fh,
+    EnableState = 10h,
+    DisableState = 11h,
+    SetState = 12h,
+    SetGameParameter = 13h,
+    ResetGameParameter = 14h,
+    SetSwitch = 19h,
+    EnableDisableBypass = 1Ah,
+    ResetBypassEffect = 1Bh,
+    Break = 1Ch,
+    Seek = 1Eh
+} actType;
+typedef enum<ubyte>{
+    Delay_ms = 0Eh,//uint32, in milliseconds
+    Play_FadeInTime_ms = 0Fh,//uint32, in milliseconds
+    Probability = 10h//float
+} paramType;
+typedef struct{
+local quad pos = FTell();
+    uint actionID;
+    actScope actionScope;
+    actType actionType;
+    uint objectID;
+    bool isBus;
+    ubyte numParams;
+    if (numParams > 0)
+        struct{
+            paramType ParamType;
+            uint data;
+        } Params[numParams];
+    ubyte numRange;
+    if (numRange > 0)
+        struct{
+            paramType ParamType;
+            int min;
+            int max;
+        } Range[numRange];
+    //extra shit
+    if (actionScope==04h){
+        uint32 SwitchGroupID;
+        uint32 SwitchID;
+    }
+    else if (actionType!=1Ch){
+        ubyte fadeCurve;
+        uint soundbankID;
+    }
+    // Padding so the next chunk and filter out some odds
+    local quad size = FTell()-pos;
+    if( (size < length) && (FTell() < FileSize()) )
+        uchar padding[length-size];
+    else if(size > length)
+        return -1;
+} chunk_3;
+
+typedef struct{
+    uint eventID;
+    uint numEventActions;
+    uint eventActionID[numEventActions];
+} chunk_4;
+
+typedef struct{
+    uint mixerID;// = 650605636;
+    bool overrideParentFX;// = 0;
+    byte numFX;// = 0;
+    if (numFX > 0) {
+        mType bitMaskFX;
+        struct{
+            byte effectIDX;//00 to 03
+            uint effectID;
+            byte pad[2];//padding?
+        } effects[numFX];
+    }
+    uint parentOutBusID;// = 2616261673;//00 if Output Bus of parent object should be used
+    uint directParentID;// = 0;
+    //unkID1
+    bool overridePP;
+    bool isOffsetPPOptimize;// "Offset priority by (X units) at max distance" setting is activated
+    byte numExtParams;// included only if they are different from their default values
+    byte unkk;
+//
+    //int unkID1;// = 0;
+    int unkID2;// = 65792;
+    byte priorityOverrideParent;// = 0;
+    byte priorityApplyDist;// = 0;
+    byte numParam;// = 0;
+    byte numRange;// = 0;
+    byte positionOverride;// = 0;
+    byte overrideGameAux;// = 0;
+    byte useGameAux;// = 0;
+    byte overrideUserAux;// = 0;
+    byte hasAux;// = 0;
+    byte virtualQueueBehavior;// = 0;
+    byte killNewest;// = 0;
+    byte useVirtualBehavior;// = 0;
+    short maxNumInstance;// = 0;
+    byte isGlobalLimit;// = 0;
+    byte belowThresholdBehavior;// = 0;
+    byte isMaxNumInstOverrideParent;// = 0;
+    byte isVVoiceOptOverrideParent;// = 0;
+    int stateGroupList;// = 0;
+    short rtpcList;// = 0;
+    int numChild;// = 1;
+    int child[numChild];// = soundid;
+} chunk_7;
+
+typedef enum<ubyte>{
+STGS = 01,
+SFXV = 02,
+ETAN = 03,
+EVNT = 04,
+AMIX = 07
+} hirc_type;
+
+int hircToaster(ubyte id)
+{
+    if(FEof()) return -1;
+    switch( id )
+    {
+      case 01://General Settings
+        chunk_1 STGS;
+        break;
+      case 02://Sound SFX\Sound Voice
+        //chunk_2 SFXV;
+        byte SFXV[length];
+        break;
+      case 03://Event Action
+        chunk_3 ETAN;
+        break;
+      case 04://Event
+        chunk_4 EVNT;
+        break;
+      case 07://Actor-Mixer
+        chunk_7 AMIX;
+        //byte AMIX[length];
+        break;
+      default: // NotImplementedEx()
+        byte UNKN[length];
+        //return -1;
+        break;
+    } return 1;
+}
 typedef struct{
 //common
     char chunk_magic[4];
     uint chunk_len <format=hex>;
     uint obj_num;
     struct OBJ{
-        byte type; //1..20
-        uint data_chunk_len;
-        byte data_chunk[data_chunk_len];//There isbunch of cdata formats. skipped
-    } obj[obj_num]<optimize=false>;   
+        hirc_type type; //1..20
+        uint data_chunk_len<hidden=true>;
+//data_chunk[data_chunk_len];
+        local int64 length = data_chunk_len;
+        if (hircToaster(type) < 0) { return -1; }
+    } obj[obj_num]<optimize=false>;
 } chunk_hirc;
 
 typedef struct{
@@ -97,7 +326,7 @@ typedef struct{
 //chunk_data[chunk_len]
     float volumeThreshold;
     ushort maxVoiceInstances;
-    
+
     uint numStateGroups;
     struct state_chunk{
         uint id;
@@ -108,8 +337,8 @@ typedef struct{
             uint id_state_to;
             uint time_ms;
         } CTIME[custom_truns_size]<optimize=true>;
-    } STATE[numStateGroups]<optimize=false>; 
-    
+    } STATE[numStateGroups]<optimize=false>;
+
     uint numSwitchGroups;
     struct switch_chunk{
         uint id;
@@ -118,15 +347,15 @@ typedef struct{
         struct points{
             float value_game_param;
             uint switch_id;
-            uint curve_shape; //09 
+            uint curve_shape; //09
         } POINT[points_num]<optimize=false>;
     } SWITCH[numSwitchGroups]<optimize=false>;
-    
+
     uint numGameParams;
     struct gparam_chunk{
         uint gparam_id;
         float def_val;
-    } GPARAM[numGameParams]<optimize=false>;    
+    } GPARAM[numGameParams]<optimize=false>;
 } chunk_stmg;
 
 //just for fun, skip it
@@ -139,29 +368,30 @@ typedef struct{
 //common
     char chunk_magic[4];
     uint chunk_len <format=hex>;
-//chunk_data[chunk_len]    
+//chunk_data[chunk_len]
     UNK unk1(chunk_len);
 } chunk_envs;
 
 byte[] Pad( uint len, uint sizef )
 {
     if (len-sizef >0)
-        byte pad[len-sizef];    
+        byte pad[len-sizef];
         return "";
 }
 
 // Read Header (Present in every .BNK)
 chunk_bkhd BKHD;
+//if no other chunks it's empty
 
 // Read the file as a set of chunks
 local string tag;
 do
-{   // Read the chunk tag 
+{   // Read the chunk tag
     tag = ReadString(FTell(), 4);
     if (Toaster(tag) < 0) { return -1; }
 } while (!FEof());
 
-uint Toaster(string magic)
+int Toaster(string magic)
 {
     // See which chunk this is
     if(!FEof())
