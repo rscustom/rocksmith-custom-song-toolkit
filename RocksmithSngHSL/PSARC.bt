@@ -19,6 +19,14 @@ string rUInt40(uint40 &r)
     SPrintf(s,"%Lu", out);
     return s;
 }
+uint t(uint40 &r)
+{
+    local uint out; local uint i;
+    for (i = 0; i != 5; ++i) {
+        out += ((uint)r[i]) << (32 - i * 8);
+    }
+    return out;
+}
 typedef enum<uint> {
     LZ770 = 0x6C7A7820, //'lzx '
     Deflate = 0x7A6C6962,//zlib
@@ -28,7 +36,7 @@ cTYPE<format=hex>;
 
 //typedef enum<uint> {
 typedef struct {
-    BitfieldRightToLeft();    
+    BitfieldRightToLeft();
 uint
     IGNORECASE :1,
     ABSOLUTEPATHS :1, 
@@ -37,9 +45,10 @@ uint
 cFLAG<size=4>;
 
 typedef struct {
-    local string name;
     local int id;
-    
+    //local string name;
+    local uint zLen;
+
     byte nameDigest_MD5[16];
     uint32 blockSizeList_zIndex;
     uint40 origSize_length;
@@ -60,24 +69,37 @@ typedef struct {
     Version;
     cTYPE Compression;//zlib
     uint TotalTOCSize;
-    uint TOCEntrySize;//30
+    uint TOCEntrySize;//30 bytes
     uint NumFiles;//including NamesBlock.bin
     uint BlockSize;//compression buffer size 64 default
     cFLAG ArchiveFlags;
 }
 HEADER<size=32,open=true>;
 typedef struct {
-    local long blockSizes_len = tocSize-(header.NumFiles*header.TOCEntrySize);
-    local long blockSizes_num = blockSizes_len/(Log(header.BlockSize)/Log(256));
-    TOC_ENTRY Entry[header.NumFiles];
-    ZLENGHTS BlockSizeList[blockSizes_num];
+    local int i = 0;
+    for ( i = 0; i < header.NumFiles; i++)
+    {
+        TOC_ENTRY Entry;
+        Entry.id = i;
+        if (i == 0) continue;
+        if (i == header.NumFiles - 1)
+            Entry.zLen = FileSize() - t(Entry.startOffset); //HACK: fails if psarc is truncated.
+        Entry[i - 1].zLen = t(Entry.startOffset)- t(Entry[i - 1].startOffset);
+    }
 } TOC;
+typedef struct (uint &n){
+    ubyte Data[n];
+} Data;
 typedef struct{
     //Header
     HEADER header;
     //TOC
     local long tocSize = header.TotalTOCSize-32;
     TOC Table_Of_Contents;
+    //ZLENGHTS
+    local long blockSizes_len = header.TotalTOCSize - FTell();//tocSize-(header.NumFiles*header.TOCEntrySize);
+    local long blockSizes_num = blockSizes_len/(Log(header.BlockSize)/Log(256));
+    ZLENGHTS BlockSizeList[blockSizes_num];
     //Data
     if(header.ArchiveFlags.TOC_ENCRYPTED){
         //Encrypted TOC
@@ -85,7 +107,13 @@ typedef struct{
     } 
     if(!header.ArchiveFlags.TOC_ENCRYPTED) {
         //Plain TOC
-        BYTE zData[FileSize()-header.TotalTOCSize];
+        //BYTE zData[FileSize()-header.TotalTOCSize];
+        local int i = 0;    
+        for ( i = 0; i < header.NumFiles; i++)
+        {
+           Data File(Table_Of_Contents.Entry[i].zLen)<open=false>;
+        }
+	//packed everything except .sng and .appid files
     }
 }
 FILE<open=true>;

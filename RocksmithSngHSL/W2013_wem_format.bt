@@ -1,0 +1,851 @@
+//-----------------------------------
+//--- 010 Editor v2.0 Binary Template
+//
+// File:     W2013_wem_format.bt
+// Revision: 1.1
+// Purpose: Parse "wwise encoded media" (WEM)
+//    Supported: RIFF\RIFX
+//-----------------------------------
+/*
+application/vnd.wwise.bnk
+application/vnd.wwise.wem
+application/vnd.wwise.pck
+*/
+// Typedefs for the wave file
+typedef char ID[4];
+typedef char GUID[16] <read=FormatGUID>;
+// PCM   "00000001-0000-0010-8000-00aa00389b71"
+// ADPCM "00000002-0000-0010-8000-00aa00389b71"
+
+// Record whether we have found a format chunk yet
+local int haveValidFormat = false;
+//Supported?: ADPCM, PCM, Vorbis I, AAC
+
+// Channel mask values
+#define SPEAKER_FRONT_LEFT             0x00000001
+#define SPEAKER_FRONT_RIGHT            0x00000002
+#define SPEAKER_FRONT_CENTER           0x00000004
+#define SPEAKER_LOW_FREQUENCY          0x00000008
+#define SPEAKER_BACK_LEFT              0x00000010
+#define SPEAKER_BACK_RIGHT             0x00000020
+#define SPEAKER_FRONT_LEFT_OF_CENTER   0x00000040
+#define SPEAKER_FRONT_RIGHT_OF_CENTER  0x00000080
+#define SPEAKER_BACK_CENTER            0x00000100
+#define SPEAKER_SIDE_LEFT              0x00000200
+#define SPEAKER_SIDE_RIGHT             0x00000400
+#define SPEAKER_TOP_CENTER             0x00000800
+#define SPEAKER_TOP_FRONT_LEFT         0x00001000
+#define SPEAKER_TOP_FRONT_CENTER       0x00002000
+#define SPEAKER_TOP_FRONT_RIGHT        0x00004000
+#define SPEAKER_TOP_BACK_LEFT          0x00008000
+#define SPEAKER_TOP_BACK_CENTER        0x00010000
+#define SPEAKER_TOP_BACK_RIGHT         0x00020000
+#define SPEAKER_RESERVED               0x80000000
+
+// GUID parser
+string FormatGUID(GUID &s)
+{
+    string sGUID;
+    uint iData1;
+    ushort iData2;
+    ushort iData3;
+    ushort iData4a;
+    ushort iData4b;
+    uint iData4c;
+
+    //ReadGUID123
+    LittleEndian();
+    iData1 = ReadUInt(startof(s));
+    iData2 = ReadUShort(startof(s)+4);
+    iData3 = ReadUShort(startof(s)+6);
+
+    //ReadGUID4
+    BigEndian();
+    iData4a = ReadUShort(startof(s)+8);
+    iData4b = ReadUShort(startof(s)+10);
+    iData4c = ReadUInt(startof(s)+12);
+
+    if (!iStartedAsBigEndian)
+        LittleEndian();
+
+    SPrintf(sGUID, "{%08X-%04X-%04X-%04X-%04X%08X}", 
+        iData1, iData2, iData3, iData4a, iData4b, iData4c);
+    return sGUID;
+}
+string pow(uchar &e) {
+    local string r;SPrintf(r, "%u", Pow(2, e));return r;
+}
+//-----------------------------------
+// Define structures used in WAV files
+
+// Stores the file header information
+typedef struct
+{
+    ID     groupID;
+    long   size;//of file-8 (add +8 to get full file length)
+    ID     riffType;
+} WAVRIFFHEADER<size=12>;
+
+typedef struct {
+    /* Blocksizes. allowed[64,128,256,512,1024,2048,4096,8192] 
+     * Packed to 4 bits for each
+     * Pack:   uBlockSizes_pow[1] << 4 | uBlockSizes_pow[0];
+     * Unpack: uBlockSizes_pow[0] & uBlockSizes_pow[1] >> 4;
+     * Each blocksize represented as pow of 2 */
+    //uchar  uBlockSizes_pow[2];
+    uchar blocksize_0<read=pow>;
+    uchar blocksize_1<read=pow>;
+} BLOCKSIZES<size=2>;
+
+// Stores the FORMAT information for the file
+typedef struct 
+{
+    ID             chunkID;
+    long           chunkSize;//fmt size
+    local int pos = FTell();
+
+    struct WAVEFORMAT {
+        short  wFormatTag;      //compression 
+        ushort wChannels;
+        uint   dwSamplesPerSec; //samplrate Min:6000 Max:48000
+        uint   dwAvgBytesPerSec;//help to calc time-wise length of the audio (=SampleRate * BlockAlign)
+        ushort wBlockAlign;     //0 if not PCM bpsample/8*channels
+        ushort wBitsPerSample;  //0 if not PCM
+    } fmt<size=16>; //minimum format;
+
+    //wwise
+    if( fmt.wFormatTag == -2 && chunkSize > 16) {
+            ulong wSamplesPerBlock; //Samples.wValidBitsPerSample\Block
+            ulong dwChannelMask;
+    }
+    if( fmt.wFormatTag == -1 && chunkSize > 16) {
+        ushort exSize; //0-22 RS2014:48==66-18
+        struct WAVEFORMATEX {        
+            ushort wSamplesPerBlock;//Samples.wValidBitsPerSample\Block
+            long   dwChannelMask;
+    if( chunkSize == 40 && wSamplesPerBlock > 0 ) {
+        GUID SubFormat; //KSDATAFORMAT_SUBTYPE_PCM
+    }    
+    else if( chunkSize > 24 ) {
+        long   dwTotalPCMFrames; //=SongLengthInSeconds*dwSamplesPerSec
+        ulong  dwLoopStartPacketOffset; //=vorbis_data_offset-seek_table_size //starts after codebook(codebook is pat of packet streams)
+        ulong  dwLoopEndPacketOffset;   //end
+        ushort uLoopBeginExtra;
+        ushort uLoopEndExtra;
+    }
+    if( chunkSize > 40 ) {
+        long   dwSeekTableSize;
+        uint   dwVorbisDataOffset; //=seekTableSize+CodebookSize
+        ushort uMaxPacketSize;//largest packet size
+        ushort uLastGranuleExtra; //
+        long   dwDecodeAllocSize;
+        long   dwDecodeX64AllocSize;
+
+        ulong  uHashCodebook; //FNV hash of ogg_packet *op_code. from vorbis_analysis_headerout() //usually 1844255845 - rs1? (crc ?)
+        BLOCKSIZES uBlockSizes;
+    } } ex;
+ }
+    // Unknown data at the end of the chunk
+    if( (chunkSize > (FTell() - pos)) )
+        uchar unknown[ chunkSize - (FTell() - pos) ];
+    // Padding so the next chunk starts on an even byte
+    if( chunkSize & 1 )
+        uchar padding;
+    // Mark that we have found a valid format chunk
+    haveValidFormat = true;
+} FORMATCHUNK<open=suppress>;
+
+// Stores the VORB header information
+typedef struct
+{
+    ID     chunkID;
+    long   size <format=hex>;
+    
+    local int pos = FTell(); 
+    uint dwTotalPCMFrames; // sample_count (used for loop)
+    //validate sizes
+    switch (size) {
+        //case -1:
+        case 0x2A://Offset=4
+            ulong dwLoopStartPacketOffset, //mod_signal
+                  dwLoopEndPacketOffset;
+            // seems to be 0xD9 when _mod_packets should be set
+            // also seen 0xCB, 0xBC, 0xB2
+            // possible signal bits are 10000000 high, 01000000 low
+            if( 0x4A != dwLoopStartPacketOffset && 
+                0x4B != dwLoopStartPacketOffset && 
+                0x69 != dwLoopStartPacketOffset && 
+                0x70 != dwLoopStartPacketOffset ) 
+            {
+                local int mod_packets = true;
+            }
+            local int no_granule = true;
+            
+            ushort uLoopBeginExtra, 
+                   uLoopEndExtra;
+            break;//Offset=16
+        case 0x28:
+        case 0x2C:
+        case 0x32:
+        case 0x34://Offset=4
+            uint  unk1_sizeof_what, //related to smpl count
+                  unk2_setup_packet_offset, //coodebooks offset?
+                  unk3_first_audio_packet_offset; 
+            ulong dwLoopStartPacketOffset,
+                  dwLoopEndPacketOffset;
+            break;//Offset=24
+        default:
+            Warning( "bad vorb chunk size." );
+            return -1;
+            break;
+    }
+    uint dwSeekTableSize;
+    uint dwVorbisDataOffset; //first_audio_packet_offset
+    //parse last 20+6 bytes
+    switch(size) {
+        case 0x28:
+        case 0x2C:
+            // ok to leave _uid, _blocksize_0_pow and _blocksize_1_pow unset
+            local int header_triad_present = true;
+            local int old_packet_headers = true;
+            break;
+        case -1:
+        case 0x2A:
+        case 0x32:
+        case 0x34://Offset=??
+            ushort _MaxPacketSize,
+                   _LastGranuleExtra;
+            long   _DecodeAllocSize, 
+                   _DecodeX64AllocSize;
+            uint   uHashCodebook;//uid
+            BLOCKSIZES uBlockSizes;
+            break;
+    }
+    // Padding
+    if( size == 0x34 )
+        ushort unk_pad<hidden=true>;
+} VORBCHUNK<open=true>;
+
+/* old vorbis packet8 */
+typedef struct {
+  uint size;
+  uint granule; /* number of samples decoded at the end of the packet */
+  char data[size];
+} DATA_PACKET;
+// Stores the actual wave DATA
+typedef struct
+{
+    ID             chunkID;
+    long           chunkSize;
+
+    // Test if we have a valid format
+    if( !haveValidFormat ) {
+        Warning( "File contains no valid WAVE format chunk." );
+        return -1;
+    }
+
+    // Parse the samples of the data
+    if( (format.fmt.wChannels == 1) && (format.fmt.wBitsPerSample == 8) )
+    {
+        // Define an array of 8-bit samples - common case
+        uchar samples[ chunkSize ];
+    }
+    else if( (format.fmt.wChannels == 1) && (format.fmt.wBitsPerSample == 16) )
+    {
+        // Define an array of 16-bit samples - common case
+        short samples[ chunkSize / sizeof(short) ];
+    }
+    else if( (format.fmt.wChannels == 1) && (format.fmt.wBitsPerSample == 32) )
+    {
+        // Define an array of 32-bit samples - common case
+        int samples[ chunkSize / sizeof(int) ];
+    }
+    else if ( format.fmt.wFormatTag == -2 && format.wSamplesPerBlock > 0 )
+    {
+        ushort data[chunkSize / sizeof(ushort) ]<optimize=true>;
+    }
+    else if ( format.fmt.wFormatTag == -1 && format.exSize > 0 )
+    {// wwise 2013.2.2
+        local ulong s;
+        if( format.chunkSize == 66 )
+            s = format.ex.dwSeekTableSize / sizeof(short);
+        else
+            s = vorb.dwSeekTableSize / sizeof(short);
+        if( s > 0){
+            //Define an array of 16-bit samples
+            struct seektable{
+                ushort seekGranularity[s]; //looks like vorb data
+            } seekTable;//sample frames
+        }
+        //codebook (setup) header [just first audio packet]
+        struct codebook{
+            short codebooksize;
+            ubyte codebook[codebooksize];
+        } codeBook;
+        //stream, works for RIFF, not for others
+        struct streams{
+            //calculate the total stream size till End of File (in bytes)
+            if( format.chunkSize == 66 ) {
+                s = format.ex.dwLoopEndPacketOffset - format.ex.dwLoopStartPacketOffset;                   
+                local long i;
+                for (i = 0; i < s; i += sizeof(packet_stream))
+                {
+                    struct chunk_packet{
+                        ushort pSize;       // size of the packet
+                        byte pData[pSize];  // the packets are the same in both pc/console
+                    } packet_stream;
+                }
+            }else
+            {/*3 VORBIS packets. seems it's Bullshit */
+                short id_size; 
+                int unk1;
+                byte id[id_size];
+                
+                short coments_size;
+                int unk2;
+                byte coments[coments_size];
+    
+                short codebooks_size;
+                int unk3;
+                byte codebooks[codebooks_size]; 
+            } 
+            /*{
+                s = (vorb.dwLoopEndPacketOffset - vorb.dwLoopStartPacketOffset);
+                byte pData[s];//[1527217];
+            }*/
+        } packetStreams;
+          
+    }
+    else if( ((format.fmt.wBitsPerSample != 8) && (format.fmt.wBitsPerSample != 16) && (format.fmt.wBitsPerSample != 32))
+        || (chunkSize % (int)format.fmt.wBlockAlign != 0) )
+    {
+        // Unsupported storage method used
+        unsigned char  waveformData[chunkSize];
+    }
+    else if (format.fmt.wBlockAlign != 0 )
+    {
+        local ulong count = chunkSize / (int)format.fmt.wBlockAlign;//(header.size-0x24-(int)format.fmt.wBlockAlign) / (int)format.fmt.wBlockAlign+1;
+
+        // Define general case sample
+        struct SAMPLES {
+            if( format.fmt.wBitsPerSample == 8 )
+                 uchar channels[ format.fmt.wChannels ];
+            else if( format.fmt.wBitsPerSample == 16 )
+                 ushort channels[ format.fmt.wChannels ];
+            else if( format.fmt.wBitsPerSample == 32 )
+                 uint   channels[ format.fmt.wChannels ];
+      } samples[ count ]<optimize=false>; // M *Nc* Ns | header.size-0x24-(int)format.fmt.wBlockAlign( M * Nc * Ns)-1
+    }
+
+    // Padding so the next chunk starts on an even byte
+    if( (chunkSize & 1) && (FTell() < FileSize()) )
+        uchar padding;
+} DATACHUNK;
+
+// Stores the size of the wave after decompression
+typedef struct
+{
+    ID             chunkID;
+    long           chunkSize;
+    local int pos = FTell();
+
+    unsigned long  uncompressedSize;//dfFileSize
+
+    // Unknown data at the end of the chunk
+    if( chunkSize > (FTell() - pos) )
+        uchar unknown[ chunkSize - (FTell() - pos) ];
+} FACTCHUNK;
+
+// Stores a list of cue points or markers to points in the data
+typedef struct {
+    long    dwIdentifier;
+    long    dwPosition;
+    ID      fccChunk;
+    long    dwChunkStart;
+    long    dwBlockStart;
+    long    dwSampleOffset;
+} CUEPOINT<size=24>;
+
+typedef struct {
+    ID        chunkID;
+    long      chunkSize;
+    local int pos = FTell();
+
+    long      dwCuePoints;
+    CUEPOINT  points[dwCuePoints];
+
+    // Unknown data at the end of the chunk
+    if( chunkSize > (FTell() - pos) )
+        uchar unknown[ chunkSize - (FTell() - pos) ];
+} CUECHUNK;
+
+// Define a list chunk with a set of subchunks
+typedef struct {
+    ID        chunkID;
+    long      chunkSize;
+    struct listChunk {
+        uint    id;
+        local int len = chunkSize-4+(chunkSize%2);
+        char    listData[len];//shgould be pow.
+    } ListChunk;
+} LISTSUBCHUNK;
+
+typedef struct {
+    ID        chunkID;
+    long      chunkSize;
+    local quad pos = FTell();
+
+    ID        chunkType;
+    // Read the subchunks
+    while( FTell() - pos < chunkSize )
+        LISTSUBCHUNK subchunk;
+
+    // Padding so the next chunk starts on an even byte
+    if( (chunkSize & 1) && (FTell() < FileSize()) )
+        uchar padding;
+} LISTCHUNK<optimize=false>;
+
+/*
+The .akd files (2013.1) replace for 
+the .akpk files (2012.2 and previous) from previous releases.  
+
+The 'akd ' store the following information:
+ - Waveform peaks (for the user interface display of the wav file)
+ - Loudness analysis (for the loudness normalization feature)
+ - HDR envelope (for the HDR system)
+
+The akpk files were storing waveform peaks only.
+
+You should not add them to source control.  
+They will be recalculated automatically in the background when opening the project (2013.1+).
+They are basically storing cached data.
+*/
+typedef struct {
+    ID        chunkID;
+    long      chunkSize;
+    ushort    waveData[chunkSize/sizeof(ushort)];
+
+    // Padding so the next chunk starts on an even byte
+    if( (chunkSize & 1) && (FTell() < FileSize()) )
+        uchar padding;
+} AKDCHUNK;
+
+// A chunk which could not be identified
+typedef struct {
+    ID        chunkID;
+    long      chunkSize;
+    byte      unknownData[chunkSize];
+
+    // Padding so the next chunk starts on an even byte
+    if( (chunkSize & 1) && (FTell() < FileSize()) )
+        uchar padding;
+} UNKNOWNCHUNK;
+
+//---------------------------------------------
+// SMPL / SMPL Loop
+//---------------------------------------------
+
+typedef long SMPLLOOPS_Cue_ID <read=WAV_SMPLLOOPS_Cue_ID>;
+
+string
+WAV_SMPLLOOPS_Cue_ID( SMPLLOOPS_Cue_ID cid )
+{
+    string  sret;
+    SPrintf( sret, "Cue Point ID: %u", cid );
+
+return sret;
+}
+
+//---------------------------------------------
+
+typedef long SMPLLOOPS_Play_Count <read=WAV_SMPLLOOPS_Play_Count>;
+
+string
+WAV_SMPLLOOPS_Play_Count( SMPLLOOPS_Play_Count pc )
+{
+    string  sret;
+
+    if (pc==0)
+    {
+        SPrintf( sret, " Infinite Sustain Loop (%u)", pc );
+    }
+    else
+    {
+        SPrintf( sret, "Play Count: %u", pc );
+    }
+
+return sret;
+}
+
+
+//---------------------------------------------
+typedef long SMPLLOOPS_Start <read=WAV_SMPLLOOPS_Start>;
+
+string
+WAV_SMPLLOOPS_Start( SMPLLOOPS_Start st )
+{
+    string  sret;
+    SPrintf( sret, "Loop Start at %u byte offset", st );
+
+return sret;
+}
+
+//---------------------------------------------
+typedef long SMPLLOOPS_End <read=WAV_SMPLLOOPS_End>;
+
+string
+WAV_SMPLLOOPS_End( SMPLLOOPS_End end )
+{
+    string  sret;
+    SPrintf( sret, "Loop End at %u byte offset", end );
+
+return sret;
+}
+
+//---------------------------------------------
+typedef long SMPLLOOPS_Fraction <read=WAV_SMPLLOOPS_Fraction>;
+
+string
+WAV_SMPLLOOPS_Fraction( SMPLLOOPS_Fraction f )
+{
+    string  sret;
+    SPrintf( sret, "Fraction: %u", f );
+
+return sret;
+}
+
+//---------------------------------------------
+typedef long SMPL_SL <read=WAV_SMPL_SL>;
+
+string
+WAV_SMPL_SL( SMPL_SL sl )
+{
+    string  sret;
+    SPrintf( sret, "Number of Samples Loops (Sustain Loops): %u", sl );
+
+return sret;
+}
+
+//---------------------------------------------
+typedef long SMPL_SD <read=WAV_SMPL_SD>;
+
+string
+WAV_SMPL_SD( SMPL_SD sd )
+{
+    string  sret;
+    SPrintf( sret, "Sample Data (number of bytes): %u", sd );
+
+return sret;
+}
+
+
+//---------------------------------------------
+typedef long SMPL_SMPTE_Offset <read=WAV_SMPL_SMPTE_Offset>;
+
+string
+WAV_SMPL_SMPTE_Offset( SMPL_SMPTE_Offset so )
+{
+    string  sret;
+    SPrintf( sret, "SMPTE Offset (for synchronization): %u", so );
+
+return sret;
+}
+
+//---------------------------------------------
+typedef long SMPL_MIDI_Pitch_Fraction <read=WAV_SMPL_MIDI_Pitch_Fraction>;
+
+string
+WAV_SMPL_MIDI_Pitch_Fraction( SMPL_MIDI_Pitch_Fraction pf )
+{
+    string  sret;
+    SPrintf( sret, "MIDI Pitch Fraction: %u", pf );
+
+return sret;
+}
+
+//---------------------------------------------
+typedef long SMPL_MIDI_Unity_Note <read=WAV_SMPL_MIDI_Unity_Note>;
+
+string
+WAV_SMPL_MIDI_Unity_Note( SMPL_MIDI_Unity_Note un )
+{
+    string  sret;
+    SPrintf( sret, "MIDI unity note value: %u", un );
+
+return sret;
+}
+
+//---------------------------------------------
+typedef long SMPL_Product <read=WAV_SMPL_Product>;
+
+string
+WAV_SMPL_Product( SMPL_Product product )
+{
+    string  sret;
+    SPrintf( sret, "MIDI model ID (defined by the manufacturer): %u", product );
+
+return sret;
+}
+
+//---------------------------------------------
+typedef long SMPL_Sample_Period <read=WAV_SMPL_Sample_Period>;
+
+string
+WAV_SMPL_Sample_Period( SMPL_Sample_Period sp )
+{
+    string  sret;
+     // The sample period specifies the duration of time that passes during the playback of one sample in nanoseconds (normally equal to 1 / Samplers Per Second, where Samples Per Second is the value found in the format chunk).
+    SPrintf( sret, "Sample Period: %u", sp );
+
+return sret;
+}
+
+//---------------------------------------------
+typedef long SMPL_SMPTE <read=WAV_SMPL_SMPTE>;
+
+string
+WAV_SMPL_SMPTE( SMPL_SMPTE smptef )
+{
+    string  s;
+    string  sret;
+
+    switch( smptef )
+    {
+    case 0: SPrintf( s, "No SMPTE offset" ); break;
+    case 24: SPrintf( s, "24 frames per second" ); break;
+    case 25: SPrintf( s, "25 frames per second" ); break;
+    case 29: SPrintf( s, "30 frames per second with frame dropping (30 drop)" ); break;
+    case 30: SPrintf( s, "30 frames per second" ); break;
+    default: SPrintf( s, "unknown (%u)", smptef ); break;
+    }
+
+    SPrintf( sret, "SMPTE Format: %s", s );
+
+return sret;
+}
+
+//---------------------------------------------
+typedef long SMPL_Manufacturer <read=WAV_SMPL_Manufacturer>;
+
+string
+WAV_SMPL_Manufacturer( SMPL_Manufacturer manufacture )
+{
+    string  s;
+    string  sret;
+
+    switch( manufacture )
+    {
+    case 0: SPrintf( s, "Unknown" ); break;
+    case 1: SPrintf( s, "Sequential Circuits"); break;
+    case 2: SPrintf( s, "Big Briar"); break;
+    case 3: SPrintf( s, "Octave / Plateau"); break;
+    case 4: SPrintf( s, "Moog"); break;
+    case 5: SPrintf( s, "Passport Designs"); break;
+    case 6: SPrintf( s, "Lexicon"); break;
+    case 7: SPrintf( s, "Kurzweil"); break;
+    case 8: SPrintf( s, "Fender"); break;
+    case 9: SPrintf( s, "Gulbransen"); break;
+    case 10: SPrintf( s, "Delta Labs"); break;
+    case 11: SPrintf( s, "Sound Comp."); break;
+    case 12: SPrintf( s, "General Electro"); break;
+    case 13: SPrintf( s, "Techmar"); break;
+    case 14: SPrintf( s, "Matthews Research"); break;
+    case 16: SPrintf( s, "Oberheim"); break;
+    case 17: SPrintf( s, "PAIA"); break;
+    case 18: SPrintf( s, "Simmons"); break;
+    case 19: SPrintf( s, "DigiDesign"); break;
+    case 20: SPrintf( s, "Fairlight"); break;
+    case 21: SPrintf( s, "JL Cooper"); break;
+    case 22: SPrintf( s, "Lowery"); break;
+    case 23: SPrintf( s, "Lin"); break;
+    case 24: SPrintf( s, "Emu"); break;
+    case 27: SPrintf( s, "Peavey"); break;
+    case 32: SPrintf( s, "Bon Tempi"); break;
+    case 33: SPrintf( s, "S.I.E.L."); break;
+    case 35: SPrintf( s, "SyntheAxe"); break;
+    case 36: SPrintf( s, "Hohner"); break;
+    case 37: SPrintf( s, "Crumar"); break;
+    case 38: SPrintf( s, "Solton"); break;
+    case 39: SPrintf( s, "Jellinghaus Ms"); break;
+    case 40: SPrintf( s, "CTS"); break;
+    case 41: SPrintf( s, "PPG"); break;
+    case 47: SPrintf( s, "Elka"); break;
+    case 54: SPrintf( s, "Cheetah"); break;
+    case 62: SPrintf( s, "Waldorf"); break;
+    case 64: SPrintf( s, "Kawai"); break;
+    case 65: SPrintf( s, "Roland"); break;
+    case 66: SPrintf( s, "Korg"); break;
+    case 67: SPrintf( s, "Yamaha"); break;
+    case 68: SPrintf( s, "Casio"); break;
+    case 70: SPrintf( s, "Kamiya Studio"); break;
+    case 71: SPrintf( s, "Akai"); break;
+    case 72: SPrintf( s, "Victor"); break;
+    case 75: SPrintf( s, "Fujitsu"); break;
+    case 76: SPrintf( s, "Sony"); break;
+    case 78: SPrintf( s, "Teac"); break;
+    case 80: SPrintf( s, "Matsushita"); break;
+    case 81: SPrintf( s, "Fostex"); break;
+    case 82: SPrintf( s, "Zoom"); break;
+    case 84: SPrintf( s, "Matsushita"); break;
+    case 85: SPrintf( s, "Suzuki"); break;
+    case 86: SPrintf( s, "Fuji Sound"); break;
+    case 87: SPrintf( s, "Acoustic Technical Laboratory"); break;
+    default: SPrintf( s, "Unknown"); break;
+    }
+
+SPrintf( sret, "Manufacturer: %s", s);
+
+return sret;
+}
+
+//----------------------------------------------------------------------
+typedef long SMPLLOOPS_Type <read=WAV_SMPL_Loop_Type>;
+
+string
+WAV_SMPL_Loop_Type( SMPLLOOPS_Type loop )
+{
+    string  s;
+    switch( loop )
+    {
+        case 0 :
+            SPrintf( s, "Loop: Forward (%u)", loop );
+            break;
+
+        case 1 :
+            SPrintf( s, "Loop: Ping Pong (%u)", loop );
+            break;
+
+        case 2 :
+            SPrintf( s, "Loop: Reverse (%u)", loop );
+            break;
+
+        case 3 :
+            SPrintf( s, "Loop [reserved for future standard types] (%u)", loop );
+            break;
+
+        default:
+            s = "Loop: <unknown>";
+    }
+
+    return s;
+}
+
+//----------------------------------------------------------------------
+// SMPL Loop
+typedef struct {
+    SMPLLOOPS_Cue_ID     Cue_Point;
+    SMPLLOOPS_Type       Type;
+    SMPLLOOPS_Start      Start;
+    SMPLLOOPS_End        End;
+    SMPLLOOPS_Fraction   Fraction;
+    SMPLLOOPS_Play_Count Play_Count;
+
+} SMPLLOOPS; // no sortrecuired because of cueID
+
+//----------------------------------------------------------------------
+// Chunk SMPL
+typedef struct {
+    ID                       chunkID;
+    long                     chunkSize;
+    SMPL_Manufacturer        Manufacturer;
+    SMPL_Product             Product; // Product code (Manufacture)
+    SMPL_Sample_Period       Sample_Period;
+    SMPL_MIDI_Unity_Note     MIDI_Unity_Note;
+    SMPL_MIDI_Pitch_Fraction MIDI_Pitch_Fraction;
+    SMPL_SMPTE               SMPTE;
+    SMPL_SMPTE_Offset        SMPTE_Offset;
+    SMPL_SL                  Num_Sample_Loops;
+    SMPL_SD                  Sampler_Data;
+    SMPLLOOPS                loops[Num_Sample_Loops];
+
+    //Padding so the next chunk starts on an even byte
+     if( (chunkSize & 1) && (FTell() < FileSize()) )
+     uchar padding;
+
+} SMPLCHUNK;
+
+//---------------------------------------------
+// Check for valid header
+local int iStartedAsBigEndian = false;
+local string type = ReadString(0,4);
+local string subtype = ReadString(8,4);
+if( subtype != "WAVE" )
+{
+    Warning( "File is not a valid wave file. Template stopped." );
+    return -1;
+}
+if( type != "RIFF" )
+{
+    BigEndian();
+    iStartedAsBigEndian = true;
+}
+if( type != "RIFX" )
+{
+    LittleEndian();
+}   FSeek(0);
+// Define the header
+SetBackColor( cLtAqua ); 
+WAVRIFFHEADER header;
+
+//---------------------------------------------
+// Main loop
+// Read the file as a set of chunks
+local char tag[5];
+local uint size;
+while( !FEof() )
+{
+    // Read the chunk tag
+    ReadBytes( tag, FTell(), 4 );
+    tag[4] = 0;
+
+    // See which chunk this is
+    switch( tag )
+    {
+        case "fmt ": //RS1 = 24(0x18); RS2 = 66(0x42);
+            SetBackColor( cYellow );
+            FORMATCHUNK format;
+            break;
+        case "vorb":
+            SetBackColor( 0x50C0C0 );
+            VORBCHUNK vorb;
+            break;
+        case "data":
+            SetBackColor( 0xF0A0F0 );
+            DATACHUNK   data;
+            break;
+        case "fact":
+            SetBackColor( cLtBlue );
+            FACTCHUNK   fact;
+            break;
+        case "cue ":
+            SetBackColor( cLtGray );
+            CUECHUNK    cue;
+            break;
+        case "smpl":
+            SetBackColor( cLtGray );
+            SMPLCHUNK    smpl;
+            break;
+        case "LIST":
+            SetBackColor( cLtGray );
+            LISTCHUNK   list;
+            break;
+        case "JUNK":
+            SetBackColor( cNone );
+            UNKNOWNCHUNK junk;
+            break;
+        case "akd ":
+            SetBackColor( cWhite );
+            AKDCHUNK akd;//storing waveform peaks only
+            break;
+        default:
+            // Unknown chunk
+            size = ReadUInt( FTell()+4 );
+            Printf( "Encountered unknown chunk '%s' of size %d at position %Ld.\n",
+                tag, size, FTell() );
+            SetBackColor( cNone );
+            Warning( "Template stopped." );
+            return -1;
+            //UNKNOWNCHUNK unknown;
+            break;
+    }
+}
