@@ -75,7 +75,7 @@ namespace RocksmithToolkitLib.DLCPackage
             data.GameVersion = (convert ? GameVersion.RS2014 : GameVersion.RS2012);
             data.SignatureType = PackageMagic.CON;
             // set default volumes
-            data.Volume = (float)-7.0; // - 7 default maybe too quite
+            data.Volume = -6.5F; // default maybe too quite
             data.PreviewVolume = data.Volume;
 
             //Load song manifest

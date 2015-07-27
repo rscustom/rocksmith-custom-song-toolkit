@@ -178,14 +178,17 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void PackPC(string sourcePath, string saveFileName, bool useCryptography, bool updateSng)
         {
-            foreach (var namesBlock in Directory.EnumerateFiles(sourcePath, "NamesBlock.bin", SearchOption.AllDirectories))
+            var bins = Directory.EnumerateFiles(sourcePath, "NamesBlock.bin", SearchOption.AllDirectories).Where(File.Exists);
+            foreach (var namesBlock in bins)
             {
-                if (File.Exists(namesBlock))
-                    File.Delete(namesBlock);
+                File.Delete(namesBlock);
             }
 
-            using (var psarcStream = new MemoryStream())
+            if (Path.GetExtension(saveFileName) != ".dat")
+                saveFileName += ".dat";
+
             using (var streamCollection = new DisposableCollection<Stream>())
+            using (var outputFileStream = File.Create(saveFileName))
             {
                 var psarc = new PSARC.PSARC();
                 foreach (var x in Directory.EnumerateFiles(sourcePath))
@@ -215,21 +218,18 @@ namespace RocksmithToolkitLib.DLCPackage
                     PackInnerPC(innerPsarcStream, directory);
                     psarc.AddEntry(directoryName + ".psarc", innerPsarcStream);
                 }
-
-                psarc.Write(psarcStream, false);
-                psarcStream.Flush();
-                psarcStream.Seek(0, SeekOrigin.Begin);
-
-                if (Path.GetExtension(saveFileName) != ".dat")
-                    saveFileName += ".dat";
-
-                using (var outputFileStream = File.Create(saveFileName))
+                if (useCryptography)
                 {
-                    if (useCryptography)
+                    using (var psarcStream = new MemoryStream())
+                    {
+                        psarc.Write(psarcStream, false);
+                        psarcStream.Seek(0, SeekOrigin.Begin);
+                        psarcStream.Flush();
                         RijndaelEncryptor.EncryptFile(psarcStream, outputFileStream, RijndaelEncryptor.DLCKey);
-                    else
-                        psarcStream.CopyTo(outputFileStream);
+                        return;
+                    }
                 }
+                psarc.Write(outputFileStream);
             }
         }
 
@@ -705,7 +705,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     Directory.CreateDirectory(Path.GetDirectoryName(fullfilename));
                     psarc.InflateEntry(entry, fullfilename);
                     if (entry.Data != null)
-                        entry.Data.Close();
+                    {
+                        entry.Data.Dispose();//Close();
+                    }
                 }
 
                 if (!String.IsNullOrEmpty(psarc.ErrMSG)) throw new InvalidDataException(psarc.ErrMSG);

@@ -118,9 +118,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         public static void PackSng(Stream input, Stream output, Platform platform)
         {
             EndianBitConverter conv = platform.GetBitConverter;
-            Int32 platformHeader = 3;
-            if(conv == EndianBitConverter.Big)
-                platformHeader = 1;
+            Int32 platformHeader = (conv == EndianBitConverter.Big)? 1 : 3;
 
             using( var w = new EndianBinaryWriter(conv, output) )
             using( var zData = new MemoryStream() )
@@ -137,7 +135,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 if (platformHeader == 3) {
                     // write size of uncompressed data and packed data itself | already there
                     encw.Write((Int32)input.Length);
-                    encw.Write(zData.ToArray());
+                    encw.Write(zData.GetBuffer());
                     encw.Flush();
 
                     // choose key
@@ -153,13 +151,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     // encrypt (writes 16B IV and encrypted data)
                     plain.Position = 0;
                     RijndaelEncryptor.EncryptSngData(plain, encrypted, key);
-                    w.Write(encrypted.ToArray());
-                    // append zero signature
-                    w.Write(new Byte[56]);
+                    w.Write(encrypted.GetBuffer());
+                    w.Write(new Byte[56]); // append zero signature
                 } else {
                     // unencrypted and unsigned
                     w.Write((Int32)input.Length);
-                    w.Write(zData.ToArray());
+                    w.Write(zData.GetBuffer());
                 }
 
                 output.Flush();

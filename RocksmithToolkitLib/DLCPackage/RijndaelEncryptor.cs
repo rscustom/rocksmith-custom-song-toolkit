@@ -108,7 +108,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
         public static void Unzip(byte[] array, Stream outStream, bool rewind = true)
         {
-            Unzip(new MemoryStream(array), outStream,rewind);
+            Unzip(new MemoryStream(array), outStream, rewind);
         }
 
         public static long Zip(Stream str, Stream outStream, long plainLen, bool rewind = true)
