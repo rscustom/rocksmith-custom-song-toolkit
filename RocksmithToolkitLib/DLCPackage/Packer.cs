@@ -229,7 +229,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         return;
                     }
                 }
-                psarc.Write(outputFileStream);
+                psarc.Write(outputFileStream, false);
             }
         }
 
