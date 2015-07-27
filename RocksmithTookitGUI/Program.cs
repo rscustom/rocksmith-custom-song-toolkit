@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-using NLog;
 using System.Security.Permissions;
+using NLog;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitGUI
 {
@@ -13,7 +12,7 @@ namespace RocksmithToolkitGUI
         /// <summary>
         /// Usage: RocksmithToolkitGUI.log.Error(«ERROR: {0}», this.Text);
         /// </summary>
-        public static Logger log;
+        public static Logger Log;
 
         /// <summary>
         /// The main entry point for the application.
@@ -22,12 +21,14 @@ namespace RocksmithToolkitGUI
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
         static void Main(string[] args)
         {
-            log = LogManager.GetCurrentClassLogger();
+            Log = LogManager.GetCurrentClassLogger();
 
-            log.Info(
+            Log.Info(
                 String.Format("Version: {0}\r\n ", RocksmithToolkitLib.ToolkitVersion.version) +
                 String.Format("OS: {0}\r\n ", Environment.OSVersion) +
-                String.Format("Command: {0}", Environment.CommandLine)
+                String.Format("Command: {0}", Environment.CommandLine) +
+                String.Format("Runtime Version: v{0}", Environment.Version) +
+                String.Format("JIT: {0}", JitVersionInfo.GetJitVersion())
             );
 
             var ci = new CultureInfo("en-US");
@@ -45,7 +46,7 @@ namespace RocksmithToolkitGUI
                 var exception = (Exception)e.ExceptionObject;
                 MessageBox.Show(String.Format("Application.ThreadException\n{0}\n{1}\nPlease send us \"_RSToolkit_{2}.log\", you can find it in Toolkit folder.",
                     exception.ToString(), exception.Message.ToString(), DateTime.Now.ToString("yyyy-MM-dd")), "Unhandled Exception catched!");
-                log.ErrorException(String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
+                Log.ErrorException(String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
             };
 
             // UI thread exceptions handling.
@@ -54,7 +55,7 @@ namespace RocksmithToolkitGUI
                 var exception = (Exception)e.Exception;
                 MessageBox.Show(String.Format("Application.ThreadException\n{0}\n{1}\nPlease send us \"_RSToolkit_{2}.log\", you can find it in Toolkit folder.",
                     exception.ToString(),  exception.Message.ToString(), DateTime.Now.ToString("yyyy-MM-dd")), "Thread Exception catched!");
-                log.ErrorException(String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
+                Log.ErrorException(String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
             };
 
             Application.EnableVisualStyles();

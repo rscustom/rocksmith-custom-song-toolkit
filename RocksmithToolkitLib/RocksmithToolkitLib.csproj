@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</ProjectGuid>
@@ -27,8 +27,6 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>true</Optimize>
     <PreBuildEvent>CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"</PreBuildEvent>
-    <DocumentationFile>
-    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseMac|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -81,6 +79,7 @@
     <Compile Include="DLCPackage\Showlight\Showlights.cs" />
     <Compile Include="DLCPackage\XBlock\XblockX.cs" />
     <Compile Include="Extensions\ExternalApps.cs" />
+    <Compile Include="Extensions\JitVersionInfo.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
     <Compile Include="Ogg\Wwise.cs" />
     <Compile Include="SngToTab\Sng2Tab.cs" />

@@ -31,8 +31,6 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PostBuildEvent>xcopy /S /Y "$(SolutionDir)Third-party Apps" "$(TargetDir)"</PostBuildEvent>
@@ -383,7 +381,7 @@
       <Name>sngtotab</Name>
     </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitCLI\xml2sng\xml2sng.csproj">
-      <Project>{48703f6c-9f98-4534-ab1d-67856a84d806}</Project>
+      <Project>{48703F6C-9F98-4534-AB1D-67856A84D806}</Project>
       <Name>xml2sng</Name>
     </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
