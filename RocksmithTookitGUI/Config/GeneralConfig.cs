@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -137,7 +138,7 @@ namespace RocksmithToolkitGUI.Config
                 }
                 else if (control is NumericUpDown)
                 {
-                    value = ((NumericUpDown)control).Value.ToString();
+                    value = ((NumericUpDown)control).Value.ToString(CultureInfo.InvariantCulture);
                 }
 
                 if (ConfigRepository.Instance().ValueChanged(key, value) && !String.IsNullOrEmpty(value))

@@ -9,7 +9,6 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 
 using Newtonsoft.Json;
-using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
@@ -302,29 +301,30 @@ namespace RocksmithToolkitLib.Xml
         public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null)
         {
             const string magic = " CST v";
-            XDocument xml = XDocument.Load(xmlSongRS2014File);
+            var xml = XDocument.Load(xmlSongRS2014File);
+            var rootnode = xml.Element("song");
 
-            if (commentNodes != null && commentNodes.Any())
+            xml.DescendantNodes().OfType<XComment>().Remove();//cleanup xml
+            if (commentNodes == null)
+            {
+                commentNodes = ReadXmlComments(xmlSongRS2014File);
+            }
+            if (commentNodes != null)
             {
                 // reverse order of stored comments is original order
                 foreach (var commentNode in commentNodes.Reverse())
                 {
+                    if (commentNode.Value.Contains(magic)) continue;
                     // xml.Element("song").AddFirst(new XComment(commentNode));
                     // this looks nicers but does not match the EOF original
                     // used to distinguish XML that is modified by toolkit
-                    xml.Element("song").AddBeforeSelf(new XComment(commentNode));
-
-                    // remove previous version of toolkit magic
-                    if (commentNode.ToString().Contains(magic))
-                        xml.Element("song").Remove();
+                    rootnode.AddBeforeSelf(new XComment(commentNode));
                 }
             }
 
             // add current version of toolkit magic
-            xml.Element("song").AddBeforeSelf(new XComment(magic + ToolkitVersion.version + " "));
-
-            if (commentNodes != null && commentNodes.Any())
-                xml.Save(xmlSongRS2014File);
+            rootnode.AddBeforeSelf(new XComment(magic + ToolkitVersion.version + " "));
+            xml.Save(xmlSongRS2014File);
         }
 
         public static Song2014 LoadFromFile(string xmlSongRS2014File)
@@ -682,14 +682,15 @@ namespace RocksmithToolkitLib.Xml
 
         internal static TranscriptionTrack2014 GetDefault()
         {
-            var tt = new TranscriptionTrack2014();
-            tt.Difficulty = -1;
-            tt.Anchors = new SongAnchor2014[0];
-            tt.Chords = new SongChord2014[0];
-            tt.FretHandMutes = new SongFretHandMuteTemplate[0];
-            tt.HandShapes = new SongHandShape[0];
-            tt.Notes = new SongNote2014[0];
-            return tt;
+            return new TranscriptionTrack2014
+            {
+                Difficulty = -1,
+                Anchors = new SongAnchor2014[0],
+                Chords = new SongChord2014[0],
+                FretHandMutes = new SongFretHandMuteTemplate[0],
+                HandShapes = new SongHandShape[0],
+                Notes = new SongNote2014[0]
+            };
         }
     }
 

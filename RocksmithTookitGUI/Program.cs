@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Security.Permissions;
 using NLog;
@@ -24,21 +25,11 @@ namespace RocksmithToolkitGUI
             Log = LogManager.GetCurrentClassLogger();
 
             Log.Info(
-                String.Format("Version: {0}\r\n ", RocksmithToolkitLib.ToolkitVersion.version) +
-                String.Format("OS: {0}\r\n ", Environment.OSVersion) +
-                String.Format("Command: {0}", Environment.CommandLine) +
-                String.Format("Runtime Version: v{0}", Environment.Version) +
+                String.Format("Version: {0} ({1} bit)\r\n ", RocksmithToolkitLib.ToolkitVersion.version, Environment.Is64BitProcess ? "64" : "32") +
+                String.Format("OS: {0} ({1} bit)\r\n ", Environment.OSVersion, Environment.Is64BitOperatingSystem ? "64" : "32") +
+                String.Format("Runtime: v{0}\r\n ", Environment.Version) +
                 String.Format("JIT: {0}", JitVersionInfo.GetJitVersion())
             );
-
-            var ci = new CultureInfo("en-US");
-            Application.CurrentCulture = ci;
-            Application.CurrentInputLanguage = InputLanguage.FromCulture(ci);
-            var thread = System.Threading.Thread.CurrentThread;
-            thread.CurrentCulture = ci;
-            thread.CurrentUICulture = ci;
-            // can't figure out how disable this while debugging in IDE...
-            // how about like this ...
 
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>

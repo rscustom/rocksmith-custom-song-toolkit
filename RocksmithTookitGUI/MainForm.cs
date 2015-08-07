@@ -6,6 +6,7 @@ using RocksmithToolkitLib;
 using System.IO;
 using System.Net;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace RocksmithToolkitGUI
 {
@@ -25,6 +26,11 @@ namespace RocksmithToolkitGUI
         public MainForm(string[] args)
         {
             InitializeComponent();
+
+            var ci = new CultureInfo("en-US");
+            var thread = System.Threading.Thread.CurrentThread;
+            Application.CurrentCulture = thread.CurrentCulture = thread.CurrentUICulture = ci;
+            Application.CurrentInputLanguage = InputLanguage.FromCulture(ci);
 
             if (args.Length > 0 && File.Exists(args[0]))
                 LoadTemplate(args[0]);
@@ -49,11 +55,11 @@ namespace RocksmithToolkitGUI
             get { return base.Text; }
             set { base.Text = value; }
         }
-
+//TODO: keep tabs data please.
         private void MainForm_Load(object sender, EventArgs e) {
-            // Show only by 'Configuration' click
+            // Show this tab only by 'Configuration' click
             tabControl1.TabPages.Remove(GeneralConfigTab);
-  
+
             // position main form at top center of screen to avoid having to reposition on low res displays
             this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2, 0);
         }
@@ -100,8 +106,6 @@ namespace RocksmithToolkitGUI
                     break;
                 case Keys.T: //<< Add Tone
                     dlcPackageCreatorControl.toneAddButton_Click();
-                    break;
-                default:
                     break;
             }
         }
