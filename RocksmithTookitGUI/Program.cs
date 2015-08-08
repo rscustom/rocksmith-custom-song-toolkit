@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Security.Permissions;
 using NLog;
