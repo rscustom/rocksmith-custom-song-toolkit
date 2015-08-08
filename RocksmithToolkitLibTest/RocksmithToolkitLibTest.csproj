@@ -18,8 +18,6 @@
     <OutputPath>bin\Release\</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>true</Optimize>
-    <DefineConstants>
-    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -59,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RocksmithTookitGUI\RocksmithToolkitGUI.csproj">
-      <Project>{1a3dead6-14f3-43c3-b15c-a866d48fef61}</Project>
+      <Project>{1A3DEAD6-14F3-43C3-B15C-A866D48FEF61}</Project>
       <Name>RocksmithToolkitGUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">

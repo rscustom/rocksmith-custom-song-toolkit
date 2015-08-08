@@ -54,7 +54,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
                     foreach (var arr in arrangements)
                     {
-                        var arrangement = browser.GetArrangement(song.Identifier, arr);
+                        var arrangement = (Song2014)browser.GetArrangement(song.Identifier, arr);
                         // get maximum difficulty for the arrangement
                         var mf = new ManifestFunctions(GameVersion.RS2014);
                         int maxDif = mf.GetMaxDifficulty(arrangement);
@@ -78,7 +78,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                         }
                         else // combine maximum difficulty arrangements into one file
                         {
-                            Console.WriteLine(String.Format("Maximum Difficulty Level: {0}", maxDif));
+                            Console.WriteLine("Maximum Difficulty Level: {0}", maxDif);
                             ExportArrangement(score, arrangement, maxDif, inputFilePath, toolkitInfo);
                         }
                     }

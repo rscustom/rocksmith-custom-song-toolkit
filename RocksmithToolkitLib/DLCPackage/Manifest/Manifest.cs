@@ -11,15 +11,12 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public String ModelName { get; set; }
         public int IterationVersion { get; set; }
 
-
         public static Manifest LoadFromFile(string manifestToneFile)
         {
-            var manifest = new Manifest();
             using (var reader = new StreamReader(manifestToneFile))
             {
-                manifest = JsonConvert.DeserializeObject<Manifest>(reader.ReadToEnd());
+                return JsonConvert.DeserializeObject<Manifest>(reader.ReadToEnd());
             }
-            return manifest;
         }
     }
 }
