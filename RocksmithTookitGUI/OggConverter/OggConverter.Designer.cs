@@ -43,10 +43,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblChorusTime = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.audioQualityBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.btnAudio2Wem = new System.Windows.Forms.Button();
             this.txtAudio2Wem = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.audioQualityBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -162,13 +162,13 @@
             // groupBox4
             // 
             this.groupBox4.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox4.Controls.Add(this.tbarChorusTime);
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.lblChorusTime);
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.audioQualityBox);
             this.groupBox4.Controls.Add(this.btnAudio2Wem);
             this.groupBox4.Controls.Add(this.txtAudio2Wem);
+            this.groupBox4.Controls.Add(this.tbarChorusTime);
             this.groupBox4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.groupBox4.Location = new System.Drawing.Point(5, 218);
             this.groupBox4.Name = "groupBox4";
@@ -180,8 +180,8 @@
             // tbarChorusTime
             // 
             this.tbarChorusTime.AutoSize = false;
-            this.tbarChorusTime.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.tbarChorusTime.Location = new System.Drawing.Point(276, 47);
+            this.tbarChorusTime.BackColor = System.Drawing.SystemColors.Control;
+            this.tbarChorusTime.Location = new System.Drawing.Point(281, 44);
             this.tbarChorusTime.Margin = new System.Windows.Forms.Padding(2);
             this.tbarChorusTime.Maximum = 600;
             this.tbarChorusTime.Name = "tbarChorusTime";
@@ -229,6 +229,31 @@
             this.label7.Text = "Audio Quality";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // audioQualityBox
+            // 
+            this.audioQualityBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.audioQualityBox.Location = new System.Drawing.Point(81, 44);
+            this.audioQualityBox.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.audioQualityBox.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.audioQualityBox.Name = "audioQualityBox";
+            this.audioQualityBox.Size = new System.Drawing.Size(37, 20);
+            this.audioQualityBox.TabIndex = 39;
+            this.toolTip1.SetToolTip(this.audioQualityBox, "High Quality 6 ... Default Quality 4\r\nLeave audio quality set to Default 4\r\nif so" +
+                "urce audio quality is unknown");
+            this.audioQualityBox.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            // 
             // btnAudio2Wem
             // 
             this.btnAudio2Wem.Location = new System.Drawing.Point(412, 19);
@@ -257,32 +282,6 @@
             this.toolTip1.AutoPopDelay = 7000;
             this.toolTip1.InitialDelay = 100;
             this.toolTip1.ReshowDelay = 100;
-            // 
-            // audioQualityBox
-            // 
-            this.audioQualityBox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.audioQualityBox.Location = new System.Drawing.Point(81, 44);
-            this.audioQualityBox.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.audioQualityBox.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.audioQualityBox.Name = "audioQualityBox";
-            this.audioQualityBox.Size = new System.Drawing.Size(37, 20);
-            this.audioQualityBox.TabIndex = 39;
-            this.audioQualityBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip1.SetToolTip(this.audioQualityBox, "High Quality 6 ... Default Quality 4\r\nLeave audio quality set to Default 4\r\nif so" +
-                    "urce audio quality is unknown");
-            this.audioQualityBox.Value = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
             // 
             // OggConverter
             // 

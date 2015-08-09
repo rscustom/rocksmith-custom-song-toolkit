@@ -58,7 +58,7 @@
             this.toneDuplicateButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.chkShowlights = new System.Windows.Forms.CheckBox();
+            this.btnQuickAdd = new System.Windows.Forms.Button();
             this.keyboardDescArrLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -69,7 +69,6 @@
             this.dlcImportButton = new System.Windows.Forms.Button();
             this.currentOperationLabel = new System.Windows.Forms.Label();
             this.updateProgress = new System.Windows.Forms.ProgressBar();
-            this.btnQuickAdd = new System.Windows.Forms.Button();
             this.previewVolumeBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.packageVersionTB = new RocksmithToolkitGUI.CueTextBox();
             this.DlcNameTB = new RocksmithToolkitGUI.CueTextBox();
@@ -382,7 +381,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label7.Location = new System.Drawing.Point(446, 14);
+            this.label7.Location = new System.Drawing.Point(445, 17);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(39, 26);
             this.label7.TabIndex = 38;
@@ -398,7 +397,7 @@
             this.label2.Size = new System.Drawing.Size(424, 13);
             this.label2.TabIndex = 36;
             this.label2.Text = "Song preview is generated automatically if not provided in format \'filename_previ" +
-                "ew.wem\'\r\n";
+    "ew.wem\'\r\n";
             // 
             // gbTones
             // 
@@ -436,12 +435,11 @@
             this.label1.Size = new System.Drawing.Size(495, 13);
             this.label1.TabIndex = 36;
             this.label1.Text = "Use \"Up/Down\" keys to change order of the tones, use \"Delete\" to delete and \"D\" t" +
-                "o duplicate a tone.";
+    "o duplicate a tone.";
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.btnQuickAdd);
-            this.groupBox1.Controls.Add(this.chkShowlights);
             this.groupBox1.Controls.Add(this.keyboardDescArrLabel);
             this.groupBox1.Controls.Add(this.arrangementLB);
             this.groupBox1.Controls.Add(this.arrangementAddButton);
@@ -455,20 +453,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Arrangements";
             // 
-            // chkShowlights
+            // btnQuickAdd
             // 
-            this.chkShowlights.AutoSize = true;
-            this.chkShowlights.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkShowlights.Checked = true;
-            this.chkShowlights.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowlights.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkShowlights.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.chkShowlights.Location = new System.Drawing.Point(376, 89);
-            this.chkShowlights.Name = "chkShowlights";
-            this.chkShowlights.Size = new System.Drawing.Size(115, 17);
-            this.chkShowlights.TabIndex = 36;
-            this.chkShowlights.Text = "Include Showlights";
-            this.chkShowlights.UseVisualStyleBackColor = true;
+            this.btnQuickAdd.Location = new System.Drawing.Point(401, 14);
+            this.btnQuickAdd.Name = "btnQuickAdd";
+            this.btnQuickAdd.Size = new System.Drawing.Size(91, 23);
+            this.btnQuickAdd.TabIndex = 37;
+            this.btnQuickAdd.Text = "Quick Add";
+            this.btnQuickAdd.UseVisualStyleBackColor = true;
+            this.btnQuickAdd.Click += new System.EventHandler(this.btnQuickAdd_Click);
+            this.btnQuickAdd.MouseEnter += new System.EventHandler(this.btnQuickAdd_MouseEnter);
             // 
             // keyboardDescArrLabel
             // 
@@ -596,17 +590,6 @@
             this.updateProgress.TabIndex = 999;
             this.updateProgress.Visible = false;
             // 
-            // btnQuickAdd
-            // 
-            this.btnQuickAdd.Location = new System.Drawing.Point(401, 14);
-            this.btnQuickAdd.Name = "btnQuickAdd";
-            this.btnQuickAdd.Size = new System.Drawing.Size(91, 23);
-            this.btnQuickAdd.TabIndex = 37;
-            this.btnQuickAdd.Text = "Quick Add";
-            this.btnQuickAdd.UseVisualStyleBackColor = true;
-            this.btnQuickAdd.Click += new System.EventHandler(this.btnQuickAdd_Click);
-            this.btnQuickAdd.MouseEnter += new System.EventHandler(this.btnQuickAdd_MouseEnter);
-            // 
             // previewVolumeBox
             // 
             this.previewVolumeBox.DecimalPlaces = 1;
@@ -616,7 +599,7 @@
             0,
             0,
             65536});
-            this.previewVolumeBox.Location = new System.Drawing.Point(72, 69);
+            this.previewVolumeBox.Location = new System.Drawing.Point(71, 69);
             this.previewVolumeBox.Maximum = new decimal(new int[] {
             0,
             0,
@@ -719,7 +702,7 @@
             0,
             0,
             65536});
-            this.songVolumeBox.Location = new System.Drawing.Point(7, 69);
+            this.songVolumeBox.Location = new System.Drawing.Point(6, 69);
             this.songVolumeBox.Maximum = new decimal(new int[] {
             0,
             0,
@@ -788,7 +771,7 @@
             // audioQualityBox
             // 
             this.audioQualityBox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.audioQualityBox.Location = new System.Drawing.Point(447, 44);
+            this.audioQualityBox.Location = new System.Drawing.Point(447, 46);
             this.audioQualityBox.Maximum = new decimal(new int[] {
             9,
             0,
@@ -802,7 +785,6 @@
             this.audioQualityBox.Name = "audioQualityBox";
             this.audioQualityBox.Size = new System.Drawing.Size(37, 20);
             this.audioQualityBox.TabIndex = 37;
-            this.audioQualityBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.audioQualityBox.Value = new decimal(new int[] {
             4,
             0,
@@ -915,7 +897,6 @@
         private System.Windows.Forms.Label label7;
         private NumericUpDownFixed audioQualityBox;
         private System.Windows.Forms.RadioButton rbConvert;
-        private System.Windows.Forms.CheckBox chkShowlights;
         private System.Windows.Forms.Button btnQuickAdd;
     }
 }

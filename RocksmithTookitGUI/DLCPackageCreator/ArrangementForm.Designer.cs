@@ -157,15 +157,15 @@
             // scrollSpeedTrackBar
             // 
             this.scrollSpeedTrackBar.AutoSize = false;
-            this.scrollSpeedTrackBar.Location = new System.Drawing.Point(40, 18);
+            this.scrollSpeedTrackBar.Location = new System.Drawing.Point(43, 14);
             this.scrollSpeedTrackBar.Margin = new System.Windows.Forms.Padding(2);
             this.scrollSpeedTrackBar.Maximum = 45;
             this.scrollSpeedTrackBar.Minimum = 5;
             this.scrollSpeedTrackBar.Name = "scrollSpeedTrackBar";
-            this.scrollSpeedTrackBar.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.scrollSpeedTrackBar.Size = new System.Drawing.Size(130, 23);
+            this.scrollSpeedTrackBar.Size = new System.Drawing.Size(121, 23);
             this.scrollSpeedTrackBar.TabIndex = 9;
-            this.scrollSpeedTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.scrollSpeedTrackBar.TabStop = false;
+            this.scrollSpeedTrackBar.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             this.scrollSpeedTrackBar.Value = 20;
             this.scrollSpeedTrackBar.ValueChanged += new System.EventHandler(this.scrollSpeedTrackBar_ValueChanged);
             // 
@@ -173,29 +173,29 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(2, 21);
+            this.label3.Location = new System.Drawing.Point(5, 21);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 13);
+            this.label3.Size = new System.Drawing.Size(41, 13);
             this.label3.TabIndex = 30;
-            this.label3.Text = "Slowest";
+            this.label3.Text = "Fastest";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label5.Location = new System.Drawing.Point(167, 21);
+            this.label5.Location = new System.Drawing.Point(162, 21);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(41, 13);
+            this.label5.Size = new System.Drawing.Size(44, 13);
             this.label5.TabIndex = 32;
-            this.label5.Text = "Fastest";
+            this.label5.Text = "Slowest";
             // 
             // scrollSpeedDisplay
             // 
             this.scrollSpeedDisplay.AutoSize = true;
             this.scrollSpeedDisplay.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.scrollSpeedDisplay.Location = new System.Drawing.Point(61, 39);
+            this.scrollSpeedDisplay.Location = new System.Drawing.Point(71, 43);
             this.scrollSpeedDisplay.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.scrollSpeedDisplay.Name = "scrollSpeedDisplay";
             this.scrollSpeedDisplay.Size = new System.Drawing.Size(71, 13);
@@ -451,12 +451,12 @@
             // 
             // gbArrInfo
             // 
+            this.gbArrInfo.Controls.Add(this.gbScrollSpeed);
             this.gbArrInfo.Controls.Add(this.typeEdit);
             this.gbArrInfo.Controls.Add(this.tuningEditButton);
             this.gbArrInfo.Controls.Add(this.BonusCheckBox);
             this.gbArrInfo.Controls.Add(this.gbTuningPitch);
             this.gbArrInfo.Controls.Add(this.Picked);
-            this.gbArrInfo.Controls.Add(this.gbScrollSpeed);
             this.gbArrInfo.Controls.Add(this.label4);
             this.gbArrInfo.Controls.Add(this.arrangementTypeCombo);
             this.gbArrInfo.Controls.Add(this.label1);
@@ -603,10 +603,10 @@
             // 
             // gbScrollSpeed
             // 
-            this.gbScrollSpeed.Controls.Add(this.scrollSpeedTrackBar);
             this.gbScrollSpeed.Controls.Add(this.label5);
             this.gbScrollSpeed.Controls.Add(this.label3);
             this.gbScrollSpeed.Controls.Add(this.scrollSpeedDisplay);
+            this.gbScrollSpeed.Controls.Add(this.scrollSpeedTrackBar);
             this.gbScrollSpeed.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbScrollSpeed.Location = new System.Drawing.Point(214, 12);
             this.gbScrollSpeed.Name = "gbScrollSpeed";
