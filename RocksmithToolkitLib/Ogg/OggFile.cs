@@ -11,7 +11,7 @@ namespace RocksmithToolkitLib.Ogg
 {
     public static class OggFile//wwRIFF
     {
-        public enum WwiseVersion { Wwise2010, Wwise2013, None };
+        public enum WwiseVersion { None, Wwise2010, Wwise2013, Wwise2014, Wwise2015 };
 
         #region RS1
 
@@ -262,9 +262,9 @@ namespace RocksmithToolkitLib.Ogg
             var wavPreviewPath = String.Format(audioPathNoExt + "_preview.wav");
             var wemPreviewPath = String.Format(audioPathNoExt + "_preview.wem");
 
-            if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".ogg")//RS1 old ogg was actually wwise
+            if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".ogg")//RS1 ogg's was actually wwise
             {
-                ExternalApps.Ogg2Wav(audioPath, wavPath);
+                ExternalApps.Ogg2Wav(audioPath, wavPath);//detect quality here
                 if (!File.Exists(oggPreviewPath))
                 {
                     ExternalApps.Ogg2Preview(audioPath, oggPreviewPath, previewLength, chorusTime);
@@ -290,7 +290,7 @@ namespace RocksmithToolkitLib.Ogg
 
             if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".wem" && !File.Exists(wemPreviewPath))
             {
-                OggFile.Revorb(audioPath, oggPath, Path.GetDirectoryName(Application.ExecutablePath), OggFile.WwiseVersion.Wwise2013);
+                Revorb(audioPath, oggPath, Path.GetDirectoryName(Application.ExecutablePath), WwiseVersion.Wwise2013);
                 ExternalApps.Ogg2Wav(oggPath, wavPath);
                 ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, previewLength, chorusTime);
                 ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);

@@ -7,11 +7,13 @@ using RocksmithToolkitLib.Extensions;
 using System.Linq;
 using ICSharpCode.SharpZipLib.BZip2;
 using ICSharpCode.SharpZipLib.Tar;
+using System.Diagnostics;
 
 namespace RocksmithToolkitLib.Ogg
 {
     public static class Wwise
     {
+        static OggFile.WwiseVersion Selected { get; set; }
         public static void Convert2Wem(string sourcePath, string destinationPath, int audioQuality)
         {
             try
@@ -42,17 +44,21 @@ namespace RocksmithToolkitLib.Ogg
             if (String.IsNullOrEmpty(wwisePath))
                 throw new FileNotFoundException("Could not find Audiokinect Wwise installation." + Environment.NewLine + "Please confirm that Wwise v2013.2.x or v2014.1.x series are installed.");
 
-            // No support for v2015.1.x yet, code is expandable
-            if (!wwisePath.ToLower().Contains("v2013.2"))
-                if (!wwisePath.ToLower().Contains("v2014.1"))
-                    throw new FileNotFoundException("You have an incompatible version of Audiokinect Wwise installed." +
-                    Environment.NewLine + "Install Wwise v2013.2.x or v2014.1.x series if you would like to use" +
-                    Environment.NewLine + " the toolkit OGG/WAV audio to Wwise WEM audio auto convert features.");
-
+            Selected = OggFile.WwiseVersion.None;
             var pathWwiseCli = Directory.EnumerateFiles(wwisePath, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
-
-            if (!pathWwiseCli.Any())
+            if (pathWwiseCli == null)
                 throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwisePath + Environment.NewLine + "Please confirm that Wwise v2013.2.x or v2014.1.x series is installed.");
+
+            var wwiseVersion = FileVersionInfo.GetVersionInfo(pathWwiseCli).ProductVersion;
+            if (wwiseVersion.StartsWith("2013.2"))
+                Selected = OggFile.WwiseVersion.Wwise2013;
+            if (wwiseVersion.StartsWith("2014.1"))
+                Selected = OggFile.WwiseVersion.Wwise2014;
+            // No support for v2015.1.x yet, code is expandable
+            if (Selected == OggFile.WwiseVersion.None)
+               throw new FileNotFoundException("You have an incompatible version of Audiokinect Wwise installed." +
+               Environment.NewLine + "Install Wwise v2013.2.x or v2014.1.x series if you would like to use" +
+               Environment.NewLine + " the toolkit OGG/WAV audio to Wwise WEM audio auto convert features.");
 
             return pathWwiseCli;
         }
@@ -64,32 +70,28 @@ namespace RocksmithToolkitLib.Ogg
             var packedTemplatePath2014 = Path.Combine(appRootDir, "Wwise2014.tar.bz2");
             var templateDir = String.Empty;
             //Unpack required template here, based on wwise version installed.
-            if (wwisePath.ToLower().Contains("v2013.2"))
+            switch (Selected)
             {
-                ExtractTemplate(packedTemplatePath2013);
-                templateDir = Path.Combine(appRootDir, "Wwise2013\\Template");
+                case OggFile.WwiseVersion.Wwise2013:
+                    ExtractTemplate(packedTemplatePath2013);
+                    templateDir = Path.Combine(appRootDir, "Wwise2013\\Template");
+                    break;
+                case OggFile.WwiseVersion.Wwise2014:
+                    ExtractTemplate(packedTemplatePath2014);
+                    templateDir = Path.Combine(appRootDir, "Wwise2014\\Template");
+                    break;
+                // expandable to next new Wwise version here
+                default:
+                    throw new FileNotFoundException("Wwise path is incompatible.");
             }
-            else if (wwisePath.ToLower().Contains("v2014.1"))
-            {
-                ExtractTemplate(packedTemplatePath2014);
-                templateDir = Path.Combine(appRootDir, "Wwise2014\\Template");
-            }
-            // expandable to next new Wwise version here
-            else
-                throw new FileNotFoundException("Wwise path is incompatible.");
-
-            string resString = String.Empty;
+            var resString = String.Empty;
             var workUnitPath = Path.Combine(templateDir, "Interactive Music Hierarchy", "Default Work Unit.wwu");
             using (var sr = new StreamReader(File.OpenRead(workUnitPath)))
             {
-                resString = sr.ReadToEnd();
-            }
-
-            resString = resString.Replace("%QF1%", Convert.ToString(audioQuality));
-            resString = resString.Replace("%QF2%", "4");//preview
-
-            using (TextWriter tw = new StreamWriter(workUnitPath, false))
-            {
+                resString = sr.ReadToEnd(); sr.Close();
+                resString = resString.Replace("%QF1%", Convert.ToString(audioQuality));
+                resString = resString.Replace("%QF2%", "4"); //preview
+                var tw = new StreamWriter(workUnitPath, false);
                 tw.Write(resString);
                 tw.Flush();
             }
