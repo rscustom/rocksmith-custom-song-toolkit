@@ -31,7 +31,6 @@ namespace RocksmithToolkitLib.DLCPackage
         public bool Mac { get; set; }
         public bool XBox360 { get; set; }
         public bool PS3 { get; set; }
-        public bool Showlights { get; set; }
 
         public string AppId { get; set; }
         public string Name { get; set; }

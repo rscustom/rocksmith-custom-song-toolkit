@@ -403,10 +403,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dlcSavePath = ofd.FileName;
             }
 
-            // added on/off feature for debugging 
-            // showlights cause in game hanging for some RS1-RS2 conversions
-            packageData.Showlights = chkShowlights.Checked;
-
             //Generate metronome arrangemnts here
             var mArr = new List<Arrangement>();
             foreach (var arr in packageData.Arrangements)
