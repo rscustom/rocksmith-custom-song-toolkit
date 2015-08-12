@@ -34,12 +34,14 @@
             this.repackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.gameVersionCombo = new System.Windows.Forms.ComboBox();
+            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.decodeAudioCheckbox = new System.Windows.Forms.CheckBox();
             this.updateSngCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.extractSongXmlCheckBox = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.extractSongXmlCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.currentOperationLabel = new System.Windows.Forms.Label();
             this.updateProgress = new System.Windows.Forms.ProgressBar();
@@ -47,9 +49,7 @@
             this.deleteSourceFileCheckBox = new System.Windows.Forms.CheckBox();
             this.quickBassFixBox = new System.Windows.Forms.CheckBox();
             this.lowTuningBassFixButton = new System.Windows.Forms.Button();
-            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.dlcPackageCreatorControl = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator();
-            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -118,8 +118,8 @@
             // 
             // gameVersionCombo
             // 
-            this.gameVersionCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gameVersionCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gameVersionCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.gameVersionCombo.FormattingEnabled = true;
             this.gameVersionCombo.Location = new System.Drawing.Point(5, 17);
@@ -129,10 +129,20 @@
             this.gameVersionCombo.TabIndex = 5;
             this.gameVersionCombo.SelectedIndexChanged += new System.EventHandler(this.gameVersionCombo_SelectedIndexChanged);
             // 
+            // AppIdTB
+            // 
+            this.AppIdTB.Cue = "APP ID";
+            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
+            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
+            this.AppIdTB.Name = "AppIdTB";
+            this.AppIdTB.Size = new System.Drawing.Size(93, 20);
+            this.AppIdTB.TabIndex = 41;
+            // 
             // appIdCombo
             // 
-            this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.appIdCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.appIdCombo.FormattingEnabled = true;
             this.appIdCombo.Location = new System.Drawing.Point(102, 17);
@@ -179,16 +189,18 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Unpacker";
             // 
-            // extractSongXmlCheckBox
+            // label2
             // 
-            this.extractSongXmlCheckBox.AutoSize = true;
-            this.extractSongXmlCheckBox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.extractSongXmlCheckBox.Location = new System.Drawing.Point(6, 42);
-            this.extractSongXmlCheckBox.Name = "extractSongXmlCheckBox";
-            this.extractSongXmlCheckBox.Size = new System.Drawing.Size(86, 17);
-            this.extractSongXmlCheckBox.TabIndex = 1;
-            this.extractSongXmlCheckBox.Text = "SNG to XML";
-            this.extractSongXmlCheckBox.UseVisualStyleBackColor = true;
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label2.Location = new System.Drawing.Point(9, 59);
+            this.label2.Margin = new System.Windows.Forms.Padding(0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(116, 12);
+            this.label2.TabIndex = 18;
+            this.label2.Text = "Removes XML Comments";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label1
             // 
@@ -202,6 +214,17 @@
             this.label1.TabIndex = 17;
             this.label1.Text = "RS2014";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // extractSongXmlCheckBox
+            // 
+            this.extractSongXmlCheckBox.AutoSize = true;
+            this.extractSongXmlCheckBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.extractSongXmlCheckBox.Location = new System.Drawing.Point(6, 42);
+            this.extractSongXmlCheckBox.Name = "extractSongXmlCheckBox";
+            this.extractSongXmlCheckBox.Size = new System.Drawing.Size(86, 17);
+            this.extractSongXmlCheckBox.TabIndex = 1;
+            this.extractSongXmlCheckBox.Text = "SNG to XML";
+            this.extractSongXmlCheckBox.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
@@ -280,16 +303,6 @@
             this.lowTuningBassFixButton.UseVisualStyleBackColor = true;
             this.lowTuningBassFixButton.Click += new System.EventHandler(this.lowTuningBassFixButton_Click);
             // 
-            // AppIdTB
-            // 
-            this.AppIdTB.Cue = "APP ID";
-            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
-            this.AppIdTB.Location = new System.Drawing.Point(5, 44);
-            this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(93, 20);
-            this.AppIdTB.TabIndex = 41;
-            // 
             // dlcPackageCreatorControl
             // 
             this.dlcPackageCreatorControl.Album = "";
@@ -308,19 +321,6 @@
             this.dlcPackageCreatorControl.SongTitle = "";
             this.dlcPackageCreatorControl.SongTitleSort = "";
             this.dlcPackageCreatorControl.TabIndex = 0;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label2.Location = new System.Drawing.Point(9, 59);
-            this.label2.Margin = new System.Windows.Forms.Padding(0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(116, 12);
-            this.label2.TabIndex = 18;
-            this.label2.Text = "Removes XML Comments";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // DLCPackerUnpacker
             // 
