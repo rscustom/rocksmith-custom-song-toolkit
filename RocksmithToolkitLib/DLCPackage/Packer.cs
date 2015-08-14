@@ -30,6 +30,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null, bool updateManifest = false)
         {
+          //  if (!Path.GetFileName(sourcePath).ToLower().Contains("crowd.psarc"))
             DeleteFixedAudio(sourcePath);
             Platform platform = sourcePath.GetPlatform();
 
@@ -255,7 +256,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng, bool updateManifest)
         {
             using (var psarc = new PSARC.PSARC())
-            using (var psarcStream = new MemoryStream())
+            using (var psarcStream = new MemoryStreamExtension())
             {
                 if (updateSng)
                     UpdateSng2014(sourcePath, platform);
@@ -263,10 +264,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     UpdateManifest2014(sourcePath, platform);
 
                 WalkThroughDirectory("", sourcePath, (a, b) =>
-                {
-                    var fileStream = File.OpenRead(b);
-                    psarc.AddEntry(a, fileStream);
-                });
+               {
+                   var fileStream = File.OpenRead(b);
+                   psarc.AddEntry(a, fileStream);
+               });
 
                 psarc.Write(psarcStream, !platform.IsConsole);
                 psarcStream.Flush();
@@ -617,6 +618,10 @@ namespace RocksmithToolkitLib.DLCPackage
                         return new Platform(GamePlatform.XBox360, GameVersion.RS2014);
                     else
                         return new Platform(GamePlatform.XBox360, GameVersion.None);
+                }
+                else if (Directory.Exists(Path.Combine(fullPath, "grcrowd")))
+                {
+                   return new Platform(GamePlatform.Pc, GameVersion.RS2014); 
                 }
                 else
                 {

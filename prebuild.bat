@@ -1,19 +1,35 @@
 @echo off
 setlocal enabledelayedexpansion
+
 if errorlevel 1 goto BuildEventFailed
 
 set solution=%~1
 set toolkitver=%~2
+::echo Solution Path: %solution%
+::echo Toolkit Version Path: %toolkitver%
 
-:: if problem passing CL from VS pre-build event then hard code
-:: set solution=".\"
-:: set toolkitver=".\RocksmithToolkitLib\ToolkitVersion.cs"
+if "%solution%"=="" (
+set solution=.\
+)
 
-::git in 128 char range.
-echo Checking for .git\HEAD...
-set rev=nongit
-if exist "%solution%\.git\HEAD" (
-	echo Reading .git\HEAD...
+if "%toolkitver%"=="" (
+set toolkitver=.\RocksmithToolkitLib\ToolkitVersion.cs
+)
+
+set toolkitverdist=%toolkitver%_dist
+
+echo solution %solution%
+echo toolkitver %toolkitver%
+echo toolkitverdist %toolkitverdist%
+::echo Copying %toolkitverdist% 
+::echo To %toolkitver%
+::Copy /v %toolkitverdist% %toolkitver%
+
+
+echo Checking .git\HEAD exists ...
+::github commit version script
+if exist %solution%\.git\HEAD (
+	echo Reading .git\HEAD ...
 	set /p head=<"%solution%\.git\HEAD"
 	if "!head:~0,4!" == "ref:" (
 		echo Reading .git\!head:~5!...
@@ -23,27 +39,44 @@ if exist "%solution%\.git\HEAD" (
 	)
 	if not "!commit!" == ""	(
 		echo Found commit: !commit!
-		set rev=!commit:~0,8!
-	) else echo Unable to find commit
+		set newrev=!commit:~0,8!
+		echo newrev !newrev!
+	) else echo Unable to find commit ...
 )
-:: *.cs files in Unicode
-echo Reading ToolkitVersion.cs_dist...
-set origstr=00000000
 
-echo %toolkitver%_dist
-:: next line is required for VS2010 Pre-Build Event to work with WinXP
-chcp 65001>nul
+set oldrev=00000000
+
 ::pause
 
-for /f "tokens=* delims=" %%i in ('type "%toolkitver%_dist"') do (
+REM this has been depricated does not seem to be needed with revised scripts
+::*.cs files in Unicode, required for VS2010 Pre-Build Event to work with WinXP
+::chcp 65001>nul not reliable on WinXP SP3
+::alt work around
+::(
+::chcp 65001
+::cmd /c type myfile.txt
+::chcp 850
+::)
+
+echo Replacing %oldrev% 
+echo In %toolkitver% 
+echo With %newrev% ...
+::pause
+
+::git version replacement script
+for /f "tokens=* delims==" %%i in (%toolkitverdist%) do (
 	set str=%%i
-	set newstr=!str:%origstr%=%rev%!
-	echo !newstr! >> tempfile.txt
+	set newstr=!str:%oldrev%=%newrev%!
+	echo !newstr!>>tempfile.txt
 )
 
-echo Writing ToolkitVersion.cs...
+echo Moving new %toolkitver% ...
 move /y tempfile.txt "%toolkitver%"
 echo Done
+
+pause
+
+endlocal
 exit /b 0
 
 :BuildEventFailed

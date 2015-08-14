@@ -242,7 +242,7 @@
             // 
             this.currentOperationLabel.AutoSize = true;
             this.currentOperationLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.currentOperationLabel.Location = new System.Drawing.Point(6, 241);
+            this.currentOperationLabel.Location = new System.Drawing.Point(8, 247);
             this.currentOperationLabel.Name = "currentOperationLabel";
             this.currentOperationLabel.Size = new System.Drawing.Size(16, 13);
             this.currentOperationLabel.TabIndex = 19;
@@ -251,9 +251,9 @@
             // 
             // updateProgress
             // 
-            this.updateProgress.Location = new System.Drawing.Point(8, 260);
+            this.updateProgress.Location = new System.Drawing.Point(8, 267);
             this.updateProgress.Name = "updateProgress";
-            this.updateProgress.Size = new System.Drawing.Size(389, 26);
+            this.updateProgress.Size = new System.Drawing.Size(389, 19);
             this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.updateProgress.TabIndex = 0;
             this.updateProgress.Visible = false;
@@ -366,12 +366,12 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label currentOperationLabel;
-        private System.Windows.Forms.ProgressBar updateProgress;
         private System.Windows.Forms.GroupBox customFixesGroupBox;
         protected System.Windows.Forms.Button lowTuningBassFixButton;
         private DLCPackageCreator.DLCPackageCreator dlcPackageCreatorControl;
         private System.Windows.Forms.CheckBox quickBassFixBox;
         private System.Windows.Forms.CheckBox deleteSourceFileCheckBox;
         private System.Windows.Forms.Label label2;
+        public System.Windows.Forms.ProgressBar updateProgress;
     }
 }

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
 
@@ -115,7 +117,7 @@ namespace RocksmithToolkitLib.PSARC
                     entry.Data = new FileStream(destfilepath, FileMode.Create, FileAccess.Write, FileShare.Read);
                 else
                     entry.Data = new TempFileStream();
-                
+
                 var data = entry.Data;
                 _reader.BaseStream.Position = (long)entry.Offset;
 
@@ -207,15 +209,25 @@ namespace RocksmithToolkitLib.PSARC
         /// <param name="zLengths">zBlocksSizeList</param>
         private void DeflateEntries(out Dictionary<Entry, byte[]> entryDeflatedData, out List<uint> zLengths)
         {
+            // TODO: This produces perfect results for song archives (original vs repacked)
+            // there are slight differences in the binary of large archives (original vs repacked).  WHY?
+            //
             entryDeflatedData = new Dictionary<Entry, byte[]>();
             uint blockSize = this.header.blockSizeAlloc;
             zLengths = new List<uint>();
+
+            var ndx = 0; // for debugging
+            var step = Math.Round(1.0 / (this.TOC.Count + 2) * 100, 3);
+            double progress = 0;
+            GlobalExtension.ShowProgress("Deflating Entries ...");
+
             foreach (Entry entry in this.TOC)
             {
                 var zList = new List<Tuple<byte[], int>>();
                 entry.zIndexBegin = (uint)zLengths.Count;
                 entry.Data.Seek(0, SeekOrigin.Begin);
                 Stream data = entry.Data;
+
                 while (data.Position < data.Length)
                 {
                     var array_i = new byte[blockSize];
@@ -241,19 +253,25 @@ namespace RocksmithToolkitLib.PSARC
                         }
                     }
                 }
+
                 int zSisesSum = 0;
                 foreach (var zSize in zList)
                 {
                     zSisesSum += zSize.Item2;
                     zLengths.Add((uint)zSize.Item2);
                 }
+
                 var array3 = new byte[zSisesSum];
                 var memoryStream2 = new MemoryStream(array3);
                 foreach (var entryblock in zList)
                 {
                     memoryStream2.Write(entryblock.Item1, 0, entryblock.Item2);
                 }
+
                 entryDeflatedData.Add(entry, array3);
+                progress += step;
+                GlobalExtension.UpdateProgress.Value = (int)progress;
+                Debug.WriteLine("Deflating: " + ndx++);
             }
         }
 
@@ -412,8 +430,11 @@ namespace RocksmithToolkitLib.PSARC
         }
 
         private BigEndianBinaryWriter _writer;
-        public void Write(Stream psarc, bool encrypt)
+        public void Write(Stream inputStream, bool encrypt)
         {
+            // TODO: This produces perfect results for song archives (original vs repacked)
+            // there are slight differences in the binary of large archives (original vs repacked).  WHY?
+            //
             this.header.archiveFlags = encrypt ? 4U : 0U;
             this.header.TOCEntrySize = 30;
             this.WriteManifest();
@@ -421,7 +442,7 @@ namespace RocksmithToolkitLib.PSARC
             Dictionary<Entry, byte[]> zStreams; List<uint> zLengths;
             DeflateEntries(out zStreams, out zLengths);
             //Build zLengths
-            _writer = new BigEndianBinaryWriter(psarc);
+            _writer = new BigEndianBinaryWriter(inputStream);
             this.header.TotalTOCSize = (uint)(32 + this.TOC.Count * this.header.TOCEntrySize + zLengths.Count * bNum);
             this.TOC[0].Offset = (ulong)this.header.TotalTOCSize;
             for (int i = 1; i < this.TOC.Count; i++)
@@ -461,44 +482,71 @@ namespace RocksmithToolkitLib.PSARC
                         break;
                 }
             }
-            //Write zData
+
+            // Write zData
+            var ndx = 0; // for debugging
+            var step = Math.Round(1.0 / (this.TOC.Count + 2) * 100, 3);
+            double progress = 0;
+            GlobalExtension.ShowProgress("Writing Zipped Data ...");
+
             foreach (Entry current in this.TOC)
             {
                 _writer.Write(zStreams[current]);
+                progress += step;
+                GlobalExtension.UpdateProgress.Value = (int)progress;
+                Debug.WriteLine("Zipped: " + ndx++);
                 current.Data.Close();
             }
-            if (encrypt)
-            {// Encrypt TOC
-                var encStream = new MemoryStreamExtension();
+
+            if (encrypt) // Encrypt TOC
+            {
                 using (var outputStream = new MemoryStreamExtension())
                 {
+                    var encStream = new MemoryStreamExtension();
+                    inputStream.Seek(32, SeekOrigin.Begin);
+                    RijndaelEncryptor.EncryptPSARC(inputStream, outputStream, this.header.TotalTOCSize);
+                    inputStream.Seek(0, SeekOrigin.Begin);
+
                     int bytesRead;
-                    int decSize = 0;
-                    var buffer = new byte[30000];
-                    int tocSize = (int)this.header.TotalTOCSize - 32;
-
-                    psarc.Seek(32, SeekOrigin.Begin);
-                    RijndaelEncryptor.EncryptPSARC(psarc, outputStream, this.header.TotalTOCSize);
-
-                    psarc.Seek(0, SeekOrigin.Begin);
-                    while ((bytesRead = psarc.Read(buffer, 0, buffer.Length)) > 0)
-                        encStream.Write(buffer, 0, bytesRead);
-
-                    outputStream.Seek(0, SeekOrigin.Begin);
+                    var buffer = new byte[32];
+                    bytesRead = inputStream.Read(buffer, 0, buffer.Length);
+                    inputStream.Flush();
+                    inputStream.Dispose(); // Free Memory ASAP
+                    // copy header from input stream
+                    encStream.Write(buffer, 0, bytesRead);
                     encStream.Seek(32, SeekOrigin.Begin);
+
+                    int tocSize = (int)this.header.TotalTOCSize - 32;
+                    int decSize = 0;
+                    buffer = new byte[30000];
+
+                    ndx = 0; // for debuging
+                    step = Math.Round(1.0 / ((tocSize / buffer.Length) + 2) * 100, 3);
+                    progress = 0;
+                    GlobalExtension.ShowProgress("Writing Encrypted Data ...");
+
                     while ((bytesRead = outputStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
                         decSize += bytesRead;
-                        if (decSize > tocSize) bytesRead = tocSize - (decSize - bytesRead);
-                        encStream.Write(buffer, 0, bytesRead);
-                    }
-                }
+                        if (decSize > tocSize)
+                            bytesRead = tocSize - (decSize - bytesRead);
 
-                psarc.Seek(0, SeekOrigin.Begin);
-                encStream.Seek(0, SeekOrigin.Begin);
-                encStream.CopyTo(psarc, (int)this.header.blockSizeAlloc);
+                        encStream.Write(buffer, 0, bytesRead);
+                        progress += step;
+                        GlobalExtension.UpdateProgress.Value = (int)progress;
+                        Debug.WriteLine("Encrypted: " + ndx++);
+                    }
+
+                    inputStream.Seek(0, SeekOrigin.Begin);
+                    encStream.Seek(0, SeekOrigin.Begin);
+                    encStream.CopyTo(inputStream, (int)this.header.blockSizeAlloc);
+                }
             }
-            psarc.Flush();
+            else
+            {
+                inputStream.Flush();
+                inputStream.Dispose();
+            }
         }
 
         #endregion

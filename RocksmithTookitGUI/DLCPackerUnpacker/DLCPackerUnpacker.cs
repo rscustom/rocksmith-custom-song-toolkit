@@ -8,6 +8,7 @@ using System.IO;
 using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib;
+using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Ogg;
 
@@ -21,21 +22,30 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private StringBuilder errorsFound;
         private string savePath;
 
-        private bool decodeAudio {
+        public static ProgressBar UpdateProgress { get; set; }
+        public static Label CurrentOperationLabel { get; set; }
+
+        private bool decodeAudio
+        {
             get { return decodeAudioCheckbox.Checked; }
         }
 
-        private bool extractSongXml {
+        private bool extractSongXml
+        {
             get { return extractSongXmlCheckBox.Checked; }
         }
 
-        private bool updateSng {
+        private bool updateSng
+        {
             get { return updateSngCheckBox.Checked; }
         }
 
         public DLCPackerUnpacker()
         {
             InitializeComponent();
+            GlobalExtension.UpdateProgress = this.updateProgress;
+            GlobalExtension.CurrentOperationLabel = this.currentOperationLabel;
+
             try
             {
                 var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
@@ -84,6 +94,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             AppIdTB.Text = songAppId.AppId;
         }
 
+        public void SetProgress(int progress, int maxValue)
+        {
+            var step = (int)Math.Round(1.0 / (maxValue + 1) * 100, 0);
+            updateProgress.Value = (int)(progress / step);
+        }
+
         private void packButton_Click(object sender, EventArgs e)
         {
             string sourcePath;
@@ -102,17 +118,22 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     return;
                 saveFileName = sfd.FileName;
             }
+
+            GlobalExtension.ShowProgress("Packing archive ...");
             Application.DoEvents();
+
             try
             {
-                var platform = sourcePath.GetPlatform();
                 Packer.Pack(sourcePath, saveFileName, updateSng);
+                GlobalExtension.ShowProgress("Finished packing archive ...", 100);
                 MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(String.Format("{0}\n{1}\n{2}", "Packing error!", ex.Message, ex.InnerException), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            GlobalExtension.HideProgress();
         }
 
         private void unpackButton_Click(object sender, EventArgs e)
@@ -223,7 +244,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                         File.WriteAllText(appIdFile, appId);
                         Packer.Pack(unpackedDir, sourceFileName, updateSng);
                     }
-                    catch (Exception ex) {
+                    catch (Exception ex)
+                    {
                         errorsFound.AppendLine(String.Format("Error trying repack file '{0}': {1}", Path.GetFileName(sourceFileName), ex.Message));
                     }
 
@@ -271,7 +293,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             currentOperationLabel.Visible = false;
         }
 
-        private void ShowCurrentOperation(string message)
+        public void ShowCurrentOperation(string message)
         {
             currentOperationLabel.Text = message;
             currentOperationLabel.Refresh();

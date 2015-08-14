@@ -12,6 +12,9 @@ namespace RocksmithToolkitLib.Extensions
         public TempFileStream()
             : base(Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.Read, _buffer_size, FileOptions.DeleteOnClose) { }
 
+        public TempFileStream(FileMode mode) // for Appending can not use FileAccess.ReadWrite
+            : base(Path.GetTempFileName(), mode, FileAccess.Write, FileShare.Read, _buffer_size, FileOptions.DeleteOnClose) { }
+
         public TempFileStream(FileAccess access)
             : base(Path.GetTempFileName(), FileMode.Create, access, FileShare.Read, _buffer_size, FileOptions.DeleteOnClose) { }
 
