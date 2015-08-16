@@ -196,13 +196,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     var fileStream = File.OpenRead(x);
                     streamCollection.Add(fileStream);
-                    var entry = new PSARC.Entry
-                    {
-                        Name = Path.GetFileName(x),
-                        Data = fileStream,
-                        Length = (ulong)fileStream.Length
-                    };
-                    psarc.AddEntry(entry);
+                    psarc.AddEntry(Path.GetFileName(x), fileStream);
                 }
 
                 foreach (var directory in Directory.EnumerateDirectories(sourcePath))

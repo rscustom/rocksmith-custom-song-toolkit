@@ -354,7 +354,7 @@ namespace RocksmithToolkitLib.Extensions
 
         public static void WriteFile(this Stream memoryStream, string fileName)
         {
-            using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            using (var file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 byte[] bytes = new byte[memoryStream.Length];
                 memoryStream.Read(bytes, 0, (int)memoryStream.Length);
