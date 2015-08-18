@@ -30,7 +30,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null, bool updateManifest = false)
         {
-          //  if (!Path.GetFileName(sourcePath).ToLower().Contains("crowd.psarc"))
+            //  if (!Path.GetFileName(sourcePath).ToLower().Contains("crowd.psarc"))
             DeleteFixedAudio(sourcePath);
             Platform platform = sourcePath.GetPlatform();
 
@@ -613,9 +613,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     else
                         return new Platform(GamePlatform.XBox360, GameVersion.None);
                 }
-                else if (Directory.Exists(Path.Combine(fullPath, "grcrowd")))
+                else if (fullPath.ToLower().Contains("_pc"))
                 {
-                   return new Platform(GamePlatform.Pc, GameVersion.RS2014); 
+                    return new Platform(GamePlatform.Pc, GameVersion.RS2014);
                 }
                 else
                 {
@@ -690,6 +690,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream, true);
+
+            var step = Math.Round(1.0 / (psarc.TOC.Count + 2) * 100, 3);
+            double progress = 0;
+            GlobalExtension.ShowProgress("Inflating Entries ...");
+
             foreach (var entry in psarc.TOC)
             {// custom InflateEntries
                 var fullfilename = Path.Combine(destpath, entry.Name);
@@ -710,6 +715,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
 
                 if (!String.IsNullOrEmpty(psarc.ErrMSG)) throw new InvalidDataException(psarc.ErrMSG);
+
+                progress += step;
+                GlobalExtension.UpdateProgress.Value = (int)progress;
             }
         }
 

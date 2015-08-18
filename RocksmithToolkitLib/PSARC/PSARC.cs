@@ -191,6 +191,8 @@ namespace RocksmithToolkitLib.PSARC
         /// <param name="zLengths">zBlocksSizeList</param>
         private void DeflateEntries(out Dictionary<Entry, byte[]> entryDeflatedData, out List<uint> zLengths)
         {
+            // TODO: optimize this code
+            //
             entryDeflatedData = new Dictionary<Entry, byte[]>();
             uint blockSize = _header.BlockSizeAlloc;
             zLengths = new List<uint>();
@@ -246,6 +248,7 @@ namespace RocksmithToolkitLib.PSARC
                 }
 
                 entryDeflatedData.Add(entry, array3);
+                
                 progress += step;
                 GlobalExtension.UpdateProgress.Value = (int)progress;
                 Debug.WriteLine("Deflating: " + ndx++);
@@ -510,7 +513,7 @@ namespace RocksmithToolkitLib.PSARC
 
                     int tocSize = (int)_header.TotalTOCSize - 32;
                     int decSize = 0;
-                    buffer = new byte[30000];
+                    buffer = new byte[1024*16];
 
                     ndx = 0; // for debuging
                     step = Math.Round(1.0 / ((tocSize / buffer.Length) + 2) * 100, 3);

@@ -112,6 +112,7 @@ Backup*/
 UpgradeLog*.XML
 RocksmithToolkitLib/ToolkitVersion.cs
 CleanupBeforeGitPullRequest.bat
+RevisionLog.txt
 
 # Python
 # Byte-compiled / optimized / DLL files

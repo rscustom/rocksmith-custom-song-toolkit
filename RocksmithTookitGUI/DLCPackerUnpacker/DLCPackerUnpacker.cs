@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.IO;
@@ -45,6 +47,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             InitializeComponent();
             GlobalExtension.UpdateProgress = this.updateProgress;
             GlobalExtension.CurrentOperationLabel = this.currentOperationLabel;
+            Thread.Sleep(100); // give Globals a chance to initialize
 
             try
             {
@@ -63,12 +66,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             bwRepack.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ProcessCompleted);
             bwRepack.WorkerReportsProgress = true;
 
-            // Upack worker
-            bwUnpack.DoWork += new DoWorkEventHandler(Unpack);
-            bwUnpack.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
-            bwUnpack.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ProcessCompleted);
-            bwUnpack.WorkerReportsProgress = true;
-
+            // commented out bWorker aspects to test GlobalExtension ProgressBar function
+            //// Upack worker
+            //bwUnpack.DoWork += new DoWorkEventHandler(Unpack);
+            //bwUnpack.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
+            //bwUnpack.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ProcessCompleted);
+            //bwUnpack.WorkerReportsProgress = true;
         }
 
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
@@ -124,8 +127,11 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             try
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Restart();
                 Packer.Pack(sourcePath, saveFileName, updateSng);
-                GlobalExtension.ShowProgress("Finished packing archive ...", 100);
+                sw.Stop();
+                GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
                 MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -158,44 +164,61 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 savePath = fbd.SelectedPath;
             }
 
-            if (!bwUnpack.IsBusy && sourceFileNames.Length > 0)
-            {
-                updateProgress.Value = 0;
-                updateProgress.Visible = true;
-                currentOperationLabel.Visible = true;
-                unpackButton.Enabled = false;
-                bwUnpack.RunWorkerAsync(sourceFileNames);
-            }
-        }
+            // commented out bWorker aspects to test GlobalExtension ProgressBar function
+            //if (!bwUnpack.IsBusy && sourceFileNames.Length > 0)
+            //{
+            //    updateProgress.Value = 0;
+            //    updateProgress.Visible = true;
+            //    currentOperationLabel.Visible = true;
+            unpackButton.Enabled = false;
+            //    bwUnpack.RunWorkerAsync(sourceFileNames);
+            //}
+            //}
 
-        private void Unpack(object sender, DoWorkEventArgs e)
-        {
-            var sourceFileNames = e.Argument as string[];
+            //private void Unpack(object sender, DoWorkEventArgs e)
+            //{            
+            //    var sourceFileNames = e.Argument as string[];
             errorsFound = new StringBuilder();
-            var step = (int)Math.Round(1.0 / sourceFileNames.Length * 100, 0);
-            int progress = 0;
+            //var step = (int)Math.Round(1.0 / sourceFileNames.Length * 100, 0);
+            //int progress = 0;
 
             foreach (string sourceFileName in sourceFileNames)
             {
                 Application.DoEvents();
                 Platform platform = Packer.GetPlatform(sourceFileName);
-                bwUnpack.ReportProgress(progress, String.Format("Unpacking '{0}'", Path.GetFileName(sourceFileName)));
+                // bwUnpack.ReportProgress(progress, String.Format("Unpacking '{0}'", Path.GetFileName(sourceFileName)));
+
+                GlobalExtension.ShowProgress(String.Format("Unpacking '{0}'", Path.GetFileName(sourceFileName)));
 
                 // remove this exception handler for testing
                 try
                 {
+                    Stopwatch sw = new Stopwatch();
+                    sw.Restart();
                     Packer.Unpack(sourceFileName, savePath, decodeAudio, extractSongXml);
+                    sw.Stop();
+                    GlobalExtension.ShowProgress("Finished unpacking archive (elapsed time): " + sw.Elapsed, 100);
                 }
                 catch (Exception ex)
                 {
                     errorsFound.AppendLine(String.Format("Error unpacking file '{0}': {1}", Path.GetFileName(sourceFileName), ex.Message));
                 }
 
-                progress += step;
-                bwUnpack.ReportProgress(progress);
+                // progress += step;
+                // bwUnpack.ReportProgress(progress);
             }
-            bwUnpack.ReportProgress(100);
-            e.Result = "unpack";
+            //  bwUnpack.ReportProgress(100);
+            //  e.Result = "unpack";
+
+            // add this message while bWorker is commented out
+            if (errorsFound.Length <= 0)
+                MessageBox.Show("Unpacking is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
+                MessageBox.Show("Unpacking is complete with errors. See below: " + Environment.NewLine + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            unpackButton.Enabled = true;
+            GlobalExtension.HideProgress();
+
         }
 
         private void repackButton_Click(object sender, EventArgs e)
