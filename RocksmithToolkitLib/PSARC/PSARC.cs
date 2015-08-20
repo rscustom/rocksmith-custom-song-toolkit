@@ -511,7 +511,7 @@ namespace RocksmithToolkitLib.PSARC
                     var buffer = new byte[32];
                     bytesRead = inputStream.Read(buffer, 0, buffer.Length);
                     inputStream.Flush();
-                     // copy header from input stream
+                    // copy header from input stream
                     encStream.Write(buffer, 0, bytesRead);
                     encStream.Seek(32, SeekOrigin.Begin);
 
@@ -541,12 +541,9 @@ namespace RocksmithToolkitLib.PSARC
                     encStream.CopyTo(inputStream, (int)this.header.blockSizeAlloc);
                 }
             }
-            else
-            {
-                inputStream.Flush();
-                GlobalExtension.HideProgress();
-            }
 
+            inputStream.Flush();
+            GlobalExtension.HideProgress();
         }
 
         #endregion
