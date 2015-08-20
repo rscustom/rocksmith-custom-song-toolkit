@@ -278,17 +278,19 @@ namespace RocksmithToolkitLib.Xml
         /// <param name="xmlSongRS2014File">Xml file path.</param>
         public static IEnumerable<XComment> ReadXmlComments(string xmlSongRS2014File)
         {
+            IEnumerable<XComment> commentNodes = new List<XComment>();
             try
             {
                 // this could fail if there are no comments
                 var xml = XDocument.Load(xmlSongRS2014File);
-                return xml.DescendantNodes().OfType<XComment>();
+                commentNodes = xml.DescendantNodes().OfType<XComment>();
             }
             catch (Exception ex)
             {
+                commentNodes = null;
                 Console.WriteLine("This XML Arrangement has no comments: " + ex.Message);
-                return null;
             }
+            return commentNodes;
         }
 
         /// <summary>
@@ -301,7 +303,6 @@ namespace RocksmithToolkitLib.Xml
             const string magic = " CST v";
             var xml = XDocument.Load(xmlSongRS2014File);
             var rootnode = xml.Element("song");
-            if (rootnode == null) throw new ArgumentNullException("Song node not found, empty or wrong xml file.");
 
             xml.DescendantNodes().OfType<XComment>().Remove();//cleanup xml
             if (commentNodes == null)
@@ -346,7 +347,8 @@ namespace RocksmithToolkitLib.Xml
             }
 
             FixArrayAttribs(song);
-            stream.Write(song.GetBuffer(), 0, (int)song.Position);
+            song.Position = 0;
+            song.CopyTo(stream);
             stream.Flush();
             stream.Seek(0, SeekOrigin.Begin);
         }
@@ -369,15 +371,15 @@ namespace RocksmithToolkitLib.Xml
             foreach (var n in anodes)
             {
                 var es = doc.Descendants(n).ToArray();
-                if (!es.Any()) continue;
-                foreach (var e in es)
-                {
-                    var ret = e.Attribute("count");
-                    if (ret == null)
-                        e.Add(new XAttribute("count", e.Elements().Count()));
-                    else
-                        ret.SetValue(e.Elements().Count());
-                }
+                if (es.Any())
+                    foreach (var e in es)
+                    {
+                        var ret = e.Attribute("count");
+                        if (ret == null)
+                            e.Add(new XAttribute("count", e.Elements().Count()));
+                        else
+                            ret.SetValue(e.Elements().Count());
+                    }
             }
             xml.Position = 0;
             doc.Save(xml);
@@ -425,12 +427,10 @@ namespace RocksmithToolkitLib.Xml
             var piter = new SongPhraseIteration2014[piSection.Count];
             for (int i = 0; i < piSection.Count; i++)
             {
-                var pi = new SongPhraseIteration2014
-                {
-                    PhraseId = piSection.PhraseIterations[i].PhraseId,
-                    Time = piSection.PhraseIterations[i].StartTime,
-                    Variation = ""
-                };
+                var pi = new SongPhraseIteration2014();
+                pi.PhraseId = piSection.PhraseIterations[i].PhraseId;
+                pi.Time = piSection.PhraseIterations[i].StartTime;
+                pi.Variation = "";
                 if (!piSection.PhraseIterations[i].Difficulty.SequenceEqual(new Int32[] { 0, 0, 0 }))
                     pi.HeroLevels = HeroLevel.Parse(piSection.PhraseIterations[i]);
                 piter[i] = pi;
@@ -453,11 +453,10 @@ namespace RocksmithToolkitLib.Xml
             var heroLevels = new HeroLevel[3];
             for (var i = 0; i < heroLevels.Length; i++)
             {
-                heroLevels[i] = new HeroLevel
-                {
-                    Hero = i + 1,
-                    Difficulty = (byte) phraseIteration.MaxScorePerDifficulty[i]
-                };
+                var hero = new HeroLevel();
+                hero.Hero = i + 1;
+                hero.Difficulty = (byte)phraseIteration.MaxScorePerDifficulty[i];
+                heroLevels[i] = hero;
             }
             return heroLevels;
         }
@@ -467,11 +466,10 @@ namespace RocksmithToolkitLib.Xml
             var heroLevels = new HeroLevel[3];
             for (var i = 0; i < heroLevels.Length; i++)
             {
-                heroLevels[i] = new HeroLevel
-                {
-                    Hero = i + 1,
-                    Difficulty = (byte) phraseIteration.Difficulty[i]
-                };
+                var hero = new HeroLevel();
+                hero.Hero = i + 1;
+                hero.Difficulty = (byte)phraseIteration.Difficulty[i];
+                heroLevels[i] = hero;
             }
             return heroLevels;
         }
@@ -497,13 +495,12 @@ namespace RocksmithToolkitLib.Xml
             var newLinkedDiff = new SongNewLinkedDiff[nlinkedDifficultySection.Count];
             for (int i = 0; i < nlinkedDifficultySection.Count; i++)
             {
-                newLinkedDiff[i] = new SongNewLinkedDiff
-                {
-                    LevelBreak = nlinkedDifficultySection.NLinkedDifficulties[i].LevelBreak,
-                    PhraseCount = nlinkedDifficultySection.NLinkedDifficulties[i].PhraseCount,
-                    Nld_phrase = SongNld_phrase.Parse(nlinkedDifficultySection.NLinkedDifficulties[i].NLD_Phrase),
-                    Ratio = "" //TODO: ???
-                };
+                var nld = new SongNewLinkedDiff();
+                nld.LevelBreak = nlinkedDifficultySection.NLinkedDifficulties[i].LevelBreak;
+                nld.PhraseCount = nlinkedDifficultySection.NLinkedDifficulties[i].PhraseCount;
+                nld.Nld_phrase = SongNld_phrase.Parse(nlinkedDifficultySection.NLinkedDifficulties[i].NLD_Phrase);
+                nld.Ratio = ""; //TODO: ???
+                newLinkedDiff[i] = nld;
             }
             return newLinkedDiff;
         }
@@ -517,7 +514,10 @@ namespace RocksmithToolkitLib.Xml
 
         internal static List<SongNld_phrase> Parse(int[] nldp)
         {
-            return nldp.Select(n => new SongNld_phrase { Id = n }).ToList();
+            var songNldp = new List<SongNld_phrase>();
+            foreach (var n in nldp)
+                songNldp.Add(new SongNld_phrase() { Id = n });
+            return songNldp;
         }
     }
 
@@ -573,25 +573,24 @@ namespace RocksmithToolkitLib.Xml
             var chordTemplates = new SongChordTemplate2014[cteamplateList.Count];
             for (int i = 0; i < cteamplateList.Count; i++)
             {
-                chordTemplates[i] = new SongChordTemplate2014
-                {
-                    ChordName = cteamplateList[i].ChordName,
-                    // split getting funky RS1 -> RS2 results when combined
-                    DisplayName = cteamplateList[i].ChordName,
-                    Finger0 = (sbyte) cteamplateList[i].Fingers[0],
-                    Finger1 = (sbyte) cteamplateList[i].Fingers[1],
-                    Finger2 = (sbyte) cteamplateList[i].Fingers[2],
-                    Finger3 = (sbyte) cteamplateList[i].Fingers[3],
-                    Finger4 = (sbyte) cteamplateList[i].Fingers[4],
-                    Finger5 = (sbyte) cteamplateList[i].Fingers[5],
-                    Fret0 = (sbyte) cteamplateList[i].Frets[0],
-                    Fret1 = (sbyte) cteamplateList[i].Frets[1],
-                    Fret2 = (sbyte) cteamplateList[i].Frets[2],
-                    Fret3 = (sbyte) cteamplateList[i].Frets[3],
-                    Fret4 = (sbyte) cteamplateList[i].Frets[4],
-                    Fret5 = (sbyte) cteamplateList[i].Frets[5],
-                    ChordId = cteamplateList[i].ChordId
-                };
+                var sct2014 = new SongChordTemplate2014();
+                sct2014.ChordName = cteamplateList[i].ChordName;
+                // split getting funky RS1 -> RS2 results when combined
+                sct2014.DisplayName = cteamplateList[i].ChordName;
+                sct2014.Finger0 = (sbyte)cteamplateList[i].Fingers[0];
+                sct2014.Finger1 = (sbyte)cteamplateList[i].Fingers[1];
+                sct2014.Finger2 = (sbyte)cteamplateList[i].Fingers[2];
+                sct2014.Finger3 = (sbyte)cteamplateList[i].Fingers[3];
+                sct2014.Finger4 = (sbyte)cteamplateList[i].Fingers[4];
+                sct2014.Finger5 = (sbyte)cteamplateList[i].Fingers[5];
+                sct2014.Fret0 = (sbyte)cteamplateList[i].Frets[0];
+                sct2014.Fret1 = (sbyte)cteamplateList[i].Frets[1];
+                sct2014.Fret2 = (sbyte)cteamplateList[i].Frets[2];
+                sct2014.Fret3 = (sbyte)cteamplateList[i].Frets[3];
+                sct2014.Fret4 = (sbyte)cteamplateList[i].Frets[4];
+                sct2014.Fret5 = (sbyte)cteamplateList[i].Frets[5];
+                sct2014.ChordId = cteamplateList[i].ChordId;
+                chordTemplates[i] = sct2014;
             }
             return chordTemplates;
         }
@@ -721,14 +720,13 @@ namespace RocksmithToolkitLib.Xml
             var levels = new SongLevel2014[sngData.Arrangements.Count];
             for (var i = 0; i < sngData.Arrangements.Count; i++)
             {
-                levels[i] = new SongLevel2014
-                {
-                    Difficulty = sngData.Arrangements.Arrangements[i].Difficulty,
-                    Notes = SongNote2014.Parse(sngData.Arrangements.Arrangements[i].Notes),
-                    Chords = SongChord2014.Parse(sngData, sngData.Arrangements.Arrangements[i].Notes),
-                    Anchors = SongAnchor2014.Parse(sngData.Arrangements.Arrangements[i].Anchors),
-                    HandShapes = SongHandShape.Parse(sngData.Arrangements.Arrangements[i])
-                };
+                var level = new SongLevel2014();
+                level.Difficulty = sngData.Arrangements.Arrangements[i].Difficulty;
+                level.Notes = SongNote2014.Parse(sngData.Arrangements.Arrangements[i].Notes);
+                level.Chords = SongChord2014.Parse(sngData, sngData.Arrangements.Arrangements[i].Notes);
+                level.Anchors = SongAnchor2014.Parse(sngData.Arrangements.Arrangements[i].Anchors);
+                level.HandShapes = SongHandShape.Parse(sngData.Arrangements.Arrangements[i]);
+                levels[i] = level;
             }
             return levels;
         }
@@ -977,8 +975,19 @@ namespace RocksmithToolkitLib.Xml
 
         internal static BendValue[] Parse(Sng2014HSL.BendData32[] bendData)
         {
-            var bendValues = (bendData.Where(t => t.Time > 0 && t.Step >= 0)
-                .Select(t => new BendValue {Time = t.Time, Step = t.Step, Unk5 = t.Unk5})).ToList();
+            var bendValues = new List<BendValue>();
+
+            for (var i = 0; i < bendData.Length; i++)
+            {
+                if (bendData[i].Time > 0 && bendData[i].Step >= 0)
+                {
+                    var bend = new BendValue();
+                    bend.Time = bendData[i].Time;
+                    bend.Step = bendData[i].Step;
+                    bend.Unk5 = bendData[i].Unk5;
+                    bendValues.Add(bend);
+                }
+            }
 
             return (bendValues.Count > 0) ? bendValues.ToArray() : null;
         }
@@ -1173,12 +1182,11 @@ namespace RocksmithToolkitLib.Xml
             var anchors = new SongAnchor2014[anchorSection.Count];
             for (var i = 0; i < anchorSection.Count; i++)
             {
-                anchors[i] = new SongAnchor2014
-                {
-                    Time = anchorSection.Anchors[i].StartBeatTime,
-                    Fret = anchorSection.Anchors[i].FretId,
-                    Width = anchorSection.Anchors[i].Width
-                };
+                var anchor = new SongAnchor2014();
+                anchor.Time = anchorSection.Anchors[i].StartBeatTime;
+                anchor.Fret = anchorSection.Anchors[i].FretId;
+                anchor.Width = anchorSection.Anchors[i].Width;
+                anchors[i] = anchor;
             }
             return anchors;
         }
@@ -1201,11 +1209,9 @@ namespace RocksmithToolkitLib.Xml
             var tones = new SongTone2014[toneSection.Count];
             for (var i = 0; i < toneSection.Count; i++)
             {
-                var tone = new SongTone2014
-                {
-                    Id = toneSection.Tones[i].ToneId,
-                    Time = toneSection.Tones[i].Time
-                };
+                var tone = new SongTone2014();
+                tone.Id = toneSection.Tones[i].ToneId;
+                tone.Time = toneSection.Tones[i].Time;
 
                 if (attr != null)
                 {

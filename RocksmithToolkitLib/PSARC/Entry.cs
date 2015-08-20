@@ -11,25 +11,19 @@ namespace RocksmithToolkitLib.PSARC
 
         public byte[] MD5 {
             get;
-            internal set;
+            set;
         }
 
         public uint zIndexBegin {
             get;
             set;
         }
-        /// <summary>
-        /// Original data length of this entry.
-        /// </summary>
-        /// <value>The length.</value>
+
         public ulong Length {
             get;
             set;
         }
-        /// <summary>
-        /// Starting offset from
-        /// </summary>
-        /// <value>The offset.</value>
+
         public ulong Offset {
             get;
             set;
@@ -37,53 +31,40 @@ namespace RocksmithToolkitLib.PSARC
 
 #endregion
 
-        public int Id
-        {
-            get;
-            internal set;
-        }
-        /*
-        /// <summary>
-        /// Length of packed bytes to read.
-        /// </summary>
-        public ulong zDatalen
-        {
-            get;
-            set;
-        }
-        /// <summary>
-        /// Actual entry data from archive.
-        /// </summary>
-        public Stream zData//TODO: reduce memory usage\streams count.
-        {
-            get;
-            set;
-        }*/
-        /// <summary>
-        /// Unpacked data.
-        /// </summary>
-        public Stream Data
-        {
+        public Stream Data {
             get;
             set;
         }
 
+        public int Id {
+            get;
+            set;
+        }
         /// <summary>
         /// Gets a value indicating whether this <see cref="RocksmithToolkitLib.PSARC.Entry"/> is compressed.
         /// </summary>
         /// <value><c>true</c> if compressed; otherwise, <c>false</c>.</value>
-        /// <remarks>Kinda rubbish but could be useful someday. Now inactive.</remarks>
+        /// <remarks>Kinda rubbush but could be useful someday. Now inactive.</remarks>
         public bool Compressed {
             get;
             set;
         }
 
-        public string Name { get; set; }
+        private string _name;
+        public string Name {
+            get {
+                return this._name;
+            }
+            set {
+                this._name = value;
+                this.UpdateNameMD5();
+            }
+        }
 
         public Entry()
         {
-            Id = 0;
-            Name = string.Empty;
+            this.Id = 0;
+            this.Name = string.Empty;
         }
         #region IDisposable implementation
         public void Dispose()
@@ -93,19 +74,20 @@ namespace RocksmithToolkitLib.PSARC
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) return;
-            if (Data != null) Data.Dispose();
-            MD5 = null;
+            if(disposing){
+                if(Data != null) Data.Dispose();
+                MD5 = null;
+            }
         }
         #endregion
         public override string ToString()
         {
-            return Name;
+            return this.Name;
         }
 
         public void UpdateNameMD5()
         {
-            MD5 = (Id == 0)? new byte[16] : new MD5CryptoServiceProvider().ComputeHash(Encoding.ASCII.GetBytes(Name));
+            MD5 = new MD5CryptoServiceProvider().ComputeHash(Encoding.ASCII.GetBytes(this.Name));
         }
     }
 }

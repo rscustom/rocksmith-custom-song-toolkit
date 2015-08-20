@@ -140,15 +140,15 @@ namespace RocksmithToolkitLib.DLCPackage
                 var packageName = Path.GetFileNameWithoutExtension(packagePath).StripPlatformEndName();
                 var songFileName = String.Format("{0}{1}", Path.Combine(Path.GetDirectoryName(packagePath), packageName), platform.GetPathName()[2]);
 
-                // SAVE PACKAGE
                 switch (platform.platform)
                 {
                     case GamePlatform.Pc:
                     case GamePlatform.Mac:
                         switch (platform.version)
                         {
+                            // SAVE PACKAGE
                             case GameVersion.RS2014:
-                                using (var fl = File.Create(songFileName + ".psarc"))
+                                using (FileStream fl = File.Create(songFileName + ".psarc"))
                                     packPsarcStream.CopyTo(fl);
                                 break;
                             case GameVersion.RS2012:
@@ -168,7 +168,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
 
-            packPsarc.Dispose();
             FILES_XBOX.Clear();
             FILES_PS3.Clear();
             DeleteTmpFiles(TMPFILES_SNG);
@@ -345,12 +344,10 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
                     }
 
-                    ddsfiles = new List<DDSConvertedFile>
-                    {
-                        new DDSConvertedFile { sizeX = 64,  sizeY = 64,  sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") },
-                        new DDSConvertedFile { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") },
-                        new DDSConvertedFile { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") }
-                    };
+                    ddsfiles = new List<DDSConvertedFile>();
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
 
                     // Convert to DDS
                     ToDDS(ddsfiles);
@@ -425,7 +422,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         packageListWriter.Write(dlcName);
                         packageListWriter.Flush();
                         packageListStream.Seek(0, SeekOrigin.Begin);
-                        packageListStream.WriteTmpFile("PackageList.txt", platform);
+                        const string packageList = "PackageList.txt";
+                        packageListStream.WriteTmpFile(packageList, platform);
                     }
 
                     // SOUNDBANK
@@ -438,7 +436,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     var soundbankPreviewFileName = String.Format("song_{0}_preview", dlcName);
                     dynamic audioPreviewFileNameId;
                     var previewVolume = (float)(info.PreviewVolume ?? info.Volume);
-                    if (File.Exists(previewAudioFile))
+                    if (!soundPreviewStream.Equals(soundStream))
                         audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, previewVolume, platform, true);
                     else
                         audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform, true, true);
@@ -528,7 +526,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/songs_dlc_{0}.hsan", dlcName), manifestHeaderHSANStream);
                     }
 
-                    // XML SHOWLIGHTS //TODO: bring back manual showlights switch
+                    // XML SHOWLIGHTS
                     var shlArr = info.Arrangements.FirstOrDefault(ar => ar.ArrangementType == ArrangementType.ShowLight);
                     if (shlArr != null && shlArr.SongXml.File != null)
                         using (var fs = File.OpenRead(shlArr.SongXml.File))
@@ -549,7 +547,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
 
                     // XBLOCK
-                    var game = GameXblock<Entity2014>.Generate2014(info, platform);
+                    GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform);
                     game.SerializeXml(xblockStream);
                     xblockStream.Flush();
                     xblockStream.Seek(0, SeekOrigin.Begin);
@@ -1101,22 +1099,22 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void WriteTmpFile(this Stream memoryStream, string fileName, Platform platform)
         {
-            var filePath = String.Empty;
-            switch (platform.platform)
+            if (platform.IsConsole)
             {
-                case GamePlatform.XBox360:
-                    filePath = Path.Combine(XBOX_WORKDIR, fileName);
-                    FILES_XBOX.Add(filePath);
-                    break;
-                case GamePlatform.PS3:
-                    filePath = Path.Combine(PS3_WORKDIR, fileName);
-                    FILES_PS3.Add(filePath);
-                    break;
-                default:
-                    return;
-            }
+                string workDir = platform.platform == GamePlatform.XBox360 ? XBOX_WORKDIR : PS3_WORKDIR;
+                string filePath = Path.Combine(workDir, fileName);
 
-            if (platform.IsConsole) memoryStream.WriteFile(filePath);
+                memoryStream.WriteFile(filePath);
+                switch (platform.platform)
+                {
+                    case GamePlatform.XBox360:
+                        FILES_XBOX.Add(filePath);
+                        break;
+                    case GamePlatform.PS3:
+                        FILES_PS3.Add(filePath);
+                        break;
+                }
+            }
         }
 
         #endregion
