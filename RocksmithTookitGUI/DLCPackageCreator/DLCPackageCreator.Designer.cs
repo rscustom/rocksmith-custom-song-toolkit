@@ -397,7 +397,7 @@
             this.label2.Size = new System.Drawing.Size(424, 13);
             this.label2.TabIndex = 36;
             this.label2.Text = "Song preview is generated automatically if not provided in format \'filename_previ" +
-    "ew.wem\'\r\n";
+                "ew.wem\'\r\n";
             // 
             // gbTones
             // 
@@ -435,7 +435,7 @@
             this.label1.Size = new System.Drawing.Size(495, 13);
             this.label1.TabIndex = 36;
             this.label1.Text = "Use \"Up/Down\" keys to change order of the tones, use \"Delete\" to delete and \"D\" t" +
-    "o duplicate a tone.";
+                "o duplicate a tone.";
             // 
             // groupBox1
             // 
@@ -572,21 +572,22 @@
             // 
             // currentOperationLabel
             // 
-            this.currentOperationLabel.AutoSize = true;
             this.currentOperationLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.currentOperationLabel.Location = new System.Drawing.Point(2, 547);
+            this.currentOperationLabel.Location = new System.Drawing.Point(3, 540);
             this.currentOperationLabel.Name = "currentOperationLabel";
-            this.currentOperationLabel.Size = new System.Drawing.Size(16, 13);
+            this.currentOperationLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.currentOperationLabel.Size = new System.Drawing.Size(96, 13);
             this.currentOperationLabel.TabIndex = 0;
             this.currentOperationLabel.Text = "...";
+            this.currentOperationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.currentOperationLabel.Visible = false;
             // 
             // updateProgress
             // 
-            this.updateProgress.Location = new System.Drawing.Point(3, 535);
+            this.updateProgress.Location = new System.Drawing.Point(106, 540);
             this.updateProgress.Name = "updateProgress";
-            this.updateProgress.Size = new System.Drawing.Size(497, 10);
-            this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.updateProgress.Size = new System.Drawing.Size(395, 13);
+            this.updateProgress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.updateProgress.TabIndex = 999;
             this.updateProgress.Visible = false;
             // 
@@ -819,7 +820,7 @@
             this.Controls.Add(this.dlcSaveButton);
             this.Controls.Add(this.dlcGenerateButton);
             this.Name = "DLCPackageCreator";
-            this.Size = new System.Drawing.Size(507, 571);
+            this.Size = new System.Drawing.Size(507, 560);
             this.gbPlatofmr.ResumeLayout(false);
             this.gbPlatofmr.PerformLayout();
             this.gbFiles.ResumeLayout(false);
@@ -836,7 +837,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.songVolumeBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.audioQualityBox)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

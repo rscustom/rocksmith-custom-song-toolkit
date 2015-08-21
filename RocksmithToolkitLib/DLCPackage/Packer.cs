@@ -710,7 +710,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     psarc.InflateEntry(entry, fullfilename);
                     if (entry.Data != null)
                     {
-                        entry.Data.Dispose();//Close();
+                        entry.Data.Dispose(); //Close();
                     }
                 }
 
@@ -719,6 +719,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 progress += step;
                 GlobalExtension.UpdateProgress.Value = (int)progress;
             }
+            GlobalExtension.HideProgress();            
         }
 
         private static void UpdateSng(string songDirectory, Platform platform)

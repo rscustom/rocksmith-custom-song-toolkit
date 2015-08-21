@@ -511,13 +511,13 @@ namespace RocksmithToolkitLib.PSARC
                     var buffer = new byte[32];
                     bytesRead = inputStream.Read(buffer, 0, buffer.Length);
                     inputStream.Flush();
-                    // copy header from input stream
+                    // quick copy header from input stream
                     encStream.Write(buffer, 0, bytesRead);
                     encStream.Seek(32, SeekOrigin.Begin);
 
                     int tocSize = (int)this.header.TotalTOCSize - 32;
                     int decSize = 0;
-                    buffer = new byte[30000];
+                    buffer = new byte[1024 * 16]; // more effecient use of memory
 
                     ndx = 0; // for debuging
                     step = Math.Round(1.0 / ((tocSize / buffer.Length) + 2) * 100, 3);
@@ -531,6 +531,7 @@ namespace RocksmithToolkitLib.PSARC
                             bytesRead = tocSize - (decSize - bytesRead);
 
                         encStream.Write(buffer, 0, bytesRead);
+
                         progress += step;
                         GlobalExtension.UpdateProgress.Value = (int)progress;
                         Debug.WriteLine("Encrypted: " + ndx++);
@@ -539,11 +540,11 @@ namespace RocksmithToolkitLib.PSARC
                     inputStream.Seek(0, SeekOrigin.Begin);
                     encStream.Seek(0, SeekOrigin.Begin);
                     encStream.CopyTo(inputStream, (int)this.header.blockSizeAlloc);
-                }
+                 }
             }
 
             inputStream.Flush();
-            GlobalExtension.HideProgress();
+            GlobalExtension.HideProgress();            
         }
 
         #endregion

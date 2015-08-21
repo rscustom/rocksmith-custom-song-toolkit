@@ -139,7 +139,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 MessageBox.Show(String.Format("{0}\n{1}\n{2}", "Packing error!", ex.Message, ex.InnerException), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            GlobalExtension.HideProgress();
+            GlobalExtension.HideProgress();            
         }
 
         private void unpackButton_Click(object sender, EventArgs e)
@@ -217,8 +217,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 MessageBox.Show("Unpacking is complete with errors. See below: " + Environment.NewLine + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             unpackButton.Enabled = true;
-            GlobalExtension.HideProgress();
-
+            GlobalExtension.HideProgress();            
         }
 
         private void repackButton_Click(object sender, EventArgs e)
