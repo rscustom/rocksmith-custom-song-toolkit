@@ -49,7 +49,6 @@ namespace RocksmithToolkitLib.Extensions
         {
             UpdateProgress.Visible = false;
             CurrentOperationLabel.Visible = false;
-            Dispose();
         }
 
         public static void ShowProgress(string currentOperation = "...", int progressValue = 0)
@@ -67,9 +66,9 @@ namespace RocksmithToolkitLib.Extensions
 
         public static void Dispose()
         {
-            _updateProgress.Dispose();
+            HideProgress();
+            // do not use dispose here!
             _updateProgress = null;
-            _currentOperationLabel.Dispose();
             _currentOperationLabel = null;
         }
 

@@ -45,9 +45,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         public DLCPackerUnpacker()
         {
             InitializeComponent();
-            GlobalExtension.UpdateProgress = this.updateProgress;
-            GlobalExtension.CurrentOperationLabel = this.currentOperationLabel;
-            Thread.Sleep(100); // give Globals a chance to initialize
 
             try
             {
@@ -121,8 +118,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     return;
                 saveFileName = sfd.FileName;
             }
-
+      
+            GlobalExtension.UpdateProgress = this.updateProgress;
+            GlobalExtension.CurrentOperationLabel = this.currentOperationLabel;
+            Thread.Sleep(100); // give Globals a chance to initialize
             GlobalExtension.ShowProgress("Packing archive ...");
+            
             Application.DoEvents();
 
             try
@@ -139,7 +140,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 MessageBox.Show(String.Format("{0}\n{1}\n{2}", "Packing error!", ex.Message, ex.InnerException), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            GlobalExtension.HideProgress();            
+            // prevents possible cross threading
+            GlobalExtension.Dispose();
         }
 
         private void unpackButton_Click(object sender, EventArgs e)
@@ -181,6 +183,10 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             errorsFound = new StringBuilder();
             //var step = (int)Math.Round(1.0 / sourceFileNames.Length * 100, 0);
             //int progress = 0;
+          
+            GlobalExtension.UpdateProgress = this.updateProgress;
+            GlobalExtension.CurrentOperationLabel = this.currentOperationLabel;
+            Thread.Sleep(100); // give Globals a chance to initialize
 
             foreach (string sourceFileName in sourceFileNames)
             {
@@ -217,7 +223,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 MessageBox.Show("Unpacking is complete with errors. See below: " + Environment.NewLine + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             unpackButton.Enabled = true;
-            GlobalExtension.HideProgress();            
+            // prevents possible cross threading
+            GlobalExtension.Dispose();
         }
 
         private void repackButton_Click(object sender, EventArgs e)
