@@ -411,11 +411,24 @@
     <PreBuildEvent>
     </PreBuildEvent>
     <!-- be sure to address all build types in the PostBuildEvent -->
-    <PostBuildEvent>IF $(ConfigurationName) == ReleaseMac (
-/bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)")
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+      IF $(ConfigurationName) == ReleaseMac (
+        /bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)"
+      )
 
-IF NOT $(ConfigurationName) == ReleaseMac (
-xcopy /S /Y "$(SolutionDir)Third-party Apps")</PostBuildEvent>
+      IF NOT $(ConfigurationName) == ReleaseMac (
+        xcopy /S /Y "$(SolutionDir)Third-party Apps"
+      )
+    </PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+      if [ $(ConfigurationName) == ReleaseMac ]; then
+        /bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)"
+      fi
+
+      if [ $(ConfigurationName) != ReleaseMac ]; then
+        /bin/cp -Rf "$(SolutionDir)Third-party Apps"
+      fi
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
