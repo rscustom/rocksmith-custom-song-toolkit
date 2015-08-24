@@ -25,11 +25,11 @@ after_build:
   - rem Windows package
   - 7z a Windows.zip %APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\Release\*
   - rem Mac package
-  - copy "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\Release\RocksmithToolkitGUI.exe" "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
-  - del "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - del "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\RocksmithCustomSongToolkit.app\Contents\Resources\gitkeep.txt"
   - xcopy /E "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\Release\*" "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\RocksmithCustomSongToolkit.app\Contents\Resources\"
   - xcopy "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\songcreator.icns" "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\RocksmithCustomSongToolkit.app\Contents\Resources\"
+  - copy "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\Release\RocksmithToolkitGUI.exe" "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
+  - del "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - 7z a -ttar Mac.tar %APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin\RocksmithCustomSongToolkit.app\
   - 7z a -tgzip Mac.tar.gz Mac.tar
 

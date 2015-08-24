@@ -26,6 +26,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>true</Optimize>
+	<DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
