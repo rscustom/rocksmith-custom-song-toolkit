@@ -26,14 +26,6 @@
     <OutputPath>bin\Release\</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>true</Optimize>
-    <PreBuildEvent>CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseMac|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\ReleaseMac\</OutputPath>
-    <PreBuildEvent>"$(ProjectDir)../prebuild.sh" "$(ProjectDir).." "$(ProjectDir)ToolkitVersion.cs"</PreBuildEvent>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
@@ -255,16 +247,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
-      IF NOT $(ConfigurationName) == ReleaseMac (
-        CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"
-      )
-
-      IF $(ConfigurationName) == ReleaseMac (
-        "$(ProjectDir)../prebuild.sh" "$(ProjectDir)" "$(ProjectDir)ToolkitVersion.cs"
-      )
+      CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"
     </PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
-        "$(ProjectDir)../prebuild.sh" "$(ProjectDir)" "$(ProjectDir)ToolkitVersion.cs"
+      "$(SolutionDir)prebuild.sh" "$(ProjectDir)" "$(ProjectDir)ToolkitVersion.cs"
     </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -33,22 +33,9 @@
     <OutputPath>bin\Release\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PostBuildEvent>xcopy /S /Y "$(SolutionDir)Third-party Apps" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>songcreator.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseMac|x86'">
-    <OutputPath>bin\ReleaseMac\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
-    <PostBuildEvent>/bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)"</PostBuildEvent>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
@@ -412,22 +399,10 @@
     </PreBuildEvent>
     <!-- be sure to address all build types in the PostBuildEvent -->
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-      IF $(ConfigurationName) == ReleaseMac (
-        /bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)"
-      )
-
-      IF NOT $(ConfigurationName) == ReleaseMac (
-        xcopy /S /Y "$(SolutionDir)Third-party Apps"
-      )
+      xcopy /S /Y "$(SolutionDir)Third-party Apps"
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-      if [ $(ConfigurationName) == ReleaseMac ]; then
-        /bin/cp -Rf "$(ProjectDir)../Third-party Apps/" "$(TargetDir)"
-      fi
-
-      if [ $(ConfigurationName) != ReleaseMac ]; then
-        /bin/cp -Rf "$(SolutionDir)Third-party Apps"
-      fi
+      /bin/cp -Rf "$(SolutionDir)Third-party Apps" "$(TargetDir)"
     </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
