@@ -49,7 +49,7 @@
     <None Include="ToolkitTests.nunit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RocksmithTookitGUI\RocksmithToolkitGUI.csproj">
+    <ProjectReference Include="..\RocksmithToolkitGUI\RocksmithToolkitGUI.csproj">
       <Project>{1A3DEAD6-14F3-43C3-B15C-A866D48FEF61}</Project>
       <Name>RocksmithToolkitGUI</Name>
     </ProjectReference>

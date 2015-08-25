@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Rocksmith Toolkit CDLC Converter")]
 [assembly: AssemblyDescription("Converts Rocksmith 2012 CDLC to Rocksmith 2014 CDLC")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Rocksmith Custom Song Tookit CLI")]
+[assembly: AssemblyCompany("Rocksmith Custom Song Toolkit CLI")]
 [assembly: AssemblyProduct("convert2012")]
 [assembly: AssemblyCopyright("Copyright ©  2015 CST Developer Team")]
 [assembly: AssemblyTrademark("")]
