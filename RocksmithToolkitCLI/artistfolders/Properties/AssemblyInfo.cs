@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Rocksmith Toolkit Artist Folder Creator")]
 [assembly: AssemblyDescription("Creates CDLC Artist Folders")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Rocksmith Custom Song Tookit CLI")]
+[assembly: AssemblyCompany("Rocksmith Custom Song Toolkit CLI")]
 [assembly: AssemblyProduct("artistfolders")]
 [assembly: AssemblyCopyright("Copyright ©  2015 CST Developer Team")]
 [assembly: AssemblyTrademark("")]

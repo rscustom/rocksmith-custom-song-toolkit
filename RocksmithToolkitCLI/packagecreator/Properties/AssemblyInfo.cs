@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Rocksmith Toolkit Package Creator")]
 [assembly: AssemblyDescription("Creates Rocksmith 2014 CDLC Packages")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Rocksmith Custom Song Tookit CLI")]
+[assembly: AssemblyCompany("Rocksmith Custom Song Toolkit CLI")]
 [assembly: AssemblyProduct("packagecreator")]
 [assembly: AssemblyCopyright("Copyright ©  2015 CST Developer Team")]
 [assembly: AssemblyTrademark("")]
