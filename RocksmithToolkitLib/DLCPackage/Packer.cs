@@ -28,7 +28,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PACK
 
-        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null, bool updateManifest = false)
+        public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null, bool updateManifest = false, bool fixShowlights = true)
         {
             //  if (!Path.GetFileName(sourcePath).ToLower().Contains("crowd.psarc"))
             DeleteFixedAudio(sourcePath);
@@ -44,7 +44,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (platform.version == GameVersion.RS2012)
                         PackPC(sourcePath, saveFileName, true, updateSng);
                     else if (platform.version == GameVersion.RS2014)
-                        Pack2014(sourcePath, saveFileName, platform, updateSng, updateManifest);
+                        Pack2014(sourcePath, saveFileName, platform, updateSng, updateManifest, fixShowlights: fixShowlights);
                     break;
                 case GamePlatform.XBox360:
                     PackXBox360(sourcePath, saveFileName, platform, updateSng, updateManifest);
@@ -247,13 +247,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PC/MAC 2014
 
-        private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng, bool updateManifest)
+        private static void Pack2014(string sourcePath, string saveFileName, Platform platform, bool updateSng, bool updateManifest, bool fixShowlights = true)
         {
             using (var psarc = new PSARC.PSARC())
             using (var psarcStream = new MemoryStreamExtension())
             {
                 if (updateSng)
-                    UpdateSng2014(sourcePath, platform);
+                    UpdateSng2014(sourcePath, platform, fixShowlights: fixShowlights);
                 if (updateManifest)
                     UpdateManifest2014(sourcePath, platform);
 
@@ -756,7 +756,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void UpdateSng2014(string songDirectory, Platform targetPlatform)
+        private static void UpdateSng2014(string songDirectory, Platform targetPlatform, bool fixShowlights = true)
         {
             var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, "songs", "arr"), "*_*.xml", SearchOption.AllDirectories).ToList();
             var sngFolder = Path.Combine(songDirectory, "songs", "bin", targetPlatform.GetPathName()[1]); //-3 or more times re-calculation
@@ -769,7 +769,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     //Update Showlights
                     if (xmlName.ToLower().Contains("_showlights"))
-                        UpdateShl(xmlFile);
+                        UpdateShl(xmlFile, fixShowlights: fixShowlights);
                     else
                     {
                         var sngFile = Path.Combine(sngFolder, xmlName + ".sng");
@@ -816,14 +816,15 @@ namespace RocksmithToolkitLib.DLCPackage
         /// </summary>
         /// <param name="shlPath"></param>
         /// <returns></returns>
-        internal static void UpdateShl(string shlPath)
+        internal static void UpdateShl(string shlPath, bool fixShowlights = true)
         {
             var shl = new Showlight.Showlights(shlPath);
-            if (shl.FixShowlights(shl))
+            if (fixShowlights && shl.FixShowlights(shl))
             {
                 using (var fs = new FileStream(shlPath, FileMode.Create))
                     shl.Serialize(fs);
             }
+
         }
 
         private static void UpdateManifest2014(string songDirectory, Platform platform)
