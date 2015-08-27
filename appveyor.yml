@@ -33,6 +33,7 @@ after_build:
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - rem Generate AOT image.
   - mono -V
+  - mono --aot "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
   - rem Packing
   - 7z a -ttar Mac.tar "%BIN%\RocksmithCustomSongToolkit.app\"
   - 7z a -tgzip Mac.tar.gz Mac.tar
