@@ -74,7 +74,7 @@ echo Moving new %toolkitver% ...
 move /y tempfile.txt "%toolkitver%"
 echo Done
 
-pause
+::pause
 
 endlocal
 exit /b 0
