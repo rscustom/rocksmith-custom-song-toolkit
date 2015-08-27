@@ -12,8 +12,8 @@ using RocksmithToolkitLib.Sng2014HSL;
 namespace RocksmithToolkitLib.DLCPackage.Showlight
 {
     /*
-     * * * * * * * * * Color sheme * * * * * * * * * * * * * * * * * * 
-     * Fog midi notes: 24-35 (color cheme isn't natural)
+     * * * * * * * * * Colour scheme * * * * * * * * * * * * * * * * * * 
+     * Fog midi notes: 24-35 (colour scheme isn't natural)
      * 24(C)  = Green;                     25(C#) = Dark Red(G like)
      * 26(D)  = Medium Turquoise(C# like); 27(D#) = Brown(A like)
      * 28(E)  = Blue(D# like);             29(F)  = LtGreen(B like)
@@ -22,11 +22,11 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
      * 34(A#) = LtBlue(D like);            35(B)  = Dark Violet(F like)
      * 
      * Unknown: 36-41
-     * (?) Spotlights/colors/effects: 42-59
+     * (?) Spotlights/colours/effects: 42-59
      * TODO: (?) Game hangs caused by 60-62
      * (?) Laser lights: 66-67
      * 
-     * Need to define Fog Color + stage lights before Venue shows up (Time = 0-10)
+     * Need to define Fog Colour + stage lights before Venue shows up (Time = 0-10)
      */
 
     [XmlRoot("showlights", Namespace = "", IsNullable = false)]

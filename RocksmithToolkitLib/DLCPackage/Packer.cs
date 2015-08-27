@@ -815,11 +815,12 @@ namespace RocksmithToolkitLib.DLCPackage
         /// Fixes showlights and updates existing xml.
         /// </summary>
         /// <param name="shlPath"></param>
-        /// <returns></returns>
+        /// <param name = "fixShowlights"></param>
         internal static void UpdateShl(string shlPath, bool fixShowlights = true)
         {
+            if (!fixShowlights) return;
             var shl = new Showlight.Showlights(shlPath);
-            if (fixShowlights && shl.FixShowlights(shl))
+            if (shl.FixShowlights(shl))
             {
                 using (var fs = new FileStream(shlPath, FileMode.Create))
                     shl.Serialize(fs);
