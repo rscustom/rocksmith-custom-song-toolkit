@@ -1,5 +1,3 @@
-os: Unstable
-
 version: "{build}"
 branches:
   only:
@@ -34,9 +32,7 @@ after_build:
   - copy "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - rem Generate AOT image.
-  - C:\monoinstall\bin\mono.exe -V
-  - C:\Program Files (x86)\Mono\bin\mono.exe -V
-  - C:\monoinstall\bin\mono.exe --aot "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
+  - dir "C:\monoinstall"
   - rem Packing
   - 7z a -ttar Mac.tar "%BIN%\RocksmithCustomSongToolkit.app\"
   - 7z a -tgzip Mac.tar.gz Mac.tar
