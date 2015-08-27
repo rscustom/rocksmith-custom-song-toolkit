@@ -53,5 +53,5 @@ cd "$APP_PATH/Contents/Resources"
 if [ ! -d "./bin" ]; then mkdir bin ; fi
 if [ -f "./bin/$APP_NAME" ]; then rm -f "./bin/$APP_NAME" ; fi
 ln -s `which mono` "./bin/$APP_NAME"
-"./bin/$APP_NAME" "$ASSEMBLY"
+"./bin/$APP_NAME"  --optimize=sse2,simd,loop,inline "$ASSEMBLY"
 

@@ -5,8 +5,6 @@ branches:
 configuration: Release
 test: off
 
-os: unstable
-
 environment:
   cert_url:
     secure: +Hrnyb/2BCwM+8B+26euLJlIcgul2423FxzS82lgeI4yh8ZpfGEZ+YsqQsbClVU5
@@ -18,7 +16,7 @@ build:
   verbosity: minimal
 
 install:
-  - set PATH=C:\cygwin\bin;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;C:\Program Files (x86)\Mono\bin;%PATH%
+  - set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;%PATH%
 
 after_build:
   - set BIN=%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin
@@ -33,8 +31,6 @@ after_build:
   - xcopy "%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\songcreator.icns" "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\"
   - copy "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
-  - rem Generate AOT image.
-  - mono --aot "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
   - rem Packing
   - 7z a -ttar Mac.tar "%BIN%\RocksmithCustomSongToolkit.app\"
   - 7z a -tgzip Mac.tar.gz Mac.tar
