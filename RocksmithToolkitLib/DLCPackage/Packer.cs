@@ -759,7 +759,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void UpdateSng2014(string songDirectory, Platform targetPlatform, bool fixShowlights = true)
         {
             var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, "songs", "arr"), "*_*.xml", SearchOption.AllDirectories).ToList();
-            var sngFolder = Path.Combine(songDirectory, "songs", "bin", targetPlatform.GetPathName()[1]); //-3 or more times re-calculation
+            var sngFolder = Path.Combine(songDirectory, "songs", "bin", targetPlatform.GetPathName()[1].ToLower()); //-3 or more times re-calculation
             foreach (var xmlFile in xmlFiles)
             {
                 if (File.Exists(xmlFile))
