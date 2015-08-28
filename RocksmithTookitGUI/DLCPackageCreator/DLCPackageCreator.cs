@@ -412,10 +412,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             } packageData.Arrangements.AddRange(mArr);
 
             // Update Xml arrangements song info
+            bool updateArrangmentID = false;
+            if (userChangesToInputControls > 0)
+                if (MessageBox.Show(@"The song information has been changed." + Environment.NewLine +
+                    @"Do you also want to update the 'Arrangement IDs'?" + Environment.NewLine +
+                    @"Answering 'Yes' will reduce the risk of CDLC" + Environment.NewLine +
+                    @"in game hanging and song stats will be reset.  ", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    updateArrangmentID = true;
+
             foreach (var arr in packageData.Arrangements)
             {
                 if (userChangesToInputControls > 0)
-                    UpdateXml(arr, packageData);
+                    UpdateXml(arr, packageData, updateArrangmentID);
 
                 if (arr.ArrangementType == ArrangementType.Guitar || arr.ArrangementType == ArrangementType.Bass)
                     Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
@@ -1374,11 +1382,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         /// </summary>
         /// <param name="arr"></param>
         /// <param name="info"></param>
-        public void UpdateXml(Arrangement arr, DLCPackageData info)
+        public void UpdateXml(Arrangement arr, DLCPackageData info, bool updateArrangementID = false)
         {
-            // generate new ids
-            arr.Id = IdGenerator.Guid();
-            arr.MasterId = RandomGenerator.NextInt();
+            // generate new Arrangment IDs
+            if (updateArrangementID)
+            {
+                arr.Id = IdGenerator.Guid();
+                arr.MasterId = RandomGenerator.NextInt();
+            }
 
             if (arr.ArrangementType == ArrangementType.Vocal)
                 return;

@@ -60,6 +60,7 @@
             this.gbXmlDefinition = new System.Windows.Forms.GroupBox();
             this.XmlFilePath = new RocksmithToolkitGUI.CueTextBox();
             this.gbArrInfo = new System.Windows.Forms.GroupBox();
+            this.gbScrollSpeed = new System.Windows.Forms.GroupBox();
             this.typeEdit = new System.Windows.Forms.Button();
             this.tuningEditButton = new System.Windows.Forms.Button();
             this.BonusCheckBox = new System.Windows.Forms.CheckBox();
@@ -71,7 +72,6 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.gbScrollSpeed = new System.Windows.Forms.GroupBox();
             this.gbGameplayPath = new System.Windows.Forms.GroupBox();
             this.routeMaskNoneRadio = new System.Windows.Forms.RadioButton();
             this.routeMaskBassRadio = new System.Windows.Forms.RadioButton();
@@ -83,8 +83,8 @@
             this.gbDLCId.SuspendLayout();
             this.gbXmlDefinition.SuspendLayout();
             this.gbArrInfo.SuspendLayout();
-            this.gbTuningPitch.SuspendLayout();
             this.gbScrollSpeed.SuspendLayout();
+            this.gbTuningPitch.SuspendLayout();
             this.gbGameplayPath.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -471,6 +471,20 @@
             this.gbArrInfo.TabStop = false;
             this.gbArrInfo.Text = "Arrangement Information";
             // 
+            // gbScrollSpeed
+            // 
+            this.gbScrollSpeed.Controls.Add(this.label5);
+            this.gbScrollSpeed.Controls.Add(this.label3);
+            this.gbScrollSpeed.Controls.Add(this.scrollSpeedDisplay);
+            this.gbScrollSpeed.Controls.Add(this.scrollSpeedTrackBar);
+            this.gbScrollSpeed.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbScrollSpeed.Location = new System.Drawing.Point(214, 12);
+            this.gbScrollSpeed.Name = "gbScrollSpeed";
+            this.gbScrollSpeed.Size = new System.Drawing.Size(211, 60);
+            this.gbScrollSpeed.TabIndex = 42;
+            this.gbScrollSpeed.TabStop = false;
+            this.gbScrollSpeed.Text = "Scroll Speed";
+            // 
             // typeEdit
             // 
             this.typeEdit.Enabled = false;
@@ -601,20 +615,6 @@
             this.label13.TabIndex = 45;
             this.label13.Text = "hz";
             // 
-            // gbScrollSpeed
-            // 
-            this.gbScrollSpeed.Controls.Add(this.label5);
-            this.gbScrollSpeed.Controls.Add(this.label3);
-            this.gbScrollSpeed.Controls.Add(this.scrollSpeedDisplay);
-            this.gbScrollSpeed.Controls.Add(this.scrollSpeedTrackBar);
-            this.gbScrollSpeed.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbScrollSpeed.Location = new System.Drawing.Point(214, 12);
-            this.gbScrollSpeed.Name = "gbScrollSpeed";
-            this.gbScrollSpeed.Size = new System.Drawing.Size(211, 60);
-            this.gbScrollSpeed.TabIndex = 42;
-            this.gbScrollSpeed.TabStop = false;
-            this.gbScrollSpeed.Text = "Scroll Speed";
-            // 
             // gbGameplayPath
             // 
             this.gbGameplayPath.Controls.Add(this.routeMaskNoneRadio);
@@ -715,10 +715,10 @@
             this.gbXmlDefinition.PerformLayout();
             this.gbArrInfo.ResumeLayout(false);
             this.gbArrInfo.PerformLayout();
-            this.gbTuningPitch.ResumeLayout(false);
-            this.gbTuningPitch.PerformLayout();
             this.gbScrollSpeed.ResumeLayout(false);
             this.gbScrollSpeed.PerformLayout();
+            this.gbTuningPitch.ResumeLayout(false);
+            this.gbTuningPitch.PerformLayout();
             this.gbGameplayPath.ResumeLayout(false);
             this.gbGameplayPath.PerformLayout();
             this.ResumeLayout(false);
