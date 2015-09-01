@@ -42,10 +42,7 @@ namespace RocksmithToolkitLib.PSARC
 		}
 		public virtual bool ReadBoolean()
 		{
-			return BitConverter.ToBoolean(new byte[]
-			{
-				this.ReadByte()
-			}, 0);
+            return this.BaseStream.ReadByte() != 0;
 		}
 		public virtual byte ReadByte()
 		{

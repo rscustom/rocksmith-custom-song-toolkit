@@ -118,12 +118,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     return;
                 saveFileName = sfd.FileName;
             }
-      
+
             GlobalExtension.UpdateProgress = this.updateProgress;
             GlobalExtension.CurrentOperationLabel = this.currentOperationLabel;
             Thread.Sleep(100); // give Globals a chance to initialize
             GlobalExtension.ShowProgress("Packing archive ...");
-            
+
             Application.DoEvents();
 
             try
@@ -178,12 +178,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             //}
 
             //private void Unpack(object sender, DoWorkEventArgs e)
-            //{            
+            //{
             //    var sourceFileNames = e.Argument as string[];
             errorsFound = new StringBuilder();
             //var step = (int)Math.Round(1.0 / sourceFileNames.Length * 100, 0);
             //int progress = 0;
-          
+
             GlobalExtension.UpdateProgress = this.updateProgress;
             GlobalExtension.CurrentOperationLabel = this.currentOperationLabel;
             Thread.Sleep(100); // give Globals a chance to initialize

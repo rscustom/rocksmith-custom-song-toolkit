@@ -28,6 +28,7 @@ echo toolkitverdist %toolkitverdist%
 
 echo Checking .git\HEAD exists ...
 ::github commit version script
+set newrev=nongit
 if exist %solution%\.git\HEAD (
 	echo Reading .git\HEAD ...
 	set /p head=<"%solution%\.git\HEAD"
@@ -57,10 +58,11 @@ REM this has been depricated does not seem to be needed with revised scripts
 ::cmd /c type myfile.txt
 ::chcp 850
 ::)
-
-echo Replacing %oldrev% 
-echo In %toolkitver% 
-echo With %newrev% ...
+if not "!commit!" == ""	(
+	echo Replacing %oldrev% 
+	echo In %toolkitver% 
+	echo With %newrev% ...
+)
 ::pause
 
 ::git version replacement script
@@ -74,7 +76,7 @@ echo Moving new %toolkitver% ...
 move /y tempfile.txt "%toolkitver%"
 echo Done
 
-::pause
+pause
 
 endlocal
 exit /b 0

@@ -288,7 +288,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             var buffer = new byte[512];
             int pad = buffer.Length - (int)(len % buffer.Length);
-            var decoder = new CryptoStream(output, transform, CryptoStreamMode.Write) ;
+            var decoder = new CryptoStream(output, transform, CryptoStreamMode.Write);
             while( input.Position < len )
             {
                 int size = (int)Math.Min(len - input.Position, buffer.Length);

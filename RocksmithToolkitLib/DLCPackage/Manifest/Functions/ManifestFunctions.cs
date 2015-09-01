@@ -412,10 +412,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             if (arrangement.ArrangementType == ArrangementType.Vocal)
             {
                 if (version == GameVersion.RS2014)
-                    attribute.DynamicVisualDensity = new List<float> {
-                        2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f,
-                        2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f
-                    };
+                    attribute.DynamicVisualDensity = Enumerable.Repeat(2.0f, 20).ToList();
                 else
                     attribute.DynamicVisualDensity = new List<float> {
                         4.5f, 4.3000001907348633f, 4.0999999046325684f, 3.9000000953674316f, 3.7000000476837158f,
@@ -426,20 +423,18 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             }
             else
             {
+                const float floorLimit = 5f;
                 attribute.DynamicVisualDensity = new List<float>(20);
-                float endSpeed = Math.Min(45f, Math.Max(10f, arrangement.ScrollSpeed)) / 10f;
+                float endSpeed = Math.Min(45f, Math.Max(floorLimit, arrangement.ScrollSpeed)) / 10f;
                 if (song.Levels.Length == 1)
                 {
-                    for (int i = 0; i < 20; i++)
-                    {
-                        attribute.DynamicVisualDensity.Add(endSpeed);
-                    }
+                    attribute.DynamicVisualDensity = Enumerable.Repeat(endSpeed, 20).ToList();
                 }
                 else
                 {
                     double beginSpeed = 4.5d;
-                    double maxLevel = Math.Min(song.Levels.Length, 16d) - 1;
-                    double factor = maxLevel == 0 ? 1d : Math.Pow(endSpeed / beginSpeed, 1d / maxLevel);
+                    double maxLevel = Math.Min(song.Levels.Length, 20d) - 1;
+                    double factor = maxLevel > 0 ? Math.Pow(endSpeed / beginSpeed, 1d / maxLevel) : 1d;
                     for (int i = 0; i < 20; i++)
                     {
                         if (i >= maxLevel)

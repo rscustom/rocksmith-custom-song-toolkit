@@ -18,12 +18,18 @@ namespace RocksmithToolkitLib.PSARC
             get;
             set;
         }
-
+        /// <summary>
+        /// Original data length of this entry.
+        /// </summary>
+        /// <value>The length.</value>
         public ulong Length {
             get;
             set;
         }
-
+        /// <summary>
+        /// Starting offset from
+        /// </summary>
+        /// <value>The offset.</value>
         public ulong Offset {
             get;
             set;
@@ -50,21 +56,12 @@ namespace RocksmithToolkitLib.PSARC
             set;
         }
 
-        private string _name;
-        public string Name {
-            get {
-                return this._name;
-            }
-            set {
-                this._name = value;
-                this.UpdateNameMD5();
-            }
-        }
+        public string Name { get; set; }
 
         public Entry()
         {
-            this.Id = 0;
-            this.Name = string.Empty;
+            Id = 0;
+            Name = string.Empty;
         }
         #region IDisposable implementation
         public void Dispose()
@@ -74,20 +71,19 @@ namespace RocksmithToolkitLib.PSARC
         }
         protected virtual void Dispose(bool disposing)
         {
-            if(disposing){
-                if(Data != null) Data.Dispose();
-                MD5 = null;
-            }
+            if (!disposing) return;
+            if (Data != null) Data.Dispose();
+            MD5 = null;
         }
         #endregion
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
 
         public void UpdateNameMD5()
         {
-            MD5 = new MD5CryptoServiceProvider().ComputeHash(Encoding.ASCII.GetBytes(this.Name));
+            MD5 = (Id == 0)? new byte[16] : new MD5CryptoServiceProvider().ComputeHash(Encoding.ASCII.GetBytes(Name));
         }
     }
 }

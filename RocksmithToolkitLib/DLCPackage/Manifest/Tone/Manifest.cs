@@ -21,12 +21,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 
         public static Manifest LoadFromFile(string manifestToneFile)
         {
-            var manifest = new Manifest();
             using (var reader = new StreamReader(manifestToneFile))
             {
-                manifest = JsonConvert.DeserializeObject<Manifest>(reader.ReadToEnd());
+                return JsonConvert.DeserializeObject<Manifest>(reader.ReadToEnd());
             }
-            return manifest;
         }
 
     }

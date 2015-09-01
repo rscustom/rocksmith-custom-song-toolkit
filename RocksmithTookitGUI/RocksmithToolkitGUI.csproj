@@ -386,7 +386,7 @@
   <ItemGroup>
     <None Include="Resources\colored.png" />
     <None Include="Resources\brasil_logo.png" />
-    <Content Include="Resources\ddc-512.png" />
+    <None Include="Resources\ddc-512.png" />
     <None Include="Resources\guitar_256.png" />
     <None Include="Resources\flipXc.png" />
     <None Include="Resources\flipYc.png" />

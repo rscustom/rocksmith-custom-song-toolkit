@@ -719,7 +719,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 progress += step;
                 GlobalExtension.UpdateProgress.Value = (int)progress;
             }
-            GlobalExtension.HideProgress();            
+            GlobalExtension.HideProgress();
         }
 
         private static void UpdateSng(string songDirectory, Platform platform)
@@ -817,7 +817,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="shlPath"></param>
         /// <param name = "fixShowlights"></param>
         internal static void UpdateShl(string shlPath, bool fixShowlights = true)
-        {
+        {//TODO:FIXME
             if (!fixShowlights) return;
             var shl = new Showlight.Showlights(shlPath);
             if (shl.FixShowlights(shl))

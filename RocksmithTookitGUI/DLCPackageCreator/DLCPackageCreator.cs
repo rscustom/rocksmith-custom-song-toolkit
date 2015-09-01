@@ -710,7 +710,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 fbd.Description = "Select folder to save project artifacts";
                 fbd.UseDescriptionForTitle = true;
-                fbd.SelectedPath = Path.GetDirectoryName(sourcePackage);
+                fbd.SelectedPath = Path.GetDirectoryName(sourcePackage) + Path.DirectorySeparatorChar;
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
                 savePath = fbd.SelectedPath;
@@ -758,12 +758,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // FILL PACKAGE CREATOR FORM
             FillPackageCreatorForm(info, unpackedDir);
 
-            // TODO: this code is depreicated for now
             // AUTO SAVE CDLC TEMPLATE
-            //SaveTemplateFile(unpackedDir);
-            //Application.DoEvents();
-            //MessageBox.Show(CurrentRocksmithTitle + " CDLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+            if (!rbConvert.Checked)
+            {
+                SaveTemplateFile(unpackedDir);
+                Application.DoEvents();
+                MessageBox.Show(CurrentRocksmithTitle + " CDLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
             Parent.Focus();
         }
 
