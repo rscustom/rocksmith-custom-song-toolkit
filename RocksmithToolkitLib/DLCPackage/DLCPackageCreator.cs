@@ -168,7 +168,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
 
-            packPsarc.Dispose();
+            packPsarc.Dispose();//test this too
             FILES_XBOX.Clear();
             FILES_PS3.Clear();
             DeleteTmpFiles(TMPFILES_SNG);
