@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -80,10 +81,10 @@ namespace RocksmithToolkitLib.PSARC
         {
             return Name;
         }
-
+        //My best guess is: RS2014 uses method like PSARCBrowser, they pick file from PSARC using md5(faster to use first file from collection, since it's defined be format, haha) and meet 2 of them, so they fail to read filenames from Manifest, rest is impossible. Changed check to Name instead of Id.
         public void UpdateNameMD5()
         {
-            MD5 = (Id == 0)? new byte[16] : new MD5CryptoServiceProvider().ComputeHash(Encoding.ASCII.GetBytes(Name));
+            MD5 = (Name == String.Empty)? new byte[16] : new MD5CryptoServiceProvider().ComputeHash(Encoding.ASCII.GetBytes(Name));
         }
     }
 }

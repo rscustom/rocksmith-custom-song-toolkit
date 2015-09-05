@@ -555,8 +555,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     // WRITE PACKAGE
                     packPsarc.Write(output, !platform.IsConsole);
-                    output.Flush();
-                    output.Seek(0, SeekOrigin.Begin);
                     output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
                 }
             }
@@ -728,8 +726,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         // WRITE PACKAGE
                         packPsarc.Write(output, !platform.IsConsole);
-                        output.Flush();
-                        output.Seek(0, SeekOrigin.Begin);
                         output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
                     }
                 }
@@ -811,8 +807,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         packageListStream.WriteTmpFile(packageList, platform);
                     }
                     packPsarc.Write(output, false);
-                    output.Flush();
-                    output.Seek(0, SeekOrigin.Begin);
                 }
                 finally
                 {
@@ -943,8 +937,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         songPsarc.AddEntry(String.Format("GRExports/{0}/{1}.sng", platform.GetPathName()[1], Path.GetFileNameWithoutExtension(x.SongFile.File)), sngFile);
                     }
                     songPsarc.Write(output, false);
-                    output.Flush();
-                    output.Seek(0, SeekOrigin.Begin);
                 }
             }
             finally
@@ -986,8 +978,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 tonePsarc.AddEntry("AggregateGraph.nt", toneAggregateGraphStream);
                 tonePsarc.AddEntry("PACKAGE_ID", packageIdStream);
                 tonePsarc.Write(output, false);
-                output.Flush();
-                output.Seek(0, SeekOrigin.Begin);
             }
         }
 

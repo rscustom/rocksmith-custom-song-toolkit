@@ -218,8 +218,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     using (var psarcStream = new MemoryStream())
                     {
                         psarc.Write(psarcStream, false);
-                        psarcStream.Seek(0, SeekOrigin.Begin);
-                        psarcStream.Flush();
                         RijndaelEncryptor.EncryptFile(psarcStream, outputFileStream, RijndaelEncryptor.DLCKey);
                         return;
                     }
@@ -239,7 +237,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     streamCollection.Add(fileStream);
                     innerPsarc.AddEntry(a, fileStream);
                 });
-                innerPsarc.Write(output, false);
+                innerPsarc.Write(output, false, false);
             }
         }
 
@@ -264,8 +262,6 @@ namespace RocksmithToolkitLib.DLCPackage
                });
 
                 psarc.Write(psarcStream, !platform.IsConsole);
-                psarcStream.Flush();
-                psarcStream.Seek(0, SeekOrigin.Begin);
 
                 if (Path.GetExtension(saveFileName) != ".psarc")
                     saveFileName += ".psarc";
@@ -410,9 +406,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     innerPsarc.AddEntry(a, fileStream);
                 });
 
-                innerPsarc.Write(psarcStream, false);
-                psarcStream.Flush();
-
+                innerPsarc.Write(psarcStream, false, false);
                 using (var outputFileStream = File.Create(Path.Combine(sourcePath, Path.GetFileName(directory)) + ".psarc"))
                 {
                     psarcStream.Seek(0, SeekOrigin.Begin);
