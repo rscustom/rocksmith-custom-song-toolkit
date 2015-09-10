@@ -27,14 +27,15 @@ echo toolkitverdist %toolkitverdist%
 
 
 echo Checking .git\HEAD exists ...
-::github commit version script
-set newrev=nongit
+:: fancy way to get to git commit version which
+:: is located in .git\refs\heads\master file
+:: github commit version script
 if exist %solution%\.git\HEAD (
 	echo Reading .git\HEAD ...
 	set /p head=<"%solution%\.git\HEAD"
 	if "!head:~0,4!" == "ref:" (
-		echo Reading .git\!head:~5!...
-		if exist "%solution%\.git\!head:~5!" set /p commit=<"%solution%\.git\!head:~5!"
+		set master=.git\!head:~5!
+ 		if exist "%solution%\.git\!head:~5!" set /p commit=<"%solution%\.git\!head:~5!"
 	) else (
 		set commit=!head!
 	)
@@ -42,6 +43,8 @@ if exist %solution%\.git\HEAD (
 		echo Found commit: !commit!
 		set newrev=!commit:~0,8!
 		echo newrev !newrev!
+                for %%a in (%solution%!master!) do set newrevdate=%%~ta
+                echo newrevdate !newrevdate!
 	) else echo Unable to find commit ...
 )
 
@@ -58,11 +61,8 @@ REM this has been depricated does not seem to be needed with revised scripts
 ::cmd /c type myfile.txt
 ::chcp 850
 ::)
-if not "!commit!" == ""	(
-	echo Replacing %oldrev% 
-	echo In %toolkitver% 
-	echo With %newrev% ...
-)
+
+echo Replacing %oldrev% in tempfile.txt with %newrev% ...
 ::pause
 
 ::git version replacement script
@@ -72,11 +72,11 @@ for /f "tokens=* delims==" %%i in (%toolkitverdist%) do (
 	echo !newstr!>>tempfile.txt
 )
 
-echo Moving new %toolkitver% ...
+echo Moving tempfile.txt to new %toolkitver% ...
 move /y tempfile.txt "%toolkitver%"
 echo Done
 
-pause
+::pause
 
 endlocal
 exit /b 0

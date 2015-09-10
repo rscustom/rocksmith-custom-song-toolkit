@@ -292,11 +292,12 @@ namespace RocksmithToolkitLib.Xml
         }
 
         /// <summary>
-        /// Write the CST\EOF\DDC xml comments.
+        /// Write the CST\EOF\DDC xml comments
         /// </summary>
         /// <param name="xmlSongRS2014File"></param>
         /// <param name="commentNodes"></param>
-        public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null)
+        /// <param name="overwriteCST"></param>
+        public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null, bool overwriteCST = true)
         {
             const string magic = " CST v";
             var xml = XDocument.Load(xmlSongRS2014File);
@@ -304,22 +305,28 @@ namespace RocksmithToolkitLib.Xml
             if (rootnode == null)
                 throw new InvalidDataException("Empty or wrong xml file. (Song node not found, no comments found)");
 
-            xml.DescendantNodes().OfType<XComment>().Remove();//cleanup xml
+            xml.DescendantNodes().OfType<XComment>().Remove(); //cleanup xml
             if (commentNodes == null)
-            {
                 commentNodes = ReadXmlComments(xmlSongRS2014File);
-            }
+
             if (commentNodes != null)
             {
                 // reverse order of stored comments is original order and filter toolkit comment(s)
-                foreach (var commentNode in commentNodes.Reverse().Where(commentNode => !commentNode.Value.Contains(magic)))
+                foreach (var commentNode in commentNodes.Reverse())
                 {
-                    rootnode.AddFirst(new XComment(commentNode));
+                    // preserve old CST version comment for debugging
+                    if (!overwriteCST)
+                        rootnode.AddFirst(new XComment(commentNode));
+                    else
+                        if (!commentNode.Value.Contains(magic))
+                            rootnode.AddFirst(new XComment(commentNode));
                 }
             }
 
             // add current version of toolkit magic
-            rootnode.AddFirst(new XComment(magic + ToolkitVersion.version + " "));
+            if (overwriteCST)
+                rootnode.AddFirst(new XComment(magic + ToolkitVersion.version + " "));
+
             xml.Save(xmlSongRS2014File);
         }
 
@@ -454,7 +461,7 @@ namespace RocksmithToolkitLib.Xml
                 heroLevels[i] = new HeroLevel
                 {
                     Hero = i + 1,
-                    Difficulty = (byte) phraseIteration.MaxScorePerDifficulty[i]
+                    Difficulty = (byte)phraseIteration.MaxScorePerDifficulty[i]
                 };
             }
             return heroLevels;
@@ -468,7 +475,7 @@ namespace RocksmithToolkitLib.Xml
                 heroLevels[i] = new HeroLevel
                 {
                     Hero = i + 1,
-                    Difficulty = (byte) phraseIteration.Difficulty[i]
+                    Difficulty = (byte)phraseIteration.Difficulty[i]
                 };
             }
             return heroLevels;
@@ -576,18 +583,18 @@ namespace RocksmithToolkitLib.Xml
                     ChordName = cteamplateList[i].ChordName,
                     // split getting funky RS1 -> RS2 results when combined
                     DisplayName = cteamplateList[i].ChordName,
-                    Finger0 = (sbyte) cteamplateList[i].Fingers[0],
-                    Finger1 = (sbyte) cteamplateList[i].Fingers[1],
-                    Finger2 = (sbyte) cteamplateList[i].Fingers[2],
-                    Finger3 = (sbyte) cteamplateList[i].Fingers[3],
-                    Finger4 = (sbyte) cteamplateList[i].Fingers[4],
-                    Finger5 = (sbyte) cteamplateList[i].Fingers[5],
-                    Fret0 = (sbyte) cteamplateList[i].Frets[0],
-                    Fret1 = (sbyte) cteamplateList[i].Frets[1],
-                    Fret2 = (sbyte) cteamplateList[i].Frets[2],
-                    Fret3 = (sbyte) cteamplateList[i].Frets[3],
-                    Fret4 = (sbyte) cteamplateList[i].Frets[4],
-                    Fret5 = (sbyte) cteamplateList[i].Frets[5],
+                    Finger0 = (sbyte)cteamplateList[i].Fingers[0],
+                    Finger1 = (sbyte)cteamplateList[i].Fingers[1],
+                    Finger2 = (sbyte)cteamplateList[i].Fingers[2],
+                    Finger3 = (sbyte)cteamplateList[i].Fingers[3],
+                    Finger4 = (sbyte)cteamplateList[i].Fingers[4],
+                    Finger5 = (sbyte)cteamplateList[i].Fingers[5],
+                    Fret0 = (sbyte)cteamplateList[i].Frets[0],
+                    Fret1 = (sbyte)cteamplateList[i].Frets[1],
+                    Fret2 = (sbyte)cteamplateList[i].Frets[2],
+                    Fret3 = (sbyte)cteamplateList[i].Frets[3],
+                    Fret4 = (sbyte)cteamplateList[i].Frets[4],
+                    Fret5 = (sbyte)cteamplateList[i].Frets[5],
                     ChordId = cteamplateList[i].ChordId
                 };
             }
@@ -976,7 +983,7 @@ namespace RocksmithToolkitLib.Xml
         internal static BendValue[] Parse(Sng2014HSL.BendData32[] bendData)
         {
             var bendValues = (bendData.Where(t => t.Time > 0 && t.Step >= 0)
-                .Select(t => new BendValue {Time = t.Time, Step = t.Step, Unk5 = t.Unk5})).ToArray();
+                .Select(t => new BendValue { Time = t.Time, Step = t.Step, Unk5 = t.Unk5 })).ToArray();
 
             return (bendValues.Length > 0) ? bendValues : null;
         }

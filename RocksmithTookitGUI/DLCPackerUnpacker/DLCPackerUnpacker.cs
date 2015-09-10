@@ -118,12 +118,11 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     return;
                 saveFileName = sfd.FileName;
             }
-
+      
             GlobalExtension.UpdateProgress = this.updateProgress;
             GlobalExtension.CurrentOperationLabel = this.currentOperationLabel;
             Thread.Sleep(100); // give Globals a chance to initialize
-            GlobalExtension.ShowProgress("Packing archive ...");
-
+            GlobalExtension.ShowProgress("Packing archive ...");            
             Application.DoEvents();
 
             try

@@ -114,6 +114,7 @@ RocksmithToolkitLib/ToolkitVersion.cs
 CleanupBeforeGitPullRequest.bat
 RevisionLog.txt
 
+
 # Python
 # Byte-compiled / optimized / DLL files
 __pycache__/

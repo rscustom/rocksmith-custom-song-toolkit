@@ -4,16 +4,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-
 using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using X360.STFS;
-
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
@@ -22,6 +19,7 @@ using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 using Control = System.Windows.Forms.Control;
+
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -33,7 +31,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private string dlcSavePath;
         private int userChangesToInputControls;
         // prevents multiple tool tip appearance and gives better action
-        private ToolTip tt = new ToolTip();
+        private ToolTip tt = new ToolTip();       
 
         #region Properties
 
@@ -228,6 +226,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public DLCPackageCreator()
         {
             InitializeComponent();
+#if (!DEBUG)
+            chkShowlights.Visible = false;
+#endif
             arrangementLB.AllowDrop = true;
             audioQualityBox.MouseEnter += audioQualityBox_MouseEnter;
             rbConvert.MouseEnter += rbConvert_MouseEnter;
@@ -402,6 +403,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 dlcSavePath = ofd.FileName;
             }
+
+            // showlights cause in game hanging for some RS1-RS2 conversions
+            packageData.Showlights = chkShowlights.Checked;
 
             //Generate metronome arrangemnts here
             var mArr = new List<Arrangement>();
@@ -2085,6 +2089,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 LoadArrangements(xmlFilePaths);
             }
         }
+
         private void LoadArrangements(string[] filePaths)
         {
             foreach (var filePath in filePaths)

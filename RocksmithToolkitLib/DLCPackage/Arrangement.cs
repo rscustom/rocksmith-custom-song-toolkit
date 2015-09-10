@@ -134,6 +134,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.ToneMultiplayer = attr.Tone_Multiplayer;
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
+            // save xml comments
             this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
             //Tones
             if (attr.Tones == null) // RS2012
@@ -201,9 +202,13 @@ namespace RocksmithToolkitLib.DLCPackage
                         throw new InvalidDataException("Custom tones were not set properly in EOF" + Environment.NewLine + "Please reauthor XML arrangement in EOF and fix custom tone consistency.");
                 }
 
-                // write changes to xml arrangement
+                // write changes to xml arrangement (w/o comments)
                 using (var stream = File.Open(xmlSongFile, FileMode.Create))
                     song.Serialize(stream);
+               
+                // write comments back to xml now so they are available for debugging
+                if (this.ArrangementType == ArrangementType.Guitar || this.ArrangementType == ArrangementType.Bass)
+                    Song2014.WriteXmlComments(xmlSongFile, this.XmlComments, false);
             }
         }
 

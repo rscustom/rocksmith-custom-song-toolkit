@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Xml;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using X360.IO;
 using X360.Other;
 using X360.STFS;
-
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.Showlight;
 using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.Extensions;
@@ -526,7 +522,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry(String.Format("manifests/songs_dlc_{0}/songs_dlc_{0}.hsan", dlcName), manifestHeaderHSANStream);
                     }
 
-                    // XML SHOWLIGHTS //TODO: bring back manual showlights switch
+                    // XML SHOWLIGHTS
                     var shlArr = info.Arrangements.FirstOrDefault(ar => ar.ArrangementType == ArrangementType.ShowLight);
                     if (shlArr != null && shlArr.SongXml.File != null)
                         using (var fs = File.OpenRead(shlArr.SongXml.File))
@@ -535,15 +531,12 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         var showlight = new Showlights(info);
                         showlight.Serialize(showlightStream);
-#if DEBUG
-                        // write to file for debugging
-                        string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "CST"));
+                        string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "cst"));
                         using (FileStream file = new FileStream(shlFilePath, FileMode.Create, FileAccess.Write))
                             showlightStream.WriteTo(file);
-#endif
                     }
 
-                    if (showlightStream.CanRead)
+                    if (showlightStream.CanRead && showlightStream.Length > 0 && info.Showlights)
                         packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
 
                     // XBLOCK
