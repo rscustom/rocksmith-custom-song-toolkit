@@ -156,7 +156,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Tone
 
         private static List<Tone2014> ReadFromPackage(string packagePath, Platform platform)
         {
-            if (packagePath.EndsWith("_prfldb") || packagePath.EndsWith("_profile"))
+            if (packagePath.ToLowerInvariant().EndsWith("_prfldb") || packagePath.ToLowerInvariant().EndsWith("_profile"))
                 return ReadFromProfile(packagePath);
             else
             {
