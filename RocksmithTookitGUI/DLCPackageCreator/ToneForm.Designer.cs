@@ -31,7 +31,7 @@
             this.okButton = new System.Windows.Forms.Button();
             this.loadButton = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
-            this.toneControl1 = new RocksmithToolkitGUI.DLCPackageCreator.ToneControl();
+            this.toneControl = new RocksmithToolkitGUI.DLCPackageCreator.ToneControl();
             this.SuspendLayout();
             // 
             // okButton
@@ -76,20 +76,20 @@
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
-            // toneControl1
+            // toneControl
             // 
-            this.toneControl1.Location = new System.Drawing.Point(13, 12);
-            this.toneControl1.MinimumSize = new System.Drawing.Size(513, 301);
-            this.toneControl1.Name = "toneControl1";
-            this.toneControl1.Size = new System.Drawing.Size(513, 301);
-            this.toneControl1.TabIndex = 4;
-            this.toneControl1.Tone = null;
+            this.toneControl.Location = new System.Drawing.Point(13, 12);
+            this.toneControl.MinimumSize = new System.Drawing.Size(513, 301);
+            this.toneControl.Name = "toneControl";
+            this.toneControl.Size = new System.Drawing.Size(513, 301);
+            this.toneControl.TabIndex = 4;
+            this.toneControl.Tone = null;
             // 
             // ToneForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(543, 369);
-            this.Controls.Add(this.toneControl1);
+            this.Controls.Add(this.toneControl);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.loadButton);
             this.Controls.Add(this.okButton);
@@ -110,8 +110,8 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.Button saveButton;
-
-        public ToneControl toneControl1;
+        private ToneControl toneControl1; // prevents form errors
+        public ToneControl toneControl;
 
     }
 }

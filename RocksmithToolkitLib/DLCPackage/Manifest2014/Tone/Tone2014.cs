@@ -28,12 +28,12 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Tone
         public decimal SortOrder { get; set; }
 
         public Tone2014()
-        {   //fill with defauld amp\cab
+        {   //fill with default amp\cab
             GearList = new Gear2014(); //{ Amp = new Pedal2014() { }, Cabinet = new Pedal2014() { } }; 
             IsCustom = true;
             Volume = -12;
             ToneDescriptors = new List<string>();
-            NameSeparator = " - ";
+            NameSeparator = " - "; // not always the case, sometimes it is "" on customs
             SortOrder = 0;
         }
 

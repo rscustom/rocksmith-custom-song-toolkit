@@ -31,7 +31,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private string dlcSavePath;
         private int userChangesToInputControls;
         // prevents multiple tool tip appearance and gives better action
-        private ToolTip tt = new ToolTip();       
+        private ToolTip tt = new ToolTip();
 
         #region Properties
 
@@ -90,6 +90,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 var filter = CurrentOFDPackageFilter + "|";
                 filter += CurrentRocksmithTitle + " Song Manifest (*.json)|*.json";
+                if (RS2012.Checked)
+                    filter += "|Rocksmith 2012 Game Save Profile (*_profile)|*_profile";
+                else
+                    filter += "|Rocksmith 2014 Game Save Profile (*_prfldb)|*_prfldb";
 
                 return filter;
             }
@@ -380,7 +384,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
-            using (var ofd = new SaveFileDialog())
+            using (var sfd = new SaveFileDialog())
             {
                 var versionPrefix = String.Empty;
                 switch (CurrentGameVersion)
@@ -398,10 +402,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
 
-                ofd.FileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
-                ofd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
-                if (ofd.ShowDialog() != DialogResult.OK) return;
-                dlcSavePath = ofd.FileName;
+                sfd.FileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                sfd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
+                if (sfd.ShowDialog() != DialogResult.OK) return;
+                dlcSavePath = sfd.FileName;
             }
 
             // showlights cause in game hanging for some RS1-RS2 conversions
@@ -419,9 +423,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             bool updateArrangmentID = false;
             if (userChangesToInputControls > 0)
                 if (MessageBox.Show(@"The song information has been changed." + Environment.NewLine +
-                    @"Do you also want to update the 'Arrangement IDs'?" + Environment.NewLine +
+                    @"Do you want to update the 'Arrangement Identification'?  " + Environment.NewLine +
                     @"Answering 'Yes' will reduce the risk of CDLC" + Environment.NewLine +
-                    @"in game hanging and song stats will be reset.  ", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    @"in game hanging and song stats will be reset.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                     updateArrangmentID = true;
 
             foreach (var arr in packageData.Arrangements)
@@ -1501,13 +1505,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 form.EditMode = false;
                 form.CurrentGameVersion = CurrentGameVersion;
-                form.toneControl1.CurrentGameVersion = CurrentGameVersion;
-                form.toneControl1.Init();
-                form.toneControl1.Tone = GeneralExtensions.Copy(tone);
+                form.toneControl.CurrentGameVersion = CurrentGameVersion;
+                form.toneControl.Init();
+                form.toneControl.Tone = GeneralExtensions.Copy(tone);
                 form.ShowDialog();
 
                 if (form.Saved)
-                    tonesLB.Items.Add(form.toneControl1.Tone);
+                    tonesLB.Items.Add(form.toneControl.Tone);
             }
         }
 
@@ -1584,14 +1588,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     form.EditMode = true;
                     var currentGameVersion = CurrentGameVersion != GameVersion.RS2012 ? GameVersion.RS2014 : GameVersion.RS2012;
                     form.CurrentGameVersion = currentGameVersion;
-                    form.toneControl1.CurrentGameVersion = currentGameVersion;
-                    form.toneControl1.Init();
-                    form.toneControl1.Tone = GeneralExtensions.Copy(tone);
+                    form.toneControl.CurrentGameVersion = currentGameVersion;
+                    form.toneControl.Init();
+                    form.toneControl.Tone = GeneralExtensions.Copy(tone);
                     form.ShowDialog();
 
                     if (form.Saved)
                     {
-                        tone = form.toneControl1.Tone;
+                        tone = form.toneControl.Tone;
                         tonesLB.Items[tonesLB.SelectedIndex] = tone;
                     }
                 }
@@ -1682,11 +1686,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 toneImportFile = ofd.FileName;
             }
 
+            // game may convert profiles to uppercase
+            if (toneImportFile.ToLower().Contains("prfldb"))
+                toneImportFile = toneImportFile.ToLower();
+
             ImportTone(toneImportFile);
         }
 
         private void ImportTone(string toneImportFile)
         {
+            var preToneCount = tonesLB.Items.Count;
+
             try
             {
                 Application.DoEvents();
@@ -1704,7 +1714,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             foreach (var tone in importForm.Tone2014.Where(t => !t.GearList.IsNull()))
                                 tonesLB.Items.Add(tone);
                         }
-                    else if (tones2014.Count > 0) tonesLB.Items.Add(tones2014.FirstOrDefault(t => !t.GearList.IsNull()));
+                    else if (tones2014.Count > 0)
+                        tonesLB.Items.Add(tones2014.FirstOrDefault(t => !t.GearList.IsNull()));
                 }
                 else
                 {
@@ -1720,7 +1731,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             foreach (var tone in importForm.Tone.Where(t => t.PedalList.Count != 0))
                                 tonesLB.Items.Add(tone);
                         }
-                    else if (tones.Count > 0) tonesLB.Items.Add(tones.FirstOrDefault(t => t.PedalList.Count != 0));
+                    else if (tones.Count > 0)
+                        tonesLB.Items.Add(tones.FirstOrDefault(t => t.PedalList.Count != 0));
                 }
             }
             catch (Exception ex)
@@ -1729,7 +1741,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
-            MessageBox.Show("Tone(s) was imported.", "CDLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Tone(s) imported: " + (tonesLB.Items.Count - preToneCount) + "  ", "CDLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();
         }
 

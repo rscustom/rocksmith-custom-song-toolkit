@@ -156,22 +156,22 @@ namespace RocksmithToolkitLib.DLCPackage
                     // fix for tone.id (may not be needed/used by game)
                     Int32 toneId = 0;
 
-                    // cleanup the xml arrangment file too
+                    // cleanup the xml arrangement file too
                     if (jsonTone.Name.ToLower() == attr.Tone_Base.ToLower())
                         this.ToneBase = song.ToneBase = attr.Tone_Base;
-                    if (jsonTone.Name.ToLower() == attr.Tone_A.ToLower())
+                    if (attr.Tone_A != null && jsonTone.Name.ToLower() == attr.Tone_A.ToLower())
                         this.ToneA = song.ToneA = attr.Tone_A;
-                    if (jsonTone.Name.ToLower() == attr.Tone_B.ToLower())
+                    if (attr.Tone_B != null && jsonTone.Name.ToLower() == attr.Tone_B.ToLower())
                     {
                         this.ToneB = song.ToneB = attr.Tone_B;
                         toneId = 1;
                     }
-                    if (jsonTone.Name.ToLower() == attr.Tone_C.ToLower())
+                    if (attr.Tone_C != null && jsonTone.Name.ToLower() == attr.Tone_C.ToLower())
                     {
                         this.ToneC = song.ToneC = attr.Tone_C;
                         toneId = 2;
                     }
-                    if (jsonTone.Name.ToLower() == attr.Tone_D.ToLower())
+                    if (attr.Tone_D != null && jsonTone.Name.ToLower() == attr.Tone_D.ToLower())
                     {
                         this.ToneD = song.ToneD = attr.Tone_D;
                         toneId = 3;

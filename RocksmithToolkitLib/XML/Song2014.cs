@@ -296,16 +296,24 @@ namespace RocksmithToolkitLib.Xml
         /// </summary>
         /// <param name="xmlSongRS2014File"></param>
         /// <param name="commentNodes"></param>
-        /// <param name="overwriteCST"></param>
-        public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null, bool overwriteCST = true)
+        /// <param name="overwriteCstComment"></param>
+        /// <param name="customComment"></param>
+        public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null, bool overwriteCstComment = true, string customComment = "")
         {
             const string magic = " CST v";
             var xml = XDocument.Load(xmlSongRS2014File);
             var rootnode = xml.Element("song");
+
             if (rootnode == null)
                 throw new InvalidDataException("Empty or wrong xml file. (Song node not found, no comments found)");
 
-            xml.DescendantNodes().OfType<XComment>().Remove(); //cleanup xml
+            //cleanup xml comments
+            xml.DescendantNodes().OfType<XComment>().Remove();
+
+            // add a new custom comment
+            if (!String.IsNullOrEmpty(customComment))
+                rootnode.AddFirst(new XComment(" " + customComment + " "));
+
             if (commentNodes == null)
                 commentNodes = ReadXmlComments(xmlSongRS2014File);
 
@@ -315,7 +323,7 @@ namespace RocksmithToolkitLib.Xml
                 foreach (var commentNode in commentNodes.Reverse())
                 {
                     // preserve old CST version comment for debugging
-                    if (!overwriteCST)
+                    if (!overwriteCstComment)
                         rootnode.AddFirst(new XComment(commentNode));
                     else
                         if (!commentNode.Value.Contains(magic))
@@ -324,7 +332,7 @@ namespace RocksmithToolkitLib.Xml
             }
 
             // add current version of toolkit magic
-            if (overwriteCST)
+            if (overwriteCstComment)
                 rootnode.AddFirst(new XComment(magic + ToolkitVersion.version + " "));
 
             xml.Save(xmlSongRS2014File);
