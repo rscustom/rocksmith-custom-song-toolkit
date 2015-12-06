@@ -43,7 +43,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return other.Note == Note && Time.Equals(other.Time) || Time + 2.0F > other.Time; //will work only if collection is ordered by time.
+            return other.Note == Note && Time + 2.0F > other.Time; //will work only if collection is ordered by time.
         }
 
         #endregion

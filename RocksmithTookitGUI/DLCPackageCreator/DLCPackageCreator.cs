@@ -347,8 +347,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (MessageBox.Show("Are you sure to delete the selected arrangement?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 return;
-
-            // regenerate new showlights arrangement 
+            //FIXME: bad thing happens here.
+            /*/ regenerate new showlights arrangement
             if (arrangementLB.SelectedItem.ToString().ToLower().Contains("showlight"))
             {
                 var packageData = GetPackageData();
@@ -356,9 +356,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (arr.ArrangementType == ArrangementType.ShowLight)
                     {
                         File.Delete(arr.SongXml.File);
-                        arr.SongXml.File = null; // forces regeneration of shl                        
+                        arr.SongXml.File = null; // forces regeneration of shl
                     }
-            }
+            }*/
 
             arrangementLB.Items.Remove(arrangementLB.SelectedItem);
         }

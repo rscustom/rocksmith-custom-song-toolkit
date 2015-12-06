@@ -572,7 +572,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         return new Platform(GamePlatform.None, GameVersion.None);
                 }
             }
-            else if (Directory.Exists(fullPath))
+            if (Directory.Exists(fullPath))
             {
                 var fullPathInfo = new DirectoryInfo(fullPath);
                 // GET PLATFORM BY PACKAGE ROOT DIRECTORY
@@ -581,20 +581,21 @@ namespace RocksmithToolkitLib.DLCPackage
                     // PC 2012
                     return new Platform(GamePlatform.Pc, GameVersion.RS2012);
                 }
-                else if (File.Exists(Path.Combine(fullPath, "appid.appid")))
+                string agg;
+                if (File.Exists(Path.Combine(fullPath, "appid.appid")))
                 {
                     // PC / MAC 2014
-                    var agg = fullPathInfo.EnumerateFiles("*.nt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
+                    agg = fullPathInfo.EnumerateFiles("*.nt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
                     var aggContent = File.ReadAllText(agg);
 
                     if (aggContent.Contains("\"dx9\""))
                         return new Platform(GamePlatform.Pc, GameVersion.RS2014);
-                    else if (aggContent.Contains("\"macos\""))
+                    if (aggContent.Contains("\"macos\""))
                         return new Platform(GamePlatform.Mac, GameVersion.RS2014);
-                    else
-                        return new Platform(GamePlatform.Pc, GameVersion.RS2014); // Because appid.appid have only in RS2014
+
+                    return new Platform(GamePlatform.Pc, GameVersion.RS2014); // Because appid.appid have only in RS2014
                 }
-                else if (Directory.Exists(Path.Combine(fullPath, ROOT_XBox360)))
+                if (Directory.Exists(Path.Combine(fullPath, ROOT_XBox360)))
                 {
                     // XBOX 2012/2014
                     var hTxt = fullPathInfo.EnumerateFiles("*.txt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
@@ -602,37 +603,32 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     if (hTxtContent.Contains("Title ID: 55530873"))
                         return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
-                    else if (hTxtContent.Contains("Title ID: 555308C0"))
+                    if (hTxtContent.Contains("Title ID: 555308C0"))
                         return new Platform(GamePlatform.XBox360, GameVersion.RS2014);
-                    else
-                        return new Platform(GamePlatform.XBox360, GameVersion.None);
+
+                    return new Platform(GamePlatform.XBox360, GameVersion.None);
                 }
-                else if (fullPath.ToLower().Contains("_pc"))
+                if (fullPath.ToLower().Contains("_pc"))
                 {
                     return new Platform(GamePlatform.Pc, GameVersion.RS2014);
                 }
-                else
+                // PS3 2012/2014
+                agg = fullPathInfo.EnumerateFiles("*.nt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
+
+                if (agg.Length > 0)
                 {
-                    // PS3 2012/2014
-                    var agg = fullPathInfo.EnumerateFiles("*.nt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
+                    var aggContent = File.ReadAllText(agg);
 
-                    if (agg.Length > 0)
-                    {
-                        var aggContent = File.ReadAllText(agg);
+                    if (aggContent.Contains("\"PS3\""))
+                        return new Platform(GamePlatform.PS3, GameVersion.RS2012);
+                    if (aggContent.Contains("\"ps3\""))
+                        return new Platform(GamePlatform.PS3, GameVersion.RS2014);
 
-                        if (aggContent.Contains("\"PS3\""))
-                            return new Platform(GamePlatform.PS3, GameVersion.RS2012);
-                        else if (aggContent.Contains("\"ps3\""))
-                            return new Platform(GamePlatform.PS3, GameVersion.RS2014);
-                        else
-                            return TryGetPlatformByEndName(fullPath);
-                    }
-                    else
-                        return TryGetPlatformByEndName(fullPath);
+                    return TryGetPlatformByEndName(fullPath);
                 }
+                return TryGetPlatformByEndName(fullPath);
             }
-            else
-                return new Platform(GamePlatform.None, GameVersion.None);
+            return new Platform(GamePlatform.None, GameVersion.None);
         }
 
         /// <summary>
@@ -642,20 +638,21 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <returns>Platform(DetectedPlatform, RS2014 ? None)</returns>
         public static Platform TryGetPlatformByEndName(string fileName)
         {
-            GamePlatform p = GamePlatform.None;
-            GameVersion v = GameVersion.RS2014;
-            var pIndex = Path.GetFileNameWithoutExtension(fileName).LastIndexOf("_");
+            var p = GamePlatform.None;
+            var v = GameVersion.RS2014;
+            var name = Path.GetFileNameWithoutExtension(fileName);
+            var pIndex = name.LastIndexOf("_", StringComparison.Ordinal);
 
             if (Directory.Exists(fileName))
             {// Pc, Mac, XBox360, PS3
-                string platformString = Path.GetFileNameWithoutExtension(fileName).Substring(pIndex + 1);
-                bool isValid = Enum.TryParse(platformString, true, out p);
-                if (isValid) return new Platform(p, v);
-                else return new Platform(GamePlatform.None, GameVersion.None);
+                var platformString = name.Substring(pIndex + 1);
+                var isValid = Enum.TryParse(platformString, true, out p);
+
+                return isValid ? new Platform(p, v) : new Platform(GamePlatform.None, GameVersion.None);
             }
             else
             {//_p, _m, _ps3, _xbox
-                string platformString = pIndex > -1 ? Path.GetFileNameWithoutExtension(fileName).Substring(pIndex) : "";
+                var platformString = pIndex > -1 ? name.Substring(pIndex) : "";
                 switch (platformString.ToLower())
                 {
                     case "_p":

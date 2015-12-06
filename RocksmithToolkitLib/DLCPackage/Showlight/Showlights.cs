@@ -24,6 +24,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
      * Unknown: 36-41
      * (?) Spotlights/colours/effects: 42-59
      * TODO: (?) Game hangs caused by 60-62
+     * Unknown: 63, 64-65
      * (?) Laser lights: 66-67
      * 
      * Need to define Fog Colour + stage lights before Venue shows up (Time = 0-10)
@@ -57,7 +58,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             // bass arrangement usually has few chords so not much use 
             int maxArrNdx = 0;
             int maxNoteChordCount = 0;
-            for (int i = 0; i < info.Arrangements.Count; i++)
+            for (int i = 0, arrCnt = info.Arrangements.Count; i < arrCnt; i++)
             {
                 if (info.Arrangements[i].ArrangementType == ArrangementType.Vocal)
                     continue;
@@ -129,7 +130,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         private int GetBeamNote(int midiNote)
         {
             // Console.WriteLine("GetBeamNote: " + (midiNote % 12) + (12 * 4));
-            return (midiNote % 12) + (12 * 4);
+            return new Random(midiNote % 12).Next(42, 59); //(midiNote % 12) + (12 * 4);
         }
 
         public bool FixShowlights(Showlights shl)
@@ -142,55 +143,57 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         {
             if (showlightList.Count == 0) return true;
 
-            //Setup Stage Fog Color
+            //Setup Stage Fog+Lights
             if (showlightList[0].Time > 10.0F)
             {
                 showlightList.Insert(0, new Showlight { Note = GetFogNote(showlightList[0].Note), Time = 10.0F });
+                showlightList.Insert(1, new Showlight { Note = GetBeamNote(showlightList[0].Note), Time = 10.0F });
             }
             else if (showlightList[0].Note < 24 || showlightList[0].Note > 35)
             {
                 showlightList[0].Note = GetFogNote(showlightList[0].Note);
             }
-            //Setup Stage lights
+            if (!showlightList.Select(s => s.Time < 10.0F && (s.Note > 41 && s.Note < 60)).Any())
+            {
+                showlightList.Insert(1, new Showlight { Note = GetBeamNote(showlightList[0].Note), Time = 10.0F });
+            }
+
             //Additional fix for stage lights
             for (var i = 1; i + 1 <= showlightList.Count; i++)
             {
-
-                //if current is last, add new one n=n t=t+1
+                //if current is last, add copy of it at the end
                 if (i + 1 == showlightList.Count)
                 {
-                    var objectToAdd = new Showlight
+                    showlightList.Add(new Showlight
                     {
                         Note = showlightList[i].Note,
-                        Time = showlightList[i].Time + 1
-                    };
-
-                    showlightList.Add(objectToAdd);
+                        Time = showlightList[i].Time + 1.0F
+                    });
                 }
 
-                if (showlightList[i].Note == showlightList[i + 1].Note) // if next note is current
+                // If next note == current
+                if (showlightList[i].Note == showlightList[i + 1].Note)
                     showlightList.Remove(showlightList[i + 1]);
 
-                //Fog Color for, every: Solo, every 30% of the song. NO EFFECT.
+                //Change FogNote for: Solo, every 30% of the song. NO EFFECT NOW.
                 if (showlightList[i].Note > 23 && showlightList[i].Note < 36)
                 {
                     showlightList[i].Note = GetBeamNote(showlightList[i].Note);
-                    continue;
                 }
-
-                // TODO: notes 42 to 65 range? cause RS1->RS2 in game hangs
-                //For all notes > 67 || note in range [36..41] translate it to Beam\spotlight, range [42..59]
-                if (showlightList[i].Note < 24 ||
-                    showlightList[i].Note > 35 && showlightList[i].Note < 42 ||
-                    showlightList[i].Note > 67)
+                //Turn all other notes into BeamNote
+                else
                 {
+                    if (showlightList[i].Note > 41 && showlightList[i].Note < 60)
+                        continue;
                     showlightList[i].Note = GetBeamNote(showlightList[i].Note);
-                    continue;//useless for now
                 }
             }
 
             //Forced laser effect for last note (we probablty couldn't see it)
-            showlightList[showlightList.Count - 1].Note = 66;
+            if (showlightList.Last().Note != 66)
+            {
+                showlightList.Add(new Showlight { Note = 66, Time = showlightList[showlightList.Count-1].Time });
+            }
 
             return PopShList(showlightList);
         }
@@ -248,14 +251,14 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         /// <returns>true if success.</returns>
         public bool PopShList(List<Showlight> list)
         {
-            if (this.ShowlightList.Count == 0)
-                this.ShowlightList.AddRange(list);
+            if (ShowlightList.Count == 0)
+                ShowlightList.AddRange(list);
             else
             {
                 try
                 {
-                    this.ShowlightList = this.ShowlightList.OrderBy(x => x.Time).Union(list.OrderBy(x => x.Time)).ToList();
-                    this.ShowlightList.TrimExcess();
+                    ShowlightList = ShowlightList.Union(list).OrderBy(x => x.Time).ToList();
+                    ShowlightList.TrimExcess();
                 }
                 catch (Exception)
                 {
