@@ -647,19 +647,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
 
                     if (foundTuning == -1 && selectedType != ArrangementType.Bass)
+                    {
+                        tuningComboBox.SelectedIndex = 0;
                         ShowTuningForm(selectedType, new TuningDefinition { Tuning = xmlSong.Tuning, Custom = true, GameVersion = currentGameVersion });
+                    }
                     else
                     {
+                        // E Standard, Drop D, and Open E tuning are same for both guitar and bass
                         if (selectedType == ArrangementType.Bass)
-                        {
-                            MessageBox.Show(@"Remember to set the correct tuning using Edit for" + Environment.NewLine +
-                                @"Bass Arrangement: " + Path.GetFileName(xmlFilePath),
-                                DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                            tuningComboBox.SelectedIndex = 0;
-                        }
-                        else
-                            tuningComboBox.SelectedIndex = foundTuning;
+                            if (xmlSong.Tuning.String4 == 0 && xmlSong.Tuning.String5 == 0)
+                                Debug.WriteLine("Bass Tuning is the same as Guitar Tuning");
+                            else
+                            {
+                                tuningComboBox.SelectedIndex = 0;
+                                MessageBox.Show("Toolkit was not able to automatically set tuning for  " + Environment.NewLine +
+                                                "Bass Arrangement: " + Path.GetFileName(xmlFilePath) + Environment.NewLine +
+                                                "Use the tuning selector dropdown or Tunining Editor  " + Environment.NewLine +
+                                                "to manually set the correct bass tuning.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
                     }
 
                     tuningComboBox.Refresh();

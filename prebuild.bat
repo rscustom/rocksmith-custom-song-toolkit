@@ -3,10 +3,14 @@ setlocal enabledelayedexpansion
 
 if errorlevel 1 goto BuildEventFailed
 
+set batchpath=%~dp0
+echo Current batch path: %batchpath%
+cd %batchpath%
+
 set solution=%~1
 set toolkitver=%~2
-::echo Solution Path: %solution%
-::echo Toolkit Version Path: %toolkitver%
+echo Solution Path from Command Line: %solution%
+echo Toolkit Version Path from Command Line: %toolkitver%
 
 if "%solution%"=="" (
 set solution=.\
@@ -21,10 +25,10 @@ set toolkitverdist=%toolkitver%_dist
 echo solution %solution%
 echo toolkitver %toolkitver%
 echo toolkitverdist %toolkitverdist%
-::echo Copying %toolkitverdist% 
-::echo To %toolkitver%
-::Copy /v %toolkitverdist% %toolkitver%
+echo Copying %toolkitverdist% 
+echo To %toolkitver%
 
+copy %toolkitverdist% %toolkitver%
 
 echo Checking .git\HEAD exists ...
 :: fancy way to get to git commit version which
