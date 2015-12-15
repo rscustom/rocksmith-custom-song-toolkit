@@ -49,9 +49,11 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
         public string Tone_D { get; set; }
         public string Tone_Multiplayer { get; set; }
         public List<Tone2014> Tones { get; set; }
+
         public string InputEvent { get; set; } //Vocals only
         public float SongVolume { get; set; } //Customs only (to easy platform conversion) its float!
         public float? PreviewVolume { get; set; } //Customs only like above
+
 
         public Attributes2014() { }
 

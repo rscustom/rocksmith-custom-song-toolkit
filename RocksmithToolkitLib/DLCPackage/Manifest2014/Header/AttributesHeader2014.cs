@@ -13,7 +13,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public static readonly string URN_TEMPLATE = "urn:{0}:{1}:{2}";
         public static readonly string URN_TEMPLATE_SHORT = "urn:{0}:{1}";
 
-
         [JsonIgnore]
         internal bool IsVocal = false;
         [JsonIgnore]
@@ -42,7 +41,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public double? NotesEasy { get; set; }
         public double? NotesHard { get; set; }
         public double? NotesMedium { get; set; }
-        public string PersistentID { get; set; }
         public int? Representative { get; set; } // Header only
         public int? RouteMask { get; set; } // Header only
         public bool Shipping { get; set; }
@@ -57,6 +55,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public string SongNameSort { get; set; }
         public int? SongYear { get; set; }
         public TuningStrings Tuning { get; set; }
+        public string PersistentID { get; set; }
 
         public AttributesHeader2014() { }
 

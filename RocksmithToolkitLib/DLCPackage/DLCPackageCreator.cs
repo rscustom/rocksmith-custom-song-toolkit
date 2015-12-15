@@ -511,7 +511,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         else
                         {
                             // One for all arrangements (PC/Mac)
-                            manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
+                            manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);                       
                         }
                     }
 
