@@ -22,7 +22,7 @@ namespace RocksmithToolkitGUI.DLCConverter
 {
     public partial class DLCConverter : UserControl
     {
-        private const string MESSAGEBOX_CAPTION = "DLC Converter";
+        private const string MESSAGEBOX_CAPTION = "CDLC Converter";
         private BackgroundWorker bwConvert;
         private StringBuilder errorsFound;
 

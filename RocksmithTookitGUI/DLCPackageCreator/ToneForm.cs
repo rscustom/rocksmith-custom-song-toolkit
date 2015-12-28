@@ -35,7 +35,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         private void okButton_Click(object sender, EventArgs e)
-        {//TODO: max 6 gears allowed, 2 nessesary and 4 extra.
+        {
+            // removed limit ... set to 69 for testing
+            //TODO: max 6 gears allowed, 2 nessesary and 4 extra.
             switch (CurrentGameVersion)
             {
                 case GameVersion.RS2012:
@@ -46,8 +48,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (toneControl.Tone.GearList.IsNull()) return;
                     if (toneControl.Tone.GearList.SlotsUsed() > 6)
                     {
-                        MessageBox.Show("Reached effects limit, Only 4 extra gears allowed.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                        MessageBox.Show("Using " + toneControl.Tone.GearList.SlotsUsed() + " Game Effects may crash game.   " + Environment.NewLine + Environment.NewLine +
+                                        "Please report your test results to" + Environment.NewLine + "the Rocksmith Toolkit Developers.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                        // MessageBox.Show("Reached effects limit, Only 4 extra gears allowed.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        // return;
                     }
                     break;
             }

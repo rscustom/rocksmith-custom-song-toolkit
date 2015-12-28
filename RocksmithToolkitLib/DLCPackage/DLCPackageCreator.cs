@@ -1006,7 +1006,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 GeneralExtensions.RunExternalExecutable("nvdxt.exe", true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
         }
 
-        private static void GenerateToolkitVersion(Stream output, string version = null)
+        public static void GenerateToolkitVersion(Stream output, string version = null)
         {
             var author = ConfigRepository.Instance()["general_defaultauthor"];
 
@@ -1021,7 +1021,7 @@ namespace RocksmithToolkitLib.DLCPackage
             output.Seek(0, SeekOrigin.Begin);
         }
 
-        private static void GenerateAppId(Stream output, string appId, Platform platform)
+        public static void GenerateAppId(Stream output, string appId, Platform platform)
         {
             var writer = new StreamWriter(output);
             var defaultAppId = (platform.version == GameVersion.RS2012) ? "206113" : "248750";

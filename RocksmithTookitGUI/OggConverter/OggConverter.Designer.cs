@@ -39,14 +39,14 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnWwiseConvert = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.tbarChorusTime = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
             this.lblChorusTime = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.audioQualityBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.btnAudio2Wem = new System.Windows.Forms.Button();
             this.txtAudio2Wem = new System.Windows.Forms.TextBox();
+            this.tbarChorusTime = new System.Windows.Forms.TrackBar();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.audioQualityBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -177,23 +177,6 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Input Vobis OGG or WAV file to convert to WEM (Wwise 2013):";
             // 
-            // tbarChorusTime
-            // 
-            this.tbarChorusTime.AutoSize = false;
-            this.tbarChorusTime.BackColor = System.Drawing.SystemColors.Control;
-            this.tbarChorusTime.Location = new System.Drawing.Point(281, 44);
-            this.tbarChorusTime.Margin = new System.Windows.Forms.Padding(2);
-            this.tbarChorusTime.Maximum = 600;
-            this.tbarChorusTime.Name = "tbarChorusTime";
-            this.tbarChorusTime.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.tbarChorusTime.Size = new System.Drawing.Size(109, 20);
-            this.tbarChorusTime.SmallChange = 5;
-            this.tbarChorusTime.TabIndex = 10;
-            this.tbarChorusTime.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.toolTip1.SetToolTip(this.tbarChorusTime, "Left mouse click on slider line \r\nfor 0.5 second increments");
-            this.tbarChorusTime.Value = 40;
-            this.tbarChorusTime.ValueChanged += new System.EventHandler(this.tbarChorusTime_ValueChanged);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -210,7 +193,7 @@
             // 
             this.lblChorusTime.AutoSize = true;
             this.lblChorusTime.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblChorusTime.Location = new System.Drawing.Point(386, 48);
+            this.lblChorusTime.Location = new System.Drawing.Point(394, 46);
             this.lblChorusTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblChorusTime.Name = "lblChorusTime";
             this.lblChorusTime.Size = new System.Drawing.Size(22, 13);
@@ -228,31 +211,6 @@
             this.label7.TabIndex = 40;
             this.label7.Text = "Audio Quality";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // audioQualityBox
-            // 
-            this.audioQualityBox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.audioQualityBox.Location = new System.Drawing.Point(81, 44);
-            this.audioQualityBox.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.audioQualityBox.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.audioQualityBox.Name = "audioQualityBox";
-            this.audioQualityBox.Size = new System.Drawing.Size(37, 20);
-            this.audioQualityBox.TabIndex = 39;
-            this.toolTip1.SetToolTip(this.audioQualityBox, "High Quality 6 ... Default Quality 4\r\nLeave audio quality set to Default 4\r\nif so" +
-                "urce audio quality is unknown");
-            this.audioQualityBox.Value = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
             // 
             // btnAudio2Wem
             // 
@@ -277,11 +235,53 @@
             this.txtAudio2Wem.Size = new System.Drawing.Size(399, 20);
             this.txtAudio2Wem.TabIndex = 4;
             // 
+            // tbarChorusTime
+            // 
+            this.tbarChorusTime.AutoSize = false;
+            this.tbarChorusTime.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tbarChorusTime.Location = new System.Drawing.Point(281, 44);
+            this.tbarChorusTime.Margin = new System.Windows.Forms.Padding(2);
+            this.tbarChorusTime.Maximum = 600;
+            this.tbarChorusTime.Name = "tbarChorusTime";
+            this.tbarChorusTime.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tbarChorusTime.Size = new System.Drawing.Size(109, 20);
+            this.tbarChorusTime.SmallChange = 5;
+            this.tbarChorusTime.TabIndex = 10;
+            this.tbarChorusTime.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.toolTip1.SetToolTip(this.tbarChorusTime, "Left mouse click on slider line \r\nfor 0.5 second increments");
+            this.tbarChorusTime.Value = 40;
+            this.tbarChorusTime.ValueChanged += new System.EventHandler(this.tbarChorusTime_ValueChanged);
+            // 
             // toolTip1
             // 
             this.toolTip1.AutoPopDelay = 7000;
             this.toolTip1.InitialDelay = 100;
             this.toolTip1.ReshowDelay = 100;
+            // 
+            // audioQualityBox
+            // 
+            this.audioQualityBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.audioQualityBox.Location = new System.Drawing.Point(81, 44);
+            this.audioQualityBox.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.audioQualityBox.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.audioQualityBox.Name = "audioQualityBox";
+            this.audioQualityBox.Size = new System.Drawing.Size(37, 20);
+            this.audioQualityBox.TabIndex = 39;
+            this.toolTip1.SetToolTip(this.audioQualityBox, "High Quality 6 ... Default Quality 4\r\nLeave audio quality set to Default 4\r\nif so" +
+                    "urce audio quality is unknown");
+            this.audioQualityBox.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
             // 
             // OggConverter
             // 

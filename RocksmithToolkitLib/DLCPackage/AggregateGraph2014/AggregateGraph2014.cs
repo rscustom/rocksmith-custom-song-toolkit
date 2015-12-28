@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.Properties;
 
 namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
 {
-    public class AggregateGraph2014 {
+    public class AggregateGraph2014
+    {
         #region Path/Names Template
 
         // PATH PATTERNS
@@ -15,8 +20,10 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
         public static readonly string CANONICAL_GAMESONG = "/songs/bin/{0}"; //Platform Path [1]
         public static readonly string CANONICAL_LYRIC = "/assets/ui/lyrics/{0}"; //DLC Name
         public static readonly string CANONICAL_INLAY = "/assets/gameplay/inlay";
-        public static Dictionary<DLCPackageType, string> CANONICAL_IMAGEART {
-            get {
+        public static Dictionary<DLCPackageType, string> CANONICAL_IMAGEART
+        {
+            get
+            {
                 var d = new Dictionary<DLCPackageType, string>();
                 d.Add(DLCPackageType.Song, "/gfxassets/album_art");
                 d.Add(DLCPackageType.Inlay, "/gfxassets/rewards/guitar_inlays");
@@ -24,8 +31,10 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             }
         }
         public static readonly string CANONICAL_XMLSONG = "/songs/arr";
-        public static Dictionary<DLCPackageType, string> CANONICAL_XBLOCK {
-            get {
+        public static Dictionary<DLCPackageType, string> CANONICAL_XBLOCK
+        {
+            get
+            {
                 var d = new Dictionary<DLCPackageType, string>();
                 d.Add(DLCPackageType.Song, "/gamexblocks/nsongs");
                 d.Add(DLCPackageType.Inlay, "/gamexblocks/nguitars");
@@ -40,25 +49,28 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
         public static readonly string NAME_SHOWLIGHT = "{0}_showlights"; //DLC Name
         #endregion
 
-        private Platform currentPlatform;
+        // sets a default platform
+        private Platform currentPlatform = new Platform(GamePlatform.Pc, GameVersion.RS2014);
 
         public List<GraphItem> JsonDB { get; set; }
         public List<GraphItem> HsonDB { get; set; }
-        public GraphItem HsanDB { get; set; }
+        public GraphItem HsanDB { get; set; } // combined hsan file of all songs
         public List<GraphItemLLID> MusicgameSong { get; set; }
         public List<GraphItemLLID> SongXml { get; set; }
-        public GraphItemLLID ShowlightXml { get; set; }
+        public List<GraphItemLLID> ShowlightXml { get; set; }
         public List<GraphItemLLID> ImageArt { get; set; }
         public List<GraphItemLLID> Soundbank { get; set; }
-        public GraphItem GameXblock { get; set; }
+        public List<GraphItem> GameXblock { get; set; }
         public GraphItemLLID InlayNif { get; set; }
 
-        public AggregateGraph2014() {}
+        public AggregateGraph2014() { }
 
-        public AggregateGraph2014(DLCPackageData info, Platform platform, DLCPackageType dlcType = DLCPackageType.Song) {
+        public AggregateGraph2014(DLCPackageData info, Platform platform, DLCPackageType dlcType = DLCPackageType.Song)
+        {
             currentPlatform = platform;
 
-            switch (dlcType) {
+            switch (dlcType)
+            {
                 case DLCPackageType.Song:
                     SongAggregateGraph(info, dlcType);
                     break;
@@ -70,11 +82,13 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             }
         }
 
-        private void SongAggregateGraph(DLCPackageData info, DLCPackageType dlcType) {
+        private void SongAggregateGraph(DLCPackageData info, DLCPackageType dlcType)
+        {
             var dlcName = info.Name.ToLower();
             var songPartition = new SongPartition();
 
             // Xblock
+            GameXblock = new List<GraphItem>();
             var xbl = new GraphItem();
             xbl.Name = dlcName;
             xbl.Canonical = String.Format(CANONICAL_XBLOCK[dlcType], dlcName);
@@ -84,7 +98,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             xbl.Tag.Add(TagValue.XWorld.GetDescription());
             xbl.UUID = IdGenerator.Guid();
             xbl.RelPathFile = String.Format("{0}.xblock", xbl.Name);
-            GameXblock = xbl;
+            GameXblock.Add(xbl);
 
             JsonDB = new List<GraphItem>();
             if (currentPlatform.IsConsole)
@@ -92,7 +106,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
 
             SongXml = new List<GraphItemLLID>();
             MusicgameSong = new List<GraphItemLLID>();
-            foreach (var arrangement in info.Arrangements) {
+            foreach (var arrangement in info.Arrangements)
+            {
                 var name = String.Format(NAME_ARRANGEMENT, dlcName, songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower());
 
                 // JsonDB
@@ -108,7 +123,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 JsonDB.Add(json);
 
                 //One file for each arrangement (Xbox360 / PS3 only)
-                if (currentPlatform.IsConsole) {
+                if (currentPlatform.IsConsole)
+                {
                     // HsonDB
                     var hson = new GraphItem();
                     hson.Name = name;
@@ -132,8 +148,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 xml.Tag.Add(TagValue.Application.GetDescription());
                 xml.Tag.Add(TagValue.XML.GetDescription());
                 xml.UUID = arrangement.SongXml.UUID;
-                xml.LLID = IdGenerator.LLIDGuid ();
-                xml.RelPathFile = String.Format ("{0}.xml", xml.Name);
+                xml.LLID = IdGenerator.LLIDGuid();
+                xml.RelPathFile = String.Format("{0}.xml", xml.Name);
                 xml.LogPathFile = xml.RelPathFile;
                 SongXml.Add(xml);
 
@@ -149,15 +165,17 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 if (currentPlatform.IsConsole)
                     sng.Tag.Add(GraphItem.GetPlatformTagDescription(currentPlatform.platform));
                 sng.UUID = arrangement.SongFile.UUID;
-                sng.LLID = IdGenerator.LLIDGuid ();
-                sng.RelPathFile = String.Format ("{0}.sng", sng.Name);
+                sng.LLID = IdGenerator.LLIDGuid();
+                sng.RelPathFile = String.Format("{0}.sng", sng.Name);
                 sng.LogPathFile = sng.RelPathFile;
                 MusicgameSong.Add(sng);
             }
 
-            if (currentPlatform.version == GameVersion.RS2014) {
+            if (currentPlatform.version == GameVersion.RS2014)
+            {
                 //One file for all arrangement (PC / Mac only)
-                if (!currentPlatform.IsConsole) {
+                if (!currentPlatform.IsConsole)
+                {
                     // HsanDB
                     var hsan = new GraphItem();
                     hsan.Name = String.Format("songs_dlc_{0}", dlcName);
@@ -172,6 +190,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 }
 
                 // Showlight (Xml)
+                var ShowlightXml = new List<GraphItemLLID>();
                 var xml = new GraphItemLLID();
                 xml.Name = String.Format(NAME_SHOWLIGHT, dlcName);
                 xml.Canonical = String.Format(CANONICAL_XMLSONG, dlcName);
@@ -181,11 +200,11 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 xml.Tag.Add(TagValue.Application.GetDescription());
                 xml.Tag.Add(TagValue.XML.GetDescription());
                 xml.UUID = IdGenerator.Guid();
-                xml.LLID = IdGenerator.LLIDGuid ();
+                xml.LLID = IdGenerator.LLIDGuid();
                 xml.RelPathFile = String.Format("{0}.xml", xml.Name);
                 xml.LogPathFile = xml.RelPathFile;
-                SongXml.Add(xml);
-                ShowlightXml = xml;
+                SongXml.Add(xml); // TODO: check this
+                ShowlightXml.Add(xml);
             }
 
             // Image Art (DDS)
@@ -197,7 +216,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                     String.Format ("album_{0}_64.dds", dlcName)
                 };
             ImageArt = new List<GraphItemLLID>();
-            foreach (var album in aArtArray) {
+            foreach (var album in aArtArray)
+            {
                 var dds = new GraphItemLLID();
                 dds.Canonical = CANONICAL_IMAGEART[dlcType];
                 dds.RelPathDirectory = dds.Canonical;
@@ -206,7 +226,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 dds.Tag.Add(TagValue.DDS.GetDescription());
                 dds.Tag.Add(TagValue.Image.GetDescription());
                 dds.UUID = IdGenerator.Guid();
-                dds.LLID = IdGenerator.LLIDGuid ();
+                dds.LLID = IdGenerator.LLIDGuid();
                 dds.Name = Path.GetFileNameWithoutExtension(album);
                 dds.RelPathFile = Path.GetFileName(album);
                 dds.LogPathFile = dds.RelPathFile;
@@ -214,7 +234,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             }
 
             // Lyrics Font Texture
-            if (!String.IsNullOrEmpty(info.LyricArtPath)) {
+            if (!String.IsNullOrEmpty(info.LyricArtPath))
+            {
                 var dds = new GraphItemLLID();
                 dds.Canonical = String.Format(CANONICAL_LYRIC, dlcName);
                 dds.RelPathDirectory = dds.Canonical;
@@ -223,7 +244,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 dds.Tag.Add(TagValue.DDS.GetDescription());
                 dds.Tag.Add(TagValue.Image.GetDescription());
                 dds.UUID = IdGenerator.Guid();
-                dds.LLID = IdGenerator.LLIDGuid ();
+                dds.LLID = IdGenerator.LLIDGuid();
                 dds.Name = String.Format("lyrics_{0}", dlcName);
                 dds.RelPathFile = dds.Name;
                 dds.LogPathFile = dds.RelPathFile;
@@ -241,13 +262,14 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             bnk.Tag.Add(TagValue.WwiseSoundBank.GetDescription());
             bnk.Tag.Add(GraphItem.GetPlatformTagDescription(currentPlatform.platform));
             bnk.UUID = IdGenerator.Guid();
-            bnk.LLID = IdGenerator.LLIDGuid ();
+            bnk.LLID = IdGenerator.LLIDGuid();
             bnk.Name = String.Format("song_{0}", dlcName);
             bnk.RelPathFile = String.Format("{0}.bnk", bnk.Name);
             bnk.LogPathFile = bnk.RelPathFile;
             Soundbank.Add(bnk);
 
-            if (currentPlatform.version == GameVersion.RS2014) {
+            if (currentPlatform.version == GameVersion.RS2014)
+            {
                 // Soundbank Preview
                 var bnkPreview = new GraphItemLLID();
                 bnkPreview.Canonical = String.Format(CANONICAL_SOUNDBANK, currentPlatform.GetPathName()[0].ToLower());
@@ -258,7 +280,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 bnkPreview.Tag.Add(TagValue.WwiseSoundBank.GetDescription());
                 bnkPreview.Tag.Add(GraphItem.GetPlatformTagDescription(currentPlatform.platform));
                 bnkPreview.UUID = IdGenerator.Guid();
-                bnkPreview.LLID = IdGenerator.LLIDGuid ();
+                bnkPreview.LLID = IdGenerator.LLIDGuid();
                 bnkPreview.Name = String.Format("song_{0}_preview", dlcName);
                 bnkPreview.RelPathFile = String.Format("{0}.bnk", bnkPreview.Name);
                 bnkPreview.LogPathFile = bnkPreview.RelPathFile;
@@ -266,10 +288,12 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             }
         }
 
-        private void InlayAggregateGraph(DLCPackageData info, DLCPackageType dlcType) {
+        private void InlayAggregateGraph(DLCPackageData info, DLCPackageType dlcType)
+        {
             var dlcName = info.Inlay.DLCSixName;
 
             // Xblock
+            GameXblock = new List<GraphItem>();
             var xbl = new GraphItem();
             xbl.Name = String.Format("guitar_{0}", dlcName);
             xbl.Canonical = String.Format(CANONICAL_XBLOCK[dlcType], dlcName);
@@ -279,7 +303,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             xbl.Tag.Add(TagValue.XWorld.GetDescription());
             xbl.UUID = IdGenerator.Guid();
             xbl.RelPathFile = String.Format("guitar_{0}.xblock", dlcName);
-            GameXblock = xbl;
+            GameXblock.Add(xbl);
 
             // JsonDB
             JsonDB = new List<GraphItem>();
@@ -294,7 +318,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             json.RelPathFile = String.Format("dlc_guitar_{0}.json", dlcName);
             JsonDB.Add(json);
 
-            if (currentPlatform.IsConsole) {
+            if (currentPlatform.IsConsole)
+            {
                 // HsonDB - One file for each manifest (Xbox360 / PS3 only)
                 HsonDB = new List<GraphItem>();
                 var hson = new GraphItem();
@@ -307,10 +332,12 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 hson.UUID = IdGenerator.Guid();
                 hson.RelPathFile = String.Format("dlc_{0}.hson", dlcName);
                 HsonDB.Add(hson);
-            } else {
+            }
+            else
+            {
                 // HsanDB - One file for all manifest (PC / Mac)
                 var hsan = new GraphItem();
-                hsan.Name = String.Format("dlc_{0}", dlcName); 
+                hsan.Name = String.Format("dlc_{0}", dlcName);
                 hsan.Canonical = String.Format(CANONICAL_MANIFEST_PC, dlcName);
                 hsan.RelPathDirectory = hsan.Canonical;
                 hsan.Tag = new List<string>();
@@ -330,7 +357,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 String.Format ("reward_inlay_{0}_64", dlcName)
             };
 
-            foreach (var icon in aArtArray) {
+            foreach (var icon in aArtArray)
+            {
                 var iconDDS = new GraphItemLLID();
                 iconDDS.Canonical = CANONICAL_IMAGEART[dlcType];
                 iconDDS.RelPathDirectory = iconDDS.Canonical;
@@ -339,7 +367,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 iconDDS.Tag.Add(TagValue.DDS.GetDescription());
                 iconDDS.Tag.Add(TagValue.Image.GetDescription());
                 iconDDS.UUID = IdGenerator.Guid();
-                iconDDS.LLID = IdGenerator.LLIDGuid ();
+                iconDDS.LLID = IdGenerator.LLIDGuid();
                 iconDDS.Name = icon;
                 iconDDS.RelPathFile = String.Format("{0}.dds", iconDDS.Name);
                 iconDDS.LogPathFile = iconDDS.RelPathFile;
@@ -355,7 +383,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             inlayDDS.Tag.Add(TagValue.DDS.GetDescription());
             inlayDDS.Tag.Add(TagValue.Image.GetDescription());
             inlayDDS.UUID = IdGenerator.Guid();
-            inlayDDS.LLID = IdGenerator.LLIDGuid ();
+            inlayDDS.LLID = IdGenerator.LLIDGuid();
             inlayDDS.Name = String.Format("inlay_{0}", dlcName);
             inlayDDS.RelPathFile = String.Format("{0}.dds", inlayDDS.Name);
             inlayDDS.LogPathFile = inlayDDS.RelPathFile;
@@ -370,14 +398,15 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             nif.Tag.Add(TagValue.Application.GetDescription());
             nif.Tag.Add(TagValue.GamebryoSceneGraph.GetDescription());
             nif.UUID = IdGenerator.Guid();
-            nif.LLID = IdGenerator.LLIDGuid ();
+            nif.LLID = IdGenerator.LLIDGuid();
             nif.Name = dlcName;
             nif.RelPathFile = String.Format("{0}.nif", dlcName);
             nif.LogPathFile = nif.RelPathFile;
             InlayNif = nif;
         }
 
-        public void Serialize(Stream stream) {
+        public void Serialize(Stream stream)
+        {
             StreamWriter writer = new StreamWriter(stream);
 
             // JSON
@@ -391,7 +420,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                     foreach (var hson in HsonDB)
                         hson.Write(writer);
 
-            if (currentPlatform.version == GameVersion.RS2014) {
+            if (currentPlatform.version == GameVersion.RS2014)
+            {
                 // HSAN
                 if (!currentPlatform.IsConsole)
                     if (HsanDB != null)
@@ -399,7 +429,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
 
                 // Showlight
                 if (ShowlightXml != null)
-                    ShowlightXml.Write(writer);
+                    foreach (var showlightXml in ShowlightXml)
+                        showlightXml.Write(writer);
             }
 
             // Song Xml
@@ -427,66 +458,252 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 InlayNif.Write(writer);
 
             // Xblock
-            GameXblock.Write(writer, true);
+            foreach (var xblock in GameXblock)
+                xblock.Write(writer, true);
 
             writer.Flush();
         }
 
-        public static AggregateGraph2014 LoadFromFile(string agregateGraphFile) {
+        public static AggregateGraph2014 LoadFromFile(string agregateGraphFile)
+        {
             AggregateGraph2014 aggregateGraph = new AggregateGraph2014(); ;
             var graphPartList = GraphPart.GetGraphParts(File.ReadAllLines(agregateGraphFile));
 
             var json = GraphPart.WhereByValue(graphPartList, TagValue.JsonDB.GetDescription());
-            if (json.Any()) {
+            if (json.Any())
+            {
                 aggregateGraph.JsonDB = new List<GraphItem>();
-                foreach (var j in json) {
+                foreach (var j in json)
+                {
                     aggregateGraph.JsonDB.Add(new GraphItem(j.UUID, GraphPart.WhereByUUID(graphPartList, j.UUID)));
                 }
             }
 
+            // only one of these
             var hsan = GraphPart.SingleByValue(graphPartList, TagValue.HsanDB.GetDescription());
             if (hsan != null)
                 aggregateGraph.HsanDB = new GraphItem(hsan.UUID, GraphPart.WhereByUUID(graphPartList, hsan.UUID));
 
             var sng = GraphPart.WhereByValue(graphPartList, TagValue.MusicgameSong.GetDescription());
-            if (sng.Any()) {
+            if (sng.Any())
+            {
                 aggregateGraph.MusicgameSong = new List<GraphItemLLID>();
                 foreach (var s in sng)
                     aggregateGraph.MusicgameSong.Add(new GraphItemLLID(s.UUID, GraphPart.WhereByUUID(graphPartList, s.UUID)));
             }
 
             var xml = GraphPart.WhereByValue(graphPartList, TagValue.XML.GetDescription());
-            if (xml.Any()) {
-                foreach (var x in xml) {
+            if (xml.Any())
+            {
+                foreach (var x in xml)
+                {
                     if (aggregateGraph.SongXml == null)
                         aggregateGraph.SongXml = new List<GraphItemLLID>();
+                    if (aggregateGraph.ShowlightXml == null)
+                        aggregateGraph.ShowlightXml = new List<GraphItemLLID>();
+
                     var graphList = GraphPart.WhereByUUID(graphPartList, x.UUID);
                     if (graphList.Exists(p => p.Value.Contains("showlights")))
-                        aggregateGraph.ShowlightXml = new GraphItemLLID(x.UUID, graphList);
+                        aggregateGraph.ShowlightXml.Add(new GraphItemLLID(x.UUID, graphList));
                     else
                         aggregateGraph.SongXml.Add(new GraphItemLLID(x.UUID, graphList));
                 }
             }
 
             var dds = GraphPart.WhereByValue(graphPartList, TagValue.Image.GetDescription());
-            if (dds.Any()) {
+            if (dds.Any())
+            {
                 aggregateGraph.ImageArt = new List<GraphItemLLID>();
                 foreach (var d in dds)
                     aggregateGraph.ImageArt.Add(new GraphItemLLID(d.UUID, GraphPart.WhereByUUID(graphPartList, d.UUID)));
             }
 
             var bnk = GraphPart.WhereByValue(graphPartList, TagValue.WwiseSoundBank.GetDescription());
-            if (bnk.Any()) {
+            if (bnk.Any())
+            {
                 aggregateGraph.Soundbank = new List<GraphItemLLID>();
                 foreach (var b in bnk)
                     aggregateGraph.Soundbank.Add(new GraphItemLLID(b.UUID, GraphPart.WhereByUUID(graphPartList, b.UUID)));
             }
 
-            var xblock = GraphPart.SingleByValue(graphPartList, TagValue.XWorld.GetDescription());
-            aggregateGraph.GameXblock = new GraphItem(xblock.UUID, GraphPart.WhereByUUID(graphPartList, xblock.UUID));
-
+            var xblock = GraphPart.WhereByValue(graphPartList, TagValue.XWorld.GetDescription());
+            if (xblock.Any())
+            {
+                aggregateGraph.GameXblock = new List<GraphItem>();
+                foreach (var xb in xblock)
+                {
+                    aggregateGraph.GameXblock.Add(new GraphItem(xb.UUID, GraphPart.WhereByUUID(graphPartList, xb.UUID)));
+                }
+            }
 
             return aggregateGraph;
         }
+
+        public static void MergeHsanFiles(string srcPath, string songPackName, string destPath)
+        {
+            //Load hsan manifest
+            var hsanFiles = Directory.EnumerateFiles(srcPath, "*.hsan", SearchOption.AllDirectories).ToArray();
+            if (hsanFiles.Length < 1)
+                throw new DataException("No songs_*.hsan file found.");
+
+            // merge multiple hsan files into a single hsan file
+            if (hsanFiles.Length > 1)
+            {
+                var mergeSettings = new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Union };
+                JObject hsanObject1 = new JObject();
+
+                foreach (var hsan in hsanFiles)
+                {
+                    JObject hsanObject2 = JObject.Parse(File.ReadAllText(hsan));
+                    hsanObject1.Merge(hsanObject2, mergeSettings);
+                }
+
+                var hsanFileName = String.Format("songs_{0}.hsan", songPackName.ToLower());
+                var hsanPath = Path.Combine(destPath, hsanFileName);
+                string json = JsonConvert.SerializeObject(hsanObject1, Formatting.Indented);
+                File.WriteAllText(hsanPath, json);
+
+                // delete old hsan files
+                foreach (var hsan in hsanFiles)
+                    File.Delete(hsan);
+            }
+        }
+
+        public static string DoLikeSongPack(string srcPath, string appId = "248750")
+        {
+            // create SongPack directory structure
+            var songPackDirName = Path.GetFileName(srcPath).ToLower();
+            var songPackDir = Path.Combine(Path.GetTempPath(), String.Format("{0}_p_Pc", songPackDirName));
+            var audioWindowDir = Path.Combine(songPackDir, "audio", "windows");
+            var flatmodelsRsDir = Path.Combine(songPackDir, "flatmodels", "rs");
+            var gamexblocksNsongsDir = Path.Combine(songPackDir, "gamexblocks", "nsongs");
+            var gfxassetsAlbumArtDir = Path.Combine(songPackDir, "gfxassets", "album_art");
+            var manifestSongsDir = Path.Combine(songPackDir, "manifests", "songs");
+            var songsArrDir = Path.Combine(songPackDir, "songs", "arr");
+            var binGenericDir = Path.Combine(songPackDir, "songs", "bin", "generic");
+
+            if (Directory.Exists(songPackDir))
+                DirectoryExtension.SafeDelete(songPackDir);
+
+            Directory.CreateDirectory(songPackDir);
+            Directory.CreateDirectory(audioWindowDir);
+            Directory.CreateDirectory(flatmodelsRsDir);
+            Directory.CreateDirectory(gamexblocksNsongsDir);
+            Directory.CreateDirectory(gfxassetsAlbumArtDir);
+            Directory.CreateDirectory(manifestSongsDir);
+            Directory.CreateDirectory(songsArrDir);
+            Directory.CreateDirectory(binGenericDir);
+
+            // populate SongPack temporary directory
+            var audioWemFiles = Directory.EnumerateFiles(srcPath, "*.wem", SearchOption.AllDirectories).ToArray();
+            foreach (var wem in audioWemFiles)
+                File.Copy(wem, Path.Combine(audioWindowDir, Path.GetFileName(wem)));
+
+            var audioBnkFiles = Directory.EnumerateFiles(srcPath, "*.bnk", SearchOption.AllDirectories).ToArray();
+            foreach (var bnk in audioBnkFiles)
+                File.Copy(bnk, Path.Combine(audioWindowDir, Path.GetFileName(bnk)));
+
+            var xblockFiles = Directory.EnumerateFiles(srcPath, "*.xblock", SearchOption.AllDirectories).ToArray();
+            foreach (var xblock in xblockFiles)
+                File.Copy(xblock, Path.Combine(gamexblocksNsongsDir, Path.GetFileName(xblock)));
+
+            var albumArtFiles = Directory.EnumerateFiles(srcPath, "*.dds", SearchOption.AllDirectories).ToArray();
+            foreach (var albumArt in albumArtFiles)
+                File.Copy(albumArt, Path.Combine(gfxassetsAlbumArtDir, Path.GetFileName(albumArt)));
+
+            var jsonFiles = Directory.EnumerateFiles(srcPath, "*.json", SearchOption.AllDirectories).ToArray();
+            foreach (var json in jsonFiles)
+                File.Copy(json, Path.Combine(manifestSongsDir, Path.GetFileName(json)));
+
+            var hsanFiles = Directory.EnumerateFiles(srcPath, "*.hsan", SearchOption.AllDirectories).ToArray();
+            foreach (var hsan in hsanFiles)
+                File.Copy(hsan, Path.Combine(manifestSongsDir, Path.GetFileName(hsan)));
+
+            var sngFiles = Directory.EnumerateFiles(srcPath, "*.sng", SearchOption.AllDirectories).ToArray();
+            foreach (var sng in sngFiles)
+                File.Copy(sng, Path.Combine(binGenericDir, Path.GetFileName(sng)));
+
+            var xmlFiles = Directory.EnumerateFiles(srcPath, "*.xml", SearchOption.AllDirectories).ToArray();
+            foreach (var xml in xmlFiles)
+                File.Copy(xml, Path.Combine(songsArrDir, Path.GetFileName(xml)));
+
+            // generate new Aggregate Graph
+            var aggGraphPack = new AggregateGraph2014();
+            aggGraphPack.JsonDB = new List<GraphItem>();
+            aggGraphPack.HsonDB = new List<GraphItem>(); // used for consoles ONLY
+            aggGraphPack.HsanDB = new GraphItem();
+            aggGraphPack.MusicgameSong = new List<GraphItemLLID>();
+            aggGraphPack.SongXml = new List<GraphItemLLID>();
+            aggGraphPack.ShowlightXml = new List<GraphItemLLID>();
+            aggGraphPack.ImageArt = new List<GraphItemLLID>();
+            aggGraphPack.Soundbank = new List<GraphItemLLID>();
+            aggGraphPack.GameXblock = new List<GraphItem>();
+
+            var aggregateGraphFiles = Directory.EnumerateFiles(srcPath, "*.nt", SearchOption.AllDirectories).ToArray();
+            foreach (var aggGraph in aggregateGraphFiles)
+            {
+                var agg = LoadFromFile(aggGraph);
+
+                aggGraphPack.JsonDB.AddRange(agg.JsonDB);
+                if (agg.HsonDB != null) // used for consoles ONLY
+                    aggGraphPack.HsonDB.AddRange(agg.HsonDB);
+                aggGraphPack.HsanDB = agg.HsanDB;
+                aggGraphPack.MusicgameSong.AddRange(agg.MusicgameSong);
+                aggGraphPack.SongXml.AddRange(agg.SongXml);
+                aggGraphPack.ShowlightXml.AddRange(agg.ShowlightXml);
+                aggGraphPack.ImageArt.AddRange(agg.ImageArt);
+                aggGraphPack.Soundbank.AddRange(agg.Soundbank);
+                aggGraphPack.GameXblock.AddRange(agg.GameXblock);
+            }
+
+            var aggregateGraphFileName = Path.Combine(songPackDir, String.Format("{0}_aggregategraph.nt", songPackDirName));
+            using (var fs = new FileStream(aggregateGraphFileName, FileMode.Create))
+            using (var ms = new MemoryStream())
+            {
+                aggGraphPack.Serialize(ms);
+                ms.Flush();
+                ms.Seek(0, SeekOrigin.Begin);
+                ms.CopyTo(fs);
+            }
+
+            MergeHsanFiles(songPackDir, songPackDirName, manifestSongsDir);
+
+            var appIdFile = Path.Combine(songPackDir, "appid.appid");
+            File.WriteAllText(appIdFile, appId);
+
+            var toolkitVersionFile = Path.Combine(songPackDir, "toolkit.version");
+            using (var fs = new FileStream(toolkitVersionFile, FileMode.Create))
+            using (var ms = new MemoryStream())
+            {
+                DLCPackageCreator.GenerateToolkitVersion(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                ms.CopyTo(fs);
+            }
+
+            var rootFlatFile = Path.Combine(flatmodelsRsDir, "rsenumerable_root.flat");
+            using (var fs = new FileStream(rootFlatFile, FileMode.Create))
+            using (var ms = new MemoryStream(Resources.rsenumerable_root))
+            {
+                ms.Seek(0, SeekOrigin.Begin);
+                ms.CopyTo(fs);
+            }
+
+            var songFlatFile = Path.Combine(flatmodelsRsDir, "rsenumerable_song.flat");
+            using (var fs = new FileStream(songFlatFile, FileMode.Create))
+            using (var ms = new MemoryStream(Resources.rsenumerable_song))
+            {
+                ms.Seek(0, SeekOrigin.Begin);
+                ms.CopyTo(fs);
+            }
+
+            return songPackDir;
+        }
+
+
     }
 }
+
+
+
+
+
