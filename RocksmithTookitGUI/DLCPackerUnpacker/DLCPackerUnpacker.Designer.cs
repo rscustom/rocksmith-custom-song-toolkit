@@ -32,19 +32,20 @@
             this.btnUnpack = new System.Windows.Forms.Button();
             this.btnPack = new System.Windows.Forms.Button();
             this.btnRepackAppId = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbAppIdUpdater = new System.Windows.Forms.GroupBox();
             this.lblAppId = new System.Windows.Forms.Label();
             this.cmbGameVersion = new System.Windows.Forms.ComboBox();
+            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
             this.cmbAppId = new System.Windows.Forms.ComboBox();
             this.chkDecodeAudio = new System.Windows.Forms.CheckBox();
             this.chkUpdateSng = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.gbUnpacker = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.chkExtractSongXml = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.gbPacker = new System.Windows.Forms.GroupBox();
             this.lblCurrentOperation = new System.Windows.Forms.Label();
             this.pbUpdateProgress = new System.Windows.Forms.ProgressBar();
-            this.customFixesGroupBox = new System.Windows.Forms.GroupBox();
+            this.gbCustomFixes = new System.Windows.Forms.GroupBox();
             this.chkDeleteSourceFile = new System.Windows.Forms.CheckBox();
             this.chkQuickBassFix = new System.Windows.Forms.CheckBox();
             this.btnLowTuningBassFix = new System.Windows.Forms.Button();
@@ -53,11 +54,10 @@
             this.btnPackSongPack = new System.Windows.Forms.Button();
             this.lblHelp = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.customFixesGroupBox.SuspendLayout();
+            this.gbAppIdUpdater.SuspendLayout();
+            this.gbUnpacker.SuspendLayout();
+            this.gbPacker.SuspendLayout();
+            this.gbCustomFixes.SuspendLayout();
             this.gpSongPacks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -96,22 +96,22 @@
             this.btnRepackAppId.UseVisualStyleBackColor = true;
             this.btnRepackAppId.Click += new System.EventHandler(this.btnRepackAppId_Click);
             // 
-            // groupBox1
+            // gbAppIdUpdater
             // 
-            this.groupBox1.Controls.Add(this.lblAppId);
-            this.groupBox1.Controls.Add(this.cmbGameVersion);
-            this.groupBox1.Controls.Add(this.txtAppId);
-            this.groupBox1.Controls.Add(this.cmbAppId);
-            this.groupBox1.Controls.Add(this.btnRepackAppId);
-            this.groupBox1.ForeColor = System.Drawing.Color.Firebrick;
-            this.groupBox1.Location = new System.Drawing.Point(8, 92);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(434, 71);
-            this.groupBox1.TabIndex = 13;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "App ID Updater";
+            this.gbAppIdUpdater.Controls.Add(this.lblAppId);
+            this.gbAppIdUpdater.Controls.Add(this.cmbGameVersion);
+            this.gbAppIdUpdater.Controls.Add(this.txtAppId);
+            this.gbAppIdUpdater.Controls.Add(this.cmbAppId);
+            this.gbAppIdUpdater.Controls.Add(this.btnRepackAppId);
+            this.gbAppIdUpdater.ForeColor = System.Drawing.Color.Firebrick;
+            this.gbAppIdUpdater.Location = new System.Drawing.Point(8, 92);
+            this.gbAppIdUpdater.Margin = new System.Windows.Forms.Padding(2);
+            this.gbAppIdUpdater.Name = "gbAppIdUpdater";
+            this.gbAppIdUpdater.Padding = new System.Windows.Forms.Padding(2);
+            this.gbAppIdUpdater.Size = new System.Drawing.Size(434, 71);
+            this.gbAppIdUpdater.TabIndex = 13;
+            this.gbAppIdUpdater.TabStop = false;
+            this.gbAppIdUpdater.Text = "App ID Updater";
             // 
             // lblAppId
             // 
@@ -133,6 +133,16 @@
             this.cmbGameVersion.Size = new System.Drawing.Size(81, 21);
             this.cmbGameVersion.TabIndex = 5;
             this.cmbGameVersion.SelectedIndexChanged += new System.EventHandler(this.cmbGameVersion_SelectedIndexChanged);
+            // 
+            // txtAppId
+            // 
+            this.txtAppId.Cue = "APP ID";
+            this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtAppId.ForeColor = System.Drawing.Color.Gray;
+            this.txtAppId.Location = new System.Drawing.Point(155, 43);
+            this.txtAppId.Name = "txtAppId";
+            this.txtAppId.Size = new System.Drawing.Size(82, 20);
+            this.txtAppId.TabIndex = 41;
             // 
             // cmbAppId
             // 
@@ -168,19 +178,19 @@
             this.chkUpdateSng.Text = "Update SNG";
             this.chkUpdateSng.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // gbUnpacker
             // 
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.chkExtractSongXml);
-            this.groupBox2.Controls.Add(this.chkDecodeAudio);
-            this.groupBox2.Controls.Add(this.btnUnpack);
-            this.groupBox2.ForeColor = System.Drawing.Color.Firebrick;
-            this.groupBox2.Location = new System.Drawing.Point(100, 4);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(204, 83);
-            this.groupBox2.TabIndex = 16;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Unpacker";
+            this.gbUnpacker.Controls.Add(this.label2);
+            this.gbUnpacker.Controls.Add(this.chkExtractSongXml);
+            this.gbUnpacker.Controls.Add(this.chkDecodeAudio);
+            this.gbUnpacker.Controls.Add(this.btnUnpack);
+            this.gbUnpacker.ForeColor = System.Drawing.Color.Firebrick;
+            this.gbUnpacker.Location = new System.Drawing.Point(100, 4);
+            this.gbUnpacker.Name = "gbUnpacker";
+            this.gbUnpacker.Size = new System.Drawing.Size(204, 83);
+            this.gbUnpacker.TabIndex = 16;
+            this.gbUnpacker.TabStop = false;
+            this.gbUnpacker.Text = "Unpacker";
             // 
             // label2
             // 
@@ -206,17 +216,17 @@
             this.chkExtractSongXml.Text = "SNG to XML";
             this.chkExtractSongXml.UseVisualStyleBackColor = true;
             // 
-            // groupBox3
+            // gbPacker
             // 
-            this.groupBox3.Controls.Add(this.chkUpdateSng);
-            this.groupBox3.Controls.Add(this.btnPack);
-            this.groupBox3.ForeColor = System.Drawing.Color.Firebrick;
-            this.groupBox3.Location = new System.Drawing.Point(319, 4);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(123, 83);
-            this.groupBox3.TabIndex = 17;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Packer";
+            this.gbPacker.Controls.Add(this.chkUpdateSng);
+            this.gbPacker.Controls.Add(this.btnPack);
+            this.gbPacker.ForeColor = System.Drawing.Color.Firebrick;
+            this.gbPacker.Location = new System.Drawing.Point(319, 4);
+            this.gbPacker.Name = "gbPacker";
+            this.gbPacker.Size = new System.Drawing.Size(123, 83);
+            this.gbPacker.TabIndex = 17;
+            this.gbPacker.TabStop = false;
+            this.gbPacker.Text = "Packer";
             // 
             // lblCurrentOperation
             // 
@@ -238,18 +248,18 @@
             this.pbUpdateProgress.TabIndex = 0;
             this.pbUpdateProgress.Visible = false;
             // 
-            // customFixesGroupBox
+            // gbCustomFixes
             // 
-            this.customFixesGroupBox.Controls.Add(this.chkDeleteSourceFile);
-            this.customFixesGroupBox.Controls.Add(this.chkQuickBassFix);
-            this.customFixesGroupBox.Controls.Add(this.btnLowTuningBassFix);
-            this.customFixesGroupBox.ForeColor = System.Drawing.Color.Firebrick;
-            this.customFixesGroupBox.Location = new System.Drawing.Point(8, 168);
-            this.customFixesGroupBox.Name = "customFixesGroupBox";
-            this.customFixesGroupBox.Size = new System.Drawing.Size(434, 43);
-            this.customFixesGroupBox.TabIndex = 20;
-            this.customFixesGroupBox.TabStop = false;
-            this.customFixesGroupBox.Text = "Custom Fixes (RS 2014)";
+            this.gbCustomFixes.Controls.Add(this.chkDeleteSourceFile);
+            this.gbCustomFixes.Controls.Add(this.chkQuickBassFix);
+            this.gbCustomFixes.Controls.Add(this.btnLowTuningBassFix);
+            this.gbCustomFixes.ForeColor = System.Drawing.Color.Firebrick;
+            this.gbCustomFixes.Location = new System.Drawing.Point(8, 168);
+            this.gbCustomFixes.Name = "gbCustomFixes";
+            this.gbCustomFixes.Size = new System.Drawing.Size(434, 43);
+            this.gbCustomFixes.TabIndex = 20;
+            this.gbCustomFixes.TabStop = false;
+            this.gbCustomFixes.Text = "Custom Fixes (RS 2014)";
             // 
             // chkDeleteSourceFile
             // 
@@ -339,38 +349,28 @@
             this.pictureBox2.TabIndex = 11;
             this.pictureBox2.TabStop = false;
             // 
-            // txtAppId
-            // 
-            this.txtAppId.Cue = "APP ID";
-            this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtAppId.ForeColor = System.Drawing.Color.Gray;
-            this.txtAppId.Location = new System.Drawing.Point(155, 43);
-            this.txtAppId.Name = "txtAppId";
-            this.txtAppId.Size = new System.Drawing.Size(82, 20);
-            this.txtAppId.TabIndex = 41;
-            // 
             // DLCPackerUnpacker
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.gpSongPacks);
-            this.Controls.Add(this.customFixesGroupBox);
+            this.Controls.Add(this.gbCustomFixes);
             this.Controls.Add(this.lblCurrentOperation);
             this.Controls.Add(this.pbUpdateProgress);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.gbPacker);
+            this.Controls.Add(this.gbUnpacker);
             this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbAppIdUpdater);
             this.MinimumSize = new System.Drawing.Size(400, 308);
             this.Name = "DLCPackerUnpacker";
             this.Size = new System.Drawing.Size(450, 403);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.customFixesGroupBox.ResumeLayout(false);
-            this.customFixesGroupBox.PerformLayout();
+            this.gbAppIdUpdater.ResumeLayout(false);
+            this.gbAppIdUpdater.PerformLayout();
+            this.gbUnpacker.ResumeLayout(false);
+            this.gbUnpacker.PerformLayout();
+            this.gbPacker.ResumeLayout(false);
+            this.gbPacker.PerformLayout();
+            this.gbCustomFixes.ResumeLayout(false);
+            this.gbCustomFixes.PerformLayout();
             this.gpSongPacks.ResumeLayout(false);
             this.gpSongPacks.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -385,17 +385,17 @@
         private System.Windows.Forms.Button btnPack;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button btnRepackAppId;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbAppIdUpdater;
         private System.Windows.Forms.ComboBox cmbAppId;
         private CueTextBox txtAppId;
         private System.Windows.Forms.CheckBox chkDecodeAudio;
         private System.Windows.Forms.CheckBox chkUpdateSng;
         private System.Windows.Forms.ComboBox cmbGameVersion;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbUnpacker;
         private System.Windows.Forms.CheckBox chkExtractSongXml;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox gbPacker;
         private System.Windows.Forms.Label lblCurrentOperation;
-        private System.Windows.Forms.GroupBox customFixesGroupBox;
+        private System.Windows.Forms.GroupBox gbCustomFixes;
         protected System.Windows.Forms.Button btnLowTuningBassFix;
         private DLCPackageCreator.DLCPackageCreator dlcPackageCreatorControl;
         private System.Windows.Forms.CheckBox chkQuickBassFix;

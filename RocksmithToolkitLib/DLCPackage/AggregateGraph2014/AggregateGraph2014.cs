@@ -459,7 +459,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
 
             // Xblock
             foreach (var xblock in GameXblock)
-                xblock.Write(writer, true);
+                xblock.Write(writer);
 
             writer.Flush();
         }
@@ -558,7 +558,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                     hsanObject1.Merge(hsanObject2, mergeSettings);
                 }
 
-                var hsanFileName = String.Format("songs_{0}.hsan", songPackName.ToLower());
+                var hsanFileName = String.Format("songs_dlc_{0}.hsan", songPackName.ToLower());
                 var hsanPath = Path.Combine(destPath, hsanFileName);
                 string json = JsonConvert.SerializeObject(hsanObject1, Formatting.Indented);
                 File.WriteAllText(hsanPath, json);
@@ -572,13 +572,13 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
         public static string DoLikeSongPack(string srcPath, string appId = "248750")
         {
             // create SongPack directory structure
-            var songPackDirName = Path.GetFileName(srcPath).ToLower();
-            var songPackDir = Path.Combine(Path.GetTempPath(), String.Format("{0}_p_Pc", songPackDirName));
+            var dlcName = Path.GetFileName(srcPath).ToLower();
+            var songPackDir = Path.Combine(Path.GetTempPath(), String.Format("{0}_p_Pc", dlcName));
             var audioWindowDir = Path.Combine(songPackDir, "audio", "windows");
             var flatmodelsRsDir = Path.Combine(songPackDir, "flatmodels", "rs");
             var gamexblocksNsongsDir = Path.Combine(songPackDir, "gamexblocks", "nsongs");
             var gfxassetsAlbumArtDir = Path.Combine(songPackDir, "gfxassets", "album_art");
-            var manifestSongsDir = Path.Combine(songPackDir, "manifests", "songs");
+            var manifestSongsDir = Path.Combine(songPackDir, "manifests", String.Format("songs_dlc_{0}", dlcName));
             var songsArrDir = Path.Combine(songPackDir, "songs", "arr");
             var binGenericDir = Path.Combine(songPackDir, "songs", "bin", "generic");
 
@@ -639,24 +639,45 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             aggGraphPack.Soundbank = new List<GraphItemLLID>();
             aggGraphPack.GameXblock = new List<GraphItem>();
 
-            var aggregateGraphFiles = Directory.EnumerateFiles(srcPath, "*.nt", SearchOption.AllDirectories).ToArray();
+            // fix aggegrate graph entries, reusing existing Persistent ID
+            var currentPlatform = new Platform(GamePlatform.Pc, GameVersion.RS2014);
+            var aggregateGraphFiles = Directory.EnumerateFiles(srcPath, "*.nt", SearchOption.AllDirectories).ToArray();           
             foreach (var aggGraph in aggregateGraphFiles)
             {
                 var agg = LoadFromFile(aggGraph);
 
+                foreach (var json in agg.JsonDB)
+                {
+                    json.Canonical = String.Format(CANONICAL_MANIFEST_PC, dlcName);
+                    json.RelPathDirectory = json.Canonical;
+                    json.Tag = new List<string>();
+                    json.Tag.Add(TagValue.Database.GetDescription());
+                    json.Tag.Add(TagValue.JsonDB.GetDescription());
+                    json.UUID = IdGenerator.Guid();
+                    json.RelPathFile = String.Format("{0}.json", json.Name);
+                }
+
                 aggGraphPack.JsonDB.AddRange(agg.JsonDB);
-                if (agg.HsonDB != null) // used for consoles ONLY
-                    aggGraphPack.HsonDB.AddRange(agg.HsonDB);
-                aggGraphPack.HsanDB = agg.HsanDB;
                 aggGraphPack.MusicgameSong.AddRange(agg.MusicgameSong);
                 aggGraphPack.SongXml.AddRange(agg.SongXml);
                 aggGraphPack.ShowlightXml.AddRange(agg.ShowlightXml);
                 aggGraphPack.ImageArt.AddRange(agg.ImageArt);
                 aggGraphPack.Soundbank.AddRange(agg.Soundbank);
-                aggGraphPack.GameXblock.AddRange(agg.GameXblock);
-            }
 
-            var aggregateGraphFileName = Path.Combine(songPackDir, String.Format("{0}_aggregategraph.nt", songPackDirName));
+                aggGraphPack.GameXblock.AddRange(agg.GameXblock);
+             }
+
+            // create a single hsanDB entry
+            aggGraphPack.HsanDB.Name = String.Format("songs_dlc_{0}", dlcName);
+            aggGraphPack.HsanDB.Canonical = String.Format(CANONICAL_MANIFEST_PC, dlcName);
+            aggGraphPack.HsanDB.RelPathDirectory = aggGraphPack.HsanDB.Canonical;
+            aggGraphPack.HsanDB.Tag = new List<string>();
+            aggGraphPack.HsanDB.Tag.Add(TagValue.Database.GetDescription());
+            aggGraphPack.HsanDB.Tag.Add(TagValue.HsanDB.GetDescription());
+            aggGraphPack.HsanDB.UUID = IdGenerator.Guid();
+            aggGraphPack.HsanDB.RelPathFile = String.Format("{0}.hsan", aggGraphPack.HsanDB.Name);
+
+            var aggregateGraphFileName = Path.Combine(songPackDir, String.Format("{0}_aggregategraph.nt", dlcName));
             using (var fs = new FileStream(aggregateGraphFileName, FileMode.Create))
             using (var ms = new MemoryStream())
             {
@@ -666,7 +687,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 ms.CopyTo(fs);
             }
 
-            MergeHsanFiles(songPackDir, songPackDirName, manifestSongsDir);
+            MergeHsanFiles(songPackDir, dlcName, manifestSongsDir);
 
             var appIdFile = Path.Combine(songPackDir, "appid.appid");
             File.WriteAllText(appIdFile, appId);

@@ -105,7 +105,11 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014 {
         [Description("name")]
         public string Name { get; set; }
         [Description("relpath")]
-        public string RelPath { get { return String.Format("{0}/{1}", RelPathDirectory, RelPathFile); } }
+        public string RelPath
+        {
+            get { return String.Format("{0}/{1}", RelPathDirectory, RelPathFile); }
+           // set { }
+        }
         public string RelPathDirectory { get; set; }
         public string RelPathFile { get; set; }
 

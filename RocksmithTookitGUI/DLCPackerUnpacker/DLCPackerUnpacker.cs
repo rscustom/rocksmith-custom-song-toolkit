@@ -80,9 +80,24 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             lblCurrentOperation.Refresh();
         }
 
+        private void ToggleUIControls(bool enable)
+        {
+            btnLowTuningBassFix.Enabled = enable;
+            btnPack.Enabled = enable;
+            btnPackSongPack.Enabled = enable;
+            btnRepackAppId.Enabled = enable;
+            btnSelectSongs.Enabled = enable;
+            btnUnpack.Enabled = enable;
+            chkDecodeAudio.Enabled = enable;
+            chkDeleteSourceFile.Enabled = enable;
+            chkExtractSongXml.Enabled = enable;
+            chkQuickBassFix.Enabled = enable;
+            chkUpdateSng.Enabled = enable;
+        }
+
         private void UnpackSongs(IEnumerable<string> sourceFileNames, string destPath, bool decode = false, bool extract = false)
         {
-            btnSelectSongs.Enabled = false;
+            ToggleUIControls(false);
             errorsFound = new StringBuilder();
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
             GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
@@ -95,7 +110,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Application.DoEvents();
                 Platform platform = Packer.GetPlatform(sourceFileName);
                 GlobalExtension.ShowProgress(String.Format("Unpacking '{0}'", Path.GetFileName(sourceFileName)));
-
+                lblCurrentOperation.Refresh();
+                
                 try
                 {
                     Packer.Unpack(sourceFileName, destPath, decode, extract);
@@ -114,9 +130,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             else
                 MessageBox.Show("Unpacking is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            btnSelectSongs.Enabled = true;
             // prevents possible cross threading
             GlobalExtension.Dispose();
+            ToggleUIControls(true);
         }
 
         private void ProcessCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -155,6 +171,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         private void UpdateAppId(object sender, DoWorkEventArgs e)
         {
+            ToggleUIControls(false);
             var sourceFileNames = e.Argument as string[];
             errorsFound = new StringBuilder();
             var step = (int)Math.Round(1.0 / sourceFileNames.Length * 100, 0);
@@ -191,11 +208,14 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             }
             bwRepack.ReportProgress(100);
             e.Result = "repack";
+            ToggleUIControls(true);
         }
 
         private void btnLowTuningBassFix_Click(object sender, EventArgs e)
         {
+            ToggleUIControls(false);
             dlcPackageCreatorControl.dlcLowTuningBassFix(sender, e, btnLowTuningBassFix, chkQuickBassFix.Checked, chkDeleteSourceFile.Checked);
+            ToggleUIControls(true);
         }
 
         private void btnPackSongPack_Click(object sender, EventArgs e)
@@ -242,8 +262,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Packer.Pack(songPackDir, destFilePath, fixShowlights: false, predefinedPlatform: new Platform(GamePlatform.Pc, GameVersion.RS2014));
 
                 // clean up now (song pack folder)
-                if (Directory.Exists(songPackDir))
-                    DirectoryExtension.SafeDelete(songPackDir);
+                //if (Directory.Exists(songPackDir))
+                //    DirectoryExtension.SafeDelete(songPackDir);
 
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
@@ -277,6 +297,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 saveFileName = sfd.FileName;
             }
 
+            ToggleUIControls(false);
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
             GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
             Thread.Sleep(100); // give Globals a chance to initialize
@@ -299,6 +320,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             // prevents possible cross threading
             GlobalExtension.Dispose();
+            ToggleUIControls(true);
         }
 
         private void btnRepackAppId_Click(object sender, EventArgs e)
@@ -311,6 +333,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
+                ToggleUIControls(false);
+
                 if (!bwRepack.IsBusy && ofd.FileNames.Length > 0)
                 {
                     pbUpdateProgress.Value = 0;
@@ -319,6 +343,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     btnRepackAppId.Enabled = false;
                     bwRepack.RunWorkerAsync(ofd.FileNames);
                 }
+
+                ToggleUIControls(true);
             }
         }
 
@@ -386,5 +412,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             PopulateAppIdCombo(gameVersion); ;
         }
 
-     }
+
+    }
 }
