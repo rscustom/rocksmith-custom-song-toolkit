@@ -572,6 +572,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         return new Platform(GamePlatform.None, GameVersion.None);
                 }
             }
+
             if (Directory.Exists(fullPath))
             {
                 var fullPathInfo = new DirectoryInfo(fullPath);
@@ -581,7 +582,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     // PC 2012
                     return new Platform(GamePlatform.Pc, GameVersion.RS2012);
                 }
+
                 string agg;
+              
                 if (File.Exists(Path.Combine(fullPath, "appid.appid")))
                 {
                     // PC / MAC 2014
@@ -595,6 +598,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     return new Platform(GamePlatform.Pc, GameVersion.RS2014); // Because appid.appid have only in RS2014
                 }
+               
                 if (Directory.Exists(Path.Combine(fullPath, ROOT_XBox360)))
                 {
                     // XBOX 2012/2014
@@ -608,14 +612,16 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     return new Platform(GamePlatform.XBox360, GameVersion.None);
                 }
+     
                 if (fullPath.ToLower().Contains("_pc"))
                 {
                     return new Platform(GamePlatform.Pc, GameVersion.RS2014);
                 }
+           
                 // PS3 2012/2014
                 agg = fullPathInfo.EnumerateFiles("*.nt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
 
-                if (agg.Length > 0)
+                if (agg.Any())
                 {
                     var aggContent = File.ReadAllText(agg);
 
@@ -626,8 +632,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     return TryGetPlatformByEndName(fullPath);
                 }
+
                 return TryGetPlatformByEndName(fullPath);
             }
+
             return new Platform(GamePlatform.None, GameVersion.None);
         }
 

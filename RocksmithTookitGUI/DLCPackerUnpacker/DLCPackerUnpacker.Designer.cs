@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DLCPackerUnpacker));
             this.btnUnpack = new System.Windows.Forms.Button();
             this.btnPack = new System.Windows.Forms.Button();
@@ -35,7 +36,6 @@
             this.gbAppIdUpdater = new System.Windows.Forms.GroupBox();
             this.lblAppId = new System.Windows.Forms.Label();
             this.cmbGameVersion = new System.Windows.Forms.ComboBox();
-            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
             this.cmbAppId = new System.Windows.Forms.ComboBox();
             this.chkDecodeAudio = new System.Windows.Forms.CheckBox();
             this.chkUpdateSng = new System.Windows.Forms.CheckBox();
@@ -54,6 +54,9 @@
             this.btnPackSongPack = new System.Windows.Forms.Button();
             this.lblHelp = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.chkVerbose = new System.Windows.Forms.CheckBox();
+            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
             this.gbAppIdUpdater.SuspendLayout();
             this.gbUnpacker.SuspendLayout();
             this.gbPacker.SuspendLayout();
@@ -133,16 +136,6 @@
             this.cmbGameVersion.Size = new System.Drawing.Size(81, 21);
             this.cmbGameVersion.TabIndex = 5;
             this.cmbGameVersion.SelectedIndexChanged += new System.EventHandler(this.cmbGameVersion_SelectedIndexChanged);
-            // 
-            // txtAppId
-            // 
-            this.txtAppId.Cue = "APP ID";
-            this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtAppId.ForeColor = System.Drawing.Color.Gray;
-            this.txtAppId.Location = new System.Drawing.Point(155, 43);
-            this.txtAppId.Name = "txtAppId";
-            this.txtAppId.Size = new System.Drawing.Size(82, 20);
-            this.txtAppId.TabIndex = 41;
             // 
             // cmbAppId
             // 
@@ -250,6 +243,7 @@
             // 
             // gbCustomFixes
             // 
+            this.gbCustomFixes.Controls.Add(this.chkVerbose);
             this.gbCustomFixes.Controls.Add(this.chkDeleteSourceFile);
             this.gbCustomFixes.Controls.Add(this.chkQuickBassFix);
             this.gbCustomFixes.Controls.Add(this.btnLowTuningBassFix);
@@ -265,22 +259,28 @@
             // 
             this.chkDeleteSourceFile.AutoSize = true;
             this.chkDeleteSourceFile.ForeColor = System.Drawing.Color.Black;
-            this.chkDeleteSourceFile.Location = new System.Drawing.Point(99, 19);
+            this.chkDeleteSourceFile.Location = new System.Drawing.Point(91, 19);
             this.chkDeleteSourceFile.Name = "chkDeleteSourceFile";
-            this.chkDeleteSourceFile.Size = new System.Drawing.Size(113, 17);
+            this.chkDeleteSourceFile.Size = new System.Drawing.Size(124, 17);
             this.chkDeleteSourceFile.TabIndex = 9;
-            this.chkDeleteSourceFile.Text = "Delete Source File";
+            this.chkDeleteSourceFile.Text = "Delete Source File(s)";
+            this.toolTip.SetToolTip(this.chkDeleteSourceFile, "If checked deletes the original CDLC file.");
             this.chkDeleteSourceFile.UseVisualStyleBackColor = true;
             // 
             // chkQuickBassFix
             // 
             this.chkQuickBassFix.AutoSize = true;
+            this.chkQuickBassFix.Checked = true;
+            this.chkQuickBassFix.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkQuickBassFix.ForeColor = System.Drawing.Color.Black;
             this.chkQuickBassFix.Location = new System.Drawing.Point(10, 19);
             this.chkQuickBassFix.Name = "chkQuickBassFix";
             this.chkQuickBassFix.Size = new System.Drawing.Size(70, 17);
             this.chkQuickBassFix.TabIndex = 8;
             this.chkQuickBassFix.Text = "Quick Fix";
+            this.toolTip.SetToolTip(this.chkQuickBassFix, "If checked automatically apply Low Bass Tuning fix.\r\nNote: Creates new file and d" +
+                    "oes not overwrite\r\nthe original CDLC file.  Speeds up the process\r\nif appling Lo" +
+                    "w Bass Tuning fix to multiple CDLC.");
             this.chkQuickBassFix.UseVisualStyleBackColor = true;
             // 
             // btnLowTuningBassFix
@@ -349,6 +349,36 @@
             this.pictureBox2.TabIndex = 11;
             this.pictureBox2.TabStop = false;
             // 
+            // toolTip
+            // 
+            this.toolTip.AutomaticDelay = 100;
+            this.toolTip.AutoPopDelay = 15000;
+            this.toolTip.InitialDelay = 100;
+            this.toolTip.IsBalloon = true;
+            this.toolTip.ReshowDelay = 10;
+            // 
+            // chkVerbose
+            // 
+            this.chkVerbose.AutoSize = true;
+            this.chkVerbose.ForeColor = System.Drawing.Color.Black;
+            this.chkVerbose.Location = new System.Drawing.Point(226, 19);
+            this.chkVerbose.Name = "chkVerbose";
+            this.chkVerbose.Size = new System.Drawing.Size(65, 17);
+            this.chkVerbose.TabIndex = 11;
+            this.chkVerbose.Text = "Verbose";
+            this.toolTip.SetToolTip(this.chkVerbose, "If checked shows any error messages.");
+            this.chkVerbose.UseVisualStyleBackColor = true;
+            // 
+            // txtAppId
+            // 
+            this.txtAppId.Cue = "APP ID";
+            this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtAppId.ForeColor = System.Drawing.Color.Gray;
+            this.txtAppId.Location = new System.Drawing.Point(155, 43);
+            this.txtAppId.Name = "txtAppId";
+            this.txtAppId.Size = new System.Drawing.Size(82, 20);
+            this.txtAppId.TabIndex = 41;
+            // 
             // DLCPackerUnpacker
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -397,7 +427,6 @@
         private System.Windows.Forms.Label lblCurrentOperation;
         private System.Windows.Forms.GroupBox gbCustomFixes;
         protected System.Windows.Forms.Button btnLowTuningBassFix;
-        private DLCPackageCreator.DLCPackageCreator dlcPackageCreatorControl;
         private System.Windows.Forms.CheckBox chkQuickBassFix;
         private System.Windows.Forms.CheckBox chkDeleteSourceFile;
         private System.Windows.Forms.Label label2;
@@ -407,5 +436,7 @@
         private System.Windows.Forms.Button btnSelectSongs;
         private System.Windows.Forms.Label lblHelp;
         private System.Windows.Forms.Label lblAppId;
+        private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.CheckBox chkVerbose;
     }
 }

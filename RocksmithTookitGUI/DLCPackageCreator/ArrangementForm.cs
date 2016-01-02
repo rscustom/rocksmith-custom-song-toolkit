@@ -620,7 +620,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         {
                             bassFix = false;
                             Arrangement.SongXml.File = XmlFilePath.Text;
-                            parentControl.ApplyBassFix(Arrangement);
+                            if (!TuningFrequency.ApplyBassFix(Arrangement))
+                                MessageBox.Show("This bass arrangement is already at 220Hz pitch.  ", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
 
