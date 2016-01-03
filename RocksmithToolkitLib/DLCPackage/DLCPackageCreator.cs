@@ -1006,14 +1006,15 @@ namespace RocksmithToolkitLib.DLCPackage
                 GeneralExtensions.RunExternalExecutable("nvdxt.exe", true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
         }
 
-        public static void GenerateToolkitVersion(Stream output, string packageVersion = null)
+        public static void GenerateToolkitVersion(Stream output, string packageAuthor = null, string packageVersion = null)
         {
-            var author = ConfigRepository.Instance()["general_defaultauthor"];
+            if (String.IsNullOrEmpty(packageAuthor))
+                packageAuthor = ConfigRepository.Instance()["general_defaultauthor"];
 
             var writer = new StreamWriter(output);
-            writer.WriteLine(String.Format("Toolkit Version: {0}", ToolkitVersion.version));
-            if (!String.IsNullOrEmpty(author))
-                writer.WriteLine(String.Format("Package Author: {0}", author));
+            writer.WriteLine(String.Format("Toolkit version: {0}", ToolkitVersion.version));
+            if (!String.IsNullOrEmpty(packageAuthor))
+                writer.WriteLine(String.Format("Package Author: {0}", packageAuthor));
             if (!String.IsNullOrEmpty(packageVersion))
                 writer.Write(String.Format("Package Version: {0}", packageVersion));
 

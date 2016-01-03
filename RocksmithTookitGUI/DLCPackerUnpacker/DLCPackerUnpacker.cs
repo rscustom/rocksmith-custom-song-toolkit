@@ -146,15 +146,24 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     {
                         hasBass = true;
 
-                        if (!TuningFrequency.ApplyBassFix(arr))
+                        if (arr.TuningStrings.String0 < -4 && arr.TuningPitch == 440.0)
+                        {
+                            if (!TuningFrequency.ApplyBassFix(arr))
+                            {
+                                if (verbose)
+                                    MessageBox.Show(Path.GetFileName(sourcePackage) + "  " + Environment.NewLine + "bass arrangement is already at 220Hz pitch.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                                alreadyFixed = true;
+                            }
+                        }
+                        else
                         {
                             if (verbose)
-                                MessageBox.Show(Path.GetFileName(sourcePackage) + "  " + Environment.NewLine + "bass arrangement is already at 220Hz pitch.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(Path.GetFileName(sourcePackage) + "  " + Environment.NewLine + "bass arrangement tuning does not need to be fixed.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                             alreadyFixed = true;
-                            break;
-                        }
                     }
+                }
                 }
 
                 // don't repackage a song that is already fixed or doesn't have bass
