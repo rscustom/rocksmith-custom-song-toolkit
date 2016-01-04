@@ -36,7 +36,7 @@ namespace RocksmithToolkitLib
 
         public override int GetHashCode()
         {
-            return this.platform.GetHashCode() + this.version.GetHashCode();
+            return platform.GetHashCode() + version.GetHashCode();
         }
 
         public EndianBitConverter GetBitConverter

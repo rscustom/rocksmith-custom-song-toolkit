@@ -70,7 +70,7 @@ namespace packagecreator
                 ShowHelpfulError(String.Format("{0} is not a valid platform.", platformString));
                 arguments.Platform.platform = GamePlatform.None;
             }
-            arguments.Platform.platform = p;
+            else arguments.Platform.platform = p;
         }
 
         private static void SetVersion(this Arguments arguments, string versionString)
@@ -82,7 +82,7 @@ namespace packagecreator
                 ShowHelpfulError(String.Format("{0} is not a valid game version.", versionString));
                 arguments.Platform.version = GameVersion.None;
             }
-            arguments.Platform.version = v;
+            else arguments.Platform.version = v;
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace packagecreator
 
                     if (arguments.Package)
                     {
-                        if (!arguments.Input[0].IsDirectory() || (arguments.Input == null && arguments.Input.Length <= 0))
+                        if ((arguments.Input == null && arguments.Input.Length <= 0) || !arguments.Input[0].IsDirectory())
                         {
                             ShowHelpfulError("Must specify and 'input' directory.");
                             return 1;

@@ -151,7 +151,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (arrType != ArrangementType.Vocal)
                     {
                         var jsonFiles = Directory.EnumerateFiles(unpackedDir, String.Format("{0}.json", Path.GetFileNameWithoutExtension(sngFile)), SearchOption.AllDirectories).FirstOrDefault();
-                        if (jsonFiles.Any() && !String.IsNullOrEmpty(jsonFiles))
+                        if (!String.IsNullOrEmpty(jsonFiles) && jsonFiles.Any())
                             att = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles).Entries.ToArray()[0].Value.ToArray()[0].Value;
                     }
 
@@ -584,7 +584,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
 
                 string agg;
-              
+
                 if (File.Exists(Path.Combine(fullPath, "appid.appid")))
                 {
                     // PC / MAC 2014
@@ -598,7 +598,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     return new Platform(GamePlatform.Pc, GameVersion.RS2014); // Because appid.appid have only in RS2014
                 }
-               
+
                 if (Directory.Exists(Path.Combine(fullPath, ROOT_XBox360)))
                 {
                     // XBOX 2012/2014
@@ -612,12 +612,12 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     return new Platform(GamePlatform.XBox360, GameVersion.None);
                 }
-     
+
                 if (fullPath.ToLower().Contains("_pc"))
                 {
                     return new Platform(GamePlatform.Pc, GameVersion.RS2014);
                 }
-           
+
                 // PS3 2012/2014
                 agg = fullPathInfo.EnumerateFiles("*.nt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
 

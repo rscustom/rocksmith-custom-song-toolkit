@@ -190,8 +190,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.Metadata.Part = xml.Part;
             sng.Metadata.SongLength = xml.SongLength;
             sng.Metadata.StringCount = 6;
-            sng.Metadata.Tuning = new Int16[sng.Metadata.StringCount];
-            sng.Metadata.Tuning = tuning;
+            sng.Metadata.Tuning = tuning ?? new Int16[sng.Metadata.StringCount];
             // calculated when parsing arrangements
             sng.Metadata.Unk11_FirstNoteTime = first_note_time;
             sng.Metadata.Unk12_FirstNoteTime = first_note_time;
@@ -887,7 +886,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         anchor.EndBeatTime = xml.PhraseIterations[xml.PhraseIterations.Length - 1].Time;
                     // TODO not 100% clear
                     // times will be updated later
-                    // these garbage values are only in interactive lessons?
+                    // these "garbage" values are everywhere!
                     //anchor.Unk3_FirstNoteTime = (float) 3.4028234663852886e+38;
                     //anchor.Unk4_LastNoteTime = (float) 1.1754943508222875e-38;
                     anchor.FretId = (byte)level.Anchors[j].Fret;
@@ -910,18 +909,18 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 // Fingerprints2 is for handshapes with "arp" displayName
                 a.Fingerprints2 = new FingerprintSection();
 
-                List<Fingerprint> fp1 = new List<Fingerprint>();
-                List<Fingerprint> fp2 = new List<Fingerprint>();
+                var fp1 = new List<Fingerprint>();
+                var fp2 = new List<Fingerprint>();
                 foreach (var h in level.HandShapes)
                 {
-                    var fp = new Fingerprint();
-                    fp.ChordId = h.ChordId;
-                    fp.StartTime = h.StartTime;
-                    fp.EndTime = h.EndTime;
+                    if (h.ChordId < 0) continue;
+                    var fp = new Fingerprint
+                    {
+                        ChordId = h.ChordId, StartTime = h.StartTime, EndTime = h.EndTime
                     // TODO not always StartTime
                     //fp.Unk3_FirstNoteTime = fp.StartTime;
                     //fp.Unk4_LastNoteTime = fp.StartTime;
-                    if (fp.ChordId < 0) continue;
+                    };
 
                     if (xml.ChordTemplates[fp.ChordId].DisplayName.EndsWith("arp"))
                         fp2.Add(fp);
@@ -1016,12 +1015,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                 foreach (var n in notes)
                 {
-                    for (Int16 id = 0; id < fp1.Count; id++)
+                    for (Int16 id = 0; id < fp1.Count; id++) //FingerPrints 1st level (common handshapes?)
                         if (n.Time >= fp1[id].StartTime && n.Time < fp1[id].EndTime)
                         {
                             n.FingerPrintId[0] = id;
-                            // add STRUM to chords
-                            if (fp1[id].StartTime == n.Time && n.ChordId != -1)
+                            // add STRUM to chords if highDensity = 0
+                            if (n.ChordId != -1 && (n.NoteMask & CON.NOTE_MASK_HIGHDENSITY) != CON.NOTE_MASK_HIGHDENSITY)
                                 n.NoteMask |= CON.NOTE_MASK_STRUM;
                             if (fp1[id].Unk3_FirstNoteTime == 0)
                                 fp1[id].Unk3_FirstNoteTime = n.Time;
@@ -1032,7 +1031,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             fp1[id].Unk4_LastNoteTime = n.Time + sustain;
                             break;
                         }
-                    for (Int16 id = 0; id < fp2.Count; id++)
+                    for (Int16 id = 0; id < fp2.Count; id++) //FingerPrints 2nd level (used for -arp(eggio) handshapes)
                         if (n.Time >= fp2[id].StartTime && n.Time < fp2[id].EndTime)
                         {
                             n.FingerPrintId[1] = id;

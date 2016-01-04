@@ -80,7 +80,7 @@ namespace RocksmithToolkitLib {
             if (Object.ReferenceEquals(obj, null))
                 return 0;
 
-            return obj.Key.GetHashCode() ^ obj.Key.GetHashCode();
+            return obj.Key.GetHashCode() * 397;
         }
     }
 }

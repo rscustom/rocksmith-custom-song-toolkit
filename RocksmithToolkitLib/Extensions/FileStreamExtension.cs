@@ -56,7 +56,7 @@ namespace RocksmithToolkitLib.Extensions
 
         public T Deserialize()
         {
-            while (_reader.IsStartElement())
+            if (_reader.IsStartElement())
             {
                     XmlReader reader = _reader.ReadSubtree();
                     return (T)_serializer.Deserialize(reader);

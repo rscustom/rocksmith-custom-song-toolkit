@@ -61,7 +61,7 @@ namespace sng2014
                 ShowHelpfulError(String.Format("{0} is not a valid platform.", arrangementType));
                 arguments.ArrangementType = ArrangementType.Guitar;
             }
-            arguments.ArrangementType = arr;
+            else arguments.ArrangementType = arr;
         }
 
         private static void SetPlatform(this Arguments arguments, string platformString) {
@@ -74,7 +74,7 @@ namespace sng2014
                 ShowHelpfulError(String.Format("{0} is not a valid platform.", platformString));
                 arguments.Platform = GamePlatform.None;
             }
-            arguments.Platform = p;
+            else arguments.Platform = p;
         }
 
         static int Main(string[] args)

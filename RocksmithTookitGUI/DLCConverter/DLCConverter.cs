@@ -39,7 +39,7 @@ namespace RocksmithToolkitGUI.DLCConverter
         {
             if (platformSourceCombo.Items.Count > 0)
                 SourcePlatform = new Platform(platformSourceCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
-            else 
+            else
                 SourcePlatform = new Platform(GamePlatform.None, GameVersion.None);
         }
 
@@ -50,7 +50,7 @@ namespace RocksmithToolkitGUI.DLCConverter
         {
             if (platformTargetCombo.Items.Count > 0)
                 TargetPlatform = new Platform(platformTargetCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
-            else 
+            else
                 TargetPlatform = new Platform(GamePlatform.None, GameVersion.None);
         }
 

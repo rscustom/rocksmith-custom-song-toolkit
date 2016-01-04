@@ -466,13 +466,13 @@ namespace RocksmithToolkitLib.PSARC
             {
                 switch (bNum)
                 {
-                    case 2:
+                    case 2://16bit
                         _writer.Write((ushort)zLen);
                         break;
-                    case 3:
+                    case 3://24bit
                         _writer.WriteUInt24(zLen);
                         break;
-                    case 4:
+                    case 4://32bit
                         _writer.Write(zLen);
                         break;
                 }
@@ -481,7 +481,7 @@ namespace RocksmithToolkitLib.PSARC
 
             // Write zData
             var ndx = 0; // for debugging
-            var step = Math.Round(1.0 / (this.TOC.Count + 2) * 100, 3);
+            var step = Math.Round(1D / (this.TOC.Count + 2) * 100, 3);
             double progress = 0;
             GlobalExtension.ShowProgress("Writing Zipped Data ...");
 
@@ -515,7 +515,7 @@ namespace RocksmithToolkitLib.PSARC
                     buffer = new byte[1024 * 16]; // more effecient use of memory
 
                     ndx = 0; // for debuging
-                    step = Math.Round(1.0 / ((tocSize / buffer.Length) + 2) * 100, 3);
+                    step = Math.Round(1D / (((double)tocSize / buffer.Length) + 2) * 100, 3);
                     progress = 0;
                     GlobalExtension.ShowProgress("Writing Encrypted Data ...");
 

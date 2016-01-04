@@ -82,7 +82,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                 // fbd.SelectedPath = "D:\\Temp"; // for testing
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
-                outputDir = fbd.SelectedPath;
+                else outputDir = fbd.SelectedPath;
             }
 
             Cursor.Current = Cursors.WaitCursor;

@@ -219,7 +219,7 @@ namespace RocksmithToolkitLib.Xml
                 Part = sngData.Metadata.Part;
                 SongLength = sngData.Metadata.SongLength;
                 Tuning = new TuningStrings(sngData.Metadata.Tuning);
-                Capo = (sngData.Metadata.CapoFretId >= 0) ? sngData.Metadata.CapoFretId : (byte)0;
+                Capo = (byte) ((sngData.Metadata.CapoFretId == 0xFF) ? 0x00 : sngData.Metadata.CapoFretId);
                 LastConversionDateTime = sngData.Metadata.LastConversionDateTime.ToNullTerminatedAscii();
             }
 

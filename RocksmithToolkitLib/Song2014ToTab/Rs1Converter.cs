@@ -239,7 +239,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     else
                         nfbomTime = ebeat.Time;
 
-                    if (section.Name.ToLower().Contains("noguitar") && ebeat.Time == section.StartTime)
+                    if (section.Name.ToLower().Contains("noguitar") && Math.Abs(ebeat.Time - section.StartTime) < 0.001)
                     {
                         // CRITICAL - fix Section noguitar time (matches EOF output)
                         if (ebeat.Measure != -1)
@@ -252,7 +252,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     }
 
                     // found a valid Section time
-                    if (ebeat.Measure != -1 && ebeat.Time == section.StartTime)
+                    if (ebeat.Measure != -1 && Math.Abs(ebeat.Time - section.StartTime) < 0.001)
                         break;
 
                     // fix invalid Section time
@@ -492,7 +492,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
         public string SongFile2Song2014File(string songFilePath, bool overWrite)
         {
-            Song2014 song2014 = new Song2014();
+            Song2014 song2014;
             using (var obj = new Rs1Converter())
                 song2014 = obj.SongToSong2014(Song.LoadFromFile(songFilePath));
 
