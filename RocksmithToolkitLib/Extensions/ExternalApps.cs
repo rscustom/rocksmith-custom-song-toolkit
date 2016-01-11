@@ -151,7 +151,7 @@ namespace RocksmithToolkitLib.Extensions
         public static void Wav2Wem(string wwiseCLIPath, string wwiseTemplateDir)
         {
             var templatePath = Path.Combine(wwiseTemplateDir, "Template.wproj");
-            var cmdArgs = String.Format(" \"{0}\" -GenerateSoundBanks", templatePath);
+            var cmdArgs = String.Format(" \"{0}\" -GenerateSoundBanks -Platform Windows", templatePath);
 
             GeneralExtensions.RunExternalExecutable(wwiseCLIPath, true, false, true, cmdArgs);
         }

@@ -39,7 +39,7 @@ if exist %solution%\.git\HEAD (
 	set /p head=<"%solution%\.git\HEAD"
 	if "!head:~0,4!" == "ref:" (
 		set master=.git\!head:~5!
- 		if exist "%solution%\.git\!head:~5!" set /p commit=<"%solution%\.git\!head:~5!"
+		if exist "%solution%\.git\!head:~5!" set /p commit=<"%solution%\.git\!head:~5!"
 	) else (
 		set commit=!head!
 	)
@@ -47,8 +47,8 @@ if exist %solution%\.git\HEAD (
 		echo Found commit: !commit!
 		set newrev=!commit:~0,8!
 		echo newrev !newrev!
-                for %%a in (%solution%!master!) do set newrevdate=%%~ta
-                echo newrevdate !newrevdate!
+				for %%a in (%solution%!master!) do set newrevdate=%%~ta
+				echo newrevdate !newrevdate!
 	) else echo Unable to find commit ...
 )
 

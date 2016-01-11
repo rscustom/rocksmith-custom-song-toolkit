@@ -47,6 +47,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-p
 		Third-party Apps\ww2ogg.exe = Third-party Apps\ww2ogg.exe
 		Third-party Apps\Wwise2013.tar.bz2 = Third-party Apps\Wwise2013.tar.bz2
 		Third-party Apps\Wwise2014.tar.bz2 = Third-party Apps\Wwise2014.tar.bz2
+		Third-party Apps\Wwise2015.tar.bz2 = Third-party Apps\Wwise2015.tar.bz2
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tool", "tool", "{8BDB8985-CC6B-4479-A9A7-0489836D87CD}"

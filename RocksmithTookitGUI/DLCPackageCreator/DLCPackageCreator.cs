@@ -857,6 +857,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             songVolumeBox.Value = Decimal.Round((decimal)info.Volume, 2);
             previewVolumeBox.Value = (info.PreviewVolume != null) ? Decimal.Round((decimal)info.PreviewVolume, 2) : songVolumeBox.Value;
 
+            if (info.OggQuality > 1 && info.OggQuality < 10)
+                audioQualityBox.Value = info.OggQuality;
+            else
+                audioQualityBox.Value = 4;
+
             //if (platformXBox360.Checked)
             //    rbuttonSignatureLIVE.Checked = info.SignatureType == PackageMagic.LIVE;
 
@@ -1165,6 +1170,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             var songVol = (float)songVolumeBox.Value;
             var previewVol = (!String.IsNullOrEmpty(audioPreviewPath)) ? (float)songVolumeBox.Value : songVol;
+            var audioQualiy = audioQualityBox.Value;
             var data = new DLCPackageData
                        {
                            GameVersion = CurrentGameVersion,
@@ -1190,6 +1196,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                            LyricArtPath = LyricArtPath,
                            OggPath = AudioPath,
                            OggPreviewPath = audioPreviewPath,
+                           OggQuality = audioQualiy,
                            Arrangements = arrangements,
                            Tones = tones,
                            TonesRS2014 = tonesRS2014,

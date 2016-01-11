@@ -54,10 +54,12 @@ namespace RocksmithToolkitLib.Ogg
                 Selected = OggFile.WwiseVersion.Wwise2013;
             if (wwiseVersion.StartsWith("2014.1"))
                 Selected = OggFile.WwiseVersion.Wwise2014;
+            if (wwiseVersion.StartsWith("2015.1"))
+                Selected = OggFile.WwiseVersion.Wwise2015;
             // No support for v2015.1.x yet, code is expandable
             if (Selected == OggFile.WwiseVersion.None)
-               throw new FileNotFoundException("You have an incompatible version of Audiokinect Wwise installed." +
-               Environment.NewLine + "Install Wwise v2013.2.x or v2014.1.x series if you would like to use" +
+               throw new FileNotFoundException("You have no compatible version of Audiokinect Wwise installed." +
+               Environment.NewLine + "Install Wwise v2013.2.x or v2014.1.x or even v2015.1.x series if you would like to use" +
                Environment.NewLine + " the toolkit OGG/WAV audio to Wwise WEM audio auto convert features.");
 
             return pathWwiseCli;
@@ -66,19 +68,14 @@ namespace RocksmithToolkitLib.Ogg
         public static string LoadWwiseTemplate(string sourcePath, int audioQuality, string wwisePath)
         {
             var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
-            var packedTemplatePath2013 = Path.Combine(appRootDir, "Wwise2013.tar.bz2");
-            var packedTemplatePath2014 = Path.Combine(appRootDir, "Wwise2014.tar.bz2");
-            var templateDir = String.Empty;
+            var templateDir = Path.Combine(appRootDir, "Template");
             //Unpack required template here, based on wwise version installed.
             switch (Selected)
             {
                 case OggFile.WwiseVersion.Wwise2013:
-                    ExtractTemplate(packedTemplatePath2013);
-                    templateDir = Path.Combine(appRootDir, "Wwise2013\\Template");
-                    break;
                 case OggFile.WwiseVersion.Wwise2014:
-                    ExtractTemplate(packedTemplatePath2014);
-                    templateDir = Path.Combine(appRootDir, "Wwise2014\\Template");
+                case OggFile.WwiseVersion.Wwise2015:
+                    ExtractTemplate(Path.Combine(appRootDir, Selected+".tar.bz2"));
                     break;
                 // expandable to next new Wwise version here
                 default:
@@ -91,6 +88,7 @@ namespace RocksmithToolkitLib.Ogg
                 resString = sr.ReadToEnd(); sr.Close();
                 resString = resString.Replace("%QF1%", Convert.ToString(audioQuality));
                 resString = resString.Replace("%QF2%", "4"); //preview
+
                 var tw = new StreamWriter(workUnitPath, false);
                 tw.Write(resString);
                 tw.Flush();
@@ -132,10 +130,6 @@ namespace RocksmithToolkitLib.Ogg
         public static void ExtractTemplate(string packedTemplatePath)
         {
             var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
-            // speed up by only unpacking one time, also allows users to upgrade Wwise later
-            var wwiseFolder = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(packedTemplatePath));
-            if (Directory.Exists(Path.Combine(appRootDir, wwiseFolder)))
-                return;
 
             using (var packedTemplate = File.OpenRead(packedTemplatePath))
             using (var bz2 = new BZip2InputStream(packedTemplate))
@@ -159,7 +153,7 @@ namespace RocksmithToolkitLib.Ogg
                 throw new Exception("Did not find converted Wem audio and preview files");
 
             //var destPreviewPath = Path.Combine(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + "_preview.wem");
-            var destPreviewPath = string.Format("{0}_preview.wem", destinationPath.Substring(0, destinationPath.LastIndexOf(".")));
+            var destPreviewPath = string.Format("{0}_preview.wem", destinationPath.Substring(0, destinationPath.LastIndexOf(".", StringComparison.Ordinal)));
             foreach (var srcPath in srcPaths)
             {
                 File.Copy(srcPath.FullName, srcPath.Name.Contains("_preview_") ? destPreviewPath : destinationPath, true);

@@ -38,6 +38,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public string AlbumArtPath { get; set; }
         public string OggPath { get; set; }
         public string OggPreviewPath { get; set; }
+        public decimal OggQuality { get; set; }
         public List<Arrangement> Arrangements { get; set; }
         public float Volume { get; set; }
         public PackageMagic SignatureType { get; set; }

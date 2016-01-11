@@ -286,7 +286,7 @@ typedef struct
         struct streams{
             //calculate the total stream size till End of File (in bytes)
             if( format.chunkSize == 66 ) {
-                s = format.ex.dwLoopEndPacketOffset - format.ex.dwLoopStartPacketOffset;                   
+                s = format.ex.dwLoopEndPacketOffset - format.ex.dwLoopStartPacketOffset;
                 local long i;
                 for (i = 0; i < s; i += sizeof(packet_stream))
                 {
