@@ -403,7 +403,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 using (var xblockStream = new MemoryStream())
                 {
                     // TOOLKIT VERSION
-                    GenerateToolkitVersion(toolkitVersionStream, info.PackageVersion);
+                    GenerateToolkitVersion(toolkitVersionStream, packageVersion: info.PackageVersion);
                     packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
 
                     // APP ID
@@ -511,7 +511,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         else
                         {
                             // One for all arrangements (PC/Mac)
-                            manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);                       
+                            manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
                         }
                     }
 
@@ -1006,7 +1006,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 GeneralExtensions.RunExternalExecutable("nvdxt.exe", true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
         }
 
-        public static void GenerateToolkitVersion(Stream output, string packageVersion = null, string packageAuthor = null)
+        public static void GenerateToolkitVersion(Stream output, string packageAuthor = null, string packageVersion = null)
         {
             if (String.IsNullOrEmpty(packageAuthor))
                 packageAuthor = ConfigRepository.Instance()["general_defaultauthor"];

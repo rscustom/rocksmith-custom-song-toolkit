@@ -573,7 +573,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
         {
             // create SongPack directory structure
             var dlcName = Path.GetFileName(srcPath).ToLower();
-            var songPackDir = Path.Combine(Path.GetTempPath(), String.Format("{0}_p_Pc", dlcName));
+            var songPackDir = Path.Combine(Path.GetTempPath(), String.Format("{0}_songpack_p_Pc", dlcName));
             var audioWindowDir = Path.Combine(songPackDir, "audio", "windows");
             var flatmodelsRsDir = Path.Combine(songPackDir, "flatmodels", "rs");
             var gamexblocksNsongsDir = Path.Combine(songPackDir, "gamexblocks", "nsongs");
@@ -641,7 +641,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
 
             // fix aggegrate graph entries, reusing existing Persistent ID
             var currentPlatform = new Platform(GamePlatform.Pc, GameVersion.RS2014);
-            var aggregateGraphFiles = Directory.EnumerateFiles(srcPath, "*.nt", SearchOption.AllDirectories).ToArray();           
+            var aggregateGraphFiles = Directory.EnumerateFiles(srcPath, "*.nt", SearchOption.AllDirectories).ToArray();
             foreach (var aggGraph in aggregateGraphFiles)
             {
                 var agg = LoadFromFile(aggGraph);
@@ -665,7 +665,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 aggGraphPack.Soundbank.AddRange(agg.Soundbank);
 
                 aggGraphPack.GameXblock.AddRange(agg.GameXblock);
-             }
+            }
 
             // create a single hsanDB entry
             aggGraphPack.HsanDB.Name = String.Format("songs_dlc_{0}", dlcName);
@@ -696,7 +696,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             using (var fs = new FileStream(toolkitVersionFile, FileMode.Create))
             using (var ms = new MemoryStream())
             {
-                DLCPackageCreator.GenerateToolkitVersion(ms, "SongPack v1.0");
+                DLCPackageCreator.GenerateToolkitVersion(ms, packageVersion: "CST SongPack v1.1");
                 ms.Flush();
                 ms.Seek(0, SeekOrigin.Begin);
                 ms.CopyTo(fs);

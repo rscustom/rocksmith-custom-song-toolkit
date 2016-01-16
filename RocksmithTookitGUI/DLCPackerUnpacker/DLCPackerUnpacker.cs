@@ -416,7 +416,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 sw.Restart();
 
                 var songPackDir = AggregateGraph2014.DoLikeSongPack(sourcePath, txtAppId.Text);
-                var destFilePath = Path.Combine(Path.GetDirectoryName(sourcePath), String.Format("{0}_p.psarc", Path.GetFileName(sourcePath)));
+                var destFilePath = Path.Combine(Path.GetDirectoryName(sourcePath), String.Format("{0}_songpack_p.psarc", Path.GetFileName(sourcePath)));
                 Packer.Pack(songPackDir, destFilePath, fixShowlights: false, predefinedPlatform: new Platform(GamePlatform.Pc, GameVersion.RS2014));
 
                 // clean up now (song pack folder)
