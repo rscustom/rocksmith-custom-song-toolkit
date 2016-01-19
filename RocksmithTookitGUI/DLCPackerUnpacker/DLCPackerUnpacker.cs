@@ -67,7 +67,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private void LowTuningBassFix(bool quick, bool deleteSourceFile, bool verbose)
         {
             string[] sourcePackages;
-            string saveWorkingDirectoryPath;
             string dlcSavePath;
             bool alreadyFixed;
             bool hasBass;
@@ -93,8 +92,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 }
             }
 
-            saveWorkingDirectoryPath = Path.GetDirectoryName(sourcePackages[0]);
-
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
             GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
             Thread.Sleep(100); // give Globals a chance to initialize
@@ -106,14 +103,25 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 // UNPACK
                 GlobalExtension.ShowProgress(String.Format("Unpacking '{0}'", Path.GetFileName(sourcePackage)), 20);
                 Application.DoEvents();
-                var unpackedDir = Packer.Unpack(sourcePackage, saveWorkingDirectoryPath, true, true, false);
                 var packagePlatform = sourcePackage.GetPlatform();
+                var tmpPath = Path.GetTempPath();
+                var unpackedDir = Packer.Unpack(sourcePackage, tmpPath, true, true, false);
+                savePath = Path.Combine(Path.GetDirectoryName(sourcePackages[0]), Path.GetFileNameWithoutExtension(sourcePackage));
+
+                // Same name xbox issue fix
+                if (packagePlatform.platform == GamePlatform.XBox360)
+                    savePath += GamePlatform.XBox360.ToString();
+
+                DirectoryExtension.Move(unpackedDir, savePath, true);
+                unpackedDir = savePath;
 
                 // REORGANIZE
                 GlobalExtension.ShowProgress(String.Format("Reorganizing '{0}'", Path.GetFileName(sourcePackage)), 40);
                 var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
-                if (structured && !quick)
-                    unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
+
+                // this method will reuse showlights.xml if it exists else no showlights are included
+                if (structured)
+                    unpackedDir = DLCPackageData.DoLikeProject(savePath);
 
                 // LOAD DATA
                 var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform);
@@ -162,8 +170,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                                 MessageBox.Show(Path.GetFileName(sourcePackage) + "  " + Environment.NewLine + "bass arrangement tuning does not need to be fixed.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                             alreadyFixed = true;
+                        }
                     }
-                }
                 }
 
                 // don't repackage a song that is already fixed or doesn't have bass
@@ -188,7 +196,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     }
                 }
                 else
-                    dlcSavePath = Path.Combine(saveWorkingDirectoryPath, Path.GetFileNameWithoutExtension(sourcePackage) + "_bassfix");
+                {
+                    var srcPackageName = Path.GetFileNameWithoutExtension(sourcePackage);
+                    srcPackageName = srcPackageName.Remove(srcPackageName.Length - 2);
+
+                    dlcSavePath = Path.Combine(Path.GetDirectoryName(sourcePackages[0]), srcPackageName + "_bassfix");
+                }
 
                 if (Path.GetFileName(dlcSavePath).Contains(" ") && info.PS3)
                     if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn"))
@@ -209,6 +222,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     }
                 }
 
+                // reuse existing showlights.xml or generates new one if none is found
+                info.Showlights = true;
                 // Generate Bass Fixed CDLC
                 GlobalExtension.ShowProgress(String.Format("Repackaging '{0}'", Path.GetFileName(sourcePackage)), 80);
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, info, packagePlatform);
@@ -251,6 +266,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             chkDeleteSourceFile.Enabled = enable;
             chkExtractSongXml.Enabled = enable;
             chkQuickBassFix.Enabled = enable;
+            chkVerbose.Enabled = enable;
             chkUpdateSng.Enabled = enable;
         }
 

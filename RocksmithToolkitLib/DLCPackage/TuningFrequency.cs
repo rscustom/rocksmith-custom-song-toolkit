@@ -11,7 +11,7 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public static class TuningFrequency
     {
-        private static double A440 { get{ return 440D; } }
+        private static double A440 { get { return 440D; } }
         private static double CentsInOctave { get { return 1200D; } }
 
         private static double Ratio2Cents(double Ratio)
@@ -24,7 +24,8 @@ namespace RocksmithToolkitLib.DLCPackage
             return Math.Round(A440 * Math.Pow(Math.Pow(2, 1D / 1200D), Cents));
         }
 
-        public static double Cents2Frequency(this double? Cents) {
+        public static double Cents2Frequency(this double? Cents)
+        {
             if (Cents != null)
                 return Convert.ToDouble(Cents).Cents2Frequency();
             else
@@ -47,16 +48,23 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var noteTable = new string[] { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
             string noteName = "";
-            if (cents < 50) {
+            if (cents < 50)
+            {
                 noteName = "C";
-            } else if (cents >= 1150) {
+            }
+            else if (cents >= 1150)
+            {
                 noteName = "C";
                 cents -= CentsInOctave;
                 oct++;
-            } else {
+            }
+            else
+            {
                 var offset = 50.0;
-                for (var j = 1; j <= 11; j++) {
-                    if (cents >= offset && cents < (offset + 100)) {
+                for (var j = 1; j <= 11; j++)
+                {
+                    if (cents >= offset && cents < (offset + 100))
+                    {
                         noteName = noteTable[j];
                         cents -= (j * 100);
                         break;
@@ -87,7 +95,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             if (arr.TuningPitch.Equals(220.0))
             {
-               // MessageBox.Show("This song is already at 220Hz pitch (bass fixed applied already?)", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // MessageBox.Show("This song is already at 220Hz pitch (bass fixed applied already?)", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             Song2014 songXml = Song2014.LoadFromFile(arr.SongXml.File);

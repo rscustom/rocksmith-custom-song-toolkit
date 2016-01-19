@@ -122,7 +122,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //in case it's bass and EOF won't wrote a tuning for last 2 strings...
             //TODO: guess guitar tuning.
             if (IsBass && Tuning.Tuning.String4 == 0 && Tuning.Tuning.String5 == 0)
-                if (MessageBox.Show(String.Format("Are strings 4 and 5 really 0?{0}We recommend filling in all strings fields (to cover guitar tuning).{0}To avoid two of the same tuning for different instruments.{0}{0}Would you like to cancel save and correct it now?{0}",
+                if (MessageBox.Show(String.Format("Are strings 4 and 5 really 0?{0}We recommend filling in all strings fields (to cover guitar tuning).{0}To avoid two of the same tuning for different instruments.{0}{0}Would you like to correct it now?{0}",
                     Environment.NewLine), DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     return;
 

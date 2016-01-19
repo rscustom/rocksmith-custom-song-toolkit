@@ -598,7 +598,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                                 RouteMask = RouteMask.Bass;
                                 //Low tuning fix for bass, If lowstring is B and bass fix not applied
                                 if (xmlSong.Tuning.String0 < -4 && this.frequencyTB.Text == "440")
-                                    bassFix |= MessageBox.Show("Your tuning is too low, would you like to apply \"Low Tuning Fix?\"\n" + "Note, that this won't work if you re-save arangement in EOF.\n", "Low Tuning Fix Required!", MessageBoxButtons.YesNo) == DialogResult.Yes;
+                                    bassFix |= MessageBox.Show("The bass tuning may be too low.  Apply Low Bass Tuning Fix?" + Environment.NewLine +
+                                                               "Note: This will not work if the bass arangement is resaved in EOF.  ", "Warning ... Low Bass Tuning", MessageBoxButtons.YesNo) == DialogResult.Yes;
                             }
                         }
                     }
@@ -620,8 +621,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         {
                             bassFix = false;
                             Arrangement.SongXml.File = XmlFilePath.Text;
+                           
+                            if (Arrangement.TuningStrings == null)
+                            {
+                                // need to load tuning here from the xml arrangement
+                                Arrangement.TuningStrings = new TuningStrings();
+                                Arrangement.TuningStrings = xmlSong.Tuning;
+                            }
+
                             if (!TuningFrequency.ApplyBassFix(Arrangement))
                                 MessageBox.Show("This bass arrangement is already at 220Hz pitch.  ", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            xmlSong.Tuning = Arrangement.TuningStrings;
                         }
                     }
 
@@ -696,7 +707,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 MessageBox.Show(@"Unable to get information from XML arrangement:  " + Environment.NewLine +
                     Path.GetFileName(xmlFilePath) + Environment.NewLine +
-                    @"It may not be a valide arrangment or " + Environment.NewLine +
+                    @"It may not be a valid arrangement or " + Environment.NewLine +
                     @"your version of the EOF may be out of date." + Environment.NewLine +
                     ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
