@@ -424,7 +424,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     data.PackageVersion = GeneralExtensions.ReadPackageVersion(versionFile[0]);
                 else data.PackageVersion = "1";
             }
-            catch {}
+            catch { }
 
             if (convert)
                 data.Tones = null;
@@ -488,7 +488,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             SongYear = attr.SongYear ?? 0,
                             Artist = attr.ArtistName,
                             ArtistSort = attr.ArtistNameSort,
-                            AverageTempo = (int) attr.SongAverageTempo
+                            AverageTempo = (int)attr.SongAverageTempo
                         };
                     }
 
@@ -525,8 +525,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals,
                         ArrangementType = ArrangementType.Vocal,
                         ScrollSpeed = 20,
-                        SongXml = new SongXML {File = xmlFile},
-                        SongFile = new SongFile {File = ""},
+                        SongXml = new SongXML { File = xmlFile },
+                        SongFile = new SongFile { File = "" },
                         CustomFont = attr.JapaneseVocal == true
                     };
 

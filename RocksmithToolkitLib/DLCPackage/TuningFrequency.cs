@@ -109,13 +109,15 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (strings[s] != 0)
                     strings[s] += 12;
             }
+
             //Detect tuning
             var tuning = TuningDefinitionRepository.Instance().SelectAny(new TuningStrings(strings), GameVersion.RS2014);
             if (tuning == null)
             {
                 tuning = new TuningDefinition();
                 tuning.Tuning = new TuningStrings(strings);
-                tuning.UIName = tuning.Name = tuning.NameFromStrings(tuning.Tuning, false);
+                tuning.Name = tuning.NameFromStrings(tuning.Tuning, false);
+                tuning.UIName = tuning.Name = String.Format("{0} Fixed", tuning.Name);
                 tuning.Custom = true;
                 tuning.GameVersion = GameVersion.RS2014;
                 TuningDefinitionRepository.Instance().Add(tuning, true);

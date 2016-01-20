@@ -190,8 +190,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Tone
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            // HACK: Some Rancid DLC manifests contain bogus characters in Volume elements.
-            // Filter only numerical characters
+            // Some manifests may contain unexpected characters in Volume element.
+            // Filter out unexpected characters and make numeric 
             string input = new string(serializer.Deserialize<string>(reader).Replace(',', '.')
                 .Where(c => char.IsDigit(c) || c == '.' || c == '-').ToArray());
             return float.Parse(input, CultureInfo.InvariantCulture);

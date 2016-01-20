@@ -57,6 +57,7 @@ namespace RocksmithToolkitLib
             return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
         }
 
+        [Obsolete("Depricated, please use TuningDefinition Select() funtion.", true)]
         public TuningDefinition SelectForBass(TuningStrings tuningStrings, GameVersion gameVersion)
         {
             return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings.ToBassArray()) && s.GameVersion == gameVersion);
@@ -67,6 +68,7 @@ namespace RocksmithToolkitLib
             return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
         }
 
+        [Obsolete("Depricated, please use TuningDefinition Select() funtion.", true)]
         public TuningDefinition SelectForBass(Int16[] tuningStrings, GameVersion gameVersion)
         {
             return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);

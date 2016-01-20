@@ -481,10 +481,7 @@ namespace RocksmithToolkitLib.Xml
             return new Int16[] { String0, String1, String2, String3, String4, String5 };
         }
 
-        /// <summary>
-        /// Returns tuning strings array ommiting last 2 strings.
-        /// </summary>
-        /// <returns>The bass array.</returns>
+        [Obsolete("Depricated, please use regular ToArray() funtion.", true)]
         public Int16[] ToBassArray()
         {
             return new Int16[] { String0, String1, String2, String3, 0, 0 };
@@ -511,11 +508,11 @@ namespace RocksmithToolkitLib.Xml
             unchecked
             {
                 var hashCode = String0.GetHashCode();
-                hashCode = (hashCode*397) ^ String1.GetHashCode();
-                hashCode = (hashCode*397) ^ String2.GetHashCode();
-                hashCode = (hashCode*397) ^ String3.GetHashCode();
-                hashCode = (hashCode*397) ^ String4.GetHashCode();
-                hashCode = (hashCode*397) ^ String5.GetHashCode();
+                hashCode = (hashCode * 397) ^ String1.GetHashCode();
+                hashCode = (hashCode * 397) ^ String2.GetHashCode();
+                hashCode = (hashCode * 397) ^ String3.GetHashCode();
+                hashCode = (hashCode * 397) ^ String4.GetHashCode();
+                hashCode = (hashCode * 397) ^ String5.GetHashCode();
                 return hashCode;
             }
         }
@@ -561,7 +558,7 @@ namespace RocksmithToolkitLib.Xml
                     //Ignore = 0;
                     MaxDifficulty = phraseList[i].MaxDifficulty,
                     Name = phraseList[i].Name,
-                    Solo = (byte) (phraseList[i].Name.ToLower().Contains("solo") ? 1 : 0)
+                    Solo = (byte)(phraseList[i].Name.ToLower().Contains("solo") ? 1 : 0)
                 };
             }
             return phrases;

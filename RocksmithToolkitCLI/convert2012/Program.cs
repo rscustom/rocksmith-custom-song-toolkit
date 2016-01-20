@@ -63,7 +63,7 @@ namespace convert2012
 
                 try
                 {
-                    Packer.Unpack(cdlcFilePath, unpackedDest, true, true);
+                    Packer.Unpack(cdlcFilePath, unpackedDest, true);
 
                     // Load Package Data
                     Console.WriteLine(@"Converting RS2012 CDLC to RS2014 CDLC ...");

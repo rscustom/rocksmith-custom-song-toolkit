@@ -54,9 +54,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             get { return chkDecodeAudio.Checked; }
         }
 
-        private bool extractSongXml
+        private bool overwriteSongXml
         {
-            get { return chkExtractSongXml.Checked; }
+            get { return chkOverwriteSongXml.Checked; }
         }
 
         private bool updateSng
@@ -101,12 +101,13 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             foreach (var sourcePackage in sourcePackages)
             {
                 // UNPACK
-                GlobalExtension.ShowProgress(String.Format("Unpacking '{0}'", Path.GetFileName(sourcePackage)), 20);
-                Application.DoEvents();
                 var packagePlatform = sourcePackage.GetPlatform();
                 var tmpPath = Path.GetTempPath();
-                var unpackedDir = Packer.Unpack(sourcePackage, tmpPath, true, true, false);
+                Application.DoEvents();
+                var unpackedDir = Packer.Unpack(sourcePackage, tmpPath);
                 savePath = Path.Combine(Path.GetDirectoryName(sourcePackages[0]), Path.GetFileNameWithoutExtension(sourcePackage));
+
+                GlobalExtension.ShowProgress(String.Format("Loading '{0}' ...", Path.GetFileName(sourcePackage)), 40);
 
                 // Same name xbox issue fix
                 if (packagePlatform.platform == GamePlatform.XBox360)
@@ -114,14 +115,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                 DirectoryExtension.Move(unpackedDir, savePath, true);
                 unpackedDir = savePath;
-
-                // REORGANIZE
-                GlobalExtension.ShowProgress(String.Format("Reorganizing '{0}'", Path.GetFileName(sourcePackage)), 40);
-                var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
-
-                // this method will reuse showlights.xml if it exists else no showlights are included
-                if (structured)
-                    unpackedDir = DLCPackageData.DoLikeProject(savePath);
 
                 // LOAD DATA
                 var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform);
@@ -143,7 +136,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 }
 
                 //apply bass fix
-                GlobalExtension.ShowProgress(String.Format("Applying Bass Tuning Fix '{0}'", Path.GetFileName(sourcePackage)), 60);
+                GlobalExtension.ShowProgress(String.Format("Applying Bass Tuning Fix '{0}' ...", Path.GetFileName(sourcePackage)), 60);
                 alreadyFixed = false;
                 hasBass = false;
 
@@ -224,8 +217,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                 // reuse existing showlights.xml or generates new one if none is found
                 info.Showlights = true;
-                // Generate Bass Fixed CDLC
-                GlobalExtension.ShowProgress(String.Format("Repackaging '{0}'", Path.GetFileName(sourcePackage)), 80);
+                // Generate Fixed Low Bass Tuning Package
+                GlobalExtension.ShowProgress(String.Format("Repackaging '{0}' ...", Path.GetFileName(sourcePackage)), 80);
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, info, packagePlatform);
                 DirectoryExtension.SafeDelete(unpackedDir);
             }
@@ -264,13 +257,13 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             btnUnpack.Enabled = enable;
             chkDecodeAudio.Enabled = enable;
             chkDeleteSourceFile.Enabled = enable;
-            chkExtractSongXml.Enabled = enable;
+            chkOverwriteSongXml.Enabled = enable;
             chkQuickBassFix.Enabled = enable;
             chkVerbose.Enabled = enable;
             chkUpdateSng.Enabled = enable;
         }
 
-        private void UnpackSongs(IEnumerable<string> sourceFileNames, string destPath, bool decode = false, bool extract = false)
+        private void UnpackSongs(IEnumerable<string> sourceFileNames, string destPath, bool decode = false, bool overwrite = false)
         {
             ToggleUIControls(false);
             errorsFound = new StringBuilder();
@@ -288,7 +281,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                 try
                 {
-                    Packer.Unpack(sourceFileName, destPath, decode, extract);
+                    Packer.Unpack(sourceFileName, destPath, decode, overwrite);
                 }
                 catch (Exception ex)
                 {
@@ -578,7 +571,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 savePath = fbd.SelectedPath;
             }
 
-            UnpackSongs(sourceFileNames, savePath, decodeAudio, extractSongXml);
+            UnpackSongs(sourceFileNames, savePath, decodeAudio, overwriteSongXml);
         }
 
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)

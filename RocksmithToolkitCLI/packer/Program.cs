@@ -27,7 +27,7 @@ namespace packer
         public bool DecodeOGG;
         public bool UpdateSng;
         public bool UpdateManifest;
-        public bool ExtractSongXml;
+        public bool OverwriteSongXml;
         public Platform Platform;
     }
 
@@ -57,7 +57,7 @@ namespace packer
                 { "ogg|decodeogg", "Decode ogg file when unpack a song (default is true)", v => { if (v != null) outputArguments.DecodeOGG = true; }},
                 { "sng|updatesng", "Recreate SNG files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateSng = true; }},
                 { "jsn|updatejsn", "Updates manifest files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateManifest = true; }},
-                { "xml|extractxml", "Extract Song Xml files from SNG when unpack a song (default is false)", v => { if (v != null) outputArguments.ExtractSongXml = true; }}
+                { "xml|overwritexml", "Overwrite EOF XML files with XML from SNG files (default is false)", v => { if (v != null) outputArguments.OverwriteSongXml = true; }}
             };
         }
 
@@ -251,7 +251,7 @@ namespace packer
 
                         try
                         {
-                            Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.DecodeOGG, arguments.ExtractSongXml);
+                            Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.DecodeOGG, arguments.OverwriteSongXml);
                         }
                         catch (Exception ex)
                         {

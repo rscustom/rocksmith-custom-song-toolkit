@@ -36,16 +36,18 @@
             this.gbAppIdUpdater = new System.Windows.Forms.GroupBox();
             this.lblAppId = new System.Windows.Forms.Label();
             this.cmbGameVersion = new System.Windows.Forms.ComboBox();
+            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
             this.cmbAppId = new System.Windows.Forms.ComboBox();
             this.chkDecodeAudio = new System.Windows.Forms.CheckBox();
             this.chkUpdateSng = new System.Windows.Forms.CheckBox();
             this.gbUnpacker = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.chkExtractSongXml = new System.Windows.Forms.CheckBox();
+            this.chkOverwriteSongXml = new System.Windows.Forms.CheckBox();
             this.gbPacker = new System.Windows.Forms.GroupBox();
             this.lblCurrentOperation = new System.Windows.Forms.Label();
             this.pbUpdateProgress = new System.Windows.Forms.ProgressBar();
             this.gbCustomFixes = new System.Windows.Forms.GroupBox();
+            this.chkVerbose = new System.Windows.Forms.CheckBox();
             this.chkDeleteSourceFile = new System.Windows.Forms.CheckBox();
             this.chkQuickBassFix = new System.Windows.Forms.CheckBox();
             this.btnLowTuningBassFix = new System.Windows.Forms.Button();
@@ -55,8 +57,6 @@
             this.lblHelp = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.chkVerbose = new System.Windows.Forms.CheckBox();
-            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
             this.gbAppIdUpdater.SuspendLayout();
             this.gbUnpacker.SuspendLayout();
             this.gbPacker.SuspendLayout();
@@ -137,6 +137,16 @@
             this.cmbGameVersion.TabIndex = 5;
             this.cmbGameVersion.SelectedIndexChanged += new System.EventHandler(this.cmbGameVersion_SelectedIndexChanged);
             // 
+            // txtAppId
+            // 
+            this.txtAppId.Cue = "APP ID";
+            this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtAppId.ForeColor = System.Drawing.Color.Gray;
+            this.txtAppId.Location = new System.Drawing.Point(155, 43);
+            this.txtAppId.Name = "txtAppId";
+            this.txtAppId.Size = new System.Drawing.Size(82, 20);
+            this.txtAppId.TabIndex = 41;
+            // 
             // cmbAppId
             // 
             this.cmbAppId.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -174,7 +184,7 @@
             // gbUnpacker
             // 
             this.gbUnpacker.Controls.Add(this.label2);
-            this.gbUnpacker.Controls.Add(this.chkExtractSongXml);
+            this.gbUnpacker.Controls.Add(this.chkOverwriteSongXml);
             this.gbUnpacker.Controls.Add(this.chkDecodeAudio);
             this.gbUnpacker.Controls.Add(this.btnUnpack);
             this.gbUnpacker.ForeColor = System.Drawing.Color.Firebrick;
@@ -193,21 +203,21 @@
             this.label2.Location = new System.Drawing.Point(9, 36);
             this.label2.Margin = new System.Windows.Forms.Padding(0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(116, 12);
+            this.label2.Size = new System.Drawing.Size(145, 12);
             this.label2.TabIndex = 18;
-            this.label2.Text = "Removes XML Comments";
+            this.label2.Text = "Generate fresh XML from SNG file";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // chkExtractSongXml
+            // chkOverwriteSongXml
             // 
-            this.chkExtractSongXml.AutoSize = true;
-            this.chkExtractSongXml.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.chkExtractSongXml.Location = new System.Drawing.Point(7, 19);
-            this.chkExtractSongXml.Name = "chkExtractSongXml";
-            this.chkExtractSongXml.Size = new System.Drawing.Size(86, 17);
-            this.chkExtractSongXml.TabIndex = 1;
-            this.chkExtractSongXml.Text = "SNG to XML";
-            this.chkExtractSongXml.UseVisualStyleBackColor = true;
+            this.chkOverwriteSongXml.AutoSize = true;
+            this.chkOverwriteSongXml.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.chkOverwriteSongXml.Location = new System.Drawing.Point(7, 19);
+            this.chkOverwriteSongXml.Name = "chkOverwriteSongXml";
+            this.chkOverwriteSongXml.Size = new System.Drawing.Size(86, 17);
+            this.chkOverwriteSongXml.TabIndex = 1;
+            this.chkOverwriteSongXml.Text = "SNG to XML";
+            this.chkOverwriteSongXml.UseVisualStyleBackColor = true;
             // 
             // gbPacker
             // 
@@ -254,6 +264,18 @@
             this.gbCustomFixes.TabIndex = 20;
             this.gbCustomFixes.TabStop = false;
             this.gbCustomFixes.Text = "Custom Fixes (RS 2014)";
+            // 
+            // chkVerbose
+            // 
+            this.chkVerbose.AutoSize = true;
+            this.chkVerbose.ForeColor = System.Drawing.Color.Black;
+            this.chkVerbose.Location = new System.Drawing.Point(226, 19);
+            this.chkVerbose.Name = "chkVerbose";
+            this.chkVerbose.Size = new System.Drawing.Size(65, 17);
+            this.chkVerbose.TabIndex = 11;
+            this.chkVerbose.Text = "Verbose";
+            this.toolTip.SetToolTip(this.chkVerbose, "If checked shows any error messages.");
+            this.chkVerbose.UseVisualStyleBackColor = true;
             // 
             // chkDeleteSourceFile
             // 
@@ -357,28 +379,6 @@
             this.toolTip.IsBalloon = true;
             this.toolTip.ReshowDelay = 10;
             // 
-            // chkVerbose
-            // 
-            this.chkVerbose.AutoSize = true;
-            this.chkVerbose.ForeColor = System.Drawing.Color.Black;
-            this.chkVerbose.Location = new System.Drawing.Point(226, 19);
-            this.chkVerbose.Name = "chkVerbose";
-            this.chkVerbose.Size = new System.Drawing.Size(65, 17);
-            this.chkVerbose.TabIndex = 11;
-            this.chkVerbose.Text = "Verbose";
-            this.toolTip.SetToolTip(this.chkVerbose, "If checked shows any error messages.");
-            this.chkVerbose.UseVisualStyleBackColor = true;
-            // 
-            // txtAppId
-            // 
-            this.txtAppId.Cue = "APP ID";
-            this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtAppId.ForeColor = System.Drawing.Color.Gray;
-            this.txtAppId.Location = new System.Drawing.Point(155, 43);
-            this.txtAppId.Name = "txtAppId";
-            this.txtAppId.Size = new System.Drawing.Size(82, 20);
-            this.txtAppId.TabIndex = 41;
-            // 
             // DLCPackerUnpacker
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -422,7 +422,7 @@
         private System.Windows.Forms.CheckBox chkUpdateSng;
         private System.Windows.Forms.ComboBox cmbGameVersion;
         private System.Windows.Forms.GroupBox gbUnpacker;
-        private System.Windows.Forms.CheckBox chkExtractSongXml;
+        private System.Windows.Forms.CheckBox chkOverwriteSongXml;
         private System.Windows.Forms.GroupBox gbPacker;
         private System.Windows.Forms.Label lblCurrentOperation;
         private System.Windows.Forms.GroupBox gbCustomFixes;

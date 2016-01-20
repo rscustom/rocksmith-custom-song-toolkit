@@ -99,7 +99,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     break;
                 case ArrangementName.Bass:
                     this.ArrangementType = Sng.ArrangementType.Bass;
-                    // TODO: trying to fix bass tuning issue
+                    // bass tuning uses guitar tuning for fewer issues
                     tuning = TuningDefinitionRepository.Instance().Select(song.Tuning, GameVersion.RS2014);
                     // tuning = TuningDefinitionRepository.Instance().SelectForBass(song.Tuning, GameVersion.RS2014);
                     break;
@@ -108,6 +108,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     break;
             }
 
+            // unknow tuning
             if (tuning == null)
             {
                 tuning = new TuningDefinition();
@@ -115,7 +116,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 tuning.Custom = true;
                 tuning.GameVersion = GameVersion.RS2014;
                 tuning.Tuning = song.Tuning;
-                TuningDefinitionRepository.Instance().Add(tuning, true);
+                // only add guitar arrangement tunings to the TuningDefinitionRepository  (these will be used for bass tuning)
+                if (ArrangementType == ArrangementType.Guitar)
+                    TuningDefinitionRepository.Instance().Add(tuning, true);
             }
 
             this.Tuning = tuning.UIName;
@@ -205,7 +208,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 // write changes to xml arrangement (w/o comments)
                 using (var stream = File.Open(xmlSongFile, FileMode.Create))
                     song.Serialize(stream);
-               
+
                 // write comments back to xml now so they are available for debugging
                 if (this.ArrangementType == ArrangementType.Guitar || this.ArrangementType == ArrangementType.Bass)
                     Song2014.WriteXmlComments(xmlSongFile, this.XmlComments, false);

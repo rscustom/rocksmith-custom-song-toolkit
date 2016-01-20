@@ -39,6 +39,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 songXml.Tuning.String4,
                 songXml.Tuning.String5,
             };
+
             parseEbeats(songXml, sngFile);
             parsePhrases(songXml, sngFile);
             parseChords(songXml, sngFile, tuning, songXml.Arrangement == "Bass");

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using X360.STFS;
@@ -61,21 +62,15 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region UNPACK
 
-        public static string Unpack(string sourceFileName, string savePath, Platform predefinedPlatform)
-        {
-            return Unpack(sourceFileName, savePath, false, false, true, predefinedPlatform);
-        }
-
         /// <summary>
         /// Unpack the specified File, returns unpacked dir.
         /// </summary>
         /// <param name="sourceFileName">Source file path.</param>
         /// <param name="savePath">Save path.</param>
         /// <param name="decodeAudio">If set to <c>true</c> decode audio.</param>
-        /// <param name="extractSongXml">If set to <c>true</c> extract song xml from sng.</param>
-        /// <param name="overwriteSongXml">If set to <c>true</c> overwrite existing song xml with produced.</param>
+        /// <param name="overwriteSongXml">If set to <c>true</c> overwrite existing song (EOF) xml with SNG data</param>
         /// <param name="predefinedPlatform">Predefined source platform.</param>
-        public static string Unpack(string sourceFileName, string savePath, bool decodeAudio = false, bool extractSongXml = false, bool overwriteSongXml = true, Platform predefinedPlatform = null)
+        public static string Unpack(string sourceFileName, string savePath, bool decodeAudio = false, bool overwriteSongXml = false, Platform predefinedPlatform = null)
         {
             Platform platform = sourceFileName.GetPlatform();
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
@@ -122,29 +117,37 @@ namespace RocksmithToolkitLib.DLCPackage
             // DECODE AUDIO
             if (decodeAudio)
             {
+                GlobalExtension.ShowProgress("Decoding Audio ...", 50);
                 var audioFiles = Directory.EnumerateFiles(unpackedDir, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
                 foreach (var file in audioFiles)
                 {
                     var outputAudioFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
                     OggFile.Revorb(file, outputAudioFileName, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(file).GetWwiseVersion());
                 }
+
+                //GlobalExtension.HideProgress();
             }
 
-            // EXTRACT XML FROM SNG
-            if (extractSongXml && platform.version == GameVersion.RS2014)
+            // for debugging
+            //overwriteSongXml = false;
+
+            // Extract XML from SNG and check it against the EOF XML (correct bass tuning from older toolkit/EOF xml files)
+            if (platform.version == GameVersion.RS2014)
             {
-                var sngFiles = Directory.EnumerateFiles(unpackedDir, "*.sng", SearchOption.AllDirectories);
+                var sngFiles = Directory.EnumerateFiles(unpackedDir, "*.sng", SearchOption.AllDirectories).ToList();
+                var step = Math.Round(1.0 / (sngFiles.Count + 2) * 100, 3);
+                double progress = 0;
+                GlobalExtension.ShowProgress("Extracting XML from SNG ...");
 
                 foreach (var sngFile in sngFiles)
                 {
-                    var xmlOutput = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
-                    xmlOutput = xmlOutput.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, platform.GetPathName()[1].ToLower()), "arr");
-
-                    if (File.Exists(xmlOutput) && !overwriteSongXml)
-                        continue;
+                    var xmlEofFile = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
+                    xmlEofFile = xmlEofFile.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, platform.GetPathName()[1].ToLower()), "arr");
+                    var xmlSngFile = xmlEofFile.Replace(".xml", ".sng.xml");
 
                     var arrType = ArrangementType.Guitar;
-                    if (Path.GetFileName(xmlOutput).ToLower().Contains("vocal"))
+
+                    if (Path.GetFileName(xmlSngFile).ToLower().Contains("vocal"))
                         arrType = ArrangementType.Vocal;
 
                     Attributes2014 att = null;
@@ -156,7 +159,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
 
                     var sngContent = Sng2014File.LoadFromFile(sngFile, platform);
-                    using (var outputStream = new FileStream(xmlOutput, FileMode.Create, FileAccess.ReadWrite))
+                    using (var outputStream = new FileStream(xmlSngFile, FileMode.Create, FileAccess.ReadWrite))
                     {
                         dynamic xmlContent = null;
 
@@ -167,11 +170,44 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         xmlContent.Serialize(outputStream);
                     }
-                }
-            }
 
+                    // correct old toolkit/EOF xml (tuning) issues ... sync with SNG data                   
+                    if (File.Exists(xmlEofFile) &&
+                        !overwriteSongXml && arrType != ArrangementType.Vocal)
+                    {
+                        var eofSong = Song2014.LoadFromFile(xmlEofFile);
+                        var sngSong = Song2014.LoadFromFile(xmlSngFile);
+                        if (eofSong.Tuning != sngSong.Tuning)
+                        {
+                            eofSong.Tuning = sngSong.Tuning;
+                            var xmlComments = Song2014.ReadXmlComments(xmlEofFile);
+
+                            using (var stream = File.Open(xmlEofFile, FileMode.Create))
+                                eofSong.Serialize(stream);
+
+                            Song2014.WriteXmlComments(xmlEofFile, xmlComments, customComment: "Synced with SNG file");
+                        }
+
+                        File.Delete(xmlSngFile);
+                    }
+                    else
+                    {
+                        if (arrType != ArrangementType.Vocal)
+                            Song2014.WriteXmlComments(xmlSngFile, customComment: "Generated from SNG file");
+
+                        File.Copy(xmlSngFile, xmlEofFile, true);
+                        File.Delete(xmlSngFile);
+                    }
+
+                    progress += step;
+                    GlobalExtension.UpdateProgress.Value = (int)progress;
+                }
+
+                //GlobalExtension.HideProgress();
+            }
             return unpackedDir;
         }
+
 
         #endregion
 
@@ -718,7 +754,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 progress += step;
                 GlobalExtension.UpdateProgress.Value = (int)progress;
             }
-            GlobalExtension.HideProgress();
+            // GlobalExtension.HideProgress();
         }
 
         private static void UpdateSng(string songDirectory, Platform platform)

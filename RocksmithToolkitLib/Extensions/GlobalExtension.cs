@@ -56,11 +56,12 @@ namespace RocksmithToolkitLib.Extensions
             // getter/setter checks this so should not need here
             // if (progressValue > 100)
             //    progressValue = 100;
-
-            UpdateProgress.Value = progressValue;
-            CurrentOperationLabel.Text = currentOperation;
+            
             UpdateProgress.Visible = true;
             CurrentOperationLabel.Visible = true;
+            UpdateProgress.Value = progressValue;
+            CurrentOperationLabel.Text = currentOperation;
+            UpdateProgress.Refresh();
             CurrentOperationLabel.Refresh();
         }
 

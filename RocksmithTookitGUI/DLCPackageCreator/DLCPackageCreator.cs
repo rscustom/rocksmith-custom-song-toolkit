@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using Ookii.Dialogs;
@@ -19,7 +20,7 @@ using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 using Control = System.Windows.Forms.Control;
-
+using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -449,8 +450,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (!bwGenerate.IsBusy && packageData != null)
             {
-                updateProgress.Visible = true;
-                currentOperationLabel.Visible = true;
+                pbUpdateProgress.Visible = true;
+                lblCurrentOperation.Visible = true;
                 dlcGenerateButton.Enabled = false;
                 bwGenerate.RunWorkerAsync(packageData);
             }
@@ -478,7 +479,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (platformPC.Checked)
                 try
                 {
-                    bwGenerate.ReportProgress(progress, "Generating PC package");
+                    bwGenerate.ReportProgress(progress, " Generating PC Package ...");
                     RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, currentGameVersion), pnum: numPlatforms);
                     progress += step; numPlatforms--;
                     bwGenerate.ReportProgress(progress);
@@ -491,7 +492,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (platformMAC.Checked)
                 try
                 {
-                    bwGenerate.ReportProgress(progress, "Generating Mac package");
+                    bwGenerate.ReportProgress(progress, "Generating Mac Package ...");
                     RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Mac, currentGameVersion), pnum: numPlatforms);
                     progress += step; numPlatforms--;
                     bwGenerate.ReportProgress(progress);
@@ -504,7 +505,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (platformXBox360.Checked)
                 try
                 {
-                    bwGenerate.ReportProgress(progress, "Generating XBox 360 package");
+                    bwGenerate.ReportProgress(progress, "Generating XBox 360 Package ...");
                     RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.XBox360, currentGameVersion), pnum: numPlatforms);
                     progress += step; numPlatforms--;
                     bwGenerate.ReportProgress(progress);
@@ -517,7 +518,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (platformPS3.Checked)
                 try
                 {
-                    bwGenerate.ReportProgress(progress, "Generating PS3 package");
+                    bwGenerate.ReportProgress(progress, "Generating PS3 Package ...");
                     RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.PS3, currentGameVersion), pnum: numPlatforms);
                     progress += step; numPlatforms--;
                     bwGenerate.ReportProgress(progress);
@@ -530,7 +531,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Cache cleanup so we don't serialize or reuse data that could be changed
             packageData.CleanCache();
             e.Result = (numPlatforms == 1 && errorsFound.Length > 0) ? "error" : "generate";
-        }
+
+         }
 
         private void albumArtButton_Click(object sender, EventArgs e)
         {
@@ -724,9 +726,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 savePath = fbd.SelectedPath;
             }
 
+            GlobalExtension.UpdateProgress = pbUpdateProgress;
+            GlobalExtension.UpdateProgress.Style = ProgressBarStyle.Continuous;
+            GlobalExtension.CurrentOperationLabel = lblCurrentOperation;
+            Thread.Sleep(100); // give Globals a chance to initialize
+            Application.DoEvents();
+
             // UNPACK
-            var packagePlatform = sourcePackage.GetPlatform();
-            var unpackedDir = Packer.Unpack(sourcePackage, tmp, true, true, false);
+             var packagePlatform = sourcePackage.GetPlatform();
+            var unpackedDir = Packer.Unpack(sourcePackage, tmp, true);
             savePath = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourcePackage));
 
             // Same name xbox issue fix
@@ -747,6 +755,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             else
                 info = DLCPackageData.RS1LoadFromFolder(unpackedDir, packagePlatform, rbConvert.Checked);
 
+            GlobalExtension.ShowProgress("Reorganized and Loaded ...", 75);
+            
             switch (packagePlatform.platform)
             {
                 case GamePlatform.Pc:
@@ -766,6 +776,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // FILL PACKAGE CREATOR FORM
             FillPackageCreatorForm(info, unpackedDir);
 
+            GlobalExtension.ShowProgress("Import Package Finished ...", 100);
+
             // AUTO SAVE CDLC TEMPLATE
             if (!rbConvert.Checked)
             {
@@ -774,11 +786,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 MessageBox.Show(CurrentRocksmithTitle + " CDLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             Parent.Focus();
+
+            // prevents possible cross threading
+            GlobalExtension.UpdateProgress.Style = ProgressBarStyle.Marquee;
+            GlobalExtension.Dispose();
         }
-
-
- 
- 
 
         private void FillPackageCreatorForm(DLCPackageData info, string filesBaseDir)
         {
@@ -901,10 +913,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                         //Load tuning from Arrangement
                         var tuning = new TuningDefinition();
-                        if (arrangement.ArrangementType == ArrangementType.Bass)
-                            tuning = TuningDefinitionRepository.Instance().SelectForBass(songXml.Tuning, CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014);
-                        else
-                            tuning = TuningDefinitionRepository.Instance().Select(songXml.Tuning, CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014);
+
+                        // depricated use full guitar tuning for all instruments
+                        //if (arrangement.ArrangementType == ArrangementType.Bass)
+                        //    tuning = TuningDefinitionRepository.Instance().SelectForBass(songXml.Tuning, CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014);
+                        //else
+                        tuning = TuningDefinitionRepository.Instance().Select(songXml.Tuning, CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014);
 
                         if (tuning == null)
                         {//add it to database
@@ -1787,10 +1801,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.ProgressPercentage <= updateProgress.Maximum)
-                updateProgress.Value = e.ProgressPercentage;
+            if (e.ProgressPercentage <= pbUpdateProgress.Maximum)
+                pbUpdateProgress.Value = e.ProgressPercentage;
             else
-                updateProgress.Value = updateProgress.Maximum;
+                pbUpdateProgress.Value = pbUpdateProgress.Maximum;
 
             ShowCurrentOperation(e.UserState as string);
         }
@@ -1817,14 +1831,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             dlcGenerateButton.Enabled = true;
-            updateProgress.Visible = false;
-            currentOperationLabel.Visible = false;
+            pbUpdateProgress.Visible = false;
+            lblCurrentOperation.Visible = false;
         }
 
         private void ShowCurrentOperation(string message)
         {
-            currentOperationLabel.Text = message;
-            currentOperationLabel.Refresh();
+            lblCurrentOperation.Text = message;
+            lblCurrentOperation.Refresh();
         }
 
         private void ArtistSortTB_TextChanged(object sender, EventArgs e)

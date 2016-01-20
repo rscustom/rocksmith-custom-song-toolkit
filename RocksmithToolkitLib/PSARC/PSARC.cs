@@ -543,7 +543,7 @@ namespace RocksmithToolkitLib.PSARC
                 inputStream.Flush();
                 inputStream.Position = 0;
             }
-            GlobalExtension.HideProgress();
+            //GlobalExtension.HideProgress();
         }
 
         #endregion
