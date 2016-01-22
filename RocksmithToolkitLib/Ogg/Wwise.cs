@@ -42,12 +42,12 @@ namespace RocksmithToolkitLib.Ogg
                 wwisePath = Environment.GetEnvironmentVariable("WWISEROOT");
 
             if (String.IsNullOrEmpty(wwisePath))
-                throw new FileNotFoundException("Could not find Audiokinect Wwise installation." + Environment.NewLine + "Please confirm that Wwise v2013.2.x or v2014.1.x series are installed.");
+                throw new FileNotFoundException("Could not find Audiokinect Wwise installation." + Environment.NewLine + "Please confirm that Wwise v2013.2.x v2014.1.x or 2015.1.x series is installed.");
 
             Selected = OggFile.WwiseVersion.None;
             var pathWwiseCli = Directory.EnumerateFiles(wwisePath, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
             if (pathWwiseCli == null)
-                throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwisePath + Environment.NewLine + "Please confirm that Wwise v2013.2.x or v2014.1.x series is installed.");
+                throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwisePath + Environment.NewLine + "Please confirm that Wwise v2013.2.x v2014.1.x or 2015.1.x series is installed.");
 
             var wwiseVersion = FileVersionInfo.GetVersionInfo(pathWwiseCli).ProductVersion;
             if (wwiseVersion.StartsWith("2013.2"))
@@ -56,11 +56,13 @@ namespace RocksmithToolkitLib.Ogg
                 Selected = OggFile.WwiseVersion.Wwise2014;
             if (wwiseVersion.StartsWith("2015.1"))
                 Selected = OggFile.WwiseVersion.Wwise2015;
-            // No support for v2015.1.x yet, code is expandable
+            // add support for new versions here, code is expandable
+            //if (wwiseVersion.StartsWith("201x.x"))
+            //    Selected = OggFile.WwiseVersion.Wwise201x;      
             if (Selected == OggFile.WwiseVersion.None)
-               throw new FileNotFoundException("You have no compatible version of Audiokinect Wwise installed." +
-               Environment.NewLine + "Install Wwise v2013.2.x or v2014.1.x or even v2015.1.x series if you would like to use" +
-               Environment.NewLine + " the toolkit OGG/WAV audio to Wwise WEM audio auto convert features.");
+                throw new FileNotFoundException("You have no compatible version of Audiokinect Wwise installed." +
+                Environment.NewLine + "Install Wwise v2013.2.x or v2014.1.x or even v2015.1.x series if you would like to use" +
+                Environment.NewLine + " the toolkit OGG/WAV audio to Wwise WEM audio auto convert features.");
 
             return pathWwiseCli;
         }
@@ -72,12 +74,12 @@ namespace RocksmithToolkitLib.Ogg
             //Unpack required template here, based on wwise version installed.
             switch (Selected)
             {
+                // add support for new versions of Wwise here
                 case OggFile.WwiseVersion.Wwise2013:
                 case OggFile.WwiseVersion.Wwise2014:
                 case OggFile.WwiseVersion.Wwise2015:
-                    ExtractTemplate(Path.Combine(appRootDir, Selected+".tar.bz2"));
+                    ExtractTemplate(Path.Combine(appRootDir, Selected + ".tar.bz2"));
                     break;
-                // expandable to next new Wwise version here
                 default:
                     throw new FileNotFoundException("Wwise path is incompatible.");
             }

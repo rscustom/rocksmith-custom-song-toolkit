@@ -189,6 +189,7 @@
             // dlcPackageCreatorControl
             // 
             this.dlcPackageCreatorControl.Album = "";
+            this.dlcPackageCreatorControl.AlbumSort = "";
             this.dlcPackageCreatorControl.AlbumYear = "";
             this.dlcPackageCreatorControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)

@@ -87,9 +87,10 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // appIdCombo
             // 
-            this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.appIdCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.appIdCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.appIdCombo.DropDownWidth = 320;
             this.appIdCombo.FormattingEnabled = true;
             this.appIdCombo.Location = new System.Drawing.Point(204, 30);
             this.appIdCombo.Margin = new System.Windows.Forms.Padding(2);
@@ -266,8 +267,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // inlayTemplateCombo
             // 
-            this.inlayTemplateCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.inlayTemplateCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.inlayTemplateCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.inlayTemplateCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.inlayTemplateCombo.FormattingEnabled = true;
@@ -510,8 +511,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // 
             // inlayTypeCombo
             // 
-            this.inlayTypeCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.inlayTypeCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.inlayTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.inlayTypeCombo.FormattingEnabled = true;
             this.inlayTypeCombo.Location = new System.Drawing.Point(10, 15);

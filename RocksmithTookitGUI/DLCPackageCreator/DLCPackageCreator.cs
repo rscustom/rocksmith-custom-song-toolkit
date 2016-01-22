@@ -30,7 +30,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private BackgroundWorker bwGenerate = new BackgroundWorker();
         private StringBuilder errorsFound;
         private string dlcSavePath;
-        private int userChangesToInputControls;
+        private bool userChangedInputControls;
         // prevents multiple tool tip appearance and gives better action
         private ToolTip tt = new ToolTip();
 
@@ -141,7 +141,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string DLCName
         {
             get { return DlcNameTB.Text; }
-            set { DlcNameTB.Text = value.GetValidSongName(SongTitle); }
+            set { DlcNameTB.Text = value; }
         }
 
         public string SongTitle
@@ -162,6 +162,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { AlbumTB.Text = value; }
         }
 
+        public string AlbumSort
+        {
+            get { return AlbumSortTB.Text; }
+            set { AlbumSortTB.Text = value; }
+        }
+
         public string Artist
         {
             get { return ArtistTB.Text; }
@@ -171,7 +177,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string ArtistSort
         {
             get { return ArtistSortTB.Text; }
-            set { ArtistSortTB.Text = value; }
+            set { ArtistSortTB.Text = value.GetValidName(); }
         }
 
         public string AlbumYear
@@ -231,15 +237,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public DLCPackageCreator()
         {
             InitializeComponent();
+
 #if (!DEBUG)
             chkShowlights.Visible = false;
 #endif
+
             arrangementLB.AllowDrop = true;
             audioQualityBox.MouseEnter += audioQualityBox_MouseEnter;
             rbConvert.MouseEnter += rbConvert_MouseEnter;
             songVolumeBox.MouseEnter += songVolumeBox_MouseEnter;
             previewVolumeBox.MouseEnter += songVolumeBox_MouseEnter;
-            AddOnChangeHandlerToInputControls();
+            AddVToInputControls();
 
             try
             {
@@ -422,7 +430,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // Update Xml arrangements song info
             bool updateArrangmentID = false;
-            if (userChangesToInputControls > 0)
+            if (userChangedInputControls)
                 if (MessageBox.Show(@"The song information has been changed." + Environment.NewLine +
                     @"Do you want to update the 'Arrangement Identification'?  " + Environment.NewLine +
                     @"Answering 'Yes' will reduce the risk of CDLC" + Environment.NewLine +
@@ -431,7 +439,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             foreach (var arr in packageData.Arrangements)
             {
-                if (userChangesToInputControls > 0)
+                if (userChangedInputControls)
                     UpdateXml(arr, packageData, updateArrangmentID);
 
                 if (arr.ArrangementType == ArrangementType.Guitar || arr.ArrangementType == ArrangementType.Bass)
@@ -532,7 +540,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             packageData.CleanCache();
             e.Result = (numPlatforms == 1 && errorsFound.Length > 0) ? "error" : "generate";
 
-         }
+        }
 
         private void albumArtButton_Click(object sender, EventArgs e)
         {
@@ -733,7 +741,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Application.DoEvents();
 
             // UNPACK
-             var packagePlatform = sourcePackage.GetPlatform();
+            var packagePlatform = sourcePackage.GetPlatform();
             var unpackedDir = Packer.Unpack(sourcePackage, tmp, true);
             savePath = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourcePackage));
 
@@ -756,7 +764,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 info = DLCPackageData.RS1LoadFromFolder(unpackedDir, packagePlatform, rbConvert.Checked);
 
             GlobalExtension.ShowProgress("Reorganized and Loaded ...", 75);
-            
+
             switch (packagePlatform.platform)
             {
                 case GamePlatform.Pc:
@@ -845,8 +853,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             AppIdTB.Text = info.AppId;
             SelectComboAppId(info.AppId);
             if (String.IsNullOrEmpty(AppIdTB.Text))
-                AppIdTB.Text = "248750"; //hardcoded for now
+                AppIdTB.Text = "248750"; // hardcoded for now
             AlbumTB.Text = info.SongInfo.Album;
+            AlbumSortTB.Text = info.SongInfo.AlbumSort;
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
             SongDisplayNameSortTB.Text = info.SongInfo.SongDisplayNameSort;
             YearTB.Text = info.SongInfo.SongYear.ToString();
@@ -949,7 +958,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // forces RS1 XML to be updated
-            userChangesToInputControls = CurrentGameVersion == GameVersion.RS2014 ? 0 : 1;
+            userChangedInputControls = CurrentGameVersion != GameVersion.RS2014;
         }
 
         private void songVolumeBox_ValueChanged(object sender, EventArgs e)
@@ -1611,19 +1620,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 cmbAppIds.SelectedItem = songAppId;
         }
 
-        private void DlcNameTB_Leave(object sender, EventArgs e)
-        {
-            TextBox dlcName = (TextBox)sender;
-            dlcName.Text = dlcName.Text.Trim().GetValidSongName(SongTitle);
-        }
-
-        private void AverageTempoTB_Leave(object sender, EventArgs e)
-        {
-            TextBox averageTB = (TextBox)sender;
-            float tempo = 0;
-            float.TryParse(averageTB.Text.Trim(), out tempo);
-            averageTB.Text = Math.Round(tempo).ToString();
-        }
 
         //private void rbuttonSignature_CheckedChanged(object sender, EventArgs e)
         //{
@@ -1878,48 +1874,72 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Environment.NewLine + "to RS2014 Arrangements");
         }
 
-        private void AddOnChangeHandlerToInputControls()
+        private void AddVToInputControls()
         {
-            // track user changes to form
-            DlcNameTB.TextChanged +=
-                        new EventHandler(InputControls_OnChange);
-            SongDisplayNameSortTB.TextChanged +=
-                        new EventHandler(InputControls_OnChange);
-            SongDisplayNameTB.TextChanged +=
-                        new EventHandler(InputControls_OnChange);
-            AlbumTB.TextChanged +=
-                        new EventHandler(InputControls_OnChange);
-            ArtistTB.TextChanged +=
-                        new EventHandler(InputControls_OnChange);
-            ArtistSortTB.TextChanged +=
-                        new EventHandler(InputControls_OnChange);
-            YearTB.TextChanged +=
-                        new EventHandler(InputControls_OnChange);
-            packageVersionTB.TextChanged +=
-                        new EventHandler(InputControls_OnChange);
-            AverageTempoTB.TextChanged +=
-                        new EventHandler(InputControls_OnChange);
-            arrangementAddButton.Click +=
-                        new EventHandler(InputControls_OnChange);
-            arrangementEditButton.Click +=
-             new EventHandler(InputControls_OnChange);
-            arrangementRemoveButton.Click +=
-                         new EventHandler(InputControls_OnChange);
-            toneAddButton.Click +=
-                         new EventHandler(InputControls_OnChange);
-            toneEditButton.Click +=
-                         new EventHandler(InputControls_OnChange);
-            toneRemoveButton.Click +=
-                         new EventHandler(InputControls_OnChange);
-            toneDuplicateButton.Click +=
-                          new EventHandler(InputControls_OnChange);
-            toneImportButton.Click +=
-                          new EventHandler(InputControls_OnChange);
+            ArtistTB.Validating += ValidateName;
+            ArtistSortTB.Validating += ValidateSortName;
+            SongDisplayNameTB.Validating += ValidateName;
+            SongDisplayNameSortTB.Validating += ValidateSortName;
+            AlbumTB.Validating += ValidateName;
+            AlbumSortTB.Validating += ValidateSortName;
+            YearTB.Validating += ValidateVersion;
+            DlcNameTB.Validating += ValidateDlcKey;
+            packageVersionTB.Validating += ClickedInputControl;
+            AverageTempoTB.Validating += ValidateTempo;
+            arrangementAddButton.Click += ClickedInputControl;
+            arrangementEditButton.Click += ClickedInputControl;
+            arrangementRemoveButton.Click += ClickedInputControl;
+            toneAddButton.Click += ClickedInputControl;
+            toneEditButton.Click += ClickedInputControl;
+            toneRemoveButton.Click += ClickedInputControl;
+            toneDuplicateButton.Click += ClickedInputControl;
+            toneImportButton.Click += ClickedInputControl;
         }
 
-        private void InputControls_OnChange(object sender, EventArgs e)
+        private void ValidateSortName(object sender, CancelEventArgs e)
         {
-            userChangesToInputControls++;
+            var tb = sender as TextBox;
+            tb.Text = tb.Text.Trim().GetValidSortName();
+            userChangedInputControls = true;
+        }
+
+        private void ValidateTempo(object sender, CancelEventArgs e)
+        {
+            TextBox averageTempo = sender as TextBox;
+            float tempo = 0;
+            float.TryParse(averageTempo.Text.Trim(), out tempo);
+            averageTempo.Text = Math.Round(tempo).ToString();
+            userChangedInputControls = true;
+        }
+
+        private void ValidateDlcKey(object sender, CancelEventArgs e)
+        {
+            TextBox dlcName = sender as TextBox;
+            dlcName.Text = dlcName.Text.Trim().GetValidSongName(SongTitle);
+            userChangedInputControls = true;
+        }
+
+        private void ValidateName(object sender, CancelEventArgs e)
+        {
+            var tb = sender as TextBox;
+            tb.Text = tb.Text.Trim().GetValidName(true);
+            userChangedInputControls = true;
+
+            if (tb.Name == "SongDisplayNameTB")
+                DlcNameTB.Text = String.Format("{0} {1}", Artist.Acronym(), SongTitle.GetValidSortName());
+        }
+
+        private void ValidateVersion(object sender, CancelEventArgs e)
+        {
+            var dlcVersion = sender as CueTextBox;
+            dlcVersion.Text = dlcVersion.Text.Trim().GetValidVersion();
+            userChangedInputControls = true;
+        }
+
+        private void ClickedInputControl(object sender, EventArgs e)
+        {
+            // well maybe user changed ;)
+            userChangedInputControls = true;
         }
 
         private void btnQuickAdd_Click(object sender, EventArgs e)

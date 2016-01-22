@@ -485,6 +485,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             SongDisplayName = attr.SongName,
                             SongDisplayNameSort = attr.SongNameSort,
                             Album = attr.AlbumName,
+                            AlbumSort = attr.AlbumNameSort,
                             SongYear = attr.SongYear ?? 0,
                             Artist = attr.ArtistName,
                             ArtistSort = attr.ArtistNameSort,

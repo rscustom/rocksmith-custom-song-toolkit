@@ -11,6 +11,7 @@ namespace RocksmithToolkitLib.Ogg
 {
     public static class OggFile//wwRIFF
     {
+        // add support for new versions of Wwise here
         public enum WwiseVersion { None, Wwise2010, Wwise2013, Wwise2014, Wwise2015 };
 
         #region RS1

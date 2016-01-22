@@ -25,6 +25,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private GameVersion currentGameVersion;
         public bool EditMode = false;
         private bool bassFix = false;
+        private ToolTip tt = new ToolTip();
 
         public Arrangement Arrangement
         {
@@ -424,7 +425,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // If have ToneBase and ToneB is setup it's because auto tone are setup in EoF, so, disable edit to prevent errors.
             disableTonesCheckbox.Checked = (!String.IsNullOrEmpty(arr.ToneBase) && !String.IsNullOrEmpty(arr.ToneB));
             if (disableTonesCheckbox.Checked && !EditMode)
-                disableTonesCheckbox.Enabled = false;
+            {
+                // disableTonesCheckbox.Enabled = false;
+                tt.IsBalloon = true;
+                tt.AutoPopDelay = 9000; // tt remains visible if the point is stationary
+                tt.InitialDelay = 100; // time that passes before tt appears
+                tt.ReshowDelay = 100; // time before next tt window appears
+                tt.ShowAlways = true; // force tt display even if parent is not active
+                tt.SetToolTip(disableTonesCheckbox, "For Toolkit Expert Use Only");
+            }
         }
 
         private void SequencialToneComboEnabling()
@@ -621,7 +630,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         {
                             bassFix = false;
                             Arrangement.SongXml.File = XmlFilePath.Text;
-                           
+
                             if (Arrangement.TuningStrings == null)
                             {
                                 // need to load tuning here from the xml arrangement
@@ -757,8 +766,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (String.IsNullOrEmpty(parentControl.Artist)) parentControl.Artist = xmlSong.ArtistName ?? String.Empty;
                 if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = xmlSong.ArtistNameSort.GetValidSortName() ?? parentControl.Artist.GetValidSortName();
                 if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = xmlSong.AlbumName ?? String.Empty;
+                if (String.IsNullOrEmpty(parentControl.AlbumSort)) parentControl.AlbumSort = xmlSong.AlbumNameSort.GetValidSortName() ?? parentControl.Album.GetValidSortName();
                 if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear ?? String.Empty;
-                if (String.IsNullOrEmpty(parentControl.DLCName)) parentControl.DLCName = parentControl.Artist.Acronym() + parentControl.SongTitleSort;
+                if (String.IsNullOrEmpty(parentControl.DLCName)) parentControl.DLCName = String.Format("{0} {1}", parentControl.Artist.Acronym(), parentControl.SongTitle.GetValidSortName());
             }
 
             //Arrangment Information

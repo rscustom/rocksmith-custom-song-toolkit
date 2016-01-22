@@ -43,6 +43,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
                 var attribute = new Attributes();
                 attribute.AlbumArt = String.Format("urn:llid:{0}", AggregateGraph.AlbumArt.LLID);
+                // TODO: add better AlbumNameSort feature
                 attribute.AlbumNameSort = attribute.AlbumName = songInfo.Album;
                 attribute.ArrangementName = x.Name.ToString();
                 attribute.ArtistName = songInfo.Artist;

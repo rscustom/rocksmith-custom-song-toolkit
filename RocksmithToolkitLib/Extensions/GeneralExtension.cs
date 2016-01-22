@@ -160,9 +160,11 @@ namespace RocksmithToolkitLib.Extensions
         {
             if (String.IsNullOrEmpty(value))
                 return value;
+
             if (value.ToUpperInvariant().StartsWith("THE "))
-                return value.Remove(0, 4);
-            return value;
+                return value.Remove(0, 4).GetValidName(true);
+
+            return value.GetValidName(true);
         }
 
         public static string GetValidName(this string value, bool allowSpace = false, bool allowStartsWithNumber = false, bool underscoreSpace = false, bool frets24 = false)

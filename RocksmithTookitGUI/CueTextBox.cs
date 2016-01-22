@@ -5,8 +5,20 @@ using System.Drawing;
 
 namespace RocksmithToolkitGUI
 {
-    public class CueTextBox : TextBox
+    public sealed class CueTextBox : TextBox
     {
+        // adds transparency color option
+        //public CueTextBox()
+        //{
+        //    SetStyle(ControlStyles.SupportsTransparentBackColor |
+        //        ControlStyles.OptimizedDoubleBuffer |
+        //        ControlStyles.AllPaintingInWmPaint |
+        //        ControlStyles.ResizeRedraw, true);
+        //    // commented out prevents cue text from showing
+        //    // || ControlStyles.UserPaint, true); 
+        //    BackColor = Color.White;
+        //}
+
         protected override void OnGotFocus(EventArgs e)
         {
             base.OnGotFocus(e);
