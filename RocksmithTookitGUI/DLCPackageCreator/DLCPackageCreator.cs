@@ -232,6 +232,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set;
         }
 
+        public bool JavaBool { get; set; }
+
         #endregion
 
         public DLCPackageCreator()
@@ -1593,6 +1595,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void plataform_CheckedChanged(object sender, EventArgs e)
         {
+            var cbx = sender as CheckBox;
+            if (cbx.Text.Contains("PS3") && !JavaBool)
+            {
+                JavaBool = true;
+                if (!RijndaelEncryptor.IfJavaInstalled())
+                {
+                    MessageBox.Show("Unable to generate PS3 package, since Java isn't present on this machine.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cbx.Checked = cbx.Enabled = false;
+                }
+            }
             if (platformPC.Checked || platformMAC.Checked)
             {
                 AppIdTB.Enabled = true;

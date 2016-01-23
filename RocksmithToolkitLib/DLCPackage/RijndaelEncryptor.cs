@@ -315,7 +315,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// Ensure that we running JVM x86
         /// </summary>
         /// <returns></returns>
-        internal static bool IfJavaInstalled()
+        public static bool IfJavaInstalled()
         {
             try {
                 using(var version = new Process()){
