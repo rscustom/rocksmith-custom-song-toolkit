@@ -98,6 +98,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 // MessageBox.Show("This song is already at 220Hz pitch (bass fixed applied already?)", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+
             Song2014 songXml = Song2014.LoadFromFile(arr.SongXml.File);
             // Force 220Hz
             arr.TuningPitch = 220.0;
@@ -131,8 +132,8 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 songXml.Serialize(stream);
             }
-
-            return true;
+   
+             return true;
         }
 
     }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml.Linq;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
@@ -607,8 +608,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                                 RouteMask = RouteMask.Bass;
                                 //Low tuning fix for bass, If lowstring is B and bass fix not applied
                                 if (xmlSong.Tuning.String0 < -4 && this.frequencyTB.Text == "440")
-                                    bassFix |= MessageBox.Show("The bass tuning may be too low.  Apply Low Bass Tuning Fix?" + Environment.NewLine +
-                                                               "Note: This will not work if the bass arangement is resaved in EOF.  ", "Warning ... Low Bass Tuning", MessageBoxButtons.YesNo) == DialogResult.Yes;
+                                    bassFix |= MessageBox.Show("The bass tuning may be too low.  Apply Low Bass Tuning Fix?" + Environment.NewLine + "Note: This will not work if the bass arangement is resaved in EOF.  ", "Warning ... Low Bass Tuning", MessageBoxButtons.YesNo) == DialogResult.Yes;
                             }
                         }
                     }
@@ -640,6 +640,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                             if (!TuningFrequency.ApplyBassFix(Arrangement))
                                 MessageBox.Show("This bass arrangement is already at 220Hz pitch.  ", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            else
+                            {
+                                var commentsList = Arrangement.XmlComments.ToList();
+                                commentsList.Add(new XComment("Low Bass Tuning Fixed"));
+                                Arrangement.XmlComments = commentsList;
+                            }
 
                             xmlSong.Tuning = Arrangement.TuningStrings;
                         }
@@ -672,21 +678,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         tuningComboBox.SelectedIndex = 0;
                         ShowTuningForm(selectedType, new TuningDefinition { Tuning = xmlSong.Tuning, Custom = true, GameVersion = currentGameVersion });
                     }
-                    else
+
+                    // E Standard, Drop D, and Open E tuning are now the same for both guitar and bass
+                    if (foundTuning == -1 && selectedType == ArrangementType.Bass)
                     {
-                        // E Standard, Drop D, and Open E tuning are same for both guitar and bass
-                        if (selectedType == ArrangementType.Bass)
-                            if (xmlSong.Tuning.String4 == 0 && xmlSong.Tuning.String5 == 0)
-                                Debug.WriteLine("Bass Tuning is the same as Guitar Tuning");
-                            else
-                            {
-                                tuningComboBox.SelectedIndex = 0;
-                                MessageBox.Show("Toolkit was not able to automatically set tuning for  " + Environment.NewLine +
-                                                "Bass Arrangement: " + Path.GetFileName(xmlFilePath) + Environment.NewLine +
-                                                "Use the tuning selector dropdown or Tunining Editor  " + Environment.NewLine +
-                                                "to manually set the correct bass tuning.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
+                        tuningComboBox.SelectedIndex = 0;
+                        MessageBox.Show("Toolkit was not able to automatically set tuning for" + Environment.NewLine + 
+                                        "Bass Arrangement: " + Path.GetFileName(xmlFilePath) + Environment.NewLine + 
+                                        "Use the tuning selector dropdown or Tunining Editor" + Environment.NewLine + 
+                                        "to customize bass tuning (as defined for six strings).  ", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
+
 
                     tuningComboBox.Refresh();
 

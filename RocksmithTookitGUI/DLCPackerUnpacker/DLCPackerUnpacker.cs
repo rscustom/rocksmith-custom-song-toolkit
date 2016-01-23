@@ -7,12 +7,14 @@ using System.Threading;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.IO;
+using System.Xml.Linq;
 using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph2014;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.Xml;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 
 namespace RocksmithToolkitGUI.DLCPackerUnpacker
@@ -64,7 +66,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             get { return chkUpdateSng.Checked; }
         }
 
-        private void LowTuningBassFix(bool quick, bool deleteSourceFile, bool verbose)
+        private void FixLowBassTuning(bool quick, bool deleteSourceFile, bool verbose)
         {
             string[] sourcePackages;
             string dlcSavePath;
@@ -156,6 +158,11 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                                 alreadyFixed = true;
                             }
+                            else
+                            {
+                                // write xml comments back to fixed bass arrangement
+                                Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments, customComment: "Low Bass Tuning Fixed");
+                            }
                         }
                         else
                         {
@@ -218,8 +225,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 // reuse existing showlights.xml or generates new one if none is found
                 info.Showlights = true;
                 // Generate Fixed Low Bass Tuning Package
-                GlobalExtension.ShowProgress(String.Format("Repackaging '{0}' ...", Path.GetFileName(sourcePackage)), 80);
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, info, packagePlatform);
+                GlobalExtension.ShowProgress(String.Format("Repackaging '{0}' ...", Path.GetFileName(sourcePackage)), 80);         
+               // TODO consider user of regular packer here
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, info, packagePlatform);               
                 DirectoryExtension.SafeDelete(unpackedDir);
             }
 
@@ -249,7 +257,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         private void ToggleUIControls(bool enable)
         {
-            btnLowTuningBassFix.Enabled = enable;
+            btnFixLowBassTuning.Enabled = enable;
             btnPack.Enabled = enable;
             btnPackSongPack.Enabled = enable;
             btnRepackAppId.Enabled = enable;
@@ -378,10 +386,10 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             ToggleUIControls(true);
         }
 
-        private void btnLowTuningBassFix_Click(object sender, EventArgs e)
+        private void btnFixLowBassTuning_Click(object sender, EventArgs e)
         {
             ToggleUIControls(false);
-            LowTuningBassFix(chkQuickBassFix.Checked, chkDeleteSourceFile.Checked, chkVerbose.Checked);
+            FixLowBassTuning(chkQuickBassFix.Checked, chkDeleteSourceFile.Checked, chkVerbose.Checked);
             ToggleUIControls(true);
         }
 

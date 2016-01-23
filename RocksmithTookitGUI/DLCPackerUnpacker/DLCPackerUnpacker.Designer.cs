@@ -50,7 +50,7 @@
             this.chkVerbose = new System.Windows.Forms.CheckBox();
             this.chkDeleteSourceFile = new System.Windows.Forms.CheckBox();
             this.chkQuickBassFix = new System.Windows.Forms.CheckBox();
-            this.btnLowTuningBassFix = new System.Windows.Forms.Button();
+            this.btnFixLowBassTuning = new System.Windows.Forms.Button();
             this.gpSongPacks = new System.Windows.Forms.GroupBox();
             this.btnSelectSongs = new System.Windows.Forms.Button();
             this.btnPackSongPack = new System.Windows.Forms.Button();
@@ -256,7 +256,7 @@
             this.gbCustomFixes.Controls.Add(this.chkVerbose);
             this.gbCustomFixes.Controls.Add(this.chkDeleteSourceFile);
             this.gbCustomFixes.Controls.Add(this.chkQuickBassFix);
-            this.gbCustomFixes.Controls.Add(this.btnLowTuningBassFix);
+            this.gbCustomFixes.Controls.Add(this.btnFixLowBassTuning);
             this.gbCustomFixes.ForeColor = System.Drawing.Color.Firebrick;
             this.gbCustomFixes.Location = new System.Drawing.Point(8, 168);
             this.gbCustomFixes.Name = "gbCustomFixes";
@@ -305,16 +305,16 @@
                     "w Bass Tuning fix to multiple CDLC.");
             this.chkQuickBassFix.UseVisualStyleBackColor = true;
             // 
-            // btnLowTuningBassFix
+            // btnFixLowBassTuning
             // 
-            this.btnLowTuningBassFix.ForeColor = System.Drawing.Color.Black;
-            this.btnLowTuningBassFix.Location = new System.Drawing.Point(297, 15);
-            this.btnLowTuningBassFix.Name = "btnLowTuningBassFix";
-            this.btnLowTuningBassFix.Size = new System.Drawing.Size(128, 23);
-            this.btnLowTuningBassFix.TabIndex = 10;
-            this.btnLowTuningBassFix.Text = "Fix Low Bass Tuning";
-            this.btnLowTuningBassFix.UseVisualStyleBackColor = true;
-            this.btnLowTuningBassFix.Click += new System.EventHandler(this.btnLowTuningBassFix_Click);
+            this.btnFixLowBassTuning.ForeColor = System.Drawing.Color.Black;
+            this.btnFixLowBassTuning.Location = new System.Drawing.Point(297, 15);
+            this.btnFixLowBassTuning.Name = "btnFixLowBassTuning";
+            this.btnFixLowBassTuning.Size = new System.Drawing.Size(128, 23);
+            this.btnFixLowBassTuning.TabIndex = 10;
+            this.btnFixLowBassTuning.Text = "Fix Low Bass Tuning";
+            this.btnFixLowBassTuning.UseVisualStyleBackColor = true;
+            this.btnFixLowBassTuning.Click += new System.EventHandler(this.btnFixLowBassTuning_Click);
             // 
             // gpSongPacks
             // 
@@ -426,7 +426,7 @@
         private System.Windows.Forms.GroupBox gbPacker;
         private System.Windows.Forms.Label lblCurrentOperation;
         private System.Windows.Forms.GroupBox gbCustomFixes;
-        protected System.Windows.Forms.Button btnLowTuningBassFix;
+        protected System.Windows.Forms.Button btnFixLowBassTuning;
         private System.Windows.Forms.CheckBox chkQuickBassFix;
         private System.Windows.Forms.CheckBox chkDeleteSourceFile;
         private System.Windows.Forms.Label label2;
