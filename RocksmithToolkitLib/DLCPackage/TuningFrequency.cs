@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage
@@ -117,12 +118,13 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 tuning = new TuningDefinition();
                 tuning.Tuning = new TuningStrings(strings);
-                tuning.Name = tuning.NameFromStrings(tuning.Tuning, false);
+                tuning.Name = tuning.NameFromStrings(tuning.Tuning);
                 tuning.UIName = tuning.Name = String.Format("{0} Fixed", tuning.Name);
                 tuning.Custom = true;
                 tuning.GameVersion = GameVersion.RS2014;
                 TuningDefinitionRepository.Instance().Add(tuning, true);
             }
+
             arr.TuningStrings = tuning.Tuning;
             arr.Tuning = tuning.Name;
             songXml.Tuning = tuning.Tuning;
@@ -132,8 +134,8 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 songXml.Serialize(stream);
             }
-   
-             return true;
+
+            return true;
         }
 
     }

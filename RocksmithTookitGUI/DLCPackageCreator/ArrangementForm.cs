@@ -595,20 +595,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                                 arrangementNameCombo.SelectedItem = ArrangementName.Rhythm;
                                 if (currentGameVersion != GameVersion.RS2012) RouteMask = RouteMask.Rhythm;
                             }
-
                         }
                         else if (arr.Contains("bass"))
                         {
                             arrangementTypeCombo.SelectedItem = ArrangementType.Bass;
-
-                            //SetTuningCombo(xmlSong.Tuning, true);
                             Picked.Checked = Equals(xmlSong.ArrangementProperties.BassPick, 1);
+
                             if (currentGameVersion != GameVersion.RS2012)
                             {
                                 RouteMask = RouteMask.Bass;
                                 //Low tuning fix for bass, If lowstring is B and bass fix not applied
                                 if (xmlSong.Tuning.String0 < -4 && this.frequencyTB.Text == "440")
-                                    bassFix |= MessageBox.Show("The bass tuning may be too low.  Apply Low Bass Tuning Fix?" + Environment.NewLine + "Note: This will not work if the bass arangement is resaved in EOF.  ", "Warning ... Low Bass Tuning", MessageBoxButtons.YesNo) == DialogResult.Yes;
+                                    bassFix |= MessageBox.Show("The bass tuning may be too low.  Apply Low Bass Tuning Fix?" + Environment.NewLine +
+                                                               "Note: The fix will revert if bass arangement is resaved in EOF.  ",
+                                                               "Warning ... Low Bass Tuning", MessageBoxButtons.YesNo) == DialogResult.Yes;
                             }
                         }
                     }
@@ -622,10 +622,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         Arrangement.ToneC = xmlSong.ToneC;
                         Arrangement.ToneD = xmlSong.ToneD;
                         Arrangement.ToneMultiplayer = null;
-
                         SetupTones(Arrangement);
 
-                        //Apply bass Fix, refactor me. 
+                        // Fix Low Bass Tuning
                         if (bassFix)
                         {
                             bassFix = false;
@@ -683,19 +682,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (foundTuning == -1 && selectedType == ArrangementType.Bass)
                     {
                         tuningComboBox.SelectedIndex = 0;
-                        MessageBox.Show("Toolkit was not able to automatically set tuning for" + Environment.NewLine + 
-                                        "Bass Arrangement: " + Path.GetFileName(xmlFilePath) + Environment.NewLine + 
-                                        "Use the tuning selector dropdown or Tunining Editor" + Environment.NewLine + 
+                        MessageBox.Show("Toolkit was not able to automatically set tuning for" + Environment.NewLine +
+                                        "Bass Arrangement: " + Path.GetFileName(xmlFilePath) + Environment.NewLine +
+                                        "Use the tuning selector dropdown or Tunining Editor" + Environment.NewLine +
                                         "to customize bass tuning (as defined for six strings).  ", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
 
-
                     tuningComboBox.Refresh();
-
                     Arrangement.Tuning = tuningComboBox.SelectedItem.ToString();
                     Arrangement.TuningStrings = xmlSong.Tuning;
                     Arrangement.CapoFret = xmlSong.Capo;
                     frequencyTB.Text = Arrangement.TuningPitch.ToString();
+                    
+                    // bastard bass hack
+                    if (Arrangement.Tuning.ToLower().Contains("fixed"))
+                        frequencyTB.Text = "220";
+                    
                     UpdateCentOffset();
 
                     // save converted RS1 to RS2014 Song2014 XML
@@ -760,6 +762,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Arrangement.SongXml.File = xmlfilepath;
 
             // SONG INFO
+            // TODO: get song info from json or hsan file (would be better than from xml)
             if (!ReferenceEquals(xmlSong, null))
             {
                 if (String.IsNullOrEmpty(parentControl.SongTitle)) parentControl.SongTitle = xmlSong.Title ?? String.Empty;
@@ -768,9 +771,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (String.IsNullOrEmpty(parentControl.Artist)) parentControl.Artist = xmlSong.ArtistName ?? String.Empty;
                 if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = xmlSong.ArtistNameSort.GetValidSortName() ?? parentControl.Artist.GetValidSortName();
                 if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = xmlSong.AlbumName ?? String.Empty;
-                if (String.IsNullOrEmpty(parentControl.AlbumSort)) parentControl.AlbumSort = xmlSong.AlbumNameSort.GetValidSortName() ?? parentControl.Album.GetValidSortName();
                 if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear ?? String.Empty;
                 if (String.IsNullOrEmpty(parentControl.DLCName)) parentControl.DLCName = String.Format("{0} {1}", parentControl.Artist.Acronym(), parentControl.SongTitle.GetValidSortName());
+
+                if (String.IsNullOrEmpty(parentControl.AlbumSort))
+                {
+                    // substitute package author for AlbumSort
+                    var useDefaultAuthor = ConfigRepository.Instance().GetBoolean("creator_usedefaultauthor");
+                    if (useDefaultAuthor && currentGameVersion == GameVersion.RS2014)
+                        parentControl.AlbumSort = ConfigRepository.Instance()["general_defaultauthor"].Trim().GetValidSortName();
+                    else
+                        parentControl.AlbumSort = xmlSong.AlbumNameSort.GetValidSortName() ?? parentControl.Album.GetValidSortName();
+                }
             }
 
             //Arrangment Information

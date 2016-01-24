@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,8 @@ namespace RocksmithToolkitGUI.Config
         public GeneralConfig()
         {
             InitializeComponent();
+            general_defaultauthor.Validating += ValidateSortName;
+
             loading = true;
             try
             {
@@ -34,6 +37,13 @@ namespace RocksmithToolkitGUI.Config
             }
             catch { /*For mono compatibility*/ }
             loading = false;
+        }
+
+        private void ValidateSortName(object sender, CancelEventArgs e)
+        {
+            var tb = sender as TextBox;
+            if (tb != null)
+                tb.Text = tb.Text.Trim().GetValidSortName();
         }
 
         private void LoadAndSetupConfiguration(ControlCollection controls)

@@ -36,12 +36,13 @@ namespace RocksmithToolkitGUI
                 LoadTemplate(args[0]);
 
             this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", ToolkitVersion.version);
-            if(Environment.OSVersion.Platform == PlatformID.MacOSX)
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX)
             {// Disable updates for Mac (speedup) -1.5 secconds here
                 updateButton.Enabled = false;
                 updateButton.Text = "Updates Disabled";
                 updateButton.Visible = true;
-            } else
+            }
+            else
             {
                 bWorker = new BackgroundWorker();
                 bWorker.DoWork += CheckForUpdate;
@@ -55,8 +56,9 @@ namespace RocksmithToolkitGUI
             get { return base.Text; }
             set { base.Text = value; }
         }
-//TODO: keep tabs data please.
-        private void MainForm_Load(object sender, EventArgs e) {
+        //TODO: keep tabs data please.
+        private void MainForm_Load(object sender, EventArgs e)
+        {
             // Show this tab only by 'Configuration' click
             tabControl1.TabPages.Remove(GeneralConfigTab);
 
@@ -138,17 +140,20 @@ namespace RocksmithToolkitGUI
 
         private void updateButton_Click(object sender, EventArgs e)
         {
-            using (var u = new UpdateForm()) {
+            using (var u = new UpdateForm())
+            {
                 u.Init(onlineVersion);
                 u.ShowDialog();
             }
         }
 
-        private void configurationToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void configurationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             ShowConfigScreen();
         }
 
-        private void ShowConfigScreen() {
+        private void ShowConfigScreen()
+        {
             configurationToolStripMenuItem.Enabled = false;
 
             // Remove all tabs
@@ -159,10 +164,32 @@ namespace RocksmithToolkitGUI
                 tabControl1.TabPages.Add(GeneralConfigTab);
         }
 
-        public void ReloadControls() {
+        public void ReloadControls()
+        {
             this.Controls.Clear();
             InitializeComponent();
             tabControl1.TabPages.Remove(GeneralConfigTab);
         }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // cleanup temp folder garbage carefully
+#if !DEBUG
+            var di = new DirectoryInfo(Path.GetTempPath());
+ 
+            // confirm this is the 'Local Settings\Temp' directory
+            if (di.Parent != null)
+                if (di.Parent.Name == "Local Settings" && di.Name == "Temp")
+                {
+                    foreach (FileInfo file in di.GetFiles())
+                        file.Delete();
+
+                    foreach (DirectoryInfo dir in di.GetDirectories())
+                        dir.Delete(true);
+                }
+#endif
+        }
+
+
     }
 }

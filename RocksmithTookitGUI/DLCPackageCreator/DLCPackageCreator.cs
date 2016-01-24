@@ -962,6 +962,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // forces RS1 XML to be updated
             userChangedInputControls = CurrentGameVersion != GameVersion.RS2014;
+
+            // substitute package author for AlbumSort
+            var useDefaultAuthor = ConfigRepository.Instance().GetBoolean("creator_usedefaultauthor");
+            if (useDefaultAuthor && CurrentGameVersion == GameVersion.RS2014)
+            {
+                AlbumSort = ConfigRepository.Instance()["general_defaultauthor"].Trim().GetValidSortName();
+                userChangedInputControls = true; // force write/update of song info
+            }
         }
 
         private void songVolumeBox_ValueChanged(object sender, EventArgs e)

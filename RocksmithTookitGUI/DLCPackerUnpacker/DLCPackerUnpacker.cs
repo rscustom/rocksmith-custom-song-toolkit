@@ -94,17 +94,14 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Process.Start(destDirPath);
         }
 
-        private string RecycleFolderName(string srcPath, bool longEndings = false)
+        private string RecycleFolderName(string srcPath)
         {
-            var endings = new string[] { "_Pc", "_Mac", "_PS3", "_XBox360" };
-            if (longEndings)
-                endings = new string[] { "_p_Pc", "_m_Mac", "_ps3_PS3", "_xbox_XBox360" };
-
-            string[] extensions = { "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox" };
+            // looks for long endings first and then short endings
+            var endings = new string[] { "_p_Pc", "_m_Mac", "_ps3_PS3", "_xbox_XBox360", "_Pc", "_Mac", "_PS3", "_XBox360" };
+            string[] extensions = { "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox", "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox" };
 
             // reuse sanitized folder name as default file name if possible
             var destFileName = Path.GetFileName(srcPath);
-
             for (int ndx = 0; ndx < endings.Count(); ndx++)
             {
                 if (destFileName.EndsWith(endings[ndx]))
@@ -336,7 +333,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                             else
                             {
                                 // write xml comments back to fixed bass arrangement
-                                Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments, customComment: "Low Bass Tuning Fixed");
+                                Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments, customComment: " Low Bass Tuning Fixed ");
                             }
                         }
                         else
@@ -405,7 +402,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 GlobalExtension.ShowProgress(String.Format("Repackaging '{0}' ...", Path.GetFileName(srcPath)), 80);
                 // TODO consider user of regular packer here
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(destPath, info, packagePlatform);
+#if !DEBUG
                 DirectoryExtension.SafeDelete(unpackedDir);
+#endif
             }
 
             sw.Stop();
@@ -480,7 +479,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 srcPath = destPath = fbd.SelectedPath;
             }
 
-            destFileName = RecycleFolderName(srcPath, true);
+            destFileName = RecycleFolderName(srcPath);
 
             using (var sfd = new SaveFileDialog())
             {

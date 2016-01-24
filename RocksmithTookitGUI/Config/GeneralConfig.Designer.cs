@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.general_usebeta = new System.Windows.Forms.CheckBox();
             this.gbCreator = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.creator_scrollspeed = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.creator_useacronyms = new System.Windows.Forms.CheckBox();
@@ -41,23 +41,18 @@
             this.general_defaultappid_RS2012 = new System.Windows.Forms.ComboBox();
             this.gbGeneral = new System.Windows.Forms.GroupBox();
             this.WwisePathButton = new System.Windows.Forms.Button();
-            this.general_wwisepath = new RocksmithToolkitGUI.CueTextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.gbAutoUpdate = new System.Windows.Forms.GroupBox();
             this.general_replacerepo = new System.Windows.Forms.CheckBox();
             this.rs2014PathButton = new System.Windows.Forms.Button();
             this.rs1PathButton = new System.Windows.Forms.Button();
-            this.general_rs2014path = new RocksmithToolkitGUI.CueTextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.general_rs1path = new RocksmithToolkitGUI.CueTextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.general_defaultauthor = new RocksmithToolkitGUI.CueTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.general_defaultappid_RS2014 = new System.Windows.Forms.ComboBox();
             this.gbDDC = new System.Windows.Forms.GroupBox();
-            this.ddc_phraselength = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.ddc_removesustain = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -70,14 +65,22 @@
             this.label8 = new System.Windows.Forms.Label();
             this.converter_source = new System.Windows.Forms.ComboBox();
             this.closeConfigButton = new System.Windows.Forms.Button();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.creator_usedefaultauthor = new System.Windows.Forms.CheckBox();
+            this.ddc_phraselength = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
+            this.general_wwisepath = new RocksmithToolkitGUI.CueTextBox();
+            this.general_rs2014path = new RocksmithToolkitGUI.CueTextBox();
+            this.general_rs1path = new RocksmithToolkitGUI.CueTextBox();
+            this.general_defaultauthor = new RocksmithToolkitGUI.CueTextBox();
+            this.creator_scrollspeed = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.gbCreator.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
             this.gbGeneral.SuspendLayout();
             this.gbAutoUpdate.SuspendLayout();
             this.gbDDC.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).BeginInit();
             this.gbConverter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
             this.SuspendLayout();
             // 
             // general_usebeta
@@ -95,6 +98,7 @@
             // 
             // gbCreator
             // 
+            this.gbCreator.Controls.Add(this.creator_usedefaultauthor);
             this.gbCreator.Controls.Add(this.groupBox1);
             this.gbCreator.Controls.Add(this.label3);
             this.gbCreator.Controls.Add(this.creator_useacronyms);
@@ -120,36 +124,6 @@
             this.groupBox1.TabIndex = 45;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Arrangement";
-            // 
-            // creator_scrollspeed
-            // 
-            this.creator_scrollspeed.DecimalPlaces = 1;
-            this.creator_scrollspeed.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_scrollspeed.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Location = new System.Drawing.Point(117, 15);
-            this.creator_scrollspeed.Maximum = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.creator_scrollspeed.Name = "creator_scrollspeed";
-            this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
-            this.creator_scrollspeed.TabIndex = 11;
-            this.creator_scrollspeed.Value = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label1
             // 
@@ -207,6 +181,7 @@
             this.creator_structured.Size = new System.Drawing.Size(158, 17);
             this.creator_structured.TabIndex = 12;
             this.creator_structured.Text = "Import Structured Packages";
+            this.toolTip.SetToolTip(this.creator_structured, "If checked creates user friendly\r\nEOF and Toolkit artifact folders.");
             this.creator_structured.UseVisualStyleBackColor = true;
             this.creator_structured.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -270,16 +245,6 @@
             this.WwisePathButton.Text = "...";
             this.WwisePathButton.UseVisualStyleBackColor = true;
             this.WwisePathButton.Click += new System.EventHandler(this.WwisePathButton_Click);
-            // 
-            // general_wwisepath
-            // 
-            this.general_wwisepath.Cue = "Wwise v2013.2.x build 48xx path (must be this build series)";
-            this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
-            this.general_wwisepath.Location = new System.Drawing.Point(122, 160);
-            this.general_wwisepath.Name = "general_wwisepath";
-            this.general_wwisepath.Size = new System.Drawing.Size(345, 20);
-            this.general_wwisepath.TabIndex = 101;
             // 
             // label14
             // 
@@ -346,17 +311,6 @@
             this.rs1PathButton.UseVisualStyleBackColor = true;
             this.rs1PathButton.Click += new System.EventHandler(this.rs1PathButton_Click);
             // 
-            // general_rs2014path
-            // 
-            this.general_rs2014path.Cue = "Rocksmith 2014 path";
-            this.general_rs2014path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_rs2014path.ForeColor = System.Drawing.Color.Gray;
-            this.general_rs2014path.Location = new System.Drawing.Point(122, 136);
-            this.general_rs2014path.Name = "general_rs2014path";
-            this.general_rs2014path.Size = new System.Drawing.Size(345, 20);
-            this.general_rs2014path.TabIndex = 6;
-            this.general_rs2014path.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -367,17 +321,6 @@
             this.label11.Size = new System.Drawing.Size(111, 13);
             this.label11.TabIndex = 50;
             this.label11.Text = "Rocksmith 2014 path:";
-            // 
-            // general_rs1path
-            // 
-            this.general_rs1path.Cue = "Rocksmith path";
-            this.general_rs1path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_rs1path.ForeColor = System.Drawing.Color.Gray;
-            this.general_rs1path.Location = new System.Drawing.Point(122, 110);
-            this.general_rs1path.Name = "general_rs1path";
-            this.general_rs1path.Size = new System.Drawing.Size(345, 20);
-            this.general_rs1path.TabIndex = 4;
-            this.general_rs1path.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label10
             // 
@@ -400,17 +343,6 @@
             this.label9.Size = new System.Drawing.Size(87, 13);
             this.label9.TabIndex = 47;
             this.label9.Text = "Package Author:";
-            // 
-            // general_defaultauthor
-            // 
-            this.general_defaultauthor.Cue = "Author";
-            this.general_defaultauthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_defaultauthor.ForeColor = System.Drawing.Color.Gray;
-            this.general_defaultauthor.Location = new System.Drawing.Point(122, 67);
-            this.general_defaultauthor.Name = "general_defaultauthor";
-            this.general_defaultauthor.Size = new System.Drawing.Size(250, 20);
-            this.general_defaultauthor.TabIndex = 3;
-            this.general_defaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label4
             // 
@@ -450,31 +382,6 @@
             this.gbDDC.TabIndex = 15;
             this.gbDDC.TabStop = false;
             this.gbDDC.Text = "DDC";
-            // 
-            // ddc_phraselength
-            // 
-            this.ddc_phraselength.Location = new System.Drawing.Point(122, 67);
-            this.ddc_phraselength.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
-            this.ddc_phraselength.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.ddc_phraselength.Name = "ddc_phraselength";
-            this.ddc_phraselength.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.ddc_phraselength.Size = new System.Drawing.Size(52, 20);
-            this.ddc_phraselength.TabIndex = 16;
-            this.ddc_phraselength.ThousandsSeparator = true;
-            this.ddc_phraselength.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.ddc_phraselength.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // ddc_removesustain
             // 
@@ -613,13 +520,133 @@
             // 
             this.closeConfigButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.closeConfigButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeConfigButton.Location = new System.Drawing.Point(404, 435);
+            this.closeConfigButton.Location = new System.Drawing.Point(402, 435);
             this.closeConfigButton.Name = "closeConfigButton";
             this.closeConfigButton.Size = new System.Drawing.Size(116, 29);
             this.closeConfigButton.TabIndex = 0;
             this.closeConfigButton.Text = "Close";
             this.closeConfigButton.UseVisualStyleBackColor = false;
             this.closeConfigButton.Click += new System.EventHandler(this.closeConfigButton_Click);
+            // 
+            // toolTip
+            // 
+            this.toolTip.AutomaticDelay = 100;
+            this.toolTip.AutoPopDelay = 8000;
+            this.toolTip.InitialDelay = 100;
+            this.toolTip.ReshowDelay = 100;
+            // 
+            // creator_usedefaultauthor
+            // 
+            this.creator_usedefaultauthor.AutoSize = true;
+            this.creator_usedefaultauthor.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_usedefaultauthor.Location = new System.Drawing.Point(298, 63);
+            this.creator_usedefaultauthor.Name = "creator_usedefaultauthor";
+            this.creator_usedefaultauthor.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.creator_usedefaultauthor.Size = new System.Drawing.Size(209, 17);
+            this.creator_usedefaultauthor.TabIndex = 46;
+            this.creator_usedefaultauthor.Text = "Album Sort defaults to Package Author";
+            this.toolTip.SetToolTip(this.creator_usedefaultauthor, "If check the configuration Package Author\r\nwill be used by default for the Album " +
+                    "Sort\r\ntextbox field in the Creator GUI.");
+            this.creator_usedefaultauthor.UseVisualStyleBackColor = true;
+            this.creator_usedefaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // ddc_phraselength
+            // 
+            this.ddc_phraselength.Location = new System.Drawing.Point(122, 67);
+            this.ddc_phraselength.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+            this.ddc_phraselength.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.ddc_phraselength.Name = "ddc_phraselength";
+            this.ddc_phraselength.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.ddc_phraselength.Size = new System.Drawing.Size(52, 20);
+            this.ddc_phraselength.TabIndex = 16;
+            this.ddc_phraselength.ThousandsSeparator = true;
+            this.ddc_phraselength.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.ddc_phraselength.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // general_wwisepath
+            // 
+            this.general_wwisepath.Cue = "Wwise v2013.2.x build 48xx path (must be this build series)";
+            this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
+            this.general_wwisepath.Location = new System.Drawing.Point(122, 160);
+            this.general_wwisepath.Name = "general_wwisepath";
+            this.general_wwisepath.Size = new System.Drawing.Size(345, 20);
+            this.general_wwisepath.TabIndex = 101;
+            // 
+            // general_rs2014path
+            // 
+            this.general_rs2014path.Cue = "Rocksmith 2014 path";
+            this.general_rs2014path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_rs2014path.ForeColor = System.Drawing.Color.Gray;
+            this.general_rs2014path.Location = new System.Drawing.Point(122, 136);
+            this.general_rs2014path.Name = "general_rs2014path";
+            this.general_rs2014path.Size = new System.Drawing.Size(345, 20);
+            this.general_rs2014path.TabIndex = 6;
+            this.general_rs2014path.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // general_rs1path
+            // 
+            this.general_rs1path.Cue = "Rocksmith path";
+            this.general_rs1path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_rs1path.ForeColor = System.Drawing.Color.Gray;
+            this.general_rs1path.Location = new System.Drawing.Point(122, 110);
+            this.general_rs1path.Name = "general_rs1path";
+            this.general_rs1path.Size = new System.Drawing.Size(345, 20);
+            this.general_rs1path.TabIndex = 4;
+            this.general_rs1path.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // general_defaultauthor
+            // 
+            this.general_defaultauthor.Cue = "Author";
+            this.general_defaultauthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_defaultauthor.ForeColor = System.Drawing.Color.Gray;
+            this.general_defaultauthor.Location = new System.Drawing.Point(122, 67);
+            this.general_defaultauthor.Name = "general_defaultauthor";
+            this.general_defaultauthor.Size = new System.Drawing.Size(250, 20);
+            this.general_defaultauthor.TabIndex = 3;
+            this.general_defaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // creator_scrollspeed
+            // 
+            this.creator_scrollspeed.DecimalPlaces = 1;
+            this.creator_scrollspeed.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_scrollspeed.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Location = new System.Drawing.Point(117, 15);
+            this.creator_scrollspeed.Maximum = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.creator_scrollspeed.Name = "creator_scrollspeed";
+            this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
+            this.creator_scrollspeed.TabIndex = 11;
+            this.creator_scrollspeed.Value = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // GeneralConfig
             // 
@@ -630,21 +657,21 @@
             this.Controls.Add(this.gbGeneral);
             this.Controls.Add(this.gbCreator);
             this.Name = "GeneralConfig";
-            this.Size = new System.Drawing.Size(521, 505);
+            this.Size = new System.Drawing.Size(521, 477);
             this.gbCreator.ResumeLayout(false);
             this.gbCreator.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).EndInit();
             this.gbGeneral.ResumeLayout(false);
             this.gbGeneral.PerformLayout();
             this.gbAutoUpdate.ResumeLayout(false);
             this.gbAutoUpdate.PerformLayout();
             this.gbDDC.ResumeLayout(false);
             this.gbDDC.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).EndInit();
             this.gbConverter.ResumeLayout(false);
             this.gbConverter.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -693,5 +720,7 @@
         private System.Windows.Forms.Button WwisePathButton;
         private CueTextBox general_wwisepath;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.CheckBox creator_usedefaultauthor;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }

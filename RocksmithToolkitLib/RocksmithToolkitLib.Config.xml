@@ -14,6 +14,7 @@
   <Config Key="creator_scrollspeed" Value="2.0" />
   <Config Key="creator_structured" Value="true" />
   <Config Key="creator_useacronyms" Value="false" />
+  <Config Key="creator_usedefaultauthor" Value="false" />
   <Config Key="ddc_config" Value="ddc_default" />
   <Config Key="ddc_rampup" Value="ddc_default" />
   <Config Key="ddc_phraselength" Value="4" />
