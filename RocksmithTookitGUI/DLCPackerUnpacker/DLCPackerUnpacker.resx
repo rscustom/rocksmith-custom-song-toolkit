@@ -123,10 +123,13 @@
   <data name="lblHelp.Text" xml:space="preserve">
     <value>1.  Press Select Songs
      Multi select individual songs for the Song Pack
-     Button 'Make New Folder' then right click New Folder
-     and Rename folder to desired song pack name
+     Make New Folder button then right click New Folder
+     Then Rename folder to desired song pack name
 
 2. Press Repack as Song Pack
-    Select the song pack folder created in Step 1</value>
+    Select the song pack folder created in Step #1</value>
   </data>
+  <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

@@ -33,7 +33,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public bool PS3 { get; set; }
         public bool Showlights { get; set; }
         public string AppId { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } // DLC Key
         public SongInfo SongInfo { get; set; }
         public string AlbumArtPath { get; set; }
         public string OggPath { get; set; }

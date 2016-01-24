@@ -263,18 +263,20 @@
             this.gbCustomFixes.Size = new System.Drawing.Size(434, 43);
             this.gbCustomFixes.TabIndex = 20;
             this.gbCustomFixes.TabStop = false;
-            this.gbCustomFixes.Text = "Custom Fixes (RS 2014)";
+            this.gbCustomFixes.Text = "Low Bass Tuning Fix";
             // 
             // chkVerbose
             // 
             this.chkVerbose.AutoSize = true;
+            this.chkVerbose.Checked = true;
+            this.chkVerbose.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkVerbose.ForeColor = System.Drawing.Color.Black;
             this.chkVerbose.Location = new System.Drawing.Point(226, 19);
             this.chkVerbose.Name = "chkVerbose";
             this.chkVerbose.Size = new System.Drawing.Size(65, 17);
             this.chkVerbose.TabIndex = 11;
             this.chkVerbose.Text = "Verbose";
-            this.toolTip.SetToolTip(this.chkVerbose, "If checked shows any error messages.");
+            this.toolTip.SetToolTip(this.chkVerbose, "If checked shows any error messages.\r\nIncluding if the file doesn\'t need fixing.");
             this.chkVerbose.UseVisualStyleBackColor = true;
             // 
             // chkDeleteSourceFile
@@ -327,7 +329,8 @@
             this.gpSongPacks.Size = new System.Drawing.Size(434, 128);
             this.gpSongPacks.TabIndex = 21;
             this.gpSongPacks.TabStop = false;
-            this.gpSongPacks.Text = "NEW Song Packs (RS 2014 PC Only)";
+            this.gpSongPacks.Text = "Song Packs (Rocksmith 2014 PC Only)";
+            this.toolTip.SetToolTip(this.gpSongPacks, "Use the \'Converter\' tab to convert\r\nPC Song Packs to other platforms.");
             // 
             // btnSelectSongs
             // 
@@ -357,7 +360,7 @@
             this.lblHelp.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.lblHelp.Location = new System.Drawing.Point(7, 22);
             this.lblHelp.Name = "lblHelp";
-            this.lblHelp.Size = new System.Drawing.Size(273, 91);
+            this.lblHelp.Size = new System.Drawing.Size(268, 91);
             this.lblHelp.TabIndex = 24;
             this.lblHelp.Text = resources.GetString("lblHelp.Text");
             // 

@@ -749,7 +749,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // Same name xbox issue fix
             if (packagePlatform.platform == GamePlatform.XBox360)
-                savePath += GamePlatform.XBox360.ToString();
+                savePath = String.Format("{0}_{1}", savePath, GamePlatform.XBox360.ToString());
+
             DirectoryExtension.Move(unpackedDir, savePath, true);
             unpackedDir = savePath;
 
@@ -1825,7 +1826,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     var message = "Package was generated.";
                     if (errorsFound.Length > 0)
                         message = String.Format("Package was generated with errors! See below: {0}{1}", Environment.NewLine, errorsFound);
-                    message += String.Format("{0}You want to open the folder in which the package was generated?{0}", Environment.NewLine);
+                    message += String.Format("{0}Would you like to open the folder where the package was generated?{0}", Environment.NewLine);
                     if (MessageBox.Show(message, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                     {
                         Process.Start(Path.GetDirectoryName(dlcSavePath));

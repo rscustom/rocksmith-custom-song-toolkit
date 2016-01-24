@@ -7,7 +7,6 @@ using System.Threading;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.IO;
-using System.Xml.Linq;
 using Ookii.Dialogs;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib;
@@ -15,7 +14,7 @@ using RocksmithToolkitLib.DLCPackage.AggregateGraph2014;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
-using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
+
 
 namespace RocksmithToolkitGUI.DLCPackerUnpacker
 {
@@ -23,11 +22,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
     {
         private const string MESSAGEBOX_CAPTION = "CDLC Packer/Unpacker";
         private BackgroundWorker bwRepack = new BackgroundWorker();
+        private string destPath;
         private StringBuilder errorsFound;
-        private string savePath;
-
-        public static Label CurrentOperationLabel { get; set; }
-        public static ProgressBar UpdateProgress { get; set; }
 
         public DLCPackerUnpacker()
         {
@@ -66,178 +62,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             get { return chkUpdateSng.Checked; }
         }
 
-        private void FixLowBassTuning(bool quick, bool deleteSourceFile, bool verbose)
-        {
-            string[] sourcePackages;
-            string dlcSavePath;
-            bool alreadyFixed;
-            bool hasBass;
-
-            // GET PATH
-            using (var ofd = new OpenFileDialog())
-            {
-                ofd.Title = "Select a CDLC(s) which to apply Bass Tuning Fix";
-                ofd.Filter = "Rocksmith 2014 CDLC (*.psarc)|*.psarc";
-                ofd.Multiselect = true;
-
-                if (ofd.ShowDialog() != DialogResult.OK) return;
-
-                sourcePackages = ofd.FileNames;
-            }
-
-            foreach (var sourcePackage in sourcePackages)
-            {
-                if (!sourcePackage.IsValidPSARC())
-                {
-                    MessageBox.Show(String.Format("File '{0}' isn't valid. File extension was changed to '.invalid'", Path.GetFileName(sourcePackage)), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
-
-            GlobalExtension.UpdateProgress = this.pbUpdateProgress;
-            GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
-            Thread.Sleep(100); // give Globals a chance to initialize
-            Stopwatch sw = new Stopwatch();
-            sw.Restart();
-
-            foreach (var sourcePackage in sourcePackages)
-            {
-                // UNPACK
-                var packagePlatform = sourcePackage.GetPlatform();
-                var tmpPath = Path.GetTempPath();
-                Application.DoEvents();
-                var unpackedDir = Packer.Unpack(sourcePackage, tmpPath);
-                savePath = Path.Combine(Path.GetDirectoryName(sourcePackages[0]), Path.GetFileNameWithoutExtension(sourcePackage));
-
-                GlobalExtension.ShowProgress(String.Format("Loading '{0}' ...", Path.GetFileName(sourcePackage)), 40);
-
-                // Same name xbox issue fix
-                if (packagePlatform.platform == GamePlatform.XBox360)
-                    savePath += GamePlatform.XBox360.ToString();
-
-                DirectoryExtension.Move(unpackedDir, savePath, true);
-                unpackedDir = savePath;
-
-                // LOAD DATA
-                var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform);
-
-                switch (packagePlatform.platform)
-                {
-                    case GamePlatform.Pc:
-                        info.Pc = true;
-                        break;
-                    case GamePlatform.Mac:
-                        info.Mac = true;
-                        break;
-                    case GamePlatform.XBox360:
-                        info.XBox360 = true;
-                        break;
-                    case GamePlatform.PS3:
-                        info.PS3 = true;
-                        break;
-                }
-
-                //apply bass fix
-                GlobalExtension.ShowProgress(String.Format("Applying Bass Tuning Fix '{0}' ...", Path.GetFileName(sourcePackage)), 60);
-                alreadyFixed = false;
-                hasBass = false;
-
-                for (int i = 0; i < info.Arrangements.Count; i++)
-                {
-                    Arrangement arr = info.Arrangements[i];
-                    if (arr.ArrangementType == ArrangementType.Bass)
-                    {
-                        hasBass = true;
-
-                        if (arr.TuningStrings.String0 < -4 && arr.TuningPitch == 440.0)
-                        {
-                            if (!TuningFrequency.ApplyBassFix(arr))
-                            {
-                                if (verbose)
-                                    MessageBox.Show(Path.GetFileName(sourcePackage) + "  " + Environment.NewLine + "bass arrangement is already at 220Hz pitch.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                                alreadyFixed = true;
-                            }
-                            else
-                            {
-                                // write xml comments back to fixed bass arrangement
-                                Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments, customComment: "Low Bass Tuning Fixed");
-                            }
-                        }
-                        else
-                        {
-                            if (verbose)
-                                MessageBox.Show(Path.GetFileName(sourcePackage) + "  " + Environment.NewLine + "bass arrangement tuning does not need to be fixed.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                            alreadyFixed = true;
-                        }
-                    }
-                }
-
-                // don't repackage a song that is already fixed or doesn't have bass
-                if (alreadyFixed || !hasBass)
-                {
-                    if (verbose && !hasBass)
-                        MessageBox.Show(Path.GetFileName(sourcePackage) + "  " + Environment.NewLine + "has no bass arrangement.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    DirectoryExtension.SafeDelete(unpackedDir);
-                    continue;
-                }
-
-                if (!quick)
-                {
-                    using (var ofd = new SaveFileDialog())
-                    {
-                        ofd.FileName = String.Format("{0}_{1}_{2}", info.SongInfo.ArtistSort, info.SongInfo.SongDisplayNameSort, "bassfix");
-                        ofd.Filter = "Rocksmith 2014 CDLC (*.*)|*.*";
-                        if (ofd.ShowDialog() != DialogResult.OK) return;
-
-                        dlcSavePath = ofd.FileName;
-                    }
-                }
-                else
-                {
-                    var srcPackageName = Path.GetFileNameWithoutExtension(sourcePackage);
-                    srcPackageName = srcPackageName.Remove(srcPackageName.Length - 2);
-
-                    dlcSavePath = Path.Combine(Path.GetDirectoryName(sourcePackages[0]), srcPackageName + "_bassfix");
-                }
-
-                if (Path.GetFileName(dlcSavePath).Contains(" ") && info.PS3)
-                    if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn"))
-                        MessageBox.Show(String.Format("PS3 package name can't support space character due to encryption limitation. {0} Spaces will be automatic removed for your PS3 package name.", Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    else
-                        ConfigRepository.Instance()["creator_ps3pkgnamewarn"] = true.ToString();
-
-                if (deleteSourceFile)
-                {
-                    try
-                    {
-                        File.Delete(sourcePackage);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.Write(ex.Message);
-                        MessageBox.Show("Access rights required to delete source package, or an error occured. Package still may exist. Try running as Administrator.");
-                    }
-                }
-
-                // reuse existing showlights.xml or generates new one if none is found
-                info.Showlights = true;
-                // Generate Fixed Low Bass Tuning Package
-                GlobalExtension.ShowProgress(String.Format("Repackaging '{0}' ...", Path.GetFileName(sourcePackage)), 80);         
-               // TODO consider user of regular packer here
-                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, info, packagePlatform);               
-                DirectoryExtension.SafeDelete(unpackedDir);
-            }
-
-            sw.Stop();
-            GlobalExtension.ShowProgress("Finished applying low bass tuning fix (elapsed time): " + sw.Elapsed, 100);
-            MessageBox.Show("Repackaging is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            // prevents possible cross threading
-            GlobalExtension.Dispose();
-        }
-
         private void PopulateAppIdCombo(GameVersion gameVersion)
         {
             cmbAppId.Items.Clear();
@@ -247,6 +71,51 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             var songAppId = SongAppIdRepository.Instance().Select((gameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], gameVersion);
             cmbAppId.SelectedItem = songAppId;
             txtAppId.Text = songAppId.AppId;
+        }
+
+        private void PromptComplete(string destDirPath, bool actionPacking = true, string errMsg = null)
+        {
+            if (actionPacking)
+                destDirPath = Path.GetDirectoryName(destDirPath);
+
+            var actionMsg = "Packing";
+            if (!actionPacking)
+                actionMsg = "Unpacking";
+
+            if (String.IsNullOrEmpty(errMsg))
+                errMsg = actionMsg + " is complete." + Environment.NewLine;
+            else
+                errMsg = actionMsg + " is complete with the following errors:" + Environment.NewLine +
+                         errMsg + Environment.NewLine;
+
+            errMsg += "Would you like to open the destination path?  ";
+
+            if (MessageBox.Show(errMsg, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                Process.Start(destDirPath);
+        }
+
+        private string RecycleFolderName(string srcPath, bool longEndings = false)
+        {
+            var endings = new string[] { "_Pc", "_Mac", "_PS3", "_XBox360" };
+            if (longEndings)
+                endings = new string[] { "_p_Pc", "_m_Mac", "_ps3_PS3", "_xbox_XBox360" };
+
+            string[] extensions = { "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox" };
+
+            // reuse sanitized folder name as default file name if possible
+            var destFileName = Path.GetFileName(srcPath);
+
+            for (int ndx = 0; ndx < endings.Count(); ndx++)
+            {
+                if (destFileName.EndsWith(endings[ndx]))
+                {
+                    destFileName = destFileName.Substring(0, destFileName.LastIndexOf(endings[ndx], StringComparison.OrdinalIgnoreCase));
+                    destFileName = String.Format("{0}{1}", destFileName, extensions[ndx]);
+                    break;
+                }
+            }
+
+            return destFileName;
         }
 
         private void ShowCurrentOperation(string message)
@@ -284,12 +153,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             foreach (string sourceFileName in sourceFileNames)
             {
                 Application.DoEvents();
-                Platform platform = Packer.GetPlatform(sourceFileName);
                 GlobalExtension.ShowProgress(String.Format("Unpacking '{0}'", Path.GetFileName(sourceFileName)), 10);
 
                 try
                 {
-                    Packer.Unpack(sourceFileName, destPath, decode, overwrite);
+                    Platform platform = sourceFileName.GetPlatform();
+                    Packer.Unpack(sourceFileName, destPath, decode, overwrite, platform);
                 }
                 catch (Exception ex)
                 {
@@ -299,13 +168,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             sw.Stop();
             GlobalExtension.ShowProgress("Finished unpacking archive (elapsed time): " + sw.Elapsed, 100);
-
-            if (errorsFound.Length > 0)
-                MessageBox.Show("Unpacking is complete with errors. See below: " + Environment.NewLine + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            else
-                MessageBox.Show("Unpacking is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            // prevents possible cross threading
+            PromptComplete(destPath, false, errorsFound.ToString());
             GlobalExtension.Dispose();
             ToggleUIControls(true);
         }
@@ -346,7 +209,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         private void UpdateAppId(object sender, DoWorkEventArgs e)
         {
-            ToggleUIControls(false);
             var sourceFileNames = e.Argument as string[];
             errorsFound = new StringBuilder();
             var step = (int)Math.Round(1.0 / sourceFileNames.Length * 100, 0);
@@ -379,48 +241,197 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     bwRepack.ReportProgress(progress);
                 }
                 else
-                    errorsFound.AppendLine(String.Format("File '{0}' is not a valid package for desktop platform.", Path.GetFileName(sourceFileName)));
+                    errorsFound.AppendLine(String.Format("File '{0}' is not a valid desktop platform package.", Path.GetFileName(sourceFileName)));
             }
             bwRepack.ReportProgress(100);
             e.Result = "repack";
-            ToggleUIControls(true);
         }
 
         private void btnFixLowBassTuning_Click(object sender, EventArgs e)
         {
+            string[] srcPaths;
+            bool alreadyFixed;
+            bool hasBass;
+
+            // GET PATH
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Select the CDLC(s) which to apply Bass Tuning Fix";
+                ofd.Filter = "All Files (*.*)|*.*|Rocksith 2014 PC|*_p.psarc|Rocksith 2014 Mac|*_m.psarc|Rocksith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
+                ofd.Multiselect = true;
+                ofd.FileName = destPath;
+
+                if (ofd.ShowDialog() != DialogResult.OK) return;
+
+                srcPaths = ofd.FileNames;
+            }
+
             ToggleUIControls(false);
-            FixLowBassTuning(chkQuickBassFix.Checked, chkDeleteSourceFile.Checked, chkVerbose.Checked);
+            GlobalExtension.UpdateProgress = this.pbUpdateProgress;
+            GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
+            Thread.Sleep(100); // give Globals a chance to initialize
+            Stopwatch sw = new Stopwatch();
+            sw.Restart();
+
+            foreach (var srcPath in srcPaths)
+            {
+                // UNPACK
+                var packagePlatform = srcPath.GetPlatform();
+                var tmpPath = Path.GetTempPath();
+                Application.DoEvents();
+                var unpackedDir = Packer.Unpack(srcPath, tmpPath, overwriteSongXml: true, predefinedPlatform: packagePlatform);
+                destPath = Path.Combine(Path.GetDirectoryName(srcPaths[0]), Path.GetFileName(unpackedDir));
+
+                GlobalExtension.ShowProgress(String.Format("Loading '{0}' ...", Path.GetFileName(srcPath)), 40);
+
+                // Same name xbox issue fix
+                //if (packagePlatform.platform == GamePlatform.XBox360)
+                //    destPath = String.Format("{0}_{1}", destPath, GamePlatform.XBox360.ToString());
+
+                DirectoryExtension.Move(unpackedDir, destPath, true);
+                unpackedDir = destPath;
+
+                // Low Bass Tuning Fix is for Rocksmith 2014 Only
+                packagePlatform = new Platform(packagePlatform.platform, GameVersion.RS2014);
+                // LOAD DATA
+                var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform);
+
+                switch (packagePlatform.platform)
+                {
+                    case GamePlatform.Pc:
+                        info.Pc = true;
+                        break;
+                    case GamePlatform.Mac:
+                        info.Mac = true;
+                        break;
+                    case GamePlatform.XBox360:
+                        info.XBox360 = true;
+                        break;
+                    case GamePlatform.PS3:
+                        info.PS3 = true;
+                        break;
+                }
+
+                //apply bass fix
+                GlobalExtension.ShowProgress(String.Format("Applying Bass Tuning Fix '{0}' ...", Path.GetFileName(srcPath)), 60);
+                alreadyFixed = false;
+                hasBass = false;
+
+                for (int i = 0; i < info.Arrangements.Count; i++)
+                {
+                    Arrangement arr = info.Arrangements[i];
+                    if (arr.ArrangementType == ArrangementType.Bass)
+                    {
+                        hasBass = true;
+
+                        if (arr.TuningStrings.String0 < -4 && arr.TuningPitch == 440.0)
+                        {
+                            if (!TuningFrequency.ApplyBassFix(arr))
+                            {
+                                if (chkVerbose.Checked)
+                                    MessageBox.Show(Path.GetFileName(srcPath) + "  " + Environment.NewLine + "bass arrangement is already at 220Hz pitch.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                                alreadyFixed = true;
+                            }
+                            else
+                            {
+                                // write xml comments back to fixed bass arrangement
+                                Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments, customComment: "Low Bass Tuning Fixed");
+                            }
+                        }
+                        else
+                        {
+                            if (chkVerbose.Checked)
+                                MessageBox.Show(Path.GetFileName(srcPath) + "  " + Environment.NewLine + "bass arrangement tuning does not need to be fixed.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            alreadyFixed = true;
+                        }
+                    }
+                }
+
+                // don't repackage a song that is already fixed or doesn't have bass
+                if (alreadyFixed || !hasBass)
+                {
+                    if (chkVerbose.Checked && !hasBass)
+                        MessageBox.Show(Path.GetFileName(srcPath) + "  " + Environment.NewLine + "has no bass arrangement.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    DirectoryExtension.SafeDelete(unpackedDir);
+                    continue;
+                }
+
+                var ndx = srcPath.LastIndexOf('_');
+                var srcName = srcPath.Substring(0, ndx);
+                var srcExt = srcPath.Substring(ndx, srcPath.Length - ndx);
+
+                if (!chkQuickBassFix.Checked)
+                {
+                    using (var ofd = new SaveFileDialog())
+                    {
+                        ofd.Title = "Select a name for the Low Bass Tuning Fixed file.";
+                        ofd.Filter = "All Files (*.*)|*.*|Rocksith 2014 PC|*_p.psarc|Rocksith 2014 Mac|*_m.psarc|Rocksith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
+                        ofd.FileName = String.Format("{0}_{1}_bassfix{2}", info.SongInfo.ArtistSort, info.SongInfo.SongDisplayNameSort, srcExt);
+
+                        if (ofd.ShowDialog() != DialogResult.OK)
+                            return;
+
+                        destPath = ofd.FileName;
+                    }
+                }
+                else
+                    destPath = String.Format("{0}_bassfix{1}", srcName, srcExt);
+
+                if (Path.GetFileName(destPath).Contains(" ") && info.PS3)
+                    if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn"))
+                        MessageBox.Show(String.Format("PS3 package name can't support space character due to encryption limitation. {0} Spaces will be automatic removed for your PS3 package name.", Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    else
+                        ConfigRepository.Instance()["creator_ps3pkgnamewarn"] = true.ToString();
+
+                if (chkDeleteSourceFile.Checked)
+                {
+                    try
+                    {
+                        File.Delete(srcPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Write(ex.Message);
+                        MessageBox.Show("Access rights required to delete source package, or an error occured. Package still may exist. Try running as Administrator.");
+                    }
+                }
+
+                // reuse existing showlights.xml or generates new one if none is found
+                info.Showlights = true;
+                // Generate Fixed Low Bass Tuning Package
+                GlobalExtension.ShowProgress(String.Format("Repackaging '{0}' ...", Path.GetFileName(srcPath)), 80);
+                // TODO consider user of regular packer here
+                RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(destPath, info, packagePlatform);
+                DirectoryExtension.SafeDelete(unpackedDir);
+            }
+
+            sw.Stop();
+            GlobalExtension.ShowProgress("Finished applying low bass tuning fix (elapsed time): " + sw.Elapsed, 100);
+            PromptComplete(destPath);
+            GlobalExtension.Dispose();
             ToggleUIControls(true);
         }
 
         private void btnPackSongPack_Click(object sender, EventArgs e)
         {
-            string sourcePath;
-            // string saveFileName;
+            var srcPath = String.Empty;
+            var errMsg = String.Empty;
 
             using (var fbd = new VistaFolderBrowserDialog())
             {
-                fbd.Description = "Select the Song Pack folder";
-                fbd.SelectedPath = savePath;
+                fbd.Description = "Select the Song Pack folder created in Step #1.";
+                fbd.SelectedPath = destPath;
 
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
 
-                sourcePath = fbd.SelectedPath;
+                srcPath = fbd.SelectedPath;
             }
 
-            // saveFileName = Path.GetFileName(sourcePath);
-
-            //using (var sfd = new SaveFileDialog())
-            //{
-            //    sfd.FileName = Path.GetFileName(sourcePath);
-
-            //    if (sfd.ShowDialog() != DialogResult.OK)
-            //        return;
-
-            //    saveFileName = sfd.FileName;
-            //}
-
+            ToggleUIControls(false);
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
             GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
             Thread.Sleep(100); // give Globals a chance to initialize
@@ -432,9 +443,10 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Stopwatch sw = new Stopwatch();
                 sw.Restart();
 
-                var songPackDir = AggregateGraph2014.DoLikeSongPack(sourcePath, txtAppId.Text);
-                var destFilePath = Path.Combine(Path.GetDirectoryName(sourcePath), String.Format("{0}_songpack_p.psarc", Path.GetFileName(sourcePath)));
-                Packer.Pack(songPackDir, destFilePath, fixShowlights: false, predefinedPlatform: new Platform(GamePlatform.Pc, GameVersion.RS2014));
+                var songPackDir = AggregateGraph2014.DoLikeSongPack(srcPath, txtAppId.Text);
+                destPath = Path.Combine(Path.GetDirectoryName(srcPath), String.Format("{0}_songpack_p.psarc", Path.GetFileName(srcPath)));
+                // PC Only for now can't mix platform packages
+                Packer.Pack(songPackDir, destPath, fixShowlights: false, predefinedPlatform: new Platform(GamePlatform.Pc, GameVersion.RS2014));
 
                 // clean up now (song pack folder)
                 if (Directory.Exists(songPackDir))
@@ -442,34 +454,42 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
-                MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format("{0}\n{1}\n{2}", "Packing error!", ex.Message, ex.InnerException), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                errMsg = String.Format("{0}\n{1}", ex.Message, ex.InnerException);
             }
 
-            // prevents possible cross threading
+            PromptComplete(destPath, true, errMsg);
             GlobalExtension.Dispose();
+            ToggleUIControls(true);
         }
 
         private void btnPack_Click(object sender, EventArgs e)
         {
-            string sourcePath;
-            string saveFileName;
+            var srcPath = String.Empty;
+            var destFileName = String.Empty;
 
             using (var fbd = new VistaFolderBrowserDialog())
             {
+                fbd.SelectedPath = destPath;
+                fbd.Description = "Select CDLC artifacts folder.";
+
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
-                sourcePath = fbd.SelectedPath;
+                srcPath = destPath = fbd.SelectedPath;
             }
+
+            destFileName = RecycleFolderName(srcPath, true);
 
             using (var sfd = new SaveFileDialog())
             {
+                sfd.Title = "Select a new CDLC destination file name or use the system generated default.";
+                sfd.FileName = destFileName;
+
                 if (sfd.ShowDialog() != DialogResult.OK)
                     return;
-                saveFileName = sfd.FileName;
+                destFileName = sfd.FileName;
             }
 
             ToggleUIControls(false);
@@ -478,22 +498,23 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             Thread.Sleep(100); // give Globals a chance to initialize
             GlobalExtension.ShowProgress("Packing archive ...");
             Application.DoEvents();
+            var errMsg = String.Empty;
 
             try
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Restart();
-                Packer.Pack(sourcePath, saveFileName, updateSng);
+                var packagePlatform = srcPath.GetPlatform();
+                Packer.Pack(srcPath, destFileName, updateSng, packagePlatform);
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
-                MessageBox.Show("Packing is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format("{0}\n{1}\n{2}", "Packing error!", ex.Message, ex.InnerException), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                errMsg = String.Format("{0}\n{1}", ex.Message, ex.InnerException);
             }
 
-            // prevents possible cross threading
+            PromptComplete(destFileName, true, errMsg);
             GlobalExtension.Dispose();
             ToggleUIControls(true);
         }
@@ -513,8 +534,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
-                ToggleUIControls(false);
-
                 if (!bwRepack.IsBusy && ofd.FileNames.Length > 0)
                 {
                     pbUpdateProgress.Value = 0;
@@ -523,63 +542,65 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     btnRepackAppId.Enabled = false;
                     bwRepack.RunWorkerAsync(ofd.FileNames);
                 }
-
-                ToggleUIControls(true);
             }
         }
 
         private void btnSelectSongs_Click(object sender, EventArgs e)
         {
-            string[] sourceFileNames;
-            savePath = String.Empty;
-
+            string[] srcFileNames;
+            destPath = String.Empty;
 
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "All CDLC Files (*.psarc)|*.psarc";
+                ofd.Title = "Select multiple songs to include in Song Pack";
+                ofd.Filter = "Rocksith 2014 PC Only|*_p.psarc";
+                ofd.FilterIndex = 1;
                 ofd.Multiselect = true;
+
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
-                sourceFileNames = ofd.FileNames;
+                srcFileNames = ofd.FileNames;
             }
 
             using (var fbd = new FolderBrowserDialog())
             {
-                fbd.SelectedPath = Path.GetDirectoryName(sourceFileNames[0]) + Path.DirectorySeparatorChar;
                 fbd.Description = "Select 'Make New Folder' then right click to 'Rename'" + Environment.NewLine + "the 'New Folder' to the desired Song Pack name." + Environment.NewLine + "Make sure the new Song Pack folder stays selected then click Ok.";
+                fbd.SelectedPath = Path.GetDirectoryName(srcFileNames[0]) + Path.DirectorySeparatorChar;
 
-                if (fbd.ShowDialog() != DialogResult.OK) return;
-                savePath = fbd.SelectedPath;
+                if (fbd.ShowDialog() != DialogResult.OK)
+                    return;
+                destPath = fbd.SelectedPath;
             }
 
-            UnpackSongs(sourceFileNames, savePath);
+            UnpackSongs(srcFileNames, destPath);
         }
 
         private void btnUnpack_Click(object sender, EventArgs e)
         {
-            string[] sourceFileNames;
-            savePath = String.Empty;
+            string[] srcFileNames;
 
             using (var ofd = new OpenFileDialog())
             {
-                //ofd.Filter = "All Files (*.*)|*.*";
-                ofd.Filter = "Custom Rocksmith/Rocksmith 2014 CDLC (*.dat;*.psarc)|*.dat;*.psarc";
+                ofd.Filter = "All Files (*.*)|*.*|Rocksmith 1|*.dat|Rocksith 2014 PC|*_p.psarc|Rocksith 2014 Mac|*_m.psarc|Rocksith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
                 ofd.Multiselect = true;
+                ofd.FilterIndex = 1;
+                ofd.FileName = destPath;
 
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
-                sourceFileNames = ofd.FileNames;
+                srcFileNames = ofd.FileNames;
             }
 
             using (var fbd = new VistaFolderBrowserDialog())
             {
-                fbd.SelectedPath = Path.GetDirectoryName(sourceFileNames[0]) + Path.DirectorySeparatorChar;
+                fbd.Description = "Select a artifacts destination folder.";
+                fbd.SelectedPath = Path.GetDirectoryName(srcFileNames[0]) + Path.DirectorySeparatorChar;
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
-                savePath = fbd.SelectedPath;
+                destPath = fbd.SelectedPath;
             }
 
-            UnpackSongs(sourceFileNames, savePath, decodeAudio, overwriteSongXml);
+            UnpackSongs(srcFileNames, destPath, decodeAudio, overwriteSongXml);
         }
 
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
@@ -594,5 +615,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             PopulateAppIdCombo(gameVersion); ;
         }
 
+        public static Label CurrentOperationLabel { get; set; }
+        public static ProgressBar UpdateProgress { get; set; }
     }
 }

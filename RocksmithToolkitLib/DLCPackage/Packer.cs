@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
@@ -599,8 +600,24 @@ namespace RocksmithToolkitLib.DLCPackage
                     case ".dat":
                         return new Platform(GamePlatform.Pc, GameVersion.RS2012);
                     case "":
+                        // old method was failing for RS2014 xbox so revised to read file header
+                        // return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
+                        const int HEADER_SIZE = 4;
+                        byte[] bytesFile = new byte[HEADER_SIZE];
+                        using (var fs = File.Open(fullPath, FileMode.Open))
+                        {
+                            fs.Read(bytesFile, 0, HEADER_SIZE);
+                            fs.Close();
+                        }
+
+                        // along with a little bit of belt and suspenders works nicely
+                        if (Encoding.UTF8.GetString(bytesFile) == "CON ")
+                            if (TryGetPlatformByEndName(fullPath).Equals(new Platform(GamePlatform.XBox360, GameVersion.RS2014)))
+                                return new Platform(GamePlatform.XBox360, GameVersion.RS2014);
+
                         return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
                     case ".edat":
+                        // must get game version from UserControl GUI
                         return new Platform(GamePlatform.PS3, GameVersion.None);
                     case ".psarc":
                         return TryGetPlatformByEndName(fullPath);
@@ -649,9 +666,14 @@ namespace RocksmithToolkitLib.DLCPackage
                     return new Platform(GamePlatform.XBox360, GameVersion.None);
                 }
 
-                if (fullPath.ToLower().Contains("_pc"))
+                if (fullPath.ToLower().EndsWith("_p"))
                 {
                     return new Platform(GamePlatform.Pc, GameVersion.RS2014);
+                }
+
+                if (fullPath.ToLower().EndsWith("_m"))
+                {
+                    return new Platform(GamePlatform.Mac, GameVersion.RS2014);
                 }
 
                 // PS3 2012/2014
