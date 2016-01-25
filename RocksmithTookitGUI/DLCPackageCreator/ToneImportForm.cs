@@ -1,9 +1,7 @@
 ﻿﻿﻿﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using RocksmithToTabLib;
 ﻿﻿﻿﻿﻿using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
-﻿﻿﻿﻿﻿using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 ﻿﻿﻿﻿﻿﻿using System.Linq;
 
@@ -28,9 +26,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         bool isRS2014 {
             get
             {
-                if (Tone2014 != null && Tone == null)
-                    return true;
-                return false;
+                return Tone2014 != null && Tone == null;
             }
         }
 
@@ -53,22 +49,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (lstToneList.SelectedItems.Count > 0)
             {
                 //Get Selected tones
-                List<string> toneNames = new List<string>();
+                var toneNames = new List<string>();
                 foreach (var selectedItem in lstToneList.SelectedItems) {
                     var lstItemArray = selectedItem.ToString().Split(new [] { " " }, StringSplitOptions.None);
                     toneNames.Add(lstItemArray[0]);
                 }
                 //Replace tones with selected.
                 if (isRS2014) {
-                    var Selected = new List<Tone2014>();
+                    var selected = new List<Tone2014>();
                     foreach( var tName in toneNames )
-                        Selected.Add(Tone2014.SingleOrDefault(t => t.Name == tName));
-                    Tone2014 = Selected;
+                        selected.Add(Tone2014.Find(t => t.Name == tName));
+                    Tone2014 = selected;
                 } else {
-                    var Selected = new List<Tone>();
+                    var selected = new List<Tone>();
                     foreach( var tName in toneNames )
-                        Selected.Add(Tone.SingleOrDefault(t => t.Name == tName));
-                    Tone = Selected;
+                        selected.Add(Tone.Find(t => t.Name == tName));
+                    Tone = selected;
                 }
             }
             else
@@ -78,7 +74,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation) == DialogResult.Cancel)
                     this.DialogResult = DialogResult.Cancel;
             }
-            this.DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK;
             Close();
         }
 

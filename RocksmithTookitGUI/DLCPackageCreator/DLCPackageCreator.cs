@@ -1559,19 +1559,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Application.DoEvents();
                 if (CurrentGameVersion != GameVersion.RS2012)
                 {
-                    List<Tone2014> tones2014 = Tone2014.Import(toneImportFile);
+                    var tones2014 = Tone2014.Import(toneImportFile);
                     //Popup ToneImportForm if tones > 1
                     if (tones2014.Count > 1)
                         using (var importForm = new ToneImportForm())
                         {
                             importForm.Tone2014 = tones2014;
                             importForm.PopList();
-                            if (importForm.ShowDialog() != DialogResult.OK)
-                                return;
-                            foreach (var tone in importForm.Tone2014.Where(t => !t.GearList.IsNull()))
-                                tonesLB.Items.Add(tone);
+                            if (importForm.ShowDialog() == DialogResult.OK)
+                            {
+                                foreach (var tone in importForm.Tone2014.Where(t => !t.GearList.IsNull()))
+                                    tonesLB.Items.Add(tone);
+                            }
                         }
-                    else if (tones2014.Count > 0)
+                    else if (tones2014.Count < 2)
                         tonesLB.Items.Add(tones2014.FirstOrDefault(t => !t.GearList.IsNull()));
                 }
                 else
@@ -1583,12 +1584,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         {
                             importForm.Tone = tones;
                             importForm.PopList();
-                            if (importForm.ShowDialog() != DialogResult.OK)
-                                return;
-                            foreach (var tone in importForm.Tone.Where(t => t.PedalList.Count != 0))
-                                tonesLB.Items.Add(tone);
+                            if (importForm.ShowDialog() == DialogResult.OK)
+                            {
+                                foreach (var tone in importForm.Tone.Where(t => t.PedalList.Count != 0))
+                                    tonesLB.Items.Add(tone);
+                            }
                         }
-                    else if (tones.Count > 0)
+                    else if (tones.Count < 2)
                         tonesLB.Items.Add(tones.FirstOrDefault(t => t.PedalList.Count != 0));
                 }
             }
@@ -1598,7 +1600,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
-            MessageBox.Show("Tone(s) imported: " + (tonesLB.Items.Count - preToneCount) + "  ", "CDLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            var numTones = tonesLB.Items.Count - preToneCount;
+            if(numTones > 0)
+                MessageBox.Show("Tone(s) imported: " + numTones + "  ", "CDLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();
         }
 
