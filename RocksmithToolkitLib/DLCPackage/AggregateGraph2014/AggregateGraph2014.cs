@@ -84,7 +84,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
 
         private void SongAggregateGraph(DLCPackageData info, DLCPackageType dlcType)
         {
-            var dlcName = info.Name.ToLower();
+            var dlcName = info.DLCKey.ToLower();
             var songPartition = new SongPartition();
 
             // Xblock

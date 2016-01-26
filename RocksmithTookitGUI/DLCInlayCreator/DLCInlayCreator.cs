@@ -319,7 +319,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 sfd.Title = "Select a location to store your CGM file";
                 sfd.Filter = "CGM file (*.cgm)|*.cgm";
                 sfd.InitialDirectory = Path.Combine(workDir, "cgm");
-                sfd.FileName = InlayName.GetValidName(true, false, true, Frets24) + "_" + GeneralExtensions.Acronym(Author) + ".cgm";
+                sfd.FileName = (InlayName.GetValidName(true, false, true, Frets24) + "_" + GeneralExtensions.Acronym(Author) + ".cgm").GetValidFileName();               
+
                 if (sfd.ShowDialog() != DialogResult.OK) return;
                 saveFile = sfd.FileName;
             }
@@ -386,7 +387,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             using (var ofd = new SaveFileDialog())
             {
-                ofd.FileName = InlayName.GetValidName(true, false, true, Frets24).ToLower();
+                ofd.FileName = (InlayName.GetValidName(true, false, true, Frets24).ToLower()).GetValidFileName();
                 ofd.Filter = "Custom Inlay DLC (*.*)|*.*";
                 ofd.InitialDirectory = dlcSavePath;
 
@@ -404,7 +405,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // CRITICAL - 24 fret inlays have naming dependencies
             if (Frets24) packageData.Inlay.DLCSixName = String.Format("24fret_{0}", packageData.Inlay.DLCSixName);
 
-            packageData.Name = InlayName;
+            packageData.DLCKey = InlayName;
             packageData.AppId = appIdCombo.SelectedValue.ToString();
 
             // Saving for later

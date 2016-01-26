@@ -199,7 +199,7 @@
             this.dlcPackageCreatorControl.ArtistSort = "";
             this.dlcPackageCreatorControl.AverageTempo = "";
             this.dlcPackageCreatorControl.CurrentGameVersion = RocksmithToolkitLib.GameVersion.RS2014;
-            this.dlcPackageCreatorControl.DLCName = "";
+            this.dlcPackageCreatorControl.DLCKey = "";
             this.dlcPackageCreatorControl.JavaBool = false;
             this.dlcPackageCreatorControl.Location = new System.Drawing.Point(16, 6);
             this.dlcPackageCreatorControl.LyricArtPath = null;

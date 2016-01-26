@@ -33,6 +33,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private bool userChangedInputControls;
         // prevents multiple tool tip appearance and gives better action
         private ToolTip tt = new ToolTip();
+        private string dlcKeyOrg; // used to preserve original
 
         #region Properties
 
@@ -138,10 +139,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         //Song Information
-        public string DLCName
+        public string DLCKey // appears to be interchageble with SongKey
         {
-            get { return DlcNameTB.Text; }
-            set { DlcNameTB.Text = value; }
+            get { return DlcKeyTB.Text; }
+            set { DlcKeyTB.Text = value; }
         }
 
         public string SongTitle
@@ -438,7 +439,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     @"Answering 'Yes' will reduce the risk of CDLC" + Environment.NewLine +
                     @"in game hanging and song stats will be reset.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                     updateArrangmentID = true;
-
+                else
+                    // maintain use of original DLCKey, as well as, PID
+                    packageData.DLCKey = dlcKeyOrg; 
+               
             foreach (var arr in packageData.Arrangements)
             {
                 if (userChangedInputControls)
@@ -546,10 +550,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void albumArtButton_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(DlcNameTB.Text))
+            if (String.IsNullOrEmpty(DlcKeyTB.Text))
             {
                 MessageBox.Show("Fill the 'CDLC Name' field first.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                DlcNameTB.Focus();
+                DlcKeyTB.Focus();
                 return;
             }
             using (var ofd = new OpenFileDialog())
@@ -849,7 +853,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var BasePath = Path.GetDirectoryName(filesBaseDir);
 
             // Song INFO
-            DlcNameTB.Text = info.Name;
+            DlcKeyTB.Text = dlcKeyOrg = info.DLCKey;           
 
             PopulateAppIdCombo();
             Application.DoEvents();
@@ -1009,15 +1013,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
             int year, tempo;
-            if (String.IsNullOrEmpty(DLCName))
+            if (String.IsNullOrEmpty(DLCKey))
             {
-                DlcNameTB.Focus();
+                DlcKeyTB.Focus();
                 return null;
             }
-            if (DLCName == SongTitle)
+            if (DLCKey == SongTitle)
             {
                 MessageBox.Show("Error: CDLC name can't be the same of song name", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                DlcNameTB.Focus();
+                DlcKeyTB.Focus();
                 return null;
             }
             if (String.IsNullOrEmpty(SongTitle))
@@ -1212,7 +1216,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                            Mac = platformMAC.Checked,
                            XBox360 = platformXBox360.Checked,
                            PS3 = platformPS3.Checked,
-                           Name = DlcNameTB.Text,
+                           DLCKey = DlcKeyTB.Text,
                            AppId = AppIdTB.Text,
 
                            SongInfo = new SongInfo
@@ -1908,7 +1912,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             AlbumTB.Validating += ValidateName;
             AlbumSortTB.Validating += ValidateSortName;
             YearTB.Validating += ValidateVersion;
-            DlcNameTB.Validating += ValidateDlcKey;
+            DlcKeyTB.Validating += ValidateDlcKey;
             packageVersionTB.Validating += ClickedInputControl;
             AverageTempoTB.Validating += ValidateTempo;
             arrangementAddButton.Click += ClickedInputControl;
@@ -1939,19 +1943,19 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void ValidateDlcKey(object sender, CancelEventArgs e)
         {
-            TextBox dlcName = sender as TextBox;
-            dlcName.Text = dlcName.Text.Trim().GetValidSongName(SongTitle);
+            TextBox dlcKey = sender as TextBox;
+            dlcKey.Text = Artist.GetValidDlcKey(SongTitle);
             userChangedInputControls = true;
         }
 
         private void ValidateName(object sender, CancelEventArgs e)
         {
             var tb = sender as TextBox;
-            tb.Text = tb.Text.Trim().GetValidName(true);
+            tb.Text = tb.Text.Trim().GetValidName(true, true);
             userChangedInputControls = true;
 
-            if (tb.Name == "SongDisplayNameTB")
-                DlcNameTB.Text = String.Format("{0} {1}", Artist.Acronym(), SongTitle.GetValidSortName());
+            if (tb.Name == "SongDisplayNameTB" || tb.Name == "ArtistTB")
+                DlcKeyTB.Text = String.Format("{0}{1}", Artist.Acronym(), SongTitle).GetValidDlcKey(SongTitle);
         }
 
         private void ValidateVersion(object sender, CancelEventArgs e)
@@ -2034,7 +2038,5 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tt.Show("", this, 20000); // show for 20 seconds
         }
 
-
     }
-
 }

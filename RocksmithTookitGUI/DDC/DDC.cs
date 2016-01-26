@@ -119,9 +119,9 @@ namespace RocksmithToolkitGUI.DDC
                             {
                                 string filePath = file.Value,
                                 newName = String.Format("{0}_{1}{2}",
-                                file.Key.StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD", ""), isNDD ? "_NDD" : "DD", filePath.GetPlatform().GetPathName()[2]);
+                                file.Key.StripPlatformEndName().GetValidFileName().Replace("_DD", "").Replace("_NDD", ""), isNDD ? "_NDD" : "DD", filePath.GetPlatform().GetPathName()[2]);
 
-                                if (CleanProcess && File.Exists(filePath) && !Path.GetFileNameWithoutExtension(filePath).GetValidName(false).Equals(newName))
+                                if (CleanProcess && File.Exists(filePath) && !Path.GetFileNameWithoutExtension(filePath).GetValidFileName().Equals(newName))
                                     File.Delete(filePath);
                             }
                             break;
@@ -255,7 +255,7 @@ namespace RocksmithToolkitGUI.DDC
             {
                 var logFiles = Directory.EnumerateFiles(unpackedDir, "*.log", SearchOption.AllDirectories);
                 var newName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_{1}{2}", 
-                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidName(false).Replace("_DD", "").Replace("_NDD", ""), 
+                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidFileName().Replace("_DD", "").Replace("_NDD", ""), 
                     isNDD ? "NDD" :  "DD", platform.GetPathName()[2]));
                 if (keepLog)
                 {

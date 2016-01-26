@@ -119,10 +119,11 @@ namespace RocksmithToolkitLib.Extensions
         {
             var path = String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcname);
             if (vox.Vocals != null)
-                if (vox.Vocals.Count > 0 && vox.SymbolsTexture.Count > 0) {
-                RocksmithToolkitLib.Sng2014HSL.Sng2014FileWriter.readString(path, vox.SymbolsTexture.SymbolsTextures[0].Font);
+                if (vox.Vocals.Count > 0 && vox.SymbolsTexture.Count > 0)
+                {
+                    RocksmithToolkitLib.Sng2014HSL.Sng2014FileWriter.readString(path, vox.SymbolsTexture.SymbolsTextures[0].Font);
                     vox.SymbolsTexture.SymbolsTextures[0].FontpathLength = path.Length;
-            }
+                }
         }
 
         public static string GetValidVersion(this string value)
@@ -136,24 +137,26 @@ namespace RocksmithToolkitLib.Extensions
             }
             return "1";
         }
+
         /// <summary>
-        /// Format input string as valid SongKey name.
+        /// Format string as valid DLCKey (aka SongKey).
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="songTitle"></param>
-        /// <returns>SongKey valid name</returns>
-        public static string GetValidSongName(this string value, string songTitle)
+        /// <param name="value">DLCKey for verification</param>
+        /// <param name="songTitle">optional varification comparison to DLCKey </param>
+        /// <returns>valid DLCKey contains no spaces, no accents, or special characters but can begin with or be all numbers</returns>
+
+        public static string GetValidDlcKey(this string value, string songTitle = "")
         {
-            string songName = String.Empty;
+            string dlcKey = String.Empty;
             if (!String.IsNullOrEmpty(value))
             {
-                Regex rgx = new Regex("[^a-zA-Z0-9\\-]");
-                songName = rgx.Replace(value, "");
+                Regex rgx = new Regex("[^a-zA-Z0-9]"); // removes spaces
+                dlcKey = rgx.Replace(value, "");
                 //Avoid SongKey==SongTitle case
-                if (songName == songTitle)
-                    songName = songName + "Song";
+                if (dlcKey == songTitle.Replace(" ", ""))
+                    dlcKey = dlcKey + "Song";
             }
-            return songName;
+            return dlcKey;
         }
 
         public static string GetValidSortName(this string value)
@@ -167,16 +170,32 @@ namespace RocksmithToolkitLib.Extensions
             return value.GetValidName(true);
         }
 
+        public static string GetValidFileName(this string value)
+        {
+            return String.Concat(value.Split(Path.GetInvalidFileNameChars()));
+        }
+
         public static string GetValidName(this string value, bool allowSpace = false, bool allowStartsWithNumber = false, bool underscoreSpace = false, bool frets24 = false)
         {
+            // valid characters developed from actually reviewing ODLC artist, title, album names
             string name = String.Empty;
+
             if (!String.IsNullOrEmpty(value))
             {
-                Regex rgx = new Regex((allowSpace) ? "[^a-zA-Z0-9\\-_ /&]" : "[^a-zA-Z0-9\\-_/&]");
+                // ODLC artist, title, album character use allows these but not these
+                // allow use of accents Über ñice \\p{L}
+                // allow use of unicode punctuation \\p{P\\{S} not currently implimented
+                // may need to be escaped \t\n\f\r#$()*+.?[\^{|  ... '-' needs to be escaped if not at the beginning or end of regex sequence
+                // allow use of only these special characters \\-_ /&.:',!?()\"#
+                // allow use of alphanumerics a-zA-Z0-9
+                // tested and working ... Üuber!@#$%^&*()_+=-09{}][":';<>.,?/ñice
+
+                Regex rgx = new Regex((allowSpace) ? "[^a-zA-Z0-9\\-_ /&.:',!?()\"#\\p{L}]" : "[^a-zA-Z0-9\\-_/&.:',!?()\"#\\p{L} ]");
                 name = rgx.Replace(value, "");
 
                 Regex rgx2 = new Regex(@"^[\d]*\s*");
-                if (!allowStartsWithNumber) name = rgx2.Replace(name, "");
+                if (!allowStartsWithNumber)
+                    name = rgx2.Replace(name, "");
 
                 if (frets24)
                 {
@@ -192,7 +211,9 @@ namespace RocksmithToolkitLib.Extensions
                     }
                     name = name.Trim() + " 24";
                 }
-                if (underscoreSpace) name = name.Replace(" ", "_");
+
+                if (underscoreSpace)
+                    name = name.Replace(" ", "_");
             }
 
             return name.Trim();
@@ -200,11 +221,11 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string StripPlatformEndName(this string value)
         {
-            if (value.EndsWith(GamePlatform.Pc     .GetPathName()[2]) ||
-                value.EndsWith(GamePlatform.Mac    .GetPathName()[2]) ||
+            if (value.EndsWith(GamePlatform.Pc.GetPathName()[2]) ||
+                value.EndsWith(GamePlatform.Mac.GetPathName()[2]) ||
                 value.EndsWith(GamePlatform.XBox360.GetPathName()[2]) ||
-                value.EndsWith(GamePlatform.PS3    .GetPathName()[2]) ||
-                value.EndsWith(GamePlatform.PS3    .GetPathName()[2] + ".psarc"))
+                value.EndsWith(GamePlatform.PS3.GetPathName()[2]) ||
+                value.EndsWith(GamePlatform.PS3.GetPathName()[2] + ".psarc"))
             {
                 return value.Substring(0, value.LastIndexOf("_"));
             }
@@ -372,7 +393,7 @@ namespace RocksmithToolkitLib.Extensions
         public static string CopyToTempFile(this string file, string extension = ".tmp")
         {
             var tmp = GetTempFileName(extension);
-            if(File.Exists(file))
+            if (File.Exists(file))
                 File.Copy(file, tmp);
             return tmp;
         }

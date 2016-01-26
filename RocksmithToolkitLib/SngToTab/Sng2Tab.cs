@@ -45,7 +45,7 @@ namespace RocksmithToolkitLib.SngToTab
                     outputFileName = String.Format("{0}", "Unknown Song");
 
                 outputFileName += (difficulties.Length != 1) ? String.Format(" (level {0:D2})", d) : "";
-                outputFileName = outputFileName.GetValidName(true);
+                outputFileName = outputFileName.GetValidFileName();
                 var outputFilePath = Path.Combine(outputDir, outputFileName + ".txt");
 
                 using (TextWriter tw = new StreamWriter(outputFilePath))

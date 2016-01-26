@@ -348,7 +348,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 var fileList = Directory.EnumerateFiles(sourcePath, "*.*", SearchOption.AllDirectories);
 
                 // MAKE THE XBOX360 EXPECTED STRUCTURE TO PACK WORK
-                var newPackageName = songTitle.GetValidSongName(songTitle).ToLower();
+                var newPackageName = songTitle.GetValidDlcKey(songTitle).ToLower();
                 var newSongDir = Path.Combine(packageRoot, newPackageName);
 
                 // Creating new directories

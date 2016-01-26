@@ -66,7 +66,7 @@
             this.btnQuickAdd = new System.Windows.Forms.Button();
             this.keyboardDescArrLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.DlcNameTB = new RocksmithToolkitGUI.CueTextBox();
+            this.DlcKeyTB = new RocksmithToolkitGUI.CueTextBox();
             this.AlbumSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -556,7 +556,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.cmbAppIds);
-            this.groupBox2.Controls.Add(this.DlcNameTB);
+            this.groupBox2.Controls.Add(this.DlcKeyTB);
             this.groupBox2.Controls.Add(this.AlbumSortTB);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label5);
@@ -581,19 +581,19 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Song Information";
             // 
-            // DlcNameTB
+            // DlcKeyTB
             // 
-            this.DlcNameTB.BackColor = System.Drawing.Color.Snow;
-            this.DlcNameTB.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.DlcNameTB.Cue = "Spawned DLC Name";
-            this.DlcNameTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.DlcNameTB.ForeColor = System.Drawing.Color.Gray;
-            this.DlcNameTB.Location = new System.Drawing.Point(359, -2);
-            this.DlcNameTB.Name = "DlcNameTB";
-            this.DlcNameTB.Size = new System.Drawing.Size(131, 13);
-            this.DlcNameTB.TabIndex = 7;
-            this.DlcNameTB.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.DlcNameTB, "DLC Name");
+            this.DlcKeyTB.BackColor = System.Drawing.Color.Snow;
+            this.DlcKeyTB.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.DlcKeyTB.Cue = "Spawned DLC Key";
+            this.DlcKeyTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.DlcKeyTB.ForeColor = System.Drawing.Color.Gray;
+            this.DlcKeyTB.Location = new System.Drawing.Point(359, -2);
+            this.DlcKeyTB.Name = "DlcKeyTB";
+            this.DlcKeyTB.Size = new System.Drawing.Size(131, 13);
+            this.DlcKeyTB.TabIndex = 7;
+            this.DlcKeyTB.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip.SetToolTip(this.DlcKeyTB, "DLC Key");
             // 
             // AlbumSortTB
             // 
@@ -923,7 +923,7 @@
         private RocksmithToolkitGUI.CueTextBox AlbumTB;
         private RocksmithToolkitGUI.CueTextBox ArtistTB;
         private RocksmithToolkitGUI.CueTextBox SongDisplayNameTB;
-        private RocksmithToolkitGUI.CueTextBox DlcNameTB;
+        private RocksmithToolkitGUI.CueTextBox DlcKeyTB;
         private System.Windows.Forms.Button dlcSaveButton;
         private System.Windows.Forms.Button dlcLoadButton;
         private CueTextBox AverageTempoTB;

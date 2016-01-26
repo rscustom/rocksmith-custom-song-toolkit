@@ -210,7 +210,7 @@ namespace convert2012
                 DLCPackageCreator.ToDDS(ddsFiles);
 
                 var albumArtDir = Path.GetDirectoryName(albumArtPath);
-                var albumArtName = String.Format("album_{0}", info.Name.ToLower().Replace("_", "").GetValidName());
+                var albumArtName = String.Format("album_{0}", info.DLCKey.ToLower().Replace("_", "").GetValidName());
                 var ddsPartialPath = Path.Combine(albumArtDir, albumArtName);
 
                 foreach (var dds in ddsFiles)

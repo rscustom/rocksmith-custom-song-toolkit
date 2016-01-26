@@ -33,7 +33,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public bool PS3 { get; set; }
         public bool Showlights { get; set; }
         public string AppId { get; set; }
-        public string Name { get; set; } // DLC Key
+        public string DLCKey { get; set; } // aka SongKey
         public SongInfo SongInfo { get; set; }
         public string AlbumArtPath { get; set; }
         public string OggPath { get; set; }
@@ -105,7 +105,7 @@ namespace RocksmithToolkitLib.DLCPackage
             data.SongInfo.SongYear = (attr.FirstOrDefault().SongYear == 0 ? 2012 : attr.FirstOrDefault().SongYear);
             data.SongInfo.Artist = attr.FirstOrDefault().ArtistName;
             data.SongInfo.ArtistSort = attr.FirstOrDefault().ArtistNameSort;
-            data.Name = attr.FirstOrDefault().SongKey;
+            data.DLCKey = attr.FirstOrDefault().SongKey;
 
             //Load tone manifest, even poorly formed tone_bass.manifest.json
             var toneManifestJson = Directory.GetFiles(unpackedDir, "*tone*.manifest.json", SearchOption.AllDirectories);
@@ -145,9 +145,9 @@ namespace RocksmithToolkitLib.DLCPackage
             data.Tones = tones;
 
             // Load AggregateGraph.nt 
-            var songDir = Path.Combine(unpackedDir, data.Name);
+            var songDir = Path.Combine(unpackedDir, data.DLCKey);
             if (targetPlatform.platform == GamePlatform.XBox360)
-                songDir = Path.Combine(unpackedDir, "Root", data.Name);
+                songDir = Path.Combine(unpackedDir, "Root", data.DLCKey);
 
             var aggFile = Directory.GetFiles(songDir, "*.nt", SearchOption.TopDirectoryOnly)[0];
             var aggGraphData = AggregateGraph.AggregateGraph.ReadFromFile(aggFile);
@@ -475,7 +475,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (data.SongInfo == null)
                     {
                         // Fill Package Data
-                        data.Name = attr.DLCKey;
+                        data.DLCKey = attr.DLCKey;
                         data.Volume = (attr.SongVolume == 0 ? -12 : attr.SongVolume); //FIXME: too low song volume issue, revert to -6 to fix.
                         data.PreviewVolume = (attr.PreviewVolume ?? data.Volume);
 

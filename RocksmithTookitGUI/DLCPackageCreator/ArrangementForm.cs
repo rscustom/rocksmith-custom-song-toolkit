@@ -772,7 +772,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = xmlSong.ArtistNameSort.GetValidSortName() ?? parentControl.Artist.GetValidSortName();
                 if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = xmlSong.AlbumName ?? String.Empty;
                 if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear ?? String.Empty;
-                if (String.IsNullOrEmpty(parentControl.DLCName)) parentControl.DLCName = String.Format("{0} {1}", parentControl.Artist.Acronym(), parentControl.SongTitle.GetValidSortName());
+                if (String.IsNullOrEmpty(parentControl.DLCKey)) parentControl.DLCKey = String.Format("{0}{1}", parentControl.Artist.Acronym(), parentControl.SongTitle).GetValidDlcKey(parentControl.SongTitle);
 
                 if (String.IsNullOrEmpty(parentControl.AlbumSort))
                 {
