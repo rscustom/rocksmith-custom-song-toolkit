@@ -149,7 +149,7 @@ namespace RocksmithToolkitLib.Xml
          * E is for Emotions? or it's generic event?
          * "E1", "Crowd happy"
          * "E3", "Crowd wild"
-         * "E13", "Crowd rxtra wild?"
+         * "E13", "Crowd extra wild?" // usually at the end of the song
          * 
          * DNA stuff
          * dna_none
@@ -364,7 +364,7 @@ namespace RocksmithToolkitLib.Xml
         }
 
         /// <summary>
-        /// Writes count attribute for choosed nodes.
+        /// Writes count attribute for chosen nodes.
         /// </summary>
         /// <param name="xml">Xml stream.</param>
         private static void FixArrayAttribs(Stream xml)

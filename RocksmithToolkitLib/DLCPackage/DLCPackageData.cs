@@ -168,7 +168,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             foreach (var xmlFile in xmlFiles)
             {
-                if (xmlFile.ToLower().Contains("metadata")) // skip DeadFox file
+                if (xmlFile.ToLower().Contains("metadata"))
                     continue;
 
                 // some poorly formed RS1 CDLC use just "vocal"
@@ -284,7 +284,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
                     else
                     {
-                        // default to Lead arrangment
+                        // default to Lead arrangement
                         attr2014.ArrangementName = "Lead";
                         attr2014.ArrangementType = (int)ArrangementType.Guitar;
                         attr2014.ArrangementProperties.RouteMask = (int)RouteMask.Lead;
@@ -292,7 +292,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         attr2014.ArrangementProperties.PathRhythm = 0;
                         attr2014.ArrangementProperties.PathBass = 0;
 
-                        Console.WriteLine("RS1->RS2 CDLC Conversion defaulted to 'Lead' arrangment");
+                        Console.WriteLine("RS1->RS2 CDLC Conversion defaulted to 'Lead' arrangement");
                     }
 
                     if (convert) // RS1 -> RS2 magic
@@ -345,8 +345,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
                     catch (Exception ex)
                     {
-                        // mainly for the benifit of convert2012 CLI users
-                        Console.WriteLine(@"This CDLC could not be auto converted." + Environment.NewLine + "You can still try manually adding the arrangements and assests." + Environment.NewLine + ex.Message);
+                        // mainly for the benefit of convert2012 CLI users
+                        Console.WriteLine(@"This CDLC could not be auto converted." + Environment.NewLine + "You can still try manually adding the arrangements and assets." + Environment.NewLine + ex.Message);
                     }
                 }
             }
@@ -709,7 +709,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 songVersion = fileNameParts[2];
             SongName = attr.FullName.Split('_')[0];
 
-            //Create dir sruct
+            //Create dir struct
             var outdir = Path.Combine(Path.GetDirectoryName(unpackedDir), String.Format("{0}_{1}_{2}", attr.ArtistName.GetValidSortName(), attr.SongName.GetValidSortName(), songVersion).Replace(" ", "-"));
             var eofdir = Path.Combine(outdir, EOF);
             var kitdir = Path.Combine(outdir, KIT);

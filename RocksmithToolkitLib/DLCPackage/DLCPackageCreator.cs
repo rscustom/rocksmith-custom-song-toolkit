@@ -250,7 +250,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (Path.GetFileName(songFileName).Contains(" "))
                 songFileName = Path.Combine(Path.GetDirectoryName(songFileName), Path.GetFileName(songFileName).Replace(" ", "_"));
 
-            // Cleaning work dir, beware ther is .psarcthat we need.
+            // Cleaning work dir, beware there is .psarcthat we need.
             var junkFiles = Directory.EnumerateFiles(PS3_WORKDIR, "*.*").Where(e => !e.EndsWith(".psarc"));
             foreach (var junk in junkFiles)
                 File.Delete(junk);
@@ -294,7 +294,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", songFileName));
             }
 
-            if (encryptResult.IndexOf("No JDK or JRE is intsalled on your machine") > 0)
+            if (encryptResult.IndexOf("No JDK or JRE is installed on your machine") > 0)
                 throw new InvalidOperationException("You need install Java SE 7 (x86) or higher on your machine. The Java path should be in PATH Environment Variable:" + Environment.NewLine + Environment.NewLine + encryptResult);
 
             if (encryptResult.IndexOf("Encrypt all EDAT files successfully") < 0)

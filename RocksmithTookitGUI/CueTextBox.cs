@@ -67,7 +67,7 @@ namespace RocksmithToolkitGUI
                 }
                 else
                 {
-                    // TODO don't hardcode the user given values.
+                    // TODO: don't hardcode the user given values.
                     this.Font = new Font(this.Font.Name, this.Font.Size, FontStyle.Regular);
                     this.ForeColor = Color.Black;
                 }

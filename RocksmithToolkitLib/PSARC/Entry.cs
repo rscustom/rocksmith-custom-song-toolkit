@@ -51,7 +51,7 @@ namespace RocksmithToolkitLib.PSARC
         /// Gets a value indicating whether this <see cref="RocksmithToolkitLib.PSARC.Entry"/> is compressed.
         /// </summary>
         /// <value><c>true</c> if compressed; otherwise, <c>false</c>.</value>
-        /// <remarks>Kinda rubbush but could be useful someday. Now inactive.</remarks>
+        /// <remarks>Kinda rubbish but could be useful someday. Now inactive.</remarks>
         public bool Compressed {
             get;
             set;

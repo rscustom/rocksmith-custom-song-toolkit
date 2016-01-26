@@ -14,7 +14,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             InitializeComponent();
         }
 
-        ~ToneImportForm()//GC unmnaged memory only, TODO: switch to Dispose() pattern
+        ~ToneImportForm()//GC unmanaged memory only, TODO: switch to Dispose() pattern
         {
             Tone2014 = null;
             Tone = null;

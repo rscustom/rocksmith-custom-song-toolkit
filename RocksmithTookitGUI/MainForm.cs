@@ -37,7 +37,7 @@ namespace RocksmithToolkitGUI
 
             this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", ToolkitVersion.version);
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
-            {// Disable updates for Mac (speedup) -1.5 secconds here
+            {// Disable updates for Mac (speedup) -1.5 seconds here
                 updateButton.Enabled = false;
                 updateButton.Text = "Updates Disabled";
                 updateButton.Visible = true;

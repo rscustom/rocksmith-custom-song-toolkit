@@ -63,7 +63,7 @@ namespace RocksmithToolkitGUI.OggConverter
                 if (converterType == ConverterType.Revorb || converterType == ConverterType.WEM)
                     fd.Filter += "|Wwise 2013 WEM files (*.wem)|*.wem";
                 else if (converterType == ConverterType.Ogg2Wem)
-                    fd.Filter = "Vobis Ogg or Wave files (*.ogg, *.wav)|*.ogg; *.wav";
+                    fd.Filter = "Vorbis Ogg or Wave files (*.ogg, *.wav)|*.ogg; *.wav";
 
                 fd.ShowDialog();
                 if (!fd.FileNames.Any())

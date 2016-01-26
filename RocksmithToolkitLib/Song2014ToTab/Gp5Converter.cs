@@ -59,7 +59,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                         var mf = new ManifestFunctions(GameVersion.RS2014);
                         int maxDif = mf.GetMaxDifficulty(arrangement);
 
-                        if (allDif) // create seperate file for each difficulty
+                        if (allDif) // create separate file for each difficulty
                         {
                             for (int difLevel = 0; difLevel <= maxDif; difLevel++)
                             {
@@ -161,7 +161,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
         #region SongInfoShort to SongInfo
 
         /// <summary>
-        /// Convert SongInfoShort to SongInfo that contains only user selections or defualts
+        /// Convert SongInfoShort to SongInfo that contains only user selections or defaults
         /// </summary>
         /// <param name="songListShort"></param>
         /// <param name="songList"></param>
@@ -184,7 +184,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     newSongList.Add(songInfo);
                     newSongNdx++;
 
-                    // clear arrangments so we can add user selections
+                    // clear arrangements so we can add user selections
                     if (arrangementShort != null)
                     {
                         newSongList[newSongNdx - 1].Arrangements.Clear();

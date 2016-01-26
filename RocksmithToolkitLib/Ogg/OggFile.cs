@@ -214,7 +214,7 @@ namespace RocksmithToolkitLib.Ogg
                 for (int i = 0; i < y; i++)
                 {
                     writer.Write(reader.ReadUInt16()); //seekgranularity
-                    writer.Write(reader.ReadUInt16()); //unk. actuall granularity used??
+                    writer.Write(reader.ReadUInt16()); //unk. actual granularity used??
                 }
 
                 //codebook
@@ -231,7 +231,7 @@ namespace RocksmithToolkitLib.Ogg
                 for (int i = 0; i < streamsize; i++)
                 {
                     UInt16 packetsize = reader.ReadUInt16(); // size of packet
-                    i++; // increase becuase two bytes read for size of packet
+                    i++; // increase because two bytes read for size of packet
                     writer.Write(packetsize);
                     for (int z = 0; z < packetsize; z++)
                     {
@@ -245,7 +245,7 @@ namespace RocksmithToolkitLib.Ogg
         }
 
         /// <summary>
-        /// Convert ogg or wave audio files to Wwise 2013 wem audio, including preveiw wem file.
+        /// Convert ogg or wave audio files to Wwise 2013 wem audio, including preview wem file.
         /// </summary>
         /// <param name="audioPath"></param>
         /// <param name="audioQuality"></param>
@@ -279,7 +279,7 @@ namespace RocksmithToolkitLib.Ogg
                 if (!File.Exists(wavPreviewPath))
                 {
                     if (!File.Exists(oggPath))
-                    {//may cause issues if you've got another guitar.ogg in folder, but it's extreamley rare.
+                    {//may cause issues if you've got another guitar.ogg in folder, but it's extremely rare.
                         ExternalApps.Wav2Ogg(audioPath, oggPath, audioQuality); // 4
                     }
                     ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, previewLength, chorusTime);
@@ -319,7 +319,7 @@ namespace RocksmithToolkitLib.Ogg
                     throw new InvalidDataException("The input OGG file appears to be truncated.");
 
                 if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "WAVE")
-                    throw new InvalidDataException("Erorr reading input file - expected WAVE");
+                    throw new InvalidDataException("Error reading input file - expected WAVE");
 
                 if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "fmt ")
                     throw new InvalidDataException("Error reading input file - expected fmt");

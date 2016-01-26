@@ -151,7 +151,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             rsSong2014.AlbumYear = rsSong.AlbumYear;
             rsSong2014.CrowdSpeed = "1";
 
-            // initialize arrangment properties
+            // initialize arrangement properties
             rsSong2014.ArrangementProperties = new SongArrangementProperties2014
             {
                 Represent = 1,
@@ -344,7 +344,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
                     //if (String.IsNullOrEmpty(zChordTemplate.ChordName))
                     //    continue;
 
-                    if (zChordTemplate.Finger0 != -1) // finger > -1 is a string played                       
+                    if (zChordTemplate.Finger0 != -1) // finger > -1 is a string played
                         chordNotes.Add(DecodeChordTemplate(zChord, 0, zChordTemplate.Fret0));
 
                     if (zChordTemplate.Finger1 != -1)

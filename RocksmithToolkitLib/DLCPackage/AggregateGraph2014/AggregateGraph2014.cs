@@ -639,7 +639,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             aggGraphPack.Soundbank = new List<GraphItemLLID>();
             aggGraphPack.GameXblock = new List<GraphItem>();
 
-            // fix aggegrate graph entries, reusing existing Persistent ID
+            // fix aggregate graph entries, reusing existing Persistent ID
             var currentPlatform = new Platform(GamePlatform.Pc, GameVersion.RS2014);
             var aggregateGraphFiles = Directory.EnumerateFiles(srcPath, "*.nt", SearchOption.AllDirectories).ToArray();
             foreach (var aggGraph in aggregateGraphFiles)

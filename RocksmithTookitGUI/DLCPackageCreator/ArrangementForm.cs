@@ -41,7 +41,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 //Song XML File
                 XmlFilePath.Text = _arrangement.SongXml.File;
 
-                //Arrangment Information
+                //Arrangement Information
                 arrangementTypeCombo.SelectedItem = _arrangement.ArrangementType;
                 arrangementNameCombo.SelectedItem = _arrangement.Name;
                 if (!String.IsNullOrEmpty(_arrangement.Tuning))
@@ -286,7 +286,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // TODO: figure out logic behind unexpected LINQ behaviors
             // tuningComboBox list is being updated with custom tuning info
-            // so refilling the combobox is required to produce the expected results
+            // so refilling the combo-box is required to produce the expected results
             // for now using old fashioned non-LINQ method
             FillTuningCombo(selectedType, currentGameVersion);
 
@@ -438,7 +438,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         private void SequencialToneComboEnabling()
-        {//TODO: handle not one-by-one enabilng disabling tone slots and use data from enabled one, confused about this one.
+        {//TODO: handle not one-by-one enabling disabling tone slots and use data from enabled one, confused about this one.
             if (currentGameVersion != GameVersion.RS2012)
             {
                 toneBCombo.Enabled = !String.IsNullOrEmpty((string)toneACombo.SelectedItem) && toneACombo.SelectedIndex > 0;
@@ -514,7 +514,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     {
                         MessageBox.Show(@"Unable to get information from XML arrangement:  " + Environment.NewLine +
                             Path.GetFileName(xmlFilePath) + Environment.NewLine +
-                            @"It may not be a valid arrangment or " + Environment.NewLine +
+                            @"It may not be a valid arrangement or " + Environment.NewLine +
                             @"your version of the EOF may be out of date." + Environment.NewLine +
                             ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return false;
@@ -604,10 +604,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             if (currentGameVersion != GameVersion.RS2012)
                             {
                                 RouteMask = RouteMask.Bass;
-                                //Low tuning fix for bass, If lowstring is B and bass fix not applied
+                                //Low tuning fix for bass, If lowest string is B and bass fix not applied
                                 if (xmlSong.Tuning.String0 < -4 && this.frequencyTB.Text == "440")
                                     bassFix |= MessageBox.Show("The bass tuning may be too low.  Apply Low Bass Tuning Fix?" + Environment.NewLine +
-                                                               "Note: The fix will revert if bass arangement is resaved in EOF.  ",
+                                                               "Note: The fix will revert if bass arrangement is re-saved in EOF.  ",
                                                                "Warning ... Low Bass Tuning", MessageBoxButtons.YesNo) == DialogResult.Yes;
                             }
                         }
@@ -684,7 +684,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         tuningComboBox.SelectedIndex = 0;
                         MessageBox.Show("Toolkit was not able to automatically set tuning for" + Environment.NewLine +
                                         "Bass Arrangement: " + Path.GetFileName(xmlFilePath) + Environment.NewLine +
-                                        "Use the tuning selector dropdown or Tunining Editor" + Environment.NewLine +
+                                        "Use the tuning selector dropdown or Tuning Editor" + Environment.NewLine +
                                         "to customize bass tuning (as defined for six strings).  ", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
 
@@ -693,11 +693,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     Arrangement.TuningStrings = xmlSong.Tuning;
                     Arrangement.CapoFret = xmlSong.Capo;
                     frequencyTB.Text = Arrangement.TuningPitch.ToString();
-                    
+
                     // bastard bass hack
                     if (Arrangement.Tuning.ToLower().Contains("fixed"))
                         frequencyTB.Text = "220";
-                    
+
                     UpdateCentOffset();
 
                     // save converted RS1 to RS2014 Song2014 XML

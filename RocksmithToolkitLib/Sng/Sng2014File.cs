@@ -45,7 +45,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
         /// Raw SNG data reader.
         /// </summary>
         /// <param name="inputFile">Packed and encrypted SNG file</param>
-        /// <returns><see cref="Sng2014File"/> exemplair.</returns>
+        /// <returns><see cref="Sng2014File"/> exemplar.</returns>
         /// <param name = "platform"></param>
         public static Sng2014File LoadFromFile(string inputFile, Platform platform) {
             using (var fs = new FileStream(inputFile, FileMode.Open)) {

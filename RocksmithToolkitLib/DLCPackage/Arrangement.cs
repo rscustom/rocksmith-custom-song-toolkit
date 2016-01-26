@@ -66,7 +66,7 @@ namespace RocksmithToolkitLib.DLCPackage
         // DLC ID
         public Guid Id { get; set; }
         public int MasterId { get; set; }
-        // Motronome
+        // Metronome
         public Metronome Metronome { get; set; }
         // preserve EOF and DDS comments
         [IgnoreDataMember] // required for SaveTemplate feature to work
@@ -108,7 +108,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     break;
             }
 
-            // unknow tuning
+            // unknown tuning
             if (tuning == null)
             {
                 tuning = new TuningDefinition();
@@ -202,7 +202,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
 
                     if (song.Tones == null && toneId > 0)
-                        throw new InvalidDataException("Custom tones were not set properly in EOF" + Environment.NewLine + "Please reauthor XML arrangement in EOF and fix custom tone consistency.");
+                        throw new InvalidDataException("Custom tones were not set properly in EOF" + Environment.NewLine + "Please re-author XML arrangement in EOF and fix custom tone consistency.");
                 }
 
                 // write changes to xml arrangement (w/o comments)

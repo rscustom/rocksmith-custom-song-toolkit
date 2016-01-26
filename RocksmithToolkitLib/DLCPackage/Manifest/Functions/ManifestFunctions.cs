@@ -283,7 +283,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             }
 
             // Is not the way of official are calculated, but is a way to calculate unique values for custom
-            // Can be rewrited with the correct way or a best way to get this value
+            // Could be rewritten with the correct way or a best way to get this value
             var itCount = song.PhraseIterations.Length;
             var ifAny = easyArray.Count > 0;
 
@@ -407,7 +407,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                         Frets = new List<int> { y.Fret0, y.Fret1, y.Fret2, y.Fret3, y.Fret4, y.Fret5 }
                     });
         }
-        //TODO: inverstigate on values 0.9 and lower, spotted in DLC
+        //TODO: investigate on values 0.9 and lower, spotted in DLC
         public void GenerateDynamicVisualDensity(IAttributes attribute, dynamic song, Arrangement arrangement, GameVersion version) {
             if (arrangement.ArrangementType == ArrangementType.Vocal)
             {

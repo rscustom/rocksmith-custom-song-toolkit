@@ -132,7 +132,7 @@ namespace RocksmithToolkitLib.SngToTab
 
                 int slot = slots[s];
                 // calculate the position of the current note/chord in the measure
-                // +1 because the first column should always be empty for readbility's sake
+                // +1 because the first column should always be empty for readability's sake
                 int index = slot * slotLength + 1;
 
                 // First fill the measure with empty measure data up to the current position
@@ -174,10 +174,10 @@ namespace RocksmithToolkitLib.SngToTab
                     s++;
                     continue;
                 }
-                
+
                 TabBeat b = Beats[time];
                 string beatString = TabFile.BEAT_STRING.PadLeft(slotLength, TabFile.PADDING_INFO);
-                
+
                 int slot = slots[s];
                 int index = slot * slotLength + 1;
 
@@ -186,7 +186,7 @@ namespace RocksmithToolkitLib.SngToTab
             }
             return _lines;
         }
-        
+
         // Fills the measure's text lines with empty data op to a given length
         private void FillLines(int length)
         {

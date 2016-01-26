@@ -26,7 +26,7 @@ namespace ArtistFolderCreator
             {
                 Console.WriteLine(@"Artist Folder Creator DropletApp for Rocksmith 2014 CDLC");
                 Console.WriteLine(@" - Version: " + ProjectVersion());
-                Console.WriteLine(@"   Copywrite (C) 2015 CST Developers");
+                Console.WriteLine(@"   Copyright (C) 2015 CST Developers");
                 Console.WriteLine();
                 Console.WriteLine(@" - Purpose: Catalog CDLC songs by ArtistName into folders");
                 Console.WriteLine(@"   Copies 'Artist-Name_Song-Name_v1_p.psarc' files to ArtistName folders.");
@@ -41,7 +41,7 @@ namespace ArtistFolderCreator
             var errorMsg = String.Empty;
 
             if (args.GetLength(0) > 1)
-                return ShowHelpfulError("Too many CDLC folders dropped onto the execuatable.\r\nOne at time ... please.");
+                return ShowHelpfulError("Too many CDLC folders dropped onto the executable.\r\nOne at time ... please.");
 
             if (args[0] == "-u")
             {

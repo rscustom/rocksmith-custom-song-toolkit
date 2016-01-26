@@ -33,7 +33,7 @@ namespace dlcconverter
                 { "sp|sourceplatform=", "Source platform (valid values: Pc, Mac, XBox360 or PS3)", v => outputArguments.SourcePlatform = GetPlatform(v) },
                 { "tp|targetplatform=", "Target platform (valid values: Pc, Mac, XBox360 or PS3)", v => outputArguments.TargetPlatform = GetPlatform(v) },
                 { "i|input=", "The input file or directory (multiple allowed)", v => outputArguments.Input = v },
-                { "appid=", "AppId (required for Pc and Mac platforms)", v => outputArguments.AppId = v }                
+                { "appid=", "AppId (required for Pc and Mac platforms)", v => outputArguments.AppId = v }
             };
         }
 
@@ -89,7 +89,7 @@ namespace dlcconverter
                 {
                     ShowHelpfulError("'appid' is required for 'Pc' or 'Mac' target platform.");
                     return 1;
-                }              
+                }
 
                 // CONVERSION
                 var packageFilter = "*.psarc";
@@ -148,12 +148,12 @@ namespace dlcconverter
                         }
                         else
                         {
-                            Console.WriteLine(String.Format("DLC {0} converted from '{1}' to '{2}'.", Path.GetFileName(sourcePackage), arguments.SourcePlatform.platform, arguments.TargetPlatform.platform));                     
+                            Console.WriteLine(String.Format("DLC {0} converted from '{1}' to '{2}'.", Path.GetFileName(sourcePackage), arguments.SourcePlatform.platform, arguments.TargetPlatform.platform));
                         }
 
                         dlcSuccessfulCount++;
-                    } catch (Exception e) {
-                        
+                    }
+                    catch (Exception e) {
                         Console.WriteLine(String.Format("ERROR: Couldn't convert DLC because of error '{0}' - skip file '{1}'", e.Message, Path.GetFileName(sourcePackage)));
                         dlcErrorList.Add(Path.GetFullPath(sourcePackage));
                     }
@@ -161,10 +161,10 @@ namespace dlcconverter
                     {
                         Console.WriteLine("-----------------------------------------------------------------");
                         dlcCount++;
-                    }   
+                    }
                 }
 
-                Console.WriteLine(String.Format("'{0}' DLCs sucessful processed.", dlcSuccessfulCount));
+                Console.WriteLine(String.Format("'{0}' DLCs successful processed.", dlcSuccessfulCount));
                 if (dlcErrorList.Count > 0)
                 {
                     Console.WriteLine(String.Format("'{0}' DLCs processed with errors:", dlcErrorList.Count));
@@ -173,14 +173,14 @@ namespace dlcconverter
                         Console.WriteLine(fileName);
                     });
                 }
-                
+
             }
             catch (Exception ex)
             {
                 ShowHelpfulError(ex.Message);
                 return 1;
             }
-            
+
 
             return 0;
         }

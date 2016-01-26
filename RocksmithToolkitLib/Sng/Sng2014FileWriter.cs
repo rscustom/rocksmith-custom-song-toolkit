@@ -309,7 +309,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         break;
                     }
                 }
-                // TODO need to figure out which masks are not applied
+                // TODO: need to figure out which masks are not applied
                 c.NoteMask[i] = parseNoteMask(n, false);
                 c.BendData[i] = new BendData();
                 c.BendData[i].BendData32 = parseBendData(n, false);
@@ -422,7 +422,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             {
                 var nld = xml.NewLinkedDiff[i];
                 var n = new NLinkedDifficulty();
-                // TODO Ratio attribute unused?
+                // TODO: Ratio attribute unused?
                 n.LevelBreak = nld.LevelBreak;
                 n.PhraseCount = nld.PhraseCount;
                 n.NLD_Phrase = new Int32[n.PhraseCount];
@@ -502,7 +502,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 catch (Exception)
                 {
-                    throw new InvalidDataException(@"There is tone name error in XML Arrangment: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + "Use EOF to reauthor custom tones or Notepad to attempt manual repair." );
+                    throw new InvalidDataException(@"There is tone name error in XML Arrangement: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + "Use EOF to re-author custom tones or Notepad to attempt manual repair." );
                 }
             }
         }
@@ -653,7 +653,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             if (note.Harmonic != 0)
                 mask |= CON.NOTE_MASK_HARMONIC;
 
-            // TODO seems to have no effect
+            // TODO: seems to have no effect
             // hopo = 0
 
             if (single && note.Ignore != 0)
@@ -679,7 +679,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             if (note.HarmonicPinch != 0)
                 mask |= CON.NOTE_MASK_PINCHHARMONIC;
 
-            // TODO seems to have no effect
+            // TODO: seems to have no effect
             // pickDirection = 0
 
             if (note.RightHand != -1)
@@ -720,7 +720,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             n.SlideTo = unchecked((Byte)note.SlideTo);
             n.SlideUnpitchTo = unchecked((Byte)note.SlideUnpitchTo);
             n.LeftHand = unchecked((Byte)note.LeftHand);
-            // bvibrato and rchords8 are using 0 value but without TAP mask
+            // 'bvibrato' and 'rchords8' are using 0 value but without TAP mask
             if (note.Tap != 0)
                 n.Tap = unchecked((Byte)note.Tap);
             else
@@ -760,7 +760,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 n.NoteMask |= CON.NOTE_MASK_IGNORE;
             if (chord.PalmMute != 0)
                 n.NoteMask |= CON.NOTE_MASK_PALMMUTE;
-            // TODO does not seem to have a mask or any effect
+            // TODO: does not seem to have a mask or any effect
             // if (chord.Hopo != 0)
             //     n.NoteMask |= ;
 
@@ -885,7 +885,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     else
                         // last phrase iteration = noguitar/end
                         anchor.EndBeatTime = xml.PhraseIterations[xml.PhraseIterations.Length - 1].Time;
-                    // TODO not 100% clear
+                    // TODO: not 100% clear
                     // times will be updated later
                     // these "garbage" values are everywhere!
                     //anchor.Unk3_FirstNoteTime = (float) 3.4028234663852886e+38;
@@ -918,7 +918,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     var fp = new Fingerprint
                     {
                         ChordId = h.ChordId, StartTime = h.StartTime, EndTime = h.EndTime
-                    // TODO not always StartTime
+                    // TODO: not always StartTime
                     //fp.Unk3_FirstNoteTime = fp.StartTime;
                     //fp.Unk4_LastNoteTime = fp.StartTime;
                     };
@@ -1066,7 +1066,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         }
                 }
 
-                // initialize times for empty anchors, based on lrocknroll
+                // initialize times for empty anchors, based on 'lrocknroll'
                 foreach (var anchor in a.Anchors.Anchors)
                     if (anchor.Unk3_FirstNoteTime == 0)
                     {
@@ -1112,13 +1112,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     if (n.Time != p.Time) prvnote = 1;
                     else
                     {
-                        for (int x = 1; x < (a.Notes.Notes.Length); x++) //search up till the begining of iteration 
+                        for (int x = 1; x < (a.Notes.Notes.Length); x++) //search up till the beginning of iteration 
                         {
-                            if (j - x < 1) //dont search past the first note in iteration
+                            if (j - x < 1) //don't search past the first note in iteration
                             {
                                 prvnote = x;
                                 x = a.Notes.Notes.Length + 2;
-                                break; // stop searching for a match we reached the begining
+                                break; // stop searching for a match we reached the beginning
                             }
                             var prv = a.Notes.Notes[j - x]; // get the info for the note we are checking against
                             if (prv.Time != n.Time)
@@ -1129,14 +1129,14 @@ namespace RocksmithToolkitLib.Sng2014HSL
                                     //check if its a chord
                                     prvnote = x;
                                     x = a.Notes.Notes.Length + 2;
-                                    break; //stop here, its a chord so dont need to check the strings
+                                    break; //stop here, its a chord so don't need to check the strings
                                 }
                                 if (prv.StringIndex == n.StringIndex)
                                 {
                                     //check to see if we are looking at the same string
                                     prvnote = x;
                                     x = a.Notes.Notes.Length + 2;
-                                    break; //stop here we found the same string, at a differnt timestamp, thats not a chord
+                                    break; //stop here we found the same string, at a different timestamp, thats not a chord
                                 }
                             }
                         }

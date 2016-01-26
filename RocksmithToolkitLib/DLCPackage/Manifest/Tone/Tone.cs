@@ -34,7 +34,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
 
         public Tone()
         {
-            //fill with defauld amp\cab
+            //fill with default amp\cab
             PedalList = new Dictionary<string, Pedal>();
             ExclusiveBuild = new List<object>();
             UnlockKey = "";

@@ -93,7 +93,7 @@ namespace RocksmithToolkitLib.Extensions
                 else
                     break;
 
-            //If we didn't find a common prefix then return wo results
+            //If we didn't find a common prefix then return w\o results
             if (lastCommonRoot == -1)
                 return objectPath;
 

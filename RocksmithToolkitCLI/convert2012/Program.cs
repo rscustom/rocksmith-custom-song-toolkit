@@ -31,7 +31,7 @@ namespace convert2012
             {
                 Console.WriteLine(@"Rocksmith 2012 CDCL Converter DropletApp");
                 Console.WriteLine(@" - Version: " + ProjectVersion());
-                Console.WriteLine(@"   Copywrite (C) 2015 CST Developers");
+                Console.WriteLine(@"   Copyright (C) 2015 CST Developers");
                 Console.WriteLine();
                 Console.WriteLine(@" - Purpose: Converts RS2012 CDLC dat file to RS2014 CDLC psarc file");
                 Console.WriteLine();
@@ -73,7 +73,7 @@ namespace convert2012
                     // Convert Audio to Wem Format
                     info = ConvertAudio(info);
 
-                    // Update Albmum Art
+                    // Update Album Art
                     info = ConvertAlbumArt(cdlcFilePath, info);
 
                     foreach (var arr in info.Arrangements)
@@ -114,7 +114,7 @@ namespace convert2012
 
         public static void UpdateXml(Arrangement arr, DLCPackageData info)
         {
-            // update xml with user modified DLCPackageData info                                               
+            // update xml with user modified DLCPackageData info
             var songXml = Song2014.LoadFromFile(arr.SongXml.File);
             arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
             arr.Id = IdGenerator.Guid();

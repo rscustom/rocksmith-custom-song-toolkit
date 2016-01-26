@@ -29,7 +29,7 @@ namespace RocksmithToolkitLib.SngToTab
         // Measure where notes are being added to
         private TabMeasure _currentMeasure;
         // Sometimes a copy of the last measure is needed if a measure is split by a section separator,
-        // i.e. the first half of the section belongs to the verse and the second hald to the chorus
+        // i.e. the first half of the section belongs to the verse and the second half to the chorus
         private TabMeasure _lastMeasure;
 
         public TabMeasure CurrentMeasure

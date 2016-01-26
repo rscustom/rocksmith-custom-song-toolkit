@@ -616,7 +616,7 @@ namespace RocksmithToolkitLib.Sng
                 if (!phraseIterationFound)
                     throw new Exception(string.Format("No phrase iteration found with matching time for section {0}.", i.ToString()));
 
-                // phrase iteration end index           
+                // phrase iteration end index
                 if (i == sections.Length - 1) // if last section, default to last phrase iteration
                 {
                     w.Write(phraseIterations.Length - 1);
@@ -831,7 +831,7 @@ namespace RocksmithToolkitLib.Sng
             // output notes header count
             w.Write(handShapes.Length);
 
-            // ouput handshapes
+            // output handshapes
             for (int i = 0; i < handShapes.Length; i++)
             {
                 SongHandShape handShape = handShapes[i];
@@ -1115,7 +1115,7 @@ namespace RocksmithToolkitLib.Sng
 
             // unknown
             // from 6AMSalvation_Combo.xml value = 11.525
-            // which does not match any pharse iteration start time
+            // which does not match any phrase iteration start time
             // and does not match first ebeat time
             // and does not match any section start time
             // does match first event time of E3 (although this is not a match in other files)

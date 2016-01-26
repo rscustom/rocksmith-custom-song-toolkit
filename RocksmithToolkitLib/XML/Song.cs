@@ -470,7 +470,7 @@ namespace RocksmithToolkitLib.Xml
                 String5 = stringArray[5];
         }
 
-        [Obsolete("Depricated, please use regular ToArray() funtion.", true)]
+        [Obsolete("Deprecated, please use regular ToArray() function.", true)]
         public Int16[] ToShortArray()
         {
             return ToArray();
@@ -481,7 +481,7 @@ namespace RocksmithToolkitLib.Xml
             return new Int16[] { String0, String1, String2, String3, String4, String5 };
         }
 
-        [Obsolete("Depricated, please use regular ToArray() funtion.", true)]
+        [Obsolete("Deprecated, please use regular ToArray() function.", true)]
         public Int16[] ToBassArray()
         {
             return new Int16[] { String0, String1, String2, String3, 0, 0 };

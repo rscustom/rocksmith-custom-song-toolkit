@@ -258,7 +258,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             for (int i = 0; i < 5; i++)
             {
                 progress += step;
-                ProcessStarted(progress, "Convertng user PNG images ...");
+                ProcessStarted(progress, "Converting user PNG images ...");
 
                 if (imageArray[i, 3] != null) // user has specified a replacement image
                 {
@@ -313,7 +313,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             // convert user png images to dds images
             progress += step * 3;
-            ProcessStarted(progress, "Convertng user PNG images ...");
+            ProcessStarted(progress, "Converting user PNG images ...");
 
             // CRITICAL PATH AND ARGS
             var rootDir = string.Format("static_{0}", DLCInlayCreator.GlobalTitlePlatform);
@@ -510,7 +510,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             picBackground.Image = ImageHandler.PreSizeImage(imageArray[0, 3], imageArray[0, 1]);
             lblBackground.Visible = imageArray[0, 3] == null;
 
-            // upadate background image in other images
+            // Update background image in other images
             picUbi.BackgroundImage = picBackground.Image;
             picPedals.BackgroundImage = picBackground.Image;
             picCredits.BackgroundImage = picBackground.Image;
@@ -626,7 +626,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             Application.DoEvents();
             pbarStatus.Value = pbarStatus.Maximum;
             UpdateLblStatus("All done ...");
-            Thread.Sleep(1500); // dispaly message
+            Thread.Sleep(1500); // display message
             pbarStatus.Visible = lblStatus.Visible = false;
             btnGenerate.Enabled = true;
             btnLoad.Enabled = true;

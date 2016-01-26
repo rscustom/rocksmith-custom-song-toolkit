@@ -215,7 +215,7 @@ namespace RocksmithToolkitLib.DLCPackage
             byte overrideParent = 0;
             byte numFX = 0;
             int parentBusID = RandomGenerator.NextInt();
-            int directParentID = isConsole ? 134217984 : 65536; // todo, changes on console
+            int directParentID = isConsole ? 134217984 : 65536; // TODO: changes on console
             uint unkID1 = (preview) ? 4178100890 : 0;
             int mixerID = mixerid;
             byte priorityOverrideParent = 0;
@@ -479,7 +479,7 @@ namespace RocksmithToolkitLib.DLCPackage
             oldSoundID = soundID; oldFileID = fileID;
 
             var audioReader = new EndianBinaryReader(bitConverter, audioStream);
-            byte[] dataChunk = audioReader.ReadBytes(51200); // wwise is based on audio length, we'll just make it up(prefethc lookup is 100ms)
+            byte[] dataChunk = audioReader.ReadBytes(51200); // wwise is based on audio length, we'll just make it up(prefetch lookup is 100ms)
             byte[] dataIndexChunk = DataIndex(fileID, dataChunk.Length);
             byte[] headerChunk = Header(soundbankID, dataIndexChunk.Length, platform.IsConsole);
             byte[] stringIdChunk = StringID(soundbankID, soundbankName);

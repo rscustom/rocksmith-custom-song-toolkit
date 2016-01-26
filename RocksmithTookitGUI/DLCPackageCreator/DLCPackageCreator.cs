@@ -76,7 +76,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     case GameVersion.RS2014:
                         // TODO: Test WEM generations with non-PC Platforms
                         if (platformMAC.Checked == platformPS3.Checked == platformXBox360.Checked == false)
-                            return "All Supported Files|*.wem;*.ogg;*.wav|Wwise 2013 audio files (*.wem)|*.wem|Ogg Vobis audio files (*.ogg)|*.ogg|Wave audio files (*.wav)|*.wav";
+                            return "All Supported Files|*.wem;*.ogg;*.wav|Wwise 2013 audio files (*.wem)|*.wem|Ogg Vorbis audio files (*.ogg)|*.ogg|Wave audio files (*.wav)|*.wav";
 
                         return "Wwise 2013 audio files (*.wem)|*.wem";
                     default:
@@ -422,7 +422,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // showlights cause in game hanging for some RS1-RS2 conversions
             packageData.Showlights = chkShowlights.Checked;
 
-            //Generate metronome arrangemnts here
+            //Generate metronome arrangements here
             var mArr = new List<Arrangement>();
             foreach (var arr in packageData.Arrangements)
             {
@@ -430,7 +430,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     mArr.Add(GenMetronomeArr(arr));
             } packageData.Arrangements.AddRange(mArr);
 
-            // Update Xml arrangements song info
+            // Update XML arrangements song info
             bool updateArrangmentID = false;
             if (userChangedInputControls)
                 if (MessageBox.Show(@"The song information has been changed." + Environment.NewLine +
@@ -489,7 +489,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (platformPC.Checked)
                 try
                 {
-                    bwGenerate.ReportProgress(progress, " Generating PC Package ...");
+                    bwGenerate.ReportProgress(progress, "Generating PC Package ...");
                     RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(dlcSavePath, packageData, new Platform(GamePlatform.Pc, currentGameVersion), pnum: numPlatforms);
                     progress += step; numPlatforms--;
                     bwGenerate.ReportProgress(progress);
@@ -676,7 +676,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 if (RS2014.Checked)
                 {
-                    // check and fix the template compatablity if necessary
+                    // check and fix the template compatibility if necessary
                     var templateString = File.ReadAllText(dlcLoadPath);
 
                     if (templateString.Contains("Manifest.Tone\">"))
@@ -920,13 +920,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     // Populate tuning info
                     try
                     {
-                        var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);//not exist\mooved\etc, should check it instead of catch.
+                        var songXml = Song2014.LoadFromFile(arrangement.SongXml.File);//not exist\moved\etc, should check it instead of catch.
                         arrangement.CapoFret = songXml.Capo;
 
                         //Load tuning from Arrangement
                         var tuning = new TuningDefinition();
 
-                        // depricated use full guitar tuning for all instruments
+                        // deprecated. use full guitar tunings for all instruments
                         //if (arrangement.ArrangementType == ArrangementType.Bass)
                         //    tuning = TuningDefinitionRepository.Instance().SelectForBass(songXml.Tuning, CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014);
                         //else
@@ -1056,7 +1056,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             if (!PackageVersion.Equals(PackageVersion.GetValidVersion()))
             {
-                MessageBox.Show(String.Format("Package verion field contain invalid characters!\n" +
+                MessageBox.Show(String.Format("Package version field contain invalid characters!\n" +
                                               "Please replace this: {0}\n" +
                                               "By something like this: 1 or 2.1 or 2.2.1",
                                               PackageVersion), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1093,7 +1093,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 if (!File.Exists(arr.SongXml.File))
                 {
-                    MessageBox.Show("Error: Song Xml File doesn't exist: " + arr.SongXml.File, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error: Song XML File doesn't exist: " + arr.SongXml.File, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
                 arr.SongFile.File = "";
@@ -1168,7 +1168,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string audioPreviewPath = null;
             if (CurrentGameVersion != GameVersion.RS2012)
             {
-                // impliment reusable audio to WEM conversion code
+                // implement reusable audio to WEM conversion code
                 AudioPath = OggFile.Convert2Wem(AudioPath, (int)audioQualityBox.Value, previewLength, chorusTime);
                 var audioPathNoExt = Path.Combine(Path.GetDirectoryName(AudioPath), Path.GetFileNameWithoutExtension(AudioPath));
                 audioPreviewPath = String.Format(audioPathNoExt + "_preview.wem");
@@ -1250,7 +1250,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         /// <param name="info"></param>
         public void UpdateXml(Arrangement arr, DLCPackageData info, bool updateArrangementID = false)
         {
-            // generate new Arrangment IDs
+            // generate new Arrangement IDs
             if (updateArrangementID)
             {
                 arr.Id = IdGenerator.Guid();
@@ -1300,7 +1300,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public Arrangement GenMetronomeArr(Arrangement arr)
         {
-            var mArr = GeneralExtensions.Copy<Arrangement>(arr);
+            var mArr = GeneralExtensions.Copy(arr);
             var songXml = Song2014.LoadFromFile(mArr.SongXml.File);
             var newXml = Path.GetTempFileName();
             mArr.SongXml = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongXML { File = newXml };
@@ -1507,7 +1507,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                                 toneId = 3;
                             }
 
-                            // update tone name and tone id and accomadate EOF custom tone differences
+                            // update tone name and tone id and accommodate EOF custom tone differences
                             if (songXml.Tones != null)
                             {
                                 foreach (var xmlTone in songXml.Tones)
@@ -1525,7 +1525,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             }
                         }
 
-                        // force update to tone in arragement
+                        // force update to tone in arrangement
                         arrangementLB.Items[i] = arrangement;
                     }
                 }
@@ -1971,7 +1971,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Title = "Quick Add ... Multiselect Arrangments";
+                ofd.Title = "Quick Add ... Multiselect Arrangements";
                 ofd.Filter = "Rocksmith Song Xml Files (*.xml)|*.xml";
                 ofd.Multiselect = true;
                 if (ofd.ShowDialog() != DialogResult.OK)
@@ -2024,7 +2024,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tt.ShowAlways = true;
 
             tt.SetToolTip(btnQuickAdd,
-               "Add multiple arrangments quickly. Use the " + Environment.NewLine +
+               "Add multiple arrangements quickly. Use the " + Environment.NewLine +
                "file dialog to multiselect arrangements." + Environment.NewLine +
                "The first arrangement selected will be used to" + Environment.NewLine +
                "populated the song information on this form." + Environment.NewLine +

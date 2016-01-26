@@ -73,7 +73,7 @@ namespace SngToTab
                 }
                 Console.WriteLine("The conversion is complete.");
             } catch (Exception ex){
-                Console.WriteLine("Error ocurred: " + ex.Message + Environment.NewLine + ex.InnerException);
+                Console.WriteLine("Error occurred: " + ex.Message + Environment.NewLine + ex.InnerException);
             }
         }
     }

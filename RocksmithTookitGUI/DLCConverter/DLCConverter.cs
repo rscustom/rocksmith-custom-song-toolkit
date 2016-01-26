@@ -74,7 +74,7 @@ namespace RocksmithToolkitGUI.DLCConverter
                 platformTargetCombo.DataSource = targetPlatform;
                 platformTargetCombo.SelectedItem = ConfigRepository.Instance()["converter_target"];
 
-                // Fill App ID
+                // Fill AppID
                 PopulateAppIdCombo(GameVersion.RS2014); //Supported game version
                 AppIdVisibilty();
             } catch { /*For mono compatibility*/ }
@@ -103,7 +103,7 @@ namespace RocksmithToolkitGUI.DLCConverter
                         );
                     else
                         MessageBox.Show(
-                            String.Format("DLC was converted from '{2}' to '{3}' with erros. See below: {0}{1}{0}", Environment.NewLine, errorsFound.ToString(), SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning
+                            String.Format("DLC was converted from '{2}' to '{3}' with errors. See below: {0}{1}{0}", Environment.NewLine, errorsFound.ToString(), SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning
                         );
                     convertButton.Enabled = true;
                     Parent.Focus();

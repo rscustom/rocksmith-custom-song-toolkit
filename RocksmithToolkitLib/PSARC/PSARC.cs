@@ -28,7 +28,7 @@ namespace RocksmithToolkitLib.PSARC
             {
                 MagicNumber = 1347633490; //'PSAR'
                 VersionNumber = 65540; //1.4
-                CompressionMethod = 2053925218; //'zlib' (also avalible 'lzma')
+                CompressionMethod = 2053925218; //'zlib' (also available 'lzma')
                 TOCEntrySize = 30;//bytes
                 //NumFiles = 0;
                 BlockSizeAlloc = 65536; //Decompression buffer size = 64kb
@@ -86,7 +86,7 @@ namespace RocksmithToolkitLib.PSARC
             if (_writer != null) _writer.Dispose();
         }
         #endregion
-        #region Helpers Inflator/Deflator
+        #region Helpers Inflater/Deflater
 
         public string ErrMSG;
 
@@ -178,7 +178,7 @@ namespace RocksmithToolkitLib.PSARC
         public void InflateEntries()
         {
             foreach (var current in _toc)
-            {// We really can use Parrallel here.
+            {// We really can use Parallel here.
                 InflateEntry(current);
             }
         }
@@ -311,7 +311,7 @@ namespace RocksmithToolkitLib.PSARC
             AddEntry(entry);
         }
         public void AddEntry(Entry entry)
-        {//important hierachy
+        {//important hierarchy
             _toc.Add(entry);
             entry.Id = this.TOC.Count - 1;
         }
@@ -507,14 +507,14 @@ namespace RocksmithToolkitLib.PSARC
                     // quick copy header from input stream
                     var buffer = new byte[32];
                     encStream.Write(buffer, 0, inputStream.Read(buffer, 0, buffer.Length));
-                    encStream.Position = 32; //sainty check ofc
+                    encStream.Position = 32; //sanity check ofc
                     inputStream.Flush();
 
                     int tocSize = (int)_header.TotalTOCSize - 32;
                     int decSize = 0;
-                    buffer = new byte[1024 * 16]; // more effecient use of memory
+                    buffer = new byte[1024 * 16]; // more efficient use of memory
 
-                    ndx = 0; // for debuging
+                    ndx = 0; // for debugging
                     step = Math.Round(1D / (((double)tocSize / buffer.Length) + 2) * 100, 3);
                     progress = 0;
                     GlobalExtension.ShowProgress("Writing Encrypted Data ...");

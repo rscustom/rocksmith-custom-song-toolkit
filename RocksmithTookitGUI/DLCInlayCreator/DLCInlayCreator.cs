@@ -268,7 +268,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 Configuration iniConfig = Configuration.LoadFromFile(Path.Combine(unpackedFolder, "setup.smb"));
 
                 // switch to new sharpconfig.dll ini file format with [General] section
-                // allow for backward compatiblity with old *.cgm files
+                // allow for backward compatibility with old *.cgm files
                 try
                 {
                     Author = iniConfig["General"]["author"].Value;

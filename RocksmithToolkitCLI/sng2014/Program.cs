@@ -127,10 +127,10 @@ namespace sng2014
                             continue;
                         }
                     }
-                    
+
                     if (arguments.Pack || arguments.Unpack) {
                         var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), String.Format("{0}_{1}.sng", Path.GetFileNameWithoutExtension(inputFile), (arguments.Unpack) ? "decrypted" : "encrypted"));
-                        
+
                         using (FileStream inputStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
                         using (FileStream outputStream = new FileStream(outputFile, FileMode.Create, FileAccess.ReadWrite)) {
                             if (arguments.Pack)
@@ -149,7 +149,7 @@ namespace sng2014
                         using (FileStream outputStream = new FileStream(outputFile, FileMode.Create, FileAccess.ReadWrite))
                         {
                             dynamic xml = null;
-                            
+
                             if (arguments.ArrangementType == ArrangementType.Vocal)
                                 xml = new Vocals(sng);
                             else
@@ -168,11 +168,11 @@ namespace sng2014
                 }
 
                 if (errorCount == 0)
-                    Console.WriteLine("Process sucessfully completed!");
+                    Console.WriteLine("Process successfully completed!");
                 else if (errorCount > 0 && errorCount < srcFiles.Count)
                     Console.WriteLine("Process completed with errors!");
                 else
-                    Console.WriteLine("An error ocurred!");
+                    Console.WriteLine("An error occurred!");
 
             } catch (OptionException ex) {
                 ShowHelpfulError(ex.Message);

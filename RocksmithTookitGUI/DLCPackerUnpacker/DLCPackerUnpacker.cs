@@ -40,7 +40,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             }
             catch { /*For mono compatibility*/ }
 
-            // App ID updater worker
+            // AppID updater worker
             bwRepack.DoWork += new DoWorkEventHandler(UpdateAppId);
             bwRepack.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
             bwRepack.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ProcessCompleted);
@@ -254,7 +254,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Title = "Select the CDLC(s) which to apply Bass Tuning Fix";
-                ofd.Filter = "All Files (*.*)|*.*|Rocksith 2014 PC|*_p.psarc|Rocksith 2014 Mac|*_m.psarc|Rocksith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
+                ofd.Filter = "All Files (*.*)|*.*|Rocksmith 2014 PC|*_p.psarc|Rocksmith 2014 Mac|*_m.psarc|Rocksmith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
                 ofd.Multiselect = true;
                 ofd.FileName = destPath;
 
@@ -365,7 +365,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     using (var ofd = new SaveFileDialog())
                     {
                         ofd.Title = "Select a name for the Low Bass Tuning Fixed file.";
-                        ofd.Filter = "All Files (*.*)|*.*|Rocksith 2014 PC|*_p.psarc|Rocksith 2014 Mac|*_m.psarc|Rocksith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
+                        ofd.Filter = "All Files (*.*)|*.*|Rocksmith 2014 PC|*_p.psarc|Rocksmith 2014 Mac|*_m.psarc|Rocksmith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
                         ofd.FileName = String.Format("{0}_{1}_bassfix{2}", info.SongInfo.ArtistSort, info.SongInfo.SongDisplayNameSort, srcExt);
 
                         if (ofd.ShowDialog() != DialogResult.OK)
@@ -392,7 +392,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     catch (Exception ex)
                     {
                         Console.Write(ex.Message);
-                        MessageBox.Show("Access rights required to delete source package, or an error occured. Package still may exist. Try running as Administrator.");
+                        MessageBox.Show("Access rights required to delete source package, or an error occurred. Package still may exist. Try running as Administrator.");
                     }
                 }
 
@@ -552,7 +552,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Title = "Select multiple songs to include in Song Pack";
-                ofd.Filter = "Rocksith 2014 PC Only|*_p.psarc";
+                ofd.Filter = "Rocksmith 2014 PC Only|*_p.psarc";
                 ofd.FilterIndex = 1;
                 ofd.Multiselect = true;
 
@@ -580,7 +580,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "All Files (*.*)|*.*|Rocksmith 1|*.dat|Rocksith 2014 PC|*_p.psarc|Rocksith 2014 Mac|*_m.psarc|Rocksith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
+                ofd.Filter = "All Files (*.*)|*.*|Rocksmith 1|*.dat|Rocksmith 2014 PC|*_p.psarc|Rocksmith 2014 Mac|*_m.psarc|Rocksmith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
                 ofd.Multiselect = true;
                 ofd.FilterIndex = 1;
                 ofd.FileName = destPath;
