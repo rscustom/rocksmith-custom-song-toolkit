@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
+using CFSM.ImageTools;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
@@ -204,7 +207,7 @@ namespace RocksmithToolkitLib.DLCPackage
             switch (dlcType)
             {
                 case DLCPackageType.Song:
-                    displayName = String.Format("{0} by {1}", info.SongInfo.SongDisplayName, info.SongInfo.Artist);
+                    displayName = String.Format("{0} by {1}", info.SongInfo.SongTitle, info.SongInfo.Artist);
                     break;
                 case DLCPackageType.Lesson:
                     throw new NotImplementedException("Lesson package type not implemented yet :(");
@@ -988,22 +991,62 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void ToDDS(List<DDSConvertedFile> filesToConvert, DLCPackageType dlcType = DLCPackageType.Song)
         {
-            string args = null;
-            switch (dlcType)
+            // testing using dreddfoxx CFSM.ImageTool library.  Thanks to DF.
+            var CFSM_IMAGE_TOOLS = File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "CFSM.ImageTools.dll"));
+            var DF_DDSIMAGE = File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "DF_DDSImage.dll"));
+            
+            if (CFSM_IMAGE_TOOLS && DF_DDSIMAGE && dlcType == DLCPackageType.Song)
             {
-                case DLCPackageType.Song:
-                    args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -nomipmap -RescaleBox -dxt1a -overwrite -forcewrite";
-                    break;
-                case DLCPackageType.Lesson:
-                    throw new NotImplementedException("Lesson package type not implemented yet :(");
-                case DLCPackageType.Inlay:
-                    // CRITICAL - DO NOT CHANGE ARGS
-                    args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -quality_highest -max -dxt5 -nomipmap -alpha -overwrite -forcewrite";
-                    break;
+                foreach (var item in filesToConvert)
+                {
+                    using (FileStream fs = File.OpenRead(item.sourceFile))
+                    using (FileStream dfs = File.Create(item.destinationFile))
+                    {
+                        Bitmap b;
+                        if (Path.GetExtension(item.sourceFile).ToLower() == ".dds")                        
+                            b = ImageExtensions.DDStoBitmap(fs);                        
+                        else
+                        {
+                            var art = Image.FromFile(item.sourceFile);
+                            if (art.Width > 256 || art.Height > 256)
+                            {
+                                var resizeart = art.ScaleImage(256);
+                                art.Dispose();
+                                b = resizeart;
+                            }
+                            else
+                                b = art as Bitmap;
+                        }
+
+                        b.ResizeImage(item.sizeX, item.sizeY);
+                        var output = ImageExtensions.ToDDS(b);
+                        if (output != null)
+                        {
+                            output.CopyTo(dfs);
+                            output.Dispose();
+                        }
+                    }
+                }
             }
-            //TODO: there is an option to use NVTT lib: supports Win, Mac, Linux
-            foreach (var item in filesToConvert)
-                GeneralExtensions.RunExternalExecutable("nvdxt.exe", true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
+            else
+            {
+                string args = null;
+                switch (dlcType)
+                {
+                    case DLCPackageType.Song:
+                        args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -nomipmap -RescaleBox -dxt1a -overwrite -forcewrite";
+                        break;
+                    case DLCPackageType.Lesson:
+                        throw new NotImplementedException("Lesson package type not implemented yet :(");
+                    case DLCPackageType.Inlay:
+                        // CRITICAL - DO NOT CHANGE ARGS
+                        args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -quality_highest -max -dxt5 -nomipmap -alpha -overwrite -forcewrite";
+                        break;
+                }
+
+                foreach (var item in filesToConvert)
+                    GeneralExtensions.RunExternalExecutable("nvdxt.exe", true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
+            }
         }
 
         public static void GenerateToolkitVersion(Stream output, string packageAuthor = null, string packageVersion = null)

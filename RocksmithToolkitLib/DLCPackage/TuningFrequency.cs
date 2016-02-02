@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 
@@ -136,6 +137,35 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             return true;
+        }
+                 
+        public static string TuningToName(string tolkenTuning, GameVersion gameVersion = GameVersion.RS2014)
+        {
+            var jObj = JObject.Parse(tolkenTuning);
+            TuningStrings songTuning = jObj.ToObject<TuningStrings>();
+            var tuningXml = TuningDefinitionRepository.LoadTuningDefinitions(gameVersion);
+
+            foreach (var tuning in tuningXml)
+                if (tuning.Tuning.String0 == songTuning.String0 &&
+                    tuning.Tuning.String1 == songTuning.String1 && 
+                    tuning.Tuning.String2 == songTuning.String2 && 
+                    tuning.Tuning.String3 == songTuning.String3 && 
+                    tuning.Tuning.String4 == songTuning.String4 && 
+                    tuning.Tuning.String5 == songTuning.String5)
+                    return tuning.UIName;
+
+            return "Other";
+        }
+
+        public static string TuningStringToName(string strings, GameVersion gameVersion = GameVersion.RS2014)
+        {
+            var tuningXml = TuningDefinitionRepository.LoadTuningDefinitions(gameVersion);
+
+            foreach (var tuning in tuningXml)
+                if ((string)("" + (tuning.Tuning.String0) + (tuning.Tuning.String1) + (tuning.Tuning.String2) + (tuning.Tuning.String3) + (tuning.Tuning.String4) + (tuning.Tuning.String5)) == strings)
+                    return tuning.UIName;
+
+            return "Other";
         }
 
     }

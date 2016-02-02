@@ -9,8 +9,8 @@ namespace RocksmithToolkitLib.DLCPackage
         public string Artist { get; set; }
         public string ArtistSort { get; set; }
         public int AverageTempo { get; set; }
-        public string SongDisplayName { get; set; }
-        public string SongDisplayNameSort { get; set; }
+        public string SongTitle { get; set; }
+        public string SongTitleSort { get; set; }
         public int SongYear { get; set; }
     }
 }

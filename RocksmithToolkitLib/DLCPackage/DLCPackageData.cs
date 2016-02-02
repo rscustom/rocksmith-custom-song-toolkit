@@ -99,8 +99,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // Fill SongInfo
             data.SongInfo = new SongInfo();
-            data.SongInfo.SongDisplayName = attr.FirstOrDefault().SongName;
-            data.SongInfo.SongDisplayNameSort = attr.FirstOrDefault().SongNameSort;
+            data.SongInfo.SongTitle = attr.FirstOrDefault().SongName;
+            data.SongInfo.SongTitleSort = attr.FirstOrDefault().SongNameSort;
             data.SongInfo.Album = attr.FirstOrDefault().AlbumName;
             data.SongInfo.SongYear = (attr.FirstOrDefault().SongYear == 0 ? 2012 : attr.FirstOrDefault().SongYear);
             data.SongInfo.Artist = attr.FirstOrDefault().ArtistName;
@@ -482,8 +482,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         // Fill SongInfo
                         data.SongInfo = new SongInfo
                         {
-                            SongDisplayName = attr.SongName,
-                            SongDisplayNameSort = attr.SongNameSort,
+                            SongTitle = attr.SongName,
+                            SongTitleSort = attr.SongNameSort,
                             Album = attr.AlbumName,
                             AlbumSort = attr.AlbumNameSort,
                             SongYear = attr.SongYear ?? 0,

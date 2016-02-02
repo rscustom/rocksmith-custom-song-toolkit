@@ -165,9 +165,9 @@ namespace RocksmithToolkitLib.Extensions
                 return value;
 
             if (value.ToUpperInvariant().StartsWith("THE "))
-                return value.Remove(0, 4).GetValidName(true);
+                return value.Remove(0, 4).GetValidName(true, true);
 
-            return value.GetValidName(true);
+            return value.GetValidName(true, true);
         }
 
         public static string GetValidFileName(this string value)

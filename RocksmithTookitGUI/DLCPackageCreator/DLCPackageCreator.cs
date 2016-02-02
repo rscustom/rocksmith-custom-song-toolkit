@@ -441,8 +441,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     updateArrangmentID = true;
                 else
                     // maintain use of original DLCKey, as well as, PID
-                    packageData.DLCKey = dlcKeyOrg; 
-               
+                    packageData.DLCKey = dlcKeyOrg;
+
             foreach (var arr in packageData.Arrangements)
             {
                 if (userChangedInputControls)
@@ -853,7 +853,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var BasePath = Path.GetDirectoryName(filesBaseDir);
 
             // Song INFO
-            DlcKeyTB.Text = dlcKeyOrg = info.DLCKey;           
+            DlcKeyTB.Text = dlcKeyOrg = info.DLCKey;
 
             PopulateAppIdCombo();
             Application.DoEvents();
@@ -863,8 +863,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 AppIdTB.Text = "248750"; // hardcoded for now
             AlbumTB.Text = info.SongInfo.Album;
             AlbumSortTB.Text = info.SongInfo.AlbumSort;
-            SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
-            SongDisplayNameSortTB.Text = info.SongInfo.SongDisplayNameSort;
+            SongDisplayNameTB.Text = info.SongInfo.SongTitle;
+            SongDisplayNameSortTB.Text = info.SongInfo.SongTitleSort;
             YearTB.Text = info.SongInfo.SongYear.ToString();
             ArtistTB.Text = info.SongInfo.Artist;
             ArtistSortTB.Text = info.SongInfo.ArtistSort;
@@ -1221,8 +1221,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                            SongInfo = new SongInfo
                            {
-                               SongDisplayName = SongDisplayNameTB.Text,
-                               SongDisplayNameSort = String.IsNullOrEmpty(SongDisplayNameSortTB.Text.Trim()) ? SongDisplayNameTB.Text : SongDisplayNameSortTB.Text,
+                               SongTitle = SongDisplayNameTB.Text,
+                               SongTitleSort = String.IsNullOrEmpty(SongDisplayNameSortTB.Text.Trim()) ? SongDisplayNameTB.Text : SongDisplayNameSortTB.Text,
                                Album = AlbumTB.Text,
                                SongYear = year,
                                Artist = ArtistTB.Text,
@@ -1275,7 +1275,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.ArtistName = info.SongInfo.Artist;
                 songXml.ArtistNameSort = info.SongInfo.ArtistSort;
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
-                songXml.Title = info.SongInfo.SongDisplayName;
+                songXml.Title = info.SongInfo.SongTitle;
                 songXml.Tuning = arr.TuningStrings;
                 if (!String.IsNullOrEmpty(arr.ToneBase)) songXml.ToneBase = arr.ToneBase;
                 if (!String.IsNullOrEmpty(arr.ToneA)) songXml.ToneA = arr.ToneA;
@@ -1289,12 +1289,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             else
             {
                 var songXml = Song.LoadFromFile(arr.SongXml.File);
-                songXml.Title = info.SongInfo.SongDisplayName;
+                songXml.Title = info.SongInfo.SongTitle;
                 songXml.AlbumName = info.SongInfo.Album;
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
                 songXml.ArtistName = info.SongInfo.Artist;
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
-                songXml.Title = info.SongInfo.SongDisplayName;
+                songXml.Title = info.SongInfo.SongTitle;
                 songXml.Tuning = arr.TuningStrings;
 
                 using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
@@ -1605,7 +1605,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             var numTones = tonesLB.Items.Count - preToneCount;
-            if(numTones > 0)
+            if (numTones > 0)
                 MessageBox.Show("Tone(s) imported: " + numTones + "  ", "CDLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();
         }
@@ -1868,13 +1868,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void ArtistSortTB_TextChanged(object sender, EventArgs e)
         {
-            ArtistSortTB.TextChanged -= ArtistSortTB_TextChanged;
-            var artist = ArtistSortTB.Text.ToUpperInvariant();
-            if (artist.StartsWith("THE ", StringComparison.Ordinal))
-            {
-                ArtistSortTB.Text = artist.GetValidSortName();
-            }
-            ArtistSortTB.TextChanged += ArtistSortTB_TextChanged;
+            // depricated ... now using ValidateSortName
+            //ArtistSortTB.TextChanged -= ArtistSortTB_TextChanged;
+            //var artist = ArtistSortTB.Text.ToUpperInvariant();
+            //if (artist.StartsWith("THE ", StringComparison.Ordinal))
+            //{
+            //    ArtistSortTB.Text = artist.GetValidSortName();
+            //}
+            //ArtistSortTB.TextChanged += ArtistSortTB_TextChanged;
         }
 
         private void packageVersionTB_KeyPress(object sender, KeyPressEventArgs e)
@@ -1944,7 +1945,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void ValidateDlcKey(object sender, CancelEventArgs e)
         {
             TextBox dlcKey = sender as TextBox;
-            dlcKey.Text = Artist.GetValidDlcKey(SongTitle);
+            dlcKey.Text = dlcKey.Text.Trim().GetValidDlcKey(SongTitle);
             userChangedInputControls = true;
         }
 
@@ -1954,8 +1955,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tb.Text = tb.Text.Trim().GetValidName(true, true);
             userChangedInputControls = true;
 
-            if (tb.Name == "SongDisplayNameTB" || tb.Name == "ArtistTB")
-                DlcKeyTB.Text = String.Format("{0}{1}", Artist.Acronym(), SongTitle).GetValidDlcKey(SongTitle);
+            //if (tb.Name == "SongDisplayNameTB" || tb.Name == "ArtistTB")
+            //    DlcKeyTB.Text = String.Format("{0}{1}", Artist.Acronym(), SongTitle).GetValidDlcKey(SongTitle);
         }
 
         private void ValidateVersion(object sender, CancelEventArgs e)

@@ -87,7 +87,7 @@ namespace convert2012
 
                     // Repack
                     var cdlcVersion = "c1"; // conversion 1
-                    var cdlcFileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", info.SongInfo.Artist, info.SongInfo.SongDisplayName, cdlcVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                    var cdlcFileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", info.SongInfo.Artist, info.SongInfo.SongTitle, cdlcVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                     var cdlcSavePath = Path.Combine(cdlcSaveDir, cdlcFileName);
                     Console.WriteLine(@"Repacking as RS2014 CDLC: " + cdlcFileName + @".psarc");
                     Console.WriteLine("");
@@ -125,7 +125,7 @@ namespace convert2012
             songXml.ArtistName = info.SongInfo.Artist;
             songXml.ArtistNameSort = info.SongInfo.ArtistSort;
             songXml.AverageTempo = info.SongInfo.AverageTempo;
-            songXml.Title = info.SongInfo.SongDisplayName;
+            songXml.Title = info.SongInfo.SongTitle;
             songXml.ToneBase = arr.ToneBase;
             songXml.ToneA = arr.ToneA;
             songXml.ToneB = arr.ToneB;

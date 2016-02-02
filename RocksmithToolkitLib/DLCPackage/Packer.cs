@@ -337,7 +337,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     var song = Song2014.LoadFromFile(xml);
 
                     songData.SongInfo = new SongInfo();
-                    songData.SongInfo.SongDisplayName = songTitle = song.Title;
+                    songData.SongInfo.SongTitle = songTitle = song.Title;
                     songData.SongInfo.Artist = song.ArtistName;
 
                     songData.SignatureType = PackageMagic.CON;
@@ -411,7 +411,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             if (!String.IsNullOrEmpty(songInfo))
                             {
                                 songData.SongInfo = new SongInfo();
-                                songData.SongInfo.SongDisplayName = songInfo;
+                                songData.SongInfo.SongTitle = songInfo;
                                 songData.SongInfo.Artist = songInfo;
                             }
                         }

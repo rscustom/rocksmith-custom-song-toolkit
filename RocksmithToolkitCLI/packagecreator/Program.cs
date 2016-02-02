@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using NDesk.Options;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
@@ -195,7 +196,7 @@ namespace packagecreator
 
                         // generate CDLC file name
                         var artist = packageData.SongInfo.ArtistSort;
-                        var title = packageData.SongInfo.SongDisplayNameSort;
+                        var title = packageData.SongInfo.SongTitleSort;
                         // var destDir = Path.Combine(arguments.Output, Path.GetFileName(srcDirs[i]).GetValidName());
                         var fileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", artist, title, arguments.Revision.Replace(".", "_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                         var destPath = Path.Combine(arguments.Output, fileName);

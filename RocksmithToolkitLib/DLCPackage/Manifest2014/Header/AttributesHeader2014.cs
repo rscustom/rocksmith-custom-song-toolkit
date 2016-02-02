@@ -119,8 +119,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
                 SongDifficulty = SongDiffHard;
 
                 SongLength = (double?)Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
-                SongName = info.SongInfo.SongDisplayName;
-                SongNameSort = info.SongInfo.SongDisplayNameSort;
+                SongName = info.SongInfo.SongTitle;
+                SongNameSort = info.SongInfo.SongTitleSort;
                 SongYear = info.SongInfo.SongYear;
 
                 //Detect tuning
