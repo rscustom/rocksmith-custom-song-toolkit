@@ -994,7 +994,11 @@ namespace RocksmithToolkitLib.DLCPackage
             // testing using dreddfoxx CFSM.ImageTool library.  Thanks to DF.
             var CFSM_IMAGE_TOOLS = File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "CFSM.ImageTools.dll"));
             var DF_DDSIMAGE = File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "DF_DDSImage.dll"));
-            
+
+//#if !DEBUG
+//            CFSM_IMAGE_TOOLS = false;
+//#endif
+
             if (CFSM_IMAGE_TOOLS && DF_DDSIMAGE && dlcType == DLCPackageType.Song)
             {
                 foreach (var item in filesToConvert)
@@ -1003,23 +1007,12 @@ namespace RocksmithToolkitLib.DLCPackage
                     using (FileStream dfs = File.Create(item.destinationFile))
                     {
                         Bitmap b;
-                        if (Path.GetExtension(item.sourceFile).ToLower() == ".dds")                        
-                            b = ImageExtensions.DDStoBitmap(fs);                        
+                        if (Path.GetExtension(item.sourceFile).ToLower() == ".dds")
+                            b = ImageExtensions.DDStoBitmap(fs);
                         else
-                        {
-                            var art = Image.FromFile(item.sourceFile);
-                            if (art.Width > 256 || art.Height > 256)
-                            {
-                                var resizeart = art.ScaleImage(256);
-                                art.Dispose();
-                                b = resizeart;
-                            }
-                            else
-                                b = art as Bitmap;
-                        }
+                            b = Image.FromFile(item.sourceFile) as Bitmap;
 
-                        b.ResizeImage(item.sizeX, item.sizeY);
-                        var output = ImageExtensions.ToDDS(b);
+                        var output = b.ToDDS(item.sizeX, item.sizeY);
                         if (output != null)
                         {
                             output.CopyTo(dfs);
