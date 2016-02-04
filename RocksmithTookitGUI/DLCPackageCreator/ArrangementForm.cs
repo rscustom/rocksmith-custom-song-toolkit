@@ -776,9 +776,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 if (String.IsNullOrEmpty(parentControl.AlbumSort))
                 {
-                    // substitute package author for AlbumSort
+                    // use default author for AlbumSort or generate
                     var useDefaultAuthor = ConfigRepository.Instance().GetBoolean("creator_usedefaultauthor");
-                    if (useDefaultAuthor && currentGameVersion == GameVersion.RS2014)
+                    if (useDefaultAuthor) // && currentGameVersion == GameVersion.RS2014)
                         parentControl.AlbumSort = ConfigRepository.Instance()["general_defaultauthor"].Trim().GetValidSortName();
                     else
                         parentControl.AlbumSort = xmlSong.AlbumNameSort.GetValidSortName() ?? parentControl.Album.GetValidSortName();

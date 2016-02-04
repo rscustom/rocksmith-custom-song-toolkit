@@ -207,7 +207,7 @@ namespace RocksmithToolkitLib.DLCPackage
             switch (dlcType)
             {
                 case DLCPackageType.Song:
-                    displayName = String.Format("{0} by {1}", info.SongInfo.SongTitle, info.SongInfo.Artist);
+                    displayName = String.Format("{0} by {1}", info.SongInfo.SongDisplayName, info.SongInfo.Artist);
                     break;
                 case DLCPackageType.Lesson:
                     throw new NotImplementedException("Lesson package type not implemented yet :(");
@@ -313,7 +313,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void GenerateRS2014SongPsarc(Stream output, DLCPackageData info, Platform platform, int pnum = -1)
         {
             // TODO: Benchmark processes and optimize speed
-            dlcName = info.DLCKey.ToLower();
+            dlcName = info.Name.ToLower();
             packPsarc = new PSARC.PSARC();
 
             // Stream objects
@@ -427,7 +427,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     // SOUNDBANK
                     var soundbankFileName = String.Format("song_{0}", dlcName);
-                    var audioFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.DLCKey, soundStream, soundbankStream, info.Volume, platform);
+                    var audioFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name, soundStream, soundbankStream, info.Volume, platform);
                     packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankFileName), soundbankStream);
                     packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioFileNameId), soundStream);
 
@@ -436,9 +436,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     dynamic audioPreviewFileNameId;
                     var previewVolume = (float)(info.PreviewVolume ?? info.Volume);
                     if (File.Exists(previewAudioFile))
-                        audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.DLCKey + "_Preview", soundPreviewStream, soundbankPreviewStream, previewVolume, platform, true);
+                        audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, previewVolume, platform, true);
                     else
-                        audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.DLCKey + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform, true, true);
+                        audioPreviewFileNameId = SoundBankGenerator2014.GenerateSoundBank(info.Name + "_Preview", soundPreviewStream, soundbankPreviewStream, info.Volume, platform, true, true);
                     packPsarc.AddEntry(String.Format("audio/{0}/{1}.bnk", platform.GetPathName()[0].ToLower(), soundbankPreviewFileName), soundbankPreviewStream);
                     if (!soundPreviewStream.Equals(soundStream)) packPsarc.AddEntry(String.Format("audio/{0}/{1}.wem", platform.GetPathName()[0].ToLower(), audioPreviewFileNameId), soundPreviewStream);
 
@@ -769,10 +769,10 @@ namespace RocksmithToolkitLib.DLCPackage
                         packPsarc.AddEntry("APP_ID", appIdStream);
                     }
 
-                    packageListWriter.WriteLine(info.DLCKey);
+                    packageListWriter.WriteLine(info.Name);
 
                     GenerateSongPsarcRS1(songPsarcStream, info, platform);
-                    string songFileName = String.Format("{0}.psarc", info.DLCKey);
+                    string songFileName = String.Format("{0}.psarc", info.Name);
                     packPsarc.AddEntry(songFileName, songPsarcStream);
                     songPsarcStream.WriteTmpFile(songFileName, platform);
 
@@ -783,7 +783,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         // TODO: generate single tone.manifest.json file that has multiple tones
                         // currently generating multiple tone.manifest.json files
                         toneStreams.Add(tonePsarcStream);
-                        var toneKey = info.DLCKey + "_" + tone.Name == null ? "Default" : tone.Name.Replace(' ', '_');
+                        var toneKey = info.Name + "_" + tone.Name == null ? "Default" : tone.Name.Replace(' ', '_');
                         GenerateTonePsarc(tonePsarcStream, toneKey, tone);
                         string toneEntry = String.Format("DLC_Tone_{0}.psarc", toneKey);
                         packPsarc.AddEntry(toneEntry, tonePsarcStream);
@@ -820,7 +820,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static void GenerateSongPsarcRS1(Stream output, DLCPackageData info, Platform platform)
         {
-            var soundBankName = String.Format("Song_{0}", info.DLCKey);
+            var soundBankName = String.Format("Song_{0}", info.Name);
 
             try
             {
@@ -891,34 +891,34 @@ namespace RocksmithToolkitLib.DLCPackage
                         manifestBuilder.AggregateGraph.SongFiles.Add(x.SongFile);
                         manifestBuilder.AggregateGraph.SongXMLs.Add(x.SongXml);
                     }
-                    manifestBuilder.AggregateGraph.XBlock = new XBlockFile { File = info.DLCKey + ".xblock" };
-                    manifestBuilder.AggregateGraph.Write(info.DLCKey, platform.GetPathName(), platform, aggregateGraphStream);
+                    manifestBuilder.AggregateGraph.XBlock = new XBlockFile { File = info.Name + ".xblock" };
+                    manifestBuilder.AggregateGraph.Write(info.Name, platform.GetPathName(), platform, aggregateGraphStream);
                     aggregateGraphStream.Flush();
                     aggregateGraphStream.Seek(0, SeekOrigin.Begin);
 
                     {
-                        var manifestData = manifestBuilder.GenerateManifest(info.DLCKey, info.Arrangements, info.SongInfo, platform);
+                        var manifestData = manifestBuilder.GenerateManifest(info.Name, info.Arrangements, info.SongInfo, platform);
                         var writer = new StreamWriter(manifestStream);
                         writer.Write(manifestData);
                         writer.Flush();
                         manifestStream.Seek(0, SeekOrigin.Begin);
                     }
 
-                    GameXblock<Entity>.Generate(info.DLCKey, manifestBuilder.Manifest, manifestBuilder.AggregateGraph, xblockStream);
+                    GameXblock<Entity>.Generate(info.Name, manifestBuilder.Manifest, manifestBuilder.AggregateGraph, xblockStream);
                     xblockStream.Flush();
                     xblockStream.Seek(0, SeekOrigin.Begin);
 
-                    var soundFileName = SoundBankGenerator.GenerateSoundBank(info.DLCKey, soundStream, soundbankStream, info.Volume, platform);
+                    var soundFileName = SoundBankGenerator.GenerateSoundBank(info.Name, soundStream, soundbankStream, info.Volume, platform);
                     soundbankStream.Flush();
                     soundbankStream.Seek(0, SeekOrigin.Begin);
 
-                    GenerateSongPackageId(packageIdStream, info.DLCKey);
+                    GenerateSongPackageId(packageIdStream, info.Name);
 
                     var songPsarc = new PSARC.PSARC();
                     songPsarc.AddEntry("PACKAGE_ID", packageIdStream);
                     songPsarc.AddEntry("AggregateGraph.nt", aggregateGraphStream);
                     songPsarc.AddEntry("Manifests/songs.manifest.json", manifestStream);
-                    songPsarc.AddEntry(String.Format("Exports/Songs/{0}.xblock", info.DLCKey), xblockStream);
+                    songPsarc.AddEntry(String.Format("Exports/Songs/{0}.xblock", info.Name), xblockStream);
                     songPsarc.AddEntry(String.Format("Audio/{0}/{1}.bnk", platform.GetPathName()[0], soundBankName), soundbankStream);
                     songPsarc.AddEntry(String.Format("Audio/{0}/{1}.ogg", platform.GetPathName()[0], soundFileName), soundStream);
                     songPsarc.AddEntry(String.Format("GRAssets/AlbumArt/{0}.dds", manifestBuilder.AggregateGraph.AlbumArt.Name), albumArtStream);

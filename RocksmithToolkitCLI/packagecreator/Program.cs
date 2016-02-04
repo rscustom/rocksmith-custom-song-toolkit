@@ -186,17 +186,17 @@ namespace packagecreator
                         DLCPackageData packageData = DLCPackageData.LoadFromFolder(srcDirs[i], arguments.Platform, arguments.Platform);
                         packageData.AppId = arguments.AppId;
                         packageData.PackageVersion = arguments.Revision;
-                        packageData.DLCKey = Path.GetFileName(srcDirs[i]).GetValidName();
+                        packageData.Name = Path.GetFileName(srcDirs[i]).GetValidName();
                         packageData.Volume = packageData.Volume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.Volume;
                         packageData.PreviewVolume = packageData.PreviewVolume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.PreviewVolume;
 
                         // check Album Artwork
                         if (arguments.Platform.version == GameVersion.RS2014)
-                            CheckAlbumArt(srcDirs[i], packageData.DLCKey);
+                            CheckAlbumArt(srcDirs[i], packageData.Name);
 
                         // generate CDLC file name
                         var artist = packageData.SongInfo.ArtistSort;
-                        var title = packageData.SongInfo.SongTitleSort;
+                        var title = packageData.SongInfo.SongDisplayNameSort;
                         // var destDir = Path.Combine(arguments.Output, Path.GetFileName(srcDirs[i]).GetValidName());
                         var fileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", artist, title, arguments.Revision.Replace(".", "_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                         var destPath = Path.Combine(arguments.Output, fileName);

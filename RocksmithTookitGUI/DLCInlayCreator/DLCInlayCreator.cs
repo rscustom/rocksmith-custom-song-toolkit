@@ -405,7 +405,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             // CRITICAL - 24 fret inlays have naming dependencies
             if (Frets24) packageData.Inlay.DLCSixName = String.Format("24fret_{0}", packageData.Inlay.DLCSixName);
 
-            packageData.DLCKey = InlayName;
+            packageData.Name = InlayName;
             packageData.AppId = appIdCombo.SelectedValue.ToString();
 
             // Saving for later

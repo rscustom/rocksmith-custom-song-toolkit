@@ -63,7 +63,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
 
             #region VARIABLES
 
-            var dlcName = info.DLCKey.ToLower();
+            var dlcName = info.Name.ToLower();
 
             var xblockUrn = String.Format(URN_TEMPLATE_SHORT, TagValue.EmergentWorld.GetDescription(), dlcName);
             var showlightUrn = String.Format(URN_TEMPLATE, TagValue.Application.GetDescription(), TagValue.XML.GetDescription(), String.Format("{0}_showlights", dlcName));
@@ -79,15 +79,15 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             ArrangementSort = arrangement.ArrangementSort;
             BlockAsset = xblockUrn;
             manifestFunctions.GenerateDynamicVisualDensity(this, SongContent, arrangement, GameVersion.RS2014);//2.0 constant for vocs in RS2
-            FullName = String.Format(AggregateGraph2014.AggregateGraph2014.NAME_ARRANGEMENT, info.DLCKey, arrangement.Name);
+            FullName = String.Format(AggregateGraph2014.AggregateGraph2014.NAME_ARRANGEMENT, info.Name, arrangement.Name);
             MasterID_PS3 = (IsVocal) ? -1 : arrangement.MasterId;
             MasterID_XBox360 = (IsVocal) ? -1 : arrangement.MasterId;
-            PreviewBankPath = String.Format("song_{0}_preview.bnk", info.DLCKey.ToLower());
+            PreviewBankPath = String.Format("song_{0}_preview.bnk", info.Name.ToLower());
             RelativeDifficulty = 0; //Always 0 in RS2014
             ShowlightsXML = showlightUrn;
             SongAsset = songSngUrn;
-            SongBank = String.Format("song_{0}.bnk", info.DLCKey.ToLower());
-            SongEvent = String.Format("Play_{0}", info.DLCKey);
+            SongBank = String.Format("song_{0}.bnk", info.Name.ToLower());
+            SongEvent = String.Format("Play_{0}", info.Name);
             SongXml = songXmlUrn;
             SongVolume = info.Volume;
             PreviewVolume = info.PreviewVolume ?? SongVolume;

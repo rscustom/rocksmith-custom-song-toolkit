@@ -51,7 +51,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
             var game = new GameXblock<Entity2014>();
             game.EntitySet = new List<Entity2014>();
 
-            var dlcName = info.DLCKey.ToLower();
+            var dlcName = info.Name.ToLower();
             var songPartition = new SongPartition();
 
             switch (dlcType)
@@ -66,7 +66,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
 
                         entity.Id = arrangement.Id.ToLowerId();
                         entity.ModelName = "RSEnumerable_Song";
-                        entity.Name = String.Format("{0}_{1}", info.DLCKey, arrangementFileName);
+                        entity.Name = String.Format("{0}_{1}", info.Name, arrangementFileName);
                         entity.Iterations = 0;
 
                         entity.Properties = new List<Property2014>();
@@ -98,7 +98,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
 
                     inlayEntity.Id = info.Inlay.Id.ToLowerId();
                     inlayEntity.ModelName = "RSEnumerable_Guitars";
-                    inlayEntity.Name = info.DLCKey;
+                    inlayEntity.Name = info.Name;
                     inlayEntity.Iterations = 0;
 
                     inlayEntity.Properties = new List<Property2014>();

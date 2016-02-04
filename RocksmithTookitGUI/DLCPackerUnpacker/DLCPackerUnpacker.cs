@@ -366,7 +366,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     {
                         ofd.Title = "Select a name for the Low Bass Tuning Fixed file.";
                         ofd.Filter = "All Files (*.*)|*.*|Rocksmith 2014 PC|*_p.psarc|Rocksmith 2014 Mac|*_m.psarc|Rocksmith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
-                        ofd.FileName = String.Format("{0}_{1}_bassfix{2}", info.SongInfo.ArtistSort, info.SongInfo.SongTitleSort, srcExt);
+                        ofd.FileName = String.Format("{0}_{1}_bassfix{2}", info.SongInfo.ArtistSort, info.SongInfo.SongDisplayNameSort, srcExt);
 
                         if (ofd.ShowDialog() != DialogResult.OK)
                             return;

@@ -87,7 +87,7 @@ namespace convert2012
 
                     // Repack
                     var cdlcVersion = "c1"; // conversion 1
-                    var cdlcFileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", info.SongInfo.Artist, info.SongInfo.SongTitle, cdlcVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                    var cdlcFileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", info.SongInfo.Artist, info.SongInfo.SongDisplayName, cdlcVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                     var cdlcSavePath = Path.Combine(cdlcSaveDir, cdlcFileName);
                     Console.WriteLine(@"Repacking as RS2014 CDLC: " + cdlcFileName + @".psarc");
                     Console.WriteLine("");
@@ -125,7 +125,7 @@ namespace convert2012
             songXml.ArtistName = info.SongInfo.Artist;
             songXml.ArtistNameSort = info.SongInfo.ArtistSort;
             songXml.AverageTempo = info.SongInfo.AverageTempo;
-            songXml.Title = info.SongInfo.SongTitle;
+            songXml.Title = info.SongInfo.SongDisplayName;
             songXml.ToneBase = arr.ToneBase;
             songXml.ToneA = arr.ToneA;
             songXml.ToneB = arr.ToneB;
@@ -210,7 +210,7 @@ namespace convert2012
                 DLCPackageCreator.ToDDS(ddsFiles);
 
                 var albumArtDir = Path.GetDirectoryName(albumArtPath);
-                var albumArtName = String.Format("album_{0}", info.DLCKey.ToLower().Replace("_", "").GetValidName());
+                var albumArtName = String.Format("album_{0}", info.Name.ToLower().Replace("_", "").GetValidName());
                 var ddsPartialPath = Path.Combine(albumArtDir, albumArtName);
 
                 foreach (var dds in ddsFiles)

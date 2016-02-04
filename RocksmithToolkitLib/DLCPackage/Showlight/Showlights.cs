@@ -84,7 +84,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
         {
             var shlFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File),
                 arrangement.SongXml.Name + "_showlights.xml");
-            var shlCommon = Path.Combine(Path.GetDirectoryName(shlFile), info.DLCKey + "_showlights.xml");
+            var shlCommon = Path.Combine(Path.GetDirectoryName(shlFile), info.Name + "_showlights.xml");
             if (!File.Exists(shlCommon))
             {
                 //Generate

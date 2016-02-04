@@ -25,15 +25,15 @@ namespace RocksmithToolkitLib.DLCPackage
 {
     public class DLCPackageData
     {
+        // DO NOT change variable names ... hidden dependancies
         public GameVersion GameVersion;
-
         public bool Pc { get; set; }
         public bool Mac { get; set; }
         public bool XBox360 { get; set; }
         public bool PS3 { get; set; }
         public bool Showlights { get; set; }
         public string AppId { get; set; }
-        public string DLCKey { get; set; } // aka SongKey
+        public string Name { get; set; } // aka DLCKey <=> SongKey
         public SongInfo SongInfo { get; set; }
         public string AlbumArtPath { get; set; }
         public string OggPath { get; set; }
@@ -99,13 +99,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // Fill SongInfo
             data.SongInfo = new SongInfo();
-            data.SongInfo.SongTitle = attr.FirstOrDefault().SongName;
-            data.SongInfo.SongTitleSort = attr.FirstOrDefault().SongNameSort;
+            data.SongInfo.SongDisplayName = attr.FirstOrDefault().SongName;
+            data.SongInfo.SongDisplayNameSort = attr.FirstOrDefault().SongNameSort;
             data.SongInfo.Album = attr.FirstOrDefault().AlbumName;
             data.SongInfo.SongYear = (attr.FirstOrDefault().SongYear == 0 ? 2012 : attr.FirstOrDefault().SongYear);
             data.SongInfo.Artist = attr.FirstOrDefault().ArtistName;
             data.SongInfo.ArtistSort = attr.FirstOrDefault().ArtistNameSort;
-            data.DLCKey = attr.FirstOrDefault().SongKey;
+            data.Name = attr.FirstOrDefault().SongKey;
 
             //Load tone manifest, even poorly formed tone_bass.manifest.json
             var toneManifestJson = Directory.GetFiles(unpackedDir, "*tone*.manifest.json", SearchOption.AllDirectories);
@@ -145,9 +145,9 @@ namespace RocksmithToolkitLib.DLCPackage
             data.Tones = tones;
 
             // Load AggregateGraph.nt 
-            var songDir = Path.Combine(unpackedDir, data.DLCKey);
+            var songDir = Path.Combine(unpackedDir, data.Name);
             if (targetPlatform.platform == GamePlatform.XBox360)
-                songDir = Path.Combine(unpackedDir, "Root", data.DLCKey);
+                songDir = Path.Combine(unpackedDir, "Root", data.Name);
 
             var aggFile = Directory.GetFiles(songDir, "*.nt", SearchOption.TopDirectoryOnly)[0];
             var aggGraphData = AggregateGraph.AggregateGraph.ReadFromFile(aggFile);
@@ -475,15 +475,15 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (data.SongInfo == null)
                     {
                         // Fill Package Data
-                        data.DLCKey = attr.DLCKey;
+                        data.Name = attr.DLCKey;
                         data.Volume = (attr.SongVolume == 0 ? -12 : attr.SongVolume); //FIXME: too low song volume issue, revert to -6 to fix.
                         data.PreviewVolume = (attr.PreviewVolume ?? data.Volume);
 
                         // Fill SongInfo
                         data.SongInfo = new SongInfo
                         {
-                            SongTitle = attr.SongName,
-                            SongTitleSort = attr.SongNameSort,
+                            SongDisplayName = attr.SongName,
+                            SongDisplayNameSort = attr.SongNameSort,
                             Album = attr.AlbumName,
                             AlbumSort = attr.AlbumNameSort,
                             SongYear = attr.SongYear ?? 0,

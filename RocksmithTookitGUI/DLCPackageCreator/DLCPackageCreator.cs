@@ -388,13 +388,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void dlcGenerateButton_Click(object sender = null, EventArgs e = null)
         {
-            // last check to make sure DLC Key is not empty
-            if (String.IsNullOrEmpty(DlcKeyTB.Text))
-                DlcKeyTB.Text = String.Format("{0}{1}", Artist.Acronym(), SongTitle).GetValidDlcKey(SongTitle);
-
             var packageData = GetPackageData();
 
-            if (packageData == null)
+            if (packageData == null || String.IsNullOrEmpty(DlcKeyTB.Text))
             {
                 MessageBox.Show("One or more fields are missing information.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -445,7 +441,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     updateArrangmentID = true;
                 else
                     // maintain use of original DLCKey, as well as, PID
-                    packageData.DLCKey = dlcKeyOrg;
+                    packageData.Name = dlcKeyOrg;
 
             foreach (var arr in packageData.Arrangements)
             {
@@ -857,7 +853,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var BasePath = Path.GetDirectoryName(filesBaseDir);
 
             // Song INFO
-            DlcKeyTB.Text = dlcKeyOrg = info.DLCKey;
+            DlcKeyTB.Text = dlcKeyOrg = info.Name;
 
             PopulateAppIdCombo();
             Application.DoEvents();
@@ -867,15 +863,23 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 AppIdTB.Text = "248750"; // hardcoded for now
             AlbumTB.Text = info.SongInfo.Album;
             AlbumSortTB.Text = info.SongInfo.AlbumSort;
-            SongDisplayNameTB.Text = info.SongInfo.SongTitle;
-            SongDisplayNameSortTB.Text = info.SongInfo.SongTitleSort;
+            SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
+            SongDisplayNameSortTB.Text = info.SongInfo.SongDisplayNameSort;
             YearTB.Text = info.SongInfo.SongYear.ToString();
             ArtistTB.Text = info.SongInfo.Artist;
             ArtistSortTB.Text = info.SongInfo.ArtistSort;
             AverageTempoTB.Text = info.SongInfo.AverageTempo.ToString();
 
-            if (String.IsNullOrEmpty(DlcKeyTB.Text))
-                DlcKeyTB.Text = String.Format("{0}{1}", Artist.Acronym(), SongTitle).GetValidDlcKey(SongTitle);
+            // fill in the new AlbumSort textbox if it is empty
+            if (String.IsNullOrEmpty(AlbumSortTB.Text))
+            {
+                var useDefaultAuthor = ConfigRepository.Instance().GetBoolean("creator_usedefaultauthor");
+                // use default author for AlbumSort or generate
+                if (useDefaultAuthor) // && CurrentGameVersion == GameVersion.RS2014)
+                    AlbumSort = ConfigRepository.Instance()["general_defaultauthor"].Trim().GetValidSortName();
+                else
+                    AlbumSort = Album.GetValidSortName();
+            }
 
             // Album art
             AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
@@ -973,14 +977,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // forces RS1 XML to be updated
             userChangedInputControls = CurrentGameVersion != GameVersion.RS2014;
-
-            // substitute package author for AlbumSort
-            var useDefaultAuthor = ConfigRepository.Instance().GetBoolean("creator_usedefaultauthor");
-            if (useDefaultAuthor && CurrentGameVersion == GameVersion.RS2014)
-            {
-                AlbumSort = ConfigRepository.Instance()["general_defaultauthor"].Trim().GetValidSortName();
-                userChangedInputControls = true; // force write/update of song info
-            }
         }
 
         private void songVolumeBox_ValueChanged(object sender, EventArgs e)
@@ -1223,13 +1219,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                            Mac = platformMAC.Checked,
                            XBox360 = platformXBox360.Checked,
                            PS3 = platformPS3.Checked,
-                           DLCKey = DlcKeyTB.Text,
+                           Name = DlcKeyTB.Text,
                            AppId = AppIdTB.Text,
 
                            SongInfo = new SongInfo
                            {
-                               SongTitle = SongDisplayNameTB.Text,
-                               SongTitleSort = String.IsNullOrEmpty(SongDisplayNameSortTB.Text.Trim()) ? SongDisplayNameTB.Text : SongDisplayNameSortTB.Text,
+                               SongDisplayName = SongDisplayNameTB.Text,
+                               SongDisplayNameSort = String.IsNullOrEmpty(SongDisplayNameSortTB.Text.Trim()) ? SongDisplayNameTB.Text : SongDisplayNameSortTB.Text,
                                Album = AlbumTB.Text,
                                SongYear = year,
                                Artist = ArtistTB.Text,
@@ -1282,7 +1278,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.ArtistName = info.SongInfo.Artist;
                 songXml.ArtistNameSort = info.SongInfo.ArtistSort;
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
-                songXml.Title = info.SongInfo.SongTitle;
+                songXml.Title = info.SongInfo.SongDisplayName;
                 songXml.Tuning = arr.TuningStrings;
                 if (!String.IsNullOrEmpty(arr.ToneBase)) songXml.ToneBase = arr.ToneBase;
                 if (!String.IsNullOrEmpty(arr.ToneA)) songXml.ToneA = arr.ToneA;
@@ -1296,12 +1292,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             else
             {
                 var songXml = Song.LoadFromFile(arr.SongXml.File);
-                songXml.Title = info.SongInfo.SongTitle;
+                songXml.Title = info.SongInfo.SongDisplayName;
                 songXml.AlbumName = info.SongInfo.Album;
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
                 songXml.ArtistName = info.SongInfo.Artist;
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
-                songXml.Title = info.SongInfo.SongTitle;
+                songXml.Title = info.SongInfo.SongDisplayName;
                 songXml.Tuning = arr.TuningStrings;
 
                 using (var stream = File.Open(arr.SongXml.File, FileMode.Create))

@@ -54,7 +54,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 attribute.BlockAsset = String.Format("urn:emergent-world:{0}", AggregateGraph.XBlock.Name);
                 attribute.ChordTemplates = null;
                 attribute.DISC_DLC_OTHER = "Disc";
-                attribute.DisplayName = songInfo.SongTitle;
+                attribute.DisplayName = songInfo.SongDisplayName;
                 attribute.DLCPreview = false;
                 attribute.EffectChainMultiplayerName = string.Empty;
                 attribute.EffectChainName = isVocal ? "" : (dlcKey + "_" + x.ToneBase == null ? "Default" : x.ToneBase.Replace(' ', '_'));
@@ -90,8 +90,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
                 attribute.SongEvent = String.Format("Play_{0}", dlcKey);
                 attribute.SongKey = dlcKey;
                 attribute.SongLength = 0;
-                attribute.SongName = songInfo.SongTitle;
-                attribute.SongNameSort = songInfo.SongTitleSort;
+                attribute.SongName = songInfo.SongDisplayName;
+                attribute.SongNameSort = songInfo.SongDisplayNameSort;
                 attribute.SongXml = String.Format("urn:llid:{0}", x.SongXml.LLID);
                 attribute.SongYear = songInfo.SongYear;
                 attribute.TargetScore = 0;
