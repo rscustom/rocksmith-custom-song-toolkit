@@ -388,6 +388,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void dlcGenerateButton_Click(object sender = null, EventArgs e = null)
         {
+            // last check to make sure DLC Key is not empty
+            if (String.IsNullOrEmpty(DlcKeyTB.Text))
+                DlcKeyTB.Text = String.Format("{0}{1}", Artist.Acronym(), SongTitle).GetValidDlcKey(SongTitle);
+
             var packageData = GetPackageData();
 
             if (packageData == null)
@@ -870,6 +874,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             ArtistSortTB.Text = info.SongInfo.ArtistSort;
             AverageTempoTB.Text = info.SongInfo.AverageTempo.ToString();
 
+            if (String.IsNullOrEmpty(DlcKeyTB.Text))
+                DlcKeyTB.Text = String.Format("{0}{1}", Artist.Acronym(), SongTitle).GetValidDlcKey(SongTitle);
+
             // Album art
             AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
 
@@ -1020,7 +1027,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             if (DLCKey == SongTitle)
             {
-                MessageBox.Show("Error: CDLC name can't be the same of song name", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: DLC Key can't be the same of song name", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DlcKeyTB.Focus();
                 return null;
             }

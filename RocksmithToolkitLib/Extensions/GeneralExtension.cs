@@ -156,7 +156,8 @@ namespace RocksmithToolkitLib.Extensions
                 if (dlcKey == songTitle.Replace(" ", ""))
                     dlcKey = dlcKey + "Song";
             }
-            return dlcKey;
+            // limit length to 20
+            return dlcKey.Substring(0, Math.Min(20, dlcKey.Length));
         }
 
         public static string GetValidSortName(this string value)
