@@ -27,6 +27,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public bool EditMode = false;
         private bool bassFix = false;
         private ToolTip tt = new ToolTip();
+        private string defaultProjectDir ;
 
         public Arrangement Arrangement
         {
@@ -114,8 +115,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public ArrangementForm(Arrangement arrangement, DLCPackageCreator control, GameVersion gameVersion)
         {
             InitializeComponent();
-            currentGameVersion = gameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014;
 
+            defaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"]; 
+            currentGameVersion = gameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014;
             FillTuningCombo(arrangement.ArrangementType, currentGameVersion);
 
             foreach (var val in Enum.GetValues(typeof(ArrangementType)))
@@ -473,6 +475,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
+                ofd.InitialDirectory = defaultProjectDir;
                 ofd.Filter = "Rocksmith Song Xml Files (*.xml)|*.xml";
                 if (ofd.ShowDialog() != DialogResult.OK)
                 {
@@ -752,6 +755,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             LoadArrangementData(xmlfilepath);
+            defaultProjectDir = Path.GetDirectoryName(xmlfilepath);
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -765,6 +769,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // TODO: get song info from json or hsan file (would be better than from xml)
             if (!ReferenceEquals(xmlSong, null))
             {
+                var defaultAuthor = ConfigRepository.Instance()["general_defaultauthor"].Trim();
+
                 if (String.IsNullOrEmpty(parentControl.SongTitle)) parentControl.SongTitle = xmlSong.Title ?? String.Empty;
                 if (String.IsNullOrEmpty(parentControl.SongTitleSort)) parentControl.SongTitleSort = xmlSong.SongNameSort.GetValidSortName() ?? parentControl.SongTitle.GetValidSortName();
                 if (String.IsNullOrEmpty(parentControl.AverageTempo)) parentControl.AverageTempo = Math.Round(xmlSong.AverageTempo).ToString() ?? String.Empty;
@@ -772,14 +778,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = xmlSong.ArtistNameSort.GetValidSortName() ?? parentControl.Artist.GetValidSortName();
                 if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = xmlSong.AlbumName ?? String.Empty;
                 if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear ?? String.Empty;
-                if (String.IsNullOrEmpty(parentControl.DLCKey)) parentControl.DLCKey = String.Format("{0}{1}", parentControl.Artist.Acronym(), parentControl.SongTitle).GetValidDlcKey(parentControl.SongTitle);
+                if (String.IsNullOrEmpty(parentControl.DLCKey)) parentControl.DLCKey = String.Format("{0}{1}{2}", defaultAuthor.Substring(0, Math.Min(3, defaultAuthor.Length)), parentControl.Artist.Acronym(), parentControl.SongTitle).GetValidDlcKey(parentControl.SongTitle);
 
                 if (String.IsNullOrEmpty(parentControl.AlbumSort))
                 {
                     // use default author for AlbumSort or generate
                     var useDefaultAuthor = ConfigRepository.Instance().GetBoolean("creator_usedefaultauthor");
                     if (useDefaultAuthor) // && currentGameVersion == GameVersion.RS2014)
-                        parentControl.AlbumSort = ConfigRepository.Instance()["general_defaultauthor"].Trim().GetValidSortName();
+                        parentControl.AlbumSort = defaultAuthor.GetValidSortName();
                     else
                         parentControl.AlbumSort = xmlSong.AlbumNameSort.GetValidSortName() ?? parentControl.Album.GetValidSortName();
                 }

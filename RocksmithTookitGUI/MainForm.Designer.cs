@@ -183,7 +183,7 @@
             this.dlcPackageCreatorTab.Padding = new System.Windows.Forms.Padding(2);
             this.dlcPackageCreatorTab.Size = new System.Drawing.Size(542, 564);
             this.dlcPackageCreatorTab.TabIndex = 0;
-            this.dlcPackageCreatorTab.Text = "Creator";
+            this.dlcPackageCreatorTab.Text = "CDLC Creator";
             this.dlcPackageCreatorTab.UseVisualStyleBackColor = true;
             // 
             // dlcPackageCreatorControl
@@ -219,7 +219,7 @@
             this.dlcPackerUnpackerTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcPackerUnpackerTab.Name = "dlcPackerUnpackerTab";
             this.dlcPackerUnpackerTab.Padding = new System.Windows.Forms.Padding(2);
-            this.dlcPackerUnpackerTab.Size = new System.Drawing.Size(192, 74);
+            this.dlcPackerUnpackerTab.Size = new System.Drawing.Size(542, 564);
             this.dlcPackerUnpackerTab.TabIndex = 1;
             this.dlcPackerUnpackerTab.Text = "Packer/Unpacker";
             this.dlcPackerUnpackerTab.UseVisualStyleBackColor = true;
@@ -240,7 +240,7 @@
             this.dlcConverterTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcConverterTab.Name = "dlcConverterTab";
             this.dlcConverterTab.Padding = new System.Windows.Forms.Padding(2);
-            this.dlcConverterTab.Size = new System.Drawing.Size(192, 74);
+            this.dlcConverterTab.Size = new System.Drawing.Size(542, 564);
             this.dlcConverterTab.TabIndex = 2;
             this.dlcConverterTab.Text = "Converter";
             this.dlcConverterTab.UseVisualStyleBackColor = true;
@@ -262,7 +262,7 @@
             this.DDCTab.Location = new System.Drawing.Point(4, 22);
             this.DDCTab.Name = "DDCTab";
             this.DDCTab.Padding = new System.Windows.Forms.Padding(3);
-            this.DDCTab.Size = new System.Drawing.Size(192, 74);
+            this.DDCTab.Size = new System.Drawing.Size(542, 564);
             this.DDCTab.TabIndex = 3;
             this.DDCTab.Text = "DDC";
             this.DDCTab.ToolTipText = "Generator of low levels for arrangement.";
@@ -275,7 +275,7 @@
             this.ddcControl.Location = new System.Drawing.Point(3, 3);
             this.ddcControl.MinimumSize = new System.Drawing.Size(530, 380);
             this.ddcControl.Name = "ddcControl";
-            this.ddcControl.Size = new System.Drawing.Size(530, 380);
+            this.ddcControl.Size = new System.Drawing.Size(536, 558);
             this.ddcControl.TabIndex = 3;
             // 
             // dlcInlayCreatorTab
@@ -284,7 +284,7 @@
             this.dlcInlayCreatorTab.Location = new System.Drawing.Point(4, 22);
             this.dlcInlayCreatorTab.Name = "dlcInlayCreatorTab";
             this.dlcInlayCreatorTab.Padding = new System.Windows.Forms.Padding(3);
-            this.dlcInlayCreatorTab.Size = new System.Drawing.Size(192, 74);
+            this.dlcInlayCreatorTab.Size = new System.Drawing.Size(542, 564);
             this.dlcInlayCreatorTab.TabIndex = 4;
             this.dlcInlayCreatorTab.Text = "Inlay Creator";
             this.dlcInlayCreatorTab.UseVisualStyleBackColor = true;
@@ -303,7 +303,7 @@
             this.sngConverterTab.Margin = new System.Windows.Forms.Padding(2);
             this.sngConverterTab.Name = "sngConverterTab";
             this.sngConverterTab.Padding = new System.Windows.Forms.Padding(2);
-            this.sngConverterTab.Size = new System.Drawing.Size(192, 74);
+            this.sngConverterTab.Size = new System.Drawing.Size(542, 564);
             this.sngConverterTab.TabIndex = 5;
             this.sngConverterTab.Text = "SNG";
             this.sngConverterTab.UseVisualStyleBackColor = true;
@@ -316,7 +316,7 @@
             this.sngConverterControl.Margin = new System.Windows.Forms.Padding(4);
             this.sngConverterControl.MinimumSize = new System.Drawing.Size(494, 307);
             this.sngConverterControl.Name = "sngConverterControl";
-            this.sngConverterControl.Size = new System.Drawing.Size(494, 307);
+            this.sngConverterControl.Size = new System.Drawing.Size(844, 307);
             this.sngConverterControl.TabIndex = 4;
             // 
             // oggConverterTab
@@ -326,7 +326,7 @@
             this.oggConverterTab.Margin = new System.Windows.Forms.Padding(2);
             this.oggConverterTab.Name = "oggConverterTab";
             this.oggConverterTab.Padding = new System.Windows.Forms.Padding(2);
-            this.oggConverterTab.Size = new System.Drawing.Size(192, 74);
+            this.oggConverterTab.Size = new System.Drawing.Size(542, 564);
             this.oggConverterTab.TabIndex = 6;
             this.oggConverterTab.Text = "OGG";
             this.oggConverterTab.UseVisualStyleBackColor = true;
@@ -343,7 +343,7 @@
             this.cdlcConverterTab.Controls.Add(this.cdlC2Tab1);
             this.cdlcConverterTab.Location = new System.Drawing.Point(4, 22);
             this.cdlcConverterTab.Name = "cdlcConverterTab";
-            this.cdlcConverterTab.Size = new System.Drawing.Size(192, 74);
+            this.cdlcConverterTab.Size = new System.Drawing.Size(542, 564);
             this.cdlcConverterTab.TabIndex = 10;
             this.cdlcConverterTab.Text = "CDLC 2 Tab";
             this.cdlcConverterTab.UseVisualStyleBackColor = true;
@@ -361,7 +361,7 @@
             this.zigProConverterTab.Location = new System.Drawing.Point(4, 22);
             this.zigProConverterTab.Margin = new System.Windows.Forms.Padding(2);
             this.zigProConverterTab.Name = "zigProConverterTab";
-            this.zigProConverterTab.Size = new System.Drawing.Size(192, 74);
+            this.zigProConverterTab.Size = new System.Drawing.Size(542, 564);
             this.zigProConverterTab.TabIndex = 8;
             this.zigProConverterTab.Text = "Ziggy Pro";
             this.zigProConverterTab.UseVisualStyleBackColor = true;
@@ -373,7 +373,7 @@
             this.ziggyConverterControl.Location = new System.Drawing.Point(16, 8);
             this.ziggyConverterControl.MinimumSize = new System.Drawing.Size(483, 111);
             this.ziggyConverterControl.Name = "ziggyConverterControl";
-            this.ziggyConverterControl.Size = new System.Drawing.Size(483, 296);
+            this.ziggyConverterControl.Size = new System.Drawing.Size(833, 296);
             this.ziggyConverterControl.TabIndex = 7;
             // 
             // GeneralConfigTab
@@ -382,7 +382,7 @@
             this.GeneralConfigTab.Location = new System.Drawing.Point(4, 22);
             this.GeneralConfigTab.Name = "GeneralConfigTab";
             this.GeneralConfigTab.Padding = new System.Windows.Forms.Padding(3);
-            this.GeneralConfigTab.Size = new System.Drawing.Size(192, 74);
+            this.GeneralConfigTab.Size = new System.Drawing.Size(542, 564);
             this.GeneralConfigTab.TabIndex = 9;
             this.GeneralConfigTab.Text = "General Config";
             this.GeneralConfigTab.UseVisualStyleBackColor = true;
@@ -392,7 +392,7 @@
             this.generalConfigControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.generalConfigControl.Location = new System.Drawing.Point(3, 3);
             this.generalConfigControl.Name = "generalConfigControl";
-            this.generalConfigControl.Size = new System.Drawing.Size(186, 68);
+            this.generalConfigControl.Size = new System.Drawing.Size(536, 558);
             this.generalConfigControl.TabIndex = 7;
             // 
             // pictureBox1

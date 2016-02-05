@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
@@ -11,6 +12,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public bool Saved = false;
         public GameVersion CurrentGameVersion;
         public bool EditMode = false;
+        private string defaultTonePath;
 
         //private DLCPackageCreator parentControl = null;
 
@@ -32,6 +34,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public ToneForm()
         {
             InitializeComponent();
+            defaultTonePath = ConfigRepository.Instance()["creator_defaulttone"];
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -65,11 +68,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneSavePath;
             using (var ofd = new OpenFileDialog())
             {
+                ofd.InitialDirectory = defaultTonePath;
                 ofd.Filter = CurrentOFDFilter;
                 if (ofd.ShowDialog() != DialogResult.OK) return;
                 toneSavePath = ofd.FileName;
             }
+            LoadToneFile(toneSavePath);
+        }
 
+        public void LoadToneFile(string toneSavePath, bool verbose = true)
+        {
             try
             {
                 switch (CurrentGameVersion)
@@ -90,7 +98,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
-            MessageBox.Show("Tone was loaded.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (verbose)
+                MessageBox.Show("Tone was loaded.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void saveButton_Click(object sender, EventArgs e)
@@ -98,6 +107,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneSavePath;
             using (var ofd = new SaveFileDialog())
             {
+                ofd.InitialDirectory = defaultTonePath;
                 ofd.Filter = CurrentOFDFilter;
                 ofd.AddExtension = true;
                 if (CurrentGameVersion != GameVersion.RS2012)
@@ -105,8 +115,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 else
                     ofd.FileName = String.Format("{0}.tone.xml", toneControl.Tone.Name);
 
-                if (ofd.ShowDialog() != DialogResult.OK) return;
-                toneSavePath = ofd.FileName;
+                if (ofd.ShowDialog() != DialogResult.OK) 
+                    return;
+                
+                toneSavePath = defaultTonePath = ofd.FileName;
             }
 
             var tone = toneControl.Tone;

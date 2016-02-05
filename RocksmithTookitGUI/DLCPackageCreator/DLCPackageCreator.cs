@@ -34,6 +34,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         // prevents multiple tool tip appearance and gives better action
         private ToolTip tt = new ToolTip();
         private string dlcKeyOrg; // used to preserve original
+        private string defaultProjectDir;
+        private string defaultTonePath;
 
         #region Properties
 
@@ -250,13 +252,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             rbConvert.MouseEnter += rbConvert_MouseEnter;
             songVolumeBox.MouseEnter += songVolumeBox_MouseEnter;
             previewVolumeBox.MouseEnter += songVolumeBox_MouseEnter;
-            AddVToInputControls();
+            AddValidationEventHandlers();
 
             try
             {
+                // this gets done everytime config changes
+                SetDefaultFromConfig();
                 PopulateAppIdCombo();
                 PopulateTonesLB();
-                SetDefaultFromConfig();
+                // TODO: read these from config
                 platformPC.Checked = true;
                 platformMAC.Checked = platformPS3.Checked = platformXBox360.Checked = false;
                 RS2014.Checked = true;
@@ -274,6 +278,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void SetDefaultFromConfig()
         {
             CurrentGameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
+            defaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"];
+            defaultTonePath = ConfigRepository.Instance()["creator_defaulttone"];
         }
 
         public dynamic CreateNewTone(string toneName = "Default")
@@ -655,10 +661,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string dlcLoadPath;
             using (var ofd = new OpenFileDialog())
             {
+                ofd.InitialDirectory = defaultProjectDir;
                 ofd.SupportMultiDottedExtensions = true;
                 ofd.Filter = CurrentRocksmithTitle + " CDLC Template (*.dlc.xml)|*.dlc.xml";
-                if (ofd.ShowDialog() != DialogResult.OK) return;
-                dlcLoadPath = ofd.FileName;
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+
+                dlcLoadPath = defaultProjectDir = ofd.FileName;
             }
 
             loadTemplate(dlcLoadPath);
@@ -1824,7 +1833,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void PopulateTonesLB()
         {
             tonesLB.Items.Clear();
-            tonesLB.Items.Add(CreateNewTone());
+
+            // check if user has assigned default tone and it exists
+            if (!String.IsNullOrEmpty(defaultTonePath) && File.Exists(defaultTonePath))
+            {
+                var tone = CreateNewTone();
+                using (var form = new ToneForm())
+                {
+                    form.EditMode = false;
+                    form.CurrentGameVersion = CurrentGameVersion;
+                    form.toneControl.CurrentGameVersion = CurrentGameVersion;
+                    form.toneControl.Init();
+                    form.toneControl.Tone = GeneralExtensions.Copy(tone);
+                    form.LoadToneFile(defaultTonePath, false);
+                    tonesLB.Items.Add(form.toneControl.Tone);
+                }
+            }
+            else
+                tonesLB.Items.Add(CreateNewTone());
         }
 
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -1907,7 +1933,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Environment.NewLine + "to RS2014 Arrangements");
         }
 
-        private void AddVToInputControls()
+        private void AddValidationEventHandlers()
         {
             ArtistTB.Validating += ValidateName;
             ArtistSortTB.Validating += ValidateSortName;
@@ -1979,6 +2005,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
+                ofd.InitialDirectory = defaultProjectDir;
                 ofd.Title = "Quick Add ... Multiselect Arrangements";
                 ofd.Filter = "Rocksmith Song Xml Files (*.xml)|*.xml";
                 ofd.Multiselect = true;
