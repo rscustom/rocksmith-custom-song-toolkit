@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -32,6 +33,9 @@ namespace RocksmithToolkitGUI.Config
                 PopulateRampUp();
                 PopulateConfigDDC();
                 LoadAndSetupConfiguration(this.Controls);
+                // eye candy
+                if (ConfigRepository.Instance()["general_firstrun"] == "false")
+                    lblFirstRun.Visible = false;
             }
             catch { /*For mono compatibility*/ }
             loading = false;
@@ -156,7 +160,7 @@ namespace RocksmithToolkitGUI.Config
 
         private void closeConfigButton_Click(object sender, EventArgs e)
         {
-            ConfigRepository.Instance()[general_firstrun.Name] = "false";
+            ConfigRepository.Instance()["general_firstrun"] = "false";
             ((MainForm)ParentForm).ReloadControls();
         }
 
@@ -166,7 +170,7 @@ namespace RocksmithToolkitGUI.Config
             {
                 fbd.SelectedPath = general_rs1path.Name;
                 fbd.Description = "Select Rocksmith 2012 executable root installation folder.";
-                
+
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
 
@@ -211,7 +215,7 @@ namespace RocksmithToolkitGUI.Config
         private void btnProjectDir_Click(object sender, EventArgs e)
         {
             using (var fbd = new VistaFolderBrowserDialog())
-            {                
+            {
                 fbd.SelectedPath = creator_defaultproject.Name;
                 fbd.Description = "Select Default Project Folder for the CDLC Creator";
                 if (fbd.ShowDialog() != DialogResult.OK)

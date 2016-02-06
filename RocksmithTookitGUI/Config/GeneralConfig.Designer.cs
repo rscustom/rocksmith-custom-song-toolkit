@@ -66,7 +66,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.ddc_config = new System.Windows.Forms.ComboBox();
             this.ddc_rampup = new System.Windows.Forms.ComboBox();
-            this.general_firstrun = new System.Windows.Forms.CheckBox();
             this.gbConverter = new System.Windows.Forms.GroupBox();
             this.converter_target = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -74,6 +73,7 @@
             this.converter_source = new System.Windows.Forms.ComboBox();
             this.closeConfigButton = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.lblFirstRun = new System.Windows.Forms.Label();
             this.ddc_phraselength = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.general_wwisepath = new RocksmithToolkitGUI.CueTextBox();
             this.general_rs2014path = new RocksmithToolkitGUI.CueTextBox();
@@ -116,7 +116,7 @@
             this.gbCreator.Controls.Add(this.creator_usedefaultauthor);
             this.gbCreator.Controls.Add(this.groupBox1);
             this.gbCreator.Controls.Add(this.creator_useacronyms);
-            this.gbCreator.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbCreator.ForeColor = System.Drawing.Color.IndianRed;
             this.gbCreator.Location = new System.Drawing.Point(4, 219);
             this.gbCreator.Margin = new System.Windows.Forms.Padding(2);
             this.gbCreator.Name = "gbCreator";
@@ -189,6 +189,7 @@
             // 
             this.groupBox1.Controls.Add(this.creator_scrollspeed);
             this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.ForeColor = System.Drawing.Color.DodgerBlue;
             this.groupBox1.Location = new System.Drawing.Point(8, 70);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(180, 42);
@@ -306,7 +307,7 @@
             this.gbGeneral.Controls.Add(this.general_defaultappid_RS2014);
             this.gbGeneral.Controls.Add(this.label2);
             this.gbGeneral.Controls.Add(this.general_defaultappid_RS2012);
-            this.gbGeneral.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbGeneral.ForeColor = System.Drawing.Color.IndianRed;
             this.gbGeneral.Location = new System.Drawing.Point(4, 2);
             this.gbGeneral.Margin = new System.Windows.Forms.Padding(2);
             this.gbGeneral.Name = "gbGeneral";
@@ -364,7 +365,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label12.ForeColor = System.Drawing.Color.DodgerBlue;
             this.label12.Location = new System.Drawing.Point(119, 88);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(169, 13);
@@ -375,7 +376,7 @@
             // 
             this.gbAutoUpdate.Controls.Add(this.general_replacerepo);
             this.gbAutoUpdate.Controls.Add(this.general_usebeta);
-            this.gbAutoUpdate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbAutoUpdate.ForeColor = System.Drawing.Color.DodgerBlue;
             this.gbAutoUpdate.Location = new System.Drawing.Point(380, 10);
             this.gbAutoUpdate.Name = "gbAutoUpdate";
             this.gbAutoUpdate.Size = new System.Drawing.Size(127, 62);
@@ -394,6 +395,7 @@
             this.general_replacerepo.TabIndex = 9;
             this.general_replacerepo.Text = "Reset repositories";
             this.general_replacerepo.UseVisualStyleBackColor = true;
+            this.general_replacerepo.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // btnRs2014Path
             // 
@@ -484,7 +486,7 @@
             this.gbDDC.Controls.Add(this.label5);
             this.gbDDC.Controls.Add(this.ddc_config);
             this.gbDDC.Controls.Add(this.ddc_rampup);
-            this.gbDDC.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbDDC.ForeColor = System.Drawing.Color.IndianRed;
             this.gbDDC.Location = new System.Drawing.Point(4, 392);
             this.gbDDC.Name = "gbDDC";
             this.gbDDC.Size = new System.Drawing.Size(516, 73);
@@ -566,31 +568,13 @@
             this.ddc_rampup.TabIndex = 14;
             this.ddc_rampup.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
-            // general_firstrun
-            // 
-            this.general_firstrun.AutoCheck = false;
-            this.general_firstrun.AutoSize = true;
-            this.general_firstrun.Checked = true;
-            this.general_firstrun.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.general_firstrun.Enabled = false;
-            this.general_firstrun.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.general_firstrun.Location = new System.Drawing.Point(302, 481);
-            this.general_firstrun.Name = "general_firstrun";
-            this.general_firstrun.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.general_firstrun.Size = new System.Drawing.Size(68, 17);
-            this.general_firstrun.TabIndex = 51;
-            this.general_firstrun.Text = "First Run";
-            this.toolTip.SetToolTip(this.general_firstrun, "Read-Only");
-            this.general_firstrun.UseVisualStyleBackColor = true;
-            this.general_firstrun.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
             // gbConverter
             // 
             this.gbConverter.Controls.Add(this.converter_target);
             this.gbConverter.Controls.Add(this.label7);
             this.gbConverter.Controls.Add(this.label8);
             this.gbConverter.Controls.Add(this.converter_source);
-            this.gbConverter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.gbConverter.ForeColor = System.Drawing.Color.IndianRed;
             this.gbConverter.Location = new System.Drawing.Point(4, 341);
             this.gbConverter.Name = "gbConverter";
             this.gbConverter.Size = new System.Drawing.Size(516, 45);
@@ -665,6 +649,17 @@
             this.toolTip.AutoPopDelay = 8000;
             this.toolTip.InitialDelay = 100;
             this.toolTip.ReshowDelay = 100;
+            // 
+            // lblFirstRun
+            // 
+            this.lblFirstRun.AutoSize = true;
+            this.lblFirstRun.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFirstRun.ForeColor = System.Drawing.Color.DodgerBlue;
+            this.lblFirstRun.Location = new System.Drawing.Point(305, 480);
+            this.lblFirstRun.Name = "lblFirstRun";
+            this.lblFirstRun.Size = new System.Drawing.Size(65, 15);
+            this.lblFirstRun.TabIndex = 51;
+            this.lblFirstRun.Text = "First Run";
             // 
             // ddc_phraselength
             // 
@@ -801,7 +796,7 @@
             // GeneralConfig
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.general_firstrun);
+            this.Controls.Add(this.lblFirstRun);
             this.Controls.Add(this.closeConfigButton);
             this.Controls.Add(this.gbConverter);
             this.Controls.Add(this.gbDDC);
@@ -880,8 +875,8 @@
         private System.Windows.Forms.Button btnProjectDir;
         private CueTextBox creator_defaultproject;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.CheckBox general_firstrun;
         private System.Windows.Forms.ComboBox general_defaultplatform;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label lblFirstRun;
     }
 }
