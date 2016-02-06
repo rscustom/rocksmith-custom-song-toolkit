@@ -26,6 +26,7 @@ namespace RocksmithToolkitGUI
         public MainForm(string[] args)
         {
             InitializeComponent();
+            this.Shown += MainForm_Shown;
 
             var ci = new CultureInfo("en-US");
             var thread = System.Threading.Thread.CurrentThread;
@@ -56,6 +57,7 @@ namespace RocksmithToolkitGUI
             get { return base.Text; }
             set { base.Text = value; }
         }
+
         //TODO: keep tabs data please.
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -64,6 +66,22 @@ namespace RocksmithToolkitGUI
 
             // position main form at top center of screen to avoid having to reposition on low res displays
             this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2, 0);
+
+            //#if !DEBUG
+            // check for first run
+            //bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
+            //if (firstRun)
+            //{
+            //    MessageBox.Show(new Form { TopMost = true },
+            //        "       Welcome to the Rocksmith Custom Song Toolkit" + Environment.NewLine +
+            //        "              Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
+            //        "  It looks like this may be your first time running the toolkit." + Environment.NewLine +
+            //        "Please go to the Configuration menu and fill in your selections.  ", "Rocksmith Custom Song Toolkit ... First Run",
+            //         MessageBoxButtons.OK, MessageBoxIcon.Hand);
+
+            //    ShowConfigScreen();
+            //}
+            //#endif
         }
 
         private void CheckForUpdate(object sender, DoWorkEventArgs e)
@@ -92,22 +110,22 @@ namespace RocksmithToolkitGUI
             switch (e.KeyCode)
             {
                 case Keys.O: //<< Open Template
-                    dlcPackageCreatorControl.dlcLoadButton_Click();
+                    dlcPackageCreator1.dlcLoadButton_Click();
                     break;
                 case Keys.S: //<< Save Template
-                    dlcPackageCreatorControl.SaveTemplateFile();
+                    dlcPackageCreator1.SaveTemplateFile();
                     break;
                 case Keys.I: //<< Import Template
-                    dlcPackageCreatorControl.dlcImportButton_Click();
+                    dlcPackageCreator1.dlcImportButton_Click();
                     break;
                 case Keys.G: //<< Generate Package
-                    dlcPackageCreatorControl.dlcGenerateButton_Click();
+                    dlcPackageCreator1.dlcGenerateButton_Click();
                     break;
                 case Keys.A: //<< Add Arrangement
-                    dlcPackageCreatorControl.arrangementAddButton_Click();
+                    dlcPackageCreator1.arrangementAddButton_Click();
                     break;
                 case Keys.T: //<< Add Tone
-                    dlcPackageCreatorControl.toneAddButton_Click();
+                    dlcPackageCreator1.toneAddButton_Click();
                     break;
             }
         }
@@ -189,6 +207,28 @@ namespace RocksmithToolkitGUI
                 }
 #endif
         }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            this.Refresh();
+#if !DEBUG
+            // check for first run
+            bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
+            if (firstRun)
+            {
+                MessageBox.Show(new Form { TopMost = true },
+                    "    Welcome to the Song Creator Toolkit for Rocksmith." + Environment.NewLine +
+                    "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
+                    "It looks like this may be your first time running the toolkit.  " + Environment.NewLine +
+                    "  Please fill in the Configuration menu with your selections.", "Rocksmith Custom Song Toolkit ... First Run",
+                     MessageBoxButtons.OK, MessageBoxIcon.Hand);
+
+                ShowConfigScreen();
+            }
+#endif
+
+        }
+
 
 
     }

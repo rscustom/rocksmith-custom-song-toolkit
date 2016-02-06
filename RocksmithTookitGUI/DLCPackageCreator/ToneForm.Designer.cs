@@ -110,7 +110,7 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.Button saveButton;
-        private ToneControl toneControl1; // prevents form errors
+        private ToneControl toneControl1; // here to prevents form errors
         public ToneControl toneControl;
 
     }

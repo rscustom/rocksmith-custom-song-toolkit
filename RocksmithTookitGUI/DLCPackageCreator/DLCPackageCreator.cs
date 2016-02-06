@@ -37,15 +37,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private string defaultProjectDir;
         private string defaultTonePath;
 
+
         #region Properties
 
         public GameVersion CurrentGameVersion
         {
             get
             {
-                if (RS2014.Checked)
+                if (rbRs2014.Checked)
                     return GameVersion.RS2014;
-                if (RS2012.Checked)
+                if (rbRs2012.Checked)
                     return GameVersion.RS2012;
                 if (rbConvert.Checked)
                     return GameVersion.None;
@@ -57,10 +58,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 switch (value)
                 {
                     case GameVersion.RS2014:
-                        RS2014.Checked = true;
+                        rbRs2014.Checked = true;
                         break;
                     case GameVersion.RS2012:
-                        RS2012.Checked = true;
+                        rbRs2012.Checked = true;
                         break;
                     case GameVersion.None:
                         rbConvert.Checked = true;
@@ -94,7 +95,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 var filter = CurrentOFDPackageFilter + "|";
                 filter += CurrentRocksmithTitle + " Song Manifest (*.json)|*.json";
-                if (RS2012.Checked)
+                if (rbRs2012.Checked)
                     filter += "|Rocksmith 2012 Game Save Profile (*_profile)|*_profile";
                 else
                     filter += "|Rocksmith 2014 Game Save Profile (*_prfldb)|*_prfldb";
@@ -256,15 +257,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             try
             {
-                // this gets done everytime config changes
+                // this sequence gets done everytime config changes
                 SetDefaultFromConfig();
                 PopulateAppIdCombo();
                 PopulateTonesLB();
-                // TODO: read these from config
-                platformPC.Checked = true;
-                platformMAC.Checked = platformPS3.Checked = platformXBox360.Checked = false;
-                RS2014.Checked = true;
-                CurrentGameVersion = GameVersion.RS2014;
             }
             catch { /*For mono compatibility*/ }
 
@@ -277,6 +273,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void SetDefaultFromConfig()
         {
+            // TODO: maybe read these from Config xml
+            platformPC.Checked = true;
+            platformMAC.Checked = platformPS3.Checked = platformXBox360.Checked = false;
+
             CurrentGameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
             defaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"];
             defaultTonePath = ConfigRepository.Instance()["creator_defaulttone"];
@@ -684,10 +684,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (info == null) throw new InvalidDataException("CDLC Template is null");
 
                 // use AppId to determine GameVersion of dlc.xml template
-                RS2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
-                RS2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
+                rbRs2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
+                rbRs2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
 
-                if (RS2014.Checked)
+                if (rbRs2014.Checked)
                 {
                     // check and fix the template compatibility if necessary
                     var templateString = File.ReadAllText(dlcLoadPath);
@@ -1711,8 +1711,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             control.Refresh();
         }
 
-        private void GameVersion_CheckedChanged(object sender, EventArgs e)
+        private void GameVersion_KeyUp(object sender, KeyEventArgs e)
         {
+            // GameVersion_CheckedChanged usage comes with problems
+            // everytime the value of checked is changed the event handler fires
+            // this is not what we want ... use KeyUp instead to detect changes
+
             GameVersion oldGameVersion;
             var btn = sender as RadioButton;
             switch (btn.Text.ToLowerInvariant())
@@ -2068,6 +2072,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                "and arrangement information using Edit later.");
             tt.Show("", this, 20000); // show for 20 seconds
         }
+
+
 
     }
 }

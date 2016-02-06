@@ -155,6 +155,7 @@ namespace RocksmithToolkitGUI.Config
 
         private void closeConfigButton_Click(object sender, EventArgs e)
         {
+            ConfigRepository.Instance()[general_firstrun.Name] = "false";
             ((MainForm)ParentForm).ReloadControls();
         }
 
