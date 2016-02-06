@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using RocksmithToolkitGUI.Config;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
@@ -12,7 +13,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public bool Saved = false;
         public GameVersion CurrentGameVersion;
         public bool EditMode = false;
-        private string defaultTonePath;
 
         //private DLCPackageCreator parentControl = null;
 
@@ -34,7 +34,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public ToneForm()
         {
             InitializeComponent();
-            defaultTonePath = ConfigRepository.Instance()["creator_defaulttone"];
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -68,10 +67,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneSavePath;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = defaultTonePath;
+                ofd.InitialDirectory = Globals.DefaultTonePath;
                 ofd.Filter = CurrentOFDFilter;
                 if (ofd.ShowDialog() != DialogResult.OK) return;
-                toneSavePath = ofd.FileName;
+                toneSavePath = Globals.DefaultTonePath = ofd.FileName;
             }
             LoadToneFile(toneSavePath);
         }
@@ -107,7 +106,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneSavePath;
             using (var ofd = new SaveFileDialog())
             {
-                ofd.InitialDirectory = defaultTonePath;
+                ofd.InitialDirectory = Globals.DefaultTonePath;
                 ofd.Filter = CurrentOFDFilter;
                 ofd.AddExtension = true;
                 if (CurrentGameVersion != GameVersion.RS2012)
@@ -115,10 +114,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 else
                     ofd.FileName = String.Format("{0}.tone.xml", toneControl.Tone.Name);
 
-                if (ofd.ShowDialog() != DialogResult.OK) 
+                if (ofd.ShowDialog() != DialogResult.OK)
                     return;
-                
-                toneSavePath = defaultTonePath = ofd.FileName;
+
+                toneSavePath = Globals.DefaultTonePath = ofd.FileName;
             }
 
             var tone = toneControl.Tone;

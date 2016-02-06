@@ -81,6 +81,7 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Config\Globals.cs" />
     <Compile Include="DLCInlayCreator\IntroScreensCreator.cs">
       <SubType>UserControl</SubType>
     </Compile>

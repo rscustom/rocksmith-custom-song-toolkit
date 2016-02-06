@@ -163,8 +163,12 @@ namespace RocksmithToolkitGUI.Config
         {
             using (var fbd = new VistaFolderBrowserDialog())
             {
+                fbd.SelectedPath = general_rs1path.Name;
+                fbd.Description = "Select Rocksmith 2012 executable root installation folder.";
+                
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
+
                 var rs1Path = fbd.SelectedPath;
                 general_rs1path.Text = rs1Path;
                 ConfigRepository.Instance()[general_rs1path.Name] = rs1Path;
@@ -175,6 +179,9 @@ namespace RocksmithToolkitGUI.Config
         {
             using (var fbd = new VistaFolderBrowserDialog())
             {
+                fbd.SelectedPath = general_rs2014path.Name;
+                fbd.Description = "Select Rocksmith 2014 executable root installation folder.";
+
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
 
@@ -188,6 +195,9 @@ namespace RocksmithToolkitGUI.Config
         {
             using (var fbd = new VistaFolderBrowserDialog())
             {
+                fbd.SelectedPath = general_wwisepath.Name;
+                fbd.Description = "Select Wwise CLI installation folder.";
+
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
 
@@ -200,9 +210,9 @@ namespace RocksmithToolkitGUI.Config
         private void btnProjectDir_Click(object sender, EventArgs e)
         {
             using (var fbd = new VistaFolderBrowserDialog())
-            {
-                fbd.SelectedPath = creator_defaultproject.Text;
-                fbd.Description = "Select Default Project Folder for CDLC Creator";
+            {                
+                fbd.SelectedPath = creator_defaultproject.Name;
+                fbd.Description = "Select Default Project Folder for the CDLC Creator";
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
 
@@ -216,8 +226,8 @@ namespace RocksmithToolkitGUI.Config
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.FileName = creator_defaulttone.Text;
-                ofd.Title = "Select Default Tone for CDLC Creator";
+                ofd.InitialDirectory = creator_defaulttone.Name;
+                ofd.Title = "Select Default Tone for the CDLC Creator";
                 ofd.Filter = CurrentOFDFilter;
 
                 if (ofd.ShowDialog() != DialogResult.OK)
@@ -242,8 +252,6 @@ namespace RocksmithToolkitGUI.Config
                 }
             }
         }
-
-
 
     }
 }

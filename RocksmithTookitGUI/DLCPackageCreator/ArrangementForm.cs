@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml.Linq;
+using RocksmithToolkitGUI.Config;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
@@ -27,7 +28,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public bool EditMode = false;
         private bool bassFix = false;
         private ToolTip tt = new ToolTip();
-        private string defaultProjectDir ;
 
         public Arrangement Arrangement
         {
@@ -112,11 +112,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Console.WriteLine("Debug");
         }
 
-        public ArrangementForm(Arrangement arrangement, DLCPackageCreator control, GameVersion gameVersion)
+        public ArrangementForm(Arrangement arrangement, DLCPackageCreator control, GameVersion gameVersion) // , string projectDir = "")
         {
             InitializeComponent();
 
-            defaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"]; 
             currentGameVersion = gameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014;
             FillTuningCombo(arrangement.ArrangementType, currentGameVersion);
 
@@ -475,15 +474,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = defaultProjectDir;
+                ofd.InitialDirectory = Globals.DefaultProjectDir;
                 ofd.Filter = "Rocksmith Song Xml Files (*.xml)|*.xml";
                 if (ofd.ShowDialog() != DialogResult.OK)
                 {
                     return;
                 }
 
-                XmlFilePath.Text = ofd.FileName;
-                string xmlFilePath = XmlFilePath.Text;
+                string xmlFilePath = XmlFilePath.Text = ofd.FileName;
+                Globals.DefaultProjectDir = Path.GetDirectoryName(xmlFilePath);
                 LoadXmlArrangement(xmlFilePath);
             }
         }
@@ -755,7 +754,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             LoadArrangementData(xmlfilepath);
-            defaultProjectDir = Path.GetDirectoryName(xmlfilepath);
+            Globals.DefaultProjectDir = Path.GetDirectoryName(xmlfilepath);
             DialogResult = DialogResult.OK;
             Close();
         }

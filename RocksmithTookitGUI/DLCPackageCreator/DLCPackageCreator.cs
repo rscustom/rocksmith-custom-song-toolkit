@@ -21,6 +21,7 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 using Control = System.Windows.Forms.Control;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
+using RocksmithToolkitGUI.Config;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -34,9 +35,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         // prevents multiple tool tip appearance and gives better action
         private ToolTip tt = new ToolTip();
         private string dlcKeyOrg; // used to preserve original
-        private string defaultProjectDir;
-        private string defaultTonePath;
-
 
         #region Properties
 
@@ -278,8 +276,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             platformMAC.Checked = platformPS3.Checked = platformXBox360.Checked = false;
 
             CurrentGameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
-            defaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"];
-            defaultTonePath = ConfigRepository.Instance()["creator_defaulttone"];
+            Globals.DefaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"];
+            Globals.DefaultTonePath = ConfigRepository.Instance()["creator_defaulttone"];
         }
 
         public dynamic CreateNewTone(string toneName = "Default")
@@ -661,13 +659,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string dlcLoadPath;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = defaultProjectDir;
+                ofd.InitialDirectory = Globals.DefaultProjectDir;
                 ofd.SupportMultiDottedExtensions = true;
                 ofd.Filter = CurrentRocksmithTitle + " CDLC Template (*.dlc.xml)|*.dlc.xml";
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
-                dlcLoadPath = defaultProjectDir = ofd.FileName;
+                dlcLoadPath = Globals.DefaultProjectDir = ofd.FileName;
             }
 
             loadTemplate(dlcLoadPath);
@@ -1839,7 +1837,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tonesLB.Items.Clear();
 
             // check if user has assigned default tone and it exists
-            if (!String.IsNullOrEmpty(defaultTonePath) && File.Exists(defaultTonePath))
+            if (!String.IsNullOrEmpty(Globals.DefaultTonePath) && File.Exists(Globals.DefaultTonePath))
             {
                 var tone = CreateNewTone();
                 using (var form = new ToneForm())
@@ -1849,7 +1847,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     form.toneControl.CurrentGameVersion = CurrentGameVersion;
                     form.toneControl.Init();
                     form.toneControl.Tone = GeneralExtensions.Copy(tone);
-                    form.LoadToneFile(defaultTonePath, false);
+                    form.LoadToneFile(Globals.DefaultTonePath, false);
                     tonesLB.Items.Add(form.toneControl.Tone);
                 }
             }
@@ -2009,7 +2007,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = defaultProjectDir;
+                ofd.InitialDirectory = Globals.DefaultProjectDir;
                 ofd.Title = "Quick Add ... Multiselect Arrangements";
                 ofd.Filter = "Rocksmith Song Xml Files (*.xml)|*.xml";
                 ofd.Multiselect = true;
@@ -2019,6 +2017,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 string[] xmlFilePaths = ofd.FileNames;
+                Globals.DefaultProjectDir = xmlFilePaths[0];
                 LoadArrangements(xmlFilePaths);
             }
         }
