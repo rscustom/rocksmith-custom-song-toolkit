@@ -271,13 +271,36 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void SetDefaultFromConfig()
         {
-            // TODO: maybe read these from Config xml
-            platformPC.Checked = true;
-            platformMAC.Checked = platformPS3.Checked = platformXBox360.Checked = false;
+            // read from RocksmithToolkitLib.Config.xml
+            try
+            {
+                Globals.DefaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"];
+                Globals.DefaultToneFile = ConfigRepository.Instance()["creator_defaulttone"];
+                CurrentGameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
+                var defaultPlatform = (GamePlatform)Enum.Parse(typeof(GamePlatform), ConfigRepository.Instance()["general_defaultplatform"]);
 
-            CurrentGameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
-            Globals.DefaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"];
-            Globals.DefaultTonePath = ConfigRepository.Instance()["creator_defaulttone"];
+                switch (defaultPlatform)
+                {
+                    case GamePlatform.Pc:
+                        platformPC.Checked = true;
+                        break;
+                    case GamePlatform.Mac:
+                        platformMAC.Checked = true;
+                        break;
+                    case GamePlatform.XBox360:
+                        platformXBox360.Checked = true;
+                        break;
+                    case GamePlatform.PS3:
+                        platformPS3.Checked = true;
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+                throw new FileLoadException("RocksmithToolkitLib.Config.xml is corrupt.  Please reload fresh installation.");
+            }
+
+
         }
 
         public dynamic CreateNewTone(string toneName = "Default")
@@ -1837,7 +1860,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tonesLB.Items.Clear();
 
             // check if user has assigned default tone and it exists
-            if (!String.IsNullOrEmpty(Globals.DefaultTonePath) && File.Exists(Globals.DefaultTonePath))
+            if (!String.IsNullOrEmpty(Globals.DefaultToneFile) && File.Exists(Globals.DefaultToneFile))
             {
                 var tone = CreateNewTone();
                 using (var form = new ToneForm())
@@ -1847,7 +1870,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     form.toneControl.CurrentGameVersion = CurrentGameVersion;
                     form.toneControl.Init();
                     form.toneControl.Tone = GeneralExtensions.Copy(tone);
-                    form.LoadToneFile(Globals.DefaultTonePath, false);
+                    form.LoadToneFile(Globals.DefaultToneFile, false);
                     tonesLB.Items.Add(form.toneControl.Tone);
                 }
             }

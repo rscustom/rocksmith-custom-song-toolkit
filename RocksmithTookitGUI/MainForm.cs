@@ -66,22 +66,6 @@ namespace RocksmithToolkitGUI
 
             // position main form at top center of screen to avoid having to reposition on low res displays
             this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2, 0);
-
-            //#if !DEBUG
-            // check for first run
-            //bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
-            //if (firstRun)
-            //{
-            //    MessageBox.Show(new Form { TopMost = true },
-            //        "       Welcome to the Rocksmith Custom Song Toolkit" + Environment.NewLine +
-            //        "              Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
-            //        "  It looks like this may be your first time running the toolkit." + Environment.NewLine +
-            //        "Please go to the Configuration menu and fill in your selections.  ", "Rocksmith Custom Song Toolkit ... First Run",
-            //         MessageBoxButtons.OK, MessageBoxIcon.Hand);
-
-            //    ShowConfigScreen();
-            //}
-            //#endif
         }
 
         private void CheckForUpdate(object sender, DoWorkEventArgs e)
@@ -194,16 +178,24 @@ namespace RocksmithToolkitGUI
             // cleanup temp folder garbage carefully
 #if !DEBUG
             var di = new DirectoryInfo(Path.GetTempPath());
- 
+
             // confirm this is the 'Local Settings\Temp' directory
             if (di.Parent != null)
                 if (di.Parent.Name == "Local Settings" && di.Name == "Temp")
                 {
                     foreach (FileInfo file in di.GetFiles())
-                        file.Delete();
+                        try
+                        {
+                            file.Delete();
+                        }
+                        catch { /*Don't worry just skip locked file*/ }
 
                     foreach (DirectoryInfo dir in di.GetDirectories())
-                        dir.Delete(true);
+                        try
+                        {
+                            dir.Delete(true);
+                        }
+                        catch { /*Don't worry just skip locked directory*/ }
                 }
 #endif
         }
@@ -211,6 +203,8 @@ namespace RocksmithToolkitGUI
         private void MainForm_Shown(object sender, EventArgs e)
         {
             this.Refresh();
+
+            // don't bug the Developers when in debug mode ;)
 #if !DEBUG
             // check for first run
             bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
@@ -220,7 +214,7 @@ namespace RocksmithToolkitGUI
                     "    Welcome to the Song Creator Toolkit for Rocksmith." + Environment.NewLine +
                     "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
                     "It looks like this may be your first time running the toolkit.  " + Environment.NewLine +
-                    "  Please fill in the Configuration menu with your selections.", "Rocksmith Custom Song Toolkit ... First Run",
+                    "  Please fill in the Configuration menu with your selections.", "Song Creator Toolkit for Rocksmith ... First Run",
                      MessageBoxButtons.OK, MessageBoxIcon.Hand);
 
                 ShowConfigScreen();
@@ -228,8 +222,6 @@ namespace RocksmithToolkitGUI
 #endif
 
         }
-
-
 
     }
 }

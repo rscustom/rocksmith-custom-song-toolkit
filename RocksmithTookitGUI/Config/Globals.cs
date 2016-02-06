@@ -7,8 +7,9 @@ namespace RocksmithToolkitGUI.Config
 {
     public static class Globals
     {
-        public static string DefaultTonePath { get; set; }
+        public static string DefaultToneFile { get; set; }
         public static string DefaultProjectDir { get; set; }
+
     }
 
 }

@@ -26,6 +26,7 @@ namespace RocksmithToolkitGUI.Config
                 PopulateAppIdCombo(general_defaultappid_RS2012, GameVersion.RS2012);
                 PopulateAppIdCombo(general_defaultappid_RS2014, GameVersion.RS2014);
                 PopulateEnumCombo(general_defaultgameversion, typeof(GameVersion));
+                PopulateEnumCombo(general_defaultplatform, typeof(GamePlatform));
                 PopulateEnumCombo(converter_source, typeof(GamePlatform));
                 PopulateEnumCombo(converter_target, typeof(GamePlatform));
                 PopulateRampUp();
