@@ -33,7 +33,7 @@ namespace RocksmithToolkitGUI.Config
                 PopulateRampUp();
                 PopulateConfigDDC();
                 LoadAndSetupConfiguration(this.Controls);
-                // eye candy
+                // hide First Run
                 if (ConfigRepository.Instance()["general_firstrun"] == "false")
                     lblFirstRun.Visible = false;
             }

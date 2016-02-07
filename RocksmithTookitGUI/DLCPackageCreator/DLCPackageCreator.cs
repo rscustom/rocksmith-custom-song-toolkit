@@ -258,7 +258,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 // this sequence gets done everytime config changes
                 SetDefaultFromConfig();
                 PopulateAppIdCombo();
-                PopulateTonesLB();
+                PopulateTonesLB();          
             }
             catch { /*For mono compatibility*/ }
 

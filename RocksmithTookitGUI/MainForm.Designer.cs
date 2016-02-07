@@ -320,7 +320,6 @@
             this.dlcPackageCreator1.Album = "";
             this.dlcPackageCreator1.AlbumSort = "";
             this.dlcPackageCreator1.AlbumYear = "";
-            this.dlcPackageCreator1.AppId = "";
             this.dlcPackageCreator1.Artist = "";
             this.dlcPackageCreator1.ArtistSort = "";
             this.dlcPackageCreator1.AverageTempo = "";
