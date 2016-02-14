@@ -133,7 +133,7 @@ namespace RocksmithToolkitLib.DLCPackage
             File.Delete(arr.SongXml.File);
             using (var stream = File.OpenWrite(arr.SongXml.File))
             {
-                songXml.Serialize(stream);
+                songXml.Serialize(stream, true);
             }
 
             return true;

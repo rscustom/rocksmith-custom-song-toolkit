@@ -184,7 +184,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             var xmlComments = Song2014.ReadXmlComments(xmlEofFile);
 
                             using (var stream = File.Open(xmlEofFile, FileMode.Create))
-                                eofSong.Serialize(stream);
+                                eofSong.Serialize(stream, true);
 
                             Song2014.WriteXmlComments(xmlEofFile, xmlComments, customComment: "Synced with SNG file");
                         }

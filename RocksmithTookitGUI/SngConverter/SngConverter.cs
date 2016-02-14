@@ -184,7 +184,7 @@ namespace RocksmithToolkitGUI.SngConverter
                     else
                         xml = new Song2014(sng, att ?? null);
 
-                    xml.Serialize(outputStream);
+                    xml.Serialize(outputStream, true);
 
                     MessageBox.Show(String.Format("XML file was generated! {0}It was saved on same location of sng file specified.", Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

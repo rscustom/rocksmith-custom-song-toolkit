@@ -26,7 +26,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CFSM.AudioTools">

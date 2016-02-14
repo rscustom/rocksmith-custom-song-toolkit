@@ -429,6 +429,7 @@ namespace RocksmithToolkitLib.Xml
     }
 
     // stay consistent SNG TuningStrings data stored as Int16 (short)
+    [Serializable]
     [XmlType("tuning")]
     public class TuningStrings : IEquatable<TuningStrings>
     {

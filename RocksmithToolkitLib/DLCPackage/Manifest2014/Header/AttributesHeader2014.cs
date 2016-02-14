@@ -8,6 +8,7 @@ using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
 {
+    [Serializable]
     public class AttributesHeader2014
     {
         public static readonly string URN_TEMPLATE = "urn:{0}:{1}:{2}";

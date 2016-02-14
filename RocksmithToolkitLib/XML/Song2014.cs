@@ -16,6 +16,7 @@ using CON = RocksmithToolkitLib.Sng.Constants;
 
 namespace RocksmithToolkitLib.Xml
 {
+    [Serializable]
     [XmlRoot("song", Namespace = "", IsNullable = false)]
     public class Song2014
     {

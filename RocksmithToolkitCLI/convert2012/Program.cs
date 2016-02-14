@@ -135,7 +135,7 @@ namespace convert2012
             File.Delete(arr.SongXml.File);
             using (var stream = File.OpenWrite(arr.SongXml.File))
             {
-                songXml.Serialize(stream);
+                songXml.Serialize(stream, true);
             }
         }
 

@@ -1317,7 +1317,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (!String.IsNullOrEmpty(arr.ToneD)) songXml.ToneD = arr.ToneD;
 
                 using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
-                    songXml.Serialize(stream);
+                    songXml.Serialize(stream, true);
             }
             else
             {
@@ -1362,7 +1362,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             songXml.Events = songXml.Events.Union(songEvents, new EqSEvent()).OrderBy(x => x.Time).ToArray();
             using (var stream = File.OpenWrite(mArr.SongXml.File))
             {
-                songXml.Serialize(stream);
+                songXml.Serialize(stream, true);
             }
             return mArr;
         }
@@ -1558,7 +1558,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                                 // save changes to xml
                                 using (var stream = File.Open(arrangement.SongXml.File, FileMode.Create))
-                                    songXml.Serialize(stream);
+                                    songXml.Serialize(stream, true);
                             }
                         }
 
