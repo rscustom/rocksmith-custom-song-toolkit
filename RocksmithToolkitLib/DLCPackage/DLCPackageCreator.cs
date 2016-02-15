@@ -995,9 +995,9 @@ namespace RocksmithToolkitLib.DLCPackage
             var CFSM_IMAGE_TOOLS = File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "CFSM.ImageTools.dll"));
             var DF_DDSIMAGE = File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "DF_DDSImage.dll"));
 
-            //#if !DEBUG
-            //            CFSM_IMAGE_TOOLS = false;
-            //#endif
+#if !DEBUG
+                        CFSM_IMAGE_TOOLS = false;
+#endif
 
             if (CFSM_IMAGE_TOOLS && DF_DDSIMAGE && dlcType == DLCPackageType.Song)
             {
