@@ -258,7 +258,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 // this sequence gets done everytime config changes
                 SetDefaultFromConfig();
                 PopulateAppIdCombo();
-                PopulateTonesLB();          
+                PopulateTonesLB();
             }
             catch { /*For mono compatibility*/ }
 
@@ -696,18 +696,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void loadTemplate(string dlcLoadPath)
         {
-            DLCPackageData info;
+            DLCPackageData info = null;
             try
             {
-                using (var stm = new XmlTextReader(dlcLoadPath))
-                    info = new DataContractSerializer(typeof(DLCPackageData)).ReadObject(stm) as DLCPackageData;
-
-                if (info == null) throw new InvalidDataException("CDLC Template is null");
-
-                // use AppId to determine GameVersion of dlc.xml template
-                rbRs2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
-                rbRs2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
-
                 if (rbRs2014.Checked)
                 {
                     // check and fix the template compatibility if necessary
@@ -717,15 +708,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     {
                         templateString = templateString.Replace("Manifest.Tone\">", "Manifest2014.Tone\">");
                         File.WriteAllText(dlcLoadPath, templateString, Encoding.UTF8);
-
-                        using (var stm = new XmlTextReader(dlcLoadPath))
-                            info = new DataContractSerializer(typeof(DLCPackageData)).ReadObject(stm) as DLCPackageData;
                     }
                 }
+                
+                using (var stm = new XmlTextReader(dlcLoadPath))
+                    info = new DataContractSerializer(typeof(DLCPackageData)).ReadObject(stm) as DLCPackageData;
+
+                if (info == null) throw new InvalidDataException("CDLC Template is null");
+
+                // use AppId to determine GameVersion of dlc.xml template
+                rbRs2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
+                rbRs2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
             }
             catch (Exception se)
             {
-                MessageBox.Show("Can't load CDLC Template because it's not compatible with new CDLC Template format. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Can not load CDLC Template. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

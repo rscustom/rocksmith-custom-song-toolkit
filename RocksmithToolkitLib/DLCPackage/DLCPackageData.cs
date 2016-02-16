@@ -23,6 +23,7 @@ using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
+  
     public class DLCPackageData
     {
         // DO NOT change variable names ... hidden dependancies
