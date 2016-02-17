@@ -23,9 +23,9 @@ using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
-  
+
     public class DLCPackageData
-    {
+    { 
         // DO NOT change variable names ... hidden dependancies
         public GameVersion GameVersion;
         public bool Pc { get; set; }
@@ -44,6 +44,25 @@ namespace RocksmithToolkitLib.DLCPackage
         public float Volume { get; set; }
         public PackageMagic SignatureType { get; set; }
         public string PackageVersion { get; set; }
+
+        // loads the old toolkit version info from template (if any)
+        // writes current toolkit version to package template file
+        private string _version;
+        public string Version
+        {
+            get
+            {
+                if (_version == null)
+                    _version = String.Format("Toolkit Version {0}", ToolkitVersion.version);
+                return _version;
+            }
+            set
+            {
+                if (value == null)
+                    _version = String.Format("Toolkit Version {0}", ToolkitVersion.version);
+                _version = value;
+            }
+        }
 
         private List<XBox360License> xbox360Licenses;
         public List<XBox360License> XBox360Licenses
