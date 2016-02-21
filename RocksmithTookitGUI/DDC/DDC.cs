@@ -16,13 +16,13 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Xml;
+using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 
 namespace RocksmithToolkitGUI.DDC
 {
     public partial class DDC : UserControl
     {
         const string MESSAGEBOX_CAPTION = "Dynamic Difficulty Creator";
-
         internal BackgroundWorker bw;
         // 0 - fpath 1 - name
         internal Dictionary<string, string> DLCdb;
@@ -30,25 +30,31 @@ namespace RocksmithToolkitGUI.DDC
         internal Dictionary<string, string> ConfigsDb;
         internal static string AppWD = AppDomain.CurrentDomain.BaseDirectory;
         internal static string DdcBD = Path.Combine(AppWD, "ddc");
-        internal Color EnabledColor = Color.Green;
-        internal Color DisabledColor = Color.FromArgb(192, 64, 0);
+        internal Color EnabledColor = Color.Lime;
+        internal Color DisabledColor = Color.Red;
 
         internal bool isNDD { get; set; }
 
-        internal bool CleanProcess {
-            get {
+        internal bool CleanProcess
+        {
+            get
+            {
                 return cleanCheckbox.Checked;
             }
-            set {
+            set
+            {
                 cleanCheckbox.Checked = value;
             }
         }
 
-        public bool KeepLog {
-            get {
+        public bool KeepLog
+        {
+            get
+            {
                 return keepLogfile.Checked;
             }
-            set {
+            set
+            {
                 keepLogfile.Checked = value;
             }
         }
@@ -72,7 +78,8 @@ namespace RocksmithToolkitGUI.DDC
 
         private void DDC_Load(object sender, EventArgs e)
         {
-            try {
+            try
+            {
                 string ddcPath = Path.Combine(AppWD, "ddc", "ddc.exe");
                 if (!this.DesignMode && File.Exists(ddcPath))
                 {
@@ -82,19 +89,21 @@ namespace RocksmithToolkitGUI.DDC
                 PopMDLs();
                 PopCFGs();
                 SetDefaultFromConfig();
-            } catch { /*For mono compatibility*/ }
+            }
+            catch { /*For mono compatibility*/ }
         }
 
-        private void SetDefaultFromConfig() {
+        private void SetDefaultFromConfig()
+        {
             ramUpMdlsCbox.SelectedItem = ConfigRepository.Instance()["ddc_rampup"];
-            ConfigFilesCbx.SelectedItem = ConfigRepository.Instance()["ddc_config"]; 
+            ConfigFilesCbx.SelectedItem = ConfigRepository.Instance()["ddc_config"];
             phaseLenNum.Value = ConfigRepository.Instance().GetDecimal("ddc_phraselength");
             delsustainsBT.Checked = ConfigRepository.Instance().GetBoolean("ddc_removesustain");
         }
 
         private void bw_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
-            DDprogress.Value = 100;
+            pbUpdateProgress.Value = 100;
             if (e.Result.Equals(0))
             {
                 foreach (var file in DLCdb)
@@ -127,7 +136,7 @@ namespace RocksmithToolkitGUI.DDC
                             break;
                     }
 
-                    Invoke(new MethodInvoker(() => DelEntry (file.Value)));
+                    Invoke(new MethodInvoker(() => DelEntry(file.Value)));
                 }
 
                 DLCdb.Clear();
@@ -135,33 +144,39 @@ namespace RocksmithToolkitGUI.DDC
             }
             else if (e.Result.Equals(1))
                 MessageBox.Show("DDC error! System Error. See below: " + Environment.NewLine + processOutput, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (e.Result.Equals(2)) {
+            else if (e.Result.Equals(2))
+            {
                 MessageBox.Show(String.Format("Dynamic difficulty {0} with errors! See below:{1}{2}", Environment.NewLine, isNDD ? "removed" : "generated", processOutput), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            } else
+            }
+            else
                 MessageBox.Show("DDC error! See ddc.log", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             ProduceDDbt.Enabled = true;
-            DDprogress.Visible = false;
+            pbUpdateProgress.Visible = false;
+            pbUpdateProgress.MarqueeAnimationSpeed = 0;
+            pbUpdateProgress.Style = ProgressBarStyle.Continuous;
+            lblCurrentOperation.Visible = false;
             this.Focus();
         }
 
         private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            DDprogress.Value = e.ProgressPercentage;
+            pbUpdateProgress.Value = e.ProgressPercentage;
         }
 
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
             processOutput = String.Empty;
-
+            // TODO: change progress reporting method so it is responsive for a single file
             var step = (int)Math.Round(1.0 / DLCdb.Count * 100, 0);
             int result = -1, progress = 0;
             string remSUS = String.Empty, rampPath = String.Empty, cfgPath = String.Empty;
 
-            this.Invoke(new MethodInvoker(() => {
-                    remSUS = IsREMsus();
-                    rampPath = GetRampUpMdl();
-                    cfgPath = GetConfig();
+            this.Invoke(new MethodInvoker(() =>
+            {
+                remSUS = IsREMsus();
+                rampPath = GetRampUpMdl();
+                cfgPath = GetConfig();
             }));
 
             bw.ReportProgress(progress);
@@ -170,7 +185,8 @@ namespace RocksmithToolkitGUI.DDC
             foreach (var file in DLCdb)
             {
                 string consoleOutput = String.Empty;
-                switch (Path.GetExtension(file.Value)) {
+                switch (Path.GetExtension(file.Value))
+                {
                     case ".xml":   // Arrangement
                         result = ApplyDD(file.Value, remSUS, rampPath, cfgPath, out consoleOutput, CleanProcess, KeepLog);
                         errorsFound.AppendLine(consoleOutput);
@@ -183,7 +199,8 @@ namespace RocksmithToolkitGUI.DDC
                         errorsFound.AppendLine(consoleOutput);
                         break;
                 }
-                if (!String.IsNullOrEmpty(errorsFound.ToString())) {
+                if (!String.IsNullOrEmpty(errorsFound.ToString()))
+                {
                     processOutput = errorsFound.ToString();
                 }
 
@@ -202,19 +219,20 @@ namespace RocksmithToolkitGUI.DDC
                 WorkingDirectory = Path.GetDirectoryName(file),
                 Arguments = String.Format("\"{0}\" -l {1} -s {2}{3}{4}{5}{6}",
                     Path.GetFileName(file),
-                    (UInt16) phaseLenNum.Value,
+                    (UInt16)phaseLenNum.Value,
                     remSUS, rampPath, cfgPath,
                     cleanProcess ? " -p Y" : " -p N",
                     keepLog ? " -t Y" : " -t N"
                     ),
                 UseShellExecute = false,
-                CreateNoWindow = false,
+                CreateNoWindow = true,  // hide command window
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
             };
 
 
-            using (var DDC = new Process()) {
+            using (var DDC = new Process())
+            {
                 DDC.StartInfo = startInfo;
                 DDC.Start();
                 consoleOutput = DDC.StandardOutput.ReadToEnd();
@@ -254,9 +272,9 @@ namespace RocksmithToolkitGUI.DDC
             if (!exitedByError)
             {
                 var logFiles = Directory.EnumerateFiles(unpackedDir, "*.log", SearchOption.AllDirectories);
-                var newName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_{1}{2}", 
-                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidFileName().Replace("_DD", "").Replace("_NDD", ""), 
-                    isNDD ? "NDD" :  "DD", platform.GetPathName()[2]));
+                var newName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_{1}{2}",
+                    Path.GetFileNameWithoutExtension(file).StripPlatformEndName().GetValidFileName().Replace("_DD", "").Replace("_NDD", ""),
+                    isNDD ? "NDD" : "DD", platform.GetPathName()[2]));
                 if (keepLog)
                 {
                     string clogDir = Path.Combine(Path.GetDirectoryName(newName), "DDC_Log");
@@ -322,11 +340,18 @@ namespace RocksmithToolkitGUI.DDC
 
         private void ProduceDDbt_Click(object sender, EventArgs e)
         {
+ 
             if (!this.bw.IsBusy && DLCdb.Count > 0)
             {
-                if(DLCdb.Count > 1) DDprogress.Visible = true;
+                pbUpdateProgress.Style = ProgressBarStyle.Marquee;
+                pbUpdateProgress.MarqueeAnimationSpeed = 60;
+                pbUpdateProgress.Visible = true;
+                lblCurrentOperation.Text = "Generating DD Content ... Please wait ...";
+                lblCurrentOperation.Visible = true;
+                this.Refresh();
+
                 ProduceDDbt.Enabled = false;
-                this.bw.RunWorkerAsync(); 
+                this.bw.RunWorkerAsync();
             }
         }
 
@@ -434,26 +459,28 @@ namespace RocksmithToolkitGUI.DDC
             bool done = false;
             string arg1 = "";
             const string link = "http://ddcreator.wordpress.com";
-            if(Environment.OSVersion.Platform == PlatformID.MacOSX){
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+            {
                 Process.Start(link);
             }
-            else {
-                    string[] browsers = { "chrome", "opera", "firefox" };
-                    foreach (var name in browsers)
+            else
+            {
+                string[] browsers = { "chrome", "opera", "firefox" };
+                foreach (var name in browsers)
+                {
+                    var browser = Process.GetProcessesByName(name)[0];
+                    if (browser.ProcessName.Equals(name))
                     {
-                        var browser = Process.GetProcessesByName(name)[0];
-                        if (browser.ProcessName.Equals(name))
-                        {
-                            if (name.Contains("opera"))
-                                arg1 = "-newwindow ";
+                        if (name.Contains("opera"))
+                            arg1 = "-newwindow ";
 
-                            browser.StartInfo.FileName = browser.MainModule.FileName;
-                            browser.StartInfo.Arguments = String.Format("{0}{1}", arg1, link);
-                            browser.Start();
-                            done = true;
-                            break;
-                        }
+                        browser.StartInfo.FileName = browser.MainModule.FileName;
+                        browser.StartInfo.Arguments = String.Format("{0}{1}", arg1, link);
+                        browser.Start();
+                        done = true;
+                        break;
                     }
+                }
                 if (!done)
                     Process.Start(link);
             }
@@ -555,7 +582,8 @@ namespace RocksmithToolkitGUI.DDC
             keepLogfile.ForeColor = keepLogfile.Checked ? EnabledColor : DisabledColor;
         }
 
-        private void ramUpMdlsCbox_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ramUpMdlsCbox_SelectedIndexChanged(object sender, EventArgs e)
+        {
             isNDD = ((ComboBox)sender).Text.Equals("ddc_dd_remover");
             ProduceDDbt.Text = (isNDD) ? "Remove DD" : "Generate DD";
         }

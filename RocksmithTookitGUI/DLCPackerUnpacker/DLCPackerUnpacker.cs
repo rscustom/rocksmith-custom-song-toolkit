@@ -47,17 +47,17 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             bwRepack.WorkerReportsProgress = true;
         }
 
-        private bool decodeAudio
+        private bool DecodeAudio
         {
             get { return chkDecodeAudio.Checked; }
         }
 
-        private bool overwriteSongXml
+        private bool OverwriteSongXml
         {
             get { return chkOverwriteSongXml.Checked; }
         }
 
-        private bool updateSng
+        private bool UpdateSng
         {
             get { return chkUpdateSng.Checked; }
         }
@@ -224,10 +224,10 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 {
                     try
                     {
-                        var unpackedDir = Packer.Unpack(sourceFileName, tmpDir);
+                        var unpackedDir = Packer.Unpack(sourceFileName, tmpDir, OverwriteSongXml);
                         var appIdFile = Path.Combine(unpackedDir, (platform.version == GameVersion.RS2012) ? "APP_ID" : "appid.appid");
                         File.WriteAllText(appIdFile, appId);
-                        Packer.Pack(unpackedDir, sourceFileName, updateSng);
+                        Packer.Pack(unpackedDir, sourceFileName, UpdateSng);
                     }
                     catch (Exception ex)
                     {
@@ -504,7 +504,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Stopwatch sw = new Stopwatch();
                 sw.Restart();
                 var packagePlatform = srcPath.GetPlatform();
-                Packer.Pack(srcPath, destFileName, updateSng, packagePlatform);
+                Packer.Pack(srcPath, destFileName, UpdateSng, packagePlatform);
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
             }
@@ -599,7 +599,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 destPath = fbd.SelectedPath;
             }
 
-            UnpackSongs(srcFileNames, destPath, decodeAudio, overwriteSongXml);
+            UnpackSongs(srcFileNames, destPath, DecodeAudio, OverwriteSongXml);
         }
 
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
@@ -616,5 +616,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         public static Label CurrentOperationLabel { get; set; }
         public static ProgressBar UpdateProgress { get; set; }
+
+     
     }
 }

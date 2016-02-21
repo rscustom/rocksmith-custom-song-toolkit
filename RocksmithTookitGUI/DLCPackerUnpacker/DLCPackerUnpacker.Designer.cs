@@ -91,11 +91,13 @@
             // 
             this.btnRepackAppId.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRepackAppId.ForeColor = System.Drawing.Color.Black;
-            this.btnRepackAppId.Location = new System.Drawing.Point(297, 41);
+            this.btnRepackAppId.Location = new System.Drawing.Point(297, 42);
             this.btnRepackAppId.Name = "btnRepackAppId";
             this.btnRepackAppId.Size = new System.Drawing.Size(128, 23);
             this.btnRepackAppId.TabIndex = 7;
             this.btnRepackAppId.Text = "Repack AppId";
+            this.toolTip.SetToolTip(this.btnRepackAppId, "You can also try checking the SNG to XML box if you \r\nreceive an error message wh" +
+                    "en using Repack AppId.");
             this.btnRepackAppId.UseVisualStyleBackColor = true;
             this.btnRepackAppId.Click += new System.EventHandler(this.btnRepackAppId_Click);
             // 
@@ -120,7 +122,7 @@
             // 
             this.lblAppId.AutoSize = true;
             this.lblAppId.ForeColor = System.Drawing.Color.Black;
-            this.lblAppId.Location = new System.Drawing.Point(7, 46);
+            this.lblAppId.Location = new System.Drawing.Point(7, 47);
             this.lblAppId.Name = "lblAppId";
             this.lblAppId.Size = new System.Drawing.Size(142, 13);
             this.lblAppId.TabIndex = 25;
@@ -142,7 +144,7 @@
             this.txtAppId.Cue = "APP ID";
             this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtAppId.ForeColor = System.Drawing.Color.Gray;
-            this.txtAppId.Location = new System.Drawing.Point(155, 43);
+            this.txtAppId.Location = new System.Drawing.Point(156, 44);
             this.txtAppId.Name = "txtAppId";
             this.txtAppId.Size = new System.Drawing.Size(82, 20);
             this.txtAppId.TabIndex = 41;
@@ -217,6 +219,8 @@
             this.chkOverwriteSongXml.Size = new System.Drawing.Size(86, 17);
             this.chkOverwriteSongXml.TabIndex = 1;
             this.chkOverwriteSongXml.Text = "SNG to XML";
+            this.toolTip.SetToolTip(this.chkOverwriteSongXml, "You can also check this box if you are trying to \r\nRepack AppId and receive an er" +
+                    "ror message.");
             this.chkOverwriteSongXml.UseVisualStyleBackColor = true;
             // 
             // gbPacker

@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.AddArrBT = new System.Windows.Forms.Button();
-            this.ProduceDDbt = new System.Windows.Forms.Button();
             this.rampUpBT = new System.Windows.Forms.Button();
             this.delsustainsBT = new System.Windows.Forms.CheckBox();
             this.process1 = new System.Diagnostics.Process();
@@ -44,7 +44,6 @@
             this.DDCfilesDgw = new System.Windows.Forms.DataGridView();
             this.PathColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TypeColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DDprogress = new System.Windows.Forms.ProgressBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.keepLogfile = new System.Windows.Forms.CheckBox();
             this.cleanCheckbox = new System.Windows.Forms.CheckBox();
@@ -58,6 +57,10 @@
             this.ddcVersion = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.ProduceDDbt = new System.Windows.Forms.Button();
+            this.lblCurrentOperation = new System.Windows.Forms.Label();
+            this.pbUpdateProgress = new System.Windows.Forms.ProgressBar();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -85,20 +88,6 @@
             this.AddArrBT.UseVisualStyleBackColor = true;
             this.AddArrBT.Click += new System.EventHandler(this.AddArrBT_Click);
             // 
-            // ProduceDDbt
-            // 
-            this.ProduceDDbt.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.ProduceDDbt.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lime;
-            this.ProduceDDbt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DodgerBlue;
-            this.ProduceDDbt.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ProduceDDbt.Location = new System.Drawing.Point(397, 373);
-            this.ProduceDDbt.Name = "ProduceDDbt";
-            this.ProduceDDbt.Size = new System.Drawing.Size(125, 32);
-            this.ProduceDDbt.TabIndex = 10;
-            this.ProduceDDbt.Text = "Generate DD";
-            this.ProduceDDbt.UseVisualStyleBackColor = false;
-            this.ProduceDDbt.Click += new System.EventHandler(this.ProduceDDbt_Click);
-            // 
             // rampUpBT
             // 
             this.rampUpBT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
@@ -114,7 +103,7 @@
             // 
             this.delsustainsBT.AutoSize = true;
             this.delsustainsBT.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.delsustainsBT.Location = new System.Drawing.Point(156, 84);
+            this.delsustainsBT.Location = new System.Drawing.Point(157, 84);
             this.delsustainsBT.Name = "delsustainsBT";
             this.delsustainsBT.Size = new System.Drawing.Size(107, 17);
             this.delsustainsBT.TabIndex = 7;
@@ -155,7 +144,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(5, 85);
+            this.label1.Location = new System.Drawing.Point(13, 84);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 13);
             this.label1.TabIndex = 0;
@@ -181,8 +170,8 @@
             this.DDCfilesDgw.AllowUserToAddRows = false;
             this.DDCfilesDgw.AllowUserToResizeColumns = false;
             this.DDCfilesDgw.AllowUserToResizeRows = false;
-            this.DDCfilesDgw.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-                                    | System.Windows.Forms.AnchorStyles.Right)));
+            this.DDCfilesDgw.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.DDCfilesDgw.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DDCfilesDgw.BackgroundColor = System.Drawing.SystemColors.Window;
             this.DDCfilesDgw.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -190,26 +179,24 @@
             this.DDCfilesDgw.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
             this.DDCfilesDgw.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.DDCfilesDgw.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-                                    this.PathColnm,
-                                    this.TypeColnm});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.NotSet;
-            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle1;
+            this.PathColnm,
+            this.TypeColnm});
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle19;
             this.DDCfilesDgw.GridColor = System.Drawing.SystemColors.AppWorkspace;
             this.DDCfilesDgw.Location = new System.Drawing.Point(6, 19);
             this.DDCfilesDgw.Name = "DDCfilesDgw";
             this.DDCfilesDgw.RowHeadersWidth = 4;
-            this.DDCfilesDgw.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.EnableResizing;
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.NotSet;
-            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle20.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.Color.Black;
+            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle20;
             this.DDCfilesDgw.RowTemplate.ErrorText = "#####";
             this.DDCfilesDgw.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DDCfilesDgw.ShowEditingIcon = false;
@@ -227,6 +214,7 @@
             this.PathColnm.MinimumWidth = 340;
             this.PathColnm.Name = "PathColnm";
             this.PathColnm.ReadOnly = true;
+            this.PathColnm.Width = 340;
             // 
             // TypeColnm
             // 
@@ -235,16 +223,6 @@
             this.TypeColnm.MinimumWidth = 40;
             this.TypeColnm.Name = "TypeColnm";
             this.TypeColnm.ReadOnly = true;
-            // 
-            // DDprogress
-            // 
-            this.DDprogress.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.DDprogress.Location = new System.Drawing.Point(10, 374);
-            this.DDprogress.MarqueeAnimationSpeed = 80;
-            this.DDprogress.Name = "DDprogress";
-            this.DDprogress.Size = new System.Drawing.Size(381, 30);
-            this.DDprogress.TabIndex = 0;
-            this.DDprogress.Visible = false;
             // 
             // groupBox1
             // 
@@ -319,32 +297,33 @@
             // 
             this.phaseLenNum.Location = new System.Drawing.Point(94, 81);
             this.phaseLenNum.Maximum = new decimal(new int[] {
-                                    65536,
-                                    0,
-                                    0,
-                                    0});
+            65536,
+            0,
+            0,
+            0});
             this.phaseLenNum.Minimum = new decimal(new int[] {
-                                    2,
-                                    0,
-                                    0,
-                                    0});
+            2,
+            0,
+            0,
+            0});
             this.phaseLenNum.Name = "phaseLenNum";
             this.phaseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.phaseLenNum.Size = new System.Drawing.Size(52, 20);
             this.phaseLenNum.TabIndex = 6;
             this.phaseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.phaseLenNum.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.phaseLenNum, "Number of Bars");
             this.phaseLenNum.Value = new decimal(new int[] {
-                                    4,
-                                    0,
-                                    0,
-                                    0});
+            4,
+            0,
+            0,
+            0});
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label5.Location = new System.Drawing.Point(5, 51);
+            this.label5.Location = new System.Drawing.Point(32, 50);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(56, 13);
             this.label5.TabIndex = 0;
@@ -354,7 +333,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label4.Location = new System.Drawing.Point(5, 22);
+            this.label4.Location = new System.Drawing.Point(4, 21);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(84, 13);
             this.label4.TabIndex = 0;
@@ -415,21 +394,61 @@
             this.label3.TabIndex = 12;
             this.label3.Text = "Help can be found on:";
             // 
+            // ProduceDDbt
+            // 
+            this.ProduceDDbt.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.ProduceDDbt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ProduceDDbt.Location = new System.Drawing.Point(418, 396);
+            this.ProduceDDbt.Name = "ProduceDDbt";
+            this.ProduceDDbt.Size = new System.Drawing.Size(97, 29);
+            this.ProduceDDbt.TabIndex = 37;
+            this.ProduceDDbt.Text = "Generate DD";
+            this.ProduceDDbt.UseVisualStyleBackColor = false;
+            this.ProduceDDbt.Click += new System.EventHandler(this.ProduceDDbt_Click);
+            // 
+            // lblCurrentOperation
+            // 
+            this.lblCurrentOperation.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lblCurrentOperation.Location = new System.Drawing.Point(30, 373);
+            this.lblCurrentOperation.Name = "lblCurrentOperation";
+            this.lblCurrentOperation.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.lblCurrentOperation.Size = new System.Drawing.Size(227, 17);
+            this.lblCurrentOperation.TabIndex = 1000;
+            this.lblCurrentOperation.Text = "...";
+            this.lblCurrentOperation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCurrentOperation.Visible = false;
+            // 
+            // pbUpdateProgress
+            // 
+            this.pbUpdateProgress.Location = new System.Drawing.Point(263, 373);
+            this.pbUpdateProgress.Name = "pbUpdateProgress";
+            this.pbUpdateProgress.Size = new System.Drawing.Size(252, 17);
+            this.pbUpdateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.pbUpdateProgress.TabIndex = 1001;
+            this.pbUpdateProgress.Visible = false;
+            // 
+            // toolTip
+            // 
+            this.toolTip.AutoPopDelay = 9000;
+            this.toolTip.InitialDelay = 100;
+            this.toolTip.ReshowDelay = 100;
+            // 
             // DDC
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.lblCurrentOperation);
+            this.Controls.Add(this.pbUpdateProgress);
+            this.Controls.Add(this.ProduceDDbt);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.ddcVersion);
             this.Controls.Add(this.DescriptionDDC);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.DDprogress);
-            this.Controls.Add(this.ProduceDDbt);
             this.Controls.Add(this.pictureBox1);
             this.MinimumSize = new System.Drawing.Size(530, 380);
             this.Name = "DDC";
-            this.Size = new System.Drawing.Size(530, 419);
+            this.Size = new System.Drawing.Size(530, 458);
             this.Load += new System.EventHandler(this.DDC_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).EndInit();
@@ -439,13 +458,13 @@
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button AddArrBT;
-        private System.Windows.Forms.Button ProduceDDbt;
         private System.Windows.Forms.Button rampUpBT;
         private System.Windows.Forms.CheckBox delsustainsBT;
         private System.Diagnostics.Process process1;
@@ -456,7 +475,6 @@
         private DLCPackageCreator.NumericUpDownFixed phaseLenNum;
         private System.Windows.Forms.ComboBox ramUpMdlsCbox;
         private System.Windows.Forms.DataGridView DDCfilesDgw;
-        private System.Windows.Forms.ProgressBar DDprogress;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button deleteArrBT;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -471,5 +489,9 @@
         private System.Windows.Forms.Button ConfigFilesBtn;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button ProduceDDbt;
+        private System.Windows.Forms.Label lblCurrentOperation;
+        private System.Windows.Forms.ProgressBar pbUpdateProgress;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }
