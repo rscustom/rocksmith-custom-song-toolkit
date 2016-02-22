@@ -780,7 +780,7 @@
             this.AppIdTB.Size = new System.Drawing.Size(49, 20);
             this.AppIdTB.TabIndex = 16;
             this.toolTip.SetToolTip(this.AppIdTB, "App ID");
-            this.AppIdTB.TextChanged += new System.EventHandler(this.AppIdTB_TextChanged);
+            this.AppIdTB.Validating += new System.ComponentModel.CancelEventHandler(this.AppIdTB_Validating);
             // 
             // SongDisplayNameSortTB
             // 

@@ -1664,12 +1664,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void AppIdTB_TextChanged(object sender, EventArgs e)
+       private void AppIdTB_Validating(object sender, CancelEventArgs e)
         {
-            var appId = ((TextBox)sender).Text.Trim();
-            AppIdTB.TextChanged -= AppIdTB_TextChanged;
+           var appId = ((TextBox)sender).Text.Trim();
+           // AppIdTB.TextChanged -= AppIdTB_TextChanged;
             SelectComboAppId(appId);
-            AppIdTB.TextChanged += AppIdTB_TextChanged;
+           // AppIdTB.TextChanged += AppIdTB_TextChanged;
         }
 
         private void SelectComboAppId(string appId)
@@ -1829,7 +1829,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             var songAppId = SongAppIdRepository.Instance().Select((currentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], currentGameVersion);
             cmbAppIds.SelectedItem = songAppId;
-            AppId = songAppId.AppId;
+            AppIdTB.Text = songAppId.AppId;   
+            AppId = songAppId.AppId;  
         }
 
         private void PopulateTonesLB(GameVersion oldGameVersion)
@@ -2092,7 +2093,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tt.Show("", this, 20000); // show for 20 seconds
         }
 
-
+ 
 
     }
 }
