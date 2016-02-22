@@ -326,8 +326,7 @@
             this.rbRs2012.TabIndex = 1;
             this.rbRs2012.Text = "Rocksmith";
             this.rbRs2012.UseVisualStyleBackColor = true;
-            this.rbRs2012.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GameVersion_KeyUp);
-            // 
+                // 
             // rbRs2014
             // 
             this.rbRs2014.AutoSize = true;
@@ -341,7 +340,6 @@
             this.rbRs2014.TabStop = true;
             this.rbRs2014.Text = "Rocksmith 2014";
             this.rbRs2014.UseVisualStyleBackColor = true;
-            this.rbRs2014.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GameVersion_KeyUp);
             // 
             // gbPlatofmr
             // 
@@ -832,7 +830,6 @@
             this.rbConvert.TabIndex = 3;
             this.rbConvert.Text = "Convert";
             this.rbConvert.UseVisualStyleBackColor = true;
-            this.rbConvert.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GameVersion_KeyUp);
             // 
             // dlcImportButton
             // 

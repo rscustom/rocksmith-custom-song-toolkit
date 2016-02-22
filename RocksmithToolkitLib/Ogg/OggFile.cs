@@ -61,9 +61,11 @@ namespace RocksmithToolkitLib.Ogg
         {
             // testing using dreddfoxx CFSM.AudioTool library.  Thanks to DF.
             var CFSM_AUDIO_TOOLS = File.Exists(Path.Combine(appPath, "CFSM.AudioTools.dll"));
-#if !DEBUG
-                        CFSM_AUDIO_TOOLS = false;
-#endif
+
+            // TODO: comment out when there is time to debug/test
+            // not working for RS1-RS2 ogg conversions ;(
+            CFSM_AUDIO_TOOLS = false;
+
             if (CFSM_AUDIO_TOOLS)
             {
                 using (var readStream = File.OpenRead(file))
