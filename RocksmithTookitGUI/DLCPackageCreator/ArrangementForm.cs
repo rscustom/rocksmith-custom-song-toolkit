@@ -891,7 +891,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void vocalEdit_Click(object sender, EventArgs e)
         {//TODO: wrong behaviour with this warning message
             if (!String.IsNullOrEmpty(parentControl.LyricArtPath) && String.IsNullOrEmpty(Arrangement.FontSng))
-                MessageBox.Show("FYI, there is alredy defined one custom font.\r\n", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("FYI, there is already defined one custom font.\r\n", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             using (var form = new VocalsForm(Arrangement.FontSng, parentControl.LyricArtPath, Arrangement.CustomFont))
             {

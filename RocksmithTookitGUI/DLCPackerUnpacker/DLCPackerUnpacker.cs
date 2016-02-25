@@ -20,10 +20,16 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 {
     public partial class DLCPackerUnpacker : UserControl
     {
+        #region Constants
+
         private const string MESSAGEBOX_CAPTION = "CDLC Packer/Unpacker";
+
+        #endregion
+
         private BackgroundWorker bwRepack = new BackgroundWorker();
         private string destPath;
         private StringBuilder errorsFound;
+        private GameVersion gameVersion;
 
         public DLCPackerUnpacker()
         {
@@ -35,7 +41,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 gameVersionList.Remove("None");
                 cmbGameVersion.DataSource = gameVersionList;
                 cmbGameVersion.SelectedItem = ConfigRepository.Instance()["general_defaultgameversion"];
-                GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
+                gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
                 PopulateAppIdCombo(gameVersion);
             }
             catch { /*For mono compatibility*/ }
@@ -61,6 +67,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         {
             get { return chkUpdateSng.Checked; }
         }
+
+        private bool UpdateManifest
+        {
+            get { return chkUpdateManifest.Checked; }
+        }
+
 
         private void PopulateAppIdCombo(GameVersion gameVersion)
         {
@@ -113,6 +125,16 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             }
 
             return destFileName;
+        }
+
+        private void SelectComboAppId(string appId)
+        {
+            var songAppId = SongAppIdRepository.Instance().Select(appId, gameVersion);
+            if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
+                cmbAppId.SelectedItem = songAppId;
+            else
+                MessageBox.Show("You entered an unknown AppID." + Environment.NewLine +
+                                "Please ensure that it is valid.  ", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ShowCurrentOperation(string message)
@@ -224,10 +246,10 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 {
                     try
                     {
-                        var unpackedDir = Packer.Unpack(sourceFileName, tmpDir, OverwriteSongXml);
+                        var unpackedDir = Packer.Unpack(sourceFileName, tmpDir, overwriteSongXml: OverwriteSongXml);
                         var appIdFile = Path.Combine(unpackedDir, (platform.version == GameVersion.RS2012) ? "APP_ID" : "appid.appid");
                         File.WriteAllText(appIdFile, appId);
-                        Packer.Pack(unpackedDir, sourceFileName, UpdateSng);
+                        Packer.Pack(unpackedDir, sourceFileName, UpdateSng, platform, UpdateManifest);
                     }
                     catch (Exception ex)
                     {
@@ -504,7 +526,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Stopwatch sw = new Stopwatch();
                 sw.Restart();
                 var packagePlatform = srcPath.GetPlatform();
-                Packer.Pack(srcPath, destFileName, UpdateSng, packagePlatform);
+                Packer.Pack(srcPath, destFileName, UpdateSng, packagePlatform, UpdateManifest);
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
             }
@@ -614,8 +636,16 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             PopulateAppIdCombo(gameVersion); ;
         }
 
+        private void txtAppId_Validating(object sender, CancelEventArgs e)
+        {
+            var appId = ((TextBox)sender).Text.Trim();
+            SelectComboAppId(appId);
+        }
+
         public static Label CurrentOperationLabel { get; set; }
         public static ProgressBar UpdateProgress { get; set; }
+
+
 
      
     }

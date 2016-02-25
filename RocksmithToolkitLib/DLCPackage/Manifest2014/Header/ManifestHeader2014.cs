@@ -38,7 +38,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             
         }
 
-        public void Serialize(Stream stream) {
+        public void Serialize(Stream stream) 
+        {
             var writer = new StreamWriter(stream);
             JsonSerializerSettings jss = new JsonSerializerSettings();
             jss.Formatting = Formatting.Indented;
@@ -48,10 +49,21 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             writer.Flush();
         }
 
-        public static ManifestHeader2014<T> LoadFromFile(string manifestHeader2014FilePath) {
+        public static ManifestHeader2014<T> LoadFromFile(string manifestHeader2014FilePath)
+        {
             using (var reader = new StreamReader(manifestHeader2014FilePath)) {
                 return JsonConvert.DeserializeObject<ManifestHeader2014<T>>(reader.ReadToEnd());
             }
         }
+
+        public void SaveToFile(string manifestHeader2014FilePath)
+        {
+            JsonSerializerSettings jss = new JsonSerializerSettings();
+            jss.Formatting = Formatting.Indented;
+            jss.NullValueHandling = NullValueHandling.Ignore;
+            string json = JsonConvert.SerializeObject(this, jss);
+            File.WriteAllText(manifestHeader2014FilePath, json);
+        }
+
     }
 }

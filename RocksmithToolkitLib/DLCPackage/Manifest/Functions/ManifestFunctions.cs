@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
 using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.Xml;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
@@ -292,7 +293,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             attribute.SongDiffHard = ifAny ? hardArray.Average() / itCount : 0;
             attribute.SongDifficulty = attribute.SongDiffHard;
         }
-
+       
         public void GenerateSectionData(IAttributes attribute, dynamic song)
         {
             if (song.Sections == null)
@@ -496,5 +497,21 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                     max = phrase.MaxDifficulty;
             return max;
         }
+
+        public void GenerateTuningData(Attributes2014 attribute, dynamic song)
+        { 
+            if (song.Tuning == null)
+                return;
+
+            attribute.Tuning = song.Tuning;
+            var tuning = new TuningDefinition();
+            var tuningName = tuning.NameFromStrings(attribute.Tuning);
+
+            if (tuningName == "E Standard")
+                attribute.ArrangementProperties.StandardTuning = 1;
+            else
+                attribute.ArrangementProperties.StandardTuning = 0;
+        }
+
     }
 }

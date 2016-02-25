@@ -139,7 +139,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         //Song Information
-
         public string DLCKey // appears to be interchageble with SongKey
         {
             get { return DlcKeyTB.Text; }
@@ -207,7 +206,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         //Tones
-
         private IEnumerable<string> GetToneNames()
         {
             if (CurrentGameVersion != GameVersion.RS2012)
@@ -217,7 +215,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         //Files
-
         private string AlbumArtPath // 512 (RS1)
         {
             get { return albumArtPathTB.Text; }
@@ -239,7 +236,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public bool JavaBool { get; set; }
 
         #endregion
-
 
         public DLCPackageCreator()
         {
@@ -306,8 +302,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 throw new FileLoadException("RocksmithToolkitLib.Config.xml is corrupt.  Please reload fresh installation.");
             }
-
-
         }
 
         public dynamic CreateNewTone(string toneName = "Default")
@@ -1674,9 +1668,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void AppIdTB_Validating(object sender, CancelEventArgs e)
         {
             var appId = ((TextBox)sender).Text.Trim();
-            // AppIdTB.TextChanged -= AppIdTB_TextChanged;
             SelectComboAppId(appId);
-            // AppIdTB.TextChanged += AppIdTB_TextChanged;
         }
 
         private void SelectComboAppId(string appId)
@@ -1684,6 +1676,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppIds.SelectedItem = songAppId;
+            else
+                MessageBox.Show("You entered an unknown AppID." + Environment.NewLine +
+                                "Please ensure that it is valid.  ", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 

@@ -428,31 +428,40 @@ namespace RocksmithToolkitLib.Xml
         public Int32 Sustain { get; set; }
     }
 
-    // stay consistent SNG TuningStrings data stored as Int16 (short)
-    //[Serializable] can not be used here it causes ill side effect to template saves
+    // TODO: monitor that xml templates are properly serialized
+    // the use of [Serializable] may causes malformed tunining elements in templates
+    [DataContract] // here for datacontract templates to work properly
+    [Serializable] // here for bin serializer to work properly in other programs
     [XmlType("tuning")]
     public class TuningStrings : IEquatable<TuningStrings>
     {
+        // stay consistent SNG TuningStrings data stored as Int16 (short)
+        [DataMember]
         [JsonProperty("string0")]
         [XmlAttribute("string0")]
         public Int16 String0 { get; set; }
 
+        [DataMember]
         [JsonProperty("string1")]
         [XmlAttribute("string1")]
         public Int16 String1 { get; set; }
 
+        [DataMember]
         [JsonProperty("string2")]
         [XmlAttribute("string2")]
         public Int16 String2 { get; set; }
 
+        [DataMember]
         [JsonProperty("string3")]
         [XmlAttribute("string3")]
         public Int16 String3 { get; set; }
 
+        [DataMember]
         [JsonProperty("string4")]
         [XmlAttribute("string4")]
         public Int16 String4 { get; set; }
 
+        [DataMember]
         [JsonProperty("string5")]
         [XmlAttribute("string5")]
         public Int16 String5 { get; set; }
@@ -471,7 +480,7 @@ namespace RocksmithToolkitLib.Xml
                 String5 = stringArray[5];
         }
 
-        [Obsolete("Deprecated, please use regular ToArray() function.", true)]
+        [Obsolete("Deprecated, please use regular ToArray() method.", true)]
         public Int16[] ToShortArray()
         {
             return ToArray();

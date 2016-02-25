@@ -36,7 +36,6 @@
             this.gbAppIdUpdater = new System.Windows.Forms.GroupBox();
             this.lblAppId = new System.Windows.Forms.Label();
             this.cmbGameVersion = new System.Windows.Forms.ComboBox();
-            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
             this.cmbAppId = new System.Windows.Forms.ComboBox();
             this.chkDecodeAudio = new System.Windows.Forms.CheckBox();
             this.chkUpdateSng = new System.Windows.Forms.CheckBox();
@@ -44,6 +43,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.chkOverwriteSongXml = new System.Windows.Forms.CheckBox();
             this.gbPacker = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.chkUpdateManifest = new System.Windows.Forms.CheckBox();
             this.lblCurrentOperation = new System.Windows.Forms.Label();
             this.pbUpdateProgress = new System.Windows.Forms.ProgressBar();
             this.gbCustomFixes = new System.Windows.Forms.GroupBox();
@@ -57,6 +58,7 @@
             this.lblHelp = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
             this.gbAppIdUpdater.SuspendLayout();
             this.gbUnpacker.SuspendLayout();
             this.gbPacker.SuspendLayout();
@@ -68,7 +70,7 @@
             // btnUnpack
             // 
             this.btnUnpack.ForeColor = System.Drawing.Color.Black;
-            this.btnUnpack.Location = new System.Drawing.Point(120, 54);
+            this.btnUnpack.Location = new System.Drawing.Point(107, 54);
             this.btnUnpack.Name = "btnUnpack";
             this.btnUnpack.Size = new System.Drawing.Size(75, 23);
             this.btnUnpack.TabIndex = 2;
@@ -79,7 +81,7 @@
             // btnPack
             // 
             this.btnPack.ForeColor = System.Drawing.Color.Black;
-            this.btnPack.Location = new System.Drawing.Point(39, 54);
+            this.btnPack.Location = new System.Drawing.Point(63, 54);
             this.btnPack.Name = "btnPack";
             this.btnPack.Size = new System.Drawing.Size(75, 23);
             this.btnPack.TabIndex = 4;
@@ -139,16 +141,6 @@
             this.cmbGameVersion.TabIndex = 5;
             this.cmbGameVersion.SelectedIndexChanged += new System.EventHandler(this.cmbGameVersion_SelectedIndexChanged);
             // 
-            // txtAppId
-            // 
-            this.txtAppId.Cue = "APP ID";
-            this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtAppId.ForeColor = System.Drawing.Color.Gray;
-            this.txtAppId.Location = new System.Drawing.Point(156, 44);
-            this.txtAppId.Name = "txtAppId";
-            this.txtAppId.Size = new System.Drawing.Size(82, 20);
-            this.txtAppId.TabIndex = 41;
-            // 
             // cmbAppId
             // 
             this.cmbAppId.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -170,17 +162,19 @@
             this.chkDecodeAudio.Size = new System.Drawing.Size(94, 17);
             this.chkDecodeAudio.TabIndex = 0;
             this.chkDecodeAudio.Text = "Decode Audio";
+            this.toolTip.SetToolTip(this.chkDecodeAudio, "If checked, decodes audio\r\nto a playable ogg format.");
             this.chkDecodeAudio.UseVisualStyleBackColor = true;
             // 
             // chkUpdateSng
             // 
             this.chkUpdateSng.AutoSize = true;
             this.chkUpdateSng.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.chkUpdateSng.Location = new System.Drawing.Point(6, 19);
+            this.chkUpdateSng.Location = new System.Drawing.Point(89, 19);
             this.chkUpdateSng.Name = "chkUpdateSng";
-            this.chkUpdateSng.Size = new System.Drawing.Size(87, 17);
+            this.chkUpdateSng.Size = new System.Drawing.Size(49, 17);
             this.chkUpdateSng.TabIndex = 3;
-            this.chkUpdateSng.Text = "Update SNG";
+            this.chkUpdateSng.Text = "SNG";
+            this.toolTip.SetToolTip(this.chkUpdateSng, "If checked generates fresh\r\nSNG files from XML info");
             this.chkUpdateSng.UseVisualStyleBackColor = true;
             // 
             // gbUnpacker
@@ -192,7 +186,7 @@
             this.gbUnpacker.ForeColor = System.Drawing.Color.Firebrick;
             this.gbUnpacker.Location = new System.Drawing.Point(100, 4);
             this.gbUnpacker.Name = "gbUnpacker";
-            this.gbUnpacker.Size = new System.Drawing.Size(204, 83);
+            this.gbUnpacker.Size = new System.Drawing.Size(189, 83);
             this.gbUnpacker.TabIndex = 16;
             this.gbUnpacker.TabStop = false;
             this.gbUnpacker.Text = "Unpacker";
@@ -202,12 +196,12 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.label2.Location = new System.Drawing.Point(9, 36);
+            this.label2.Location = new System.Drawing.Point(8, 36);
             this.label2.Margin = new System.Windows.Forms.Padding(0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(145, 12);
+            this.label2.Size = new System.Drawing.Size(150, 12);
             this.label2.TabIndex = 18;
-            this.label2.Text = "Generate fresh XML from SNG file";
+            this.label2.Text = "Generate fresh XML from SNG files";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // chkOverwriteSongXml
@@ -219,21 +213,48 @@
             this.chkOverwriteSongXml.Size = new System.Drawing.Size(86, 17);
             this.chkOverwriteSongXml.TabIndex = 1;
             this.chkOverwriteSongXml.Text = "SNG to XML";
-            this.toolTip.SetToolTip(this.chkOverwriteSongXml, "You can also check this box if you are trying to \r\nRepack AppId and receive an er" +
-                    "ror message.");
+            this.toolTip.SetToolTip(this.chkOverwriteSongXml, "If checked generates fresh XML files from SNG info\r\n\r\nYou can also check this box" +
+                    " if you are trying to \r\nRepack AppId and receive an error message.");
             this.chkOverwriteSongXml.UseVisualStyleBackColor = true;
             // 
             // gbPacker
             // 
+            this.gbPacker.Controls.Add(this.label1);
+            this.gbPacker.Controls.Add(this.chkUpdateManifest);
             this.gbPacker.Controls.Add(this.chkUpdateSng);
             this.gbPacker.Controls.Add(this.btnPack);
             this.gbPacker.ForeColor = System.Drawing.Color.Firebrick;
-            this.gbPacker.Location = new System.Drawing.Point(319, 4);
+            this.gbPacker.Location = new System.Drawing.Point(295, 4);
             this.gbPacker.Name = "gbPacker";
-            this.gbPacker.Size = new System.Drawing.Size(123, 83);
+            this.gbPacker.Size = new System.Drawing.Size(147, 83);
             this.gbPacker.TabIndex = 17;
             this.gbPacker.TabStop = false;
             this.gbPacker.Text = "Packer";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label1.Location = new System.Drawing.Point(6, 36);
+            this.label1.Margin = new System.Windows.Forms.Padding(0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(120, 12);
+            this.label1.TabIndex = 19;
+            this.label1.Text = "Update Manifest / SNG files";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // chkUpdateManifest
+            // 
+            this.chkUpdateManifest.AutoSize = true;
+            this.chkUpdateManifest.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.chkUpdateManifest.Location = new System.Drawing.Point(6, 19);
+            this.chkUpdateManifest.Name = "chkUpdateManifest";
+            this.chkUpdateManifest.Size = new System.Drawing.Size(66, 17);
+            this.chkUpdateManifest.TabIndex = 5;
+            this.chkUpdateManifest.Text = "Manifest";
+            this.toolTip.SetToolTip(this.chkUpdateManifest, "If checked updates existing\r\nManifest files from XML info");
+            this.chkUpdateManifest.UseVisualStyleBackColor = true;
             // 
             // lblCurrentOperation
             // 
@@ -386,6 +407,17 @@
             this.toolTip.IsBalloon = true;
             this.toolTip.ReshowDelay = 10;
             // 
+            // txtAppId
+            // 
+            this.txtAppId.Cue = "APP ID";
+            this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtAppId.ForeColor = System.Drawing.Color.Gray;
+            this.txtAppId.Location = new System.Drawing.Point(156, 44);
+            this.txtAppId.Name = "txtAppId";
+            this.txtAppId.Size = new System.Drawing.Size(82, 20);
+            this.txtAppId.TabIndex = 41;
+            this.txtAppId.Validating += new System.ComponentModel.CancelEventHandler(this.txtAppId_Validating);
+            // 
             // DLCPackerUnpacker
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -445,5 +477,7 @@
         private System.Windows.Forms.Label lblAppId;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.CheckBox chkVerbose;
+        private System.Windows.Forms.CheckBox chkUpdateManifest;
+        private System.Windows.Forms.Label label1;
     }
 }

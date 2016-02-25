@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json.Linq;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Sng2014HSL;
@@ -33,9 +34,10 @@ namespace RocksmithToolkitLib
             String[] notesNamesHi = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
             String[] notesNamesLo = { "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" };
 
-            var id = Sng2014FileWriter.GetMidiNote(tuning.ToArray(), s, 0, false, 0)%12;
+            var id = Sng2014FileWriter.GetMidiNote(tuning.ToArray(), s, 0, false, 0) % 12;
             return flats ? notesNamesLo[id] : notesNamesHi[id];
         }
+ 
         public string NameFromStrings(TuningStrings tuning, bool flats = true)
         {
             var t = tuning.ToArray();
@@ -101,11 +103,12 @@ namespace RocksmithToolkitLib
         {
             using (FileStream stream = File.OpenWrite(fileName))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof (List<TuningDefinition>));
+                XmlSerializer serializer = new XmlSerializer(typeof(List<TuningDefinition>));
                 serializer.Serialize(stream, tuningDefinitions);
             }
         }
 
+        [Obsolete("Deprecated, please use regular guitar tuning methods.", true)]
         public static TuningStrings Convert2Bass(TuningStrings guitarTuning)
         {
             var bassTuning = new TuningStrings
@@ -121,6 +124,7 @@ namespace RocksmithToolkitLib
             return bassTuning;
         }
 
+        [Obsolete("Deprecated, please use regular guitar tuning methods.", true)]
         public static TuningDefinition Convert2Bass(TuningDefinition tuningDefinition)
         {
             TuningDefinition bassTuning = tuningDefinition;
@@ -129,5 +133,56 @@ namespace RocksmithToolkitLib
             return bassTuning;
         }
 
+        public static string TuningToName(TuningStrings songTuning, GameVersion gameVersion = GameVersion.RS2014, List<TuningDefinition> tuningXml = null)
+        {
+            // speed hack ... use preloaded TuningDefinitionRepository if available
+            if (tuningXml == null)
+                tuningXml = TuningDefinitionRepository.LoadTuningDefinitions(gameVersion);
+
+            foreach (var tuning in tuningXml)
+                if (tuning.Tuning.String0 == songTuning.String0 &&
+                    tuning.Tuning.String1 == songTuning.String1 &&
+                    tuning.Tuning.String2 == songTuning.String2 &&
+                    tuning.Tuning.String3 == songTuning.String3 &&
+                    tuning.Tuning.String4 == songTuning.String4 &&
+                    tuning.Tuning.String5 == songTuning.String5)
+                    return tuning.UIName;
+
+            return "Other";
+        }
+
+        public static string TuningToName(string jsonTuning, GameVersion gameVersion = GameVersion.RS2014, List<TuningDefinition> tuningXml = null)
+        {
+            // speed hack ... use preloaded TuningDefinitionRepository if available
+            if (tuningXml == null)
+                tuningXml = TuningDefinitionRepository.LoadTuningDefinitions(gameVersion);
+
+            var jObj = JObject.Parse(jsonTuning);
+            TuningStrings songTuning = jObj.ToObject<TuningStrings>();
+
+            foreach (var tuning in tuningXml)
+                if (tuning.Tuning.String0 == songTuning.String0 &&
+                    tuning.Tuning.String1 == songTuning.String1 &&
+                    tuning.Tuning.String2 == songTuning.String2 &&
+                    tuning.Tuning.String3 == songTuning.String3 &&
+                    tuning.Tuning.String4 == songTuning.String4 &&
+                    tuning.Tuning.String5 == songTuning.String5)
+                    return tuning.UIName;
+
+            return "Other";
+        }
+
+        public static string TuningStringToName(string strings, GameVersion gameVersion = GameVersion.RS2014, List<TuningDefinition> tuningXml = null)
+        {
+            // speed hack ... use preloaded TuningDefinitionRepository if available
+            if (tuningXml == null)
+                tuningXml = TuningDefinitionRepository.LoadTuningDefinitions(gameVersion);
+
+            foreach (var tuning in tuningXml)
+                if ((string)("" + (tuning.Tuning.String0) + (tuning.Tuning.String1) + (tuning.Tuning.String2) + (tuning.Tuning.String3) + (tuning.Tuning.String4) + (tuning.Tuning.String5)) == strings)
+                    return tuning.UIName;
+
+            return "Other";
+        }
     }
 }

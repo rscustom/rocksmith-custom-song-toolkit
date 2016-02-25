@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
+using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
 using X360.STFS;
 using X360.Other;
 using RocksmithToolkitLib.Sng;
@@ -851,8 +853,8 @@ namespace RocksmithToolkitLib.DLCPackage
                             sng.WriteSng(fs, targetPlatform);
                         }
 
-                        noShowlights &= !xmlFiles.Any(x => Path.GetFileName(x).Contains(xmlName.Split('_')[0].ToLower() + "_showlights"));
                         //Create Showlights
+                        noShowlights &= !xmlFiles.Any(x => Path.GetFileName(x).Contains(xmlName.Split('_')[0].ToLower() + "_showlights"));
                         if (noShowlights && arrType != ArrangementType.Vocal)
                         {
                             var shlName = Path.Combine(Path.GetDirectoryName(xmlFile), xmlName.Split('_')[0] + "_showlights.xml");
@@ -866,15 +868,16 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
                 }
             }
-
         }
+
         /// <summary>
         /// Fixes showlights and updates existing xml.
         /// </summary>
         /// <param name="shlPath"></param>
         /// <param name = "fixShowlights"></param>
         internal static void UpdateShl(string shlPath, bool fixShowlights = true)
-        {//TODO:FIXME
+        {
+            // TODO: seems to be working now, continue to monitor output
             if (!fixShowlights) return;
             var shl = new Showlight.Showlights(shlPath);
             if (shl.FixShowlights(shl))
@@ -882,50 +885,80 @@ namespace RocksmithToolkitLib.DLCPackage
                 using (var fs = new FileStream(shlPath, FileMode.Create))
                     shl.Serialize(fs);
             }
-
         }
 
         private static void UpdateManifest2014(string songDirectory, Platform platform)
         {
-            // UPDATE MANIFEST (RS2014)
-            if (platform.version == GameVersion.RS2014)
+            if (platform.version != GameVersion.RS2014)
+                return;
+
+            var hsanFiles = Directory.EnumerateFiles(songDirectory, "*.hsan", SearchOption.AllDirectories).ToList();
+            if (!hsanFiles.Any())
+                throw new DataException("Error: could not find any hsan file");
+            if (hsanFiles.Count > 1)
+                throw new DataException("Error: there is more than one hsan file");
+
+            var manifestHeader = new ManifestHeader2014<AttributesHeader2014>(platform);
+            var hsanFile = hsanFiles.First();
+            var jsonFiles = Directory.EnumerateFiles(songDirectory, "*.json", SearchOption.AllDirectories).ToList();
+            var xmlFiles = Directory.EnumerateFiles(songDirectory, "*.xml", SearchOption.AllDirectories).ToList();
+            //var songFiles = xmlFiles.Where(x => !x.ToLower().Contains("showlight") && !x.ToLower().Contains("vocal")).ToList();
+            //var vocalFiles = xmlFiles.Where(x => x.ToLower().Contains("vocal")).ToList();
+
+            foreach (var xmlFile in xmlFiles)
             {
-                var xmlFiles = Directory.EnumerateFiles(songDirectory, "*.xml", SearchOption.AllDirectories);
-                var jsonFiles = Directory.EnumerateFiles(songDirectory, "*.json", SearchOption.AllDirectories);
-                foreach (var xml in xmlFiles)
+                var xmlName = Path.GetFileNameWithoutExtension(xmlFile);
+                if (xmlName.ToLower().Contains("showlight"))
+                    continue;
+
+                var json = jsonFiles.FirstOrDefault(name => Path.GetFileNameWithoutExtension(name) == xmlName);
+                if (String.IsNullOrEmpty(json))
+                    continue;
+
+                var attr = Manifest2014<Attributes2014>.LoadFromFile(json).Entries.First().Value.First().Value;
+
+                if (!xmlName.ToLower().Contains("vocal"))
                 {
-                    var xmlName = Path.GetFileNameWithoutExtension(xml);
-                    if (xmlName.ToUpperInvariant().Contains("SHOWLIGHT"))
-                        continue;
-                    if (xmlName.ToUpperInvariant().Contains("VOCAL"))
-                        continue;//TODO: Re-generate vocals manifest.
+                    var manifestFunctions = new ManifestFunctions(platform.version);
+                    var xmlContent = Song2014.LoadFromFile(xmlFile);
 
-                    string json = jsonFiles.FirstOrDefault(name => Path.GetFileNameWithoutExtension(name) == xmlName);
-                    if (!String.IsNullOrEmpty(json))
-                    {
-                        var xmlContent = Song2014.LoadFromFile(xml);
-                        var manifest = new Manifest2014<Attributes2014>();
-                        var attr = Manifest2014<Attributes2014>.LoadFromFile(json).Entries.First().Value.First().Value;
+                    attr.PhraseIterations = new List<Manifest.PhraseIteration>();
+                    manifestFunctions.GeneratePhraseIterationsData(attr, xmlContent, platform.version);
 
-                        var manifestFunctions = new ManifestFunctions(platform.version);
+                    attr.Phrases = new List<Manifest.Phrase>();
+                    manifestFunctions.GeneratePhraseData(attr, xmlContent);
 
-                        attr.PhraseIterations = new List<Manifest.PhraseIteration>();
-                        manifestFunctions.GeneratePhraseIterationsData(attr, xmlContent, platform.version);
+                    attr.Sections = new List<Manifest.Section>();
+                    manifestFunctions.GenerateSectionData(attr, xmlContent);
 
-                        attr.Phrases = new List<Manifest.Phrase>();
-                        manifestFunctions.GeneratePhraseData(attr, xmlContent);
+                    attr.Tuning = new TuningStrings();
+                    manifestFunctions.GenerateTuningData(attr, xmlContent);
 
-                        attr.Sections = new List<Manifest.Section>();
-                        manifestFunctions.GenerateSectionData(attr, xmlContent);
-
-                        attr.MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(xmlContent);
-
-                        var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attr } };
-                        manifest.Entries.Add(attr.PersistentID, attributeDictionary);
-                        manifest.SaveToFile(json);
-                    }
+                    attr.MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(xmlContent);
                 }
+
+                // else { // TODO: good place to update vocals }
+
+                // write updated json file
+                var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attr } };
+                var manifest = new Manifest2014<Attributes2014>();
+                manifest.Entries.Add(attr.PersistentID, attributeDictionary);
+                manifest.SaveToFile(json);
+
+                // update manifestHeader (hsan) entry
+                var attributeHeaderDictionary = new Dictionary<string, AttributesHeader2014> { { "Attributes", new AttributesHeader2014(attr) } };
+                if (platform.IsConsole)
+                {
+                    // One for each arrangements (Xbox360/PS3)
+                    manifestHeader = new ManifestHeader2014<AttributesHeader2014>(platform);
+                    manifestHeader.Entries.Add(attr.PersistentID, attributeHeaderDictionary);
+                }
+                else
+                    manifestHeader.Entries.Add(attr.PersistentID, attributeHeaderDictionary);
             }
+
+            // write updated hsan file
+            manifestHeader.SaveToFile(hsanFile);
         }
 
         #endregion
