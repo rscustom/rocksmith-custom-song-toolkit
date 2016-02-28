@@ -1665,22 +1665,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void AppIdTB_Validating(object sender, CancelEventArgs e)
-        {
-            var appId = ((TextBox)sender).Text.Trim();
-            SelectComboAppId(appId);
-        }
-
         private void SelectComboAppId(string appId)
         {
             var songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppIds.SelectedItem = songAppId;
             else
-                MessageBox.Show("You entered an unknown AppID." + Environment.NewLine +
-                                "Please ensure that it is valid.  ", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine +
+                                "Toolkit will use the AppID that  " + Environment.NewLine +
+                                "was entered manually but it can  " + Environment.NewLine +
+                                "not assess its validity.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
 
         //private void rbuttonSignature_CheckedChanged(object sender, EventArgs e)
         //{
@@ -2090,6 +2085,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                "Don't forget to update individual tuning, tone" + Environment.NewLine +
                "and arrangement information using Edit later.");
             tt.Show("", this, 20000); // show for 20 seconds
+        }
+
+        private void AppIdTB_MouseLeave(object sender, EventArgs e)
+        {
+            var appId = ((TextBox)sender).Text.Trim();
+            SelectComboAppId(appId);
         }
 
 

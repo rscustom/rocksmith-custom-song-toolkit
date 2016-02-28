@@ -36,6 +36,7 @@
             this.gbAppIdUpdater = new System.Windows.Forms.GroupBox();
             this.lblAppId = new System.Windows.Forms.Label();
             this.cmbGameVersion = new System.Windows.Forms.ComboBox();
+            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
             this.cmbAppId = new System.Windows.Forms.ComboBox();
             this.chkDecodeAudio = new System.Windows.Forms.CheckBox();
             this.chkUpdateSng = new System.Windows.Forms.CheckBox();
@@ -58,7 +59,6 @@
             this.lblHelp = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
             this.gbAppIdUpdater.SuspendLayout();
             this.gbUnpacker.SuspendLayout();
             this.gbPacker.SuspendLayout();
@@ -140,6 +140,17 @@
             this.cmbGameVersion.Size = new System.Drawing.Size(81, 21);
             this.cmbGameVersion.TabIndex = 5;
             this.cmbGameVersion.SelectedIndexChanged += new System.EventHandler(this.cmbGameVersion_SelectedIndexChanged);
+            // 
+            // txtAppId
+            // 
+            this.txtAppId.Cue = "APP ID";
+            this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtAppId.ForeColor = System.Drawing.Color.Gray;
+            this.txtAppId.Location = new System.Drawing.Point(156, 44);
+            this.txtAppId.Name = "txtAppId";
+            this.txtAppId.Size = new System.Drawing.Size(82, 20);
+            this.txtAppId.TabIndex = 41;
+            this.txtAppId.MouseLeave += new System.EventHandler(this.txtAppId_MouseLeave);
             // 
             // cmbAppId
             // 
@@ -406,17 +417,6 @@
             this.toolTip.InitialDelay = 100;
             this.toolTip.IsBalloon = true;
             this.toolTip.ReshowDelay = 10;
-            // 
-            // txtAppId
-            // 
-            this.txtAppId.Cue = "APP ID";
-            this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtAppId.ForeColor = System.Drawing.Color.Gray;
-            this.txtAppId.Location = new System.Drawing.Point(156, 44);
-            this.txtAppId.Name = "txtAppId";
-            this.txtAppId.Size = new System.Drawing.Size(82, 20);
-            this.txtAppId.TabIndex = 41;
-            this.txtAppId.Validating += new System.ComponentModel.CancelEventHandler(this.txtAppId_Validating);
             // 
             // DLCPackerUnpacker
             // 

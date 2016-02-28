@@ -133,8 +133,10 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppId.SelectedItem = songAppId;
             else
-                MessageBox.Show("You entered an unknown AppID." + Environment.NewLine +
-                                "Please ensure that it is valid.  ", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine +
+                                "Toolkit will use the AppID that  " + Environment.NewLine +
+                                "was entered manually but it can  " + Environment.NewLine +
+                                "not assess its validity.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ShowCurrentOperation(string message)
@@ -636,7 +638,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             PopulateAppIdCombo(gameVersion); ;
         }
 
-        private void txtAppId_Validating(object sender, CancelEventArgs e)
+        private void txtAppId_MouseLeave(object sender, EventArgs e)
         {
             var appId = ((TextBox)sender).Text.Trim();
             SelectComboAppId(appId);
@@ -647,6 +649,5 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
 
 
-     
     }
 }
