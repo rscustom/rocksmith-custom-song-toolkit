@@ -147,6 +147,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         private void ToggleUIControls(bool enable)
         {
+            picLogo.Select();
+            picLogo.Focus();
+            txtAppId.Enabled = enable;
             btnFixLowBassTuning.Enabled = enable;
             btnPack.Enabled = enable;
             btnPackSongPack.Enabled = enable;
@@ -159,6 +162,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             chkQuickBassFix.Enabled = enable;
             chkVerbose.Enabled = enable;
             chkUpdateSng.Enabled = enable;
+            chkUpdateManifest.Enabled = enable;
         }
 
         private void UnpackSongs(IEnumerable<string> sourceFileNames, string destPath, bool decode = false, bool overwrite = false)
@@ -203,17 +207,18 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                         MessageBox.Show("APP ID update is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else
                         MessageBox.Show("APP ID update is complete with errors. See below: " + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    btnRepackAppId.Enabled = true;
-                    break;
+ 
+                        break;
                 case "unpack":
                     if (errorsFound.Length <= 0)
                         MessageBox.Show("Unpacking is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else
                         MessageBox.Show("Unpacking is complete with errors. See below: " + Environment.NewLine + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    btnUnpack.Enabled = true;
+
                     break;
             }
 
+            ToggleUIControls(true);
             pbUpdateProgress.Visible = false;
             lblCurrentOperation.Visible = false;
         }
@@ -562,7 +567,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     pbUpdateProgress.Value = 0;
                     pbUpdateProgress.Visible = true;
                     lblCurrentOperation.Visible = true;
-                    btnRepackAppId.Enabled = false;
+                    ToggleUIControls(false);
                     bwRepack.RunWorkerAsync(ofd.FileNames);
                 }
             }

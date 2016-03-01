@@ -120,6 +120,15 @@
   <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="btnPack.ToolTip" xml:space="preserve">
+    <value>If you receive an error message, such as,
+'Object reference not set to an instance of an object''
+then the artifcacts folders and contents
+are probably not structured correctly.
+
+Look at a freshly unpacked artifacts
+folder to see how it should be structured.</value>
+  </data>
   <data name="lblHelp.Text" xml:space="preserve">
     <value>1.  Press Select Songs
      Multi select individual songs for the Song Pack

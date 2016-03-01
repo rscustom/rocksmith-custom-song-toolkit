@@ -1958,7 +1958,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             SongDisplayNameSortTB.Validating += ValidateSortName;
             AlbumTB.Validating += ValidateName;
             AlbumSortTB.Validating += ValidateSortName;
-            YearTB.Validating += ValidateVersion;
+            YearTB.Validating += ValidateYear;
             DlcKeyTB.Validating += ValidateDlcKey;
             packageVersionTB.Validating += ClickedInputControl;
             AverageTempoTB.Validating += ValidateTempo;
@@ -1972,6 +1972,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             toneImportButton.Click += ClickedInputControl;
         }
 
+        private void ValidateYear(object sender, CancelEventArgs e)
+        {
+            var tb = sender as TextBox;
+            tb.Text = tb.Text.Trim().GetValidYear();
+            userChangedInputControls = true;
+        }
+
         private void ValidateSortName(object sender, CancelEventArgs e)
         {
             var tb = sender as TextBox;
@@ -1981,10 +1988,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void ValidateTempo(object sender, CancelEventArgs e)
         {
-            TextBox averageTempo = sender as TextBox;
-            float tempo = 0;
-            float.TryParse(averageTempo.Text.Trim(), out tempo);
-            averageTempo.Text = Math.Round(tempo).ToString();
+            var tb = sender as TextBox;
+            tb.Text  = tb.Text.Trim().GetValidTempo();
             userChangedInputControls = true;
         }
 

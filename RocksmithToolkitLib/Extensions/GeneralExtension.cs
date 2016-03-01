@@ -160,6 +160,27 @@ namespace RocksmithToolkitLib.Extensions
             return dlcKey.Substring(0, Math.Min(20, dlcKey.Length));
         }
 
+        public static string GetValidYear(this string value)
+        {
+            // check for valid four digit song year 
+            if (!Regex.IsMatch(value, "^(19[0-9][0-9]|20[0-1][0-9])"))
+                value = ""; // clear if not valid
+
+            return value;
+        }
+
+        public static string GetValidTempo(this string value)
+        {
+            float tempo = 0;
+            float.TryParse(value.Trim(), out tempo);
+            int bpm = (int)Math.Round(tempo);
+            // check for valid tempo
+            if (bpm > 0 && bpm < 300)
+                return bpm.ToString();
+
+            return "";
+       }
+
         public static string GetValidSortName(this string value)
         {
             if (String.IsNullOrEmpty(value))

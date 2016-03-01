@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using System.Text.RegularExpressions;
-using Ookii.Dialogs;
-using X360.STFS;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
-using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
-using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.DLCPackage.AggregateGraph;
-using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Ogg;
-using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Extensions;
 using System.ComponentModel;
 
@@ -22,37 +12,14 @@ namespace RocksmithToolkitGUI.DLCConverter
 {
     public partial class DLCConverter : UserControl
     {
+        #region Constants
+
         private const string MESSAGEBOX_CAPTION = "CDLC Converter";
+
+        #endregion
+
         private BackgroundWorker bwConvert;
         private StringBuilder errorsFound;
-
-        public string AppId
-        {
-            get { return AppIdTB.Text; }
-            set { AppIdTB.Text = value; }
-        }
-
-        public Platform SourcePlatform {
-            get ; set;
-        }
-        void defineSourcePlatform()
-        {
-            if (platformSourceCombo.Items.Count > 0)
-                SourcePlatform = new Platform(platformSourceCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
-            else
-                SourcePlatform = new Platform(GamePlatform.None, GameVersion.None);
-        }
-
-        public Platform TargetPlatform {
-            get ; set;
-        }
-        void defineTargetPlatform()
-        {
-            if (platformTargetCombo.Items.Count > 0)
-                TargetPlatform = new Platform(platformTargetCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
-            else
-                TargetPlatform = new Platform(GamePlatform.None, GameVersion.None);
-        }
 
         public DLCConverter()
         {
@@ -60,33 +27,111 @@ namespace RocksmithToolkitGUI.DLCConverter
             bwConvert = new BackgroundWorker { WorkerReportsProgress = true };
         }
 
-        private void DLCConverter_Load(object sender, EventArgs e) {
-            try {
+        public string AppId
+        {
+            get { return txtAppId.Text; }
+            set { txtAppId.Text = value; }
+        }
+
+        public Platform SourcePlatform { get; set; }
+        public Platform TargetPlatform { get; set; }
+
+        private void AppIdVisibilty()
+        {
+            if (cmbTargetPlatform.SelectedItem != null)
+            {
+                var target = new Platform(cmbTargetPlatform.SelectedItem.ToString(), GameVersion.RS2014.ToString());
+                cmbAppId.Enabled = !target.IsConsole;
+                txtAppId.Enabled = !target.IsConsole;
+            }
+        }
+
+        private void PopulateAppIdCombo(GameVersion gameVersion)
+        {
+            cmbAppId.Items.Clear();
+            foreach (var song in SongAppIdRepository.Instance().Select(gameVersion))
+                cmbAppId.Items.Add(song);
+
+            var songAppId = SongAppIdRepository.Instance().Select(ConfigRepository.Instance()["general_defaultappid_RS2014"], gameVersion);
+            cmbAppId.SelectedItem = songAppId;
+            AppId = songAppId.AppId;
+        }
+
+        private void SelectComboAppId(string appId)
+        {
+            var songAppId = SongAppIdRepository.Instance().Select(appId, GameVersion.RS2014);
+            if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
+                cmbAppId.SelectedItem = songAppId;
+            else
+                MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine +
+                                "Toolkit will use the AppID that  " + Environment.NewLine +
+                                "was entered manually but it can  " + Environment.NewLine +
+                                "not assess its validity.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void ShowCurrentOperation(string message)
+        {
+            lblCurrentOperation.Text = message;
+            lblCurrentOperation.Refresh();
+        }
+
+        private void ToggleUIControls(bool enable)
+        {
+            picLogo.Select();
+            picLogo.Focus();
+            btnConvert.Enabled = enable;
+            cmbAppId.Enabled = enable;
+            cmbSourcePlatform.Enabled = enable;
+            cmbTargetPlatform.Enabled = enable;
+            txtAppId.Enabled = enable;
+        }
+
+        private void defineSourcePlatform()
+        {
+            if (cmbSourcePlatform.Items.Count > 0)
+                SourcePlatform = new Platform(cmbSourcePlatform.SelectedItem.ToString(), GameVersion.RS2014.ToString());
+            else
+                SourcePlatform = new Platform(GamePlatform.None, GameVersion.None);
+        }
+
+        private void defineTargetPlatform()
+        {
+            if (cmbTargetPlatform.Items.Count > 0)
+                TargetPlatform = new Platform(cmbTargetPlatform.SelectedItem.ToString(), GameVersion.RS2014.ToString());
+            else
+                TargetPlatform = new Platform(GamePlatform.None, GameVersion.None);
+        }
+
+        private void DLCConverter_Load(object sender, EventArgs e)
+        {
+            try
+            {
                 // Fill source combo
                 var sourcePlatform = Enum.GetNames(typeof(GamePlatform)).ToList<string>();
                 sourcePlatform.Remove("None");
-                platformSourceCombo.DataSource = sourcePlatform;
-                platformSourceCombo.SelectedItem = ConfigRepository.Instance()["converter_source"];
+                cmbSourcePlatform.DataSource = sourcePlatform;
+                cmbSourcePlatform.SelectedItem = ConfigRepository.Instance()["converter_source"];
 
                 // Fill target combo
                 var targetPlatform = Enum.GetNames(typeof(GamePlatform)).ToList<string>();
                 targetPlatform.Remove("None");
-                platformTargetCombo.DataSource = targetPlatform;
-                platformTargetCombo.SelectedItem = ConfigRepository.Instance()["converter_target"];
+                cmbTargetPlatform.DataSource = targetPlatform;
+                cmbTargetPlatform.SelectedItem = ConfigRepository.Instance()["converter_target"];
 
                 // Fill AppID
                 PopulateAppIdCombo(GameVersion.RS2014); //Supported game version
                 AppIdVisibilty();
-            } catch { /*For mono compatibility*/ }
+            }
+            catch { /*For mono compatibility*/ }
 
             // Converter worker
             bwConvert.DoWork += doConvert;
-            bwConvert.ProgressChanged += (se,ea) =>
+            bwConvert.ProgressChanged += (se, ea) =>
             {
-                if (ea.ProgressPercentage <= updateProgress.Maximum)
-                    updateProgress.Value = ea.ProgressPercentage;
+                if (ea.ProgressPercentage <= pbUpdateProgress.Maximum)
+                    pbUpdateProgress.Value = ea.ProgressPercentage;
                 else
-                    updateProgress.Value = updateProgress.Maximum;
+                    pbUpdateProgress.Value = pbUpdateProgress.Maximum;
                 ShowCurrentOperation(ea.UserState as string);
             };
             bwConvert.RunWorkerCompleted += ProcessCompleted;
@@ -105,50 +150,66 @@ namespace RocksmithToolkitGUI.DLCConverter
                         MessageBox.Show(
                             String.Format("DLC was converted from '{2}' to '{3}' with errors. See below: {0}{1}{0}", Environment.NewLine, errorsFound.ToString(), SourcePlatform.platform, TargetPlatform.platform), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning
                         );
-                    convertButton.Enabled = true;
-                    Parent.Focus();
-                break;
+
+                    break;
             }
 
-            updateProgress.Visible = false;
-            currentOperationLabel.Visible = false;
+            ToggleUIControls(true);
+            pbUpdateProgress.Visible = false;
+            lblCurrentOperation.Visible = false;
         }
 
-        private void ShowCurrentOperation(string message)
+        private void btnConvert_Click(object sender, EventArgs e)
         {
-            currentOperationLabel.Text = message;
-            currentOperationLabel.Refresh();
-        }
-
-        private void PopulateAppIdCombo(GameVersion gameVersion)
-        {
-            appIdCombo.Items.Clear();
-            foreach (var song in SongAppIdRepository.Instance().Select(gameVersion))
-                appIdCombo.Items.Add(song);
-
-            var songAppId = SongAppIdRepository.Instance().Select(ConfigRepository.Instance()["general_defaultappid_RS2014"], gameVersion);
-            appIdCombo.SelectedItem = songAppId;
-            AppId = songAppId.AppId;
-        }
-
-        private void AppIdVisibilty() {
-            if (platformTargetCombo.SelectedItem != null)
+            defineSourcePlatform();
+            defineTargetPlatform();
+            // VALIDATIONS
+            if (SourcePlatform.Equals(TargetPlatform))
             {
-                var target = new Platform(platformTargetCombo.SelectedItem.ToString(), GameVersion.RS2014.ToString());
-                appIdCombo.Enabled = !target.IsConsole;
-                AppIdTB.Enabled = !target.IsConsole;
+                MessageBox.Show("The source and target platform should be different.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // GET FILES
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Select one DLC for platform conversion";
+                ofd.Multiselect = true;
+                switch (SourcePlatform.platform)
+                {
+                    case GamePlatform.Pc:
+                    case GamePlatform.Mac:
+                        ofd.Filter = "PC or Mac Rocksmith 2014 DLC (*.psarc)|*.psarc";
+                        break;
+                    case GamePlatform.XBox360:
+                        ofd.Filter = "XBox 360 Rocksmith 2014 DLC (*.)|*.*";
+                        break;
+                    case GamePlatform.PS3:
+                        ofd.Filter = "PS3 Rocksmith 2014 DLC (*.edat)|*.edat";
+                        break;
+                    default:
+                        MessageBox.Show("The converted audio on Wwise 2013 for target platform should be selected.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                }
+
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+
+                if (!bwConvert.IsBusy && ofd.FileNames.Length > 0)
+                {
+                    pbUpdateProgress.Value = 0;
+                    pbUpdateProgress.Visible = true;
+                    lblCurrentOperation.Visible = true;
+                    ToggleUIControls(false);
+                    bwConvert.RunWorkerAsync(ofd.FileNames);
+                }
             }
         }
 
-        private void platformTargetCombo_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbAppId_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AppIdVisibilty();
-        }
-
-        private void appIdCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (appIdCombo.SelectedItem != null)
-                AppId = ((SongAppId)appIdCombo.SelectedItem).AppId;
+            if (cmbAppId.SelectedItem != null)
+                AppId = ((SongAppId)cmbAppId.SelectedItem).AppId;
         }
 
         private void doConvert(object sender, DoWorkEventArgs e)
@@ -180,14 +241,16 @@ namespace RocksmithToolkitGUI.DLCConverter
                         continue;
                 }
 
-                try {
-                // CONVERT
-                var output = DLCPackageConverter.Convert(sourcePackage, SourcePlatform, TargetPlatform, AppId);
-                if(!String.IsNullOrEmpty(output))
-                    errorsFound.AppendLine(output);
+                try
+                {
+                    // CONVERT
+                    var output = DLCPackageConverter.Convert(sourcePackage, SourcePlatform, TargetPlatform, AppId);
+                    if (!String.IsNullOrEmpty(output))
+                        errorsFound.AppendLine(output);
                 }
-                catch(Exception ex) {
-                    errorsFound.AppendLine(String.Format("{0}\n{1}\n",ex.Message, ex.StackTrace));
+                catch (Exception ex)
+                {
+                    errorsFound.AppendLine(String.Format("{0}\n{1}\n", ex.Message, ex.StackTrace));
                 }
                 progress += step;
                 bwConvert.ReportProgress(progress);
@@ -196,47 +259,15 @@ namespace RocksmithToolkitGUI.DLCConverter
             e.Result = "done";
         }
 
-        private void convertButton_Click(object sender, EventArgs e)
+        private void platformTargetCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            defineSourcePlatform();
-            defineTargetPlatform();
-            // VALIDATIONS
-            if (SourcePlatform.Equals(TargetPlatform)) {
-                MessageBox.Show("The source and target platform should be different.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            AppIdVisibilty();
+        }
 
-            // GET FILES
-            using (var ofd = new OpenFileDialog()) {
-                ofd.Title = "Select one DLC for platform conversion";
-                ofd.Multiselect = true;
-                switch (SourcePlatform.platform) {
-                    case GamePlatform.Pc:
-                    case GamePlatform.Mac:
-                        ofd.Filter = "PC or Mac Rocksmith 2014 DLC (*.psarc)|*.psarc";
-                        break;
-                    case GamePlatform.XBox360:
-                        ofd.Filter = "XBox 360 Rocksmith 2014 DLC (*.)|*.*";
-                        break;
-                    case GamePlatform.PS3:
-                        ofd.Filter = "PS3 Rocksmith 2014 DLC (*.edat)|*.edat";
-                        break;
-                    default:
-                        MessageBox.Show("The converted audio on Wwise 2013 for target platform should be selected.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                }
-
-                if (ofd.ShowDialog() != DialogResult.OK)
-                    return;
-                if (!bwConvert.IsBusy && ofd.FileNames.Length > 0)
-                {
-                    updateProgress.Value = 0;
-                    updateProgress.Visible = true;
-                    currentOperationLabel.Visible = true;
-                    convertButton.Enabled = false;
-                    bwConvert.RunWorkerAsync(ofd.FileNames);
-                }
-            }
+        private void txtAppId_MouseLeave(object sender, EventArgs e)
+        {
+            var appId = ((TextBox)sender).Text.Trim();
+            SelectComboAppId(appId);
         }
     }
 }
