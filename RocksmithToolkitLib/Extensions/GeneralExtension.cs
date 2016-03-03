@@ -219,6 +219,10 @@ namespace RocksmithToolkitLib.Extensions
                 if (!allowStartsWithNumber)
                     name = rgx2.Replace(name, "");
 
+                // prevent names from starting with special characters -_* etc
+                Regex rgx3 = new Regex("^[^A-Za-z0-9]*");
+                     name = rgx3.Replace(name, "");
+
                 if (frets24)
                 {
                     if (name.Contains("24"))
