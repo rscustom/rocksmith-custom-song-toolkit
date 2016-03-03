@@ -67,6 +67,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.AppIdTB = new System.Windows.Forms.TextBox();
             this.gbGameVersion = new System.Windows.Forms.GroupBox();
             this.rbConvert = new System.Windows.Forms.RadioButton();
             this.dlcImportButton = new System.Windows.Forms.Button();
@@ -83,7 +84,6 @@
             this.YearTB = new RocksmithToolkitGUI.CueTextBox();
             this.AverageTempoTB = new RocksmithToolkitGUI.CueTextBox();
             this.songVolumeBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
-            this.AppIdTB = new RocksmithToolkitGUI.CueTextBox();
             this.SongDisplayNameSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.ArtistSortTB = new RocksmithToolkitGUI.CueTextBox();
             this.albumArtPathTB = new RocksmithToolkitGUI.CueTextBox();
@@ -559,6 +559,18 @@
             this.label4.TabIndex = 65;
             this.label4.Text = "dB";
             // 
+            // AppIdTB
+            // 
+            this.AppIdTB.BackColor = System.Drawing.SystemColors.Window;
+            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
+            this.AppIdTB.Location = new System.Drawing.Point(139, 69);
+            this.AppIdTB.Name = "AppIdTB";
+            this.AppIdTB.Size = new System.Drawing.Size(49, 20);
+            this.AppIdTB.TabIndex = 16;
+            this.toolTip.SetToolTip(this.AppIdTB, "Specify any valid App ID\r\nby typing it into this box");
+            this.AppIdTB.Validating += new System.ComponentModel.CancelEventHandler(this.AppIdTB_Validating);
+            // 
             // gbGameVersion
             // 
             this.gbGameVersion.Controls.Add(this.rbConvert);
@@ -622,6 +634,7 @@
             // 
             this.toolTip.AutoPopDelay = 9000;
             this.toolTip.InitialDelay = 100;
+            this.toolTip.IsBalloon = true;
             this.toolTip.ReshowDelay = 100;
             // 
             // DlcKeyTB
@@ -783,19 +796,6 @@
             -2147483648});
             this.songVolumeBox.ValueChanged += new System.EventHandler(this.songVolumeBox_ValueChanged);
             // 
-            // AppIdTB
-            // 
-            this.AppIdTB.BackColor = System.Drawing.SystemColors.Window;
-            this.AppIdTB.Cue = "App ID";
-            this.AppIdTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.AppIdTB.ForeColor = System.Drawing.Color.Gray;
-            this.AppIdTB.Location = new System.Drawing.Point(139, 69);
-            this.AppIdTB.Name = "AppIdTB";
-            this.AppIdTB.Size = new System.Drawing.Size(49, 20);
-            this.AppIdTB.TabIndex = 16;
-            this.toolTip.SetToolTip(this.AppIdTB, "App ID");
-            this.AppIdTB.MouseLeave += new System.EventHandler(this.AppIdTB_MouseLeave);
-            // 
             // SongDisplayNameSortTB
             // 
             this.SongDisplayNameSortTB.BackColor = System.Drawing.SystemColors.Window;
@@ -923,7 +923,7 @@
         private System.Windows.Forms.Button dlcSaveButton;
         private System.Windows.Forms.Button dlcLoadButton;
         private CueTextBox AverageTempoTB;
-        private CueTextBox AppIdTB;
+        private System.Windows.Forms.TextBox AppIdTB;
         private System.Windows.Forms.ComboBox cmbAppIds;
         private System.Windows.Forms.Button toneRemoveButton;
         private System.Windows.Forms.Button toneAddButton;

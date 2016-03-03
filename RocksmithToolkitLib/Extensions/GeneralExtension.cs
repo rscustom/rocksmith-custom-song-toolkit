@@ -284,6 +284,12 @@ namespace RocksmithToolkitLib.Extensions
             return String.Format(Format, Artist.Acronym(), Title.GetValidName(true, true), Version).Replace(" ", "-");
         }
 
+        public static bool IsAppId6Digits(this string value)
+        {
+            // check for valid six digit AppID that begins with 2 , e.g. 248750
+            return Regex.IsMatch(value, "^[2]\\d{5}$");  // "^[0-9]{6}$");
+        }
+
         public static bool IsValidPSARC(this string fileName)
         {
             //Supported DLC Package types

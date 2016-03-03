@@ -36,7 +36,7 @@
             this.gbAppIdUpdater = new System.Windows.Forms.GroupBox();
             this.lblAppId = new System.Windows.Forms.Label();
             this.cmbGameVersion = new System.Windows.Forms.ComboBox();
-            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
+            this.txtAppId = new System.Windows.Forms.TextBox();
             this.cmbAppId = new System.Windows.Forms.ComboBox();
             this.chkDecodeAudio = new System.Windows.Forms.CheckBox();
             this.chkUpdateSng = new System.Windows.Forms.CheckBox();
@@ -144,14 +144,14 @@
             // 
             // txtAppId
             // 
-            this.txtAppId.Cue = "App ID";
             this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtAppId.ForeColor = System.Drawing.Color.Gray;
             this.txtAppId.Location = new System.Drawing.Point(156, 44);
             this.txtAppId.Name = "txtAppId";
             this.txtAppId.Size = new System.Drawing.Size(82, 20);
             this.txtAppId.TabIndex = 41;
-            this.txtAppId.MouseLeave += new System.EventHandler(this.txtAppId_MouseLeave);
+            this.toolTip.SetToolTip(this.txtAppId, "Specify any valid App ID\r\nby typing it into this box");
+            this.txtAppId.Validating += new System.ComponentModel.CancelEventHandler(this.txtAppId_Validating);
             // 
             // cmbAppId
             // 
@@ -457,7 +457,7 @@
         private System.Windows.Forms.Button btnRepackAppId;
         private System.Windows.Forms.GroupBox gbAppIdUpdater;
         private System.Windows.Forms.ComboBox cmbAppId;
-        private CueTextBox txtAppId;
+        private System.Windows.Forms.TextBox txtAppId;
         private System.Windows.Forms.CheckBox chkDecodeAudio;
         private System.Windows.Forms.CheckBox chkUpdateSng;
         private System.Windows.Forms.ComboBox cmbGameVersion;

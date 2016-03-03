@@ -63,11 +63,12 @@ namespace RocksmithToolkitGUI.DLCConverter
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppId.SelectedItem = songAppId;
             else
-                if (txtAppId.Cue != "App ID") // prevent unnecessary display of message
-                MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine +
-                                "Toolkit will use the AppID that  " + Environment.NewLine +
-                                "was entered manually but it can  " + Environment.NewLine +
-                                "not assess its validity.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            {
+                if (!appId.IsAppId6Digits())
+                    MessageBox.Show("Please enter a valid six digit  " + Environment.NewLine + "App ID before continuing.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                else
+                    MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine + "Toolkit will use the AppID that  " + Environment.NewLine + "was entered manually but it can  " + Environment.NewLine + "not assess its validity.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void ShowCurrentOperation(string message)
@@ -265,10 +266,11 @@ namespace RocksmithToolkitGUI.DLCConverter
             AppIdVisibilty();
         }
 
-        private void txtAppId_MouseLeave(object sender, EventArgs e)
+        private void txtAppId_Validating(object sender, CancelEventArgs e)
         {
             var appId = ((TextBox)sender).Text.Trim();
             SelectComboAppId(appId);
         }
+
     }
 }

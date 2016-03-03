@@ -1,4 +1,6 @@
-﻿namespace RocksmithToolkitGUI.DLCConverter
+﻿using System.Windows.Forms;
+
+namespace RocksmithToolkitGUI.DLCConverter
 {
     partial class DLCConverter
     {
@@ -28,10 +30,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.picLogo = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblAppId = new System.Windows.Forms.Label();
-            this.txtAppId = new RocksmithToolkitGUI.CueTextBox();
+            this.txtAppId = new System.Windows.Forms.TextBox();
             this.cmbAppId = new System.Windows.Forms.ComboBox();
             this.btnConvert = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -41,6 +44,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.lblCurrentOperation = new System.Windows.Forms.Label();
             this.pbUpdateProgress = new System.Windows.Forms.ProgressBar();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -87,14 +91,14 @@
             // 
             // txtAppId
             // 
-            this.txtAppId.Cue = "App ID";
             this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtAppId.ForeColor = System.Drawing.Color.Gray;
             this.txtAppId.Location = new System.Drawing.Point(291, 107);
             this.txtAppId.Name = "txtAppId";
             this.txtAppId.Size = new System.Drawing.Size(82, 20);
             this.txtAppId.TabIndex = 50;
-            this.txtAppId.MouseLeave += new System.EventHandler(this.txtAppId_MouseLeave);
+            this.toolTip.SetToolTip(this.txtAppId, "Specify any valid App ID\r\nby typing it into this box");
+            this.txtAppId.Validating += new System.ComponentModel.CancelEventHandler(this.txtAppId_Validating);
             // 
             // cmbAppId
             // 
@@ -194,6 +198,13 @@
             this.pbUpdateProgress.TabIndex = 0;
             this.pbUpdateProgress.Visible = false;
             // 
+            // toolTip
+            // 
+            this.toolTip.AutoPopDelay = 9000;
+            this.toolTip.InitialDelay = 100;
+            this.toolTip.IsBalloon = true;
+            this.toolTip.ReshowDelay = 100;
+            // 
             // DLCConverter
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -224,10 +235,11 @@
         private System.Windows.Forms.ComboBox cmbSourcePlatform;
         private System.Windows.Forms.Button btnConvert;
         private System.Windows.Forms.ComboBox cmbAppId;
-        private CueTextBox txtAppId;
+        private System.Windows.Forms.TextBox txtAppId;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblCurrentOperation;
         private System.Windows.Forms.ProgressBar pbUpdateProgress;
         private System.Windows.Forms.Label lblAppId;
+        private ToolTip toolTip;
     }
 }
