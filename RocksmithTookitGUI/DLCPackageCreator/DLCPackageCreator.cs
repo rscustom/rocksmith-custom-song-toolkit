@@ -1115,11 +1115,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
+            // TODO: Not really .. Broken CDLC show up here .. because of bad song info/naming/characters
+            // which causes audio files to be regenerated .. interesting but this is not a toolkit issue (any more)
             if (!File.Exists(AudioPath))
             {
                 audioPathTB.Focus();
                 return null;
             }
+
+            // theoretically we should never be here if a valid CDLC is imported
+            // but it is not valid/complete but we may be able to fix it
+
             int chorusTime = 4000;
             int previewLength = 30000;
             var arrangements = arrangementLB.Items.OfType<Arrangement>().ToList();
@@ -1671,10 +1677,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppIds.SelectedItem = songAppId;
             else
-                MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine +
-                                "Toolkit will use the AppID that  " + Environment.NewLine +
-                                "was entered manually but it can  " + Environment.NewLine +
-                                "not assess its validity.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (AppIdTB.Cue != "App ID") // prevent unnecessary display of message
+                    MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine +
+                                    "Toolkit will use the AppID that  " + Environment.NewLine +
+                                    "was entered manually but it can  " + Environment.NewLine +
+                                    "not assess its validity.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         //private void rbuttonSignature_CheckedChanged(object sender, EventArgs e)
@@ -1989,7 +1996,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void ValidateTempo(object sender, CancelEventArgs e)
         {
             var tb = sender as TextBox;
-            tb.Text  = tb.Text.Trim().GetValidTempo();
+            tb.Text = tb.Text.Trim().GetValidTempo();
             userChangedInputControls = true;
         }
 

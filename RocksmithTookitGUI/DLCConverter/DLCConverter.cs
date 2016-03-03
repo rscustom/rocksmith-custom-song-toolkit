@@ -63,6 +63,7 @@ namespace RocksmithToolkitGUI.DLCConverter
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppId.SelectedItem = songAppId;
             else
+                if (txtAppId.Cue != "App ID") // prevent unnecessary display of message
                 MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine +
                                 "Toolkit will use the AppID that  " + Environment.NewLine +
                                 "was entered manually but it can  " + Environment.NewLine +

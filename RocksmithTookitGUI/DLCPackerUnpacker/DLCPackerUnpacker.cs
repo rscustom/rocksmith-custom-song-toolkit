@@ -133,10 +133,11 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppId.SelectedItem = songAppId;
             else
-                MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine +
-                                "Toolkit will use the AppID that  " + Environment.NewLine +
-                                "was entered manually but it can  " + Environment.NewLine +
-                                "not assess its validity.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (txtAppId.Cue != "App ID") // prevent unnecessary display of message
+                    MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine +
+                                    "Toolkit will use the AppID that  " + Environment.NewLine +
+                                    "was entered manually but it can  " + Environment.NewLine +
+                                    "not assess its validity.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ShowCurrentOperation(string message)
@@ -207,8 +208,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                         MessageBox.Show("APP ID update is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else
                         MessageBox.Show("APP ID update is complete with errors. See below: " + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
- 
-                        break;
+
+                    break;
                 case "unpack":
                     if (errorsFound.Length <= 0)
                         MessageBox.Show("Unpacking is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);

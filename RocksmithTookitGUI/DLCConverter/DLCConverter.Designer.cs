@@ -87,7 +87,7 @@
             // 
             // txtAppId
             // 
-            this.txtAppId.Cue = "APP ID";
+            this.txtAppId.Cue = "App ID";
             this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtAppId.ForeColor = System.Drawing.Color.Gray;
             this.txtAppId.Location = new System.Drawing.Point(291, 107);
