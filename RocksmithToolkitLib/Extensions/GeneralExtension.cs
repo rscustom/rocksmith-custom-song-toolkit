@@ -108,7 +108,7 @@ namespace RocksmithToolkitLib.Extensions
         public static Stream StripIllegalXMLChars(this string filePath)
         {
             string tmpContents = File.ReadAllText(filePath);
-            string pattern = @"[\x01-\x08\x0B-\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]";// XML1.1
+            const string pattern = @"[\x01-\x08\x0B-\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]"; // XML1.1
 
             tmpContents = Regex.Replace(tmpContents, pattern, "", RegexOptions.IgnoreCase);
 
@@ -156,8 +156,8 @@ namespace RocksmithToolkitLib.Extensions
                 if (dlcKey == songTitle.Replace(" ", ""))
                     dlcKey = dlcKey + "Song";
             }
-            // limit length to 20
-            return dlcKey.Substring(0, Math.Min(20, dlcKey.Length));
+            // limit length to 30
+            return dlcKey.Substring(0, Math.Min(30, dlcKey.Length));
         }
 
         public static string GetValidYear(this string value)

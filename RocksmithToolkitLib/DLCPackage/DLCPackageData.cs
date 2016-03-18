@@ -34,7 +34,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public bool PS3 { get; set; }
         public bool Showlights { get; set; }
         public string AppId { get; set; }
-        public string Name { get; set; } // aka DLCKey <=> SongKey
+        public string Name { get; set; } // aka DLCKey <=> SongKey //TODO: implement deserialize here, with workaround for DLCKey=Name and rename Name to DLCKey finnaly!
         public SongInfo SongInfo { get; set; }
         public string AlbumArtPath { get; set; }
         public string OggPath { get; set; }
@@ -216,7 +216,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (result.Tones.Count != 1)
                         throw new DataException("Invalid RS1 CDLC Tones Data");
 
-                    var arrangement = attr.First(s => s.SongXml.ToLower().Contains(result.LLID));
+                    var arrangement = attr.First(s => s.SongXml.ToLower().Contains(result.LLID));//FIXME: Sequence contains no matching element issue
                     var tone = tones.First(t => t.Key == result.Tones[0]);
 
                     using (var obj1 = new Rs1Converter())

@@ -11,10 +11,10 @@ using System.ComponentModel;
 
 namespace RocksmithToolkitLib.Sng
 {
-    public enum ArrangementName : int { Lead = 0/* Single notes */, Rhythm /* Chords */, Combo /* Combo */, Bass, Vocals, JVocals, ShowLights };
+    public enum ArrangementName { Lead = 0/* Single notes */, Rhythm /* Chords */, Combo /* Combo */, Bass, Vocals, JVocals, ShowLights };
     public enum ArrangementType { Guitar, Bass, Vocal, ShowLight };
     public enum InstrumentTuning { [Description("E Standard")] Standard, [Description("Drop D")] DropD, [Description("Eb")] EFlat, [Description("Open G")] OpenG };
-    public enum PluckedType : int { NotPicked, Picked };
+    public enum PluckedType { NotPicked, Picked };
     public enum Metronome { None, Itself, Generate };
 
     public static class InstrumentTuningExtensions
@@ -45,14 +45,13 @@ namespace RocksmithToolkitLib.Sng
 
         public static InstrumentTuning GetTuningByOffsets(Int16[] strings)
         {
-            if (Enumerable.SequenceEqual(strings, DropDOffsets))
+            if (strings.SequenceEqual(DropDOffsets))
                 return InstrumentTuning.DropD;
-            if (Enumerable.SequenceEqual(strings, EFlatOffsets))
+            if (strings.SequenceEqual(EFlatOffsets))
                 return InstrumentTuning.EFlat;
-            if (Enumerable.SequenceEqual(strings, OpenGOffsets))
+            if (strings.SequenceEqual(OpenGOffsets))
                 return InstrumentTuning.OpenG;
-            else
-                return InstrumentTuning.Standard;
+            return InstrumentTuning.Standard;
         }
 
         public static int GetMidiNote(this InstrumentTuning tuning, ArrangementType arrangementType, int stringNumber, int fret)
@@ -298,13 +297,13 @@ namespace RocksmithToolkitLib.Sng
             for (int i = 0; i < phrases.Length; i++)
             {
                 // solo
-                w.Write(phrases[i].Solo == 1 ? true : false);
+                w.Write(phrases[i].Solo == 1);
 
                 // disparity
-                w.Write(phrases[i].Disparity == 1 ? true : false);
+                w.Write(phrases[i].Disparity == 1);
 
                 // ignore
-                w.Write(phrases[i].Ignore == 1 ? true : false);
+                w.Write(phrases[i].Ignore == 1);
 
                 // unused padding
                 w.Write(new byte());
@@ -687,16 +686,16 @@ namespace RocksmithToolkitLib.Sng
                     int num = 0;
                     if (level.Notes != null)
                     {
-                        num += level.Notes.Where(n => n.Time >= iteration.StartTime && n.Time < iteration.EndTime).Count();
+                        num += level.Notes.Count(n => n.Time >= iteration.StartTime && n.Time < iteration.EndTime);
                     }
                     if (level.Chords != null)
                     {
-                        num += level.Chords.Where(n => n.Time >= iteration.StartTime && n.Time < iteration.EndTime).Count();
+                        num += level.Chords.Count(n => n.Time >= iteration.StartTime && n.Time < iteration.EndTime);
                     }
                     iterationNotes.Add(num);
                 }
 
-                var phrases = iterationInfo.GroupBy(it => it.PhraseId).OrderBy(grp => grp.Key); ;
+                var phrases = iterationInfo.GroupBy(it => it.PhraseId).OrderBy(grp => grp.Key);
                 // count of phrases
                 w.Write(phrases.Count());
                 foreach (var phrase in phrases)
@@ -750,13 +749,13 @@ namespace RocksmithToolkitLib.Sng
 
                 float? lastNote = null, lastChord = null;
                 var notes = (level.Notes == null) ? null : level.Notes.Where(note => note.Time >= startTime && note.Time < endTime);
-                if (notes != null && notes.Count() > 0)
+                if (notes != null && notes.Any())
                 {
                     var note = notes.OrderByDescending(n => n.Time).First();
                     lastNote = note.Time + note.Sustain + .1f;
                 }
                 var chords = (level.Chords == null) ? null : level.Chords.Where(chord => chord.Time >= startTime && chord.Time < endTime);
-                if (chords != null && chords.Count() > 0)
+                if (chords != null && chords.Any())
                 {
                     lastChord = chords.Max(chord => chord.Time) + .1f;
                 }
@@ -867,7 +866,7 @@ namespace RocksmithToolkitLib.Sng
                 {
                     lastChord = endTime;
                 }
-                else if (chords != null && chords.Count() > 0)
+                else if (chords != null && chords.Any())
                 {
                     lastChord = chords.Max(chord => chord.Time);
                 }
@@ -1028,11 +1027,11 @@ namespace RocksmithToolkitLib.Sng
                 var level = s.Levels[iteration.MaxDifficulty];
                 if (level.Notes != null)
                 {
-                    totalNotes += level.Notes.Where(note => note.Time >= iteration.StartTime && note.Time < iteration.EndTime).Count();
+                    totalNotes += level.Notes.Count(note => note.Time >= iteration.StartTime && note.Time < iteration.EndTime);
                 }
                 if (level.Chords != null)
                 {
-                    totalNotes += level.Chords.Where(chord => chord.Time >= iteration.StartTime && chord.Time < iteration.EndTime).Count();
+                    totalNotes += level.Chords.Count(chord => chord.Time >= iteration.StartTime && chord.Time < iteration.EndTime);
                 }
             }
             // Total notes when fully leveled

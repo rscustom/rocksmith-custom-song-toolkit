@@ -115,8 +115,8 @@ namespace RocksmithToolkitLib.Extensions
         {
             if (destinationPath == null)
                 destinationPath = String.Format("{0}", Path.ChangeExtension(sourcePath, "ogg"));
-
-            var cmdArgs = String.Format(" -r -q {2} -R 48000 \"{0}\" -o \"{1}\"", sourcePath, destinationPath, Convert.ToString(qualityFactor ));
+            //TODO: maybe ww could resample while encoding wem? but let's just fix this issue for now..
+            var cmdArgs = String.Format(" --resample 48000 -r -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, Convert.ToString(qualityFactor ));
 
             GeneralExtensions.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
         }

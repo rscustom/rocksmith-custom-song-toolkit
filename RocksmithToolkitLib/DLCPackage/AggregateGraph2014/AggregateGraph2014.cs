@@ -12,7 +12,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
 {
     public class AggregateGraph2014
     {
-        #region Path/Names Template
+        #region Paths/Names Templates
 
         // PATH PATTERNS
         public static readonly string CANONICAL_MANIFEST_CONSOLE = "/manifests/songs_dlc";
@@ -45,7 +45,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
         public static readonly string LOGPATH_SOUNDBANK = "/audio";
 
         // NAME PATTERNS
-        public static readonly string NAME_ARRANGEMENT = "{0}_{1}"; //DLC Name - Arrangement Name
+        public static readonly string NAME_ARRANGEMENT = "{0}_{1}"; //DLC Name_Arrangement Name
         public static readonly string NAME_SHOWLIGHT = "{0}_showlights"; //DLC Name
         #endregion
 
@@ -466,7 +466,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
 
         public static AggregateGraph2014 LoadFromFile(string agregateGraphFile)
         {
-            AggregateGraph2014 aggregateGraph = new AggregateGraph2014(); ;
+            var aggregateGraph = new AggregateGraph2014();
             var graphPartList = GraphPart.GetGraphParts(File.ReadAllLines(agregateGraphFile));
 
             var json = GraphPart.WhereByValue(graphPartList, TagValue.JsonDB.GetDescription());

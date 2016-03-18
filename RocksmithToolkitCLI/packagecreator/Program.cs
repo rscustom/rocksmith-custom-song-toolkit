@@ -44,12 +44,12 @@ namespace packagecreator
             return new OptionSet
             {
                 { "p|PackageCreator", "Usage: Drag/Drop a root directory " +
-                  "that contains songname subfolders that each contain CDLC ready files onto the executable application icon:\r\n" +                 
+                  "that contains songname subfolders that each contain CDLC ready files onto the executable application icon:\r\n" +
                   "RS2014 *.json [lead, rhythm, combos, bass]\r\n"+
                   "RS2014 *.xml [lead, rhythm, combos, bass]\r\n"+
                   "RS2014 Vocals.xml and Vocals.json (optional)\r\nAlbumArt256.dds\r\n" + 
-                  "Wwise 2013 Audio.wem\r\nWwise 2013 Audio_preview.wem\r\n", v => { if (v != null) outputArguments.Package = true; }},                
-                { "-|--------------", "Alternate Command Line Usage is shown below:\r\n", v => { if (v != null) outputArguments.Package = true; }},                
+                  "Wwise 2013 Audio.wem\r\nWwise 2013 Audio_preview.wem\r\n", v => { if (v != null) outputArguments.Package = true; }},
+                { "-|--------------", "Alternate Command Line Usage is shown below:\r\n", v => { if (v != null) outputArguments.Package = true; }},
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
                 { "i|input=", "Input directory (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
                 { "o|output=", "Output directory", v => outputArguments.Output = v },

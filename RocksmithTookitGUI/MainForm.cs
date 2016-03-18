@@ -158,6 +158,9 @@ namespace RocksmithToolkitGUI
         {
             configurationToolStripMenuItem.Enabled = false;
 
+            // Save Data
+            //GeneralConfigTab.cachedTabs = tabControl1.TabPages;
+
             // Remove all tabs
             tabControl1.TabPages.Clear();
 
@@ -206,19 +209,18 @@ namespace RocksmithToolkitGUI
 
             // don't bug the Developers when in debug mode ;)
 #if !DEBUG
-            // check for first run
+            // check for first run //Check if author set at least, then it's not a first run tho, but let it show msg anyways...
             bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
-            if (firstRun)
-            {
-                MessageBox.Show(new Form { TopMost = true },
-                    "    Welcome to the Song Creator Toolkit for Rocksmith." + Environment.NewLine +
-                    "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
-                    "It looks like this may be your first time running the toolkit.  " + Environment.NewLine +
-                    "  Please fill in the Configuration menu with your selections.", "Song Creator Toolkit for Rocksmith ... First Run",
-                     MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            if (!firstRun) return;
+            MessageBox.Show(new Form { TopMost = true },
+                "    Welcome to the Song Creator Toolkit for Rocksmith." + Environment.NewLine +
+                "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
+                "It looks like this may be your first time running the toolkit.  " + Environment.NewLine +
+                "  Please fill in the Configuration menu with your selections.", "Song Creator Toolkit for Rocksmith ... First Run",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                ShowConfigScreen();
-            }
+            ShowConfigScreen();
+            BringToFront();
 #endif
 
         }

@@ -26,9 +26,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
         public Sng2014File() { }
 
         // Easy, Medium, Hard = 0, 1, 2
-        public int[] NoteCount { get ; set; }
+        public int[] NoteCount { get; set; }
         // none, solo, riff, chord
-        public int[] DNACount { get ; set ; }
+        public int[] DNACount { get; set; }
 
         // this is platform independent SNG object
         public static Sng2014File ConvertSong(string xmlFile) {

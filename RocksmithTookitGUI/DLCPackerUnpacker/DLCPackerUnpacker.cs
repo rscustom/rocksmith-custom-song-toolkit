@@ -641,7 +641,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private void cmbGameVersion_SelectedIndexChanged(object sender, EventArgs e)
         {
             GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
-            PopulateAppIdCombo(gameVersion); ;
+            PopulateAppIdCombo(gameVersion);
         }
 
         private void txtAppId_Validating(object sender, CancelEventArgs e)
