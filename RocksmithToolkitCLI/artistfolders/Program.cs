@@ -141,7 +141,7 @@ namespace ArtistFolderCreator
 
         static int ShowHelpfulError(string message)
         {
-            Console.Write("Split Song Pack: ");
+            Console.Write("Artist Folders CLI: ");
             Console.WriteLine(message);
             Console.ReadLine();
             return 0;

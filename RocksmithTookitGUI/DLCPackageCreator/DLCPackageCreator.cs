@@ -1111,7 +1111,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
-            // NOTE: Old CDLC that do not have preview audio will auto regenerate audio here
+            // NOTE: CDLC produced with older versions of toolkit may not
+            // have an audio preview file so it is auto regenerate here
             if (!File.Exists(AudioPath))
             {
                 audioPathTB.Focus();
@@ -1119,7 +1120,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // theoretically the code below should not be called if imported CDLC is properly formed/valid
-            // TODO: CDLC that end up here may also be responsible for cross platform conversion failures
+            // TODO: CDLC that end up here may be responsible for cross platform conversion failures
 
             int chorusTime = 4000;
             int previewLength = 30000;
@@ -1243,36 +1244,37 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var audioQualiy = audioQualityBox.Value;
             var data = new DLCPackageData
                 {
-                    GameVersion = CurrentGameVersion, 
-                    Pc = platformPC.Checked, 
-                    Mac = platformMAC.Checked, 
-                    XBox360 = platformXBox360.Checked, 
-                    PS3 = platformPS3.Checked, 
-                    Name = DlcKeyTB.Text, 
-                    AppId = AppIdTB.Text, 
-                    
+                    GameVersion = CurrentGameVersion,
+                    Pc = platformPC.Checked,
+                    Mac = platformMAC.Checked,
+                    XBox360 = platformXBox360.Checked,
+                    PS3 = platformPS3.Checked,
+                    Name = DlcKeyTB.Text,
+                    AppId = AppIdTB.Text,
+
                     SongInfo = new SongInfo
                         {
-                            SongDisplayName = SongDisplayNameTB.Text, 
-                            SongDisplayNameSort = String.IsNullOrEmpty(SongDisplayNameSortTB.Text.Trim()) ? SongDisplayNameTB.Text : SongDisplayNameSortTB.Text, 
-                            Album = AlbumTB.Text, 
-                            SongYear = year, 
-                            Artist = ArtistTB.Text, 
-                            ArtistSort = String.IsNullOrEmpty(ArtistSortTB.Text.Trim()) ? ArtistTB.Text : ArtistSortTB.Text, AverageTempo = tempo
-                        }, 
-                        
-                        AlbumArtPath = AlbumArtPath, 
-                        LyricArtPath = LyricArtPath, 
-                        OggPath = AudioPath, 
-                        OggPreviewPath = audioPreviewPath, 
-                        OggQuality = audioQualiy, 
-                        Arrangements = arrangements, 
-                        Tones = tones, 
-                        TonesRS2014 = tonesRS2014, 
-                        Volume = songVol, 
-                        PreviewVolume = previewVol, 
-                        SignatureType = PackageMagic.CON, 
-                        PackageVersion = PackageVersion.GetValidVersion()
+                            SongDisplayName = SongDisplayNameTB.Text,
+                            SongDisplayNameSort = String.IsNullOrEmpty(SongDisplayNameSortTB.Text.Trim()) ? SongDisplayNameTB.Text : SongDisplayNameSortTB.Text,
+                            Album = AlbumTB.Text,
+                            SongYear = year,
+                            Artist = ArtistTB.Text,
+                            ArtistSort = String.IsNullOrEmpty(ArtistSortTB.Text.Trim()) ? ArtistTB.Text : ArtistSortTB.Text,
+                            AverageTempo = tempo
+                        },
+
+                    AlbumArtPath = AlbumArtPath,
+                    LyricArtPath = LyricArtPath,
+                    OggPath = AudioPath,
+                    OggPreviewPath = audioPreviewPath,
+                    OggQuality = audioQualiy,
+                    Arrangements = arrangements,
+                    Tones = tones,
+                    TonesRS2014 = tonesRS2014,
+                    Volume = songVol,
+                    PreviewVolume = previewVol,
+                    SignatureType = PackageMagic.CON,
+                    PackageVersion = PackageVersion.GetValidVersion()
                 };
 
             return data;

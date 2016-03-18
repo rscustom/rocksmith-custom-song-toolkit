@@ -34,7 +34,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void Pack(string sourcePath, string saveFileName, bool updateSng = false, Platform predefinedPlatform = null, bool updateManifest = false, bool fixShowlights = true)
         {
-            //  if (!Path.GetFileName(sourcePath).ToLower().Contains("crowd.psarc"))
             DeleteFixedAudio(sourcePath);
             Platform platform = sourcePath.GetPlatform();
 
@@ -668,12 +667,12 @@ namespace RocksmithToolkitLib.DLCPackage
                     return new Platform(GamePlatform.XBox360, GameVersion.None);
                 }
 
-                if (fullPath.ToLower().EndsWith("_p"))
+                if (fullPath.ToLower().EndsWith("_p") || fullPath.ToLower().EndsWith("_pc"))
                 {
                     return new Platform(GamePlatform.Pc, GameVersion.RS2014);
                 }
 
-                if (fullPath.ToLower().EndsWith("_m"))
+                if (fullPath.ToLower().EndsWith("_m")|| fullPath.ToLower().EndsWith("_mac"))
                 {
                     return new Platform(GamePlatform.Mac, GameVersion.RS2014);
                 }
