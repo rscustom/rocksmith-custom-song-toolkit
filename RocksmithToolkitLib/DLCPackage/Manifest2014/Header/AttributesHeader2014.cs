@@ -95,8 +95,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
 
             if (!IsVocal)
             {
-                // TODO: add better AlbumNameSort feature
-                AlbumName = AlbumNameSort = info.SongInfo.Album;
+                // added better AlbumNameSort feature
+                AlbumName = info.SongInfo.Album;
+                AlbumNameSort = info.SongInfo.AlbumSort;
                 ArtistName = info.SongInfo.Artist;
                 CentOffset = (!arrangement.TuningPitch.Equals(0)) ? TuningFrequency.Frequency2Cents(arrangement.TuningPitch) : 0.0;
                 ArtistNameSort = info.SongInfo.ArtistSort;

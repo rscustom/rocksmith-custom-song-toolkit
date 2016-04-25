@@ -176,7 +176,7 @@ namespace RocksmithToolkitGUI.DLCConverter
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(249, 15);
             this.label3.TabIndex = 38;
-            this.label3.Text = "Compatible with Rocksmith 2014 Only";
+            this.label3.Text = "Only Compatible with Rocksmith 2014";
             // 
             // lblCurrentOperation
             // 

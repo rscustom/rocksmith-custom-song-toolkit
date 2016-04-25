@@ -1054,12 +1054,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 DlcKeyTB.Focus();
                 return null;
             }
-            if (DLCKey == SongTitle)
-            {
-                MessageBox.Show("Error: DLC Key can't be the same of song name", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                DlcKeyTB.Focus();
-                return null;
-            }
+
+            // actually some ODLC do have same DLCKey as SongTitle so commented this conditional check out 
+            //if (DLCKey == SongTitle)
+            //{
+            //    MessageBox.Show("Error: DLC Key can't be the same of song name", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    DlcKeyTB.Focus();
+            //    return null;
+            //}
+
             if (String.IsNullOrEmpty(SongTitle))
             {
                 SongDisplayNameTB.Focus();
@@ -1266,6 +1269,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             SongDisplayName = SongDisplayNameTB.Text,
                             SongDisplayNameSort = String.IsNullOrEmpty(SongDisplayNameSortTB.Text.Trim()) ? SongDisplayNameTB.Text : SongDisplayNameSortTB.Text,
                             Album = AlbumTB.Text,
+                            AlbumSort = AlbumSortTB.Text,
                             SongYear = year,
                             Artist = ArtistTB.Text,
                             ArtistSort = String.IsNullOrEmpty(ArtistSortTB.Text.Trim()) ? ArtistTB.Text : ArtistSortTB.Text,
