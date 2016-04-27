@@ -1,4 +1,6 @@
-﻿namespace RocksmithToolkitGUI.DLCPackageCreator
+﻿using System.Windows.Forms;
+
+namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     partial class TuningForm
     {
@@ -254,6 +256,7 @@
             // 
             // TuningForm
             // 
+            this.StartPosition = FormStartPosition.CenterParent;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(310, 167);
             this.Controls.Add(this.StateAdd);

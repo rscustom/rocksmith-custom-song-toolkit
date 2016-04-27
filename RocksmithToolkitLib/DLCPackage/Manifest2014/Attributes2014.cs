@@ -15,6 +15,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
     {
         public SongArrangementProperties2014 ArrangementProperties { get; set; }
         public int ArrangementSort { get; set; }
+        /// <summary>
+        /// typeof ArrangementName enum
+        /// </summary>
         public int? ArrangementType { get; set; }
         public string BlockAsset { get; set; }
         public Dictionary<string, Dictionary<string, object>> Chords { get; set; } //Problem in 3rd sublevel that can be a list or not
@@ -94,78 +97,78 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
 
             // Only for Vocal
             if (IsVocal)
+            {
                 InputEvent = "Play_Tone_Standard_Mic";
+                return;
+            }
 
             // Only for instruments
-            if (!IsVocal)
-            {
-                ArrangementProperties = SongContent.ArrangementProperties;
-                ArrangementProperties.BassPick = (int)arrangement.PluckedType;
-                ArrangementProperties.PathLead = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Lead);
-                ArrangementProperties.PathRhythm = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Rhythm);
-                ArrangementProperties.PathBass = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Bass);
-                ArrangementProperties.RouteMask = (int)arrangement.RouteMask;
+            ArrangementProperties = SongContent.ArrangementProperties;
+            ArrangementProperties.BassPick = (int)arrangement.PluckedType;
+            ArrangementProperties.PathLead = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Lead);
+            ArrangementProperties.PathRhythm = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Rhythm);
+            ArrangementProperties.PathBass = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Bass);
+            ArrangementProperties.RouteMask = (int)arrangement.RouteMask;
 
-                // BONUS ARRANGEMENT
-                ArrangementProperties.BonusArr = Convert.ToInt32(arrangement.BonusArr);
+            // BONUS ARRANGEMENT
+            ArrangementProperties.BonusArr = Convert.ToInt32(arrangement.BonusArr);
 
-                // Metronome
-                ArrangementProperties.Metronome = (int)arrangement.Metronome;
+            // Metronome
+            ArrangementProperties.Metronome = (int)arrangement.Metronome;
 
-                if (arrangement.Name == Sng.ArrangementName.Combo)
-                { //Exclusive condition
-                    if (arrangement.RouteMask == DLCPackage.RouteMask.Lead)
-                        ArrangementType = (int)Sng.ArrangementName.Lead;
-                    else if (arrangement.RouteMask == DLCPackage.RouteMask.Rhythm)
-                        ArrangementType = (int)Sng.ArrangementName.Rhythm;
-                    else
-                        ArrangementType = (int)arrangement.Name;
-                }
+            if (arrangement.Name == Sng.ArrangementName.Combo)
+            { //Exclusive condition
+                if (arrangement.RouteMask == DLCPackage.RouteMask.Lead)
+                    ArrangementType = (int)Sng.ArrangementName.Lead;
+                else if (arrangement.RouteMask == DLCPackage.RouteMask.Rhythm)
+                    ArrangementType = (int)Sng.ArrangementName.Rhythm;
                 else
                     ArrangementType = (int)arrangement.Name;
-
-                //Chords        -- //TODO: MISSING GENERATE
-
-                ChordTemplates = new List<ChordTemplate>();
-                manifestFunctions.GenerateChordTemplateData(this, SongContent);
-
-                LastConversionDateTime = SongContent.LastConversionDateTime;
-                MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(SongContent);
-
-                TargetScore = 100000;
-                PhraseIterations = new List<PhraseIteration>();
-                manifestFunctions.GeneratePhraseIterationsData(this, SongContent, platform.version);
-                //Score_MaxNotes -- Generated on function above
-                //Score_PNV      -- Generated on function above
-
-                Phrases = new List<Phrase>();
-                manifestFunctions.GeneratePhraseData(this, SongContent);
-
-                Sections = new List<Section>();
-                manifestFunctions.GenerateSectionData(this, SongContent);
-
-                SongAverageTempo = SongContent.AverageTempo;
-                SongOffset = arrangement.Sng2014.Metadata.StartTime * -1;
-
-                //SongPartition  -- Generated in DLCPackageCreator after this constructor
-
-                //Techniques TODO: improve me
-                try
-                {
-                    manifestFunctions.GenerateTechniques(this, SongContent);
-                }
-                catch { }
-
-                //Fix for Dead tones
-                var it = info.TonesRS2014;
-                Tones = new List<Tone2014>();
-                Tone_A = GetToneName(arrangement.ToneA, it);
-                Tone_B = GetToneName(arrangement.ToneB, it);
-                Tone_Base = GetToneName(arrangement.ToneBase, it);
-                Tone_C = GetToneName(arrangement.ToneC, it);
-                Tone_D = GetToneName(arrangement.ToneD, it);
-                Tone_Multiplayer = GetToneName(arrangement.ToneMultiplayer, it);
             }
+            else
+                ArrangementType = (int)arrangement.Name;
+
+            //Chords        -- //TODO: MISSING GENERATE
+
+            ChordTemplates = new List<ChordTemplate>();
+            manifestFunctions.GenerateChordTemplateData(this, SongContent);
+
+            LastConversionDateTime = SongContent.LastConversionDateTime;
+            MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(SongContent);
+
+            TargetScore = 100000;
+            PhraseIterations = new List<PhraseIteration>();
+            manifestFunctions.GeneratePhraseIterationsData(this, SongContent, platform.version);
+            //Score_MaxNotes -- Generated on function above
+            //Score_PNV      -- Generated on function above
+
+            Phrases = new List<Phrase>();
+            manifestFunctions.GeneratePhraseData(this, SongContent);
+
+            Sections = new List<Section>();
+            manifestFunctions.GenerateSectionData(this, SongContent);
+
+            SongAverageTempo = SongContent.AverageTempo;
+            SongOffset = arrangement.Sng2014.Metadata.StartTime * -1;
+
+            //SongPartition  -- Generated in DLCPackageCreator after this constructor
+
+            //Techniques TODO: improve me
+            try
+            {
+                manifestFunctions.GenerateTechniques(this, SongContent);
+            }
+            catch { }
+
+            //Fix for Dead tones
+            var it = info.TonesRS2014;
+            Tones = new List<Tone2014>();
+            Tone_A = GetToneName(arrangement.ToneA, it);
+            Tone_B = GetToneName(arrangement.ToneB, it);
+            Tone_Base = GetToneName(arrangement.ToneBase, it);
+            Tone_C = GetToneName(arrangement.ToneC, it);
+            Tone_D = GetToneName(arrangement.ToneD, it);
+            Tone_Multiplayer = GetToneName(arrangement.ToneMultiplayer, it);
 
             #endregion
         }

@@ -13,17 +13,17 @@ namespace RocksmithToolkitLib {
 
         public Config Select(string configKey)
         {
-            return List.Any(s => s.Key == configKey) ? List.FirstOrDefault<Config>(s => s.Key == configKey) : List[0];
+            return List.Any(s => s.Key == configKey) ? List.FirstOrDefault(s => s.Key == configKey) : List[0];
         }
 
         public string this[string configKey]
         {
             get {
-                return List.FirstOrDefault<Config>(s => s.Key == configKey).Value;
+                return List.FirstOrDefault(s => s.Key == configKey).Value;
             }
             set {
                 if (Exists(configKey)) {
-                    Config conf = List.FirstOrDefault<Config>(s => s.Key == configKey);
+                    Config conf = List.FirstOrDefault(s => s.Key == configKey);
                     conf.Value = value;
                 } else {
                     this.Add(new Config() { Key = configKey, Value = value });
@@ -44,7 +44,7 @@ namespace RocksmithToolkitLib {
 
         public bool ValueChanged(string configKey, object value) {
             if (Exists(configKey)) {
-                Config conf = List.FirstOrDefault<Config>(s => s.Key == configKey);
+                Config conf = List.FirstOrDefault(s => s.Key == configKey);
                 if (conf.Value.Equals(value))
                     return false;
             }
@@ -53,15 +53,15 @@ namespace RocksmithToolkitLib {
         }
 
         public bool GetBoolean(string configKey) {
-            return Convert.ToBoolean(List.FirstOrDefault<Config>(s => s.Key == configKey).Value);
+            return Convert.ToBoolean(List.FirstOrDefault(s => s.Key == configKey).Value);
         }
 
         public Int32 GetInt32(string configKey) {
-            return Convert.ToInt32(List.FirstOrDefault<Config>(s => s.Key == configKey).Value);
+            return Convert.ToInt32(List.FirstOrDefault(s => s.Key == configKey).Value);
         }
 
         public decimal GetDecimal(string configKey) {
-            return Convert.ToDecimal(List.FirstOrDefault<Config>(s => s.Key == configKey).Value.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture);
+            return Convert.ToDecimal(List.FirstOrDefault(s => s.Key == configKey).Value.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 

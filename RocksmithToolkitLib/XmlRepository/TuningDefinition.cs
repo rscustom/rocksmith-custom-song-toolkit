@@ -29,9 +29,21 @@ namespace RocksmithToolkitLib
         [XmlElement]
         public TuningStrings Tuning { get; set; }
 
+        public TuningDefinition()
+        {
+        }
+
+        public TuningDefinition(TuningStrings tStrings, GameVersion rsVersion, string name = "", bool custom = true)
+        {
+            Custom = custom;
+            Tuning = tStrings;
+            GameVersion = rsVersion;
+
+            UIName = Name = !string.IsNullOrEmpty(name) ? name : NameFromStrings(tStrings);
+        }
         static string NoteName(TuningStrings tuning, byte s, bool flats = false)
         {
-            String[] notesNamesHi = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+            String[] notesNamesHi = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" }; //TODO: use maj\min or intervals classification...
             String[] notesNamesLo = { "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" };
 
             var id = Sng2014FileWriter.GetMidiNote(tuning.ToArray(), s, 0, false, 0) % 12;
@@ -63,7 +75,8 @@ namespace RocksmithToolkitLib
         enum TuningFamily { None, Standard, Drop, Open }
         static TuningFamily GetTuningFamily(Int16[] t)
         {
-            if (t[1] != t[2] || t[2] != t[3] || t[3] != t[4] || t[4] != t[5]) return TuningFamily.None;
+            if (t[1] != t[2] || t[2] != t[3] || t[3] != t[4] || t[4] != t[5])
+                return TuningFamily.None;
             if (t[0] == t[1])
                 return TuningFamily.Standard;
             if (t[0] + 2 == t[1])
@@ -79,15 +92,14 @@ namespace RocksmithToolkitLib
             return UIName;
         }
 
-        // old fashioned but reliable way to load xml file to list object
+        // old fashioned but reliable way to load xml file to list object (avoid LINQ pls)
         public static List<TuningDefinition> LoadFile(string fileName, GameVersion gameVersion)
         {
-            List<TuningDefinition> tuningDefinitionsFiltered = new List<TuningDefinition>();
+            var tuningDefinitionsFiltered = new List<TuningDefinition>();
 
-            using (FileStream stream = File.OpenRead(fileName))
+            using (var stream = File.OpenRead(fileName))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(List<TuningDefinition>));
-                List<TuningDefinition> tuningDefinitions = (List<TuningDefinition>)serializer.Deserialize(stream);
+                var tuningDefinitions = (List<TuningDefinition>) new XmlSerializer(typeof(List<TuningDefinition>)).Deserialize(stream);
 
                 foreach (var tuningDefinition in tuningDefinitions)
                 {
@@ -101,10 +113,9 @@ namespace RocksmithToolkitLib
 
         public static void WriteFile(string fileName, List<TuningDefinition> tuningDefinitions)
         {
-            using (FileStream stream = File.OpenWrite(fileName))
+            using (var stream = File.OpenWrite(fileName))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(List<TuningDefinition>));
-                serializer.Serialize(stream, tuningDefinitions);
+                new XmlSerializer(typeof(List<TuningDefinition>)).Serialize(stream, tuningDefinitions);
             }
         }
 
@@ -137,7 +148,7 @@ namespace RocksmithToolkitLib
         {
             // speed hack ... use preloaded TuningDefinitionRepository if available
             if (tuningXml == null)
-                tuningXml = TuningDefinitionRepository.LoadTuningDefinitions(gameVersion);
+                tuningXml = TuningDefinitionRepository.Instance.LoadTuningDefinitions(gameVersion);
 
             foreach (var tuning in tuningXml)
                 if (tuning.Tuning.String0 == songTuning.String0 &&
@@ -155,7 +166,7 @@ namespace RocksmithToolkitLib
         {
             // speed hack ... use preloaded TuningDefinitionRepository if available
             if (tuningXml == null)
-                tuningXml = TuningDefinitionRepository.LoadTuningDefinitions(gameVersion);
+                tuningXml = TuningDefinitionRepository.Instance.LoadTuningDefinitions(gameVersion);
 
             var jObj = JObject.Parse(jsonTuning);
             TuningStrings songTuning = jObj.ToObject<TuningStrings>();
@@ -176,10 +187,10 @@ namespace RocksmithToolkitLib
         {
             // speed hack ... use preloaded TuningDefinitionRepository if available
             if (tuningXml == null)
-                tuningXml = TuningDefinitionRepository.LoadTuningDefinitions(gameVersion);
+                tuningXml = TuningDefinitionRepository.Instance.LoadTuningDefinitions(gameVersion);
 
             foreach (var tuning in tuningXml)
-                if ((string)("" + (tuning.Tuning.String0) + (tuning.Tuning.String1) + (tuning.Tuning.String2) + (tuning.Tuning.String3) + (tuning.Tuning.String4) + (tuning.Tuning.String5)) == strings)
+                if ("" + (tuning.Tuning.String0) + (tuning.Tuning.String1) + (tuning.Tuning.String2) + (tuning.Tuning.String3) + (tuning.Tuning.String4) + (tuning.Tuning.String5) == strings)
                     return tuning.UIName;
 
             return "Other";

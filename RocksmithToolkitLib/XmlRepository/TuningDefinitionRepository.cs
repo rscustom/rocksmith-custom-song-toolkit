@@ -19,9 +19,9 @@ namespace RocksmithToolkitLib
 
         // this load method is producing unexpected results if used to fill combobox 
         // custom tunings are being added and referenced undesirably in memory
-        public static TuningDefinitionRepository Instance()
+        public static TuningDefinitionRepository Instance
         {
-            return instance.Value;
+            get { return instance.Value; }
         }
 
         public TuningDefinitionRepository()
@@ -29,6 +29,7 @@ namespace RocksmithToolkitLib
         {
         }
 
+        #region Select
         public IEnumerable<TuningDefinition> Select(GameVersion gameVersion)
         {
             return List.Where(s => s.GameVersion == gameVersion);
@@ -42,7 +43,7 @@ namespace RocksmithToolkitLib
         [Obsolete("This function is deprecated due to low accuracy. Use SelectAny() instead.", true)]
         public TuningDefinition Select(string uiName, GameVersion gameVersion)
         {
-            return List.FirstOrDefault<TuningDefinition>(s => s.UIName == uiName && s.GameVersion == gameVersion);
+            return List.FirstOrDefault(s => s.UIName == uiName && s.GameVersion == gameVersion);
         }
 
         public TuningDefinition SelectAny(TuningStrings tuningStrings, GameVersion gameVersion)
@@ -54,34 +55,36 @@ namespace RocksmithToolkitLib
         //Tuning Strings + GameVersion
         public TuningDefinition Select(TuningStrings tuningStrings, GameVersion gameVersion)
         {
-            return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
+            return List.FirstOrDefault(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
+        }
+
+        public TuningDefinition Select(Int16[] tuningStrings, GameVersion gameVersion)
+        {
+            return List.FirstOrDefault(s => s.Tuning.ToArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
         }
 
         [Obsolete("Depricated, please use TuningDefinition Select() funtion.", true)]
         public TuningDefinition SelectForBass(TuningStrings tuningStrings, GameVersion gameVersion)
         {
-            return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings.ToBassArray()) && s.GameVersion == gameVersion);
-        }
-
-        public TuningDefinition Select(Int16[] tuningStrings, GameVersion gameVersion)
-        {
-            return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
+            return List.FirstOrDefault(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings.ToBassArray()) && s.GameVersion == gameVersion);
         }
 
         [Obsolete("Depricated, please use TuningDefinition Select() funtion.", true)]
         public TuningDefinition SelectForBass(Int16[] tuningStrings, GameVersion gameVersion)
         {
-            return List.FirstOrDefault<TuningDefinition>(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
+            return List.FirstOrDefault(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
         }
+        #endregion
 
-        // produce expected results the good old fashioned way
-        public static List<TuningDefinition> LoadTuningDefinitions(GameVersion gameVersion)
+        // LINQ method produces unexpected results on subsequent calls
+        // so produce expected results the good old fashioned way
+        public List<TuningDefinition> LoadTuningDefinitions(GameVersion gameVersion)
         {
             string tdFilePath = Path.Combine(Application.StartupPath, FILENAME);
             return TuningDefinition.LoadFile(tdFilePath, gameVersion);
         }
 
-        public static void SaveFile(TuningDefinition customTuningDefinition)
+        public void SaveFile(TuningDefinition customTuningDefinition)
         {
             string tdFilePath = Path.Combine(Application.StartupPath, FILENAME);
 
@@ -90,6 +93,21 @@ namespace RocksmithToolkitLib
 
         }
 
+        public TuningDefinition Detect(TuningStrings tuning, GameVersion gameVersion, bool addreload = false)
+        {
+            var t = Instance.Select(tuning, gameVersion);
+            // if unknown tuning then register it at tunung definition
+            if (t == null)
+            {
+                t = new TuningDefinition(tuning, gameVersion);
+                // only add full(guitar one) arrangement tunings to the TuningDefinitionRepository
+                if (addreload)
+                {
+                    Add(t, true);
+                }
+            }
+            return t;
+        }
 
     }
 
@@ -105,7 +123,7 @@ namespace RocksmithToolkitLib
 
         public int GetHashCode(TuningDefinition obj)
         {
-            if (Object.ReferenceEquals(obj, null))
+            if (ReferenceEquals(obj, null))
                 return 0;
 
             return obj.GameVersion.GetHashCode() ^ obj.Tuning.GetHashCode();

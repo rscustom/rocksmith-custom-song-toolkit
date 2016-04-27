@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -43,7 +44,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public ArrangementType ArrangementType { get; set; }
         public int ArrangementSort { get; set; }
         public ArrangementName Name { get; set; }
-        public string Tuning { get; set; }
+        public string Tuning { get; set; } //tuning Name
         public TuningStrings TuningStrings { get; set; }
         public double TuningPitch { get; set; }
         public decimal CapoFret { get; set; }
@@ -68,7 +69,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public int MasterId { get; set; }
         // Metronome
         public Metronome Metronome { get; set; }
-        // preserve EOF and DDS comments
+        // preserve EOF and DDC comments
         [IgnoreDataMember] // required for SaveTemplate feature to work
         public IEnumerable<XComment> XmlComments { get; set; }
 
@@ -78,55 +79,22 @@ namespace RocksmithToolkitLib.DLCPackage
             MasterId = (ArrangementType == ArrangementType.Vocal || ArrangementType == ArrangementType.ShowLight) ? 1 : RandomGenerator.NextInt();
         }
 
+        /// <summary>
+        /// Fill Arrangement 2014 from json and xml.
+        /// </summary>
+        /// <param name="attr"></param>
+        /// <param name="xmlSongFile"></param>
         public Arrangement(Attributes2014 attr, string xmlSongFile)
         {
             var song = Song2014.LoadFromFile(xmlSongFile);
 
-            this.SongFile = new SongFile();
-            this.SongFile.File = "";
+            this.SongFile = new SongFile {File = ""};
+            this.SongXml = new SongXML {File = xmlSongFile};
 
-            this.SongXml = new SongXML();
-            this.SongXml.File = xmlSongFile;
-            //Tuning
-            TuningDefinition tuning = null;
-            switch ((ArrangementName)attr.ArrangementType)
-            {
-                case ArrangementName.Lead:
-                case ArrangementName.Rhythm:
-                case ArrangementName.Combo:
-                    this.ArrangementType = Sng.ArrangementType.Guitar;
-                    tuning = TuningDefinitionRepository.Instance().Select(song.Tuning, GameVersion.RS2014);
-                    break;
-                case ArrangementName.Bass:
-                    this.ArrangementType = Sng.ArrangementType.Bass;
-                    // bass tuning uses guitar tuning for fewer issues
-                    tuning = TuningDefinitionRepository.Instance().Select(song.Tuning, GameVersion.RS2014);
-                    // tuning = TuningDefinitionRepository.Instance().SelectForBass(song.Tuning, GameVersion.RS2014);
-                    break;
-                case ArrangementName.Vocals:
-                    this.ArrangementType = Sng.ArrangementType.Vocal;
-                    break;
-            }
-
-            // unknown tuning
-            if (tuning == null)
-            {
-                tuning = new TuningDefinition();
-                tuning.UIName = tuning.Name = tuning.NameFromStrings(song.Tuning, this.ArrangementType == Sng.ArrangementType.Bass);
-                tuning.Custom = true;
-                tuning.GameVersion = GameVersion.RS2014;
-                tuning.Tuning = song.Tuning;
-                // only add guitar arrangement tunings to the TuningDefinitionRepository  (these will be used for bass tuning)
-                if (ArrangementType == ArrangementType.Guitar)
-                    TuningDefinitionRepository.Instance().Add(tuning, true);
-            }
-
-            this.Tuning = tuning.UIName;
-            this.TuningStrings = tuning.Tuning;
-            this.CapoFret = attr.CapoFret;
-            if (attr.CentOffset != null)
-                this.TuningPitch = attr.CentOffset.Cents2Frequency();
             //Properties
+            Debug.Assert(attr.ArrangementType != null, "Missing information from manifest (ArrangementType)");
+            SetArrType(attr.ArrangementType);
+
             this.ArrangementSort = attr.ArrangementSort;
             this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
             this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last() * 10);
@@ -137,8 +105,20 @@ namespace RocksmithToolkitLib.DLCPackage
             this.ToneMultiplayer = attr.Tone_Multiplayer;
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
+
+            //Filter out showlights\vocals
+            if (ArrangementType != ArrangementType.Guitar && ArrangementType != ArrangementType.Bass)
+                return;
+
+            //Tuning
+            DetectTuning(song);
+            this.CapoFret = attr.CapoFret;
+            if (attr.CentOffset != null)
+                this.TuningPitch = attr.CentOffset.Cents2Frequency();
+
             // save xml comments
             this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
+
             //Tones
             if (attr.Tones == null) // RS2012
             {
@@ -209,9 +189,43 @@ namespace RocksmithToolkitLib.DLCPackage
                 using (var stream = File.Open(xmlSongFile, FileMode.Create))
                     song.Serialize(stream, true);
 
-                // write comments back to xml now so they are available for debugging
-                if (this.ArrangementType == ArrangementType.Guitar || this.ArrangementType == ArrangementType.Bass)
-                    Song2014.WriteXmlComments(xmlSongFile, this.XmlComments, false);
+                // write comments back to xml now so they are available for debugging (used for Guitar and Bass)
+                Song2014.WriteXmlComments(xmlSongFile, XmlComments, false);
+            }
+        }
+
+        /// <summary>
+        /// Set Arrangement Type and Tuning information.
+        /// </summary>
+        /// <param name="song"></param>
+        private void DetectTuning(Song2014 song)
+        {
+            var t = TuningDefinitionRepository.Instance.Detect(song.Tuning, GameVersion.RS2014, ArrangementType == ArrangementType.Guitar);
+            Tuning = t.UIName;
+            TuningStrings = t.Tuning;
+        }
+
+        /// <summary>
+        /// Sets Arrangement Type
+        /// </summary>
+        /// <param name="ArrNameType"></param>
+        private void SetArrType(int?arrNameType)
+        {
+            switch ((ArrangementName)arrNameType)
+            {
+                case ArrangementName.Bass:
+                    ArrangementType = ArrangementType.Bass;
+                    break;
+                case ArrangementName.JVocals:
+                case ArrangementName.Vocals:
+                    ArrangementType = ArrangementType.Vocal;
+                    break;
+                case ArrangementName.ShowLights:
+                    ArrangementType = ArrangementType.ShowLight;
+                    break;
+                default:
+                    ArrangementType = ArrangementType.Guitar;
+                    break;
             }
         }
 
@@ -235,7 +249,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 capoInfo = String.Format(", Capo Fret {0}", CapoFret);
 
             var pitchInfo = String.Empty;
-            if (!TuningPitch.Equals(440.0))
+            if (TuningPitch > 0 && !TuningPitch.Equals(440.0))
                 pitchInfo = String.Format(": A{0}", TuningPitch);
 
             var metDesc = String.Empty;
@@ -254,7 +268,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        public void CleanCache()
+        public void ClearCache()
         {
             Sng2014 = null;
         }

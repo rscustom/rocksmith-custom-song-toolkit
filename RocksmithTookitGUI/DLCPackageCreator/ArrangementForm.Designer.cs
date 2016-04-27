@@ -1,4 +1,6 @@
-﻿namespace RocksmithToolkitGUI.DLCPackageCreator
+﻿using System.Windows.Forms;
+
+namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     partial class ArrangementForm
     {
@@ -65,9 +67,10 @@
             this.tuningEditButton = new System.Windows.Forms.Button();
             this.BonusCheckBox = new System.Windows.Forms.CheckBox();
             this.gbTuningPitch = new System.Windows.Forms.GroupBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.noteDisplay = new System.Windows.Forms.Label();
             this.frequencyTB = new RocksmithToolkitGUI.CueTextBox();
-            this.centOffsetDisplay = new System.Windows.Forms.Label();
+            this.centOffsetDisplay = new RocksmithToolkitGUI.CueTextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -519,6 +522,7 @@
             // 
             // gbTuningPitch
             // 
+            this.gbTuningPitch.Controls.Add(this.label12);
             this.gbTuningPitch.Controls.Add(this.noteDisplay);
             this.gbTuningPitch.Controls.Add(this.frequencyTB);
             this.gbTuningPitch.Controls.Add(this.centOffsetDisplay);
@@ -534,42 +538,61 @@
             this.gbTuningPitch.TabStop = false;
             this.gbTuningPitch.Text = "Tuning Pitch";
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label12.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label12.Location = new System.Drawing.Point(115, 38);
+            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(14, 15);
+            this.label12.TabIndex = 49;
+            this.label12.Text = "¢";
+            // 
             // noteDisplay
             // 
             this.noteDisplay.AutoSize = true;
-            this.noteDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.noteDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.noteDisplay.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.noteDisplay.Location = new System.Drawing.Point(168, 20);
+            this.noteDisplay.Location = new System.Drawing.Point(155, 36);
             this.noteDisplay.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.noteDisplay.Name = "noteDisplay";
-            this.noteDisplay.Size = new System.Drawing.Size(36, 13);
+            this.noteDisplay.Size = new System.Drawing.Size(50, 16);
             this.noteDisplay.TabIndex = 48;
             this.noteDisplay.Text = "{note}";
+            this.noteDisplay.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // frequencyTB
             // 
+            this.frequencyTB.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.frequencyTB.Cue = "";
             this.frequencyTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.frequencyTB.ForeColor = System.Drawing.Color.Black;
-            this.frequencyTB.Location = new System.Drawing.Point(71, 17);
-            this.frequencyTB.MaxLength = 5;
+            this.frequencyTB.Location = new System.Drawing.Point(66, 20);
+            this.frequencyTB.MaxLength = 9;
             this.frequencyTB.Name = "frequencyTB";
-            this.frequencyTB.Size = new System.Drawing.Size(44, 20);
+            this.frequencyTB.Size = new System.Drawing.Size(50, 13);
             this.frequencyTB.TabIndex = 10;
-            this.frequencyTB.Text = "440";
+            this.frequencyTB.Text = "{A440}";
+            this.frequencyTB.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.frequencyTB.TextChanged += new System.EventHandler(this.frequencyTB_TextChanged);
             // 
             // centOffsetDisplay
             // 
-            this.centOffsetDisplay.AutoSize = true;
-            this.centOffsetDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.centOffsetDisplay.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.centOffsetDisplay.Location = new System.Drawing.Point(67, 41);
+            this.centOffsetDisplay.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.centOffsetDisplay.Cue = "";
+            this.centOffsetDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.centOffsetDisplay.ForeColor = System.Drawing.Color.Black;
+            this.centOffsetDisplay.Location = new System.Drawing.Point(66, 41);
             this.centOffsetDisplay.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.centOffsetDisplay.MaxLength = 6;
             this.centOffsetDisplay.Name = "centOffsetDisplay";
-            this.centOffsetDisplay.Size = new System.Drawing.Size(64, 13);
-            this.centOffsetDisplay.TabIndex = 46;
-            this.centOffsetDisplay.Text = "{centOffset}";
+            this.centOffsetDisplay.Size = new System.Drawing.Size(50, 13);
+            this.centOffsetDisplay.TabIndex = 11;
+            this.centOffsetDisplay.Text = "{cOffset}";
+            this.centOffsetDisplay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.centOffsetDisplay.TextChanged += new System.EventHandler(this.frequencyTB_TextChanged);
             // 
             // label2
             // 
@@ -586,12 +609,12 @@
             // 
             this.label14.AutoSize = true;
             this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label14.Location = new System.Drawing.Point(138, 20);
+            this.label14.Location = new System.Drawing.Point(146, 19);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(33, 13);
+            this.label14.Size = new System.Drawing.Size(59, 13);
             this.label14.TabIndex = 47;
-            this.label14.Text = "Note:";
+            this.label14.Text = "Root Note:";
             // 
             // label7
             // 
@@ -611,9 +634,9 @@
             this.label13.Location = new System.Drawing.Point(115, 20);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(18, 13);
+            this.label13.Size = new System.Drawing.Size(20, 13);
             this.label13.TabIndex = 45;
-            this.label13.Text = "hz";
+            this.label13.Text = "Hz";
             // 
             // gbGameplayPath
             // 
@@ -671,7 +694,7 @@
             this.routeMaskLeadRadio.Location = new System.Drawing.Point(72, 19);
             this.routeMaskLeadRadio.Name = "routeMaskLeadRadio";
             this.routeMaskLeadRadio.Size = new System.Drawing.Size(49, 17);
-            this.routeMaskLeadRadio.TabIndex = 11;
+            this.routeMaskLeadRadio.TabIndex = 46;
             this.routeMaskLeadRadio.Text = "Lead";
             this.routeMaskLeadRadio.UseVisualStyleBackColor = true;
             // 
@@ -726,13 +749,14 @@
 
         }
         private System.Windows.Forms.CheckBox MetronomeCb;
-        private RocksmithToolkitGUI.CueTextBox PersistentId;
-        private RocksmithToolkitGUI.CueTextBox MasterId;
         private System.Windows.Forms.GroupBox gbDLCId;
+        private CueTextBox MasterId;
+        private CueTextBox XmlFilePath;
+        private CueTextBox PersistentId;
+        private CueTextBox centOffsetDisplay;
 
         #endregion
 
-        private CueTextBox XmlFilePath;
         private System.Windows.Forms.Button songXmlBrowseButton;
         private System.Windows.Forms.Button OkButton;
         private System.Windows.Forms.ComboBox arrangementTypeCombo;
@@ -767,7 +791,6 @@
         private System.Windows.Forms.Label label7;
         private CueTextBox frequencyTB;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label centOffsetDisplay;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.GroupBox gbTuningPitch;
         private System.Windows.Forms.Label label14;
@@ -778,5 +801,6 @@
         private System.Windows.Forms.Button typeEdit;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox toneACombo;
+        private Label label12;
     }
 }

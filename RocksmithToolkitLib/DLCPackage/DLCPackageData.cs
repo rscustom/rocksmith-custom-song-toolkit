@@ -701,7 +701,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (Arrangements == null) return;
             foreach (var a in Arrangements)
-                a.CleanCache();
+                a.ClearCache();
         }
 
         ~DLCPackageData()

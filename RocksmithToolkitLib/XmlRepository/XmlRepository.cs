@@ -23,13 +23,11 @@ namespace RocksmithToolkitLib {
         /// <summary>
         /// Repository file name i.e.: RocksmithToolkitLib.SongAppId.xml
         /// </summary>
-        string _fileName;
-        protected string FileName {
-            set{
-                _fileName = value;
-                FilePath = Path.Combine(Application.StartupPath, value);
-            }
-            get { return _fileName; }
+        protected string FileName { set; get; }
+
+        public string FilePath
+        {
+            get { return Path.Combine(Application.StartupPath, FileName); }
         }
 
         /// <summary>
@@ -37,12 +35,10 @@ namespace RocksmithToolkitLib {
         /// </summary>
         protected IEqualityComparer<T> Comparer;
 
-        public string FilePath;
-
-        /// <summary>                                                  (
+        /// <summary>
         /// List of objects from *.xml file
         /// </summary>
-        public List<T> List;
+        public List<T> List { set; get; }
 
         #endregion
 
@@ -61,9 +57,9 @@ namespace RocksmithToolkitLib {
                 OnSaving.Invoke();
 
             lock (List) {
-                using (FileStream writer = File.Create(FilePath)) {
-                    var serializer = new XmlSerializer(List.GetType());
-                    serializer.Serialize(writer, List);
+                using (var writer = File.Create(FilePath))
+                {
+                    new XmlSerializer(List.GetType()).Serialize(writer, List);
                 }
             }
 
@@ -85,15 +81,15 @@ namespace RocksmithToolkitLib {
         }
 
         /// <summary>
-        /// Refresh list from *.xml file
+        /// Refresh List from *.xml file
         /// </summary>
         public void Load() {
-            if (File.Exists(FilePath)) {
+            if (File.Exists(FilePath))
+            {
                 lock (List) {
                     using (var reader = new StreamReader(FilePath))
                     {
-                        var serializer = new XmlSerializer(typeof(List<T>));
-                        List = (List<T>)serializer.Deserialize(reader);
+                        List = (List<T>) new XmlSerializer(List.GetType()).Deserialize(reader);
                     }
                 }
             } else {
@@ -113,7 +109,7 @@ namespace RocksmithToolkitLib {
             FileName = sourceFile;
             List = Activator.CreateInstance<List<T>>();
             Load();
-            var sourceRepoList = GeneralExtensions.Copy<List<T>>(List);
+            var sourceRepoList = GeneralExtensions.Copy(List);
 
             // Load destination repository
             FileName = destinationFile;
@@ -121,7 +117,7 @@ namespace RocksmithToolkitLib {
             Load();
 
             // Merge source to destination
-            List = List.Union<T>(sourceRepoList, Comparer).ToList<T>();
+            List = List.Union(sourceRepoList, Comparer).ToList();
 
             // Save
             Save();

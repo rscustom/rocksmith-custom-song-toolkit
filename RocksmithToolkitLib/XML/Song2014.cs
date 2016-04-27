@@ -148,7 +148,7 @@ namespace RocksmithToolkitLib.Xml
          * "B1", "Low pitch tick"
          * 
          * E is for Emotions? or it's generic event?
-         * "E1", "Crowd happy"
+         * "E1", "Crowd happy" //Meet the band event
          * "E3", "Crowd wild"
          * "E13", "Crowd extra wild?" // usually at the end of the song
          * 
@@ -164,7 +164,9 @@ namespace RocksmithToolkitLib.Xml
          * tone_c
          * tone_d
          * 
-         * "D3", "???"
+         * "D3", "maybe it dispose showlights? nope that ingame bug..."
+         * 
+         * ???
          */
 
         [XmlArray("controls")]

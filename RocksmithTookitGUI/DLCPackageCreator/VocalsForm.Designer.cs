@@ -131,6 +131,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // VocalsForm
             // 
+            this.StartPosition = FormStartPosition.CenterParent;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(309, 197);
             this.Controls.Add(this.isCustomCB);

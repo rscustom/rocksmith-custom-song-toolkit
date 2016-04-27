@@ -1,4 +1,6 @@
-﻿namespace RocksmithToolkitGUI.DLCPackageCreator
+﻿using System.Windows.Forms;
+
+namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     partial class ToneForm
     {
@@ -87,6 +89,7 @@
             // 
             // ToneForm
             // 
+            this.StartPosition = FormStartPosition.CenterParent;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(543, 369);
             this.Controls.Add(this.toneControl);

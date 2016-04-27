@@ -310,7 +310,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (CurrentGameVersion != GameVersion.RS2012)
                 return new Tone2014() { Name = name, Key = name };
-            return new Tone() { Name = name, Key = name };
+            return new Tone { Name = name, Key = name };
         }
 
         private string GetUniqueToneName(string toneName)
@@ -944,7 +944,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (!String.IsNullOrEmpty(arrangement.FontSng))
                     arrangement.FontSng = arrangement.FontSng.AbsoluteTo(BasePath);
 
-                arrangement.CleanCache();
+                arrangement.ClearCache();
 
                 if (arrangement.Metronome == Metronome.Itself)
                     continue;
@@ -970,34 +970,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         var songXml = Song2014.LoadFromFile(arrangement.SongXml.File); //not exist\moved\etc, should check it instead of catch.
                         arrangement.CapoFret = songXml.Capo;
 
-                        //Load tuning from Arrangement
-                        var tuning = new TuningDefinition();
-
-                        // deprecated. use full guitar tunings for all instruments
-                        //if (arrangement.ArrangementType == ArrangementType.Bass)
-                        //    tuning = TuningDefinitionRepository.Instance().SelectForBass(songXml.Tuning, CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014);
-                        //else
-                        tuning = TuningDefinitionRepository.Instance().Select(songXml.Tuning, CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014);
-
-                        if (tuning == null)
-                        {
-                            //add it to database
-                            tuning = new TuningDefinition();
-                            tuning.Tuning = arrangement.TuningStrings;
-                            tuning.Custom = true;
-                            tuning.GameVersion = CurrentGameVersion;
-                            tuning.Name = tuning.UIName = arrangement.Tuning;
-
-                            if (String.IsNullOrEmpty(tuning.Name))
-                                tuning.Name = tuning.UIName = tuning.NameFromStrings(arrangement.TuningStrings, arrangement.ArrangementType == ArrangementType.Bass);
-                        }
+                        // Load tuning from Arrangement
+                        var add = (songXml.ArrangementProperties.PathBass != 1);
+                        var version = CurrentGameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014;
+                        var tuning = TuningDefinitionRepository.Instance.Detect(songXml.Tuning, version, add);
 
                         // Populate Arrangement tuning info
                         arrangement.Tuning = tuning.UIName;
                         arrangement.TuningStrings = tuning.Tuning;
-                        //Cleanup
-                        tuning = null;
-                        songXml = null;
                     }
                     catch
                     {
@@ -1315,7 +1295,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-                arr.CleanCache();
+                arr.ClearCache();
                 songXml.AlbumName = info.SongInfo.Album;
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
                 songXml.ArtistName = info.SongInfo.Artist;
@@ -1355,7 +1335,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var newXml = Path.GetTempFileName();
             mArr.SongXml = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongXML { File = newXml };
             mArr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
-            mArr.CleanCache();
+            mArr.ClearCache();
             mArr.BonusArr = true;
             mArr.Id = IdGenerator.Guid();
             mArr.MasterId = RandomGenerator.NextInt();

@@ -72,7 +72,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             if (arrangement.ArrangementType == ArrangementType.ShowLight)
                 return;
 
-            IsVocal = arrangement.ArrangementType == Sng.ArrangementType.Vocal;
+            IsVocal = arrangement.ArrangementType == ArrangementType.Vocal;
             SongContent = (IsVocal) ? null : Song2014.LoadFromFile(arrangement.SongXml.File);
             var dlcName = info.Name.ToLower();
 
@@ -93,55 +93,40 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             SKU = "RS2";
             SongKey = info.Name; // proof same same
 
-            if (!IsVocal)
-            {
-                // added better AlbumNameSort feature
-                AlbumName = info.SongInfo.Album;
-                AlbumNameSort = info.SongInfo.AlbumSort;
-                ArtistName = info.SongInfo.Artist;
-                CentOffset = (!arrangement.TuningPitch.Equals(0)) ? TuningFrequency.Frequency2Cents(arrangement.TuningPitch) : 0.0;
-                ArtistNameSort = info.SongInfo.ArtistSort;
-                CapoFret = (arrangement.Sng2014.Metadata.CapoFretId == 0xFF) ? CapoFret = 0 : Convert.ToDecimal(arrangement.Sng2014.Metadata.CapoFretId);
-                DNA_Chords = arrangement.Sng2014.DNACount[(int)DNAId.Chord];
-                DNA_Riffs = arrangement.Sng2014.DNACount[(int)DNAId.Riff];
-                DNA_Solo = arrangement.Sng2014.DNACount[(int)DNAId.Solo];
-                NotesEasy = arrangement.Sng2014.NoteCount[0];
-                NotesMedium = arrangement.Sng2014.NoteCount[1];
-                NotesHard = arrangement.Sng2014.NoteCount[2];
-                EasyMastery = NotesEasy / NotesHard;
-                MediumMastery = NotesMedium / NotesHard;
-                Metronome = (int?)arrangement.Metronome;
-                Representative = Convert.ToInt32(!arrangement.BonusArr);
-                RouteMask = (int)arrangement.RouteMask;
+            if (IsVocal) return;
+            // added better AlbumNameSort feature
+            AlbumName = info.SongInfo.Album;
+            AlbumNameSort = info.SongInfo.AlbumSort;
+            ArtistName = info.SongInfo.Artist;
+            CentOffset = (!arrangement.TuningPitch.Equals(0)) ? TuningFrequency.Frequency2Cents(arrangement.TuningPitch) : 0.0;
+            ArtistNameSort = info.SongInfo.ArtistSort;
+            CapoFret = (arrangement.Sng2014.Metadata.CapoFretId == 0xFF) ? CapoFret = 0 : Convert.ToDecimal(arrangement.Sng2014.Metadata.CapoFretId);
+            DNA_Chords = arrangement.Sng2014.DNACount[(int)DNAId.Chord];
+            DNA_Riffs = arrangement.Sng2014.DNACount[(int)DNAId.Riff];
+            DNA_Solo = arrangement.Sng2014.DNACount[(int)DNAId.Solo];
+            NotesEasy = arrangement.Sng2014.NoteCount[0];
+            NotesMedium = arrangement.Sng2014.NoteCount[1];
+            NotesHard = arrangement.Sng2014.NoteCount[2];
+            EasyMastery = NotesEasy / NotesHard;
+            MediumMastery = NotesMedium / NotesHard;
+            Metronome = (int?)arrangement.Metronome;
+            Representative = Convert.ToInt32(!arrangement.BonusArr);
+            RouteMask = (int)arrangement.RouteMask;
 
-                // TODO: use ManifestFunctions.GetSongDifficulty() method (fix generation algorithm)
-                SongDiffEasy = SongContent.SongLength / NotesEasy;
-                SongDiffMed = SongContent.SongLength / NotesMedium;
-                SongDiffHard = SongContent.SongLength / NotesHard;
-                SongDifficulty = SongDiffHard;
+            // TODO: use ManifestFunctions.GetSongDifficulty() method (fix generation algorithm)
+            SongDiffEasy = SongContent.SongLength / NotesEasy;
+            SongDiffMed = SongContent.SongLength / NotesMedium;
+            SongDiffHard = SongContent.SongLength / NotesHard;
+            SongDifficulty = SongDiffHard;
 
-                SongLength = (double?)Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
-                SongName = info.SongInfo.SongDisplayName;
-                SongNameSort = info.SongInfo.SongDisplayNameSort;
-                SongYear = info.SongInfo.SongYear;
+            SongLength = Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
+            SongName = info.SongInfo.SongDisplayName;
+            SongNameSort = info.SongInfo.SongDisplayNameSort;
+            SongYear = info.SongInfo.SongYear;
 
-                //Detect tuning
-                var tuning = TuningDefinitionRepository.Instance().SelectAny(SongContent.Tuning, platform.version);
-                if (tuning == null)
-                {
-                    tuning = new TuningDefinition();
-                    tuning.Tuning = SongContent.Tuning;
-                    tuning.Name = tuning.UIName = arrangement.Tuning;
-                    if (String.IsNullOrEmpty(tuning.Name))
-                    {
-                        tuning.Name = tuning.UIName = tuning.NameFromStrings(arrangement.TuningStrings, arrangement.ArrangementType == ArrangementType.Bass);
-                    }
-                    tuning.Custom = true;
-                    tuning.GameVersion = GameVersion.RS2014;
-                    TuningDefinitionRepository.Instance().Add(tuning, true);
-                }
-                Tuning = tuning.Tuning;
-            }
+            //Detect tuning
+            var tuning = TuningDefinitionRepository.Instance.Detect(SongContent.Tuning, platform.version, arrangement.ArrangementType == ArrangementType.Bass);
+            Tuning = tuning.Tuning; //can we just use SongContent.Tuning
         }
     }
 }
