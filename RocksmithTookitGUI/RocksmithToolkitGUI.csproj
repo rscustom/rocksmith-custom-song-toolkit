@@ -393,6 +393,9 @@
     <None Include="Resources\flipXc.png" />
     <None Include="Resources\flipYc.png" />
     <None Include="Resources\music_edit.png" />
+    <Content Include="ReleaseNotes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="songcreator.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

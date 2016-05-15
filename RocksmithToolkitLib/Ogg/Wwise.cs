@@ -14,12 +14,23 @@ namespace RocksmithToolkitLib.Ogg
     public static class Wwise
     {
         static OggFile.WwiseVersion Selected { get; set; }
-        public static void Convert2Wem(string sourcePath, string destinationPath, int audioQuality)
+        /// <summary>
+        /// Covert Wav to Wem using WwiseCLI.exe
+        /// for faster conversion, source path should be wav file
+        /// </summary>
+        /// <param name="wavSourcePath"></param>
+        /// <param name="destinationPath"></param>
+        /// <param name="audioQuality"></param>
+        public static void Convert2Wem(string wavSourcePath, string destinationPath, int audioQuality)
         {
             try
             {
                 var wwiseCLIPath = GetWwisePath();
-                var wwiseTemplateDir = LoadWwiseTemplate(sourcePath, audioQuality, wwiseCLIPath);
+                var wwiseTemplateDir = LoadWwiseTemplate(wavSourcePath, audioQuality, wwiseCLIPath);
+
+                // used to debug library paths
+                // MessageBox.Show("wwiseCLIPath:" + wwiseCLIPath + Environment.NewLine + "wwiseTemplateDir: " + wwiseTemplateDir);
+                
                 ExternalApps.Wav2Wem(wwiseCLIPath, wwiseTemplateDir);
                 GetWwiseFiles(destinationPath, wwiseTemplateDir);
             }

@@ -116,11 +116,13 @@
             // rbGp5
             // 
             this.rbGp5.AutoSize = true;
+            this.rbGp5.Checked = true;
             this.rbGp5.ForeColor = System.Drawing.Color.Black;
             this.rbGp5.Location = new System.Drawing.Point(13, 82);
             this.rbGp5.Name = "rbGp5";
             this.rbGp5.Size = new System.Drawing.Size(69, 17);
             this.rbGp5.TabIndex = 3;
+            this.rbGp5.TabStop = true;
             this.rbGp5.Text = "GuitarPro";
             this.toolTip1.SetToolTip(this.rbGp5, "Create a GuitarPro *.gp5 file from RS2014 CDLC");
             this.rbGp5.UseVisualStyleBackColor = true;
@@ -150,13 +152,11 @@
             // rbAsciiTab
             // 
             this.rbAsciiTab.AutoSize = true;
-            this.rbAsciiTab.Checked = true;
             this.rbAsciiTab.ForeColor = System.Drawing.Color.Black;
             this.rbAsciiTab.Location = new System.Drawing.Point(13, 61);
             this.rbAsciiTab.Name = "rbAsciiTab";
             this.rbAsciiTab.Size = new System.Drawing.Size(74, 17);
             this.rbAsciiTab.TabIndex = 2;
-            this.rbAsciiTab.TabStop = true;
             this.rbAsciiTab.Text = "ASCII Tab";
             this.toolTip1.SetToolTip(this.rbAsciiTab, "Create a ASCII Tablature *.txt file from RS2014 CDLC");
             this.rbAsciiTab.UseVisualStyleBackColor = true;
@@ -196,7 +196,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.convertButton);
             this.Name = "CDLC2Tab";
-            this.Size = new System.Drawing.Size(420, 209);
+            this.Size = new System.Drawing.Size(421, 340);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.gbOutput.ResumeLayout(false);

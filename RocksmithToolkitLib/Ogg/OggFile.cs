@@ -283,9 +283,9 @@ namespace RocksmithToolkitLib.Ogg
             var wavPreviewPath = String.Format(audioPathNoExt + "_preview.wav");
             var wemPreviewPath = String.Format(audioPathNoExt + "_preview.wem");
 
-            if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".ogg")//RS1 ogg's was actually wwise
+            if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".ogg") //in RS1 ogg was actually wwise
             {
-                ExternalApps.Ogg2Wav(audioPath, wavPath);//detect quality here
+                ExternalApps.Ogg2Wav(audioPath, wavPath); //detect quality here
                 if (!File.Exists(oggPreviewPath))
                 {
                     ExternalApps.Ogg2Preview(audioPath, oggPreviewPath, previewLength, chorusTime);
@@ -299,7 +299,8 @@ namespace RocksmithToolkitLib.Ogg
                 if (!File.Exists(wavPreviewPath))
                 {
                     if (!File.Exists(oggPath))
-                    {//may cause issues if you've got another guitar.ogg in folder, but it's extremely rare.
+                    { 
+                        //may cause issues if you've got another guitar.ogg in folder, but it's extremely rare.
                         ExternalApps.Wav2Ogg(audioPath, oggPath, audioQuality); // 4
                     }
                     ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, previewLength, chorusTime);

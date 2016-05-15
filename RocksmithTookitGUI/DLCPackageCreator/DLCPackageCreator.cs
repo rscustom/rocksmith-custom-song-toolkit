@@ -1230,7 +1230,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //{
             //    licenses.Add(new XBox360License() { ID = Convert.ToInt64(xboxLicense0IDTB.Text.Trim(), 16), Bit = 1, Flag = 1 });
             //}
-//FIXME:
+            //FIXME:
             var songVol = (float)songVolumeBox.Value;
             var previewVol = (!String.IsNullOrEmpty(audioPreviewPath)) ? (float)songVolumeBox.Value : songVol;
             var audioQualiy = audioQualityBox.Value;

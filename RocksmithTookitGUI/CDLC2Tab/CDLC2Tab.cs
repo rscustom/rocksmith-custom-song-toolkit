@@ -63,7 +63,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                 if (rbAsciiTab.Checked)
                     ofd.Filter = "RS1 (*.dat, *.sng, *.xml) or RS2014 (*.psarc) files|*.dat;*.sng;*.xml;*.psarc";
                 else
-                    ofd.Filter = "RS2014 (*.psarc) files|*.psarc";
+                    ofd.Filter = "RS2014 (*.psarc, *.xml) files|*.psarc;*.xml";
 
                 ofd.Title = "Select RS1 and/or RS2014 CDLC files to convert";
                 ofd.Multiselect = true;
@@ -82,7 +82,8 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                 // fbd.SelectedPath = "D:\\Temp"; // for testing
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
-                else outputDir = fbd.SelectedPath;
+ 
+                outputDir = fbd.SelectedPath;
             }
 
             Cursor.Current = Cursors.WaitCursor;
@@ -92,6 +93,13 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                 switch (fileExtension)
                 {
                     case ".xml":
+                        if (rbGp5.Checked)
+                        {
+                            using (var obj = new Gp5Converter())
+                                obj.XmlToGp5(inputFilePath, outputDir);
+                        }
+                        else
+                        {
                         var fileName = Path.GetFileNameWithoutExtension(inputFilePath);
                         var splitPoint = fileName.LastIndexOf('_');
                         var arrangement = fileName.Substring(splitPoint + 1);
@@ -103,12 +111,13 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                             rs1Song = obj.XmlToSong(inputFilePath);
                         string sngFilePath;
                         using (var obj = new Rs1Converter())
-                            sngFilePath = obj.SongToSngFilePath(rs1Song, Path.Combine( outputDir, Path.GetFileName(inputFilePath)));
+                            sngFilePath = obj.SongToSngFilePath(rs1Song, Path.Combine(outputDir, Path.GetFileName(inputFilePath)));
                         using (var obj = new Sng2Tab())
                             obj.Convert(sngFilePath, outputDir, allDif);
                         if (File.Exists(sngFilePath))
                             File.Delete(sngFilePath);
-                        break;
+                }
+                break;
                     case ".dat":
                         using (var obj = new Sng2Tab())
                             obj.ExtractBeforeConvert(inputFilePath, outputDir, allDif);

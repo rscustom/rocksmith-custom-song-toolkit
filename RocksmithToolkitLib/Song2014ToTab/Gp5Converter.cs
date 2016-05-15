@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using RocksmithToTabLib;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
@@ -102,6 +103,70 @@ namespace RocksmithToolkitLib.Song2014ToTab
 
         }
 
+        /// <summary>
+        /// Load a XML arrangment into memory and
+        /// convert to GuitarPro file
+        /// </summary>
+        /// <param name="inputFilePath"></param>
+        /// <param name="outputDir"></param>
+        /// <param name="outputFormat"></param>
+        /// <param name="allDif"></param>
+        public void XmlToGp5(string inputFilePath, string outputDir, string outputFormat = "gp5", bool allDif = false)
+        {
+            Console.WriteLine("Opening arrangement {0} ...", inputFilePath);
+            Console.WriteLine();
+            var score = new Score();
+            var toolkitInfo = new ToolkitInfo();
+            toolkitInfo.ToolkitVersion = "Unknown";
+            toolkitInfo.PackageAuthor = "CST Xml To GP5 Converter";
+            toolkitInfo.PackageVersion = ToolkitVersion.version;
+
+            var arrangement = Song2014.LoadFromFile(inputFilePath);
+            var comments = Song2014.ReadXmlComments(inputFilePath);
+            foreach (var xComment in comments)
+            {
+                if (xComment.Value.Contains("CST"))
+                {
+                    toolkitInfo.ToolkitVersion = xComment.Value;
+                    break;
+                }
+            }
+
+            // get maximum difficulty for the arrangement
+            var mf = new ManifestFunctions(GameVersion.RS2014);
+            int maxDif = mf.GetMaxDifficulty(arrangement);
+
+            if (allDif) // create separate file for each difficulty
+            {
+                for (int difLevel = 0; difLevel <= maxDif; difLevel++)
+                {
+                    ExportArrangement(score, arrangement, difLevel, inputFilePath, toolkitInfo);
+                    Console.WriteLine("Difficulty Level: {0}", difLevel);
+
+                    var baseFileName = CleanFileName(
+                        String.Format("{0} - {1}", score.Artist, score.Title));
+                    baseFileName += String.Format(" ({0})", arrangement.Arrangement);
+                    baseFileName += String.Format(" (level {0:D2})", difLevel);
+
+                    SaveScore(score, baseFileName, outputDir, outputFormat);
+                    // remember to remove the track from the score again
+                    score.Tracks.Clear();
+                }
+            }
+            else // combine maximum difficulty arrangements into one file
+            {
+                Console.WriteLine("Maximum Difficulty Level: {0}", maxDif);
+                ExportArrangement(score, arrangement, maxDif, inputFilePath, toolkitInfo);
+            }
+
+            if (!allDif) // only maximum difficulty
+            {
+                var baseFileName = CleanFileName(
+                    String.Format("{0} - {1}", score.Artist, score.Title));
+                SaveScore(score, baseFileName, outputDir, outputFormat);
+            }
+
+        }
 
         static void ExportArrangement(Score score, Song2014 arrangement, int difficulty,
                string originalFile, ToolkitInfo toolkitInfo)

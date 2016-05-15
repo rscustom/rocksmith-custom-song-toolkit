@@ -115,11 +115,36 @@ namespace RocksmithToolkitLib.Extensions
         {
             if (destinationPath == null)
                 destinationPath = String.Format("{0}", Path.ChangeExtension(sourcePath, "ogg"));
-            //TODO: maybe ww could resample while encoding wem? but let's just fix this issue for now..
-            var cmdArgs = String.Format(" --resample 48000 -r -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, Convert.ToString(qualityFactor ));
+            // interestingly ODLC uses 44100 or 48000 interchangeably ... so resampling is not necessary and even causes audio degradation/distortion
+            // var cmdArgs = String.Format(" --resample 48000 -r -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, Convert.ToString(qualityFactor));
+            var cmdArgs = String.Format(" -r -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, Convert.ToString(qualityFactor));
 
             GeneralExtensions.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
         }
+
+        /// <summary>
+        /// Convert audio file to ogg
+        /// </summary>
+        /// <param name="sourcePath"> RAW Audio, WAV, AIFF, FLAC, OGG</param>
+        /// <param name="destinationPath">OGG</param>
+        /// <param name="qualityFactor"> 0 (low) to 10 (high)</param>
+        /// <param name="sampleRate"> (Hz), defaults to same sample rate as source if not specified</param>
+        /// <param name="channels">default is 2 </param>
+        public static void Audio2Ogg(string sourcePath, string destinationPath, int qualityFactor, int sampleRate = 0)
+        {
+            var cmdArgs = String.Empty;
+
+            if (destinationPath == null)
+                destinationPath = String.Format("{0}", Path.ChangeExtension(sourcePath, "ogg"));
+
+            if (sampleRate == 0)
+                cmdArgs = String.Format(" -r -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, qualityFactor);
+            else
+                cmdArgs = String.Format(" --resample {3} -r -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, qualityFactor, sampleRate);
+
+            GeneralExtensions.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
+        }
+
 
         public static void Ogg2Preview(string sourcePath, string destinationPath, long msLength = 30000, long msStart = 4000)
         {

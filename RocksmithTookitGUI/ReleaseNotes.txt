@@ -1,0 +1,7 @@
+Rocksmith Toolkit Release Notes
+-------------------------------
+
+2016.05.15
+----------
+Added this ReleaseNotes.txt file to keep better track of toolkit revisions
+Added feature to CDLC2Tab to convert EOF or Toolkit XML arrangements to GP5 files. 
