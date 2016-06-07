@@ -178,7 +178,7 @@ namespace RocksmithToolkitLib.Extensions
             if (bpm > 0 && bpm < 300)
                 return bpm.ToString();
 
-            return "";
+            return "120"; // default tempo
        }
 
         public static string GetValidSortName(this string value)

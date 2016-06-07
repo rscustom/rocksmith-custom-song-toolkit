@@ -108,16 +108,14 @@ namespace RocksmithToolkitLib.Extensions
             {
                 GeneralExtensions.RunExternalExecutable(APP_7Z, true, false, true, cmdArgs);
             }
-
         }
 
         public static void Wav2Ogg(string sourcePath, string destinationPath, int qualityFactor)
         {
             if (destinationPath == null)
                 destinationPath = String.Format("{0}", Path.ChangeExtension(sourcePath, "ogg"));
-            // interestingly ODLC uses 44100 or 48000 interchangeably ... so resampling is not necessary and even causes audio degradation/distortion
-            // var cmdArgs = String.Format(" --resample 48000 -r -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, Convert.ToString(qualityFactor));
-            var cmdArgs = String.Format(" -r -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, Convert.ToString(qualityFactor));
+            // interestingly ODLC uses 44100 or 48000 interchangeably ... so resampling is not necessary
+            var cmdArgs = String.Format(" -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, Convert.ToString(qualityFactor));
 
             GeneralExtensions.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
         }

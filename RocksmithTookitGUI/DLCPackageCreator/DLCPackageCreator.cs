@@ -443,7 +443,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 sfd.FileName = GeneralExtensions.GetShortName("{0}_{1}_{2}", ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                 sfd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
-                if (sfd.ShowDialog() != DialogResult.OK) return;
+  
+                if (sfd.ShowDialog(this) != DialogResult.OK) // 'this' ensures sfd is topmost
+                    return;
+
                 dlcSavePath = sfd.FileName;
             }
 
@@ -1979,7 +1982,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tb.Text = tb.Text.Trim().GetValidSortName();
             userChangedInputControls = true;
         }
-        //should be readonly tho
+
         private void ValidateTempo(object sender, CancelEventArgs e)
         {
             var tb = sender as TextBox;

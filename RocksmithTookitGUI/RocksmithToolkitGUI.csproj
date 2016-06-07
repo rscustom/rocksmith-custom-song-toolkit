@@ -38,7 +38,8 @@
     <ApplicationIcon>songcreator.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\ZLib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="NDesk.Options">

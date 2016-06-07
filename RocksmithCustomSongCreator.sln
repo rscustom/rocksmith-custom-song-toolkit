@@ -35,7 +35,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third-party Apps", "Third-p
 		Third-party Apps\nvdxt.exe = Third-party Apps\nvdxt.exe
 		Third-party Apps\oggCut.exe = Third-party Apps\oggCut.exe
 		Third-party Apps\oggdec.exe = Third-party Apps\oggdec.exe
-		Third-party Apps\oggenc.exe = Third-party Apps\oggenc.exe
 		Third-party Apps\PackageCreatorCLI.bat = Third-party Apps\PackageCreatorCLI.bat
 		Third-party Apps\packed_codebooks.bin = Third-party Apps\packed_codebooks.bin
 		Third-party Apps\packed_codebooks_aoTuV_603.bin = Third-party Apps\packed_codebooks_aoTuV_603.bin

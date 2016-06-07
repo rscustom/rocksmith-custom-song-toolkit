@@ -487,6 +487,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             catch (Exception ex)
             {
                 errMsg = String.Format("{0}\n{1}", ex.Message, ex.InnerException);
+                errMsg += Environment.NewLine + "Make sure there aren't any non-PC CDLC in the SongPacks folder.";
             }
 
             PromptComplete(destPath, true, errMsg);

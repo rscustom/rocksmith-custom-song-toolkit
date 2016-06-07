@@ -116,18 +116,18 @@ namespace RocksmithToolkitLib.Song2014ToTab
             Console.WriteLine("Opening arrangement {0} ...", inputFilePath);
             Console.WriteLine();
             var score = new Score();
-            var toolkitInfo = new ToolkitInfo();
-            toolkitInfo.ToolkitVersion = "Unknown";
-            toolkitInfo.PackageAuthor = "CST Xml To GP5 Converter";
-            toolkitInfo.PackageVersion = ToolkitVersion.version;
-
             var arrangement = Song2014.LoadFromFile(inputFilePath);
+            var toolkitInfo = new ToolkitInfo();
+            toolkitInfo.ToolkitVersion = String.Format("CST v{0}", ToolkitVersion.version);
+            toolkitInfo.PackageAuthor = "XML To GP5 Converter";
+            toolkitInfo.PackageVersion = arrangement.LastConversionDateTime;
+
             var comments = Song2014.ReadXmlComments(inputFilePath);
             foreach (var xComment in comments)
             {
                 if (xComment.Value.Contains("CST"))
                 {
-                    toolkitInfo.ToolkitVersion = xComment.Value;
+                    toolkitInfo.ToolkitVersion = xComment.Value.Trim();
                     break;
                 }
             }

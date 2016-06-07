@@ -271,7 +271,7 @@ namespace RocksmithToolkitLib.Ogg
         /// <param name="audioQuality"></param>
         /// <param name="previewLength"></param>
         /// <param name="chorusTime"></param>
-        /// <returns></returns>
+        /// <returns>wemPath</returns>
         public static string Convert2Wem(string audioPath, int audioQuality = 4, long previewLength = 30000, long chorusTime = 4000)
         {
             // ExternalApps.VerifyExternalApps(); // for testing
