@@ -7,9 +7,9 @@ test: off
 
 environment:
   cert_url:
-    secure: +Hrnyb/2BCwM+8B+26euLJlIcgul2423FxzS82lgeI4yh8ZpfGEZ+YsqQsbClVU5
+    secure: +Hrnyb/2BCwM+8B+26euLJlIcgul2423FxzS82lgeI74fpndTDYBc6akD1ewkFgI
   cert_pass:
-    secure: BFY5QH5tvpycnuWJ7EsWmZoT2MnI4wORlRf1fxfpqaY=
+    secure: TO54ZSKCKVIi1I+GkfUB6dRWBtKJi1hr7BRt8Dmrmkk=
 
 build:
   parallel: true
