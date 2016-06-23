@@ -31,14 +31,21 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         public void ReadSong(Song2014 songXml, Sng2014File sngFile)
         {
-            Int16[] tuning = {
-                songXml.Tuning.String0,
-                songXml.Tuning.String1,
-                songXml.Tuning.String2,
-                songXml.Tuning.String3,
-                songXml.Tuning.String4,
-                songXml.Tuning.String5,
-            };
+            // fixes 'Object reference not set to an instance of an object' error
+            Int16[] tuning = {0, 0, 0, 0, 0, 0};
+            try
+            {
+                tuning[0] = songXml.Tuning.String0;
+                tuning[1] = songXml.Tuning.String1;
+                tuning[2] = songXml.Tuning.String2;
+                tuning[3] = songXml.Tuning.String3;
+                tuning[4] = songXml.Tuning.String4;
+                tuning[5] = songXml.Tuning.String5;
+            }
+            catch
+            {                
+                // just ignore any error and use any tuning that is available from XML file
+            }
 
             parseEbeats(songXml, sngFile);
             parsePhrases(songXml, sngFile);
@@ -502,7 +509,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 catch (Exception)
                 {
-                    throw new InvalidDataException(@"There is tone name error in XML Arrangement: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + "Use EOF to re-author custom tones or Notepad to attempt manual repair." );
+                    throw new InvalidDataException(@"There is tone name error in XML Arrangement: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + "Use EOF to re-author custom tones or Notepad to attempt manual repair.");
                 }
             }
         }
@@ -917,10 +924,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     if (h.ChordId < 0) continue;
                     var fp = new Fingerprint
                     {
-                        ChordId = h.ChordId, StartTime = h.StartTime, EndTime = h.EndTime
-                    // TODO: not always StartTime
-                    //fp.Unk3_FirstNoteTime = fp.StartTime;
-                    //fp.Unk4_LastNoteTime = fp.StartTime;
+                        ChordId = h.ChordId,
+                        StartTime = h.StartTime,
+                        EndTime = h.EndTime
+                        // TODO: not always StartTime
+                        //fp.Unk3_FirstNoteTime = fp.StartTime;
+                        //fp.Unk4_LastNoteTime = fp.StartTime;
                     };
 
                     if (xml.ChordTemplates[fp.ChordId].DisplayName.EndsWith("arp"))

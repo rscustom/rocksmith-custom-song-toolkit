@@ -1,5 +1,8 @@
 Rocksmith Toolkit Release Notes
 -------------------------------
+2016.06.23
+Possible fix for 'Object reference not set to an instance of an object' error ... user needs to test
+
 2016.06.07
 Cleaned up XmlToGp5 comment strings
 Fixed bug in Wav2Ogg, removed -r from oggenc args which causes audio duration to change

@@ -127,18 +127,15 @@ namespace RocksmithToolkitLib.Extensions
         /// <param name="destinationPath">OGG</param>
         /// <param name="qualityFactor"> 0 (low) to 10 (high)</param>
         /// <param name="sampleRate"> (Hz), defaults to same sample rate as source if not specified</param>
-        /// <param name="channels">default is 2 </param>
         public static void Audio2Ogg(string sourcePath, string destinationPath, int qualityFactor, int sampleRate = 0)
         {
-            var cmdArgs = String.Empty;
-
             if (destinationPath == null)
                 destinationPath = String.Format("{0}", Path.ChangeExtension(sourcePath, "ogg"));
 
-            if (sampleRate == 0)
-                cmdArgs = String.Format(" -r -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, qualityFactor);
-            else
-                cmdArgs = String.Format(" --resample {3} -r -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, qualityFactor, sampleRate);
+            var cmdArgs = String.Format(" -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, qualityFactor);
+
+            if (sampleRate > 0)
+                cmdArgs += String.Format(" --resample {0}\"", sampleRate);
 
             GeneralExtensions.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
         }
