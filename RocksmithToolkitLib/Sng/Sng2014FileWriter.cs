@@ -31,8 +31,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         public void ReadSong(Song2014 songXml, Sng2014File sngFile)
         {
-            // fixes 'Object reference not set to an instance of an object' error
-            Int16[] tuning = {0, 0, 0, 0, 0, 0};
+            // fix for 'Object reference not set to an instance of an object' error
+            Int16[] tuning = { 0, 0, 0, 0, 0, 0 };
             try
             {
                 tuning[0] = songXml.Tuning.String0;
@@ -43,7 +43,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 tuning[5] = songXml.Tuning.String5;
             }
             catch
-            {                
+            {
                 // just ignore any error and use any tuning that is available from XML file
             }
 
@@ -268,7 +268,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
             {
                 var chord = xml.ChordTemplates[i];
                 var c = new Chord();
-                // TODO: skip if DisplayName == null
+
+                // fix for 'Object reference not set to an instance of an object' error
+                if (chord.DisplayName == null)
+                    chord.DisplayName = String.Empty;
+
                 if (chord.DisplayName.EndsWith("arp"))
                     c.Mask |= CON.CHORD_MASK_ARPEGGIO;
                 else if (chord.DisplayName.EndsWith("nop"))
@@ -422,7 +426,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private void parseNLD(Song2014 xml, Sng2014File sng)
         {
             sng.NLD = new NLinkedDifficultySection();
-            sng.NLD.Count = xml.NewLinkedDiff.Length;
+            // fix for 'Object reference not set to an instance of an object' error
+            if (xml.NewLinkedDiff == null)
+                sng.NLD.Count = 0; // TODO: throw error here to reauthor in EOF
+            else
+                sng.NLD.Count = xml.NewLinkedDiff.Length;
+
             sng.NLD.NLinkedDifficulties = new NLinkedDifficulty[sng.NLD.Count];
 
             for (int i = 0; i < sng.NLD.Count; i++)
@@ -477,12 +486,14 @@ namespace RocksmithToolkitLib.Sng2014HSL
         private void parseTones(Song2014 xml, Sng2014File sng)
         {
             sng.Tones = new ToneSection();
-            if (xml.Tones != null)
-                sng.Tones.Count = xml.Tones.Length;
-            else
+            // fix for 'Object reference not set to an instance of an object' error
+            if (xml.Tones == null)
                 sng.Tones.Count = 0;
+            else
+                sng.Tones.Count = xml.Tones.Length;
 
             sng.Tones.Tones = new Tone[sng.Tones.Count];
+
             for (int i = 0; i < sng.Tones.Count; i++)
             {
                 var tn = xml.Tones[i];
@@ -509,9 +520,21 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 catch (Exception)
                 {
-                    throw new InvalidDataException(@"There is tone name error in XML Arrangement: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + "Use EOF to re-author custom tones or Notepad to attempt manual repair.");
+                    throw new InvalidDataException("There is tone name error in XML Arrangement: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + "Use EOF to re-author custom tones or Notepad to attempt manual repair.");
                 }
             }
+
+            if (String.IsNullOrEmpty(xml.ToneBase.ToLower()))
+                throw new InvalidDataException("ToneBase must be defined.");
+
+            // TODO: apply better logic
+            // confirm that tonebase is set to one of the multi tones in case user didn't do it in EOF
+            if (!String.IsNullOrEmpty(xml.ToneA.ToLower()))
+                if (xml.ToneBase.ToLower() != xml.ToneA.ToLower() &&
+                    xml.ToneBase.ToLower() != xml.ToneB.ToLower() &&
+                    xml.ToneBase.ToLower() != xml.ToneC.ToLower() &&
+                    xml.ToneBase.ToLower() != xml.ToneD.ToLower())
+                    xml.ToneBase = xml.ToneA;
         }
 
         private static void parseVocals(Vocals xml, Sng2014File sng)

@@ -1,7 +1,10 @@
 Rocksmith Toolkit Release Notes
 -------------------------------
+2016.06.24
+Additional fixes for 'Object reference not set to an instance of an object' error
+
 2016.06.23
-Possible fix for 'Object reference not set to an instance of an object' error ... user needs to test
+Possible fix for 'Object reference not set to an instance of an object' error
 
 2016.06.07
 Cleaned up XmlToGp5 comment strings
