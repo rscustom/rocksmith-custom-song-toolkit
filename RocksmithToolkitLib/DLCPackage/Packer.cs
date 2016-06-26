@@ -173,7 +173,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         xmlContent.Serialize(outputStream);
                     }
 
-                    // correct old toolkit/EOF xml (tuning) issues ... sync with SNG data                   
+                    // correct old toolkit/EOF xml (tuning) issues ... sync with SNG data
                     if (File.Exists(xmlEofFile) &&
                         !overwriteSongXml && arrType != ArrangementType.Vocal)
                     {

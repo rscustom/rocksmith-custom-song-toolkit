@@ -485,23 +485,20 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
         private void parseTones(Song2014 xml, Sng2014File sng)
         {
+            //even if no tone changes, write section size (of 4 bytes)
             sng.Tones = new ToneSection();
-            // fix for 'Object reference not set to an instance of an object' error
-            if (xml.Tones == null)
-                sng.Tones.Count = 0;
-            else
-                sng.Tones.Count = xml.Tones.Length;
-
+            sng.Tones.Count = xml.Tones == null ? 0 : xml.Tones.Length;
             sng.Tones.Tones = new Tone[sng.Tones.Count];
-
             for (int i = 0; i < sng.Tones.Count; i++)
             {
                 var tn = xml.Tones[i];
-                var t = new Tone();
-                t.Time = tn.Time;
+                var t = new Tone { Time = tn.Time };
 
                 try
                 {
+                    if (String.IsNullOrEmpty(xml.ToneBase))
+                        throw new InvalidDataException("ToneBase must be defined.");
+
                     // fix for undefined tone name (tone name should be shorter)
                     if (xml.ToneBase.ToLower().Contains(tn.Name.ToLower()))
                         t.ToneId = 0;
@@ -524,17 +521,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
             }
 
-            if (String.IsNullOrEmpty(xml.ToneBase.ToLower()))
-                throw new InvalidDataException("ToneBase must be defined.");
-
-            // TODO: apply better logic
-            // confirm that tonebase is set to one of the multi tones in case user didn't do it in EOF
-            if (!String.IsNullOrEmpty(xml.ToneA.ToLower()))
-                if (xml.ToneBase.ToLower() != xml.ToneA.ToLower() &&
-                    xml.ToneBase.ToLower() != xml.ToneB.ToLower() &&
-                    xml.ToneBase.ToLower() != xml.ToneC.ToLower() &&
-                    xml.ToneBase.ToLower() != xml.ToneD.ToLower())
-                    xml.ToneBase = xml.ToneA;
+            // TODO: confirm that tonebase is set to one of the multi tones in case user didn't do it in EOF
         }
 
         private static void parseVocals(Vocals xml, Sng2014File sng)
