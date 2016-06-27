@@ -226,7 +226,7 @@ namespace RocksmithToolkitLib.Xml
                 LastConversionDateTime = sngData.Metadata.LastConversionDateTime.ToNullTerminatedAscii();
             }
 
-            Tones = (attr != null) ? SongTone2014.Parse(sngData.Tones, attr) : SongTone2014.Parse(sngData.Tones);
+            Tones = SongTone2014.Parse(sngData.Tones, attr);
             if (attr == null)
             {
                 // Fix tones slots for fake tone names if manifest was not entered

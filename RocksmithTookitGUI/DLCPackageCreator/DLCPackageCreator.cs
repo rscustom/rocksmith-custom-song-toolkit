@@ -1306,11 +1306,44 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.AverageTempo = info.SongInfo.AverageTempo;
                 songXml.Title = info.SongInfo.SongDisplayName;
                 songXml.Tuning = arr.TuningStrings;
+                //TODO: before this, check somewhere if autotone present, like update arrangement info in GetPackageData section.
                 if (!String.IsNullOrEmpty(arr.ToneBase)) songXml.ToneBase = arr.ToneBase;
-                if (!String.IsNullOrEmpty(arr.ToneA)) songXml.ToneA = arr.ToneA;
-                if (!String.IsNullOrEmpty(arr.ToneB)) songXml.ToneB = arr.ToneB;
-                if (!String.IsNullOrEmpty(arr.ToneC)) songXml.ToneC = arr.ToneC;
-                if (!String.IsNullOrEmpty(arr.ToneD)) songXml.ToneD = arr.ToneD;
+                if (!String.IsNullOrEmpty(arr.ToneA)) {
+                    foreach (var t in songXml.Tones)
+                        if (t.Name == songXml.ToneA)
+                        {
+                            t.Name = arr.ToneA;
+                            t.Id = 0;
+                        }
+                    songXml.ToneA = arr.ToneA;
+                }
+                if (!String.IsNullOrEmpty(arr.ToneB)) {
+                    foreach (var t in songXml.Tones)
+                        if (t.Name == songXml.ToneB)
+                        {
+                            t.Name = arr.ToneB;
+                            t.Id = 1;
+                        }
+                    songXml.ToneB = arr.ToneB;
+                }
+                if (!String.IsNullOrEmpty(arr.ToneC)) {
+                    foreach (var t in songXml.Tones)
+                        if (t.Name == songXml.ToneC)
+                        {
+                            t.Name = arr.ToneC;
+                            t.Id = 2;
+                        }
+                    songXml.ToneC = arr.ToneC;
+                }
+                if (!String.IsNullOrEmpty(arr.ToneD)) {
+                    foreach (var t in songXml.Tones)
+                        if (t.Name == songXml.ToneD)
+                        {
+                            t.Name = arr.ToneD;
+                            t.Id = 3;
+                        }
+                    songXml.ToneD = arr.ToneD;
+                }
 
                 using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                     songXml.Serialize(stream, true);
