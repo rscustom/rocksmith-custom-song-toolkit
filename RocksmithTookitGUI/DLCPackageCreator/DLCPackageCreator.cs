@@ -1307,8 +1307,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.Title = info.SongInfo.SongDisplayName;
                 songXml.Tuning = arr.TuningStrings;
                 //TODO: before this, check somewhere if autotone present, like update arrangement info in GetPackageData section.
+                bool updTones = songXml.Tones != null;
                 if (!String.IsNullOrEmpty(arr.ToneBase)) songXml.ToneBase = arr.ToneBase;
                 if (!String.IsNullOrEmpty(arr.ToneA)) {
+                    if (updTones)
                     foreach (var t in songXml.Tones)
                         if (t.Name == songXml.ToneA)
                         {
@@ -1318,6 +1320,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     songXml.ToneA = arr.ToneA;
                 }
                 if (!String.IsNullOrEmpty(arr.ToneB)) {
+                    if (updTones)
                     foreach (var t in songXml.Tones)
                         if (t.Name == songXml.ToneB)
                         {
@@ -1327,6 +1330,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     songXml.ToneB = arr.ToneB;
                 }
                 if (!String.IsNullOrEmpty(arr.ToneC)) {
+                    if (updTones)
                     foreach (var t in songXml.Tones)
                         if (t.Name == songXml.ToneC)
                         {
@@ -1336,6 +1340,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     songXml.ToneC = arr.ToneC;
                 }
                 if (!String.IsNullOrEmpty(arr.ToneD)) {
+                    if (updTones)
                     foreach (var t in songXml.Tones)
                         if (t.Name == songXml.ToneD)
                         {
