@@ -730,7 +730,7 @@ namespace RocksmithToolkitLib.DLCPackage
             SongName = attr.FullName.Split('_')[0];
 
             //Create dir struct
-            var outdir = Path.Combine(Path.GetDirectoryName(unpackedDir), String.Format("{0}_{1}_{2}", attr.ArtistName.GetValidSortName(), attr.SongName.GetValidSortName(), songVersion).Replace(" ", "-"));
+            var outdir = Path.Combine(Path.GetDirectoryName(unpackedDir), String.Format("{0}_{1}", SongName, songVersion).Replace(" ", "-"));
             var eofdir = Path.Combine(outdir, EOF);
             var kitdir = Path.Combine(outdir, KIT);
             attr = null; //dispose

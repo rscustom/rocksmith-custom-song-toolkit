@@ -280,8 +280,8 @@ namespace RocksmithToolkitLib.Extensions
         public static string GetShortName(string Format, string Artist, string Title, string Version, bool Acronym)
         {
             if (!Acronym)
-                return String.Format(Format, Artist.GetValidName(true, true), Title.GetValidName(true, true), Version).Replace(" ", "-");
-            return String.Format(Format, Artist.Acronym(), Title.GetValidName(true, true), Version).Replace(" ", "-");
+                return String.Format(Format, Artist.GetValidName(true, true), Title.GetValidName(true, true), Version).Replace(" ", "-").GetValidFileName();
+            return String.Format(Format, Artist.Acronym(), Title.GetValidName(true, true), Version).Replace(" ", "-").GetValidFileName();
         }
 
         public static bool IsAppId6Digits(this string value)

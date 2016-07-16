@@ -660,10 +660,30 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (!String.IsNullOrEmpty(arr.FontSng))
                     arr.FontSng = arr.FontSng.RelativeTo(BasePath);
             }
-
-            using (var stm = XmlWriter.Create(dlcSavePath, new XmlWriterSettings { CheckCharacters = true, Indent = true }))
+            try
             {
-                new DataContractSerializer(typeof(DLCPackageData)).WriteObject(stm, packageData);
+                using (
+                    var stm = XmlWriter.Create(dlcSavePath,
+                        new XmlWriterSettings {CheckCharacters = true, Indent = true}))
+                {
+                    new DataContractSerializer(typeof (DLCPackageData)).WriteObject(stm, packageData);
+                }
+            }
+            catch
+            {
+                //Re-absolutize the paths
+                foreach (var arr in packageData.Arrangements)
+                {
+                    if (!String.IsNullOrEmpty(arr.SongXml.File))
+                        arr.SongXml.File = arr.SongXml.File.AbsoluteTo(BasePath);
+                    if (!String.IsNullOrEmpty(arr.SongFile.File))
+                        arr.SongFile.File = arr.SongFile.File.AbsoluteTo(BasePath);
+                    if (!String.IsNullOrEmpty(arr.FontSng))
+                        arr.FontSng = arr.FontSng.AbsoluteTo(BasePath);
+                }
+
+                if (!String.IsNullOrEmpty(packageData.LyricArtPath))
+                    packageData.LyricArtPath = packageData.LyricArtPath.AbsoluteTo(BasePath);
             }
 
             //Re-absolutize the paths
