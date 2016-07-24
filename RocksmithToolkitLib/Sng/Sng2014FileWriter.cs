@@ -138,6 +138,22 @@ namespace RocksmithToolkitLib.Sng2014HSL
             return max;
         }
 
+        /// <summary>
+        /// Counts total ignore statuses for notes and chords.
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns></returns>
+        private Int32 getIngoreCount(Song2014 xml)
+        {
+            var ctr = 0;
+            foreach (var l in xml.Levels)
+            {
+                ctr += l.Notes.Count(x => x.Ignore == 1);
+                ctr += l.Chords.Count(x => x.Ignore == 1);
+            }
+            return ctr;
+        }
+
         // Easy, Medium, Hard = 0, 1, 2
         public int[] NoteCount { get; set; }
         private int getNoteCount(Sng2014File sng, int Level)
@@ -188,7 +204,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
             sng.Metadata.MaxDifficulty = getMaxDifficulty(xml);
             sng.Metadata.MaxNotesAndChords = NoteCount[2];
-            sng.Metadata.MaxNotesAndChords_Real = sng.Metadata.MaxNotesAndChords;//num unique notes+not ignored
+            sng.Metadata.MaxNotesAndChords_Real = sng.Metadata.MaxNotesAndChords - getIngoreCount(xml); //num "unique notes - ignored"
             sng.Metadata.PointsPerNote = sng.Metadata.MaxScore / sng.Metadata.MaxNotesAndChords;
 
             sng.Metadata.FirstBeatLength = xml.Ebeats[1].Time - xml.Ebeats[0].Time;
