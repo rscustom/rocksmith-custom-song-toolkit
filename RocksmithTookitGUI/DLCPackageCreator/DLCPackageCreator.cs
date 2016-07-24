@@ -1600,7 +1600,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             {
                                 foreach (var xmlTone in songXml.Tones)
                                 {
-                                    if (xmlTone.Name.ToLower() == toneName.ToLower() || toneName.ToLower().Contains(xmlTone.Name.ToLower()))
+                                    if (xmlTone.Name.ToLower() == toneName.ToLower() || toneName.ToLower().EndsWith(xmlTone.Name.ToLower())) //todo: SAMENAME tone fix?
                                     {
                                         xmlTone.Name = tone.Name;
                                         xmlTone.Id = toneId;

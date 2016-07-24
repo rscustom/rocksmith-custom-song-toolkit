@@ -174,7 +174,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             if (xmlTone.Name == "ToneD")
                                 xmlTone.Name = attr.Tone_D;
 
-                            if (xmlTone.Name.ToLower() == jsonTone.Name.ToLower() || jsonTone.Name.ToLower().Contains(xmlTone.Name.ToLower()))
+                            if (xmlTone.Name.ToLower() == jsonTone.Name.ToLower() || jsonTone.Name.ToLower().EndsWith(xmlTone.Name.ToLower())) //todo: SAMENAME tone fix?
                             {
                                 xmlTone.Name = jsonTone.Name;
                                 xmlTone.Id = toneId;

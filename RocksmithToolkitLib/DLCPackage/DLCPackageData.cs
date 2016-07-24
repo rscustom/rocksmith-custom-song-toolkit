@@ -583,6 +583,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 // Adding ShowLights
                 data.Arrangements.Add(shl);
+                data.Showlights = true;
             }
 
             //Get DDS Files

@@ -108,6 +108,9 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             MusicgameSong = new List<GraphItemLLID>();
             foreach (var arrangement in info.Arrangements)
             {
+                if (arrangement.ArrangementType == Sng.ArrangementType.ShowLight)
+                    continue;
+
                 var name = String.Format(NAME_ARRANGEMENT, dlcName, songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower());
 
                 // JsonDB

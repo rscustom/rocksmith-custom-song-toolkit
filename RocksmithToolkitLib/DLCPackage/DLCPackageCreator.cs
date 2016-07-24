@@ -171,7 +171,7 @@ namespace RocksmithToolkitLib.DLCPackage
             FILES_XBOX.Clear();
             FILES_PS3.Clear();
             DeleteTmpFiles(TMPFILES_SNG);
-            if (pnum == 0)
+            if (pnum <= 1)// doesn't trigger for last one, should be ? == 1 when last package generated.
             {
                 DeleteTmpFiles(TMPFILES_ART);
             }
@@ -539,7 +539,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             showlightStream.WriteTo(file);
                     }
 
-                    if (showlightStream.CanRead && showlightStream.Length > 0 && info.Showlights)
+                    if (showlightStream.CanRead && showlightStream.Length > 0)
                         packPsarc.AddEntry(String.Format("songs/arr/{0}_showlights.xml", dlcName), showlightStream);
 
                     // XBLOCK
@@ -565,7 +565,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     rsenumerableRootStream.Dispose();
                 if (rsenumerableSongStream != null)
                     rsenumerableSongStream.Dispose();
-                if (pnum == 0)
+                if (pnum <= 1)
                     DeleteTmpFiles(TMPFILES_ART);
                 DeleteTmpFiles(TMPFILES_SNG);
             }
