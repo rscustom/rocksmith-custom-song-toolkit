@@ -36,8 +36,10 @@ namespace RocksmithToolkitGUI
             if (args.Length > 0 && File.Exists(args[0]))
                 LoadTemplate(args[0]);
 
-            // this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", ToolkitVersion.version);
-            this.Text = String.Format("Custom Song Creator Toolkit (v{0})", ToolkitVersion.version);
+            // comment out as necessary when issuing new release version
+            // rem to update AssemblyInfo.cs in both GUI, Lib and Updater
+            this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", ToolkitVersion.version);
+            //this.Text = String.Format("Custom Song Creator Toolkit (v{0})", ToolkitVersion.version);
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
             {// Disable updates for Mac (speedup) -1.5 seconds here
