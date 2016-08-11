@@ -38,8 +38,8 @@ namespace RocksmithToolkitGUI
 
             // comment out as necessary when issuing new release version
             // rem to update AssemblyInfo.cs in both GUI, Lib and Updater
-            this.Text = String.Format("Custom Song Creator Toolkit (v{0} beta)", ToolkitVersion.version);
-            //this.Text = String.Format("Custom Song Creator Toolkit (v{0})", ToolkitVersion.version);
+            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta)", ToolkitVersion.version);
+            //this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
             {// Disable updates for Mac (speedup) -1.5 seconds here
