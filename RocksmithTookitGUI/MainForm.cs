@@ -37,7 +37,7 @@ namespace RocksmithToolkitGUI
                 LoadTemplate(args[0]);
 
             // comment out as necessary when issuing new release version
-            // rem to update AssemblyInfo.cs in both GUI, Lib and Updater
+            // update (remove beta) from AssemblyInfo.cs in GUI, Lib and Updater
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta)", ToolkitVersion.version);
             //this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
 

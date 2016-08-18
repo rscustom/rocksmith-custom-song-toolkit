@@ -395,15 +395,18 @@
     <None Include="Resources\flipXc.png" />
     <None Include="Resources\flipYc.png" />
     <None Include="Resources\music_edit.png" />
-    <Content Include="ReleaseNotes.txt">
+    <Content Include="..\VersionInfo.txt">
+      <Link>VersionInfo.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="songcreator.ico" />
+    <Content Include="songcreator.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>call "$(SolutionDir)prebuild.bat"
+</PreBuildEvent>
     <!-- be sure to address all build types in the PostBuildEvent -->
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
       xcopy /S /Y "$(SolutionDir)Third-party Apps"
