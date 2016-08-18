@@ -6,10 +6,10 @@ setlocal enabledelayedexpansion
 
 if errorlevel 1 goto BuildEventFailed
 
-call prebuild_all.bat ".\" ".\RocksmithToolkitLib\ToolkitVersion.cs"
-call prebuild_all.bat ".\" ".\RocksmithToolkitLib\Properties\AssemblyInfo.cs"
-call prebuild_all.bat ".\" ".\RocksmithToolkitUpdater\Properties\AssemblyInfo.cs"
-call prebuild_all.bat ".\" ".\RocksmithTookitGUI\Properties\AssemblyInfo.cs"
+call UpdateGitSvn_All.bat ".\" ".\RocksmithToolkitLib\ToolkitVersion.cs"
+call UpdateGitSvn_All.bat ".\" ".\RocksmithToolkitLib\Properties\AssemblyInfo.cs"
+call UpdateGitSvn_All.bat ".\" ".\RocksmithToolkitUpdater\Properties\AssemblyInfo.cs"
+call UpdateGitSvn_All.bat ".\" ".\RocksmithTookitGUI\Properties\AssemblyInfo.cs"
 
 echo Done
 pause

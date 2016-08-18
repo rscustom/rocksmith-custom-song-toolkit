@@ -1,5 +1,5 @@
 REM this line goes in RocksmithToolkitLib Pre-Build
-Rem CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"
+REM CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"
 
 
 @echo off
