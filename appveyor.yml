@@ -54,11 +54,11 @@ notifications:
     on_build_status_changed: true
 
 init:
-  $env:REPO_COMMIT = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
+  -ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
 	
 assembly_info:
 # enable patching of AssemblyInfo.cs files
   patch: true
   file: AssemblyInfo.cs
-  assembly_informational_version: "$(REPO_COMMIT)"
+  assembly_informational_version: "$(GIT_HASH)"
   
