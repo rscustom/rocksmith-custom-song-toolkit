@@ -28,10 +28,10 @@ before_build:
 # use manual batch 'Patch_All_AssemblyInfo.bat' to patch 'AssemblyInfo.cs' files 
 #
 # enable patching of AssemblyInfo.* files
-# assembly_info:
-#  patch: true
-#  file: AssemblyInfo.cs
-#  assembly_informational_version: '$(GIT_HASH)'
+assembly_info:
+  patch: true
+  file: AssemblyInfo.cs
+  assembly_informational_version: '$(GIT_HASH)'
  
 # scripts to run after build 
 after_build:
