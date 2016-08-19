@@ -405,7 +405,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
     <!-- be sure to address all build types in the PostBuildEvent -->
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
       xcopy /S /Y "$(SolutionDir)Third-party Apps"

@@ -32,5 +32,5 @@ using RocksmithToolkitLib;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.7.1.0")]
-[assembly: AssemblyInformationalVersion(""ff6eaff8-beta")]
+[assembly: AssemblyInformationalVersion("941ec3dd")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
