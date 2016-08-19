@@ -1,29 +1,21 @@
-# version format
+# script syntax is very sensitive - BE CAREFUL EDITING
 version: "{build}"
-
-# branches to build
 branches:
   only:
     - master
-	
-# build Configuration	
 configuration: Release
-
-# test configuration
 test: off
 
-build:
-  parallel: true
-  verbosity: minimal
-
-# environment variables
 environment:
   cert_url:
     secure: +Hrnyb/2BCwM+8B+26euLJlIcgul2423FxzS82lgeI74fpndTDYBc6akD1ewkFgI
   cert_pass:
     secure: qMlxBF8JbVTwM9vm3fYbCdbuI+0cD2ixtu61YzVoq2c=
 
-# scripts that run after cloning repository
+build:
+  parallel: true
+  verbosity: minimal
+
 install:
   - set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;%PATH%
 
