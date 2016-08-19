@@ -18,7 +18,7 @@ build:
 
 install:
   - set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;%PATH%
-  - ps: PatchAssemblyVersion
+  - ps: .\PatchAssemblyVersion.ps1
 
 # scripts to run before build  
 before_build: 
