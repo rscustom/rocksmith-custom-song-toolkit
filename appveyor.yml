@@ -20,7 +20,7 @@ install:
   - set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;%PATH%
   - rem General package variables
   - ps: $env:PkgName = "rstoolkit-" + $env:BuildVer + "-" + $env:BuildCommit
-  - ps: $env:BuildVer = Select-String -Path $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs" -Pattern '^\[assembly:\ AssemblyVersion\("(.*?)"\)\]' | % { $_.Matches } | % { $_.Groups[1].Value }
+  - ps: $env:BuildVer = "{version}"
   - ps: $env:BuildCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
 
 after_build:
