@@ -53,10 +53,12 @@ notifications:
     on_build_failure: true
     on_build_status_changed: true
 
-# enable patching of AssemblyInfo.cs files
+init:
+  - ps: $env:RepoCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
+	
 assembly_info:
-  $env:BuildCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
+# enable patching of AssemblyInfo.cs files
   patch: true
   file: AssemblyInfo.cs
-  assembly_informational_version: "$(BuildCommit)"
+  assembly_informational_version: "$(RepoCommit)"
   
