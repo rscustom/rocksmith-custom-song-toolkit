@@ -1,4 +1,6 @@
-$assemblyFile = "$env:APPVEYOR_BUILD_FOLDER\RocksmithToolkitLib\Properties\AssemblyInfo.cs"
+param([string]$AssemblyFile) 
+
+Write-Host "- Patching $AssemblyFile"
 
 $regex = new-object System.Text.RegularExpressions.Regex ('(AssemblyInformationalVersion(Attribute)?\s*\(\s*\")(.*)(\"\s*\))', 
          [System.Text.RegularExpressions.RegexOptions]::MultiLine)
@@ -13,7 +15,7 @@ if($match.Success) {
 
 # new version
 $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
-$version = "$version.$env:GIT_HASH"
+$version = "$env:GIT_HASH"
 
 # update assembly info
 $content = $regex.Replace($content, '${1}' + $version + '${4}')

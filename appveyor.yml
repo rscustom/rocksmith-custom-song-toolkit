@@ -24,7 +24,9 @@ before_build:
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8) 
   - rem Pause commands in the batch will make AppVeyor hang ... so make sure they are removed
   - rem cmd: .\PatchAssemblyInfo_All.bat
-  - ps: .\PatchAssemblyVersion.ps1
+  - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithTookitGUI\Properties\AssemblyInfo.cs"
+  - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithToolkitLib\Properties\AssemblyInfo.cs"
+  - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithToolkitUpdater\Properties\AssemblyInfo.cs"
 
 #
 # assembly_info: breaks the $env:BuildVer variable
