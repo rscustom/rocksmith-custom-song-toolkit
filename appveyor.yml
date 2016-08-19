@@ -55,9 +55,7 @@ notifications:
 
 init:
   -ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
-	
 assembly_info:
-# enable patching of AssemblyInfo.cs files
   patch: true
   file: AssemblyInfo.cs
   assembly_informational_version: "$(GIT_HASH)"
