@@ -58,5 +58,5 @@ init:
 assembly_info:
   patch: true
   file: AssemblyInfo.cs
-  assembly_informational_version: "$(GIT_HASH)"
+  assembly_informational_version: 'GIT-$(GIT_HASH)'
   
