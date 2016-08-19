@@ -15,13 +15,21 @@ build:
   parallel: true
   verbosity: minimal
 
-  # scripts that run after cloning repository
+# scripts that run after cloning repository
 install:
   - set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;%PATH%
-  
+
+# scripts to run before build  
 before_build:  
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
 
+# enable patching of AssemblyInfo.* files  
+assembly_info:
+  patch: false
+  file: AssemblyInfo.cs
+  assembly_informational_version: '$(GIT_HASH)'
+ 
+# scripts to run after build 
 after_build:
   - set BIN=%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin
   - rem Code signing

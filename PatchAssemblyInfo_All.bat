@@ -1,4 +1,5 @@
 REM adds git subversion commit references to all AssemblyInfo.cs
+REM run this batch after AppVeyor builds
 
 @echo off
 
