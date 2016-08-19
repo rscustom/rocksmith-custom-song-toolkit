@@ -36,6 +36,11 @@ namespace RocksmithToolkitGUI
             if (args.Length > 0 && File.Exists(args[0]))
                 LoadTemplate(args[0]);
 
+            InitMainForm();
+        }
+
+        private void InitMainForm()
+        {
             // comment out as necessary when issuing new release version
             // update (remove beta) from AssemblyInfo.cs in GUI, Lib and Updater
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta)", ToolkitVersion.version);
@@ -176,8 +181,9 @@ namespace RocksmithToolkitGUI
         public void ReloadControls()
         {
             this.Controls.Clear();
-            InitializeComponent();
+            InitializeComponent();            
             tabControl1.TabPages.Remove(GeneralConfigTab);
+            InitMainForm();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
