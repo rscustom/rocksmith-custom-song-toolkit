@@ -18,6 +18,8 @@ build:
   # scripts that run after cloning repository
 install:
   - set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;%PATH%
+  
+before_package:  
   - rem General package variables
   - ps: $env:PkgName = "rstoolkit-" + $env:BuildVer + "-" + $env:BuildCommit
   - ps: $env:BuildVer = "{version}"
