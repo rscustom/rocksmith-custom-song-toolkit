@@ -25,7 +25,6 @@ before_build:
   - cmd: >-
     powershell -f PatchAssemblyVersion.ps1 -version "%GIT_HASH%" 
 
-
 #
 # assembly_info: breaks the $env:BuildVer variable
 # use manual batch 'Patch_All_AssemblyInfo.bat' to patch 'AssemblyInfo.cs' files 
