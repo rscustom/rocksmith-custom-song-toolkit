@@ -22,6 +22,7 @@ install:
 # scripts to run before build  
 before_build:  
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
+  - cmd: .\PatchAssemblyInfo_All.bat
 
 #
 # assembly_info: breaks the $env:BuildVer variable

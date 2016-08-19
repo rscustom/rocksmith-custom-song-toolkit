@@ -31,7 +31,7 @@ echo f | XCOPY /y .\RocksmithToolkitLib\ToolkitVersion.cs_dist .\RocksmithToolki
 echo.
 call PatchAssemblyInfo_All.bat
 
-PAUSE
+::PAUSE
 
 .\contributing.md >> CON
 
