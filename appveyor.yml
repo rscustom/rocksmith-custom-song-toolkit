@@ -57,4 +57,4 @@ notifications:
 assembly_info:
   patch: true
   file: AssemblyInfo.cs
-  assembly_informational_version: "(BuildCommit)"
+  assembly_informational_version: "$(BuildCommit)"
