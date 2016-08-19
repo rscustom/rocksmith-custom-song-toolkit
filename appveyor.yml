@@ -22,7 +22,6 @@ install:
 # scripts to run before build  
 before_build:  
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
-  - ps: PatchAssemblyVersion.ps1 -version "%GIT_HASH%" 
 
 #
 # assembly_info: breaks the $env:BuildVer variable
@@ -44,6 +43,11 @@ after_build:
   - ps: $env:BuildVer = Select-String -Path $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs" -Pattern '^\[assembly:\ AssemblyVersion\("(.*?)"\)\]' | % { $_.Matches } | % { $_.Groups[1].Value }
   - ps: $env:BuildCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
   - ps: $env:PkgName = "rstoolkit-" + $env:BuildVer + "-" + $env:BuildCommit
+  - ps: |
+  foreach ($file in "AssemblyInfo.cs" )
+  {
+    $env:APPVEYOR_BUILD_FOLDER | get-childitem -recurse |? {$_.Name -eq $file} | Update-SourceVersion $env:BuildVer;
+  }
   - rem Windows package
   - 7z a %PkgName%-win.zip %BIN%\Release\*
   - rem Mac package
