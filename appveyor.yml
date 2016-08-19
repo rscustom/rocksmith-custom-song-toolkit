@@ -25,7 +25,7 @@ before_build:
 
 # enable patching of AssemblyInfo.* files  
 assembly_info:
-  patch: false
+  patch: true
   file: AssemblyInfo.cs
   assembly_informational_version: '$(GIT_HASH)'
  
