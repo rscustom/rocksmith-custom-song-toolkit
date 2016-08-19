@@ -23,12 +23,12 @@ install:
 before_build:  
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
 
-# enable patching of AssemblyInfo.* files  
+# enable patching of AssemblyInfo.* files
+# this breaks the $env:BuildVer ...  
 assembly_info:
-  patch: true
+  patch: false # true breaks the BuildVer
   file: AssemblyInfo.cs
   assembly_informational_version: '$(GIT_HASH)'
-  $BuildVer = Select-String -Path $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs" -Pattern '^\[assembly:\ AssemblyVersion\("(.*?)"\)\]' | % { $_.Matches } | % { $_.Groups[1].Value }
  
 # scripts to run after build 
 after_build:
@@ -36,7 +36,7 @@ after_build:
   - rem Code signing
   - ps: if ($env:cert_url) { Start-FileDownload $env:cert_url }
   - if defined cert_url signtool sign /v /f selfsigned2016.pfx /p "%cert_pass%" /t http://timestamp.verisign.com/scripts/timstamp.dll "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\Release\RocksmithToolkitUpdater.exe" "%BIN%\Release\RocksmithToolkitLib.dll"
-  - rem ps: $env:BuildVer = Select-String -Path $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs" -Pattern '^\[assembly:\ AssemblyVersion\("(.*?)"\)\]' | % { $_.Matches } | % { $_.Groups[1].Value }
+  - ps: $env:BuildVer = Select-String -Path $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs" -Pattern '^\[assembly:\ AssemblyVersion\("(.*?)"\)\]' | % { $_.Matches } | % { $_.Groups[1].Value }
   - ps: $env:BuildCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
   - ps: $env:PkgName = "rstoolkit-" + $env:BuildVer + "-" + $env:BuildCommit
   - rem Windows package
