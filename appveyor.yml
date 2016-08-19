@@ -14,9 +14,8 @@ environment:
 # enable patching of AssemblyInfo.cs files
 assembly_info:
   patch: true
-  file: AssemblyInfo.cs
-  assembly_informational_version: "{version}"
-  #  (APPVEYOR_REPO_COMMIT.Substring(0, 8))"
+  file: AssemblyInfo.*
+  assembly_informational_version: "(APPVEYOR_REPO_COMMIT.Substring(0, 8))"
   	
 build:
   parallel: true
