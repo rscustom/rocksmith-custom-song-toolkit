@@ -51,10 +51,11 @@ notifications:
     on_build_failure: true
     on_build_status_changed: true
 
-# be very careful with syntacs	
+before_build:
+  - ps: $env:BuildVer = Select-String -Path $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs" -Pattern '^\[assembly:\ AssemblyVersion\("(.*?)"\)\]' | % { $_.Matches } | % { $_.Groups[1].Value }
+	
 init:
   - ps: $env:BuildCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
-  - ps: $env:BuildVer = Select-String -Path $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs" -Pattern '^\[assembly:\ AssemblyVersion\("(.*?)"\)\]' | % { $_.Matches } | % { $_.Groups[1].Value }
 
 assembly_info:
   patch: true
