@@ -22,8 +22,7 @@ install:
 # scripts to run before build  
 before_build:  
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
-  - cmd: >-
-    powershell -f PatchAssemblyVersion.ps1 -version "%GIT_HASH%" 
+  - ps: PatchAssemblyVersion.ps1 -version "%GIT_HASH%" 
 
 #
 # assembly_info: breaks the $env:BuildVer variable
