@@ -57,4 +57,5 @@ notifications:
 assembly_info:
   patch: true
   file: AssemblyInfo.cs
-  assembly_informational_version: "$(APPVEYOR_REPO_COMMIT.Substring(0, 8))"
+  - ps: $env:RepoCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
+  assembly_informational_version: "$(RepoCommit)"
