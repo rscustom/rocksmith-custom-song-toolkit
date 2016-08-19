@@ -1,19 +1,27 @@
+# version format
 version: "{build}"
+
+# branches to build
 branches:
   only:
     - master
+	
+# build Configuration	
 configuration: Release
+
+# test configuration
 test: off
 
+build:
+  parallel: true
+  verbosity: minimal
+
+# environment variables
 environment:
   cert_url:
     secure: +Hrnyb/2BCwM+8B+26euLJlIcgul2423FxzS82lgeI74fpndTDYBc6akD1ewkFgI
   cert_pass:
     secure: qMlxBF8JbVTwM9vm3fYbCdbuI+0cD2ixtu61YzVoq2c=
-
-build:
-  parallel: true
-  verbosity: minimal
 
 # scripts that run after cloning repository
 install:
@@ -23,12 +31,15 @@ install:
 before_build:  
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
 
+#
+# assembly_info: breaks the $env:BuildVer 
+# use manual batch 'Patch_All_AssemblyInfo.bat' to patch 'AssemblyInfo.cs' files 
+#
 # enable patching of AssemblyInfo.* files
-# this breaks the $env:BuildVer ...  
-assembly_info:
-  patch: false # true breaks the BuildVer
-  file: AssemblyInfo.cs
-  assembly_informational_version: '$(GIT_HASH)'
+# assembly_info:
+#  patch: true
+#  file: AssemblyInfo.cs
+#  assembly_informational_version: '$(GIT_HASH)'
  
 # scripts to run after build 
 after_build:
