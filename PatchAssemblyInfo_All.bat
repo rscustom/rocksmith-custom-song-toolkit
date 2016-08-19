@@ -13,7 +13,7 @@ call PatchAssemblyInfo.bat ".\" ".\RocksmithToolkitUpdater\Properties\AssemblyIn
 call PatchAssemblyInfo.bat ".\" ".\RocksmithTookitGUI\Properties\AssemblyInfo.cs"
 
 echo Done
-pause
+::pause
 
 endlocal
 exit /b 0
