@@ -24,7 +24,7 @@ before_build:
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
 
 #
-# assembly_info: breaks the $env:BuildVer 
+# assembly_info: breaks the $env:BuildVer variable
 # use manual batch 'Patch_All_AssemblyInfo.bat' to patch 'AssemblyInfo.cs' files 
 #
 # enable patching of AssemblyInfo.* files

@@ -85,6 +85,10 @@ for /f "tokens=* delims==" %%i in (%toolkitverdist%) do (
 ::pause
 echo Moving tempfile.txt to new %toolkitver% ...
 move /y tempfile.txt "%toolkitver%"
+
+echo Creating VersionInfo.txt ...
+echo %newrev% > VersionInfo.txt
+
 echo Done
 
 pause
