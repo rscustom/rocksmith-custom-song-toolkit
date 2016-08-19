@@ -54,7 +54,7 @@ notifications:
     on_build_status_changed: true
 
 init:
-  - ps: $env:RepoCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
+  $env:RepoCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
 	
 assembly_info:
 # enable patching of AssemblyInfo.cs files
