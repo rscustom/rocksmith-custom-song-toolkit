@@ -89,7 +89,7 @@ echo Creating VersionInfo.txt ...
 echo %newrev% > VersionInfo.txt
 echo Done
 
-pause
+::pause
 
 endlocal
 exit /b 0

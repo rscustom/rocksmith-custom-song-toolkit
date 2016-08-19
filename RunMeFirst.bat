@@ -25,8 +25,12 @@ echo f | XCOPY /y "%UserPROFILE%\My Documents\Visual Studio 2010\Settings\Curren
 echo.
 echo f | XCOPY /y .\CST-2014-04-09.vssettings "%UserPROFILE%\Documents\Visual Studio 2010\Settings\Currentsettings.vssettings" 
 
-echo. 
-echo f | XCOPY /y .\RocksmithToolkitLib\ToolkitVersion.cs_dist .\RocksmithToolkitLib\ToolkitVersion.cs
+REM echo. 
+REM echo f | XCOPY /y .\RocksmithToolkitLib\ToolkitVersion.cs_dist .\RocksmithToolkitLib\ToolkitVersion.cs
+
+echo.
+call Patch_All_AssemblyInfo.bat
+
 
 echo.
 PAUSE

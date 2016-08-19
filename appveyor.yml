@@ -18,6 +18,10 @@ build:
 install:
   - set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;%PATH%
 
+ assembly_info:
+   patch: true
+   assembly_informational_version: "{version} $(APPVEYOR_REPO_COMMIT.Substring(0, 8))"
+  
 after_build:
   - set BIN=%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin
   - rem Code signing
@@ -36,8 +40,8 @@ after_build:
   - copy "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - 7z a %PkgName%-mac.zip "%BIN%\RocksmithCustomSongToolkit.app\"
-
-artifacts:
+  
+ artifacts:
   - path: '*-win.zip'
     name: Windows
   - path: '*-mac.zip'
