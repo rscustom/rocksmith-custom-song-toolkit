@@ -18,11 +18,13 @@ build:
 
 install:
   - set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;%PATH%
+  - ps: PatchAssemblyVersion
 
 # scripts to run before build  
-before_build:  
-  - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
-  - cmd: .\PatchAssemblyInfo_All.bat
+before_build: 
+# - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8) 
+  - rem Pause commands in the batch will make AppVeyor hang ... so remove them
+  - rem cmd: .\PatchAssemblyInfo_All.bat
 
 #
 # assembly_info: breaks the $env:BuildVer variable
