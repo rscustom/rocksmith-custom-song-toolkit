@@ -27,7 +27,8 @@ after_build:
   - rem Code signing
   - ps: if ($env:cert_url) { Start-FileDownload $env:cert_url }
   - if defined cert_url signtool sign /v /f selfsigned2016.pfx /p "%cert_pass%" /t http://timestamp.verisign.com/scripts/timstamp.dll "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\Release\RocksmithToolkitUpdater.exe" "%BIN%\Release\RocksmithToolkitLib.dll"
-  - ps: $env:BuildVer = Select-String -Path $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs" -Pattern '^\[assembly:\ AssemblyVersion\("(.*?)"\)\]' | % { $_.Matches } | % { $_.Groups[1].Value }
+  - ps: $env:BuildFolder = $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs"
+  - ps: $env:BuildVer = Select-String -Path $env:BuildFolder -Pattern "AssemblyVersion\(`"(?<AssemblyVersion>.*)`"\)" | % { $_.Matches } | % { $_.Groups[1].Value }
   - ps: $env:BuildCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
   - ps: $env:PkgName = "rstoolkit-" + $env:BuildVer + "-" + $env:BuildCommit
   - rem Windows package
