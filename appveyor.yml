@@ -22,6 +22,9 @@ install:
 # scripts to run before build  
 before_build:  
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
+  - cmd: >-
+    powershell -f PatchAssemblyVersion.ps1 -version "%GIT_HASH%" 
+
 
 #
 # assembly_info: breaks the $env:BuildVer variable
@@ -39,6 +42,7 @@ after_build:
   - rem Code signing
   - ps: if ($env:cert_url) { Start-FileDownload $env:cert_url }
   - if defined cert_url signtool sign /v /f selfsigned2016.pfx /p "%cert_pass%" /t http://timestamp.verisign.com/scripts/timstamp.dll "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\Release\RocksmithToolkitUpdater.exe" "%BIN%\Release\RocksmithToolkitLib.dll"
+  - rem General package variables
   - ps: $env:BuildVer = Select-String -Path $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs" -Pattern '^\[assembly:\ AssemblyVersion\("(.*?)"\)\]' | % { $_.Matches } | % { $_.Groups[1].Value }
   - ps: $env:BuildCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
   - ps: $env:PkgName = "rstoolkit-" + $env:BuildVer + "-" + $env:BuildCommit
