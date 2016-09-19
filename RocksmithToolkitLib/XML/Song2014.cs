@@ -147,7 +147,8 @@ namespace RocksmithToolkitLib.Xml
          * "B0", "High pitch tick"
          * "B1", "Low pitch tick"
          * 
-         * E is for Emotions? or it's generic event?
+         * E is for Crowd emotion control
+         * "e0", "Crowd waving hands like in The Sky is crying.
          * "E1", "Crowd happy" //Meet the band event
          * "E3", "Crowd wild"
          * "E13", "Crowd extra wild?" // usually at the end of the song

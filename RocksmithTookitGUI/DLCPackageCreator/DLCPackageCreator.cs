@@ -1255,7 +1255,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //}
             //FIXME:
             var songVol = (float)songVolumeBox.Value;
-            var previewVol = (!String.IsNullOrEmpty(audioPreviewPath)) ? (float)songVolumeBox.Value : songVol;
+            var previewVol = (float)previewVolumeBox.Value;
             var audioQualiy = audioQualityBox.Value;
             var data = new DLCPackageData
                 {

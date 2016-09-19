@@ -707,7 +707,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             var p = GamePlatform.None;
             var v = GameVersion.RS2014;
-            var name = Path.GetFileNameWithoutExtension(fileName);
+            var name = Path.GetFileName(fileName);
             var pIndex = name.LastIndexOf("_", StringComparison.Ordinal);
 
             if (Directory.Exists(fileName))
@@ -832,18 +832,18 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         var sngFile = Path.Combine(sngFolder, xmlName + ".sng");
                         var arrType = ArrangementType.Guitar;
-                        if (Path.GetFileName(xmlFile).ToLower().Contains("vocal"))
+                        if (xmlName.ToLower().Contains("vocal"))
                             arrType = ArrangementType.Vocal;
 
-                        // Handle custom fonts
+                        // Handle vocals custom font
                         string fontSng = null;
                         if (arrType == ArrangementType.Vocal)
                         {
-                            var vocSng = Sng2014File.LoadFromFile(sngFile, TryGetPlatformByEndName(songDirectory));
-                            if (vocSng.IsCustomFont())
-                            {
-                                vocSng.WriteChartData((fontSng = Path.GetTempFileName()), new Platform(GamePlatform.Pc, GameVersion.None));
-                            }
+                            //var vocSng = Sng2014File.LoadFromFile(sngFile, GetPlatform(songDirectory));
+                            //if (vocSng.IsCustomFont())
+                            //{
+                            //    vocSng.WriteChartData((fontSng = Path.GetTempFileName()), new Platform(GamePlatform.Pc, GameVersion.None));
+                            //}
                         }
 
                         using (var fs = new FileStream(sngFile, FileMode.Create))

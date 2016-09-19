@@ -28,7 +28,7 @@ NEW_OSX_MSG=""
 # Then change the permissions for /usr/local, sudo chmod 777 /usr/local
 if [[ `sw_vers -productVersion` = "10.11"* ]]
 then
-    export PATH=/usr/local/bin:${PATH}
+	export PATH=/usr/local/bin:${PATH}
 	NEW_OSX_MSG="It seems that you've got El Capitan, if you've got issues with mono, read this: http://git.io/vCBjz"
 fi
 
@@ -44,8 +44,8 @@ if [ -z "$MONO_VERSION" ] \
 	|| [ $MONO_VERSION_MAJOR -lt $REQUIRED_MAJOR ] \
 	|| [ $MONO_VERSION_MAJOR -eq $REQUIRED_MAJOR -a $MONO_VERSION_MINOR -lt $REQUIRED_MINOR ] 
 then
-    MONO_VERSION_MET="Mono Framework is not installed. (or too old)"
-    VERSION_MSG="$CMD_NAME requires the Mono Framework version $REQUIRED_MAJOR.$REQUIRED_MINOR or later. $MONO_VERSION_MET"
+	MONO_VERSION_MET="Mono Framework is not installed. (or too old)"
+	VERSION_MSG="$CMD_NAME requires the Mono Framework version $REQUIRED_MAJOR.$REQUIRED_MINOR or later. $MONO_VERSION_MET"
 	osascript \
 	-e "set question to display dialog \"$VERSION_MSG\" with title \"$VERSION_TITLE\" buttons {\"Cancel\", \"Download...\"} default button 2" \
 	-e "if button returned of question is equal to \"Download...\" then open location \"$DOWNLOAD_URL\""

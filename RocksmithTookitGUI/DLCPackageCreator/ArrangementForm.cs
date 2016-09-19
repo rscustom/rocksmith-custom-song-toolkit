@@ -660,7 +660,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     if (currentGameVersion != GameVersion.RS2012)
                     {
-                        //Tones setup
+                        //Tones setup //TODO: add parsing tones events
                         Arrangement.ToneBase = xmlSong.ToneBase;
                         Arrangement.ToneA = xmlSong.ToneA;
                         Arrangement.ToneB = xmlSong.ToneB;
@@ -853,7 +853,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Arrangement.CapoFret = xmlSong.Capo;
             UpdateCentOffset();
 
-            //ToneSelector
+            //ToneSelector //TODO: add parsing tones events
             Arrangement.ToneBase = toneBaseCombo.SelectedItem.ToString();
             Arrangement.ToneA = (toneACombo.SelectedItem != null) ? toneACombo.SelectedItem.ToString() : ""; //Only need if have more than one tone
             Arrangement.ToneB = (toneBCombo.SelectedItem != null) ? toneBCombo.SelectedItem.ToString() : "";

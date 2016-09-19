@@ -470,12 +470,12 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, float volume, Platform platform, bool preview = false, bool same = false)
+        public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, float volume, Platform platform, bool preview = false, bool sameID = false)
         {
             bitConverter = platform.GetBitConverter;
             int soundbankID = RandomGenerator.NextInt();
-            int fileID = same ? oldFileID : RandomGenerator.NextInt();
-            int soundID = same ? oldSoundID : RandomGenerator.NextInt();
+            int fileID = sameID ? oldFileID : RandomGenerator.NextInt();
+            int soundID = sameID ? oldSoundID : RandomGenerator.NextInt();
             oldSoundID = soundID; oldFileID = fileID;
 
             var audioReader = new EndianBinaryReader(bitConverter, audioStream);
