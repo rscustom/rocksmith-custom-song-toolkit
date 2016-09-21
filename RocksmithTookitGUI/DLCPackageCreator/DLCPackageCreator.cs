@@ -1017,7 +1017,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void songVolumeBox_ValueChanged(object sender, EventArgs e)
         {
-            previewVolumeBox.Value = songVolumeBox.Value;
+            if (previewVolumeBox.Value == decimal.Parse(songVolumeBox.Text)) //let's confuve user a bit more here :D
+                previewVolumeBox.Value = songVolumeBox.Value;
         }
 
         private void songVolumeBox_MouseEnter(object sender, EventArgs e)

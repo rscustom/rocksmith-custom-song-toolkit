@@ -113,6 +113,7 @@ UpgradeLog*.XML
 RocksmithToolkitLib/ToolkitVersion.cs
 CleanupBeforeGitPullRequest.bat
 RevisionLog.txt
+VersionInfo.txt
 RS2014 TONES.rar
 
 
