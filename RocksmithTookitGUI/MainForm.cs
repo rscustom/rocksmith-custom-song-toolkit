@@ -8,6 +8,7 @@ using System.Net;
 using System.ComponentModel;
 using System.Globalization;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitGUI
 {
