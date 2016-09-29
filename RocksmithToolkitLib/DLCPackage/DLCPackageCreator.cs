@@ -9,6 +9,7 @@ using CFSM.ImageTools;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
+using RocksmithToolkitLib.XmlRepository;
 using X360.IO;
 using X360.Other;
 using X360.STFS;

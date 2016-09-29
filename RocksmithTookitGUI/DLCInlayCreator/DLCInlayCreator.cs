@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Text;
+using RocksmithToolkitLib.XmlRepository;
 using SharpConfig;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
@@ -166,7 +167,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         private void inlayNameTextbox_Leave(object sender, EventArgs e)
         {
             TextBox textbox = (TextBox)sender;
-            textbox.Text = textbox.Text.Trim().GetValidName(true, false, false, Frets24);
+            textbox.Text = textbox.Text.Trim().GetValidInlayName(Frets24);
         }
 
         private void FlipX_Changed(object sender, EventArgs e)
@@ -319,7 +320,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 sfd.Title = "Select a location to store your CGM file";
                 sfd.Filter = "CGM file (*.cgm)|*.cgm";
                 sfd.InitialDirectory = Path.Combine(workDir, "cgm");
-                sfd.FileName = (InlayName.GetValidName(true, false, true, Frets24) + "_" + GeneralExtensions.Acronym(Author) + ".cgm").GetValidFileName();               
+                sfd.FileName = (InlayName.GetValidInlayName(Frets24)) + "_" + StringExtensions.GetValidAcronym(Author) + ".cgm".GetValidFileName();                               
 
                 if (sfd.ShowDialog() != DialogResult.OK) return;
                 saveFile = sfd.FileName;
@@ -387,7 +388,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             using (var ofd = new SaveFileDialog())
             {
-                ofd.FileName = (InlayName.GetValidName(true, false, true, Frets24).ToLower()).GetValidFileName();
+                ofd.FileName = (InlayName.GetValidInlayName(Frets24).ToLower()).GetValidFileName();
                 ofd.Filter = "Custom Inlay DLC (*.*)|*.*";
                 ofd.InitialDirectory = dlcSavePath;
 

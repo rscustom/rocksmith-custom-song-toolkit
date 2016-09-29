@@ -16,8 +16,9 @@ namespace ArtistFolderCreator
 
 #if (DEBUG)
             // give the progie some dumby file to work on
-           // args = new string[] { "D:\\Temp\\Test" };
-            args = new string[] { "-u" };
+            args = new string[] { "D:\\Temp\\Test" };
+            // args = new string[] { "-u" };
+            Console.WriteLine("Running in Debug Mode ... help is not available");
 #endif
 
             // catch if there are no cmd line arguments
@@ -26,12 +27,12 @@ namespace ArtistFolderCreator
             {
                 Console.WriteLine(@"Artist Folder Creator DropletApp for Rocksmith 2014 CDLC");
                 Console.WriteLine(@" - Version: " + ProjectVersion());
-                Console.WriteLine(@"   Copyright (C) 2015 CST Developers");
+                Console.WriteLine(@"   Copywrite (C) 2015 CST Developers");
                 Console.WriteLine();
                 Console.WriteLine(@" - Purpose: Catalog CDLC songs by ArtistName into folders");
                 Console.WriteLine(@"   Copies 'Artist-Name_Song-Name_v1_p.psarc' files to ArtistName folders.");
                 Console.WriteLine();
-                Console.WriteLine(@" - Usage: Drag/Drop CDLC song file folder onto the console executable icon.");
+                Console.WriteLine(@" - Usage: Drag/Drop CDLC song FILE FOLDER onto the console executable icon.");
                 Console.WriteLine();
                 Console.WriteLine(@" - AltUsage: Put application into dlc folder with all artist folders and run from");
                 Console.WriteLine(@"   command window with switch: '-u' to undo, i.e. put all songs back into dlc folder");
@@ -41,7 +42,7 @@ namespace ArtistFolderCreator
             var errorMsg = String.Empty;
 
             if (args.GetLength(0) > 1)
-                return ShowHelpfulError("Too many CDLC folders dropped onto the executable.\r\nOne at time ... please.");
+                return ShowHelpfulError("Too many CDLC folders dropped onto the execuatable.\r\nOne at time ... please.");
 
             if (args[0] == "-u")
             {
@@ -57,7 +58,7 @@ namespace ArtistFolderCreator
                     File.Copy(cdlcFile, Path.Combine(appPath, Path.GetFileName(cdlcFile)));
 
                 Console.WriteLine(@"All songs files have been returned to:");
-                Console.WriteLine(appPath);                
+                Console.WriteLine(appPath);
             }
 
             else if (IsDirectory(args[0]))
@@ -141,7 +142,7 @@ namespace ArtistFolderCreator
 
         static int ShowHelpfulError(string message)
         {
-            Console.Write("Artist Folders CLI: ");
+            Console.Write("Split Song Pack: ");
             Console.WriteLine(message);
             Console.ReadLine();
             return 0;

@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -134,7 +135,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             TextBox name = (TextBox)sender;
             name.TextChanged -= nameTB_TextChanged;
-            name.Text = name.Text.GetValidName(false);
+            name.Text = name.Text.GetValidAtaSpaceName().ReplaceSpaceWith("");
             name.TextChanged += nameTB_TextChanged;
         }
 
@@ -142,7 +143,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             TextBox name = (TextBox)sender;
             name.TextChanged -= uiNameTB_TextChanged;
-            nameTB.Text = name.Text.GetValidName(true);
+            nameTB.Text = name.Text.GetValidAtaSpaceName();
             name.TextChanged += uiNameTB_TextChanged;
         }
 

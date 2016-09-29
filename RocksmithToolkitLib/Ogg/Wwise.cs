@@ -8,6 +8,7 @@ using System.Linq;
 using ICSharpCode.SharpZipLib.BZip2;
 using ICSharpCode.SharpZipLib.Tar;
 using System.Diagnostics;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitLib.Ogg
 {

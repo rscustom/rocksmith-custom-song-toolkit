@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json.Linq;
-using RocksmithToolkitLib;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Sng2014HSL;
 
-namespace RocksmithToolkitLib
+namespace RocksmithToolkitLib.XmlRepository
 {
     public class TuningDefinition
     {

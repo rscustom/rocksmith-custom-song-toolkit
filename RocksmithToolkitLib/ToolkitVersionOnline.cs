@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using Newtonsoft.Json;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitLib
 {

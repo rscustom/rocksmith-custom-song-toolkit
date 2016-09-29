@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitLib.DLCPackage
 {

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using RocksmithToolkitLib;
+﻿using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib {
+namespace RocksmithToolkitLib.XmlRepository {
     public class Config {
         [XmlAttribute]
         public string Key { get; set; }

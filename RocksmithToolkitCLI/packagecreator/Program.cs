@@ -7,6 +7,7 @@ using NDesk.Options;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace packagecreator
 {
@@ -186,7 +187,7 @@ namespace packagecreator
                         DLCPackageData packageData = DLCPackageData.LoadFromFolder(srcDirs[i], arguments.Platform, arguments.Platform);
                         packageData.AppId = arguments.AppId;
                         packageData.PackageVersion = arguments.Revision;
-                        packageData.Name = Path.GetFileName(srcDirs[i]).GetValidName();
+                        packageData.Name = Path.GetFileName(srcDirs[i]).GetValidFileName();
                         packageData.Volume = packageData.Volume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.Volume;
                         packageData.PreviewVolume = packageData.PreviewVolume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.PreviewVolume;
 
@@ -198,7 +199,7 @@ namespace packagecreator
                         var artist = packageData.SongInfo.ArtistSort;
                         var title = packageData.SongInfo.SongDisplayNameSort;
                         // var destDir = Path.Combine(arguments.Output, Path.GetFileName(srcDirs[i]).GetValidName());
-                        var fileName = GeneralExtensions.GetShortName("{0}_{1}_v{2}", artist, title, arguments.Revision.Replace(".", "_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                        var fileName = StringExtensions.GetValidShortFileName(artist, title, arguments.Revision.Replace(".", "_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                         var destPath = Path.Combine(arguments.Output, fileName);
                         var fullFileName = String.Format("{0}{1}.psarc", fileName, DLCPackageCreator.GetPathName(arguments.Platform)[2]);
                         Console.WriteLine(@"Packing: " + Path.GetFileName(fullFileName));
@@ -308,7 +309,7 @@ namespace packagecreator
                 DLCPackageCreator.ToDDS(ddsFiles);
 
                 var albumArtDir = Path.GetDirectoryName(albumArtPath);
-                var albumArtName = String.Format("album_{0}", dlcName.ToLower().Replace("_", "").GetValidName());
+                var albumArtName = String.Format("album_{0}", dlcName.ToLower().Replace("_", "").GetValidFileName());
                 var ddsPartialPath = Path.Combine(albumArtDir, albumArtName);
 
                 foreach (var dds in ddsFiles)

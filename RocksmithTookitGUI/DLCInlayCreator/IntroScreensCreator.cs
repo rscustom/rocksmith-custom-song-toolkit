@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.XmlRepository;
 using SharpConfig;
 
 namespace RocksmithToolkitGUI.DLCInlayCreator
@@ -563,7 +564,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         private void txtSeqName_Leave(object sender, EventArgs e)
         {
             var textbox = (TextBox)sender;
-            textbox.Text = textbox.Text.Trim().GetValidName(false, false, false, false);
+            textbox.Text = textbox.Text.StripSpecialCharacters().ReplaceSpaceWith("_");
         }
 
         private void txtSeqName_DoubleClick(object sender, EventArgs e)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RocksmithToolkitLib {
+namespace RocksmithToolkitLib.XmlRepository {
     public class ConfigRepository : XmlRepository<Config> {
         private const string FILENAME = "RocksmithToolkitLib.Config.xml";
         private static readonly Lazy<ConfigRepository> instance = new Lazy<ConfigRepository>(() => new ConfigRepository());

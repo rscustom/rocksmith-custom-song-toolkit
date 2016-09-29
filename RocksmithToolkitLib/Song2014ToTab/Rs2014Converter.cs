@@ -32,7 +32,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             {
                 var outputDir = Path.GetDirectoryName(outputPath);
                 var outputFile = String.Format("{0}_{1}", rs2014Song.Title, rs2014Song.Arrangement);
-                outputFile = String.Format("{0}{1}", outputFile.GetValidName(false, true).ToLower().GetValidFileName(), "_rs2014.xml");
+                outputFile = String.Format("{0}{1}", outputFile.ToLower().GetValidFileName(), "_rs2014.xml");
                 outputPath = Path.Combine(outputDir, outputFile);
             }
 

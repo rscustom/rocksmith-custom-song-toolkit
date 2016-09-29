@@ -9,7 +9,7 @@ using RocksmithToolkitLib;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
-
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitGUI.CDLC2Tab
 {

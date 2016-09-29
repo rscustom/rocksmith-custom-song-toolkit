@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using System.Windows.Forms;
 using RocksmithToolkitLib.Extensions;
 
-namespace RocksmithToolkitLib {
+namespace RocksmithToolkitLib.XmlRepository {
     public abstract class XmlRepository<T> {
         #region Events
 

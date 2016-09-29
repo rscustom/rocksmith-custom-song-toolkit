@@ -5,8 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using RocksmithToolkitLib.Xml;
 
-
-namespace RocksmithToolkitLib
+namespace RocksmithToolkitLib.XmlRepository
 {
     public class TuningDefinitionRepository : XmlRepository<TuningDefinition>
     {

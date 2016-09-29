@@ -16,6 +16,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XmlRepository;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 
 namespace RocksmithToolkitGUI.DDC

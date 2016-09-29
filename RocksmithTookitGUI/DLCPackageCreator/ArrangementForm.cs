@@ -16,6 +16,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -814,24 +815,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var defaultAuthor = ConfigRepository.Instance()["general_defaultauthor"].Trim();
 
                 if (String.IsNullOrEmpty(parentControl.SongTitle)) parentControl.SongTitle = xmlSong.Title ?? String.Empty;
-                if (String.IsNullOrEmpty(parentControl.SongTitleSort)) parentControl.SongTitleSort = xmlSong.SongNameSort.GetValidSortName() ?? parentControl.SongTitle.GetValidSortName();
+                if (String.IsNullOrEmpty(parentControl.SongTitleSort)) parentControl.SongTitleSort = xmlSong.SongNameSort.GetValidSortableName() ?? parentControl.SongTitle.GetValidSortableName();
                 if (String.IsNullOrEmpty(parentControl.AverageTempo)) parentControl.AverageTempo = Math.Round(xmlSong.AverageTempo).ToString() ?? String.Empty;
                 if (String.IsNullOrEmpty(parentControl.Artist)) parentControl.Artist = xmlSong.ArtistName ?? String.Empty;
-                if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = xmlSong.ArtistNameSort.GetValidSortName() ?? parentControl.Artist.GetValidSortName();
+                if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = xmlSong.ArtistNameSort.GetValidSortableName() ?? parentControl.Artist.GetValidSortableName();
                 if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = xmlSong.AlbumName ?? String.Empty;
                 if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear ?? String.Empty;
                 // using first three letters of defaultAuthor to make DLCKey unique
                 if (String.IsNullOrEmpty(parentControl.DLCKey)) parentControl.DLCKey = String.Format("{0}{1}{2}", 
-                   defaultAuthor.Substring(0, Math.Min(3, defaultAuthor.Length)), parentControl.Artist.Acronym(), parentControl.SongTitle).GetValidDlcKey(parentControl.SongTitle); 
+                   defaultAuthor.Substring(0, Math.Min(3, defaultAuthor.Length)), parentControl.Artist.GetValidAcronym(), parentControl.SongTitle).GetValidKey(parentControl.SongTitle); 
 
                 if (String.IsNullOrEmpty(parentControl.AlbumSort))
                 {
                     // use default author for AlbumSort or generate
                     var useDefaultAuthor = ConfigRepository.Instance().GetBoolean("creator_usedefaultauthor");
                     if (useDefaultAuthor) // && currentGameVersion == GameVersion.RS2014)
-                        parentControl.AlbumSort = defaultAuthor.GetValidSortName();
+                        parentControl.AlbumSort = defaultAuthor.GetValidSortableName();
                     else
-                        parentControl.AlbumSort = xmlSong.AlbumNameSort.GetValidSortName() ?? parentControl.Album.GetValidSortName();
+                        parentControl.AlbumSort = xmlSong.AlbumNameSort.GetValidSortableName() ?? parentControl.Album.GetValidSortableName();
                 }
             }
 

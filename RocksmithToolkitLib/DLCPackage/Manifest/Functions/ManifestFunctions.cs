@@ -8,6 +8,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 {

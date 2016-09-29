@@ -10,6 +10,49 @@ namespace RocksmithToolkitLib.Extensions
 {
     public static class ImageHandler
     {
+        public static byte[] ImageToBytes(this Image image, ImageFormat format)
+        {
+            byte[] xret = null;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                image.Save(ms, format);
+                xret = ms.ToArray();
+            }
+            return xret;
+        }
+
+        public static bool IsValidImage(this string fileName)
+        {
+            //Supported image types in DLC Package Converter
+            var mimeByteHeaderList = new Dictionary<string, byte[]>();
+            mimeByteHeaderList.Add(".dds", new byte[] { 68, 68, 83, 32, 124 });
+            mimeByteHeaderList.Add(".gif", new byte[] { 71, 73, 70, 56 });
+            mimeByteHeaderList.Add(".jpg", new byte[] { 255, 216, 255 });
+            mimeByteHeaderList.Add(".jpeg", new byte[] { 255, 216, 255 });
+            mimeByteHeaderList.Add(".bmp", new byte[] { 66, 77 });
+            mimeByteHeaderList.Add(".png", new byte[] { 137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82 });
+
+            var extension = Path.GetExtension(fileName);
+            if (mimeByteHeaderList.ContainsKey(extension))
+            {
+                byte[] mime = mimeByteHeaderList[extension];
+                byte[] file = File.ReadAllBytes(fileName);
+
+                return file.Take(mime.Length).SequenceEqual(mime);
+            }
+            else
+                return false;
+        }
+
+        public static Image PreSizeImage(string picPngPath, string imageSize)
+        {
+            if (picPngPath == null) return null;
+
+            // resize image
+            Image img = new Bitmap(Image.FromFile(picPngPath), Size2IntX(imageSize), Size2IntY(imageSize));
+            return img;
+        }
+
         public static void Save(this string inputFilePath, int maxWidth, int maxHeight, int quality, string saveFilePath)
         {
             using (var image = new Bitmap(inputFilePath))
@@ -28,7 +71,8 @@ namespace RocksmithToolkitLib.Extensions
                 int newHeight = (int)(originalHeight * ratio);
 
                 // Convert other formats (including CMYK) to RGB.
-                using (Bitmap newImage = new Bitmap(newWidth, newHeight, PixelFormat.Format24bppRgb)) {
+                using (Bitmap newImage = new Bitmap(newWidth, newHeight, PixelFormat.Format24bppRgb))
+                {
                     // Draws the image in the specified size with quality mode set to HighQuality
                     using (Graphics graphics = Graphics.FromImage(newImage))
                     {
@@ -55,34 +99,6 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
-        private static ImageCodecInfo GetEncoderInfo(ImageFormat format)
-        {
-            return ImageCodecInfo.GetImageDecoders().SingleOrDefault(c => c.FormatID == format.Guid);
-        }
-
-        public static bool IsValidImage(this string fileName)
-        {
-            //Supported image types in DLC Package Converter
-            var mimeByteHeaderList = new Dictionary<string, byte[]>();
-            mimeByteHeaderList.Add(".dds", new byte[] { 68, 68, 83, 32, 124 });
-            mimeByteHeaderList.Add(".gif", new byte[] { 71, 73, 70, 56 });
-            mimeByteHeaderList.Add(".jpg", new byte[] { 255, 216, 255 });
-            mimeByteHeaderList.Add(".jpeg", new byte[] { 255, 216, 255 });
-            mimeByteHeaderList.Add(".bmp", new byte[] { 66, 77 });
-            mimeByteHeaderList.Add(".png", new byte[] { 137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82 });
-            
-            var extension = Path.GetExtension(fileName);
-            if (mimeByteHeaderList.ContainsKey(extension))
-            {
-                byte[] mime = mimeByteHeaderList[extension];
-                byte[] file = File.ReadAllBytes(fileName);
-
-                return file.Take(mime.Length).SequenceEqual(mime);
-            }
-            else
-                return false;
-        }
-
         public static Int32 Size2IntX(string imageSize)
         {
             string xSize = imageSize.Split(new[] { "x" }, StringSplitOptions.None)[0];
@@ -95,13 +111,9 @@ namespace RocksmithToolkitLib.Extensions
             return Int32.Parse(ySize);
         }
 
-        public static Image PreSizeImage(string picPngPath, string imageSize)
+        private static ImageCodecInfo GetEncoderInfo(ImageFormat format)
         {
-            if (picPngPath == null) return null;
-
-            // resize image
-            Image img = new Bitmap(Image.FromFile(picPngPath), Size2IntX(imageSize), Size2IntY(imageSize));
-            return img;
+            return ImageCodecInfo.GetImageDecoders().SingleOrDefault(c => c.FormatID == format.Guid);
         }
 
     }

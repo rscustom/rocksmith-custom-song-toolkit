@@ -124,7 +124,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             toneNameBox.TextChanged += (sender, e) =>
             {
                 var toneName = toneNameBox.Text;
-                tone.Key = toneName.GetValidName();
+                tone.Key = toneName.GetValidKey();
                 tone.Name = toneName;
             };
 
@@ -299,7 +299,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void toneNameBox_Leave(object sender, EventArgs e)
         {
             TextBox control = (TextBox)sender;
-            control.Text = control.Text.Trim().GetValidName(true);
+            control.Text = control.Text.Trim().GetValidAtaSpaceName();
         }
 
         // prevents multiple tool tip appearance and gives better action
