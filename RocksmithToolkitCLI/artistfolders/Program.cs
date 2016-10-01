@@ -27,7 +27,7 @@ namespace ArtistFolderCreator
             {
                 Console.WriteLine(@"Artist Folder Creator DropletApp for Rocksmith 2014 CDLC");
                 Console.WriteLine(@" - Version: " + ProjectVersion());
-                Console.WriteLine(@"   Copywrite (C) 2015 CST Developers");
+                Console.WriteLine(@"   Copyright (C) 2015 CST Developers");
                 Console.WriteLine();
                 Console.WriteLine(@" - Purpose: Catalog CDLC songs by ArtistName into folders");
                 Console.WriteLine(@"   Copies 'Artist-Name_Song-Name_v1_p.psarc' files to ArtistName folders.");
@@ -142,7 +142,7 @@ namespace ArtistFolderCreator
 
         static int ShowHelpfulError(string message)
         {
-            Console.Write("Split Song Pack: ");
+            Console.Write("artistfolders: ");
             Console.WriteLine(message);
             Console.ReadLine();
             return 0;

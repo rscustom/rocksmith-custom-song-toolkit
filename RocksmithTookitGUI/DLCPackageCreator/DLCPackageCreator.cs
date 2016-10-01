@@ -156,7 +156,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string SongTitleSort
         {
             get { return SongDisplayNameSortTB.Text; }
-            set { SongDisplayNameSortTB.Text = value; }
+            set
+            {
+                if (String.IsNullOrEmpty(value))
+                    value = SongTitle.GetValidSortableName();
+                SongDisplayNameSortTB.Text = value;
+            }
         }
 
         public string Album
@@ -168,7 +173,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string AlbumSort
         {
             get { return AlbumSortTB.Text; }
-            set { AlbumSortTB.Text = value.GetValidSortableName(); }
+            set
+            {
+                if (String.IsNullOrEmpty(value))
+                    value = Album.GetValidSortableName();
+
+                AlbumSortTB.Text = value.GetValidSortableName();
+            }
         }
 
         public string Artist
@@ -180,7 +191,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string ArtistSort
         {
             get { return ArtistSortTB.Text; }
-            set { ArtistSortTB.Text = value; }
+            set
+            {
+                if (String.IsNullOrEmpty(value))
+                    value = Artist.GetValidSortableName();
+
+                ArtistSortTB.Text = value;
+            }
         }
 
         public string AlbumYear
@@ -1083,6 +1100,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 ArtistTB.Focus();
                 return null;
             }
+            if (string.IsNullOrEmpty(ArtistSort))
+            {
+                ArtistSortTB.Focus();
+                return null;
+            }
+            if (String.IsNullOrEmpty(SongTitleSort))
+            {
+                SongDisplayNameSortTB.Focus();
+                return null;
+            }
+            if (String.IsNullOrEmpty(AlbumSort))
+            {
+                AlbumSortTB.Focus();
+                return null;
+            }
+  
             if (!Int32.TryParse(AlbumYear, out year))
             {
                 YearTB.Focus();
@@ -1100,7 +1133,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             if (String.IsNullOrEmpty(PackageVersion))
             {
-                PackageVersion = "1";
+                // force user to make entry rather than defaulting
+                // PackageVersion = "1";
+                packageVersionTB.Focus();
+                return null;
             }
             if (!PackageVersion.Equals(PackageVersion.GetValidVersion()))
             {

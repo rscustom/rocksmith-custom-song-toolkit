@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,21 +10,21 @@ using RocksmithToolkitLib.DLCPackage;
 /*
 Non-Sortable Artist, Title, Album Notes:
   Diacritics, Alpha, Numeric are allowed in any case combination
-  Most special characters and puncuations are allowed with few exception
+  Most special characters and puncuations are allowed with a few exceptions
   
 Sortable Artist, Title, Album Notes:
-  ( ) are always stripped,
-  / is replaced with a space,
-  - usage is inconsistent (so removed it)
-  , is stripped (in titles),
-  ' is not stripped,
-  . and ? usage are inconsistent (so leave these)
+  ( ) are always stripped
+  / is replaced with a space
+  - usage is inconsistent (so for consistency remove it)
+  , is stripped (in titles)
+  ' is not stripped
+  . and ? usage are inconsistent (so for consistency leave these)
   Abbreviations/symbols like 'Mr.' and '&' are replaced with words
   Diacritics are replaced with their ASCII approximations if available
 
-DLC Key, Tone Key Notes:
-  Limited to a maximum length of 30
-  ASCII Alpha and Numeric **ONLY** 
+DLC Key, and Tone Key Notes:
+  Limited to a maximum length of 30 charactures
+  Only Ascii Alpha and Numeric may be used
   No spaces, no special characters, no puncuation
   All alpha lower, upper, or mixed case are allowed
   All numeric is allowed
@@ -51,6 +52,9 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string GetValidAcronym(this string value)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             var v = Regex.Split(value, @"[\W\s]+").Where(r => !string.IsNullOrEmpty(r)).ToArray();
             if (v.Length > 1)
                 return string.Join(string.Empty, v.Select(s => s[0])).ToUpper();
@@ -85,31 +89,35 @@ namespace RocksmithToolkitLib.Extensions
 
             Regex rgx = new Regex("[^a-zA-Z0-9\\-_/&',!.?()\"#\\p{L} ]*");
             value = rgx.Replace(value, "");
-            // value = value.StripLeadingSpecialCharacters(); // some ODLC have
-
+            // commented out because some ODLC have these
+            // value = value.StripLeadingSpecialCharacters(); 
             return value;
         }
 
-        public static string GetValidFileName(this string value)
+        public static string GetValidFileName(this string fileName)
         {
-            value = String.Concat(value.Split(Path.GetInvalidFileNameChars()));
-
-            return value;
+            fileName = String.Concat(fileName.Split(Path.GetInvalidFileNameChars()));
+            return fileName;
         }
 
         public static string GetValidFilePath(this string value)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             var fileName = Path.GetFileName(value);
             var pathName = Path.GetDirectoryName(value);
             fileName = fileName.GetValidFileName();
             pathName = pathName.GetValidPathName();
             value = Path.Combine(pathName, fileName);
-
             return value;
         }
 
         public static string GetValidInlayName(this string value, bool frets24 = false)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             // remove all special characters, and leading numbers and replace spaces with underscore
             Regex rgx = new Regex("[^a-zA-Z0-9]_ ");
             value = rgx.Replace(value, "");
@@ -133,7 +141,6 @@ namespace RocksmithToolkitLib.Extensions
             }
 
             value = value.ReplaceSpaceWith("_");
-
             return value;
         }
 
@@ -145,25 +152,23 @@ namespace RocksmithToolkitLib.Extensions
         /// <returns>contains no spaces, no accents, or special characters but can begin with or be all numbers or all lower case</returns>
         public static string GetValidKey(this string value, string songTitle = "")
         {
-            string keyName = String.Empty;
-            if (!String.IsNullOrEmpty(value))
-            {
-                keyName = value.StripNonAlpaNumeric();
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
 
-                // check if they are the same, if so add 'Song' to end
-                if (keyName == songTitle.Replace(" ", ""))
-                    keyName = keyName + "Song";
-            }
+            value = value.StripNonAlpaNumeric();
+            // check if they are the same, if so add 'Song' to end
+            if (value == songTitle.Replace(" ", ""))
+                value = value + "Song";
 
-            // limit dlcKey length to 30
-            keyName = keyName.Substring(0, Math.Min(30, keyName.Length));
-            return keyName;
+            // limit Key length to 30
+            value = value.Substring(0, Math.Min(30, value.Length));
+            return value;
         }
 
-        public static string GetValidPathName(this string value)
+        public static string GetValidPathName(this string pathName)
         {
-            value = String.Concat(value.Split(Path.GetInvalidPathChars()));
-            return value;
+            pathName = String.Concat(pathName.Split(Path.GetInvalidPathChars()));
+            return pathName;
         }
 
         /// <summary>
@@ -175,20 +180,26 @@ namespace RocksmithToolkitLib.Extensions
         /// <param name="version"></param>
         /// <param name="acronym">use artist acronym instead of full artist name</param>
         /// <returns></returns>
-        public static string GetValidShortFileName(string artist, string title, string version, bool acronym)
+        public static string GetValidShortFileName(string artist, string title, string version, bool acronym = false)
         {
-            string result;
-            if (!acronym)
-                result = String.Format("{0}_{1}_{2}", artist.GetValidAtaSpaceName(), title.GetValidAtaSpaceName(), version).Replace(" ", "-");
-            else
-                result = String.Format("{0}_{1}_{2}", artist.GetValidAcronym(), title.GetValidAtaSpaceName(), version).Replace(" ", "-");
+            if (String.IsNullOrEmpty(artist) || String.IsNullOrEmpty(title) || String.IsNullOrEmpty(version))
+                throw new DataException("Artist, title, or version field is null or empty.");
 
-            result = result.GetValidFileName().StripExcessWhiteSpace();
-            return result;
+            string value;
+            if (!acronym)
+                value = String.Format("{0}_{1}_{2}", artist.GetValidAtaSpaceName(), title.GetValidAtaSpaceName(), version).Replace(" ", "-");
+            else
+                value = String.Format("{0}_{1}_{2}", artist.GetValidAcronym(), title.GetValidAtaSpaceName(), version).Replace(" ", "-");
+
+            value = value.GetValidFileName().StripExcessWhiteSpace();
+            return value;
         }
 
         public static string GetValidSortableName(this string value)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             // processing order is important to achieve output like ODLC
             value = value.ReplaceAbbreviations();
             value = value.ReplaceDiacritics();
@@ -209,19 +220,21 @@ namespace RocksmithToolkitLib.Extensions
             if (bpm > 0 && bpm < 300)
                 return bpm.ToString();
 
-            return "120"; // default tempo
+            // force user to make entry rather than defaulting
+            // return "120"; // default tempo 
+            return "";
         }
 
         public static string GetValidVersion(this string value)
         {
-            if (!String.IsNullOrEmpty(value))
-            {
-                Regex rgx = new Regex(@"^[\d\.]*");
-                var match = rgx.Match(value);
-                if (match.Success)
-                    return match.Value.Trim();
-            }
-            return "1";
+            Regex rgx = new Regex(@"^[\d\.]*");
+            var match = rgx.Match(value);
+            if (match.Success)
+                return match.Value.Trim();
+
+            // force user to make entry rather than defaulting
+            // return "1"; // default version
+            return "";
         }
 
         public static string GetValidYear(this string value)
@@ -347,6 +360,9 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string ReplaceAbbreviations(this string value)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             // this does a better job of replacing diacretics and special characters
             value = value.Replace(" & ", " and ");
             value = value.Replace("&", " and ");
@@ -366,6 +382,9 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string ReplaceDiacritics(this string value)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             value = Regex.Replace(value, "[ÀÁÂÃÅÄĀĂĄǍǺ]", "A");
             value = Regex.Replace(value, "[ǻǎàáâãäåąāă]", "a");
             value = Regex.Replace(value, "[ÇĆĈĊČ]", "C");
@@ -415,11 +434,11 @@ namespace RocksmithToolkitLib.Extensions
             return value;
         }
 
-        public static string ReplaceDiacriticsFast(this string input)
+        public static string ReplaceDiacriticsFast(this string value)
         {
             // this does a good quick job of replacing diacretics
             // using "ISO-8859-8" gives better results than ""ISO-8859-1"
-            byte[] byteOuput = Encoding.GetEncoding("ISO-8859-8").GetBytes(input);
+            byte[] byteOuput = Encoding.GetEncoding("ISO-8859-8").GetBytes(value);
             var result = Encoding.GetEncoding("ISO-8859-8").GetString(byteOuput);
             return result;
         }
@@ -444,6 +463,9 @@ namespace RocksmithToolkitLib.Extensions
         /// <returns></returns>
         public static string ShortWordMover(this string value, bool undoIt = false)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             var shortWord = new string[] { "The ", "THE ", "the ", "A ", "a " };
             var newEnding = new string[] { ", The", ", THE", ", the", ", A", ", a" };
 
@@ -503,6 +525,9 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string StripLeadingSpecialCharacters(this string value)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             Regex rgx = new Regex("^[^A-Za-z0-9(]*");
             var result = rgx.Replace(value, "");
             return result;
@@ -516,18 +541,18 @@ namespace RocksmithToolkitLib.Extensions
             return result;
         }
 
-        public static string StripPlatformEndName(this string value)
+        public static string StripPlatformEndName(this string filePath)
         {
-            if (value.EndsWith(GamePlatform.Pc.GetPathName()[2]) ||
-                value.EndsWith(GamePlatform.Mac.GetPathName()[2]) ||
-                value.EndsWith(GamePlatform.XBox360.GetPathName()[2]) ||
-                value.EndsWith(GamePlatform.PS3.GetPathName()[2]) ||
-                value.EndsWith(GamePlatform.PS3.GetPathName()[2] + ".psarc"))
+            if (filePath.EndsWith(GamePlatform.Pc.GetPathName()[2]) ||
+               filePath.EndsWith(GamePlatform.Mac.GetPathName()[2]) ||
+               filePath.EndsWith(GamePlatform.XBox360.GetPathName()[2]) ||
+               filePath.EndsWith(GamePlatform.PS3.GetPathName()[2]) ||
+               filePath.EndsWith(GamePlatform.PS3.GetPathName()[2] + ".psarc"))
             {
-                return value.Substring(0, value.LastIndexOf("_"));
+                return filePath.Substring(0, filePath.LastIndexOf("_"));
             }
 
-            return value;
+            return filePath;
         }
 
         public static string StripSpecialCharacters(this string value)

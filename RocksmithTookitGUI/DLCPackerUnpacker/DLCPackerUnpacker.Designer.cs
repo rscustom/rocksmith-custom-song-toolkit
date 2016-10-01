@@ -150,7 +150,8 @@
             this.txtAppId.Name = "txtAppId";
             this.txtAppId.Size = new System.Drawing.Size(82, 20);
             this.txtAppId.TabIndex = 41;
-            this.toolTip.SetToolTip(this.txtAppId, "Specify any valid App ID\r\nby typing it into this box");
+            this.txtAppId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip.SetToolTip(this.txtAppId, "Specify any valid App ID for a song\r\nthat you own by typing it into this box");
             this.txtAppId.Validating += new System.ComponentModel.CancelEventHandler(this.txtAppId_Validating);
             // 
             // cmbAppId

@@ -320,7 +320,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 sfd.Title = "Select a location to store your CGM file";
                 sfd.Filter = "CGM file (*.cgm)|*.cgm";
                 sfd.InitialDirectory = Path.Combine(workDir, "cgm");
-                sfd.FileName = (InlayName.GetValidInlayName(Frets24)) + "_" + StringExtensions.GetValidAcronym(Author) + ".cgm".GetValidFileName();                               
+                sfd.FileName = (InlayName.GetValidInlayName(Frets24)) + "_" + StringExtensions.GetValidAcronym(Author) + ".cgm".GetValidFileName();
 
                 if (sfd.ShowDialog() != DialogResult.OK) return;
                 saveFile = sfd.FileName;
