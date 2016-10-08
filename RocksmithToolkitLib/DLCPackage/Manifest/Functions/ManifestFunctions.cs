@@ -109,6 +109,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
         /// <param name="song">Song.</param>
         public void GenerateTechniques(Attributes2014 attribute, Song2014 song)
         {
+
             if (song.Sections == null)
                 return;
 
@@ -289,6 +290,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             var itCount = song.PhraseIterations.Length;
             var ifAny = easyArray.Count > 0;
 
+            // TODO: round to 9 decimal places and improve calculation
             attribute.SongDiffEasy = ifAny ? easyArray.Average() / itCount : 0;
             attribute.SongDiffMed = ifAny ? mediumArray.Average() / itCount : 0;
             attribute.SongDiffHard = ifAny ? hardArray.Average() / itCount : 0;

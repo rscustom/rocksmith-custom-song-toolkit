@@ -154,11 +154,12 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             //SongPartition  -- Generated in DLCPackageCreator after this constructor
 
             //Techniques TODO: improve me
-            try
-            {
-                manifestFunctions.GenerateTechniques(this, SongContent);
-            }
-            catch { }
+            // COMMENTED OUT FOR TESTING: may be source of 100% bug
+            //try
+            //{
+            //    manifestFunctions.GenerateTechniques(this, SongContent);
+            //}
+            //catch { }
 
             //Fix for Dead tones
             var it = info.TonesRS2014;

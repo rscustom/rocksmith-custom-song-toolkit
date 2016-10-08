@@ -39,16 +39,11 @@ namespace RocksmithToolkitGUI
                 LoadTemplate(args[0]);
 
             // get the user's attention that this is a special beta release
-            var errMsg = "This is a special beta release of the toolkit so there could be some bugs. ;)" + Environment.NewLine +
-                          "Song information validation has been significantly changed and improved." + Environment.NewLine +
-                          "The permissible usage of diacritics, alpha and numeric, special characters, and punctuation" + Environment.NewLine +
-                          "in Artist, Title, and Album naming conventions has been expanded inline with ODLC usage." + Environment.NewLine + Environment.NewLine +
-                          "If you find you still can't use some character it is probably because it is not used in ODLC." + Environment.NewLine + Environment.NewLine +
-                          "You may notice some minor changes with name validation in other fields as well, such as," + Environment.NewLine +
-                          "DLC Key, Sortable fields for Artist, Title, Album, and file naming.  There are no other" + Environment.NewLine +
-                          "included revisions so we can focus on song info and naming validation.  Please let the" + Environment.NewLine +
-                          "toolkit devs know if experience any in game issues as result these revisions.  ENJOY!" + Environment.NewLine;
-            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... VALIDATION ISSUES", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
+            var errMsg = "This is a special beta release of the toolkit so there could be some bugs." + Environment.NewLine +
+                          "The 'Techniques' array has been removed from CDLC JSON Manifest files for testing." + Environment.NewLine +
+                          "There are no other revision in this beta release." + Environment.NewLine + Environment.NewLine +
+                          "Please let the toolkit devs know if experience any in game issues or not as a result." + Environment.NewLine;
+            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
 
             InitMainForm();
         }
@@ -57,7 +52,7 @@ namespace RocksmithToolkitGUI
         {
             // comment out as necessary when issuing new release version
             // update (remove beta) from AssemblyInfo.cs in GUI, Lib and Updater
-            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta) VALIDATION 2", ToolkitVersion.version);
+            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta) 100% BUG ISSUES", ToolkitVersion.version);
             //this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)

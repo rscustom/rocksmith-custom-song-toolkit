@@ -115,6 +115,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             RouteMask = (int)arrangement.RouteMask;
 
             // TODO: use ManifestFunctions.GetSongDifficulty() method (fix generation algorithm)
+            // TODO: round to 9 decimal places and improve calculation
             SongDiffEasy = SongContent.SongLength / NotesEasy;
             SongDiffMed = SongContent.SongLength / NotesMedium;
             SongDiffHard = SongContent.SongLength / NotesHard;
