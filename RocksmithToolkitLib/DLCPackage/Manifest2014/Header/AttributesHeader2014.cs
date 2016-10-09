@@ -116,6 +116,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
 
             // TODO: use ManifestFunctions.GetSongDifficulty() method (fix generation algorithm)
             // TODO: round to 9 decimal places and improve calculation
+            // TODO: fix SongDiff calculations
             SongDiffEasy = SongContent.SongLength / NotesEasy;
             SongDiffMed = SongContent.SongLength / NotesMedium;
             SongDiffHard = SongContent.SongLength / NotesHard;

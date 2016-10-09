@@ -1022,7 +1022,11 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     for (int j = 0; j < xml.PhraseIterations.Length; j++)
                     {
                         var piter = xml.PhraseIterations[j];
-                        if (chord.Time >= piter.Time && piter.Time >= chord.Time)
+ 
+                        // REVERTED TO 2.2.0.0 version code 
+                        // attmpt to fix 100 % bug issue
+ 
+                        if (piter.Time > chord.Time) 
                         {
                             if (chord.Ignore == 0)
                                 ++a.NotesInIteration1[j];

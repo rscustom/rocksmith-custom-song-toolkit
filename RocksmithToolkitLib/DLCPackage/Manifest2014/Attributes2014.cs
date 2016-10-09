@@ -20,7 +20,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
         /// </summary>
         public int? ArrangementType { get; set; }
         public string BlockAsset { get; set; }
-        public Dictionary<string, Dictionary<string, object>> Chords { get; set; } //Problem in 3rd sublevel that can be a list or not
+        // public List<Chord> Chords { get; set; }
+        public Dictionary<string, Dictionary<string, List<int>>> Chords { get; set; }
         public List<ChordTemplate> ChordTemplates { get; set; }
         public List<float> DynamicVisualDensity { get; set; }
         public string FullName { get; set; }
@@ -45,6 +46,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
         public string SongXml { get; set; }
         public int TargetScore { get; set; }
         public Dictionary<string, Dictionary<string, List<int>>> Techniques { get; set; }
+        //  public List<Technique> Techniques { get; set; }
         public string Tone_A { get; set; }
         public string Tone_B { get; set; }
         public string Tone_Base { get; set; }
@@ -128,11 +130,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             else
                 ArrangementType = (int)arrangement.Name;
 
-            //Chords        -- //TODO: MISSING GENERATE
-
-            ChordTemplates = new List<ChordTemplate>();
-            manifestFunctions.GenerateChordTemplateData(this, SongContent);
-
             LastConversionDateTime = SongContent.LastConversionDateTime;
             MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(SongContent);
 
@@ -153,13 +150,19 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
 
             //SongPartition  -- Generated in DLCPackageCreator after this constructor
 
+            // not sure why this is here?
+            ChordTemplates = new List<ChordTemplate>();
+            manifestFunctions.GenerateChordTemplateData(this, SongContent);
+
+            // manifestFunctions.GenerateChords(this, SongContent);
+
             //Techniques TODO: improve me
-            // COMMENTED OUT FOR TESTING: may be source of 100% bug
-            //try
-            //{
-            //    manifestFunctions.GenerateTechniques(this, SongContent);
-            //}
-            //catch { }
+            // not source of 100% bug
+            try
+            {
+                manifestFunctions.GenerateTechniques(this, SongContent);
+            }
+            catch { }
 
             //Fix for Dead tones
             var it = info.TonesRS2014;
