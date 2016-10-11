@@ -96,11 +96,11 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 
         public void GenerateTechniques(Attributes2014 attribute, Song2014 song)
         {
-            // TODO: fix ... results from this method are NOT accurate yet
+            // results from this method do not match ODLC but are workable
             //
             //"Techniques" : {
             //     "DiffLevelID" : {//used to display which techs are set at current lvl.
-            //         "SectionID" : [// >= 0
+            //         "SectionNumber" : [// > 0
             //             TechID, //required base tech for extended tech(?)
             //             TechID
             //         ]
@@ -119,6 +119,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 
                 for (int section = 0; section < song.Sections.Length; section++)
                 {
+                    var sectionNumber = song.Sections[section].Number;
                     var starTime = song.Sections[section].StartTime;
                     var endTime = song.Sections[Math.Min(section + 1, song.Sections.Length - 1)].StartTime;
 
@@ -138,7 +139,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                         //  techId.Add(35); // try adding dumby data for now
                         // order of original usage
                         List<int> distinctTechIds = techId.Distinct().ToList();
-                        sectionId.Add(section.ToString(), distinctTechIds);
+                        sectionId.Add(sectionNumber.ToString(), distinctTechIds);
                     }
                     /*
                          "5": {
@@ -552,12 +553,12 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 
         public void GenerateChords(Attributes2014 attribute, Song2014 song)
         {
-            // TODO: fix ... results from this method are NOT accurate 
-            // Some ODLC contain JSON Chords errors, this method is producing good results
+            // Some ODLC contain JSON Chords errors, this method is producing workable results
+            //
             // USING song.Levels[difficulty].HandShapes METHOD
             // the handshape data can be used to obtain chordIds 
             // (more efficient less data to iterate through)
-
+            //
             //"Chords" : {
             //     "DiffLevelID" : {//used to display which chord is set at current lvl.
             //         "SectionID" : [// >= 0
@@ -579,6 +580,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 
                 for (int section = 0; section < song.Sections.Length; section++)
                 {
+                    var sectionNumber = song.Sections[section].Number;
                     var starTime = song.Sections[section].StartTime;
                     var endTime = song.Sections[Math.Min(section + 1, song.Sections.Length - 1)].StartTime;
 

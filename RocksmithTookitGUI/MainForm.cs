@@ -42,9 +42,10 @@ namespace RocksmithToolkitGUI
             var errMsg = "This is a special beta release of the toolkit so there could be some bugs." + Environment.NewLine +
                           "Reverted parseArrangements method in Sng2014FileWriter to earlier version for testing." + Environment.NewLine +
                           "Revised mastery to make it more difficult to obtain 100%." + Environment.NewLine +
-                          "Revised Techniques and Codes Section of JSON Manifest output." + Environment.NewLine + Environment.NewLine +
+                          "Revised Techniques and Codes Section of JSON Manifest output." + Environment.NewLine +
+                          "Updated toolkit to use DDC 3.1 (fixes sustain management)" + Environment.NewLine + Environment.NewLine +
                           "Please let the toolkit devs know if experience any in game issues or not as a result." + Environment.NewLine;
-            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES #3", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
+            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES #4", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
 
             InitMainForm();
         }
@@ -53,7 +54,7 @@ namespace RocksmithToolkitGUI
         {
             // comment out as necessary when issuing new release version
             // update (remove beta) from AssemblyInfo.cs in GUI, Lib and Updater
-            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta) 100% BUG ISSUES #3", ToolkitVersion.version);
+            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta) 100% BUG ISSUES #4", ToolkitVersion.version);
             //this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
