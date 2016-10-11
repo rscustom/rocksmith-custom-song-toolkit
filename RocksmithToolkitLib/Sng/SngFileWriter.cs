@@ -820,7 +820,7 @@ namespace RocksmithToolkitLib.Sng
         private static void WriteRocksmithSngLevelHandShapes(EndianBinaryWriter w, SongHandShape[] handShapes, Xml.SongLevel level, float songLength)
         {
             // sample section begins @ 328,356 in NumberThirteen_Combo.sng
-            //  sample section begins @ 4,300 in TCPowerChords_Lead.sng   
+            // sample section begins @ 4,300 in TCPowerChords_Lead.sng   
 
             if (handShapes == null || handShapes.Length == 0)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -223,7 +224,7 @@ namespace RocksmithToolkitLib.Xml
                 Part = sngData.Metadata.Part;
                 SongLength = sngData.Metadata.SongLength;
                 Tuning = new TuningStrings(sngData.Metadata.Tuning);
-                Capo = (byte) ((sngData.Metadata.CapoFretId == 0xFF) ? 0x00 : sngData.Metadata.CapoFretId);
+                Capo = (byte)((sngData.Metadata.CapoFretId == 0xFF) ? 0x00 : sngData.Metadata.CapoFretId);
                 LastConversionDateTime = sngData.Metadata.LastConversionDateTime.ToNullTerminatedAscii();
             }
 
@@ -265,7 +266,7 @@ namespace RocksmithToolkitLib.Xml
             Ebeats = SongEbeat.Parse(sngData.BPMs);
             StartBeat = sngData.BPMs.BPMs[0].Time;
             Events = SongEvent.Parse(sngData.Events);
-            Levels = SongLevel2014.Parse(sngData);
+            Levels = SongLevel2014.Parse(sngData); 
 
             //Not used in RS2014 customs at this time. Need to check official files
             NewLinkedDiff = SongNewLinkedDiff.Parse(sngData.NLD);
@@ -1048,6 +1049,7 @@ namespace RocksmithToolkitLib.Xml
                 var chord = new SongChord2014();
                 chord.ChordId = notesSection.Notes[i].ChordId;
                 chord.Time = notesSection.Notes[i].Time;
+                // Debug.WriteLine("Song2014 chord.ChordId = " + chord.ChordId);
 
                 // TECHNIQUES
                 chord.parseChordMask(notesSection.Notes[i], notesSection.Notes[i].NoteMask);

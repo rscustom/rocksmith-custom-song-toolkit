@@ -69,8 +69,6 @@
     <Compile Include="DLCPackage\DLCPackageCreator.cs" />
     <Compile Include="DLCPackage\InlayNif.cs" />
     <Compile Include="DLCPackage\Manifest2014\InlayAttributes2014.cs" />
-    <Compile Include="DLCPackage\Manifest\Chord.cs" />
-    <Compile Include="DLCPackage\Manifest\Technique.cs" />
     <Compile Include="DLCPackage\Manifest\Manifest.cs">
       <SubType>Code</SubType>
     </Compile>

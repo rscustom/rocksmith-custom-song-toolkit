@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -92,94 +93,85 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                     break;
             }
         }
- 
-        // OLD METHOD DOES NOT PRODUCE SAME BUT WORKS
+
         public void GenerateTechniques(Attributes2014 attribute, Song2014 song)
         {
+            // TODO: fix ... results from this method are NOT accurate yet
+            //
+            //"Techniques" : {
+            //     "DiffLevelID" : {//used to display which techs are set at current lvl.
+            //         "SectionID" : [// >= 0
+            //             TechID, //required base tech for extended tech(?)
+            //             TechID
+            //         ]
+            //     },
+            // }
+
             if (song.Sections == null)
                 return;
 
             attribute.Techniques = new Dictionary<string, Dictionary<string, List<int>>>();
-            for (int l = 0, s = 0, sectionsL = song.Sections.Length, levelsL = song.Levels.Length; l < levelsL; l++, s = 0)
+            for (int difficulty = 0; difficulty < song.Levels.Length; difficulty++)
             {
-                //                var shapes = song.Levels[l].HandShapes;
-                //                var chords = song.Levels[l].Chords;
-                var notes = song.Levels[l].Notes;
-                var t = new List<int>();
-                var techs = new Dictionary<string, List<int>>();
+                var notes = song.Levels[difficulty].Notes;
+                var sectionId = new Dictionary<string, List<int>>();
+                var techId = new List<int>();
 
-                foreach (var n in notes)
-                {//note should be in section range
-                    var starTime = song.Sections[s].StartTime;
-                    var endTime = song.Sections[Math.Min(s + 1, sectionsL - 1)].StartTime;
-
-                    if (n.Time > starTime && n.Time <= endTime)//in range
-                    {
-                        t.AddRange(getNoteTech(n));
-                    }
-                    else if (n.Time > endTime)//at next section
-                    {
-                        s++;
-                        if (t.Count > 0)
-                        {
-                            techs.Add(s.ToString(), t.Distinct().ToList());
-                            t = new List<int>();
-                        }
-                    }
-                }
-                if (techs.Values.Count > 0)
-                    attribute.Techniques.Add(l.ToString(), techs.Distinct().ToDictionary(x => x.Key, x => x.Value));
-            }
-        }
-        /*
-        public void GenerateTechniques(Attributes2014 attribute, Song2014 song)
-        {
-            if (song.Sections == null)
-                return;
-
-            attribute.Techniques = new Dictionary<string, Dictionary<string, List<int>>>();
-            var attrTechniques = new List<Technique>();
-            
-            for (int l = 0, s = 0, sectionsL = song.Sections.Length, levelsL = song.Levels.Length; l < levelsL; l++, s = 0)
-            {
-                var notes = song.Levels[l].Notes;
-                var t = new Technique();
-                t.DiffLevelID = l.ToString();
-
-                foreach (var note in notes)
+                for (int section = 0; section < song.Sections.Length; section++)
                 {
-                    var starTime = song.Sections[s].StartTime;
-                    var endTime = song.Sections[Math.Min(s + 1, sectionsL - 1)].StartTime;
-                    var tid = new List<int>();
+                    var starTime = song.Sections[section].StartTime;
+                    var endTime = song.Sections[Math.Min(section + 1, song.Sections.Length - 1)].StartTime;
 
-                    if (note.Time > starTime && note.Time <= endTime) //in range
+                    // iterate through notes in section in the difficulty level
+                    foreach (var note in notes)
                     {
-                        int i = 0;
-                        var gntList = getNoteTech(note);
-                        foreach (var gnt in gntList)
-                            i = i + gnt;
-
-                        tid.Add(i);
-                    }
-                    else if (note.Time > endTime) //at next section
-                    {
-                        if (tid.Any())
+                        if (note.Time >= starTime && note.Time < endTime) //in range
                         {
-                            t.SectionID = s.ToString();
-                            t.TechID.AddRange(tid);
-                            attrTechniques.Add(t);
+                            var noteTech = getNoteTech(note);
+                            techId.AddRange(noteTech);
                         }
-
-                        s++;
                     }
+
+                    if (techId.Count > 0)
+                    {
+                        // TODO: needs more tweaking
+                        //  techId.Add(35); // try adding dumby data for now
+                        // order of original usage
+                        List<int> distinctTechIds = techId.Distinct().ToList();
+                        sectionId.Add(section.ToString(), distinctTechIds);
+                    }
+                    /*
+                         "5": {
+                            "1": [
+                                13,
+                                35 <- missing
+                                ],
+                        */
+
+                    techId = new List<int>();
+                }
+
+                if (sectionId.Keys.Count > 0)
+                {
+                    var sortedSectionIds = new Dictionary<string, List<int>>();
+                    var keysSorted = sectionId.Keys.ToList();
+                    keysSorted.Sort();
+
+                    foreach (var key in keysSorted)
+                    {
+                        var keyValue = sectionId[key];
+                        sortedSectionIds.Add(key, keyValue);
+                    }
+
+                    attribute.Techniques.Add(difficulty.ToString(), sortedSectionIds);
                 }
             }
-
-            var stopHere = attrTechniques;
         }
-        */
+
         static List<int> getNoteTech(SongNote2014 n)
         {
+            // TODO: adjust these values
+
             var t = new List<int>();
             if (1 == n.Accent)
                 t.Add(0);
@@ -215,6 +207,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                 t.Add(15);
             if (1 == n.Vibrato)
                 t.Add(16);
+
+            // TODO: determine other dependencies
+
             return t;
         }
 
@@ -264,13 +259,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             foreach (var y in attribute.PhraseIterations)
             {
                 var phrase = song.Phrases[y.PhraseIndex];
-                for (int o = 0; o <= phrase.MaxDifficulty; o++)
+                for (int ndx = 0; ndx <= phrase.MaxDifficulty; ndx++)
                 {
-                    var multiplier = ((float)(o + 1)) / (phrase.MaxDifficulty + 1);
+                    var multiplier = ((float)(ndx + 1)) / (phrase.MaxDifficulty + 1);
                     var pnv = attribute.Score_PNV;
                     var noteCount = 0;
 
-                    if (song.Levels[o].Chords != null)
+                    if (song.Levels[ndx].Chords != null)
                     {
                         if (gameVersion == GameVersion.RS2012)
                             noteCnt += GetNoteCount(y.StartTime, y.EndTime, song.Levels[y.MaxDifficulty].Notes);
@@ -278,8 +273,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                             noteCnt += GetNoteCount2014(y.StartTime, y.EndTime, song.Levels[y.MaxDifficulty].Notes);
                     }
 
-                    if (song.Levels[o].Chords != null)
-                        noteCount += GetChordCount(y.StartTime, y.EndTime, song.Levels[o].Chords);
+                    if (song.Levels[ndx].Chords != null)
+                        noteCount += GetChordCount(y.StartTime, y.EndTime, song.Levels[ndx].Chords);
 
                     if (gameVersion == GameVersion.RS2012)
                     {
@@ -555,61 +550,250 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                 attribute.ArrangementProperties.StandardTuning = 0;
         }
 
-
-        /// <summary>
-        /// Generates the chords.
-        /// </summary>
-        /// <remarks>
-        /// "Chords" : {
-        ///     "DiffLevelID" : {//used to display which techs are set at current lvl.
-        ///         "SetionID" : [// > 0
-        ///             ChordID, //required base tech for extended tech(?)
-        ///             ChordID
-        ///         ]
-        ///     },
-        /// }
-        /// </remarks>
-        /// <param name="attribute">Attribute.</param>
-        /// <param name="song">Song.</param>
         public void GenerateChords(Attributes2014 attribute, Song2014 song)
         {
+            // TODO: fix ... results from this method are NOT accurate 
+            // Some ODLC contain JSON Chords errors, this method is producing good results
+            // USING song.Levels[difficulty].HandShapes METHOD
+            // the handshape data can be used to obtain chordIds 
+            // (more efficient less data to iterate through)
+
+            //"Chords" : {
+            //     "DiffLevelID" : {//used to display which chord is set at current lvl.
+            //         "SectionID" : [// >= 0
+            //             ChordID, 
+            //             ChordID
+            //         ]
+            //     },
+            // }
+
             if (song.Sections == null)
                 return;
 
-           // attribute.Chords = new List<Chord>();
-            var attrChords = new List<Chord>();
-
-            for (int l = 0, s = 0, sectionsL = song.Sections.Length, levelsL = song.Levels.Length; l < levelsL; l++, s = 0)
+            attribute.Chords = new Dictionary<string, Dictionary<string, List<int>>>();
+            for (int difficulty = 0; difficulty < song.Levels.Length; difficulty++)
             {
-                var chords = song.Levels[l].Chords;
-                var c = new Chord();
-                c.DiffLevelID = l.ToString();
+                var chords = song.Levels[difficulty].HandShapes;
+                var sectionId = new Dictionary<string, List<int>>();
+                var chordId = new List<int>();
 
-                foreach (var chord in chords)
+                for (int section = 0; section < song.Sections.Length; section++)
                 {
-                    var starTime = song.Sections[s].StartTime;
-                    var endTime = song.Sections[Math.Min(s + 1, sectionsL - 1)].StartTime;
-                    var cid = new List<int>();
+                    var starTime = song.Sections[section].StartTime;
+                    var endTime = song.Sections[Math.Min(section + 1, song.Sections.Length - 1)].StartTime;
 
-                    if (chord.Time > starTime && chord.Time <= endTime) //in range
+                    // iterate through chords in handshapes in the difficulty level
+                    foreach (var chord in chords)
                     {
-                        cid.Add(chord.ChordId);
-                    }
-                    else if (chord.Time > endTime) //at next section
-                    {
-                        if (cid.Any())
+                        if (chord.StartTime >= starTime && chord.EndTime < endTime) //in range
                         {
-                            c.SectionID = s.ToString();
-                            c.ChordID.AddRange(cid);
-                            attrChords.Add(c);
+                            chordId.Add(chord.ChordId);
                         }
-
-                        s++;
                     }
+
+                    if (chordId.Count > 0)
+                    {
+                        // always ordered in ODLC
+                        List<int> distinctChordIds = chordId.Distinct().OrderBy(x => x).ToList();
+                        sectionId.Add(section.ToString(), distinctChordIds);
+                    }
+
+                    chordId = new List<int>();
                 }
+
+                if (sectionId.Keys.Count > 0)
+                    attribute.Chords.Add(difficulty.ToString(), sectionId);
             }
-            var stopHere = attrChords;
+
         }
 
     }
 }
+
+
+
+//public void GenerateChords(Attributes2014 attribute, Song2014 song)
+//{
+// SAVE ... This method works for chords for which handshapes do not exists.
+// Some ODLC contain JSON Chords errors, confirmed this method is accurate
+// USING song.Levels[difficulty].Chords METHOD
+//
+//    //"Chords" : {
+//    //     "DiffLevelID" : {//used to display which chord is set at current lvl.
+//    //         "SectionID" : [// >= 0
+//    //             ChordID, 
+//    //             ChordID
+//    //         ]
+//    //     },
+//    // }
+
+//    if (song.Sections == null)
+//        return;
+
+//    attribute.Chords = new Dictionary<string, Dictionary<string, List<int>>>();
+//    for (int difficulty = 0; difficulty < song.Levels.Length; difficulty++)
+//    {
+//        var chords = song.Levels[difficulty].Chords;
+//        var sectionId = new Dictionary<string, List<int>>();
+//        var chordId = new List<int>();
+//        Debug.WriteLine("ManifestFunctions difficulty level: " + difficulty);
+
+//        for (int section = 0; section < song.Sections.Length; section++)
+//        {
+//            var starTime = song.Sections[section].StartTime;
+//            var endTime = song.Sections[Math.Min(section + 1, song.Sections.Length - 1)].StartTime;
+//            Debug.WriteLine("ManifestFunctions section: " + section);
+
+//            // iterate through chords in section in the difficulty level
+//            foreach (var chord in chords)
+//            {
+//                if (chord.Time >= starTime && chord.Time < endTime) //in range
+//                {
+//                    Debug.WriteLine("ManifestFunctions added chord.ChordId: " + chord.ChordId);
+//                    chordId.Add(chord.ChordId);
+//                }
+//            }
+
+//            if (chordId.Count > 0)
+//            {
+//                List<int> distinctChordIds = chordId.Distinct().OrderBy(x => x).ToList();
+//                sectionId.Add(section.ToString(), distinctChordIds);
+//            }
+
+//            chordId = new List<int>();
+//        }
+
+//        if (sectionId.Keys.Count > 0)
+//            attribute.Chords.Add(difficulty.ToString(), sectionId); // .Distinct().ToDictionary(x => x.Key, x => x.Value));
+//    }
+
+//}
+
+
+///// <summary>
+///// Generates the techniques.
+///// </summary>
+///// <remarks>
+///// "Techniques" : {
+/////     "DiffLevelID" : {//used to display which techs are set at current lvl.
+/////         "SetionID" : [// > 0
+/////             TechID, //required base tech for extended tech(?)
+/////             TechID
+/////         ]
+/////     },
+///// }
+///// </remarks>
+///// <param name="attribute">Attribute.</param>
+///// <param name="song">Song.</param>
+//public void GenerateTechniques(Attributes2014 attribute, Song2014 song)
+//{
+//    // TODO: fix ... results from this method are NOT accurate 
+//    //
+//    //"Techniques" : {
+//    //     "DiffLevelID" : {//used to display which techs are set at current lvl.
+//    //         "SectionID" : [// > 0
+//    //             TechID, //required base tech for extended tech(?)
+//    //             TechID
+//    //         ]
+//    //     },
+//    // }
+
+//    if (song.Sections == null)
+//        return;
+
+//    attribute.Techniques = new Dictionary<string, Dictionary<string, List<int>>>();
+//    for (int difficulty = 0; difficulty < song.Levels.Length; difficulty++)
+//    {
+//        var notes = song.Levels[difficulty].Notes;
+//        var sectionId = new Dictionary<string, List<int>>();
+//        var techId = new List<int>();
+
+//        for (int section = 0; section < song.Sections.Length; section++)
+//        {
+//            var starTime = song.Sections[section].StartTime;
+//            var endTime = song.Sections[Math.Min(section + 1, song.Sections.Length - 1)].StartTime;
+
+//            // iterate through notes in section in the difficulty level
+//            foreach (var note in notes)
+//            {
+//                if (note.Time >= starTime && note.Time < endTime) //in range
+//                {
+//                    var noteTech = getNoteTech(note);
+//                    techId.AddRange(noteTech);
+//                }
+//            }
+
+//            if (techId.Count > 0)
+//            {
+//                // TODO: needs more tweaking
+//                //  techId.Add(35); // try adding dumby data for now
+//                // order of usage in ODLC
+//                List<int> distinctTechIds = techId.Distinct().ToList();
+//                sectionId.Add((section + 1).ToString(), distinctTechIds);
+//            }
+//            /*
+//                 "5": {
+//                    "1": [
+//                        13,
+//                        35 <- missing
+//                        ],
+//                */
+
+
+
+//            techId = new List<int>();
+//        }
+
+//        if (sectionId.Keys.Count > 0)
+//        {
+//            var sortedSectionIds = new Dictionary<string, List<int>>();
+//            var keysSorted = sectionId.Keys.ToList();
+//            keysSorted.Sort();
+//            foreach (var key in keysSorted)
+//            {
+//                var keyValue = sectionId[key];
+//                sortedSectionIds.Add(key, keyValue);
+//            }
+//            attribute.Techniques.Add(difficulty.ToString(), sortedSectionIds);
+//        }
+//    }
+//}
+
+
+//       public void GenerateTechniques(Attributes2014 attribute, Song2014 song)
+//        {
+//            // TODO: improve this method
+//            if (song.Sections == null)
+//                return;
+
+//            attribute.Techniques = new Dictionary<string, Dictionary<string, List<int>>>();
+//            for( int l = 0, s = 0, sectionsL = song.Sections.Length, levelsL = song.Levels.Length; l < levelsL; l++, s = 0 )
+//            {
+////                var shapes = song.Levels[l].HandShapes;
+////                var chords = song.Levels[l].Chords;
+//                var notes = song.Levels[l].Notes;
+//                var t = new List<int>();
+//                var techs = new Dictionary<string, List<int>>();
+
+//                foreach( var n in notes )
+//                {//note should be in section range
+//                    var starTime = song.Sections[s].StartTime;
+//                    var endTime = song.Sections[Math.Min(s + 1, sectionsL - 1)].StartTime;
+
+//                    if(n.Time > starTime && n.Time <= endTime)//in range
+//                    {
+//                        t.AddRange(getNoteTech(n));
+//                    }
+//                    else if(n.Time > endTime)//at next section
+//                    {
+//                        s++;
+//                        if(t.Count > 0){
+//                            techs.Add(s.ToString(), t.Distinct().ToList());
+//                            t = new List<int>();
+//                        }
+//                    }
+//                }
+//                if(techs.Values.Count > 0)
+//                    attribute.Techniques.Add(l.ToString(), techs.Distinct().ToDictionary(x => x.Key, x => x.Value));
+//            }
+//        }

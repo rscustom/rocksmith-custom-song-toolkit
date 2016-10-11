@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph2014;
 using RocksmithToolkitLib.DLCPackage.Manifest;
@@ -20,7 +21,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
         /// </summary>
         public int? ArrangementType { get; set; }
         public string BlockAsset { get; set; }
-        // public List<Chord> Chords { get; set; }
+        // ODLC may contain errors in Chords data (seeing too many Chords in some JSON files) 
         public Dictionary<string, Dictionary<string, List<int>>> Chords { get; set; }
         public List<ChordTemplate> ChordTemplates { get; set; }
         public List<float> DynamicVisualDensity { get; set; }
@@ -46,7 +47,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
         public string SongXml { get; set; }
         public int TargetScore { get; set; }
         public Dictionary<string, Dictionary<string, List<int>>> Techniques { get; set; }
-        //  public List<Technique> Techniques { get; set; }
         public string Tone_A { get; set; }
         public string Tone_B { get; set; }
         public string Tone_Base { get; set; }
@@ -150,19 +150,29 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
 
             //SongPartition  -- Generated in DLCPackageCreator after this constructor
 
-            // not sure why this is here?
             ChordTemplates = new List<ChordTemplate>();
             manifestFunctions.GenerateChordTemplateData(this, SongContent);
 
-            // manifestFunctions.GenerateChords(this, SongContent);
+            //Chords TODO: create me
+            try
+            {
+                manifestFunctions.GenerateChords(this, SongContent);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("GenerateChords: " + ex.Message);
+            }
 
             //Techniques TODO: improve me
             // not source of 100% bug
             try
             {
-                manifestFunctions.GenerateTechniques(this, SongContent);
+                   manifestFunctions.GenerateTechniques(this, SongContent);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("GenerateTechniques: " + ex.Message);
+            }
 
             //Fix for Dead tones
             var it = info.TonesRS2014;
