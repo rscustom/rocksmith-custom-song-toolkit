@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "remastered", "remastered.csproj", "{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		InnoInstaller|Any CPU = InnoInstaller|Any CPU
+		InnoInstaller|x86 = InnoInstaller|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.Debug|x86.ActiveCfg = Debug|x86
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.Debug|x86.Build.0 = Debug|x86
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.InnoInstaller|Any CPU.ActiveCfg = Release|Any CPU
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.InnoInstaller|Any CPU.Build.0 = Release|Any CPU
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.InnoInstaller|x86.ActiveCfg = Release|Any CPU
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.Release|x86.ActiveCfg = Release|x86
+		{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

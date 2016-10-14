@@ -79,7 +79,7 @@ namespace RocksmithToolkitLib.Extensions
             if (reader == null)
                 return null;
 
-            var info = new ToolkitInfo();
+            var tkInfo = new ToolkitInfo();
             string line = null;
             while ((line = reader.ReadLine()) != null)
             {
@@ -94,7 +94,7 @@ namespace RocksmithToolkitLib.Extensions
                 if (tokens.Length == 1)
                 {
                     // this is probably just the version number
-                    info.ToolkitVersion = tokens[0];
+                    tkInfo.ToolkitVersion = tokens[0];
                 }
                 if (tokens.Length == 2)
                 {
@@ -103,11 +103,13 @@ namespace RocksmithToolkitLib.Extensions
                     switch (key)
                     {
                         case "toolkit version":
-                            info.ToolkitVersion = tokens[1]; break;
+                            tkInfo.ToolkitVersion = tokens[1]; break;
                         case "package author":
-                            info.PackageAuthor = tokens[1]; break;
+                            tkInfo.PackageAuthor = tokens[1]; break;
                         case "package version":
-                            info.PackageVersion = tokens[1]; break;
+                            tkInfo.PackageVersion = tokens[1]; break;
+                        case "package comment":
+                            tkInfo.PackageComment = tokens[1]; break;
                         default:
                             Console.WriteLine("  Notice: Unknown key in toolkit.version: {0}", key);
                             break;
@@ -118,7 +120,7 @@ namespace RocksmithToolkitLib.Extensions
                     Console.WriteLine("  Notice: Unrecognized line in toolkit.version: {0}", line);
                 }
             }
-            return info;
+            return tkInfo;
         }
 
         public static bool IsBetween(float testValue, float minValue, float maxValue)
@@ -182,14 +184,13 @@ namespace RocksmithToolkitLib.Extensions
             return builder.ToString();
         }
 
-        public static string ReadPackageVersion(string filePath)
+        public static ToolkitInfo ReadToolkitInfo(string filePath)
         {
-            string packageVersion = "1";
+            ToolkitInfo tkInfo;
             using (var info = File.OpenText(filePath))
-            {
-                packageVersion = GetToolkitInfo(info).PackageVersion ?? "1";
-            }
-            return packageVersion;
+                tkInfo = GetToolkitInfo(info);
+  
+            return tkInfo;
         }
 
         public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null)

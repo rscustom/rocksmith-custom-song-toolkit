@@ -25,7 +25,7 @@ namespace RocksmithToolkitLib.DLCPackage
 {
 
     public class DLCPackageData
-    { 
+    {
         // DO NOT change variable names ... hidden dependancies
         public GameVersion GameVersion;
         public bool Pc { get; set; }
@@ -44,6 +44,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public float Volume { get; set; }
         public PackageMagic SignatureType { get; set; }
         public string PackageVersion { get; set; }
+        public string PackageComment { get; set; }
 
         // loads the old toolkit version info from template (if any)
         // writes current toolkit version to package template file
@@ -437,12 +438,20 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             try
-            {//TODO: validate that rs1 songs have no this file
-                //Package version
-                var versionFile = Directory.GetFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories);
-                if (versionFile.Length > 0)
-                    data.PackageVersion = GeneralExtensions.ReadPackageVersion(versionFile[0]);
-                else data.PackageVersion = "1";
+            {
+                // Package Info
+                var versionFile = Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).FirstOrDefault();
+                if (versionFile.Any())
+                {
+                    var tkInfo = GeneralExtensions.ReadToolkitInfo(versionFile);
+                    data.PackageVersion = tkInfo.PackageVersion;
+                    data.PackageComment = tkInfo.PackageComment;
+                }
+                else
+                {
+                    data.PackageVersion = "1";
+                    data.PackageComment = "";
+                }
             }
             catch { }
 
@@ -668,11 +677,19 @@ namespace RocksmithToolkitLib.DLCPackage
             if (appidFile != null)
                 data.AppId = File.ReadAllText(appidFile);
 
-            //Package version
+            // Package Info
             var versionFile = Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).FirstOrDefault();
-            if (versionFile != null)
-                data.PackageVersion = GeneralExtensions.ReadPackageVersion(versionFile);
-            else data.PackageVersion = "1";
+            if (versionFile.Any())
+            {
+                var tkInfo = GeneralExtensions.ReadToolkitInfo(versionFile);
+                data.PackageVersion = tkInfo.PackageVersion;
+                data.PackageComment = tkInfo.PackageComment;
+            }
+            else
+            {
+                data.PackageVersion = "1";
+                data.PackageComment = "";
+            }
 
             return data;
         }
@@ -783,7 +800,10 @@ namespace RocksmithToolkitLib.DLCPackage
             var oggFiles = Directory.EnumerateFiles(unpackedDir, "*_fixed.ogg", SearchOption.AllDirectories).ToArray();
             if (!oggFiles.Any())
                 throw new InvalidDataException("Audio files not found.");
-            //TODO: read names from bnk and rename.
+            // TODO: read names from bnk and rename.
+            // TODO: FIX THIS ... not valid for short jingle/riff CDLC < 30 seconds
+            // because the preview 30 seconds is larger than actual song
+            // need to base preview decision on duration not size
             var a0 = new FileInfo(oggFiles[0]);
             if (oggFiles.Count() == 2)
             {
@@ -807,6 +827,9 @@ namespace RocksmithToolkitLib.DLCPackage
             if (!wemFiles.Any())
                 throw new InvalidDataException("Audio files not found.");
 
+            // TODO: FIX THIS ... not valid for short jingle/riff CDLC < 30 seconds
+            // because the preview 30 seconds is larger than actual song
+            // need to base preview decision on duration not size
             var a1 = new FileInfo(wemFiles[0]);
             if (wemFiles.Count() == 2)
             {

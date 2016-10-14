@@ -128,7 +128,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                     {
                         if (note.Time >= starTime && note.Time < endTime) //in range
                         {
-                            var noteTech = getNoteTech(note);
+                            var noteTech = getNoteTech(note); // needs tweaking
                             techId.AddRange(noteTech);
                         }
                     }
@@ -137,35 +137,32 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                     {
                         // TODO: needs more tweaking
                         //  techId.Add(35); // try adding dumby data for now
-                        // order of original usage
-                        List<int> distinctTechIds = techId.Distinct().ToList();
+                        List<int> distinctTechIds = techId.Distinct().OrderBy(x => x).ToList();
+                        // sometimes sectionNumbers are not unique so duplicate key throws an error if not checked
+                        if (sectionId.ContainsKey(sectionNumber.ToString()))
+                        {
+                            // get the current values and make sure all combined values are distinct
+                            var techIdValue = sectionId[sectionNumber.ToString()];
+                            techIdValue.AddRange(distinctTechIds);
+                            distinctTechIds = techIdValue.Distinct().OrderBy(x => x).ToList();
+                            sectionId.Remove(sectionNumber.ToString());
+                        }
+
                         sectionId.Add(sectionNumber.ToString(), distinctTechIds);
                     }
-                    /*
-                         "5": {
-                            "1": [
-                                13,
-                                35 <- missing
-                                ],
-                        */
 
                     techId = new List<int>();
                 }
+                /*
+                "5": {
+                   "1": [
+                       13,
+                       35 <- missing
+                       ],
+               */
 
                 if (sectionId.Keys.Count > 0)
-                {
-                    var sortedSectionIds = new Dictionary<string, List<int>>();
-                    var keysSorted = sectionId.Keys.ToList();
-                    keysSorted.Sort();
-
-                    foreach (var key in keysSorted)
-                    {
-                        var keyValue = sectionId[key];
-                        sortedSectionIds.Add(key, keyValue);
-                    }
-
-                    attribute.Techniques.Add(difficulty.ToString(), sortedSectionIds);
-                }
+                    attribute.Techniques.Add(difficulty.ToString(), sectionId);
             }
         }
 
@@ -612,7 +609,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
     }
 }
 
-
+// CODE GRAVE YARD
 
 //public void GenerateChords(Attributes2014 attribute, Song2014 song)
 //{
@@ -799,3 +796,18 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 //                    attribute.Techniques.Add(l.ToString(), techs.Distinct().ToDictionary(x => x.Key, x => x.Value));
 //            }
 //        }
+
+//if (sectionId.Keys.Count > 0)
+//{
+//    var sortedSectionIds = new Dictionary<string, List<int>>();
+//    var keysSorted = sectionId.Keys.ToList();
+//    keysSorted.Sort();
+
+//    foreach (var key in keysSorted)
+//    {
+//        var keyValue = sectionId[key];
+//        sortedSectionIds.Add(key, keyValue);
+//    }
+
+//    attribute.Techniques.Add(difficulty.ToString(), sortedSectionIds);
+//}

@@ -407,7 +407,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 using (var xblockStream = new MemoryStream())
                 {
                     // TOOLKIT VERSION
-                    GenerateToolkitVersion(toolkitVersionStream, packageVersion: info.PackageVersion);
+                    var stopHere = info;
+                    GenerateToolkitVersion(toolkitVersionStream, packageVersion: info.PackageVersion, packageComment: info.PackageComment);
                     packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
 
                     // APP ID
@@ -1039,7 +1040,7 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        public static void GenerateToolkitVersion(Stream output, string packageAuthor = null, string packageVersion = null)
+        public static void GenerateToolkitVersion(Stream output, string packageAuthor = null, string packageVersion = null, string packageComment = null)
         {
             if (String.IsNullOrEmpty(packageAuthor))
                 packageAuthor = ConfigRepository.Instance()["general_defaultauthor"];
@@ -1049,7 +1050,9 @@ namespace RocksmithToolkitLib.DLCPackage
             if (!String.IsNullOrEmpty(packageAuthor))
                 writer.WriteLine("Package Author: {0}", packageAuthor);
             if (!String.IsNullOrEmpty(packageVersion))
-                writer.Write("Package Version: {0}", packageVersion);
+                writer.WriteLine("Package Version: {0}", packageVersion);
+            if (!String.IsNullOrEmpty(packageComment))
+                writer.Write("Package Comment: {0}", packageComment);
 
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);

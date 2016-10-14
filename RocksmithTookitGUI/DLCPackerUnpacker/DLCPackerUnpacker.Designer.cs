@@ -243,6 +243,7 @@
             this.gbPacker.TabIndex = 17;
             this.gbPacker.TabStop = false;
             this.gbPacker.Text = "Packer";
+            this.toolTip.SetToolTip(this.gbPacker, "Use the CDLC Creator tab for\r\nmaking repairs or changes");
             // 
             // label1
             // 

@@ -39,13 +39,15 @@ namespace RocksmithToolkitGUI
                 LoadTemplate(args[0]);
 
             // get the user's attention that this is a special beta release
-            var errMsg = "This is a special beta release of the toolkit so there could be some bugs." + Environment.NewLine +
-                          "Reverted parseArrangements method in Sng2014FileWriter to earlier version for testing." + Environment.NewLine +
-                          "Revised mastery to make it more difficult to obtain 100%." + Environment.NewLine +
-                          "Revised Techniques and Codes Section of JSON Manifest output." + Environment.NewLine +
-                          "Updated toolkit to use DDC 3.1 (fixes sustain management)" + Environment.NewLine + Environment.NewLine +
-                          "Please let the toolkit devs know if experience any in game issues or not as a result." + Environment.NewLine;
-            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES #4", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
+            var errMsg = "This is a special beta release of the toolkit so there could be some bugs." + Environment.NewLine + Environment.NewLine +
+                "- Updated parseArrangements method in Sng2014FileWriter." + Environment.NewLine +
+                "- Revised mastery to make it more difficult to obtain 100%." + Environment.NewLine +
+                "- Revised Techniques and Codes Section of JSON Manifest output." + Environment.NewLine +
+                "- Updated toolkit to use DDC 3.1 (fixes sustain management)" + Environment.NewLine +
+                "- Added DropletApp 'remasted.exe' CLI tool to do bulk CDLC repairs." + Environment.NewLine +
+                "- Added ToolkitInfo comment field to track CDLC repair status." + Environment.NewLine + Environment.NewLine +
+                "Please let the toolkit devs know if experience any in game issues or not as a result." + Environment.NewLine;
+            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES #5", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
 
             InitMainForm();
         }
@@ -54,7 +56,7 @@ namespace RocksmithToolkitGUI
         {
             // comment out as necessary when issuing new release version
             // update (remove beta) from AssemblyInfo.cs in GUI, Lib and Updater
-            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta) 100% BUG ISSUES #4", ToolkitVersion.version);
+            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta) 100% BUG ISSUES #5", ToolkitVersion.version);
             //this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)

@@ -224,6 +224,23 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { packageVersionTB.Text = value; }
         }
 
+        private string packageComment;
+        public string PackageComment
+        {
+            get
+            {
+                // add any ToolkitInfo comment here
+                if (String.IsNullOrEmpty(packageComment))
+                    return "(Remastered by CDLC Creator)";
+
+                if (!packageComment.Contains("Remastered"))
+                    return packageComment + " " + "(Remastered by CDLC Creator)";
+
+                return packageComment;
+            }
+            set { packageComment = value; }
+        }
+
         //Tones
         private IEnumerable<string> GetToneNames()
         {
@@ -461,7 +478,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 sfd.FileName = StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                 sfd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
-  
+
                 if (sfd.ShowDialog(this) != DialogResult.OK) // 'this' ensures sfd is topmost
                     return;
 
@@ -682,9 +699,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 using (
                     var stm = XmlWriter.Create(dlcSavePath,
-                        new XmlWriterSettings {CheckCharacters = true, Indent = true}))
+                        new XmlWriterSettings { CheckCharacters = true, Indent = true }))
                 {
-                    new DataContractSerializer(typeof (DLCPackageData)).WriteObject(stm, packageData);
+                    new DataContractSerializer(typeof(DLCPackageData)).WriteObject(stm, packageData);
                 }
             }
             catch
@@ -888,6 +905,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             platformPS3.Checked = info.PS3;
 
             PackageVersion = info.PackageVersion;
+            PackageComment = info.PackageComment;
 
             tonesLB.Items.Clear();
             switch (CurrentGameVersion)
@@ -1115,7 +1133,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 AlbumSortTB.Focus();
                 return null;
             }
-  
+
             if (!Int32.TryParse(AlbumYear, out year))
             {
                 YearTB.Focus();
@@ -1272,6 +1290,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion != GameVersion.RS2012)
                 tonesRS2014 = tonesLB.Items.OfType<Tone2014>().ToList();
 
+            //TODO FIXME:
             //string liveSignatureID = xboxLicense0IDTB.Text.Trim();
             //if (rbuttonSignatureLIVE.Checked && String.IsNullOrEmpty(liveSignatureID))
             //{
@@ -1291,7 +1310,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //{
             //    licenses.Add(new XBox360License() { ID = Convert.ToInt64(xboxLicense0IDTB.Text.Trim(), 16), Bit = 1, Flag = 1 });
             //}
-            //FIXME:
+
             var songVol = (float)songVolumeBox.Value;
             var previewVol = (float)previewVolumeBox.Value;
             var audioQualiy = audioQualityBox.Value;
@@ -1328,7 +1347,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     Volume = songVol,
                     PreviewVolume = previewVol,
                     SignatureType = PackageMagic.CON,
-                    PackageVersion = PackageVersion.GetValidVersion()
+                    PackageVersion = PackageVersion.GetValidVersion(),
+                    PackageComment = PackageComment
                 };
 
             return data;
@@ -1367,44 +1387,48 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 //TODO: before this, check somewhere if autotone present, like update arrangement info in GetPackageData section.
                 bool updTones = songXml.Tones != null;
                 if (!String.IsNullOrEmpty(arr.ToneBase)) songXml.ToneBase = arr.ToneBase;
-                if (!String.IsNullOrEmpty(arr.ToneA)) {
+                if (!String.IsNullOrEmpty(arr.ToneA))
+                {
                     if (updTones)
-                    foreach (var t in songXml.Tones)
-                        if (t.Name == songXml.ToneA)
-                        {
-                            t.Name = arr.ToneA;
-                            t.Id = 0;
-                        }
+                        foreach (var t in songXml.Tones)
+                            if (t.Name == songXml.ToneA)
+                            {
+                                t.Name = arr.ToneA;
+                                t.Id = 0;
+                            }
                     songXml.ToneA = arr.ToneA;
                 }
-                if (!String.IsNullOrEmpty(arr.ToneB)) {
+                if (!String.IsNullOrEmpty(arr.ToneB))
+                {
                     if (updTones)
-                    foreach (var t in songXml.Tones)
-                        if (t.Name == songXml.ToneB)
-                        {
-                            t.Name = arr.ToneB;
-                            t.Id = 1;
-                        }
+                        foreach (var t in songXml.Tones)
+                            if (t.Name == songXml.ToneB)
+                            {
+                                t.Name = arr.ToneB;
+                                t.Id = 1;
+                            }
                     songXml.ToneB = arr.ToneB;
                 }
-                if (!String.IsNullOrEmpty(arr.ToneC)) {
+                if (!String.IsNullOrEmpty(arr.ToneC))
+                {
                     if (updTones)
-                    foreach (var t in songXml.Tones)
-                        if (t.Name == songXml.ToneC)
-                        {
-                            t.Name = arr.ToneC;
-                            t.Id = 2;
-                        }
+                        foreach (var t in songXml.Tones)
+                            if (t.Name == songXml.ToneC)
+                            {
+                                t.Name = arr.ToneC;
+                                t.Id = 2;
+                            }
                     songXml.ToneC = arr.ToneC;
                 }
-                if (!String.IsNullOrEmpty(arr.ToneD)) {
+                if (!String.IsNullOrEmpty(arr.ToneD))
+                {
                     if (updTones)
-                    foreach (var t in songXml.Tones)
-                        if (t.Name == songXml.ToneD)
-                        {
-                            t.Name = arr.ToneD;
-                            t.Id = 3;
-                        }
+                        foreach (var t in songXml.Tones)
+                            if (t.Name == songXml.ToneD)
+                            {
+                                t.Name = arr.ToneD;
+                                t.Id = 3;
+                            }
                     songXml.ToneD = arr.ToneD;
                 }
 
