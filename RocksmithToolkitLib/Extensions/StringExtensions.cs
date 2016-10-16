@@ -232,9 +232,7 @@ namespace RocksmithToolkitLib.Extensions
             if (match.Success)
                 return match.Value.Trim();
 
-            // force user to make entry rather than defaulting
-            // return "1"; // default version
-            return "";
+            return "1"; // default version
         }
 
         public static string GetValidYear(this string value)
@@ -558,7 +556,7 @@ namespace RocksmithToolkitLib.Extensions
         public static string StripSpecialCharacters(this string value)
         {
             // value = Regex.Replace(value, "[`~#\\$€£*',.;:!?()[]\"{}/]", "");
-            Regex rgx = new Regex("[^a-zA-Z0-9 _#'.]+$"); // these are acceptable
+            Regex rgx = new Regex("[^a-zA-Z0-9 _#'.]+$"); // only these are acceptable
             var result = rgx.Replace(value, "");
             return result;
         }

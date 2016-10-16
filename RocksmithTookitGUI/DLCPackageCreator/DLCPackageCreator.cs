@@ -953,7 +953,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (String.IsNullOrEmpty(AppIdTB.Text))
                 AppIdTB.Text = "248750"; // hardcoded for now
             AlbumTB.Text = info.SongInfo.Album;
-            AlbumSortTB.Text = info.SongInfo.AlbumSort;
+            // AlbumSortTB.Text = info.SongInfo.AlbumSort; // done below
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
             SongDisplayNameSortTB.Text = info.SongInfo.SongDisplayNameSort;
             YearTB.Text = info.SongInfo.SongYear.ToString();
@@ -1377,12 +1377,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 var songXml = Song2014.LoadFromFile(arr.SongXml.File);
                 arr.ClearCache();
-                songXml.AlbumName = info.SongInfo.Album;
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
                 songXml.ArtistName = info.SongInfo.Artist;
-                songXml.ArtistNameSort = info.SongInfo.ArtistSort;
-                songXml.AverageTempo = info.SongInfo.AverageTempo;
                 songXml.Title = info.SongInfo.SongDisplayName;
+                songXml.AlbumName = info.SongInfo.Album;
+                songXml.ArtistNameSort = info.SongInfo.ArtistSort;
+                songXml.SongNameSort = info.SongInfo.SongDisplayNameSort;
+                songXml.AlbumNameSort = info.SongInfo.AlbumSort;
+                songXml.AverageTempo = info.SongInfo.AverageTempo;
                 songXml.Tuning = arr.TuningStrings;
                 //TODO: before this, check somewhere if autotone present, like update arrangement info in GetPackageData section.
                 bool updTones = songXml.Tones != null;

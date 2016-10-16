@@ -6,6 +6,7 @@ using System.Linq;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
+using RocksmithToolkitLib.Xml;
 
 namespace remastered
 {
@@ -28,6 +29,7 @@ namespace remastered
             if (args[0].Contains(@"?") || args[0].ToLower().Contains(@"help"))
             {
                 Console.WriteLine(@"remastered DropletApp for Rocksmith 2014 CDLC");
+                Console.WriteLine(@" - Now includes CDLC corruption and validation checking");
                 Console.WriteLine();
                 Console.WriteLine(@" - Mac/PC Version: " + ProjectVersion());
                 Console.WriteLine(@"   Copyright (C) 2016 Toolkit Developers");
@@ -169,11 +171,30 @@ namespace remastered
                         // generate new Arrangement IDs
                         arr.Id = IdGenerator.Guid();
                         arr.MasterId = RandomGenerator.NextInt();
-                        arr.ClearCache();
+
+                        // validate SongInfo
+                        var songXml = Song2014.LoadFromFile(arr.SongXml.File);
+                        arr.ClearCache(); // why this comes after loading xml IDK
+                        songXml.AlbumYear = packageData.SongInfo.SongYear.ToString().GetValidYear();
+                        songXml.ArtistName = packageData.SongInfo.Artist.GetValidAtaSpaceName();
+                        songXml.Title = packageData.SongInfo.SongDisplayName.GetValidAtaSpaceName();
+                        songXml.AlbumName = packageData.SongInfo.Album.GetValidAtaSpaceName();
+                        songXml.ArtistNameSort = packageData.SongInfo.ArtistSort.GetValidSortableName();
+                        songXml.SongNameSort = packageData.SongInfo.SongDisplayNameSort.GetValidSortableName();
+                        songXml.AlbumNameSort = packageData.SongInfo.AlbumSort.GetValidSortableName();
+                        songXml.AverageTempo = Convert.ToSingle(packageData.SongInfo.AverageTempo.ToString().GetValidTempo());
+
+                        using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
+                            songXml.Serialize(stream, true);
                     }
+
+                    // validate packageData (important)
+                    packageData.Name = packageData.Name.GetValidKey(); // DLC Key                 
 
                     if (String.IsNullOrEmpty(packageData.PackageVersion))
                         packageData.PackageVersion = "1";
+                    else
+                        packageData.PackageVersion = packageData.PackageVersion.GetValidVersion();
 
                     // add comment to ToolkitInfo to identify Remastered CDLC
                     var packageComment = packageData.PackageComment;
@@ -229,6 +250,8 @@ namespace remastered
                     Console.ForegroundColor = ConsoleColor.Green;
                     continue;
                 }
+
+                // could check for corrupt CDLC here
 
                 RemasterSong(cdlcFile);
             }
