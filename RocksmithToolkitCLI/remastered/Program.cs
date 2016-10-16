@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
@@ -12,6 +15,8 @@ namespace remastered
 {
     class Program
     {
+        private static StringBuilder sbErrors = new StringBuilder();
+
         private static int Main(string[] args)
         {
             Console.WindowWidth = 80;
@@ -20,7 +25,7 @@ namespace remastered
 
 #if (DEBUG)
             // give the progie some dumby file to work on
-            args = new string[] { "D:\\Temp\\Test\\PeppaPig_p.psarc" };
+            args = new string[] { "D:\\Temp\\Test\\The_Beatles-NowhereMan_p.psarc" };
             Console.WriteLine(@"Running in Debug Mode ... help is not available");
 #endif
 
@@ -55,6 +60,7 @@ namespace remastered
             }
 
             Console.WriteLine(@"Initializing Remastered CLI ...");
+            sbErrors.AppendLine("remastered.exe CLI failed to repair the following files:");
 
             foreach (var arg in args)
             {
@@ -75,6 +81,13 @@ namespace remastered
                     RepairFiles(new string[] { arg });
             }
 
+            var errorLogLines = Regex.Matches(sbErrors.ToString(), Environment.NewLine).Count;
+            if (errorLogLines > 1)
+            {
+                var errorLogPath = Path.Combine(Path.GetDirectoryName(args[0]), "remastered_error.log");
+                File.WriteAllText(errorLogPath, sbErrors.ToString().TrimEnd('\r', '\n'));
+            }
+
             Console.WriteLine();
             Console.WriteLine(@"Done applying Remastered Repair to CDLC ...");
             Console.WriteLine();
@@ -91,6 +104,11 @@ namespace remastered
             Console.WriteLine();
             Console.WriteLine(@" - The (.org) files can be archived or deleted after");
             Console.WriteLine(@"   it is confirm that the Remastered CDLC is working.");
+            Console.WriteLine();
+            Console.WriteLine(@" - Any corrupt CDLC have been renamed and now have a");
+            Console.WriteLine(@"   (.cor) file extension.  These should be submitted to");
+            Console.WriteLine(@"   the original charter so they can be repaired.  See");
+            Console.WriteLine(@"   'remastered_error.log' for a list of corrupt files.");
             Console.WriteLine();
             Console.WriteLine(@"Press any key to continue ...");
             CleanupLocalTemp();
@@ -172,8 +190,19 @@ namespace remastered
                         arr.Id = IdGenerator.Guid();
                         arr.MasterId = RandomGenerator.NextInt();
 
+                        // preserve existing xml comments
+                        arr.XmlComments = Song2014.ReadXmlComments(arr.SongXml.File);
+                        var isCommented = false;
+                        var commentNodes = arr.XmlComments as List<XComment> ?? arr.XmlComments.ToList();
+                        foreach (var commentNode in commentNodes)
+                        {
+                            if (commentNode.ToString().Contains(@"Remastered"))
+                                isCommented = true;
+                        }
+
                         // validate SongInfo
                         var songXml = Song2014.LoadFromFile(arr.SongXml.File);
+
                         arr.ClearCache(); // why this comes after loading xml IDK
                         songXml.AlbumYear = packageData.SongInfo.SongYear.ToString().GetValidYear();
                         songXml.ArtistName = packageData.SongInfo.Artist.GetValidAtaSpaceName();
@@ -184,8 +213,13 @@ namespace remastered
                         songXml.AlbumNameSort = packageData.SongInfo.AlbumSort.GetValidSortableName();
                         songXml.AverageTempo = Convert.ToSingle(packageData.SongInfo.AverageTempo.ToString().GetValidTempo());
 
+                        // resave the validated xml
                         using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                             songXml.Serialize(stream, true);
+
+                        // add "Remastered" comment to saved xml to be able to identify repaired CDLC        
+                        if (!isCommented)
+                            Song2014.WriteXmlComments(arr.SongXml.File, commentNodes, true, String.Format(@"(Remastered by CLI"));
                     }
 
                     // validate packageData (important)
@@ -220,6 +254,18 @@ namespace remastered
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(@" - Repair failed ... " + ex.Message);
                 Console.ForegroundColor = ConsoleColor.Green;
+
+                // delete backup, restore original and rename corrupt (cor)
+                var backupPath = String.Format(@"{0}.org", filePath);
+                if (File.Exists(backupPath))
+                {
+                    var corruptPath = String.Format(@"{0}.cor", filePath);
+                    File.Copy(backupPath, corruptPath, true);
+                    File.Delete(backupPath);
+                    File.Delete(filePath);
+                }
+
+                sbErrors.AppendLine(String.Format("{0}", filePath));        
             }
 
             Console.WriteLine();
@@ -259,6 +305,7 @@ namespace remastered
 
         private static int ShowHelpfulError(string message)
         {
+            sbErrors.AppendLine(String.Format("{0}", message));
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write(@"remastered: ");
             Console.WriteLine(message);
@@ -342,16 +389,3 @@ namespace remastered
 //else
 //    return ShowHelpfulError(@"Please drop either all files or all folders onto the executable.");
 
-// commented out since we are not modifying any xml files
-// preserve existing xml comments
-//arr.XmlComments = Song2014.ReadXmlComments(arr.SongXml.File);
-// add "Remastered" comment to XML to be able to identify repaired CDLC 
-//var isCommented = false;
-//var commentNodes = arr.XmlComments as List<XComment> ?? arr.XmlComments.ToList();
-//foreach (var commentNode in commentNodes)
-//{
-//    if (commentNode.ToString().Contains(@"Remastered"))
-//        isCommented = true;
-//}
-//if (!isCommented)
-//    Song2014.WriteXmlComments(arr.SongXml.File, commentNodes, true, String.Format(@"Remastered"));

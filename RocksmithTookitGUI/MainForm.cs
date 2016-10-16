@@ -47,9 +47,13 @@ namespace RocksmithToolkitGUI
                 "- Added DropletApp 'remasted.exe' CLI tool to do bulk CDLC repairs." + Environment.NewLine +
                 "- Added ToolkitInfo comment field to track CDLC repair status." + Environment.NewLine +
                 "- Upgraded remaster.exe CLI to perform CDLC validation checks." + Environment.NewLine +
-                "- Added missing sort fields to CDLC Creator UpdateXml method." + Environment.NewLine + Environment.NewLine +
+                "- Added missing sort fields to CDLC Creator UpdateXml method." + Environment.NewLine + 
+                "- Preserve existing XML comments and add remastered comment." + Environment.NewLine +
+                "- Added (.cor) file extension to corrupt (non-repairable) CDLC files." + Environment.NewLine +
+                "- Added remasterd_error.log to capture corrupt file names." + Environment.NewLine + Environment.NewLine +
+
                 "Please let the toolkit devs know if experience any in game issues or not as a result." + Environment.NewLine;
-            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES #6", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
+            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES #7", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
 
             InitMainForm();
         }
@@ -58,7 +62,7 @@ namespace RocksmithToolkitGUI
         {
             // comment out as necessary when issuing new release version
             // update (remove beta) from AssemblyInfo.cs in GUI, Lib and Updater
-            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta) 100% BUG ISSUES #6", ToolkitVersion.version);
+            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta) 100% BUG ISSUES #7", ToolkitVersion.version);
             //this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
