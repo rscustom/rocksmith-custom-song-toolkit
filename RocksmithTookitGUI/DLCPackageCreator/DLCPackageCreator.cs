@@ -150,78 +150,61 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string SongTitle
         {
             get { return SongDisplayNameTB.Text; }
-            set { SongDisplayNameTB.Text = value; }
+            set { SongDisplayNameTB.Text = value.GetValidAtaSpaceName(); }
         }
 
         public string SongTitleSort
         {
             get { return SongDisplayNameSortTB.Text; }
-            set
-            {
-                if (String.IsNullOrEmpty(value))
-                    value = SongTitle.GetValidSortableName();
-                SongDisplayNameSortTB.Text = value;
-            }
+            set{SongDisplayNameSortTB.Text = value.GetValidSortableName();}
         }
 
         public string Album
         {
             get { return AlbumTB.Text; }
-            set { AlbumTB.Text = value; }
+            set { AlbumTB.Text = value.GetValidAtaSpaceName(); }
         }
 
         public string AlbumSort
         {
             get { return AlbumSortTB.Text; }
-            set
-            {
-                if (String.IsNullOrEmpty(value))
-                    value = Album.GetValidSortableName();
-
-                AlbumSortTB.Text = value.GetValidSortableName();
-            }
+            set{AlbumSortTB.Text = value.GetValidSortableName();}
         }
 
         public string Artist
         {
             get { return ArtistTB.Text; }
-            set { ArtistTB.Text = value; }
+            set { ArtistTB.Text = value.GetValidAtaSpaceName(); }
         }
 
         public string ArtistSort
         {
             get { return ArtistSortTB.Text; }
-            set
-            {
-                if (String.IsNullOrEmpty(value))
-                    value = Artist.GetValidSortableName();
-
-                ArtistSortTB.Text = value;
-            }
+            set{ArtistSortTB.Text = value.GetValidSortableName();}
         }
 
         public string AlbumYear
         {
             get { return YearTB.Text; }
-            set { YearTB.Text = value; }
+            set { YearTB.Text = value.GetValidYear(); }
         }
 
         public string AppId
         {
             get { return AppIdTB.Text; }
-            set { AppIdTB.Text = value; }
+            set { AppIdTB.Text = value.GetValidAppIdSixDigits(); }
         }
 
         public string AverageTempo
         {
             get { return AverageTempoTB.Text; }
-            set { AverageTempoTB.Text = value; }
+            set { AverageTempoTB.Text = value.GetValidTempo(); }
         }
 
         public string PackageVersion
         {
             get { return packageVersionTB.Text; }
-            set { packageVersionTB.Text = value; }
+            set { packageVersionTB.Text = value.GetValidVersion(); }
         }
 
         private string packageComment;
@@ -798,11 +781,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void dlcImportButton_Click(object sender = null, EventArgs e = null)
         {
+
             string sourcePackage;
             string savePath;
             string tmp = Path.GetTempPath();
-
-            // GET PATH
+             // GET PATH
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Title = "Select a CDLC to import";
@@ -953,7 +936,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (String.IsNullOrEmpty(AppIdTB.Text))
                 AppIdTB.Text = "248750"; // hardcoded for now
             AlbumTB.Text = info.SongInfo.Album;
-            // AlbumSortTB.Text = info.SongInfo.AlbumSort; // done below
+            AlbumSortTB.Text = info.SongInfo.AlbumSort; 
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
             SongDisplayNameSortTB.Text = info.SongInfo.SongDisplayNameSort;
             YearTB.Text = info.SongInfo.SongYear.ToString();
@@ -1376,7 +1359,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-                arr.ClearCache();
+                arr.ClearCache(); // why is this here?  IDK
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
                 songXml.ArtistName = info.SongInfo.Artist;
                 songXml.Title = info.SongInfo.SongDisplayName;

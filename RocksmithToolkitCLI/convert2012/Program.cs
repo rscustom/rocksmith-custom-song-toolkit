@@ -115,12 +115,12 @@ namespace convert2012
 
         public static void UpdateXml(Arrangement arr, DLCPackageData info)
         {
-            // update xml with user modified DLCPackageData info
-            var songXml = Song2014.LoadFromFile(arr.SongXml.File);
             arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile { File = "" };
             arr.Id = IdGenerator.Guid();
             arr.MasterId = RandomGenerator.NextInt();
 
+            // update xml with user modified DLCPackageData info
+            var songXml = Song2014.LoadFromFile(arr.SongXml.File);
             songXml.AlbumName = info.SongInfo.Album;
             songXml.AlbumYear = info.SongInfo.SongYear.ToString();
             songXml.ArtistName = info.SongInfo.Artist;

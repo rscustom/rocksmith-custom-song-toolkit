@@ -89,6 +89,11 @@
     <Compile Include="Extensions\JitVersionInfo.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
     <Compile Include="Ogg\Wwise.cs" />
+    <Compile Include="PsarcLoader\Entry.cs" />
+    <Compile Include="PsarcLoader\PSARC.cs" />
+    <Compile Include="PsarcLoader\PsarcExtensions.cs" />
+    <Compile Include="PsarcLoader\PsarcLoader.cs" />
+    <Compile Include="PsarcLoader\PsarcPackager.cs" />
     <Compile Include="SngToTab\Sng2Tab.cs" />
     <Compile Include="Sng\Constants.cs" />
     <Compile Include="Song2014ToTab\Gp5Converter.cs" />
@@ -243,6 +248,7 @@
     <Content Include="DF_DDSImage.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="PsarcLoader\ReadMe.txt" />
     <Content Include="RocksmithToolkitLib.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

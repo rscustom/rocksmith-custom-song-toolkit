@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.AddArrBT = new System.Windows.Forms.Button();
             this.rampUpBT = new System.Windows.Forms.Button();
-            this.delsustainsBT = new System.Windows.Forms.CheckBox();
+            this.chkRemoveSustains = new System.Windows.Forms.CheckBox();
             this.process1 = new System.Diagnostics.Process();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -45,8 +45,9 @@
             this.PathColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TypeColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.keepLogfile = new System.Windows.Forms.CheckBox();
-            this.cleanCheckbox = new System.Windows.Forms.CheckBox();
+            this.chkGenArrIds = new System.Windows.Forms.CheckBox();
+            this.chkGenLogFile = new System.Windows.Forms.CheckBox();
+            this.chkOverwrite = new System.Windows.Forms.CheckBox();
             this.ConfigFilesCbx = new System.Windows.Forms.ComboBox();
             this.ConfigFilesBtn = new System.Windows.Forms.Button();
             this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
@@ -99,16 +100,17 @@
             this.rampUpBT.UseVisualStyleBackColor = true;
             this.rampUpBT.Click += new System.EventHandler(this.rampUpBT_Click);
             // 
-            // delsustainsBT
+            // chkRemoveSustains
             // 
-            this.delsustainsBT.AutoSize = true;
-            this.delsustainsBT.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.delsustainsBT.Location = new System.Drawing.Point(157, 84);
-            this.delsustainsBT.Name = "delsustainsBT";
-            this.delsustainsBT.Size = new System.Drawing.Size(107, 17);
-            this.delsustainsBT.TabIndex = 7;
-            this.delsustainsBT.Text = "Remove sustains";
-            this.delsustainsBT.UseVisualStyleBackColor = true;
+            this.chkRemoveSustains.AutoSize = true;
+            this.chkRemoveSustains.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.chkRemoveSustains.Location = new System.Drawing.Point(168, 82);
+            this.chkRemoveSustains.Name = "chkRemoveSustains";
+            this.chkRemoveSustains.Size = new System.Drawing.Size(109, 17);
+            this.chkRemoveSustains.TabIndex = 7;
+            this.chkRemoveSustains.Text = "Remove Sustains";
+            this.chkRemoveSustains.UseVisualStyleBackColor = true;
+            this.chkRemoveSustains.CheckStateChanged += new System.EventHandler(this.Highlight_CheckStateChanged);
             // 
             // process1
             // 
@@ -181,22 +183,22 @@
             this.DDCfilesDgw.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PathColnm,
             this.TypeColnm});
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle1;
             this.DDCfilesDgw.GridColor = System.Drawing.SystemColors.AppWorkspace;
             this.DDCfilesDgw.Location = new System.Drawing.Point(6, 19);
             this.DDCfilesDgw.Name = "DDCfilesDgw";
             this.DDCfilesDgw.RowHeadersWidth = 4;
-            dataGridViewCellStyle20.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.Color.Black;
-            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.DDCfilesDgw.RowTemplate.ErrorText = "#####";
             this.DDCfilesDgw.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DDCfilesDgw.ShowEditingIcon = false;
@@ -226,48 +228,63 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.keepLogfile);
-            this.groupBox1.Controls.Add(this.cleanCheckbox);
+            this.groupBox1.Controls.Add(this.chkGenArrIds);
+            this.groupBox1.Controls.Add(this.chkGenLogFile);
+            this.groupBox1.Controls.Add(this.chkOverwrite);
             this.groupBox1.Controls.Add(this.ConfigFilesCbx);
             this.groupBox1.Controls.Add(this.ramUpMdlsCbox);
             this.groupBox1.Controls.Add(this.ConfigFilesBtn);
             this.groupBox1.Controls.Add(this.rampUpBT);
             this.groupBox1.Controls.Add(this.phaseLenNum);
-            this.groupBox1.Controls.Add(this.delsustainsBT);
+            this.groupBox1.Controls.Add(this.chkRemoveSustains);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.groupBox1.Location = new System.Drawing.Point(10, 260);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(511, 107);
+            this.groupBox1.Size = new System.Drawing.Size(511, 130);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
             // 
-            // keepLogfile
+            // chkGenArrIds
             // 
-            this.keepLogfile.AutoSize = true;
-            this.keepLogfile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.keepLogfile.Location = new System.Drawing.Point(418, 84);
-            this.keepLogfile.Name = "keepLogfile";
-            this.keepLogfile.Size = new System.Drawing.Size(87, 17);
-            this.keepLogfile.TabIndex = 9;
-            this.keepLogfile.Text = "Generate log";
-            this.keepLogfile.UseVisualStyleBackColor = true;
-            this.keepLogfile.CheckStateChanged += new System.EventHandler(this.colorHiglight_CheckStateChanged);
+            this.chkGenArrIds.AutoSize = true;
+            this.chkGenArrIds.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.chkGenArrIds.Location = new System.Drawing.Point(291, 105);
+            this.chkGenArrIds.Name = "chkGenArrIds";
+            this.chkGenArrIds.Size = new System.Drawing.Size(196, 17);
+            this.chkGenArrIds.TabIndex = 10;
+            this.chkGenArrIds.Text = "Generate Arrangement Identification";
+            this.toolTip.SetToolTip(this.chkGenArrIds, "Notice: \r\nGenerating Arrangment Identification\r\nwill reset song stats and helps e" +
+                    "lminate\r\nsome in game errors.");
+            this.chkGenArrIds.UseVisualStyleBackColor = true;
+            this.chkGenArrIds.CheckStateChanged += new System.EventHandler(this.Highlight_CheckStateChanged);
             // 
-            // cleanCheckbox
+            // chkGenLogFile
             // 
-            this.cleanCheckbox.AutoSize = true;
-            this.cleanCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.cleanCheckbox.Location = new System.Drawing.Point(280, 84);
-            this.cleanCheckbox.Name = "cleanCheckbox";
-            this.cleanCheckbox.Size = new System.Drawing.Size(123, 17);
-            this.cleanCheckbox.TabIndex = 8;
-            this.cleanCheckbox.Text = "Overwrite original file";
-            this.cleanCheckbox.UseVisualStyleBackColor = true;
-            this.cleanCheckbox.CheckStateChanged += new System.EventHandler(this.colorHiglight_CheckStateChanged);
+            this.chkGenLogFile.AutoSize = true;
+            this.chkGenLogFile.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.chkGenLogFile.Location = new System.Drawing.Point(168, 105);
+            this.chkGenLogFile.Name = "chkGenLogFile";
+            this.chkGenLogFile.Size = new System.Drawing.Size(91, 17);
+            this.chkGenLogFile.TabIndex = 9;
+            this.chkGenLogFile.Text = "Generate Log";
+            this.chkGenLogFile.UseVisualStyleBackColor = true;
+            this.chkGenLogFile.CheckStateChanged += new System.EventHandler(this.Highlight_CheckStateChanged);
+            // 
+            // chkOverwrite
+            // 
+            this.chkOverwrite.AutoSize = true;
+            this.chkOverwrite.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.chkOverwrite.Location = new System.Drawing.Point(291, 82);
+            this.chkOverwrite.Name = "chkOverwrite";
+            this.chkOverwrite.Size = new System.Drawing.Size(128, 17);
+            this.chkOverwrite.TabIndex = 8;
+            this.chkOverwrite.Text = "Overwrite Original File";
+            this.chkOverwrite.UseVisualStyleBackColor = true;
+            this.chkOverwrite.CheckStateChanged += new System.EventHandler(this.Highlight_CheckStateChanged);
             // 
             // ConfigFilesCbx
             // 
@@ -398,7 +415,7 @@
             // 
             this.ProduceDDbt.BackColor = System.Drawing.Color.LightSteelBlue;
             this.ProduceDDbt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ProduceDDbt.Location = new System.Drawing.Point(418, 396);
+            this.ProduceDDbt.Location = new System.Drawing.Point(417, 424);
             this.ProduceDDbt.Name = "ProduceDDbt";
             this.ProduceDDbt.Size = new System.Drawing.Size(97, 29);
             this.ProduceDDbt.TabIndex = 37;
@@ -409,10 +426,10 @@
             // lblCurrentOperation
             // 
             this.lblCurrentOperation.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.lblCurrentOperation.Location = new System.Drawing.Point(30, 373);
+            this.lblCurrentOperation.Location = new System.Drawing.Point(23, 401);
             this.lblCurrentOperation.Name = "lblCurrentOperation";
             this.lblCurrentOperation.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblCurrentOperation.Size = new System.Drawing.Size(227, 17);
+            this.lblCurrentOperation.Size = new System.Drawing.Size(149, 17);
             this.lblCurrentOperation.TabIndex = 1000;
             this.lblCurrentOperation.Text = "...";
             this.lblCurrentOperation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -420,9 +437,9 @@
             // 
             // pbUpdateProgress
             // 
-            this.pbUpdateProgress.Location = new System.Drawing.Point(263, 373);
+            this.pbUpdateProgress.Location = new System.Drawing.Point(178, 401);
             this.pbUpdateProgress.Name = "pbUpdateProgress";
-            this.pbUpdateProgress.Size = new System.Drawing.Size(252, 17);
+            this.pbUpdateProgress.Size = new System.Drawing.Size(336, 17);
             this.pbUpdateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.pbUpdateProgress.TabIndex = 1001;
             this.pbUpdateProgress.Visible = false;
@@ -448,7 +465,7 @@
             this.Controls.Add(this.pictureBox1);
             this.MinimumSize = new System.Drawing.Size(530, 380);
             this.Name = "DDC";
-            this.Size = new System.Drawing.Size(530, 458);
+            this.Size = new System.Drawing.Size(530, 470);
             this.Load += new System.EventHandler(this.DDC_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).EndInit();
@@ -466,7 +483,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button AddArrBT;
         private System.Windows.Forms.Button rampUpBT;
-        private System.Windows.Forms.CheckBox delsustainsBT;
+        private System.Windows.Forms.CheckBox chkRemoveSustains;
         private System.Diagnostics.Process process1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel DescriptionDDC;
@@ -480,9 +497,9 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridViewTextBoxColumn PathColnm;
         private System.Windows.Forms.DataGridViewTextBoxColumn TypeColnm;
-        private System.Windows.Forms.CheckBox cleanCheckbox;
+        private System.Windows.Forms.CheckBox chkOverwrite;
         private System.Windows.Forms.Label ddcVersion;
-        private System.Windows.Forms.CheckBox keepLogfile;
+        private System.Windows.Forms.CheckBox chkGenLogFile;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox ConfigFilesCbx;
@@ -493,5 +510,6 @@
         private System.Windows.Forms.Label lblCurrentOperation;
         private System.Windows.Forms.ProgressBar pbUpdateProgress;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.CheckBox chkGenArrIds;
     }
 }

@@ -4,14 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
-using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.XmlRepository;
 
 // future use code incubator 
 
-namespace remastered
+namespace RocksmithToolkitLib.PsarcLoader
 {
     public static class PsarcExtensions
     {
@@ -273,6 +272,8 @@ namespace remastered
             }
             return s;
         }
+
+
 
     }
 

@@ -623,6 +623,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         // must get game version from UserControl GUI
                         return new Platform(GamePlatform.PS3, GameVersion.None);
                     case ".psarc":
+                        var debugMe = TryGetPlatformByEndName(fullPath);
                         return TryGetPlatformByEndName(fullPath);
                     default:
                         return new Platform(GamePlatform.None, GameVersion.None);

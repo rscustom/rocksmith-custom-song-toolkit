@@ -125,7 +125,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 var toneName = toneNameBox.Text;
                 tone.Key = toneName.GetValidKey();
-                tone.Name = toneName;
+                tone.Name = tone.Key;
+                toneNameBox.Text = tone.Key;
             };
 
             // VOLUME

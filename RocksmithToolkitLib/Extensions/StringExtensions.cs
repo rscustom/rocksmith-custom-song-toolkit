@@ -534,7 +534,7 @@ namespace RocksmithToolkitLib.Extensions
         public static string StripNonAlpaNumeric(this string value)
         {
             // removes all non alphanumeric and all white space
-            Regex rgx = new Regex("[^a-zA-Z0-9]+");
+            Regex rgx = new Regex("[^a-zA-Z0-9_]+");
             var result = rgx.Replace(value, "");
             return result;
         }

@@ -40,20 +40,19 @@ namespace RocksmithToolkitGUI
 
             // get the user's attention that this is a special beta release
             var errMsg = "This is a special beta release of the toolkit so there could be some bugs." + Environment.NewLine + Environment.NewLine +
-                "- Updated parseArrangements method in Sng2014FileWriter." + Environment.NewLine +
-                "- Revised mastery to make it more difficult to obtain 100%." + Environment.NewLine +
-                "- Revised Techniques and Codes Section of JSON Manifest output." + Environment.NewLine +
-                "- Updated toolkit to use DDC 3.1 (fixes sustain management)" + Environment.NewLine +
-                "- Added DropletApp 'remasted.exe' CLI tool to do bulk CDLC repairs." + Environment.NewLine +
-                "- Added ToolkitInfo comment field to track CDLC repair status." + Environment.NewLine +
-                "- Upgraded remaster.exe CLI to perform CDLC validation checks." + Environment.NewLine +
-                "- Added missing sort fields to CDLC Creator UpdateXml method." + Environment.NewLine + 
-                "- Preserve existing XML comments and add remastered comment." + Environment.NewLine +
-                "- Added (.cor) file extension to corrupt (non-repairable) CDLC files." + Environment.NewLine +
-                "- Added remasterd_error.log to capture corrupt file names." + Environment.NewLine + Environment.NewLine +
-
+                "What's new in this release:" + Environment.NewLine +
+                "- Added remastered_error.log to capture non-repairable (corrupt) file names." + Environment.NewLine +
+                "- Added CLI option [-org] to remaster (.org) files.  Read the CLI Help message." + Environment.NewLine +
+                "- Added CLI option [-pre] to preserve song stats.  Read the CLI Help message." + Environment.NewLine +
+                "- Added CLI option [-ren] to rename (.org) file to (.psarc) file." + Environment.NewLine+
+                "- Added batch files that externally run remastered.exe CLI with options." + Environment.NewLine +
+                "- Added 'Generate Arrangement Identification' checkbox to DDC generator tab." + Environment.NewLine +
+                "- Fixed Tone Name and Tone Key validation to allow underscores." + Environment.NewLine +
+                "- Fixed CDLC Creator subsequent 'Import Package' bug." + Environment.NewLine +
+                "- Reverted 'GenerateChords' to test if this is cause of chord ghosting issue." + Environment.NewLine +
+          Environment.NewLine +
                 "Please let the toolkit devs know if experience any in game issues or not as a result." + Environment.NewLine;
-            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES #7", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
+            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES #8", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
 
             InitMainForm();
         }
@@ -62,7 +61,7 @@ namespace RocksmithToolkitGUI
         {
             // comment out as necessary when issuing new release version
             // update (remove beta) from AssemblyInfo.cs in GUI, Lib and Updater
-            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta) 100% BUG ISSUES #7", ToolkitVersion.version);
+            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta) 100% BUG ISSUES #8", ToolkitVersion.version);
             //this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)

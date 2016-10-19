@@ -16,7 +16,7 @@ using RocksmithToolkitLib.Extensions;
 
 namespace remastered
 {
-    public sealed class PsarcBrowser : IDisposable
+    public sealed class PsarcLoader : IDisposable
     {
         private PSARC _archive;
         private string _filePath;
@@ -24,7 +24,7 @@ namespace remastered
         public string ErrMsg { get; set; }
 
         // Loads song archive file to memory.
-        public PsarcBrowser(string fileName, bool useMemory = true)
+        public PsarcLoader(string fileName, bool useMemory = true)
         {
             _filePath = fileName;
             _archive = new PSARC(useMemory);
