@@ -52,7 +52,7 @@ namespace RocksmithToolkitGUI
                 "- Reverted 'GenerateChords' to test if this is cause of chord ghosting issue." + Environment.NewLine +
           Environment.NewLine +
                 "Please let the toolkit devs know if experience any in game issues or not as a result." + Environment.NewLine;
-            BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES #8", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
+            // BetterDialog2.ShowDialog(errMsg, "SPECIAL TOOLKIT BETA RELEASE MESSAGE ... 100% BUG ISSUES #8", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Information.Handle), "Information", 150, 150);
 
             InitMainForm();
         }
