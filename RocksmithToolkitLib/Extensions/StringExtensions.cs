@@ -67,8 +67,7 @@ namespace RocksmithToolkitLib.Extensions
         public static string GetValidAppIdSixDigits(this string value)
         {
             value = value.Trim();
-            // valid six digit AppID that begins with 2 or 4 , e.g. 248750
-            // Regex rgx = new Regex("^[2]\\d{5}$");  // "^[0-9]{6}$");
+            // simple six digit number validation, eg. 248750
             if (Regex.IsMatch(value, ("^([0-9]{6})$")))
                 return value;
 

@@ -156,7 +156,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string SongTitleSort
         {
             get { return SongDisplayNameSortTB.Text; }
-            set{SongDisplayNameSortTB.Text = value.GetValidSortableName();}
+            set { SongDisplayNameSortTB.Text = value.GetValidSortableName(); }
         }
 
         public string Album
@@ -168,7 +168,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string AlbumSort
         {
             get { return AlbumSortTB.Text; }
-            set{AlbumSortTB.Text = value.GetValidSortableName();}
+            set { AlbumSortTB.Text = value.GetValidSortableName(); }
         }
 
         public string Artist
@@ -180,7 +180,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string ArtistSort
         {
             get { return ArtistSortTB.Text; }
-            set{ArtistSortTB.Text = value.GetValidSortableName();}
+            set { ArtistSortTB.Text = value.GetValidSortableName(); }
         }
 
         public string AlbumYear
@@ -204,7 +204,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string PackageVersion
         {
             get { return packageVersionTB.Text; }
-            set { packageVersionTB.Text = value.GetValidVersion(); }
+
+            set
+            {
+                // null exception check and fix
+                if (String.IsNullOrEmpty(value))
+                    packageVersionTB.Text = "1";
+                else
+                    packageVersionTB.Text = value.GetValidVersion();
+            }
         }
 
         private string packageComment;
@@ -785,7 +793,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string sourcePackage;
             string savePath;
             string tmp = Path.GetTempPath();
-             // GET PATH
+            // GET PATH
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Title = "Select a CDLC to import";
@@ -936,7 +944,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (String.IsNullOrEmpty(AppIdTB.Text))
                 AppIdTB.Text = "248750"; // hardcoded for now
             AlbumTB.Text = info.SongInfo.Album;
-            AlbumSortTB.Text = info.SongInfo.AlbumSort; 
+            AlbumSortTB.Text = info.SongInfo.AlbumSort;
             SongDisplayNameTB.Text = info.SongInfo.SongDisplayName;
             SongDisplayNameSortTB.Text = info.SongInfo.SongDisplayNameSort;
             YearTB.Text = info.SongInfo.SongYear.ToString();
