@@ -156,9 +156,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             //Chords TODO: create me
             try
             {
-                Chords = new Dictionary<string, Dictionary<string, List<int>>>();
                 // Commented out to check if this is cause of repeating chord display in game
-                // manifestFunctions.GenerateChords(this, SongContent);
+                manifestFunctions.GenerateChords(this, SongContent);
             }
             catch (Exception ex)
             {
