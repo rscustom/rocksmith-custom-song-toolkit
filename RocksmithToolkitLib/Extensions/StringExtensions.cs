@@ -66,10 +66,13 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string GetValidAppIdSixDigits(this string value)
         {
-            // valid six digit AppID that begins with 2 , e.g. 248750
-            Regex rgx = new Regex("^[2]\\d{6}$");  // "^[0-9]{6}$");
-            value = rgx.Replace(value, "");
-            return value;
+            value = value.Trim();
+            // valid six digit AppID that begins with 2 or 4 , e.g. 248750
+            // Regex rgx = new Regex("^[2]\\d{5}$");  // "^[0-9]{6}$");
+            if (Regex.IsMatch(value, ("^([0-9]{6})$")))
+                return value;
+
+            return "";
         }
 
         /// <summary>
@@ -246,8 +249,10 @@ namespace RocksmithToolkitLib.Extensions
 
         public static bool IsAppIdSixDigits(this string value)
         {
-            // check for valid six digit AppID that begins with 2 , e.g. 248750
-            return Regex.IsMatch(value, "^[2]\\d{5}$");  // "^[0-9]{6}$");
+            if (String.IsNullOrEmpty(GetValidAppIdSixDigits(value)))
+                return false;
+ 
+            return true;
         }
 
         public static bool IsFilePathLengthValid(this string filePath)
