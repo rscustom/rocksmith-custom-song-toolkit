@@ -527,14 +527,20 @@ namespace RocksmithToolkitGUI.DDC
             }
             else
             {
-                string[] browsers = { "chrome", "opera", "firefox" };
+                string[] browsers = { "chrome", "opera", "firefox", "browser", "MicrosoftEdge" };
                 foreach (var name in browsers)
                 {
-                    var browser = Process.GetProcessesByName(name)[0];
+                    var browsera = Process.GetProcessesByName(name);
+                    if (!browsera.Any())
+                        continue;
+                    var browser = browsera[0];
                     if (browser.ProcessName.Equals(name))
                     {
                         if (name.Contains("opera"))
                             arg1 = "-newwindow ";
+
+                        if (name.Contains("MicrosoftEdge"))
+                            browser.StartInfo.FileName = "start microsoft-edge:";
 
                         browser.StartInfo.FileName = browser.MainModule.FileName;
                         browser.StartInfo.Arguments = String.Format("{0}{1}", arg1, link);
