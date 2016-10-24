@@ -520,7 +520,8 @@ namespace RocksmithToolkitGUI.DDC
         {
             bool done = false;
             string arg1 = "";
-            const string link = "http://ddcreator.wordpress.com";
+            var link_control = (System.Windows.Forms.LinkLabel)sender;
+            var link = link_control.Text; //"https://ddcreator.wordpress.com";
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
             {
                 Process.Start(link);
@@ -534,20 +535,21 @@ namespace RocksmithToolkitGUI.DDC
                     if (!browsera.Any())
                         continue;
                     var browser = browsera[0];
-                    if (browser.ProcessName.Equals(name))
+                    if (name.Contains("opera"))
+                        arg1 = "-newwindow ";
+
+                    if (name.Contains("MicrosoftEdge"))
                     {
-                        if (name.Contains("opera"))
-                            arg1 = "-newwindow ";
-
-                        if (name.Contains("MicrosoftEdge"))
-                            browser.StartInfo.FileName = "start microsoft-edge:";
-
-                        browser.StartInfo.FileName = browser.MainModule.FileName;
-                        browser.StartInfo.Arguments = String.Format("{0}{1}", arg1, link);
-                        browser.Start();
+                        Process.Start("microsoft-edge:"+link);
                         done = true;
                         break;
                     }
+
+                    browser.StartInfo.FileName = browser.MainModule.FileName;
+                    browser.StartInfo.Arguments = String.Format("{0}{1}", arg1, link);
+                    browser.Start();
+                    done = true;
+                    break;
                 }
                 if (!done)
                     Process.Start(link);
