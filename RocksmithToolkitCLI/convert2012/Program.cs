@@ -133,11 +133,8 @@ namespace convert2012
             songXml.ToneC = arr.ToneC;
             songXml.ToneD = arr.ToneD;
 
-            File.Delete(arr.SongXml.File);
-            using (var stream = File.OpenWrite(arr.SongXml.File))
-            {
+            using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                 songXml.Serialize(stream, true);
-            }
         }
 
         private static DLCPackageData ConvertAudio(DLCPackageData info)

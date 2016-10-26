@@ -16,6 +16,9 @@ namespace remastered
 {
     class Program
     {
+        private static string WorkDirectory { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "REMASTERED_CLI"); } }
+        private const string TKI_REMASTER = "(Remastered by CLI)";
+        private const string TKI_ARRID = "(Arrangement ID by CLI)";
         private static StringBuilder sbErrors = new StringBuilder();
         private static string fileExt = "psarc";
         private static bool optionOrg;
@@ -24,6 +27,7 @@ namespace remastered
 
         private static int Main(string[] args)
         {
+            Console.Title = "remastered.exe";
             Console.WindowWidth = 85;
             Console.WindowHeight = 35;
             Console.BackgroundColor = ConsoleColor.Black;
@@ -31,10 +35,11 @@ namespace remastered
 
 #if (DEBUG)
             // give the progie some dumby file to work on
-            args = new string[] { "D:\\Temp\\Test\\The_Beatles-NowhereMan_p.psarc", "D:\\Temp\\Test\\PeppaPig_p.psarc" };
-            args = new string[] { "-org", "Tragically-Hip_Emperor-Penguin_v0_8_p.psarc" };
-            args = new string[] { "-pre", "D:\\Temp\\Test\\PeppaPig_p.psarc" };
-            args = new string[] { "-ren", "D:\\Temp\\Test\\PeppaPig_p.psarc.org" };
+            // args = new string[] { "D:\\Temp\\Test\\The_Beatles-NowhereMan_p.psarc" };
+            args = new string[] { "D:\\Temp\\Test\\PeppaPig_p.psarc" };
+            // args = new string[] { "-org", "-pre", "D:\\Temp\\Test\\PeppaPig_p.psarc.org" };
+            // args = new string[] { "-pre", "D:\\Temp\\Test\\PeppaPig_p.psarc" };
+            // args = new string[] { "-ren", "D:\\Temp\\Test\\PeppaPig_p.psarc.org" };
             Console.WriteLine(@"Running in Debug Mode ... help is not available");
 #endif
 
@@ -64,11 +69,15 @@ namespace remastered
                 Console.WriteLine(@"   option: [-org] to remaster files that have extension (.org)");
                 Console.WriteLine(@"   option: [-pre] to repair CDLC that have not been played in");
                 Console.WriteLine(@"           Rocksmith 2014 Remastered and preserve song stats.");
+                Console.WriteLine(@"   option: [-ren] to rename (.org) files to (.psarc) files");
                 Console.WriteLine(@"   source: [Pathname] of CDLC files or folders to be repaired]");
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(@" - WARNING: Do not use this DroplettApp for short jingle/riff CDLC.");
                 Console.WriteLine(@"   CDLC with less than 30 seconds audio will not be synced properly.");
+                Console.WriteLine();
+                Console.WriteLine(@"   Make sure all CDLC with (.org) or (.cor) have been removed from");
+                Console.WriteLine(@"   the Rocksmith 2014 'dlc' folder prior to playing the game.");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine();
                 Console.WriteLine(@"The more you Drag/Drop the longer it takes to process.  Coffee break ;)");
@@ -79,8 +88,10 @@ namespace remastered
             }
 
             Console.WriteLine(@"Initializing Remastered CLI ...");
-            sbErrors.AppendLine("remastered.exe CLI failed to repair the following files:");
+            Console.WriteLine();
+            sbErrors.AppendLine(DateTime.Now.ToString("MM-dd-yy HH:mm") + " - remastered.exe CLI failed to repair the following files:");
 
+            // detect, set and remove [option] from args
             var argsClean = args;
             for (int i = 0; i < args.Length; i++)
             {
@@ -89,31 +100,36 @@ namespace remastered
                     case "-org":
                         fileExt = "org";
                         optionOrg = true;
-                        argsClean = argsClean.Where((src, ndx) => ndx != i).ToArray();
+                        // TODO: move to code grave yard
+                        // argsClean = argsClean.Where((src, ndx) => ndx != i).ToArray();
+                        argsClean = argsClean.Where(x => x != args[i]).ToArray();
                         Console.WriteLine(@"CLI option [-org] was found ...");
                         break;
                     case "-pre":
                         optionPre = true;
-                        argsClean = argsClean.Where((src, ndx) => ndx != i).ToArray();
+                        argsClean = argsClean.Where(x => x != args[i]).ToArray();
                         Console.WriteLine(@"CLI option [-pre] was found ...");
                         break;
                     case "-ren":
                         fileExt = "org";
                         optionRen = true;
-                        argsClean = argsClean.Where((src, ndx) => ndx != i).ToArray();
+                        argsClean = argsClean.Where(x => x != args[i]).ToArray();
                         Console.WriteLine(@"CLI option [-ren] was found ...");
                         break;
                 }
             }
 
+            Console.WriteLine();
             if ((optionOrg || optionPre) && optionRen)
                 ShowHelpfulError("Multiple CLI options may not be used with option [-ren]");
 
-            args = argsClean;
+            if (!Directory.Exists(WorkDirectory))
+                Directory.CreateDirectory(WorkDirectory);
 
+            args = argsClean;
             foreach (var arg in args)
             {
-                if (IsDirectory(arg)) // this will throw an error if file not found
+                if (IsDirectory(arg)) // this will throw an error if file is not found
                 {
                     Console.WriteLine();
                     Console.WriteLine(@"Parsing folder: " + arg);
@@ -149,12 +165,16 @@ namespace remastered
             var errorLogLines = Regex.Matches(sbErrors.ToString(), Environment.NewLine).Count;
             if (errorLogLines > 1)
             {
-                var errorLogPath = Path.Combine(Path.GetDirectoryName(args[0]), "remastered_error.log");
-                File.WriteAllText(errorLogPath, sbErrors.ToString().TrimEnd('\r', '\n'));
+                var errorLogPath = Path.Combine(WorkDirectory, "remastered_error.log");
+                using (TextWriter tw = new StreamWriter(errorLogPath, true))
+                    tw.WriteLine(sbErrors + Environment.NewLine);
+
+                // File.WriteAllText(errorLogPath, sbErrors.ToString().TrimEnd('\r', '\n'));
             }
 
+            CleanupLocalTemp();
             Console.WriteLine();
-            
+
             if (optionRen)
             {
                 Console.WriteLine(@"Done renaming CDLC (.org) to (.psarc) ...");
@@ -180,19 +200,22 @@ namespace remastered
                 Console.WriteLine(@"   of the toolkit. The Remastered CDLC has been");
                 Console.WriteLine(@"   updated to the current version of the toolkit.");
                 Console.WriteLine();
-                Console.WriteLine(@" - Remember the original (buggy) CDLC has been renamed");
-                Console.WriteLine(@"   and it now has a backup file extension of (.org).");
-                Console.WriteLine(@"   The (.org) files can be archived or deleted after");
-                Console.WriteLine(@"   it is confirm that the Remastered CDLC is working.");
+                Console.WriteLine(@" - The original non-remastered CDLC have been renamed with");
+                Console.WriteLine(@"   file extension (.org) and moved to the subfolder named");
+                Console.WriteLine(@"   'REMASTERED_CLI' inside of the 'My Documents' folder.");
+                Console.WriteLine(@"   The (.org) backup files can be archived or deleted after");
+                Console.WriteLine(@"   it is confirm that the Remastered CDLC are working.");
                 Console.WriteLine();
-                Console.WriteLine(@" - Any corrupt CDLC have been renamed and now has a");
-                Console.WriteLine(@"   (.cor) file extension.  These should be submitted to");
-                Console.WriteLine(@"   the original charter so they can be repaired.  See");
-                Console.WriteLine(@"   'remastered_error.log' for a list of corrupt files.");
+                Console.WriteLine(@" - Corrupt CDLC have been renamed with file extension (.cor)");
+                Console.WriteLine(@"   and moved to the subfolder named 'REMASTERED_CLI'.");
+                Console.WriteLine(@"   Corrupt (non-repairable) CDLC should be submitted to");
+                Console.WriteLine(@"   the original charter so they can be repaired.");
+                Console.WriteLine();
+                Console.WriteLine(@" - See the 'remastered_error.log' inside the subfolder named");
+                Console.WriteLine(@"   'REMASTERED_CLI' for a list of non-repairable files.");
             }
             Console.WriteLine();
             Console.WriteLine(@"Press any key to continue ...");
-            CleanupLocalTemp();
             Console.ReadKey();
             return 0;
         }
@@ -207,11 +230,11 @@ namespace remastered
                 return "Official";
 
             if (entryTkInfo != null && entryTkInfo.PackageAuthor != null)
-                if (entryTkInfo.PackageAuthor.Equals(@"Ubisoft"))
+                if (entryTkInfo.PackageAuthor.Equals("Ubisoft"))
                     return "Official";
 
             if (entryTkInfo != null && entryTkInfo.PackageComment != null)
-                if (entryTkInfo.PackageComment.Contains(@"Remastered"))
+                if (entryTkInfo.PackageComment.Contains("Remastered"))
                     return "Remastered";
 
             return null;
@@ -229,7 +252,7 @@ namespace remastered
                 Console.WriteLine(@"File: " + fileName);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(@" - Making a backup copy ...");
-                var backupPath = String.Format(@"{0}.org", filePath);
+                var backupPath = String.Format(@"{0}.org", Path.Combine(WorkDirectory, Path.GetFileName(filePath)));
                 if (!File.Exists(backupPath))
                 {
                     File.Copy(filePath, backupPath, false);
@@ -262,10 +285,6 @@ namespace remastered
                 // Update arrangement song info
                 foreach (Arrangement arr in packageData.Arrangements)
                 {
-                    // skip vocal and showlight arrangements
-                    if (arr.ArrangementType == ArrangementType.Vocal || arr.ArrangementType == ArrangementType.ShowLight)
-                        continue;
-
                     if (!optionPre)
                     {
                         // generate new AggregateGraph
@@ -276,15 +295,9 @@ namespace remastered
                         arr.MasterId = RandomGenerator.NextInt();
                     }
 
-                    // preserve existing xml comments
-                    arr.XmlComments = Song2014.ReadXmlComments(arr.SongXml.File);
-                    var isCommented = false;
-                    var commentNodes = arr.XmlComments as List<XComment> ?? arr.XmlComments.ToList();
-                    foreach (var commentNode in commentNodes)
-                    {
-                        if (commentNode.ToString().Contains(@"Remastered"))
-                            isCommented = true;
-                    }
+                    // skip vocal and showlight arrangements
+                    if (arr.ArrangementType == ArrangementType.Vocal || arr.ArrangementType == ArrangementType.ShowLight)
+                        continue;
 
                     // validate SongInfo
                     var songXml = Song2014.LoadFromFile(arr.SongXml.File);
@@ -297,34 +310,43 @@ namespace remastered
                     songXml.AlbumNameSort = packageData.SongInfo.AlbumSort.GetValidSortableName();
                     songXml.AverageTempo = Convert.ToSingle(packageData.SongInfo.AverageTempo.ToString().GetValidTempo());
 
-                    // resave the validated xml
-                    File.Delete(arr.SongXml.File);
+                    // write updated xml arrangement
                     using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                         songXml.Serialize(stream, true);
 
-                    // add "Remastered" comment to saved xml to be able to identify repaired CDLC        
-                    if (!isCommented)
-                        Song2014.WriteXmlComments(arr.SongXml.File, commentNodes, true, String.Format(@"Remastered by CLI"));
+                    // add comments back to xml arrangement   
+                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
                 }
 
-                // validate packageData (important)
-                packageData.Name = packageData.Name.GetValidKey(); // DLC Key                 
+                if (!optionPre)
+                {
+                    // add comment to ToolkitInfo to identify CDLC
+                    var arrIdComment = packageData.PackageComment;
+                    if (String.IsNullOrEmpty(arrIdComment))
+                        arrIdComment = TKI_ARRID;
+                    else if (!arrIdComment.Contains(TKI_ARRID))
+                        arrIdComment = arrIdComment + " " + TKI_ARRID;
 
+                    packageData.PackageComment = arrIdComment;
+                }
+
+                // add comment to ToolkitInfo to identify CDLC
+                var remasterComment = packageData.PackageComment;
+                if (String.IsNullOrEmpty(remasterComment))
+                    remasterComment = TKI_REMASTER;
+                else if (!remasterComment.Contains(TKI_REMASTER))
+                    remasterComment = remasterComment + " " + TKI_REMASTER;
+
+                packageData.PackageComment = remasterComment;
+
+                // add default package version if missing
                 if (String.IsNullOrEmpty(packageData.PackageVersion))
                     packageData.PackageVersion = "1";
                 else
                     packageData.PackageVersion = packageData.PackageVersion.GetValidVersion();
 
-                // add comment to ToolkitInfo to identify Remastered CDLC
-                var packageComment = packageData.PackageComment;
-
-                if (String.IsNullOrEmpty(packageComment))
-                    packageComment = "(Remastered by CLI)";
-
-                if (!packageComment.Contains(@"Remastered"))
-                    packageComment = packageComment + " " + "(Remastered by CLI)";
-
-                packageData.PackageComment = packageComment;
+                // validate packageData (important)
+                packageData.Name = packageData.Name.GetValidKey(); // DLC Key                 
                 Console.WriteLine(@" - Repackaging remastered CDLC ...");
 
                 // regenerates the SNG with the repair and repackages               
@@ -340,11 +362,11 @@ namespace remastered
                 Console.WriteLine(@" - See 'remastered_error.log' file ... ");
                 Console.ForegroundColor = ConsoleColor.Green;
 
-                // delete backup, restore original and rename corrupt (cor)
-                var backupPath = String.Format(@"{0}.org", filePath);
+                // copy (org) to corrupt (cor), delete backup (org), delete original
+                var backupPath = String.Format(@"{0}.org", Path.Combine(WorkDirectory, Path.GetFileName(filePath)));
                 if (File.Exists(backupPath))
                 {
-                    var corruptPath = String.Format(@"{0}.cor", filePath);
+                    var corruptPath = String.Format(@"{0}.cor", Path.Combine(WorkDirectory, Path.GetFileName(filePath)));
                     File.Copy(backupPath, corruptPath, true);
                     File.Delete(backupPath);
                     File.Delete(filePath);
@@ -361,7 +383,7 @@ namespace remastered
             foreach (var cdlcFile in cdlcFiles)
             {
                 if (optionRen)
-                // rename buggy original (.org) cdlc to (.psarc)
+                // copy and rename buggy original (.org) cdlc to (.psarc)
                 {
                     if (File.Exists(cdlcFile) && Path.GetExtension(cdlcFile).ToLower() == ".org")
                     {
@@ -461,7 +483,6 @@ namespace remastered
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 sbErrors.AppendLine(path);
-
             }
 
             return isDirectory;
@@ -469,12 +490,15 @@ namespace remastered
 
         private static void CleanupLocalTemp()
         {
-#if !DEBUG
+            //#if !DEBUG
             var di = new DirectoryInfo(Path.GetTempPath());
 
-            // confirm this is the 'Local Settings\Temp' directory
+            // 'Local Settings\Temp' in WinXp
+            // 'AppData\Local\Temp' in Win7
+            // confirm this is the correct temp directory before deleting
             if (di.Parent != null)
-                if (di.Parent.Name == "Local Settings" && di.Name == "Temp")
+            {
+                if (di.Parent.Name.Contains("Local") && di.Name == "Temp")
                 {
                     foreach (FileInfo file in di.GetFiles())
                         try
@@ -490,7 +514,8 @@ namespace remastered
                         }
                         catch { /*Don't worry just skip locked directory*/ }
                 }
-#endif
+            }
+            //#endif
         }
 
         private static string ProjectVersion()
@@ -504,22 +529,4 @@ namespace remastered
 
     }
 }
-
-// CODE Grave Yard
-//
-//var dropIsDirectory = false;
-//var dropCount = args.GetLength(0);
-//if (dropCount > 0)
-//{
-//    for (int i = 0; i < dropCount; i++)
-//    {
-//        if (IsDirectory(args[i]))
-//            dropIsDirectory = true;
-
-//        if (!IsDirectory(args[i]) && dropIsDirectory)
-//            return ShowHelpfulError(@"Please drop all files or all folders onto the executable.");
-//    }
-//}
-//else
-//    return ShowHelpfulError(@"Please drop either all files or all folders onto the executable.");
 

@@ -50,7 +50,7 @@
             this.chkOverwrite = new System.Windows.Forms.CheckBox();
             this.ConfigFilesCbx = new System.Windows.Forms.ComboBox();
             this.ConfigFilesBtn = new System.Windows.Forms.Button();
-            this.phaseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
+            this.phraseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.deleteArrBT = new System.Windows.Forms.Button();
@@ -65,7 +65,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.phraseLenNum)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,7 +103,7 @@
             // chkRemoveSustains
             // 
             this.chkRemoveSustains.AutoSize = true;
-            this.chkRemoveSustains.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.chkRemoveSustains.ForeColor = System.Drawing.Color.Gray;
             this.chkRemoveSustains.Location = new System.Drawing.Point(168, 82);
             this.chkRemoveSustains.Name = "chkRemoveSustains";
             this.chkRemoveSustains.Size = new System.Drawing.Size(109, 17);
@@ -235,7 +235,7 @@
             this.groupBox1.Controls.Add(this.ramUpMdlsCbox);
             this.groupBox1.Controls.Add(this.ConfigFilesBtn);
             this.groupBox1.Controls.Add(this.rampUpBT);
-            this.groupBox1.Controls.Add(this.phaseLenNum);
+            this.groupBox1.Controls.Add(this.phraseLenNum);
             this.groupBox1.Controls.Add(this.chkRemoveSustains);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
@@ -251,21 +251,21 @@
             // chkGenArrIds
             // 
             this.chkGenArrIds.AutoSize = true;
-            this.chkGenArrIds.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.chkGenArrIds.ForeColor = System.Drawing.Color.Gray;
             this.chkGenArrIds.Location = new System.Drawing.Point(291, 105);
             this.chkGenArrIds.Name = "chkGenArrIds";
             this.chkGenArrIds.Size = new System.Drawing.Size(196, 17);
             this.chkGenArrIds.TabIndex = 10;
             this.chkGenArrIds.Text = "Generate Arrangement Identification";
-            this.toolTip.SetToolTip(this.chkGenArrIds, "Notice: \r\nGenerating Arrangment Identification\r\nwill reset song stats and helps e" +
-                    "lminate\r\nsome in game errors.");
+            this.toolTip.SetToolTip(this.chkGenArrIds, "Notice: This only applies to archives (not xml files)\r\nGenerating Arrangment Iden" +
+                    "tification will reset \r\nsong stats and helps elminate some in game errors\r\n\r\n");
             this.chkGenArrIds.UseVisualStyleBackColor = true;
             this.chkGenArrIds.CheckStateChanged += new System.EventHandler(this.Highlight_CheckStateChanged);
             // 
             // chkGenLogFile
             // 
             this.chkGenLogFile.AutoSize = true;
-            this.chkGenLogFile.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.chkGenLogFile.ForeColor = System.Drawing.Color.Gray;
             this.chkGenLogFile.Location = new System.Drawing.Point(168, 105);
             this.chkGenLogFile.Name = "chkGenLogFile";
             this.chkGenLogFile.Size = new System.Drawing.Size(91, 17);
@@ -277,12 +277,14 @@
             // chkOverwrite
             // 
             this.chkOverwrite.AutoSize = true;
-            this.chkOverwrite.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.chkOverwrite.ForeColor = System.Drawing.Color.Gray;
             this.chkOverwrite.Location = new System.Drawing.Point(291, 82);
             this.chkOverwrite.Name = "chkOverwrite";
             this.chkOverwrite.Size = new System.Drawing.Size(128, 17);
             this.chkOverwrite.TabIndex = 8;
             this.chkOverwrite.Text = "Overwrite Original File";
+            this.toolTip.SetToolTip(this.chkOverwrite, "If check the original CDLC file name is used.\r\nNDD or DD will not be added to the" +
+                    " file name.");
             this.chkOverwrite.UseVisualStyleBackColor = true;
             this.chkOverwrite.CheckStateChanged += new System.EventHandler(this.Highlight_CheckStateChanged);
             // 
@@ -310,27 +312,27 @@
             this.ConfigFilesBtn.UseVisualStyleBackColor = true;
             this.ConfigFilesBtn.Click += new System.EventHandler(this.ConfigFilesBtn_Click);
             // 
-            // phaseLenNum
+            // phraseLenNum
             // 
-            this.phaseLenNum.Location = new System.Drawing.Point(94, 81);
-            this.phaseLenNum.Maximum = new decimal(new int[] {
+            this.phraseLenNum.Location = new System.Drawing.Point(94, 81);
+            this.phraseLenNum.Maximum = new decimal(new int[] {
             65536,
             0,
             0,
             0});
-            this.phaseLenNum.Minimum = new decimal(new int[] {
+            this.phraseLenNum.Minimum = new decimal(new int[] {
             2,
             0,
             0,
             0});
-            this.phaseLenNum.Name = "phaseLenNum";
-            this.phaseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.phaseLenNum.Size = new System.Drawing.Size(52, 20);
-            this.phaseLenNum.TabIndex = 6;
-            this.phaseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.phaseLenNum.ThousandsSeparator = true;
-            this.toolTip.SetToolTip(this.phaseLenNum, "Number of Bars");
-            this.phaseLenNum.Value = new decimal(new int[] {
+            this.phraseLenNum.Name = "phraseLenNum";
+            this.phraseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.phraseLenNum.Size = new System.Drawing.Size(52, 20);
+            this.phraseLenNum.TabIndex = 6;
+            this.phraseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.phraseLenNum.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.phraseLenNum, "Number of Bars");
+            this.phraseLenNum.Value = new decimal(new int[] {
             4,
             0,
             0,
@@ -471,7 +473,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.phaseLenNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.phraseLenNum)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -489,7 +491,7 @@
         private System.Windows.Forms.LinkLabel DescriptionDDC;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private DLCPackageCreator.NumericUpDownFixed phaseLenNum;
+        private DLCPackageCreator.NumericUpDownFixed phraseLenNum;
         private System.Windows.Forms.ComboBox ramUpMdlsCbox;
         private System.Windows.Forms.DataGridView DDCfilesDgw;
         private System.Windows.Forms.GroupBox groupBox1;

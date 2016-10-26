@@ -187,11 +187,11 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
 
                 // write changes to xml arrangement (w/o comments)
-                using (var stream = File.Open(xmlSongFile, FileMode.Create))
+                 using (var stream = File.Open(xmlSongFile, FileMode.Create))
                     song.Serialize(stream, true);
 
                 // write comments back to xml now so they are available for debugging (used for Guitar and Bass)
-                Song2014.WriteXmlComments(xmlSongFile, XmlComments, false);
+                Song2014.WriteXmlComments(xmlSongFile, XmlComments, writeNewVers: false);
             }
         }
 

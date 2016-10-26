@@ -83,6 +83,7 @@
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Config\Globals.cs" />
+    <Compile Include="DDC\SettingsDDC.cs" />
     <Compile Include="DLCInlayCreator\IntroScreensCreator.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -403,6 +404,7 @@
       <Link>VersionInfo.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\BetaInfo.rtf" />
     <Content Include="songcreator.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

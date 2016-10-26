@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Drawing;
 using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitLib
@@ -40,11 +44,29 @@ namespace RocksmithToolkitLib
         public static ToolkitVersionOnline Load()
         {
             var url = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.commit);
-            var versionJson = new WebClient().DownloadString(url);
-            // test string for when no internet connection exists
-            //var versionJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
+            Debug.WriteLine("Current version url: " + url);
 
-            return JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionJson);
+            // attempt to connect a couple of times
+            for (int i = 0; i < 5; i++)
+            {
+                Debug.WriteLine("Server Connection Attempt #" + i);
+                try
+                {
+                    // No TLS 1.2 in WinXp or before IE8 browser if OS is newer than WinXP 
+                    // Aautomatic updates do not work in WinXp
+                    var versionJson = new WebClient().DownloadString(url);
+                    // test string for when no internet connection exists
+                    //var versionJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
+                    return JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionJson);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("versionJson Error: " + ex.Message);
+                    Thread.Sleep(250);
+                }
+            }
+
+            return null;
         }
 
         public static string GetFileUrl(bool addExtension = false)
@@ -62,5 +84,31 @@ namespace RocksmithToolkitLib
             }
             return fileUrl + ".zip";
         }
+
+        //public static bool IsTlsCompat(string appName)
+        //{
+        //    // requires Net 4.5, or Win7 and IE8
+        //    // use TLS 1.2 protocol if available
+        //    // ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+
+        //    // check system config, some websites e.g. https://www.rscustom.net/ require TSL 1.2 compatible browswer
+        //    var errMsg = String.Empty;
+        //    var ieVers = SysExtensions.GetBrowserVersion(SysExtensions.GetInternetExplorerVersion());
+        //    if (ieVers < 8.0)
+        //        errMsg = "Internet Explorer 8 or greater is required";
+
+        //    var sysVers = SysExtensions.MajorVersion + (double)SysExtensions.MinorVersion / 10;
+        //    if (sysVers < 6.1)
+        //        errMsg = !String.IsNullOrEmpty(errMsg) ? errMsg + Environment.NewLine + "and OS Windows 7 or greater is required" : "OS Windows 7 or greater is required";
+
+        //    if (!String.IsNullOrEmpty(errMsg))
+        //    {
+        //        errMsg = errMsg + Environment.NewLine + "to download " + appName;
+        //        BetterDialog2.ShowDialog(errMsg, "Incompatible System Configuration", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
+        //        return false;
+        //    }
+
+        //    return true;
+        //}
     }
 }

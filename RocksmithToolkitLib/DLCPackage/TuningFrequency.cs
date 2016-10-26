@@ -92,9 +92,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 // MessageBox.Show("This song is already at 220Hz pitch (bass fixed applied already?)", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            var songFile = arr.SongXml.File;
-            var comments = Song2014.ReadXmlComments(songFile);
-            Song2014 songXml = Song2014.LoadFromFile(songFile);
+
+            Song2014 songXml = Song2014.LoadFromFile(arr.SongXml.File);
             // Force 220Hz
             arr.TuningPitch = 220.0;
             songXml.CentOffset = "-1200.0";
@@ -112,12 +111,11 @@ namespace RocksmithToolkitLib.DLCPackage
             arr.TuningStrings = songXml.Tuning = tuning.Tuning;
             TuningDefinitionRepository.Instance.Save(true);
 
-            File.Delete(songFile);
-            using (var stream = File.OpenWrite(songFile))
-            {
+            var xmlComments = Song2014.ReadXmlComments(arr.SongXml.File);
+            using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                 songXml.Serialize(stream, true);
-            }
-            Song2014.WriteXmlComments(songFile, comments, false);
+
+            Song2014.WriteXmlComments(arr.SongXml.File, xmlComments);
 
             return true;
         }

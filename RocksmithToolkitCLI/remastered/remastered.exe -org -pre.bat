@@ -2,10 +2,14 @@
 
 COLOR 0A
 
-ECHO This batch runs remastered.exe with the -org option
+ECHO This batch runs remastered.exe with the -org -pre options
 ECHO.
-ECHO CDCL with (.org) extensions will be repaired with CLI
-ECHO.
+ECHO CDCL with (.org) extensions will be repaired and
+ECHO song stats are preserved.  Be aware that if this option is
+ECHO used on files located in the "My Documents\Remastered_CLI"
+ECHO folder that the remastered CDLC needs to be manually move
+ECHO back to the Rocksmith 2014 'dlc' folder.  
+ECHO. 
 ECHO Song stats are preserved only for CDLC that have
 ECHO not been played in Rocksmith 2014 Remastered
 ECHO.

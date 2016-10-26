@@ -4,7 +4,7 @@ COLOR 0A
 
 ECHO This batch runs remastered.exe with the -ren option
 ECHO.
-ECHO CDCL with (.org) extensions will be renamed to (.psarc)
+ECHO CDCL with (.org) extensions will be copied to (.psarc)
 ECHO This restores the original unrepaired CDLC.  For 
 ECHO safety (.org) files are not deleted by the CLI.
 ECHO.

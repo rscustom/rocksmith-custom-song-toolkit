@@ -266,7 +266,7 @@ namespace RocksmithToolkitLib.Xml
             Ebeats = SongEbeat.Parse(sngData.BPMs);
             StartBeat = sngData.BPMs.BPMs[0].Time;
             Events = SongEvent.Parse(sngData.Events);
-            Levels = SongLevel2014.Parse(sngData); 
+            Levels = SongLevel2014.Parse(sngData);
 
             //Not used in RS2014 customs at this time. Need to check official files
             NewLinkedDiff = SongNewLinkedDiff.Parse(sngData.NLD);
@@ -299,48 +299,65 @@ namespace RocksmithToolkitLib.Xml
         /// <summary>
         /// Write the CST\EOF\DDC xml comments
         /// </summary>
-        /// <param name="xmlSongRS2014File"></param>
+        /// <param name="xmlSongFile"></param>
         /// <param name="commentNodes"></param>
-        /// <param name="overwriteCstComment"></param>
+        /// <param name="saveOldVers"></param>
+        /// <param name="writeNewVers"> </param>
         /// <param name="customComment"></param>
-        public static void WriteXmlComments(string xmlSongRS2014File, IEnumerable<XComment> commentNodes = null, bool overwriteCstComment = true, string customComment = "")
+        public static void WriteXmlComments(string xmlSongFile, IEnumerable<XComment> commentNodes = null, bool saveOldVers = true, bool writeNewVers = true, string customComment = "")
         {
-            const string magic = " CST v";
-            var xml = XDocument.Load(xmlSongRS2014File);
+            const string CST_MAGIC = " CST v";
+            var sameComment = false;
+            var sameVersion = false;
+            var xml = XDocument.Load(xmlSongFile);
             var rootnode = xml.Element("song");
 
             if (rootnode == null)
-                throw new InvalidDataException("Empty or wrong xml file. (Song node not found, no comments found)");
+                throw new InvalidDataException(xmlSongFile + Environment.NewLine +
+                    "XML file does not contain 'Song' node.");
 
-            //cleanup xml comments
+            // remove all xml comments
             xml.DescendantNodes().OfType<XComment>().Remove();
 
-            // add a new custom comment
-            if (!String.IsNullOrEmpty(customComment))
-                rootnode.AddFirst(new XComment(" " + customComment + " "));
-
             if (commentNodes == null)
-                commentNodes = ReadXmlComments(xmlSongRS2014File);
+                commentNodes = ReadXmlComments(xmlSongFile);
 
             if (commentNodes != null)
             {
-                // reverse order of stored comments is original order and filter toolkit comment(s)
+                // add back all non-magic (DDC, EOF, custom) comments first
                 foreach (var commentNode in commentNodes.Reverse())
                 {
-                    // preserve old CST version comment for debugging
-                    if (!overwriteCstComment)
+                    if (!commentNode.ToString().Contains(CST_MAGIC))
                         rootnode.AddFirst(new XComment(commentNode));
-                    else
-                        if (!commentNode.Value.Contains(magic))
-                            rootnode.AddFirst(new XComment(commentNode));
+
+                    if (!String.IsNullOrEmpty(customComment) && commentNode.ToString().Contains(customComment))
+                        sameComment = true;
                 }
+
+                // add back old version info
+                foreach (var commentNode in commentNodes.Reverse())
+                {
+                    if (commentNode.ToString().Contains(CST_MAGIC))
+                    {
+                        if (!commentNode.ToString().Contains(ToolkitVersion.version))
+                        {
+                            if (saveOldVers)
+                                rootnode.AddFirst(new XComment(commentNode));
+                        }
+                        else
+                            sameVersion = true;
+                    }
+                }
+
+                if (!sameComment && !String.IsNullOrEmpty(customComment))
+                    rootnode.AddFirst(new XComment(" " + customComment + " "));
+
+                // always put current CST version info first
+                if (sameVersion || writeNewVers)
+                    rootnode.AddFirst(new XComment(CST_MAGIC + ToolkitVersion.version + " "));
             }
 
-            // add current version of toolkit magic
-            if (overwriteCstComment)
-                rootnode.AddFirst(new XComment(magic + ToolkitVersion.version + " "));
-
-            xml.Save(xmlSongRS2014File);
+            xml.Save(xmlSongFile);
         }
 
         public static Song2014 LoadFromFile(string xmlSongRS2014File)

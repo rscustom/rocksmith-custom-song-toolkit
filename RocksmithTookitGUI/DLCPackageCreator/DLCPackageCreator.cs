@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -9,7 +10,9 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 using Ookii.Dialogs;
+using RocksmithToolkitGUI.DDC;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using RocksmithToolkitLib.XmlRepository;
 using X360.STFS;
@@ -29,6 +32,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     public partial class DLCPackageCreator : UserControl
     {
         public static readonly string MESSAGEBOX_CAPTION = "CDLC Package Creator";
+        private const string TKI_REMASTER = "(Remastered by CDLC Creator)";
+        private const string TKI_ARRID = "(Arrangement ID by CDLC Creator)";
+        private const string TKI_DDC = "(DDC by CDLC Creator)";
         private BackgroundWorker bwGenerate = new BackgroundWorker();
         private StringBuilder errorsFound;
         private string dlcSavePath;
@@ -156,7 +162,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string SongTitleSort
         {
             get { return SongDisplayNameSortTB.Text; }
-            set { SongDisplayNameSortTB.Text = value.GetValidSortableName(); }
+            set { SongDisplayNameSortTB.Text = String.IsNullOrEmpty(value) ? SongTitle.GetValidSortableName() : value.GetValidSortableName(); }
         }
 
         public string Album
@@ -168,7 +174,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string AlbumSort
         {
             get { return AlbumSortTB.Text; }
-            set { AlbumSortTB.Text = value.GetValidSortableName(); }
+            set { AlbumSortTB.Text = String.IsNullOrEmpty(value) ? Album.GetValidSortableName() : value.GetValidSortableName(); }
         }
 
         public string Artist
@@ -180,7 +186,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string ArtistSort
         {
             get { return ArtistSortTB.Text; }
-            set { ArtistSortTB.Text = value.GetValidSortableName(); }
+            set { ArtistSortTB.Text = String.IsNullOrEmpty(value) ? Artist.GetValidSortableName() : value.GetValidSortableName(); }
         }
 
         public string AlbumYear
@@ -198,21 +204,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string AverageTempo
         {
             get { return AverageTempoTB.Text; }
-            set { AverageTempoTB.Text = value.GetValidTempo(); }
+            set
+            { AverageTempoTB.Text = value.GetValidTempo(); }
         }
 
         public string PackageVersion
         {
             get { return packageVersionTB.Text; }
 
-            set
-            {
-                // null exception check and fix
-                if (String.IsNullOrEmpty(value))
-                    packageVersionTB.Text = "1";
-                else
-                    packageVersionTB.Text = value.GetValidVersion();
-            }
+            set { packageVersionTB.Text = String.IsNullOrEmpty(value) ? "1" : value.GetValidVersion(); }
         }
 
         private string packageComment;
@@ -466,8 +466,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
-
-                sfd.FileName = StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                var ddAcronym = ConfigRepository.Instance().GetBoolean("ddc_autogen") ? "DD" : "NDD";
+                sfd.FileName = String.Format("{0}_{1}", StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms")), ddAcronym);
                 sfd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
 
                 if (sfd.ShowDialog(this) != DialogResult.OK) // 'this' ensures sfd is topmost
@@ -486,38 +486,111 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (arr.Metronome == Metronome.Generate)
                     mArr.Add(GenMetronomeArr(arr));
             }
+
             packageData.Arrangements.AddRange(mArr);
 
             // Update XML arrangements song info
             bool updateArrangmentID = false;
             if (userChangedInputControls)
-                if (MessageBox.Show(@"The song information has been changed." + Environment.NewLine +
-                    @"Do you want to update the 'Arrangement Identification'?  " + Environment.NewLine +
-                    @"Answering 'Yes' will reduce the risk of CDLC" + Environment.NewLine +
-                    @"in game hanging and song stats will be reset.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                if (MessageBox.Show(@"The song information has been changed." + Environment.NewLine + @"Do you want to update the 'Arrangement Identification'?  " + Environment.NewLine + @"Answering 'Yes' will reduce the risk of CDLC" + Environment.NewLine + @"in game hanging and song stats will be reset.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                {
                     updateArrangmentID = true;
+
+                    // add TKI_ARRID comment
+                    var arrIdComment = packageData.PackageComment;
+                    if (String.IsNullOrEmpty(arrIdComment))
+                        arrIdComment = TKI_ARRID;
+                    else if (!arrIdComment.Contains(TKI_ARRID))
+                        arrIdComment = arrIdComment + " " + TKI_ARRID;
+
+                    packageData.PackageComment = arrIdComment;
+                }
                 else
                     // maintain use of original DLCKey, as well as, PID
                     packageData.Name = dlcKeyOrg;
 
+            if (ConfigRepository.Instance().GetBoolean("ddc_autogen"))
+            {
+                // add TKI_DDC comment
+                var ddcComment = packageData.PackageComment;
+                if (String.IsNullOrEmpty(ddcComment))
+                    ddcComment = TKI_DDC;
+                else if (!ddcComment.Contains(TKI_DDC))
+                    ddcComment = ddcComment + " " + TKI_DDC;
+
+                packageData.PackageComment = ddcComment;
+            }
+
+            // add TKI_REMASTER comment
+            var remasterComment = packageData.PackageComment;
+            if (String.IsNullOrEmpty(remasterComment))
+                remasterComment = TKI_REMASTER;
+            else if (!remasterComment.Contains(TKI_REMASTER))
+                remasterComment = remasterComment + " " + TKI_REMASTER;
+
+            packageData.PackageComment = remasterComment;
+
+            // declare one time for DDC generation   
+            var consoleOutput = String.Empty;
+            SettingsDDC.Instance.LoadConfigXml();
+            var phraseLen = SettingsDDC.Instance.PhraseLen;
+            var removeSus = SettingsDDC.Instance.RemoveSus;
+            var rampPath = SettingsDDC.Instance.RampPath;
+            var cfgPath = SettingsDDC.Instance.CfgPath;
+
             foreach (var arr in packageData.Arrangements)
             {
-                if (userChangedInputControls)
-                    UpdateXml(arr, packageData, updateArrangmentID);
+                if (updateArrangmentID)
+                {
+                    // generate new AggregateGraph
+                    arr.SongFile = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongFile() { File = "" };
+                    // generate new Arrangement IDs
+                    arr.Id = IdGenerator.Guid();
+                    arr.MasterId = RandomGenerator.NextInt();
+                }
 
-                if (arr.ArrangementType == ArrangementType.Guitar || arr.ArrangementType == ArrangementType.Bass)
-                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
+                // skip vocal and showlight arrangements
+                if (arr.ArrangementType == ArrangementType.Vocal || arr.ArrangementType == ArrangementType.ShowLight)
+                    continue;
+
+                if (userChangedInputControls)
+                    UpdateXml(arr, packageData);
+
+                // restore arrangement comments
+                Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
+
+                // add DDC to arrangement
+                if (ConfigRepository.Instance().GetBoolean("ddc_autogen"))
+                {
+                    using (var ddc = new DDC.DDC())
+                    {
+                        // apply DD to xml arrangments
+                        var singleResult = ddc.ApplyDD(arr.SongXml.File, phraseLen, removeSus, rampPath, cfgPath, out consoleOutput, true);
+                        if (singleResult == 1)
+                        {
+                            var errMsg = "DDC generated an error while processing arrangement:" + Environment.NewLine + arr.SongXml.File + Environment.NewLine;
+                            BetterDialog2.ShowDialog(errMsg, "DDC Generated Error", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                        }
+
+                        if (singleResult == 2)
+                        {
+                            consoleOutput = String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(arr.SongXml.File), consoleOutput);
+                            BetterDialog2.ShowDialog(consoleOutput, "DDC Generation Info", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                        }
+                    }
+                }
+
+                // put arrangment comments in correct order
+                Song2014.WriteXmlComments(arr.SongXml.File);
             }
 
             if (Path.GetFileName(dlcSavePath).Contains(" ") && platformPS3.Checked)
+            {
                 if (!ConfigRepository.Instance().GetBoolean("creator_ps3pkgnamewarn"))
-                {
                     MessageBox.Show(String.Format("PS3 package name can't support space character due to encryption limitation. {0} Spaces will be automatic removed for your PS3 package name.", Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
                 else
-                {
                     ConfigRepository.Instance()["creator_ps3pkgnamewarn"] = true.ToString();
-                }
+            }
 
             if (!bwGenerate.IsBusy && packageData != null)
             {
@@ -1350,24 +1423,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         /// </summary>
         /// <param name="arr"></param>
         /// <param name="info"></param>
-        public void UpdateXml(Arrangement arr, DLCPackageData info, bool updateArrangementID = false)
+        public void UpdateXml(Arrangement arr, DLCPackageData info)
         {
-            // generate new Arrangement IDs
-            if (updateArrangementID)
-            {
-                arr.Id = IdGenerator.Guid();
-                arr.MasterId = RandomGenerator.NextInt();
-            }
-
-            if (arr.ArrangementType == ArrangementType.Vocal)
-                return;
-            if (arr.ArrangementType == ArrangementType.ShowLight)
-                return;
-
             if (CurrentGameVersion != GameVersion.RS2012)
             {
                 var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-                arr.ClearCache(); // why is this here?  IDK
                 songXml.AlbumYear = info.SongInfo.SongYear.ToString();
                 songXml.ArtistName = info.SongInfo.Artist;
                 songXml.Title = info.SongInfo.SongDisplayName;
@@ -1425,6 +1485,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     songXml.ToneD = arr.ToneD;
                 }
 
+                // write updated xml arrangement
                 using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                     songXml.Serialize(stream, true);
             }
@@ -1439,8 +1500,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.Title = info.SongInfo.SongDisplayName;
                 songXml.Tuning = arr.TuningStrings;
 
+                // write updated xml arrangement
                 using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
-                    songXml.Serialize(stream);
+                    songXml.Serialize(stream, true);
             }
         }
 
@@ -1468,11 +1530,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     Time = ebeats[i].Time
                 };
             }
+
             songXml.Events = songXml.Events.Union(songEvents, new EqSEvent()).OrderBy(x => x.Time).ToArray();
             using (var stream = File.OpenWrite(mArr.SongXml.File))
-            {
                 songXml.Serialize(stream, true);
-            }
+
             return mArr;
         }
 

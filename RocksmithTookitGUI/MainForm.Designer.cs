@@ -248,17 +248,8 @@
             this.DDCTab.Size = new System.Drawing.Size(542, 564);
             this.DDCTab.TabIndex = 3;
             this.DDCTab.Text = "DDC";
-            this.DDCTab.ToolTipText = "Generator of low levels for arrangement.";
+            this.DDCTab.ToolTipText = "Generate dynamic difficulty for arrangements.";
             this.DDCTab.UseVisualStyleBackColor = true;
-            // 
-            // ddc1
-            // 
-            this.ddc1.KeepLog = false;
-            this.ddc1.Location = new System.Drawing.Point(6, 6);
-            this.ddc1.MinimumSize = new System.Drawing.Size(530, 380);
-            this.ddc1.Name = "ddc1";
-            this.ddc1.Size = new System.Drawing.Size(530, 466);
-            this.ddc1.TabIndex = 0;
             // 
             // dlcInlayCreatorTab
             // 

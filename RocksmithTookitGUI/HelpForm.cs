@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -15,11 +16,28 @@ namespace RocksmithToolkitGUI
         {
             InitializeComponent();
             this.Text = String.Format("Help for {0}", AssemblyTitle);
-            
+            rtbBlank.BackColor = rtbNotes.BackColor;
+
             LinkLabel.Link link = new LinkLabel.Link();
-            link.LinkData = @"http://www.rscustom.net";
-	        linkLabel1.Links.Add(link);
+            link.LinkData = @"https://www.rscustom.net";
+            linkLabel1.Links.Add(link);
+            PopulateRichText();
         }
+
+        public void PopulateRichText(Stream streamRtfNotes = null, bool wordWrap = true)
+        {
+            if (streamRtfNotes == null)
+            {
+                this.Size = new Size(550, 132);
+                rtbNotes.Text = "Additional help will be displayed here when available.";
+            }
+            else
+            {
+                this.Size = new Size(780, 450);
+                rtbNotes.LoadFile(streamRtfNotes, RichTextBoxStreamType.RichText);
+            }
+        }
+
 
         #region Assembly Attribute Accessors
 
@@ -46,5 +64,7 @@ namespace RocksmithToolkitGUI
             // Send the URL to the operating system.
             Process.Start(e.Link.LinkData as string);
         }
+
+
     }
 }

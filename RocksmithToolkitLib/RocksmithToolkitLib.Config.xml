@@ -4,8 +4,8 @@
   <Config Key="general_firstrun" Value="true" />
   <Config Key="general_usebeta" Value="true" />
   <Config Key="general_replacerepo" Value="false" />
-  <Config Key="general_urllastestrelease" Value="http://www.rscustom.net/builds/latest" />
-  <Config Key="general_urllastestbuild" Value="http://www.rscustom.net/builds/latest_test" />
+  <Config Key="general_urllastestrelease" Value="https://www.rscustom.net/builds/latest" />
+  <Config Key="general_urllastestbuild" Value="https://www.rscustom.net/builds/latest_test" />
   <Config Key="general_defaultappid_RS2012" Value="206102"  />
   <Config Key="general_defaultappid_RS2014" Value="248750"  />
   <Config Key="general_defaultauthor" Value="Custom Song Creator" />
@@ -24,11 +24,12 @@
   <!-- converter config key count = 2 -->"
   <Config Key="converter_source" Value="Pc" />
   <Config Key="converter_target" Value="XBox360" />
-  <!-- ddc config key count = 4 -->"
+  <!-- ddc config key count = 5 -->"
   <Config Key="ddc_config" Value="ddc_default" />
   <Config Key="ddc_rampup" Value="ddc_default" />
   <Config Key="ddc_phraselength" Value="4" />
-  <Config Key="ddc_removesustain" Value="false" />
+  <Config Key="ddc_removesustain" Value="false" />  
+  <Config Key="ddc_autogen" Value="false" />
   <!-- inlay 3 items TODO: add these -->"
   <Config Key="cgm_inlayname" Value="Default Inlay" />
   <Config Key="cgm_24frets" Value="false" />
