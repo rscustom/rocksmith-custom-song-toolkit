@@ -39,8 +39,8 @@ namespace RocksmithToolkitGUI
             if (args.Length > 0 && File.Exists(args[0]))
                 LoadTemplate(args[0]);
 
-            ShowHelpForm();
             InitMainForm();
+            ShowHelpForm();
         }
 
         private void InitMainForm()
