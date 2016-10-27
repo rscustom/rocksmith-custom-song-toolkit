@@ -210,7 +210,7 @@ namespace RocksmithToolkitGUI.DDC
                 DDC.Start();
                 consoleOutput = DDC.StandardOutput.ReadToEnd();
                 consoleOutput += DDC.StandardError.ReadToEnd();
-                DDC.WaitForExit(1000 * 60 * 15); //wait 15 minutes ???
+                DDC.WaitForExit(1000 * 60 * 15); //wait for 15 minutes, crunchy solution for AV-sandboxing issues
                 return DDC.ExitCode;
             }
         }
