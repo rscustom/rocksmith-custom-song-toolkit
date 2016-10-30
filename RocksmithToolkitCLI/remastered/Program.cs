@@ -16,7 +16,7 @@ namespace remastered
 {
     class Program
     {
-        private static string WorkDirectory { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "REMASTERED_CLI"); } }
+        private static string workDirectory;
         private const string TKI_REMASTER = "(Remastered by CLI)";
         private const string TKI_ARRID = "(Arrangement ID by CLI)";
         private static StringBuilder sbErrors = new StringBuilder();
@@ -24,6 +24,7 @@ namespace remastered
         private static bool optionOrg;
         private static bool optionPre;
         private static bool optionRen;
+        private static bool optionLog;
 
         private static int Main(string[] args)
         {
@@ -40,6 +41,7 @@ namespace remastered
             // args = new string[] { "-org", "-pre", "D:\\Temp\\Test\\PeppaPig_p.psarc.org" };
             // args = new string[] { "-pre", "D:\\Temp\\Test\\PeppaPig_p.psarc" };
             // args = new string[] { "-ren", "D:\\Temp\\Test\\PeppaPig_p.psarc.org" };
+            // args = new string[] { "-log \"D:\\Temp\\Test\"", "D:\\Temp\\Test\\PeppaPig_p.psarc" };
             Console.WriteLine(@"Running in Debug Mode ... help is not available");
 #endif
 
@@ -70,6 +72,8 @@ namespace remastered
                 Console.WriteLine(@"   option: [-pre] to repair CDLC that have not been played in");
                 Console.WriteLine(@"           Rocksmith 2014 Remastered and preserve song stats.");
                 Console.WriteLine(@"   option: [-ren] to rename (.org) files to (.psarc) files");
+                Console.WriteLine(@"   option: [-log] [directory path] to specify a custom log path");
+                Console.WriteLine(@"           folder for CLI generated (.org), (.cor), and (.log) files");
                 Console.WriteLine(@"   source: [Pathname] of CDLC files or folders to be repaired]");
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -116,6 +120,13 @@ namespace remastered
                         argsClean = argsClean.Where(x => x != args[i]).ToArray();
                         Console.WriteLine(@"CLI option [-ren] was found ...");
                         break;
+                    case "-log":
+                        optionLog = true;
+                        workDirectory = args[i].Substring(5).Trim().Trim('"');
+                        argsClean = argsClean.Where(x => x != args[i]).ToArray();
+                        Console.WriteLine(@"CLI option [-log] was found ...");
+                        Console.WriteLine(@"Custom Log Path: " + workDirectory);
+                        break;
                 }
             }
 
@@ -123,8 +134,11 @@ namespace remastered
             if ((optionOrg || optionPre) && optionRen)
                 ShowHelpfulError("Multiple CLI options may not be used with option [-ren]");
 
-            if (!Directory.Exists(WorkDirectory))
-                Directory.CreateDirectory(WorkDirectory);
+            if (!optionLog)
+                workDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "REMASTERED_CLI");
+
+            if (!Directory.Exists(workDirectory))
+                Directory.CreateDirectory(workDirectory);
 
             args = argsClean;
             foreach (var arg in args)
@@ -165,7 +179,7 @@ namespace remastered
             var errorLogLines = Regex.Matches(sbErrors.ToString(), Environment.NewLine).Count;
             if (errorLogLines > 1)
             {
-                var errorLogPath = Path.Combine(WorkDirectory, "remastered_error.log");
+                var errorLogPath = Path.Combine(workDirectory, "remastered_error.log");
                 using (TextWriter tw = new StreamWriter(errorLogPath, true))
                     tw.WriteLine(sbErrors + Environment.NewLine);
 
@@ -200,19 +214,23 @@ namespace remastered
                 Console.WriteLine(@"   of the toolkit. The Remastered CDLC has been");
                 Console.WriteLine(@"   updated to the current version of the toolkit.");
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine(@"   Log Path Folder used (.org), (.cor), and (.log) files:");
+                Console.WriteLine(@"   " + workDirectory);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine();
                 Console.WriteLine(@" - The original non-remastered CDLC have been renamed with");
-                Console.WriteLine(@"   file extension (.org) and moved to the subfolder named");
-                Console.WriteLine(@"   'REMASTERED_CLI' inside of the 'My Documents' folder.");
+                Console.WriteLine(@"   file extension (.org) and moved to the log path folder.");
                 Console.WriteLine(@"   The (.org) backup files can be archived or deleted after");
                 Console.WriteLine(@"   it is confirm that the Remastered CDLC are working.");
                 Console.WriteLine();
                 Console.WriteLine(@" - Corrupt CDLC have been renamed with file extension (.cor)");
-                Console.WriteLine(@"   and moved to the subfolder named 'REMASTERED_CLI'.");
+                Console.WriteLine(@"   and moved to the log path folder.");
                 Console.WriteLine(@"   Corrupt (non-repairable) CDLC should be submitted to");
                 Console.WriteLine(@"   the original charter so they can be repaired.");
                 Console.WriteLine();
-                Console.WriteLine(@" - See the 'remastered_error.log' inside the subfolder named");
-                Console.WriteLine(@"   'REMASTERED_CLI' for a list of non-repairable files.");
+                Console.WriteLine(@" - See the 'remastered_error.log' in the log path folder");
+                Console.WriteLine(@"   for a list of non-repairable files.");
             }
             Console.WriteLine();
             Console.WriteLine(@"Press any key to continue ...");
@@ -252,7 +270,7 @@ namespace remastered
                 Console.WriteLine(@"File: " + fileName);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(@" - Making a backup copy ...");
-                var backupPath = String.Format(@"{0}.org", Path.Combine(WorkDirectory, Path.GetFileName(filePath)));
+                var backupPath = String.Format(@"{0}.org", Path.Combine(workDirectory, Path.GetFileName(filePath)));
                 if (!File.Exists(backupPath))
                 {
                     File.Copy(filePath, backupPath, false);
@@ -363,10 +381,10 @@ namespace remastered
                 Console.ForegroundColor = ConsoleColor.Green;
 
                 // copy (org) to corrupt (cor), delete backup (org), delete original
-                var backupPath = String.Format(@"{0}.org", Path.Combine(WorkDirectory, Path.GetFileName(filePath)));
+                var backupPath = String.Format(@"{0}.org", Path.Combine(workDirectory, Path.GetFileName(filePath)));
                 if (File.Exists(backupPath))
                 {
-                    var corruptPath = String.Format(@"{0}.cor", Path.Combine(WorkDirectory, Path.GetFileName(filePath)));
+                    var corruptPath = String.Format(@"{0}.cor", Path.Combine(workDirectory, Path.GetFileName(filePath)));
                     File.Copy(backupPath, corruptPath, true);
                     File.Delete(backupPath);
                     File.Delete(filePath);

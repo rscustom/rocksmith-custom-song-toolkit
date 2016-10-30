@@ -13,6 +13,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Ookii.Dialogs;
 using RocksmithToolkitGUI.DDC;
+using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using RocksmithToolkitLib.XmlRepository;
 using X360.STFS;
@@ -562,22 +563,31 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 // add DDC to arrangement
                 if (ConfigRepository.Instance().GetBoolean("ddc_autogen"))
                 {
-                    using (var ddc = new DDC.DDC())
+                    // don't overwrite DD if it is already present in the arragement
+                    var xmlContent = Song2014.LoadFromFile(arr.SongXml.File);
+                    var mf = new ManifestFunctions(GameVersion.RS2014);
+                    var maxDif = mf.GetMaxDifficulty(xmlContent);
+                    if (maxDif == 0)
                     {
-                        // apply DD to xml arrangments
-                        var singleResult = ddc.ApplyDD(arr.SongXml.File, phraseLen, removeSus, rampPath, cfgPath, out consoleOutput, true);
-                        if (singleResult == 1)
+                        using (var ddc = new DDC.DDC())
                         {
-                            var errMsg = "DDC generated an error while processing arrangement:" + Environment.NewLine + arr.SongXml.File + Environment.NewLine;
-                            BetterDialog2.ShowDialog(errMsg, "DDC Generated Error", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
-                        }
+                            // apply DD to xml arrangments
+                            var singleResult = ddc.ApplyDD(arr.SongXml.File, phraseLen, removeSus, rampPath, cfgPath, out consoleOutput, true);
+                            if (singleResult == 1)
+                            {
+                                var errMsg = "DDC generated an error while processing arrangement:" + Environment.NewLine + arr.SongXml.File + Environment.NewLine;
+                                BetterDialog2.ShowDialog(errMsg, "DDC Generated Error", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                            }
 
-                        if (singleResult == 2)
-                        {
-                            consoleOutput = String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(arr.SongXml.File), consoleOutput);
-                            BetterDialog2.ShowDialog(consoleOutput, "DDC Generation Info", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                            if (singleResult == 2)
+                            {
+                                consoleOutput = String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(arr.SongXml.File), consoleOutput);
+                                BetterDialog2.ShowDialog(consoleOutput, "DDC Generation Info", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                            }
                         }
                     }
+                    else
+                        MessageBox.Show("Existing DD content in arrangement: " + arr.Name + " was not changed", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 // put arrangment comments in correct order

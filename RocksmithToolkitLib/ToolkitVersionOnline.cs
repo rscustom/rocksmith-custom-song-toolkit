@@ -52,7 +52,7 @@ namespace RocksmithToolkitLib
                 Debug.WriteLine("Server Connection Attempt #" + i);
                 try
                 {
-                    // No TLS 1.2 in WinXp or before IE8 browser if OS is newer than WinXP 
+                    // No TLS 1.2 in WinXp, or before IE8 browser if OS is newer than WinXP 
                     // Aautomatic updates do not work in WinXp
                     var versionJson = new WebClient().DownloadString(url);
                     // test string for when no internet connection exists
@@ -85,6 +85,7 @@ namespace RocksmithToolkitLib
             return fileUrl + ".zip";
         }
 
+        // TODO: impliment TLS check
         //public static bool IsTlsCompat(string appName)
         //{
         //    // requires Net 4.5, or Win7 and IE8
