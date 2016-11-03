@@ -19,6 +19,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         internal bool IsVocal = false;
         [JsonIgnore]
         internal Song2014 SongContent = null;
+        [JsonIgnore]
+        public bool SerializeBassInfo { get; set; }
 
         public string AlbumArt { get; set; }
         public string AlbumName { get; set; }
@@ -26,6 +28,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public string ArrangementName { get; set; }
         public string ArtistName { get; set; }
         public string ArtistNameSort { get; set; }
+        // apply conditional serialization to BassPick
+        public int BassPick { get; set; } // added to resolve issue #272
         public decimal CapoFret { get; set; }
         public double? CentOffset { get; set; }
         public bool DLC { get; set; }
@@ -101,6 +105,14 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             ArtistName = info.SongInfo.Artist;
             CentOffset = (!arrangement.TuningPitch.Equals(0)) ? TuningFrequency.Frequency2Cents(arrangement.TuningPitch) : 0.0;
             ArtistNameSort = info.SongInfo.ArtistSort;
+            if (arrangement.ArrangementType == ArrangementType.Bass)
+            {
+                SerializeBassInfo = true;
+                BassPick = (int) arrangement.PluckedType;
+            }
+            else
+                SerializeBassInfo = false;
+
             CapoFret = (arrangement.Sng2014.Metadata.CapoFretId == 0xFF) ? CapoFret = 0 : Convert.ToDecimal(arrangement.Sng2014.Metadata.CapoFretId);
             DNA_Chords = arrangement.Sng2014.DNACount[(int)DNAId.Chord];
             DNA_Riffs = arrangement.Sng2014.DNACount[(int)DNAId.Riff];
@@ -111,7 +123,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             EasyMastery = NotesEasy / NotesHard;
             MediumMastery = NotesMedium / NotesHard;
             Metronome = (int?)arrangement.Metronome;
-            Representative = Convert.ToInt32(!arrangement.BonusArr);
+            // TODO: check for bug here 
+            // if there is an equivalent bonus arrangement then Representative is set to "1" otherwise "0"
+            Representative = Convert.ToInt32(!arrangement.BonusArr); 
             RouteMask = (int)arrangement.RouteMask;
 
             // TODO: use ManifestFunctions.GetSongDifficulty() method (fix generation algorithm)
@@ -131,5 +145,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             var tuning = TuningDefinitionRepository.Instance.Detect(SongContent.Tuning, platform.version, arrangement.ArrangementType == ArrangementType.Bass);
             Tuning = tuning.Tuning; //can we just use SongContent.Tuning
         }
+
+        // semi-undocumented feature of Newtonsoft.Json selective conditional serialization
+        public bool ShouldSerializeBassPick()
+        {
+            // only serialize if ArrangmentType is Bass
+            return (this.SerializeBassInfo);
+        }
+
     }
 }

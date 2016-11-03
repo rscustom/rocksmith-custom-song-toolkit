@@ -15,6 +15,7 @@ using System.Runtime.Serialization;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToTabLib;
 using RocksmithToolkitLib.Sng2014HSL;
+using Action = System.Action;
 using ToolkitInfo = RocksmithToolkitLib.DLCPackage.ToolkitInfo;
 
 namespace RocksmithToolkitLib.Extensions
@@ -274,6 +275,13 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
-
+        public static void InvokeIfRequired<T>(this T c, Action<T> action) where T : Control
+        {
+            if (c.InvokeRequired)
+                c.Invoke(new Action(() => action(c)));
+            else
+                action(c);
+        }
+    
     }
 }

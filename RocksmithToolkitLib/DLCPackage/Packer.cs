@@ -155,8 +155,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     Attributes2014 att = null;
                     if (arrType != ArrangementType.Vocal)
                     {
-                        // Some ODLC json files contain errors
-                        // Confirmeted error in Chords (too many chords are reported in some difficulty levels)
+                        // Some ODLC json files contain factory errors
+                        // Confirmed error in Chords (too many chords are reported in some difficulty levels)
                         var jsonFiles = Directory.EnumerateFiles(unpackedDir, String.Format("{0}.json", Path.GetFileNameWithoutExtension(sngFile)), SearchOption.AllDirectories).FirstOrDefault();
                         if (!String.IsNullOrEmpty(jsonFiles) && jsonFiles.Any())
                             att = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles).Entries.ToArray()[0].Value.ToArray()[0].Value;

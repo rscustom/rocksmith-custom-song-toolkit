@@ -32,15 +32,15 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.AddArrBT = new System.Windows.Forms.Button();
-            this.rampUpBT = new System.Windows.Forms.Button();
+            this.btnAddArr = new System.Windows.Forms.Button();
+            this.btnRampUp = new System.Windows.Forms.Button();
             this.chkRemoveSustains = new System.Windows.Forms.CheckBox();
             this.process1 = new System.Diagnostics.Process();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.DescriptionDDC = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
-            this.ramUpMdlsCbox = new System.Windows.Forms.ComboBox();
+            this.cmbRampUp = new System.Windows.Forms.ComboBox();
             this.DDCfilesDgw = new System.Windows.Forms.DataGridView();
             this.PathColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TypeColnm = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -48,25 +48,26 @@
             this.chkGenArrIds = new System.Windows.Forms.CheckBox();
             this.chkGenLogFile = new System.Windows.Forms.CheckBox();
             this.chkOverwrite = new System.Windows.Forms.CheckBox();
-            this.ConfigFilesCbx = new System.Windows.Forms.ComboBox();
-            this.ConfigFilesBtn = new System.Windows.Forms.Button();
-            this.phraseLenNum = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
+            this.cmbConfigFile = new System.Windows.Forms.ComboBox();
+            this.btnConfigFile = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.deleteArrBT = new System.Windows.Forms.Button();
+            this.btnRemove = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ddcVersion = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.ProduceDDbt = new System.Windows.Forms.Button();
+            this.btnGenerate = new System.Windows.Forms.Button();
             this.lblCurrentOperation = new System.Windows.Forms.Label();
             this.pbUpdateProgress = new System.Windows.Forms.ProgressBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.cmbPhraseLen = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.phraseLenNum)).BeginInit();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbPhraseLen)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -78,38 +79,39 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // AddArrBT
+            // btnAddArr
             // 
-            this.AddArrBT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.AddArrBT.Location = new System.Drawing.Point(441, 19);
-            this.AddArrBT.Name = "AddArrBT";
-            this.AddArrBT.Size = new System.Drawing.Size(64, 24);
-            this.AddArrBT.TabIndex = 0;
-            this.AddArrBT.Text = "Add";
-            this.AddArrBT.UseVisualStyleBackColor = true;
-            this.AddArrBT.Click += new System.EventHandler(this.AddArrBT_Click);
+            this.btnAddArr.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.btnAddArr.Location = new System.Drawing.Point(441, 19);
+            this.btnAddArr.Name = "btnAddArr";
+            this.btnAddArr.Size = new System.Drawing.Size(64, 24);
+            this.btnAddArr.TabIndex = 0;
+            this.btnAddArr.Text = "Add";
+            this.btnAddArr.UseVisualStyleBackColor = true;
+            this.btnAddArr.Click += new System.EventHandler(this.btnAddArr_Click);
             // 
-            // rampUpBT
+            // btnRampUp
             // 
-            this.rampUpBT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.rampUpBT.Location = new System.Drawing.Point(441, 17);
-            this.rampUpBT.Name = "rampUpBT";
-            this.rampUpBT.Size = new System.Drawing.Size(64, 23);
-            this.rampUpBT.TabIndex = 3;
-            this.rampUpBT.Text = "Add";
-            this.rampUpBT.UseVisualStyleBackColor = true;
-            this.rampUpBT.Click += new System.EventHandler(this.rampUpBT_Click);
+            this.btnRampUp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.btnRampUp.Location = new System.Drawing.Point(441, 17);
+            this.btnRampUp.Name = "btnRampUp";
+            this.btnRampUp.Size = new System.Drawing.Size(64, 23);
+            this.btnRampUp.TabIndex = 3;
+            this.btnRampUp.Text = "Add";
+            this.btnRampUp.UseVisualStyleBackColor = true;
+            this.btnRampUp.Click += new System.EventHandler(this.btnRampUp_Click);
             // 
             // chkRemoveSustains
             // 
             this.chkRemoveSustains.AutoSize = true;
             this.chkRemoveSustains.ForeColor = System.Drawing.Color.Gray;
-            this.chkRemoveSustains.Location = new System.Drawing.Point(168, 82);
+            this.chkRemoveSustains.Location = new System.Drawing.Point(168, 105);
             this.chkRemoveSustains.Name = "chkRemoveSustains";
             this.chkRemoveSustains.Size = new System.Drawing.Size(109, 17);
             this.chkRemoveSustains.TabIndex = 7;
             this.chkRemoveSustains.Text = "Remove Sustains";
             this.chkRemoveSustains.UseVisualStyleBackColor = true;
+            this.chkRemoveSustains.Visible = false;
             this.chkRemoveSustains.CheckStateChanged += new System.EventHandler(this.Highlight_CheckStateChanged);
             // 
             // process1
@@ -152,19 +154,19 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Phrase length:";
             // 
-            // ramUpMdlsCbox
+            // cmbRampUp
             // 
-            this.ramUpMdlsCbox.AllowDrop = true;
-            this.ramUpMdlsCbox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ramUpMdlsCbox.FormattingEnabled = true;
-            this.ramUpMdlsCbox.Location = new System.Drawing.Point(94, 18);
-            this.ramUpMdlsCbox.MinimumSize = new System.Drawing.Size(20, 0);
-            this.ramUpMdlsCbox.Name = "ramUpMdlsCbox";
-            this.ramUpMdlsCbox.Size = new System.Drawing.Size(341, 21);
-            this.ramUpMdlsCbox.Sorted = true;
-            this.ramUpMdlsCbox.TabIndex = 2;
-            this.ramUpMdlsCbox.DropDown += new System.EventHandler(this.ramUpMdlsCbox_DropDown);
-            this.ramUpMdlsCbox.SelectedIndexChanged += new System.EventHandler(this.ramUpMdlsCbox_SelectedIndexChanged);
+            this.cmbRampUp.AllowDrop = true;
+            this.cmbRampUp.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRampUp.FormattingEnabled = true;
+            this.cmbRampUp.Location = new System.Drawing.Point(94, 18);
+            this.cmbRampUp.MinimumSize = new System.Drawing.Size(20, 0);
+            this.cmbRampUp.Name = "cmbRampUp";
+            this.cmbRampUp.Size = new System.Drawing.Size(341, 21);
+            this.cmbRampUp.Sorted = true;
+            this.cmbRampUp.TabIndex = 2;
+            this.cmbRampUp.DropDown += new System.EventHandler(this.ramUpMdlsCbox_DropDown);
+            this.cmbRampUp.SelectedIndexChanged += new System.EventHandler(this.cmbRampUp_SelectedIndexChanged);
             // 
             // DDCfilesDgw
             // 
@@ -205,7 +207,7 @@
             this.DDCfilesDgw.Size = new System.Drawing.Size(429, 84);
             this.DDCfilesDgw.StandardTab = true;
             this.DDCfilesDgw.TabIndex = 0;
-            this.DDCfilesDgw.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DDCfilesDgw_UserDeletingRow);
+            this.DDCfilesDgw.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DDCfilesDgw_UserRemovingRow);
             this.DDCfilesDgw.DragDrop += new System.Windows.Forms.DragEventHandler(this.DDCfilesDgw_DragDrop);
             this.DDCfilesDgw.DragEnter += new System.Windows.Forms.DragEventHandler(this.DDCfilesDgw_DragEnter);
             // 
@@ -231,11 +233,11 @@
             this.groupBox1.Controls.Add(this.chkGenArrIds);
             this.groupBox1.Controls.Add(this.chkGenLogFile);
             this.groupBox1.Controls.Add(this.chkOverwrite);
-            this.groupBox1.Controls.Add(this.ConfigFilesCbx);
-            this.groupBox1.Controls.Add(this.ramUpMdlsCbox);
-            this.groupBox1.Controls.Add(this.ConfigFilesBtn);
-            this.groupBox1.Controls.Add(this.rampUpBT);
-            this.groupBox1.Controls.Add(this.phraseLenNum);
+            this.groupBox1.Controls.Add(this.cmbConfigFile);
+            this.groupBox1.Controls.Add(this.cmbRampUp);
+            this.groupBox1.Controls.Add(this.btnConfigFile);
+            this.groupBox1.Controls.Add(this.btnRampUp);
+            this.groupBox1.Controls.Add(this.cmbPhraseLen);
             this.groupBox1.Controls.Add(this.chkRemoveSustains);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
@@ -266,7 +268,7 @@
             // 
             this.chkGenLogFile.AutoSize = true;
             this.chkGenLogFile.ForeColor = System.Drawing.Color.Gray;
-            this.chkGenLogFile.Location = new System.Drawing.Point(168, 105);
+            this.chkGenLogFile.Location = new System.Drawing.Point(168, 82);
             this.chkGenLogFile.Name = "chkGenLogFile";
             this.chkGenLogFile.Size = new System.Drawing.Size(91, 17);
             this.chkGenLogFile.TabIndex = 9;
@@ -288,55 +290,29 @@
             this.chkOverwrite.UseVisualStyleBackColor = true;
             this.chkOverwrite.CheckStateChanged += new System.EventHandler(this.Highlight_CheckStateChanged);
             // 
-            // ConfigFilesCbx
+            // cmbConfigFile
             // 
-            this.ConfigFilesCbx.AllowDrop = true;
-            this.ConfigFilesCbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ConfigFilesCbx.FormattingEnabled = true;
-            this.ConfigFilesCbx.Location = new System.Drawing.Point(94, 47);
-            this.ConfigFilesCbx.MinimumSize = new System.Drawing.Size(20, 0);
-            this.ConfigFilesCbx.Name = "ConfigFilesCbx";
-            this.ConfigFilesCbx.Size = new System.Drawing.Size(341, 21);
-            this.ConfigFilesCbx.Sorted = true;
-            this.ConfigFilesCbx.TabIndex = 4;
-            this.ConfigFilesCbx.DropDown += new System.EventHandler(this.ConfigFilesCbx_DropDown);
+            this.cmbConfigFile.AllowDrop = true;
+            this.cmbConfigFile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbConfigFile.FormattingEnabled = true;
+            this.cmbConfigFile.Location = new System.Drawing.Point(94, 47);
+            this.cmbConfigFile.MinimumSize = new System.Drawing.Size(20, 0);
+            this.cmbConfigFile.Name = "cmbConfigFile";
+            this.cmbConfigFile.Size = new System.Drawing.Size(341, 21);
+            this.cmbConfigFile.Sorted = true;
+            this.cmbConfigFile.TabIndex = 4;
+            this.cmbConfigFile.DropDown += new System.EventHandler(this.ConfigFilesCbx_DropDown);
             // 
-            // ConfigFilesBtn
+            // btnConfigFile
             // 
-            this.ConfigFilesBtn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.ConfigFilesBtn.Location = new System.Drawing.Point(441, 46);
-            this.ConfigFilesBtn.Name = "ConfigFilesBtn";
-            this.ConfigFilesBtn.Size = new System.Drawing.Size(64, 23);
-            this.ConfigFilesBtn.TabIndex = 5;
-            this.ConfigFilesBtn.Text = "Add";
-            this.ConfigFilesBtn.UseVisualStyleBackColor = true;
-            this.ConfigFilesBtn.Click += new System.EventHandler(this.ConfigFilesBtn_Click);
-            // 
-            // phraseLenNum
-            // 
-            this.phraseLenNum.Location = new System.Drawing.Point(94, 81);
-            this.phraseLenNum.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
-            this.phraseLenNum.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.phraseLenNum.Name = "phraseLenNum";
-            this.phraseLenNum.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.phraseLenNum.Size = new System.Drawing.Size(52, 20);
-            this.phraseLenNum.TabIndex = 6;
-            this.phraseLenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.phraseLenNum.ThousandsSeparator = true;
-            this.toolTip.SetToolTip(this.phraseLenNum, "Number of Bars");
-            this.phraseLenNum.Value = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
+            this.btnConfigFile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.btnConfigFile.Location = new System.Drawing.Point(441, 46);
+            this.btnConfigFile.Name = "btnConfigFile";
+            this.btnConfigFile.Size = new System.Drawing.Size(64, 23);
+            this.btnConfigFile.TabIndex = 5;
+            this.btnConfigFile.Text = "Add";
+            this.btnConfigFile.UseVisualStyleBackColor = true;
+            this.btnConfigFile.Click += new System.EventHandler(this.btnConfigFile_Click);
             // 
             // label5
             // 
@@ -358,21 +334,21 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "Ramp-up model:";
             // 
-            // deleteArrBT
+            // btnRemove
             // 
-            this.deleteArrBT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.deleteArrBT.Location = new System.Drawing.Point(441, 48);
-            this.deleteArrBT.Name = "deleteArrBT";
-            this.deleteArrBT.Size = new System.Drawing.Size(64, 24);
-            this.deleteArrBT.TabIndex = 1;
-            this.deleteArrBT.Text = "Delete";
-            this.deleteArrBT.UseVisualStyleBackColor = true;
-            this.deleteArrBT.Click += new System.EventHandler(this.deleteArrBT_Click);
+            this.btnRemove.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.btnRemove.Location = new System.Drawing.Point(441, 48);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(64, 24);
+            this.btnRemove.TabIndex = 1;
+            this.btnRemove.Text = "Remove";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.AddArrBT);
-            this.groupBox2.Controls.Add(this.deleteArrBT);
+            this.groupBox2.Controls.Add(this.btnAddArr);
+            this.groupBox2.Controls.Add(this.btnRemove);
             this.groupBox2.Controls.Add(this.DDCfilesDgw);
             this.groupBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.groupBox2.Location = new System.Drawing.Point(10, 145);
@@ -413,17 +389,17 @@
             this.label3.TabIndex = 12;
             this.label3.Text = "Help can be found on:";
             // 
-            // ProduceDDbt
+            // btnGenerate
             // 
-            this.ProduceDDbt.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.ProduceDDbt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ProduceDDbt.Location = new System.Drawing.Point(417, 424);
-            this.ProduceDDbt.Name = "ProduceDDbt";
-            this.ProduceDDbt.Size = new System.Drawing.Size(97, 29);
-            this.ProduceDDbt.TabIndex = 37;
-            this.ProduceDDbt.Text = "Generate DD";
-            this.ProduceDDbt.UseVisualStyleBackColor = false;
-            this.ProduceDDbt.Click += new System.EventHandler(this.ProduceDDbt_Click);
+            this.btnGenerate.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.btnGenerate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGenerate.Location = new System.Drawing.Point(417, 424);
+            this.btnGenerate.Name = "btnGenerate";
+            this.btnGenerate.Size = new System.Drawing.Size(97, 29);
+            this.btnGenerate.TabIndex = 37;
+            this.btnGenerate.Text = "Generate DD";
+            this.btnGenerate.UseVisualStyleBackColor = false;
+            this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
             // 
             // lblCurrentOperation
             // 
@@ -452,12 +428,51 @@
             this.toolTip.InitialDelay = 100;
             this.toolTip.ReshowDelay = 100;
             // 
+            // lblStatus
+            // 
+            this.lblStatus.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lblStatus.Location = new System.Drawing.Point(175, 428);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.lblStatus.Size = new System.Drawing.Size(218, 20);
+            this.lblStatus.TabIndex = 1002;
+            this.lblStatus.Text = "...";
+            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblStatus.Visible = false;
+            // 
+            // cmbPhraseLen
+            // 
+            this.cmbPhraseLen.Location = new System.Drawing.Point(94, 81);
+            this.cmbPhraseLen.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+            this.cmbPhraseLen.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.cmbPhraseLen.Name = "cmbPhraseLen";
+            this.cmbPhraseLen.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.cmbPhraseLen.Size = new System.Drawing.Size(52, 20);
+            this.cmbPhraseLen.TabIndex = 6;
+            this.cmbPhraseLen.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.cmbPhraseLen.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.cmbPhraseLen, "Number of Bars");
+            this.cmbPhraseLen.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            // 
             // DDC
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.lblCurrentOperation);
             this.Controls.Add(this.pbUpdateProgress);
-            this.Controls.Add(this.ProduceDDbt);
+            this.Controls.Add(this.btnGenerate);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.ddcVersion);
@@ -473,8 +488,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.phraseLenNum)).EndInit();
             this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.cmbPhraseLen)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -483,19 +498,19 @@
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button AddArrBT;
-        private System.Windows.Forms.Button rampUpBT;
+        private System.Windows.Forms.Button btnAddArr;
+        private System.Windows.Forms.Button btnRampUp;
         private System.Windows.Forms.CheckBox chkRemoveSustains;
         private System.Diagnostics.Process process1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel DescriptionDDC;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private DLCPackageCreator.NumericUpDownFixed phraseLenNum;
-        private System.Windows.Forms.ComboBox ramUpMdlsCbox;
+        private DLCPackageCreator.NumericUpDownFixed cmbPhraseLen;
+        private System.Windows.Forms.ComboBox cmbRampUp;
         private System.Windows.Forms.DataGridView DDCfilesDgw;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button deleteArrBT;
+        private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridViewTextBoxColumn PathColnm;
         private System.Windows.Forms.DataGridViewTextBoxColumn TypeColnm;
@@ -504,14 +519,15 @@
         private System.Windows.Forms.CheckBox chkGenLogFile;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox ConfigFilesCbx;
-        private System.Windows.Forms.Button ConfigFilesBtn;
+        private System.Windows.Forms.ComboBox cmbConfigFile;
+        private System.Windows.Forms.Button btnConfigFile;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button ProduceDDbt;
+        private System.Windows.Forms.Button btnGenerate;
         private System.Windows.Forms.Label lblCurrentOperation;
         private System.Windows.Forms.ProgressBar pbUpdateProgress;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.CheckBox chkGenArrIds;
+        private System.Windows.Forms.Label lblStatus;
     }
 }

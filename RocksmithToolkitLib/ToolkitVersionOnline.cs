@@ -46,24 +46,18 @@ namespace RocksmithToolkitLib
             var url = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.commit);
             Debug.WriteLine("Current version url: " + url);
 
-            // attempt to connect a couple of times
-            for (int i = 0; i < 5; i++)
+            try
             {
-                Debug.WriteLine("Server Connection Attempt #" + i);
-                try
-                {
-                    // No TLS 1.2 in WinXp, or before IE8 browser if OS is newer than WinXP 
-                    // Aautomatic updates do not work in WinXp
-                    var versionJson = new WebClient().DownloadString(url);
-                    // test string for when no internet connection exists
-                    //var versionJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
-                    return JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionJson);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("versionJson Error: " + ex.Message);
-                    Thread.Sleep(250);
-                }
+                // No TLS 1.2 in WinXp, or before IE8 browser if OS is newer than WinXP 
+                // Automatic updates do not work in WinXP
+                var versionJson = new WebClient().DownloadString(url);
+                // test string for when no internet connection exists
+                //var versionJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
+                return JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionJson);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("versionJson Error: " + ex.Message);
             }
 
             return null;

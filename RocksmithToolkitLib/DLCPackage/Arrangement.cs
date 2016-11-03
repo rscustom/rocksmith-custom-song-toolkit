@@ -42,6 +42,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public SongFile SongFile { get; set; }
         public SongXML SongXml { get; set; }
         // Song Information
+        public SongArrangementProperties2014 ArrangementPropeties { get; set; }
         public ArrangementType ArrangementType { get; set; }
         public int ArrangementSort { get; set; }
         public ArrangementName Name { get; set; }
@@ -57,7 +58,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public Sng2014File Sng2014 { get; set; }
         // Gameplay Path
         public RouteMask RouteMask { get; set; }
-        public bool BonusArr { get; set; } // = false;
+        public bool BonusArr { get; set; }
         // Tone Selector
         public string ToneBase { get; set; }
         public string ToneMultiplayer { get; set; }
@@ -96,6 +97,7 @@ namespace RocksmithToolkitLib.DLCPackage
             Debug.Assert(attr.ArrangementType != null, "Missing information from manifest (ArrangementType)");
             SetArrType(attr.ArrangementType);
 
+            this.ArrangementPropeties = attr.ArrangementProperties;
             this.ArrangementSort = attr.ArrangementSort;
             this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
             this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last() * 10);
@@ -106,6 +108,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.ToneMultiplayer = attr.Tone_Multiplayer;
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
+            
 
             //Filter out showlights\vocals
             if (ArrangementType != ArrangementType.Guitar && ArrangementType != ArrangementType.Bass)

@@ -26,7 +26,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
     public class DLCPackageData
     {
-        // DO NOT change variable names ... hidden dependancies
+        // DO NOT change variable names ... there are hidden dependancies
         public GameVersion GameVersion;
         public bool Pc { get; set; }
         public bool Mac { get; set; }

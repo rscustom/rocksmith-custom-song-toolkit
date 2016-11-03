@@ -39,7 +39,7 @@ namespace RocksmithToolkitLib.PsarcLoader
 
         public void WritePackage(string destPath, DLCPackageData packageData, string srcPath = "")
         {
-            // if the outputPath does not exist GetPlatform returns 'None'
+            // if the srcPath does not exist GetPlatform returns 'None'
             // this generates an error condition so need to check platform of srcPath
             Platform platform;
             if (String.IsNullOrEmpty(srcPath))

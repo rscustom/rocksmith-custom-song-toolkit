@@ -227,12 +227,14 @@
     </Compile>
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="DLCInlayCreator\IntroScreensCreator.resx">
       <DependentUpon>IntroScreensCreator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CDLC2Tab\SongInfoForm.resx">
       <DependentUpon>SongInfoForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackageCreator\ShowLightsForm.resx">
       <DependentUpon>ShowLightsForm.cs</DependentUpon>
@@ -308,6 +310,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CDLC2Tab\CDLC2Tab.resx">
       <DependentUpon>CDLC2Tab.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ZiggyProEditorConverter\ZpeConverter.resx">
       <DependentUpon>ZpeConverter.cs</DependentUpon>
