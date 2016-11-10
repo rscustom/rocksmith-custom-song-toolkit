@@ -475,15 +475,15 @@ namespace RocksmithToolkitLib.DLCPackage
                         // MANIFEST
                         var manifest = new Manifest2014<Attributes2014>();
                         var attribute = new Attributes2014(arrangementFileName, arrangement, info, platform);
-                        if (arrangement.ArrangementType != ArrangementType.Vocal && arrangement.ArrangementType != ArrangementType.ShowLight)
+                        if (arrangement.ArrangementType == ArrangementType.Bass || arrangement.ArrangementType == ArrangementType.Guitar)
                         {
                             // TODO: monitor this new code for bugs
                             // represent is set to "1" by default, if there is a bonus then set represent to "0"
-                            attribute.Representative = arrangement.ArrangementPropeties.BonusArr == 1 ? 0 : 1;
-                            attribute.ArrangementProperties.Represent = arrangement.ArrangementPropeties.BonusArr == 1 ? 0 : 1;
+                            attribute.Representative = arrangement.BonusArr ? 0 : 1;
+                            attribute.ArrangementProperties.Represent = arrangement.BonusArr ? 0 : 1;
 
                             attribute.SongPartition = songPartitionCount.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
-                            if (attribute.SongPartition > 1 && arrangement.ArrangementPropeties.BonusArr == 0)
+                            if (attribute.SongPartition > 1 && !arrangement.BonusArr)
                             {
                                 // for alternate arrangement then both represent and bonus are set to "0"
                                 attribute.Representative = 0;

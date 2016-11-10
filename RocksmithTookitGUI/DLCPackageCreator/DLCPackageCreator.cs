@@ -492,14 +492,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
                 var ddAcronym = ConfigRepository.Instance().GetBoolean("ddc_autogen") || isDD ? "DD" : "NDD";
-                sfd.FileName = String.Format("{0}_{1}", StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms")), ddAcronym);
+                var fileName = String.Format("{0}_{1}", StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms")), ddAcronym);
+                sfd.FileName = fileName.GetValidFileName();
                 sfd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
 
                 if (sfd.ShowDialog(this) != DialogResult.OK) // 'this' ensures sfd is topmost
                     return;
 
                 dlcSavePath = sfd.FileName;
-            }  
+            }
 
             // showlights cause in game hanging for some RS1-RS2 conversions
             // they can be disabled here by devs
@@ -538,11 +539,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // fire up a fake progress bar to show app is alive and well
+            var step = (int)Math.Round(1.0 / arrangementCount * 100, 0);
+            var progress = 0;
             pbUpdateProgress.Visible = true;
             lblCurrentOperation.Visible = true;
             dlcGenerateButton.Enabled = false;
-            bwGenerate.ReportProgress(100, "Updating package data  ...");
- 
+            pbUpdateProgress.Style = ProgressBarStyle.Continuous;
+            progress += step;
+            pbUpdateProgress.Value = (progress > 100 ? 100 : progress);
+            ShowCurrentOperation("Updating package data  ...");
+
             if (ConfigRepository.Instance().GetBoolean("ddc_autogen"))
             {
                 // add TKI_DDC comment
@@ -588,6 +594,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (arr.ArrangementType == ArrangementType.Vocal || arr.ArrangementType == ArrangementType.ShowLight)
                     continue;
 
+                progress += step;
+                pbUpdateProgress.Value = (progress > 100 ? 100 : progress);
+                
                 if (userChangedInputControls)
                     UpdateSongXml(arr, packageData);
 
@@ -639,6 +648,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (!bwGenerate.IsBusy && packageData != null)
             {
+                pbUpdateProgress.Style = ProgressBarStyle.Marquee;
                 pbUpdateProgress.Visible = true;
                 lblCurrentOperation.Visible = true;
                 dlcGenerateButton.Enabled = false;
@@ -775,7 +785,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     ofd.SupportMultiDottedExtensions = true;
                     ofd.Filter = CurrentRocksmithTitle + " CDLC Template (*.dlc.xml)|*.dlc.xml";
-                    ofd.FileName = fileName;
+                    ofd.FileName = fileName.GetValidFileName();
                     if (DialogResult.OK != ofd.ShowDialog()) return;
                     dlcSavePath = ofd.FileName;
                 }
@@ -863,10 +873,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dlcLoadPath = Globals.DefaultProjectDir = ofd.FileName;
             }
 
-            loadTemplate(dlcLoadPath);
+            LoadTemplate(dlcLoadPath);
         }
 
-        public void loadTemplate(string dlcLoadPath)
+        public void LoadTemplate(string dlcLoadPath)
         {
             DLCPackageData info = null;
             try
@@ -1131,10 +1141,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 if (arrangement.ArrangementType == ArrangementType.Bass || arrangement.ArrangementType == ArrangementType.Guitar)
                 {
-                    // Populate tuning info
+                    // populate arrangment
                     try
                     {
                         var songXml = Song2014.LoadFromFile(arrangement.SongXml.File); //not exist\moved\etc, should check it instead of catch.
+                        arrangement.ArrangementPropeties = songXml.ArrangementProperties;
                         arrangement.CapoFret = songXml.Capo;
 
                         // Load tuning from Arrangement
@@ -1148,7 +1159,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                     catch
                     {
-                        /* Handle old types of *.dlc.xml */
+                        /* ignore old types of *.dlc.xml */
                     }
                 }
 
@@ -1488,12 +1499,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 // all other ArrangementProperties in the xml are set by EOF and not changed by Toolkit (currently)
                 songXml.ArrangementProperties = arr.ArrangementPropeties;
                 songXml.ArrangementProperties.BonusArr = arr.BonusArr ? 1 : 0;
-                songXml.ArrangementProperties.BassPick = (int)arr.PluckedType;
                 songXml.ArrangementProperties.PathLead = Convert.ToInt32(arr.RouteMask == RouteMask.Lead);
                 songXml.ArrangementProperties.PathRhythm = Convert.ToInt32(arr.RouteMask == RouteMask.Rhythm);
                 songXml.ArrangementProperties.PathBass = Convert.ToInt32(arr.RouteMask == RouteMask.Bass);
                 songXml.ArrangementProperties.RouteMask = (int)arr.RouteMask;
                 songXml.ArrangementProperties.StandardTuning = arr.Tuning == "E Standard" ? 1 : 0;
+
+                if (arr.ArrangementType == ArrangementType.Bass)
+                    songXml.ArrangementProperties.BassPick = (int)arr.PluckedType;
+                else
+                    songXml.ArrangementProperties.BassPick = 0;
 
                 // TODO: monitor this new code for bugs
                 // represent is set to "1" by default, if there is a bonus then set represent to "0"
@@ -2132,6 +2147,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         Process.Start(Path.GetDirectoryName(dlcSavePath));
                     }
                     break;
+
                 case "error":
                     var message2 = String.Format("Package generation failed. See below: {0}{1}{0}", Environment.NewLine, errorsFound);
                     MessageBox.Show(message2, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);

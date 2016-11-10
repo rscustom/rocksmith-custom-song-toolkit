@@ -22,7 +22,7 @@
 
         protected void LoadTemplate(string path)
         {
-            this.dlcPackageCreator1.loadTemplate(path);
+            this.dlcPackageCreator1.LoadTemplate(path);
         }
 
         #region Windows Form Designer generated code

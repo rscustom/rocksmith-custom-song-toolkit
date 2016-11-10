@@ -98,6 +98,8 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string GetValidFileName(this string fileName)
         {
+            fileName = fileName.Replace(",", ""); // remove commas even though valid
+            fileName = fileName.StripExcessWhiteSpace();
             fileName = String.Concat(fileName.Split(Path.GetInvalidFileNameChars()));
             return fileName;
         }
@@ -476,12 +478,12 @@ namespace RocksmithToolkitLib.Extensions
                 if (undoIt)
                 {
                     if (value.EndsWith(newEnding[i], StringComparison.InvariantCulture))
-                        value = String.Format("{0}{1}", shortWord[0], value.Substring(0, value.Length - 5)).Trim();
+                        value = String.Format("{0}{1}", shortWord[i], value.Substring(0, value.Length - newEnding[i].Length - 1)).Trim();
                 }
                 else
                 {
                     if (value.StartsWith(shortWord[i], StringComparison.InvariantCulture))
-                        value = String.Format("{0}{1}", value.Substring(4, value.Length - 4), newEnding[i]).Trim();
+                        value = String.Format("{0}{1}", value.Substring(shortWord[i].Length, value.Length - shortWord[i].Length), newEnding[i]).Trim();
                 }
             }
 
