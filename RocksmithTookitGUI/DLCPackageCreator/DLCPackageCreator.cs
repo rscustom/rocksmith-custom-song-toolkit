@@ -449,10 +449,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
-            var arrangementCount = packageData.Arrangements.Count(arr => arr.ArrangementType != ArrangementType.Vocal || arr.ArrangementType != ArrangementType.ShowLight);
-            if (arrangementCount > 5) // may crash RS14R
+            var playableArrCount = packageData.Arrangements.Count(arr => arr.ArrangementType == ArrangementType.Guitar || arr.ArrangementType == ArrangementType.Bass);
+            if (playableArrCount > 5) // may crash RS14R
             {
-                var errMsg = "This CDLC will likely crash if it is played in Rocksmith 2014 Remastered." + Environment.NewLine + "The combined number of guitar and bass arrangements" + Environment.NewLine + "(including bonus arrangements) is " + arrangementCount + ", which exceeds the limit of 5." + Environment.NewLine + Environment.NewLine + "Do you still want to package this CDLC?";
+                var errMsg = "This CDLC will likely crash if it is played in Rocksmith 2014 Remastered." + Environment.NewLine + "The combined number of guitar and bass arrangements" + Environment.NewLine + "(including bonus arrangements) is " + playableArrCount + ", which exceeds the limit of 5." + Environment.NewLine + Environment.NewLine + "Do you still want to package this CDLC?";
                 if (MessageBox.Show(errMsg, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
                     return;
             }
@@ -539,7 +539,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // fire up a fake progress bar to show app is alive and well
-            var step = (int)Math.Round(1.0 / arrangementCount * 100, 0);
+            var step = (int)Math.Round(1.0 / playableArrCount * 100, 0);
             var progress = 0;
             pbUpdateProgress.Visible = true;
             lblCurrentOperation.Visible = true;
