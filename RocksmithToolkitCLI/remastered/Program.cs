@@ -202,21 +202,13 @@ namespace remastered
             var errorLogLines = Regex.Matches(sbErrors.ToString(), Environment.NewLine).Count;
             if (errorLogLines > 0)
             {
-                // comma seperated error log can be turned into CSV file if needed
+                // error log can be turned into CSV file
                 sbErrors.Insert(0, "File Path, Error Message" + Environment.NewLine);
                 sbErrors.Insert(0, DateTime.Now.ToString("MM-dd-yy HH:mm") + Environment.NewLine);
-
-                // read existing error log
                 var errorLogPath = Path.Combine(workDirectory, LogFileName);
-                if (File.Exists(errorLogPath))
+                using (TextWriter tw = new StreamWriter(errorLogPath, true))
                 {
-                    var errorLogText = File.ReadAllText(errorLogPath);
-                    sbErrors.AppendLine(Environment.NewLine + errorLogText);
-                }
-
-                using (TextWriter tw = new StreamWriter(errorLogPath, false))
-                {
-                    tw.WriteLine(sbErrors);
+                    tw.WriteLine(sbErrors + Environment.NewLine);
                     tw.Close();
                 }
             }
@@ -610,7 +602,7 @@ namespace remastered
             foreach (var srcFilePath in srcFilePaths)
             {
                 // srcFilePath may have been removed by CleanArgFolder
-                if (!File.Exists(srcFilePath))
+                if(!File.Exists(srcFilePath))
                     continue;
 
                 if (!srcFilePath.IsValidPSARC())
