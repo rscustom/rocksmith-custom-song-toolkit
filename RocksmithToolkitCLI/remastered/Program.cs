@@ -192,8 +192,6 @@ namespace remastered
                     {
                         // cleanup the directory removing (.org) and (.cor) files
                         CleanArgFolder(Path.GetDirectoryName(arg));
-                        cleanFolders.Add(Path.GetDirectoryName(arg));
-
                         RepairFiles(new string[] { arg });
                     }
                 }
@@ -324,7 +322,6 @@ namespace remastered
                     foreach (FileInfo file in di.GetFiles())
                         try
                         {
-                            File.SetAttributes(file.FullName, FileAttributes.Normal);
                             file.Delete();
                         }
                         catch { /*Don't worry just skip locked file*/ }
@@ -602,7 +599,7 @@ namespace remastered
             foreach (var srcFilePath in srcFilePaths)
             {
                 // srcFilePath may have been removed by CleanArgFolder
-                if(!File.Exists(srcFilePath))
+                if (!File.Exists(srcFilePath))
                     continue;
 
                 if (!srcFilePath.IsValidPSARC())

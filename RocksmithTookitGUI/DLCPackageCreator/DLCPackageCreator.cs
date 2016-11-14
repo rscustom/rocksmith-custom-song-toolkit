@@ -1498,6 +1498,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.Capo = (byte)arr.CapoFret;
                 // all other ArrangementProperties in the xml are set by EOF and not changed by Toolkit (currently)
                 songXml.ArrangementProperties = arr.ArrangementPropeties;
+                
                 songXml.ArrangementProperties.BonusArr = arr.BonusArr ? 1 : 0;
                 songXml.ArrangementProperties.PathLead = Convert.ToInt32(arr.RouteMask == RouteMask.Lead);
                 songXml.ArrangementProperties.PathRhythm = Convert.ToInt32(arr.RouteMask == RouteMask.Rhythm);
@@ -1648,7 +1649,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public void toneAddButton_Click(object sender = null, EventArgs e = null)
         {
             var tone = CreateNewTone();
-            using (var form = new ToneForm() { Text = "Add Tuning" })
+            using (var form = new ToneForm() { Text = "Add Tone" })
             {
                 form.EditMode = false;
                 form.CurrentGameVersion = CurrentGameVersion;

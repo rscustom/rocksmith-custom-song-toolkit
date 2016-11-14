@@ -47,7 +47,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (toneControl.Tone.PedalList.Count > 6) return;
                     break;
                 case GameVersion.RS2014:
-                    if (toneControl.Tone.GearList.IsNull()) return;
+                    if (toneControl.Tone.GearList.IsNull()) 
+                        return;
                     if (toneControl.Tone.GearList.SlotsUsed() > 6)
                     {
                         MessageBox.Show("Using " + toneControl.Tone.GearList.SlotsUsed() + " Game Effects may crash game.   " + Environment.NewLine + Environment.NewLine +

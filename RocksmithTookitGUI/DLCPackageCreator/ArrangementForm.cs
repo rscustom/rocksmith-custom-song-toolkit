@@ -619,6 +619,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     // SONG AND ARRANGEMENT INFO / ROUTE MASK
                     BonusCheckBox.Checked = Equals(xmlSong.ArrangementProperties.BonusArr, 1);
                     MetronomeCb.Checked = Equals(xmlSong.ArrangementProperties.Metronome, 2);
+                    Arrangement.ArrangementPropeties = xmlSong.ArrangementProperties;
+                    Arrangement.CapoFret = xmlSong.Capo;
+
                     if (!EditMode)
                     {
                         string arr = xmlSong.Arrangement.ToLowerInvariant();
