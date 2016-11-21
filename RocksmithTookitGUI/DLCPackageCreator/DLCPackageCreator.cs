@@ -1497,8 +1497,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 songXml.Tuning = arr.TuningStrings;
                 songXml.Capo = (byte)arr.CapoFret;
                 // all other ArrangementProperties in the xml are set by EOF and not changed by Toolkit (currently)
-                songXml.ArrangementProperties = arr.ArrangementPropeties;
-                
+                songXml.ArrangementProperties = arr.ArrangementPropeties;                
                 songXml.ArrangementProperties.BonusArr = arr.BonusArr ? 1 : 0;
                 songXml.ArrangementProperties.PathLead = Convert.ToInt32(arr.RouteMask == RouteMask.Lead);
                 songXml.ArrangementProperties.PathRhythm = Convert.ToInt32(arr.RouteMask == RouteMask.Rhythm);

@@ -620,14 +620,19 @@
             // 
             // ddc_phraselength
             // 
+            this.ddc_phraselength.Increment = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
             this.ddc_phraselength.Location = new System.Drawing.Point(447, 16);
             this.ddc_phraselength.Maximum = new decimal(new int[] {
-            65536,
+            256,
             0,
             0,
             0});
             this.ddc_phraselength.Minimum = new decimal(new int[] {
-            2,
+            8,
             0,
             0,
             0});
@@ -638,7 +643,7 @@
             this.ddc_phraselength.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.ddc_phraselength.ThousandsSeparator = true;
             this.ddc_phraselength.Value = new decimal(new int[] {
-            2,
+            8,
             0,
             0,
             0});
