@@ -23,11 +23,12 @@ ASSEMBLY="$CMD_NAME.exe"
 REQUIRED_MAJOR=2
 REQUIRED_MINOR=8
 NEW_OSX_MSG=""
-# Workaround for new OS X
+
+MAC_VERSION_MINOR = `sw_vers -productVersion | cut -f2 -d.`
+# Workaround for new macxOS
 # Create /usr/local/bin  since it didn't actually exist, sudo mkdir /usr/local/bin
 # Then change the permissions for /usr/local, sudo chmod 777 /usr/local
-if [[ `sw_vers -productVersion` = "10.11"* ]]
-then
+if [[ MAC_VERSION_MINOR -gt 11 ]]; then
 	export PATH=/usr/local/bin:${PATH}
 	NEW_OSX_MSG="It seems that you've got El Capitan, if you've got issues with mono, read this: http://git.io/vCBjz"
 fi
@@ -42,7 +43,7 @@ MONO_VERSION_MET="Current Mono version: v$MONO_VERSION"
 
 if [ -z "$MONO_VERSION" ] \
 	|| [ $MONO_VERSION_MAJOR -lt $REQUIRED_MAJOR ] \
-	|| [ $MONO_VERSION_MAJOR -eq $REQUIRED_MAJOR -a $MONO_VERSION_MINOR -lt $REQUIRED_MINOR ] 
+	|| [[ $MONO_VERSION_MAJOR -eq $REQUIRED_MAJOR && $MONO_VERSION_MINOR -lt $REQUIRED_MINOR ]];
 then
 	MONO_VERSION_MET="Mono Framework is not installed. (or too old)"
 	VERSION_MSG="$CMD_NAME requires the Mono Framework version $REQUIRED_MAJOR.$REQUIRED_MINOR or later. $MONO_VERSION_MET"
