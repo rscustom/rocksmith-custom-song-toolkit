@@ -479,8 +479,8 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="unpackedDir">Unpacked dir.</param>
         /// <param name="targetPlatform">Target platform.</param>
         /// <param name = "sourcePlatform"></param>
-        /// <param name="ignoreToneError">Ignore multitone exceptions</param>
-        public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform, Platform sourcePlatform = null, bool ignoreToneError = true)
+        /// <param name="ignoreMultitoneEx">Ignore multitone exceptions</param>
+        public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform, Platform sourcePlatform = null, bool ignoreMultitoneEx = false)
         {
             var data = new DLCPackageData();
             data.GameVersion = GameVersion.RS2014;
@@ -524,7 +524,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
 
                     // Adding Arrangement
-                    data.Arrangements.Add(new Arrangement(attr, xmlFile, ignoreToneError));
+                    data.Arrangements.Add(new Arrangement(attr, xmlFile, ignoreMultitoneEx));
 
                     // make a list of tone names used in arrangements
                     var toneNames = new List<string>();

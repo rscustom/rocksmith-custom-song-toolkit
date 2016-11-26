@@ -86,7 +86,8 @@ namespace RocksmithToolkitLib.DLCPackage
         /// </summary>
         /// <param name="attr"></param>
         /// <param name="xmlSongFile"></param>
-        public Arrangement(Attributes2014 attr, string xmlSongFile, bool ignoreMultitoneException = true)
+        /// <param name="ignoreMultitoneException"> </param>
+        public Arrangement(Attributes2014 attr, string xmlSongFile, bool ignoreMultitoneException = false)
         {
             var song = Song2014.LoadFromFile(xmlSongFile);
 
