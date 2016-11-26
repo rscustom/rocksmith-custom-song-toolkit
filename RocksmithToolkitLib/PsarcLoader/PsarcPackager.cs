@@ -16,6 +16,11 @@ namespace RocksmithToolkitLib.PsarcLoader
             _deleteOnClose = deleteOnClose;
         }
 
+        /// <summary>
+        /// this method auto ignores multitone errors and converts to single tone
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <returns></returns>
         public DLCPackageData ReadPackage(string inputPath)
         {
             // UNPACK

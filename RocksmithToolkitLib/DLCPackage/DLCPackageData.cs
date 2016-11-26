@@ -479,7 +479,8 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="unpackedDir">Unpacked dir.</param>
         /// <param name="targetPlatform">Target platform.</param>
         /// <param name = "sourcePlatform"></param>
-        public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform, Platform sourcePlatform = null)
+        /// <param name="ignoreToneError">Ignore multitone exceptions</param>
+        public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform, Platform sourcePlatform = null, bool ignoreToneError = true)
         {
             var data = new DLCPackageData();
             data.GameVersion = GameVersion.RS2014;
@@ -522,6 +523,20 @@ namespace RocksmithToolkitLib.DLCPackage
                         };
                     }
 
+                    // Adding Arrangement
+                    data.Arrangements.Add(new Arrangement(attr, xmlFile, ignoreToneError));
+
+                    // make a list of tone names used in arrangements
+                    var toneNames = new List<string>();
+                    foreach (var arr in data.Arrangements)
+                    {
+                        if (!String.IsNullOrEmpty(arr.ToneA)) toneNames.Add(arr.ToneA);
+                        if (!String.IsNullOrEmpty(arr.ToneB)) toneNames.Add(arr.ToneB);
+                        if (!String.IsNullOrEmpty(arr.ToneC)) toneNames.Add(arr.ToneC);
+                        if (!String.IsNullOrEmpty(arr.ToneD)) toneNames.Add(arr.ToneD);
+                        if (!String.IsNullOrEmpty(arr.ToneBase)) toneNames.Add(arr.ToneBase);
+                    }
+
                     // Adding Tones
                     foreach (var jsonTone in attr.Tones)
                     {
@@ -541,12 +556,12 @@ namespace RocksmithToolkitLib.DLCPackage
                             if (attr.Tone_D != null && attr.Tone_D.ToLower() == jsonTone.Name.ToLower() && attr.Tone_D != jsonTone.Name)
                                 jsonTone.Name = attr.Tone_D;
 
-                            data.TonesRS2014.Add(jsonTone);
+                            // this is part of multitone exception handling auto convert to single tone arrangment
+                            // make data.TonesRS2014 consistent with data.Arragment.Tones (toneNames)
+                            if (toneNames.Contains(jsonTone.Name))
+                                data.TonesRS2014.Add(jsonTone);
                         }
                     }
-
-                    // Adding Arrangement
-                    data.Arrangements.Add(new Arrangement(attr, xmlFile));
                 }
                 else if (xmlFile.ToLower().Contains("_vocals"))
                 {

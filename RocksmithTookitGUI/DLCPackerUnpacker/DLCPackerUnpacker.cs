@@ -321,7 +321,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 // Low Bass Tuning Fix is for Rocksmith 2014 Only
                 packagePlatform = new Platform(packagePlatform.platform, GameVersion.RS2014);
                 // LOAD DATA
-                var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform);
+                var info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform, false);
 
                 switch (packagePlatform.platform)
                 {

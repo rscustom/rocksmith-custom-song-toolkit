@@ -86,12 +86,12 @@ namespace RocksmithToolkitLib.DLCPackage
         /// </summary>
         /// <param name="attr"></param>
         /// <param name="xmlSongFile"></param>
-        public Arrangement(Attributes2014 attr, string xmlSongFile)
+        public Arrangement(Attributes2014 attr, string xmlSongFile, bool ignoreMultitoneException = true)
         {
             var song = Song2014.LoadFromFile(xmlSongFile);
 
-            this.SongFile = new SongFile {File = ""};
-            this.SongXml = new SongXML {File = xmlSongFile};
+            this.SongFile = new SongFile { File = "" };
+            this.SongXml = new SongXML { File = xmlSongFile };
 
             //Properties
             Debug.Assert(attr.ArrangementType != null, "Missing information from manifest (ArrangementType)");
@@ -108,7 +108,6 @@ namespace RocksmithToolkitLib.DLCPackage
             this.ToneMultiplayer = attr.Tone_Multiplayer;
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
-            
 
             //Filter out showlights\vocals
             if (ArrangementType != ArrangementType.Guitar && ArrangementType != ArrangementType.Bass)
@@ -185,12 +184,31 @@ namespace RocksmithToolkitLib.DLCPackage
                             }
                         }
 
+                    // song.Tones => id, name, time to apply tone is missing when song.Tones == null
                     if (song.Tones == null && toneId > 0)
-                        throw new InvalidDataException("Custom tones were not set properly in EOF" + Environment.NewLine + "Please re-author XML arrangement in EOF and fix custom tone consistency.");
+                    {
+                        // convert the corrupt multitone to a single tone instead of throwing exception
+                        if (ignoreMultitoneException)
+                            song.Tones = new SongTone2014[0];  // => song.Tones.Length == 0
+                         else
+                            throw new InvalidDataException("Tone data is missing in CDLC and multitones will not change properly in game." + Environment.NewLine +
+                                                           "Please re-author XML arrangements in EOF and repair multitones name and time changes.");
+                    }
+                }
+
+                // convert corrupt multitone to single tone and/or cleanup/repair old toolkit single tone
+                // ToneA in single tone ODLC is null/empty
+                if ((song.Tones == null || song.Tones.Length == 0) &&
+                    !String.IsNullOrEmpty(song.ToneA))
+                {
+                    song.ToneA = song.ToneB = song.ToneC = String.Empty;
+                    song.ToneBase = attr.Tone_Base;
+                    this.ToneBase = attr.Tone_Base;
+                    this.ToneA = this.ToneB = this.ToneC = String.Empty;
                 }
 
                 // write changes to xml arrangement (w/o comments)
-                 using (var stream = File.Open(xmlSongFile, FileMode.Create))
+                using (var stream = File.Open(xmlSongFile, FileMode.Create))
                     song.Serialize(stream, true);
 
                 // write comments back to xml now so they are available for debugging (used for Guitar and Bass)
@@ -213,7 +231,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// Sets Arrangement Type
         /// </summary>
         /// <param name="ArrNameType"></param>
-        private void SetArrType(int?arrNameType)
+        private void SetArrType(int? arrNameType)
         {
             switch ((ArrangementName)arrNameType)
             {

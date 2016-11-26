@@ -312,7 +312,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.disableTonesCheckbox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.disableTonesCheckbox.Size = new System.Drawing.Size(196, 39);
             this.disableTonesCheckbox.TabIndex = 19;
-            this.disableTonesCheckbox.Text = "If checked, tone slots are disabled to prevent multiple tone failure.";
+            this.disableTonesCheckbox.Text = "If checked, tone slots are disabled to prevent multitone failure.";
             this.disableTonesCheckbox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.disableTonesCheckbox.UseVisualStyleBackColor = true;
             this.disableTonesCheckbox.CheckedChanged += new System.EventHandler(this.disableTonesCheckbox_CheckedChanged);

@@ -235,7 +235,7 @@ namespace RocksmithToolkitLib.Xml
                 foreach (var tone in Tones)
                 {
                     if (tone.Name.EndsWith("_0"))
-                        ToneBase = tone.Name;
+                        ToneBase = tone.Name; // only ToneBase is need for single tone, others are empty
                     if (tone.Name.EndsWith("_1"))
                     {
                         ToneA = ToneBase;
@@ -1232,9 +1232,11 @@ namespace RocksmithToolkitLib.Xml
         [XmlAttribute("name")]
         public string Name { get; set; }
 
+        // method only produces output when arrangement has multitones
         internal static SongTone2014[] Parse(Sng2014HSL.ToneSection toneSection, Attributes2014 attr = null)
         {
             var tones = new SongTone2014[toneSection.Count];
+            
             for (var i = 0; i < toneSection.Count; i++)
             {
                 var tone = new SongTone2014
@@ -1270,6 +1272,7 @@ namespace RocksmithToolkitLib.Xml
 
                 tones[i] = tone;
             }
+
             return tones;
         }
     }

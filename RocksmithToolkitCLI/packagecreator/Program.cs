@@ -184,7 +184,7 @@ namespace packagecreator
                     {
 
                         // get package data
-                        DLCPackageData packageData = DLCPackageData.LoadFromFolder(srcDirs[i], arguments.Platform, arguments.Platform);
+                        DLCPackageData packageData = DLCPackageData.LoadFromFolder(srcDirs[i], arguments.Platform, arguments.Platform, false);
                         packageData.AppId = arguments.AppId;
                         packageData.PackageVersion = arguments.Revision;
                         packageData.Name = Path.GetFileName(srcDirs[i]).GetValidFileName();

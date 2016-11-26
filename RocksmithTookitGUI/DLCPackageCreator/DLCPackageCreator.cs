@@ -974,7 +974,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // LOAD DATA
             DLCPackageData info = null; // DLCPackageData specific to RS2
             if (CurrentGameVersion == GameVersion.RS2014)
-                info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform);
+                info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform, chkIgnoreErrors.Checked);
             else
                 info = DLCPackageData.RS1LoadFromFolder(unpackedDir, packagePlatform, rbConvert.Checked);
 
@@ -2351,8 +2351,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var appId = ((TextBox)sender).Text.Trim();
             SelectComboAppId(appId);
         }
-
-
 
 
 

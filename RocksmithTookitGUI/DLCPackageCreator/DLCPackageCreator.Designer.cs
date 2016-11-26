@@ -60,6 +60,7 @@
             this.audioQualityBox = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.audioPathTB = new RocksmithToolkitGUI.CueTextBox();
             this.gbTones = new System.Windows.Forms.GroupBox();
+            this.chkIgnoreErrors = new System.Windows.Forms.CheckBox();
             this.toneDuplicateButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -148,7 +149,7 @@
             this.arrangementAddButton.ForeColor = System.Drawing.Color.IndianRed;
             this.arrangementAddButton.Location = new System.Drawing.Point(401, 39);
             this.arrangementAddButton.Name = "arrangementAddButton";
-            this.arrangementAddButton.Size = new System.Drawing.Size(45, 23);
+            this.arrangementAddButton.Size = new System.Drawing.Size(40, 23);
             this.arrangementAddButton.TabIndex = 2;
             this.arrangementAddButton.Text = "Add";
             this.arrangementAddButton.UseVisualStyleBackColor = true;
@@ -203,9 +204,9 @@
             // toneRemoveButton
             // 
             this.toneRemoveButton.ForeColor = System.Drawing.Color.IndianRed;
-            this.toneRemoveButton.Location = new System.Drawing.Point(447, 43);
+            this.toneRemoveButton.Location = new System.Drawing.Point(449, 43);
             this.toneRemoveButton.Name = "toneRemoveButton";
-            this.toneRemoveButton.Size = new System.Drawing.Size(44, 23);
+            this.toneRemoveButton.Size = new System.Drawing.Size(42, 23);
             this.toneRemoveButton.TabIndex = 3;
             this.toneRemoveButton.Text = "Del";
             this.toneRemoveButton.UseVisualStyleBackColor = true;
@@ -247,9 +248,9 @@
             // toneEditButton
             // 
             this.toneEditButton.ForeColor = System.Drawing.Color.IndianRed;
-            this.toneEditButton.Location = new System.Drawing.Point(400, 43);
+            this.toneEditButton.Location = new System.Drawing.Point(401, 43);
             this.toneEditButton.Name = "toneEditButton";
-            this.toneEditButton.Size = new System.Drawing.Size(45, 23);
+            this.toneEditButton.Size = new System.Drawing.Size(42, 23);
             this.toneEditButton.TabIndex = 2;
             this.toneEditButton.Text = "Edit";
             this.toneEditButton.UseVisualStyleBackColor = true;
@@ -258,11 +259,12 @@
             // toneImportButton
             // 
             this.toneImportButton.ForeColor = System.Drawing.Color.IndianRed;
-            this.toneImportButton.Location = new System.Drawing.Point(400, 92);
+            this.toneImportButton.Location = new System.Drawing.Point(449, 68);
             this.toneImportButton.Name = "toneImportButton";
-            this.toneImportButton.Size = new System.Drawing.Size(91, 23);
+            this.toneImportButton.Size = new System.Drawing.Size(42, 23);
             this.toneImportButton.TabIndex = 5;
-            this.toneImportButton.Text = "Import";
+            this.toneImportButton.Text = "Imprt";
+            this.toolTip.SetToolTip(this.toneImportButton, "Import tone dlc.xml file");
             this.toneImportButton.UseVisualStyleBackColor = true;
             this.toneImportButton.Click += new System.EventHandler(this.toneImportButton_Click);
             // 
@@ -461,6 +463,7 @@
             // 
             // gbTones
             // 
+            this.gbTones.Controls.Add(this.chkIgnoreErrors);
             this.gbTones.Controls.Add(this.toneDuplicateButton);
             this.gbTones.Controls.Add(this.label1);
             this.gbTones.Controls.Add(this.tonesLB);
@@ -476,14 +479,30 @@
             this.gbTones.TabStop = false;
             this.gbTones.Text = "Tones";
             // 
+            // chkIgnoreErrors
+            // 
+            this.chkIgnoreErrors.AutoSize = true;
+            this.chkIgnoreErrors.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkIgnoreErrors.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkIgnoreErrors.ForeColor = System.Drawing.Color.MediumSlateBlue;
+            this.chkIgnoreErrors.Location = new System.Drawing.Point(404, 97);
+            this.chkIgnoreErrors.Name = "chkIgnoreErrors";
+            this.chkIgnoreErrors.Size = new System.Drawing.Size(86, 17);
+            this.chkIgnoreErrors.TabIndex = 7;
+            this.chkIgnoreErrors.Text = "Ignore Errors";
+            this.toolTip.SetToolTip(this.chkIgnoreErrors, "If checked, ignore multitone exceptions\r\nfound during \'Import Package\' and auto\r\n" +
+                    "convert to single tone arrangement.");
+            this.chkIgnoreErrors.UseVisualStyleBackColor = true;
+            // 
             // toneDuplicateButton
             // 
             this.toneDuplicateButton.ForeColor = System.Drawing.Color.IndianRed;
-            this.toneDuplicateButton.Location = new System.Drawing.Point(400, 67);
+            this.toneDuplicateButton.Location = new System.Drawing.Point(401, 68);
             this.toneDuplicateButton.Name = "toneDuplicateButton";
-            this.toneDuplicateButton.Size = new System.Drawing.Size(91, 23);
+            this.toneDuplicateButton.Size = new System.Drawing.Size(42, 23);
             this.toneDuplicateButton.TabIndex = 4;
-            this.toneDuplicateButton.Text = "Duplicate";
+            this.toneDuplicateButton.Text = "Dupl";
+            this.toolTip.SetToolTip(this.toneDuplicateButton, "Duplicate selected tone");
             this.toneDuplicateButton.UseVisualStyleBackColor = true;
             this.toneDuplicateButton.Click += new System.EventHandler(this.toneDuplicateButton_Click);
             // 
@@ -976,5 +995,6 @@
         private System.Windows.Forms.CheckBox chkShowlights;
         private CueTextBox AlbumSortTB;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.CheckBox chkIgnoreErrors;
     }
 }
