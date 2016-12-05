@@ -96,3 +96,4 @@ cd "$APP_PATH/Contents/Resources" || exit
 
 #Finally launch the APP
 ${MONO_BIN} --optimize=sse2,simd,loop,inline "$ASSEMBLY"
+
