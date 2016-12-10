@@ -408,7 +408,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     // TOOLKIT VERSION
                     var stopHere = info;
-                    GenerateToolkitVersion(toolkitVersionStream, packageVersion: info.PackageVersion, packageComment: info.PackageComment);
+                    GenerateToolkitVersion(toolkitVersionStream, info.ToolkitInfo.PackageAuthor, info.ToolkitInfo.PackageVersion, info.ToolkitInfo.PackageComment);
                     packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
 
                     // APP ID
@@ -996,36 +996,34 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static void ToDDS(List<DDSConvertedFile> filesToConvert, DLCPackageType dlcType = DLCPackageType.Song)
         {
+            // TODO: uncomment when there is time to debug/test
             // testing using dreddfoxx CFSM.ImageTool library.  Thanks to DF.
-            var CFSM_IMAGE_TOOLS = File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "CFSM.ImageTools.dll"));
-            var DF_DDSIMAGE = File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "DF_DDSImage.dll"));
+            //var CFSM_IMAGE_TOOLS = File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "CFSM.ImageTools.dll"));
+            //var DF_DDSIMAGE = File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "DF_DDSImage.dll"));
 
-            // TODO: comment out when there is time to debug
-            CFSM_IMAGE_TOOLS = false;
+            //if (CFSM_IMAGE_TOOLS && DF_DDSIMAGE && dlcType == DLCPackageType.Song)
+            //{
+            //    foreach (var item in filesToConvert)
+            //    {
+            //        using (FileStream fs = File.OpenRead(item.sourceFile))
+            //        using (FileStream dfs = File.Create(item.destinationFile))
+            //        {
+            //            Bitmap b;
+            //            if (Path.GetExtension(item.sourceFile).ToLower() == ".dds")
+            //                b = ImageExtensions.DDStoBitmap(fs);
+            //            else
+            //                b = Image.FromFile(item.sourceFile) as Bitmap;
 
-            if (CFSM_IMAGE_TOOLS && DF_DDSIMAGE && dlcType == DLCPackageType.Song)
-            {
-                foreach (var item in filesToConvert)
-                {
-                    using (FileStream fs = File.OpenRead(item.sourceFile))
-                    using (FileStream dfs = File.Create(item.destinationFile))
-                    {
-                        Bitmap b;
-                        if (Path.GetExtension(item.sourceFile).ToLower() == ".dds")
-                            b = ImageExtensions.DDStoBitmap(fs);
-                        else
-                            b = Image.FromFile(item.sourceFile) as Bitmap;
-
-                        var output = b.ToDDS(item.sizeX, item.sizeY);
-                        if (output != null)
-                        {
-                            output.CopyTo(dfs);
-                            output.Dispose();
-                        }
-                    }
-                }
-            }
-            else
+            //            var output = b.ToDDS(item.sizeX, item.sizeY);
+            //            if (output != null)
+            //            {
+            //                output.CopyTo(dfs);
+            //                output.Dispose();
+            //            }
+            //        }
+            //    }
+            //}
+            //else
             {
                 string args = null;
                 switch (dlcType)

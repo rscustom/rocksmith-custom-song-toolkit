@@ -242,7 +242,7 @@ namespace RocksmithToolkitLib.Extensions
         public static string GetValidYear(this string value)
         {
             // check for valid four digit song year 
-            if (!Regex.IsMatch(value, "^(19[0-9][0-9]|20[0-1][0-9])"))
+            if (!Regex.IsMatch(value, "^(15[0-9][0-9]|16[0-9][0-9]|17[0-9][0-9]|18[0-9][0-9]|19[0-9][0-9]|20[0-1][0-9])"))
                 value = ""; // clear if not valid
 
             return value;

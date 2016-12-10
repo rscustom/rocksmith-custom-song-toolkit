@@ -699,7 +699,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             using (var fs = new FileStream(toolkitVersionFile, FileMode.Create))
             using (var ms = new MemoryStream())
             {
-                DLCPackageCreator.GenerateToolkitVersion(ms, packageVersion: "SongPack Maker v1.1");
+                DLCPackageCreator.GenerateToolkitVersion(ms, packageComment: "SongPack Maker v1.1");
                 ms.Flush();
                 ms.Seek(0, SeekOrigin.Begin);
                 ms.CopyTo(fs);

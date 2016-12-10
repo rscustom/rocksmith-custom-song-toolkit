@@ -331,29 +331,29 @@ namespace RocksmithToolkitGUI.DDC
             if (chkGenArrIds.Checked)
             {
                 // add comment to ToolkitInfo to identify CDLC
-                var arrIdComment = packageData.PackageComment;
+                var arrIdComment = packageData.ToolkitInfo.PackageComment;
                 if (String.IsNullOrEmpty(arrIdComment))
                     arrIdComment = TKI_ARRID;
                 else if (!arrIdComment.Contains(TKI_ARRID))
                     arrIdComment = arrIdComment + " " + TKI_ARRID;
 
-                packageData.PackageComment = arrIdComment;
+                packageData.ToolkitInfo.PackageComment = arrIdComment;
             }
 
             // add comment to ToolkitInfo to identify CDLC
-            var remasterComment = packageData.PackageComment;
+            var remasterComment = packageData.ToolkitInfo.PackageComment;
             if (String.IsNullOrEmpty(remasterComment))
                 remasterComment = TKI_REMASTER;
             else if (!remasterComment.Contains(TKI_REMASTER))
                 remasterComment = remasterComment + " " + TKI_REMASTER;
 
-            packageData.PackageComment = remasterComment;
+            packageData.ToolkitInfo.PackageComment = remasterComment;
 
             // add default package version if missing
-            if (String.IsNullOrEmpty(packageData.PackageVersion))
-                packageData.PackageVersion = "1";
+            if (String.IsNullOrEmpty(packageData.ToolkitInfo.PackageVersion))
+                packageData.ToolkitInfo.PackageVersion = "1";
             else
-                packageData.PackageVersion = packageData.PackageVersion.GetValidVersion();
+                packageData.ToolkitInfo.PackageVersion = packageData.ToolkitInfo.PackageVersion.GetValidVersion();
 
             // validate packageData (important)
             packageData.Name = packageData.Name.GetValidKey(); // DLC Key                 

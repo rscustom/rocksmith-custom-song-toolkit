@@ -527,14 +527,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         t.ToneId = 2;
                     else if (xml.ToneD.ToLower() == tn.Name.ToLower())
                         t.ToneId = 3;
-                    else
-                        throw new InvalidDataException("Undefined tone name: " + tn.Name);
 
                     sng.Tones.Tones[i] = t;
                 }
                 catch (Exception)
                 {
-                    throw new InvalidDataException("There is tone name error in XML Arrangement: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + "Use EOF to re-author custom tones or Notepad to attempt manual repair.");
+                    throw new InvalidDataException("There is tone name error in XML Arrangement: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + Environment.NewLine + 
+                        "Use EOF to re-author custom tones or Notepad to attempt manual repair.");
                 }
             }
 

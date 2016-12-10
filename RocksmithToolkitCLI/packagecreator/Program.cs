@@ -36,7 +36,7 @@ namespace packagecreator
                 AppId = "248750",  // RS1 => 206102 not currently supported
                 Revision = "1",
                 Quality = "4", // not currently used
-                Decibels = "-12"
+                Decibels = "-7"
             };
         }
 
@@ -182,11 +182,10 @@ namespace packagecreator
 
                     try
                     {
-
                         // get package data
                         DLCPackageData packageData = DLCPackageData.LoadFromFolder(srcDirs[i], arguments.Platform, arguments.Platform, false);
                         packageData.AppId = arguments.AppId;
-                        packageData.PackageVersion = arguments.Revision;
+                        packageData.ToolkitInfo.PackageVersion = arguments.Revision;
                         packageData.Name = Path.GetFileName(srcDirs[i]).GetValidFileName();
                         packageData.Volume = packageData.Volume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.Volume;
                         packageData.PreviewVolume = packageData.PreviewVolume == 0 ? Convert.ToInt16(arguments.Decibels) : packageData.PreviewVolume;
