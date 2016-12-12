@@ -209,7 +209,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             { AverageTempoTB.Text = value.GetValidTempo(); }
         }
 
-       public string PackageVersion
+        public string PackageVersion
         {
             get { return packageVersionTB.Text; }
 
@@ -1023,6 +1023,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             platformXBox360.Checked = info.XBox360;
             platformPS3.Checked = info.PS3;
 
+            if (info.ToolkitInfo == null)
+                info.ToolkitInfo = new ToolkitInfo{PackageVersion = "1"};
+            
             PackageVersion = info.ToolkitInfo.PackageVersion;
             PackageComment = info.ToolkitInfo.PackageComment;
 
@@ -1464,7 +1467,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     ToolkitInfo = new ToolkitInfo
                     {
                         PackageVersion = PackageVersion.GetValidVersion(),
-                        PackageComment = PackageComment                        
+                        PackageComment = PackageComment
                     },
 
                     AlbumArtPath = AlbumArtPath,

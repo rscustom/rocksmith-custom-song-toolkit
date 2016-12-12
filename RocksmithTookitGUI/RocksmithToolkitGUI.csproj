@@ -367,10 +367,6 @@
       <Project>{822D185A-28A3-4AE0-A811-800E968AA2E7}</Project>
       <Name>packer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitCLI\remastered\remastered.csproj">
-      <Project>{88A34EB4-10FE-495C-9A54-97DBBBA37D2D}</Project>
-      <Name>remastered</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitCLI\sng2014\sng2014.csproj">
       <Project>{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}</Project>
       <Name>sng2014</Name>
