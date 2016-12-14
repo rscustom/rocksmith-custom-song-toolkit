@@ -13,7 +13,8 @@ MWF_MODE=1
 PWD=$(pwd)
 
 # Fetch the .app bundle path. (cd .. [x3] from cmd script) awk so slow...
-APP_PATH=$(echo "$0" | awk '{split("$0",patharr,"/"); idx=1; while(patharr[idx+3] != "") { if (patharr[idx] != "/") {printf("%s/", patharr[idx]); idx++ }} }')
+# use apostrophe instead of $() here because of issues with awk
+APP_PATH=`echo "$0" | awk '{split("$0",patharr,"/"); idx=1; while(patharr[idx+3] != "") { if (patharr[idx] != "/") {printf("%s/", patharr[idx]); idx++ }} }'`
 
 # Fetch the app name (its our own name)
 CMD_NAME=$(basename "$0")
