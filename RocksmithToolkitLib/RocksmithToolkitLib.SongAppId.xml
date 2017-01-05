@@ -45,6 +45,7 @@
   <SongAppId Version="RS2012" AppId="222054" Name="Pantera - Cowboys From Hell" />
   <SongAppId Version="RS2012" AppId="222055" Name="Pantera - Domination" />
   <SongAppId Version="RS2012" AppId="222056" Name="Pantera - Walk" />
+  <SongAppId Version="RS2012" AppId="222093" Name="Carry On Wayward Son - Kansas" />
   <SongAppId Version="RS2012" AppId="206150" Name="Pat Benetar - Hit Me With Your Best Shot" />
   <SongAppId Version="RS2012" AppId="222074" Name="Pearl Jam - Alive" />
   <SongAppId Version="RS2012" AppId="206111" Name="Pearl Jam - Black" />
@@ -698,4 +699,10 @@
   <SongAppId Version="RS2014" AppId="390448" Name="Sister Hazel - All For You" />
   <SongAppId Version="RS2014" AppId="390449" Name="Daryl Hall and John Oates - You Make My Dreams" />
   <SongAppId Version="RS2014" AppId="390450" Name="Valentine's Day Song Pack" />
+  <SongAppId Version="RS2014" AppId="492986" Name="Elvis Presley - Suspicious Minds" />
+  <SongAppId Version="RS2014" AppId="492987" Name="Jackson 5 - I Want You Back" />
+  <SongAppId Version="RS2014" AppId="492988" Name="Bob Marley & The Wailers - Three Little Birds" />
+  <SongAppId Version="RS2014" AppId="492989" Name="Train - Drops of Jupiter" />
+  <SongAppId Version="RS2014" AppId="509630" Name="OutKast - Hey Ya!" />
+  <SongAppId Version="RS2014" AppId="509631" Name="FUN. - Some Nights" />
 </ArrayOfSongAppId>
