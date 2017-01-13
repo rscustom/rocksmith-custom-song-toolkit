@@ -41,15 +41,12 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RocksmithToolkitLib">
-      <HintPath>..\RocksmithTookitGUI\bin\Debug\RocksmithToolkitLib.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -94,6 +91,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="songcreator.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
+      <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
+      <Name>RocksmithToolkitLib</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
