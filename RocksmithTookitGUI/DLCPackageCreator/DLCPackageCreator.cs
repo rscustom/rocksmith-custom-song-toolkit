@@ -1098,7 +1098,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // Album art
             AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
-            // forces the ArtFiles array to be generate from the AlbumArtPath
+            // forces the ArtFiles array to be generated from the AlbumArtPath
             if (!String.IsNullOrEmpty(AlbumArtPath))
                 info.ArtFiles = null;
 
@@ -1107,10 +1107,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 LyricArtPath = info.LyricArtPath.AbsoluteTo(BasePath);
 
             // Audio file
-            if (!String.IsNullOrEmpty(info.OggPath)) //TODO: empty since last commit
+            if (!String.IsNullOrEmpty(info.OggPath))
                 AudioPath = info.OggPath.AbsoluteTo(BasePath);
+           
             platformPC.Checked = !String.IsNullOrEmpty(info.OggPath);
-
             songVolumeBox.Value = Decimal.Round((decimal)info.Volume, 2);
             previewVolumeBox.Value = (info.PreviewVolume != null) ? Decimal.Round((decimal)info.PreviewVolume, 2) : songVolumeBox.Value;
 

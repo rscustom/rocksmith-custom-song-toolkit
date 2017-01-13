@@ -333,7 +333,7 @@
             // general_defaultappid_RS2012
             // 
             this.general_defaultappid_RS2012.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.general_defaultappid_RS2012.DropDownWidth = 320;
+            this.general_defaultappid_RS2012.DropDownWidth = 340;
             this.general_defaultappid_RS2012.ForeColor = System.Drawing.SystemColors.ControlText;
             this.general_defaultappid_RS2012.Location = new System.Drawing.Point(122, 16);
             this.general_defaultappid_RS2012.Margin = new System.Windows.Forms.Padding(2);
@@ -411,7 +411,7 @@
             // 
             // general_wwisepath
             // 
-            this.general_wwisepath.Cue = "Wwise v2013.2.x v2014.1.x or 2015.1.x build series";
+            this.general_wwisepath.Cue = "Wwise v2013.2.x, v2014.1.x, or 2015.1.x build series";
             this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
             this.general_wwisepath.Location = new System.Drawing.Point(122, 160);
@@ -576,7 +576,7 @@
             // general_defaultappid_RS2014
             // 
             this.general_defaultappid_RS2014.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.general_defaultappid_RS2014.DropDownWidth = 320;
+            this.general_defaultappid_RS2014.DropDownWidth = 340;
             this.general_defaultappid_RS2014.ForeColor = System.Drawing.SystemColors.ControlText;
             this.general_defaultappid_RS2014.Location = new System.Drawing.Point(122, 41);
             this.general_defaultappid_RS2014.Margin = new System.Windows.Forms.Padding(2);
