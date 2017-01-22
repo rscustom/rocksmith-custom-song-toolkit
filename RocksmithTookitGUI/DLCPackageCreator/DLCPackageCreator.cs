@@ -2449,11 +2449,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // prevents possible cross threading
             GlobalExtension.UpdateProgress.Style = ProgressBarStyle.Marquee;
             GlobalExtension.Dispose();
-
         }
-
-
-
 
     }
 }

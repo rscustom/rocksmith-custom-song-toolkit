@@ -670,13 +670,10 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
             if (single)
                 mask |= CON.NOTE_MASK_SINGLE;
-
             if (note.Fret == 0)
                 mask |= CON.NOTE_MASK_OPEN;
-
             if (note.LinkNext != 0)
                 mask |= CON.NOTE_MASK_PARENT;
-
             if (note.Accent != 0)
                 mask |= CON.NOTE_MASK_ACCENT;
             if (note.Bend != 0)
