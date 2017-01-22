@@ -46,8 +46,9 @@ namespace RocksmithToolkitGUI
 
         private void InitMainForm()
         {
+            // edit version number in AssemblyInfo.cs for GUI, Lib and Updater
+            // edit the version number in PatchAssemblyVersion.ps1
             // comment out as necessary when issuing new release version
-            // update (remove beta) from AssemblyInfo.cs in GUI, Lib and Updater
             //this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta)", ToolkitVersion.version);
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
 
@@ -242,7 +243,7 @@ namespace RocksmithToolkitGUI
 
         private void ShowHelpForm()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();          
+            Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream streamBetaInfo = assembly.GetManifestResourceStream("RocksmithToolkitGUI.Resources.BetaInfo.rtf"))
             {
                 using (var helpViewer = new HelpForm())
