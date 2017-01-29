@@ -651,110 +651,46 @@ namespace RocksmithToolkitLib.Xml
     [XmlType("chordTemplate")]
     public class SongChordTemplate
     {
-        // added default attribute values
-        [XmlIgnore]
-        const Int32 NotSetup = -1;
-
         [XmlAttribute("chordName")]
         public string ChordName { get; set; }
 
-        private Int32 _fret0 = NotSetup; // sets default value -1
         [XmlAttribute("fret0")]
-        public Int32 Fret0
-        {
-            get { return _fret0; }
-            set { _fret0 = value; }
-        }
+        public Int32 Fret0 { get; set; }
 
-        private Int32 _fret1 = NotSetup; // sets default value -1
         [XmlAttribute("fret1")]
-        public Int32 Fret1
-        {
-            get { return _fret1; }
-            set { _fret1 = value; }
-        }
+        public Int32 Fret1 { get; set; }
 
-        private Int32 _fret2 = NotSetup; // sets default value -1
         [XmlAttribute("fret2")]
-        public Int32 Fret2
-        {
-            get { return _fret2; }
-            set { _fret2 = value; }
-        }
+        public Int32 Fret2 { get; set; }
 
-        private Int32 _fret3 = NotSetup; // sets default value -1
         [XmlAttribute("fret3")]
-        public Int32 Fret3
-        {
-            get { return _fret3; }
-            set { _fret3 = value; }
-        }
+        public Int32 Fret3 { get; set; }
 
-        private Int32 _fret4 = NotSetup; // sets default value -1
         [XmlAttribute("fret4")]
-        public Int32 Fret4
-        {
-            get { return _fret4; }
-            set { _fret4 = value; }
-        }
+        public Int32 Fret4 { get; set; }
 
-        private Int32 _fret5 = NotSetup; // sets default value -1
         [XmlAttribute("fret5")]
-        public Int32 Fret5
-        {
-            get { return _fret5; }
-            set { _fret5 = value; }
-        }
+        public Int32 Fret5 { get; set; }
 
-        private Int32 _finger0 = NotSetup; // sets default value -1
         [XmlAttribute("finger0")]
-        public Int32 Finger0
-        {
-            get { return _finger0; }
-            set { _finger0 = value; }
-        }
+        public Int32 Finger0 { get; set; }
 
-        private Int32 _finger1 = NotSetup; // sets default value -1
         [XmlAttribute("finger1")]
-        public Int32 Finger1
-        {
-            get { return _finger1; }
-            set { _finger1 = value; }
-        }
+        public Int32 Finger1 { get; set; }
 
-        private Int32 _finger2 = NotSetup; // sets default value -1
         [XmlAttribute("finger2")]
-        public Int32 Finger2
-        {
-            get { return _finger2; }
-            set { _finger2 = value; }
-        }
+        public Int32 Finger2 { get; set; }
 
-        private Int32 _finger3 = NotSetup; // sets default value -1
         [XmlAttribute("finger3")]
-        public Int32 Finger3
-        {
-            get { return _finger3; }
-            set { _finger3 = value; }
-        }
+        public Int32 Finger3 { get; set; }
 
-        private Int32 _finger4 = NotSetup; // sets default value -1
         [XmlAttribute("finger4")]
-        public Int32 Finger4
-        {
-            get { return _finger4; }
-            set { _finger4 = value; }
-        }
+        public Int32 Finger4 { get; set; }
 
-        private Int32 _finger5 = NotSetup; // sets default value -1
         [XmlAttribute("finger5")]
-        public Int32 Finger5
-        {
-            get { return _finger5; }
-            set { _finger5 = value; }
-        }
+        public Int32 Finger5 { get; set; }
     }
-
+ 
     //TBD
     [XmlType("fretHandMuteTemplate")]
     public class SongFretHandMuteTemplate
