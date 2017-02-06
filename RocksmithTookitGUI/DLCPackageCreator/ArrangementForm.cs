@@ -363,7 +363,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 value = frequencyTB.Text;
                 if (String.IsNullOrEmpty(value))
-                    value="440.00";
+                    value = "440.00";
 
                 dirty = true;
                 double hz;
@@ -587,26 +587,26 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         else if (verAttrib >= 7) version = GameVersion.RS2014;
                     }
                     else switch (currentGameVersion)
-                    {
-                        case GameVersion.RS2012:
-                            // add missing XML elements
-                            xmlSong.Version = "4";
-                            xmlSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-                            xmlSong.ArrangementProperties = new SongArrangementProperties2014 { StandardTuning = 1 };
-                            version = GameVersion.RS2012;
-                            break;
-                        case GameVersion.None:
-                            using (var obj = new Rs1Converter())
-                            {
-                                xmlSong = null;
-                                xmlSong = obj.SongToSong2014(Song.LoadFromFile(XmlFilePath.Text));
-                            }
-                            currentGameVersion = GameVersion.RS2014;
-                            break;
-                        default:
-                            MessageBox.Show("Your version of EOF may be out of date, please update.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            break;
-                    }
+                        {
+                            case GameVersion.RS2012:
+                                // add missing XML elements
+                                xmlSong.Version = "4";
+                                xmlSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
+                                xmlSong.ArrangementProperties = new SongArrangementProperties2014 { StandardTuning = 1 };
+                                version = GameVersion.RS2012;
+                                break;
+                            case GameVersion.None:
+                                using (var obj = new Rs1Converter())
+                                {
+                                    xmlSong = null;
+                                    xmlSong = obj.SongToSong2014(Song.LoadFromFile(XmlFilePath.Text));
+                                }
+                                currentGameVersion = GameVersion.RS2014;
+                                break;
+                            default:
+                                MessageBox.Show("Your version of EOF may be out of date, please update.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                break;
+                        }
 
                     // TODO: fix error checking logic for new types of conversion
                     if (currentGameVersion != version && version != GameVersion.None)
@@ -781,22 +781,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             //Validations
             var xmlfilepath = XmlFilePath.Text;
-            if (!File.Exists(xmlfilepath))
-                if (MessageBox.Show("Xml Arrangement file path is not valid.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
-                {
-                    XmlFilePath.Focus();
-                    return;
-                }
+            if (!File.Exists(xmlfilepath) || String.IsNullOrEmpty(xmlfilepath))
+            {
+                MessageBox.Show("Xml Arrangement file path is not valid.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                XmlFilePath.Focus();
+                return;
+            }
 
             if (currentGameVersion != GameVersion.RS2012)
             {
                 if (!routeMaskLeadRadio.Checked && !routeMaskRhythmRadio.Checked && !routeMaskBassRadio.Checked && (ArrangementType)arrangementTypeCombo.SelectedItem != ArrangementType.Vocal && (ArrangementType)arrangementTypeCombo.SelectedItem != ArrangementType.ShowLight)
                 {
-                    if (MessageBox.Show("You did not select a Gameplay Path for this arrangement.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
-                    {
-                        gbGameplayPath.Focus();
-                        return;
-                    }
+                    MessageBox.Show("You did not select a Gameplay Path for this arrangement.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    gbGameplayPath.Focus();
+                    return;
                 }
             }
 
@@ -817,25 +815,25 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 var defaultAuthor = ConfigRepository.Instance()["general_defaultauthor"].Trim();
 
-                if (String.IsNullOrEmpty(parentControl.SongTitle)) parentControl.SongTitle = xmlSong.Title ?? String.Empty;
-                if (String.IsNullOrEmpty(parentControl.SongTitleSort)) parentControl.SongTitleSort = xmlSong.SongNameSort.GetValidSortableName() ?? parentControl.SongTitle.GetValidSortableName();
-                if (String.IsNullOrEmpty(parentControl.AverageTempo)) parentControl.AverageTempo = Math.Round(xmlSong.AverageTempo).ToString() ?? String.Empty;
-                if (String.IsNullOrEmpty(parentControl.Artist)) parentControl.Artist = xmlSong.ArtistName ?? String.Empty;
-                if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = xmlSong.ArtistNameSort.GetValidSortableName() ?? parentControl.Artist.GetValidSortableName();
-                if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = xmlSong.AlbumName ?? String.Empty;
-                if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear ?? String.Empty;
+                if (String.IsNullOrEmpty(parentControl.SongTitle)) parentControl.SongTitle = xmlSong.Title.GetValidAtaSpaceName();
+                if (String.IsNullOrEmpty(parentControl.SongTitleSort)) parentControl.SongTitleSort = xmlSong.SongNameSort.GetValidSortableName();
+                if (String.IsNullOrEmpty(parentControl.AverageTempo)) parentControl.AverageTempo = xmlSong.AverageTempo.ToString().GetValidTempo();
+                if (String.IsNullOrEmpty(parentControl.Artist)) parentControl.Artist = xmlSong.ArtistName.GetValidAtaSpaceName();
+                if (String.IsNullOrEmpty(parentControl.ArtistSort)) parentControl.ArtistSort = xmlSong.ArtistNameSort.GetValidSortableName();
+                if (String.IsNullOrEmpty(parentControl.Album)) parentControl.Album = xmlSong.AlbumName.GetValidAtaSpaceName();
+                if (String.IsNullOrEmpty(parentControl.AlbumYear)) parentControl.AlbumYear = xmlSong.AlbumYear.GetValidYear();
                 // using first three letters of defaultAuthor to make DLCKey unique
-                if (String.IsNullOrEmpty(parentControl.DLCKey)) parentControl.DLCKey = String.Format("{0}{1}{2}", 
-                   defaultAuthor.Substring(0, Math.Min(3, defaultAuthor.Length)), parentControl.Artist.GetValidAcronym(), parentControl.SongTitle).GetValidKey(parentControl.SongTitle); 
+                if (String.IsNullOrEmpty(parentControl.DLCKey)) parentControl.DLCKey = String.Format("{0}{1}{2}",
+                   defaultAuthor.Substring(0, Math.Min(3, defaultAuthor.Length)), parentControl.Artist.GetValidAcronym(), parentControl.SongTitle).GetValidKey(parentControl.SongTitle);
 
                 if (String.IsNullOrEmpty(parentControl.AlbumSort))
                 {
                     // use default author for AlbumSort or generate
                     var useDefaultAuthor = ConfigRepository.Instance().GetBoolean("creator_usedefaultauthor");
-                    if (useDefaultAuthor) // && currentGameVersion == GameVersion.RS2014)
+                    if (useDefaultAuthor) 
                         parentControl.AlbumSort = defaultAuthor.GetValidSortableName();
                     else
-                        parentControl.AlbumSort = xmlSong.AlbumNameSort.GetValidSortableName() ?? parentControl.Album.GetValidSortableName();
+                        parentControl.AlbumSort = xmlSong.AlbumNameSort.GetValidSortableName();
                 }
             }
 
@@ -899,7 +897,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void frequencyTB_TextChanged(object sender, EventArgs e)
         {
-            var bFreq = ((CueTextBox) sender).Name.StartsWith("frequency");
+            var bFreq = ((CueTextBox)sender).Name.StartsWith("frequency");
             UpdateCentOffset(bFreq ? "HZ" : "c");
         }
 

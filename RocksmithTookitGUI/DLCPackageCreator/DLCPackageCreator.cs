@@ -205,15 +205,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string AverageTempo
         {
             get { return AverageTempoTB.Text; }
-            set
-            { AverageTempoTB.Text = value.GetValidTempo(); }
+            set { AverageTempoTB.Text = value.GetValidTempo(); }
         }
 
         public string PackageVersion
         {
             get { return packageVersionTB.Text; }
 
-            set { packageVersionTB.Text = String.IsNullOrEmpty(value) ? "1" : value.GetValidVersion(); }
+            set { packageVersionTB.Text = value.GetValidVersion(); }
         }
 
         private string packageComment;
@@ -1024,8 +1023,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             platformPS3.Checked = info.PS3;
 
             if (info.ToolkitInfo == null)
-                info.ToolkitInfo = new ToolkitInfo{PackageVersion = "1"};
-            
+                info.ToolkitInfo = new ToolkitInfo { PackageVersion = "1" };
+
             PackageVersion = info.ToolkitInfo.PackageVersion;
             PackageComment = info.ToolkitInfo.PackageComment;
 
@@ -1109,7 +1108,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Audio file
             if (!String.IsNullOrEmpty(info.OggPath))
                 AudioPath = info.OggPath.AbsoluteTo(BasePath);
-           
+
             platformPC.Checked = !String.IsNullOrEmpty(info.OggPath);
             songVolumeBox.Value = Decimal.Round((decimal)info.Volume, 2);
             previewVolumeBox.Value = (info.PreviewVolume != null) ? Decimal.Round((decimal)info.PreviewVolume, 2) : songVolumeBox.Value;

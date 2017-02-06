@@ -224,9 +224,9 @@ namespace RocksmithToolkitLib.Extensions
             if (bpm > 0 && bpm < 999)  // allow insane tempo
                 return bpm.ToString();
 
-            return "120"; // default tempo 
+            // return "120"; // do not use a default tempo as this causes problems elsewhere
             // force user to make entry rather than defaulting
-            // return "";
+            return "";
         }
 
         public static string GetValidVersion(this string value)
@@ -235,8 +235,9 @@ namespace RocksmithToolkitLib.Extensions
             var match = rgx.Match(value);
             if (match.Success)
                 return match.Value.Trim();
-
-            return "1"; // default version
+            
+            // force user to make entry rather than defaulting
+            return ""; 
         }
 
         public static string GetValidYear(this string value)

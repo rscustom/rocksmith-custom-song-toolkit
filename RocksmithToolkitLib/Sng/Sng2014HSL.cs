@@ -56,15 +56,19 @@ namespace RocksmithToolkitLib.Sng2014HSL
             }
             catch (Exception ex)
             {
+                // debug "End of Stream" here (Mac Conversion Issue)
+                if (!ex.Message.Contains("End of Stream"))
+                {
+                    var debugHere = "";
+                }
+
                 // incomplete song information causes exceptions during conversion
                 // such as, "End of Stream reached with 4 bytes left to read" 
-
-                throw new Exception("Corrupt CDLC ... Regenerating with Creator GUI may fix it." + Environment.NewLine +
-                    "Make sure the song information is complete and correct, including Song Year and Avg Tempo information. (HINT)" + Environment.NewLine +
-                    ex.Message + Environment.NewLine + Environment.NewLine);
+                throw new Exception("Corrupt CDLC ... Regenerating or Converting the original with Creator GUI may fix it." + Environment.NewLine + "Make sure the song information is complete and correct, including Song Year and Avg Tempo information. (HINT)" + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine);
             }
         }
     }
+
     public class Phrase
     {
         public Byte Solo { get; set; }
