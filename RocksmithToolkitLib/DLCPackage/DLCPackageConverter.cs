@@ -25,21 +25,25 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="targetPlatform"></param>
         /// <param name="appId"></param>
         /// <returns>Errors if any</returns>
-        public static string Convert(string sourcePackage, Platform sourcePlatform, Platform targetPlatform, string appId) {
+        public static string Convert(string sourcePackage, Platform sourcePlatform, Platform targetPlatform, string appId)
+        {
 
             var needRebuildPackage = sourcePlatform.IsConsole != targetPlatform.IsConsole;
             var tmpDir = Path.GetTempPath();
 
-            var unpackedDir = Packer.Unpack(sourcePackage, tmpDir, false, false, sourcePlatform);
+            // key to good conversion is to overwriteSongXml
+            var unpackedDir = Packer.Unpack(sourcePackage, tmpDir, false, true, sourcePlatform);
 
             // DESTINATION
             var nameTemplate = (!targetPlatform.IsConsole) ? "{0}{1}.psarc" : "{0}{1}";
             var packageName = Path.GetFileNameWithoutExtension(sourcePackage).StripPlatformEndName();
-                packageName = packageName.Replace(".","_");
-            var targetFileName = String.Format( nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), targetPlatform.GetPathName()[2] );
+            packageName = packageName.Replace(".", "_");
+            var targetFileName = String.Format(nameTemplate, Path.Combine(Path.GetDirectoryName(sourcePackage), packageName), targetPlatform.GetPathName()[2]);
 
+            // force package rebuilding for testing
+            // needRebuildPackage = true;
             // CONVERSION
-            if (needRebuildPackage)
+            if (needRebuildPackage) 
                 ConvertPackageRebuilding(unpackedDir, targetFileName, sourcePlatform, targetPlatform, appId);
             else
                 ConvertPackageForSimilarPlatform(unpackedDir, targetFileName, sourcePlatform, targetPlatform, appId);

@@ -956,7 +956,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // UNPACK
             var packagePlatform = sourcePackage.GetPlatform();
-            var unpackedDir = Packer.Unpack(sourcePackage, tmp, true);
+            var unpackedDir = Packer.Unpack(sourcePackage, tmp, true, predefinedPlatform: packagePlatform);
             savePath = Path.Combine(savePath, Path.GetFileNameWithoutExtension(sourcePackage));
 
             // Same name xbox issue fix

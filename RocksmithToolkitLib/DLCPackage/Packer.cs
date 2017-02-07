@@ -726,10 +726,13 @@ namespace RocksmithToolkitLib.DLCPackage
                 switch (platformString.ToLower())
                 {
                     case "_p":
+                    case "_p.psarc":                        
                         return new Platform(GamePlatform.Pc, v);
                     case "_m":
+                    case "_m.psarc":
                         return new Platform(GamePlatform.Mac, v);
                     case "_ps3":
+                    case "_ps3.edat":
                         return new Platform(GamePlatform.PS3, v);
                     case "_xbox":
                         return new Platform(GamePlatform.XBox360, v);

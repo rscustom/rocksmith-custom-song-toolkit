@@ -107,7 +107,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
             //Detect tuning
             var tuning = TuningDefinitionRepository.Instance.Detect(new TuningStrings(strings), GameVersion.RS2014, true);
-            arr.Tuning = tuning.UIName = tuning.Name = String.Format("{0} Fixed", tuning.Name);// bastartd bass hack, huh?
+            // only add 'Fixed' one time to tuning name
+            if (!tuning.Name.Contains("Fixed"))
+                tuning.Name = String.Format("{0} Fixed", tuning.Name);            
+            
+            arr.Tuning = tuning.UIName = tuning.Name;
             arr.TuningStrings = songXml.Tuning = tuning.Tuning;
             TuningDefinitionRepository.Instance.Save(true);
 
