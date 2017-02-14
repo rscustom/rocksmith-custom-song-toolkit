@@ -21,6 +21,9 @@
   <Config Key="creator_usedefaultauthor" Value="false" />
   <Config Key="creator_defaultproject" Value="" />
   <Config Key="creator_defaulttone" Value="" />
+  <Config Key="creator_fixmultitone" Value="true" />
+  <Config Key="creator_fixlowbass" Value="true" />
+
   <!-- converter config key count = 2 -->"
   <Config Key="converter_source" Value="Pc" />
   <Config Key="converter_target" Value="XBox360" />

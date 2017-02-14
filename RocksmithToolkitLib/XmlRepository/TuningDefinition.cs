@@ -49,23 +49,23 @@ namespace RocksmithToolkitLib.XmlRepository
         public string NameFromStrings(TuningStrings tuning, bool flats = true)
         {
             var t = tuning.ToArray();
-            var noteNames = String.Empty;
+            var noteName = String.Empty;
             switch (GetTuningFamily(t))
             {
                 case TuningFamily.Standard:
-                    noteNames = string.Format("{0} Standard", NoteName(tuning, 0, flats));
+                    noteName = string.Format("{0} Standard", NoteName(tuning, 0, flats));
                     break;
                 case TuningFamily.Drop:
-                    noteNames = string.Format("{0} Drop {1}", NoteName(tuning, 5, true), NoteName(tuning, 0, flats));
+                    noteName = string.Format("{0} Drop {1}", NoteName(tuning, 5, true), NoteName(tuning, 0, flats));
                     break;
                 case TuningFamily.Open:
                     break;
                 default:
                     for (Byte s = 0; s < 6; s++)
-                        noteNames += NoteName(tuning, s, flats);
+                        noteName += NoteName(tuning, s, flats);
                     break;
             }
-            return noteNames;
+            return noteName;
         }
 
         enum TuningFamily { None, Standard, Drop, Open }

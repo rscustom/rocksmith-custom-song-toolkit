@@ -48,7 +48,6 @@ namespace RocksmithToolkitLib.PsarcLoader
             return "Other";
         }
 
-
         public static bool RemoveArchiveEntry(string psarcPath, string entryName)
         {
             if (!File.Exists(psarcPath))

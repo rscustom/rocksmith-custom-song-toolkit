@@ -21,7 +21,7 @@ namespace RocksmithToolkitGUI
             LinkLabel.Link link = new LinkLabel.Link();
             link.LinkData = @"https://www.rscustom.net";
             linkLabel1.Links.Add(link);
-            PopulateRichText();
+            PopulateRichText();            
         }
 
         public void PopulateRichText(Stream streamRtfNotes = null, bool wordWrap = true)

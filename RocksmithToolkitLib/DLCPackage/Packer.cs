@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
@@ -137,9 +138,9 @@ namespace RocksmithToolkitLib.DLCPackage
             if (platform.version == GameVersion.RS2014)
             {
                 var sngFiles = Directory.EnumerateFiles(unpackedDir, "*.sng", SearchOption.AllDirectories).ToList();
-                var step = Math.Round(1.0 / (sngFiles.Count + 2) * 100, 3);
+                var step = Math.Round(1.0 / sngFiles.Count * 100, 3);
                 double progress = 0;
-                GlobalExtension.ShowProgress("Extracting XML from SNG ...");
+                GlobalExtension.ShowProgress("Validating XML files ...");
 
                 foreach (var sngFile in sngFiles)
                 {
@@ -176,8 +177,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
 
                     // correct old toolkit/EOF xml (tuning) issues ... sync with SNG data
-                    if (File.Exists(xmlEofFile) &&
-                        !overwriteSongXml && arrType != ArrangementType.Vocal)
+                    if (File.Exists(xmlEofFile) && !overwriteSongXml && arrType != ArrangementType.Vocal)
                     {
                         var eofSong = Song2014.LoadFromFile(xmlEofFile);
                         var sngSong = Song2014.LoadFromFile(xmlSngFile);
@@ -190,6 +190,8 @@ namespace RocksmithToolkitLib.DLCPackage
                                 eofSong.Serialize(stream, true);
 
                             Song2014.WriteXmlComments(xmlEofFile, xmlComments, customComment: "Synced with SNG file");
+                            Debug.WriteLine("Fixed Tuning Descrepancies: " + xmlEofFile);
+                            GlobalExtension.ShowProgress("Fixed tuning descepancies ...");
                         }
 
                         File.Delete(xmlSngFile);
@@ -675,7 +677,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     return new Platform(GamePlatform.Pc, GameVersion.RS2014);
                 }
 
-                if (fullPath.ToLower().EndsWith("_m")|| fullPath.ToLower().EndsWith("_mac"))
+                if (fullPath.ToLower().EndsWith("_m") || fullPath.ToLower().EndsWith("_mac"))
                 {
                     return new Platform(GamePlatform.Mac, GameVersion.RS2014);
                 }
@@ -726,7 +728,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 switch (platformString.ToLower())
                 {
                     case "_p":
-                    case "_p.psarc":                        
+                    case "_p.psarc":
                         return new Platform(GamePlatform.Pc, v);
                     case "_m":
                     case "_m.psarc":

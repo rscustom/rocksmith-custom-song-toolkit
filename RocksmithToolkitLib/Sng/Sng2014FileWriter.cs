@@ -10,6 +10,8 @@ using MiscUtil.IO;
 using MiscUtil.Conversion;
 using CON = RocksmithToolkitLib.Sng.Constants;
 
+// TODO: new phylosophy ... charting tweaks should be done in EOF by the charter
+
 namespace RocksmithToolkitLib.Sng2014HSL
 {
     public class Sng2014FileWriter
@@ -990,7 +992,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     {
                         var piter = xml.PhraseIterations[j];
 
-                        // attmpt to fix 100 % bug issue and improve mastery
+                        // fix for 100% bug issue and improve mastery
                         if (piter.Time > note.Time && j > 0)
                         {
                             if (note.Ignore == 0)
@@ -999,6 +1001,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             break;
                         }
                     }
+            
                     if (note.SlideTo != -1)
                     {
                         var ae = new AnchorExtension();
@@ -1007,7 +1010,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         a.AnchorExtensions.AnchorExtensions[acent++] = ae;
                     }
                 }
-
 
                 foreach (var chord in level.Chords)
                 {
@@ -1022,7 +1024,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     {
                         var piter = xml.PhraseIterations[j];
 
-                        // this is attmpt to fix 100% bug issue and improve mastery
+                        // fix for 100% bug issue and improve mastery
                         if (piter.Time > chord.Time && j > 0)
                         {
                             if (chord.Ignore == 0)
@@ -1051,6 +1053,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     Console.WriteLine(@" -- CDLC contains note time errors and may not play properly"); // + ex.Message);
                 }
 
+                // TODO: new phylosophy ... charting tweaks should be done in EOF by the charter
                 foreach (var n in notes)
                 {
                     for (Int16 id = 0; id < fp1.Count; id++) //FingerPrints 1st level (common handshapes?)
@@ -1069,6 +1072,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             fp1[id].Unk4_LastNoteTime = n.Time + sustain;
                             break;
                         }
+
                     for (Int16 id = 0; id < fp2.Count; id++) //FingerPrints 2nd level (used for -arp(eggio) handshapes)
                         if (n.Time >= fp2[id].StartTime && n.Time < fp2[id].EndTime)
                         {
@@ -1086,6 +1090,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             fp2[id].Unk4_LastNoteTime = n.Time + sustain;
                             break;
                         }
+
                     for (int j = 0; j < a.Anchors.Count; j++)
                         if (n.Time >= a.Anchors.Anchors[j].StartBeatTime && n.Time < a.Anchors.Anchors[j].EndBeatTime)
                         {

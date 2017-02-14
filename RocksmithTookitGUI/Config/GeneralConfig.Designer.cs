@@ -31,16 +31,17 @@
             this.components = new System.ComponentModel.Container();
             this.general_usebeta = new System.Windows.Forms.CheckBox();
             this.gbCreator = new System.Windows.Forms.GroupBox();
+            this.creator_fixlowbass = new System.Windows.Forms.CheckBox();
+            this.creator_fixmultitone = new System.Windows.Forms.CheckBox();
+            this.creator_scrollspeed = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.btnTonePath = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.creator_defaulttone = new RocksmithToolkitGUI.CueTextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.btnProjectDir = new System.Windows.Forms.Button();
             this.creator_defaultproject = new RocksmithToolkitGUI.CueTextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.creator_usedefaultauthor = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.creator_scrollspeed = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
-            this.label1 = new System.Windows.Forms.Label();
             this.creator_useacronyms = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.general_defaultgameversion = new System.Windows.Forms.ComboBox();
@@ -84,7 +85,6 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblFirstRun = new System.Windows.Forms.Label();
             this.gbCreator.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
             this.gbGeneral.SuspendLayout();
             this.gbAutoUpdate.SuspendLayout();
@@ -108,24 +108,87 @@
             // 
             // gbCreator
             // 
+            this.gbCreator.Controls.Add(this.creator_fixlowbass);
+            this.gbCreator.Controls.Add(this.creator_fixmultitone);
+            this.gbCreator.Controls.Add(this.creator_scrollspeed);
             this.gbCreator.Controls.Add(this.btnTonePath);
+            this.gbCreator.Controls.Add(this.label1);
             this.gbCreator.Controls.Add(this.creator_defaulttone);
             this.gbCreator.Controls.Add(this.label16);
             this.gbCreator.Controls.Add(this.btnProjectDir);
             this.gbCreator.Controls.Add(this.creator_defaultproject);
             this.gbCreator.Controls.Add(this.label15);
             this.gbCreator.Controls.Add(this.creator_usedefaultauthor);
-            this.gbCreator.Controls.Add(this.groupBox1);
             this.gbCreator.Controls.Add(this.creator_useacronyms);
             this.gbCreator.ForeColor = System.Drawing.Color.IndianRed;
             this.gbCreator.Location = new System.Drawing.Point(4, 219);
             this.gbCreator.Margin = new System.Windows.Forms.Padding(2);
             this.gbCreator.Name = "gbCreator";
             this.gbCreator.Padding = new System.Windows.Forms.Padding(2);
-            this.gbCreator.Size = new System.Drawing.Size(516, 120);
+            this.gbCreator.Size = new System.Drawing.Size(516, 135);
             this.gbCreator.TabIndex = 0;
             this.gbCreator.TabStop = false;
             this.gbCreator.Text = "CDLC Creator";
+            // 
+            // creator_fixlowbass
+            // 
+            this.creator_fixlowbass.AutoSize = true;
+            this.creator_fixlowbass.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_fixlowbass.Location = new System.Drawing.Point(343, 113);
+            this.creator_fixlowbass.Name = "creator_fixlowbass";
+            this.creator_fixlowbass.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.creator_fixlowbass.Size = new System.Drawing.Size(124, 17);
+            this.creator_fixlowbass.TabIndex = 56;
+            this.creator_fixlowbass.Text = "Fix Low Bass Tuning";
+            this.toolTip.SetToolTip(this.creator_fixlowbass, "If checked automatically\r\nfix low bass tuning errors.");
+            this.creator_fixlowbass.UseVisualStyleBackColor = true;
+            this.creator_fixlowbass.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // creator_fixmultitone
+            // 
+            this.creator_fixmultitone.AutoSize = true;
+            this.creator_fixmultitone.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_fixmultitone.Location = new System.Drawing.Point(186, 113);
+            this.creator_fixmultitone.Name = "creator_fixmultitone";
+            this.creator_fixmultitone.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.creator_fixmultitone.Size = new System.Drawing.Size(115, 17);
+            this.creator_fixmultitone.TabIndex = 55;
+            this.creator_fixmultitone.Text = "Fix Multitone Errors";
+            this.toolTip.SetToolTip(this.creator_fixmultitone, "If checked automatically fix multitone errors\r\nby converting to a single tone arr" +
+                    "angement.");
+            this.creator_fixmultitone.UseVisualStyleBackColor = true;
+            this.creator_fixmultitone.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // creator_scrollspeed
+            // 
+            this.creator_scrollspeed.DecimalPlaces = 1;
+            this.creator_scrollspeed.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_scrollspeed.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Location = new System.Drawing.Point(122, 70);
+            this.creator_scrollspeed.Maximum = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.creator_scrollspeed.Name = "creator_scrollspeed";
+            this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
+            this.creator_scrollspeed.TabIndex = 11;
+            this.creator_scrollspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.creator_scrollspeed.Value = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // btnTonePath
             // 
@@ -137,6 +200,18 @@
             this.btnTonePath.UseVisualStyleBackColor = true;
             this.btnTonePath.Click += new System.EventHandler(this.btnTonePath_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label1.Location = new System.Drawing.Point(12, 72);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(107, 13);
+            this.label1.TabIndex = 41;
+            this.label1.Text = "Default Scroll Speed:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // creator_defaulttone
             // 
             this.creator_defaulttone.Cue = "Default tone used for new projects";
@@ -146,7 +221,7 @@
             this.creator_defaulttone.Multiline = true;
             this.creator_defaulttone.Name = "creator_defaulttone";
             this.creator_defaulttone.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.creator_defaulttone.Size = new System.Drawing.Size(342, 20);
+            this.creator_defaulttone.Size = new System.Drawing.Size(345, 20);
             this.creator_defaulttone.TabIndex = 52;
             this.toolTip.SetToolTip(this.creator_defaulttone, "Set a default tone used in new projects");
             this.creator_defaulttone.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -182,7 +257,7 @@
             this.creator_defaultproject.Multiline = true;
             this.creator_defaultproject.Name = "creator_defaultproject";
             this.creator_defaultproject.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.creator_defaultproject.Size = new System.Drawing.Size(343, 20);
+            this.creator_defaultproject.Size = new System.Drawing.Size(345, 20);
             this.creator_defaultproject.TabIndex = 49;
             this.toolTip.SetToolTip(this.creator_defaultproject, "Set a default CDLC project folder");
             this.creator_defaultproject.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -203,76 +278,22 @@
             // 
             this.creator_usedefaultauthor.AutoSize = true;
             this.creator_usedefaultauthor.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_usedefaultauthor.Location = new System.Drawing.Point(290, 95);
+            this.creator_usedefaultauthor.Location = new System.Drawing.Point(258, 90);
             this.creator_usedefaultauthor.Name = "creator_usedefaultauthor";
             this.creator_usedefaultauthor.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_usedefaultauthor.Size = new System.Drawing.Size(209, 17);
             this.creator_usedefaultauthor.TabIndex = 46;
             this.creator_usedefaultauthor.Text = "Album Sort defaults to Package Author";
-            this.toolTip.SetToolTip(this.creator_usedefaultauthor, "If check the configuration Package Author\r\nwill be used by default for the Album " +
-                    "Sort\r\ntextbox field in the Creator GUI.");
+            this.toolTip.SetToolTip(this.creator_usedefaultauthor, "If checked the configuration Package Author\r\nwill be used by default for the Albu" +
+                    "m Sort\r\ntextbox field in the Creator GUI.");
             this.creator_usedefaultauthor.UseVisualStyleBackColor = true;
             this.creator_usedefaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.creator_scrollspeed);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.groupBox1.Location = new System.Drawing.Point(8, 70);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(180, 42);
-            this.groupBox1.TabIndex = 45;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Arrangement";
-            // 
-            // creator_scrollspeed
-            // 
-            this.creator_scrollspeed.DecimalPlaces = 1;
-            this.creator_scrollspeed.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_scrollspeed.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Location = new System.Drawing.Point(118, 15);
-            this.creator_scrollspeed.Maximum = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.creator_scrollspeed.Name = "creator_scrollspeed";
-            this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
-            this.creator_scrollspeed.TabIndex = 11;
-            this.creator_scrollspeed.Value = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(7, 19);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(107, 13);
-            this.label1.TabIndex = 41;
-            this.label1.Text = "Default Scroll Speed:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // creator_useacronyms
             // 
             this.creator_useacronyms.AutoSize = true;
             this.creator_useacronyms.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_useacronyms.Location = new System.Drawing.Point(270, 72);
+            this.creator_useacronyms.Location = new System.Drawing.Point(238, 68);
             this.creator_useacronyms.Name = "creator_useacronyms";
             this.creator_useacronyms.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_useacronyms.Size = new System.Drawing.Size(229, 17);
@@ -596,7 +617,7 @@
             this.gbDDC.Controls.Add(this.ddc_config);
             this.gbDDC.Controls.Add(this.ddc_rampup);
             this.gbDDC.ForeColor = System.Drawing.Color.IndianRed;
-            this.gbDDC.Location = new System.Drawing.Point(4, 395);
+            this.gbDDC.Location = new System.Drawing.Point(4, 410);
             this.gbDDC.Name = "gbDDC";
             this.gbDDC.Size = new System.Drawing.Size(516, 100);
             this.gbDDC.TabIndex = 15;
@@ -607,14 +628,15 @@
             // 
             this.ddc_autogen.AutoSize = true;
             this.ddc_autogen.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.ddc_autogen.Location = new System.Drawing.Point(378, 71);
+            this.ddc_autogen.Location = new System.Drawing.Point(346, 49);
             this.ddc_autogen.Name = "ddc_autogen";
             this.ddc_autogen.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ddc_autogen.Size = new System.Drawing.Size(121, 17);
             this.ddc_autogen.TabIndex = 48;
             this.ddc_autogen.Text = "Auto Generate DDC";
             this.toolTip.SetToolTip(this.ddc_autogen, "If checked, DDC will be automatically added to\r\nthe CDLC when \'Generate\' is press" +
-                    "ed in the\r\n\'CDLC Creator\' tab.");
+                    "ed in the\r\n\'CDLC Creator\' tab.  CDLC must have DD in order\r\nto play properly in " +
+                    "Rocksmith 2014 Remastered.");
             this.ddc_autogen.UseVisualStyleBackColor = true;
             this.ddc_autogen.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -625,7 +647,7 @@
             0,
             0,
             0});
-            this.ddc_phraselength.Location = new System.Drawing.Point(447, 16);
+            this.ddc_phraselength.Location = new System.Drawing.Point(122, 74);
             this.ddc_phraselength.Maximum = new decimal(new int[] {
             256,
             0,
@@ -653,7 +675,7 @@
             // 
             this.ddc_removesustain.AutoSize = true;
             this.ddc_removesustain.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.ddc_removesustain.Location = new System.Drawing.Point(392, 47);
+            this.ddc_removesustain.Location = new System.Drawing.Point(360, 20);
             this.ddc_removesustain.Name = "ddc_removesustain";
             this.ddc_removesustain.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ddc_removesustain.Size = new System.Drawing.Size(107, 17);
@@ -666,7 +688,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label6.Location = new System.Drawing.Point(367, 18);
+            this.label6.Location = new System.Drawing.Point(44, 78);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(75, 13);
             this.label6.TabIndex = 47;
@@ -730,7 +752,7 @@
             this.gbConverter.Controls.Add(this.label8);
             this.gbConverter.Controls.Add(this.converter_source);
             this.gbConverter.ForeColor = System.Drawing.Color.IndianRed;
-            this.gbConverter.Location = new System.Drawing.Point(4, 344);
+            this.gbConverter.Location = new System.Drawing.Point(4, 359);
             this.gbConverter.Name = "gbConverter";
             this.gbConverter.Size = new System.Drawing.Size(516, 45);
             this.gbConverter.TabIndex = 50;
@@ -790,7 +812,7 @@
             // 
             this.closeConfigButton.BackColor = System.Drawing.Color.LightSteelBlue;
             this.closeConfigButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeConfigButton.Location = new System.Drawing.Point(395, 508);
+            this.closeConfigButton.Location = new System.Drawing.Point(395, 523);
             this.closeConfigButton.Name = "closeConfigButton";
             this.closeConfigButton.Size = new System.Drawing.Size(116, 29);
             this.closeConfigButton.TabIndex = 0;
@@ -810,7 +832,7 @@
             this.lblFirstRun.AutoSize = true;
             this.lblFirstRun.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFirstRun.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.lblFirstRun.Location = new System.Drawing.Point(305, 514);
+            this.lblFirstRun.Location = new System.Drawing.Point(305, 529);
             this.lblFirstRun.Name = "lblFirstRun";
             this.lblFirstRun.Size = new System.Drawing.Size(65, 15);
             this.lblFirstRun.TabIndex = 51;
@@ -829,8 +851,6 @@
             this.Size = new System.Drawing.Size(525, 560);
             this.gbCreator.ResumeLayout(false);
             this.gbCreator.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).EndInit();
             this.gbGeneral.ResumeLayout(false);
             this.gbGeneral.PerformLayout();
@@ -855,7 +875,6 @@
         private System.Windows.Forms.ComboBox general_defaultappid_RS2012;
         private System.Windows.Forms.CheckBox creator_structured;
         private System.Windows.Forms.GroupBox gbGeneral;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox general_defaultgameversion;
         private System.Windows.Forms.Label label4;
@@ -902,5 +921,7 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label lblFirstRun;
         private System.Windows.Forms.CheckBox ddc_autogen;
+        private System.Windows.Forms.CheckBox creator_fixlowbass;
+        private System.Windows.Forms.CheckBox creator_fixmultitone;
     }
 }

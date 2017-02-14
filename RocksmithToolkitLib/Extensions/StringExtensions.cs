@@ -164,8 +164,16 @@ namespace RocksmithToolkitLib.Extensions
             if (value == songTitle.Replace(" ", ""))
                 value = value + "Song";
 
-            // limit Key length to 30
+            // limit max Key length to 30
             value = value.Substring(0, Math.Min(30, value.Length));
+
+            // ensure min Key length is 6
+            if (value.Length < 7)
+            {
+                value = string.Concat(Enumerable.Repeat(value, 6));
+                value = value.Substring(0, 6);
+            }
+
             return value;
         }
 
@@ -235,9 +243,9 @@ namespace RocksmithToolkitLib.Extensions
             var match = rgx.Match(value);
             if (match.Success)
                 return match.Value.Trim();
-            
+
             // force user to make entry rather than defaulting
-            return ""; 
+            return "";
         }
 
         public static string GetValidYear(this string value)

@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Xml.Linq;
+using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.XmlRepository;
 
@@ -83,13 +88,16 @@ namespace RocksmithToolkitLib.DLCPackage
             return Frequency2Cents(frequency, out dummy);
         }
 
-        // TODO: apply before generate, like metronome arrangements does
         // only for RS2014
         public static bool ApplyBassFix(Arrangement arr)
         {
-            if (arr.TuningPitch.Equals(220.0))
+            // get the latest comments from the XML
+            var xmlComments = Song2014.ReadXmlComments(arr.SongXml.File);
+            var isBassFixed = xmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || arr.TuningPitch.Equals(220.0);
+
+            if (isBassFixed)
             {
-                // MessageBox.Show("This song is already at 220Hz pitch (bass fixed applied already?)", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Debug.WriteLine("Low bass tuning already fixed: " + arr.SongXml.File);
                 return false;
             }
 
@@ -105,21 +113,26 @@ namespace RocksmithToolkitLib.DLCPackage
                     strings[s] += 12;
             }
 
-            //Detect tuning
-            var tuning = TuningDefinitionRepository.Instance.Detect(new TuningStrings(strings), GameVersion.RS2014, true);
+            // Detect tuning
+            var tuning = TuningDefinitionRepository.Instance.Detect(new TuningStrings(strings), GameVersion.RS2014, false);
             // only add 'Fixed' one time to tuning name
-            if (!tuning.Name.Contains("Fixed"))
-                tuning.Name = String.Format("{0} Fixed", tuning.Name);            
-            
-            arr.Tuning = tuning.UIName = tuning.Name;
-            arr.TuningStrings = songXml.Tuning = tuning.Tuning;
-            TuningDefinitionRepository.Instance.Save(true);
+            if (!tuning.UIName.Contains("Fixed"))
+            {
+                // UIName may contain spaces, where as Name contains no spaces
+                tuning.UIName = String.Format("{0} Fixed", tuning.UIName);
+                tuning.Name = tuning.UIName.ReplaceSpaceWith("");
+                TuningDefinitionRepository.Instance.Add(tuning, true);
+                TuningDefinitionRepository.Instance.Save(true);
+            }
 
-            var xmlComments = Song2014.ReadXmlComments(arr.SongXml.File);
+            arr.Tuning = tuning.UIName;           
+            arr.TuningStrings = songXml.Tuning = tuning.Tuning;
+
             using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                 songXml.Serialize(stream, true);
 
-            Song2014.WriteXmlComments(arr.SongXml.File, xmlComments);
+            // write xml comments back to fixed bass arrangement
+            Song2014.WriteXmlComments(arr.SongXml.File, xmlComments, customComment: "Low Bass Tuning Fixed");
 
             return true;
         }

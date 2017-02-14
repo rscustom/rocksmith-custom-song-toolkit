@@ -68,7 +68,7 @@ namespace RocksmithToolkitLib.Extensions
         public static void Dispose()
         {
             HideProgress();
-            // do not use dispose here!
+            // do not be tempted to use dispose here!
             _updateProgress = null;
             _currentOperationLabel = null;
         }

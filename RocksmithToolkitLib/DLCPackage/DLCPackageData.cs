@@ -474,8 +474,9 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="unpackedDir"></param>
         /// <param name="targetPlatform"></param>
         /// <param name = "sourcePlatform"></param>
-        /// <param name="ignoreMultitoneEx">Ignore multitone exceptions</param>
-        public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform, Platform sourcePlatform = null, bool ignoreMultitoneEx = false)
+        /// <param name="fixMultiTone">If set to <c>true</c> fix low bass tuning </param>
+        /// <param name="fixLowBass">If set to <c>true</c> fix multitone exceptions </param>
+        public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform, Platform sourcePlatform = null, bool fixMultiTone = false, bool fixLowBass = false)
         {
             var data = new DLCPackageData();
             data.GameVersion = GameVersion.RS2014;
@@ -509,7 +510,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
 
                     // Adding Arrangement
-                    data.Arrangements.Add(new Arrangement(attr, xmlFile, ignoreMultitoneEx));
+                    data.Arrangements.Add(new Arrangement(attr, xmlFile, fixMultiTone, fixLowBass));
 
                     // make a list of tone names used in arrangements
                     var toneNames = new List<string>();
@@ -567,7 +568,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     // Adding Arrangement
                     data.Arrangements.Add(voc);
-                }
+                }                    
             }
 
             //ShowLights XML
