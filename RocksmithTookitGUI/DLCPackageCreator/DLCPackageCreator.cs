@@ -267,7 +267,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (rbRs2012.Checked)
                     filter += "|Rocksmith 2012 Game Save Profile (*_profile)|*_profile";
                 else
-                    filter += "|Rocksmith 2014 Game Save Profile (*_prfldb)|*_prfldb|Rocksmith 2014 Tone File (*.tone2014.xml)|*.tone2014.xml";
+                    filter += "|Rocksmith 2014 Game Save Profile (*_prfldb)|*_prfldb";
 
                 return filter;
             }
@@ -422,7 +422,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             try
             {
-                using (var stm = XmlWriter.Create(templatePath,new XmlWriterSettings { CheckCharacters = true, Indent = true }))
+                using (var stm = XmlWriter.Create(templatePath, new XmlWriterSettings { CheckCharacters = true, Indent = true }))
                 {
                     new DataContractSerializer(typeof(DLCPackageData)).WriteObject(stm, packageData);
                 }
@@ -613,9 +613,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         tone = GeneralExtensions.Copy<Tone2014>((Tone2014)lstTones.SelectedItem);
                         break;
                 }
+
                 var name = GetUniqueToneName(lstTones.Text);
                 tone.Name = name;
-                tone.Key = name.GetValidKey();
+                tone.Key = name.GetValidKey(isTone: true);
                 lstTones.Items.Add(tone);
 
                 dynamic firstTone = lstTones.Items[0];
@@ -651,7 +652,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     foreach (var tone in info.Tones)
                     {
                         if (String.IsNullOrEmpty(tone.Key))
-                            tone.Key = tone.Name.GetValidKey();
+                            tone.Key = tone.Name.GetValidKey(isTone: true);
 
                         lstTones.Items.Add(tone);
                     }
@@ -666,7 +667,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     foreach (var toneRS2014 in info.TonesRS2014)
                     {
                         if (String.IsNullOrEmpty(toneRS2014.Key))
-                            toneRS2014.Key = toneRS2014.Name.GetValidKey();
+                            toneRS2014.Key = toneRS2014.Name.GetValidKey(isTone: true);
 
                         lstTones.Items.Add(toneRS2014);
                     }
@@ -1181,7 +1182,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             Parent.Focus();
         }
-         
+
         private void LoadArrangementsQuick(string[] filePaths)
         {
             foreach (var filePath in filePaths)
@@ -1189,7 +1190,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Arrangement arrangement = null;
                 using (var form = new ArrangementForm(this, CurrentGameVersion))
                 {
-                    form.EditMode = true;
+                    form.EditMode = false;
                     if (!form.LoadXmlArrangement(filePath))
                         continue;
 
@@ -1631,15 +1632,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 btnPackageGenerate.Enabled = false;
                 bwGenerate.RunWorkerAsync(packageData);
             }
-
-            // AUTO SAVE CDLC TEMPLATE
-            string templateDir;
-            if (String.IsNullOrEmpty(unpackedDir))
-                templateDir = packageData.Arrangements[0].SongXml.File;
-            else
-                templateDir = unpackedDir;
-
-            SaveTemplateFile(templateDir);
         }
 
         public void btnPackageImport_Click(object sender = null, EventArgs e = null)
@@ -1695,13 +1687,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             unpackedDir = savePath;
 
             // REORGANIZE
+            GlobalExtension.ShowProgress("Reorganizing Package Data ...", 35);
             var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
             if (structured && CurrentGameVersion == GameVersion.RS2014)
                 unpackedDir = DLCPackageData.DoLikeProject(savePath);
 
-            GlobalExtension.ShowProgress("Reorganized Package Data ...", 35);
-
+ 
             // LOAD DATA
+            GlobalExtension.ShowProgress("Loading Package Data ...", 70);
             DLCPackageData info = null; // DLCPackageData specific to RS2
             if (CurrentGameVersion == GameVersion.RS2014)
             {
@@ -1712,7 +1705,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             else
                 info = DLCPackageData.RS1LoadFromFolder(unpackedDir, packagePlatform, rbConvert.Checked);
 
-            GlobalExtension.ShowProgress("Loaded Package Data ...", 70);
 
             switch (packagePlatform.platform)
             {
@@ -1734,11 +1726,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillPackageCreatorForm(info, unpackedDir);
             GlobalExtension.ShowProgress("Import Package Finished ...", 100);
             MessageBox.Show(CurrentRocksmithTitle + " CDLC package was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Parent.Focus();
 
             // prevents possible cross threading
             GlobalExtension.UpdateProgress.Style = ProgressBarStyle.Marquee;
             GlobalExtension.Dispose();
+
+            // for whatever freak'n reason users like to have template autosave happen here
+            // even though this is not the right freak'n place to do so cause data can change
+            // AUTO SAVE CDLC TEMPLATE ... so be it!
+            if (!rbConvert.Checked)
+                SaveTemplateFile(unpackedDir);
+
+            Parent.Focus();
         }
 
         public void btnTemplateLoad_Click(object sender = null, EventArgs e = null)
@@ -1947,7 +1946,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     var message = "Package was generated.";
                     if (errorsFound.Length > 0)
                         message = String.Format("Package was generated with errors! See below: {0}{1}", Environment.NewLine, errorsFound);
-                    message += String.Format("{0}Would you like to open the folder where the package was generated?{0}", Environment.NewLine);
+                    else
+                        SaveTemplateFile(unpackedDir);
+
+                       message += String.Format("{0}Would you like to open the folder where the package was generated?{0}", Environment.NewLine);
                     if (MessageBox.Show(message, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                     {
                         Process.Start(Path.GetDirectoryName(dlcDestPath));
@@ -2162,13 +2164,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 unpackedDir = String.Format("{0}_{1}", unpackedDir, GamePlatform.XBox360.ToString());
 
             // REORGANIZE
+            GlobalExtension.ShowProgress("Reorganizing Package Data ...", 35);
             var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
             if (structured && CurrentGameVersion == GameVersion.RS2014)
                 unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
 
-            GlobalExtension.ShowProgress("Reorganized Package Data ...", 35);
-
+ 
             // LOAD DATA
+            GlobalExtension.ShowProgress("Loading Package Data ...", 70);
             DLCPackageData info = null; // DLCPackageData specific to RS2
             if (CurrentGameVersion == GameVersion.RS2014)
             {
@@ -2179,8 +2182,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             else
                 info = DLCPackageData.RS1LoadFromFolder(unpackedDir, packagePlatform, rbConvert.Checked);
 
-            GlobalExtension.ShowProgress("Loaded Package Data ...", 70);
-
+ 
             switch (packagePlatform.platform)
             {
                 case GamePlatform.Pc:
@@ -2455,7 +2457,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
- 
+
     }
 
 

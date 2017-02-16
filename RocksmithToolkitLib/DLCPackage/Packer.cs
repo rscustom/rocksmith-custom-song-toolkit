@@ -144,6 +144,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 foreach (var sngFile in sngFiles)
                 {
+                    Application.DoEvents();
                     var xmlEofFile = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
                     xmlEofFile = xmlEofFile.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, platform.GetPathName()[1].ToLower()), "arr");
                     var xmlSngFile = xmlEofFile.Replace(".xml", ".sng.xml");

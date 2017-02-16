@@ -47,7 +47,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (toneControl.Tone.PedalList.Count > 6) return;
                     break;
                 case GameVersion.RS2014:
-                    if (toneControl.Tone.GearList.IsNull()) 
+                    if (toneControl.Tone.GearList.IsNull())
                         return;
                     if (toneControl.Tone.GearList.SlotsUsed() > 6)
                     {
@@ -71,8 +71,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 ofd.InitialDirectory = Globals.DefaultToneFile;
                 ofd.Filter = CurrentOFDFilter;
                 if (ofd.ShowDialog() != DialogResult.OK) return;
+
                 toneSavePath = Globals.DefaultToneFile = ofd.FileName;
             }
+
             LoadToneFile(toneSavePath);
         }
 

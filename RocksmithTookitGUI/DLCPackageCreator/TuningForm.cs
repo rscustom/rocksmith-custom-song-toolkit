@@ -11,6 +11,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
     {
         public bool AddNew = false;
         public bool IsBass = false;
+
         private TuningDefinition _tuning;
 
         public TuningForm()
@@ -150,6 +151,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             txtName.Text = name.Text.GetValidAtaSpaceName();
             name.TextChanged += txtUIName_TextChanged;
         }
+
 
     }
 }

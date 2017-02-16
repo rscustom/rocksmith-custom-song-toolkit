@@ -140,7 +140,7 @@
             this.creator_fixlowbass.Size = new System.Drawing.Size(124, 17);
             this.creator_fixlowbass.TabIndex = 56;
             this.creator_fixlowbass.Text = "Fix Low Bass Tuning";
-            this.toolTip.SetToolTip(this.creator_fixlowbass, "If checked automatically\r\nfix low bass tuning errors.");
+            this.toolTip.SetToolTip(this.creator_fixlowbass, "If checked, automatically\r\nfix low bass tuning errors.");
             this.creator_fixlowbass.UseVisualStyleBackColor = true;
             this.creator_fixlowbass.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -154,8 +154,8 @@
             this.creator_fixmultitone.Size = new System.Drawing.Size(115, 17);
             this.creator_fixmultitone.TabIndex = 55;
             this.creator_fixmultitone.Text = "Fix Multitone Errors";
-            this.toolTip.SetToolTip(this.creator_fixmultitone, "If checked automatically fix multitone errors\r\nby converting to a single tone arr" +
-                    "angement.");
+            this.toolTip.SetToolTip(this.creator_fixmultitone, "If checked, automatically fix multitone errors\r\nby converting to a single tone ar" +
+                    "rangement.");
             this.creator_fixmultitone.UseVisualStyleBackColor = true;
             this.creator_fixmultitone.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -284,8 +284,8 @@
             this.creator_usedefaultauthor.Size = new System.Drawing.Size(209, 17);
             this.creator_usedefaultauthor.TabIndex = 46;
             this.creator_usedefaultauthor.Text = "Album Sort defaults to Package Author";
-            this.toolTip.SetToolTip(this.creator_usedefaultauthor, "If checked the configuration Package Author\r\nwill be used by default for the Albu" +
-                    "m Sort\r\ntextbox field in the Creator GUI.");
+            this.toolTip.SetToolTip(this.creator_usedefaultauthor, "If checked, the configuration Package Author\r\nwill be used by default for the Alb" +
+                    "um Sort\r\ntextbox field in the Creator GUI.");
             this.creator_usedefaultauthor.UseVisualStyleBackColor = true;
             this.creator_usedefaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -299,6 +299,7 @@
             this.creator_useacronyms.Size = new System.Drawing.Size(229, 17);
             this.creator_useacronyms.TabIndex = 13;
             this.creator_useacronyms.Text = "Use artist name acronym when naming files";
+            this.toolTip.SetToolTip(this.creator_useacronyms, "If checked, creates shorter file names.");
             this.creator_useacronyms.UseVisualStyleBackColor = true;
             this.creator_useacronyms.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 

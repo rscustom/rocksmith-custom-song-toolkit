@@ -100,11 +100,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 Debug.WriteLine("Low bass tuning already fixed: " + arr.SongXml.File);
                 return false;
             }
-
-            Song2014 songXml = Song2014.LoadFromFile(arr.SongXml.File);
-            // Force 220Hz
-            arr.TuningPitch = 220.0;
-            songXml.CentOffset = "-1200.0";
+           
             // Octave up for each string
             Int16[] strings = arr.TuningStrings.ToArray();
             for (int s = 0; s < strings.Length; s++)
@@ -121,12 +117,15 @@ namespace RocksmithToolkitLib.DLCPackage
                 // UIName may contain spaces, where as Name contains no spaces
                 tuning.UIName = String.Format("{0} Fixed", tuning.UIName);
                 tuning.Name = tuning.UIName.ReplaceSpaceWith("");
+                tuning.Custom = true;
                 TuningDefinitionRepository.Instance.Add(tuning, true);
                 TuningDefinitionRepository.Instance.Save(true);
             }
 
-            arr.Tuning = tuning.UIName;           
-            arr.TuningStrings = songXml.Tuning = tuning.Tuning;
+            // update XML arrangement
+            Song2014 songXml = Song2014.LoadFromFile(arr.SongXml.File);
+            songXml.CentOffset = "-1200.0"; // Force 220Hz
+            songXml.Tuning = tuning.Tuning;
 
             using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                 songXml.Serialize(stream, true);
@@ -137,7 +136,7 @@ namespace RocksmithToolkitLib.DLCPackage
             return true;
         }
 
- 
+
 
     }
 }

@@ -124,7 +124,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             toneNameBox.TextChanged += (sender, e) =>
             {
                 var toneName = toneNameBox.Text;
-                tone.Key = toneName.GetValidKey();
+                tone.Key = toneName.GetValidKey(isTone: true);
                 tone.Name = tone.Key;
                 toneNameBox.Text = tone.Key;
             };

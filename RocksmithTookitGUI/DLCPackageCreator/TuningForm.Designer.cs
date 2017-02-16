@@ -67,6 +67,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // gbTuning
             // 
+            this.gbTuning.BackColor = System.Drawing.SystemColors.Control;
             this.gbTuning.Controls.Add(this.label6);
             this.gbTuning.Controls.Add(this.label5);
             this.gbTuning.Controls.Add(this.label4);
@@ -90,6 +91,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.Wheat;
             this.label6.ForeColor = System.Drawing.Color.Fuchsia;
             this.label6.Location = new System.Drawing.Point(237, 21);
             this.label6.Name = "label6";
@@ -100,6 +102,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.Wheat;
             this.label5.ForeColor = System.Drawing.Color.Green;
             this.label5.Location = new System.Drawing.Point(191, 21);
             this.label5.Name = "label5";
@@ -110,7 +113,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.BackColor = System.Drawing.Color.Wheat;
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.label4.Location = new System.Drawing.Point(145, 21);
             this.label4.Name = "label4";
@@ -121,7 +124,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Silver;
+            this.label3.BackColor = System.Drawing.Color.Wheat;
             this.label3.ForeColor = System.Drawing.Color.Blue;
             this.label3.Location = new System.Drawing.Point(99, 21);
             this.label3.Name = "label3";
@@ -132,7 +135,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Silver;
+            this.label2.BackColor = System.Drawing.Color.Wheat;
             this.label2.ForeColor = System.Drawing.Color.Yellow;
             this.label2.Location = new System.Drawing.Point(53, 21);
             this.label2.Name = "label2";
@@ -143,7 +146,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Silver;
+            this.label1.BackColor = System.Drawing.Color.Wheat;
             this.label1.ForeColor = System.Drawing.Color.Red;
             this.label1.Location = new System.Drawing.Point(7, 21);
             this.label1.Name = "label1";
@@ -250,9 +253,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.noteLabel.ForeColor = System.Drawing.Color.LightSlateGray;
             this.noteLabel.Location = new System.Drawing.Point(7, 112);
             this.noteLabel.Name = "noteLabel";
-            this.noteLabel.Size = new System.Drawing.Size(296, 13);
+            this.noteLabel.Size = new System.Drawing.Size(300, 13);
             this.noteLabel.TabIndex = 23;
-            this.noteLabel.Text = "If a bass tuning, fill strings 4 and 5 to allow for use on guitar ...";
+            this.noteLabel.Text = "If bass tuning, also fill strings 4 and 5 to allow for use on guitar.";
             // 
             // TuningForm
             // 
@@ -270,7 +273,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.MinimizeBox = false;
             this.Name = "TuningForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Tuning Editor";
+            this.Text = "Creator, Edit or Confirm Tuning";
             this.gbTuning.ResumeLayout(false);
             this.gbTuning.PerformLayout();
             this.ResumeLayout(false);

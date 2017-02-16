@@ -222,7 +222,11 @@ namespace RocksmithToolkitLib.DLCPackage
                 // do a quick check/repair of low bass tuning
                 if (fixLowBass && ArrangementType == ArrangementType.Bass)
                     if (this.TuningStrings.String0 < -4 && this.TuningPitch != 220.0)
-                        TuningFrequency.ApplyBassFix(this);
+                        if (TuningFrequency.ApplyBassFix(this))
+                        {
+                            this.TuningPitch = 220.0;
+                            this.TuningStrings = Song2014.LoadFromFile(xmlSongFile).Tuning;
+                        }
             }
         }
 

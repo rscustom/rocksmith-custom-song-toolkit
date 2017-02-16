@@ -23,7 +23,7 @@ Sortable Artist, Title, Album Notes:
   Diacritics are replaced with their ASCII approximations if available
 
 DLC Key, and Tone Key Notes:
-  Limited to a maximum length of 30 charactures
+  Limited to a maximum length of 30 charactures, minimum of 6 charactures for uniqueness
   Only Ascii Alpha and Numeric may be used
   No spaces, no special characters, no puncuation
   All alpha lower, upper, or mixed case are allowed
@@ -153,8 +153,9 @@ namespace RocksmithToolkitLib.Extensions
         /// </summary>
         /// <param name="value">DLCKey or ToneKey for verification</param>
         /// <param name="songTitle">optional SongTitle varification comparison for DLCKey </param>
+        /// <param name="isTone">If set to <c>true</c> validate tone name and tone key</param>
         /// <returns>contains no spaces, no accents, or special characters but can begin with or be all numbers or all lower case</returns>
-        public static string GetValidKey(this string value, string songTitle = "")
+        public static string GetValidKey(this string value, string songTitle = "", bool isTone = false)
         {
             if (String.IsNullOrEmpty(value))
                 return String.Empty;
@@ -167,8 +168,8 @@ namespace RocksmithToolkitLib.Extensions
             // limit max Key length to 30
             value = value.Substring(0, Math.Min(30, value.Length));
 
-            // ensure min Key length is 6
-            if (value.Length < 7)
+            // ensure min DLCKey length is 6, skip check if isTone
+            if (value.Length < 7 && !isTone)
             {
                 value = string.Concat(Enumerable.Repeat(value, 6));
                 value = value.Substring(0, 6);

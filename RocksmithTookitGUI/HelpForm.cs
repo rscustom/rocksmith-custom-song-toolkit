@@ -38,9 +38,6 @@ namespace RocksmithToolkitGUI
             }
         }
 
-
-        #region Assembly Attribute Accessors
-
         public string AssemblyTitle
         {
             get
@@ -57,7 +54,6 @@ namespace RocksmithToolkitGUI
                 return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
             }
         }
-        #endregion
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
