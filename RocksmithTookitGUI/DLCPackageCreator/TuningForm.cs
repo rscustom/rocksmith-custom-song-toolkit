@@ -37,7 +37,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 _tuning.Name = txtName.Text.Trim();
 
-                _tuning.Tuning = new TuningStrings();
+                _tuning.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
 
                 #region Parse fields
 

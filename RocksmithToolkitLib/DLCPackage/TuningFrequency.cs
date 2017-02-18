@@ -91,6 +91,8 @@ namespace RocksmithToolkitLib.DLCPackage
         // only for RS2014
         public static bool ApplyBassFix(Arrangement arr)
         {
+            var debubMe = arr;
+
             // get the latest comments from the XML
             var xmlComments = Song2014.ReadXmlComments(arr.SongXml.File);
             var isBassFixed = xmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || arr.TuningPitch.Equals(220.0);
@@ -100,32 +102,20 @@ namespace RocksmithToolkitLib.DLCPackage
                 Debug.WriteLine("Low bass tuning already fixed: " + arr.SongXml.File);
                 return false;
             }
-           
+
+            // TODO: check guitar compatibility
             // Octave up for each string
             Int16[] strings = arr.TuningStrings.ToArray();
             for (int s = 0; s < strings.Length; s++)
             {
                 if (strings[s] < 0)
                     strings[s] += 12;
-            }
-
-            // Detect tuning
-            var tuning = TuningDefinitionRepository.Instance.Detect(new TuningStrings(strings), GameVersion.RS2014, false);
-            // only add 'Fixed' one time to tuning name
-            if (!tuning.UIName.Contains("Fixed"))
-            {
-                // UIName may contain spaces, where as Name contains no spaces
-                tuning.UIName = String.Format("{0} Fixed", tuning.UIName);
-                tuning.Name = tuning.UIName.ReplaceSpaceWith("");
-                tuning.Custom = true;
-                TuningDefinitionRepository.Instance.Add(tuning, true);
-                TuningDefinitionRepository.Instance.Save(true);
-            }
+             }
 
             // update XML arrangement
             Song2014 songXml = Song2014.LoadFromFile(arr.SongXml.File);
             songXml.CentOffset = "-1200.0"; // Force 220Hz
-            songXml.Tuning = tuning.Tuning;
+            songXml.Tuning = new TuningStrings(strings);
 
             using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                 songXml.Serialize(stream, true);
@@ -135,8 +125,5 @@ namespace RocksmithToolkitLib.DLCPackage
 
             return true;
         }
-
-
-
     }
 }

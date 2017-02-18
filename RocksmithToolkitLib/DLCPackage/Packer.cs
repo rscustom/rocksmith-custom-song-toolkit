@@ -144,7 +144,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 foreach (var sngFile in sngFiles)
                 {
-                    Application.DoEvents();
                     var xmlEofFile = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
                     xmlEofFile = xmlEofFile.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, platform.GetPathName()[1].ToLower()), "arr");
                     var xmlSngFile = xmlEofFile.Replace(".xml", ".sng.xml");
@@ -939,7 +938,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     attr.Sections = new List<Manifest.Section>();
                     manifestFunctions.GenerateSectionData(attr, xmlContent);
 
-                    attr.Tuning = new TuningStrings();
+                    attr.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
                     manifestFunctions.GenerateTuningData(attr, xmlContent);
 
                     attr.MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(xmlContent);

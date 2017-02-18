@@ -1691,7 +1691,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
             if (structured && CurrentGameVersion == GameVersion.RS2014)
                 unpackedDir = DLCPackageData.DoLikeProject(savePath);
-
  
             // LOAD DATA
             GlobalExtension.ShowProgress("Loading Package Data ...", 70);
@@ -2059,7 +2058,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 ofd.InitialDirectory = Globals.DefaultProjectDir;
                 ofd.Title = "Quick Add ... Multiselect Arrangements";
-                ofd.Filter = "Rocksmith Song Xml Files (*.xml)|*.xml";
+                ofd.Filter = "Rocksmith EOF XML Files (*.xml)|*.xml";
                 ofd.Multiselect = true;
                 if (ofd.ShowDialog() != DialogResult.OK)
                 {

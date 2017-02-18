@@ -6,8 +6,10 @@ using System.Xml.Serialization;
 using System.Windows.Forms;
 using RocksmithToolkitLib.Extensions;
 
-namespace RocksmithToolkitLib.XmlRepository {
-    public abstract class XmlRepository<T> {
+namespace RocksmithToolkitLib.XmlRepository
+{
+    public abstract class XmlRepository<T>
+    {
         #region Events
 
         public delegate void OnSavingHandler();
@@ -18,7 +20,6 @@ namespace RocksmithToolkitLib.XmlRepository {
 
         #endregion
 
-        #region Fields
 
         /// <summary>
         /// Repository file name i.e.: RocksmithToolkitLib.SongAppId.xml
@@ -37,12 +38,11 @@ namespace RocksmithToolkitLib.XmlRepository {
 
         /// <summary>
         /// List of objects from *.xml file
-        /// </summary>
-        public List<T> List { set; get; }
+        /// </summary>       
+        public List<T> List { get; set; }
 
-        #endregion
-
-        protected XmlRepository(string fileName, IEqualityComparer<T> comparer) {
+        protected XmlRepository(string fileName, IEqualityComparer<T> comparer)
+        {
             FileName = fileName;
             Comparer = comparer;
             List = Activator.CreateInstance<List<T>>();
@@ -52,11 +52,13 @@ namespace RocksmithToolkitLib.XmlRepository {
         /// <summary>
         /// Persist object list into *.xml file
         /// </summary>
-        public void Save(bool reload = false) {
+        public void Save(bool reload = false)
+        {
             if (OnSaving != null)
                 OnSaving.Invoke();
 
-            lock (List) {
+            lock (List)
+            {
                 using (var writer = File.Create(FilePath))
                 {
                     new XmlSerializer(List.GetType()).Serialize(writer, List);
@@ -75,24 +77,60 @@ namespace RocksmithToolkitLib.XmlRepository {
         /// </summary>
         /// <param name="value">object</param>
         /// <param name = "reload"></param>
-        public void Add(T value, bool reload = false) {
+        public void Add(T value, bool reload = false)
+        {
             List.Add(value);
+            Save(reload);
+        }
+
+        /// <summary>
+        /// Remove item into object list
+        /// </summary>
+        /// <param name="value">object</param>
+        /// <param name = "reload"></param>
+        public void Remove(T value, bool reload = false)
+        {
+            // work around to remove from TuningDefinitionRepository
+            if (typeof(T) == typeof(TuningDefinition))
+            {
+                dynamic dValue = value;
+                for (int i = List.Count - 1; i >= 0; i--)
+                {
+                    dynamic item = List[i];
+                    if (TuningDefinitionRepository.TuningsAreEqual(item, dValue))
+                    {
+                        List.RemoveAt(i);
+                    }
+                }
+            }
+            else 
+            {
+                lock (List)
+                {
+                    List.Remove(value); // not working on TuningDefinitionRepository
+                }
+            }
+
             Save(reload);
         }
 
         /// <summary>
         /// Refresh List from *.xml file
         /// </summary>
-        public void Load() {
+        public void Load()
+        {
             if (File.Exists(FilePath))
             {
-                lock (List) {
+                lock (List)
+                {
                     using (var reader = new StreamReader(FilePath))
                     {
-                        List = (List<T>) new XmlSerializer(List.GetType()).Deserialize(reader);
+                        List = (List<T>)new XmlSerializer(List.GetType()).Deserialize(reader);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 List = new List<T>();
                 Save();
             }

@@ -6,11 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
-using System.Xml.Serialization;
-using Newtonsoft.Json;
-using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
-using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Sng2014HSL;
@@ -115,12 +111,6 @@ namespace RocksmithToolkitLib.DLCPackage
             if (ArrangementType != ArrangementType.Guitar && ArrangementType != ArrangementType.Bass)
                 return;
 
-            //Tuning
-            DetectTuning(song);
-            this.CapoFret = attr.CapoFret;
-            if (attr.CentOffset != null)
-                this.TuningPitch = attr.CentOffset.Cents2Frequency();
-
             // save xml comments
             this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
 
@@ -209,8 +199,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
 
                 // set to standard tuning if no tuning exists
-                if (this.TuningStrings == null)
-                    this.TuningStrings = new TuningStrings();
+                if (song.Tuning == null)
+                    song.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
+
+                this.TuningStrings = song.Tuning;
 
                 // write changes to xml arrangement (w/o comments)
                 using (var stream = File.Open(xmlSongFile, FileMode.Create))
@@ -219,15 +211,38 @@ namespace RocksmithToolkitLib.DLCPackage
                 // write comments back to xml now so they are available for debugging (used for Guitar and Bass)
                 Song2014.WriteXmlComments(xmlSongFile, XmlComments, writeNewVers: false);
 
-                // do a quick check/repair of low bass tuning
-                if (fixLowBass && ArrangementType == ArrangementType.Bass)
-                    if (this.TuningStrings.String0 < -4 && this.TuningPitch != 220.0)
+                // do a quick check/repair of low bass tuning, only for RS2014 bass arrangements
+                if (fixLowBass && song.Version == "7" && this.ArrangementType == ArrangementType.Bass)
+                    if (attr.Tuning.String0 < -4 && attr.CentOffset != -1200.0)
                         if (TuningFrequency.ApplyBassFix(this))
                         {
-                            this.TuningPitch = 220.0;
-                            this.TuningStrings = Song2014.LoadFromFile(xmlSongFile).Tuning;
+                            attr.CentOffset = -1200.0; // Force 220Hz
+                            attr.Tuning = Song2014.LoadFromFile(xmlSongFile).Tuning;
+                            var tuningDef = TuningDefinitionRepository.Instance.Detect(attr.Tuning, GameVersion.RS2014, false);
+
+                            if (!tuningDef.Name.Contains("Fixed"))
+                            {
+                                var tuningUiName = String.Format("{0} Fixed", tuningDef.UIName);
+                                // bass tuning definition gets auto added to repository
+                                var bassTuning = new TuningDefinition
+                                    {
+                                        Custom = true,
+                                        GameVersion = GameVersion.RS2014,
+                                        Name = tuningUiName.Replace(" ", ""),
+                                        Tuning = attr.Tuning,
+                                        UIName = tuningUiName
+                                    };
+
+                                TuningDefinitionRepository.SaveUnique(bassTuning);
+                            }
                         }
             }
+
+            // Set Final Tuning
+            DetectTuning(song);
+            this.CapoFret = attr.CapoFret;
+            if (attr.CentOffset != null)
+                this.TuningPitch = attr.CentOffset.Cents2Frequency();
         }
 
         /// <summary>

@@ -50,6 +50,13 @@ namespace RocksmithToolkitLib.XmlRepository
             var g = Select(tuningStrings, gameVersion);
             return g; //Accurate compare, no mercy for bass.
         }
+ 
+        public TuningDefinition SelectExact(TuningDefinition tuning)
+        {
+            return List.FirstOrDefault(s => s.GameVersion == tuning.GameVersion &&
+                s.Tuning == tuning.Tuning && s.Name == tuning.Name &&
+                s.UIName == tuning.UIName && s.Custom == tuning.Custom);
+        }
 
         //Tuning Strings + GameVersion
         public TuningDefinition Select(TuningStrings tuningStrings, GameVersion gameVersion)
@@ -57,6 +64,7 @@ namespace RocksmithToolkitLib.XmlRepository
             return List.FirstOrDefault(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
         }
 
+        [Obsolete("Depricated, please use TuningDefinition Select() funtion.", true)]
         public TuningDefinition Select(Int16[] tuningStrings, GameVersion gameVersion)
         {
             return List.FirstOrDefault(s => s.Tuning.ToArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
@@ -108,6 +116,42 @@ namespace RocksmithToolkitLib.XmlRepository
             return t;
         }
 
+        public static bool TuningsAreEqual(TuningDefinition x, TuningDefinition y)
+        {
+            if (x == null || y == null)
+                return false;
+
+            return (x.GameVersion == y.GameVersion && 
+                x.Tuning == y.Tuning && x.Name == y.Name &&
+                x.UIName == y.UIName && x.Custom == y.Custom);
+         }
+
+        public static void SaveUnique(TuningDefinition newDefinition, bool reload = true)
+        {
+            // ensure unique tuning definitions
+            // make sure name does not already exist in repository
+            // make sure tuningstrings does not already exist in the repository
+            // do not add if already exists in the repository, aka delete before adding
+            // CAREFUL ...  can mess up the TuningDefinition.xml file on multiple adds
+            var tuningDefinitions = Instance.LoadTuningDefinitions(newDefinition.GameVersion);
+
+            foreach (var tuningDefinition in tuningDefinitions)
+            {
+                var tuning = Instance.SelectExact(tuningDefinition);
+                var tuning2 = Instance.Select(tuningDefinition.Tuning, GameVersion.RS2014);
+
+                if (newDefinition.Name == tuningDefinition.Name ||
+                    newDefinition.Tuning == tuningDefinition.Tuning)
+                {
+                    // delete existing tuning from repository before adding new/revised
+                    Instance.Remove(tuningDefinition, reload);
+                }
+            }
+
+            Instance.Add(newDefinition, reload);
+            Instance.Save(reload);
+        }
+    
     }
 
     internal class TuningComparer : IEqualityComparer<TuningDefinition>
@@ -127,6 +171,8 @@ namespace RocksmithToolkitLib.XmlRepository
 
             return obj.GameVersion.GetHashCode() ^ obj.Tuning.GetHashCode();
         }
+
+
     }
 }
 

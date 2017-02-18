@@ -300,7 +300,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public bool LoadXmlArrangement(string xmlFilePath)
         {
-            // only want to use when adding arrangements
+            // only use this method when adding arrangements
             if (EditMode)
                 return false;
 
@@ -443,7 +443,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
 
                     if (Arrangement.ArrangementType == ArrangementType.Bass)
-                        FixBassTuning();
+                    {
+                        var debugMe = FixBassTuning();
+                    }
 
                     SelectTuningName();
                     CheckTuning();
@@ -525,12 +527,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             return false;
         }
 
-        private void SaveTuningDefinition(TuningDefinition formTuning)
-        {
-            // CAREFUL ...  can mess up the TuningDefinition.xml file on multiple adds
-            TuningDefinitionRepository.Instance.Add(formTuning, true);
-            TuningDefinitionRepository.Instance.Save(true);
-        }
+        
 
         private void SequencialToneComboEnabling()
         {//TODO: handle not one-by-one enabling disabling tone slots and use data from enabled one, confused about this one.
@@ -636,7 +633,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
             }
 
-            // get the latest comments from the XML to check if previously bass fixed
+            // get the latest comments from the XML to check if previous bass fixed is valid
             if (!String.IsNullOrEmpty(Arrangement.SongXml.File))
             {
                 var xmlComments = Song2014.ReadXmlComments(Arrangement.SongXml.File);
@@ -648,8 +645,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     tuning.UIName = String.Format("{0} Fixed", tuning.UIName);
                     tuning.Name = tuning.UIName.ReplaceSpaceWith("");
                     tuning.Custom = true;
-                    TuningDefinitionRepository.Instance.Add(tuning, true);
-                    TuningDefinitionRepository.Instance.Save(true);
+                    // bass tuning definition get auto added to repository
+                    TuningDefinitionRepository.SaveUnique(tuning);
                 }
             }
 
@@ -691,7 +688,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 cmbTuningName.SelectedIndex = tcbIndex;
                 tuning = (TuningDefinition)cmbTuningName.Items[tcbIndex];
-                if (tuning.Tuning == formTuning.Tuning)
+
+                // check at least tuning strings and name match
+                if (tuning.Tuning == formTuning.Tuning && tuning.Name == formTuning.Name)
                 {
                     foundTuning = tcbIndex;
                     break;
@@ -702,7 +701,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (foundTuning == -1)
             {
                 if (addNew)
-                    SaveTuningDefinition(formTuning);
+                    TuningDefinitionRepository.SaveUnique(formTuning);
 
                 formTuning.Custom = true;
                 cmbTuningName.Items.Add(formTuning);
@@ -712,7 +711,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 cmbTuningName.SelectedIndex = foundTuning;
 
             cmbTuningName.Refresh();
-            Arrangement.TuningStrings = formTuning.Tuning; // forces SET update
+            Arrangement.TuningStrings = formTuning.Tuning;
+            Arrangement.Tuning = formTuning.UIName;
         }
 
         private void ToneComboEnabled(bool enabled)
@@ -855,7 +855,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             using (var ofd = new OpenFileDialog())
             {
                 ofd.InitialDirectory = Globals.DefaultProjectDir;
-                ofd.Filter = "Rocksmith Song Xml Files (*.xml)|*.xml";
+                ofd.Filter = "Rocksmith EOF XML Files (*.xml)|*.xml";
                 if (ofd.ShowDialog() != DialogResult.OK)
                 {
                     return;
@@ -964,7 +964,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // fix old toolkit behavior
             if (Arrangement.TuningStrings == null)
             {
-                Arrangement.TuningStrings = new TuningStrings();
+                Arrangement.TuningStrings = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
                 return false;
             }
 
@@ -996,7 +996,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 cmbTuningName.SelectedIndex = tcbIndex;
                 TuningDefinition tuning = (TuningDefinition)cmbTuningName.Items[tcbIndex];
-                if (tuning.Tuning == Arrangement.TuningStrings)
+
+                // check both tuning strings and name match
+                if (tuning.Tuning == Arrangement.TuningStrings && tuning.UIName == Arrangement.Tuning)
                 {
                     foundTuning = tcbIndex;
                     break;
