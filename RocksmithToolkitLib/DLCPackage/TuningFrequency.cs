@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.XmlRepository;
 
@@ -89,7 +90,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         // only for RS2014
-        public static bool ApplyBassFix(Arrangement arr)
+        public static bool ApplyBassFix(Arrangement arr, bool saveTuningDefinition = false)
         {
             var debubMe = arr;
 
@@ -99,8 +100,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (isBassFixed)
             {
-                Debug.WriteLine("Low bass tuning already fixed: " + arr.SongXml.File);
-                return false;
+                Debug.WriteLine("Low bass tuning may already fixed: " + arr.SongXml.File);
+                // return false;
             }
 
             // TODO: check guitar compatibility
@@ -110,20 +111,43 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 if (strings[s] < 0)
                     strings[s] += 12;
-             }
+            }
 
             // update XML arrangement
             Song2014 songXml = Song2014.LoadFromFile(arr.SongXml.File);
             songXml.CentOffset = "-1200.0"; // Force 220Hz
             songXml.Tuning = new TuningStrings(strings);
 
+            // bass tuning definition gets auto added/saved to repository
+            if (saveTuningDefinition)
+            {
+                var tuningDef = TuningDefinitionRepository.Instance.Detect(songXml.Tuning, GameVersion.RS2014, false);
+
+                if (!tuningDef.Name.Contains("Fixed"))
+                {
+                    var tuningUiName = String.Format("{0} Fixed", tuningDef.UIName);
+                    var bassTuning = new TuningDefinition
+                        {
+                            Custom = true,
+                            GameVersion = GameVersion.RS2014,
+                            Name = tuningUiName.Replace(" ", ""),
+                            Tuning = songXml.Tuning,
+                            UIName = tuningUiName
+                        };
+
+                    TuningDefinitionRepository.SaveUnique(bassTuning);
+                }
+            }
+
             using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                 songXml.Serialize(stream, true);
 
             // write xml comments back to fixed bass arrangement
-            Song2014.WriteXmlComments(arr.SongXml.File, xmlComments, customComment: "Low Bass Tuning Fixed");
+            if (!isBassFixed)
+                Song2014.WriteXmlComments(arr.SongXml.File, xmlComments, customComment: "Low Bass Tuning Fixed");
 
             return true;
         }
+
     }
 }

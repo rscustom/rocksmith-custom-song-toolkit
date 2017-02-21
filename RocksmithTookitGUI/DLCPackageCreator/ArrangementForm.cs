@@ -31,6 +31,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private DLCPackageCreator _parentControl;
         private ToolTip _toolTip = new ToolTip();
         private Song2014 _xmlSong;
+        private bool _fixLowBass;
+
 
         public ArrangementForm(DLCPackageCreator control, GameVersion gameVersion)
             : this(new Arrangement
@@ -50,6 +52,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             _gameVersion = gameVersion == GameVersion.RS2012 ? GameVersion.RS2012 : GameVersion.RS2014;
             _parentControl = control;
+            _fixLowBass = ConfigRepository.Instance().GetBoolean("creator_fixlowbass");
 
             foreach (var val in Enum.GetValues(typeof(ArrangementType)))
                 cmbArrangementType.Items.Add(val);
@@ -527,7 +530,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             return false;
         }
 
-        
+
 
         private void SequencialToneComboEnabling()
         {//TODO: handle not one-by-one enabling disabling tone slots and use data from enabled one, confused about this one.
@@ -968,20 +971,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return false;
             }
 
+            if (_gameVersion == GameVersion.RS2012)
+                return false;
+
             var bassFix = false;
             //Low tuning fix for bass, If lowest string is B and bass fix not applied 
             if (Arrangement.TuningStrings.String0 < -4 && Arrangement.TuningPitch != 220.00)
-                if (ConfigRepository.Instance().GetBoolean("creator_fixlowbass"))
+                if (_fixLowBass)
                     bassFix = true;
                 else
                     bassFix |= MessageBox.Show(@"The bass tuning may be too low.  Apply Low Bass Tuning Fix?" + Environment.NewLine + @"Note: The fix may revert if bass Arrangement is re-saved in EOF.  ", @"Warning ... Low Bass Tuning", MessageBoxButtons.YesNo) == DialogResult.Yes;
 
             // Fix Low Bass Tuning
-            if (bassFix && TuningFrequency.ApplyBassFix(Arrangement))
+            if (bassFix && TuningFrequency.ApplyBassFix(Arrangement, _fixLowBass))
             {
                 Arrangement.TuningStrings = Song2014.LoadFromFile(Arrangement.SongXml.File).Tuning;
                 Arrangement.TuningPitch = 220.00;
                 txtFrequency.Text = "220.00";
+
                 return true;
             }
 

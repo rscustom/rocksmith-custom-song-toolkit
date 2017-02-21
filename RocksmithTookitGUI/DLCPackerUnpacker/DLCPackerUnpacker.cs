@@ -293,6 +293,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 srcPaths = ofd.FileNames;
             }
 
+            var fixLowBass = ConfigRepository.Instance().GetBoolean("creator_fixlowbass");
+
             ToggleUIControls(false);
             errorsFound = new StringBuilder();
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
@@ -365,7 +367,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                         if (arr.TuningStrings.String0 < -4 && arr.TuningPitch != 220.0)
                         {
-                            if (!TuningFrequency.ApplyBassFix(arr))
+                            if (!TuningFrequency.ApplyBassFix(arr, fixLowBass))
                             {
                                 if (chkVerbose.Checked)
                                     MessageBox.Show(Path.GetFileName(srcPath) + "  " + Environment.NewLine + "bass arrangement is already at 220Hz pitch.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -50,10 +50,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private ToolTip tt = new ToolTip();
         private string unpackedDir;
         private bool userChangedInputControls;
+        private bool fixLowBass;
+        private bool fixMultiTone;
 
         public DLCPackageCreator()
         {
             InitializeComponent();
+
+            fixLowBass = ConfigRepository.Instance().GetBoolean("creator_fixlowbass");
+            fixMultiTone = ConfigRepository.Instance().GetBoolean("creator_fixmultitone");
 
 #if (!DEBUG)
             chkShowlights.Visible = false;
@@ -359,6 +364,46 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 MessageBox.Show("Can not load CDLC Template. \n" + se.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+
+            // TODO: apply bassfix to template info
+          foreach (var arr in info.Arrangements)
+            {
+                if (arr.ArrangementType == ArrangementType.Bass)
+                {
+                    // fix old toolkit behavior
+                    if (arr.TuningStrings == null)
+                    {
+                        arr.TuningStrings = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
+                        continue;
+                    }
+
+                    if (rbRs2012.Checked)
+                        continue;
+
+                    var bassFix = false;
+                    //Low tuning fix for bass, If lowest string is B and bass fix not applied 
+                    if (arr.TuningStrings.String0 < -4 && arr.TuningPitch != 220.00)
+                        if (fixLowBass)
+                            bassFix = true;
+                        else
+                            bassFix |= MessageBox.Show(@"The bass tuning may be too low.  Apply Low Bass Tuning Fix?" + Environment.NewLine + @"Note: The fix may revert if bass Arrangement is re-saved in EOF.  ", @"Warning ... Low Bass Tuning", MessageBoxButtons.YesNo) == DialogResult.Yes;
+
+                    // Fix Low Bass Tuning
+                    if (bassFix && TuningFrequency.ApplyBassFix(arr, fixLowBass))
+                    {
+                        arr.TuningStrings = Song2014.LoadFromFile(arr.SongXml.File).Tuning;
+                        arr.TuningPitch = 220.00;
+                        arr.Tuning = TuningDefinitionRepository.Instance.Detect(arr.TuningStrings, GameVersion.RS2014, false).UIName;
+
+                        //MessageBox.Show("It appears the bass arrangement has been modified in EOF." + Environment.NewLine +
+                        //                "It is recommended that you manually 'Add' all the project" + Environment.NewLine +
+                        //                "files to the toolkit rather than to use 'Load Template'," + Environment.NewLine +
+                        //                "because some template files have been modified in EOF.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+
             }
 
             FillPackageCreatorForm(info, templatePath);
@@ -732,6 +777,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             //if (platformXBox360.Checked)
             //    rbuttonSignatureLIVE.Checked = info.SignatureType == PackageMagic.LIVE;
+
+            // check bass tuning before loading arrangements
+
+
 
             lstArrangements.Items.Clear();
             foreach (var arrangement in info.Arrangements)
@@ -1691,16 +1740,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
             if (structured && CurrentGameVersion == GameVersion.RS2014)
                 unpackedDir = DLCPackageData.DoLikeProject(savePath);
- 
+
             // LOAD DATA
             GlobalExtension.ShowProgress("Loading Package Data ...", 70);
             DLCPackageData info = null; // DLCPackageData specific to RS2
             if (CurrentGameVersion == GameVersion.RS2014)
-            {
-                var fixLowBass = ConfigRepository.Instance().GetBoolean("creator_fixlowbass");
-                var fixMultiTone = ConfigRepository.Instance().GetBoolean("creator_fixmultitone");
                 info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform, fixMultiTone, fixLowBass);
-            }
             else
                 info = DLCPackageData.RS1LoadFromFolder(unpackedDir, packagePlatform, rbConvert.Checked);
 
@@ -1948,7 +1993,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     else
                         SaveTemplateFile(unpackedDir);
 
-                       message += String.Format("{0}Would you like to open the folder where the package was generated?{0}", Environment.NewLine);
+                    message += String.Format("{0}Would you like to open the folder where the package was generated?{0}", Environment.NewLine);
                     if (MessageBox.Show(message, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                     {
                         Process.Start(Path.GetDirectoryName(dlcDestPath));
@@ -2168,20 +2213,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (structured && CurrentGameVersion == GameVersion.RS2014)
                 unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
 
- 
+
             // LOAD DATA
             GlobalExtension.ShowProgress("Loading Package Data ...", 70);
             DLCPackageData info = null; // DLCPackageData specific to RS2
             if (CurrentGameVersion == GameVersion.RS2014)
-            {
-                var fixLowBass = ConfigRepository.Instance().GetBoolean("creator_fixlowbass");
-                var fixMultiTone = ConfigRepository.Instance().GetBoolean("creator_fixmultitone");
                 info = DLCPackageData.LoadFromFolder(unpackedDir, packagePlatform, packagePlatform, fixMultiTone, fixLowBass);
-            }
             else
                 info = DLCPackageData.RS1LoadFromFolder(unpackedDir, packagePlatform, rbConvert.Checked);
 
- 
+
             switch (packagePlatform.platform)
             {
                 case GamePlatform.Pc:

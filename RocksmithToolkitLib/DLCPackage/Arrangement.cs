@@ -214,27 +214,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 // do a quick check/repair of low bass tuning, only for RS2014 bass arrangements
                 if (fixLowBass && song.Version == "7" && this.ArrangementType == ArrangementType.Bass)
                     if (attr.Tuning.String0 < -4 && attr.CentOffset != -1200.0)
-                        if (TuningFrequency.ApplyBassFix(this))
+                        if (TuningFrequency.ApplyBassFix(this, fixLowBass))
                         {
                             attr.CentOffset = -1200.0; // Force 220Hz
-                            attr.Tuning = Song2014.LoadFromFile(xmlSongFile).Tuning;
-                            var tuningDef = TuningDefinitionRepository.Instance.Detect(attr.Tuning, GameVersion.RS2014, false);
-
-                            if (!tuningDef.Name.Contains("Fixed"))
-                            {
-                                var tuningUiName = String.Format("{0} Fixed", tuningDef.UIName);
-                                // bass tuning definition gets auto added to repository
-                                var bassTuning = new TuningDefinition
-                                    {
-                                        Custom = true,
-                                        GameVersion = GameVersion.RS2014,
-                                        Name = tuningUiName.Replace(" ", ""),
-                                        Tuning = attr.Tuning,
-                                        UIName = tuningUiName
-                                    };
-
-                                TuningDefinitionRepository.SaveUnique(bassTuning);
-                            }
+                            song.Tuning = Song2014.LoadFromFile(xmlSongFile).Tuning;
                         }
             }
 
