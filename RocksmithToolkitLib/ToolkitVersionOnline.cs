@@ -49,7 +49,7 @@ namespace RocksmithToolkitLib
             try
             {
                 // No TLS 1.2 in WinXp, or before IE8 browser if OS is newer than WinXP 
-                // Automatic updates do not work in WinXP
+                // Automatic updates do not work in WinXP (Win10 TLS 1.2 must be manually activated)
                 var versionJson = new WebClient().DownloadString(url);
                 // test string for when no internet connection exists
                 //var versionJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";

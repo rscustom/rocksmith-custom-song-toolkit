@@ -1799,6 +1799,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 dlcTemplatePath = Globals.DefaultProjectDir = ofd.FileName;
             }
 
+            unpackedDir = Path.GetDirectoryName(dlcTemplatePath);
             LoadTemplateFile(dlcTemplatePath);
         }
 
