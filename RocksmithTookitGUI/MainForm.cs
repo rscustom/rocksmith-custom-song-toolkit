@@ -47,7 +47,7 @@ namespace RocksmithToolkitGUI
         private void InitMainForm()
         {
             // edit version number in AssemblyInfo.cs for GUI, Lib and Updater
-            // edit the version number in PatchAssemblyVersion.ps1 for AppVeyor
+            // edit the hard coded version number in PatchAssemblyVersion.ps1 used by AppVeyor
             // comment out as necessary when issuing new release version
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta)", ToolkitVersion.version);
             // this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
