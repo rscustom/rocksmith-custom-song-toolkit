@@ -1005,7 +1005,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 TuningDefinition tuning = (TuningDefinition)cmbTuningName.Items[tcbIndex];
 
                 // check both tuning strings and name match
-                if (tuning.Tuning == Arrangement.TuningStrings && tuning.UIName == Arrangement.Tuning)
+                if (tuning.Tuning == Arrangement.TuningStrings) // && tuning.UIName == Arrangement.Tuning)
                 {
                     foundTuning = tcbIndex;
                     break;
