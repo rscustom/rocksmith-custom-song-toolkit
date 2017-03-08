@@ -86,6 +86,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="fixLowBass">If set to <c>true</c> fix multitone exceptions </param>
         public Arrangement(Attributes2014 attr, string xmlSongFile, bool fixMultiTone = false, bool fixLowBass = false)
         {
+            var isDirty = false;
             var song = Song2014.LoadFromFile(xmlSongFile);
 
             this.SongFile = new SongFile { File = "" };
@@ -182,7 +183,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         // convert the corrupt multitone to a single tone instead of throwing exception
                         if (fixMultiTone)
+                        {
                             song.Tones = new SongTone2014[0]; // => song.Tones.Length == 0
+                            isDirty = true;
+                        }
                         else
                             throw new InvalidDataException("Tone data is missing in CDLC and multitones will not change properly in game." + Environment.NewLine + "Please re-author XML arrangements in EOF and repair multitones name and time changes.");
                     }
@@ -196,20 +200,28 @@ namespace RocksmithToolkitLib.DLCPackage
                     song.ToneBase = attr.Tone_Base;
                     this.ToneBase = attr.Tone_Base;
                     this.ToneA = this.ToneB = this.ToneC = String.Empty;
+                    isDirty = true;
                 }
 
                 // set to standard tuning if no tuning exists
                 if (song.Tuning == null)
+                {
                     song.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
+                    isDirty = true;
+                }
 
                 this.TuningStrings = song.Tuning;
 
-                // write changes to xml arrangement (w/o comments)
-                using (var stream = File.Open(xmlSongFile, FileMode.Create))
-                    song.Serialize(stream, true);
+                // NOTE: any serializing coverts abridged xml to standard xml arrangement
+                // so only serialize if necessary to fix errors
+                if (isDirty)
+                {
+                    using (var stream = File.Open(xmlSongFile, FileMode.Create))
+                        song.Serialize(stream, true);
 
-                // write comments back to xml now so they are available for debugging (used for Guitar and Bass)
-                Song2014.WriteXmlComments(xmlSongFile, XmlComments, writeNewVers: false);
+                    // write comments back to xml now so they are available for debugging (used for Guitar and Bass)
+                    Song2014.WriteXmlComments(xmlSongFile, XmlComments, writeNewVers: false);
+                }
 
                 // do a quick check/repair of low bass tuning, only for RS2014 bass arrangements
                 if (fixLowBass && song.Version == "7" && this.ArrangementType == ArrangementType.Bass)
