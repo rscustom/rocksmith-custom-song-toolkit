@@ -39,7 +39,7 @@
             this.btnTemplateSave = new System.Windows.Forms.Button();
             this.btnTemplateLoad = new System.Windows.Forms.Button();
             this.cmbAppIds = new System.Windows.Forms.ComboBox();
-            this.btnToneDelete = new System.Windows.Forms.Button();
+            this.btnToneRemove = new System.Windows.Forms.Button();
             this.btnToneAdd = new System.Windows.Forms.Button();
             this.lstTones = new System.Windows.Forms.ListBox();
             this.btnArrangementEdit = new System.Windows.Forms.Button();
@@ -201,16 +201,17 @@
             this.cmbAppIds.TabIndex = 12;
             this.cmbAppIds.SelectedIndexChanged += new System.EventHandler(this.cmbAppIds_SelectedValueChanged);
             // 
-            // btnToneDelete
+            // btnToneRemove
             // 
-            this.btnToneDelete.ForeColor = System.Drawing.Color.IndianRed;
-            this.btnToneDelete.Location = new System.Drawing.Point(449, 43);
-            this.btnToneDelete.Name = "btnToneDelete";
-            this.btnToneDelete.Size = new System.Drawing.Size(42, 23);
-            this.btnToneDelete.TabIndex = 3;
-            this.btnToneDelete.Text = "Del";
-            this.btnToneDelete.UseVisualStyleBackColor = true;
-            this.btnToneDelete.Click += new System.EventHandler(this.btnToneRemove_Click);
+            this.btnToneRemove.ForeColor = System.Drawing.Color.IndianRed;
+            this.btnToneRemove.Location = new System.Drawing.Point(449, 43);
+            this.btnToneRemove.Name = "btnToneRemove";
+            this.btnToneRemove.Size = new System.Drawing.Size(42, 23);
+            this.btnToneRemove.TabIndex = 3;
+            this.btnToneRemove.Text = "Rmv";
+            this.toolTip.SetToolTip(this.btnToneRemove, "Removes the selected tone.");
+            this.btnToneRemove.UseVisualStyleBackColor = true;
+            this.btnToneRemove.Click += new System.EventHandler(this.btnToneRemove_Click);
             // 
             // btnToneAdd
             // 
@@ -469,7 +470,7 @@
             this.gbTones.Controls.Add(this.label1);
             this.gbTones.Controls.Add(this.lstTones);
             this.gbTones.Controls.Add(this.btnToneAdd);
-            this.gbTones.Controls.Add(this.btnToneDelete);
+            this.gbTones.Controls.Add(this.btnToneRemove);
             this.gbTones.Controls.Add(this.btnToneEdit);
             this.gbTones.Controls.Add(this.btnToneImport);
             this.gbTones.ForeColor = System.Drawing.Color.IndianRed;
@@ -956,7 +957,7 @@
         private CueTextBox txtTempo;
         private System.Windows.Forms.TextBox txtAppId;
         private System.Windows.Forms.ComboBox cmbAppIds;
-        private System.Windows.Forms.Button btnToneDelete;
+        private System.Windows.Forms.Button btnToneRemove;
         private System.Windows.Forms.Button btnToneAdd;
         public System.Windows.Forms.ListBox lstTones;
         private System.Windows.Forms.Button btnArrangementEdit;

@@ -653,7 +653,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             btnArrangementRemove.Click += ClickedInputControl;
             btnToneAdd.Click += ClickedInputControl;
             btnToneEdit.Click += ClickedInputControl;
-            btnToneDelete.Click += ClickedInputControl;
+            btnToneRemove.Click += ClickedInputControl;
             btnToneDuplicate.Click += ClickedInputControl;
             btnToneImport.Click += ClickedInputControl;
         }
@@ -999,39 +999,42 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (arr.ArrangementType == ArrangementType.Bass || arr.ArrangementType == ArrangementType.Guitar)
                 {
                     if (chorusTime != 4000)
-                        break;
+                        break; // success ... found a better chorusTime
 
                     var songLength = Song2014.LoadFromFile(arr.SongXml.File).SongLength;
-                    if (songLength < 30)
+                    if (songLength < 30.0f)
                     {
-                        previewLength = (int)songLength * 1000;
-                        chorusTime = 0;
-                        break;
+                        previewLength = (int)(songLength * 1000f) - chorusTime;
+                        break; // don't bother with next arrangement for short riffs
                     }
 
                     if (arr.Sng2014 == null) // should always be true
                     {
                         var sections = Song2014.LoadFromFile(arr.SongXml.File).Sections;
-
+                        if (!sections.Any())
+                            continue; // try next arrangement
+            
                         if (sections.Any(x => x.Name.ToLower() == "chorus"))
-                            chorusTime = (int)sections.First(x => x.Name.ToLower() == "chorus").StartTime * 1000;
+                            chorusTime = (int)(sections.First(x => x.Name.ToLower() == "chorus").StartTime * 1000f);
                         else
-                            chorusTime = (int)sections.First().StartTime * 1000;
+                            chorusTime = (int)(sections.First().StartTime * 1000f);
 
-                        if ((chorusTime + 30000) > ((int)sections.Last().StartTime * 1000))
-                            chorusTime = (int)(sections.Last().StartTime - 30) * 1000;
+                        if (chorusTime + 30000 > (int)(sections.Last().StartTime * 1000f))
+                            chorusTime = (int)((sections.Last().StartTime - 30) * 1000f);
                     }
                     else // in theory this condition should never be used
                     {
                         var sections = arr.Sng2014.Sections.Sections;
+                        if (!sections.Any())
+                            continue; // try next arrangement
 
                         if (sections.Any(x => x.Name.ToString().ToLower() == "chorus"))
-                            chorusTime = (int)sections.First(x => x.Name.ToString().ToLower() == "chorus").StartTime * 1000;
+                            chorusTime = (int)(sections.First(x => x.Name.ToString().ToLower() == "chorus").StartTime * 1000f);
                         else
-                            chorusTime = (int)sections.First().StartTime * 1000;
+                            chorusTime = (int)(sections.First().StartTime * 1000f);
 
-                        if ((chorusTime + 30000) > ((int)sections.Last().StartTime * 1000))
-                            chorusTime = (int)(sections.Last().StartTime - 30) * 1000;
+                        if (chorusTime + 30000 > (int)(sections.Last().StartTime * 1000f))
+                            chorusTime = (int)((sections.Last().StartTime - 30) * 1000f);
                     }
                 }
             }
@@ -1402,7 +1405,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void RemoveTone()
         {
-            if (MessageBox.Show("Are you sure to delete the selected tone?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+            if (lstTones.Items.Count == 1)
+            {
+                MessageBox.Show("There must always be at least one tone.  " + Environment.NewLine +
+                    "This tone can not be removed.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBox.Show("Are you sure to remove the selected tone?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 return;
 
             if (lstTones.SelectedItem != null && lstTones.Items.Count > 1)
@@ -1871,7 +1881,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void DLCPackageCreator_Leave(object sender, EventArgs e)
         {
-            if (isDirty)
+            if (isDirty && ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
                 SaveTemplateFile(unpackedDir, false);
         }
 
@@ -2040,7 +2050,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     var message = "Package was generated.";
                     if (errorsFound.Length > 0)
                         message = String.Format("Package was generated with errors! See below: {0}{1}", Environment.NewLine, errorsFound);
-                    else
+                    else if (ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
                         SaveTemplateFile(unpackedDir);
 
                     message += String.Format("{0}Would you like to open the folder where the package was generated?{0}", Environment.NewLine);
@@ -2204,7 +2214,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (lstArrangements.SelectedItem == null)
                 return;
 
-            if (MessageBox.Show("Are you sure to delete the selected arrangement?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+            if (MessageBox.Show("Are you sure to remove the selected arrangement?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 return;
             //FIXME: bad thing happens here.
             /*/ regenerate new showlights arrangement
@@ -2310,12 +2320,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             GlobalExtension.ShowProgress("Import Package Finished ...", 100);
 
             // AUTO SAVE CDLC TEMPLATE
-            if (!rbConvert.Checked)
+            if (!rbConvert.Checked && ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
             {
                 SaveTemplateFile(unpackedDir);
                 Application.DoEvents();
                 MessageBox.Show(CurrentRocksmithTitle + " CDLC Template was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+
             Parent.Focus();
 
             // prevents possible cross threading

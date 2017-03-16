@@ -23,6 +23,7 @@
   <Config Key="creator_defaulttone" Value="" />
   <Config Key="creator_fixmultitone" Value="true" />
   <Config Key="creator_fixlowbass" Value="true" />
+  <Config Key="creator_autosavetemplate" Value="true" />
 
   <!-- converter config key count = 2 -->"
   <Config Key="converter_source" Value="Pc" />

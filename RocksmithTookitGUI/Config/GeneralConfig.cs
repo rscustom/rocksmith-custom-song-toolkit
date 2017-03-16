@@ -148,7 +148,7 @@ namespace RocksmithToolkitGUI.Config
                 }
                 else if (control is CheckBox)
                 {
-                    value = ((CheckBox)control).Checked.ToString();
+                    value = ((CheckBox)control).Checked.ToString().ToLower();
                 }
                 else if (control is NumericUpDown)
                 {
