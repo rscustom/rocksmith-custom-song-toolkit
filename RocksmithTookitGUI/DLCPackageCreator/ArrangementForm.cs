@@ -360,7 +360,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         if (verAttrib <= 6) version = GameVersion.RS2012;
                         else if (verAttrib >= 7) version = GameVersion.RS2014;
                     }
-                    else switch (_gameVersion)
+                    else
+                        switch (_gameVersion)
                         {
                             case GameVersion.RS2012:
                                 // add missing XML elements
@@ -997,6 +998,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void SelectTuningName()
         {
+            if (Arrangement.ArrangementType == ArrangementType.Vocal || Arrangement.ArrangementType == ArrangementType.ShowLight)
+                return;
+
             // find tuning in tuningComboBox list and make selection
             int foundTuning = -1;
             for (int tcbIndex = 0; tcbIndex < cmbTuningName.Items.Count; tcbIndex++)

@@ -1022,7 +1022,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         if (chorusTime + 30000 > (int)(sections.Last().StartTime * 1000f))
                             chorusTime = (int)((sections.Last().StartTime - 30) * 1000f);
                     }
-                    else // in theory this condition should never be used
+                    else // in theory this branch may never get used
                     {
                         var sections = arr.Sng2014.Sections.Sections;
                         if (!sections.Any())
