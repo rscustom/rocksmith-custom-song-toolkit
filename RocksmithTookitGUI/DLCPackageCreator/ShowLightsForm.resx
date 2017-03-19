@@ -118,10 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="label1.Text" xml:space="preserve">
-    <value>For now you can prepare showlight files by hand, 
-or the toolkit will auto generate a showlights file 
+    <value>The toolkit will auto generate a new showlights file 
 if you remove the existing showlights arrangement
-from the Creator GUI Arrangements group box.
-</value>
+from the CDLC Creator GUI Arrangements group box.
+
+As an option you can edit an existing showlights file
+below and press the 'Ok' button to resave/add it.</value>
   </data>
 </root>

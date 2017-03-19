@@ -30,6 +30,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnBrowseXml = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.cmbArrangementType = new System.Windows.Forms.ComboBox();
@@ -57,7 +58,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.cmbToneB = new System.Windows.Forms.ComboBox();
             this.lblToneA = new System.Windows.Forms.Label();
             this.gbDLCId = new System.Windows.Forms.GroupBox();
+            this.txtPersistentId = new RocksmithToolkitGUI.CueTextBox();
+            this.txtMasterId = new RocksmithToolkitGUI.CueTextBox();
             this.gbXmlDefinition = new System.Windows.Forms.GroupBox();
+            this.txtXmlPath = new RocksmithToolkitGUI.CueTextBox();
             this.gbArrInfo = new System.Windows.Forms.GroupBox();
             this.gbScrollSpeed = new System.Windows.Forms.GroupBox();
             this.btnEditType = new System.Windows.Forms.Button();
@@ -66,6 +70,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbTuningPitch = new System.Windows.Forms.GroupBox();
             this.label12 = new System.Windows.Forms.Label();
             this.lblRootNote = new System.Windows.Forms.Label();
+            this.txtFrequency = new RocksmithToolkitGUI.CueTextBox();
+            this.txtCentOffset = new RocksmithToolkitGUI.CueTextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -76,11 +82,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.rbRouteMaskRhythm = new System.Windows.Forms.RadioButton();
             this.rbRouteMaskLead = new System.Windows.Forms.RadioButton();
             this.chkMetronome = new System.Windows.Forms.CheckBox();
-            this.txtFrequency = new RocksmithToolkitGUI.CueTextBox();
-            this.txtCentOffset = new RocksmithToolkitGUI.CueTextBox();
-            this.txtXmlPath = new RocksmithToolkitGUI.CueTextBox();
-            this.txtPersistentId = new RocksmithToolkitGUI.CueTextBox();
-            this.txtMasterId = new RocksmithToolkitGUI.CueTextBox();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tbarScrollSpeed)).BeginInit();
             this.gbTone.SuspendLayout();
             this.gbDLCId.SuspendLayout();
@@ -410,6 +412,26 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbDLCId.TabStop = false;
             this.gbDLCId.Text = "Arrangement Identification";
             // 
+            // txtPersistentId
+            // 
+            this.txtPersistentId.Cue = "PersistentID";
+            this.txtPersistentId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtPersistentId.ForeColor = System.Drawing.Color.Gray;
+            this.txtPersistentId.Location = new System.Drawing.Point(156, 19);
+            this.txtPersistentId.Name = "txtPersistentId";
+            this.txtPersistentId.Size = new System.Drawing.Size(269, 20);
+            this.txtPersistentId.TabIndex = 21;
+            // 
+            // txtMasterId
+            // 
+            this.txtMasterId.Cue = "MasterID";
+            this.txtMasterId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtMasterId.ForeColor = System.Drawing.Color.Gray;
+            this.txtMasterId.Location = new System.Drawing.Point(6, 19);
+            this.txtMasterId.Name = "txtMasterId";
+            this.txtMasterId.Size = new System.Drawing.Size(144, 20);
+            this.txtMasterId.TabIndex = 20;
+            // 
             // gbXmlDefinition
             // 
             this.gbXmlDefinition.Controls.Add(this.txtXmlPath);
@@ -421,6 +443,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbXmlDefinition.TabIndex = 44;
             this.gbXmlDefinition.TabStop = false;
             this.gbXmlDefinition.Text = "Song XML File";
+            // 
+            // txtXmlPath
+            // 
+            this.txtXmlPath.Cue = "Song Xml File (*.xml)";
+            this.txtXmlPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtXmlPath.ForeColor = System.Drawing.Color.Gray;
+            this.txtXmlPath.Location = new System.Drawing.Point(10, 17);
+            this.txtXmlPath.Multiline = true;
+            this.txtXmlPath.Name = "txtXmlPath";
+            this.txtXmlPath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtXmlPath.Size = new System.Drawing.Size(347, 20);
+            this.txtXmlPath.TabIndex = 0;
             // 
             // gbArrInfo
             // 
@@ -466,6 +500,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.btnEditType.Size = new System.Drawing.Size(28, 23);
             this.btnEditType.TabIndex = 3;
             this.btnEditType.Text = "...";
+            this.toolTip.SetToolTip(this.btnEditType, "Click to open type editor.");
             this.btnEditType.UseVisualStyleBackColor = true;
             this.btnEditType.Click += new System.EventHandler(this.btnEditType_Click);
             // 
@@ -476,6 +511,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.btnEditTuning.Size = new System.Drawing.Size(28, 23);
             this.btnEditTuning.TabIndex = 6;
             this.btnEditTuning.Text = "...";
+            this.toolTip.SetToolTip(this.btnEditTuning, "Click to open tuning editor.");
             this.btnEditTuning.UseVisualStyleBackColor = true;
             this.btnEditTuning.Click += new System.EventHandler(this.btnEditTuning_Click);
             // 
@@ -532,6 +568,37 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.lblRootNote.TabIndex = 48;
             this.lblRootNote.Text = "{note}";
             this.lblRootNote.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // txtFrequency
+            // 
+            this.txtFrequency.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtFrequency.Cue = "";
+            this.txtFrequency.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtFrequency.ForeColor = System.Drawing.Color.Black;
+            this.txtFrequency.Location = new System.Drawing.Point(66, 20);
+            this.txtFrequency.MaxLength = 9;
+            this.txtFrequency.Name = "txtFrequency";
+            this.txtFrequency.Size = new System.Drawing.Size(50, 13);
+            this.txtFrequency.TabIndex = 10;
+            this.txtFrequency.Text = "{A440}";
+            this.txtFrequency.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFrequency.TextChanged += new System.EventHandler(this.txtFrequency_TextChanged);
+            // 
+            // txtCentOffset
+            // 
+            this.txtCentOffset.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtCentOffset.Cue = "";
+            this.txtCentOffset.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtCentOffset.ForeColor = System.Drawing.Color.Black;
+            this.txtCentOffset.Location = new System.Drawing.Point(66, 41);
+            this.txtCentOffset.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.txtCentOffset.MaxLength = 6;
+            this.txtCentOffset.Name = "txtCentOffset";
+            this.txtCentOffset.Size = new System.Drawing.Size(50, 13);
+            this.txtCentOffset.TabIndex = 11;
+            this.txtCentOffset.Text = "{cOffset}";
+            this.txtCentOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtCentOffset.TextChanged += new System.EventHandler(this.txtFrequency_TextChanged);
             // 
             // label2
             // 
@@ -648,69 +715,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.chkMetronome.Text = "Create Metronome Bonus Arrangement";
             this.chkMetronome.UseVisualStyleBackColor = true;
             // 
-            // txtFrequency
-            // 
-            this.txtFrequency.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtFrequency.Cue = "";
-            this.txtFrequency.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtFrequency.ForeColor = System.Drawing.Color.Black;
-            this.txtFrequency.Location = new System.Drawing.Point(66, 20);
-            this.txtFrequency.MaxLength = 9;
-            this.txtFrequency.Name = "txtFrequency";
-            this.txtFrequency.Size = new System.Drawing.Size(50, 13);
-            this.txtFrequency.TabIndex = 10;
-            this.txtFrequency.Text = "{A440}";
-            this.txtFrequency.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtFrequency.TextChanged += new System.EventHandler(this.txtFrequency_TextChanged);
-            // 
-            // txtCentOffset
-            // 
-            this.txtCentOffset.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtCentOffset.Cue = "";
-            this.txtCentOffset.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtCentOffset.ForeColor = System.Drawing.Color.Black;
-            this.txtCentOffset.Location = new System.Drawing.Point(66, 41);
-            this.txtCentOffset.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.txtCentOffset.MaxLength = 6;
-            this.txtCentOffset.Name = "txtCentOffset";
-            this.txtCentOffset.Size = new System.Drawing.Size(50, 13);
-            this.txtCentOffset.TabIndex = 11;
-            this.txtCentOffset.Text = "{cOffset}";
-            this.txtCentOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtCentOffset.TextChanged += new System.EventHandler(this.txtFrequency_TextChanged);
-            // 
-            // txtXmlPath
-            // 
-            this.txtXmlPath.Cue = "Song Xml File (*.xml)";
-            this.txtXmlPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtXmlPath.ForeColor = System.Drawing.Color.Gray;
-            this.txtXmlPath.Location = new System.Drawing.Point(10, 17);
-            this.txtXmlPath.Multiline = true;
-            this.txtXmlPath.Name = "txtXmlPath";
-            this.txtXmlPath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtXmlPath.Size = new System.Drawing.Size(347, 20);
-            this.txtXmlPath.TabIndex = 0;
-            // 
-            // txtPersistentId
-            // 
-            this.txtPersistentId.Cue = "PersistentID";
-            this.txtPersistentId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtPersistentId.ForeColor = System.Drawing.Color.Gray;
-            this.txtPersistentId.Location = new System.Drawing.Point(156, 19);
-            this.txtPersistentId.Name = "txtPersistentId";
-            this.txtPersistentId.Size = new System.Drawing.Size(269, 20);
-            this.txtPersistentId.TabIndex = 21;
-            // 
-            // txtMasterId
-            // 
-            this.txtMasterId.Cue = "MasterID";
-            this.txtMasterId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtMasterId.ForeColor = System.Drawing.Color.Gray;
-            this.txtMasterId.Location = new System.Drawing.Point(6, 19);
-            this.txtMasterId.Name = "txtMasterId";
-            this.txtMasterId.Size = new System.Drawing.Size(144, 20);
-            this.txtMasterId.TabIndex = 20;
-            // 
             // ArrangementForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -804,5 +808,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cmbToneA;
         private Label label12;
+        private ToolTip toolTip;
     }
 }

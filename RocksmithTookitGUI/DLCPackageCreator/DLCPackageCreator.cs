@@ -636,6 +636,45 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
+        private void AddArrangementsQuick(string[] filePaths)
+        {
+            foreach (var filePath in filePaths)
+                AddArrangement(filePath);
+        }
+
+        private void AddArrangement(string xmlFilePath = "")
+        {
+            Arrangement arrangement = null;
+            using (var form = new ArrangementForm(this, CurrentGameVersion))
+            {
+                if (form.IsAlreadyAdded(xmlFilePath))
+                    return;
+
+                form.EditMode = false;
+
+                if (!String.IsNullOrEmpty(xmlFilePath))
+                {
+                    if (!form.LoadXmlArrangement(xmlFilePath))
+                        return;
+
+                    form.LoadArrangementData(xmlFilePath);
+                }
+                else
+                {
+                    if (form.ShowDialog() != DialogResult.OK)
+                        return;
+                }
+
+                arrangement = form.Arrangement;
+            }
+
+            if (arrangement == null)
+                return;
+
+            lstArrangements.Items.Add(arrangement);
+            isDirty = true;
+        }
+
         private void AddValidationEventHandlers()
         {
             txtArtist.Validating += ValidateName;
@@ -1013,7 +1052,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         var sections = Song2014.LoadFromFile(arr.SongXml.File).Sections;
                         if (!sections.Any())
                             continue; // try next arrangement
-            
+
                         if (sections.Any(x => x.Name.ToLower() == "chorus"))
                             chorusTime = (int)(sections.First(x => x.Name.ToLower() == "chorus").StartTime * 1000f);
                         else
@@ -1258,39 +1297,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Parent.Focus();
         }
 
-        private void LoadArrangementsQuick(string[] filePaths)
-        {
-            foreach (var filePath in filePaths)
-            {
-                Arrangement arrangement = null;
-                using (var form = new ArrangementForm(this, CurrentGameVersion))
-                {
-                    form.EditMode = false;
-                    if (!form.LoadXmlArrangement(filePath))
-                        continue;
-
-                    form.LoadArrangementData(filePath);
-
-                    //if (!form.LoadArrangementData(filePath))
-                    //{
-                    //    MessageBox.Show(@"Unable load XML arrangement:" + Environment.NewLine + 
-                    //        Path.GetFileName(filePath), DLCPackageCreator.MESSAGEBOX_CAPTION, 
-                    //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    //    continue;
-                    //}
-
-                    arrangement = form.Arrangement;
-                }
-
-                if (arrangement == null)
-                    return;
-
-                lstArrangements.Items.Add(arrangement);
-            }
-
-            isDirty = true;
-        }
-
         private void PopulateAppIdCombo()
         {
             // takes into account possible conversion
@@ -1491,19 +1497,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void btnArrangementAdd_Click(object sender = null, EventArgs e = null)
         {
-            Arrangement arrangement = null;
-            using (var form = new ArrangementForm(this, CurrentGameVersion))
-            {
-                form.EditMode = false;
-
-                if (DialogResult.OK == form.ShowDialog())
-                    arrangement = form.Arrangement;
-            }
-            if (arrangement == null)
-                return;
-
-            lstArrangements.Items.Add(arrangement);
-            isDirty = true;
+            AddArrangement();
         }
 
         public void btnPackageGenerate_Click(object sender = null, EventArgs e = null)
@@ -2186,7 +2180,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 string[] xmlFilePaths = ofd.FileNames;
                 Globals.DefaultProjectDir = xmlFilePaths[0];
-                LoadArrangementsQuick(xmlFilePaths);
+                AddArrangementsQuick(xmlFilePaths);
             }
         }
 
