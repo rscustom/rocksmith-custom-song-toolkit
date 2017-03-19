@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Xml;
 using NDesk.Options;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib;

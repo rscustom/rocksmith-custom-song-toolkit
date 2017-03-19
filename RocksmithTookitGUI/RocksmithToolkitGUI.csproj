@@ -38,13 +38,6 @@
     <ApplicationIcon>songcreator.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\ZLib\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="NDesk.Options">
-      <HintPath>..\lib\NDesk\NDesk.Options.dll</HintPath>
-    </Reference>
     <Reference Include="NLog">
       <HintPath>..\lib\NLog\NLog.dll</HintPath>
     </Reference>
@@ -61,10 +54,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -316,21 +306,10 @@
     <EmbeddedResource Include="ZiggyProEditorConverter\ZpeConverter.resx">
       <DependentUpon>ZpeConverter.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="App.config" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Properties\app.manifest" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <Compile Include="DLCPackageCreator\ToneImportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -348,45 +327,9 @@
     <None Include="Resources\pick.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RocksmithToolkitCLI\artistfolders\artistfolders.csproj">
-      <Project>{E742753F-9DC3-4AB7-B129-DC11EB2302CA}</Project>
-      <Name>artistfolders</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitCLI\convert2012\convert2012.csproj">
-      <Project>{FE4E3BDA-2942-4009-9F42-07ECEF8DE350}</Project>
-      <Name>convert2012</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitCLI\dlcconverter\dlcconverter.csproj">
-      <Project>{972BC97A-B70A-4007-B915-952CC3606A2A}</Project>
-      <Name>dlcconverter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitCLI\PackageCreator\packagecreator.csproj">
-      <Project>{ED268869-387A-477E-A652-C6E47BE2AC02}</Project>
-      <Name>packagecreator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitCLI\packer\packer.csproj">
-      <Project>{822D185A-28A3-4AE0-A811-800E968AA2E7}</Project>
-      <Name>packer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitCLI\sng2014\sng2014.csproj">
-      <Project>{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}</Project>
-      <Name>sng2014</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitCLI\sngtotab\sngtotab.csproj">
-      <Project>{3AB6A6D5-B5AE-4319-9B57-2758D13EB042}</Project>
-      <Name>sngtotab</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitCLI\xml2sng\xml2sng.csproj">
-      <Project>{48703F6C-9F98-4534-AB1D-67856A84D806}</Project>
-      <Name>xml2sng</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
       <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
       <Name>RocksmithToolkitLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RocksmithToolkitUpdater\RocksmithToolkitUpdater.csproj">
-      <Project>{4404D0DD-017E-4CC5-8302-3C150FDF06E7}</Project>
-      <Name>RocksmithToolkitUpdater</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

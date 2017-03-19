@@ -41,14 +41,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="MiscUtil">
-      <HintPath>..\..\lib\MiscUtil\MiscUtil.dll</HintPath>
-    </Reference>
     <Reference Include="NDesk.Options">
       <HintPath>..\..\lib\NDesk\NDesk.Options.dll</HintPath>
     </Reference>

@@ -39,26 +39,9 @@
     <ApplicationIcon>CLI.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MiscUtil">
-      <HintPath>..\..\lib\MiscUtil\MiscUtil.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\lib\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="X360">
-      <HintPath>..\..\lib\X360\X360.dll</HintPath>
-    </Reference>
-    <Reference Include="zlib.net">
-      <HintPath>..\..\lib\ZLib\zlib.net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -77,13 +60,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CLI.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
       <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
       <Name>RocksmithToolkitLib</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CLI.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
