@@ -332,6 +332,10 @@
       <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
       <Name>RocksmithToolkitLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RocksmithToolkitUpdater\RocksmithToolkitUpdater.csproj">
+      <Project>{4404D0DD-017E-4CC5-8302-3C150FDF06E7}</Project>
+      <Name>RocksmithToolkitUpdater</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\toolkit_logo.png" />
