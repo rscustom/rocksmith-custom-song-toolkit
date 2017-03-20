@@ -258,7 +258,8 @@ namespace RocksmithToolkitLib.Extensions
 
         public static int ToInt32(this string value)
         {
-            if (!Int32.TryParse(value, out int v))
+			int v;
+            if (!Int32.TryParse(value, out v))
                 return -1;
             return v;
         }
