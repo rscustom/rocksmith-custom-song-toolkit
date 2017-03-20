@@ -420,6 +420,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //var arrangements = lstArrangements.Items.OfType<Arrangement>().ToList();
             string templatePath;
             var fileName = String.Empty;
+            var pdErrMsg = String.Empty;
             DLCPackageData packageData = GetPackageData(validate);
 
             try
@@ -1017,13 +1018,35 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return null;
             }
 
+            var arrangements = lstArrangements.Items.OfType<Arrangement>().ToList();
+
+            if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.Vocals) > 1)
+            {
+                MessageBox.Show("Error: Multiple Vocals arrangement found.  " + Environment.NewLine +
+                                "Please remove any multiples and retry.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+            if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.JVocals) > 1)
+            {
+                MessageBox.Show("Error: Multiple JVocals arrangement found.  " + Environment.NewLine +
+                                "Please remove any multiples and retry.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+            if (arrangements.Count(x => x.ArrangementType == ArrangementType.ShowLight && x.Name == ArrangementName.ShowLights) > 1)
+            {
+                MessageBox.Show("Error: Multiple Showlights arrangements found.  " + Environment.NewLine +
+                                "Please remove any multiples and retry.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+       
             // theoretically the code below should not be called if imported CDLC is properly formed/valid
             // TODO: CDLC that end up here may be responsible for cross platform conversion failures
 
             int chorusTime = 4000;
             int previewLength = 30000;
-            var arrangements = lstArrangements.Items.OfType<Arrangement>().ToList();
-
+            
             foreach (Arrangement arr in arrangements)
             {
                 if (!File.Exists(arr.SongXml.File))
@@ -1077,25 +1100,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
             }
-
-            if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.Vocals) > 1)
-            {
-                MessageBox.Show("Error: Multiple Vocals arrangement found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-
-            if (arrangements.Count(x => x.ArrangementType == ArrangementType.Vocal && x.Name == ArrangementName.JVocals) > 1)
-            {
-                MessageBox.Show("Error: Multiple JVocals arrangement found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-
-            if (arrangements.Count(x => x.ArrangementType == ArrangementType.ShowLight && x.Name == ArrangementName.ShowLights) > 1)
-            {
-                MessageBox.Show("Error: Multiple Showlights arrangements found", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-
+     
             try
             {
                 if (CurrentGameVersion == GameVersion.RS2012 || Path.GetExtension(AudioPath) == "*.wem")

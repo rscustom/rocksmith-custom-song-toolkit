@@ -511,6 +511,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (DialogResult.OK != form.ShowDialog())
                     return;
 
+                if (!String.IsNullOrEmpty(Arrangement.SongXml.File))
+
                 if (!String.IsNullOrEmpty(form.ShowLightsPath))
                     txtXmlPath.Text = form.ShowLightsPath;
             }
@@ -605,14 +607,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             return false;
         }
 
-        public bool IsAlreadyAdded(string xmlPath)
+        public bool IsAlreadyAdded(string xmlFilePath)
         {
             for (int i = 0; i < _parentControl.lstArrangements.Items.Count; i++)
             {
                 var selectedArrangement = (Arrangement)_parentControl.lstArrangements.Items[i];
 
-                if (!xmlPath.Equals(selectedArrangement.SongXml.File)) continue;
-                if (xmlPath.Equals(Arrangement.SongXml.File)) continue;
+                if (!xmlFilePath.Equals(selectedArrangement.SongXml.File)) continue;
+                if (xmlFilePath.Equals(Arrangement.SongXml.File)) continue;
                 return true;
             }
             return false;

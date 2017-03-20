@@ -72,10 +72,5 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        //void txtShowLights_TextChanged(object sender, EventArgs e)
-        //{
-        //    var name = (TextBox)sender;
-        //    ShowLightsPath = name.Text;
-        //}
     }
 }

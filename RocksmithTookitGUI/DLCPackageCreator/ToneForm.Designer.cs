@@ -113,7 +113,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.Button saveButton;
-        private ToneControl toneControl1; // here to prevents form errors
+        private ToneControl toneControl1; // hack to prevent form errors ... do not remove
         public ToneControl toneControl;
 
     }
