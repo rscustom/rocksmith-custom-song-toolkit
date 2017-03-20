@@ -326,11 +326,32 @@ namespace RocksmithToolkitLib.DLCPackage
             try
             {
                 // ALBUM ART
-                var ddsfiles = info.ArtFiles;
-
-                if (ddsfiles == null)
+                if (info.ArtFiles == null)
                 {
+                    //Try to get spreserved files
+                    string d256, d128, d64;
+                    if (File.Exists(info.AlbumArtPath))
+                    {
+                        d256 = info.AlbumArtPath;
+                        d128 = d256.Remove(d256.Length - 7) + "128.dds";
+                        d64 = d256.Remove(d256.Length - 7) + "64.dds";
+                        if (File.Exists(d64) && File.Exists(d128))
+                        {
+                            var _found = new List<DDSConvertedFile>
+                            {
+                                new DDSConvertedFile() { sizeX = 64, destinationFile = d64 },
+                                new DDSConvertedFile() { sizeX = 128, destinationFile = d128 },
+                                new DDSConvertedFile() { sizeX = 256, destinationFile = d256 }
+                            };
+                            info.ArtFiles = _found;
+                        }
+                    }
+                }
+                if (info.ArtFiles == null)
+                {
+                    //Generate art files
                     string albumArtPath;
+                    var ddsfiles = info.ArtFiles;
                     if (File.Exists(info.AlbumArtPath))
                     {
                         albumArtPath = info.AlbumArtPath;
@@ -345,10 +366,12 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
                     }
 
-                    ddsfiles = new List<DDSConvertedFile>();
-                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsfiles = new List<DDSConvertedFile>
+                    {
+                        new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") },
+                        new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") },
+                        new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") }
+                    };
 
                     // Convert to DDS
                     ToDDS(ddsfiles);
@@ -360,7 +383,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 foreach (var dds in info.ArtFiles)
                 {
                     packPsarc.AddEntry(String.Format("gfxassets/album_art/album_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
-                    TMPFILES_ART.Add(dds.destinationFile);
+                    if (dds.sizeY != 0)
+                    {
+                        TMPFILES_ART.Add(dds.destinationFile);
+                    }
                 }
 
                 // Lyric Art Texture

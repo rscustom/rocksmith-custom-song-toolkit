@@ -315,7 +315,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// Ensure that we running JVM x86
         /// </summary>
         /// <returns></returns>
-        public static bool IfJavaInstalled()
+        public static bool IsJavaInstalled()
         {
             try {
                 using(var version = new Process()){
@@ -354,7 +354,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <returns>Output message from execution</returns>
         public static string EncryptPS3Edat()
         {
-            if(!IfJavaInstalled())
+            if(!IsJavaInstalled())
                 return "No JDK or JRE is installed on your machine";
 
             string errors = string.Empty;
@@ -375,7 +375,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <returns>Output message from execution</returns>
         public static string DecryptPS3Edat()
         {
-            if(!IfJavaInstalled())
+            if(!IsJavaInstalled())
                 return "No JDK or JRE is installed on your machine";
 
             string errors = string.Empty;

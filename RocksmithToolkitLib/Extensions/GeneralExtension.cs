@@ -72,7 +72,10 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string GetTempFileName(string extension = ".tmp")
         {
-            return Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + extension);
+            string re = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", Path.GetRandomFileName() + extension);
+            Directory.CreateDirectory(Path.GetDirectoryName(re));
+
+            return re;
         }
 
         public static ToolkitInfo GetToolkitInfo(StreamReader reader)
@@ -135,11 +138,12 @@ namespace RocksmithToolkitLib.Extensions
         public static bool IsValidPSARC(this string fileName)
         {
             //Supported DLC Package types
-            var mimeByteHeaderList = new Dictionary<string, byte[]>();
-            mimeByteHeaderList.Add(".psarc", Encoding.ASCII.GetBytes("PSAR"));
-            mimeByteHeaderList.Add(".edat", Encoding.ASCII.GetBytes("NPD"));
-            mimeByteHeaderList.Add("xbox", Encoding.ASCII.GetBytes("CON"));
-
+            var mimeByteHeaderList = new Dictionary<string, byte[]>
+            {
+                { ".psarc", Encoding.ASCII.GetBytes("PSAR") },
+                { ".edat", Encoding.ASCII.GetBytes("NPD") },
+                { "xbox", Encoding.ASCII.GetBytes("CON") }
+            };
             string extension = Path.GetExtension(fileName);
             if (String.IsNullOrEmpty(extension))
                 extension = fileName.Split('_').LastOrDefault();
@@ -190,18 +194,18 @@ namespace RocksmithToolkitLib.Extensions
             ToolkitInfo tkInfo;
             using (var info = File.OpenText(filePath))
                 tkInfo = GetToolkitInfo(info);
-  
+
             return tkInfo;
         }
 
         public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null)
         {
-            string toolkitRootPath = Path.GetDirectoryName(Application.ExecutablePath);
+            string toolkitRootPath = AppDomain.CurrentDomain.BaseDirectory; //Path.GetDirectoryName(Application.ExecutablePath);
 
             var rootPath = (toolkitRootFolder) ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = (toolkitRootFolder) ? Path.Combine(rootPath, exeFileName) : exeFileName;
+            startInfo.FileName = Path.Combine(rootPath, exeFileName);
             startInfo.WorkingDirectory = rootPath;
 
             if (runInBackground)
@@ -254,8 +258,7 @@ namespace RocksmithToolkitLib.Extensions
 
         public static int ToInt32(this string value)
         {
-            int v;
-            if (!Int32.TryParse(value, out v))
+            if (!Int32.TryParse(value, out int v))
                 return -1;
             return v;
         }
@@ -282,6 +285,6 @@ namespace RocksmithToolkitLib.Extensions
             else
                 action(c);
         }
-    
+
     }
 }

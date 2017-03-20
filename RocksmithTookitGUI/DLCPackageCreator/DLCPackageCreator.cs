@@ -2469,7 +2469,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (cbx.Text.Contains("PS3") && !JavaBool)
             {
                 JavaBool = true;
-                if (!RijndaelEncryptor.IfJavaInstalled())
+                if (!RijndaelEncryptor.IsJavaInstalled())
                 {
                     MessageBox.Show("Unable to generate PS3 package, since Java isn't present on this machine.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     cbx.Checked = cbx.Enabled = false;

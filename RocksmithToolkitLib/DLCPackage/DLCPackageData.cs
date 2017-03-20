@@ -687,13 +687,15 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #endregion
 
-        // needs to be called after all packages for platforms are created
+        // TODO: uncommon usage of dispose, took me 10 minutes to figure out where my files gone, aware of this. PS: needs to be called after all packages for platforms are created
         public void CleanCache()
         {
             if (ArtFiles != null)
             {
                 foreach (var file in ArtFiles)
                 {
+                    if (file.sizeY == 0)
+                        continue;
                     try
                     {
                         File.Delete(file.destinationFile);
