@@ -417,10 +417,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void SaveTemplateFile(string templateDir = "", bool validate = true)
         {
-            //var arrangements = lstArrangements.Items.OfType<Arrangement>().ToList();
-            string templatePath;
+            var templatePath = String.Empty;
             var fileName = String.Empty;
-            var pdErrMsg = String.Empty;
             DLCPackageData packageData = GetPackageData(validate);
 
             try
