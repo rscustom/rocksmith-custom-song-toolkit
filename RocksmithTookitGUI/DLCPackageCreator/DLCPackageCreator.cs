@@ -197,6 +197,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public bool JavaBool { get; set; }
         public string LyricArtPath { get; set; }
+        public string ToolkitVers { get; set; }
+        public string PackageAuthor { get; set; }
 
         public string PackageComment
         {
@@ -737,8 +739,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (info.ToolkitInfo == null)
                 info.ToolkitInfo = new ToolkitInfo { PackageVersion = "1" };
 
+            ToolkitVers = info.ToolkitInfo.ToolkitVersion;
             PackageVersion = info.ToolkitInfo.PackageVersion;
             PackageComment = info.ToolkitInfo.PackageComment;
+            PackageAuthor = info.ToolkitInfo.PackageAuthor;
 
             lstTones.Items.Clear();
             switch (CurrentGameVersion)
@@ -1038,13 +1042,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                                 "Please remove any multiples and retry.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
-       
+
             // theoretically the code below should not be called if imported CDLC is properly formed/valid
             // TODO: CDLC that end up here may be responsible for cross platform conversion failures
 
             int chorusTime = 4000;
             int previewLength = 30000;
-            
+
             foreach (Arrangement arr in arrangements)
             {
                 if (!File.Exists(arr.SongXml.File))
@@ -1098,7 +1102,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
             }
-     
+
             try
             {
                 if (CurrentGameVersion == GameVersion.RS2012 || Path.GetExtension(AudioPath) == "*.wem")
@@ -1175,6 +1179,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     ToolkitInfo = new ToolkitInfo
                         {
+                            ToolkitVersion = ToolkitVers,
+                            PackageAuthor = PackageAuthor,
                             PackageVersion = PackageVersion.GetValidVersion(),
                             PackageComment = PackageComment
                         },

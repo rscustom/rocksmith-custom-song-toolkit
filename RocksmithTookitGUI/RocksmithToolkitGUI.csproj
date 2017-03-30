@@ -421,6 +421,8 @@ del /S /Q "$(TargetDir)*.vshost.exe"
 
 REM do some more cleanup
 
+del /S /Q "$(TargetDir)MiscUtil.xml"
+del /S /Q "$(TargetDir)NLog.xml"
 del /S /Q "$(TargetDir)Newtonsoft.Json.xml"
 del /S /Q "$(TargetDir)X360.xml"</PostBuildEvent>
   </PropertyGroup>

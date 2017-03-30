@@ -44,6 +44,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public float Volume { get; set; }
         public PackageMagic SignatureType { get; set; }
         public ToolkitInfo ToolkitInfo { get; set; }
+        // TODO: remove depricated fields when I'm dead
         [Obsolete("Depricated, please use ToolkitInfo.PackageVersion.", true)]
         public string PackageVersion { get; set; }
         [Obsolete("Depricated, please use ToolkitInfo.PackageComment.", true)]
