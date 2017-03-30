@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sngtotab", "RocksmithToolki
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "devtools", "RocksmithToolkitCLI\devtools\devtools.csproj", "{63FB3334-1E7E-42D7-A025-744BC387AAD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dlcconverter", "RocksmithToolkitCLI\dlcconverter\dlcconverter.csproj", "{972BC97A-B70A-4007-B915-952CC3606A2A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cdlcconverter", "RocksmithToolkitCLI\dlcconverter\cdlcconverter.csproj", "{972BC97A-B70A-4007-B915-952CC3606A2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sng2014", "RocksmithToolkitCLI\sng2014\sng2014.csproj", "{8FDBC548-DEBF-46D6-A933-33C8D72F33AB}"
 EndProject

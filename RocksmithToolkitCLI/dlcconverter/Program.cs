@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Runtime.Serialization;
 using NDesk.Options;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib;
-using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.Sng;
-using System.Text;
-using System.Collections;
 
-namespace dlcconverter
+namespace cdlcconverter
 {
     internal class Arguments
     {
