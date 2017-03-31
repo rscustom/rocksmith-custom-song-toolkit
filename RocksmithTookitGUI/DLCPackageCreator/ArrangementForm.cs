@@ -223,6 +223,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             //Song XML File
             Arrangement.SongXml.File = xmlFilePath;
+            Arrangement.XmlComments = Song2014.ReadXmlComments(xmlFilePath);
 
             // Song Info
             if (!ReferenceEquals(_xmlSong, null))
@@ -758,9 +759,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // get the latest comments from the XML to check if previous bass fixed is valid
             if (!String.IsNullOrEmpty(Arrangement.SongXml.File))
             {
-                var xmlComments = Song2014.ReadXmlComments(Arrangement.SongXml.File);
-                var isBassFixed = xmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
+                //var xmlComments = Song2014.ReadXmlComments(Arrangement.SongXml.File);
+                //var isBassFixed = xmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
 
+                var isBassFixed = Arrangement.XmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
+                
                 if (isBassFixed && !tuning.UIName.Contains("Fixed"))
                 {
                     // UIName may contain spaces, where as Name contains no spaces

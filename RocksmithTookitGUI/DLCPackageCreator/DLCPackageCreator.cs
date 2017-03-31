@@ -43,7 +43,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public static readonly string MESSAGEBOX_CAPTION = "CDLC Package Creator";
         private BackgroundWorker bwGenerate = new BackgroundWorker();
         private string dlcDestPath;
-        private string dlcKeyOrg; // used to preserve original
         private StringBuilder errorsFound;
         private bool fixLowBass;
         private bool fixMultiTone;
@@ -371,8 +370,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             foreach (var arr in info.Arrangements)
             {
                 // load xml comments
-                if (arr.ArrangementType == ArrangementType.Bass || arr.ArrangementType == ArrangementType.Guitar)
-                    arr.XmlComments = Song2014.ReadXmlComments(arr.SongXml.File);
+                arr.XmlComments = Song2014.ReadXmlComments(arr.SongXml.File);
 
                 // apply bassfix to template info in case arrangement was changed in EOF
                 if (arr.ArrangementType == ArrangementType.Bass)
@@ -781,7 +779,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var BasePath = Path.GetDirectoryName(filesBaseDir);
 
             // Song INFO
-            txtDlcKey.Text = dlcKeyOrg = info.Name;
+            txtDlcKey.Text = info.Name;
 
             PopulateAppIdCombo();
             Application.DoEvents();
@@ -1602,9 +1600,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     packageData.ToolkitInfo.PackageComment = arrIdComment;
                 }
-                else
-                    // maintain use of original DLCKey, as well as, PID
-                    packageData.Name = dlcKeyOrg;
             }
 
             // fire up a fake progress bar to show app is alive and well
@@ -1661,7 +1656,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 // skip vocal and showlight arrangements
                 if (arr.ArrangementType == ArrangementType.Vocal || arr.ArrangementType == ArrangementType.ShowLight)
+                {
+                    if (arr.ArrangementType == ArrangementType.Vocal)
+                        Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
+
                     continue;
+                }
 
                 progress += step;
                 pbUpdateProgress.Value = (progress > 100 ? 100 : progress);

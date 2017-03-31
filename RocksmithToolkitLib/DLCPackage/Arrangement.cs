@@ -108,14 +108,14 @@ namespace RocksmithToolkitLib.DLCPackage
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
 
-            //Filter out showlights\vocals
+            // Save xml comments
+            this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
+
+            // Filter out showlights\vocals
             if (ArrangementType != ArrangementType.Guitar && ArrangementType != ArrangementType.Bass)
                 return;
 
-            // save xml comments
-            this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
-
-            //Tones
+            // Tones
             if (attr.Tones == null) // RS2012
             {
                 this.ToneBase = attr.Tone_Base;
