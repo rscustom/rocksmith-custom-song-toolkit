@@ -517,18 +517,16 @@ namespace RocksmithToolkitLib.Extensions
         }
 
         /// <summary>
-        /// Strips non-printable ASCII characters
+        /// Strips non-printable characters and returns valid UTF8 XML
         /// </summary>
-        /// <param name="filePath">Full path to the File</param>
-        public static Stream StripIllegalXMLChars(this string filePath)
+        public static Stream StripIllegalXMLChars(this string value)
         {
-            string tmpContents = File.ReadAllText(filePath);
             const string pattern = @"[\x01-\x08\x0B-\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]"; // XML1.1
+            value = Regex.Replace(value, pattern, "", RegexOptions.IgnoreCase);
 
-            tmpContents = Regex.Replace(tmpContents, pattern, "", RegexOptions.IgnoreCase);
-
-            return new MemoryStream(new UTF8Encoding(false).GetBytes(tmpContents));
+            return new MemoryStream(new UTF8Encoding(false).GetBytes(value));
         }
+
 
         public static string StripLeadingNumbers(this string value)
         {
@@ -545,6 +543,12 @@ namespace RocksmithToolkitLib.Extensions
             Regex rgx = new Regex("^[^A-Za-z0-9(]*");
             var result = rgx.Replace(value, "");
             return result;
+        }
+
+        public static string RestoreCRLF(this string value)
+        {
+            // replace single lf with crlf
+            return Regex.Replace(value, @"\r\n?|\n", "\r\n");
         }
 
         public static string StripNonAlpaNumeric(this string value)

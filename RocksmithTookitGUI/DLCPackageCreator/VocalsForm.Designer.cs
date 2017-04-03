@@ -29,6 +29,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.txtVocalsSngPath = new RocksmithToolkitGUI.CueTextBox();
@@ -45,6 +46,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.txtVocalsXmlPath = new RocksmithToolkitGUI.CueTextBox();
             this.lblKey = new System.Windows.Forms.Label();
             this.lstKey = new System.Windows.Forms.ListBox();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // btnOk
@@ -119,6 +121,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.btnVocalsDdsPath.Size = new System.Drawing.Size(31, 20);
             this.btnVocalsDdsPath.TabIndex = 6;
             this.btnVocalsDdsPath.Text = "...";
+            this.toolTip.SetToolTip(this.btnVocalsDdsPath, "For Expert Charter Usage Only");
             this.btnVocalsDdsPath.UseVisualStyleBackColor = true;
             this.btnVocalsDdsPath.Click += new System.EventHandler(this.btnVocalsDdsPath_Click);
             // 
@@ -129,6 +132,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.sngpathFD.Size = new System.Drawing.Size(31, 20);
             this.sngpathFD.TabIndex = 6;
             this.sngpathFD.Text = "...";
+            this.toolTip.SetToolTip(this.sngpathFD, "For Expert Charter Usage Only");
             this.sngpathFD.UseVisualStyleBackColor = true;
             this.sngpathFD.Click += new System.EventHandler(this.btnVocalsSngPath_Click);
             // 
@@ -143,6 +147,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.chkCustomFont.Size = new System.Drawing.Size(110, 17);
             this.chkCustomFont.TabIndex = 7;
             this.chkCustomFont.Text = "Use Custom Font:";
+            this.toolTip.SetToolTip(this.chkCustomFont, "For Expert Charter Usage Only");
             this.chkCustomFont.UseVisualStyleBackColor = true;
             // 
             // rtbVocals
@@ -275,5 +280,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private CueTextBox txtVocalsXmlPath;
         private Label lblKey;
         private ListBox lstKey;
+        private ToolTip toolTip;
     }
 }

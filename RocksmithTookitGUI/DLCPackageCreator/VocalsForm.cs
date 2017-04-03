@@ -1,7 +1,15 @@
 using Ookii.Dialogs;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows;
+using Microsoft.Win32;
 using System.Windows.Forms;
+using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.Xml;
+using System.Text.RegularExpressions;
+
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
@@ -45,7 +53,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public void PopulateRichText()
         {
             if (!String.IsNullOrEmpty(VocalsPath))
-                rtbVocals.LoadFile(VocalsPath, RichTextBoxStreamType.PlainText);
+            {
+                // confirmed preserves and displays proper encoding
+                using (var sr = new StreamReader(VocalsPath, new UTF8Encoding(false)))
+                    rtbVocals.Text = sr.ReadToEnd();
+
+                // rtbVocals.LoadFile(VocalsPath, RichTextBoxStreamType.PlainText);
+            }
         }
 
         private void PopulateKey()
@@ -63,24 +77,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             lstKey.Items.Add("Submit additional keys to Developers");
         }
 
-        void btnVocalsXmlPath_Click(object sender, EventArgs e)
-        {
-            using (var f = new VistaOpenFileDialog())
-            {
-                f.FileName = VocalsPath;
-                f.Filter = "Rocksmith XML Vocals Files (*_Vocals.xml)|*_Vocals.xml";
-                if (f.ShowDialog() == DialogResult.OK)
-                {
-                    VocalsPath = f.FileName;
-                    PopulateRichText();
-                }
-            }
-        }
-
         void btnOk_Click(object sender, EventArgs e)
         {
             if (!String.IsNullOrEmpty(VocalsPath))
-                rtbVocals.SaveFile(VocalsPath, RichTextBoxStreamType.PlainText);
+            {
+                // validate vocals xml
+                var vocalsStream = rtbVocals.Text.StripIllegalXMLChars();
+                // confirmed preserves and saves with proper encoding
+                using (var reader = new StreamReader(vocalsStream, new UTF8Encoding(false)))
+                using (var sw = new StreamWriter(VocalsPath, false, new UTF8Encoding(false)))
+                {
+                    var validString = reader.ReadToEnd();
+                    // put back CRLF because RichTextBox removes them
+                    validString = validString.RestoreCRLF();
+                    sw.Write(validString);
+                }
+
+                //rtbVocals.SaveFile(VocalsPath, RichTextBoxStreamType.PlainText);
+            }
 
             if (File.Exists(SngPath) && File.Exists(ArtPath) || !IsCustom)
             {
@@ -123,5 +137,27 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
         }
+
+        void btnVocalsXmlPath_Click(object sender, EventArgs e)
+        {
+            using (var f = new VistaOpenFileDialog())
+            {
+                f.FileName = VocalsPath;
+                f.Filter = "Rocksmith XML Vocals Files (*_Vocals.xml)|*_Vocals.xml";
+                if (f.ShowDialog() == DialogResult.OK)
+                {
+                    VocalsPath = f.FileName;
+                    PopulateRichText();
+                }
+            }
+        }
+
     }
 }
+
+/*
+ *                 var xmlVocals = File.ReadAllText(VocalsPath);
+                using (var validXml = xmlVocals.StripIllegalXMLChars())
+                using (var sr = new StreamReader(validXml))
+                    rtbVocals.Text = sr.ReadToEnd();
+ */
