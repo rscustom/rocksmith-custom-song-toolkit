@@ -553,7 +553,16 @@ namespace RocksmithToolkitLib.DLCPackage
                 else if (xmlFile.ToLower().Contains("_vocals"))
                 {
                     var debugMe = "Confirm XML comments were preserved.";
-                    var voc = new Arrangement { Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals, ArrangementType = ArrangementType.Vocal, ScrollSpeed = 20, SongXml = new SongXML { File = xmlFile }, SongFile = new SongFile { File = "" }, CustomFont = attr.JapaneseVocal == true };
+                    var voc = new Arrangement
+                        {
+                            Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals,
+                            ArrangementType = ArrangementType.Vocal,
+                            ScrollSpeed = 20,
+                            SongXml = new SongXML { File = xmlFile },
+                            SongFile = new SongFile { File = "" },
+                            CustomFont = attr.JapaneseVocal == true,
+                            XmlComments = Song2014.ReadXmlComments(xmlFile)
+                        };
 
                     // Get symbols stuff from _vocals.xml
                     var fontSng = Path.Combine(unpackedDir, xmlName + ".sng");
@@ -577,7 +586,14 @@ namespace RocksmithToolkitLib.DLCPackage
             var xmlShowLights = Directory.EnumerateFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).FirstOrDefault();
             if (!String.IsNullOrEmpty(xmlShowLights))
             {
-                var shl = new Arrangement { ArrangementType = ArrangementType.ShowLight, Name = ArrangementName.ShowLights, SongXml = new SongXML { File = xmlShowLights }, SongFile = new SongFile { File = "" } };
+                var shl = new Arrangement
+                    {
+                        ArrangementType = ArrangementType.ShowLight,
+                        Name = ArrangementName.ShowLights,
+                        SongXml = new SongXML { File = xmlShowLights },
+                        SongFile = new SongFile { File = "" },
+                        XmlComments = Song2014.ReadXmlComments(xmlShowLights)
+                    };
 
                 // Adding ShowLights
                 data.Arrangements.Add(shl);

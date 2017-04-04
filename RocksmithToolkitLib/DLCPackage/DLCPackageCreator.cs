@@ -23,6 +23,8 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Properties;
 using RocksmithToolkitLib.Ogg;
 using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
+using RocksmithToolkitLib.Xml;
+
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -563,11 +565,19 @@ namespace RocksmithToolkitLib.DLCPackage
                             fs.CopyTo(showlightStream);
                     else
                     {
+                        // Generate new Showlights
                         var showlight = new Showlights(info);
                         showlight.Serialize(showlightStream);
                         string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "cst"));
                         using (FileStream file = new FileStream(shlFilePath, FileMode.Create, FileAccess.Write))
                             showlightStream.WriteTo(file);
+
+                        // write xml comments
+                        Song2014.WriteXmlComments(shlFilePath);
+                        
+                        // reload stream
+                        using (var fs = File.OpenRead(shlFilePath))
+                            fs.CopyTo(showlightStream);
                     }
 
                     if (showlightStream.CanRead && showlightStream.Length > 0)

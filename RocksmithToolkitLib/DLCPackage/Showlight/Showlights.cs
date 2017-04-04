@@ -85,13 +85,12 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             var shlFile = Path.Combine(Path.GetDirectoryName(arrangement.SongXml.File),
                 arrangement.SongXml.Name + "_showlights.xml");
             var shlCommon = Path.Combine(Path.GetDirectoryName(shlFile), info.Name + "_showlights.xml");
+
+            // Generate Showlights
             if (!File.Exists(shlCommon))
-            {
-                //Generate
                 GetShowlights(arrangement.SongXml.File);
-                return;
-            }
-            GetShowlights(shlCommon);
+            else
+                GetShowlights(shlCommon);
         }
 
         public void Serialize(Stream stream, bool omitXmlDeclaration = false)
@@ -103,7 +102,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             Count = ShowlightList.Count;
             using (var writer = System.Xml.XmlWriter.Create(stream, new System.Xml.XmlWriterSettings
             {
-                Indent = true,                
+                Indent = true,
                 OmitXmlDeclaration = omitXmlDeclaration,
                 Encoding = new UTF8Encoding(false)
             }))
@@ -192,7 +191,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             //Forced laser effect for last note (we probably couldn't see it)
             if (showlightList.Last().Note != 66)
             {
-                showlightList.Add(new Showlight { Note = 66, Time = showlightList[showlightList.Count-1].Time });
+                showlightList.Add(new Showlight { Note = 66, Time = showlightList[showlightList.Count - 1].Time });
             }
 
             return PopShList(showlightList);

@@ -36,6 +36,8 @@ namespace RocksmithToolkitLib.Extensions
 {
     public static class StringExtensions
     {
+        #region Class Methods
+
         /// <summary>
         /// Capitalize the first character without changing the rest of the string
         /// </summary>
@@ -489,6 +491,12 @@ namespace RocksmithToolkitLib.Extensions
             return result;
         }
 
+        public static string RestoreCRLF(this string value)
+        {
+            // replace single lf with crlf
+            return Regex.Replace(value, @"\r\n?|\n", "\r\n");
+        }
+
         /// <summary>
         /// Moves short words like "The " from the begining of a string to the end ", The" 
         /// </summary>
@@ -518,6 +526,12 @@ namespace RocksmithToolkitLib.Extensions
             }
 
             return value;
+        }
+
+        public static string StripCRLF(this string value, string replacement = "")
+        {
+            // replace single lf and/or crlf
+            return Regex.Replace(value, @"\r\n?|\n", replacement);
         }
 
         public static string StripDiacritics(this string value)
@@ -565,12 +579,6 @@ namespace RocksmithToolkitLib.Extensions
             return result;
         }
 
-        public static string RestoreCRLF(this string value)
-        {
-            // replace single lf with crlf
-            return Regex.Replace(value, @"\r\n?|\n", "\r\n");
-        }
-
         public static string StripNonAlpaNumeric(this string value)
         {
             // removes all non alphanumeric and all white space
@@ -613,6 +621,6 @@ namespace RocksmithToolkitLib.Extensions
             return result;
         }
 
-
+        #endregion
     }
 }

@@ -1244,8 +1244,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Thread.Sleep(100); // give Globals a chance to initialize
             Application.DoEvents();
 
-            var preToneCount = lstTones.Items.Count;
-
             try
             {
                 if (CurrentGameVersion != GameVersion.RS2012)
@@ -1285,20 +1283,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     else if (tones.Count < 2)
                         lstTones.Items.Add(tones.FirstOrDefault(t => t.PedalList.Count != 0));
                 }
-
-                isDirty = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can't import tone(s). \n" + ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                GlobalExtension.Dispose();
-                return;
+                MessageBox.Show("Can not import tone(s) from: " + toneImportFile + Environment.NewLine + ex.Message.StripCRLF("  "), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             GlobalExtension.UpdateProgress.Style = ProgressBarStyle.Continuous;
             GlobalExtension.ShowProgress("Tone Data Loaded ...", 100);
-            var numTones = lstTones.Items.Count - preToneCount;
-            MessageBox.Show("Imported Tones: (" + numTones + ")  ", "CDLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
             GlobalExtension.UpdateProgress.Style = ProgressBarStyle.Marquee;
             GlobalExtension.Dispose();
 
@@ -1655,9 +1647,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     arr.MasterId = RandomGenerator.NextInt();
                 }
 
-                // skip showlight and vocal arrangements
+                // showlight and vocal arrangements
                 if (arr.ArrangementType == ArrangementType.ShowLight)
+                {
+                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
                     continue;
+                }
 
                 if (arr.ArrangementType == ArrangementType.Vocal)
                 {
@@ -1714,7 +1709,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
 
-                // put arrangment comments in correct order
+                // puts arrangement comments in correct order
                 Song2014.WriteXmlComments(arr.SongXml.File);
             }
 
@@ -2377,8 +2372,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     if (form.Saved)
                     {
-                        tone = form.toneControl.Tone;
-                        lstTones.Items[lstTones.SelectedIndex] = tone;
+                        lstTones.Items.Remove(lstTones.SelectedItem);
+                        lstTones.Items.Add(form.toneControl.Tone);
                         isDirty = true;
                     }
                 }
@@ -2456,21 +2451,33 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void btnToneImport_Click(object sender, EventArgs e)
         {
-            string toneImportFile;
+            string[] toneImportFiles;
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Title = "Select CDLC Song Package or Tone File or your Profile";
                 ofd.Filter = CurrentOFDToneImportFilter;
+                ofd.Multiselect = true;
                 if (ofd.ShowDialog() != DialogResult.OK) return;
-                toneImportFile = ofd.FileName;
+                toneImportFiles = ofd.FileNames;
             }
 
-            // game may convert profiles to uppercase
-            if (toneImportFile.ToLower().Contains("prfldb"))
-                toneImportFile = toneImportFile.ToLower();
+            var preToneCount = lstTones.Items.Count;
 
-            ImportTone(toneImportFile);
-            isDirty = true;
+            foreach (var toneImportFile in toneImportFiles)
+            {
+                var tif = toneImportFile;
+                // game may convert profiles to uppercase
+                if (tif.ToLower().Contains("prfldb"))
+                    tif = tif.ToLower();
+
+                ImportTone(tif);
+            }
+
+            var numTones = lstTones.Items.Count - preToneCount;
+            MessageBox.Show("Imported Tones: (" + numTones + ")  ", "CDLC Package Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            if (numTones > 0)
+                isDirty = true;
         }
 
         private void btnToneRemove_Click(object sender, EventArgs e)

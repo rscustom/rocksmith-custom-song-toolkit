@@ -150,9 +150,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     var xmlEofFile = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
                     xmlEofFile = xmlEofFile.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, platform.GetPathName()[1].ToLower()), "arr");
                     var xmlSngFile = xmlEofFile.Replace(".xml", ".sng.xml");
-
                     var arrType = ArrangementType.Guitar;
-
+                    
                     if (Path.GetFileName(xmlSngFile).ToLower().Contains("vocal"))
                         arrType = ArrangementType.Vocal;
 
@@ -196,8 +195,6 @@ namespace RocksmithToolkitLib.DLCPackage
                             Debug.WriteLine("Fixed Tuning Descrepancies: " + xmlEofFile);
                             GlobalExtension.ShowProgress("Fixed tuning descepancies ...");
                         }
-
-                        File.Delete(xmlSngFile);
                     }
                     else if (File.Exists(xmlEofFile) && !overwriteSongXml && arrType == ArrangementType.Vocal)
                     {
@@ -209,8 +206,10 @@ namespace RocksmithToolkitLib.DLCPackage
                             Song2014.WriteXmlComments(xmlSngFile, customComment: "Generated from SNG file");
 
                         File.Copy(xmlSngFile, xmlEofFile, true);
-                        File.Delete(xmlSngFile);
                     }
+
+                    if (File.Exists(xmlSngFile))
+                        File.Delete(xmlSngFile);
 
                     progress += step;
                     GlobalExtension.UpdateProgress.Value = (int)progress;

@@ -111,7 +111,7 @@ namespace RocksmithToolkitLib.DLCPackage
             // Save xml comments
             this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
 
-            // Filter out showlights\vocals
+            // Filter out showlights\vocals 
             if (ArrangementType != ArrangementType.Guitar && ArrangementType != ArrangementType.Bass)
                 return;
 

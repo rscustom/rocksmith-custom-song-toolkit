@@ -265,7 +265,7 @@
             this.btnToneImport.Size = new System.Drawing.Size(42, 23);
             this.btnToneImport.TabIndex = 5;
             this.btnToneImport.Text = "Imprt";
-            this.toolTip.SetToolTip(this.btnToneImport, "Import tone dlc.xml file");
+            this.toolTip.SetToolTip(this.btnToneImport, "Import tone from file");
             this.btnToneImport.UseVisualStyleBackColor = true;
             this.btnToneImport.Click += new System.EventHandler(this.btnToneImport_Click);
             // 
