@@ -181,21 +181,17 @@ namespace RocksmithToolkitLib.Extensions
         }
 
         /// <summary>
-        /// Gets a valid lyric
+        /// Validates lyric using ODLC lyric character set
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public static string GetValidLyric(this string value)
         {
-            // ODLC lyric character use allows these
-            // allow use of accents Über ñice \\p{L} diacritics
-            // allow use of unicode punctuation \\p{P\\{S} not currently implimented
-            // may need to be escaped \t\n\f\r#$()*+.?[\^{|  ... '-' needs to be escaped if not at the beginning or end of regex sequence
-            // allow use of only these special characters \\-+_ /&:'!?()\"#
-            // allow use of alphanumerics a-zA-Z0-9
-            // tested and working ... Üuber!@#$%^&*()_+=-09{}][":';<>.,?/ñice
-
-            Regex rgx = new Regex("[^a-zA-Z0-9\\-+_/&'!?()\"#\\p{L} ]*");
+            // ODLC lyric character set
+            //!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~¡¢¥¦§¨ª«°²³´•¸¹º»¼½¾¿ÀÁÂÄÅÆÇÈÉÊËÌÎÏÑÒÓÔÖØÙÚÛÜÞßàáâäåæçèéêëìíîïñòóôöøùúûüŒœŠšž„…€™␀★➨
+            string validAlphaNumerics = "a-zA-Z0-9";
+            string validSpecialCharacters = "!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}~¡¢¥¦§¨ª«°²³´•¸¹º»¼½¾¿ÀÁÂÄÅÆÇÈÉÊËÌÎÏÑÒÓÔÖØÙÚÛÜÞßàáâäåæçèéêëìíîïñòóôöøùúûüŒœŠšž€™";
+            Regex rgx = new Regex("[^" + validAlphaNumerics + validSpecialCharacters + "]*");
             value = rgx.Replace(value, "");
             return value;
         }
