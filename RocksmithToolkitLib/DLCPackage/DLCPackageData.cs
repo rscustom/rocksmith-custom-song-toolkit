@@ -552,6 +552,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
                 else if (xmlFile.ToLower().Contains("_vocals"))
                 {
+                    var debugMe = "Confirm XML comments were preserved.";
                     var voc = new Arrangement { Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals, ArrangementType = ArrangementType.Vocal, ScrollSpeed = 20, SongXml = new SongXML { File = xmlFile }, SongFile = new SongFile { File = "" }, CustomFont = attr.JapaneseVocal == true };
 
                     // Get symbols stuff from _vocals.xml
@@ -569,7 +570,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     // Adding Arrangement
                     data.Arrangements.Add(voc);
-                }                    
+                }
             }
 
             //ShowLights XML
@@ -755,21 +756,21 @@ namespace RocksmithToolkitLib.DLCPackage
             Directory.CreateDirectory(kitdir);
 
             var xmlFiles = Directory.EnumerateFiles(unpackedDir, "*.xml", SearchOption.AllDirectories).ToArray();
-            var sngFiles = Directory.EnumerateFiles(unpackedDir, "*vocals.sng", SearchOption.AllDirectories).ToArray();
+            // var sngFiles = Directory.EnumerateFiles(unpackedDir, "*vocals.sng", SearchOption.AllDirectories).ToArray();
 
             foreach (var json in jsonFiles)
             {
                 var name = Path.GetFileNameWithoutExtension(json);
                 var xmlFile = xmlFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
-                var sngFile = sngFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
+                // var sngFile = sngFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
 
                 //Move all pair JSON\XML
                 File.Move(json, Path.Combine(kitdir, name + ".json"));
                 File.Move(xmlFile, Path.Combine(eofdir, name + ".xml"));
 
-                if (name.EndsWith("vocals", StringComparison.Ordinal))
-                    if (sngFile != null)
-                        File.Move(sngFile, Path.Combine(kitdir, name + ".sng"));
+                //if (name.EndsWith("vocals", StringComparison.Ordinal))
+                //    if (sngFile != null)
+                //        File.Move(sngFile, Path.Combine(kitdir, name + ".sng"));
             }
 
             // move showlights.xml

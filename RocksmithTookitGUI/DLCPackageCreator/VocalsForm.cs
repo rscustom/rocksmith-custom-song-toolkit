@@ -143,7 +143,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             using (var f = new VistaOpenFileDialog())
             {
                 f.FileName = VocalsPath;
-                f.Filter = "Rocksmith XML Vocals Files (*_Vocals.xml)|*_Vocals.xml";
+                f.Filter = "Rocksmith XML Vocals Files (*_vocals.xml)|*_vocals.xml";
                 if (f.ShowDialog() == DialogResult.OK)
                 {
                     VocalsPath = f.FileName;

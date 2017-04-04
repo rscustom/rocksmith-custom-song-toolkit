@@ -367,7 +367,6 @@ namespace RocksmithToolkitLib.Xml
 
         public static Song2014 LoadFromFile(string xmlSongRS2014File)
         {
-            // TODO: initial default sbyte values that may not be present in XML
             using (var reader = new StreamReader(xmlSongRS2014File))
             {
                 return new XmlStreamingDeserializer<Song2014>(reader).Deserialize();

@@ -13,7 +13,7 @@ namespace RocksmithToolkitLib.Xml
     {
         public Vocals() { }
 
-        public Vocals(Sng2014File sngData)
+        public Vocals(Sng2014File sngData, bool validateLyrics = false)
         {
             Vocal = new Vocal[sngData.Vocals.Count];
             for (var i = 0; i < sngData.Vocals.Count; i++)
@@ -23,6 +23,10 @@ namespace RocksmithToolkitLib.Xml
                 v.Note = sngData.Vocals.Vocals[i].Note;
                 v.Length = sngData.Vocals.Vocals[i].Length;
                 v.Lyric = sngData.Vocals.Vocals[i].Lyric.ToNullTerminatedUTF8();
+
+                if (validateLyrics)
+                    v.Lyric = v.Lyric.GetValidLyric();
+
                 Vocal[i] = v;
             }
             Count = Vocal.Length;
@@ -62,6 +66,7 @@ namespace RocksmithToolkitLib.Xml
             stream.Flush();
             stream.Seek(0, SeekOrigin.Begin);
         }
+
     }
 
     [XmlType("vocal")]

@@ -117,6 +117,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     throw new InvalidOperationException("Platform not found :(");
             }
 
+            // ODLC status
+            var isODLC = !Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).Any();
+
             // DECODE AUDIO
             if (decodeAudio)
             {
@@ -196,9 +199,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         File.Delete(xmlSngFile);
                     }
+                    else if (File.Exists(xmlEofFile) && !overwriteSongXml && arrType == ArrangementType.Vocal)
+                    {
+                        // preserves vocal xml comments
+                    }
                     else
                     {
-                        if (arrType != ArrangementType.Vocal)
+                        if (!isODLC)
                             Song2014.WriteXmlComments(xmlSngFile, customComment: "Generated from SNG file");
 
                         File.Copy(xmlSngFile, xmlEofFile, true);
@@ -762,7 +769,9 @@ namespace RocksmithToolkitLib.DLCPackage
             GlobalExtension.ShowProgress("Inflating Entries ...");
 
             foreach (var entry in psarc.TOC)
-            {// custom InflateEntries
+            {
+                // custom InflateEntries
+                var debugMe = "Check the TOC";
                 var fullfilename = Path.Combine(destpath, entry.Name);
 
                 if (Path.GetExtension(entry.Name).ToLower() == ".psarc")

@@ -28,6 +28,7 @@ using Control = System.Windows.Forms.Control;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 using RocksmithToolkitGUI.Config;
 
+
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class DLCPackageCreator : UserControl
@@ -1654,12 +1655,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     arr.MasterId = RandomGenerator.NextInt();
                 }
 
-                // skip vocal and showlight arrangements
-                if (arr.ArrangementType == ArrangementType.Vocal || arr.ArrangementType == ArrangementType.ShowLight)
-                {
-                    if (arr.ArrangementType == ArrangementType.Vocal)
-                        Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
+                // skip showlight and vocal arrangements
+                if (arr.ArrangementType == ArrangementType.ShowLight)
+                    continue;
 
+                if (arr.ArrangementType == ArrangementType.Vocal)
+                {
+                    var oldXml = GeneralExtensions.CopyToTempFile(arr.SongXml.File);
+                    using (var outputStream = new FileStream(arr.SongXml.File, FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        var vocals2014 = RocksmithToolkitLib.Sng2014HSL.Sng2014FileWriter.ReadVocals(oldXml);
+                        // validate lyrics
+                        var xmlContent = new Vocals(vocals2014, true);
+                        xmlContent.Serialize(outputStream);
+                    }
+
+                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
                     continue;
                 }
 

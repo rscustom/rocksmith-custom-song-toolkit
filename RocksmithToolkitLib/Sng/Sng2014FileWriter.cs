@@ -23,7 +23,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
             Sng2014File sng;
             if (!String.IsNullOrEmpty(cdata))
                 sng = new Sng2014File(new FileStream(cdata, FileMode.Open));
-            else sng = new Sng2014File(new MemoryStream(Resources.VOCALS_RS2));
+            else 
+                sng = new Sng2014File(new MemoryStream(Resources.VOCALS_RS2));
 
             var xml = Vocals.LoadFromFile(xmlFile);
             parseVocals(xml, sng);
