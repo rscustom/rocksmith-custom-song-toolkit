@@ -37,7 +37,8 @@ namespace RocksmithToolkitLib.XmlRepository
 
             UIName = Name = !string.IsNullOrEmpty(name) ? name : NameFromStrings(tStrings);
         }
-        static string NoteName(TuningStrings tuning, byte s, bool flats = false)
+  
+        private static string NoteName(TuningStrings tuning, byte s, bool flats = false)
         {
             String[] notesNamesHi = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" }; //TODO: use maj\min or intervals classification...
             String[] notesNamesLo = { "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" };

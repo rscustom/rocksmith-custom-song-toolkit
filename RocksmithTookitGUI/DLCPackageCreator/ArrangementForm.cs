@@ -310,32 +310,32 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 SongXml = new SongXML { File = xmlFilePath }
             };
 
+            bool isVocal = false;
+            bool isShowlight = false;
+
             try
             {
-                bool isVocal = false;
-                bool isShowlight = false;
-
-                try
+                _xmlSong = Song2014.LoadFromFile(xmlFilePath);
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException.Message.ToLower().Contains("<vocals"))
+                    isVocal = true;
+                else if (ex.InnerException.Message.ToLower().Contains("<showlights"))
+                    isShowlight = true;
+                else
                 {
-                    _xmlSong = Song2014.LoadFromFile(xmlFilePath);
+                    MessageBox.Show(@"Unable to load XML Arrangement:  " + Environment.NewLine +
+                                    Path.GetFileName(xmlFilePath) + Environment.NewLine +
+                                    @"It may not be a valid Arrangement or " + Environment.NewLine +
+                                    @"your version of the EOF may be out of date." + Environment.NewLine +
+                                    ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
                 }
-                catch (Exception ex)
-                {
-                    if (ex.InnerException.Message.ToLower().Contains("<vocals"))
-                        isVocal = true;
-                    else if (ex.InnerException.Message.ToLower().Contains("<showlights"))
-                        isShowlight = true;
-                    else
-                    {
-                        MessageBox.Show(@"Unable to get information from XML Arrangement:  " + Environment.NewLine +
-                                        Path.GetFileName(xmlFilePath) + Environment.NewLine +
-                                        @"It may not be a valid Arrangement or " + Environment.NewLine +
-                                        @"your version of the EOF may be out of date." + Environment.NewLine +
-                                        ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return false;
-                    }
-                }
+            }
 
+            try
+            {
                 // SETUP FIELDS
                 if (isVocal)
                 {
@@ -514,15 +514,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 if (!String.IsNullOrEmpty(Arrangement.SongXml.File))
 
-                if (!String.IsNullOrEmpty(form.ShowLightsPath))
-                    txtXmlPath.Text = form.ShowLightsPath;
+                    if (!String.IsNullOrEmpty(form.ShowLightsPath))
+                        txtXmlPath.Text = form.ShowLightsPath;
             }
         }
 
         private void EditVocals()
         {
             // TODO: explain usage of Vocals SNG and DDS files better
-            
+
             if (!String.IsNullOrEmpty(_parentControl.LyricArtPath) && String.IsNullOrEmpty(Arrangement.FontSng))
                 MessageBox.Show("There is already a custom font defined.\r\n", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
@@ -757,13 +757,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // get the latest comments from the XML to check if previous bass fixed is valid
-            if (!String.IsNullOrEmpty(Arrangement.SongXml.File))
+            if (!String.IsNullOrEmpty(Arrangement.SongXml.File) && selectedType == ArrangementType.Bass)
             {
-                //var xmlComments = Song2014.ReadXmlComments(Arrangement.SongXml.File);
-                //var isBassFixed = xmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
+                var debugMe = "";
+                var xmlComments = Song2014.ReadXmlComments(Arrangement.SongXml.File);
+                var isBassFixed = xmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
 
-                var isBassFixed = Arrangement.XmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
-                
+                // var isBassFixed = Arrangement.XmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
+
                 if (isBassFixed && !tuning.UIName.Contains("Fixed"))
                 {
                     // UIName may contain spaces, where as Name contains no spaces
