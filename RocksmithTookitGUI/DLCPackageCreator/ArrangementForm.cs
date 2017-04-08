@@ -763,6 +763,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var xmlComments = Song2014.ReadXmlComments(Arrangement.SongXml.File);
                 var isBassFixed = xmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
 
+                // commented out ... Arrangement.XmlComments may not be populated
                 // var isBassFixed = Arrangement.XmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
 
                 if (isBassFixed && !tuning.UIName.Contains("Fixed"))
@@ -771,7 +772,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     tuning.UIName = String.Format("{0} Fixed", tuning.UIName);
                     tuning.Name = tuning.UIName.ReplaceSpaceWith("");
                     tuning.Custom = true;
-                    // bass tuning definition get auto added to repository
+                    // fixed bass tuning definition is auto added to repository
                     TuningDefinitionRepository.SaveUnique(tuning);
                 }
             }

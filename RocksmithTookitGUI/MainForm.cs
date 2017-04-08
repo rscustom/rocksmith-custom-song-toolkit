@@ -40,12 +40,13 @@ namespace RocksmithToolkitGUI
                 LoadTemplate(args[0]);
 
             InitMainForm();
-            // comment out as necessary when issuing new release version
-            ShowHelpForm();
-        }
+         }
 
         private void InitMainForm()
         {
+            // comment out when issuing a new release version of toolkit
+            ShowHelpForm();
+            
             // edit version number in AssemblyInfo.cs for GUI, Lib and Updater
             // edit the hard coded version number in PatchAssemblyVersion.ps1 used by AppVeyor
             // comment out as necessary when issuing new release version

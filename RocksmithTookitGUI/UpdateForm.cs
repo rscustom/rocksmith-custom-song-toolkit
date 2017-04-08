@@ -143,6 +143,12 @@ namespace RocksmithToolkitGUI
             // COPY TO NOT LOCK PROCESS ON UPDATE
             if (File.Exists(updaterApp))
                 File.Copy(updaterApp, updatingApp, true);
+            else
+            {
+                var errMsg = "Can not find " + APP_UPDATER + Environment.NewLine + "Please reinstall/update the toolkit manually.";
+                BetterDialog2.ShowDialog(errMsg, "Toolkit Updater Error", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                return;
+            }
 
             // START AUTO UPDATE
             GeneralExtensions.RunExternalExecutable(updatingApp);

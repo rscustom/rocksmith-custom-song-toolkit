@@ -108,6 +108,8 @@ namespace RocksmithToolkitUpdater
 
             var output = Path.Combine(workDir, "temp");
             ExtractFile(output);
+            
+            // TODO: DEBUG HERE
             MoveFiles(output, workDir); 
 
             // DELETE DOWNLOADED FILE

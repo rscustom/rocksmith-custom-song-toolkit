@@ -28,9 +28,13 @@ DLC Key, and Tone Key Notes:
   No spaces, no special characters, no puncuation
   All alpha lower, upper, or mixed case are allowed
   All numeric is allowed
- */
+  
+Reserved XML Characters:
+  Double quotes usage must be escaped ==> &quot;
+  Ampersand usage must be escaped ==> &amp;
+*/
 
-// "return value;" is used throughout to aid with debugging
+// "return value;" is used to aid with debugging validation methods
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -181,14 +185,13 @@ namespace RocksmithToolkitLib.Extensions
         }
 
         /// <summary>
-        /// Validates lyric using ODLC lyric character set
+        /// Validate lyric character usage
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public static string GetValidLyric(this string value)
         {
-            // double quotes must be escaped => &quot;
-            // ODLC lyric character set
+            // standard ODLC lyric character set
             //!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~¡¢¥¦§¨ª«°²³´•¸¹º»¼½¾¿ÀÁÂÄÅÆÇÈÉÊËÌÎÏÑÒÓÔÖØÙÚÛÜÞßàáâäåæçèéêëìíîïñòóôöøùúûüŒœŠšž„…€™␀★➨
             string validAlphaNumerics = "a-zA-Z0-9";
             string validSpecialCharacters = "!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}~¡¢¥¦§¨ª«°²³´•¸¹º»¼½¾¿ÀÁÂÄÅÆÇÈÉÊËÌÎÏÑÒÓÔÖØÙÚÛÜÞßàáâäåæçèéêëìíîïñòóôöøùúûüŒœŠšž€™␀﻿﻿﻿﻿﻿﻿";

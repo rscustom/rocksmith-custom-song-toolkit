@@ -1709,7 +1709,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
 
-                // puts arrangement comments in correct order
+                // put arrangement comments in correct order
                 Song2014.WriteXmlComments(arr.SongXml.File);
             }
 
