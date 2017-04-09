@@ -13,22 +13,25 @@ namespace RocksmithToolkitGUI
 {
     partial class UpdateForm : Form
     {
+        // TODO: users may need to add both files to AV whitelist to run updater
         private const string APP_UPDATER = "RocksmithToolkitUpdater.exe";
         private const string APP_UPDATING = "RocksmithToolkitUpdating.exe";
 
-        private string RootDirectory {
-            get {
+        private string RootDirectory
+        {
+            get
+            {
                 return Path.GetDirectoryName(Application.ExecutablePath);
             }
         }
-        
+
         public UpdateForm()
         {
             InitializeComponent();
         }
 
         public void Init(ToolkitVersionOnline onlineVersion)
-        {            
+        {
             // DELETE OLD UPDATER APP IF EXISTS
             var updatingApp = Path.Combine(RootDirectory, APP_UPDATING);
             if (File.Exists(updatingApp))
@@ -140,21 +143,28 @@ namespace RocksmithToolkitGUI
             var updaterApp = Path.Combine(RootDirectory, APP_UPDATER);
             var updatingApp = Path.Combine(RootDirectory, APP_UPDATING);
 
-            // COPY TO NOT LOCK PROCESS ON UPDATE
             if (File.Exists(updaterApp))
+            {
+                // COPY TO NOT LOCK PROCESS ON UPDATE
                 File.Copy(updaterApp, updatingApp, true);
+                try
+                {
+                    // START AUTO UPDATE
+                    GeneralExtensions.RunExternalExecutable(updatingApp, waitToFinish: true);
+                }
+                catch( Exception)
+                {
+                    throw new FileLoadException("Could not run " + updatingApp);
+                }
+
+                // EXIT TOOLKIT
+                Application.Exit();
+            }
             else
             {
-                var errMsg = "Can not find " + APP_UPDATER + Environment.NewLine + "Please reinstall/update the toolkit manually.";
+                var errMsg = "Could not find " + updaterApp + Environment.NewLine + "Please reinstall/update the toolkit manually.";
                 BetterDialog2.ShowDialog(errMsg, "Toolkit Updater Error", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
-                return;
             }
-
-            // START AUTO UPDATE
-            GeneralExtensions.RunExternalExecutable(updatingApp);
-            
-            // EXIT TOOLKIT
-            Application.Exit();
         }
     }
 }

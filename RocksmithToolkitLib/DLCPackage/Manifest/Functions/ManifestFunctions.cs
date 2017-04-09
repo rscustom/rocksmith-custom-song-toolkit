@@ -313,7 +313,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             }
 
             // Is not the way of official are calculated, but is a way to calculate unique values for custom
-            // Could be rewritten with the correct way or a best way to get this value
+            // Could be rewritten with the correct way or a better way to get this value
             var itCount = song.PhraseIterations.Length;
             var ifAny = easyArray.Count > 0;
 
