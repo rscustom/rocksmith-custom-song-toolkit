@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
 using RocksmithToolkitLib.PsarcLoader;
 using RocksmithToolkitLib.Extensions;
-using System.Collections.Generic;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 
 namespace toneliberator
