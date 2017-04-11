@@ -759,7 +759,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // get the latest comments from the XML to check if previous bass fixed is valid
             if (!String.IsNullOrEmpty(Arrangement.SongXml.File) && selectedType == ArrangementType.Bass)
             {
-                var debugMe = "";
+                //var debugMe = "";
                 var xmlComments = Song2014.ReadXmlComments(Arrangement.SongXml.File);
                 var isBassFixed = xmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
 

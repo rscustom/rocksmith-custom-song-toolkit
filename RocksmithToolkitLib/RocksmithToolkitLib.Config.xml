@@ -2,6 +2,7 @@
 <ArrayOfConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <!-- general config key count = 14 -->"
   <Config Key="general_firstrun" Value="true" />
+  <Config Key="general_showrevnote" Value="true" />
   <Config Key="general_usebeta" Value="true" />
   <Config Key="general_replacerepo" Value="false" />
   <Config Key="general_urllastestrelease" Value="https://www.rscustom.net/builds/latest" />

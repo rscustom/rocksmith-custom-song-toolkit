@@ -552,7 +552,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
                 else if (xmlFile.ToLower().Contains("_vocals"))
                 {
-                    var debugMe = "Confirm XML comments were preserved.";
+                    //var debugMe = "Confirm XML comments were preserved.";
                     var voc = new Arrangement
                         {
                             Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals,

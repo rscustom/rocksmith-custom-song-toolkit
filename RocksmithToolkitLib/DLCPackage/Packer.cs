@@ -770,7 +770,7 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var entry in psarc.TOC)
             {
                 // custom InflateEntries
-                var debugMe = "Check the TOC";
+                //var debugMe = "Check the TOC";
                 var fullfilename = Path.Combine(destpath, entry.Name);
 
                 if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
