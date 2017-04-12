@@ -2372,8 +2372,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     if (form.Saved)
                     {
-                        lstTones.Items.Remove(lstTones.SelectedItem);
-                        lstTones.Items.Add(form.toneControl.Tone);
+                        tone = form.toneControl.Tone;
+                        lstTones.Items[lstTones.SelectedIndex] = tone;
                         isDirty = true;
                     }
                 }
