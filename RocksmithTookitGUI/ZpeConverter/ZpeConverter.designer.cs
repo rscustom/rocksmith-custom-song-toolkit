@@ -1,4 +1,4 @@
-﻿namespace RocksmithToolkitGUI.ZiggyProEditorConverter
+﻿namespace RocksmithToolkitGUI.ZpeConverter
 {
     partial class ZpeConverter
     {

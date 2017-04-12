@@ -6,8 +6,8 @@ using System.Windows.Forms;
 using System.IO;
 using RocksmithToTabLib;
 using RocksmithToolkitLib;
+using RocksmithToolkitLib.Conversion;
 using RocksmithToolkitLib.SngToTab;
-using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.XmlRepository;
 
@@ -22,7 +22,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
 
         public CDLC2Tab()
         {
-		    // needs to come first
+            // needs to come first
             InitializeComponent();
             try
             {
@@ -82,7 +82,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                 // fbd.SelectedPath = "D:\\Temp"; // for testing
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
- 
+
                 outputDir = fbd.SelectedPath;
             }
 
@@ -95,29 +95,29 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                     case ".xml":
                         if (rbGp5.Checked)
                         {
-                            using (var obj = new Gp5Converter())
+                            using (var obj = new CDLC2Gp5())
                                 obj.XmlToGp5(inputFilePath, outputDir);
                         }
                         else
                         {
-                        var fileName = Path.GetFileNameWithoutExtension(inputFilePath);
-                        var splitPoint = fileName.LastIndexOf('_');
-                        var arrangement = fileName.Substring(splitPoint + 1);
-                        // skip any files for vocals and/or showlights
-                        if (arrangement.ToLower() == "vocals" || arrangement.ToLower() == "showlights")
-                            break;
-                        Song rs1Song;
-                        using (var obj = new Rs1Converter())
-                            rs1Song = obj.XmlToSong(inputFilePath);
-                        string sngFilePath;
-                        using (var obj = new Rs1Converter())
-                            sngFilePath = obj.SongToSngFilePath(rs1Song, Path.Combine(outputDir, Path.GetFileName(inputFilePath)));
-                        using (var obj = new Sng2Tab())
-                            obj.Convert(sngFilePath, outputDir, allDif);
-                        if (File.Exists(sngFilePath))
-                            File.Delete(sngFilePath);
-                }
-                break;
+                            var fileName = Path.GetFileNameWithoutExtension(inputFilePath);
+                            var splitPoint = fileName.LastIndexOf('_');
+                            var arrangement = fileName.Substring(splitPoint + 1);
+                            // skip any files for vocals and/or showlights
+                            if (arrangement.ToLower() == "vocals" || arrangement.ToLower() == "showlights")
+                                break;
+                            Song rs1Song;
+                            using (var obj = new Rs1Converter())
+                                rs1Song = obj.XmlToSong(inputFilePath);
+                            string sngFilePath;
+                            using (var obj = new Rs1Converter())
+                                sngFilePath = obj.SongToSngFilePath(rs1Song, Path.Combine(outputDir, Path.GetFileName(inputFilePath)));
+                            using (var obj = new Sng2Tab())
+                                obj.Convert(sngFilePath, outputDir, allDif);
+                            if (File.Exists(sngFilePath))
+                                File.Delete(sngFilePath);
+                        }
+                        break;
                     case ".dat":
                         using (var obj = new Sng2Tab())
                             obj.ExtractBeforeConvert(inputFilePath, outputDir, allDif);
@@ -129,7 +129,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                     case ".psarc":
                         if (rbSongList.Checked)
                         {
-                            using (var obj = new Rs2014Converter())
+                            using (var obj = new CDLC2Gp5())
                                 obj.PsarcSongList(inputFilePath, outputDir);
                             break;
                         }
@@ -140,7 +140,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                             if (MessageBox.Show(string.Format("{0} file size is {1:N00} KB{2}It may take a long time to extract and convert that much data.{2}{2}Do you want to continue?", Path.GetFileName(inputFilePath), (fileInfo.Length / 1000), Environment.NewLine), MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
                                 return;
                         }
-                        using (var obj = new Rs2014Converter())
+                        using (var obj = new CDLC2Gp5())
                             songList = obj.PsarcSongList(inputFilePath);
                         if (rbAsciiTab.Checked)
                         {
@@ -158,10 +158,11 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                                 foreach (var song in form.SongListShort)
                                 {
                                     Song2014 rs2014Song;
-                                    using (var obj = new Rs2014Converter())
+                                    using (var obj = new CDLC2Gp5())
                                     {
                                         rs2014Song = obj.PsarcToSong2014(inputFilePath, song.Identifier, song.Arrangement);
-                                        obj.Song2014ToAsciiTab(rs2014Song, outputDir, allDif);
+                                        using (var obj2 = new Rs2014Converter())
+                                            obj2.Song2014ToAsciiTab(rs2014Song, outputDir, allDif);
                                     }
                                 }
                             }
@@ -169,7 +170,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                         }
                         // convert to *.gp5 file(s) optimized code for dll usage
                         if (!allDif && songList.Count == 1)
-                            using (var obj = new Gp5Converter())
+                            using (var obj = new CDLC2Gp5())
                                 obj.PsarcToGp5(inputFilePath, outputDir);
                         else
                             if (!allDif && songList.Count > 1)
@@ -187,7 +188,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                                     if (form.SongListShort[0].Identifier == "User Aborted")
                                         break;
                                     Cursor.Current = Cursors.WaitCursor;
-                                    using (var obj = new Gp5Converter())
+                                    using (var obj = new CDLC2Gp5())
                                         obj.PsarcToGp5(inputFilePath, outputDir, form.SongListShort);
                                 }
                             }
@@ -207,7 +208,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                                         if (form.SongListShort[0].Identifier == "User Aborted")
                                             break;
                                         Cursor.Current = Cursors.WaitCursor;
-                                        using (var obj = new Gp5Converter())
+                                        using (var obj = new CDLC2Gp5())
                                             obj.PsarcToGp5(inputFilePath, outputDir, form.SongListShort, "gp5", true);
                                     }
                                 }

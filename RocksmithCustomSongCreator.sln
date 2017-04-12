@@ -72,6 +72,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cdlcconverter", "RocksmithT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "toneliberator", "RocksmithToolkitCLI\toneliberator\toneliberator.csproj", "{C8BDE9BB-F671-482E-97AB-5472F3C7D319}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithToTabLib", "lib\RocksmithToTabLib\RocksmithToTabLib.csproj", "{A391030A-8289-4B6A-8117-1C7995808AD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -139,6 +141,10 @@ Global
 		{C8BDE9BB-F671-482E-97AB-5472F3C7D319}.Debug|x86.Build.0 = Debug|x86
 		{C8BDE9BB-F671-482E-97AB-5472F3C7D319}.Release|x86.ActiveCfg = Release|x86
 		{C8BDE9BB-F671-482E-97AB-5472F3C7D319}.Release|x86.Build.0 = Release|x86
+		{A391030A-8289-4B6A-8117-1C7995808AD5}.Debug|x86.ActiveCfg = Debug|x86
+		{A391030A-8289-4B6A-8117-1C7995808AD5}.Debug|x86.Build.0 = Debug|x86
+		{A391030A-8289-4B6A-8117-1C7995808AD5}.Release|x86.ActiveCfg = Release|x86
+		{A391030A-8289-4B6A-8117-1C7995808AD5}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

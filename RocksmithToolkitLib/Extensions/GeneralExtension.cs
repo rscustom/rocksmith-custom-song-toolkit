@@ -13,7 +13,6 @@ using System.Drawing;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using RocksmithToolkitLib.DLCPackage;
-using RocksmithToTabLib;
 using RocksmithToolkitLib.Sng2014HSL;
 using Action = System.Action;
 using ToolkitInfo = RocksmithToolkitLib.DLCPackage.ToolkitInfo;

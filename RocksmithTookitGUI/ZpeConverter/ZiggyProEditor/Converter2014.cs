@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.IO;
 using RocksmithToolkitLib.Xml;
 
 // compatible with ZiggyProEditor Version 70 (2.3.7.13)
-namespace RocksmithToolkitLib.ZiggyProEditor
+namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
 {
     public class Converter2014
     {

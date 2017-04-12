@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.ZiggyProEditor
+namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
 {
     // <track name="PART REAL_GUITAR">
 

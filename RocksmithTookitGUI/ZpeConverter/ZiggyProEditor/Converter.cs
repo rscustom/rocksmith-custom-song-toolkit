@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using RocksmithToolkitLib.Xml;
 
 // compatibility upgrade for XML produced by ZiggyProEditor Version 70 (2.3.7.13)
 // for now the depricated code is just commented out .. confirmed working again
-namespace RocksmithToolkitLib.ZiggyProEditor
+namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
 {
     public class Converter
     {

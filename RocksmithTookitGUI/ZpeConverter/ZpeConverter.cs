@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.ZiggyProEditor;
+using RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor;
 
-namespace RocksmithToolkitGUI.ZiggyProEditorConverter
+namespace RocksmithToolkitGUI.ZpeConverter
 {
     public partial class ZpeConverter : UserControl
     {

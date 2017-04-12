@@ -29,9 +29,8 @@ namespace RocksmithToolkitGUI
         public MainForm(string[] args)
         {
             InitializeComponent();
-            // this.Shown += MainForm_Shown;
-
-            ShowSplash();
+            // EH keeps main form responsive/refreshed
+            this.Shown += MainForm_Splash;
 
             var ci = new CultureInfo("en-US");
             var thread = System.Threading.Thread.CurrentThread;
@@ -224,16 +223,16 @@ namespace RocksmithToolkitGUI
 #endif
         }
 
-        //private void MainForm_Shown(object sender, EventArgs e)
-        private void ShowSplash()
+        private void MainForm_Splash(object sender, EventArgs e)
         {
-            this.Refresh();
             bool showRevNote = ConfigRepository.Instance().GetBoolean("general_showrevnote");
             if (showRevNote)
             {
                 ShowHelpForm();
                 ConfigRepository.Instance()["general_showrevnote"] = "false";
             }
+
+            this.Refresh();
 
             // don't bug the Developers when in debug mode ;)
 #if !DEBUG

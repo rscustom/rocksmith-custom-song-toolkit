@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.ZiggyProEditor
+namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
 {
     //<metaEvents>
     //    <metaEvent startTime="0" startTick="0" metaType="TrackName" text="PART REAL_GUITAR_22" />

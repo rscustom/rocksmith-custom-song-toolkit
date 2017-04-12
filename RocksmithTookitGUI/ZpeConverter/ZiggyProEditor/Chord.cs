@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.ZiggyProEditor
+namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
 {
     // <chord difficulty="Easy" startTime="143.054186" endTime="143.128077625" startTick="116160" endTick="116220">
 

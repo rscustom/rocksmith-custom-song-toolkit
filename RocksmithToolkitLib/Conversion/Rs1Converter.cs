@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using RocksmithToolkitLib.Extensions;
@@ -10,8 +9,7 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.Xml;
 
-
-namespace RocksmithToolkitLib.Song2014ToTab
+namespace RocksmithToolkitLib.Conversion
 {
     public class Rs1Converter : IDisposable
     {

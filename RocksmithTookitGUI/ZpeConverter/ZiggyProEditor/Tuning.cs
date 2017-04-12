@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.ZiggyProEditor
+namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
 {
   //<tunings>
   //  <tuning isGuitarTuning="true" E="0" A="0" D="0" G="0" B="0" HighE="0" />

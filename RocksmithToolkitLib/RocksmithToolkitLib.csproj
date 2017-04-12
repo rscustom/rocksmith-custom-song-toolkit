@@ -53,9 +53,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="RocksmithToTabLib">
-      <HintPath>..\lib\RocksmithToTabLib\RocksmithToTabLib.dll</HintPath>
-    </Reference>
     <Reference Include="X360">
       <HintPath>..\lib\X360\X360.dll</HintPath>
     </Reference>
@@ -64,6 +61,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conversion\Rs1Converter.cs" />
+    <Compile Include="Conversion\Rs2014Converter.cs" />
+    <Compile Include="SngToTab\Common.cs" />
+    <Compile Include="SngToTab\Sng2Tab.cs" />
+    <Compile Include="SngToTab\TabBeat.cs" />
+    <Compile Include="SngToTab\TabChord.cs" />
+    <Compile Include="SngToTab\TabEntity.cs" />
+    <Compile Include="SngToTab\TabFile.cs" />
+    <Compile Include="SngToTab\TabHeader.cs" />
+    <Compile Include="SngToTab\TabLinesEntity.cs" />
+    <Compile Include="SngToTab\TabMeasure.cs" />
+    <Compile Include="SngToTab\TabNote.cs" />
+    <Compile Include="SngToTab\TabSection.cs" />
+    <Compile Include="SngToTab\TuningInfo.cs" />
     <Compile Include="DLCPackage\Arrangement.cs" />
     <Compile Include="DLCPackage\DLCPackageCreator.cs" />
     <Compile Include="DLCPackage\InlayNif.cs" />
@@ -93,13 +104,7 @@
     <Compile Include="PsarcLoader\PsarcExtensions.cs" />
     <Compile Include="PsarcLoader\PsarcLoader.cs" />
     <Compile Include="PsarcLoader\PsarcPackager.cs" />
-    <Compile Include="SngToTab\Sng2Tab.cs" />
     <Compile Include="Sng\Constants.cs" />
-    <Compile Include="Song2014ToTab\Gp5Converter.cs" />
-    <Compile Include="Song2014ToTab\Rs1Converter.cs" />
-    <Compile Include="Song2014ToTab\Rs2014Converter.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ToolkitVersionOnline.cs" />
     <Compile Include="DLCPackage\DLCPackageConverter.cs" />
     <Compile Include="DLCPackage\SongPartition.cs" />
@@ -166,17 +171,6 @@
     <Compile Include="PSARC\BigEndianBinaryWriter.cs" />
     <Compile Include="PSARC\Entry.cs" />
     <Compile Include="PSARC\PSARC.cs" />
-    <Compile Include="SngToTab\Common.cs" />
-    <Compile Include="SngToTab\TabBeat.cs" />
-    <Compile Include="SngToTab\TabChord.cs" />
-    <Compile Include="SngToTab\TabEntity.cs" />
-    <Compile Include="SngToTab\TabFile.cs" />
-    <Compile Include="SngToTab\TabHeader.cs" />
-    <Compile Include="SngToTab\TabLinesEntity.cs" />
-    <Compile Include="SngToTab\TabMeasure.cs" />
-    <Compile Include="SngToTab\TabNote.cs" />
-    <Compile Include="SngToTab\TabSection.cs" />
-    <Compile Include="SngToTab\TuningInfo.cs" />
     <Compile Include="Sng\Sng2014FileWriter.cs" />
     <Compile Include="Sng\Sng2014File.cs" />
     <Compile Include="Sng\Sng2014HSL.cs" />
@@ -208,16 +202,6 @@
     <Compile Include="DLCPackage\XBlock\Set.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DLCPackage\ToolkitInfo.cs" />
-    <Compile Include="ZiggyProEditor\Chord.cs" />
-    <Compile Include="ZiggyProEditor\Converter.cs" />
-    <Compile Include="ZiggyProEditor\Converter2014.cs" />
-    <Compile Include="ZiggyProEditor\MetaEvent.cs" />
-    <Compile Include="ZiggyProEditor\Note.cs" />
-    <Compile Include="ZiggyProEditor\Song.cs" />
-    <Compile Include="ZiggyProEditor\Tempo.cs" />
-    <Compile Include="ZiggyProEditor\TimeSignature.cs" />
-    <Compile Include="ZiggyProEditor\Track.cs" />
-    <Compile Include="ZiggyProEditor\Tuning.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -79,7 +79,6 @@
             this.toolTip1.AutoPopDelay = 8000;
             this.toolTip1.InitialDelay = 200;
             this.toolTip1.ReshowDelay = 40;
-            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
             // SongInfoForm
             // 

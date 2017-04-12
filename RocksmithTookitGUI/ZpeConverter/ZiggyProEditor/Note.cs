@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.ZiggyProEditor
+namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
 {
     // <note fret="0" string="2" />
 

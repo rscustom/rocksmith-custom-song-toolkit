@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.ZiggyProEditor
+namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
 {
     // <timeSignature startTime="0" startTick="0" numerator="4" denominator="4" />
     

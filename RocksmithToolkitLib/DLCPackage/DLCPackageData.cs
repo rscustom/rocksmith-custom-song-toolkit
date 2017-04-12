@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -11,7 +10,6 @@ using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.Sng2014HSL;
-using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
 using X360.STFS;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
@@ -20,6 +18,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Sng;
 using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
+using RocksmithToolkitLib.Conversion;
 
 namespace RocksmithToolkitLib.DLCPackage
 {

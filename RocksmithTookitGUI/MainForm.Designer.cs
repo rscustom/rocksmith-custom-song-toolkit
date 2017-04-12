@@ -60,7 +60,7 @@
             this.cdlcConverterTab = new System.Windows.Forms.TabPage();
             this.cdlC2Tab1 = new RocksmithToolkitGUI.CDLC2Tab.CDLC2Tab();
             this.zigProConverterTab = new System.Windows.Forms.TabPage();
-            this.zpeConverter1 = new RocksmithToolkitGUI.ZiggyProEditorConverter.ZpeConverter();
+            this.zpeConverter1 = new ZpeConverter.ZpeConverter();
             this.GeneralConfigTab = new System.Windows.Forms.TabPage();
             this.generalConfig1 = new RocksmithToolkitGUI.Config.GeneralConfig();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -465,7 +465,7 @@
         private DLCPackageCreator.DLCPackageCreator dlcPackageCreator1;
         private Config.GeneralConfig generalConfig1;
         private DLCPackerUnpacker.DLCPackerUnpacker dlcPackerUnpacker1;
-        private ZiggyProEditorConverter.ZpeConverter zpeConverter1;
+        private ZpeConverter.ZpeConverter zpeConverter1;
         private DDC.DDC ddc1;
         private SngConverter.SngConverter sngConverter1;
         private DLCConverter.DLCConverter dlcConverter1;

@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.ZiggyProEditor
+namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
 {
     //<tempo startTime="0" startTick="0" rawTempo="591133" secondsPerWholeNote="5.91133" secondsPerTick="0.00123152708333333" />
     

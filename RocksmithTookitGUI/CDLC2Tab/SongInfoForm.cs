@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using RocksmithToTabLib;
-using RocksmithToolkitLib.Song2014ToTab;
+using RocksmithToolkitLib.Conversion;
 
 namespace RocksmithToolkitGUI.CDLC2Tab
 {
@@ -80,11 +80,6 @@ namespace RocksmithToolkitGUI.CDLC2Tab
                     toggleSelect = true;
                 }
             }
-        }
-
-        private void toolTip1_Popup(object sender, PopupEventArgs e)
-        {
-
         }
 
 

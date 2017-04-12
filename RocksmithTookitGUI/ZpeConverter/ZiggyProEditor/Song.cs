@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.ZiggyProEditor
+namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
 {
     // <song songid="" pue_version="46" name="Akira Yamaoka - Silent Hill 2 Theme of Laura_RB3_v4" description="Akira Yamaoka - Silent Hill 2 Theme of Laura_RB3_v4" shortname="" length="203.940885">
 

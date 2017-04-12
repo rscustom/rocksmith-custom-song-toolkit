@@ -8,13 +8,13 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using RocksmithToolkitGUI.Config;
 using RocksmithToolkitLib;
+using RocksmithToolkitLib.Conversion;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Song2014ToTab;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.XmlRepository;
 

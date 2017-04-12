@@ -2,20 +2,116 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using RocksmithToTabLib;
-using RocksmithToolkitLib.DLCPackage.Manifest;
+using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using RocksmithToolkitLib.Xml;
+using RocksmithToTabLib;
 
-
-namespace RocksmithToolkitLib.Song2014ToTab
+namespace RocksmithToolkitGUI.CDLC2Tab
 {
-    public class Gp5Converter : IDisposable
+    public class CDLC2Gp5 : IDisposable
     {
         public void Dispose() { }
 
-        #region PSARC to Song2014 to GuitarPro *.gp5 file
+        #region PSARC to SongList
+
+        /// <summary>
+        /// create SongInfo List from PSARC file 
+        /// with option to output to *.txt file
+        /// </summary>
+        /// <param name="inputFilePath"></param>
+        /// <param name="outputDir is optional"></param>
+        /// <returns>SongInfo List</returns>
+        public IList<SongInfo> PsarcSongList(string inputFilePath, string outputDir = null)
+        {
+            var browser = new PsarcBrowser(inputFilePath);
+            var songList = browser.GetSongList();
+
+            if (outputDir != null)
+            {
+                var songInfo = String.Format("ARCHIVE  -  {0}  -  SONG LIST INFO", Path.GetFileName(inputFilePath));
+                songInfo += Environment.NewLine + Environment.NewLine;
+                songInfo += "[Song Identifier]  Artist - Title  (Album, Year)  {Arrangements}";
+                songInfo += Environment.NewLine;
+                songInfo += "----------------------------------------------------------------";
+                songInfo += Environment.NewLine + Environment.NewLine;
+
+                foreach (var song in songList)
+                {
+                    songInfo += String.Format("[{0}]  {1} - {2}  ({3}, {4})  {{{5}}}", song.Identifier,
+                                              song.Artist, song.Title, song.Album, song.Year,
+                                              string.Join(", ", song.Arrangements));
+                    songInfo += Environment.NewLine;
+                }
+                songInfo += Environment.NewLine + Environment.NewLine;
+                songInfo += "End of Report";
+
+                var outputFile = Path.GetFileNameWithoutExtension(inputFilePath).ToLower();
+                var outputPath = Path.Combine(outputDir, String.Format("{0}_songlist.txt", outputFile));
+
+                using (TextWriter tw = new StreamWriter(outputPath))
+                {
+                    tw.Write(songInfo);
+                }
+            }
+
+            return songList;
+        }
+
+        #endregion
+
+        #region PSARC to Song2014 (for a specific song and/or arrangement)
+
+        /// <summary>
+        /// extract Song2014 from PSARC file for a specific
+        /// songId (short song title) and arrangement (lead, rhythm, bass)
+        /// defaults to the first songId and arrangement if not specified
+        /// </summary>
+        /// <param name="inputFilePath"></param>
+        /// <param name="songId"></param>
+        /// <param name="arrangement"></param>
+        /// <returns>Song2014</returns>
+        public Song2014 PsarcToSong2014(string inputFilePath, string songId = null, string arrangement = null)
+        {
+            var browser = new PsarcBrowser(inputFilePath);
+            var songList = browser.GetSongList();
+
+            if (songId == null) // grab the first song.Identifier
+            {
+                songId = songList.FirstOrDefault().Identifier;
+            }
+            else // check if songId exists in song.Identifier
+            {
+                if (songList.FirstOrDefault(x => x.Identifier.Contains(songId)) == null)
+                {
+                    Console.WriteLine("Could not find songId: " + songId);
+                    return null;
+                }
+            }
+
+            if (arrangement == null) // grab the first song.Arrangment[0]
+            {
+                arrangement = songList.FirstOrDefault().Arrangements[0];
+            }
+            else // check if track exists in song.Arrangments
+            {
+                if (songList.FirstOrDefault(x => x.Arrangements.Contains(arrangement)) == null)
+                {
+                    Console.WriteLine("Could not find arrangement: " + arrangement);
+                    return null;
+                }
+            }
+
+            // push Song2014 into memory for this arrangement
+            Song2014 arrSong2014 = browser.GetArrangement(songId, arrangement);
+            Console.WriteLine("Pushed To Memory: [{0}] {{{1}}}", songId, arrangement);
+
+            return arrSong2014;
+        }
+
+        #endregion
+    
+        #region Song2014 to GuitarPro *.gp5 file
 
         /// <summary>
         /// Load a PSARC file into memory and
@@ -220,7 +316,7 @@ namespace RocksmithToolkitLib.Song2014ToTab
             var cleaned = fileName.Where(x => !invalidChars.Contains(x)).ToArray();
             return new string(cleaned);
         }
-
+      
         #endregion
 
         #region SongInfoShort to SongInfo
