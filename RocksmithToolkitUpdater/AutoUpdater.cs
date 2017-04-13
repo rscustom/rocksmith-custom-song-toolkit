@@ -36,7 +36,7 @@ namespace RocksmithToolkitUpdater
         private bool ReplaceRepo {
             get {
                 if (_replaceRepo == null)
-                    _replaceRepo = (bool)AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), "RocksmithToolkitLib.ConfigRepository", "GetBoolean", "general_replacerepo");
+                    _replaceRepo = (bool)AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), "RocksmithToolkitLib.XmlRepository.ConfigRepository", "GetBoolean", "general_replacerepo");
                 return (bool)_replaceRepo;
             }
         }
@@ -183,7 +183,7 @@ namespace RocksmithToolkitUpdater
             }
  
             if (!String.IsNullOrEmpty(repo))
-                AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), String.Format("RocksmithToolkitLib.{0}", repo), "Merge", sourceFile, destFile);
+                AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), String.Format("RocksmithToolkitLib.XmlRepository.{0}", repo), "Merge", sourceFile, destFile);
         }
 
         private void ShowCurrentOperation(string message) {

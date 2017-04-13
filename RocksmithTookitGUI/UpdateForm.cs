@@ -150,7 +150,7 @@ namespace RocksmithToolkitGUI
                 try
                 {
                     // START AUTO UPDATE
-                    GeneralExtensions.RunExternalExecutable(updatingApp, waitToFinish: true);
+                    GeneralExtensions.RunExternalExecutable(updatingApp);
                 }
                 catch( Exception)
                 {
