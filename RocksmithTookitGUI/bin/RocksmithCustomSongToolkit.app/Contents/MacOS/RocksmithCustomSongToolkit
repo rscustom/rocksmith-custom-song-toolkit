@@ -14,7 +14,7 @@ PWD=$(pwd)
 
 # Fetch the .app bundle path. (cd .. [x3] from cmd script) awk so slow...
 # Don't use "$0" for this it's break the code somehow, but there should be no harm in theory.... 
-APP_PATH=$(echo $0 | awk '{split($0,patharr,"/"); idx=1; while(patharr[idx+3] != "") { if (patharr[idx] != "/") {printf("%s/", patharr[idx]); idx++ }} }')
+APP_PATH=`echo $0 | awk '{split($0,patharr,"/"); idx=1; while(patharr[idx+3] != "") { if (patharr[idx] != "/") {printf("%s/", patharr[idx]); idx++ }} }'`
 
 # Fetch the app name (its our own name)
 CMD_NAME=$(basename "$0")
@@ -92,7 +92,17 @@ if [ "$MWF_MODE" -eq "1" ]; then
 	export MONO_IOMAP=all
 fi
 
+# ensure we've got wine before use it
+WINE_VERSION=$(wine --version | grep 'wine-' | cut -f1 -d.)
+if [ -z "$WINE_VERSION" ]; then
+	export WINE_INSTALLED=0
+else
+	export WINE_INSTALLED=1
+fi
+
 echo "$MONO_VERSION_MET"
+echo "$WINE_VERSION"
+echo “$APP_PATH”
 cd "$APP_PATH/Contents/Resources" || exit
 
 #Finally launch the APP
