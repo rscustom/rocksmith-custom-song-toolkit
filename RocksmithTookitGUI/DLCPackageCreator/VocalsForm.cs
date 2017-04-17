@@ -69,9 +69,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             if (!String.IsNullOrEmpty(VocalsPath))
             {
+                // EOF is using windows-1252 Encoding for vocals
+                // Toolkit is using UTF-8 Encoding for vocals
+                // TODO: determine if this matters
+  
                 // confirmed this preserves and displays proper encoding
                 using (var sr = new StreamReader(VocalsPath, new UTF8Encoding(false)))
+                {
                     rtbVocals.Text = sr.ReadToEnd();
+                }
             }
         }
 
