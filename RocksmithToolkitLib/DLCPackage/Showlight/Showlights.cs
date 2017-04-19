@@ -267,7 +267,7 @@ namespace RocksmithToolkitLib.DLCPackage.Showlight
             return true;
         }
 
-        public Showlights LoadFromFile(string showlightsRS2014File)
+        public static Showlights LoadFromFile(string showlightsRS2014File)
         {
             using (var reader = new StreamReader(showlightsRS2014File))
             {

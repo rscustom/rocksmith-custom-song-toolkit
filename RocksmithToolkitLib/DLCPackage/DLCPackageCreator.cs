@@ -561,23 +561,29 @@ namespace RocksmithToolkitLib.DLCPackage
                     // XML SHOWLIGHTS
                     var shlArr = info.Arrangements.FirstOrDefault(ar => ar.ArrangementType == ArrangementType.ShowLight);
                     if (shlArr != null && shlArr.SongXml.File != null)
+                    {
                         using (var fs = File.OpenRead(shlArr.SongXml.File))
                             fs.CopyTo(showlightStream);
+                    }
                     else
                     {
                         // Generate new Showlights
                         var showlight = new Showlights(info);
-                        showlight.Serialize(showlightStream);
-                        string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "cst"));
-                        using (FileStream file = new FileStream(shlFilePath, FileMode.Create, FileAccess.Write))
-                            showlightStream.WriteTo(file);
+                        // TODO: determine min number of showlight elements to still be valid
+                        if (showlight.ShowlightList.Count > 5)
+                        {
+                            showlight.Serialize(showlightStream);
+                            string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "cst"));
+                            using (FileStream file = new FileStream(shlFilePath, FileMode.Create, FileAccess.Write))
+                                showlightStream.WriteTo(file);
 
-                        // write xml comments
-                        Song2014.WriteXmlComments(shlFilePath);
-                        
-                        // reload stream
-                        using (var fs = File.OpenRead(shlFilePath))
-                            fs.CopyTo(showlightStream);
+                            // write xml comments
+                            Song2014.WriteXmlComments(shlFilePath);
+
+                            // reload stream
+                            using (var fs = File.OpenRead(shlFilePath))
+                                fs.CopyTo(showlightStream);
+                        }
                     }
 
                     if (showlightStream.CanRead && showlightStream.Length > 0)

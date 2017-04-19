@@ -27,6 +27,8 @@ using RocksmithToolkitLib.Xml;
 using Control = System.Windows.Forms.Control;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 using RocksmithToolkitGUI.Config;
+using RocksmithToolkitLib.DLCPackage.Showlight;
+
 
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
@@ -1649,10 +1651,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 // showlight and vocal arrangements
                 if (arr.ArrangementType == ArrangementType.ShowLight)
-                {
-                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
                     continue;
-                }
 
                 if (arr.ArrangementType == ArrangementType.Vocal)
                 {
