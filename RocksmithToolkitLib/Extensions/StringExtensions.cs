@@ -191,11 +191,9 @@ namespace RocksmithToolkitLib.Extensions
         /// <returns></returns>
         public static string GetValidLyric(this string value)
         {
-            // standard ODLC lyric character set
+            // standard ODLC valid lyric character set, i.e., ã can not be used (confirmed by testing)
             //!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~¡¢¥¦§¨ª«°²³´•¸¹º»¼½¾¿ÀÁÂÄÅÆÇÈÉÊËÌÎÏÑÒÓÔÖØÙÚÛÜÞßàáâäåæçèéêëìíîïñòóôöøùúûüŒœŠšž„…€™␀★➨
-            // string validSpecialCharacters = "!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}~¡¢¥¦§¨ª«°²³´•¸¹º»¼½¾¿ÀÁÂÄÅÆÇÈÉÊËÌÎÏÑÒÓÔÖØÙÚÛÜÞßàáâäåæçèéêëìíîïñòóôöøùúûüŒœŠšž€™␀﻿﻿﻿﻿﻿﻿";
-            // this is better (includes ã) special character validation
-            string validSpecialCharacters = "!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}~\\p{L}";
+            string validSpecialCharacters = "!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}~¡¢¥¦§¨ª«°²³´•¸¹º»¼½¾¿ÀÁÂÄÅÆÇÈÉÊËÌÎÏÑÒÓÔÖØÙÚÛÜÞßàáâäåæçèéêëìíîïñòóôöøùúûüŒœŠšž€™␀﻿﻿﻿﻿﻿﻿";
             string validAlphaNumerics = "a-zA-Z0-9";
 
             Regex rgx = new Regex("[^" + validAlphaNumerics + validSpecialCharacters + "]*");
