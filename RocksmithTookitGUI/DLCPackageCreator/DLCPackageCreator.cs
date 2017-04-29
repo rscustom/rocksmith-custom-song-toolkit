@@ -1651,8 +1651,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 // showlight and vocal arrangements
                 if (arr.ArrangementType == ArrangementType.ShowLight)
+                {
+                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
                     continue;
-
+                }
+                
                 if (arr.ArrangementType == ArrangementType.Vocal)
                 {
                     var oldXml = GeneralExtensions.CopyToTempFile(arr.SongXml.File);

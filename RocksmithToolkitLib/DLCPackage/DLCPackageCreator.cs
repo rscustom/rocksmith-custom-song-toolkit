@@ -567,9 +567,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
                     else
                     {
-                        // Generate new Showlights
+                        // Generate Showlights 'cst_showlights.xml'
                         var showlight = new Showlights(info);
-                        // TODO: determine min number of showlight elements to still be valid
+                        // TODO: determine minimum number of showlight elements to still be valid
                         if (showlight.ShowlightList.Count > 5)
                         {
                             showlight.Serialize(showlightStream);
