@@ -198,6 +198,10 @@ namespace RocksmithToolkitGUI
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // autosave the dlc.xml template on closing
+            if (dlcPackageCreator1.IsDirty && ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
+                dlcPackageCreator1.SaveTemplateFile(dlcPackageCreator1.UnpackedDir, false);
+
             // cleanup temp folder garbage carefully
 #if !DEBUG
             var di = new DirectoryInfo(Path.GetTempPath());
@@ -265,6 +269,7 @@ namespace RocksmithToolkitGUI
                 }
             }
         }
+
 
     }
 }

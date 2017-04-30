@@ -49,6 +49,7 @@
             this.dlcPackerUnpackerTab = new System.Windows.Forms.TabPage();
             this.dlcPackerUnpacker1 = new RocksmithToolkitGUI.DLCPackerUnpacker.DLCPackerUnpacker();
             this.dlcConverterTab = new System.Windows.Forms.TabPage();
+            this.dlcConverter1 = new RocksmithToolkitGUI.DLCConverter.DLCConverter();
             this.DDCTab = new System.Windows.Forms.TabPage();
             this.ddc1 = new RocksmithToolkitGUI.DDC.DDC();
             this.dlcInlayCreatorTab = new System.Windows.Forms.TabPage();
@@ -60,12 +61,11 @@
             this.cdlcConverterTab = new System.Windows.Forms.TabPage();
             this.cdlC2Tab1 = new RocksmithToolkitGUI.CDLC2Tab.CDLC2Tab();
             this.zigProConverterTab = new System.Windows.Forms.TabPage();
-            this.zpeConverter1 = new ZpeConverter.ZpeConverter();
+            this.zpeConverter1 = new RocksmithToolkitGUI.ZpeConverter.ZpeConverter();
             this.GeneralConfigTab = new System.Windows.Forms.TabPage();
             this.generalConfig1 = new RocksmithToolkitGUI.Config.GeneralConfig();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.updateButton = new System.Windows.Forms.Button();
-            this.dlcConverter1 = new RocksmithToolkitGUI.DLCConverter.DLCConverter();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.dlcPackageCreatorTab.SuspendLayout();
@@ -191,7 +191,7 @@
             this.dlcPackageCreator1.Album = "";
             this.dlcPackageCreator1.AlbumSort = "";
             this.dlcPackageCreator1.AlbumYear = "";
-            // this.dlcPackageCreator1.AppId = ""; // bad this is blanking out defualt 
+            // this.dlcPackageCreator1.AppId = "";  // commented out to prevent changing default
             this.dlcPackageCreator1.Artist = "";
             this.dlcPackageCreator1.ArtistSort = "";
             this.dlcPackageCreator1.AverageTempo = "";
@@ -201,11 +201,14 @@
             this.dlcPackageCreator1.Location = new System.Drawing.Point(17, 1);
             this.dlcPackageCreator1.LyricArtPath = null;
             this.dlcPackageCreator1.Name = "dlcPackageCreator1";
+            this.dlcPackageCreator1.PackageAuthor = null;
+            this.dlcPackageCreator1.PackageComment = "(Remastered by CDLC Creator)";
             this.dlcPackageCreator1.PackageVersion = "";
             this.dlcPackageCreator1.Size = new System.Drawing.Size(507, 560);
             this.dlcPackageCreator1.SongTitle = "";
             this.dlcPackageCreator1.SongTitleSort = "";
             this.dlcPackageCreator1.TabIndex = 0;
+            this.dlcPackageCreator1.ToolkitVers = null;
             // 
             // dlcPackerUnpackerTab
             // 
@@ -214,7 +217,7 @@
             this.dlcPackerUnpackerTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcPackerUnpackerTab.Name = "dlcPackerUnpackerTab";
             this.dlcPackerUnpackerTab.Padding = new System.Windows.Forms.Padding(2);
-            this.dlcPackerUnpackerTab.Size = new System.Drawing.Size(542, 564);
+            this.dlcPackerUnpackerTab.Size = new System.Drawing.Size(192, 74);
             this.dlcPackerUnpackerTab.TabIndex = 1;
             this.dlcPackerUnpackerTab.Text = "Packer/Unpacker";
             this.dlcPackerUnpackerTab.UseVisualStyleBackColor = true;
@@ -234,10 +237,21 @@
             this.dlcConverterTab.Margin = new System.Windows.Forms.Padding(2);
             this.dlcConverterTab.Name = "dlcConverterTab";
             this.dlcConverterTab.Padding = new System.Windows.Forms.Padding(2);
-            this.dlcConverterTab.Size = new System.Drawing.Size(542, 564);
+            this.dlcConverterTab.Size = new System.Drawing.Size(192, 74);
             this.dlcConverterTab.TabIndex = 2;
             this.dlcConverterTab.Text = "Converter";
             this.dlcConverterTab.UseVisualStyleBackColor = true;
+            // 
+            // dlcConverter1
+            // 
+            this.dlcConverter1.AppId = "";
+            this.dlcConverter1.Location = new System.Drawing.Point(65, 19);
+            this.dlcConverter1.MinimumSize = new System.Drawing.Size(400, 279);
+            this.dlcConverter1.Name = "dlcConverter1";
+            this.dlcConverter1.Size = new System.Drawing.Size(400, 302);
+            this.dlcConverter1.SourcePlatform = null;
+            this.dlcConverter1.TabIndex = 0;
+            this.dlcConverter1.TargetPlatform = null;
             // 
             // DDCTab
             // 
@@ -245,11 +259,19 @@
             this.DDCTab.Location = new System.Drawing.Point(4, 22);
             this.DDCTab.Name = "DDCTab";
             this.DDCTab.Padding = new System.Windows.Forms.Padding(3);
-            this.DDCTab.Size = new System.Drawing.Size(542, 564);
+            this.DDCTab.Size = new System.Drawing.Size(192, 74);
             this.DDCTab.TabIndex = 3;
             this.DDCTab.Text = "DDC";
             this.DDCTab.ToolTipText = "Generate dynamic difficulty for arrangements.";
             this.DDCTab.UseVisualStyleBackColor = true;
+            // 
+            // ddc1
+            // 
+            this.ddc1.Location = new System.Drawing.Point(0, 0);
+            this.ddc1.MinimumSize = new System.Drawing.Size(530, 380);
+            this.ddc1.Name = "ddc1";
+            this.ddc1.Size = new System.Drawing.Size(530, 470);
+            this.ddc1.TabIndex = 0;
             // 
             // dlcInlayCreatorTab
             // 
@@ -386,17 +408,6 @@
             this.updateButton.Visible = false;
             this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
             // 
-            // dlcConverter1
-            // 
-            this.dlcConverter1.AppId = "";
-            this.dlcConverter1.Location = new System.Drawing.Point(65, 19);
-            this.dlcConverter1.MinimumSize = new System.Drawing.Size(400, 279);
-            this.dlcConverter1.Name = "dlcConverter1";
-            this.dlcConverter1.Size = new System.Drawing.Size(400, 302);
-            this.dlcConverter1.SourcePlatform = null;
-            this.dlcConverter1.TabIndex = 0;
-            this.dlcConverter1.TargetPlatform = null;
-            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -449,7 +460,6 @@
         private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem configurationToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage dlcPackageCreatorTab;
         private System.Windows.Forms.TabPage dlcPackerUnpackerTab;
         private System.Windows.Forms.TabPage dlcConverterTab;
         private System.Windows.Forms.TabPage DDCTab;
@@ -462,13 +472,14 @@
         private CDLC2Tab.CDLC2Tab cdlC2Tab1;
         private OggConverter.OggConverter oggConverter1;
         private DLCInlayCreator.DLCInlayCreator dlcInlayCreator1;
-        private DLCPackageCreator.DLCPackageCreator dlcPackageCreator1;
         private Config.GeneralConfig generalConfig1;
         private DLCPackerUnpacker.DLCPackerUnpacker dlcPackerUnpacker1;
         private ZpeConverter.ZpeConverter zpeConverter1;
         private DDC.DDC ddc1;
         private SngConverter.SngConverter sngConverter1;
         private DLCConverter.DLCConverter dlcConverter1;
+        private System.Windows.Forms.TabPage dlcPackageCreatorTab;
+        private DLCPackageCreator.DLCPackageCreator dlcPackageCreator1;
      }
 }
 

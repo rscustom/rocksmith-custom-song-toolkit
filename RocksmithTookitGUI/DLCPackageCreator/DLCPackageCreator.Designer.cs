@@ -918,7 +918,6 @@
             this.Controls.Add(this.btnPackageGenerate);
             this.Name = "DLCPackageCreator";
             this.Size = new System.Drawing.Size(507, 560);
-            this.Leave += new System.EventHandler(this.DLCPackageCreator_Leave);
             this.gbPlatform.ResumeLayout(false);
             this.gbPlatform.PerformLayout();
             this.gbFiles.ResumeLayout(false);

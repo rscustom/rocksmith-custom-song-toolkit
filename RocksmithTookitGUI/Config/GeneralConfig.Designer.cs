@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeneralConfig));
             this.general_usebeta = new System.Windows.Forms.CheckBox();
             this.gbCreator = new System.Windows.Forms.GroupBox();
             this.creator_autosavetemplate = new System.Windows.Forms.CheckBox();
@@ -143,7 +142,9 @@
             this.creator_autosavetemplate.Size = new System.Drawing.Size(123, 17);
             this.creator_autosavetemplate.TabIndex = 57;
             this.creator_autosavetemplate.Text = "Autosave Templates";
-            this.toolTip.SetToolTip(this.creator_autosavetemplate, resources.GetString("creator_autosavetemplate.ToolTip"));
+            this.toolTip.SetToolTip(this.creator_autosavetemplate, "If checked, automatically save template\r\n\'.dlc.xml\' file for user on application " +
+                    "exit.\r\n\r\nWARNING\r\n------------\r\nIf uncheck, templates must be saved\r\nmanually by" +
+                    " pressing \'Save Template\'\r\nbutton.");
             this.creator_autosavetemplate.UseVisualStyleBackColor = true;
             this.creator_autosavetemplate.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
