@@ -411,7 +411,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             FillPackageCreatorForm(info, templatePath);
 
-            Application.DoEvents();
+           // Application.DoEvents();
             MessageBox.Show(CurrentRocksmithTitle + " CDLC template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();
         }
@@ -827,7 +827,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (!String.IsNullOrEmpty(info.OggPath))
                 AudioPath = info.OggPath.AbsoluteTo(BasePath);
 
-            chkPlatformPC.Checked = !String.IsNullOrEmpty(info.OggPath);
             numVolSong.Value = Decimal.Round((decimal)info.Volume, 2);
             numVolPreview.Value = (info.PreviewVolume != null) ? Decimal.Round((decimal)info.PreviewVolume, 2) : numVolSong.Value;
 
@@ -835,9 +834,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 numAudioQuality.Value = info.OggQuality;
             else
                 numAudioQuality.Value = 4;
-
-            //if (platformXBox360.Checked)
-            //    rbuttonSignatureLIVE.Checked = info.SignatureType == PackageMagic.LIVE;
 
             lstArrangements.Items.Clear();
             foreach (var arrangement in info.Arrangements)
@@ -888,7 +884,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // forces RS1 XML to be updated
-            IsDirty = CurrentGameVersion != GameVersion.RS2014;
+            IsDirty = CurrentGameVersion != GameVersion.RS2014;            
         }
 
         private DLCPackageData GetPackageData(bool validate = true)
@@ -2337,7 +2333,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void btnTemplateSave_Click(object sender, EventArgs e)
         {
-            SaveTemplateFile();
+            SaveTemplateFile("", false);
         }
 
         private void btnToneDuplicate_Click(object sender, EventArgs e)
