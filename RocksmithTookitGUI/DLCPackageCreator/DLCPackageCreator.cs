@@ -71,7 +71,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             rbRs2012.MouseUp += GameVersion_MouseUp;
             rbRs2014.MouseUp += GameVersion_MouseUp;
             rbConvert.MouseUp += GameVersion_MouseUp;
-            
+
             // Generate package worker
             bwGenerate.DoWork += GeneratePackage;
             bwGenerate.ProgressChanged += ProgressChanged;
@@ -89,7 +89,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             catch
             {
                 /*For mono compatibility*/
-            } 
+            }
         }
 
         public bool IsDirty { get; set; }
@@ -411,7 +411,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             FillPackageCreatorForm(info, templatePath);
 
-           // Application.DoEvents();
+            // Application.DoEvents();
             MessageBox.Show(CurrentRocksmithTitle + " CDLC template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();
         }
@@ -443,7 +443,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (!String.IsNullOrEmpty(UnpackedDir))
                         ofd.InitialDirectory = UnpackedDir;
                     else
-                        ofd.InitialDirectory = Path.GetDirectoryName(packageData.Arrangements[0].SongXml.File);
+                    { 
+                        try
+                        {
+                            // use EOF project directory if it exists
+                            ofd.InitialDirectory = Path.GetDirectoryName(packageData.Arrangements[0].SongXml.File);
+                        }
+                        catch
+                        {
+                            // ignore exeption if the EOF project directory does not exists
+                        }
+                    }
 
                     ofd.Title = "Save CDLC Template File as ...";
                     ofd.SupportMultiDottedExtensions = true;
@@ -884,7 +894,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // forces RS1 XML to be updated
-            IsDirty = CurrentGameVersion != GameVersion.RS2014;            
+            IsDirty = CurrentGameVersion != GameVersion.RS2014;
         }
 
         private DLCPackageData GetPackageData(bool validate = true)
@@ -1658,13 +1668,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 if (arr.ArrangementType == ArrangementType.Vocal)
                 {
-                    var oldXml = GeneralExtensions.CopyToTempFile(arr.SongXml.File);
-                    using (var outputStream = new FileStream(arr.SongXml.File, FileMode.Create, FileAccess.ReadWrite))
+                    // only validate lyrics that do not use a custom font
+                    if (!arr.CustomFont)
                     {
-                        var vocals2014 = RocksmithToolkitLib.Sng2014HSL.Sng2014FileWriter.ReadVocals(oldXml);
-                        // validate lyrics
-                        var xmlContent = new Vocals(vocals2014, true);
-                        xmlContent.Serialize(outputStream);
+                        var oldXml = GeneralExtensions.CopyToTempFile(arr.SongXml.File);
+                        using (var outputStream = new FileStream(arr.SongXml.File, FileMode.Create, FileAccess.ReadWrite))
+                        {
+                            var vocals2014 = RocksmithToolkitLib.Sng2014HSL.Sng2014FileWriter.ReadVocals(oldXml);
+                            // validate lyrics
+                            var xmlContent = new Vocals(vocals2014, true);
+                            xmlContent.Serialize(outputStream);
+                        }
                     }
 
                     Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);

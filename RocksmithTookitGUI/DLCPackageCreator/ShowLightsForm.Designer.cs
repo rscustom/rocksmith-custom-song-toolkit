@@ -46,7 +46,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.btnOk.Location = new System.Drawing.Point(469, 355);
+            this.btnOk.Location = new System.Drawing.Point(567, 356);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 0;
@@ -58,7 +58,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(371, 355);
+            this.btnCancel.Location = new System.Drawing.Point(469, 356);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 1;
@@ -76,7 +76,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // btnShowLights
             // 
-            this.btnShowLights.Location = new System.Drawing.Point(517, 51);
+            this.btnShowLights.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnShowLights.Location = new System.Drawing.Point(611, 48);
             this.btnShowLights.Name = "btnShowLights";
             this.btnShowLights.Size = new System.Drawing.Size(31, 22);
             this.btnShowLights.TabIndex = 6;
@@ -93,7 +94,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.rtbShowlights.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtbShowlights.Location = new System.Drawing.Point(27, 128);
             this.rtbShowlights.Name = "rtbShowlights";
-            this.rtbShowlights.Size = new System.Drawing.Size(321, 236);
+            this.rtbShowlights.Size = new System.Drawing.Size(419, 237);
             this.rtbShowlights.TabIndex = 30;
             this.rtbShowlights.Text = "";
             this.rtbShowlights.WordWrap = false;
@@ -106,7 +107,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.rtbBlank.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.rtbBlank.Location = new System.Drawing.Point(16, 116);
             this.rtbBlank.Name = "rtbBlank";
-            this.rtbBlank.Size = new System.Drawing.Size(343, 261);
+            this.rtbBlank.Size = new System.Drawing.Size(441, 262);
             this.rtbBlank.TabIndex = 31;
             this.rtbBlank.Text = "";
             // 
@@ -117,7 +118,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.lstKey.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.lstKey.FormattingEnabled = true;
             this.lstKey.HorizontalScrollbar = true;
-            this.lstKey.Location = new System.Drawing.Point(371, 115);
+            this.lstKey.Location = new System.Drawing.Point(469, 115);
             this.lstKey.Name = "lstKey";
             this.lstKey.Size = new System.Drawing.Size(173, 225);
             this.lstKey.TabIndex = 32;
@@ -127,7 +128,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.lblKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lblKey.AutoSize = true;
-            this.lblKey.Location = new System.Drawing.Point(373, 99);
+            this.lblKey.Location = new System.Drawing.Point(471, 99);
             this.lblKey.Name = "lblKey";
             this.lblKey.Size = new System.Drawing.Size(54, 13);
             this.lblKey.TabIndex = 33;
@@ -144,6 +145,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // txtShowLights
             // 
+            this.txtShowLights.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.txtShowLights.Cue = "Select ShowLights XML file here or in Creator GUI Arrangment group box";
             this.txtShowLights.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtShowLights.ForeColor = System.Drawing.Color.Gray;
@@ -151,13 +154,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.txtShowLights.Multiline = true;
             this.txtShowLights.Name = "txtShowLights";
             this.txtShowLights.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtShowLights.Size = new System.Drawing.Size(181, 48);
+            this.txtShowLights.Size = new System.Drawing.Size(267, 44);
             this.txtShowLights.TabIndex = 2;
             // 
             // ShowLightsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(560, 390);
+            this.ClientSize = new System.Drawing.Size(658, 391);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblKey);
             this.Controls.Add(this.lstKey);
@@ -168,8 +171,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.Controls.Add(this.txtShowLights);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
             this.Name = "ShowLightsForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

@@ -148,6 +148,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Arrangement = arrangement; // update form using SET action
         }
 
+        public string XmlPath
+        {
+            get { return txtXmlPath.Text; }
+            set { txtXmlPath.Text = value; }
+        }
+
         public Arrangement Arrangement
         {
             get
@@ -159,7 +165,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 _arrangement = value;
 
                 //Song XML File
-                txtXmlPath.Text = value.SongXml.File;
+                XmlPath = value.SongXml.File;
 
                 //Arrangement Information
                 cmbArrangementType.SelectedItem = value.ArrangementType;
@@ -252,7 +258,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
-            //Arrangment Information
+            // Arrangment Information
             Arrangement.Name = (ArrangementName)cmbArrangementName.SelectedItem;
             Arrangement.ArrangementType = (ArrangementType)cmbArrangementType.SelectedItem;
             Arrangement.ScrollSpeed = tbarScrollSpeed.Value;
@@ -271,17 +277,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             UpdateCentOffset();
 
-            //ToneSelector //TODO: add parsing tones events
+            // ToneSelector //TODO: add parsing tones events
             Arrangement.ToneBase = cmbToneBase.SelectedItem.ToString();
             Arrangement.ToneA = (cmbToneA.SelectedItem != null) ? cmbToneA.SelectedItem.ToString() : ""; //Only need if have more than one tone
             Arrangement.ToneB = (cmbToneB.SelectedItem != null) ? cmbToneB.SelectedItem.ToString() : "";
             Arrangement.ToneC = (cmbToneC.SelectedItem != null) ? cmbToneC.SelectedItem.ToString() : "";
             Arrangement.ToneD = (cmbToneD.SelectedItem != null) ? cmbToneD.SelectedItem.ToString() : "";
 
-            //Gameplay Path
+            // Gameplay Path
             Arrangement.RouteMask = RouteMask;
 
-            //Xml data cleanup
+            // Xml data cleanup
             _xmlSong = null;
 
             // DLC IDs
@@ -310,47 +316,29 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 SongXml = new SongXML { File = xmlFilePath }
             };
 
-            bool isVocal = false;
-            bool isShowlight = false;
-
-            try
-            {
-                _xmlSong = Song2014.LoadFromFile(xmlFilePath);
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException.Message.ToLower().Contains("<vocals"))
-                    isVocal = true;
-                else if (ex.InnerException.Message.ToLower().Contains("<showlights"))
-                    isShowlight = true;
-                else
-                {
-                    MessageBox.Show(@"Unable to load XML Arrangement:  " + Environment.NewLine +
-                                    Path.GetFileName(xmlFilePath) + Environment.NewLine +
-                                    @"It may not be a valid Arrangement or " + Environment.NewLine +
-                                    @"your version of the EOF may be out of date." + Environment.NewLine +
-                                    ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return false;
-                }
-            }
-
             try
             {
                 // SETUP FIELDS
-                if (isVocal)
+                if (xmlFilePath.ToLower().EndsWith("vocals.xml"))
                 {
                     cmbArrangementType.SelectedItem = ArrangementType.Vocal;
                     Arrangement.ArrangementType = ArrangementType.Vocal;
+
+                    if (xmlFilePath.ToLower().EndsWith("_jvocals.xml"))
+                        cmbArrangementName.SelectedItem = ArrangementName.JVocals;
+                    else
+                        cmbArrangementName.SelectedItem = ArrangementName.Vocals;
                 }
-                else if (isShowlight)
+                else if (xmlFilePath.ToLower().EndsWith("_showlights.xml"))
                 {
                     cmbArrangementType.SelectedItem = ArrangementType.ShowLight;
                     Arrangement.ArrangementType = ArrangementType.ShowLight;
                 }
                 else
                 {
+                    _xmlSong = Song2014.LoadFromFile(xmlFilePath);
                     var version = GameVersion.None;
-                    //Detect Arrangement GameVersion
+                    // Detect Arrangement GameVersion
                     if (_xmlSong != null && _xmlSong.Version != null)
                     {
                         var verAttrib = Convert.ToInt32(_xmlSong.Version);
@@ -371,7 +359,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                                 using (var obj = new Rs1Converter())
                                 {
                                     _xmlSong = null;
-                                    _xmlSong = obj.SongToSong2014(Song.LoadFromFile(txtXmlPath.Text));
+                                    _xmlSong = obj.SongToSong2014(Song.LoadFromFile(xmlFilePath));
                                 }
                                 _gameVersion = GameVersion.RS2014;
                                 break;
@@ -444,9 +432,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
 
                     if (Arrangement.ArrangementType == ArrangementType.Bass)
-                    {
-                        var debugMe = FixBassTuning();
-                    }
+                        FixBassTuning();
 
                     SelectTuningName();
                     CheckTuning();
@@ -454,15 +440,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     // save converted RS1 to RS2014 Song2014 XML
                     if (version == GameVersion.None)
                     {
-                        var srcDir = Path.GetDirectoryName(txtXmlPath.Text);
-                        var srcName = Path.GetFileNameWithoutExtension(txtXmlPath.Text);
+                        var srcDir = Path.GetDirectoryName(xmlFilePath);
+                        var srcName = Path.GetFileNameWithoutExtension(xmlFilePath);
                         var backupSrcPath = String.Format("{0}_{1}.xml", Path.Combine(srcDir, srcName), "RS1");
 
                         // backup original RS1 file
-                        File.Copy(txtXmlPath.Text, backupSrcPath);
+                        File.Copy(xmlFilePath, backupSrcPath);
 
                         // write converted RS1 file
-                        using (var stream = new FileStream(txtXmlPath.Text, FileMode.Create))
+                        using (var stream = new FileStream(xmlFilePath, FileMode.Create))
                             _xmlSong.Serialize(stream, true);
                     }
                 }
@@ -515,28 +501,37 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (!String.IsNullOrEmpty(Arrangement.SongXml.File))
 
                     if (!String.IsNullOrEmpty(form.ShowLightsPath))
-                        txtXmlPath.Text = form.ShowLightsPath;
+                        XmlPath = form.ShowLightsPath;
             }
         }
 
         private void EditVocals()
         {
-            // TODO: explain usage of Vocals SNG and DDS files better
-
-            if (!String.IsNullOrEmpty(_parentControl.LyricArtPath) && String.IsNullOrEmpty(Arrangement.FontSng))
-                MessageBox.Show("There is already a custom font defined.\r\n", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (Arrangement.CustomFont)
+                MessageBox.Show("NOTICE: Expert Toolkit Users Only ..." + Environment.NewLine + Environment.NewLine +
+                                "A custom lyrics font is already" + Environment.NewLine +
+                                "defined for this arrangement.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             using (var form = new VocalsForm(Arrangement.FontSng, _parentControl.LyricArtPath, Arrangement.CustomFont, Arrangement.SongXml.File))
             {
                 if (DialogResult.OK != form.ShowDialog())
                     return;
 
-                Arrangement.FontSng = form.SngPath;
+                Arrangement.FontSng = form.SngPath; // this is always null/empty
                 _parentControl.LyricArtPath = form.ArtPath;
                 Arrangement.CustomFont = form.IsCustom;
 
                 if (!String.IsNullOrEmpty(form.VocalsPath))
-                    txtXmlPath.Text = form.VocalsPath;
+                {
+                    XmlPath = form.VocalsPath;
+                    Arrangement.SongXml.File = form.VocalsPath;
+                    if (XmlPath.ToLower().EndsWith("_jvocals.xml"))
+                        cmbArrangementName.SelectedItem = ArrangementName.JVocals;
+                    else
+                        cmbArrangementName.SelectedItem = ArrangementName.Vocals;
+                }
+
+
             }
         }
 
@@ -744,7 +739,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 _toolTip.InitialDelay = 100; // time that passes before tt appears
                 _toolTip.ReshowDelay = 100; // time before next tt window appears
                 _toolTip.ShowAlways = true; // force tt display even if parent is not active
-                _toolTip.SetToolTip(chkTonesDisabled, "For Toolkit Expert Use Only");
+                _toolTip.SetToolTip(chkTonesDisabled, "Expert Toolkit Users Only");
             }
         }
 
@@ -959,18 +954,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return;
                 }
 
-                string xmlFilePath = txtXmlPath.Text = ofd.FileName;
-                Globals.DefaultProjectDir = Path.GetDirectoryName(xmlFilePath);
+                XmlPath = ofd.FileName;
+                Globals.DefaultProjectDir = Path.GetDirectoryName(XmlPath);
 
-                if (IsAlreadyAdded(xmlFilePath))
+                if (IsAlreadyAdded(XmlPath))
                 {
-                    MessageBox.Show(@"XML Arrangement: " + Path.GetFileName(xmlFilePath) + @"   " + Environment.NewLine +
+                    MessageBox.Show(@"XML Arrangement: " + Path.GetFileName(XmlPath) + @"   " + Environment.NewLine +
                                     @"has already been added.  Please choose a new file. ",
                                     DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                LoadXmlArrangement(xmlFilePath);
+                LoadXmlArrangement(XmlPath);
             }
         }
 
@@ -1006,8 +1001,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void btnOk_Click(object sender, EventArgs e)
         {
             //Validations
-            var xmlfilepath = txtXmlPath.Text;
-            if (!File.Exists(xmlfilepath) || String.IsNullOrEmpty(xmlfilepath))
+            if (!File.Exists(XmlPath) || String.IsNullOrEmpty(XmlPath))
             {
                 MessageBox.Show("Xml Arrangement file path is not valid.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtXmlPath.Focus();
@@ -1027,8 +1021,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (!CheckTuning())
                 return;
 
-            LoadArrangementData(xmlfilepath);
-            Globals.DefaultProjectDir = Path.GetDirectoryName(xmlfilepath);
+            LoadArrangementData(XmlPath);
+            Globals.DefaultProjectDir = Path.GetDirectoryName(XmlPath);
             DialogResult = DialogResult.OK;
             Close();
         }

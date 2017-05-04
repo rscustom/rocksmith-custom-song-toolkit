@@ -47,13 +47,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.lblKey = new System.Windows.Forms.Label();
             this.lstKey = new System.Windows.Forms.ListBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.btnOk.Location = new System.Drawing.Point(580, 388);
+            this.btnOk.Location = new System.Drawing.Point(683, 372);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 0;
@@ -65,7 +67,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(482, 388);
+            this.btnCancel.Location = new System.Drawing.Point(585, 372);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 1;
@@ -77,78 +79,84 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.txtVocalsSngPath.Cue = "Select SNG file with custom font (.sng)";
             this.txtVocalsSngPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtVocalsSngPath.ForeColor = System.Drawing.Color.Gray;
-            this.txtVocalsSngPath.Location = new System.Drawing.Point(12, 31);
+            this.txtVocalsSngPath.Location = new System.Drawing.Point(8, 32);
             this.txtVocalsSngPath.Multiline = true;
             this.txtVocalsSngPath.Name = "txtVocalsSngPath";
             this.txtVocalsSngPath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtVocalsSngPath.Size = new System.Drawing.Size(271, 20);
+            this.txtVocalsSngPath.Size = new System.Drawing.Size(145, 20);
             this.txtVocalsSngPath.TabIndex = 2;
             // 
             // txtVocalsDdsPath
             // 
-            this.txtVocalsDdsPath.Cue = "Select DDS file with Lyrics Art (.dds)";
+            this.txtVocalsDdsPath.Cue = "Select custom lyrics font DDS file to be used with jvocals.xml";
             this.txtVocalsDdsPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtVocalsDdsPath.ForeColor = System.Drawing.Color.Gray;
-            this.txtVocalsDdsPath.Location = new System.Drawing.Point(12, 81);
+            this.txtVocalsDdsPath.Location = new System.Drawing.Point(10, 69);
             this.txtVocalsDdsPath.Multiline = true;
             this.txtVocalsDdsPath.Name = "txtVocalsDdsPath";
             this.txtVocalsDdsPath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtVocalsDdsPath.Size = new System.Drawing.Size(271, 20);
+            this.txtVocalsDdsPath.Size = new System.Drawing.Size(466, 20);
             this.txtVocalsDdsPath.TabIndex = 3;
+            this.toolTip.SetToolTip(this.txtVocalsDdsPath, "This feature is disabled when working with default vocals.xml.");
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 15);
+            this.label1.Location = new System.Drawing.Point(6, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(281, 13);
+            this.label1.Size = new System.Drawing.Size(285, 13);
             this.label1.TabIndex = 4;
-            this.label1.Text = "For now you can prepare a SNG custom font file by hand: ";
+            this.label1.Text = "For now you must prepare a SNG custom font file by hand: ";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 65);
+            this.label2.Location = new System.Drawing.Point(7, 53);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(229, 13);
+            this.label2.Size = new System.Drawing.Size(256, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Custom vocals should have glyph DDS texture:";
+            this.label2.Text = "Custom Lyrics Font DDS Glyph Texture (512 x 1024):";
             // 
             // btnVocalsDdsPath
             // 
-            this.btnVocalsDdsPath.Location = new System.Drawing.Point(289, 81);
+            this.btnVocalsDdsPath.Location = new System.Drawing.Point(482, 69);
             this.btnVocalsDdsPath.Name = "btnVocalsDdsPath";
             this.btnVocalsDdsPath.Size = new System.Drawing.Size(31, 20);
             this.btnVocalsDdsPath.TabIndex = 6;
             this.btnVocalsDdsPath.Text = "...";
-            this.toolTip.SetToolTip(this.btnVocalsDdsPath, "For Expert Charter Usage Only");
+            this.toolTip.SetToolTip(this.btnVocalsDdsPath, "Expert Toolkit Users Only ...");
             this.btnVocalsDdsPath.UseVisualStyleBackColor = true;
             this.btnVocalsDdsPath.Click += new System.EventHandler(this.btnVocalsDdsPath_Click);
             // 
             // sngpathFD
             // 
-            this.sngpathFD.Location = new System.Drawing.Point(289, 31);
+            this.sngpathFD.Location = new System.Drawing.Point(159, 32);
             this.sngpathFD.Name = "sngpathFD";
             this.sngpathFD.Size = new System.Drawing.Size(31, 20);
             this.sngpathFD.TabIndex = 6;
             this.sngpathFD.Text = "...";
-            this.toolTip.SetToolTip(this.sngpathFD, "For Expert Charter Usage Only");
+            this.toolTip.SetToolTip(this.sngpathFD, "Expert Toolkit Users Only ...");
             this.sngpathFD.UseVisualStyleBackColor = true;
             this.sngpathFD.Click += new System.EventHandler(this.btnVocalsSngPath_Click);
             // 
             // chkCustomFont
             // 
+            this.chkCustomFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
             this.chkCustomFont.AutoSize = true;
             this.chkCustomFont.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkCustomFont.Location = new System.Drawing.Point(342, 33);
+            this.chkCustomFont.Location = new System.Drawing.Point(533, 72);
             this.chkCustomFont.Margin = new System.Windows.Forms.Padding(0);
             this.chkCustomFont.Name = "chkCustomFont";
             this.chkCustomFont.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.chkCustomFont.Size = new System.Drawing.Size(110, 17);
+            this.chkCustomFont.Size = new System.Drawing.Size(140, 17);
             this.chkCustomFont.TabIndex = 7;
-            this.chkCustomFont.Text = "Use Custom Font:";
-            this.toolTip.SetToolTip(this.chkCustomFont, "For Expert Charter Usage Only");
+            this.chkCustomFont.Text = "Use Custom Lyrics Font:";
+            this.toolTip.SetToolTip(this.chkCustomFont, "NOTICE: Expert Toolkit Users Only ...\r\nIf checked, turns off vocal character vali" +
+                    "dation.\r\n\r\nThis must be checked when using a\r\ncustom lyrics font (dds) with jvoc" +
+                    "als.xml.");
             this.chkCustomFont.UseVisualStyleBackColor = true;
+            this.chkCustomFont.CheckedChanged += new System.EventHandler(this.chkCustomFont_CheckedChanged);
             // 
             // rtbVocals
             // 
@@ -157,9 +165,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbVocals.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.rtbVocals.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtbVocals.Location = new System.Drawing.Point(21, 138);
+            this.rtbVocals.Location = new System.Drawing.Point(21, 118);
             this.rtbVocals.Name = "rtbVocals";
-            this.rtbVocals.Size = new System.Drawing.Size(435, 260);
+            this.rtbVocals.Size = new System.Drawing.Size(525, 264);
             this.rtbVocals.TabIndex = 32;
             this.rtbVocals.Text = "";
             this.rtbVocals.WordWrap = false;
@@ -170,16 +178,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbBlank.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.rtbBlank.Location = new System.Drawing.Point(10, 126);
+            this.rtbBlank.Location = new System.Drawing.Point(10, 106);
             this.rtbBlank.Name = "rtbBlank";
-            this.rtbBlank.Size = new System.Drawing.Size(457, 285);
+            this.rtbBlank.Size = new System.Drawing.Size(547, 289);
             this.rtbBlank.TabIndex = 33;
             this.rtbBlank.Text = "";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(344, 65);
+            this.label3.Location = new System.Drawing.Point(7, 7);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(111, 13);
             this.label3.TabIndex = 37;
@@ -187,7 +195,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // btnVocalsXmlPath
             // 
-            this.btnVocalsXmlPath.Location = new System.Drawing.Point(624, 81);
+            this.btnVocalsXmlPath.Location = new System.Drawing.Point(482, 23);
             this.btnVocalsXmlPath.Name = "btnVocalsXmlPath";
             this.btnVocalsXmlPath.Size = new System.Drawing.Size(31, 20);
             this.btnVocalsXmlPath.TabIndex = 36;
@@ -197,22 +205,25 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // txtVocalsXmlPath
             // 
-            this.txtVocalsXmlPath.Cue = "Select ShowLights XML file here or in Creator GUI Arrangment group box";
+            this.txtVocalsXmlPath.Cue = "Select vocals.xml or jvocals.xml file here or in Creator GUI Arrangment group box" +
+                "";
             this.txtVocalsXmlPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtVocalsXmlPath.ForeColor = System.Drawing.Color.Gray;
-            this.txtVocalsXmlPath.Location = new System.Drawing.Point(347, 81);
+            this.txtVocalsXmlPath.Location = new System.Drawing.Point(10, 23);
             this.txtVocalsXmlPath.Multiline = true;
             this.txtVocalsXmlPath.Name = "txtVocalsXmlPath";
             this.txtVocalsXmlPath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtVocalsXmlPath.Size = new System.Drawing.Size(271, 20);
+            this.txtVocalsXmlPath.Size = new System.Drawing.Size(466, 19);
             this.txtVocalsXmlPath.TabIndex = 35;
+            this.toolTip.SetToolTip(this.txtVocalsXmlPath, "TIP: Use jvocals.xml when working with custom lyric fonts files.");
+            this.txtVocalsXmlPath.TextChanged += new System.EventHandler(this.txtVocalsXmlPath_TextChanged);
             // 
             // lblKey
             // 
             this.lblKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lblKey.AutoSize = true;
-            this.lblKey.Location = new System.Drawing.Point(485, 122);
+            this.lblKey.Location = new System.Drawing.Point(565, 106);
             this.lblKey.Name = "lblKey";
             this.lblKey.Size = new System.Drawing.Size(63, 13);
             this.lblKey.TabIndex = 39;
@@ -223,19 +234,38 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.lstKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lstKey.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.lstKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstKey.FormattingEnabled = true;
             this.lstKey.HorizontalScrollbar = true;
-            this.lstKey.ItemHeight = 15;
-            this.lstKey.Location = new System.Drawing.Point(483, 138);
+            this.lstKey.Location = new System.Drawing.Point(568, 122);
             this.lstKey.Name = "lstKey";
-            this.lstKey.Size = new System.Drawing.Size(172, 229);
+            this.lstKey.Size = new System.Drawing.Size(202, 225);
             this.lstKey.TabIndex = 38;
+            // 
+            // toolTip
+            // 
+            this.toolTip.AutoPopDelay = 10000;
+            this.toolTip.InitialDelay = 500;
+            this.toolTip.ReshowDelay = 100;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.txtVocalsSngPath);
+            this.groupBox1.Controls.Add(this.sngpathFD);
+            this.groupBox1.Location = new System.Drawing.Point(568, 7);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(202, 62);
+            this.groupBox1.TabIndex = 40;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "TODO:  hidden for now";
+            this.groupBox1.Visible = false;
             // 
             // VocalsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(667, 424);
+            this.ClientSize = new System.Drawing.Size(782, 408);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblKey);
             this.Controls.Add(this.lstKey);
             this.Controls.Add(this.label3);
@@ -244,22 +274,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.Controls.Add(this.rtbVocals);
             this.Controls.Add(this.rtbBlank);
             this.Controls.Add(this.chkCustomFont);
-            this.Controls.Add(this.sngpathFD);
             this.Controls.Add(this.btnVocalsDdsPath);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.txtVocalsDdsPath);
-            this.Controls.Add(this.txtVocalsSngPath);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(315, 229);
             this.Name = "VocalsForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Vocals";
+            this.TopMost = true;
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -281,5 +309,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private Label lblKey;
         private ListBox lstKey;
         private ToolTip toolTip;
+        private GroupBox groupBox1;
     }
 }

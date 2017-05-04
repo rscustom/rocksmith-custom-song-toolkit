@@ -549,7 +549,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
                     }
                 }
-                else if (xmlFile.ToLower().Contains("_vocals"))
+                else if (xmlFile.ToLower().Contains("vocals")) // detect both jvocals and vocals
                 {
                     //var debugMe = "Confirm XML comments were preserved.";
                     var voc = new Arrangement
@@ -563,15 +563,17 @@ namespace RocksmithToolkitLib.DLCPackage
                             XmlComments = Song2014.ReadXmlComments(xmlFile)
                         };
 
-                    // Get symbols stuff from _vocals.xml
-                    var fontSng = Path.Combine(unpackedDir, xmlName + ".sng");
+                    // Get symbols stuff from vocals.xml
+                    var fontSng = Path.Combine(unpackedDir, xmlName + ".sng");           
                     var vocSng = Sng2014FileWriter.ReadVocals(xmlFile);
 
-                    if (vocSng.IsCustomFont())
+                    // TODO: explain/confirm function/usage of this conditional check
+                    if (vocSng.IsCustomFont()) // always seems to be false, even for jvocals
                     {
                         voc.CustomFont = true;
                         voc.FontSng = fontSng;
                         vocSng.WriteChartData(fontSng, new Platform(GamePlatform.Pc, GameVersion.None));
+                        throw new Exception("<CRITICAL ERROR> vocSng.IsCustomFont: " + xmlFile + Environment.NewLine + "Please report this error to the toolkit developers along with the song that you are currently working on." + Environment.NewLine + "This is important!");
                     }
 
                     voc.Sng2014 = Sng2014File.ConvertXML(xmlFile, ArrangementType.Vocal, voc.FontSng);

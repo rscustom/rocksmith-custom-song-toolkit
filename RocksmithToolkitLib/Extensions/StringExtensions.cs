@@ -32,6 +32,7 @@ DLC Key, and Tone Key Notes:
 Reserved XML Characters:
   Double quotes usage must be escaped ==> &quot;
   Ampersand usage must be escaped ==> &amp;
+  Dash usage must be escaped if not the first/last character ==> &#8211; or use "--"
 */
 
 // "return value;" is used to aid with debugging validation methods
@@ -95,7 +96,7 @@ namespace RocksmithToolkitLib.Extensions
             // allow use of alphanumerics a-zA-Z0-9
             // tested and working ... Üuber!@#$%^&*()_+=-09{}][":';<>.,?/ñice 
 
-            Regex rgx = new Regex("[^a-zA-Z0-9\\-_/&',!.?()\"#\\p{L} ]*");
+            Regex rgx = new Regex("[^a-zA-Z0-9\\-_/&:',!.?()\"#\\p{L} ]*");
             value = rgx.Replace(value, "");
             // commented out because some ODLC have these
             // value = value.StripLeadingSpecialCharacters(); 
@@ -604,8 +605,9 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string StripSpecialCharacters(this string value)
         {
+            // TEST ()½!$€£Test$€£()½!  ()½!Test()½!
             // value = Regex.Replace(value, "[`~#\\$€£*',.;:!?()[]\"{}/]", "");
-            Regex rgx = new Regex("[^a-zA-Z0-9 _#'.]+$"); // only these are acceptable
+            Regex rgx = new Regex("[^a-zA-Z0-9 _#:'.]"); // only these are acceptable
             var result = rgx.Replace(value, "");
             return result;
         }

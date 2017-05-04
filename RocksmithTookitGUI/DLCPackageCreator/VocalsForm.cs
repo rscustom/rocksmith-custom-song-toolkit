@@ -69,10 +69,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             if (!String.IsNullOrEmpty(VocalsPath))
             {
-                // EOF is using windows-1252 Encoding for vocals
-                // Toolkit is using UTF-8 Encoding for vocals
-                // TODO: determine if this matters
-  
+                // EOF is using windows-1252 Encoding for extended (custom) vocals
+                // Toolkit and game are using UTF-8 Encoding for vocals
+
                 // confirmed this preserves and displays proper encoding
                 using (var sr = new StreamReader(VocalsPath, new UTF8Encoding(false)))
                 {
@@ -85,7 +84,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             if (!String.IsNullOrEmpty(VocalsPath))
             {
-                // validate vocals xml
+                // perform rough validation of vocals xml
+                // full validation is performed later if needed
                 var vocalsStream = rtbVocals.Text.StripIllegalXMLChars();
                 // confirmed this preserves and saves with proper encoding
                 using (var reader = new StreamReader(vocalsStream, new UTF8Encoding(false)))
@@ -98,26 +98,30 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
-            if (File.Exists(SngPath) && File.Exists(ArtPath) || !IsCustom)
-            {
-                if (!IsCustom)
-                    SngPath = "";
+            // commented out for now as unnecssary code
+            //if (File.Exists(SngPath) && File.Exists(ArtPath) || !IsCustom)
+            //{
+            //    if (!IsCustom)
+            //        SngPath = "";
 
-                this.DialogResult = DialogResult.OK;
-                Close();
-            }
-            else
-            {
-                MessageBox.Show("One of required files are missing, please select both required files and try again.\r\n", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            this.DialogResult = DialogResult.OK;
+            Close();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("One of required files are missing, please select both required files and try again.\r\n", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //}
         }
 
         private void btnVocalsDdsPath_Click(object sender, EventArgs e)
         {
+
+            // toolkit writes this artifact to: /assets/ui/lyrics/girigirichop/lyrics_SONGNAME.dds
             using (var f = new VistaOpenFileDialog())
             {
                 f.FileName = ArtPath;
-                f.Filter = "Rocksmith DDS Art Files (*.dds)|*.dds";
+                f.Title = "Select a Custom Lyric Font DDS Texture (512x1024)";
+                f.Filter = "Custom Lyrics Font Files (*.dds)|*.dds";
                 if (f.ShowDialog() == DialogResult.OK)
                 {
                     ArtPath = f.FileName;
@@ -144,13 +148,40 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             using (var f = new VistaOpenFileDialog())
             {
                 f.FileName = VocalsPath;
-                f.Filter = "Rocksmith XML Vocals Files (*_vocals.xml)|*_vocals.xml";
+                f.Filter = "Rocksmith XML Vocals or JVocals Files (*vocals.xml)|*vocals.xml";
                 if (f.ShowDialog() == DialogResult.OK)
                 {
                     VocalsPath = f.FileName;
                     PopulateRichText();
                 }
             }
+        }
+
+        private void txtVocalsXmlPath_TextChanged(object sender, EventArgs e)
+        {
+            ValidateGui();
+        }
+
+        private void chkCustomFont_CheckedChanged(object sender, EventArgs e)
+        {
+            ValidateGui();
+        }
+
+        private void ValidateGui()
+        {
+            // checking for custom fonts
+            if (txtVocalsXmlPath.Text.ToLower().EndsWith("_jvocals.xml"))
+            {
+                btnVocalsDdsPath.Enabled = true;
+                txtVocalsDdsPath.Enabled = true;
+                chkCustomFont.Checked = true;
+            }
+            else
+            {
+                btnVocalsDdsPath.Enabled = false;
+                txtVocalsDdsPath.Enabled = false;
+            }
+
         }
 
     }
