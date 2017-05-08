@@ -319,12 +319,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             try
             {
                 // SETUP FIELDS
-                if (xmlFilePath.ToLower().EndsWith("vocals.xml"))
+                if (xmlFilePath.ToLower().EndsWith("vocals.xml") || xmlFilePath.ToLower().EndsWith("vocals_rs2.xml"))
                 {
                     cmbArrangementType.SelectedItem = ArrangementType.Vocal;
                     Arrangement.ArrangementType = ArrangementType.Vocal;
 
-                    if (xmlFilePath.ToLower().EndsWith("_jvocals.xml"))
+                    if (xmlFilePath.ToLower().EndsWith("_jvocals.xml") || xmlFilePath.ToLower().EndsWith("jvocals_rs2.xml"))
                         cmbArrangementName.SelectedItem = ArrangementName.JVocals;
                     else
                         cmbArrangementName.SelectedItem = ArrangementName.Vocals;

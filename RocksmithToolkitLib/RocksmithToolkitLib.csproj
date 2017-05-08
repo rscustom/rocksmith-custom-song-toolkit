@@ -243,6 +243,7 @@
     <Content Include="Resources\pedals.json" />
     <Content Include="RocksmithToolkitLib.SongAppId.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Resources\rsenumerable_root.flat" />
     <None Include="Resources\rsenumerable_song.flat" />
