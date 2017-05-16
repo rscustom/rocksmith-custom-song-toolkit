@@ -82,6 +82,16 @@
       rm -rf  "$(TargetDir)ddc"
     </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /S /Y "$(SolutionDir)Third-party Apps\Wwise\*" "$(TargetDir)Wwise\*" 
+xcopy /S /Y "$(SolutionDir)Third-party Apps\ogg*.*" "$(TargetDir)" 
+xcopy /S /Y "$(SolutionDir)Third-party Apps\nvdxt.exe" "$(TargetDir)"
+xcopy /S /Y "$(SolutionDir)Third-party Apps\packed_codebook*.*" "$(TargetDir)" 
+xcopy /S /Y "$(SolutionDir)Third-party Apps\revorb.exe" "$(TargetDir)" 
+xcopy /S /Y "$(SolutionDir)Third-party Apps\ww2ogg.exe" "$(TargetDir)"
+xcopy /S /Y "$(SolutionDir)Third-party Apps\*.xml" "$(TargetDir)" 
+rd /s /q "$(TargetDir)ddc"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

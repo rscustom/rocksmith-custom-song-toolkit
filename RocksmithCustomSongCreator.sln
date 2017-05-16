@@ -32,20 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tool", "tool", "{8BDB8985-C
 		Third-party Apps\tool\core.jar = Third-party Apps\tool\core.jar
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ddc", "ddc", "{CB7159F6-4CF1-4296-A7EA-BCC4127C0441}"
-	ProjectSection(SolutionItems) = preProject
-		Third-party Apps\ddc\ddc.exe = Third-party Apps\ddc\ddc.exe
-		Third-party Apps\ddc\ddc_chords_protector.xml = Third-party Apps\ddc\ddc_chords_protector.xml
-		Third-party Apps\ddc\ddc_chords_remover.xml = Third-party Apps\ddc\ddc_chords_remover.xml
-		Third-party Apps\ddc\ddc_dd_remover.xml = Third-party Apps\ddc\ddc_dd_remover.xml
-		Third-party Apps\ddc\ddc_default.cfg = Third-party Apps\ddc\ddc_default.cfg
-		Third-party Apps\ddc\ddc_default.xml = Third-party Apps\ddc\ddc_default.xml
-		Third-party Apps\ddc\ddc_keep_all_levels.cfg = Third-party Apps\ddc\ddc_keep_all_levels.cfg
-		Third-party Apps\ddc\ddc_merge_all_levels.cfg = Third-party Apps\ddc\ddc_merge_all_levels.cfg
-		Third-party Apps\ddc\license.txt = Third-party Apps\ddc\license.txt
-		Third-party Apps\ddc\readme.txt = Third-party Apps\ddc\readme.txt
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksmithToolkitUpdater", "RocksmithToolkitUpdater\RocksmithToolkitUpdater.csproj", "{4404D0DD-017E-4CC5-8302-3C150FDF06E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cdlcconverter", "RocksmithToolkitCLI\cdlcconverter\cdlcconverter.csproj", "{972BC97A-B70A-4007-B915-952CC3606A2A}"
@@ -149,7 +135,5 @@ Global
 		{972BC97A-B70A-4007-B915-952CC3606A2A} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{C8BDE9BB-F671-482E-97AB-5472F3C7D319} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
 		{CE48B5DF-398B-47D8-96D6-198566521104} = {7CFB8499-8B82-40B3-89EA-7971F5FD1E0C}
-		{8BDB8985-CC6B-4479-A9A7-0489836D87CD} = {17ADB8C7-17DF-4BE3-8460-3E342F334B53}
-		{CB7159F6-4CF1-4296-A7EA-BCC4127C0441} = {17ADB8C7-17DF-4BE3-8460-3E342F334B53}
 	EndGlobalSection
 EndGlobal

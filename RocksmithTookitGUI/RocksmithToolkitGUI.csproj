@@ -422,8 +422,7 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-xcopy /S /Y "$(SolutionDir)Third-party Apps"
+    <PostBuildEvent>xcopy /S /Y "$(SolutionDir)Third-party Apps"
 
 REM do some cleanup
 
