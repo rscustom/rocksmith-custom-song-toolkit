@@ -313,16 +313,23 @@ namespace RocksmithToolkitLib.Xml
             const string CST_MAGIC = " CST v";
             var sameComment = false;
             var sameVersion = false;
-            var xml = XDocument.Load(xmlSongFile);
-            var rootElement = "song";
 
+            // preserve utf8 and html ampersand encoding in jvocals
+            //if (xmlSongFile.ToLower().Contains("jvocals"))
+            //{
+            //    var xmlContent = File.ReadAllText(xmlSongFile).Replace("&#", "&amp;#");
+            //    File.WriteAllText(xmlSongFile, xmlContent);
+            //}
+
+            var xml = XDocument.Load(xmlSongFile);
+           
+            var rootElement = "song";
             if (xmlSongFile.ToLower().Contains("vocals"))
                 rootElement = "vocals";
             else if (xmlSongFile.ToLower().Contains("showlights"))
                 rootElement = "showlights";
 
             var rootnode = xml.Element(rootElement);
-
             if (rootnode == null)
                 throw new InvalidDataException(xmlSongFile + Environment.NewLine +
                     "XML file does not contain required root node.");
@@ -367,8 +374,16 @@ namespace RocksmithToolkitLib.Xml
                 if (sameVersion || writeNewVers)
                     rootnode.AddFirst(new XComment(CST_MAGIC + ToolkitVersion.version + " "));
             }
-
+            
+            // xml.Declaration = new XDeclaration("1.0", "utf-8", null);
             xml.Save(xmlSongFile);
+
+            // preserve html ampersands encoding in jvocals
+            //if (xmlSongFile.ToLower().Contains("jvocals"))
+            //{
+            //    var xmlContent = File.ReadAllText(xmlSongFile).Replace("&amp;#", "&#");
+            //    File.WriteAllText(xmlSongFile, xmlContent);
+            //}
         }
 
         public static Song2014 LoadFromFile(string xmlSongRS2014File)
@@ -1390,4 +1405,5 @@ namespace RocksmithToolkitLib.Xml
             return tones;
         }
     }
+
 }
