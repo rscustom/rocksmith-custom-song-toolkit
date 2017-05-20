@@ -27,9 +27,6 @@ using RocksmithToolkitLib.Xml;
 using Control = System.Windows.Forms.Control;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 using RocksmithToolkitGUI.Config;
-using RocksmithToolkitLib.DLCPackage.Showlight;
-
-
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {

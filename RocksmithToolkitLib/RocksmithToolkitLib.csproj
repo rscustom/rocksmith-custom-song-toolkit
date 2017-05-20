@@ -85,7 +85,7 @@
     <Compile Include="DLCPackage\Manifest\Tone\Manifest.cs" />
     <Compile Include="DLCPackage\Manifest\Tone\Pedal.cs" />
     <Compile Include="DLCPackage\Manifest\Tone\Tone.cs" />
-    <Compile Include="DLCPackage\Showlight\Showlights.cs" />
+    <Compile Include="XML\Showlights.cs" />
     <Compile Include="DLCPackage\XBlock\XblockX.cs" />
     <Compile Include="Extensions\BetterDialog2.cs">
       <SubType>Form</SubType>
@@ -115,7 +115,6 @@
     <Compile Include="DLCPackage\Manifest2014\Tone\Tone2014.cs" />
     <Compile Include="DLCPackage\Manifest\IAttributes.cs" />
     <Compile Include="DLCPackage\Manifest\Functions\ManifestFunctions.cs" />
-    <Compile Include="DLCPackage\Showlight\Showlight.cs" />
     <Compile Include="DLCPackage\XBlock\IEntity.cs" />
     <Compile Include="DLCPackage\XBlock\ISet.cs">
       <SubType>Code</SubType>

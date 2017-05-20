@@ -277,6 +277,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public override string ToString()
         {
+            // generates lstArrangement string format
             var toneDesc = String.Empty;
             if (!String.IsNullOrEmpty(ToneBase))
                 toneDesc = ToneBase;

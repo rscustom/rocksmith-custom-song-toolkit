@@ -267,7 +267,8 @@
             this.chkUpdateManifest.Size = new System.Drawing.Size(66, 17);
             this.chkUpdateManifest.TabIndex = 5;
             this.chkUpdateManifest.Text = "Manifest";
-            this.toolTip.SetToolTip(this.chkUpdateManifest, "If checked updates existing\r\nManifest files from XML info");
+            this.toolTip.SetToolTip(this.chkUpdateManifest, "If checked regenerates showlights\r\nand updates existing Manifest files\r\nfrom XML " +
+                    "info\r\n");
             this.chkUpdateManifest.UseVisualStyleBackColor = true;
             // 
             // lblCurrentOperation

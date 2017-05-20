@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using CFSM.ImageTools;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 using X360.IO;
 using X360.Other;
@@ -17,7 +19,6 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.DLCPackage.Showlight;
 using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Properties;
@@ -568,9 +569,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     else
                     {
                         // Generate Showlights 'cst_showlights.xml'
-                        var showlight = new Showlights(info);
+                        var showlight = new Showlights();
+                        showlight.CreateShowlights(info);
                         // TODO: determine minimum number of showlight elements to still be valid
-                        if (showlight.ShowlightList.Count > 5)
+                        if (showlight.ShowlightList.Count > 6)
                         {
                             showlight.Serialize(showlightStream);
                             string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "cst"));
@@ -583,6 +585,11 @@ namespace RocksmithToolkitLib.DLCPackage
                             // reload stream
                             using (var fs = File.OpenRead(shlFilePath))
                                 fs.CopyTo(showlightStream);
+                        }
+                        else
+                        {
+                            // insufficient showlight changes may crash game
+                            throw new InvalidOperationException("Detected insufficient showlight changes: " + showlight.ShowlightList.Count);
                         }
                     }
 

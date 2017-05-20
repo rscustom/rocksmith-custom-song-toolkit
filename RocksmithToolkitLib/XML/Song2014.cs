@@ -324,9 +324,9 @@ namespace RocksmithToolkitLib.Xml
             var xml = XDocument.Load(xmlSongFile);
            
             var rootElement = "song";
-            if (xmlSongFile.ToLower().Contains("vocals"))
+            if (Path.GetFileName(xmlSongFile).ToLower().Contains("vocals"))
                 rootElement = "vocals";
-            else if (xmlSongFile.ToLower().Contains("showlights"))
+            else if (Path.GetFileName(xmlSongFile).ToLower().Contains("showlights"))
                 rootElement = "showlights";
 
             var rootnode = xml.Element(rootElement);
