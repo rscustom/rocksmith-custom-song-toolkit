@@ -798,7 +798,7 @@ namespace RocksmithToolkitLib.DLCPackage
             // GlobalExtension.HideProgress();
         }
 
-        private static void UpdateSng(string songDirectory, Platform platform)
+        private static void UpdateSng(string songDirectory, Platform targetPlatform)
         {
             var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, @"GR\Behaviors\Songs"));
 
@@ -806,13 +806,13 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 if (File.Exists(xmlFile) && Path.GetExtension(xmlFile) == ".xml")
                 {
-                    var sngFile = Path.Combine(songDirectory, "GRExports", platform.GetPathName()[1], Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
+                    var sngFile = Path.Combine(songDirectory, "GRExports", targetPlatform.GetPathName()[1], Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
                     var arrType = ArrangementType.Guitar;
 
                     if (Path.GetFileName(xmlFile).ToLower().Contains("vocal"))
                     {
                         arrType = ArrangementType.Vocal;
-                        SngFileWriter.Write(xmlFile, sngFile, arrType, platform);
+                        SngFileWriter.Write(xmlFile, sngFile, arrType, targetPlatform);
                     }
                     else
                     {
@@ -823,7 +823,7 @@ namespace RocksmithToolkitLib.DLCPackage
                                 arrType = ArrangementType.Bass;
                     }
 
-                    SngFileWriter.Write(xmlFile, sngFile, arrType, platform);
+                    SngFileWriter.Write(xmlFile, sngFile, arrType, targetPlatform);
                 }
                 else
                 {
@@ -841,12 +841,16 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (File.Exists(xmlFile))
                 {
                     var xmlName = Path.GetFileNameWithoutExtension(xmlFile);
+                    if (xmlName.ToLower().Contains("_showlights"))
+                        continue;
+
                     var sngFile = Path.Combine(sngFolder, xmlName + ".sng");
                     var arrType = ArrangementType.Guitar;
+
                     if (xmlName.ToLower().Contains("vocal"))
                         arrType = ArrangementType.Vocal;
 
-                    // Handle vocals custom font
+                    // TODO: Handle vocals custom font
                     string fontSng = null;
                     if (arrType == ArrangementType.Vocal)
                     {
@@ -867,17 +871,44 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         /// <summary>
-        /// Fixes missing and regenerates existing showlights to current standards
+        /// Regenerates the aggregategraph file
+        /// </summary>
+        private static void UpdateAggegrateGraph(string songDirectory, Platform targetPlatform, DLCPackageData info)
+        {
+            var dlcName = info.Name.ToLower();
+            var aggregateGraphFileName = Path.Combine(songDirectory, String.Format("{0}_aggregategraph.nt", dlcName));
+            var aggregateGraph = new AggregateGraph2014.AggregateGraph2014(info, targetPlatform);
+
+            using (var fs = new FileStream(aggregateGraphFileName, FileMode.Create))
+            using (var aggregateGraphStream = new MemoryStream())
+            {
+                aggregateGraph.Serialize(aggregateGraphStream);
+                aggregateGraphStream.Flush();
+                aggregateGraphStream.Seek(0, SeekOrigin.Begin);
+                aggregateGraphStream.CopyTo(fs);
+            }
+        }
+
+        /// <summary>
+        /// Fixes missing and updates showlights to current standards
         /// </summary>
         private static void UpdateShowlights(string songDirectory, Platform targetPlatform)
         {
+            bool hasShowlights = true;
+            // TODO: provide some pb feedback for long process
             var info = DLCPackageData.LoadFromFolder(songDirectory, targetPlatform);
             var showlightsArr = info.Arrangements.Where(x => x.ArrangementType == ArrangementType.ShowLight).FirstOrDefault();
-            var showlightFile = showlightsArr.SongXml.File;
-            if (File.Exists(showlightFile))
-                File.Delete(showlightFile);
+            var showlightFilePath = showlightsArr.SongXml.File;
 
-            // Generate Showlights 'cst_showlights.xml'
+            if (String.IsNullOrEmpty(showlightFilePath))
+            {
+                var xmlFilePath = info.Arrangements[0].SongXml.File;
+                var xmlName = Path.GetFileNameWithoutExtension(xmlFilePath);
+                showlightFilePath = Path.Combine(Path.GetDirectoryName(xmlFilePath), xmlName.Split('_')[0] + "_showlights.xml");
+                hasShowlights = false;
+            }
+
+            // Generate Showlights
             var showlight = new Showlights();
             showlight.CreateShowlights(info);
             // TODO: determine minimum number of showlight elements to still be valid
@@ -886,26 +917,26 @@ namespace RocksmithToolkitLib.DLCPackage
                 var showlightStream = new MemoryStream();
                 showlight.Serialize(showlightStream);
 
-                string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "cst"));
-                using (FileStream file = new FileStream(shlFilePath, FileMode.Create, FileAccess.Write))
+                using (FileStream file = new FileStream(showlightFilePath, FileMode.Create, FileAccess.Write))
                     showlightStream.WriteTo(file);
 
                 // write xml comments
-                Song2014.WriteXmlComments(shlFilePath);
+                Song2014.WriteXmlComments(showlightFilePath);
             }
             else
             {
                 // insufficient showlight changes may crash game
                 throw new InvalidOperationException("Detected insufficient showlight changes: " + showlight.ShowlightList.Count);
             }
+
+            if (!hasShowlights)
+                UpdateAggegrateGraph(songDirectory, targetPlatform, info);
         }
 
-        private static void UpdateManifest2014(string songDirectory, Platform platform)
+        private static void UpdateManifest2014(string songDirectory, Platform targetPlatform)
         {
-            if (platform.version != GameVersion.RS2014)
+            if (targetPlatform.version != GameVersion.RS2014)
                 return;
-
-            UpdateShowlights(songDirectory, platform);
 
             var hsanFiles = Directory.EnumerateFiles(songDirectory, "*.hsan", SearchOption.AllDirectories).ToList();
             if (!hsanFiles.Any())
@@ -913,7 +944,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (hsanFiles.Count > 1)
                 throw new DataException("Error: there is more than one hsan file");
 
-            var manifestHeader = new ManifestHeader2014<AttributesHeader2014>(platform);
+            var manifestHeader = new ManifestHeader2014<AttributesHeader2014>(targetPlatform);
             var hsanFile = hsanFiles.First();
             var jsonFiles = Directory.EnumerateFiles(songDirectory, "*.json", SearchOption.AllDirectories).ToList();
             var xmlFiles = Directory.EnumerateFiles(songDirectory, "*.xml", SearchOption.AllDirectories).ToList();
@@ -934,11 +965,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 if (!xmlName.ToLower().Contains("vocal"))
                 {
-                    var manifestFunctions = new ManifestFunctions(platform.version);
+                    var manifestFunctions = new ManifestFunctions(targetPlatform.version);
                     var xmlContent = Song2014.LoadFromFile(xmlFile);
 
                     attr.PhraseIterations = new List<Manifest.PhraseIteration>();
-                    manifestFunctions.GeneratePhraseIterationsData(attr, xmlContent, platform.version);
+                    manifestFunctions.GeneratePhraseIterationsData(attr, xmlContent, targetPlatform.version);
 
                     attr.Phrases = new List<Manifest.Phrase>();
                     manifestFunctions.GeneratePhraseData(attr, xmlContent);
@@ -962,10 +993,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 // update manifestHeader (hsan) entry
                 var attributeHeaderDictionary = new Dictionary<string, AttributesHeader2014> { { "Attributes", new AttributesHeader2014(attr) } };
-                if (platform.IsConsole)
+                if (targetPlatform.IsConsole)
                 {
                     // One for each arrangements (Xbox360/PS3)
-                    manifestHeader = new ManifestHeader2014<AttributesHeader2014>(platform);
+                    manifestHeader = new ManifestHeader2014<AttributesHeader2014>(targetPlatform);
                     manifestHeader.Entries.Add(attr.PersistentID, attributeHeaderDictionary);
                 }
                 else
@@ -974,6 +1005,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // write updated hsan file
             manifestHeader.SaveToFile(hsanFile);
+
+            // fix missing or upgrade existing showlights
+            UpdateShowlights(songDirectory, targetPlatform);
         }
 
         #endregion
