@@ -408,7 +408,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                 {
                     IterationCount = PhraseIterationCount(song, ind),
                     MaxDifficulty = y.MaxDifficulty,
-                    Name = y.Name
+                    Name = y.Name // TODO: validate phrase names here
                 });
                 ind++;
             }
@@ -608,6 +608,38 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 
     }
 }
+
+/*
+ * 
+ * MAYBE USABLE FOR PHRASE NAMES
+ * 
+                string[] sep = sect.Name.Split(new string[1] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                if (sep.Length == 1)
+                {
+                    string uiName;
+                    if (SectionUINames.TryGetValue(sep[0], out uiName))
+                        sect.UIName = uiName;
+                    else
+                        throw new InvalidDataException(String.Format("Unknown section name: {0}", sep[0]));
+                }
+                else
+                {
+                    string uiName;
+                    if (SectionUINames.TryGetValue(sep[0], out uiName))
+                    {
+                        try
+                        {
+                            if (Convert.ToInt32(sep[1]) != 0 || Convert.ToInt32(sep[1]) != 1)
+                                uiName += String.Format("|{0}", sep[1]);
+                        }
+                        catch { }
+                        sect.UIName = uiName;
+                    }
+                    else
+                        throw new InvalidDataException(String.Format("Unknown section name: {0}", sep[0]));
+                }
+
+*/
 
 // CODE GRAVE YARD
 
