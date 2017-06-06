@@ -9,29 +9,33 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Xml;
 using RocksmithToolkitLib.Sng2014HSL;
 
+/*
+  * * * * * * * * * Color scheme * * * * * * * * * * * * * * * * * * 
+  * Fog midi notes: 24-35 (TODO: color scheme needs confirmation)
+  * 24(C)  = Green;                     25(C#) = Dark Red(G like)
+  * 26(D)  = Medium Turquoise(C# like); 27(D#) = Brown(A like)
+  * 28(E)  = Blue(D# like);             29(F)  = LtGreen(B like)
+  * 30(F#) = Purple(E like);            31(G)  = Dark LtGreen(C# like)
+  * 32(G#) = Dark Orange;               33(A)  = Yellow(A# like)
+  * 34(A#) = LtBlue(D like);            35(B)  = Dark Violet(F like)
+  * 
+  * Spotlights/colors/effects: midi notes 42, 48-59 
+  * Laser lights: 66-67
+  *
+  * Unknown: 36-41
+  * notes 43-47 causes game hangs
+  * notes 60-62 causes game hangs
+  * Unknown: 63-65
+  * Unknown: 68-69
+  *
+  * Showlights can be major cause of in-game crashes
+  * Initialize Fog and Beam in first two elements to avoid in-game crashes
+  * A minimum of two elements are required to produce default showlighting
+  * Sometimes 2nd to last note is laser followed by BeamNote and have same time
+*/
+
 namespace RocksmithToolkitLib.XML
 {
-    /*
-     * * * * * * * * * Color scheme * * * * * * * * * * * * * * * * * * 
-     * Fog midi notes: 24-35 (color scheme isn't natural)
-     * 24(C)  = Green;                     25(C#) = Dark Red(G like)
-     * 26(D)  = Medium Turquoise(C# like); 27(D#) = Brown(A like)
-     * 28(E)  = Blue(D# like);             29(F)  = LtGreen(B like)
-     * 30(F#) = Purple(E like);            31(G)  = Dark LtGreen(C# like)
-     * 32(G#) = Dark Orange;               33(A)  = Yellow(A# like)
-     * 34(A#) = LtBlue(D like);            35(B)  = Dark Violet(F like)
-     * 
-     * Unknown: 36-41
-     * Spotlights/colors/effects: notes 42, 48-59 
-     * Use note 42 at beginning to eliminate hang per iminashi suggestion 20170605
-     * Do not use notes 43-47 to eliminate hang not used in ODLC per iminashi 20170605
-     * (?) Game hangs caused by 60-62
-     * Unknown: 63, 64-65
-     * (?) Laser lights: 66-67
-     * 
-     * Need to define Fog Color + stage lights before Venue shows up (Time = 0-10)
-     */
-
     [XmlType("showlight")]
     public class Showlight : System.IEquatable<Showlight>
     {
@@ -223,69 +227,87 @@ namespace RocksmithToolkitLib.XML
                 return;
 
             // remove notes that appear too early, showlights start at 10 seconds
-            showlightList = showlightList.Where(s => s.Time > 10.0F).ToList();
+            showlightList = showlightList.Where(s => s.Time >= 10.0F).ToList();
 
-            // initialize showlights Fog and Beam 
+            // initialize showlights Fog and Beam
+            // nothing else seems to matter if initialization is done properly
             if (showlightList[0].Time > 10.0F)
-            {
                 showlightList.Insert(0, new Showlight { Note = GetFogNote(showlightList[0].Note), Time = 10.0F });
-                showlightList[1].Note = GetBeamNote(showlightList[1].Note);
-            }
-            else if (showlightList[0].Note < 24 || showlightList[0].Note > 35)
-            {
-                showlightList[0].Note = GetFogNote(showlightList[0].Note);
-                showlightList[1].Note = GetBeamNote(showlightList[1].Note);
-            }
 
-            // using bottoms up approach
-            for (var i = showlightList.Count - 1; i > 0; i--)
+            if (showlightList[0].Note < 24 || showlightList[0].Note > 35)
+                showlightList[0].Note = GetFogNote(showlightList[0].Note);
+
+            if (showlightList[1].Note < 48 || showlightList[1].Note > 59)
+                showlightList[1].Note = GetBeamNote(showlightList[1].Note);
+
+            int[] badNotes = new int[] { 36, 37, 38, 39, 40, 41, 43, 44, 45, 46, 47, 60, 61, 62, 63, 64, 65, 68, 69 };
+
+            // using bottoms up approach leaving first two initializing elements unchanged
+            for (var i = showlightList.Count - 1; i > 1; i--)
             {
-                // Change FogNote to BeamNote when half octive changes occure (quasi solo swell effect)
+                // remove any bad/unknown notes
+                foreach (var badNote in badNotes)
+                {
+                    if (showlightList[i].Note == badNote)
+                    {
+                        showlightList.Remove(showlightList[i]);
+                        continue;
+                    }
+                }
+
+                // Change FogNote to BeamNote when half octive changes occure (quasi solo swell effect) not really
                 if ((showlightList[i].Note > 23 && showlightList[i].Note < 36) &&
                     (showlightList[i - 1].Note > 23 && showlightList[i - 1].Note < 36))
                 {
                     if (Math.Abs(showlightList[i].Note - showlightList[i - 1].Note) >= 6)
-                        showlightList[i - 1].Note = GetBeamNote(showlightList[i].Note);
+                    {
+                        showlightList[i].Note = GetBeamNote(showlightList[i].Note);
+                    }
                 }
 
-                if (i % 12 == 0) // change BeamNote after 12 bars for randomized effect
-                {
-                    // for completely random effect
-                    // var rnd = new Random(Guid.NewGuid().GetHashCode());
-                    // showlightList[i].Note = rnd.Next(48, 59);
-                    // for fewer changes
-                    showlightList[i].Note = GetBeamNote(showlightList[i].Note);
-                }
+                // TODO: testing
+                //if (i % 12 == 0) // randomize after 12 effects 
+                //{
+                //    // for random effect
+                //    var rnd = new Random(Guid.NewGuid().GetHashCode());
+                //    showlightList[i].Note = rnd.Next(48, 59);
+                //    // showlightList[i].Note = rnd.Next(24, 35);
+                //}
 
-                // Remove/adjust any back to back duplicate notes
+                // remove/adjust any back to back duplicate notes
                 if (showlightList[i].Note == showlightList[i - 1].Note)
                 {
                     // showlightList.Remove(showlightList[i]);
                     // TODO: testing randomized color effect instead of removal
                     var rnd = new Random(Guid.NewGuid().GetHashCode());
-                    showlightList[i - 1].Note = rnd.Next(24, 35);
+                    showlightList[i].Note = rnd.Next(24, 35);
+                    // showlightList[i].Note = rnd.Next(48, 59);
                 }
+
+                // ? change lasers to spot/strobe
+                if (showlightList[i].Note > 65)
+                    showlightList[i].Note = 42;
             }
 
-            // add a duplicate note at the end
+            // add extra BeamNote at the end
             showlightList.Add(new Showlight
             {
-                Note = showlightList[showlightList.Count - 1].Note,
-                Time = showlightList[showlightList.Count - 1].Time + 1.0F
+                Note = GetBeamNote(showlightList[showlightList.Count - 1].Note),
+                Time = showlightList[showlightList.Count - 1].Time
             });
 
-            // Forced laser effect for last note
-            if (showlightList.Last().Note != 66)
-                showlightList.Add(new Showlight { Note = 66, Time = showlightList[showlightList.Count - 1].Time });
+            // now force laser effect on 2nd to last note
+            if (showlightList[showlightList.Count - 2].Note != 66)
+                showlightList[showlightList.Count - 2].Note = 66;
 
             ShowlightList = new List<Showlight>();
-            AddShowlights(showlightList);
+            ShowlightList = showlightList;
         }
 
         private int GetFogNote(int midiNote) // 24-35
         {
             // Console.WriteLine("GetFogNote: " + (midiNote % 12) + (12 * 2));
-            var rnd = new Random(midiNote % 12);
+            var rnd = new Random(midiNote);
             var fogNote = rnd.Next(24, 35);
             return fogNote;
         }
@@ -293,13 +315,10 @@ namespace RocksmithToolkitLib.XML
         private int GetBeamNote(int midiNote) // 48-59
         {
             // Console.WriteLine("GetBeamNote: " + (midiNote % 12) + (12 * 4));
-            var rnd = new Random(midiNote % 12);
+            var rnd = new Random(midiNote);
             var beamNote = rnd.Next(48, 59);
             return beamNote;
         }
-
-
-
 
     }
 }

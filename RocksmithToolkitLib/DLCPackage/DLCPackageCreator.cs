@@ -571,8 +571,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         // Generate Showlights 'cst_showlights.xml'
                         var showlight = new Showlights();
                         showlight.CreateShowlights(info);
-                        // TODO: determine minimum number of showlight elements to still be valid
-                        if (showlight.ShowlightList.Count > 6)
+                        // check for required minimum number of showlight elements
+                        if (showlight.ShowlightList.Count > 1)
                         {
                             showlight.Serialize(showlightStream);
                             string shlFilePath = Path.Combine(Path.GetDirectoryName(info.Arrangements[0].SongXml.File), String.Format("{0}_showlights.xml", "cst"));
@@ -589,7 +589,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         else
                         {
                             // insufficient showlight changes may crash game
-                            throw new InvalidOperationException("Detected insufficient showlight changes: " + showlight.ShowlightList.Count);
+                            throw new InvalidOperationException("<ERROR> Insufficient showlight changes will crash game: " + showlight.ShowlightList.Count);
                         }
                     }
 

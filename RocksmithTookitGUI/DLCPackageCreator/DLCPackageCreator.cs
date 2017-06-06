@@ -2232,18 +2232,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             if (MessageBox.Show("Are you sure to remove the selected arrangement?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 return;
-            //FIXME: bad thing happens here.
-            /*/ regenerate new showlights arrangement
-            if (arrangementLB.SelectedItem.ToString().ToLower().Contains("showlight"))
-            {
-                var packageData = GetPackageData();
-                foreach (var arr in packageData.Arrangements)
-                    if (arr.ArrangementType == ArrangementType.ShowLight)
-                    {
-                        File.Delete(arr.SongXml.File);
-                        arr.SongXml.File = null; // forces regeneration of shl
-                    }
-            }*/
 
             lstArrangements.Items.Remove(lstArrangements.SelectedItem);
             IsDirty = true;
