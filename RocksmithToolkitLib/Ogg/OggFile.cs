@@ -120,8 +120,8 @@ namespace RocksmithToolkitLib.Ogg
                 ww2oggProcess.WaitForExit();
                 string ww2oggResult = ww2oggProcess.StandardOutput.ReadToEnd();
 
-                if (ww2oggResult.IndexOf("error") > -1)
-                    throw new Exception("ww2ogg process error." + Environment.NewLine + ww2oggResult);
+                if (ww2oggResult.IndexOf("Error ", StringComparison.Ordinal) > -1 || ww2oggResult.IndexOf(" error:", StringComparison.Ordinal) > -1)
+                    throw new Exception("ww2ogg process error or CDLC file name contains reserved word 'error'." + Environment.NewLine + ww2oggResult);
 
                 // Processing with revorb
                 Process revorbProcess = new Process();
@@ -135,13 +135,14 @@ namespace RocksmithToolkitLib.Ogg
                 revorbProcess.Start();
                 revorbProcess.WaitForExit();
                 string revorbResult = revorbProcess.StandardOutput.ReadToEnd();
-
-                if (ww2oggResult.IndexOf("error") > -1)
+           
+                // TODO: ? should check revorbResult
+                if (ww2oggResult.IndexOf("Error ", StringComparison.Ordinal) > -1 || ww2oggResult.IndexOf(" error:", StringComparison.Ordinal) > -1)
                 {
                     if (File.Exists(outputFileName))
                         File.Delete(outputFileName);
 
-                    throw new Exception("revorb process error." + Environment.NewLine + revorbResult);
+                    throw new Exception("revorb process error or CDLC file name contains reserved word 'error'." + Environment.NewLine + revorbResult);
                 }
             }
         }
@@ -299,7 +300,7 @@ namespace RocksmithToolkitLib.Ogg
                 if (!File.Exists(wavPreviewPath))
                 {
                     if (!File.Exists(oggPath))
-                    { 
+                    {
                         //may cause issues if you've got another guitar.ogg in folder, but it's extremely rare.
                         ExternalApps.Wav2Ogg(audioPath, oggPath, audioQuality); // 4
                     }
