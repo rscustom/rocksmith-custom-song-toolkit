@@ -11,7 +11,7 @@ using RocksmithToolkitLib.Sng2014HSL;
 
 /*
   * * * * * * * * * Color scheme * * * * * * * * * * * * * * * * * * 
-  * Fog midi notes: 24-35 (TODO: color scheme needs confirmation)
+  * Fog midi notes: 24-35
   * 24(C)  = Green;                     25(C#) = Dark Red(G like)
   * 26(D)  = Medium Turquoise(C# like); 27(D#) = Brown(A like)
   * 28(E)  = Blue(D# like);             29(F)  = LtGreen(B like)
@@ -19,8 +19,15 @@ using RocksmithToolkitLib.Sng2014HSL;
   * 32(G#) = Dark Orange;               33(A)  = Yellow(A# like)
   * 34(A#) = LtBlue(D like);            35(B)  = Dark Violet(F like)
   * 
-  * Spotlights/colors/effects: midi notes 42, 48-59 
-  * Laser lights: 66-67
+  * Spotlights midi notes: 48-59, 42 is off
+  * 48 = Green                  54 = Dark Red
+  * 49 = Medium Turquoise       55 = Brown
+  * 50 = Blue                   56 = LtGreen
+  * 51 = Purple                 57 = Dark LtGreen
+  * 52 = Dark Orange            58 = Yellow
+  * 53 = LtBlue                 59 = Dark Violet
+
+  * Laser lights: 66 is off (maybe), 67 is on
   *
   * Unknown: 36-41
   * notes 43-47 causes game hangs
@@ -28,10 +35,10 @@ using RocksmithToolkitLib.Sng2014HSL;
   * Unknown: 63-65
   * Unknown: 68-69
   *
-  * Showlights can be major cause of in-game crashes
+  * CAUTION - showlights can be major cause of in-game crashes
   * Initialize Fog and Beam in first two elements to avoid in-game crashes
   * A minimum of two elements are required to produce default showlighting
-  * Sometimes 2nd to last note is laser followed by BeamNote and have same time
+  * Sometimes 2nd to last note is laser off followed by BeamNote and have same time
 */
 
 namespace RocksmithToolkitLib.XML
@@ -218,7 +225,7 @@ namespace RocksmithToolkitLib.XML
         }
 
         /// <summary>
-        /// Adjust midi notes to usable showlight notes
+        /// Adjust midi notes for tolerable showlight display
         /// </summary>
         /// <param name="showlightList"></param>
         private void AdjustShowlights(List<Showlight> showlightList)
@@ -240,7 +247,7 @@ namespace RocksmithToolkitLib.XML
             if (showlightList[1].Note < 48 || showlightList[1].Note > 59)
                 showlightList[1].Note = GetBeamNote(showlightList[1].Note);
 
-            int[] badNotes = new int[] { 36, 37, 38, 39, 40, 41, 43, 44, 45, 46, 47, 60, 61, 62, 63, 64, 65, 68, 69 };
+            int[] badNotes = new int[] { 36, 37, 38, 39, 40, 41, 43, 44, 45, 46, 47 }; // , 60, 61, 62, 63, 64, 65, 68, 69 };
 
             // using bottoms up approach leaving first two initializing elements unchanged
             for (var i = showlightList.Count - 1; i > 1; i--)
@@ -265,28 +272,32 @@ namespace RocksmithToolkitLib.XML
                     }
                 }
 
-                // TODO: testing
-                //if (i % 12 == 0) // randomize after 12 effects 
+                // testing randomize after 12 effects
+                //if (i % 12 == 0)  
                 //{
                 //    // for random effect
                 //    var rnd = new Random(Guid.NewGuid().GetHashCode());
-                //    showlightList[i].Note = rnd.Next(48, 59);
-                //    // showlightList[i].Note = rnd.Next(24, 35);
+                //    showlightList[i].Note = rnd.Next(24, 36);
+                //    showlightList[i - 1].Note = rnd.Next(48, 60);
+                //    // showlightList[i - 1].Note = 42; // turn off spot
                 //}
 
-                // remove/adjust any back to back duplicate notes
+                // testing turn on laser / turn off spot
+                if (showlightList[i - 1].Note > 59)
+                {
+                    showlightList[i - 1].Note = 42; // turn off spot
+                    // showlightList[i - 1].Note = 67;
+                }
+
+                // adjust any back to back duplicate notes
                 if (showlightList[i].Note == showlightList[i - 1].Note)
                 {
                     // showlightList.Remove(showlightList[i]);
                     // TODO: testing randomized color effect instead of removal
                     var rnd = new Random(Guid.NewGuid().GetHashCode());
-                    showlightList[i].Note = rnd.Next(24, 35);
-                    // showlightList[i].Note = rnd.Next(48, 59);
+                    showlightList[i].Note = rnd.Next(24, 36);
+                    showlightList[i - 1].Note = rnd.Next(48, 60);
                 }
-
-                // ? change lasers to spot/strobe
-                if (showlightList[i].Note > 65)
-                    showlightList[i].Note = 42;
             }
 
             // add extra BeamNote at the end
@@ -296,7 +307,7 @@ namespace RocksmithToolkitLib.XML
                 Time = showlightList[showlightList.Count - 1].Time
             });
 
-            // now force laser effect on 2nd to last note
+            // now turn off the laser effect on 2nd to last note
             if (showlightList[showlightList.Count - 2].Note != 66)
                 showlightList[showlightList.Count - 2].Note = 66;
 
@@ -308,7 +319,7 @@ namespace RocksmithToolkitLib.XML
         {
             // Console.WriteLine("GetFogNote: " + (midiNote % 12) + (12 * 2));
             var rnd = new Random(midiNote);
-            var fogNote = rnd.Next(24, 35);
+            var fogNote = rnd.Next(24, 36);  // upper limit is exclusive
             return fogNote;
         }
 
@@ -316,7 +327,7 @@ namespace RocksmithToolkitLib.XML
         {
             // Console.WriteLine("GetBeamNote: " + (midiNote % 12) + (12 * 4));
             var rnd = new Random(midiNote);
-            var beamNote = rnd.Next(48, 59);
+            var beamNote = rnd.Next(48, 60);  // upper limit is exclusive
             return beamNote;
         }
 
