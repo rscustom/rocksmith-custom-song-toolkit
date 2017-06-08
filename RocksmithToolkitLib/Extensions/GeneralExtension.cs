@@ -133,6 +133,33 @@ namespace RocksmithToolkitLib.Extensions
 
             return false;
         }
+        /// <summary>
+        /// Gets the type of the PE machine.
+        /// </summary>
+        /// <returns>The PE machine type.</returns>
+        /// <example>true if 64 Bit PE was provided</example>
+        /// <param name="pecoffPath">Pecoff path.</param>
+        /// <seealso cref="https://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx"/>
+        public static bool IsPE64BitType(string pecoffPath)
+        {
+            var f = new FileStream(pecoffPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var b = new BinaryReader(f);
+
+            // Offset to PE header is always at 0x3C.
+            f.Seek(0x3c, SeekOrigin.Begin);
+
+            // The PE header starts with "PE\0\0" =  0x50 0x45 0x00 0x00, little-endian
+            var peHeaderOffset = b.ReadInt32();
+            f.Seek(peHeaderOffset, SeekOrigin.Begin);
+            if (b.ReadUInt32() != 0x00004550)
+                throw new Exception("Can't find PE header!");
+
+            //Seek to OptionalHeader to find out what ty
+            f.Seek(0x118, SeekOrigin.Begin);
+            if (b.ReadByte() != 0xB)
+                throw new Exception("ROM trype detected, you're doing it wrong!");
+            return b.ReadByte() == 2;
+        }
 
         public static bool IsValidPSARC(this string fileName)
         {

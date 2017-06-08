@@ -37,7 +37,7 @@ namespace RocksmithToolkitGUI
                 var exception = (Exception)e.ExceptionObject;
                 MessageBox.Show(String.Format("Application.ThreadException\n{0}\n{1}\nPlease send us \"_RSToolkit_{2}.log\", you can find it in Toolkit folder.",
                     exception.ToString(), exception.Message.ToString(), DateTime.Now.ToString("yyyy-MM-dd")), "Unhandled Exception catched!");
-                Log.ErrorException(String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
+                Log.Error(exception, String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
             };
 
             // UI thread exceptions handling.
@@ -46,7 +46,7 @@ namespace RocksmithToolkitGUI
                 var exception = (Exception)e.Exception;
                 MessageBox.Show(String.Format("Application.ThreadException\n{0}\n{1}\nPlease send us \"_RSToolkit_{2}.log\", you can find it in Toolkit folder.",
                     exception.ToString(), exception.Message.ToString(), DateTime.Now.ToString("yyyy-MM-dd")), "Thread Exception catched!");
-                Log.ErrorException(String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
+                Log.Error(exception, String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
             };
 
             Application.EnableVisualStyles();

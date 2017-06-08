@@ -18,13 +18,13 @@ namespace RocksmithToolkitLib.Extensions
                 return JitVersion.Mono;
             if (IsMsX86())
                 return JitVersion.MsX86;
-            //if (IsMsX64())
-            //    return JitVersion.MsX64;
+            if (IntPtr.Size == 8)
+                return JitVersion.MsX64;
             return JitVersion.RyuJit;
         }
 
-        private int bar;
-        private bool IsMsX64(int step = 1)
+        int bar;
+        bool IsMsX64(int step = 1)
         {
             var value = 0;
             for (int i = 0; i < step; i++)
@@ -36,12 +36,12 @@ namespace RocksmithToolkitLib.Extensions
             return value == 20 + step;
         }
 
-        public static bool IsMono()
+        static bool IsMono()
         {
             return Type.GetType("Mono.Runtime") != null;
         }
 
-        public static bool IsMsX86()
+        static bool IsMsX86()
         {
             return !IsMono() && IntPtr.Size == 4;
         }

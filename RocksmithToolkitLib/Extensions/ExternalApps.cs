@@ -171,7 +171,10 @@ namespace RocksmithToolkitLib.Extensions
         public static void Wav2Wem(string wwiseCLIPath, string wwiseTemplateDir)
         {
             var templatePath = Path.Combine(wwiseTemplateDir, "Template.wproj");
-            var cmdArgs = String.Format(" \"{0}\" -GenerateSoundBanks -Platform Windows", templatePath);
+            // -NoWwiseDat ignores cached wem's and will generate each time.
+            // -ClearAudioFileCache force re-generate for wem's also deletes old and creates fresh new file.
+            // -Save should help with updating project to new schema (may loose quality factor field)
+            var cmdArgs = String.Format(" \"{0}\" -GenerateSoundBanks -Platform Windows -Language English(US) -NoWwiseDat -ClearAudioFileCache -Save", templatePath);
 
             GeneralExtensions.RunExternalExecutable(wwiseCLIPath, true, false, true, cmdArgs);
         }

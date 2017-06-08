@@ -12,8 +12,8 @@ namespace RocksmithToolkitLib.Ogg
 {
     public static class OggFile//wwRIFF
     {
-        // add support for new versions of Wwise here
-        public enum WwiseVersion { None, Wwise2010, Wwise2013, Wwise2014, Wwise2015 };
+        // Add support for newer versions of Wwise here
+        public enum WwiseVersion { None, Wwise2010, Wwise2013, Wwise2014, Wwise2015, Wwise2016 };
 
         #region RS1
 
@@ -149,14 +149,50 @@ namespace RocksmithToolkitLib.Ogg
 
         #region RS2014
 
+        public static void DowngradeWemVersion(string inputFile, string outputFileName)
+        {
+            using (var ofs = File.Create(outputFileName))
+            {
+                DowngradeWemVersion(inputFile).CopyTo(ofs);
+            }
+        }
+
         public static void ConvertAudioPlatform(string inputFile, string outputFileName)
         {
-            using (var outputFileStream = File.Open(outputFileName, FileMode.Append))
+            using (var outputFileStream = File.Open(outputFileName, FileMode.Append)) //TODO: Should it use create mode for this?
             {
                 ConvertAudioPlatform(inputFile).CopyTo(outputFileStream);
             }
         }
 
+        public static Stream DowngradeWemVersion(string inputFile)
+        {
+            inputFile.VerifyHeaders();
+            var platform = inputFile.GetAudioPlatform();
+            var bitConverter = platform.GetBitConverter;
+
+            using (var o = new MemoryStream())
+            using (var reader = new EndianBinaryReader(bitConverter, o))
+            using (var writer = new EndianBinaryWriter(bitConverter, o))
+            {
+                File.Open(inputFile, FileMode.Open, FileAccess.Read).CopyTo(o);
+                reader.Seek(40, SeekOrigin.Begin);
+                if (reader.ReadUInt32() != 3)
+                {
+                    writer.Seek(40, SeekOrigin.Begin);
+                    writer.Write((int)3);
+                }
+                o.Seek(0,0);
+                return new MemoryStream(o.GetBuffer(), 0, (int)o.Length);
+            }
+        }
+
+        /// <summary>
+        /// Converts the audio files betewwn RIFF-RIFX platforms.
+        /// Basically changes Magic and converts from Big to Little endian format.
+        /// </summary>
+        /// <returns>The audio platform.</returns>
+        /// <param name="inputFile">Input file.</param>
         public static Stream ConvertAudioPlatform(string inputFile)
         {
             inputFile.VerifyHeaders();
@@ -275,6 +311,7 @@ namespace RocksmithToolkitLib.Ogg
         /// <returns>wemPath</returns>
         public static string Convert2Wem(string audioPath, int audioQuality = 4, long previewLength = 30000, long chorusTime = 4000)
         {
+            //TODO: check for converted wem's from GUI call and ask if we want generate over or use existing files.
             // ExternalApps.VerifyExternalApps(); // for testing
             var audioPathNoExt = Path.Combine(Path.GetDirectoryName(audioPath), Path.GetFileNameWithoutExtension(audioPath));
             var oggPath = String.Format(audioPathNoExt + ".ogg");
@@ -284,6 +321,7 @@ namespace RocksmithToolkitLib.Ogg
             var wavPreviewPath = String.Format(audioPathNoExt + "_preview.wav");
             var wemPreviewPath = String.Format(audioPathNoExt + "_preview.wem");
 
+            //switch to verify headers instead, maybe Plus current implmentation bugged as for me.
             if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".ogg") //in RS1 ogg was actually wwise
             {
                 ExternalApps.Ogg2Wav(audioPath, wavPath); //detect quality here

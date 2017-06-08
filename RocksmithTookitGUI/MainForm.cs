@@ -80,7 +80,10 @@ namespace RocksmithToolkitGUI
             tabControl1.TabPages.Remove(GeneralConfigTab);
 
             // position main form at top center of screen to avoid having to reposition on low res displays
-            this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2, 0);
+            if ((Screen.PrimaryScreen.WorkingArea.Height - this.Height) > 0)
+                this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2);
+            else 
+                this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2, 0);
         }
 
         private void CheckForUpdate(object sender, DoWorkEventArgs e)
@@ -229,6 +232,7 @@ namespace RocksmithToolkitGUI
 
         private void MainForm_Splash(object sender, EventArgs e)
         {
+#if !DEBUG  // don't bug the Developers when in debug mode ;)
             bool showRevNote = ConfigRepository.Instance().GetBoolean("general_showrevnote");
             if (showRevNote)
             {
@@ -238,8 +242,7 @@ namespace RocksmithToolkitGUI
 
             this.Refresh();
 
-            // don't bug the Developers when in debug mode ;)
-#if !DEBUG
+
             // check for first run //Check if author set at least, then it's not a first run tho, but let it show msg anyways...
             bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
             if (!firstRun)

@@ -28,6 +28,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -346,6 +347,7 @@
     <Compile Include="DLCPackageCreator\VocalsForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\logo_small.png" />
