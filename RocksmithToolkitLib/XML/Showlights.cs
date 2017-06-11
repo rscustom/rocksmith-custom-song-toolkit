@@ -249,17 +249,17 @@ namespace RocksmithToolkitLib.XML
 
             int[] badNotes = new int[] { 36, 37, 38, 39, 40, 41, 43, 44, 45, 46, 47 }; // , 60, 61, 62, 63, 64, 65, 68, 69 };
 
+
+
             // using bottoms up approach leaving first two initializing elements unchanged
             for (var i = showlightList.Count - 1; i > 1; i--)
             {
-                // remove any bad/unknown notes
-                foreach (var badNote in badNotes)
+                // remove any bad/unknown notes from list
+                var j = i;
+                if (badNotes.AsParallel().Any(n => showlightList[j].Note.Equals(n)))
                 {
-                    if (showlightList[i].Note == badNote)
-                    {
-                        showlightList.Remove(showlightList[i]);
-                        continue;
-                    }
+                    showlightList.Remove(showlightList[j]);
+                    continue;
                 }
 
                 // Change FogNote to BeamNote when half octive changes occure (quasi solo swell effect) not really
