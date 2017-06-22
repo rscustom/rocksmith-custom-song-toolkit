@@ -28,11 +28,6 @@ namespace RocksmithToolkitLib.PsarcLoader
             DLCPackageData info = new DLCPackageData();
             var packagePlatform = inputPath.GetPlatform();
             info = DLCPackageData.LoadFromFolder(packageDir, packagePlatform, packagePlatform, ignoreMultitoneEx);
-            var foundShowlights = Directory.EnumerateFiles(packageDir, "*_showlights.xml", SearchOption.AllDirectories).Any();
-
-            // toolkit will generate showlights if none was found
-            if (!foundShowlights)
-                info.Showlights = true;
 
             return info;
         }

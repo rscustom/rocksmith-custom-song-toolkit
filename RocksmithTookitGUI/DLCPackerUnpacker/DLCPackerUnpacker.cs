@@ -435,8 +435,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     }
                 }
 
-                // reuse existing showlights.xml or generates new one if none is found
-                info.Showlights = true;
                 // Generate Fixed Low Bass Tuning Package
                 GlobalExtension.ShowProgress(String.Format("Repackaging '{0}' ...", Path.GetFileName(srcPath)), 80);
                 // TODO consider user of regular packer here

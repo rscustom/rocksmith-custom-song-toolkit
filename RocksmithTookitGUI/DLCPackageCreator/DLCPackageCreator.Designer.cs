@@ -525,15 +525,15 @@
             // 
             this.chkShowlights.AutoSize = true;
             this.chkShowlights.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkShowlights.Checked = true;
-            this.chkShowlights.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkShowlights.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkShowlights.ForeColor = System.Drawing.Color.MediumSlateBlue;
             this.chkShowlights.Location = new System.Drawing.Point(376, 88);
             this.chkShowlights.Name = "chkShowlights";
-            this.chkShowlights.Size = new System.Drawing.Size(115, 17);
+            this.chkShowlights.Size = new System.Drawing.Size(114, 17);
             this.chkShowlights.TabIndex = 5;
-            this.chkShowlights.Text = "Include Showlights";
+            this.chkShowlights.Text = "Default Showlights";
+            this.toolTip.SetToolTip(this.chkShowlights, "FOR DEV USE ONLY\r\nIf checked, generates only the\r\nminimum required default Showli" +
+                    "ghts");
             this.chkShowlights.UseVisualStyleBackColor = true;
             // 
             // btnArrangementQuick

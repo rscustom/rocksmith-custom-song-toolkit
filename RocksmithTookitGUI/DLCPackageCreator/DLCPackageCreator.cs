@@ -1572,8 +1572,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // showlights cause in game hanging for some RS1-RS2 conversions
-            // can be disabled here by devs if required
-            packageData.Showlights = chkShowlights.Checked;
+            // and/or can be defaulted to a minimum set by devs if required
+            packageData.DefaultShowlights = chkShowlights.Checked;
 
             //Generate metronome arrangements here
             var mArr = new List<Arrangement>();

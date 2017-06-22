@@ -31,7 +31,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public bool Mac { get; set; }
         public bool XBox360 { get; set; }
         public bool PS3 { get; set; }
-        public bool Showlights { get; set; }
+        public bool DefaultShowlights { get; set; }
         public string AppId { get; set; }
         public string Name { get; set; } // aka DLCKey <=> SongKey //TODO: implement deserialize here, with workaround for DLCKey=Name and rename Name to DLCKey finnaly!
         public SongInfo SongInfo { get; set; }
@@ -598,7 +598,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 // Adding ShowLights
                 data.Arrangements.Add(shl);
-                data.Showlights = true;
             }
 
             //Get DDS Files

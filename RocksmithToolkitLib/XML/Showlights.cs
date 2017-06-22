@@ -172,7 +172,7 @@ namespace RocksmithToolkitLib.XML
             }
 
             Generate(info.Arrangements[maxArrNdx].SongXml.File, maxLevelNdx);
-            AdjustShowlights(ShowlightList);
+            AdjustShowlights(ShowlightList, info.DefaultShowlights);
             Count = ShowlightList.Count;
         }
 
@@ -199,7 +199,7 @@ namespace RocksmithToolkitLib.XML
             {
                 // make showlights changes occure on the beat/measure
                 var measOffset = song.Ebeats.Where(eb => eb.Measure != -1 && eb.Time <= note.Time).Last();
-                // forcing midi notes for guitar gives consistent results even with bass arrangements
+                // forcing midi notes for guitar gives more consistent results even with bass arrangements
                 var mNote = Sng2014FileWriter.GetMidiNote(tuning, (Byte)note.String, (Byte)note.Fret, false, song.Capo);
                 // varying midi notes gives more color changes
                 // var mNote = Sng2014FileWriter.GetMidiNote(tuning, (Byte)note.String, (Byte)note.Fret, song.Arrangement == "Bass", song.Capo);
@@ -213,7 +213,7 @@ namespace RocksmithToolkitLib.XML
 
                 // make showlights occure on the beat/measure
                 var measOffset = song.Ebeats.Where(eb => eb.Measure != -1 && eb.Time <= chord.Time).Last();
-                // forcing midi notes for guitar may give consistent results even with bass arrangements
+                // forcing midi notes for guitar gives more consistent results even with bass arrangements
                 var mNote = Sng2014FileWriter.getChordNote(tuning, chord, song.ChordTemplates, false, song.Capo);
                 // varying midi notes gives more color changes
                 // var mNote = Sng2014FileWriter.getChordNote(tuning, chord, song.ChordTemplates, song.Arrangement == "Bass", song.Capo);
@@ -237,87 +237,91 @@ namespace RocksmithToolkitLib.XML
         /// Adjust midi notes for tolerable showlight display
         /// </summary>
         /// <param name="showlightList"></param>
-        private void AdjustShowlights(List<Showlight> showlightList)
+        private void AdjustShowlights(List<Showlight> showlightList, bool defaultShowlights)
         {
-            if (showlightList.Count < 2)
-                return;
-
-            // remove notes that appear too early, showlights start at 10 seconds
-            showlightList = showlightList.Where(s => s.Time >= 10.0F).ToList();
-
-            // using bottoms up approach
-            for (var i = showlightList.Count - 1; i > 0; i--)
+            if (showlightList.Count > 2 && !defaultShowlights)
             {
-                // remove any bad/unknown notes: ranges 0-23, 36-41, 43-47, 60-65, 68-99
-                if ((showlightList[i].Note > -1 && showlightList[i].Note < 24) ||
-                    (showlightList[i].Note > 35 && showlightList[i].Note < 42) ||
-                    (showlightList[i].Note > 42 && showlightList[i].Note < 48) ||
-                    (showlightList[i].Note > 59 && showlightList[i].Note < 66))
-                // || (showlightList[i].Note > 67 && showlightList[i].Note < 128))
+                // remove notes that appear too early, showlights start at 10 seconds
+                showlightList = showlightList.Where(s => s.Time >= 10.0F).ToList();
+
+                // using bottoms up approach
+                for (var i = showlightList.Count - 1; i > 0; i--)
                 {
-                    showlightList.RemoveAt(i); // do not use 'continue' here
+                    // remove any bad/unknown notes: ranges 0-23, 36-41, 43-47, 60-65, 68-99
+                    if ((showlightList[i].Note > -1 && showlightList[i].Note < 24) || (showlightList[i].Note > 35 && showlightList[i].Note < 42) || (showlightList[i].Note > 42 && showlightList[i].Note < 48) || (showlightList[i].Note > 59 && showlightList[i].Note < 66))
+                    // || (showlightList[i].Note > 67 && showlightList[i].Note < 128))
+                    {
+                        showlightList.RemoveAt(i); // do not use 'continue' here
+                    }
+
+                    // remove any back to back duplicate notes
+                    if (showlightList[i].Note == showlightList[i - 1].Note)
+                    {
+                        showlightList.RemoveAt(i); // do not use 'continue' here
+                    }
+
+                    //// for testing music swell/solo effect
+                    //// Change FogNote to BeamNote when third octive changes occure (quasi solo swell effect) not really
+                    //if ((showlightList[i].Note > 23 && showlightList[i].Note < 36) && (showlightList[i - 1].Note > 23 && showlightList[i - 1].Note < 36))
+                    //{
+                    //    if (Math.Abs(showlightList[i].Note - showlightList[i - 1].Note) > 3)
+                    //    {
+                    //        if (i % 2 == 0)
+                    //        {
+                    //            showlightList[i - 1].Note = 67; // turn off laser
+                    //            showlightList[i].Note = 66;
+                    //        }
+                    //        else
+                    //        {
+                    //            showlightList[i - 1].Note = 42; // spots off
+                    //            showlightList[i].Note = 52; // blue spot
+                    //        }
+                    //    }
+                    //}
+
+                    //// for testing laser
+                    //if (showlightList[i].Note > 67)
+                    //{
+                    //    showlightList[i - 1].Note = 66; // turn on laser
+                    //    showlightList[i].Note = 52; // blue spots back
+                    //}
+
+                    //// for testing randomize after 12 effects
+                    //if (i % 12 == 0)
+                    //{
+                    //    showlightList[i].Note = GetBeamNote(showlightList[i].Note);
+                    //    showlightList[i - 1].Note = GetFogNote(showlightList[i - 1].Note);
+                    //}
                 }
 
-                // remove any back to back duplicate notes
-                if (showlightList[i].Note == showlightList[i - 1].Note)
+                // for testing overall laser activation
+                var laserDeactivated = showlightList.Where(x => x.Note == 67).Any();
+                var laserActived = showlightList.Where(x => x.Note == 66).Any();
+                // turns on laser and searchlight effects for entire song if no other laser on was present            
+                if (!laserActived)
                 {
-                    showlightList.RemoveAt(i); // do not use 'continue' here
+                    showlightList.Add(new Showlight { Note = GetBeamNote(showlightList[showlightList.Count - 1].Note), Time = showlightList[showlightList.Count - 1].Time });
+                    showlightList[showlightList.Count - 2].Note = 66;
                 }
 
-                //// for testing music swell/solo effect
-                //// Change FogNote to BeamNote when third octive changes occure (quasi solo swell effect) not really
-                //if ((showlightList[i].Note > 23 && showlightList[i].Note < 36) && (showlightList[i - 1].Note > 23 && showlightList[i - 1].Note < 36))
-                //{
-                //    if (Math.Abs(showlightList[i].Note - showlightList[i - 1].Note) > 3)
-                //    {
-                //        if (i % 2 == 0)
-                //        {
-                //            showlightList[i - 1].Note = 67; // turn off laser
-                //            showlightList[i].Note = 66;
-                //        }
-                //        else
-                //        {
-                //            showlightList[i - 1].Note = 42; // spots off
-                //            showlightList[i].Note = 54; // blue spot
-                //        }
-                //    }
-                //}
+                // initialize first two elements of showlights with Fog and Beam
+                // nothing else seems to matter if initialization is done properly
+                if (showlightList[0].Time > 10.0F)
+                    showlightList.Insert(0, new Showlight { Note = GetFogNote(showlightList[0].Note), Time = 10.0F });
 
-                //// for testing laser
-                //if (showlightList[i].Note > 67)
-                //{
-                //    showlightList[i - 1].Note = 66; // turn on laser
-                //    showlightList[i].Note = 54; // blue spots back
-                //}
+                if (showlightList[0].Note < 24 || showlightList[0].Note > 35)
+                    showlightList[0].Note = GetFogNote(showlightList[0].Note);
 
-                //// for testing randomize after 12 effects
-                //if (i % 12 == 0)
-                //{
-                //    showlightList[i].Note = GetBeamNote(showlightList[i].Note);
-                //    showlightList[i - 1].Note = GetFogNote(showlightList[i - 1].Note);
-                //}
+                if (showlightList[1].Note < 48 || showlightList[1].Note > 59)
+                    showlightList[1].Note = GetBeamNote(showlightList[1].Note);
             }
-
-            // for testing overall laser activation
-            var laserDeactivated = showlightList.Where(x => x.Note == 67).Any();
-            var laserActived = showlightList.Where(x => x.Note == 66).Any();
-            // turns on laser and searchlight effects for entire song if no other laser on was present            
-            if (!laserActived)
+            else
             {
-                showlightList.Add(new Showlight { Note = GetBeamNote(showlightList[showlightList.Count - 1].Note), Time = showlightList[showlightList.Count - 1].Time });
-                showlightList[showlightList.Count - 2].Note = 66;
+                // create minimum default showlights
+                showlightList.Clear();
+                showlightList.Add(new Showlight { Note = 28, Time = 10.0F });
+                showlightList.Add(new Showlight { Note = 52, Time = 10.1F });
             }
-
-            // initialize first two elements of showlights with Fog and Beam
-            // nothing else seems to matter if initialization is done properly
-            if (showlightList[0].Time > 10.0F)
-                showlightList.Insert(0, new Showlight { Note = GetFogNote(showlightList[0].Note), Time = 10.0F });
-
-            if (showlightList[0].Note < 24 || showlightList[0].Note > 35)
-                showlightList[0].Note = GetFogNote(showlightList[0].Note);
-
-            if (showlightList[1].Note < 48 || showlightList[1].Note > 59)
-                showlightList[1].Note = GetBeamNote(showlightList[1].Note);
 
             ShowlightList = null;
             ShowlightList = new List<Showlight>();
