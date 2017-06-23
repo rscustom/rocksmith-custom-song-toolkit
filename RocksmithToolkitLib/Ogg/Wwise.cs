@@ -64,7 +64,12 @@ namespace RocksmithToolkitLib.Ogg
                 pathWwiseCli = Directory.EnumerateFiles(wwiseCLIPath, "WwiseCLI.exe", SearchOption.AllDirectories).AsParallel().FirstOrDefault((arg) => arg.Contains("Authoring\\Win32"));
             if (pathWwiseCli == null)
                 throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwiseCLIPath + Environment.NewLine + "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed.");
+
+#if (DEBUG)
+            // 32 bit wwise can run on 64 bit machine just fine, actually even better
+            // this check is causing an error in the release build for some user on some machines
             Console.WriteLine("64bit = {0}", GeneralExtensions.IsPE64BitType(pathWwiseCli));
+#endif
 
             var wwiseVersion = FileVersionInfo.GetVersionInfo(pathWwiseCli).ProductVersion;
             if (wwiseVersion.StartsWith("2013.2"))
@@ -121,7 +126,7 @@ namespace RocksmithToolkitLib.Ogg
                 resString = resString.Replace("%QF1%", Convert.ToString(audioQuality));
                 resString = resString.Replace("%QF2%", "4"); //preview
 
-                var tw = new StreamWriter( workUnitPath, false);
+                var tw = new StreamWriter(workUnitPath, false);
                 tw.Write(resString);
                 tw.Flush();
             }
