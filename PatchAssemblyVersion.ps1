@@ -14,7 +14,7 @@ $Assembly_Informational_Version = "$env:GIT_HASH"
 
 # edit the AssemblyVersion here 
 # will be applied to all AssemblyInfo.cs files ...
-$Assembly_Version = "2.8.3.0"
+$Assembly_Version = "2.8.3.1"
 
 Write-Host "- Patching: $Assembly_File"
 Write-Host "- AssemblyVersion: $Assembly_Version"
