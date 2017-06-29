@@ -256,10 +256,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>REM This is not work so need to manually run RocksmithToolkitLibPreBuild.bat
-CD $(SolutionDir)
-"RocksmithDevBuilder.exe TOOLKITVERS NOWAIT"
-EXIT 0</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
