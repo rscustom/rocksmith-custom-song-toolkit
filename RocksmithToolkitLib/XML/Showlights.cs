@@ -251,13 +251,15 @@ namespace RocksmithToolkitLib.XML
                     if ((showlightList[i].Note > -1 && showlightList[i].Note < 24) || (showlightList[i].Note > 35 && showlightList[i].Note < 42) || (showlightList[i].Note > 42 && showlightList[i].Note < 48) || (showlightList[i].Note > 59 && showlightList[i].Note < 66))
                     // || (showlightList[i].Note > 67 && showlightList[i].Note < 128))
                     {
-                        showlightList.RemoveAt(i); // do not use 'continue' here
+                        showlightList.RemoveAt(i);
+                        continue; // must be used
                     }
 
                     // remove any back to back duplicate notes
                     if (showlightList[i].Note == showlightList[i - 1].Note)
                     {
-                        showlightList.RemoveAt(i); // do not use 'continue' here
+                        showlightList.RemoveAt(i);
+                        continue; // must be used
                     }
 
                     //// for testing music swell/solo effect

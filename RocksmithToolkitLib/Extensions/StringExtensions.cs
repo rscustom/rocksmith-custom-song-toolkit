@@ -624,6 +624,22 @@ namespace RocksmithToolkitLib.Extensions
             return result;
         }
 
+        public static string GetStringInBetween(this string strSource, string strBegin, string strEnd)
+        {
+            string result = "";
+            int iIndexOfBegin = strSource.IndexOf(strBegin);
+            if (iIndexOfBegin != -1)
+            {
+                strSource = strSource.Substring(iIndexOfBegin + strBegin.Length);
+                int iEnd = strSource.IndexOf(strEnd);
+                if (iEnd != -1)
+                {
+                    result = strSource.Substring(0, iEnd);
+                }
+            }
+            return result;
+        }
+
         #endregion
     }
 }

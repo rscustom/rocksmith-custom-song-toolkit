@@ -476,13 +476,12 @@
             this.chkShowlights.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkShowlights.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkShowlights.ForeColor = System.Drawing.Color.MediumSlateBlue;
-            this.chkShowlights.Location = new System.Drawing.Point(376, 88);
+            this.chkShowlights.Location = new System.Drawing.Point(378, 88);
             this.chkShowlights.Name = "chkShowlights";
             this.chkShowlights.Size = new System.Drawing.Size(114, 17);
             this.chkShowlights.TabIndex = 5;
             this.chkShowlights.Text = "Default Showlights";
-            this.toolTip.SetToolTip(this.chkShowlights, "FOR DEV USE ONLY\r\nIf checked, generates only the\r\nminimum required default Showli" +
-                    "ghts");
+            this.toolTip.SetToolTip(this.chkShowlights, resources.GetString("chkShowlights.ToolTip"));
             this.chkShowlights.UseVisualStyleBackColor = true;
             // 
             // btnArrangementQuick
@@ -640,10 +639,11 @@
             // 
             // toolTip
             // 
-            this.toolTip.AutoPopDelay = 9000;
-            this.toolTip.InitialDelay = 100;
+            this.toolTip.AutomaticDelay = 300;
+            this.toolTip.AutoPopDelay = 15000;
+            this.toolTip.InitialDelay = 300;
             this.toolTip.IsBalloon = true;
-            this.toolTip.ReshowDelay = 100;
+            this.toolTip.ReshowDelay = 300;
             // 
             // btnDevUse
             // 
@@ -671,7 +671,9 @@
             this.txtDlcKey.Size = new System.Drawing.Size(187, 13);
             this.txtDlcKey.TabIndex = 3;
             this.txtDlcKey.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.toolTip.SetToolTip(this.txtDlcKey, resources.GetString("txtDlcKey.ToolTip"));
+            this.toolTip.SetToolTip(this.txtDlcKey, "DLC Key (aka Song Key):\nA unique humanly readable song key.\nNo spaces or special " +
+                    "characters allowed.\n\nUse the Configuration menu to \nsave your Charter Name so th" +
+                    "at \nDLC Key is auto formatted properly.");
             // 
             // txtAlbumSort
             // 

@@ -166,7 +166,6 @@ namespace transferprofile
             }
         }
 
-
         private static string ProjectVersion()
         {
             return String.Format("{0}.{1}.{2}", Assembly.GetExecutingAssembly().GetName().Version.Major, Assembly.GetExecutingAssembly().GetName().Version.Minor, Assembly.GetExecutingAssembly().GetName().Version.Build);

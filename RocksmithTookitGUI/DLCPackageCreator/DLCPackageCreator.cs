@@ -56,7 +56,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             InitializeComponent();
 
 #if (!DEBUG)
-            chkShowlights.Visible = false;
             btnDevUse.Visible = false;
 #endif
 

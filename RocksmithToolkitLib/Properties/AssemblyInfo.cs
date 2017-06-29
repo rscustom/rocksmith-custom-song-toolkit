@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Resources;
@@ -26,9 +26,6 @@ using System.Resources;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.8.3.1")]
-[assembly: AssemblyInformationalVersion("837f9cd6")]
+[assembly: AssemblyInformationalVersion("9605d7f3")]
 [assembly: NeutralResourcesLanguageAttribute("en")]

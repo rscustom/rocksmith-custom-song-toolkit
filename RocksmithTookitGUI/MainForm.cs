@@ -45,12 +45,8 @@ namespace RocksmithToolkitGUI
 
         private void InitMainForm()
         {
-            // NOTE: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT
-            // edit version number in AssemblyInfo.cs for GUI, Lib and Updater
-            // edit the hard coded version number in PatchAssemblyVersion.ps1 used by AppVeyor
-            // comment out as necessary when issuing new release version
-            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0} beta)", ToolkitVersion.version);
-            // this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
+            // NOTE: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT JUST EDIT TOOLKITVESION.CS 
+            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
             {// Disable updates for Mac (speedup) -1.5 seconds here
@@ -102,7 +98,7 @@ namespace RocksmithToolkitGUI
         private void EnableUpdate(object sender, RunWorkerCompletedEventArgs e)
         {
             if (onlineVersion == null) return;
-            if (ToolkitVersion.commit != "nongit")
+            if (ToolkitVersion.gitSubVersion != "nongit")
                 updateButton.Visible = updateButton.Enabled = onlineVersion.UpdateAvailable;
         }
 
@@ -236,7 +232,7 @@ namespace RocksmithToolkitGUI
             bool showRevNote = ConfigRepository.Instance().GetBoolean("general_showrevnote");
             if (showRevNote)
             {
-                if (this.Text.Contains("beta"))
+                if (this.Text.ToUpper().Contains("BETA"))
                     ShowHelpForm();
 
                 ConfigRepository.Instance()["general_showrevnote"] = "false";

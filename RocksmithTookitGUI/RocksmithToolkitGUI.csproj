@@ -29,6 +29,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -428,16 +429,19 @@
 
 REM do some cleanup
 
-del /S /Q "$(TargetDir)*.exe.config"  
+if $(ConfigurationName) == Release (
+del /S /Q "$(TargetDir)*.exe.config"
 del /S /Q "$(TargetDir)*.pdb"
 del /S /Q "$(TargetDir)*.vshost.exe"
 
-REM do some more cleanup
+del /S /Q "$(SolutionDir)*.pdb"
+del /S /Q "$(SolutionDir)*.vshost.exe"
 
 del /S /Q "$(TargetDir)MiscUtil.xml"
 del /S /Q "$(TargetDir)NLog.xml"
 del /S /Q "$(TargetDir)Newtonsoft.Json.xml"
-del /S /Q "$(TargetDir)X360.xml"</PostBuildEvent>
+del /S /Q "$(TargetDir)X360.xml"
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

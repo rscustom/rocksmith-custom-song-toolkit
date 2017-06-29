@@ -12,6 +12,7 @@
     <AssemblyName>RocksmithToolkitLib</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -27,6 +28,9 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CFSM.AudioTools">
@@ -252,16 +256,14 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PreBuildEvent>REM This is not work so need to manually run RocksmithToolkitLibPreBuild.bat
+CD $(SolutionDir)
+"RocksmithDevBuilder.exe TOOLKITVERS NOWAIT"
+EXIT 0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
-      CALL "$(SolutionDir)prebuild.bat" "$(SolutionDir)" "$(ProjectDir)ToolkitVersion.cs"
-    </PreBuildEvent>
-    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
-      "$(SolutionDir)prebuild.sh" "$(ProjectDir)" "$(ProjectDir)ToolkitVersion.cs"
-    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
