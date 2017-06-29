@@ -28,6 +28,7 @@ before_build:
   - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithTookitGUI\Properties\AssemblyInfo.cs"
   - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithToolkitLib\Properties\AssemblyInfo.cs"
   - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithToolkitUpdater\Properties\AssemblyInfo.cs"
+  
 #
 # assembly_info: breaks the $env:BuildVer variable
 # use manual batch 'Patch_All_AssemblyInfo.bat' to patch 'AssemblyInfo.cs' files 
