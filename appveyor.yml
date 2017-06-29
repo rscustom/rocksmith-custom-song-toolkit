@@ -21,7 +21,7 @@ install:
 
 # scripts to run before build  
 before_build: 
-  - RocksmithDevBuilder.exe TOOLKITVER NOWAIT
+  - rem not working RocksmithDevBuilder.exe TOOLKITVER NOWAIT
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8) 
   - rem Pause commands in the batch will make AppVeyor hang ... so make sure they are removed
   - rem cmd: .\PatchAssemblyInfo_All.bat
