@@ -28,7 +28,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -54,6 +53,7 @@
   <PropertyGroup>
     <ApplicationIcon>songcreator.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
@@ -353,7 +353,6 @@
     <Compile Include="DLCPackageCreator\VocalsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\Settings.settings">
