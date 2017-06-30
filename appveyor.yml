@@ -15,14 +15,15 @@ environment:
 build:
   parallel: true
   verbosity: minimal
+  project: RocksmithCustomSongCreator.sln
 
 install:
   - set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;%PATH%
 
 # scripts to run before build  
 before_build: 
-  - rem Pause commands in the batch will make AppVeyor hang ... 
-  - rem not working RocksmithDevBuilder.exe TOOLKITVER NOWAIT
+  - rem any PAUSE commands in a batch file will make AppVeyor hang ... 
+  - RocksmithDevBuilder.exe TOOLKITVER NOWAIT
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8) 
   - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithTookitGUI\Properties\AssemblyInfo.cs"
   - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithToolkitLib\Properties\AssemblyInfo.cs"

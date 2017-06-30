@@ -31,10 +31,10 @@ namespace RocksmithDevBuilder
             var wait = true;
 
             // set CLI appearance
-            Console.SetWindowPosition(0, 0);
-            Console.SetWindowSize(90, 35);
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Green;
+            if (DebugMode) Console.SetWindowPosition(0, 0);
+            if (DebugMode) Console.SetWindowSize(90, 35);
+            if (DebugMode) Console.BackgroundColor = ConsoleColor.Black;
+            if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
 
             // feed the CLI some data when working in debug mode
             if (DebugMode)
@@ -42,22 +42,22 @@ namespace RocksmithDevBuilder
 
             if (!args.Any() || args.Length != 2 || args[0].ToUpper().Contains("HELP") || args[0].Contains("?"))
             {
-                Console.WriteLine("");
-                Console.WriteLine(" CLI RocksmithDevBuilder.exe");
-                Console.WriteLine("");
-                Console.WriteLine(" - Version: " + ProjectVersion());
-                Console.WriteLine("   Copyright (C) 2017 CST Developers, Cozy1");
-                Console.WriteLine("");
-                Console.WriteLine(" - Purpose: FOR DEVELOPER USE ONLY");
-                Console.WriteLine("            Updates 'ToolkitVersion.cs' and 'AssemblyInfo.cs' file variables");
-                Console.WriteLine("");
-                Console.WriteLine(" - Syntax:  RocksmithPostBuilder.exe [arg0] [arg1]");
-                Console.WriteLine("            arg0 = 'TOOLKITVERS' or 'CONVERT'");
-                Console.WriteLine("            arg1 = 'WAIT' or 'NOWAIT'");
-                Console.WriteLine("");
-                Console.WriteLine(" - Usage:   Run CLI batch from the VS2010 pre-build event in RocksmithToolkitLib");
-                Console.WriteLine("");
-                if (wait) { Console.ReadLine(); }
+                if (DebugMode) Console.WriteLine("");
+                if (DebugMode) Console.WriteLine(" CLI RocksmithDevBuilder.exe");
+                if (DebugMode) Console.WriteLine("");
+                if (DebugMode) Console.WriteLine(" - Version: " + ProjectVersion());
+                if (DebugMode) Console.WriteLine("   Copyright (C) 2017 CST Developers, Cozy1");
+                if (DebugMode) Console.WriteLine("");
+                if (DebugMode) Console.WriteLine(" - Purpose: FOR DEVELOPER USE ONLY");
+                if (DebugMode) Console.WriteLine("            Updates 'ToolkitVersion.cs' and 'AssemblyInfo.cs' file variables");
+                if (DebugMode) Console.WriteLine("");
+                if (DebugMode) Console.WriteLine(" - Syntax:  RocksmithPostBuilder.exe [arg0] [arg1]");
+                if (DebugMode) Console.WriteLine("            arg0 = 'TOOLKITVERS' or 'CONVERT'");
+                if (DebugMode) Console.WriteLine("            arg1 = 'WAIT' or 'NOWAIT'");
+                if (DebugMode) Console.WriteLine("");
+                if (DebugMode) Console.WriteLine(" - Usage:   Run CLI batch from the VS2010 pre-build event in RocksmithToolkitLib");
+                if (DebugMode) Console.WriteLine("");
+                if (wait) if (DebugMode) Console.ReadLine();
                 Environment.Exit(-1);
                 return;
             }
@@ -72,20 +72,20 @@ namespace RocksmithDevBuilder
             // check for existence of critical files
             if (!File.Exists(gitHeadPath))
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(" - <ERROR> Could not find critical file ...");
-                Console.WriteLine(gitHeadPath);
-                Console.ForegroundColor = ConsoleColor.Green;
+                if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+                if (DebugMode) Console.WriteLine(" - <ERROR> Could not find critical file ...");
+                if (DebugMode) Console.WriteLine(gitHeadPath);
+                if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                 Environment.Exit(-1);
                 return;
             }
 
             if (!File.Exists(patchAssemblyVersionPath))
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(" - <ERROR> Could not find critical file ...");
-                Console.WriteLine(patchAssemblyVersionPath);
-                Console.ForegroundColor = ConsoleColor.Green;
+                if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+                if (DebugMode) Console.WriteLine(" - <ERROR> Could not find critical file ...");
+                if (DebugMode) Console.WriteLine(patchAssemblyVersionPath);
+                if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                 Environment.Exit(-1);
                 return;
             }
@@ -93,16 +93,16 @@ namespace RocksmithDevBuilder
             // get assemblyVersion and releaseType from ToolkitVersion.cs
             if (!File.Exists(toolkitVersionPath))
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(" - <ERROR> Could not find critical file ...");
-                Console.WriteLine(toolkitVersionPath);
-                Console.ForegroundColor = ConsoleColor.Green;
+                if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+                if (DebugMode) Console.WriteLine(" - <ERROR> Could not find critical file ...");
+                if (DebugMode) Console.WriteLine(toolkitVersionPath);
+                if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                 Environment.Exit(-1);
                 return;
             }
 
             // get gitSubVersion from .git folders
-            Console.WriteLine(" - Reading: " + gitHeadPath);
+            if (DebugMode) Console.WriteLine(" - Reading: " + gitHeadPath);
             var lines = File.ReadAllLines(gitHeadPath).ToList();
             var line = lines.Where(str => str.Contains("ref:")).FirstOrDefault();
             if (!String.IsNullOrEmpty(line))
@@ -117,7 +117,7 @@ namespace RocksmithDevBuilder
                     return;
                 }
 
-                //Console.WriteLine(" - Reading: " + masterPath);
+                //if(DebugMode) Console.WriteLine(" - Reading: " + masterPath);
                 lines = File.ReadAllLines(masterPath).ToList();
             }
             else
@@ -128,13 +128,13 @@ namespace RocksmithDevBuilder
             }
 
             gitSubVersion = lines[0].Substring(0, 8);
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(" - gitSubVersion: " + gitSubVersion);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("");
+            if (DebugMode) Console.ForegroundColor = ConsoleColor.Cyan;
+            if (DebugMode) Console.WriteLine(" - gitSubVersion: " + gitSubVersion);
+            if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
+            if (DebugMode) Console.WriteLine("");
 
             // get assemblyVersion and releaseType from ToolkitVersion.cs file
-            Console.WriteLine(" - Reading: " + toolkitVersionPath);
+            if (DebugMode) Console.WriteLine(" - Reading: " + toolkitVersionPath);
             lines = File.ReadAllLines(toolkitVersionPath).ToList();
             if (lines.Any())
             {
@@ -145,15 +145,15 @@ namespace RocksmithDevBuilder
                     if (idx > -1)
                     {
                         assemblyVersion = GetStringInBetween("\"", "\"", line);
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine(" - assemblyVersion: " + assemblyVersion);
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Cyan;
+                        if (DebugMode) Console.WriteLine(" - assemblyVersion: " + assemblyVersion);
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine(" - <ERROR> Could not find assemblyVersion ...");
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+                        if (DebugMode) Console.WriteLine(" - <ERROR> Could not find assemblyVersion ...");
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                     }
                 }
 
@@ -164,15 +164,15 @@ namespace RocksmithDevBuilder
                     if (idx > -1)
                     {
                         releaseType = GetStringInBetween("\"", "\"", line);
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine(" - releaseType: " + releaseType);
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Cyan;
+                        if (DebugMode) Console.WriteLine(" - releaseType: " + releaseType);
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine(" - <ERROR> Could not find 'releaseType' ...");
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+                        if (DebugMode) Console.WriteLine(" - <ERROR> Could not find 'releaseType' ...");
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                     }
                 }
 
@@ -184,18 +184,18 @@ namespace RocksmithDevBuilder
                     {
                         lines[idx] = "\t\tpublic static string gitSubVersion = \"" + gitSubVersion + "\";";
                         File.WriteAllLines(toolkitVersionPath, lines.ToArray());
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine(" - Updated gitSubVersion: " + gitSubVersion);
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Cyan;
+                        if (DebugMode) Console.WriteLine(" - Updated gitSubVersion: " + gitSubVersion);
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine(" - <ERROR> Could not find 'gitSubVersion' ...");
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+                        if (DebugMode) Console.WriteLine(" - <ERROR> Could not find 'gitSubVersion' ...");
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                     }
 
-                    Console.WriteLine("");
+                    if (DebugMode) Console.WriteLine("");
                 }
             }
             else
@@ -207,21 +207,21 @@ namespace RocksmithDevBuilder
 
             foreach (string projectName in applicationProjectNames)
             {
-                Console.WriteLine(" - Updating: " + projectName);
+                if (DebugMode) Console.WriteLine(" - Updating: " + projectName);
 
                 var assemblyInfoPath = Path.Combine(appPath, projectName, "Properties", "AssemblyInfo.cs");
                 if (!File.Exists(assemblyInfoPath))
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine(" - <ERROR> Could not find AssemblyInfoPath ...");
-                    Console.WriteLine(assemblyInfoPath);
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("");
+                    if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+                    if (DebugMode) Console.WriteLine(" - <ERROR> Could not find AssemblyInfoPath ...");
+                    if (DebugMode) Console.WriteLine(assemblyInfoPath);
+                    if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
+                    if (DebugMode) Console.WriteLine("");
 
                     continue;
                 }
 
-                Console.WriteLine(" - AssemblyInfo: " + assemblyInfoPath);
+                if (DebugMode) Console.WriteLine(" - AssemblyInfo: " + assemblyInfoPath);
                 lines = File.ReadAllLines(assemblyInfoPath).ToList();
                 if (lines.Any())
                 {
@@ -234,16 +234,16 @@ namespace RocksmithDevBuilder
                         {
                             lines[idx] = "[assembly: AssemblyVersion(\"" + assemblyVersion + "\")]";
                             File.WriteAllLines(assemblyInfoPath, lines.ToArray());
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.WriteLine(" - Updated AssemblyVersion: " + assemblyVersion);
-                            Console.ForegroundColor = ConsoleColor.Green;
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Cyan;
+                            if (DebugMode) Console.WriteLine(" - Updated AssemblyVersion: " + assemblyVersion);
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                         }
                         else
                         {
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine(" - <ERROR> Could not find 'AssemblyVersion' ...");
-                            Console.WriteLine(assemblyInfoPath);
-                            Console.ForegroundColor = ConsoleColor.Green;
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+                            if (DebugMode) Console.WriteLine(" - <ERROR> Could not find 'AssemblyVersion' ...");
+                            if (DebugMode) Console.WriteLine(assemblyInfoPath);
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                         }
                     }
 
@@ -256,25 +256,25 @@ namespace RocksmithDevBuilder
                         {
                             lines[idx] = "[assembly: AssemblyInformationalVersion(\"" + gitSubVersion + "\")]";
                             File.WriteAllLines(assemblyInfoPath, lines.ToArray());
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.WriteLine(" - Updated AssemblyInformationalVersion: " + gitSubVersion);
-                            Console.ForegroundColor = ConsoleColor.Green;
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Cyan;
+                            if (DebugMode) Console.WriteLine(" - Updated AssemblyInformationalVersion: " + gitSubVersion);
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                         }
                         else
                         {
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine(" - <ERROR> Could not find 'AssemblyInformationalVersion' ...");
-                            Console.WriteLine(assemblyInfoPath);
-                            Console.ForegroundColor = ConsoleColor.Green;
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+                            if (DebugMode) Console.WriteLine(" - <ERROR> Could not find 'AssemblyInformationalVersion' ...");
+                            if (DebugMode) Console.WriteLine(assemblyInfoPath);
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                         }
 
-                        Console.WriteLine("");
+                        if (DebugMode) Console.WriteLine("");
                     }
                 }
             }
 
             // update the PatchAssemblyVersion.ps1 file
-            Console.WriteLine(" - PatchAssemblyVersion: " + patchAssemblyVersionPath);
+            if (DebugMode) Console.WriteLine(" - PatchAssemblyVersion: " + patchAssemblyVersionPath);
             lines = File.ReadAllLines(patchAssemblyVersionPath).ToList();
             if (lines.Any())
             {
@@ -287,20 +287,20 @@ namespace RocksmithDevBuilder
                     {
                         lines[idx] = "$Assembly_Version = \"" + assemblyVersion + "\"";
                         File.WriteAllLines(patchAssemblyVersionPath, lines.ToArray());
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine(" - Updated $Assembly_Version: " + assemblyVersion);
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Cyan;
+                        if (DebugMode) Console.WriteLine(" - Updated $Assembly_Version: " + assemblyVersion);
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine(" - <ERROR> Could not find '$Assembly_Version' ...");
-                        Console.WriteLine(patchAssemblyVersionPath);
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+                        if (DebugMode) Console.WriteLine(" - <ERROR> Could not find '$Assembly_Version' ...");
+                        if (DebugMode) Console.WriteLine(patchAssemblyVersionPath);
+                        if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                     }
                 }
 
-                Console.WriteLine("");
+                if (DebugMode) Console.WriteLine("");
             }
 
             // write a new VersionInfo.txt file
@@ -311,16 +311,16 @@ namespace RocksmithDevBuilder
                 writer.WriteLine(releaseType);
             }
 
-            Console.WriteLine(" - VersionInfo: " + versionInfoPath);
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(" - Updated VersionInfo ...");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("");
+            if (DebugMode) Console.WriteLine(" - VersionInfo: " + versionInfoPath);
+            if (DebugMode) Console.ForegroundColor = ConsoleColor.Cyan;
+            if (DebugMode) Console.WriteLine(" - Updated VersionInfo ...");
+            if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
+            if (DebugMode) Console.WriteLine("");
 
             // finish up
-            Console.WriteLine("RocksmithPostBuild Finished ...");
-            Console.WriteLine("Press any key to continue");
-            if (wait) Console.ReadLine();
+            if (DebugMode) Console.WriteLine("RocksmithPostBuild Finished ...");
+            if (DebugMode) Console.WriteLine("Press any key to continue");
+            if (wait) if (DebugMode) Console.ReadLine();
 
             Environment.Exit(0);
             return;
@@ -337,7 +337,7 @@ namespace RocksmithDevBuilder
 
             foreach (string slnFile in slnFiles)
             {
-                Console.WriteLine(slnFile);
+                if (DebugMode) Console.WriteLine(slnFile);
                 var lines = File.ReadAllLines(slnFile).ToList();
                 if (lines.Count() > 0)
                 {
@@ -352,9 +352,9 @@ namespace RocksmithDevBuilder
                             lines.RemoveAll(m => m.StartsWith("VisualStudioVersion"));
                             lines.RemoveAll(m => m.StartsWith("MinimumVisualStudioVersion"));
                             File.WriteAllLines(slnFile, lines.ToArray());
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Converted :" + Path.GetFileName(slnFile));
-                            Console.ForegroundColor = ConsoleColor.Green;
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Red;
+                            if (DebugMode) Console.WriteLine("Converted :" + Path.GetFileName(slnFile));
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                             convertedCount++;
                         }
                     }
@@ -366,7 +366,7 @@ namespace RocksmithDevBuilder
 
             foreach (string csprojFile in csprojFiles)
             {
-                Console.WriteLine(csprojFile);
+                if (DebugMode) Console.WriteLine(csprojFile);
                 var lines = File.ReadAllLines(csprojFile).ToList();
                 if (lines.Count() > 0)
                 {
@@ -379,31 +379,31 @@ namespace RocksmithDevBuilder
                             lines[idx] = "<Project DefaultTargets=\"Build\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\" ToolsVersion=\"4.0\">";
                             lines.RemoveAll(m => m.StartsWith("<Import Project=\"$(MSBuildExtensionsPath)"));
                             File.WriteAllLines(csprojFile, lines.ToArray());
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Converted :" + Path.GetFileName(csprojFile));
-                            Console.ForegroundColor = ConsoleColor.Green;
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Red;
+                            if (DebugMode) Console.WriteLine("Converted :" + Path.GetFileName(csprojFile));
+                            if (DebugMode) Console.ForegroundColor = ConsoleColor.Green;
                             convertedCount++;
                         }
                     }
                 }
             }
 
-            Console.WriteLine("");
-            Console.WriteLine("Converted: " + convertedCount + " of " + fileCount + " files.");
-            Console.WriteLine("Done converting");
-            Console.WriteLine("");
-            Console.WriteLine("Press any key to continue");
-            if (wait) Console.ReadLine();
+            if (DebugMode) Console.WriteLine("");
+            if (DebugMode) Console.WriteLine("Converted: " + convertedCount + " of " + fileCount + " files.");
+            if (DebugMode) Console.WriteLine("Done converting");
+            if (DebugMode) Console.WriteLine("");
+            if (DebugMode) Console.WriteLine("Press any key to continue");
+            if (wait) if (DebugMode) Console.ReadLine();
             Environment.Exit(0);
             return;
         }
 
         private static void ShowHelpfulError(string message, bool wait = false)
         {
-            Console.WriteLine(" - RocksmithPostBuilder:");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(message);
-            if (wait) Console.ReadLine();
+            if (DebugMode) Console.WriteLine(" - RocksmithPostBuilder:");
+            if (DebugMode) Console.ForegroundColor = ConsoleColor.Yellow;
+            if (DebugMode) Console.WriteLine(message);
+            if (wait) if (DebugMode) Console.ReadLine();
         }
 
         private static string ProjectVersion()
