@@ -453,7 +453,7 @@
             // 
             // general_wwisepath
             // 
-            this.general_wwisepath.Cue = "Wwise v2013.2.x, v2014.1.x, or 2015.1.x build series";
+            this.general_wwisepath.Cue = "Wwise v2013.2.x, v2014.1.x, 2015.1.x, or 2016.1.x build series";
             this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
             this.general_wwisepath.Location = new System.Drawing.Point(122, 160);
