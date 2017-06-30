@@ -57,8 +57,7 @@ after_build:
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - 7z a %PkgName%-mac.zip "%BIN%\RocksmithCustomSongToolkit.app\"
 
-#  
- artifacts:
+artifacts:
   - path: '*-win.zip'
     name: Windows
   - path: '*-mac.zip'
