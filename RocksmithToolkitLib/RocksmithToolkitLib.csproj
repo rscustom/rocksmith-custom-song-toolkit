@@ -30,7 +30,7 @@
     <DebugType>none</DebugType>
   </PropertyGroup>
   <PropertyGroup>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CFSM.AudioTools">
@@ -270,9 +270,9 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>REM Don't bug Developers
+    <PreBuildEvent>REM This error's out in AppVeyor so it is only run when in Debug Mode
 
-if $(ConfigurationName) == Release (
+if $(ConfigurationName) == Debug (
 CD "$(SolutionDir)"
 cmd /c "RocksmithDevBuilder.exe TOOLKITVERS WAIT"
 )</PreBuildEvent>

@@ -18,7 +18,7 @@ namespace RocksmithToolkitLib
 
         // NOTE FOR DEVS: additionally the gitSubVersion below is automatically
         // updated by appveyor.yml and subsequently by CLI RocksmithDevBuilder.exe
-		public static string gitSubVersion = "13104fa0";
+		public static string gitSubVersion = "27e5af87";
 
         public static string version
         {
