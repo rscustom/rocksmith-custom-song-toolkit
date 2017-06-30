@@ -56,13 +56,15 @@ after_build:
   - copy "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - 7z a %PkgName%-mac.zip "%BIN%\RocksmithCustomSongToolkit.app\"
- 
+
+#  
  artifacts:
   - path: '*-win.zip'
     name: Windows
   - path: '*-mac.zip'
     name: Mac
 
+#	
 notifications:
   - provider: Webhook
     url: "http://hook.rscustom.net/appveyor"
