@@ -11,8 +11,9 @@ using System.Windows.Forms;
 
 namespace RocksmithDevBuilder
 {
-    internal class Program
+    class Program
     {
+        [STAThread]
         private static void Main(string[] args)
         {
             // common variables are here
@@ -58,8 +59,8 @@ namespace RocksmithDevBuilder
                 Console.WriteLine(" - Usage:   Run CLI batch from the VS2010 pre-build event in RocksmithToolkitLib");
                 Console.WriteLine("");
                 if (wait) Console.Read();
-                Environment.Exit(-1);
-                return;
+                
+                Environment.Exit(1);
             }
 
             if (args[1].ToUpper().Equals("NOWAIT"))
@@ -76,8 +77,8 @@ namespace RocksmithDevBuilder
                 Console.WriteLine(" - <ERROR> Could not find critical file ...");
                 Console.WriteLine(gitHeadPath);
                 Console.ForegroundColor = ConsoleColor.Green;
-                Environment.Exit(-1);
-                return;
+                
+                Environment.Exit(1);
             }
 
             if (!File.Exists(patchAssemblyVersionPath))
@@ -86,8 +87,8 @@ namespace RocksmithDevBuilder
                 Console.WriteLine(" - <ERROR> Could not find critical file ...");
                 Console.WriteLine(patchAssemblyVersionPath);
                 Console.ForegroundColor = ConsoleColor.Green;
-                Environment.Exit(-1);
-                return;
+                
+                Environment.Exit(1);
             }
 
             // get assemblyVersion and releaseType from ToolkitVersion.cs
@@ -97,8 +98,8 @@ namespace RocksmithDevBuilder
                 Console.WriteLine(" - <ERROR> Could not find critical file ...");
                 Console.WriteLine(toolkitVersionPath);
                 Console.ForegroundColor = ConsoleColor.Green;
-                Environment.Exit(-1);
-                return;
+                
+                Environment.Exit(1);
             }
 
             // get gitSubVersion from .git folders
@@ -113,8 +114,8 @@ namespace RocksmithDevBuilder
                 if (!File.Exists(masterPath))
                 {
                     ShowHelpfulError(" - <ERROR>: Could not find critical file " + masterPath);
-                    Environment.Exit(-1);
-                    return;
+                    
+                    Environment.Exit(1);
                 }
 
                 //if(DebugMode) Console.WriteLine(" - Reading: " + masterPath);
@@ -123,8 +124,8 @@ namespace RocksmithDevBuilder
             else
             {
                 ShowHelpfulError(" - <ERROR>: Could not find critical GitSubVersion data ...");
-                Environment.Exit(-1);
-                return;
+                
+                Environment.Exit(1);
             }
 
             gitSubVersion = lines[0].Substring(0, 8);
@@ -201,8 +202,8 @@ namespace RocksmithDevBuilder
             else
             {
                 ShowHelpfulError(" - <ERROR>: Could not read critical data " + toolkitVersionPath);
-                Environment.Exit(-1);
-                return;
+                
+                Environment.Exit(1);
             }
 
             foreach (string projectName in applicationProjectNames)
@@ -321,9 +322,8 @@ namespace RocksmithDevBuilder
             Console.WriteLine("RocksmithPostBuild Finished ...");
             Console.WriteLine("Press any key to continue");
             if (wait) Console.Read();
-
-            Environment.Exit(1);
-            return;
+            
+            Environment.Exit(0);
         }
 
         private static void ConvertVsProject(bool wait = false)
@@ -394,8 +394,8 @@ namespace RocksmithDevBuilder
             Console.WriteLine("");
             Console.WriteLine("Press any key to continue");
             if (wait) Console.Read();
-            Environment.Exit(1);
-            return;
+            
+            Environment.Exit(0);
         }
 
         private static void ShowHelpfulError(string message, bool wait = false)

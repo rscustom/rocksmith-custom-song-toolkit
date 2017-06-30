@@ -58,7 +58,7 @@ after_build:
   - copy "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - 7z a %PkgName%-mac.zip "%BIN%\RocksmithCustomSongToolkit.app\"
-  - RocksmithDevBuilder.exe TOOLKITVER NOWAIT
+  - rem FIXME: this is failing in appveyor => RocksmithDevBuilder.exe TOOLKITVER NOWAIT
 
 artifacts:
   - path: '*-win.zip'

@@ -255,13 +255,25 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- CUSTOM PREBUILD EVENT - DO NOT MODIFY -->
   <PropertyGroup>
-    <PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
+      CD $(SolutionDir)
+	  "$(SolutionDir)RocksmithDevBuilder.exe TOOLKITVERS NOWAIT" "$(ProjectDir)ToolkitVersion.cs"
+    </PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
+      "$(SolutionDir)prebuild.sh" "$(ProjectDir)" "$(ProjectDir)ToolkitVersion.cs"
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>CD $(SolutionDir)
+"$(SolutionDir)RocksmithDevBuilder.exe TOOLKITVERS NOWAIT"
+REM this is temporary work around to prevent throwing error codes during builds
+EXIT 0</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
