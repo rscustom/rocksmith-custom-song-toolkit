@@ -23,17 +23,15 @@ install:
 # scripts to run before build  
 before_build: 
   - rem any PAUSE commands in a batch file will make AppVeyor hang ... 
-  - rem this is hanging appveyor if run here RocksmithDevBuilder.exe TOOLKITVER NOWAIT
   - ps: $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8) 
   - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithTookitGUI\Properties\AssemblyInfo.cs"
   - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithToolkitLib\Properties\AssemblyInfo.cs"
   - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithToolkitUpdater\Properties\AssemblyInfo.cs"
   
 #
-# assembly_info: breaks the $env:BuildVer variable
-# use manual batch 'Patch_All_AssemblyInfo.bat' to patch 'AssemblyInfo.cs' files 
-#
 # enable patching of AssemblyInfo.* files
+# assembly_info: breaks the $env:BuildVer variable
+#
 #assembly_info:
 #  patch: false
 #  file: AssemblyInfo.cs
@@ -58,9 +56,8 @@ after_build:
   - copy "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - 7z a %PkgName%-mac.zip "%BIN%\RocksmithCustomSongToolkit.app\"
-  - rem FIXME: this is failing in appveyor => RocksmithDevBuilder.exe TOOLKITVER NOWAIT
-
-artifacts:
+ 
+ artifacts:
   - path: '*-win.zip'
     name: Windows
   - path: '*-mac.zip'

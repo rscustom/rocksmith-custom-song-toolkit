@@ -32,10 +32,11 @@ namespace RocksmithDevBuilder
             var wait = true;
 
             // set CLI appearance
-            Console.SetWindowPosition(0, 0);
-            Console.SetWindowSize(90, 35);
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Green;
+            // commented out ... causing error if exe is run from the toolkit prebuild event
+            // Console.SetWindowPosition(0, 0);
+            // Console.SetWindowSize(90, 35);
 
             // feed the CLI some data when working in debug mode
             if (DebugMode)

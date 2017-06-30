@@ -270,10 +270,12 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>CD $(SolutionDir)
-"$(SolutionDir)RocksmithDevBuilder.exe TOOLKITVERS NOWAIT"
-REM this is temporary work around to prevent throwing error codes during builds
-EXIT 0</PreBuildEvent>
+    <PreBuildEvent>REM Don't bug Developers
+
+if $(ConfigurationName) == Release (
+CD "$(SolutionDir)"
+cmd /c "RocksmithDevBuilder.exe TOOLKITVERS WAIT"
+)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

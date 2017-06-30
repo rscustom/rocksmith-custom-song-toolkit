@@ -29,5 +29,5 @@ using RocksmithToolkitLib;
 //      Revision
 //
 [assembly: AssemblyVersion("2.8.3.1")]
-[assembly: AssemblyInformationalVersion("6580a13a")]
+[assembly: AssemblyInformationalVersion("13104fa0")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
