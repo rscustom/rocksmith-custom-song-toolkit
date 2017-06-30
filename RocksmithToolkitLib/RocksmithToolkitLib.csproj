@@ -270,12 +270,9 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>REM This error's out in AppVeyor so it is only run when in Debug Mode
-
-if $(ConfigurationName) == Debug (
-CD "$(SolutionDir)"
-cmd /c "RocksmithDevBuilder.exe TOOLKITVERS WAIT"
-)</PreBuildEvent>
+    <PreBuildEvent>REM there are some hidden prebuild commands 
+REM for OSX and Linux in the RocksmithToolkitLib.csproj
+REM which calls the 'prebuild.sh' file</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

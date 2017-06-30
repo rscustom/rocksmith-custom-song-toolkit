@@ -9,7 +9,6 @@ using RocksmithToolkitLib;
 // associated with an assembly.
 [assembly: AssemblyTitle("Rocksmith Custom Song Creator Toolkit")]
 [assembly: AssemblyDescription("The purpose of this utility package is to generate custom songs compatible with Ubisoft® Rocksmith™ software. It is maintained by an open source community of enthusiasts and is not affiliated with Ubisoft® and/or the Rocksmith™ team. For more information, please visit: http://www.rscustom.net.")]
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rocksmith Custom Song Project")]
 [assembly: AssemblyProduct("Rocksmith Custom Song Creator Toolkit")]
 [assembly: AssemblyCopyright("Copyright © 2017")]
@@ -28,6 +27,8 @@ using RocksmithToolkitLib;
 //      Build Number
 //      Revision
 //
+// THESE VALUES ARE PROGRAMMATICALLY GENERATED - DO NOT EDIT
 [assembly: AssemblyVersion("2.8.3.1")]
-[assembly: AssemblyInformationalVersion("27e5af87")]
+[assembly: AssemblyInformationalVersion("ce57ebea")] // gitSubVersion
+[assembly: AssemblyConfiguration("BETA")] // "" blank for RELEASE
 [assembly: NeutralResourcesLanguageAttribute("en")]

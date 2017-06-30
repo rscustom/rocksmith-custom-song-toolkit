@@ -7,7 +7,6 @@ using System.Resources;
 // associated with an assembly.
 [assembly: AssemblyTitle("RocksmithToolkitLib")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rocksmith Custom Song Project")]
 [assembly: AssemblyProduct("RocksmithToolkitLib")]
 [assembly: AssemblyCopyright("Copyright © 2017")]
@@ -26,6 +25,8 @@ using System.Resources;
 //      Build Number
 //      Revision
 //
+// THESE VALUES ARE PROGRAMMATICALLY GENERATED - DO NOT EDIT
 [assembly: AssemblyVersion("2.8.3.1")]
-[assembly: AssemblyInformationalVersion("27e5af87")]
+[assembly: AssemblyInformationalVersion("ce57ebea")] // gitSubVersion
+[assembly: AssemblyConfiguration("BETA")] // "" blank for RELEASE
 [assembly: NeutralResourcesLanguageAttribute("en")]

@@ -45,7 +45,8 @@ namespace RocksmithToolkitGUI
 
         private void InitMainForm()
         {
-            // NOTE: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT JUST EDIT TOOLKITVESION.CS 
+            // NOTE TO DEVS: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT 
+            // Edit 'AssemblyVersion' and 'AssemblyConfiguration' values in the PatchAssemblyVersion.ps1 file 
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
@@ -98,7 +99,7 @@ namespace RocksmithToolkitGUI
         private void EnableUpdate(object sender, RunWorkerCompletedEventArgs e)
         {
             if (onlineVersion == null) return;
-            if (ToolkitVersion.gitSubVersion != "nongit")
+            if (ToolkitVersion.AssemblyInformationVersion != "nongit")
                 updateButton.Visible = updateButton.Enabled = onlineVersion.UpdateAvailable;
         }
 
@@ -165,6 +166,9 @@ namespace RocksmithToolkitGUI
 
             // reset to display the revision note
             ConfigRepository.Instance()["general_showrevnote"] = "true";
+
+            // write new VersionInfo.txt file to toolkit root
+            ToolkitVersion.UpdateVersionInfoFile();
         }
 
         private void configurationToolStripMenuItem_Click(object sender, EventArgs e)

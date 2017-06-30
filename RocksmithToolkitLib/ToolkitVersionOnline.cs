@@ -43,7 +43,7 @@ namespace RocksmithToolkitLib
         /// <returns></returns>
         public static ToolkitVersionOnline Load()
         {
-            var url = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.gitSubVersion);
+            var url = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.AssemblyConfiguration);
             Debug.WriteLine("Current version url: " + url);
 
             try
