@@ -257,22 +257,23 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- CUSTOM PREBUILD EVENT - DO NOT MODIFY -->
   <PropertyGroup>
-    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
-      CD $(SolutionDir)
-	  "$(SolutionDir)RocksmithDevBuilder.exe TOOLKITVERS NOWAIT" "$(ProjectDir)ToolkitVersion.cs"
-    </PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
       "$(SolutionDir)prebuild.sh" "$(ProjectDir)" "$(ProjectDir)ToolkitVersion.cs"
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PreBuildEvent>if $(ConfigurationName) == Debug (
+  CD "$(SolutionDir)"
+  cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
+  rem alt usage: cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.3.2 BETA"
+  rem alt usage: cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.3.2 RELEASE"
+)
+
+rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj rem which call the 'prebuild.sh' file</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>REM there are some hidden prebuild commands 
-REM for OSX and Linux in the RocksmithToolkitLib.csproj
-REM which calls the 'prebuild.sh' file</PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

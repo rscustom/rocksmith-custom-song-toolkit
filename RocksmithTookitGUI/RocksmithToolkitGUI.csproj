@@ -435,9 +435,9 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy /S /Y "$(SolutionDir)Third-party Apps"
 
-REM do some cleanup
+rem do some cleanup
 
-if $(ConfigurationName) == Release (
+rem if $(ConfigurationName) == Release (
 del /S /Q "$(TargetDir)*.exe.config"
 del /S /Q "$(TargetDir)*.pdb"
 del /S /Q "$(TargetDir)*.vshost.exe"
@@ -449,7 +449,7 @@ del /S /Q "$(TargetDir)MiscUtil.xml"
 del /S /Q "$(TargetDir)NLog.xml"
 del /S /Q "$(TargetDir)Newtonsoft.Json.xml"
 del /S /Q "$(TargetDir)X360.xml"
-)</PostBuildEvent>
+rem )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

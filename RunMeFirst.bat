@@ -26,7 +26,7 @@ echo.
 echo f | XCOPY /y .\CST-2014-04-09.vssettings "%UserPROFILE%\Documents\Visual Studio 2010\Settings\Currentsettings.vssettings" 
 
 echo.
-START /B /WAIT RocksmithDevBuilder.exe TOOLKITVERS WAIT
+START /B /WAIT RocksmithPreBuilder.exe "PREBUILD" "READ" "READ"
 
 .\contributing.md >> CON
 
