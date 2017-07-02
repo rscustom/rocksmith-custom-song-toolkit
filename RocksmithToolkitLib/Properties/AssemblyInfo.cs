@@ -26,7 +26,7 @@ using System.Resources;
 //      Revision
 //
 // THESE VALUES ARE PROGRAMMATICALLY GENERATED - DO NOT EDIT
-[assembly: AssemblyVersion("2.8.4.0")]
-[assembly: AssemblyInformationalVersion("6659db99")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyVersion("2.8.4.1")]
+[assembly: AssemblyInformationalVersion("420e01fc")]
+[assembly: AssemblyConfiguration("BETA")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
