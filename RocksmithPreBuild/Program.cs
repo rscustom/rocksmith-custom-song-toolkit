@@ -32,7 +32,7 @@ namespace RocksmithPreBuild
             // set CLI appearance
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Green;
-            // commented out ... causing error when exe is run from the toolkit prebuild event
+            // commented out ... causes error when exe is run from the toolkit prebuild event
             // Console.SetWindowPosition(0, 0);
             // Console.SetWindowSize(90, 35);
 
@@ -185,8 +185,8 @@ namespace RocksmithPreBuild
                             // convert configuration term 'RELEASE' to empty (blank)
                             if (args[2].ToUpper() == "RELEASE")
                                 assemblyConfiguration = "";
-                            else 
-                                assemblyConfiguration = (args[2];
+                            else
+                                assemblyConfiguration = (args[2]);
                             
                             lines[idx] = "$Assembly_Configuration = \"" + assemblyConfiguration + "\"";
                             File.WriteAllLines(patchAssemblyVersionPath, lines.ToArray());

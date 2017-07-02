@@ -21,7 +21,7 @@ $Assembly_Informational_Version = "$env:GIT_HASH"
 # these will be automatically applied to all AssemblyInfo.cs files by AppVeyor ...
 # $AssemblyConfiguration should be "BETA" or use "" if RELEASE
 $Assembly_Version = "2.8.3.2"
-$Assembly_Configuration = "BETA"
+$Assembly_Configuration = ""
 
 Write-Host "- Patching: $Assembly_File"
 Write-Host "- AssemblyVersion: $Assembly_Version"
