@@ -264,9 +264,10 @@
   <PropertyGroup>
     <PreBuildEvent>if $(ConfigurationName) == Debug (
   CD "$(SolutionDir)"
-  cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
-  rem alt usage: cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.3.2 BETA"
-  rem alt usage: cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.3.2 RELEASE"
+  rem alternate usages  
+  rem cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
+  rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.3.2 BETA"
+  cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.4.0 RELEASE"
 )
 
 rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj rem which call the 'prebuild.sh' file</PreBuildEvent>

@@ -20,7 +20,7 @@ $Assembly_Informational_Version = "$env:GIT_HASH"
 # before committing a major revisions/releases to github
 # these will be automatically applied to all AssemblyInfo.cs files by AppVeyor ...
 # $AssemblyConfiguration should be "BETA" or use "" if RELEASE
-$Assembly_Version = "2.8.3.2"
+$Assembly_Version = "2.8.4.0"
 $Assembly_Configuration = ""
 
 Write-Host "- Patching: $Assembly_File"
