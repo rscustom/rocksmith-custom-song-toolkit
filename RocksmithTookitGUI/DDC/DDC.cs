@@ -12,7 +12,7 @@ using System.Diagnostics;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 using Control = System.Windows.Forms.Control;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;

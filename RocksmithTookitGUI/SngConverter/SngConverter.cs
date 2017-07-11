@@ -11,7 +11,7 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.Extensions;
 using System.Xml.Linq;
 using System.Collections;

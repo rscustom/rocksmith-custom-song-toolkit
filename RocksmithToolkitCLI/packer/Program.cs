@@ -9,7 +9,7 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib;
 using System.Reflection;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 
 namespace packer
 {

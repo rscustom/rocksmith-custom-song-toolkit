@@ -23,7 +23,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using Control = System.Windows.Forms.Control;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 using RocksmithToolkitGUI.Config;
@@ -315,10 +315,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             songXml.ArrangementProperties.Metronome = (int)Metronome.Itself;
 
             var ebeats = songXml.Ebeats;
-            var songEvents = new RocksmithToolkitLib.Xml.SongEvent[ebeats.Length];
+            var songEvents = new RocksmithToolkitLib.XML.SongEvent[ebeats.Length];
             for (var i = 0; i < ebeats.Length; i++)
             {
-                songEvents[i] = new RocksmithToolkitLib.Xml.SongEvent
+                songEvents[i] = new RocksmithToolkitLib.XML.SongEvent
                     {
                         Code = ebeats[i].Measure == -1 ? "B1" : "B0",
                         Time = ebeats[i].Time
@@ -439,7 +439,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (!String.IsNullOrEmpty(UnpackedDir))
                         ofd.InitialDirectory = UnpackedDir;
                     else
-                    { 
+                    {
                         try
                         {
                             // use EOF project directory if it exists
@@ -1962,7 +1962,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 catch (Exception ex)
                 {
-                    errorsFound.AppendLine(String.Format("Error generate PC package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
+                    errorsFound.AppendLine(String.Format("Error generating PC package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
                 }
 
             if (chkPlatformMAC.Checked)
@@ -1976,7 +1976,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 catch (Exception ex)
                 {
-                    errorsFound.AppendLine(String.Format("Error generate Mac package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
+                    errorsFound.AppendLine(String.Format("Error generating Mac package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
                 }
 
             if (chkPlatformXBox360.Checked)
@@ -1990,7 +1990,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 catch (Exception ex)
                 {
-                    errorsFound.AppendLine(String.Format("Error generate XBox 360 package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
+                    errorsFound.AppendLine(String.Format("Error generating XBox 360 package: {0}{1}{0}{2}{0}", Environment.NewLine, ex.Message, ex.StackTrace));
                 }
 
             if (chkPlatformPS3.Checked)
@@ -2004,7 +2004,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 catch (Exception ex)
                 {
-                    errorsFound.AppendLine(String.Format("Error generate PS3 package: {0}{1}. {0}PS3 package require 'JAVA x86' (32 bits) installed on your machine to generate properly.{0}", Environment.NewLine, ex.StackTrace));
+                    errorsFound.AppendLine(String.Format("Error generating PS3 package: {0}{1}. {0}PS3 package require 'JAVA x86' (32 bits) installed on your machine to generate properly.{0}", Environment.NewLine, ex.StackTrace));
                 }
 
             // Cache cleanup so we don't serialize or reuse data that could be changed
@@ -2064,7 +2064,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 case "generate":
                     var message = "Package was generated.";
                     if (errorsFound.Length > 0)
-                        message = String.Format("Package was generated with errors! See below: {0}{1}", Environment.NewLine, errorsFound);
+                        message = String.Format("Package {2} was generated with errors! See below: {0}{1}", Environment.NewLine, errorsFound, ToolkitVersion.version);
                     else if (ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
                         SaveTemplateFile(UnpackedDir);
 
@@ -2076,7 +2076,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     break;
 
                 case "error":
-                    var message2 = String.Format("Package generation failed. See below: {0}{1}{0}", Environment.NewLine, errorsFound);
+                    var message2 = String.Format("Package generation {2} failed.  See below: {0}{1}{0}", Environment.NewLine, errorsFound, ToolkitVersion.version);
                     MessageBox.Show(message2, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Parent.Focus();
                     break;
@@ -2540,9 +2540,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 e.Handled = true;
         }
 
-        private class EqSEvent : IEqualityComparer<RocksmithToolkitLib.Xml.SongEvent>
+        private class EqSEvent : IEqualityComparer<RocksmithToolkitLib.XML.SongEvent>
         {
-            public bool Equals(RocksmithToolkitLib.Xml.SongEvent x, RocksmithToolkitLib.Xml.SongEvent y)
+            public bool Equals(RocksmithToolkitLib.XML.SongEvent x, RocksmithToolkitLib.XML.SongEvent y)
             {
                 if (x == null)
                     return y == null;
@@ -2550,7 +2550,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return x.Code == y.Code && x.Time.Equals(y.Time);
             }
 
-            public int GetHashCode(RocksmithToolkitLib.Xml.SongEvent obj)
+            public int GetHashCode(RocksmithToolkitLib.XML.SongEvent obj)
             {
                 if (ReferenceEquals(obj, null))
                     return 0;

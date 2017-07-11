@@ -45,8 +45,8 @@ namespace RocksmithToolkitGUI
 
         private void InitMainForm()
         {
-            // NOTE TO DEVS: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT 
-            // Only need to modify the RocksmithToolkitLib prebuild event which updates the
+            // NOTE TO DEVS: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT ...
+            // Modify the RocksmithToolkitLib prebuild event which will update the
             // PatchAssemblyVersion.ps1 file '$AssemblyVersion' and '$AssemblyConfiguration' values 
 
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.version);

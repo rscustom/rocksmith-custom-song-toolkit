@@ -9,7 +9,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.Manifest;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.Sng;
 
 namespace sng2014

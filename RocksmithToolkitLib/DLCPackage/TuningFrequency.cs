@@ -6,7 +6,7 @@ using System.Linq;
 using System.Xml.Linq;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitLib.DLCPackage

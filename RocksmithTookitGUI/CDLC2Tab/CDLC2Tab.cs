@@ -8,7 +8,7 @@ using RocksmithToTabLib;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.Conversion;
 using RocksmithToolkitLib.SngToTab;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitGUI.CDLC2Tab

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using System.IO;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 
 // compatible with ZiggyProEditor Version 70 (2.3.7.13)
 namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor

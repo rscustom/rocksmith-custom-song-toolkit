@@ -9,7 +9,7 @@ using System.IO;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.Extensions;
 
-namespace RocksmithToolkitLib.Xml
+namespace RocksmithToolkitLib.XML
 {
     [XmlRoot("song", Namespace = "", IsNullable = false)]
     public class Song

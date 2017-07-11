@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 
 namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
 {

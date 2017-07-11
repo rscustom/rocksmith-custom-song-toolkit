@@ -24,7 +24,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Properties;
 using RocksmithToolkitLib.Ogg;
 using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 
 
 namespace RocksmithToolkitLib.DLCPackage

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RocksmithToolkitLib.SngToTab;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using System.IO;
 using RocksmithToolkitLib.Extensions;
 

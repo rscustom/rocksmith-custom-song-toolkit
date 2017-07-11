@@ -3,7 +3,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph2014;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.XmlRepository;
 

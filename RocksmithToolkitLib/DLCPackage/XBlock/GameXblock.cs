@@ -10,7 +10,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 
 namespace RocksmithToolkitLib.DLCPackage.XBlock
 {

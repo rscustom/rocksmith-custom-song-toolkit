@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using RocksmithToolkitLib.Properties;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using MiscUtil.IO;
 using MiscUtil.Conversion;
 using CON = RocksmithToolkitLib.Sng.Constants;

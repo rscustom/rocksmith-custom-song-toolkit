@@ -15,7 +15,7 @@ using RocksmithToolkitLib.XML;
 using X360.STFS;
 using X360.Other;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.Ogg;

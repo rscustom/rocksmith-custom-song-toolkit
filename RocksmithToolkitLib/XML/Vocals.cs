@@ -6,7 +6,7 @@ using System.Text;
 using RocksmithToolkitLib.Sng2014HSL;
 using RocksmithToolkitLib.Extensions;
 
-namespace RocksmithToolkitLib.Xml
+namespace RocksmithToolkitLib.XML
 {
     [XmlRoot("vocals", Namespace = "", IsNullable = false)]
     public class Vocals

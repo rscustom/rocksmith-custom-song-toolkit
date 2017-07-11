@@ -13,7 +13,7 @@ using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph2014;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitGUI.DLCPackerUnpacker

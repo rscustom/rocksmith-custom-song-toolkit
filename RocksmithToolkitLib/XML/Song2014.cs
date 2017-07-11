@@ -16,7 +16,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using CON = RocksmithToolkitLib.Sng.Constants;
 
-namespace RocksmithToolkitLib.Xml
+namespace RocksmithToolkitLib.XML
 {
     [Serializable]
     [XmlRoot("song", Namespace = "", IsNullable = false)]

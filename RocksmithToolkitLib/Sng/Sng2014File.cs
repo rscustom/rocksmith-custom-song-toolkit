@@ -8,7 +8,7 @@ using MiscUtil.IO;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {

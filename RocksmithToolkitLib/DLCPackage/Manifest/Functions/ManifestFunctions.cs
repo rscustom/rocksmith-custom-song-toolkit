@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions

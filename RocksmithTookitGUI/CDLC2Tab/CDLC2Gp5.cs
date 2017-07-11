@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToTabLib;
 
 namespace RocksmithToolkitGUI.CDLC2Tab

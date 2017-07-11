@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml.Serialization;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.Sng2014HSL;
 
 /*

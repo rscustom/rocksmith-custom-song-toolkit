@@ -7,7 +7,7 @@ using System.Windows;
 using Microsoft.Win32;
 using System.Windows.Forms;
 using RocksmithToolkitLib.Extensions;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using System.Text.RegularExpressions;
 
 

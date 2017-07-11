@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using RocksmithToolkitLib;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.XmlRepository;
 

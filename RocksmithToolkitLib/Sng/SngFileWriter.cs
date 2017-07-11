@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using System.IO;
 using MiscUtil.Conversion;
 using MiscUtil.IO;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using System.ComponentModel;
 
 namespace RocksmithToolkitLib.Sng
@@ -526,7 +526,7 @@ namespace RocksmithToolkitLib.Sng
         }
 
         // COMPLETE
-        private static void WriteRocksmithSngEvents(EndianBinaryWriter w, Xml.SongEvent[] events)
+        private static void WriteRocksmithSngEvents(EndianBinaryWriter w, XML.SongEvent[] events)
         {
             // Sample: begins at position 8,172 in NumberThirteen_Lead.sng
 
@@ -562,7 +562,7 @@ namespace RocksmithToolkitLib.Sng
 
         // COMPLETE except hardcoded fields
         // Sample: begins at position 9,216 in NumberThirteen_Lead.sng
-        private static void WriteRocksmithSngSections(EndianBinaryWriter w, Xml.SongSection[] sections, SongPhraseIteration[] phraseIterations, Single songLength)
+        private static void WriteRocksmithSngSections(EndianBinaryWriter w, XML.SongSection[] sections, SongPhraseIteration[] phraseIterations, Single songLength)
         {
             // output header
             if (sections == null || sections.Length == 0)
@@ -650,7 +650,7 @@ namespace RocksmithToolkitLib.Sng
 
         // INCOMPLETE 
         // section begins at @ 9,820 in NumberThirteen_Lead.sng
-        private static void WriteRocksmithSngLevels(EndianBinaryWriter w, Xml.SongLevel[] levels, Single songLength, List<PhraseIterationInfo> iterationInfo, ArrangementType arrangementType)
+        private static void WriteRocksmithSngLevels(EndianBinaryWriter w, XML.SongLevel[] levels, Single songLength, List<PhraseIterationInfo> iterationInfo, ArrangementType arrangementType)
         {
             // output header
             if (levels == null || levels.Length == 0)
@@ -723,7 +723,7 @@ namespace RocksmithToolkitLib.Sng
         }
 
         // COMPLETE 
-        private static void WriteRocksmithSngLevelAnchors(EndianBinaryWriter w, SongAnchor[] anchors, Xml.SongLevel level, List<PhraseIterationInfo> iterationInfo, Single songLength)
+        private static void WriteRocksmithSngLevelAnchors(EndianBinaryWriter w, SongAnchor[] anchors, XML.SongLevel level, List<PhraseIterationInfo> iterationInfo, Single songLength)
         {
             if (anchors == null || anchors.Length == 0)
             {
@@ -817,7 +817,7 @@ namespace RocksmithToolkitLib.Sng
         }
 
         // INCOMPLETE
-        private static void WriteRocksmithSngLevelHandShapes(EndianBinaryWriter w, SongHandShape[] handShapes, Xml.SongLevel level, float songLength)
+        private static void WriteRocksmithSngLevelHandShapes(EndianBinaryWriter w, SongHandShape[] handShapes, XML.SongLevel level, float songLength)
         {
             // sample section begins @ 328,356 in NumberThirteen_Combo.sng
             // sample section begins @ 4,300 in TCPowerChords_Lead.sng   

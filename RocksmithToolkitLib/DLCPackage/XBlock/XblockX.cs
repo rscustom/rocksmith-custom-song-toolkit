@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 
 namespace RocksmithToolkitLib.DLCPackage.XBlock
 {

@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using System.IO;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using System.ComponentModel;
 using System.Reflection;
 using RocksmithToolkitLib.Extensions;

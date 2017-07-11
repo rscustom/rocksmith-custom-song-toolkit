@@ -10,7 +10,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 using RocksmithToolkitLib.DLCPackage.XBlock;
 using RocksmithToolkitLib.Sng2014HSL;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using X360.STFS;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest;

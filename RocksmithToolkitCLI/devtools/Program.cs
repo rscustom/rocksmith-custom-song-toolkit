@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using RocksmithToolkitLib.Xml;
+using RocksmithToolkitLib.XML;
 using System.Xml.Serialization;
 
 namespace devtools
