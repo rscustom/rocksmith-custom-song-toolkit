@@ -1195,7 +1195,7 @@ namespace RocksmithToolkitLib.XML
                 var chord = new SongChord2014();
                 chord.ChordId = notesSection.Notes[i].ChordId;
                 chord.Time = notesSection.Notes[i].Time;
-                // Debug.WriteLine("Song2014 chord.ChordId = " + chord.ChordId);
+                // Console.WriteLine("Song2014 chord.ChordId = " + chord.ChordId);
 
                 // TECHNIQUES
                 chord.parseChordMask(notesSection.Notes[i], notesSection.Notes[i].NoteMask);

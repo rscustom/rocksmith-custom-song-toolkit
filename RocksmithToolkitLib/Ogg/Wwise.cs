@@ -30,6 +30,8 @@ namespace RocksmithToolkitLib.Ogg
                 var wwiseCLIPath = GetWwisePath();
                 var wwiseTemplateDir = LoadWwiseTemplate(wavSourcePath, audioQuality);
 
+                // console writes may be captured by starting toolkit in a command window an redirecting the output to a file
+                // e.g., ‘RocksmithToolkitGUI.exe >console.log’ 
                 Console.WriteLine("WwiseCLI:\n\'" + wwiseCLIPath + "\'\n\nTemplate:\n\'" + wwiseTemplateDir + "\'");
 
                 ExternalApps.Wav2Wem(wwiseCLIPath, wwiseTemplateDir);

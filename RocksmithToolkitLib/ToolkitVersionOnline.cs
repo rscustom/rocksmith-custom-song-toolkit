@@ -44,7 +44,7 @@ namespace RocksmithToolkitLib
         public static ToolkitVersionOnline Load()
         {
             var url = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.AssemblyConfiguration);
-            Debug.WriteLine("Current version url: " + url);
+            Console.WriteLine("Current version url: " + url);
 
             try
             {
@@ -57,7 +57,7 @@ namespace RocksmithToolkitLib
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("versionJson Error: " + ex.Message);
+                Console.WriteLine("versionJson Error: " + ex.Message);
             }
 
             return null;

@@ -288,7 +288,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                     }
                     catch (Exception e)
                     {
-                        Debug.WriteLine("Exception: Incomplete INI file - " + e.Message);
+                        Console.WriteLine("Exception: Incomplete INI file - " + e.Message);
                     }
                     Colored = iniConfig["Setup"]["coloredinlay"].GetValue<bool>();
                 }

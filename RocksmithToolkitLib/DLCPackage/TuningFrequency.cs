@@ -100,7 +100,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (isBassFixed)
             {
-                Debug.WriteLine("Low bass tuning may already be fixed: " + arr.SongXml.File);
+                Console.WriteLine("Low bass tuning may already be fixed: " + arr.SongXml.File);
                 // return false;
             }
 

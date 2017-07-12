@@ -83,7 +83,7 @@ namespace RocksmithToolkitLib.Extensions
             if (dialogMessage != null) checkByte += 0x04;
             else lblDialogMessage.Dispose();
 
-            Debug.WriteLine("checkByte: " + checkByte.ToString("X"));
+            Console.WriteLine("checkByte: " + checkByte.ToString("X"));
 
             // adjust dialog dimensions based on message strings
             using (Graphics graphics = this.CreateGraphics())
@@ -116,7 +116,7 @@ namespace RocksmithToolkitLib.Extensions
                 {
                     case 0x00: // no icon and no messages
                         Controls.Remove(tlpDialog);
-                        Debug.WriteLine("No icon or messages");
+                        Console.WriteLine("No icon or messages");
                         break;
 
                     case 0x01: // icon
@@ -130,7 +130,7 @@ namespace RocksmithToolkitLib.Extensions
                         // pbIcon.Dock = DockStyle.Fill;
 
                         pbIcon.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
-                        Debug.WriteLine("Icon image");
+                        Console.WriteLine("Icon image");
                         break;
 
                     case 0x02: // icon message 
@@ -144,12 +144,12 @@ namespace RocksmithToolkitLib.Extensions
 
                         lblIconMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         heightTweak = heightTweak + iconMessageTweak;
-                        Debug.WriteLine("Icon message");
+                        Console.WriteLine("Icon message");
                         break;
 
                     case 0x03: // icon and icon message
                         tlpDialog.RowCount = 1;
-                        Debug.WriteLine("Icon image and icon message");
+                        Console.WriteLine("Icon image and icon message");
 
                         if (iconMessageSize.Height < minIconHeight)
                             iconMessageSize.Height = minIconHeight;
@@ -170,13 +170,13 @@ namespace RocksmithToolkitLib.Extensions
                         lblDialogMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         // lblDialogMessage.Padding = new Padding(5, 5, 0, 0);
                         heightTweak = heightTweak + dialogMessageTweak;
-                        Debug.WriteLine("Dialog message");
+                        Console.WriteLine("Dialog message");
                         break;
 
                     case 0x05: // icon and dialog message
                         tlpDialog.RowCount = 1;
                         tlpDialog.SetRow(lblDialogMessage, 0);
-                        Debug.WriteLine("Icon image with dialog message");
+                        Console.WriteLine("Icon image with dialog message");
 
                         if (dialogMessageSize.Height < minIconHeight)
                             dialogMessageSize.Height = minIconHeight;
@@ -200,7 +200,7 @@ namespace RocksmithToolkitLib.Extensions
                         lblIconMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         lblDialogMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         heightTweak = heightTweak + iconMessageTweak + dialogMessageTweak;
-                        Debug.WriteLine("Icon message and dialog message");
+                        Console.WriteLine("Icon message and dialog message");
                         break;
 
                     case 0x07: // icon, icon message and dialog message
@@ -224,7 +224,7 @@ namespace RocksmithToolkitLib.Extensions
                         lblIconMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         lblDialogMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         heightTweak = heightTweak + iconMessageTweak + dialogMessageTweak;
-                        Debug.WriteLine("Icon image, icon message and dialog message");
+                        Console.WriteLine("Icon image, icon message and dialog message");
                         break;
 
                     default:

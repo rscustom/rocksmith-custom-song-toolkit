@@ -159,7 +159,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("GenerateChords: " + ex.Message);
+                Console.WriteLine("GenerateChords: " + ex.Message);
             }
 
             //Techniques TODO: improve me
@@ -170,7 +170,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("GenerateTechniques: " + ex.Message);
+                Console.WriteLine("GenerateTechniques: " + ex.Message);
             }
 
             //Fix for Dead tones

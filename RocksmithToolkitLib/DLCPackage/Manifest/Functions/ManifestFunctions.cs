@@ -667,20 +667,20 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 //        var chords = song.Levels[difficulty].Chords;
 //        var sectionId = new Dictionary<string, List<int>>();
 //        var chordId = new List<int>();
-//        Debug.WriteLine("ManifestFunctions difficulty level: " + difficulty);
+//        Console.WriteLine("ManifestFunctions difficulty level: " + difficulty);
 
 //        for (int section = 0; section < song.Sections.Length; section++)
 //        {
 //            var starTime = song.Sections[section].StartTime;
 //            var endTime = song.Sections[Math.Min(section + 1, song.Sections.Length - 1)].StartTime;
-//            Debug.WriteLine("ManifestFunctions section: " + section);
+//            Console.WriteLine("ManifestFunctions section: " + section);
 
 //            // iterate through chords in section in the difficulty level
 //            foreach (var chord in chords)
 //            {
 //                if (chord.Time >= starTime && chord.Time < endTime) //in range
 //                {
-//                    Debug.WriteLine("ManifestFunctions added chord.ChordId: " + chord.ChordId);
+//                    Console.WriteLine("ManifestFunctions added chord.ChordId: " + chord.ChordId);
 //                    chordId.Add(chord.ChordId);
 //                }
 //            }

@@ -286,7 +286,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                 entryDeflatedData.Add(entry, array3);
                 //   progress += step;
                 //    GlobalExtension.UpdateProgress.Value = (int)progress;
-                Debug.WriteLine("Deflating: " + ndx++);
+                Console.WriteLine("Deflating: " + ndx++);
             }
         }
 
@@ -534,7 +534,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                 _writer.Write(zStreams[current]);
                 progress += step;
                 //    GlobalExtension.UpdateProgress.Value = (int)progress;
-                Debug.WriteLine("Zipped: " + ndx++);
+                Console.WriteLine("Zipped: " + ndx++);
                 current.Data.Close();
             }
             zStreams = null;
@@ -574,7 +574,7 @@ namespace RocksmithToolkitLib.PsarcLoader
 
                         progress += step;
                         //     GlobalExtension.UpdateProgress.Value = (int)progress;
-                        Debug.WriteLine("Encrypted: " + ndx++);
+                        Console.WriteLine("Encrypted: " + ndx++);
                     }
 
                     inputStream.Position = 0;
