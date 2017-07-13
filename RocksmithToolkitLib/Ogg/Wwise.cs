@@ -27,6 +27,7 @@ namespace RocksmithToolkitLib.Ogg
         {
             try
             {
+                //throw new  Exception("Hello from Wwise.cs code, please be gentle~~");
                 var wwiseCLIPath = GetWwisePath();
                 var wwiseTemplateDir = LoadWwiseTemplate(wavSourcePath, audioQuality);
 
@@ -49,33 +50,36 @@ namespace RocksmithToolkitLib.Ogg
             string wwiseRoot;
 
             // Audiokinetic Wwise might not be installed in the default location ;<
-            if (!String.IsNullOrEmpty(ConfigRepository.Instance()["general_wwisepath"]))
-                wwiseRoot = ConfigRepository.Instance()["general_wwisepath"];
-            else
+            if (String.IsNullOrEmpty(ConfigRepository.Instance()["general_wwisepath"]))
                 wwiseRoot = Environment.GetEnvironmentVariable("WWISEROOT");
+            else
+                wwiseRoot = ConfigRepository.Instance()["general_wwisepath"]; //could point to wrong dir, so chech back again.
 
             if (String.IsNullOrEmpty(wwiseRoot))
                 throw new FileNotFoundException("Could not find Audiokinetic Wwise installation." + Environment.NewLine + "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed.");
 
-            //// TODO: FIXME or REMOVEME ... user may have 32 bit CLI on 64 bit OS
-            //// Wwise has default and x64 build's so make sure we've picked sufficient one (e.g x64 on x64 machine) win32 = 32bit x64 = 64bit
-            ////if (Environment.Is64BitOperatingSystem)
-            ////    wwiseCLIPath = Directory.EnumerateFiles(wwiseCLIPath, "WwiseCLI.exe", SearchOption.AllDirectories).AsParallel().FirstOrDefault((arg) => arg.Contains("Authoring\\x64"));
-            ////else
-            ////    wwiseCLIPath = Directory.EnumerateFiles(wwiseCLIPath, "WwiseCLI.exe", SearchOption.AllDirectories).AsParallel().FirstOrDefault((arg) => arg.Contains("Authoring\\Win32"));
-            ////
-            //// 32 bit wwise can run on 64 bit machine just fine, actually even better
-            //// this extension method causes an error in the release build for some users on some machines
-            //// Console.WriteLine("64bit = {0}", GeneralExtensions.IsPE64BitType(pathWwiseCli));
-
-            // Confirmed working on 32 bit, this should also find Wwise on 64 bit machines
-            // TODO: need to confirm on 64 bit
-            var wwiseCLIPath = Directory.EnumerateFiles(wwiseRoot, "WwiseCLI.exe", SearchOption.AllDirectories).FirstOrDefault();
+            var wwiseCLIPath = Directory.EnumerateFiles(wwiseRoot, "WwiseCLI.exe", SearchOption.AllDirectories);
+            if (!wwiseCLIPath.Any())
+            {
+                // Check for wwise root if user has bad custom path to wwise
+                if(!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WWISEROOT")))
+                    wwiseCLIPath = Directory.EnumerateFiles(Environment.GetEnvironmentVariable("WWISEROOT"), "WwiseCLI.exe", SearchOption.AllDirectories);
+            }
             if (!wwiseCLIPath.Any())
                 throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwiseRoot + Environment.NewLine + "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed.");
 
+            //win32 = 32bit x64 = 64bit
+            string wwiseCLIexe = wwiseCLIPath.AsParallel().SingleOrDefault(e => e.Contains("Authoring\\Win32"));
+            if (Environment.Is64BitOperatingSystem)
+            {
+                var etmp = wwiseCLIPath.AsParallel().FirstOrDefault(e => e.Contains("Authoring\\x64"));
+                if (!String.IsNullOrEmpty(etmp))
+                    wwiseCLIexe = etmp;
+            }
+
+
             // a final error check
-            var wwiseVersion = FileVersionInfo.GetVersionInfo(wwiseCLIPath).ProductVersion;
+            var wwiseVersion = FileVersionInfo.GetVersionInfo(wwiseCLIexe).ProductVersion;
             if (wwiseVersion.StartsWith("2013.2"))
                 Selected = OggFile.WwiseVersion.Wwise2013;
             else if (wwiseVersion.StartsWith("2014.1"))
@@ -95,7 +99,7 @@ namespace RocksmithToolkitLib.Ogg
                 Environment.NewLine + "Install supportend Wwise version, which are v2013.2.x || v2014.1.x || v2015.1.x || v2016.2.x series" +
                 Environment.NewLine + " if you would like to use our Wwise autoconvert feature.");
 
-            return wwiseCLIPath;
+             return wwiseCLIexe;
         }
 
         /// <summary>

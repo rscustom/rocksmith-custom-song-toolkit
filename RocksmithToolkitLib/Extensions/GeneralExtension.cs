@@ -135,6 +135,7 @@ namespace RocksmithToolkitLib.Extensions
         }
         /// <summary>
         /// Gets the type of the PE machine.
+        /// (this extension method causes an error in the release build for some users on some machines)
         /// </summary>
         /// <returns>The PE machine type.</returns>
         /// <example>true if 64 Bit PE was provided</example>
