@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace RocksmithPreBuild
 {
@@ -101,7 +96,7 @@ namespace RocksmithPreBuild
             // get gitSubVersion (AssemblyInformationVersion) from in '.git' folders
             Console.WriteLine(" - Reading: " + gitHeadPath);
             var lines = File.ReadAllLines(gitHeadPath).ToList();
-            var line = lines.Where(str => str.Contains("ref:")).FirstOrDefault();
+            var line = lines.FirstOrDefault(str => str.Contains("ref:"));
             if (!String.IsNullOrEmpty(line))
             {
                 var refsFolder = line.Replace("ref: ", "").Replace("/", "\\");
@@ -187,7 +182,7 @@ namespace RocksmithPreBuild
                                 assemblyConfiguration = "";
                             else
                                 assemblyConfiguration = (args[2]);
-                            
+
                             lines[idx] = "$Assembly_Configuration = \"" + assemblyConfiguration + "\"";
                             File.WriteAllLines(patchAssemblyVersionPath, lines.ToArray());
                             Console.WriteLine(" - Updated $Assembly_Configuration: " + assemblyConfiguration);
@@ -230,7 +225,7 @@ namespace RocksmithPreBuild
                 if (lines.Any())
                 {
                     // [assembly: AssemblyVersion("2.3.8.1")]  
-                    line = lines.Where(str => str.Contains("[assembly: AssemblyVersion(\"")).FirstOrDefault();
+                    line = lines.FirstOrDefault(str => str.Contains("[assembly: AssemblyVersion(\""));
                     if (!string.IsNullOrEmpty(line))
                     {
                         var idx = lines.IndexOf(line);
@@ -252,7 +247,7 @@ namespace RocksmithPreBuild
                     }
 
                     // [assembly: AssemblyInformationalVersion("9605d7f3")]
-                    line = lines.Where(str => str.Contains("[assembly: AssemblyInformationalVersion(\"")).FirstOrDefault();
+                    line = lines.FirstOrDefault(str => str.Contains("[assembly: AssemblyInformationalVersion(\""));
                     if (!string.IsNullOrEmpty(line))
                     {
                         var idx = lines.IndexOf(line);
@@ -337,7 +332,7 @@ namespace RocksmithPreBuild
                 var lines = File.ReadAllLines(slnFile).ToList();
                 if (lines.Count() > 0)
                 {
-                    var z = lines.Where(str => str.Contains("Format Version 12.00")).FirstOrDefault();
+                    var z = lines.FirstOrDefault(str => str.Contains("Format Version 12.00"));
                     if (!string.IsNullOrEmpty(z))
                     {
                         var idx = lines.IndexOf(z);
@@ -366,7 +361,7 @@ namespace RocksmithPreBuild
                 var lines = File.ReadAllLines(csprojFile).ToList();
                 if (lines.Count() > 0)
                 {
-                    var z = lines.Where(str => str.Contains("Project ToolsVersion=\"12.0\"")).FirstOrDefault();
+                    var z = lines.FirstOrDefault(str => str.Contains("Project ToolsVersion=\"12.0\""));
                     if (!string.IsNullOrEmpty(z))
                     {
                         var idx = lines.IndexOf(z);
