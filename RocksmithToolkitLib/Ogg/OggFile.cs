@@ -13,7 +13,7 @@ namespace RocksmithToolkitLib.Ogg
     public static class OggFile//wwRIFF
     {
         // Add support for newer versions of Wwise here
-        public enum WwiseVersion { None, Wwise2010, Wwise2013, Wwise2014, Wwise2015, Wwise2016 };
+        public enum WwiseVersion { None, Wwise2010, Wwise2013, Wwise2014, Wwise2015, Wwise2016, Wwise2017 };
 
         #region RS1
 
@@ -135,7 +135,7 @@ namespace RocksmithToolkitLib.Ogg
                 revorbProcess.Start();
                 revorbProcess.WaitForExit();
                 string revorbResult = revorbProcess.StandardOutput.ReadToEnd();
-           
+
                 // TODO: ? should check revorbResult
                 if (ww2oggResult.IndexOf("Error ", StringComparison.Ordinal) > -1 || ww2oggResult.IndexOf(" error:", StringComparison.Ordinal) > -1)
                 {
@@ -180,9 +180,8 @@ namespace RocksmithToolkitLib.Ogg
                 if (reader.ReadUInt32() != 3)
                 {
                     writer.Seek(40, SeekOrigin.Begin);
-                    writer.Write((int)3);
+                    writer.Write(3);
                 }
-                o.Seek(0,0);
                 return new MemoryStream(o.GetBuffer(), 0, (int)o.Length);
             }
         }

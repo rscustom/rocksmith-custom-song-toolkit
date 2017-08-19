@@ -27,7 +27,6 @@ namespace RocksmithToolkitLib.Ogg
         {
             try
             {
-                //throw new  Exception("Hello from Wwise.cs code, please be gentle~~");
                 var wwiseCLIPath = GetWwisePath();
                 var wwiseTemplateDir = LoadWwiseTemplate(wavSourcePath, audioQuality);
 
@@ -88,6 +87,8 @@ namespace RocksmithToolkitLib.Ogg
                 Selected = OggFile.WwiseVersion.Wwise2015;
             else if (wwiseVersion.StartsWith("2016.2"))
                 Selected = OggFile.WwiseVersion.Wwise2016;
+            else if (wwiseVersion.StartsWith("2017.1"))
+                Selected = OggFile.WwiseVersion.Wwise2017;
             // add support for new versions here, code is expandable
             //else if (wwiseVersion.StartsWith("xxxx.x"))
             //    Selected = OggFile.WwiseVersion.WwiseXXXX;
@@ -121,6 +122,7 @@ namespace RocksmithToolkitLib.Ogg
                 case OggFile.WwiseVersion.Wwise2014:
                 case OggFile.WwiseVersion.Wwise2015:
                 case OggFile.WwiseVersion.Wwise2016:
+                case OggFile.WwiseVersion.Wwise2017:
                     ExtractTemplate(Path.Combine(appRootDir, Selected + ".tar.bz2"));
                     break;
                 default:
@@ -205,7 +207,7 @@ namespace RocksmithToolkitLib.Ogg
             foreach (var srcPath in srcPaths)
             {
                 //fix headers for wwise v2016 wem's
-                if (Selected == OggFile.WwiseVersion.Wwise2016)
+                if ((int)Selected >= (int)OggFile.WwiseVersion.Wwise2016)
                     OggFile.DowngradeWemVersion(srcPath.FullName, srcPath.Name.Contains("_preview_") ? destPreviewPath : destinationPath);
                 else
                     File.Copy(srcPath.FullName, srcPath.Name.Contains("_preview_") ? destPreviewPath : destinationPath, true);

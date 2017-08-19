@@ -416,7 +416,6 @@
             this.gbGeneral.TabIndex = 14;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
-            this.toolTip.SetToolTip(this.gbGeneral, "If check, ");
             // 
             // general_defaultplatform
             // 

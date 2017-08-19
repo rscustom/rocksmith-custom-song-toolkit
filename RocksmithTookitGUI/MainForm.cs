@@ -66,7 +66,7 @@ namespace RocksmithToolkitGUI
             }
         }
 
-        public override sealed string Text
+        public sealed override string Text
         {
             get { return base.Text; }
             set { base.Text = value; }

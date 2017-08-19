@@ -106,5 +106,5 @@ echo “$APP_PATH”
 cd "$APP_PATH/Contents/Resources" || exit
 
 #Finally launch the APP
-${MONO_BIN} --optimize=sse2,simd,loop,inline "$ASSEMBLY"
+${MONO_BIN} --arch=32 --no-x86-stack-align --optimize=all,-abcrem,-aot,-precomp,-deadce --runtime=v4.0.30319 "$ASSEMBLY"
 

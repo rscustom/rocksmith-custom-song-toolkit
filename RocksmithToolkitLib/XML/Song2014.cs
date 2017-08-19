@@ -149,11 +149,17 @@ namespace RocksmithToolkitLib.XML
          * "B0", "High pitch tick"
          * "B1", "Low pitch tick"
          * 
-         * E is for Crowd emotion control
-         * "e0", "Crowd waving hands like in The Sky is crying.
-         * "E1", "Crowd happy" //Meet the band event
-         * "E3", "Crowd wild"
-         * "E13", "Crowd extra wild?" // usually at the end of the song
+         * E is for Crowd emotion control (Used at the first beat of an arrangement)
+         * >>>Can be used multiple times in a song. 
+         * >>>For example, a song might start with e2, switch to e0 in a quiet part, then switch back to e2.
+         * 
+         * "e0", "Crowd waving hands like in The Sky is crying". [Waving hands side to side slowly]
+         * "E1", "Crowd happy" //Meet the band event [Hands in the air, jumping around]
+         * "E2", "Crowd happy" //A bit faster than E1, maybe breakdown reaction?
+         * "E3", "Crowd wild" //Start ovation/applause.
+         * "E13", "Crowd reaction" //Usually at the end of the song, after both E3 and D3. [End applause gradually]
+         * 
+         * "D3", "Performance ending ovations" based on your score (if bad = no applause). //Used at the end of the song.
          * 
          * DNA stuff
          * dna_none
@@ -166,8 +172,6 @@ namespace RocksmithToolkitLib.XML
          * tone_b
          * tone_c
          * tone_d
-         * 
-         * "D3", "maybe it dispose showlights? nope that ingame bug..."
          * 
          * ???
          */

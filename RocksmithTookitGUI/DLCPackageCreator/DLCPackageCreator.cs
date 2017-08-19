@@ -88,6 +88,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
+        //dirty implementation, it's always true, consider undo\redo manager for actions made+logging maybe?
         public bool IsDirty { get; set; }
         public string UnpackedDir { get; set; }
 
@@ -1897,7 +1898,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void ClickedInputControl(object sender, EventArgs e)
         {
             // well maybe user changed ;)
-            IsDirty = true;
+            //IsDirty = true;
         }
 
         private void GameVersion_MouseUp(object sender, MouseEventArgs e)
