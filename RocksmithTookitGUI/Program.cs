@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Drawing;
-using System.Reflection;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using System.Security.Permissions;
 using NLog;
+using NLog.Fluent;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib;
 
@@ -24,30 +25,47 @@ namespace RocksmithToolkitGUI
         static void Main(string[] args)
         {
             Log = LogManager.GetCurrentClassLogger();
+            //I should figure out way for native mac\linux OS
+            var logPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "_RSToolkit_"+DateTime.Now.ToString("yyyy-MM-dd")+".log");
 
-            Log.Info(
-                String.Format("Version: {0} ({1} bit)\r\n ", RocksmithToolkitLib.ToolkitVersion.version, Environment.Is64BitProcess ? "64" : "32") +
+            Log.Info(//OSVersion on unix will return it's Kernel version, urgh.
+                String.Format("Toolkit: v{0} ({1} bit)\r\n ", ToolkitVersion.version, Environment.Is64BitProcess ? "64" : "32") +
                 String.Format("OS: {0} ({1} bit)\r\n ", Environment.OSVersion, Environment.Is64BitOperatingSystem ? "64" : "32") +
                 String.Format("Runtime: v{0}\r\n ", Environment.Version) +
-                String.Format("JIT: {0}", JitVersionInfo.GetJitVersion())
+                String.Format("JIT: {0}\r\n ", JitVersionInfo.GetJitVersion()) +
+                String.Format("Wine: {0}", GeneralExtensions._wine())
             );
 
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
-                var exception = (Exception)e.ExceptionObject;
-                MessageBox.Show(String.Format("Toolkit.Application.ThreadException: {3}\n{0}\n{1}\nPlease send us \"_RSToolkit_{2}.log\", you can find it in Toolkit folder.",
-                    exception.ToString(), exception.Message.ToString(), DateTime.Now.ToString("yyyy-MM-dd"), ToolkitVersion.version), "Unhandled Exception");
-                Log.Error(exception, String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
+                var exception = e.ExceptionObject as Exception;
+                Log.Error(exception, "\n{0}\n{1}\nException catched:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
+                //Log.Error("Application Stdout:\n\n{0}", new StreamReader(_stdout.ToString()).ReadToEnd());
+
+                if (MessageBox.Show(String.Format("Application.ThreadException met.\n\n\"{0}\"\n\n{1}\n\nPlease send us \"{2}\", open log file now?",
+                    exception.ToString(), exception.Message.ToString(), Path.GetFileName(logPath)), "Unhandled Exception", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    //figure out how to call it single time
+                    //Process.Start("explorer.exe", string.Format("/select,\"{0}\"", logPath));
+                    Process.Start("explorer.exe", logPath);
+                }
+                //Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true }); //write back to Stdout in console could use custom streamwriter so you could write to console from there
             };
 
             // UI thread exceptions handling.
             Application.ThreadException += (s, e) =>
             {
-                var exception = (Exception)e.Exception;
-                MessageBox.Show(String.Format("Toolkit.Application.ThreadException: {3}\n{0}\n{1}\nPlease send us \"_RSToolkit_{2}.log\", you can find it in Toolkit folder.",
-                    exception.ToString(), exception.Message.ToString(), DateTime.Now.ToString("yyyy-MM-dd"), ToolkitVersion.version), "Thread Exception");
-                Log.Error(exception, String.Format("\n{0}\n{1}\nException catched:\n{2}\n", exception.Source, exception.TargetSite, exception.InnerException), exception);
+                var exception = e.Exception;
+                Log.Error(exception, "\n{0}\n{1}\nException catched:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
+                //Log.Error("Application Stdout:\n\n{0}", new StreamReader(_stdout.ToString()).ReadToEnd());
+
+                if (MessageBox.Show(String.Format("Application.ThreadException met.\n\n\"{0}\"\n\n{1}\n\nPlease send us \"{2}\", open log file now?",
+                    exception.ToString(), exception.Message.ToString(), Path.GetFileName(logPath)), "Thread Exception", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    //Process.Start("explorer.exe", string.Format("/select,\"{0}\"", logPath));
+                    Process.Start("explorer.exe", logPath);
+                }
             };
 
             Application.EnableVisualStyles();

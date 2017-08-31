@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
+using System.Windows.Forms;
 using RocksmithToolkitLib.Properties;
 using RocksmithToolkitLib.Sng;
 using MiscUtil.Conversion;
@@ -132,7 +134,7 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         private const string PLAY = "Play_";
         private const string SONG = "Song_";
-        private static EndianBitConverter bitConverter;
+        private static EndianBitConverter _bitConverter;
 
         private static uint HashString(String str)//FNV hash
         {
@@ -155,6 +157,46 @@ namespace RocksmithToolkitLib.DLCPackage
             w.Write(chunkData);
         }
 
+        private static decimal ReadVolume(Stream inputStream, Platform platform, GameVersion version) //rs2014 only
+        {
+            //verify header + detect endianness
+            using (var v = new EndianBinaryReader(_bitConverter, inputStream))
+            {
+                if (v.ReadInt32() != 1145588546) //BKHD
+                    throw new Exception("Unknown BNK file format!");
+                v.ReadBytes(v.ReadInt32());
+
+                //offset till HRIC (chunk len+8)
+                while (v.ReadInt32() != 1129466184 && (inputStream.Position < inputStream.Length-1))
+                {
+                    v.ReadBytes(v.ReadInt32());
+                }
+                //ok we're in Hric now, let's validate again!
+                v.BaseStream.Position -= 4;
+                if (v.ReadInt32() != 1129466184)
+                    throw new Exception("Something goes wrong with bnk parser.");
+
+                //get HRIC size
+                var len = v.ReadInt32();
+                var obj = v.ReadInt32();
+                for (var o = 0; o < obj; o++)
+                {
+                    var type = v.ReadByte();
+                    var length = v.ReadInt32();
+                    // find correct object type - SFXV
+                    if (type == 2)
+                    {
+                        //skip 46 bytes to find volume
+                        v.ReadBytes(46);
+                        return v.ReadDecimal();
+                    }
+                    v.ReadBytes(length);
+                }
+            }
+            //if frequired read filename from StringID to get it's type (preview or regular)
+            return -6;
+        }
+
         private static byte[] Header(int id, int didxSize, bool isConsole)
         {
             int soundbankVersion = 91;
@@ -163,7 +205,7 @@ namespace RocksmithToolkitLib.DLCPackage
             int hasFeedback = 0;
 
             using (var chunkStream = new MemoryStream())
-            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(_bitConverter, chunkStream))
             {
                 chunk.Write(soundbankVersion);
                 chunk.Write(soundbankID);
@@ -192,7 +234,7 @@ namespace RocksmithToolkitLib.DLCPackage
             int fileSize = len;
 
             using (var chunkStream = new MemoryStream())
-            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(_bitConverter, chunkStream))
             {
                 chunk.Write(fileID);
                 chunk.Write(fileOffset);
@@ -247,7 +289,7 @@ namespace RocksmithToolkitLib.DLCPackage
             int feedbackBus = 0;
 
             using (var chunkStream = new MemoryStream())
-            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(_bitConverter, chunkStream))
             {
                 chunk.Write((uint)soundID);
                 chunk.Write((uint)pluginID);
@@ -307,7 +349,7 @@ namespace RocksmithToolkitLib.DLCPackage
             int soundbankID = bankid;
 
             using (var chunkStream = new MemoryStream())
-            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(_bitConverter, chunkStream))
             {
                 chunk.Write(actionID);
                 chunk.Write(actionType);
@@ -331,7 +373,7 @@ namespace RocksmithToolkitLib.DLCPackage
             int actionID = id;
 
             using (var chunkStream = new MemoryStream())
-            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(_bitConverter, chunkStream))
             {
                 chunk.Write(eventID);
                 chunk.Write(numEvents);
@@ -375,7 +417,7 @@ namespace RocksmithToolkitLib.DLCPackage
             int child1 = soundid;
 
             using (var chunkStream = new MemoryStream())
-            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(_bitConverter, chunkStream))
             {
                 chunk.Write(mixerID);
                 chunk.Write(overrideParent);
@@ -427,7 +469,7 @@ namespace RocksmithToolkitLib.DLCPackage
             numObjects++;
 
             using (var chunkStream = new MemoryStream())
-            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(_bitConverter, chunkStream))
             {
                 chunk.Write(numObjects);
 
@@ -457,7 +499,7 @@ namespace RocksmithToolkitLib.DLCPackage
             string soundbankName = SONG + name;
 
             using (var chunkStream = new MemoryStream())
-            using (var chunk = new EndianBinaryWriter(bitConverter, chunkStream))
+            using (var chunk = new EndianBinaryWriter(_bitConverter, chunkStream))
             {
                 chunk.Write(stringType);
                 chunk.Write(numNames);
@@ -472,20 +514,20 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static string GenerateSoundBank(string soundbankName, Stream audioStream, Stream outStream, float volume, Platform platform, bool preview = false, bool sameID = false)
         {
-            bitConverter = platform.GetBitConverter;
+            _bitConverter = platform.GetBitConverter;
             int soundbankID = RandomGenerator.NextInt();
             int fileID = sameID ? oldFileID : RandomGenerator.NextInt();
             int soundID = sameID ? oldSoundID : RandomGenerator.NextInt();
             oldSoundID = soundID; oldFileID = fileID;
 
-            var audioReader = new EndianBinaryReader(bitConverter, audioStream);
+            var audioReader = new EndianBinaryReader(_bitConverter, audioStream);
             byte[] dataChunk = audioReader.ReadBytes(51200); // wwise is based on audio length, we'll just make it up(prefetch lookup is 100ms)
             byte[] dataIndexChunk = DataIndex(fileID, dataChunk.Length);
             byte[] headerChunk = Header(soundbankID, dataIndexChunk.Length, platform.IsConsole);
             byte[] stringIdChunk = StringID(soundbankID, soundbankName);
             byte[] hierarchyChunk = Hierarchy(soundbankID, soundID, fileID, soundbankName, volume, preview, platform.IsConsole);
 
-            var bankWriter = new EndianBinaryWriter(bitConverter, outStream);
+            var bankWriter = new EndianBinaryWriter(_bitConverter, outStream);
             WriteChunk(bankWriter, "BKHD", headerChunk);
             WriteChunk(bankWriter, "DIDX", dataIndexChunk);
             WriteChunk(bankWriter, "DATA", dataChunk);

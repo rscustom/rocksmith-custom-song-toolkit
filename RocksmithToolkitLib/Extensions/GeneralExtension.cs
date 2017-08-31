@@ -23,6 +23,16 @@ namespace RocksmithToolkitLib.Extensions
     {
         private static readonly Random randomNumber = new Random();
 
+        public static string _wine()
+        {
+            //if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+            if (Environment.GetEnvironmentVariable("WINE_INSTALLED") == "1")
+            {
+                return "wine ";
+            }
+            return string.Empty;
+        }
+
         public static bool Contains(this String obj, char[] chars)
         {
             return (obj.IndexOfAny(chars) >= 0);
@@ -229,11 +239,13 @@ namespace RocksmithToolkitLib.Extensions
         {
             string toolkitRootPath = AppDomain.CurrentDomain.BaseDirectory; //Path.GetDirectoryName(Application.ExecutablePath);
 
-            var rootPath = (toolkitRootFolder) ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
+            var rootPath = toolkitRootFolder ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
 
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = Path.Combine(rootPath, exeFileName);
-            startInfo.WorkingDirectory = rootPath;
+            var startInfo = new ProcessStartInfo
+            {//use wine prefix here
+                FileName = _wine() + Path.Combine(rootPath, exeFileName),
+                WorkingDirectory = rootPath
+            };
 
             if (runInBackground)
             {
@@ -252,7 +264,7 @@ namespace RocksmithToolkitLib.Extensions
             if (waitToFinish)
                 process.WaitForExit();
 
-            var output = String.Empty;
+            var output = string.Empty;
 
             if (runInBackground)
                 output = process.StandardOutput.ReadToEnd();

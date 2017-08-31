@@ -12,12 +12,12 @@ MWF_MODE=1
 
 PWD=$(pwd)
 
-# Fetch the .app bundle path. (cd .. [x3] from cmd script) awk so slow...
-# Don't use "$0" for this it's break the code somehow, but there should be no harm in theory.... 
+# Fetch the .app bundle path. (cd .. [x3] from cmd script)
+# Don't use "$0" for this it's break the code somehow, but there should be no harm in theory....
 APP_PATH=`echo $0 | awk '{split($0,patharr,"/"); idx=1; while(patharr[idx+3] != "") { if (patharr[idx] != "/") {printf("%s/", patharr[idx]); idx++ }} }'`
 
 # Fetch the app name (its our own name)
-CMD_NAME=$(basename "$0")
+CMD_NAME=$(basename "$(readlink -f "$0")")
 ASSEMBLY="$CMD_NAME.exe"
 
 # Mono version check
@@ -29,7 +29,7 @@ NEW_OSX_MSG=""
 # Create /usr/local/bin  since it didn't actually exist, sudo mkdir /usr/local/bin
 # Then change the permissions for /usr/local, sudo chmod 777 /usr/local
 MAC_VERSION_MINOR=$(sw_vers -productVersion | cut -f2 -d.)
-if [ $MAC_VERSION_MINOR -gt 11 ]; then
+if [ "$MAC_VERSION_MINOR" -gt 11 ]; then
 	export PATH=/usr/local/bin:${PATH}
 	NEW_OSX_MSG="It seems that you've got El Capitan, if you've got issues with mono, read this: http://git.io/vCBjz"
 fi
@@ -66,19 +66,19 @@ fi
 
 
 MONO_VERSION=$(${MONO_BIN} --version | grep 'Mono JIT compiler version ' |  cut -f5 -d\ )
-MONO_VERSION_MAJOR=$(echo $MONO_VERSION | cut -f1 -d.)
-MONO_VERSION_MINOR=$(echo $MONO_VERSION | cut -f2 -d.)
+MONO_VERSION_MAJOR=$(echo "$MONO_VERSION" | cut -f1 -d.)
+MONO_VERSION_MINOR=$(echo "$MONO_VERSION" | cut -f2 -d.)
 MONO_VERSION_MET="Current Mono version: v$MONO_VERSION"
 
 if [ -z "$MONO_VERSION" ] \
-	|| [ $MONO_VERSION_MAJOR -lt $REQUIRED_MAJOR ] \
-	|| [ $MONO_VERSION_MAJOR -eq $REQUIRED_MAJOR ] && [ $MONO_VERSION_MINOR -lt $REQUIRED_MINOR ];
+	|| [ "$MONO_VERSION_MAJOR" -lt $REQUIRED_MAJOR ] \
+	|| [ "$MONO_VERSION_MAJOR" -eq $REQUIRED_MAJOR ] && [ "$MONO_VERSION_MINOR" -lt $REQUIRED_MINOR ];
 then
 	MONO_VERSION_MET="Mono Framework is not installed. (or too old)"
 	VERSION_MSG="$CMD_NAME requires the Mono Framework version $REQUIRED_MAJOR.$REQUIRED_MINOR or later. $MONO_VERSION_MET"
 	osascript \
 	-e "set question to display dialog \"$VERSION_MSG\" with title \"$VERSION_TITLE\" buttons {\"Cancel\", \"Download...\"} default button 2" \
-	-e "if button returned of question is equal to \"Download...\" then open location \"$DOWNLOAD_URL\""
+	-e "if button returned of question is equal to \"Download...\" then open location \"$DOWNLOAD_URL\"" \
 	-e "display dialog \"$NEW_OSX_MSG\""
 	echo "$VERSION_TITLE"
 	echo "$VERSION_MSG"
@@ -92,7 +92,7 @@ if [ "$MWF_MODE" -eq "1" ]; then
 	export MONO_IOMAP=all
 fi
 
-# ensure we've got wine before use it
+# Ensure we've got wine before use it (even tho we should be running under it)
 WINE_VERSION=$(wine --version | grep 'wine-' | cut -f1 -d.)
 if [ -z "$WINE_VERSION" ]; then
 	export WINE_INSTALLED=0
@@ -102,9 +102,14 @@ fi
 
 echo "$MONO_VERSION_MET"
 echo "$WINE_VERSION"
-echo “$APP_PATH”
+echo "$APP_PATH"
 cd "$APP_PATH/Contents/Resources" || exit
 
+FIX=''
+if [ "$MONO_VERSION_MAJOR" -ge 5 ]; then
+        FIX='--arch=32'
+fi
+
 #Finally launch the APP
-${MONO_BIN} --arch=32 --no-x86-stack-align --optimize=all,-abcrem,-aot,-precomp,-deadce --runtime=v4.0.30319 "$ASSEMBLY"
+${MONO_BIN} ${FIX} --no-x86-stack-align --optimize=all,-abcrem,-aot,-precomp,-deadce --runtime=v4.0.30319 "$ASSEMBLY"
 
