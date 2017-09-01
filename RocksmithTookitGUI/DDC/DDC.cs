@@ -217,7 +217,7 @@ namespace RocksmithToolkitGUI.DDC
                         Path.GetFileName(filePath), (UInt16)phraseLen, removeSus ? "Y" : "N",
                         rampPath, cfgPath, overWrite ? "Y" : "N", keepLog ? "Y" : "N"
                         ),
-                    UseShellExecute = false,
+                    UseShellExecute = true, //possiblee fix for wineskined toolkit
                     CreateNoWindow = true,  // hide command window
                     RedirectStandardOutput = true,
                     RedirectStandardError = true

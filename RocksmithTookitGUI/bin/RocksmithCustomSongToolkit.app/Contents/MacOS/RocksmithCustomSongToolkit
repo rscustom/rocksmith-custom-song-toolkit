@@ -17,8 +17,8 @@ PWD=$(pwd)
 APP_PATH=`echo $0 | awk '{split($0,patharr,"/"); idx=1; while(patharr[idx+3] != "") { if (patharr[idx] != "/") {printf("%s/", patharr[idx]); idx++ }} }'`
 
 # Fetch the app name (its our own name)
-CMD_NAME=$(basename "$(readlink -f "$0")")
-ASSEMBLY="$CMD_NAME.exe"
+CMD_NAME=$(basename "$0")
+ASSEMBLY=$CMD_NAME.exe
 
 # Mono version check
 REQUIRED_MAJOR=3
@@ -111,5 +111,5 @@ if [ "$MONO_VERSION_MAJOR" -ge 5 ]; then
 fi
 
 #Finally launch the APP
-${MONO_BIN} ${FIX} --no-x86-stack-align --optimize=all,-abcrem,-aot,-precomp,-deadce --runtime=v4.0.30319 "$ASSEMBLY"
+${MONO_BIN} ${FIX} --optimize=all,-abcrem,-aot,-precomp,-deadce --runtime=v4.0.30319 "$ASSEMBLY"
 
