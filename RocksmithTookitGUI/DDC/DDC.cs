@@ -210,15 +210,15 @@ namespace RocksmithToolkitGUI.DDC
         public int ApplyDD(string filePath, int phraseLen, bool removeSus, string rampPath, string cfgPath, out string consoleOutput, bool overWrite = false, bool keepLog = false)
         {
             var startInfo = new ProcessStartInfo
-                {
-                    FileName = Path.Combine(AppDir, "ddc", "ddc.exe"),
-                    WorkingDirectory = Path.GetDirectoryName(filePath),
-                    Arguments = String.Format("\"{0}\" -l {1} -s {2} -m \"{3}\" -c \"{4}\" -p {5} -t {6}",
+            {
+                FileName = Path.Combine(DdcDir, "ddc.exe"),
+                WorkingDirectory = Path.GetDirectoryName(filePath),
+                Arguments = String.Format("\"{0}\" -l {1} -s {2} -m \"{3}\" -c \"{4}\" -p {5} -t {6}",
                         Path.GetFileName(filePath), (UInt16)phraseLen, removeSus ? "Y" : "N",
                         rampPath, cfgPath, overWrite ? "Y" : "N", keepLog ? "Y" : "N"
                         ),
-                    UseShellExecute = true, //possiblee fix for wineskined toolkit
-                    CreateNoWindow = true,  // hide command window
+                UseShellExecute = false,
+                CreateNoWindow = false,  // hide command window
                     RedirectStandardOutput = true,
                     RedirectStandardError = true
                 };

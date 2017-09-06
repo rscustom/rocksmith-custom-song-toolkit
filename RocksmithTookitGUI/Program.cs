@@ -48,7 +48,7 @@ namespace RocksmithToolkitGUI
                 {
                     //figure out how to call it single time
                     //Process.Start("explorer.exe", string.Format("/select,\"{0}\"", logPath));
-                    Process.Start("explorer.exe", logPath);
+                    Process.Start(logPath);
                 }
                 //Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true }); //write back to Stdout in console could use custom streamwriter so you could write to console from there
             };
@@ -64,7 +64,7 @@ namespace RocksmithToolkitGUI
                     exception.ToString(), exception.Message.ToString(), Path.GetFileName(logPath)), "Thread Exception", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     //Process.Start("explorer.exe", string.Format("/select,\"{0}\"", logPath));
-                    Process.Start("explorer.exe", logPath);
+                    Process.Start(logPath);
                 }
             };
 

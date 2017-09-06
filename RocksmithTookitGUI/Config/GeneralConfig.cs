@@ -116,13 +116,14 @@ namespace RocksmithToolkitGUI.Config
 
         private void PopulateConfigDDC()
         {
-            if (Directory.Exists(@".\ddc\"))
+            var ddcpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "ddc");
+            if (Directory.Exists(ddcpath))
             {
                 ddc_config.Items.Clear();
-                foreach (var xml in Directory.EnumerateFiles(@".\ddc\", "*.cfg", SearchOption.AllDirectories))
+                foreach (var xml in Directory.EnumerateFiles(ddcpath, "*.cfg", SearchOption.AllDirectories))
                 {
                     var name = Path.GetFileNameWithoutExtension(xml);
-                    if (name.StartsWith("user_"))
+                    if (name.StartsWith("user_", StringComparison.Ordinal))
                         name = name.Remove(0, 5);
                     ddc_config.Items.Add(name);
                     ddc_config.SelectedItem = ConfigRepository.Instance()[ddc_config.Name];
