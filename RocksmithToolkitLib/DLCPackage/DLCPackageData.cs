@@ -99,6 +99,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             data.GameVersion = (convert ? GameVersion.RS2014 : GameVersion.RS2012);
             data.SignatureType = PackageMagic.CON;
+
             // set default volumes
             data.Volume = -7;
             data.PreviewVolume = data.Volume;
@@ -489,6 +490,8 @@ namespace RocksmithToolkitLib.DLCPackage
             data.TonesRS2014 = new List<Tone2014>();
 
             //Load files
+            float? _volume = null;
+            float? _volume_preview = null;
             var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray();
             foreach (var json in jsonFiles)
             {
@@ -502,9 +505,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         // Fill Package Data
                         data.Name = attr.DLCKey;
-                        // made SongVolume nullable type to allow for proper initialization
-                        data.Volume = (attr.SongVolume ?? -7.0F);
-                        data.PreviewVolume = (attr.PreviewVolume ?? data.Volume);
+
+                        // Get song volume
+                        _volume = attr.SongVolume;
+                        _volume_preview = attr.PreviewVolume ?? _volume;
 
                         // Fill SongInfo
                         data.SongInfo = new SongInfo { SongDisplayName = attr.SongName, SongDisplayNameSort = attr.SongNameSort, Album = attr.AlbumName, AlbumSort = attr.AlbumNameSort, SongYear = attr.SongYear ?? 0, Artist = attr.ArtistName, ArtistSort = attr.ArtistNameSort, AverageTempo = (int)attr.SongAverageTempo };
@@ -630,15 +634,28 @@ namespace RocksmithToolkitLib.DLCPackage
             if (lyricArt.Any())
                 data.LyricArtPath = lyricArt.FirstOrDefault();
 
-            //Get other files
-            //Audio files
+            // Get other files //
+
+            // Volume from BNK
+            var bnkfiles = Directory.EnumerateFiles(unpackedDir, "*.bnk", SearchOption.AllDirectories).ToArray();
+            if (bnkfiles.Length == 2)
+            {
+                data.Volume = _volume ?? SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[0]), targetPlatform, GameVersion.RS2014);
+                data.PreviewVolume = _volume_preview ?? SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[1]), targetPlatform, GameVersion.RS2014);
+            }
+            else
+            {
+                data.Volume = _volume ?? -7F;
+                data.PreviewVolume = _volume_preview ?? _volume;
+            }
+
+            // Audio files
             var targetAudioFiles = new List<string>();
             var sourceAudioFiles = Directory.EnumerateFiles(unpackedDir, "*.wem", SearchOption.AllDirectories).ToArray();
-
             foreach (var file in sourceAudioFiles)
             {
                 var newFile = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), Path.GetExtension(file)));
-                if (targetPlatform.IsConsole != (sourcePlatform = file.GetAudioPlatform()).IsConsole)
+                if (targetPlatform.IsConsole != file.GetAudioPlatform().IsConsole)
                 {
                     OggFile.ConvertAudioPlatform(file, newFile);
                     targetAudioFiles.Add(newFile);
@@ -805,6 +822,12 @@ namespace RocksmithToolkitLib.DLCPackage
             if (lyricArt.Any())
                 foreach (var art in lyricArt)
                     File.Move(art, Path.Combine(kitdir, Path.GetFileName(art)));
+
+            //Move all .BNK to KIT folder
+            var bnkFiles = Directory.EnumerateFiles(unpackedDir, "song_*.bnk", SearchOption.AllDirectories).ToArray();
+            if (bnkFiles.Any())
+                foreach (var bnk in bnkFiles)
+                    File.Move(bnk, Path.Combine(kitdir, Path.GetFileName(bnk)));
 
             //Move ogg to EOF folder + rename
             var oggFiles = Directory.EnumerateFiles(unpackedDir, "*_fixed.ogg", SearchOption.AllDirectories).ToArray();

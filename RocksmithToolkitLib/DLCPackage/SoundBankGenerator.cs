@@ -157,10 +157,10 @@ namespace RocksmithToolkitLib.DLCPackage
             w.Write(chunkData);
         }
 
-        private static decimal ReadVolume(Stream inputStream, Platform platform, GameVersion version) //rs2014 only
+        public static float ReadBNKVolume(Stream inputStream, Platform platform, GameVersion version) //rs2014 only
         {
             //verify header + detect endianness
-            using (var v = new EndianBinaryReader(_bitConverter, inputStream))
+            using (var v = new EndianBinaryReader(platform.GetBitConverter, inputStream))
             {
                 if (v.ReadInt32() != 1145588546) //BKHD
                     throw new Exception("Unknown BNK file format!");
@@ -188,13 +188,13 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         //skip 46 bytes to find volume
                         v.ReadBytes(46);
-                        return v.ReadDecimal();
+                        return v.ReadSingle();
                     }
                     v.ReadBytes(length);
                 }
             }
             //if frequired read filename from StringID to get it's type (preview or regular)
-            return -6;
+            return -7;
         }
 
         private static byte[] Header(int id, int didxSize, bool isConsole)

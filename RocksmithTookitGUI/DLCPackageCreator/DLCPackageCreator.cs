@@ -835,7 +835,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 AudioPath = info.OggPath.AbsoluteTo(BasePath);
 
             numVolSong.Value = Decimal.Round((decimal)info.Volume, 2);
-            numVolPreview.Value = (info.PreviewVolume != null) ? Decimal.Round((decimal)info.PreviewVolume, 2) : numVolSong.Value;
+            numVolPreview.Value = info.PreviewVolume != null ? Decimal.Round((decimal)info.PreviewVolume, 2) : numVolSong.Value;
 
             if (info.OggQuality > 1 && info.OggQuality < 10)
                 numAudioQuality.Value = info.OggQuality;
@@ -1155,7 +1155,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //if (rbuttonSignatureLIVE.Checked)
             //{
             //    licenses.Add(new XBox360License() { ID = Convert.ToInt64(xboxLicense0IDTB.Text.Trim(), 16), Bit = 1, Flag = 1 });
-            //}            
+            //}
 
             var songVol = (float)numVolSong.Value;
             var previewVol = (float)numVolPreview.Value;
@@ -2238,6 +2238,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
         //TODO: allow to choose audio for each arrangement separately. #Lessons, #Multitracks
+        //TODO: loudness normalization apply here
+        //TODO: detect quality, but suggest keeping it low at 4
         private void btnAudio_Click(object sender, EventArgs e)
         {
             using (var ofd = new OpenFileDialog())
@@ -2516,7 +2518,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void numVolSong_ValueChanged(object sender, EventArgs e)
         {
-            if (numVolPreview.Value == decimal.Parse(numVolSong.Text)) //let's confuve user a bit more here :D
+            if (numVolPreview.Value == decimal.Parse(numVolSong.Text)) //TODO: here. warn about loudness normalization and that's better to adjust tones volume instead!
                 numVolPreview.Value = numVolSong.Value;
         }
 

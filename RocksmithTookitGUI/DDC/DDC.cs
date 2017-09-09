@@ -22,6 +22,7 @@ namespace RocksmithToolkitGUI.DDC
 {
     public partial class DDC : UserControl
     {
+        #region Fields
         private const string MESSAGEBOX_CAPTION = "Dynamic Difficulty Creator";
         private const string TKI_ARRID = "(Arrangement ID by DDC)";
         private const string TKI_REMASTER = "(Remastered by DDC)";
@@ -37,6 +38,7 @@ namespace RocksmithToolkitGUI.DDC
 
         internal bool IsNDD { get; set; }
         internal string ProcessOutput { get; set; }
+        #endregion
 
         public DDC()
         {
@@ -210,15 +212,15 @@ namespace RocksmithToolkitGUI.DDC
         public int ApplyDD(string filePath, int phraseLen, bool removeSus, string rampPath, string cfgPath, out string consoleOutput, bool overWrite = false, bool keepLog = false)
         {
             var startInfo = new ProcessStartInfo
-            {
-                FileName = Path.Combine(DdcDir, "ddc.exe"),
-                WorkingDirectory = Path.GetDirectoryName(filePath),
-                Arguments = String.Format("\"{0}\" -l {1} -s {2} -m \"{3}\" -c \"{4}\" -p {5} -t {6}",
+                {
+                    FileName = Path.Combine(DdcDir, "ddc.exe"),
+                    WorkingDirectory = Path.GetDirectoryName(filePath),
+                    Arguments = String.Format("\"{0}\" -l {1} -s {2} -m \"{3}\" -c \"{4}\" -p {5} -t {6}",
                         Path.GetFileName(filePath), (UInt16)phraseLen, removeSus ? "Y" : "N",
                         rampPath, cfgPath, overWrite ? "Y" : "N", keepLog ? "Y" : "N"
                         ),
-                UseShellExecute = false,
-                CreateNoWindow = false,  // hide command window
+                    UseShellExecute = false,
+                    CreateNoWindow = true,  // hide command window
                     RedirectStandardOutput = true,
                     RedirectStandardError = true
                 };
@@ -355,7 +357,7 @@ namespace RocksmithToolkitGUI.DDC
                 packageData.ToolkitInfo.PackageVersion = packageData.ToolkitInfo.PackageVersion.GetValidVersion();
 
             // validate packageData (important)
-            packageData.Name = packageData.Name.GetValidKey(); // DLC Key                 
+            packageData.Name = packageData.Name.GetValidKey(); // DLC Key
 
             try
             {
@@ -364,7 +366,7 @@ namespace RocksmithToolkitGUI.DDC
                 //    if (MessageBox.Show("Are you sure to overwrite file? " + Path.GetFileName(ddcFilePath), MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 //        return result;
 
-                // regenerates the SNG with the repair and repackages               
+                // regenerates the SNG with the repair and repackages
                 using (var psarcNew = new PsarcPackager(true))
                     psarcNew.WritePackage(ddcFilePath, packageData, filePath);
             }
