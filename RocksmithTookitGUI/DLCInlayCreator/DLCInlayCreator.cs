@@ -348,7 +348,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             iniCFG["General"].Add(new Setting("inlayname", String.IsNullOrEmpty(InlayName) ? "null" : InlayName));
             iniCFG["General"].Add(new Setting("24frets", Convert.ToString(Convert.ToInt32(Frets24))));
             iniCFG["General"].Add(new Setting("colored", Convert.ToString(Convert.ToInt32(Colored))));
-            iniCFG["General"].Add(new Setting("cscvers", ToolkitVersion.version.Replace("-00000000", "")));
+            iniCFG["General"].Add(new Setting("cscvers", ToolkitVersion.RSTKGuiVersion.Replace("-00000000", "")));
             iniCFG["General"].Add(new Setting("modified", DateTime.Now.ToShortDateString()));
             iniCFG.Save(iniFile);
 

@@ -58,13 +58,13 @@ namespace RocksmithToolkitLib.DLCPackage
             get
             {
                 if (_version == null)
-                    _version = String.Format("Toolkit Version {0}", ToolkitVersion.version);
+                    _version = String.Format("Toolkit Version {0}", ToolkitVersion.RSTKGuiVersion);
                 return _version;
             }
             set
             {
                 if (value == null)
-                    _version = String.Format("Toolkit Version {0}", ToolkitVersion.version);
+                    _version = String.Format("Toolkit Version {0}", ToolkitVersion.RSTKGuiVersion);
                 _version = value;
             }
         }

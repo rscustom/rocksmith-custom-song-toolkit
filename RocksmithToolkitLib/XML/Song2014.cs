@@ -361,7 +361,7 @@ namespace RocksmithToolkitLib.XML
                 {
                     if (commentNode.ToString().Contains(CST_MAGIC))
                     {
-                        if (!commentNode.ToString().Contains(ToolkitVersion.version))
+                        if (!commentNode.ToString().Contains(ToolkitVersion.RSTKGuiVersion))
                         {
                             if (saveOldVers)
                                 rootnode.AddFirst(new XComment(commentNode));
@@ -376,7 +376,7 @@ namespace RocksmithToolkitLib.XML
 
                 // always put current CST version info first
                 if (sameVersion || writeNewVers)
-                    rootnode.AddFirst(new XComment(CST_MAGIC + ToolkitVersion.version + " "));
+                    rootnode.AddFirst(new XComment(CST_MAGIC + ToolkitVersion.RSTKGuiVersion + " "));
             }
             
             // xml.Declaration = new XDeclaration("1.0", "utf-8", null);

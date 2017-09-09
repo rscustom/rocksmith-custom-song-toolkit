@@ -64,18 +64,19 @@ namespace RocksmithToolkitLib.Ogg
                 if(!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WWISEROOT")))
                     wwiseCLIPath = Directory.EnumerateFiles(Environment.GetEnvironmentVariable("WWISEROOT"), "WwiseCLI.exe", SearchOption.AllDirectories);
             }
+
             if (!wwiseCLIPath.Any())
                 throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwiseRoot + Environment.NewLine + "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed.");
 
             //win32 = 32bit x64 = 64bit
             string wwiseCLIexe = wwiseCLIPath.AsParallel().SingleOrDefault(e => e.Contains("Authoring\\Win32"));
+            // use the 64bit version if it is installed
             if (Environment.Is64BitOperatingSystem)
             {
                 var etmp = wwiseCLIPath.AsParallel().FirstOrDefault(e => e.Contains("Authoring\\x64"));
                 if (!String.IsNullOrEmpty(etmp))
                     wwiseCLIexe = etmp;
             }
-
 
             // a final error check
             var wwiseVersion = FileVersionInfo.GetVersionInfo(wwiseCLIexe).ProductVersion;

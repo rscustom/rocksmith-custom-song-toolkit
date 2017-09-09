@@ -225,7 +225,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             Configuration iniCFG = new Configuration();
             iniCFG["General"].Add(new Setting("author", String.IsNullOrEmpty(txtAuthor.Text) ? "CSC" : txtAuthor.Text));
             iniCFG["General"].Add(new Setting("seqname", String.IsNullOrEmpty(txtSeqName.Text) ? "SystemSaved" : txtSeqName.Text));
-            iniCFG["General"].Add(new Setting("cscvers", ToolkitVersion.version));
+            iniCFG["General"].Add(new Setting("cscvers", ToolkitVersion.RSTKGuiVersion));
             iniCFG["General"].Add(new Setting("modified", DateTime.Now.ToShortDateString()));
             iniCFG.Save(iniFile);
 

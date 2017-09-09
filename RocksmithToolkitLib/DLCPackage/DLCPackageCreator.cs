@@ -24,7 +24,6 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Properties;
 using RocksmithToolkitLib.Ogg;
 using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
-using RocksmithToolkitLib.XML;
 
 
 namespace RocksmithToolkitLib.DLCPackage
@@ -234,7 +233,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     break;
             }
 
-            hd.Publisher = String.Format("Custom Song Creator Toolkit ({0} beta)", ToolkitVersion.version);
+            hd.Publisher = String.Format("Custom Song Creator Toolkit ({0} beta)", ToolkitVersion.RSTKGuiVersion);
             hd.Title_Display = displayName;
             hd.Description = displayName;
             hd.ThisType = PackageType.MarketPlace;
@@ -1099,7 +1098,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 packageAuthor = ConfigRepository.Instance()["general_defaultauthor"];
 
             var writer = new StreamWriter(output);
-            writer.WriteLine("Toolkit version: {0}", ToolkitVersion.version);
+            writer.WriteLine("Toolkit version: {0}", ToolkitVersion.RSTKGuiVersion);
             if (!String.IsNullOrEmpty(packageAuthor))
                 writer.WriteLine("Package Author: {0}", packageAuthor);
             if (!String.IsNullOrEmpty(packageVersion))

@@ -26,10 +26,12 @@ namespace RocksmithToolkitGUI
         {
             Log = LogManager.GetCurrentClassLogger();
             //I should figure out way for native mac\linux OS
-            var logPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "_RSToolkit_"+DateTime.Now.ToString("yyyy-MM-dd")+".log");
+            var logPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "_RSToolkit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".log");
 
             Log.Info(//OSVersion on unix will return it's Kernel version, urgh.
-                String.Format("Toolkit: v{0} ({1} bit)\r\n ", ToolkitVersion.version, Environment.Is64BitProcess ? "64" : "32") +
+                String.Format("RocksmithToolkitGUI: v{0}\r\n ", ToolkitVersion.RSTKGuiVersion) +
+                String.Format("RocksmithToolkitLib: v{0}\r\n ", ToolkitVersion.RSTKLibVersion()) +
+                String.Format("RocksmithToolkitUpdater: v{0}\r\n ", ToolkitVersion.RSTKUpdaterVersion()) +
                 String.Format("OS: {0} ({1} bit)\r\n ", Environment.OSVersion, Environment.Is64BitOperatingSystem ? "64" : "32") +
                 String.Format("Runtime: v{0}\r\n ", Environment.Version) +
                 String.Format("JIT: {0}\r\n ", JitVersionInfo.GetJitVersion()) +

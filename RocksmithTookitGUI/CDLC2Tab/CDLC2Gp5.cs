@@ -214,7 +214,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
             var score = new Score();
             var arrangement = Song2014.LoadFromFile(inputFilePath);
             var toolkitInfo = new ToolkitInfo();
-            toolkitInfo.ToolkitVersion = String.Format("CST v{0}", ToolkitVersion.version);
+            toolkitInfo.ToolkitVersion = String.Format("CST v{0}", ToolkitVersion.RSTKGuiVersion);
             toolkitInfo.PackageAuthor = "XML To GP5 Converter";
             toolkitInfo.PackageVersion = arrangement.LastConversionDateTime;
 

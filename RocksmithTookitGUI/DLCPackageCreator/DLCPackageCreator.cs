@@ -2065,7 +2065,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 case "generate":
                     var message = "Package was generated.";
                     if (errorsFound.Length > 0)
-                        message = String.Format("Package {2} was generated with errors! See below: {0}{1}", Environment.NewLine, errorsFound, ToolkitVersion.version);
+                        message = String.Format("Package {2} was generated with errors! See below: {0}{1}", Environment.NewLine, errorsFound, ToolkitVersion.RSTKGuiVersion);
                     else if (ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
                         SaveTemplateFile(UnpackedDir);
 
@@ -2077,7 +2077,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     break;
 
                 case "error":
-                    var message2 = String.Format("Package generation {2} failed.  See below: {0}{1}{0}", Environment.NewLine, errorsFound, ToolkitVersion.version);
+                    var message2 = String.Format("Package generation {2} failed.  See below: {0}{1}{0}", Environment.NewLine, errorsFound, ToolkitVersion.RSTKGuiVersion);
                     MessageBox.Show(message2, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Parent.Focus();
                     break;

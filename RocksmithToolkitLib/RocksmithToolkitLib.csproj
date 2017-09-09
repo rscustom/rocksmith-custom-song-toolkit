@@ -262,15 +262,20 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>if $(ConfigurationName) == Debug (
+    <PreBuildEvent>rem Only need to  make changes to version information below
+rem RocksmithPreBuild.exe takes care of updating Assembly.cs files and AppVeyor versioning information
+
+if $(ConfigurationName) == Debug (
   CD "$(SolutionDir)"
-  rem alternate usages  
+
+  rem there are several alternate usages for RocksmithPreBuild.exe
+
          cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
   rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.4.1 BETA"
   rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.4.0 RELEASE"
 )
 
-rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj rem which call the 'prebuild.sh' file</PreBuildEvent>
+rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj these call the 'prebuild.sh' file</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>

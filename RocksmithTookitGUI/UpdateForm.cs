@@ -37,7 +37,7 @@ namespace RocksmithToolkitGUI
             if (File.Exists(updatingApp))
                 File.Delete(updatingApp);
 
-            currentVersionLabel.Text = ToolkitVersion.version;
+            currentVersionLabel.Text = ToolkitVersion.RSTKGuiVersion;
             newVersionLabel.Text = String.Format("{0}-{1}", onlineVersion.Version, onlineVersion.Revision);
             dateLabel.Text = onlineVersion.Date.ToShortDateString();
 

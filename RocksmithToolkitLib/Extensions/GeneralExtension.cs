@@ -165,10 +165,10 @@ namespace RocksmithToolkitLib.Extensions
             if (b.ReadUInt32() != 0x00004550)
                 throw new Exception("Can't find PE header!");
 
-            //Seek to OptionalHeader to find out what ty
+            //Seek to OptionalHeader to find out what type
             f.Seek(0x118, SeekOrigin.Begin);
             if (b.ReadByte() != 0xB)
-                throw new Exception("ROM trype detected, you're doing it wrong!");
+                throw new Exception("ROM type detected, you're doing it wrong!");
             return b.ReadByte() == 2;
         }
 
