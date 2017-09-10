@@ -738,7 +738,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void FillPackageCreatorForm(DLCPackageData info, string filesBaseDir)
+        public void FillPackageCreatorForm(DLCPackageData info, string filesBaseDir)
         {
             chkPlatformPC.Checked = info.Pc;
             chkPlatformMAC.Checked = info.Mac;

@@ -10,11 +10,18 @@ namespace RocksmithToolkitLib
     {
         // NOTE FOR DEVS: 
         // assembly variables are automatically updated by appveyor.yml and PatchAssemblyVersion.ps1
-        // DO NOT MAKE ANY CHANGES HERE
-        // the 'AssemblyVersion' and 'AssemblyConfiguration' values must be manually edited in 
-        // the 'PatchAssemblyVersion.ps1' file prior to committing major revisions/releases
-
-        // assemblyVersion e.g. "2.8.3.1"
+        //
+        // DO NOT MAKE ANY CHANGES HERE ...
+        //
+        // Edit the Pre-build Commands for the RocksmithToolkitLib 
+        // For directions see the REM comments in the RocksmithToolkitLib Pre-build Commands
+        // then RocksmithPreBuild.exe takes care of updating Assembly.cs files and AppVeyor versioning information
+        //
+        // Alternatively prior to committing major revisions/releases ...
+        // the 'AssemblyVersion' and 'AssemblyConfiguration' values must be edited in 
+        // the 'PatchAssemblyVersion.ps1' file as needed.
+  
+        // assemblyVersion e.g. "1.2.3.4"
         public static string AssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         // assemblyInformationVersion (aka gitSubVersion) e.g. "ce57ebea"

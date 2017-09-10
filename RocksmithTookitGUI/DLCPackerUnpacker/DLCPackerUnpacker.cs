@@ -173,22 +173,41 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
             GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
             Thread.Sleep(100); // give Globals a chance to initialize
+           
+            var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
+            var step = (int)Math.Floor(100.0 / (sourceFileNames.Count() * (structured ? 2.0F : 1.0F))); // Math.Floor prevents roundup errors
+            int progress = 0;
             Stopwatch sw = new Stopwatch();
             sw.Restart();
 
             foreach (string sourceFileName in sourceFileNames)
             {
                 Application.DoEvents();
-                GlobalExtension.ShowProgress(String.Format("Unpacking '{0}'", Path.GetFileName(sourceFileName)), 10);
+                progress += step;
+                GlobalExtension.ShowProgress(String.Format("Unpacking: '{0}'", Path.GetFileName(sourceFileName)), progress);
 
                 try
                 {
                     Platform platform = sourceFileName.GetPlatform();
-                    Packer.Unpack(sourceFileName, destPath, decode, overwrite, platform);
+                    var unpackedDir = Packer.Unpack(sourceFileName, destPath, decode, overwrite, platform);
+
+                    if (structured && platform.version == GameVersion.RS2014)
+                    {
+                        progress += step;
+                        GlobalExtension.ShowProgress(String.Format("Doing Like Project: '{0}'", Path.GetFileName(sourceFileName)), progress);
+
+                        using (var packageCreator = new DLCPackageCreator.DLCPackageCreator())
+                        {
+                            unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
+                            var info = DLCPackageData.LoadFromFolder(unpackedDir, platform, platform, true, true);
+                            packageCreator.FillPackageCreatorForm(info, unpackedDir);
+                            packageCreator.SaveTemplateFile(unpackedDir, false);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
-                    errorsFound.AppendLine(String.Format("Error unpacking file '{0}': {1}", Path.GetFileName(sourceFileName), ex.Message));
+                    errorsFound.AppendLine(String.Format("Error unpacking file: '{0}' ... {1}", Path.GetFileName(sourceFileName), ex.Message));
                 }
             }
 
