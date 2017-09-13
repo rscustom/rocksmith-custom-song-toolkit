@@ -795,11 +795,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             PopulateAppIdCombo();
             Application.DoEvents();
 
-            txtAppId.Text = info.AppId;
-            if (String.IsNullOrEmpty(txtAppId.Text))
-                txtAppId.Text = info.AppId = "248750"; // hardcoded for now
+            // Update appId unless locked
+            if (!chkLockAppId.Checked) { 
+                txtAppId.Text = info.AppId;
+                if (String.IsNullOrEmpty(txtAppId.Text))
+                    txtAppId.Text = info.AppId = "248750"; // hardcoded for now
+            }
 
-            SelectComboAppId(info.AppId);
+            SelectComboAppId(txtAppId.Text);
+
             txtAlbum.Text = info.SongInfo.Album;
             txtAlbumSort.Text = info.SongInfo.AlbumSort;
             txtSongTitle.Text = info.SongInfo.SongDisplayName;
@@ -1313,11 +1317,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             cmbAppIds.Items.Clear();
             foreach (var song in SongAppIdRepository.Instance().Select(currentGameVersion))
                 cmbAppIds.Items.Add(song);
-
-            var songAppId = SongAppIdRepository.Instance().Select((currentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], currentGameVersion);
-            cmbAppIds.SelectedItem = songAppId;
-            txtAppId.Text = songAppId.AppId;
-            AppId = songAppId.AppId;
+            
+            // Load default appId unless user has locked it
+            if (!chkLockAppId.Checked) {
+                var songAppId = SongAppIdRepository.Instance().Select((currentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], currentGameVersion);
+                cmbAppIds.SelectedItem = songAppId;
+                txtAppId.Text = songAppId.AppId;
+                AppId = songAppId.AppId;
+            }
         }
 
         private void PopulateArrangements(GameVersion oldGameVersion)
@@ -2560,8 +2567,5 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return obj.Code.GetHashCode() | obj.Time.GetHashCode();
             }
         }
-
-
-
     }
 }
