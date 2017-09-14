@@ -170,7 +170,7 @@ namespace convert2012
                     ExternalApps.Ogg2Preview(oggPath, oggPreviewPath);
                     ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                 }
-                Wwise.Convert2Wem(audioPath, wemPath, 4); // default audio quality = 4
+                Wwise.Wav2Wem(audioPath, wemPath, 4); // default audio quality = 4
                 audioPath = wemPath;
             }
 

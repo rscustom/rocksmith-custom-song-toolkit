@@ -344,7 +344,7 @@ namespace RocksmithToolkitLib.Ogg
                     ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, previewLength, chorusTime);
                     ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                 }
-                Wwise.Convert2Wem(audioPath, wemPath, audioQuality);
+                Wwise.Wav2Wem(audioPath, wemPath, audioQuality);
                 audioPath = wemPath;
             }
 
@@ -354,7 +354,7 @@ namespace RocksmithToolkitLib.Ogg
                 ExternalApps.Ogg2Wav(oggPath, wavPath);
                 ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, previewLength, chorusTime);
                 ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
-                Wwise.Convert2Wem(wavPath, wemPath, audioQuality);
+                Wwise.Wav2Wem(wavPath, wemPath, audioQuality);
                 audioPath = wemPath;
             }
 

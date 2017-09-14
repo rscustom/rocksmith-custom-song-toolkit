@@ -23,7 +23,7 @@ namespace RocksmithToolkitLib.Ogg
         /// <param name="wavSourcePath"></param>
         /// <param name="destinationPath"></param>
         /// <param name="audioQuality"></param>
-        public static void Convert2Wem(string wavSourcePath, string destinationPath, int audioQuality)
+        public static void Wav2Wem(string wavSourcePath, string destinationPath, int audioQuality)
         {
             try
             {

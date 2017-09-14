@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeneralConfig));
             this.general_usebeta = new System.Windows.Forms.CheckBox();
             this.gbCreator = new System.Windows.Forms.GroupBox();
             this.creator_autosavetemplate = new System.Windows.Forms.CheckBox();
@@ -50,6 +51,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.general_defaultappid_RS2012 = new System.Windows.Forms.ComboBox();
             this.gbGeneral = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.general_lockappid = new System.Windows.Forms.CheckBox();
             this.general_defaultplatform = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
             this.btnWwisePath = new System.Windows.Forms.Button();
@@ -379,12 +382,14 @@
             this.general_defaultappid_RS2012.Location = new System.Drawing.Point(122, 16);
             this.general_defaultappid_RS2012.Margin = new System.Windows.Forms.Padding(2);
             this.general_defaultappid_RS2012.Name = "general_defaultappid_RS2012";
-            this.general_defaultappid_RS2012.Size = new System.Drawing.Size(244, 21);
+            this.general_defaultappid_RS2012.Size = new System.Drawing.Size(209, 21);
             this.general_defaultappid_RS2012.TabIndex = 1;
             this.general_defaultappid_RS2012.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // gbGeneral
             // 
+            this.gbGeneral.Controls.Add(this.label18);
+            this.gbGeneral.Controls.Add(this.general_lockappid);
             this.gbGeneral.Controls.Add(this.general_defaultplatform);
             this.gbGeneral.Controls.Add(this.label17);
             this.gbGeneral.Controls.Add(this.btnWwisePath);
@@ -416,6 +421,29 @@
             this.gbGeneral.TabIndex = 14;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.ForeColor = System.Drawing.Color.DodgerBlue;
+            this.label18.Location = new System.Drawing.Point(341, 44);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(31, 13);
+            this.label18.TabIndex = 107;
+            this.label18.Text = "Lock";
+            // 
+            // general_lockappid
+            // 
+            this.general_lockappid.CheckAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.general_lockappid.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.general_lockappid.ForeColor = System.Drawing.Color.MediumSlateBlue;
+            this.general_lockappid.Location = new System.Drawing.Point(347, 27);
+            this.general_lockappid.Name = "general_lockappid";
+            this.general_lockappid.Size = new System.Drawing.Size(19, 19);
+            this.general_lockappid.TabIndex = 106;
+            this.toolTip.SetToolTip(this.general_lockappid, resources.GetString("general_lockappid.ToolTip"));
+            this.general_lockappid.UseVisualStyleBackColor = true;
+            this.general_lockappid.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // general_defaultplatform
             // 
@@ -624,7 +652,7 @@
             this.general_defaultappid_RS2014.Location = new System.Drawing.Point(122, 41);
             this.general_defaultappid_RS2014.Margin = new System.Windows.Forms.Padding(2);
             this.general_defaultappid_RS2014.Name = "general_defaultappid_RS2014";
-            this.general_defaultappid_RS2014.Size = new System.Drawing.Size(244, 21);
+            this.general_defaultappid_RS2014.Size = new System.Drawing.Size(209, 21);
             this.general_defaultappid_RS2014.TabIndex = 2;
             this.general_defaultappid_RS2014.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -946,5 +974,7 @@
         private System.Windows.Forms.CheckBox creator_fixlowbass;
         private System.Windows.Forms.CheckBox creator_fixmultitone;
         private System.Windows.Forms.CheckBox creator_autosavetemplate;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.CheckBox general_lockappid;
     }
 }

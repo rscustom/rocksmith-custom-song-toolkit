@@ -792,18 +792,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Song INFO
             txtDlcKey.Text = info.Name;
 
-            PopulateAppIdCombo();
-            Application.DoEvents();
+            // Update AppID unless it is locked
+            if (!ConfigRepository.Instance().GetBoolean("general_lockappid"))
+            {
+                if (String.IsNullOrEmpty(info.AppId))
+                {
+                    // get GeneralConfig default AppID
+                    var songAppId = SongAppIdRepository.Instance().Select((CurrentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], CurrentGameVersion);
+                    if (!String.IsNullOrEmpty(songAppId.AppId))
+                        txtAppId.Text = songAppId.AppId;
+                    else
+                        txtAppId.Text = "248750"; // JIC use hardcoded default
+                }
+                else
+                    txtAppId.Text = info.AppId;
 
-            // Update appId unless locked
-            if (!chkLockAppId.Checked) { 
-                txtAppId.Text = info.AppId;
-                if (String.IsNullOrEmpty(txtAppId.Text))
-                    txtAppId.Text = info.AppId = "248750"; // hardcoded for now
+                SelectComboAppId(txtAppId.Text);
             }
-
-            SelectComboAppId(txtAppId.Text);
-
+            
             txtAlbum.Text = info.SongInfo.Album;
             txtAlbumSort.Text = info.SongInfo.AlbumSort;
             txtSongTitle.Text = info.SongInfo.SongDisplayName;
@@ -1317,14 +1323,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             cmbAppIds.Items.Clear();
             foreach (var song in SongAppIdRepository.Instance().Select(currentGameVersion))
                 cmbAppIds.Items.Add(song);
-            
-            // Load default appId unless user has locked it
-            if (!chkLockAppId.Checked) {
-                var songAppId = SongAppIdRepository.Instance().Select((currentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], currentGameVersion);
-                cmbAppIds.SelectedItem = songAppId;
-                txtAppId.Text = songAppId.AppId;
-                AppId = songAppId.AppId;
-            }
+
+            // get GeneralConfig default AppID
+            var songAppId = SongAppIdRepository.Instance().Select((currentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], currentGameVersion);
+            cmbAppIds.SelectedItem = songAppId;
+            txtAppId.Text = songAppId.AppId;
+            AppId = songAppId.AppId;
         }
 
         private void PopulateArrangements(GameVersion oldGameVersion)
@@ -1452,14 +1456,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void SelectComboAppId(string appId)
         {
             var songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);
+
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppIds.SelectedItem = songAppId;
-            else//TODO: combobox
+            else
             {
                 if (!appId.IsAppIdSixDigits())
                     MessageBox.Show("Please enter a valid six digit  " + Environment.NewLine + "App ID before continuing.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 else
-                    MessageBox.Show("User entered an unknown AppID." + Environment.NewLine + Environment.NewLine + "Toolkit will use the AppID that  " + Environment.NewLine + "was entered manually but it can  " + Environment.NewLine + "not assess its validity.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                {
+                    cmbAppIds.Items.Insert(0, new SongAppId() { Name = "Unknown AppID", AppId = appId });
+                    cmbAppIds.SelectedIndex = 0;
+                    MessageBox.Show("<WARNING> Unknown AppID ..." + Environment.NewLine +
+                                    "This AppID may or may not be valid.  " + Environment.NewLine + Environment.NewLine +
+                                    "Please ensure the AppID is valid.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 
