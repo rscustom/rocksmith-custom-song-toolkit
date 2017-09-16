@@ -51,8 +51,9 @@ namespace RocksmithToolkitGUI
 
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.RSTKGuiVersion);
 
+            // Disable updates on Mac (speedup) -1.5 seconds here
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
-            {// Disable updates for Mac (speedup) -1.5 seconds here
+            {
                 updateButton.Enabled = false;
                 updateButton.Text = "Updates Disabled";
                 updateButton.Visible = true;
@@ -182,15 +183,14 @@ namespace RocksmithToolkitGUI
         {
             configurationToolStripMenuItem.Enabled = false;
 
-            // Save Data
+            // Save data
             //GeneralConfigTab.cachedTabs = tabControl1.TabPages;
 
             // Remove all tabs
             tabControl1.TabPages.Clear();
 
-            // Add config
-            if (!tabControl1.TabPages.Contains(GeneralConfigTab))
-                tabControl1.TabPages.Add(GeneralConfigTab);
+            // Add config tab
+            tabControl1.TabPages.Add(GeneralConfigTab);
         }
 
         public void ReloadControls()

@@ -5,6 +5,7 @@ using System.Net;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitUpdater
 {
@@ -19,13 +20,16 @@ namespace RocksmithToolkitUpdater
         private BackgroundWorker bWorker;
         string localFile = String.Empty;
 
-        private string workDir {
+        private string workDir
+        {
             get { return Path.GetDirectoryName(Application.ExecutablePath); }
         }
 
         private string _fileUrl = String.Empty;
-        private string FileUrl {
-            get {
+        private string FileUrl
+        {
+            get
+            {
                 if (String.IsNullOrEmpty(_fileUrl))
                     _fileUrl = (string)AssemblyCaller.Call(Path.Combine(workDir, APP_RSLIB), "RocksmithToolkitLib.ToolkitVersionOnline", "GetFileUrl", null, true);
                 return _fileUrl;
@@ -33,15 +37,25 @@ namespace RocksmithToolkitUpdater
         }
 
         private bool? _replaceRepo;
-        private bool ReplaceRepo {
-            get {
-                if (_replaceRepo == null)
+        private bool ReplaceRepo
+        {
+            get
+            {
+                // TODO: test and dubug new code
+                var configVers = (string)AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), "RocksmithToolkitLib.XmlRepository.ConfigRepository", "", "general_configversion");
+                if (String.IsNullOrEmpty(configVers))
+                    _replaceRepo = true;
+                else if (configVers != ConfigVersion.Version)
+                    _replaceRepo = true;
+                else if (_replaceRepo == null)
                     _replaceRepo = (bool)AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), "RocksmithToolkitLib.XmlRepository.ConfigRepository", "GetBoolean", "general_replacerepo");
+
                 return (bool)_replaceRepo;
             }
         }
 
-        public AutoUpdater() {
+        public AutoUpdater()
+        {
             InitializeComponent();
             //System.Diagnostics.Debugger.Launch();
             bWorker = new BackgroundWorker();
@@ -49,7 +63,8 @@ namespace RocksmithToolkitUpdater
             UpdateToolkit();
         }
 
-        private void UpdateToolkit() {
+        private void UpdateToolkit()
+        {
             var url = FileUrl;
             var downloadUri = new Uri(url);
             localFile = Path.Combine(workDir, Path.GetFileName(downloadUri.LocalPath));
@@ -58,8 +73,10 @@ namespace RocksmithToolkitUpdater
             DownloadFile(downloadUri, localFile);
         }
 
-        public void DownloadFile(Uri downloadUri, string location) {
-            using (webClient = new WebClient()) {
+        public void DownloadFile(Uri downloadUri, string location)
+        {
+            using (webClient = new WebClient())
+            {
                 webClient.DownloadFileCompleted += Completed;
                 webClient.DownloadProgressChanged += ProgressChanged;
 
@@ -71,7 +88,8 @@ namespace RocksmithToolkitUpdater
             }
         }
 
-        private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
+        private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
             // Update the progressbar percentage
             updateProgress.Value = e.ProgressPercentage;
 
@@ -85,13 +103,17 @@ namespace RocksmithToolkitUpdater
             labelDownloaded.Text = String.Format("Downloaded: {0:0.00} MB's / Total: {1:0.00} MB's", (e.BytesReceived / 1024d / 1024d), (e.TotalBytesToReceive / 1024d / 1024d));
         }
 
-        private void Completed(object sender, AsyncCompletedEventArgs e) {
+        private void Completed(object sender, AsyncCompletedEventArgs e)
+        {
             // Reset the stopwatch.
             sw.Reset();
 
-            if (e.Cancelled == true) {
+            if (e.Cancelled == true)
+            {
                 MessageBox.Show("Download has been canceled.");
-            } else {
+            }
+            else
+            {
                 // Change to marquee
                 updateProgress.Style = ProgressBarStyle.Marquee;
                 updateProgress.Refresh();
@@ -110,7 +132,7 @@ namespace RocksmithToolkitUpdater
             ExtractFile(output);
 
             // TODO: DEBUG HERE
-            MoveFiles(output, workDir); 
+            MoveFiles(output, workDir);
 
             // DELETE DOWNLOADED FILE
             try
@@ -124,7 +146,8 @@ namespace RocksmithToolkitUpdater
             Thread.Sleep(500);
         }
 
-        public void ExtractFile(string output) { //works only for ZIP files.
+        public void ExtractFile(string output)
+        { //works only for ZIP files.
             AssemblyCaller.Call(Path.Combine(workDir, APP_CSZIP), "ICSharpCode.SharpZipLib.Zip.FastZip", "ExtractZip", new Type[] { typeof(string), typeof(string), typeof(string) }, new object[] { localFile, output, null });
         }
 
@@ -142,7 +165,6 @@ namespace RocksmithToolkitUpdater
         public void MoveFiles(string sourceDir, string destDir)
         {
             var source = new DirectoryInfo(sourceDir);
-
             var files = source.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
             var directories = source.GetDirectories();
 
@@ -159,6 +181,7 @@ namespace RocksmithToolkitUpdater
             foreach (var file in files)
             {
                 var of = Path.Combine(destDir, file.Name);
+
                 if (!ReplaceRepo && (file.Name.StartsWith("RocksmithToolkitLib.") && file.Name.EndsWith(".xml")))
                     MergeXmlRepository(file.FullName, of);
                 else
@@ -166,7 +189,8 @@ namespace RocksmithToolkitUpdater
             }
         }
 
-        private void MergeXmlRepository(string sourceFile, string destFile) {
+        private void MergeXmlRepository(string sourceFile, string destFile)
+        {
             var repo = String.Empty;
 
             switch (Path.GetFileName(sourceFile))
@@ -181,12 +205,13 @@ namespace RocksmithToolkitUpdater
                     repo = "TuningDefinitionRepository";
                     break;
             }
- 
+
             if (!String.IsNullOrEmpty(repo))
                 AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), String.Format("RocksmithToolkitLib.XmlRepository.{0}", repo), "Merge", sourceFile, destFile);
         }
 
-        private void ShowCurrentOperation(string message) {
+        private void ShowCurrentOperation(string message)
+        {
             currentOperationLabel.Text = message;
             currentOperationLabel.Refresh();
         }

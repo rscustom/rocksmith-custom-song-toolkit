@@ -89,6 +89,7 @@
     <Compile Include="DLCPackage\Manifest\Tone\Manifest.cs" />
     <Compile Include="DLCPackage\Manifest\Tone\Pedal.cs" />
     <Compile Include="DLCPackage\Manifest\Tone\Tone.cs" />
+    <Compile Include="XmlRepository\Config.cs" />
     <Compile Include="XML\Showlights.cs" />
     <Compile Include="DLCPackage\XBlock\XblockX.cs" />
     <Compile Include="Extensions\BetterDialog2.cs">
@@ -187,7 +188,7 @@
     <Compile Include="Sng\SngFile.cs" />
     <Compile Include="Sng\SngFileWriter.cs" />
     <Compile Include="ToolkitVersion.cs" />
-    <Compile Include="XmlRepository\Config.cs" />
+    <Compile Include="XmlRepository\ConfigVersion.cs" />
     <Compile Include="XmlRepository\ConfigRepository.cs" />
     <Compile Include="XmlRepository\TuningDefinitionRepository.cs" />
     <Compile Include="XmlRepository\TuningDefinition.cs" />
