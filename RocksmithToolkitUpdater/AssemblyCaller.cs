@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace RocksmithToolkitUpdater
 {
@@ -8,16 +9,19 @@ namespace RocksmithToolkitUpdater
     {
         private const string UPDATER_DOMAIN = "UpdaterDomain";
 
-        public static object CallStatic(string assemblyPath, string typeName, string method, params object[] methodParams) {
+        public static object CallStatic(string assemblyPath, string typeName, string method, params object[] methodParams)
+        {
             return Call(assemblyPath, typeName, method, null, true, methodParams);
         }
 
-        public static object Call(string assemblyPath, string typeName, string method, Type[] paramTypes, params object[] methodParams) {
+        public static object Call(string assemblyPath, string typeName, string method, Type[] paramTypes, params object[] methodParams)
+        {
             return Call(assemblyPath, typeName, method, paramTypes, false, methodParams);
         }
 
         // EXECUTE METHOD IN LIBS WITHOUT LOCK FILE
-        private static object Call(string assemblyPath, string typeName, string method, Type[] paramTypes, bool createInstance, params object[] methodParams) {
+        private static object Call(string assemblyPath, string typeName, string method, Type[] paramTypes, bool createInstance, params object[] methodParams)
+        {
             AppDomain domain = AppDomain.CreateDomain(UPDATER_DOMAIN);
             AssemblyCaller assemblyCaller = new AssemblyCaller();
             assemblyCaller = (AssemblyCaller)domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(AssemblyCaller).FullName);

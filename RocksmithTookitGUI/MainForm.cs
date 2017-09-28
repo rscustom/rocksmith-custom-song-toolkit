@@ -29,6 +29,11 @@ namespace RocksmithToolkitGUI
         public MainForm(string[] args)
         {
             InitializeComponent();
+
+            // uncomment to debug AutoUpdater without internet connection
+            //var debug1 = new RocksmithToolkitUpdater.AutoUpdater();
+            //var debug2 = debug1.ReplaceRepo;
+
             // EH keeps main form responsive/refreshed
             this.Shown += MainForm_Splash;
 
@@ -58,7 +63,7 @@ namespace RocksmithToolkitGUI
                 updateButton.Text = "Updates Disabled";
                 updateButton.Visible = true;
             }
-            else
+            else if (ConfigRepository.Instance().GetBoolean("general_autoupdate"))
             {
                 bWorker = new BackgroundWorker();
                 bWorker.DoWork += CheckForUpdate;

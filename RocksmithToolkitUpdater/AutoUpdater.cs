@@ -37,12 +37,14 @@ namespace RocksmithToolkitUpdater
         }
 
         private bool? _replaceRepo;
-        private bool ReplaceRepo
+        public bool ReplaceRepo
         {
             get
             {
                 // TODO: test and dubug new code
-                var configVers = (string)AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), "RocksmithToolkitLib.XmlRepository.ConfigRepository", "", "general_configversion");
+                // hacked together GetString method to avoid null exceptions
+                var configVers = (string)AssemblyCaller.CallStatic(Path.Combine(workDir, APP_RSLIB), "RocksmithToolkitLib.XmlRepository.ConfigRepository", "GetString", "general_configversion");
+            
                 if (String.IsNullOrEmpty(configVers))
                     _replaceRepo = true;
                 else if (configVers != ConfigVersion.Version)

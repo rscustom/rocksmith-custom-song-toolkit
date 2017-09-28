@@ -56,6 +56,7 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.gbAutoUpdate = new System.Windows.Forms.GroupBox();
+            this.general_autoupdate = new System.Windows.Forms.CheckBox();
             this.general_replacerepo = new System.Windows.Forms.CheckBox();
             this.btnRs2014Path = new System.Windows.Forms.Button();
             this.btnRs1Path = new System.Windows.Forms.Button();
@@ -101,7 +102,7 @@
             // 
             this.general_usebeta.AutoSize = true;
             this.general_usebeta.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.general_usebeta.Location = new System.Drawing.Point(2, 16);
+            this.general_usebeta.Location = new System.Drawing.Point(2, 19);
             this.general_usebeta.Name = "general_usebeta";
             this.general_usebeta.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.general_usebeta.Size = new System.Drawing.Size(117, 17);
@@ -443,6 +444,7 @@
             // 
             // gbAutoUpdate
             // 
+            this.gbAutoUpdate.Controls.Add(this.general_autoupdate);
             this.gbAutoUpdate.Controls.Add(this.general_replacerepo);
             this.gbAutoUpdate.Controls.Add(this.general_usebeta);
             this.gbAutoUpdate.ForeColor = System.Drawing.Color.DodgerBlue;
@@ -451,7 +453,21 @@
             this.gbAutoUpdate.Size = new System.Drawing.Size(127, 62);
             this.gbAutoUpdate.TabIndex = 99;
             this.gbAutoUpdate.TabStop = false;
-            this.gbAutoUpdate.Text = "Auto-update";
+            this.gbAutoUpdate.Text = "Auto-Update      ";
+            // 
+            // general_autoupdate
+            // 
+            this.general_autoupdate.AutoSize = true;
+            this.general_autoupdate.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.general_autoupdate.Location = new System.Drawing.Point(72, 0);
+            this.general_autoupdate.Name = "general_autoupdate";
+            this.general_autoupdate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.general_autoupdate.Size = new System.Drawing.Size(15, 14);
+            this.general_autoupdate.TabIndex = 10;
+            this.toolTip.SetToolTip(this.general_autoupdate, "If checked, Auto-Update is enabled.\r\nIf not checked, Auto-Update is disabled.\r\n\r\n" +
+                    "Any change takes effect on restart.");
+            this.general_autoupdate.UseVisualStyleBackColor = true;
+            this.general_autoupdate.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // general_replacerepo
             // 
@@ -979,5 +995,6 @@
         private System.Windows.Forms.CheckBox creator_autosavetemplate;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.CheckBox general_lockappid;
+        private System.Windows.Forms.CheckBox general_autoupdate;
     }
 }

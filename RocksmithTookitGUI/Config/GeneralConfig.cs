@@ -21,9 +21,10 @@ namespace RocksmithToolkitGUI.Config
         // only gets called one time
         public GeneralConfig()
         {
-            // increment Version here to force RocksmithToolkitUpdater to do a fresh install of RocksmithToolkitLib.*.xml
-            ConfigVersion.Version = "1";
             InitializeComponent();
+
+            // increment the Version here to force RocksmithToolkitUpdater to do a fresh install of RocksmithToolkitLib.*.xml
+            ConfigVersion.Version = "2";
 
             // fix readonly textbox/cuebox background colors
             general_rs1path.BackColor = SystemColors.Window;
