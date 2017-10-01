@@ -320,7 +320,6 @@
             this.dlcPackageCreator1.Album = "";
             this.dlcPackageCreator1.AlbumSort = "";
             this.dlcPackageCreator1.AlbumYear = "";
-            this.dlcPackageCreator1.AppId = "";
             this.dlcPackageCreator1.Artist = "";
             this.dlcPackageCreator1.ArtistSort = "";
             this.dlcPackageCreator1.AverageTempo = "";
@@ -343,7 +342,7 @@
             // 
             // dlcConverter1
             // 
-            this.dlcConverter1.AppId = "";
+           // this.dlcConverter1.AppId = "";
             this.dlcConverter1.Location = new System.Drawing.Point(65, 19);
             this.dlcConverter1.MinimumSize = new System.Drawing.Size(400, 279);
             this.dlcConverter1.Name = "dlcConverter1";

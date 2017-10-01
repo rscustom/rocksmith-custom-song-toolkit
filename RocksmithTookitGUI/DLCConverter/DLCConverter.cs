@@ -28,7 +28,7 @@ namespace RocksmithToolkitGUI.DLCConverter
             bwConvert = new BackgroundWorker { WorkerReportsProgress = true };
         }
 
-        public string AppId
+        private string AppId
         {
             get { return txtAppId.Text; }
             set { txtAppId.Text = value; }

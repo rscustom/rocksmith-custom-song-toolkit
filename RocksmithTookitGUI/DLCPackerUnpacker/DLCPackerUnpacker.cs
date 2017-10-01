@@ -198,16 +198,11 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     {
                         DLCPackageData info = null;
                         if (platform.version == GameVersion.RS2014)
-                        {
                             info = DLCPackageData.LoadFromFolder(unpackedDir, platform, platform, true, true);
-                            packageCreator.CurrentGameVersion = GameVersion.RS2014;
-                        }
                         else
-                        {
                             info = DLCPackageData.RS1LoadFromFolder(unpackedDir, platform, false);
-                            info.GameVersion = GameVersion.RS2012;
-                            packageCreator.CurrentGameVersion = GameVersion.RS2012;
-                        }
+
+                        info.GameVersion = platform.version;
 
                         switch (platform.platform)
                         {
@@ -226,6 +221,11 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                         }
 
                         packageCreator.FillPackageCreatorForm(info, unpackedDir);
+                        // fix descrepancies
+                        packageCreator.CurrentGameVersion = platform.version;
+                        //packageCreator.SelectComboAppId(info.AppId);
+                        packageCreator.AppId = info.AppId;
+                        // save template xml file
                         packageCreator.SaveTemplateFile(unpackedDir, false);
                     }
                 }

@@ -338,7 +338,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             DLCPackageData info = null;
             try
             {
-                if (rbRs2014.Checked)
+                if (CurrentGameVersion == GameVersion.RS2014) // rbRs2014.Checked)
                 {
                     // check and fix the template compatibility if necessary
                     var templateString = File.ReadAllText(templatePath);
@@ -356,8 +356,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (info == null) throw new InvalidDataException("CDLC Template is null");
 
                 // use AppId to determine GameVersion of dlc.xml template
-                rbRs2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
-                rbRs2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
+                CurrentGameVersion = (Convert.ToInt32(info.AppId) < 230000) ? GameVersion.RS2012 : GameVersion.RS2014;
             }
             catch (Exception se)
             {
@@ -791,6 +790,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // Song INFO
             txtDlcKey.Text = info.Name;
+            
+            // do in case CurrentGameVersion changed
+            PopulateAppIdCombo(); 
 
             // Update AppID unless it is locked
             if (!ConfigRepository.Instance().GetBoolean("general_lockappid"))
@@ -800,16 +802,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     // get GeneralConfig default AppID
                     var songAppId = SongAppIdRepository.Instance().Select((CurrentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], CurrentGameVersion);
                     if (!String.IsNullOrEmpty(songAppId.AppId))
-                        txtAppId.Text = songAppId.AppId;
+                        AppId = songAppId.AppId;
                     else
-                        txtAppId.Text = "248750"; // JIC use hardcoded default
+                        AppId = "248750"; // JIC use hardcoded default
                 }
                 else
-                    txtAppId.Text = info.AppId;
-
-                SelectComboAppId(txtAppId.Text);
+                    AppId = info.AppId;
             }
-            
+            else
+                AppId = info.AppId;
+ 
+            SelectComboAppId(AppId);
+
             txtAlbum.Text = info.SongInfo.Album;
             txtAlbumSort.Text = info.SongInfo.AlbumSort;
             txtSongTitle.Text = info.SongInfo.SongDisplayName;
@@ -1327,7 +1331,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // get GeneralConfig default AppID
             var songAppId = SongAppIdRepository.Instance().Select((currentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], currentGameVersion);
             cmbAppIds.SelectedItem = songAppId;
-            txtAppId.Text = songAppId.AppId;
             AppId = songAppId.AppId;
         }
 
@@ -1451,6 +1454,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 lstArrangements.Refresh();
                 IsDirty = true;
             }
+
+            var debubMe = txtAppId.Text;
         }
 
         private void SelectComboAppId(string appId)
@@ -1458,7 +1463,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);
 
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
+            {
                 cmbAppIds.SelectedItem = songAppId;
+            }
             else
             {
                 if (!appId.IsAppIdSixDigits())
@@ -2520,7 +2527,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             if (cmbAppIds.SelectedItem != null)
             {
-                txtAppId.Text = ((SongAppId)cmbAppIds.SelectedItem).AppId;
+                AppId = ((SongAppId)cmbAppIds.SelectedItem).AppId;
             }
         }
 
