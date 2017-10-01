@@ -477,6 +477,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name = "sourcePlatform"></param>
         /// <param name="fixMultiTone">If set to <c>true</c> fix low bass tuning </param>
         /// <param name="fixLowBass">If set to <c>true</c> fix multitone exceptions </param>
+        /// <param name="renameAudioPreview">If set to <c>true</c> rename preview audio with friendly name </param>
         public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform, Platform sourcePlatform = null, bool fixMultiTone = false, bool fixLowBass = false)
         {
             var data = new DLCPackageData();
@@ -689,11 +690,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
             data.OggPath = audioPath;
 
-            //Make Audio preview with expected name when rebuild
+            // rename wem audio with _preview.wem so it is detected by CDLC Creator
             if (!String.IsNullOrEmpty(audioPreviewPath))
             {
                 var newPreviewFileName = Path.Combine(Path.GetDirectoryName(audioPath), String.Format("{0}_preview{1}", Path.GetFileNameWithoutExtension(audioPath), Path.GetExtension(audioPath)));
-                File.Move(audioPreviewPath, newPreviewFileName);
+                File.Copy(audioPreviewPath, newPreviewFileName);
                 data.OggPreviewPath = newPreviewFileName;
             }
 

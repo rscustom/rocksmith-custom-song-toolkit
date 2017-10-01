@@ -191,18 +191,35 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     Platform platform = sourceFileName.GetPlatform();
                     var unpackedDir = Packer.Unpack(sourceFileName, destPath, decode, overwrite, platform);
 
-                    //  if (structured && platform.version == GameVersion.RS2014)
+                    // added a bulk process to create template xml files here so unpacked folders may be loaded quickly in CDLC Creator if desired
+                    progress += step;
+                    GlobalExtension.ShowProgress(String.Format("Creating Template XML file for: '{0}'", Path.GetFileName(sourceFileName)), progress);
+                    using (var packageCreator = new DLCPackageCreator.DLCPackageCreator())
                     {
-                        progress += step;
-                        GlobalExtension.ShowProgress(String.Format("Doing Like Project: '{0}'", Path.GetFileName(sourceFileName)), progress);
+                        DLCPackageData info = null;
+                        if (platform.version == GameVersion.RS2014)
+                            info = DLCPackageData.LoadFromFolder(unpackedDir, platform, platform, true, true);
+                        else
+                            info = DLCPackageData.RS1LoadFromFolder(unpackedDir, platform, false);
 
-                        using (var packageCreator = new DLCPackageCreator.DLCPackageCreator())
+                        switch (platform.platform)
                         {
-                            // unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
-                            var info = DLCPackageData.LoadFromFolder(unpackedDir, platform, platform, true, true);
-                            packageCreator.FillPackageCreatorForm(info, unpackedDir);
-                            packageCreator.SaveTemplateFile(unpackedDir, false);
+                            case GamePlatform.Pc:
+                                info.Pc = true;
+                                break;
+                            case GamePlatform.Mac:
+                                info.Mac = true;
+                                break;
+                            case GamePlatform.XBox360:
+                                info.XBox360 = true;
+                                break;
+                            case GamePlatform.PS3:
+                                info.PS3 = true;
+                                break;
                         }
+
+                        packageCreator.FillPackageCreatorForm(info, unpackedDir);
+                        packageCreator.SaveTemplateFile(unpackedDir, false);
                     }
                 }
                 catch (Exception ex)

@@ -585,6 +585,10 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             try
             {
+                // delete preview audio file remnants that may have been added by LoadFromFolder method
+                foreach (var file in Directory.EnumerateFiles(sourcePath, "*_preview.wem", SearchOption.AllDirectories))
+                    File.Delete(file);
+
                 foreach (var file in Directory.EnumerateFiles(sourcePath, "*_fixed.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))
                     if (File.Exists(file)) File.Delete(file);
             }
