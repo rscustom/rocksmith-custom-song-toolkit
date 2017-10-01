@@ -585,8 +585,12 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             try
             {
+                // delete template xml remnants that may have been added by SaveTemplateFile method
+                foreach (var file in Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories).Where(s => s.EndsWith("RS2012.dlc.xml") || s.EndsWith("RS2014.dlc.xml")))
+                    File.Delete(file);
+
                 // delete preview audio file remnants that may have been added by LoadFromFolder method
-                foreach (var file in Directory.EnumerateFiles(sourcePath, "*_preview.wem", SearchOption.AllDirectories))
+                foreach (var file in Directory.EnumerateFiles(sourcePath, "*_preview.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))
                     File.Delete(file);
 
                 foreach (var file in Directory.EnumerateFiles(sourcePath, "*_fixed.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))

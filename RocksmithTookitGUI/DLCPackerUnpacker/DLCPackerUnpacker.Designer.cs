@@ -112,7 +112,7 @@
             this.gbAppIdUpdater.Controls.Add(this.cmbAppId);
             this.gbAppIdUpdater.Controls.Add(this.btnRepackAppId);
             this.gbAppIdUpdater.ForeColor = System.Drawing.Color.Firebrick;
-            this.gbAppIdUpdater.Location = new System.Drawing.Point(8, 92);
+            this.gbAppIdUpdater.Location = new System.Drawing.Point(8, 102);
             this.gbAppIdUpdater.Margin = new System.Windows.Forms.Padding(2);
             this.gbAppIdUpdater.Name = "gbAppIdUpdater";
             this.gbAppIdUpdater.Padding = new System.Windows.Forms.Padding(2);
@@ -275,7 +275,7 @@
             // 
             this.lblCurrentOperation.AutoSize = true;
             this.lblCurrentOperation.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.lblCurrentOperation.Location = new System.Drawing.Point(15, 353);
+            this.lblCurrentOperation.Location = new System.Drawing.Point(16, 391);
             this.lblCurrentOperation.Name = "lblCurrentOperation";
             this.lblCurrentOperation.Size = new System.Drawing.Size(16, 13);
             this.lblCurrentOperation.TabIndex = 19;
@@ -284,7 +284,7 @@
             // 
             // pbUpdateProgress
             // 
-            this.pbUpdateProgress.Location = new System.Drawing.Point(17, 373);
+            this.pbUpdateProgress.Location = new System.Drawing.Point(18, 411);
             this.pbUpdateProgress.Name = "pbUpdateProgress";
             this.pbUpdateProgress.Size = new System.Drawing.Size(416, 20);
             this.pbUpdateProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
@@ -298,7 +298,7 @@
             this.gbCustomFixes.Controls.Add(this.chkQuickBassFix);
             this.gbCustomFixes.Controls.Add(this.btnFixLowBassTuning);
             this.gbCustomFixes.ForeColor = System.Drawing.Color.Firebrick;
-            this.gbCustomFixes.Location = new System.Drawing.Point(8, 168);
+            this.gbCustomFixes.Location = new System.Drawing.Point(9, 187);
             this.gbCustomFixes.Name = "gbCustomFixes";
             this.gbCustomFixes.Size = new System.Drawing.Size(434, 43);
             this.gbCustomFixes.TabIndex = 20;
@@ -364,7 +364,7 @@
             this.gpSongPacks.Controls.Add(this.btnPackSongPack);
             this.gpSongPacks.Controls.Add(this.lblHelp);
             this.gpSongPacks.ForeColor = System.Drawing.Color.Firebrick;
-            this.gpSongPacks.Location = new System.Drawing.Point(8, 217);
+            this.gpSongPacks.Location = new System.Drawing.Point(8, 247);
             this.gpSongPacks.Name = "gpSongPacks";
             this.gpSongPacks.Size = new System.Drawing.Size(434, 128);
             this.gpSongPacks.TabIndex = 21;
@@ -435,7 +435,7 @@
             this.Controls.Add(this.gbAppIdUpdater);
             this.MinimumSize = new System.Drawing.Size(400, 308);
             this.Name = "DLCPackerUnpacker";
-            this.Size = new System.Drawing.Size(450, 403);
+            this.Size = new System.Drawing.Size(448, 462);
             this.gbAppIdUpdater.ResumeLayout(false);
             this.gbAppIdUpdater.PerformLayout();
             this.gbUnpacker.ResumeLayout(false);
