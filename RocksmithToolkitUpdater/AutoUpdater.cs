@@ -77,6 +77,7 @@ namespace RocksmithToolkitUpdater
 
         public void DownloadFile(Uri downloadUri, string location)
         {
+            // TODO: add internet connection detection
             using (webClient = new WebClient())
             {
                 webClient.DownloadFileCompleted += Completed;
@@ -109,6 +110,16 @@ namespace RocksmithToolkitUpdater
         {
             // Reset the stopwatch.
             sw.Reset();
+
+            if (e.Error != null)
+            {
+                MessageBox.Show("<ERROR> Check internet connection ..." + Environment.NewLine +
+                                e.Error.Message + Environment.NewLine +
+                                "Make sure TLS 1.2 is enabled under 'Internet Options', 'Avanced' settings.  ",
+                                "RocksmithToolkit AutoUpdater", MessageBoxButtons.OK, MessageBoxIcon.Error);                
+                this.Close();
+                return;
+            }
 
             if (e.Cancelled == true)
             {

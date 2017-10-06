@@ -27,15 +27,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.currentVersionLabel = new System.Windows.Forms.Label();
             this.newVersionLabel = new System.Windows.Forms.Label();
-            this.installButton = new System.Windows.Forms.Button();
-            this.cancelButton = new System.Windows.Forms.Button();
+            this.btnInstall = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.dateLabel = new System.Windows.Forms.Label();
             this.commitMessageDataGrid = new System.Windows.Forms.DataGridView();
@@ -95,29 +95,29 @@
             this.newVersionLabel.TabIndex = 99;
             this.newVersionLabel.Text = "{new version}";
             // 
-            // installButton
+            // btnInstall
             // 
-            this.installButton.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.installButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.installButton.Location = new System.Drawing.Point(365, 266);
-            this.installButton.Name = "installButton";
-            this.installButton.Size = new System.Drawing.Size(97, 29);
-            this.installButton.TabIndex = 0;
-            this.installButton.Text = "Install Update";
-            this.installButton.UseVisualStyleBackColor = false;
-            this.installButton.Click += new System.EventHandler(this.installButton_Click);
+            this.btnInstall.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.btnInstall.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnInstall.Location = new System.Drawing.Point(365, 266);
+            this.btnInstall.Name = "btnInstall";
+            this.btnInstall.Size = new System.Drawing.Size(97, 29);
+            this.btnInstall.TabIndex = 0;
+            this.btnInstall.Text = "Install Update";
+            this.btnInstall.UseVisualStyleBackColor = false;
+            this.btnInstall.Click += new System.EventHandler(this.btnInstall_Click);
             // 
-            // cancelButton
+            // btnCancel
             // 
-            this.cancelButton.BackColor = System.Drawing.SystemColors.Control;
-            this.cancelButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.cancelButton.Location = new System.Drawing.Point(468, 266);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(97, 29);
-            this.cancelButton.TabIndex = 1;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = false;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            this.btnCancel.BackColor = System.Drawing.SystemColors.Control;
+            this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.btnCancel.Location = new System.Drawing.Point(468, 266);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(97, 29);
+            this.btnCancel.TabIndex = 1;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // label3
             // 
@@ -145,8 +145,8 @@
             this.commitMessageDataGrid.AllowUserToDeleteRows = false;
             this.commitMessageDataGrid.AllowUserToResizeColumns = false;
             this.commitMessageDataGrid.AllowUserToResizeRows = false;
-            this.commitMessageDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.commitMessageDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.commitMessageDataGrid.BackgroundColor = System.Drawing.SystemColors.Window;
             this.commitMessageDataGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.commitMessageDataGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
@@ -154,24 +154,24 @@
             this.commitMessageDataGrid.ColumnHeadersVisible = false;
             this.commitMessageDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Message});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.commitMessageDataGrid.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.commitMessageDataGrid.DefaultCellStyle = dataGridViewCellStyle3;
             this.commitMessageDataGrid.GridColor = System.Drawing.SystemColors.AppWorkspace;
             this.commitMessageDataGrid.Location = new System.Drawing.Point(140, 81);
             this.commitMessageDataGrid.Name = "commitMessageDataGrid";
             this.commitMessageDataGrid.ReadOnly = true;
             this.commitMessageDataGrid.RowHeadersWidth = 4;
             this.commitMessageDataGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
-            this.commitMessageDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
+            this.commitMessageDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.commitMessageDataGrid.RowTemplate.ErrorText = "#####";
             this.commitMessageDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.commitMessageDataGrid.ShowEditingIcon = false;
@@ -196,8 +196,8 @@
             this.Controls.Add(this.commitMessageDataGrid);
             this.Controls.Add(this.dateLabel);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.installButton);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnInstall);
             this.Controls.Add(this.newVersionLabel);
             this.Controls.Add(this.currentVersionLabel);
             this.Controls.Add(this.label2);
@@ -212,7 +212,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Update Avaiable";
+            this.Text = "RocksmithToolkit Update Avaiable";
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.commitMessageDataGrid)).EndInit();
             this.ResumeLayout(false);
@@ -227,8 +227,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label currentVersionLabel;
         private System.Windows.Forms.Label newVersionLabel;
-        private System.Windows.Forms.Button installButton;
-        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Button btnInstall;
+        private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label dateLabel;
         private System.Windows.Forms.DataGridView commitMessageDataGrid;

@@ -464,8 +464,7 @@
             this.general_autoupdate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.general_autoupdate.Size = new System.Drawing.Size(15, 14);
             this.general_autoupdate.TabIndex = 10;
-            this.toolTip.SetToolTip(this.general_autoupdate, "If checked, Auto-Update is enabled.\r\nIf not checked, Auto-Update is disabled.\r\n\r\n" +
-                    "Any change takes effect on restart.");
+            this.toolTip.SetToolTip(this.general_autoupdate, "If checked, Auto-Update is enabled.\r\nIf not checked, Auto-Update is disabled.");
             this.general_autoupdate.UseVisualStyleBackColor = true;
             this.general_autoupdate.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 

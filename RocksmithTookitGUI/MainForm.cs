@@ -56,14 +56,15 @@ namespace RocksmithToolkitGUI
 
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.RSTKGuiVersion);
 
-            // Disable updates on Mac (speedup) -1.5 seconds here
-            if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+            // always disable updates on Mac or per general_autoupdate config setting
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
+                !ConfigRepository.Instance().GetBoolean("general_autoupdate"))
             {
-                updateButton.Enabled = false;
-                updateButton.Text = "Updates Disabled";
-                updateButton.Visible = true;
+                btnUpdate.Enabled = false;
+                btnUpdate.Text = "Updates Disabled";
+                btnUpdate.Visible = true;
             }
-            else if (ConfigRepository.Instance().GetBoolean("general_autoupdate"))
+            else
             {
                 bWorker = new BackgroundWorker();
                 bWorker.DoWork += CheckForUpdate;
@@ -108,7 +109,7 @@ namespace RocksmithToolkitGUI
         {
             if (onlineVersion == null) return;
             if (ToolkitVersion.AssemblyInformationVersion != "nongit")
-                updateButton.Visible = updateButton.Enabled = onlineVersion.UpdateAvailable;
+                btnUpdate.Visible = btnUpdate.Enabled = onlineVersion.UpdateAvailable;
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -164,7 +165,7 @@ namespace RocksmithToolkitGUI
             }
         }
 
-        private void updateButton_Click(object sender, EventArgs e)
+        private void btnUpdate_Click(object sender, EventArgs e)
         {
             using (var u = new UpdateForm())
             {

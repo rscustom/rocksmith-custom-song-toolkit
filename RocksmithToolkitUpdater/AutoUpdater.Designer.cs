@@ -95,7 +95,7 @@
             this.MinimizeBox = false;
             this.Name = "AutoUpdater";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "RocksmithToolkit Auto Update";
+            this.Text = "RocksmithToolkit Auto Updater";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIcon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

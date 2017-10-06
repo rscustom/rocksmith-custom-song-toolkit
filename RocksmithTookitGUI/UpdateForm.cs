@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using RocksmithToolkitLib;
 using System.IO;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitUpdater;
 
 namespace RocksmithToolkitGUI
 {
@@ -68,6 +69,7 @@ namespace RocksmithToolkitGUI
                         return titleAttribute.Title;
                     }
                 }
+
                 return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
             }
         }
@@ -133,12 +135,12 @@ namespace RocksmithToolkitGUI
         }
         #endregion
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void installButton_Click(object sender, EventArgs e)
+        private void btnInstall_Click(object sender, EventArgs e)
         {
             var updaterApp = Path.Combine(RootDirectory, APP_UPDATER);
             var updatingApp = Path.Combine(RootDirectory, APP_UPDATING);
@@ -150,9 +152,14 @@ namespace RocksmithToolkitGUI
                 try
                 {
                     // START AUTO UPDATE
+#if DEBUG
+                    using (var autoUpdater = new AutoUpdater())
+                        autoUpdater.ShowDialog();
+#else
                     GeneralExtensions.RunExternalExecutable(updatingApp);
+#endif
                 }
-                catch( Exception)
+                catch (Exception)
                 {
                     throw new FileLoadException("Could not run " + updatingApp);
                 }

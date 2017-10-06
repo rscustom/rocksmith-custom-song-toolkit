@@ -50,9 +50,11 @@ namespace RocksmithToolkitLib
             {
                 // No TLS 1.2 in WinXp, or before IE8 browser if OS is newer than WinXP 
                 // Automatic updates do not work in WinXP (Win10 TLS 1.2 must be manually activated)
+#if !DEBUG             
                 var versionJson = new WebClient().DownloadString(url);
-                // test string for when no internet connection exists
-                //var versionJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
+#else // test string for debugging or use when no internet connection exists
+                var versionJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
+#endif
                 return JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionJson);
             }
             catch (Exception ex)
@@ -86,7 +88,7 @@ namespace RocksmithToolkitLib
         //    // use TLS 1.2 protocol if available
         //    // ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
 
-        //    // check system config, some websites e.g. https://www.rscustom.net/ require TSL 1.2 compatible browswer
+        //    // check system config, some websites e.g. https://www.rscustom.net/ require TLS 1.2 compatible browswer
         //    var errMsg = String.Empty;
         //    var ieVers = SysExtensions.GetBrowserVersion(SysExtensions.GetInternetExplorerVersion());
         //    if (ieVers < 8.0)
