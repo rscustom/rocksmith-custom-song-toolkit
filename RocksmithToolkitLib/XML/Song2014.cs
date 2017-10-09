@@ -326,7 +326,7 @@ namespace RocksmithToolkitLib.XML
             //}
 
             var xml = XDocument.Load(xmlSongFile);
-           
+
             var rootElement = "song";
             if (Path.GetFileName(xmlSongFile).ToLower().Contains("vocals"))
                 rootElement = "vocals";
@@ -378,7 +378,7 @@ namespace RocksmithToolkitLib.XML
                 if (sameVersion || writeNewVers)
                     rootnode.AddFirst(new XComment(CST_MAGIC + ToolkitVersion.RSTKGuiVersion + " "));
             }
-            
+
             // xml.Declaration = new XDeclaration("1.0", "utf-8", null);
             xml.Save(xmlSongFile);
 
@@ -1215,7 +1215,7 @@ namespace RocksmithToolkitLib.XML
                 if (cnId != -1)
                 {
                     if (sngData.ChordNotes.ChordNotes.Length > cnId)
-                        chord.ParseChordNotes(sngData.Chords.Chords[chord.ChordId], sngData.ChordNotes.ChordNotes[cnId]);
+                        chord.ParseChordNotes(sngData.Chords.Chords[chord.ChordId], sngData.ChordNotes.ChordNotes[cnId], notesSection.Notes[i].Sustain);
                 }
 
                 chords.Add(chord);
@@ -1224,7 +1224,7 @@ namespace RocksmithToolkitLib.XML
             return chords.ToArray();
         }
 
-        private void ParseChordNotes(Sng2014HSL.Chord template, Sng2014HSL.ChordNotes chordNotes = null)
+        private void ParseChordNotes(Sng2014HSL.Chord template, Sng2014HSL.ChordNotes chordNotes = null, float chordSustain = 0f)
         {
             var notes = new List<SongNote2014>();
             const sbyte notSetup = unchecked((sbyte)-1);
@@ -1253,6 +1253,7 @@ namespace RocksmithToolkitLib.XML
                         cnote.SlideTo = (sbyte)chordNotes.SlideTo[i];
                         cnote.SlideUnpitchTo = (sbyte)chordNotes.SlideUnpitchTo[i];
                         cnote.Vibrato = chordNotes.Vibrato[i];
+                        cnote.Sustain = chordSustain;
                         cnote.BendValues = BendValue.Parse(chordNotes.BendData[i].BendData32);
                         //Fix bend status from step in bendvalues
                         if (cnote.BendValues != null && cnote.BendValues.Length > 0)

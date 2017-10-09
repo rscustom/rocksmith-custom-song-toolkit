@@ -241,6 +241,7 @@ namespace RocksmithToolkitLib.Extensions
             value = value.ReplaceAbbreviations();
             value = value.ReplaceDiacritics();
             value = value.StripSpecialCharacters();
+            value = value.StripLeadingSpecialCharacters();
             value = value.ShortWordMover(); // "The Beatles" becomes "Beatles, The"
             value = value.Capitalize(); // "blink-182" becomes "Blink 182"
             value = value.StripExcessWhiteSpace();
