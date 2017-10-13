@@ -175,7 +175,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             Thread.Sleep(100); // give Globals a chance to initialize
 
             var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
-            var step = (int)Math.Floor(100.0 / (sourceFileNames.Count() * (structured ? 2.0F : 1.0F))); // Math.Floor prevents roundup errors
+            var step = (int)Math.Floor(100.0 / (sourceFileNames.Count() * 2)); // Math.Floor prevents roundup errors
             int progress = 0;
             Stopwatch sw = new Stopwatch();
             sw.Restart();
