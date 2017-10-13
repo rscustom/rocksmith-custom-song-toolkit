@@ -661,7 +661,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     OggFile.ConvertAudioPlatform(file, newFile);
                     targetAudioFiles.Add(newFile);
                 }
-                else 
+                else
                     targetAudioFiles.Add(file);
             }
 
@@ -690,9 +690,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 audioPath = a.FullName;
 
             data.OggPath = audioPath;
+            data.OggPreviewPath = audioPreviewPath;
 
-            // renames wem audio with _preview.wem if not already done so that it is detected by CDLC Creator       
-            if (!String.IsNullOrEmpty(audioPreviewPath) && !audioPreviewPath.Contains("_preview.wem"))
+            // copy the correct wem audio to _preview.wem for use with CDLC creator
+            if (!String.IsNullOrEmpty(audioPreviewPath) && !audioPreviewPath.EndsWith("_preview.wem"))
             {
                 var newPreviewFileName = Path.Combine(Path.GetDirectoryName(audioPath), String.Format("{0}_preview{1}", Path.GetFileNameWithoutExtension(audioPath), Path.GetExtension(audioPath)));
                 File.Copy(audioPreviewPath, newPreviewFileName);
