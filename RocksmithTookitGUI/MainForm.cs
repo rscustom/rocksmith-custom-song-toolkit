@@ -108,9 +108,12 @@ namespace RocksmithToolkitGUI
 
         private void EnableUpdate(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (onlineVersion == null) return;
+            if (onlineVersion == null) 
+                return;
+
+            // commented out for testing MacWine
             if (ToolkitVersion.AssemblyInformationVersion != "nongit")
-                btnUpdate.Visible = btnUpdate.Enabled = onlineVersion.UpdateAvailable;
+                btnUpdate.Visible = btnUpdate.Enabled = true; // onlineVersion.UpdateAvailable;
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
