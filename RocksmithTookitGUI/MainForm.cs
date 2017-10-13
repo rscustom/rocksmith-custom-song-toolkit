@@ -95,8 +95,12 @@ namespace RocksmithToolkitGUI
 
         private void CheckForUpdate(object sender, DoWorkEventArgs e)
         {
+            // CHECK FOR NEW AVAILABLE VERSION AND ENABLE UPDATE
             try
-            {// CHECK FOR NEW AVAILABLE VERSION AND ENABLE UPDATE
+            {
+                MessageBox.Show("Please let the developer know that" + Environment.NewLine +
+                                "the toolkit tried to check for update.  ");
+                
                 onlineVersion = ToolkitVersionOnline.Load();
             }
             catch (WebException) { /* Do nothing on 404 */ }
@@ -108,12 +112,15 @@ namespace RocksmithToolkitGUI
 
         private void EnableUpdate(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (onlineVersion == null) 
+            if (onlineVersion == null)
+            {
+                MessageBox.Show("Please let the developer know" + Environment.NewLine +
+                           "that the OnlineVersion is null.  ");
                 return;
+            }
 
-            // commented out for testing MacWine
-            if (ToolkitVersion.AssemblyInformationVersion != "nongit")
-                btnUpdate.Visible = btnUpdate.Enabled = true; // onlineVersion.UpdateAvailable;
+            //  if (ToolkitVersion.AssemblyInformationVersion != "nongit")
+            btnUpdate.Visible = btnUpdate.Enabled = true; // onlineVersion.UpdateAvailable;
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
