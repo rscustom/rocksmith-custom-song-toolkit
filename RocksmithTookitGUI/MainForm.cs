@@ -57,8 +57,9 @@ namespace RocksmithToolkitGUI
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.RSTKGuiVersion);
 
             // always disable updates on Mac or per general_autoupdate config setting
-            if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
-                !ConfigRepository.Instance().GetBoolean("general_autoupdate"))
+            // commented out for testing MacWine
+            // if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
+            if (!ConfigRepository.Instance().GetBoolean("general_autoupdate"))
             {
                 btnUpdate.Enabled = false;
                 btnUpdate.Text = "Updates Disabled";

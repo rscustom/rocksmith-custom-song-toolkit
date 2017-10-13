@@ -692,7 +692,7 @@ namespace RocksmithToolkitLib.DLCPackage
             data.OggPath = audioPath;
             data.OggPreviewPath = audioPreviewPath;
 
-            // copy the correct wem audio to _preview.wem for use with CDLC creator
+            // copy the correct wem audio to _preview.wem for use with CDLC Creator
             if (!String.IsNullOrEmpty(audioPreviewPath) && !audioPreviewPath.EndsWith("_preview.wem"))
             {
                 var newPreviewFileName = Path.Combine(Path.GetDirectoryName(audioPath), String.Format("{0}_preview{1}", Path.GetFileNameWithoutExtension(audioPath), Path.GetExtension(audioPath)));
