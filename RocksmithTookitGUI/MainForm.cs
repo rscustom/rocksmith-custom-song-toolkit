@@ -57,16 +57,19 @@ namespace RocksmithToolkitGUI
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.RSTKGuiVersion);
 
             // always disable updates on Mac or per general_autoupdate config setting
-            // commented out for testing MacWine
-            // if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
-            if (!ConfigRepository.Instance().GetBoolean("general_autoupdate"))
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
+                !ConfigRepository.Instance().GetBoolean("general_autoupdate"))
             {
                 btnUpdate.Enabled = false;
-                btnUpdate.Text = "Updates Disabled";
+                btnUpdate.Text = "Updates are disabled";
                 btnUpdate.Visible = true;
             }
             else
             {
+                btnUpdate.Visible = false;
+                btnUpdate.Enabled = false;
+                btnUpdate.Text = "Click here to update";
+
                 bWorker = new BackgroundWorker();
                 bWorker.DoWork += CheckForUpdate;
                 bWorker.RunWorkerCompleted += EnableUpdate;
@@ -98,9 +101,6 @@ namespace RocksmithToolkitGUI
             // CHECK FOR NEW AVAILABLE VERSION AND ENABLE UPDATE
             try
             {
-                MessageBox.Show("Please let the developer know that" + Environment.NewLine +
-                                "the toolkit tried to check for update.  ");
-                
                 onlineVersion = ToolkitVersionOnline.Load();
             }
             catch (WebException) { /* Do nothing on 404 */ }
@@ -113,14 +113,10 @@ namespace RocksmithToolkitGUI
         private void EnableUpdate(object sender, RunWorkerCompletedEventArgs e)
         {
             if (onlineVersion == null)
-            {
-                MessageBox.Show("Please let the developer know" + Environment.NewLine +
-                           "that the OnlineVersion is null.  ");
                 return;
-            }
 
-            //  if (ToolkitVersion.AssemblyInformationVersion != "nongit")
-            btnUpdate.Visible = btnUpdate.Enabled = true; // onlineVersion.UpdateAvailable;
+            if (ToolkitVersion.AssemblyInformationVersion != "nongit")
+                btnUpdate.Visible = btnUpdate.Enabled = onlineVersion.UpdateAvailable;
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)

@@ -75,11 +75,8 @@ namespace RocksmithToolkitLib
 
             if (!addExtension) return fileUrl;
 
-            // commented out for testing MacWine
-            //if (Environment.OSVersion.Platform == PlatformID.MacOSX)
-            //{
-            //    return fileUrl + ".tar.gz";
-            //}
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+                return fileUrl + ".tar.gz";
 
             return fileUrl + ".zip";
         }
