@@ -10,7 +10,11 @@ using System.ComponentModel;
 using System.Globalization;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.XmlRepository;
-
+//
+// NOTE TO DEVS: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT ...
+// Modify the RocksmithToolkitLib prebuild event which will update the
+// PatchAssemblyVersion.ps1 file '$AssemblyVersion' and '$AssemblyConfiguration' values 
+//
 namespace RocksmithToolkitGUI
 {
     public partial class MainForm : Form
@@ -50,25 +54,19 @@ namespace RocksmithToolkitGUI
 
         private void InitMainForm()
         {
-            // NOTE TO DEVS: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT ...
-            // Modify the RocksmithToolkitLib prebuild event which will update the
-            // PatchAssemblyVersion.ps1 file '$AssemblyVersion' and '$AssemblyConfiguration' values 
-
             this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.RSTKGuiVersion);
 
-            // always disable updates on Mac or per general_autoupdate config setting
+            // always disable updates on Mac or according to general_autoupdate setting
             if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
                 !ConfigRepository.Instance().GetBoolean("general_autoupdate"))
             {
-                btnUpdate.Enabled = false;
                 btnUpdate.Text = "Updates are disabled";
-                btnUpdate.Visible = true;
+                btnUpdate.Enabled = false;
             }
             else
             {
-                btnUpdate.Visible = false;
                 btnUpdate.Enabled = false;
-                btnUpdate.Text = "Click here to update";
+                btnUpdate.Text = "Updates are enabled";
 
                 bWorker = new BackgroundWorker();
                 bWorker.DoWork += CheckForUpdate;
@@ -115,8 +113,11 @@ namespace RocksmithToolkitGUI
             if (onlineVersion == null)
                 return;
 
-            if (ToolkitVersion.AssemblyInformationVersion != "nongit")
-                btnUpdate.Visible = btnUpdate.Enabled = onlineVersion.UpdateAvailable;
+            if (onlineVersion.UpdateAvailable)
+            {
+                btnUpdate.Enabled = true;
+                btnUpdate.Text = "Click here to update";
+            }
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)

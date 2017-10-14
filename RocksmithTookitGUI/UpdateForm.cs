@@ -9,6 +9,7 @@ using RocksmithToolkitLib;
 using System.IO;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitUpdater;
+using System.Diagnostics;
 
 namespace RocksmithToolkitGUI
 {
@@ -156,7 +157,30 @@ namespace RocksmithToolkitGUI
                     using (var autoUpdater = new AutoUpdater())
                         autoUpdater.ShowDialog();
 #else
-                    GeneralExtensions.RunExternalExecutable(updatingApp);
+                    try
+                    {
+                        MessageBox.Show("Report try #1 the developers: GeneralExtensions.RunExternalExecutable(updatingApp, true, true, true)");
+                        GeneralExtensions.RunExternalExecutable(updatingApp, true, true, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        // changed external process call for MacWine debugging
+                        MessageBox.Show("Report try #2 to the developers: " + ex.Message);
+                       
+                        var startInfo = new ProcessStartInfo
+                        {
+                            FileName = updaterApp,
+                            UseShellExecute = false,
+                            CreateNoWindow = true, // hide command window
+                        };
+
+                        using (var updater = new Process())
+                        {
+                            updater.StartInfo = startInfo;
+                            updater.Start();
+                            updater.WaitForExit(1000 * 60 * 15); //wait for 15 minutes, crunchy solution for AV-sandboxing issues
+                        }
+                    }
 #endif
                 }
                 catch (Exception)
