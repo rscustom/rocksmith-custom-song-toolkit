@@ -482,9 +482,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 GlobalExtension.ShowProgress(String.Format("Repackaging '{0}' ...", Path.GetFileName(srcPath)), 80);
                 // TODO consider user of regular packer here
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(destPath, info, packagePlatform);
-#if !DEBUG
-                DirectoryExtension.SafeDelete(unpackedDir);
-#endif
+
+                if (!GeneralExtensions.IsInDesignMode)
+                    DirectoryExtension.SafeDelete(unpackedDir);
             }
 
             sw.Stop();

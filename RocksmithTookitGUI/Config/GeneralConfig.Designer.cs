@@ -89,6 +89,8 @@
             this.btnCloseConfig = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblFirstRun = new System.Windows.Forms.Label();
+            this.creator_qualityfactor = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
+            this.label19 = new System.Windows.Forms.Label();
             this.gbCreator.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
             this.gbGeneral.SuspendLayout();
@@ -96,6 +98,7 @@
             this.gbDDC.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).BeginInit();
             this.gbConverter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).BeginInit();
             this.SuspendLayout();
             // 
             // general_usebeta
@@ -113,6 +116,8 @@
             // 
             // gbCreator
             // 
+            this.gbCreator.Controls.Add(this.label19);
+            this.gbCreator.Controls.Add(this.creator_qualityfactor);
             this.gbCreator.Controls.Add(this.creator_autosavetemplate);
             this.gbCreator.Controls.Add(this.creator_fixlowbass);
             this.gbCreator.Controls.Add(this.creator_fixmultitone);
@@ -170,7 +175,7 @@
             // 
             this.creator_fixmultitone.AutoSize = true;
             this.creator_fixmultitone.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_fixmultitone.Location = new System.Drawing.Point(195, 113);
+            this.creator_fixmultitone.Location = new System.Drawing.Point(197, 113);
             this.creator_fixmultitone.Name = "creator_fixmultitone";
             this.creator_fixmultitone.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_fixmultitone.Size = new System.Drawing.Size(115, 17);
@@ -190,7 +195,7 @@
             0,
             0,
             65536});
-            this.creator_scrollspeed.Location = new System.Drawing.Point(122, 70);
+            this.creator_scrollspeed.Location = new System.Drawing.Point(122, 68);
             this.creator_scrollspeed.Maximum = new decimal(new int[] {
             45,
             0,
@@ -206,7 +211,7 @@
             this.creator_scrollspeed.TabIndex = 3;
             this.creator_scrollspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.creator_scrollspeed.Value = new decimal(new int[] {
-            45,
+            20,
             0,
             0,
             65536});
@@ -226,7 +231,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(12, 72);
+            this.label1.Location = new System.Drawing.Point(9, 70);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(107, 13);
@@ -300,7 +305,7 @@
             // 
             this.creator_usedefaultauthor.AutoSize = true;
             this.creator_usedefaultauthor.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_usedefaultauthor.Location = new System.Drawing.Point(252, 93);
+            this.creator_usedefaultauthor.Location = new System.Drawing.Point(252, 94);
             this.creator_usedefaultauthor.Name = "creator_usedefaultauthor";
             this.creator_usedefaultauthor.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_usedefaultauthor.Size = new System.Drawing.Size(215, 17);
@@ -315,7 +320,7 @@
             // 
             this.creator_useacronyms.AutoSize = true;
             this.creator_useacronyms.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_useacronyms.Location = new System.Drawing.Point(226, 71);
+            this.creator_useacronyms.Location = new System.Drawing.Point(226, 73);
             this.creator_useacronyms.Name = "creator_useacronyms";
             this.creator_useacronyms.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_useacronyms.Size = new System.Drawing.Size(241, 17);
@@ -855,7 +860,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label8.Location = new System.Drawing.Point(34, 18);
+            this.label8.Location = new System.Drawing.Point(32, 18);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(85, 13);
@@ -906,6 +911,43 @@
             this.lblFirstRun.TabIndex = 51;
             this.lblFirstRun.Text = "First Run";
             // 
+            // creator_qualityfactor
+            // 
+            this.creator_qualityfactor.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_qualityfactor.Location = new System.Drawing.Point(122, 91);
+            this.creator_qualityfactor.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Name = "creator_qualityfactor";
+            this.creator_qualityfactor.Size = new System.Drawing.Size(48, 20);
+            this.creator_qualityfactor.TabIndex = 55;
+            this.creator_qualityfactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.creator_qualityfactor.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label19.Location = new System.Drawing.Point(4, 91);
+            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(112, 13);
+            this.label19.TabIndex = 56;
+            this.label19.Text = "Default Quality Factor:";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // GeneralConfig
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -929,6 +971,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).EndInit();
             this.gbConverter.ResumeLayout(false);
             this.gbConverter.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -995,5 +1038,7 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.CheckBox general_lockappid;
         private System.Windows.Forms.CheckBox general_autoupdate;
+        private System.Windows.Forms.Label label19;
+        private DLCPackageCreator.NumericUpDownFixed creator_qualityfactor;
     }
 }

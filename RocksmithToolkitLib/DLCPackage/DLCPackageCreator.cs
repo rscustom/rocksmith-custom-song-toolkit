@@ -233,7 +233,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     break;
             }
 
-            hd.Publisher = String.Format("Custom Song Creator Toolkit ({0} beta)", ToolkitVersion.RSTKGuiVersion);
+            hd.Publisher = String.Format("Song Creator Toolkit for Rocksmith ({0} beta)", ToolkitVersion.RSTKGuiVersion);
             hd.Title_Display = displayName;
             hd.Description = displayName;
             hd.ThisType = PackageType.MarketPlace;

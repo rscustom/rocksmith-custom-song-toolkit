@@ -326,5 +326,21 @@ namespace RocksmithToolkitLib.Extensions
                 action(c);
         }
 
+        public static bool IsInDesignMode
+        {
+            get
+            {
+                var bVshostCheck = Process.GetCurrentProcess().ProcessName.IndexOf("vshost", StringComparison.OrdinalIgnoreCase) > -1 ? true : false;
+                var bModeCheck = LicenseManager.UsageMode == LicenseUsageMode.Designtime ? true : false;
+                var bDevEnvCheck = Application.ExecutablePath.IndexOf("devenv", StringComparison.OrdinalIgnoreCase) > -1 ? true : false;
+                var bDebuggerAttached = Debugger.IsAttached;
+
+                if (bDebuggerAttached || bDevEnvCheck || bModeCheck || bVshostCheck)
+                    return true;
+
+                return false;
+            }
+        }
+
     }
 }

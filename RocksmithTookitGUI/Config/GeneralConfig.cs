@@ -18,13 +18,17 @@ namespace RocksmithToolkitGUI.Config
         private const string MESSAGEBOX_CAPTION = "General Config";
         private bool loading = false;
 
+        public static string GetConfigVersion() // also used by AutoUpdater and AssemblyCaller
+        {
+            // increment the Version here to force RocksmithToolkitUpdater to do a fresh install of RocksmithToolkitLib.*.xml
+            return "3";
+        }
+
         // only gets called one time
         public GeneralConfig()
         {
             InitializeComponent();
 
-            // increment the Version here to force RocksmithToolkitUpdater to do a fresh install of RocksmithToolkitLib.*.xml
-            ConfigVersion.Number = "2";
 
             // fix readonly textbox/cuebox background colors
             general_rs1path.BackColor = SystemColors.Window;
@@ -191,7 +195,7 @@ namespace RocksmithToolkitGUI.Config
 
         private void btnCloseConfig_Click(object sender, EventArgs e)
         {
-            ConfigRepository.Instance()["generalconfigversion"] = ConfigVersion.Number;
+            ConfigRepository.Instance()["generalconfigversion"] = GetConfigVersion();
             ConfigRepository.Instance()["general_firstrun"] = "false";
             ((MainForm)ParentForm).ReloadControls();
         }

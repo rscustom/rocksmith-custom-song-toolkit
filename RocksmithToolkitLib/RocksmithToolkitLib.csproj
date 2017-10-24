@@ -188,7 +188,6 @@
     <Compile Include="Sng\SngFile.cs" />
     <Compile Include="Sng\SngFileWriter.cs" />
     <Compile Include="ToolkitVersion.cs" />
-    <Compile Include="XmlRepository\ConfigVersion.cs" />
     <Compile Include="XmlRepository\ConfigRepository.cs" />
     <Compile Include="XmlRepository\TuningDefinitionRepository.cs" />
     <Compile Include="XmlRepository\TuningDefinition.cs" />

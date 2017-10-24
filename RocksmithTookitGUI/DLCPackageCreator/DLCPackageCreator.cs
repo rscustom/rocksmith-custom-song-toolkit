@@ -28,6 +28,7 @@ using Control = System.Windows.Forms.Control;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 using RocksmithToolkitGUI.Config;
 
+
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class DLCPackageCreator : UserControl
@@ -55,9 +56,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             InitializeComponent();
 
-#if (!DEBUG)
-            btnDevUse.Visible = false;
-#endif
+            if (!GeneralExtensions.IsInDesignMode)
+                btnDevUse.Visible = false;
 
             lstArrangements.AllowDrop = true;
             numAudioQuality.MouseEnter += AudioQuality_MouseEnter;
@@ -790,9 +790,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // Song INFO
             txtDlcKey.Text = info.Name;
-            
+
             // do in case CurrentGameVersion changed
-            PopulateAppIdCombo(); 
+            PopulateAppIdCombo();
 
             // Update AppID unless it is locked
             if (!ConfigRepository.Instance().GetBoolean("general_lockappid"))
@@ -811,7 +811,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             else
                 AppId = info.AppId;
- 
+
             SelectComboAppId(AppId);
 
             txtAlbum.Text = info.SongInfo.Album;
@@ -1483,10 +1483,29 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void SetDefaultFromConfig()
         {
+            // initialize values
+            Album = "";
+            AlbumSort = "";
+            AlbumYear = "";
+            Artist = "";
+            ArtistSort = "";
+            AverageTempo = "";
+            DLCKey = "";
+            IsDirty = false;
+            JavaBool = false;
+            LyricArtPath = null;
+            PackageAuthor = null;
+            PackageComment = "(Remastered by CDLC Creator)";
+            PackageVersion = "";
+            SongTitle = "";
+            SongTitleSort = "";
+            ToolkitVers = null;
+            UnpackedDir = null;
+
             // read from RocksmithToolkitLib.Config.xml
             try
             {
-
+                numAudioQuality.Value = ConfigRepository.Instance().GetDecimal("creator_qualityfactor");
                 fixLowBass = ConfigRepository.Instance().GetBoolean("creator_fixlowbass");
                 fixMultiTone = ConfigRepository.Instance().GetBoolean("creator_fixmultitone");
                 Globals.DefaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"];

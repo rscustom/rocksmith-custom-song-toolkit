@@ -65,7 +65,7 @@ namespace RocksmithToolkitLib.XmlRepository
             return true;
         }
 
-        public string GetString(string configKey) // used by AugoUpdater and AssemblyCaller maybe there's better way
+        public string GetString(string configKey) // used by AutoUpdater AssemblyCallerStatic maybe there's better way
         {
             return (string)(List.FirstOrDefault(s => s.Key == configKey).Value).ToString();
         }

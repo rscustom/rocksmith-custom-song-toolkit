@@ -33,6 +33,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -56,6 +57,7 @@
             this.GeneralConfigTab = new System.Windows.Forms.TabPage();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnUpdate = new System.Windows.Forms.Button();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.dlcPackageCreator1 = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator();
             this.dlcPackerUnpacker1 = new RocksmithToolkitGUI.DLCPackerUnpacker.DLCPackerUnpacker();
             this.dlcConverter1 = new RocksmithToolkitGUI.DLCConverter.DLCConverter();
@@ -304,16 +306,26 @@
             // btnUpdate
             // 
             this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUpdate.BackColor = System.Drawing.SystemColors.Control;
             this.btnUpdate.FlatAppearance.BorderSize = 0;
             this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUpdate.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnUpdate.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnUpdate.Location = new System.Drawing.Point(475, 0);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(117, 24);
             this.btnUpdate.TabIndex = 0;
             this.btnUpdate.Text = "Click here to update";
-            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.toolTip.SetToolTip(this.btnUpdate, " -- Toolkit AutoUpdater --\r\nAn update is available for\r\ndownload if button is ena" +
+                    "bled.");
+            this.btnUpdate.UseVisualStyleBackColor = false;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // toolTip
+            // 
+            this.toolTip.AutomaticDelay = 100;
+            this.toolTip.AutoPopDelay = 8000;
+            this.toolTip.InitialDelay = 100;
+            this.toolTip.ReshowDelay = 20;
             // 
             // dlcPackageCreator1
             // 
@@ -424,7 +436,7 @@
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 688);
             this.Name = "MainForm";
-            this.Text = "Custom Song Creator Toolkit";
+            this.Text = "Song Creator Toolkit for Rocksmith";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
@@ -481,6 +493,7 @@
         private System.Windows.Forms.TabPage dlcPackageCreatorTab;
         private DLCPackageCreator.DLCPackageCreator dlcPackageCreator1;
         private DLCPackerUnpacker.DLCPackerUnpacker dlcPackerUnpacker1;
-     }
+        private System.Windows.Forms.ToolTip toolTip;
+    }
 }
 

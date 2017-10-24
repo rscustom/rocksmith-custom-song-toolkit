@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Reflection;
 using System.Diagnostics;
+using System.Windows.Forms;
+using System.ComponentModel;
+using System.IO;
 
 namespace RocksmithToolkitUpdater
 {
@@ -22,9 +25,10 @@ namespace RocksmithToolkitUpdater
         // EXECUTE METHOD IN LIBS WITHOUT LOCK FILE
         private static object Call(string assemblyPath, string typeName, string method, Type[] paramTypes, bool createInstance, params object[] methodParams)
         {
+            var assemblyName = Assembly.GetExecutingAssembly().FullName;
             AppDomain domain = AppDomain.CreateDomain(UPDATER_DOMAIN);
             AssemblyCaller assemblyCaller = new AssemblyCaller();
-            assemblyCaller = (AssemblyCaller)domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(AssemblyCaller).FullName);
+            assemblyCaller = (AssemblyCaller)domain.CreateInstanceAndUnwrap(assemblyName, typeof(AssemblyCaller).FullName);
             object result = assemblyCaller.PrivateCall(assemblyPath, typeName, method, paramTypes, createInstance, methodParams);
             AppDomain.Unload(domain);
             return result;
@@ -32,14 +36,50 @@ namespace RocksmithToolkitUpdater
 
         private object PrivateCall(string assemblyPath, string typeName, string method, Type[] paramTypes, bool createInstance, params object[] methodParams)
         {
+            if (!File.Exists(assemblyPath))
+            {
+                MessageBox.Show("<ERROR> PrivateCall file does not exist ..." + Environment.NewLine +
+                "assemblyPath = " + assemblyPath, "DEBUG ME");
+
+                return null;
+            }
+
             Assembly assembly = Assembly.LoadFile(assemblyPath);
+            // Assembly assembly = Assembly.LoadFrom(assemblyPath);
             Type compiledType = assembly.GetType(typeName);
-            var istance = Activator.CreateInstance(compiledType);
-            var bindingFlags = createInstance ? (BindingFlags.Public | BindingFlags.Instance) : (BindingFlags.Public | BindingFlags.Static);
-            var methodInfo = (paramTypes == null) ? compiledType.GetMethod(method, bindingFlags) : compiledType.GetMethod(method, paramTypes);
-            return methodInfo.Invoke(istance, methodParams ?? new object[] {
-                new object()
-            });
+            try
+            {
+                var instance = Activator.CreateInstance(compiledType);
+                var bindingFlags = createInstance ? (BindingFlags.Public | BindingFlags.Instance) : (BindingFlags.Public | BindingFlags.Static);
+                var methodInfo = (paramTypes == null) ? compiledType.GetMethod(method, bindingFlags) : compiledType.GetMethod(method, paramTypes);
+                var ret = methodInfo.Invoke(instance, methodParams ?? new object[] { new object() });
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("<ERROR> PrivateCall instance failed ..." + Environment.NewLine +
+                "assemblyPath = " + assemblyPath + Environment.NewLine +
+                ex.InnerException.Message, "DEBUG ME");
+            }
+
+            return null;
         }
+
+        public static bool IsInDesignMode
+        {
+            get
+            {
+                var bVshostCheck = Process.GetCurrentProcess().ProcessName.IndexOf("vshost", StringComparison.OrdinalIgnoreCase) > -1 ? true : false;
+                var bModeCheck = LicenseManager.UsageMode == LicenseUsageMode.Designtime ? true : false;
+                var bDevEnvCheck = Application.ExecutablePath.IndexOf("devenv", StringComparison.OrdinalIgnoreCase) > -1 ? true : false;
+                var bDebuggerAttached = Debugger.IsAttached;
+
+                if (bDebuggerAttached || bDevEnvCheck || bModeCheck || bVshostCheck)
+                    return true;
+
+                return false;
+            }
+        }
+
     }
 }

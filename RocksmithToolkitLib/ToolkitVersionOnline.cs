@@ -38,42 +38,65 @@ namespace RocksmithToolkitLib
             }
         }
         /// <summary>
-        /// Get online version info based on current build
+        /// based on current installed revision get the latest online revision
+        /// <para>server will determine if local revision should be updated</para>
         /// </summary>
         /// <returns></returns>
-        public static ToolkitVersionOnline Load()
+        public static ToolkitVersionOnline Load(string versionInfoUrl = "")
         {
-            var url = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.AssemblyConfiguration);
-            Console.WriteLine("Current version url: " + url);
+            // No TLS 1.2 in WinXp, or before IE8 browser if OS is newer than WinXP 
+            // Automatic updates do not work in WinXP (Win10 TLS 1.2 must be manually activated)
+
+            var versionInfoJson = String.Empty;
+            var toolkitVersionOnline = new ToolkitVersionOnline();
+
+            if (String.IsNullOrEmpty(versionInfoUrl))
+                versionInfoUrl = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.AssemblyInformationVersion);
 
             try
             {
-                // No TLS 1.2 in WinXp, or before IE8 browser if OS is newer than WinXP 
-                // Automatic updates do not work in WinXP (Win10 TLS 1.2 must be manually activated)
-#if !DEBUG             
-                var versionJson = new WebClient().DownloadString(url);
-#else // test string for debugging or use when no internet connection exists
-                var versionJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
-#endif
-                return JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionJson);
+                if (GeneralExtensions.IsInDesignMode)
+                {
+                    // for debugging dumby JSON data
+                    versionInfoJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
+                    toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
+                }
+                else
+                {
+                    versionInfoJson = new WebClient().DownloadString(versionInfoUrl);
+                    toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
+
+                    //  recommend update to latest revision under special conditions
+                    var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
+                    if ((!useBeta && ToolkitVersion.AssemblyConfiguration == "BETA") || (useBeta && ToolkitVersion.AssemblyConfiguration != "BETA") || (String.IsNullOrEmpty(toolkitVersionOnline.Revision) && !toolkitVersionOnline.UpdateAvailable))
+                    {
+                        versionInfoJson = new WebClient().DownloadString(GetFileUrl());
+                        toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
+                        toolkitVersionOnline.CommitMessages = new string[2];
+                        toolkitVersionOnline.CommitMessages[0] = "The currently installed version cannot be found online.";
+                        toolkitVersionOnline.CommitMessages[1] = "Recommend installing the latest online version.";
+                        toolkitVersionOnline.UpdateAvailable = true;
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("versionJson Error: " + ex.Message);
+                Console.WriteLine("VersionInfoUrl Load Error: " + ex.Message);
             }
 
-            return null;
+            return toolkitVersionOnline;
         }
 
         public static string GetFileUrl(bool addExtension = false)
         {
-            var lastestBuild = ConfigRepository.Instance().GetBoolean("general_usebeta");
+            var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
             var lastestReleaseUrl = ConfigRepository.Instance()["general_urllastestrelease"];
-            var lastestBuildUrl = ConfigRepository.Instance()["general_urllastestbuild"];
+            var lastestBetaUrl = ConfigRepository.Instance()["general_urllastestbeta"];
 
-            var fileUrl = lastestBuild ? lastestBuildUrl : lastestReleaseUrl;
+            var fileUrl = useBeta ? lastestBetaUrl : lastestReleaseUrl;
 
-            if (!addExtension) return fileUrl;
+            if (!addExtension)
+                return fileUrl;
 
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
                 return fileUrl + ".tar.gz";

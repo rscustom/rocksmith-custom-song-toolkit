@@ -7,10 +7,10 @@ using RocksmithToolkitLib;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Rocksmith Custom Song Creator Toolkit")]
+[assembly: AssemblyTitle("Song Creator Toolkit for Rocksmith")]
 [assembly: AssemblyDescription("The purpose of this utility package is to generate custom songs compatible with Ubisoft® Rocksmith™ software. It is maintained by an open source community of enthusiasts and is not affiliated with Ubisoft® and/or the Rocksmith™ team. For more information, please visit: http://www.rscustom.net.")]
 [assembly: AssemblyCompany("Rocksmith Custom Song Project")]
-[assembly: AssemblyProduct("Rocksmith Custom Song Creator Toolkit")]
+[assembly: AssemblyProduct("Song Creator Toolkit for Rocksmith")]
 [assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -29,6 +29,6 @@ using RocksmithToolkitLib;
 //
 // THESE VALUES ARE PROGRAMMATICALLY GENERATED - DO NOT EDIT
 [assembly: AssemblyVersion("2.8.4.1")]
-[assembly: AssemblyInformationalVersion("93d2d1fe")]
+[assembly: AssemblyInformationalVersion("9eb168c7")]
 [assembly: AssemblyConfiguration("BETA")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
