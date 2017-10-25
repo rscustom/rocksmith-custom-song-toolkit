@@ -45,14 +45,13 @@ namespace RocksmithToolkitUpdater
             }
 
             Assembly assembly = Assembly.LoadFile(assemblyPath);
-            // Assembly assembly = Assembly.LoadFrom(assemblyPath);
             Type compiledType = assembly.GetType(typeName);
             try
             {
                 var instance = Activator.CreateInstance(compiledType);
                 var bindingFlags = createInstance ? (BindingFlags.Public | BindingFlags.Instance) : (BindingFlags.Public | BindingFlags.Static);
                 var methodInfo = (paramTypes == null) ? compiledType.GetMethod(method, bindingFlags) : compiledType.GetMethod(method, paramTypes);
-                var ret = methodInfo.Invoke(instance, methodParams ?? new object[] { new object() });
+                var ret = methodInfo.Invoke(instance, methodParams);
                 return ret;
             }
             catch (Exception ex)
@@ -63,22 +62,6 @@ namespace RocksmithToolkitUpdater
             }
 
             return null;
-        }
-
-        public static bool IsInDesignMode
-        {
-            get
-            {
-                var bVshostCheck = Process.GetCurrentProcess().ProcessName.IndexOf("vshost", StringComparison.OrdinalIgnoreCase) > -1 ? true : false;
-                var bModeCheck = LicenseManager.UsageMode == LicenseUsageMode.Designtime ? true : false;
-                var bDevEnvCheck = Application.ExecutablePath.IndexOf("devenv", StringComparison.OrdinalIgnoreCase) > -1 ? true : false;
-                var bDebuggerAttached = Debugger.IsAttached;
-
-                if (bDebuggerAttached || bDevEnvCheck || bModeCheck || bVshostCheck)
-                    return true;
-
-                return false;
-            }
         }
 
     }

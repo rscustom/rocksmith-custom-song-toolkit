@@ -35,7 +35,7 @@
             // pbIcon
             // 
             this.pbIcon.Image = global::RocksmithToolkitUpdater.Properties.Resources.guitar_256;
-            this.pbIcon.Location = new System.Drawing.Point(12, 3);
+            this.pbIcon.Location = new System.Drawing.Point(12, 8);
             this.pbIcon.Name = "pbIcon";
             this.pbIcon.Size = new System.Drawing.Size(77, 71);
             this.pbIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -49,6 +49,7 @@
             this.pbUpdate.Size = new System.Drawing.Size(334, 26);
             this.pbUpdate.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.pbUpdate.TabIndex = 1;
+            this.pbUpdate.Value = 50;
             // 
             // lblCurrentOperation
             // 
@@ -82,9 +83,8 @@
             // 
             // AutoUpdaterForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(445, 76);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(445, 83);
             this.Controls.Add(this.lblDownloaded);
             this.Controls.Add(this.lblSpeed);
             this.Controls.Add(this.lblCurrentOperation);
@@ -95,7 +95,7 @@
             this.MinimizeBox = false;
             this.Name = "AutoUpdaterForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "RocksmithToolkit Auto Updater";
+            this.Text = "Rocksmith Toolkit Auto Updater";
             ((System.ComponentModel.ISupportInitialize)(this.pbIcon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

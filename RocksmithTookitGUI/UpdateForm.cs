@@ -90,12 +90,12 @@ namespace RocksmithToolkitGUI
             {
                 // make a copy of AutoUpdater to prevent locking the process during update
                 File.Copy(updaterAppPath, updatingAppPath, true);
-                
+
                 if (GeneralExtensions.IsInDesignMode)
                 {
                     var args = new string[] { localToolkitDir, tempToolkitDir };
                     using (var autoUpdater = new AutoUpdaterForm(args))
-                        autoUpdater.ShowDialog();
+                        autoUpdater.Show();
                 }
                 else
                 {

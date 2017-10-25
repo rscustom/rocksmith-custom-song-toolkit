@@ -17,11 +17,11 @@ namespace RocksmithToolkitGUI.Config
     {
         private const string MESSAGEBOX_CAPTION = "General Config";
         private bool loading = false;
-
-        public static string GetConfigVersion() // also used by AutoUpdater and AssemblyCaller
+        
+        public string GetConfigVersion() // also used by AutoUpdater and AssemblyCaller
         {
             // increment the Version here to force RocksmithToolkitUpdater to do a fresh install of RocksmithToolkitLib.*.xml
-            return "3";
+            return (string) "3";
         }
 
         // only gets called one time

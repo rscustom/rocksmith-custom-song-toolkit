@@ -61,6 +61,7 @@
     <Compile Include="AutoUpdaterForm.Designer.cs">
       <DependentUpon>AutoUpdaterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AutoUpdaterForm.resx">
