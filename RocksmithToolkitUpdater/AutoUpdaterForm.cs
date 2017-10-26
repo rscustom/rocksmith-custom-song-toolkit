@@ -368,7 +368,7 @@ namespace RocksmithToolkitUpdater
 
                 webClient.Dispose();
 
-                if (dlStatus == DownloadStatus.SUCCESS) // || dlStatus == DownloadStatus.CANCEL)
+                if (dlStatus == DownloadStatus.SUCCESS || dlStatus == DownloadStatus.CANCEL)
                     return;
             }
 
@@ -569,10 +569,10 @@ namespace RocksmithToolkitUpdater
             // copy all files
             var filePaths = Directory.EnumerateFiles(srcDir, "*", SearchOption.AllDirectories);
             // create some progress bar movement
-            var step = (int)Math.Floor(100.0 / filePaths.Count()); 
+            var step = (int)Math.Floor(100.0 / filePaths.Count());
             int progress = 0;
 
-             foreach (string filePath in filePaths)
+            foreach (string filePath in filePaths)
             {
                 progress += step;
                 pbUpdate.Value = progress;
@@ -615,7 +615,7 @@ namespace RocksmithToolkitUpdater
             // create some progress bar movement
             var step = (int)Math.Floor(100.0 / filePaths.Count());
             int progress = 0;
-            
+
             foreach (var filePath in filePaths)
             {
                 progress += step;
@@ -692,24 +692,22 @@ namespace RocksmithToolkitUpdater
 
         private void AutoUpdaterForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // cleanly cancell download if active
-            if (webClient != null && webClient.IsBusy)
+            if (e.CloseReason == CloseReason.UserClosing)
             {
-                webClient.CancelAsync();
-                webClient.Dispose();
-
-                if (!isInDesignMode)
+                // cleanly cancell download if active
+                if (webClient != null && webClient.IsBusy)
                 {
-                    // rollback the process to its original state
-                    RollBack(tempToolkitDir, localToolkitDir);
-                    MessageBox.Show("<WARNING> User canceled the update download ..." + Environment.NewLine +
-                        "Installation was rolled back to the original condition.  ",
-                        "RocksmithToolkit AutoUpdater", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-
-                    RestartToolkitGUI();
+                    webClient.CancelAsync();
+                    webClient.Dispose();
+                    webClient = null;
                 }
+
+                // always let AutoUpdater exit programatically
+                dlStatus = DownloadStatus.CANCEL;
+                e.Cancel = true;
             }
         }
+
 
     }
 }

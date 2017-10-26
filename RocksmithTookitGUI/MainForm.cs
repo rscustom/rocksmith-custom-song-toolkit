@@ -93,7 +93,7 @@ namespace RocksmithToolkitGUI
 
         private void CheckForUpdate(object sender, DoWorkEventArgs e)
         {
-            // CHECK FOR NEW AVAILABLE VERSION AND ENABLE UPDATE
+            // CHECK FOR NEW AVAILABLE REVISION AND ENABLE UPDATE
             try
             {
                 onlineVersion = ToolkitVersionOnline.Load();
@@ -114,10 +114,10 @@ namespace RocksmithToolkitGUI
             }
 
             //MessageBox.Show("ToolkitVersionOnline.UpdateAvailable: " + onlineVersion.UpdateAvailable + Environment.NewLine +
-            //   "ToolkitVersionOnline.Revision: " + onlineVersion.Revision);
+            //   "ToolkitVersionOnline.Revision: " + onlineVersion.Revision, "DEBUG ME");
 
-            // if (onlineVersion.UpdateAvailable || GeneralExtensions.IsInDesignMode)
-            if (true) // for debugging
+            // if (onlineVersion.UpdateAvailable) // || GeneralExtensions.IsInDesignMode)
+            if (true) // for testing
             {
                 btnUpdate.BackColor = Color.LightSteelBlue;
                 btnUpdate.FlatStyle = FlatStyle.Standard;
@@ -275,12 +275,12 @@ namespace RocksmithToolkitGUI
             bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
             if (!firstRun)
                 return;
-            
-            MessageBox.Show(new Form { TopMost = true }, 
-                "    Welcome to the Song Creator Toolkit for Rocksmith." + Environment.NewLine + 
-                "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine + 
-                "It looks like this may be your first time running the toolkit.  " + Environment.NewLine + 
-                "Please fill in the Configuration menu with your selections.", 
+
+            MessageBox.Show(new Form { TopMost = true },
+                "    Welcome to the Song Creator Toolkit for Rocksmith." + Environment.NewLine +
+                "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
+                "It looks like this may be your first time running the toolkit.  " + Environment.NewLine +
+                "Please fill in the Configuration menu with your selections.",
                 "First Run - Song Creator Toolkit for Rocksmith", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             ShowConfigScreen();

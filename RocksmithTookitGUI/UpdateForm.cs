@@ -130,9 +130,15 @@ namespace RocksmithToolkitGUI
                     Environment.Exit(0);
                 }
             }
+            catch(ObjectDisposedException ex)
+            {
+                /* Do nothing  - user cancelled the download */
+            }
             catch (Exception ex)
             {
-                var errMsg = "Could not run file: " + APP_UPDATING + Environment.NewLine + "Please reinstall the toolkit manually." + Environment.NewLine + ex.Message;
+                var errMsg = "Could not run file: " + APP_UPDATING + Environment.NewLine +
+                    "Please reinstall the toolkit manually." + Environment.NewLine +
+                    ex.Message;
                 BetterDialog2.ShowDialog(errMsg, "Toolkit Updater Error", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
             }
 
