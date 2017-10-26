@@ -49,7 +49,6 @@
             this.pbUpdate.Size = new System.Drawing.Size(334, 26);
             this.pbUpdate.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.pbUpdate.TabIndex = 1;
-            this.pbUpdate.Value = 50;
             // 
             // lblCurrentOperation
             // 
@@ -95,7 +94,8 @@
             this.MinimizeBox = false;
             this.Name = "AutoUpdaterForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Rocksmith Toolkit Auto Updater";
+            this.Text = "AutoUpdater - Song Creator Toolkit for Rocksmith";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AutoUpdaterForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pbIcon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

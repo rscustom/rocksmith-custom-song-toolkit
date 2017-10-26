@@ -16,6 +16,8 @@ using System.Drawing;
 //
 // AutoUpdater performs clean toolkit installation and merges some (TODO: all) user customized files for latest revsion
 //
+// Verbose messaging and exception handling is for use in debugging the executable
+//
 namespace RocksmithToolkitUpdater
 {
     public partial class AutoUpdaterForm : Form
@@ -58,15 +60,22 @@ namespace RocksmithToolkitUpdater
         {
             InitializeComponent();
 
+            // force showing autoupdater and progress bar on startup
+            this.Show();
             this.Location = new Point(100, 100);
+            this.BringToFront();
+            ShowCurrentOperation("Starting the AutoUpdater Engine ...");
+            pbUpdate.Style = ProgressBarStyle.Marquee;
+            pbUpdate.Value = 50;
+            this.Refresh();
 
             // catch if there are no cmd line arguments
             if (args.GetLength(0) == 0) args = new string[1] { "?" };
             if (args[0].Equals("?"))
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine("AutoUpdater for Song Creator Toolkit for Rocksmith");
-                sb.AppendLine("- commonly known as, 'the toolkit'!");
+                sb.AppendLine("Song Creator Toolkit for Rocksmith");
+                sb.AppendLine("- commonly known as, 'the toolkit'");
                 sb.AppendLine("");
                 sb.AppendLine("You are probably seeing this informative message");
                 sb.AppendLine("because you started the RocksmithToolkitUpdater.exe");
@@ -81,14 +90,15 @@ namespace RocksmithToolkitUpdater
                 sb.AppendLine("  application.  This will force the toolkit to be");
                 sb.AppendLine("  updated to the latest available online revision.");
                 sb.AppendLine("");
-                sb.AppendLine("- WARNING:");
-                sb.AppendLine("  All user customized toolkit settings are overwritten");
-                sb.AppendLine("  if AutoUpdater is run in the Alternate Usage mode.");
-                sb.AppendLine("  A warning will popup during update to remind you.");
-                sb.AppendLine("");
+                //sb.AppendLine("- WARNING:");
+                //sb.AppendLine("  All user customized toolkit settings are overwritten");
+                //sb.AppendLine("  if AutoUpdater is run in the Alternate Usage mode.");
+                //sb.AppendLine("  A warning will popup during update to remind you.");
+                //sb.AppendLine("");
                 sb.AppendLine("Continue running AutoUpdater in Alternate Usage mode?   ");
 
-                if (DialogResult.No == MessageBox.Show(sb.ToString(), "RocksmithToolkit AutoUpdater", MessageBoxButtons.YesNo, MessageBoxIcon.Information))
+                if (DialogResult.No == MessageBox.Show(sb.ToString(),
+                    "AutoUpdater", MessageBoxButtons.YesNo, MessageBoxIcon.Information))
                 {
                     Environment.Exit(0);
                 }
@@ -98,16 +108,13 @@ namespace RocksmithToolkitUpdater
                 Process[] processesByName = Process.GetProcessesByName("RocksmithToolkitGUI");
                 if (processesByName.Length != 0)
                 {
-                    MessageBox.Show("<ERROR> Detected that RocksmithToolkitGUI is running ..." + Environment.NewLine + "The toolkit must be closed before running the AutoUpdater.  ", "RocksmithToolkit AutoUpdater", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("<ERROR> Detected that RocksmithToolkitGUI is running ..." + Environment.NewLine +
+                        "The toolkit must be closed before running the AutoUpdater.  ", "RocksmithToolkit AutoUpdater", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     Environment.Exit(2);
                 }
             }
 
-            // force AutoUpdater to be shown
-            this.BringToFront();
-            this.Show();
-            this.Refresh();
             appExecPath = Application.ExecutablePath;
             appExecDir = Path.GetDirectoryName(appExecPath);
             appExecFile = Path.GetFileName(appExecPath);
@@ -146,21 +153,57 @@ namespace RocksmithToolkitUpdater
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("<ERROR> Can not find required file(s) to run AutoUpdater project in VS IDE Debug mode.  " + Environment.NewLine + "Make sure the RocksmithToolkitGUI project has been run in VS IDE Debug mode first. " + Environment.NewLine + Environment.NewLine + ex.Message, "DEBUG ME");
+                        MessageBox.Show("<ERROR> Can not find required file(s) to run AutoUpdater project in VS IDE Debug mode.  " + Environment.NewLine +
+                            "Make sure the RocksmithToolkitGUI project has been run in VS IDE Debug mode first. " + Environment.NewLine + Environment.NewLine +
+                            ex.Message, "DEBUG ME");
 
                         Environment.Exit(1);
                     }
                 }
+                else
+                {
+                    // use some whacky, hacky, trickery in Alternate Mode
+                    // make a copy of AutoUpdater to prevent locking the process during update
+                    var updaterAppPath = Path.Combine(localToolkitDir, APP_UPDATER);
+                    var updatingAppPath = Path.Combine(tempToolkitDir, APP_UPDATING);
+                    File.Copy(updaterAppPath, updatingAppPath, true);
+                    var cmdArgs = String.Format("\"{0}\" \"{1}\"", localToolkitDir, tempToolkitDir);
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = updatingAppPath,
+                        Arguments = cmdArgs,
+                        UseShellExecute = false,
+                        CreateNoWindow = true, // hide command window
+                    };
+
+                    using (var updater = new Process())
+                    {
+                        updater.StartInfo = startInfo;
+                        updater.Start();
+                    }
+
+                    Thread.Sleep(500);
+                    // Kill current process now that AutoUpdater process is started
+                    Environment.Exit(0);
+                }
             }
             else
             {
-                MessageBox.Show("<ERROR> Unexpected updater usage ..." + Environment.NewLine + "appExecFile = " + appExecFile, "RocksmithToolkit AutoUpdater", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("<ERROR> Unexpected updater usage ..." + Environment.NewLine +
+                    "appExecFile = " + appExecFile, "RocksmithToolkit AutoUpdater", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Environment.Exit(1);
             }
 
             if (isInDesignMode)
-                MessageBox.Show("Application.ExecutablePath: " + appExecPath + Environment.NewLine + "IsDesignMode = " + isInDesignMode.ToString() + Environment.NewLine + "localToolkitDir = " + localToolkitDir + Environment.NewLine + "tempToolkitDir = " + tempToolkitDir, "DEBUG ME");
+                MessageBox.Show("Application.ExecutablePath: " + appExecPath + Environment.NewLine +
+                    "IsDesignMode = " + isInDesignMode.ToString() + Environment.NewLine +
+                    "localToolkitDir = " + localToolkitDir + Environment.NewLine +
+                    "tempToolkitDir = " + tempToolkitDir, "DEBUG ME");
+
+            // switch progress bar style
+            pbUpdate.Style = ProgressBarStyle.Continuous;
+            pbUpdate.Value = 0;
 
             try
             {
@@ -169,17 +212,11 @@ namespace RocksmithToolkitUpdater
             }
             catch (Exception ex)
             {
-                MessageBox.Show("<ERROR> Process backup failure ..." + Environment.NewLine + "Please manually download and install the latest toolkit revision." + Environment.NewLine + ex.Message, "RocksmithToolkit AutoUpdater", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("<ERROR> Process backup failure ..." + Environment.NewLine +
+                    "Please manually download and install the latest toolkit revision." + Environment.NewLine +
+                    ex.Message, "RocksmithToolkit AutoUpdater", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Environment.Exit(1);
-            }
-
-            if (isInDesignMode)
-            {
-                MessageBox.Show("Check process backup: " + tempToolkitDir + Environment.NewLine +
-                    "TODO: Debug merging XML repositories next.", "DEBUG ME");
-
-                MergeXmlRepository(tempToolkitDir, localToolkitDir);
             }
 
             try
@@ -202,6 +239,16 @@ namespace RocksmithToolkitUpdater
 
             var latestZipUri = new Uri(latestZipUrl);
             latestZipPath = Path.Combine(tempToolkitDir, Path.GetFileName(latestZipUri.LocalPath));
+
+            if (isInDesignMode)
+            {
+                MessageBox.Show("Check backup files: " + tempToolkitDir, "DEBUG ME");
+                //MessageBox.Show("Debugging MergeXmlRepository next ...", "DEBUG ME");
+                //MergeXmlRepository(tempToolkitDir, localToolkitDir);
+                //MessageBox.Show("Debugging ExtractFile next ...", "DEBUG ME");
+                //ExtractFile(latestZipPath, localToolkitDir);
+            }
+
             DownloadFile(latestZipUri, latestZipPath);
 
             if (dlStatus == DownloadStatus.SUCCESS && File.Exists(latestZipPath))
@@ -228,19 +275,21 @@ namespace RocksmithToolkitUpdater
                 }
                 catch (Exception ex)
                 {
-                    if (DialogResult.No == MessageBox.Show("<ERROR> Could not unzip file: " + Path.GetFileName(latestZipPath) + Environment.NewLine +
+                    if (MessageBox.Show("<ERROR> Could not unzip file: " + Path.GetFileName(latestZipPath) + Environment.NewLine +
+                        "The AutoUpdater can not continue." + Environment.NewLine +
                         "Do you want to roll back the installation process?" + Environment.NewLine +
-                        ex.Message, "RocksmithToolkit AutoUpdater", MessageBoxButtons.YesNo, MessageBoxIcon.Error))
+                        ex.Message, "RocksmithToolkit AutoUpdater", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
                     {
                         Environment.Exit(1);
                     }
 
                     // rollback the process to its original state
                     RollBack(tempToolkitDir, localToolkitDir);
+                    RestartToolkitGUI();
                 }
 
-                // if (isInDesignMode)
-                MessageBox.Show("Check unzipped files: " + localToolkitDir, "DEBUG ME");
+                if (isInDesignMode)
+                    MessageBox.Show("Check unzipped files: " + localToolkitDir, "DEBUG ME");
 
                 try
                 {
@@ -284,7 +333,7 @@ namespace RocksmithToolkitUpdater
                     appExecFile.Equals(APP_RSGUI, StringComparison.InvariantCultureIgnoreCase))
                 {
                     ShowCurrentOperation("Please wait ... Restarting ToolkitGUI ...");
-                    Thread.Sleep(5000); // settle down before restart
+                    Thread.Sleep(3000); // settle down before restart
                     RestartToolkitGUI();
                 }
                 else
@@ -298,26 +347,28 @@ namespace RocksmithToolkitUpdater
 
         private void DownloadFile(Uri downloadUri, string destPath, int attempts = 4)
         {
+            pbUpdate.Style = ProgressBarStyle.Continuous;
+            pbUpdate.Refresh();
+
             for (int i = 0; i < attempts; i++)
             {
                 dlStatus = DownloadStatus.WAIT;
+                var webClient = new WebClient();
+                webClient.DownloadFileCompleted += Completed;
+                webClient.DownloadProgressChanged += ProgressChanged;
 
-                using (webClient = new WebClient())
+                sw.Start();
+                webClient.DownloadFileAsync(downloadUri, destPath);
+
+                while (dlStatus == DownloadStatus.WAIT)
                 {
-                    webClient.DownloadFileCompleted += Completed;
-                    webClient.DownloadProgressChanged += ProgressChanged;
-
-                    sw.Start();
-                    webClient.DownloadFileAsync(downloadUri, destPath);
-
-                    while (dlStatus == DownloadStatus.WAIT)
-                    {
-                        Application.DoEvents();
-                        Thread.Sleep(100);
-                    }
+                    Application.DoEvents();
+                    Thread.Sleep(100);
                 }
 
-                if (dlStatus == DownloadStatus.SUCCESS || dlStatus == DownloadStatus.CANCEL)
+                webClient.Dispose();
+
+                if (dlStatus == DownloadStatus.SUCCESS) // || dlStatus == DownloadStatus.CANCEL)
                     return;
             }
 
@@ -407,10 +458,11 @@ namespace RocksmithToolkitUpdater
 
                 if (replaceRepo == true)
                 {
-                    MessageBox.Show("XmlRepositories were not merged ..." + Environment.NewLine +
-                        "replaceRepo = " + replaceRepo.ToString() + Environment.NewLine +
-                        "xmlConfigVersion = " + xmlConfigVersion + Environment.NewLine +
-                        "generalConfigVersion = " + generalConfigVersion, "DEBUG ME");
+                    if (isInDesignMode)
+                        MessageBox.Show("XmlRepositories were not merged ..." + Environment.NewLine +
+                            "replaceRepo = " + replaceRepo.ToString() + Environment.NewLine +
+                            "xmlConfigVersion = " + xmlConfigVersion + Environment.NewLine +
+                            "generalConfigVersion = " + generalConfigVersion, "DEBUG ME");
 
                     return;
                 }
@@ -516,8 +568,15 @@ namespace RocksmithToolkitUpdater
 
             // copy all files
             var filePaths = Directory.EnumerateFiles(srcDir, "*", SearchOption.AllDirectories);
-            foreach (string filePath in filePaths)
+            // create some progress bar movement
+            var step = (int)Math.Floor(100.0 / filePaths.Count()); 
+            int progress = 0;
+
+             foreach (string filePath in filePaths)
             {
+                progress += step;
+                pbUpdate.Value = progress;
+
                 var isIgnored = false;
                 foreach (var ignoreFile in ignoreFiles)
                     if (filePath == ignoreFile)
@@ -553,8 +612,15 @@ namespace RocksmithToolkitUpdater
                 return lockedFiles;
 
             var filePaths = Directory.EnumerateFiles(srcDir, "*", SearchOption.AllDirectories);
+            // create some progress bar movement
+            var step = (int)Math.Floor(100.0 / filePaths.Count());
+            int progress = 0;
+            
             foreach (var filePath in filePaths)
             {
+                progress += step;
+                pbUpdate.Value = progress;
+
                 try
                 {
                     if (File.Exists(filePath))
@@ -589,6 +655,8 @@ namespace RocksmithToolkitUpdater
 
         private void RollBack(string srcDir, string destDir)
         {
+            ShowCurrentOperation("Rolling back original installation ...");
+
             var updaterPath = Path.Combine(srcDir, appExecFile.Equals(APP_UPDATER, StringComparison.InvariantCultureIgnoreCase) ? APP_UPDATER : APP_UPDATING);
             var ignoreFiles = new List<string>() { updaterPath, latestZipPath };
             var lockedDestFiles = DeleteDirectory(destDir);
@@ -603,8 +671,6 @@ namespace RocksmithToolkitUpdater
                 ShowLockedFiles(lockedFiles);
                 Environment.Exit(0);
             }
-
-            RestartToolkitGUI();
         }
 
         private void ShowLockedFiles(List<string> lockedFiles)
@@ -622,6 +688,27 @@ namespace RocksmithToolkitUpdater
 
             MessageBox.Show(sb.ToString(), "RocksmithToolkit AutoUpdater",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void AutoUpdaterForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // cleanly cancell download if active
+            if (webClient != null && webClient.IsBusy)
+            {
+                webClient.CancelAsync();
+                webClient.Dispose();
+
+                if (!isInDesignMode)
+                {
+                    // rollback the process to its original state
+                    RollBack(tempToolkitDir, localToolkitDir);
+                    MessageBox.Show("<WARNING> User canceled the update download ..." + Environment.NewLine +
+                        "Installation was rolled back to the original condition.  ",
+                        "RocksmithToolkit AutoUpdater", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+                    RestartToolkitGUI();
+                }
+            }
         }
 
     }

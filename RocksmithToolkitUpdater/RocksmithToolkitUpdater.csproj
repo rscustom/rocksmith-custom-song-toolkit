@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>songcreator.ico</ApplicationIcon>
+    <ApplicationIcon>autoupdater.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>RocksmithToolkitUpdater.Program</StartupObject>
@@ -91,7 +91,9 @@
     <None Include="Resources\guitar_256.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="songcreator.ico" />
+    <Content Include="autoupdater.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

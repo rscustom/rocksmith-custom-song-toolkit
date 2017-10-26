@@ -100,8 +100,7 @@ namespace RocksmithToolkitGUI
                 else
                 {
                     // passing args for process and backup directories to RocksmithToolkitUpdating.exe (Primary Usage Mode)
-                    var args = new string[] { localToolkitDir, tempToolkitDir };
-                    var cmdArgs = String.Format("\"{0}\" \"{1}\"", args[0], args[1]);
+                    var cmdArgs = String.Format("\"{0}\" \"{1}\"", localToolkitDir, tempToolkitDir);
 
                     try // different AutoUpdater shells for MacWine testing
                     {

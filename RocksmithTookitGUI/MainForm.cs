@@ -275,7 +275,13 @@ namespace RocksmithToolkitGUI
             bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
             if (!firstRun)
                 return;
-            MessageBox.Show(new Form { TopMost = true }, "    Welcome to the Song Creator Toolkit for Rocksmith." + Environment.NewLine + "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine + "It looks like this may be your first time running the toolkit.  " + Environment.NewLine + "  Please fill in the Configuration menu with your selections.", "Song Creator Toolkit for Rocksmith ... First Run", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
+            MessageBox.Show(new Form { TopMost = true }, 
+                "    Welcome to the Song Creator Toolkit for Rocksmith." + Environment.NewLine + 
+                "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine + 
+                "It looks like this may be your first time running the toolkit.  " + Environment.NewLine + 
+                "Please fill in the Configuration menu with your selections.", 
+                "First Run - Song Creator Toolkit for Rocksmith", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             ShowConfigScreen();
             BringToFront();
@@ -288,7 +294,7 @@ namespace RocksmithToolkitGUI
             {
                 using (var helpViewer = new HelpForm())
                 {
-                    helpViewer.Text = String.Format("{0}", "TOOLKIT BETA RELEASE MESSAGE ...");
+                    helpViewer.Text = String.Format("{0}", "TOOLKIT BETA REVISION MESSAGE ...");
                     helpViewer.PopulateRichText(streamBetaInfo);
                     helpViewer.ShowDialog();
                 }

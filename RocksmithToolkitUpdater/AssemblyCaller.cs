@@ -44,7 +44,9 @@ namespace RocksmithToolkitUpdater
                 return null;
             }
 
-            Assembly assembly = Assembly.LoadFile(assemblyPath);
+            // a f'n nightmare to debug this shit ... here's another bad boy
+            // Assembly assembly = Assembly.LoadFile(assemblyPath);
+            Assembly assembly = Assembly.LoadFrom(assemblyPath);
             Type compiledType = assembly.GetType(typeName);
             try
             {
