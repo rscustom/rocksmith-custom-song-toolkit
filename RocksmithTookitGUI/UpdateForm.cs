@@ -130,8 +130,8 @@ namespace RocksmithToolkitGUI
                     Environment.Exit(0);
                 }
             }
-            catch(ObjectDisposedException ex)
-            {
+            catch(ObjectDisposedException)
+            {                
                 /* Do nothing  - user cancelled the download */
             }
             catch (Exception ex)

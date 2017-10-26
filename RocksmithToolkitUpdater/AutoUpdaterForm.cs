@@ -305,7 +305,7 @@ namespace RocksmithToolkitUpdater
 
                 // cleanup tempToolkitDir
                 var lockedTempFiles = DeleteDirectory(tempToolkitDir);
-               
+
                 // debug locked files
                 if (isInDesignMode && lockedTempFiles.Any())
                 {
@@ -576,7 +576,7 @@ namespace RocksmithToolkitUpdater
                     File.SetAttributes(filePath, FileAttributes.Normal);
                     File.Copy(filePath, destFilePath, true);
                 }
-                catch (Exception ex)
+                catch
                 {
                     lockedFiles.Add(destFilePath);
                 }
@@ -610,7 +610,7 @@ namespace RocksmithToolkitUpdater
                         File.Delete(filePath);
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     lockedFiles.Add(filePath);
                 }
@@ -624,7 +624,7 @@ namespace RocksmithToolkitUpdater
                     if (Directory.Exists(dir))
                         Directory.Delete(dir);
                 }
-                catch (Exception ex)
+                catch
                 {
                     lockedFiles.Add(dir);
                 }
