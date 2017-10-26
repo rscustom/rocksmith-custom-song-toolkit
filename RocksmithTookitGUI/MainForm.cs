@@ -281,7 +281,7 @@ namespace RocksmithToolkitGUI
                 "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
                 "It looks like this may be your first time running the toolkit.  " + Environment.NewLine +
                 "Please fill in the Configuration menu with your selections.",
-                "First Run - Song Creator Toolkit for Rocksmith", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                "Song Creator Toolkit for Rocksmith - FIRST RUN", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             ShowConfigScreen();
             BringToFront();

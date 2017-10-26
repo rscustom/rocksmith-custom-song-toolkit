@@ -94,7 +94,7 @@
             this.MinimizeBox = false;
             this.Name = "AutoUpdaterForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "AutoUpdater - Song Creator Toolkit for Rocksmith";
+            this.Text = "Song Creator Toolkit for Rocksmith - AutoUpdater";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AutoUpdaterForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pbIcon)).EndInit();
             this.ResumeLayout(false);

@@ -114,7 +114,6 @@ CleanupBeforeGitPullRequest.bat
 RevisionLog.txt
 RS2014 TONES.rar
 
-
 # Python
 # Byte-compiled / optimized / DLL files
 __pycache__/
