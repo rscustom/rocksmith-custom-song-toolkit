@@ -47,6 +47,7 @@
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="NDesk.Options">
       <HintPath>..\..\lib\NDesk\NDesk.Options.dll</HintPath>
@@ -57,6 +58,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RocksmithTookitGUI\RocksmithToolkitGUI.csproj">
+      <Project>{1A3DEAD6-14F3-43C3-B15C-A866D48FEF61}</Project>
+      <Name>RocksmithToolkitGUI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
       <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
       <Name>RocksmithToolkitLib</Name>

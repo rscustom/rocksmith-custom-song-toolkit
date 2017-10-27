@@ -20,10 +20,11 @@
             base.Dispose(disposing);
         }
 
-        protected void LoadTemplate(string path)
-        {
-            this.dlcPackageCreator1.LoadTemplateFile(path);
-        }
+        // hidden easter egg - bad practice to place it here
+        //protected void LoadTemplate(string path)
+        //{
+        //    this.dlcPackageCreator1.LoadTemplateFile(path);
+        //}
 
         #region Windows Form Designer generated code
 
@@ -329,29 +330,10 @@
             // 
             // dlcPackageCreator1
             // 
-            this.dlcPackageCreator1.Album = "";
-            this.dlcPackageCreator1.AlbumSort = "";
-            this.dlcPackageCreator1.AlbumYear = "";
-            this.dlcPackageCreator1.AppId = "";
-            this.dlcPackageCreator1.Artist = "";
-            this.dlcPackageCreator1.ArtistSort = "";
-            this.dlcPackageCreator1.AverageTempo = "";
-            this.dlcPackageCreator1.CurrentGameVersion = RocksmithToolkitLib.GameVersion.RS2014;
-            this.dlcPackageCreator1.DLCKey = "";
-            this.dlcPackageCreator1.IsDirty = false;
-            this.dlcPackageCreator1.JavaBool = false;
             this.dlcPackageCreator1.Location = new System.Drawing.Point(17, 1);
-            this.dlcPackageCreator1.LyricArtPath = null;
             this.dlcPackageCreator1.Name = "dlcPackageCreator1";
-            this.dlcPackageCreator1.PackageAuthor = null;
-            this.dlcPackageCreator1.PackageComment = "(Remastered by CDLC Creator)";
-            this.dlcPackageCreator1.PackageVersion = "";
             this.dlcPackageCreator1.Size = new System.Drawing.Size(507, 560);
-            this.dlcPackageCreator1.SongTitle = "";
-            this.dlcPackageCreator1.SongTitleSort = "";
             this.dlcPackageCreator1.TabIndex = 0;
-            this.dlcPackageCreator1.ToolkitVers = null;
-            this.dlcPackageCreator1.UnpackedDir = null;
             // 
             // dlcPackerUnpacker1
             // 

@@ -37,12 +37,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             try
             {
-                var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
-                gameVersionList.Remove("None");
-                cmbGameVersion.DataSource = gameVersionList;
-                cmbGameVersion.SelectedItem = ConfigRepository.Instance()["general_defaultgameversion"];
-                gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
-                PopulateAppIdCombo(gameVersion);
+                PopulateGameVersionCombo();
             }
             catch { /*For mono compatibility*/ }
 
@@ -71,6 +66,17 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private bool UpdateSng
         {
             get { return chkUpdateSng.Checked; }
+        }
+
+        private void PopulateGameVersionCombo()
+        {
+            var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
+            gameVersionList.Remove("None");
+            cmbGameVersion.Items.Clear();
+            foreach (var version in gameVersionList)
+                cmbGameVersion.Items.Add(version);
+
+            cmbGameVersion.SelectedItem = ConfigRepository.Instance()["general_defaultgameversion"];
         }
 
         private void PopulateAppIdCombo(GameVersion gameVersion)
@@ -694,7 +700,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         private void cmbGameVersion_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
+            gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
             PopulateAppIdCombo(gameVersion);
         }
 

@@ -39,8 +39,9 @@ namespace RocksmithToolkitGUI
             Application.CurrentCulture = thread.CurrentCulture = thread.CurrentUICulture = ci;
             Application.CurrentInputLanguage = InputLanguage.FromCulture(ci);
 
-            if (args.Length > 0 && File.Exists(args[0]))
-                LoadTemplate(args[0]);
+            // more easter eggs ... bad practice
+            //if (args.Length > 0 && File.Exists(args[0]))
+            //    LoadTemplate(args[0]); 
 
             InitMainForm();
         }
@@ -128,29 +129,29 @@ namespace RocksmithToolkitGUI
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            // hidden easter eggs ...
-            if (!e.Control || !e.Shift) return;
-            switch (e.KeyCode)
-            {
-                case Keys.O: //<< Load Template
-                    dlcPackageCreator1.btnTemplateLoad_Click();
-                    break;
-                case Keys.S: //<< Save Template
-                    dlcPackageCreator1.SaveTemplateFile();
-                    break;
-                case Keys.I: //<< Import Package
-                    dlcPackageCreator1.btnPackageImport_Click();
-                    break;
-                case Keys.G: //<< Generate Package
-                    dlcPackageCreator1.btnPackageGenerate_Click();
-                    break;
-                case Keys.A: //<< Add Arrangement
-                    dlcPackageCreator1.btnArrangementAdd_Click();
-                    break;
-                case Keys.T: //<< Add Tone
-                    dlcPackageCreator1.btnToneAdd_Click();
-                    break;
-            }
+            // hidden easter eggs ... bad practice to place it here
+            //if (!e.Control || !e.Shift) return;
+            //switch (e.KeyCode)
+            //{
+            //    case Keys.O: //<< Load Template
+            //        dlcPackageCreator1.btnTemplateLoad_Click();
+            //        break;
+            //    case Keys.S: //<< Save Template
+            //        dlcPackageCreator1.SaveTemplateFile();
+            //        break;
+            //    case Keys.I: //<< Import Package
+            //        dlcPackageCreator1.btnPackageImport_Click();
+            //        break;
+            //    case Keys.G: //<< Generate Package
+            //        dlcPackageCreator1.btnPackageGenerate_Click();
+            //        break;
+            //    case Keys.A: //<< Add Arrangement
+            //        dlcPackageCreator1.btnArrangementAdd_Click();
+            //        break;
+            //    case Keys.T: //<< Add Tone
+            //        dlcPackageCreator1.btnToneAdd_Click();
+            //        break;
+            //}
         }
 
         private void restartToolStripMenuItem_Click(object sender, EventArgs e)
@@ -222,8 +223,8 @@ namespace RocksmithToolkitGUI
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // autosave the dlc.xml template on closing
-            if (dlcPackageCreator1.IsDirty && ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
-                dlcPackageCreator1.SaveTemplateFile(dlcPackageCreator1.UnpackedDir, false);
+            //if (dlcPackageCreator1.IsDirty && ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
+            //    dlcPackageCreator1.SaveTemplateFile(dlcPackageCreator1.UnpackedDir, false);
 
             // leave temp folder contents for developer debugging
             if (GeneralExtensions.IsInDesignMode)

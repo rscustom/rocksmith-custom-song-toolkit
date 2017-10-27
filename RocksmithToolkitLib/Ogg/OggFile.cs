@@ -2,7 +2,6 @@
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using CFSM.AudioTools;
 using MiscUtil.Conversion;
 using MiscUtil.IO;
 using System.Diagnostics;
@@ -59,91 +58,72 @@ namespace RocksmithToolkitLib.Ogg
 
         public static void Revorb(string file, string outputFileName, string appPath, WwiseVersion wwiseVersion)
         {
-            // testing using dreddfoxx CFSM.AudioTool library.  Thanks to DF.
-            var CFSM_AUDIO_TOOLS = File.Exists(Path.Combine(appPath, "CFSM.AudioTools.dll"));
+            var ww2oggPath = Path.Combine(appPath, "ww2ogg.exe");
+            var revorbPath = Path.Combine(appPath, "revorb.exe");
+            var codebooksPath = Path.Combine(appPath, "packed_codebooks.bin"); // Default
+            var codebooks603Path = Path.Combine(appPath, "packed_codebooks_aoTuV_603.bin"); // RS2014
 
-            // TODO: comment out till there is time to debug/test
-            // not working for RS1-RS2 ogg conversions ;(
-            CFSM_AUDIO_TOOLS = false;
+            // Verifying if third part apps is in root application directory
+            if (!File.Exists(ww2oggPath))
+                throw new FileNotFoundException("ww2ogg executable not found!");
 
-            if (CFSM_AUDIO_TOOLS)
+            if (!File.Exists(revorbPath))
+                throw new FileNotFoundException("revorb executable not found!");
+
+            if (!File.Exists(codebooksPath))
+                throw new FileNotFoundException("packed_codebooks.bin not found!");
+
+            if (!File.Exists(codebooks603Path))
+                throw new FileNotFoundException("packed_codebooks_aoTuV_603.bin not found!");
+
+            // Processing with ww2ogg
+            Process ww2oggProcess = new Process();
+            ww2oggProcess.StartInfo.FileName = ww2oggPath;
+            ww2oggProcess.StartInfo.WorkingDirectory = appPath;
+
+            switch (wwiseVersion)
             {
-                using (var readStream = File.OpenRead(file))
-                using (var outStream = File.Create(outputFileName))
-                {
-                    WwiseToOgg ww2Ogg = new WwiseToOgg(readStream, outStream);
-                    ww2Ogg.ConvertToOgg();
-                }
+                case WwiseVersion.Wwise2010:
+                    ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\"", file, outputFileName);
+                    break;
+                case WwiseVersion.Wwise2013:
+                    ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\" --pcb \"{2}\"", file, outputFileName, codebooks603Path);
+                    break;
+                default:
+                    throw new InvalidOperationException("Wwise version not supported or invalid input file.");
             }
-            else
+
+            ww2oggProcess.StartInfo.UseShellExecute = false;
+            ww2oggProcess.StartInfo.CreateNoWindow = true;
+            ww2oggProcess.StartInfo.RedirectStandardOutput = true;
+
+            ww2oggProcess.Start();
+            ww2oggProcess.WaitForExit();
+            string ww2oggResult = ww2oggProcess.StandardOutput.ReadToEnd();
+
+            if (ww2oggResult.IndexOf("Error ", StringComparison.Ordinal) > -1 || ww2oggResult.IndexOf(" error:", StringComparison.Ordinal) > -1)
+                throw new Exception("ww2ogg process error or CDLC file name contains reserved word 'error'." + Environment.NewLine + ww2oggResult);
+
+            // Processing with revorb
+            Process revorbProcess = new Process();
+            revorbProcess.StartInfo.FileName = revorbPath;
+            revorbProcess.StartInfo.WorkingDirectory = appPath;
+            revorbProcess.StartInfo.Arguments = String.Format("\"{0}\"", outputFileName);
+            revorbProcess.StartInfo.UseShellExecute = false;
+            revorbProcess.StartInfo.CreateNoWindow = true;
+            revorbProcess.StartInfo.RedirectStandardOutput = true;
+
+            revorbProcess.Start();
+            revorbProcess.WaitForExit();
+            string revorbResult = revorbProcess.StandardOutput.ReadToEnd();
+
+            // TODO: ? should check revorbResult
+            if (ww2oggResult.IndexOf("Error ", StringComparison.Ordinal) > -1 || ww2oggResult.IndexOf(" error:", StringComparison.Ordinal) > -1)
             {
-                var ww2oggPath = Path.Combine(appPath, "ww2ogg.exe");
-                var revorbPath = Path.Combine(appPath, "revorb.exe");
-                var codebooksPath = Path.Combine(appPath, "packed_codebooks.bin"); // Default
-                var codebooks603Path = Path.Combine(appPath, "packed_codebooks_aoTuV_603.bin"); // RS2014
+                if (File.Exists(outputFileName))
+                    File.Delete(outputFileName);
 
-                // Verifying if third part apps is in root application directory
-                if (!File.Exists(ww2oggPath))
-                    throw new FileNotFoundException("ww2ogg executable not found!");
-
-                if (!File.Exists(revorbPath))
-                    throw new FileNotFoundException("revorb executable not found!");
-
-                if (!File.Exists(codebooksPath))
-                    throw new FileNotFoundException("packed_codebooks.bin not found!");
-
-                if (!File.Exists(codebooks603Path))
-                    throw new FileNotFoundException("packed_codebooks_aoTuV_603.bin not found!");
-
-                // Processing with ww2ogg
-                Process ww2oggProcess = new Process();
-                ww2oggProcess.StartInfo.FileName = ww2oggPath;
-                ww2oggProcess.StartInfo.WorkingDirectory = appPath;
-
-                switch (wwiseVersion)
-                {
-                    case WwiseVersion.Wwise2010:
-                        ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\"", file, outputFileName);
-                        break;
-                    case WwiseVersion.Wwise2013:
-                        ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\" --pcb \"{2}\"", file, outputFileName, codebooks603Path);
-                        break;
-                    default:
-                        throw new InvalidOperationException("Wwise version not supported or invalid input file.");
-                }
-
-                ww2oggProcess.StartInfo.UseShellExecute = false;
-                ww2oggProcess.StartInfo.CreateNoWindow = true;
-                ww2oggProcess.StartInfo.RedirectStandardOutput = true;
-
-                ww2oggProcess.Start();
-                ww2oggProcess.WaitForExit();
-                string ww2oggResult = ww2oggProcess.StandardOutput.ReadToEnd();
-
-                if (ww2oggResult.IndexOf("Error ", StringComparison.Ordinal) > -1 || ww2oggResult.IndexOf(" error:", StringComparison.Ordinal) > -1)
-                    throw new Exception("ww2ogg process error or CDLC file name contains reserved word 'error'." + Environment.NewLine + ww2oggResult);
-
-                // Processing with revorb
-                Process revorbProcess = new Process();
-                revorbProcess.StartInfo.FileName = revorbPath;
-                revorbProcess.StartInfo.WorkingDirectory = appPath;
-                revorbProcess.StartInfo.Arguments = String.Format("\"{0}\"", outputFileName);
-                revorbProcess.StartInfo.UseShellExecute = false;
-                revorbProcess.StartInfo.CreateNoWindow = true;
-                revorbProcess.StartInfo.RedirectStandardOutput = true;
-
-                revorbProcess.Start();
-                revorbProcess.WaitForExit();
-                string revorbResult = revorbProcess.StandardOutput.ReadToEnd();
-
-                // TODO: ? should check revorbResult
-                if (ww2oggResult.IndexOf("Error ", StringComparison.Ordinal) > -1 || ww2oggResult.IndexOf(" error:", StringComparison.Ordinal) > -1)
-                {
-                    if (File.Exists(outputFileName))
-                        File.Delete(outputFileName);
-
-                    throw new Exception("revorb process error or CDLC file name contains reserved word 'error'." + Environment.NewLine + revorbResult);
-                }
+                throw new Exception("revorb process error or CDLC file name contains reserved word 'error'." + Environment.NewLine + revorbResult);
             }
         }
 

@@ -37,7 +37,7 @@ rem Split the parameters on spaces but respect the quotes
 for %%N IN (!params!) do (
   echo.
   ::echo %%N
-  %PP% -sp=%SOURCE% -tp=%DESTINATION% -i=%%N -appid=248750
+  %PP% -s=%SOURCE% -t=%DESTINATION% -i=%%N -appid=248750
 )
 
 echo.

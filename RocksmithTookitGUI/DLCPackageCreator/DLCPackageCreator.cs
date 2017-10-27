@@ -51,7 +51,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         // prevents multiple tool tip appearance and gives better action
         private ToolTip tt = new ToolTip();
 
-
         public DLCPackageCreator()
         {
             InitializeComponent();
@@ -75,10 +74,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             bwGenerate.WorkerReportsProgress = true;
             AddValidationEventHandlers();
 
+            // this sequence gets done everytime config changes
             try
             {
-                // this sequence gets done everytime config changes
-                SetDefaultFromConfig();
+                ReadConfigSettings();
                 PopulateAppIdCombo();
                 PopulateTonesLB();
             }
@@ -86,6 +85,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 /*For mono compatibility*/
             }
+
+            var debugMe = txtAppId.Text;
         }
 
         //dirty implementation, it's always true, consider undo\redo manager for actions made+logging maybe?
@@ -1319,17 +1320,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void PopulateAppIdCombo()
         {
-            // takes into account possible conversion
-            var currentGameVersion = GameVersion.RS2014;
-            if (CurrentGameVersion == GameVersion.RS2012)
-                currentGameVersion = GameVersion.RS2012;
-
             cmbAppIds.Items.Clear();
-            foreach (var song in SongAppIdRepository.Instance().Select(currentGameVersion))
+            foreach (var song in SongAppIdRepository.Instance().Select(CurrentGameVersion))
                 cmbAppIds.Items.Add(song);
 
-            // get GeneralConfig default AppID
-            var songAppId = SongAppIdRepository.Instance().Select((currentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], currentGameVersion);
+            var songAppId = SongAppIdRepository.Instance().Select((CurrentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], CurrentGameVersion);
             cmbAppIds.SelectedItem = songAppId;
             AppId = songAppId.AppId;
         }
@@ -1481,27 +1476,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void SetDefaultFromConfig()
+        private void ReadConfigSettings()
         {
-            // initialize values
-            Album = "";
-            AlbumSort = "";
-            AlbumYear = "";
-            Artist = "";
-            ArtistSort = "";
-            AverageTempo = "";
-            DLCKey = "";
-            IsDirty = false;
-            JavaBool = false;
-            LyricArtPath = null;
-            PackageAuthor = null;
-            PackageComment = "(Remastered by CDLC Creator)";
-            PackageVersion = "";
-            SongTitle = "";
-            SongTitleSort = "";
-            ToolkitVers = null;
-            UnpackedDir = null;
-
             // read from RocksmithToolkitLib.Config.xml
             try
             {
