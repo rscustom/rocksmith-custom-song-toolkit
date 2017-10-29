@@ -17,7 +17,8 @@ namespace convert2012
     {
         static int Main(string[] args)
         {
-            Console.WindowWidth = 85;
+            Console.SetWindowPosition(0, 0);
+            Console.SetWindowSize(85, 35);
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Green;
 

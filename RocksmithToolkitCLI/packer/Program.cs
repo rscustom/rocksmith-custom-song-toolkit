@@ -97,7 +97,8 @@ namespace packer
         [STAThread]
         static int Main(string[] args)
         {
-            Console.WindowWidth = 85;
+            Console.SetWindowPosition(0, 0); // must be specified this way 
+            Console.SetWindowSize(85, 35); // to prevent ioexceptions
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Green;
 

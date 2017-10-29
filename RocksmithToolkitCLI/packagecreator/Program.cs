@@ -93,20 +93,30 @@ namespace packagecreator
         [STAThread]
         static int Main(string[] args)
         {
-            Console.WindowWidth = 85;
+            Console.SetWindowPosition(0, 0);
+            Console.SetWindowSize(85, 35);
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Green;
 
 #if (DEBUG)
             // give the progie some dumby directory to work on for testing
             // args = new string[] { "--input=D:\\Temp\\Test", "--output=D:\\Temp" }; //, "platform=Pc", "version=RS2014" };
-            args = new string[] { "D:\\Temp\\Test" };
+            args = new string[] { "-?" };
 #endif
 
+            string[] srcDirs = null;
             var arguments = DefaultArguments();
             var options = GetOptions(arguments);
-            string[] srcDirs = null;
             options.Parse(args);
+
+            if (arguments.ShowHelp)
+            {
+                options.WriteOptionDescriptions(Console.Out);
+                Console.WriteLine("");
+                Console.WriteLine("Press any key to close window ...");
+                Console.ReadLine();
+                return 0;
+            }
 
             try
             {

@@ -27,9 +27,9 @@ namespace RocksmithToolkitGUI
         {
             InitializeComponent();
 
-            // uncomment to debug AutoUpdater without internet connection
-            //var debug1 = new RocksmithToolkitUpdater.AutoUpdater();
-            //var debug2 = debug1.ReplaceRepo;
+            // for developer testing
+            if (!GeneralExtensions.IsInDesignMode)
+                btnDevTestMethod.Visible = false;
 
             // EH keeps main form responsive/refreshed
             this.Shown += MainForm_Splash;
@@ -39,7 +39,7 @@ namespace RocksmithToolkitGUI
             Application.CurrentCulture = thread.CurrentCulture = thread.CurrentUICulture = ci;
             Application.CurrentInputLanguage = InputLanguage.FromCulture(ci);
 
-            // more easter eggs ... bad practice
+            // more easter eggs ... commented out bad practice
             //if (args.Length > 0 && File.Exists(args[0]))
             //    LoadTemplate(args[0]); 
 
@@ -129,7 +129,7 @@ namespace RocksmithToolkitGUI
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            // hidden easter eggs ... bad practice to place it here
+            // hidden easter eggs ... commented out bad practice
             //if (!e.Control || !e.Shift) return;
             //switch (e.KeyCode)
             //{
@@ -302,6 +302,31 @@ namespace RocksmithToolkitGUI
             }
         }
 
+        // area for developer testing 
+        private void DevTestMethod()
+        {
+            var args = new string[]
+            {
+                "-u",
+                "-input=D:\\Temp\\PeppaPig_p.psarc", 
+                "-x", 
+                "-d",
+                "-f=Pc",
+                "-v=RS2014",
+                "-output=D:\\Temp",
+                "-c"
+            };
+
+            var cmdArgs = String.Join(" ", args);
+            var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var cliPath = Path.Combine(appDir, "packer.exe");
+            GeneralExtensions.RunExternalExecutable(cliPath, arguments: cmdArgs);
+        }
+
+        private void btnDevTestMethod_Click(object sender, EventArgs e)
+        {
+            DevTestMethod();
+        }
 
     }
 }
