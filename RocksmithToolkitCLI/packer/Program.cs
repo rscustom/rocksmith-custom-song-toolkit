@@ -97,10 +97,13 @@ namespace packer
         [STAThread]
         static int Main(string[] args)
         {
-            Console.SetWindowPosition(0, 0); // must be specified this way 
-            Console.SetWindowSize(85, 35); // to prevent ioexceptions
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Green;
+            try
+            {
+                Console.SetWindowSize(85, 40); // to prevent ioexceptions
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+            catch {/* DO NOTHING */}
 
 #if (DEBUG)
             // give the progie some dumby data to work with
