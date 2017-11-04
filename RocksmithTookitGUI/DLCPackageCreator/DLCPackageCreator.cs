@@ -1580,8 +1580,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
-                var ddAcronym = ConfigRepository.Instance().GetBoolean("ddc_autogen") || isDD ? "DD" : "NDD";
-                var fileName = String.Format("{0}_{1}", StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms")), ddAcronym);
+                var ddAcronym = ConfigRepository.Instance().GetBoolean("ddc_autogen") || isDD ? "" : "_NDD";
+                var fileName = String.Format("{0}{1}", StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms")), ddAcronym);
                 sfd.FileName = fileName.GetValidFileName();
                 sfd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
 

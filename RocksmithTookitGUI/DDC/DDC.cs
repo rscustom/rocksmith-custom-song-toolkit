@@ -404,9 +404,9 @@ namespace RocksmithToolkitGUI.DDC
         private string GenerateDdcFilePath(string filePath)
         {
             var platform = filePath.GetPlatform();
-            var ddcFilePath = Path.Combine(Path.GetDirectoryName(filePath), String.Format("{0}_{1}{2}",
+            var ddcFilePath = Path.Combine(Path.GetDirectoryName(filePath), String.Format("{0}{1}{2}",
                 Path.GetFileNameWithoutExtension(filePath).StripPlatformEndName().GetValidFileName().Replace("_DD", "").Replace("_NDD", ""),
-                IsNDD ? "NDD" : "DD", platform.GetPathName()[2]));
+                IsNDD ? "_NDD" : "", platform.GetPathName()[2]));
             ddcFilePath = String.Format("{0}{1}", ddcFilePath, Path.GetExtension(filePath));
 
             return ddcFilePath;

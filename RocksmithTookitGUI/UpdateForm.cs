@@ -91,7 +91,7 @@ namespace RocksmithToolkitGUI
                 // make a copy of AutoUpdater to prevent locking the process during update
                 File.Copy(updaterAppPath, updatingAppPath, true);
 
-                if (GeneralExtensions.IsInDesignMode)
+                if (GeneralExtensions.IsInDesignMode) // allow updater to be run in design mode for developers
                 {
                     var args = new string[] { localToolkitDir, tempToolkitDir };
                     using (var autoUpdater = new AutoUpdaterForm(args))
@@ -109,7 +109,7 @@ namespace RocksmithToolkitGUI
                     catch (Exception ex)
                     {
                         // changed external process call for MacWine debugging
-                        MessageBox.Show("Report updater try #2 to the developers: " + Environment.NewLine + ex.Message);
+                        MessageBox.Show("Report hit updater try #2 to the developers: " + Environment.NewLine + ex.Message);
 
                         var startInfo = new ProcessStartInfo
                         {
