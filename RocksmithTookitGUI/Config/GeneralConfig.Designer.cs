@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeneralConfig));
             this.general_usebeta = new System.Windows.Forms.CheckBox();
             this.gbCreator = new System.Windows.Forms.GroupBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.creator_qualityfactor = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.creator_autosavetemplate = new System.Windows.Forms.CheckBox();
             this.creator_fixlowbass = new System.Windows.Forms.CheckBox();
             this.creator_fixmultitone = new System.Windows.Forms.CheckBox();
@@ -89,16 +91,14 @@
             this.btnCloseConfig = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblFirstRun = new System.Windows.Forms.Label();
-            this.creator_qualityfactor = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
-            this.label19 = new System.Windows.Forms.Label();
             this.gbCreator.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
             this.gbGeneral.SuspendLayout();
             this.gbAutoUpdate.SuspendLayout();
             this.gbDDC.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).BeginInit();
             this.gbConverter.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).BeginInit();
             this.SuspendLayout();
             // 
             // general_usebeta
@@ -140,6 +140,43 @@
             this.gbCreator.TabIndex = 1;
             this.gbCreator.TabStop = false;
             this.gbCreator.Text = "CDLC Creator";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label19.Location = new System.Drawing.Point(4, 91);
+            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(112, 13);
+            this.label19.TabIndex = 56;
+            this.label19.Text = "Default Quality Factor:";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // creator_qualityfactor
+            // 
+            this.creator_qualityfactor.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_qualityfactor.Location = new System.Drawing.Point(122, 91);
+            this.creator_qualityfactor.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Name = "creator_qualityfactor";
+            this.creator_qualityfactor.Size = new System.Drawing.Size(48, 20);
+            this.creator_qualityfactor.TabIndex = 55;
+            this.creator_qualityfactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.creator_qualityfactor.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // creator_autosavetemplate
             // 
@@ -708,8 +745,8 @@
             this.ddc_autogen.TabIndex = 4;
             this.ddc_autogen.Text = "Auto Generate DDC";
             this.toolTip.SetToolTip(this.ddc_autogen, "If checked, DDC will be automatically added to\r\nthe CDLC when \'Generate\' is press" +
-                    "ed in the\r\n\'CDLC Creator\' tab.  CDLC must have DD in order\r\nto play properly in " +
-                    "Rocksmith 2014 Remastered.");
+                    "ed in the\r\n\'CDLC Creator\' tab. \r\n\r\nNOTE: CDLC must have DD for them to work\r\npro" +
+                    "perly with Rocksmith 2014 Remastered.");
             this.ddc_autogen.UseVisualStyleBackColor = true;
             this.ddc_autogen.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -911,43 +948,6 @@
             this.lblFirstRun.TabIndex = 51;
             this.lblFirstRun.Text = "First Run";
             // 
-            // creator_qualityfactor
-            // 
-            this.creator_qualityfactor.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_qualityfactor.Location = new System.Drawing.Point(122, 91);
-            this.creator_qualityfactor.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.creator_qualityfactor.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.creator_qualityfactor.Name = "creator_qualityfactor";
-            this.creator_qualityfactor.Size = new System.Drawing.Size(48, 20);
-            this.creator_qualityfactor.TabIndex = 55;
-            this.creator_qualityfactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.creator_qualityfactor.Value = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.creator_qualityfactor.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label19.Location = new System.Drawing.Point(4, 91);
-            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(112, 13);
-            this.label19.TabIndex = 56;
-            this.label19.Text = "Default Quality Factor:";
-            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // GeneralConfig
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -961,6 +961,7 @@
             this.Size = new System.Drawing.Size(525, 560);
             this.gbCreator.ResumeLayout(false);
             this.gbCreator.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).EndInit();
             this.gbGeneral.ResumeLayout(false);
             this.gbGeneral.PerformLayout();
@@ -971,7 +972,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).EndInit();
             this.gbConverter.ResumeLayout(false);
             this.gbConverter.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

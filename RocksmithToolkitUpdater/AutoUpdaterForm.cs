@@ -151,7 +151,8 @@ namespace RocksmithToolkitUpdater
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("<ERROR> Can not find required file(s) to run AutoUpdater project in VS IDE Debug mode.  " + Environment.NewLine + "Make sure the RocksmithToolkitGUI project has been run in VS IDE Debug mode first. " + Environment.NewLine + Environment.NewLine + ex.Message, "DEBUG ME");
+                        MessageBox.Show("<ERROR> Can not find required file(s) to run AutoUpdater project in VS IDE Debug mode.  " + Environment.NewLine + "Make sure the RocksmithToolkitGUI project has been run in VS IDE Debug mode first. " + Environment.NewLine + Environment.NewLine + 
+                            ex.Message, "DEBUG ME");
 
                         Environment.Exit(1);
                     }
