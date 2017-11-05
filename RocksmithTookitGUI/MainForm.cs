@@ -25,30 +25,33 @@ namespace RocksmithToolkitGUI
 
         public MainForm(string[] args)
         {
+            // load order is important
             InitializeComponent();
-
-            // for developer testing
-            if (!GeneralExtensions.IsInDesignMode)
-                btnDevTestMethod.Visible = false;
-
-            // EH keeps main form responsive/refreshed
-            this.Shown += MainForm_Splash;
 
             var ci = new CultureInfo("en-US");
             var thread = System.Threading.Thread.CurrentThread;
             Application.CurrentCulture = thread.CurrentCulture = thread.CurrentUICulture = ci;
             Application.CurrentInputLanguage = InputLanguage.FromCulture(ci);
 
+            // EH keeps main form responsive/refreshed
+            this.Load += MainForm_Load;
+            this.Shown += MainForm_Splash;
+
             // more easter eggs ... commented out bad practice
             //if (args.Length > 0 && File.Exists(args[0]))
             //    LoadTemplate(args[0]); 
 
+            // for developer use only
+            if (GeneralExtensions.IsInDesignMode)
+                btnDevTestMethod.Visible = true;
+            
             InitMainForm();
         }
 
         private void InitMainForm()
         {
             this.Text = String.Format("Song Creator Toolkit for Rocksmith (v{0})", ToolkitVersion.RSTKGuiVersion);
+
             btnUpdate.FlatStyle = FlatStyle.Flat;
             btnUpdate.BackColor = SystemColors.Control;
             btnUpdate.Enabled = false;
@@ -79,9 +82,10 @@ namespace RocksmithToolkitGUI
             set { base.Text = value; }
         }
 
-        //TODO: keep tabs data please.
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // EH Load happens before EH Splash
+ 
             // Show this tab only by 'Configuration' click
             tabControl1.TabPages.Remove(GeneralConfigTab);
 

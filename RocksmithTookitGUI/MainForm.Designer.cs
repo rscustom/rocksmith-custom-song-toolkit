@@ -431,6 +431,7 @@
             this.btnDevTestMethod.TabIndex = 17;
             this.btnDevTestMethod.Text = "Dev Use";
             this.btnDevTestMethod.UseVisualStyleBackColor = true;
+            this.btnDevTestMethod.Visible = false;
             this.btnDevTestMethod.Click += new System.EventHandler(this.btnDevTestMethod_Click);
             // 
             // MainForm
@@ -451,7 +452,6 @@
             this.Name = "MainForm";
             this.Text = "Song Creator Toolkit for Rocksmith";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

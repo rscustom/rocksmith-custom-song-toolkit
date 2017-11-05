@@ -331,16 +331,23 @@ namespace RocksmithToolkitLib.Extensions
             get
             {
                 var bVshostCheck = Process.GetCurrentProcess().ProcessName.IndexOf("vshost", StringComparison.OrdinalIgnoreCase) > -1 ? true : false;
-                var bModeCheck = LicenseManager.UsageMode == LicenseUsageMode.Designtime ? true : false;
+                var bUsageCheck = LicenseManager.UsageMode == LicenseUsageMode.Designtime ? true : false;
                 var bDevEnvCheck = Application.ExecutablePath.IndexOf("devenv", StringComparison.OrdinalIgnoreCase) > -1 ? true : false;
                 var bDebuggerAttached = Debugger.IsAttached;
 
-                MessageBox.Show("bVshostCheck = " + bVshostCheck + Environment.NewLine +
-                                "bModeCheck = " + bModeCheck + Environment.NewLine +
-                                "bDevEnvCheck = " + bDevEnvCheck + Environment.NewLine +
-                                "bDebuggerAttached = " + bDebuggerAttached, "DEBUG ME");
+#if DEBUG
+                var bModeCheck = true;
+#else
+                var bModeCheck = false;
+#endif
 
-                if (bDebuggerAttached || bDevEnvCheck || bModeCheck || bVshostCheck)
+                //MessageBox.Show("bVshostCheck = " + bVshostCheck + Environment.NewLine +
+                //                "bModeCheck = " + bUsageCheck + Environment.NewLine +
+                //                "bDevEnvCheck = " + bDevEnvCheck + Environment.NewLine +
+                //                "bDebuggerAttached = " + bDebuggerAttached + Environment.NewLine +
+                //                "bModeCheck = " + bModeCheck, "DEBUG ME");
+
+                if (bDebuggerAttached || bDevEnvCheck || bUsageCheck || bVshostCheck || bModeCheck)
                     return true;
 
                 return false;
