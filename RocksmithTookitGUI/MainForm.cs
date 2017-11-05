@@ -41,10 +41,10 @@ namespace RocksmithToolkitGUI
             //if (args.Length > 0 && File.Exists(args[0]))
             //    LoadTemplate(args[0]); 
 
-            // for developer use only
+            // it is better to be hidden initially and then unhide when needed
             if (GeneralExtensions.IsInDesignMode)
                 btnDevTestMethod.Visible = true;
-            
+
             InitMainForm();
         }
 
@@ -56,24 +56,28 @@ namespace RocksmithToolkitGUI
             btnUpdate.BackColor = SystemColors.Control;
             btnUpdate.Enabled = false;
 
-            // always disable updates on Mac or according to general_autoupdate setting
-            if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
-                !ConfigRepository.Instance().GetBoolean("general_autoupdate"))
+            try
             {
-                btnUpdate.Text = "Updates are disabled";
-            }
-            else
-            {
-                btnUpdate.Text = "Updates are enabled";
+                // always disable updates on Mac or according to general_autoupdate setting
+                if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
+                    !ConfigRepository.Instance().GetBoolean("general_autoupdate"))
+                {
+                    btnUpdate.Text = "Updates are disabled";
+                }
+                else
+                {
+                    btnUpdate.Text = "Updates are enabled";
 
-                bWorker = new BackgroundWorker();
-                bWorker.DoWork += CheckForUpdate;
-                bWorker.RunWorkerCompleted += EnableUpdate;
-                bWorker.RunWorkerAsync();
-            }
+                    bWorker = new BackgroundWorker();
+                    bWorker.DoWork += CheckForUpdate;
+                    bWorker.RunWorkerCompleted += EnableUpdate;
+                    bWorker.RunWorkerAsync();
+                }
 
-            // write a new VersionInfo.txt file to toolkit root
-            ToolkitVersion.UpdateVersionInfoFile();
+                // write a new VersionInfo.txt file to toolkit root
+                ToolkitVersion.UpdateVersionInfoFile();
+            }
+            catch {/* DO NOTHING */}
         }
 
         public sealed override string Text
@@ -85,7 +89,7 @@ namespace RocksmithToolkitGUI
         private void MainForm_Load(object sender, EventArgs e)
         {
             // EH Load happens before EH Splash
- 
+
             // Show this tab only by 'Configuration' click
             tabControl1.TabPages.Remove(GeneralConfigTab);
 

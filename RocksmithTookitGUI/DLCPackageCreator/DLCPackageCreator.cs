@@ -55,8 +55,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             InitializeComponent();
 
-            if (!GeneralExtensions.IsInDesignMode)
-                btnDevUse.Visible = false;
+            // it is better to be hidden initially and then unhide when needed
+            if (GeneralExtensions.IsInDesignMode)
+                btnDevUse.Visible = true;
 
             lstArrangements.AllowDrop = true;
             numAudioQuality.MouseEnter += AudioQuality_MouseEnter;
