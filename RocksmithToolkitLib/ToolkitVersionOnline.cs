@@ -68,12 +68,16 @@ namespace RocksmithToolkitLib
 
                     //  recommend update to latest revision under special conditions
                     var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
-                    if ((!useBeta && ToolkitVersion.AssemblyConfiguration == "BETA") || (useBeta && ToolkitVersion.AssemblyConfiguration != "BETA") || (String.IsNullOrEmpty(toolkitVersionOnline.Revision) && !toolkitVersionOnline.UpdateAvailable))
+                    
+                    if ((!useBeta && ToolkitVersion.AssemblyConfiguration == "BETA") || 
+                        (useBeta && ToolkitVersion.AssemblyConfiguration != "BETA") || 
+                        (String.IsNullOrEmpty(toolkitVersionOnline.Revision) && 
+                        !toolkitVersionOnline.UpdateAvailable))
                     {
                         versionInfoJson = new WebClient().DownloadString(GetFileUrl());
                         toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
                         toolkitVersionOnline.CommitMessages = new string[2];
-                        toolkitVersionOnline.CommitMessages[0] = "The currently installed version cannot be found online.";
+                        toolkitVersionOnline.CommitMessages[0] = "<WARNING>: Special conditions were detected ...";
                         toolkitVersionOnline.CommitMessages[1] = "Recommend installing the latest online version.";
                         toolkitVersionOnline.UpdateAvailable = true;
                     }

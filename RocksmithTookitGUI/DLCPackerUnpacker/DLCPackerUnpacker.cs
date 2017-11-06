@@ -523,7 +523,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
             GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
             Thread.Sleep(100); // give Globals a chance to initialize
-            GlobalExtension.ShowProgress("Packing archive ...");
+            GlobalExtension.ShowProgress("Packing archive ...", 30);
             Application.DoEvents();
 
             try
@@ -585,7 +585,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
             GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
             Thread.Sleep(100); // give Globals a chance to initialize
-            GlobalExtension.ShowProgress("Packing archive ...");
+            GlobalExtension.ShowProgress("Packing archive ...", 30);
             Application.DoEvents();
             var errMsg = String.Empty;
 

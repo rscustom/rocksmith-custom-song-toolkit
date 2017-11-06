@@ -17,7 +17,6 @@ TestResults
 
 # Build results
 [Bb]in/
-[Oo]bj/
 [Dd]ebug/
 [Rr]elease/
 x64/
@@ -95,7 +94,6 @@ AppPackages/
 # Others
 [Oo]bj
 sql
-TestResults
 [Tt]est[Rr]esult*
 *.Cache
 *.resources
@@ -114,8 +112,7 @@ UpgradeLog*.XML
 # Developer Only Custom Files
 CleanupBeforeGitPullRequest.bat
 RevisionLog.txt
-RS2014 TONES.rar
-**/Properties/AssemblyInfo.cs
+*.rar
 
 # Python
 # Byte-compiled / optimized / DLL files
@@ -123,3 +120,4 @@ __pycache__/
 *.py[cod]
 *.egg
 *.userprefs
+

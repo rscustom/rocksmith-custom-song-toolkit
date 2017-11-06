@@ -54,17 +54,14 @@ namespace RocksmithToolkitGUI
 
             btnUpdate.FlatStyle = FlatStyle.Flat;
             btnUpdate.BackColor = SystemColors.Control;
+            btnUpdate.Text = "Updates are disabled";
             btnUpdate.Enabled = false;
 
             try
             {
                 // always disable updates on Mac or according to general_autoupdate setting
-                if (Environment.OSVersion.Platform == PlatformID.MacOSX ||
-                    !ConfigRepository.Instance().GetBoolean("general_autoupdate"))
-                {
-                    btnUpdate.Text = "Updates are disabled";
-                }
-                else
+                if (Environment.OSVersion.Platform != PlatformID.MacOSX &&
+                    ConfigRepository.Instance().GetBoolean("general_autoupdate"))
                 {
                     btnUpdate.Text = "Updates are enabled";
 

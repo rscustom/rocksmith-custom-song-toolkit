@@ -919,8 +919,8 @@ namespace RocksmithToolkitLib.DLCPackage
             // Generate Showlights
             var showlight = new Showlights();
             showlight.CreateShowlights(info);
-            // TODO: determine minimum number of showlight elements to still be valid
-            if (showlight.ShowlightList.Count > 6)
+            // need at least two showlight elements to be valid
+            if (showlight.ShowlightList.Count > 1)
             {
                 var showlightStream = new MemoryStream();
                 showlight.Serialize(showlightStream);
