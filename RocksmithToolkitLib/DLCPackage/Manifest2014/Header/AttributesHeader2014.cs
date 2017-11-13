@@ -31,7 +31,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         // apply conditional serialization to BassPick
         public int BassPick { get; set; } // added to resolve issue #272
         public decimal CapoFret { get; set; }
-        public double? CentOffset { get; set; }
+        public double? CentOffset { get; set; } // tuning frequency, see Cents2Frequency method
         public bool DLC { get; set; }
         public string DLCKey { get; set; } // <=> SongKey
         public double? DNA_Chords { get; set; }

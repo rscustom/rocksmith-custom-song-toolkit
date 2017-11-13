@@ -393,7 +393,7 @@
       <Link>VersionInfo.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Resources\BetaInfo.rtf" />
+    <EmbeddedResource Include="BetaInfo.rtf" />
     <Content Include="songcreator.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

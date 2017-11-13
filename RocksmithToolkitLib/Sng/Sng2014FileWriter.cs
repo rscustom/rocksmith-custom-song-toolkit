@@ -10,7 +10,7 @@ using MiscUtil.IO;
 using MiscUtil.Conversion;
 using CON = RocksmithToolkitLib.Sng.Constants;
 
-// TODO: new phylosophy ... charting tweaks should be done in EOF by the charter
+// TODO: new philosophy ... charting tweaks should be done in EOF by the charter
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {

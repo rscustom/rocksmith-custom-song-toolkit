@@ -232,6 +232,7 @@
     </Content>
     <Content Include="RocksmithToolkitLib.TuningDefinition.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\pedals.json" />
     <Content Include="RocksmithToolkitLib.SongAppId.xml">

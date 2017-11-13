@@ -122,8 +122,8 @@ namespace RocksmithToolkitGUI
             //MessageBox.Show("ToolkitVersionOnline.UpdateAvailable: " + onlineVersion.UpdateAvailable + Environment.NewLine +
             //   "ToolkitVersionOnline.Revision: " + onlineVersion.Revision, "DEBUG ME");
 
-            // if (onlineVersion.UpdateAvailable) // || GeneralExtensions.IsInDesignMode)
-            if (true) // for testing
+            //if (true) // for debugging and testing
+            if (onlineVersion.UpdateAvailable || GeneralExtensions.IsInDesignMode)
             {
                 btnUpdate.BackColor = Color.LightSteelBlue;
                 btnUpdate.FlatStyle = FlatStyle.Standard;
