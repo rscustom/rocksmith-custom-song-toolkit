@@ -25,9 +25,7 @@ namespace RocksmithToolkitLib.XmlRepository
         [XmlElement]
         public TuningStrings Tuning { get; set; }
 
-        public TuningDefinition()
-        {
-        }
+        public TuningDefinition() { }
 
         public TuningDefinition(TuningStrings tStrings, GameVersion rsVersion, string name = "", bool custom = true)
         {
@@ -37,7 +35,7 @@ namespace RocksmithToolkitLib.XmlRepository
 
             UIName = Name = !string.IsNullOrEmpty(name) ? name : NameFromStrings(tStrings);
         }
-  
+
         private static string NoteName(TuningStrings tuning, byte s, bool flats = false)
         {
             String[] notesNamesHi = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" }; //TODO: use maj\min or intervals classification...
@@ -46,7 +44,7 @@ namespace RocksmithToolkitLib.XmlRepository
             var id = Sng2014FileWriter.GetMidiNote(tuning.ToArray(), s, 0, false, 0) % 12;
             return flats ? notesNamesLo[id] : notesNamesHi[id];
         }
- 
+
         public string NameFromStrings(TuningStrings tuning, bool flats = true)
         {
             var t = tuning.ToArray();
@@ -96,7 +94,7 @@ namespace RocksmithToolkitLib.XmlRepository
 
             using (var stream = File.OpenRead(fileName))
             {
-                var tuningDefinitions = (List<TuningDefinition>) new XmlSerializer(typeof(List<TuningDefinition>)).Deserialize(stream);
+                var tuningDefinitions = (List<TuningDefinition>)new XmlSerializer(typeof(List<TuningDefinition>)).Deserialize(stream);
 
                 foreach (var tuningDefinition in tuningDefinitions)
                 {
