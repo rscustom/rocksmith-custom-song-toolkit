@@ -17,13 +17,29 @@ namespace RocksmithToolkitGUI.Config
     {
         private const string MESSAGEBOX_CAPTION = "General Config";
         private bool loading = false;
+        
+        public string GetConfigVersion() // also used by AutoUpdater and AssemblyCaller
+        {
+            // increment the Version here to force RocksmithToolkitUpdater to do a fresh install of RocksmithToolkitLib.*.xml
+            return (string) "3";
+        }
 
+        // only gets called one time
         public GeneralConfig()
         {
             InitializeComponent();
-            general_defaultauthor.Validating += ValidateSortName;
 
+
+            // fix readonly textbox/cuebox background colors
+            general_rs1path.BackColor = SystemColors.Window;
+            general_rs2014path.BackColor = SystemColors.Window;
+            general_wwisepath.BackColor = SystemColors.Window;
+            creator_defaulttone.BackColor = SystemColors.Window;
+            creator_defaultproject.BackColor = SystemColors.Window;
+
+            general_defaultauthor.Validating += ValidateSortName;
             loading = true;
+
             try
             {
                 PopulateAppIdCombo(general_defaultappid_RS2012, GameVersion.RS2012);
@@ -34,12 +50,24 @@ namespace RocksmithToolkitGUI.Config
                 PopulateEnumCombo(converter_target, typeof(GamePlatform));
                 PopulateRampUp();
                 PopulateConfigDDC();
+
+                // force static Wwise path and settings for Mac Wine packages on first run
+                if (Environment.OSVersion.Platform == PlatformID.MacOSX && ConfigRepository.Instance().GetBoolean("general_firstrun"))
+                {
+                    ConfigRepository.Instance()["general_replacerepo"] = "true";
+                    ConfigRepository.Instance()["general_defaultauthor"] = "MacWineBeta";
+                    ConfigRepository.Instance()["general_wwisepath"] = "C:\\Program Files\\Audiokinetic";
+                    ConfigRepository.Instance()["general_replacerepo"] = "false";
+                    ConfigRepository.Instance()["general_defaultplatform"] = "Mac";
+                    // TODO: identify these Mac paths if static
+                    ConfigRepository.Instance()["general_rs2014path"] = "";
+                    ConfigRepository.Instance()["general_rs1path"] = "";
+                }
+
                 LoadAndSetupConfiguration(this.Controls);
-                // hide First Run
-                if (ConfigRepository.Instance()["general_firstrun"] == "false")
-                    lblFirstRun.Visible = false;
             }
             catch { /*For mono compatibility*/ }
+
             loading = false;
         }
 
@@ -57,7 +85,7 @@ namespace RocksmithToolkitGUI.Config
                 if (control is TextBox || control is CueTextBox)
                 {
                     var tb = (TextBox)control;
-                    tb.Text = ConfigRepository.Instance()[tb.Name];
+                    tb.Text = (string)ConfigRepository.Instance()[tb.Name];
                 }
                 else if (control is ComboBox)
                 {
@@ -81,6 +109,10 @@ namespace RocksmithToolkitGUI.Config
                 else if (control is GroupBox)
                     LoadAndSetupConfiguration(((GroupBox)control).Controls);
             }
+
+            // hide First Run
+            if (ConfigRepository.Instance()["general_firstrun"] == "false")
+                lblFirstRun.Visible = false;
         }
 
         private void PopulateAppIdCombo(ComboBox combo, GameVersion gameVersion)
@@ -133,36 +165,37 @@ namespace RocksmithToolkitGUI.Config
 
         private void ConfigurationChanged(object sender, EventArgs e)
         {
-            if (!loading)
+            if (loading)
+                return;
+
+            Control control = (Control)sender;
+            var key = control.Name;
+            var value = control.Text;
+
+            if (control is ComboBox)
             {
-                Control control = (Control)sender;
-                var key = control.Name;
-                var value = control.Text;
-
-                if (control is ComboBox)
-                {
-                    var combo = ((ComboBox)control);
-                    if (!String.IsNullOrEmpty(combo.ValueMember))
-                        value = combo.SelectedValue.ToString();
-                    else
-                        value = combo.SelectedItem.ToString();
-                }
-                else if (control is CheckBox)
-                {
-                    value = ((CheckBox)control).Checked.ToString().ToLower();
-                }
-                else if (control is NumericUpDown)
-                {
-                    value = ((NumericUpDown)control).Value.ToString(CultureInfo.InvariantCulture);
-                }
-
-                if (ConfigRepository.Instance().ValueChanged(key, value) && !String.IsNullOrEmpty(value))
-                    ConfigRepository.Instance()[key] = value;
+                var combo = ((ComboBox)control);
+                if (!String.IsNullOrEmpty(combo.ValueMember))
+                    value = combo.SelectedValue.ToString();
+                else
+                    value = combo.SelectedItem.ToString();
             }
+            else if (control is CheckBox)
+            {
+                value = ((CheckBox)control).Checked.ToString().ToLower();
+            }
+            else if (control is NumericUpDown)
+            {
+                value = ((NumericUpDown)control).Value.ToString(CultureInfo.InvariantCulture);
+            }
+
+            if (ConfigRepository.Instance().ValueChanged(key, value) && !String.IsNullOrEmpty(value))
+                ConfigRepository.Instance()[key] = value;
         }
 
-        private void closeConfigButton_Click(object sender, EventArgs e)
+        private void btnCloseConfig_Click(object sender, EventArgs e)
         {
+            ConfigRepository.Instance()["generalconfigversion"] = GetConfigVersion();
             ConfigRepository.Instance()["general_firstrun"] = "false";
             ((MainForm)ParentForm).ReloadControls();
         }
@@ -171,7 +204,7 @@ namespace RocksmithToolkitGUI.Config
         {
             using (var fbd = new VistaFolderBrowserDialog())
             {
-                fbd.SelectedPath = general_rs1path.Name;
+                fbd.SelectedPath = general_rs1path.Text;
                 fbd.Description = "Select Rocksmith 2012 executable root installation folder.";
 
                 if (fbd.ShowDialog() != DialogResult.OK)
@@ -179,7 +212,7 @@ namespace RocksmithToolkitGUI.Config
 
                 var rs1Path = fbd.SelectedPath;
                 general_rs1path.Text = rs1Path;
-                ConfigRepository.Instance()[general_rs1path.Name] = rs1Path;
+                ConfigRepository.Instance()["general_rs1path"] = rs1Path;
             }
         }
 
@@ -187,7 +220,7 @@ namespace RocksmithToolkitGUI.Config
         {
             using (var fbd = new VistaFolderBrowserDialog())
             {
-                fbd.SelectedPath = general_rs2014path.Name;
+                fbd.SelectedPath = general_rs2014path.Text;
                 fbd.Description = "Select Rocksmith 2014 executable root installation folder.";
 
                 if (fbd.ShowDialog() != DialogResult.OK)
@@ -195,7 +228,7 @@ namespace RocksmithToolkitGUI.Config
 
                 var rs2014Path = fbd.SelectedPath;
                 general_rs2014path.Text = rs2014Path;
-                ConfigRepository.Instance()[general_rs2014path.Name] = rs2014Path;
+                ConfigRepository.Instance()["general_rs2014path"] = rs2014Path;
             }
         }
 
@@ -203,7 +236,7 @@ namespace RocksmithToolkitGUI.Config
         {
             using (var fbd = new VistaFolderBrowserDialog())
             {
-                fbd.SelectedPath = general_wwisepath.Name;
+                fbd.SelectedPath = general_wwisepath.Text;
                 fbd.Description = "Select Wwise CLI (*.exe) installation folder.";
 
                 if (fbd.ShowDialog() != DialogResult.OK)
@@ -211,7 +244,7 @@ namespace RocksmithToolkitGUI.Config
 
                 var wwisePath = fbd.SelectedPath;
                 general_wwisepath.Text = wwisePath;
-                ConfigRepository.Instance()[general_wwisepath.Name] = wwisePath;
+                ConfigRepository.Instance()["general_wwisepath"] = wwisePath;
             }
         }
 
@@ -219,14 +252,14 @@ namespace RocksmithToolkitGUI.Config
         {
             using (var fbd = new VistaFolderBrowserDialog())
             {
-                fbd.SelectedPath = creator_defaultproject.Name;
+                fbd.SelectedPath = creator_defaultproject.Text;
                 fbd.Description = "Select Default Project Folder for the CDLC Creator";
                 if (fbd.ShowDialog() != DialogResult.OK)
                     return;
 
                 var projectDir = fbd.SelectedPath;
                 creator_defaultproject.Text = projectDir;
-                ConfigRepository.Instance()[creator_defaultproject.Name] = projectDir;
+                ConfigRepository.Instance()["creator_defaultproject"] = projectDir;
             }
         }
 
@@ -234,7 +267,7 @@ namespace RocksmithToolkitGUI.Config
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = creator_defaulttone.Name;
+                ofd.InitialDirectory = creator_defaulttone.Text;
                 ofd.Title = "Select Default Tone for the CDLC Creator";
                 ofd.Filter = CurrentOFDFilter;
 
@@ -243,7 +276,7 @@ namespace RocksmithToolkitGUI.Config
 
                 var tonePath = ofd.FileName;
                 creator_defaulttone.Text = tonePath;
-                ConfigRepository.Instance()[creator_defaulttone.Name] = tonePath;
+                ConfigRepository.Instance()["creator_defaulttone"] = tonePath;
             }
         }
 

@@ -96,7 +96,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 
         public void GenerateTechniques(Attributes2014 attribute, Song2014 song)
         {
-            // results from this method do not match ODLC but are workable
+            // NOTE: results from this method do not match ODLC but are workable
             //
             //"Techniques" : {
             //     "DiffLevelID" : {//used to display which techs are set at current lvl.
@@ -535,10 +535,21 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 
         public void GenerateTuningData(Attributes2014 attribute, dynamic song)
         {
+            // packer currently does very limited error checking (used mainly by advanced toolkit users)
+            // this is a good place to ensure manifest data is the same as song xml data            
+            if (song.Version == "7")
+            {
+                if (song.CentOffset == null)
+                    song.CentOffset = 0.0;
+
+                attribute.CentOffset = Convert.ToDouble(song.CentOffset);
+            }
+
             if (song.Tuning == null)
-                return;
+                song.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
 
             attribute.Tuning = song.Tuning;
+
             var tuning = new TuningDefinition();
             var tuningName = tuning.NameFromStrings(attribute.Tuning);
 
@@ -546,6 +557,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                 attribute.ArrangementProperties.StandardTuning = 1;
             else
                 attribute.ArrangementProperties.StandardTuning = 0;
+
         }
 
         public void GenerateChords(Attributes2014 attribute, Song2014 song)

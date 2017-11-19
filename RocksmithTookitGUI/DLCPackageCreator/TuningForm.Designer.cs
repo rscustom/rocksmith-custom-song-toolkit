@@ -30,6 +30,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnOK = new System.Windows.Forms.Button();
             this.gbTuning = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -44,10 +45,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.txtString2 = new RocksmithToolkitGUI.CueTextBox();
             this.txtString1 = new RocksmithToolkitGUI.CueTextBox();
             this.txtString0 = new RocksmithToolkitGUI.CueTextBox();
-            this.txtName = new RocksmithToolkitGUI.CueTextBox();
-            this.txtUIName = new RocksmithToolkitGUI.CueTextBox();
             this.chkAddTuning = new System.Windows.Forms.CheckBox();
             this.noteLabel = new System.Windows.Forms.Label();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.txtUIName = new RocksmithToolkitGUI.CueTextBox();
+            this.txtName = new RocksmithToolkitGUI.CueTextBox();
             this.gbTuning.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -86,7 +88,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbTuning.Size = new System.Drawing.Size(286, 71);
             this.gbTuning.TabIndex = 2;
             this.gbTuning.TabStop = false;
-            this.gbTuning.Text = "Tuning";
+            this.gbTuning.Text = "Tuning (Low to High)";
+            this.toolTip.SetToolTip(this.gbTuning, "Enter the values as the number of \r\nhalf steps from E standard tuning\r\nwhich is s" +
+                    "hown as 0, 0, 0, 0, 0, 0.\r\nEntered Low to High.");
             // 
             // label6
             // 
@@ -214,28 +218,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.txtString0.Size = new System.Drawing.Size(40, 20);
             this.txtString0.TabIndex = 3;
             // 
-            // txtName
-            // 
-            this.txtName.Cue = "Name";
-            this.txtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtName.ForeColor = System.Drawing.Color.Gray;
-            this.txtName.Location = new System.Drawing.Point(158, 12);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(140, 20);
-            this.txtName.TabIndex = 2;
-            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
-            // 
-            // txtUIName
-            // 
-            this.txtUIName.Cue = "UI Name";
-            this.txtUIName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtUIName.ForeColor = System.Drawing.Color.Gray;
-            this.txtUIName.Location = new System.Drawing.Point(14, 12);
-            this.txtUIName.Name = "txtUIName";
-            this.txtUIName.Size = new System.Drawing.Size(140, 20);
-            this.txtUIName.TabIndex = 1;
-            this.txtUIName.TextChanged += new System.EventHandler(this.txtUIName_TextChanged);
-            // 
             // chkAddTuning
             // 
             this.chkAddTuning.AutoSize = true;
@@ -256,6 +238,37 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.noteLabel.Size = new System.Drawing.Size(300, 13);
             this.noteLabel.TabIndex = 23;
             this.noteLabel.Text = "If bass tuning, also fill strings 4 and 5 to allow for use on guitar.";
+            // 
+            // toolTip
+            // 
+            this.toolTip.AutomaticDelay = 100;
+            this.toolTip.AutoPopDelay = 10000;
+            this.toolTip.InitialDelay = 100;
+            this.toolTip.ReshowDelay = 20;
+            // 
+            // txtUIName
+            // 
+            this.txtUIName.Cue = "UI Name";
+            this.txtUIName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtUIName.ForeColor = System.Drawing.Color.Gray;
+            this.txtUIName.Location = new System.Drawing.Point(14, 12);
+            this.txtUIName.Name = "txtUIName";
+            this.txtUIName.Size = new System.Drawing.Size(140, 20);
+            this.txtUIName.TabIndex = 1;
+            this.toolTip.SetToolTip(this.txtUIName, "Tuning user interface/common name (spaces allowed)");
+            this.txtUIName.TextChanged += new System.EventHandler(this.txtUIName_TextChanged);
+            // 
+            // txtName
+            // 
+            this.txtName.Cue = "Name";
+            this.txtName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtName.ForeColor = System.Drawing.Color.Gray;
+            this.txtName.Location = new System.Drawing.Point(158, 12);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(140, 20);
+            this.txtName.TabIndex = 2;
+            this.toolTip.SetToolTip(this.txtName, "Tuning name no spaces (white space) allowed.");
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // TuningForm
             // 
@@ -301,5 +314,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox chkAddTuning;
         private System.Windows.Forms.Label noteLabel;
+        private ToolTip toolTip;
     }
 }

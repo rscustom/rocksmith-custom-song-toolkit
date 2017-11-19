@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("sngtotab")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Rocksmith Custom Song Creator")]
+[assembly: AssemblyCompany("Song Creator Toolkit for Rocksmith")]
 [assembly: AssemblyProduct("sngtotab")]
 [assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyTrademark("")]

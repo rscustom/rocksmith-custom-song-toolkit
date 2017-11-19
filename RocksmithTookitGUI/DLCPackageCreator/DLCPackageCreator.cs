@@ -28,6 +28,7 @@ using Control = System.Windows.Forms.Control;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 using RocksmithToolkitGUI.Config;
 
+
 namespace RocksmithToolkitGUI.DLCPackageCreator
 {
     public partial class DLCPackageCreator : UserControl
@@ -50,14 +51,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         // prevents multiple tool tip appearance and gives better action
         private ToolTip tt = new ToolTip();
 
-
         public DLCPackageCreator()
         {
             InitializeComponent();
 
-#if (!DEBUG)
-            btnDevUse.Visible = false;
-#endif
+            // it is better to be hidden initially and then unhide when needed
+            if (GeneralExtensions.IsInDesignMode)
+                btnDevUse.Visible = true;
 
             lstArrangements.AllowDrop = true;
             numAudioQuality.MouseEnter += AudioQuality_MouseEnter;
@@ -75,10 +75,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             bwGenerate.WorkerReportsProgress = true;
             AddValidationEventHandlers();
 
+            // this sequence gets done everytime config changes
             try
             {
-                // this sequence gets done everytime config changes
-                SetDefaultFromConfig();
+                ReadConfigSettings();
                 PopulateAppIdCombo();
                 PopulateTonesLB();
             }
@@ -86,6 +86,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 /*For mono compatibility*/
             }
+
+            var debugMe = txtAppId.Text;
         }
 
         //dirty implementation, it's always true, consider undo\redo manager for actions made+logging maybe?
@@ -338,7 +340,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             DLCPackageData info = null;
             try
             {
-                if (rbRs2014.Checked)
+                if (CurrentGameVersion == GameVersion.RS2014) // rbRs2014.Checked)
                 {
                     // check and fix the template compatibility if necessary
                     var templateString = File.ReadAllText(templatePath);
@@ -356,8 +358,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (info == null) throw new InvalidDataException("CDLC Template is null");
 
                 // use AppId to determine GameVersion of dlc.xml template
-                rbRs2012.Checked = (Convert.ToInt32(info.AppId) < 230000);
-                rbRs2014.Checked = (Convert.ToInt32(info.AppId) > 240000);
+                CurrentGameVersion = (Convert.ToInt32(info.AppId) < 230000) ? GameVersion.RS2012 : GameVersion.RS2014;
             }
             catch (Exception se)
             {
@@ -792,6 +793,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Song INFO
             txtDlcKey.Text = info.Name;
 
+            // do in case CurrentGameVersion changed
+            PopulateAppIdCombo();
+
             // Update AppID unless it is locked
             if (!ConfigRepository.Instance().GetBoolean("general_lockappid"))
             {
@@ -800,16 +804,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     // get GeneralConfig default AppID
                     var songAppId = SongAppIdRepository.Instance().Select((CurrentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], CurrentGameVersion);
                     if (!String.IsNullOrEmpty(songAppId.AppId))
-                        txtAppId.Text = songAppId.AppId;
+                        AppId = songAppId.AppId;
                     else
-                        txtAppId.Text = "248750"; // JIC use hardcoded default
+                        AppId = "248750"; // JIC use hardcoded default
                 }
                 else
-                    txtAppId.Text = info.AppId;
-
-                SelectComboAppId(txtAppId.Text);
+                    AppId = info.AppId;
             }
-            
+            else
+                AppId = info.AppId;
+
+            SelectComboAppId(AppId);
+
             txtAlbum.Text = info.SongInfo.Album;
             txtAlbumSort.Text = info.SongInfo.AlbumSort;
             txtSongTitle.Text = info.SongInfo.SongDisplayName;
@@ -1315,19 +1321,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void PopulateAppIdCombo()
         {
-            // takes into account possible conversion
-            var currentGameVersion = GameVersion.RS2014;
-            if (CurrentGameVersion == GameVersion.RS2012)
-                currentGameVersion = GameVersion.RS2012;
-
             cmbAppIds.Items.Clear();
-            foreach (var song in SongAppIdRepository.Instance().Select(currentGameVersion))
+            foreach (var song in SongAppIdRepository.Instance().Select(CurrentGameVersion))
                 cmbAppIds.Items.Add(song);
 
-            // get GeneralConfig default AppID
-            var songAppId = SongAppIdRepository.Instance().Select((currentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], currentGameVersion);
+            var songAppId = SongAppIdRepository.Instance().Select((CurrentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], CurrentGameVersion);
             cmbAppIds.SelectedItem = songAppId;
-            txtAppId.Text = songAppId.AppId;
             AppId = songAppId.AppId;
         }
 
@@ -1451,6 +1450,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 lstArrangements.Refresh();
                 IsDirty = true;
             }
+
+            var debubMe = txtAppId.Text;
         }
 
         private void SelectComboAppId(string appId)
@@ -1458,7 +1459,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var songAppId = SongAppIdRepository.Instance().Select(appId, CurrentGameVersion);
 
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
+            {
                 cmbAppIds.SelectedItem = songAppId;
+            }
             else
             {
                 if (!appId.IsAppIdSixDigits())
@@ -1474,12 +1477,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void SetDefaultFromConfig()
+        private void ReadConfigSettings()
         {
             // read from RocksmithToolkitLib.Config.xml
             try
             {
-
+                numAudioQuality.Value = ConfigRepository.Instance().GetDecimal("creator_qualityfactor");
                 fixLowBass = ConfigRepository.Instance().GetBoolean("creator_fixlowbass");
                 fixMultiTone = ConfigRepository.Instance().GetBoolean("creator_fixmultitone");
                 Globals.DefaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"];
@@ -1578,8 +1581,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
-                var ddAcronym = ConfigRepository.Instance().GetBoolean("ddc_autogen") || isDD ? "DD" : "NDD";
-                var fileName = String.Format("{0}_{1}", StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms")), ddAcronym);
+                var ddAcronym = ConfigRepository.Instance().GetBoolean("ddc_autogen") || isDD ? "" : "_NDD";
+                var fileName = String.Format("{0}{1}", StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms")), ddAcronym);
                 sfd.FileName = fileName.GetValidFileName();
                 sfd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
 
@@ -2520,7 +2523,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             if (cmbAppIds.SelectedItem != null)
             {
-                txtAppId.Text = ((SongAppId)cmbAppIds.SelectedItem).AppId;
+                AppId = ((SongAppId)cmbAppIds.SelectedItem).AppId;
             }
         }
 

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RocksmithToolkitLib.XmlRepository {
-    public class ConfigRepository : XmlRepository<Config> {
+namespace RocksmithToolkitLib.XmlRepository
+{
+    public class ConfigRepository : XmlRepository<Config>
+    {
         private const string FILENAME = "RocksmithToolkitLib.Config.xml";
         private static readonly Lazy<ConfigRepository> instance = new Lazy<ConfigRepository>(() => new ConfigRepository());
 
@@ -18,32 +20,43 @@ namespace RocksmithToolkitLib.XmlRepository {
 
         public string this[string configKey]
         {
-            get {
+            get
+            {
                 return List.FirstOrDefault(s => s.Key == configKey).Value;
             }
-            set {
-                if (Exists(configKey)) {
+            set
+            {
+                if (Exists(configKey))
+                {
                     Config conf = List.FirstOrDefault(s => s.Key == configKey);
                     conf.Value = value;
-                } else {
+                }
+                else
+                {
                     this.Add(new Config() { Key = configKey, Value = value });
                 }
+              
                 Save(true);
             }
         }
 
-        public string this[Int32 index] {
-            get {
+        public string this[Int32 index]
+        {
+            get
+            {
                 return List[index].Value;
             }
         }
 
-        public bool Exists(string configKey) {
+        public bool Exists(string configKey)
+        {
             return List.Any(s => s.Key == configKey);
         }
 
-        public bool ValueChanged(string configKey, object value) {
-            if (Exists(configKey)) {
+        public bool ValueChanged(string configKey, object value)
+        {
+            if (Exists(configKey))
+            {
                 Config conf = List.FirstOrDefault(s => s.Key == configKey);
                 if (conf.Value.Equals(value))
                     return false;
@@ -52,15 +65,23 @@ namespace RocksmithToolkitLib.XmlRepository {
             return true;
         }
 
-        public bool GetBoolean(string configKey) {
+        public string GetString(string configKey) // used by AutoUpdater AssemblyCallerStatic maybe there's better way
+        {
+            return (string)(List.FirstOrDefault(s => s.Key == configKey).Value).ToString();
+        }
+
+        public bool GetBoolean(string configKey)
+        {
             return Convert.ToBoolean(List.FirstOrDefault(s => s.Key == configKey).Value);
         }
 
-        public Int32 GetInt32(string configKey) {
+        public Int32 GetInt32(string configKey)
+        {
             return Convert.ToInt32(List.FirstOrDefault(s => s.Key == configKey).Value);
         }
 
-        public decimal GetDecimal(string configKey) {
+        public decimal GetDecimal(string configKey)
+        {
             return Convert.ToDecimal(List.FirstOrDefault(s => s.Key == configKey).Value.Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture);
         }
     }

@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeneralConfig));
             this.general_usebeta = new System.Windows.Forms.CheckBox();
             this.gbCreator = new System.Windows.Forms.GroupBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.creator_qualityfactor = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.creator_autosavetemplate = new System.Windows.Forms.CheckBox();
             this.creator_fixlowbass = new System.Windows.Forms.CheckBox();
             this.creator_fixmultitone = new System.Windows.Forms.CheckBox();
@@ -60,6 +62,7 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.gbAutoUpdate = new System.Windows.Forms.GroupBox();
+            this.general_autoupdate = new System.Windows.Forms.CheckBox();
             this.general_replacerepo = new System.Windows.Forms.CheckBox();
             this.btnRs2014Path = new System.Windows.Forms.Button();
             this.btnRs1Path = new System.Windows.Forms.Button();
@@ -85,10 +88,11 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.converter_source = new System.Windows.Forms.ComboBox();
-            this.closeConfigButton = new System.Windows.Forms.Button();
+            this.btnCloseConfig = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblFirstRun = new System.Windows.Forms.Label();
             this.gbCreator.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
             this.gbGeneral.SuspendLayout();
             this.gbAutoUpdate.SuspendLayout();
@@ -101,7 +105,7 @@
             // 
             this.general_usebeta.AutoSize = true;
             this.general_usebeta.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.general_usebeta.Location = new System.Drawing.Point(2, 16);
+            this.general_usebeta.Location = new System.Drawing.Point(2, 19);
             this.general_usebeta.Name = "general_usebeta";
             this.general_usebeta.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.general_usebeta.Size = new System.Drawing.Size(117, 17);
@@ -112,6 +116,8 @@
             // 
             // gbCreator
             // 
+            this.gbCreator.Controls.Add(this.label19);
+            this.gbCreator.Controls.Add(this.creator_qualityfactor);
             this.gbCreator.Controls.Add(this.creator_autosavetemplate);
             this.gbCreator.Controls.Add(this.creator_fixlowbass);
             this.gbCreator.Controls.Add(this.creator_fixmultitone);
@@ -131,9 +137,46 @@
             this.gbCreator.Name = "gbCreator";
             this.gbCreator.Padding = new System.Windows.Forms.Padding(2);
             this.gbCreator.Size = new System.Drawing.Size(516, 135);
-            this.gbCreator.TabIndex = 0;
+            this.gbCreator.TabIndex = 1;
             this.gbCreator.TabStop = false;
             this.gbCreator.Text = "CDLC Creator";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label19.Location = new System.Drawing.Point(4, 91);
+            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(112, 13);
+            this.label19.TabIndex = 56;
+            this.label19.Text = "Default Quality Factor:";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // creator_qualityfactor
+            // 
+            this.creator_qualityfactor.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_qualityfactor.Location = new System.Drawing.Point(122, 91);
+            this.creator_qualityfactor.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Name = "creator_qualityfactor";
+            this.creator_qualityfactor.Size = new System.Drawing.Size(48, 20);
+            this.creator_qualityfactor.TabIndex = 55;
+            this.creator_qualityfactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.creator_qualityfactor.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // creator_autosavetemplate
             // 
@@ -143,7 +186,7 @@
             this.creator_autosavetemplate.Name = "creator_autosavetemplate";
             this.creator_autosavetemplate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_autosavetemplate.Size = new System.Drawing.Size(123, 17);
-            this.creator_autosavetemplate.TabIndex = 57;
+            this.creator_autosavetemplate.TabIndex = 8;
             this.creator_autosavetemplate.Text = "Autosave Templates";
             this.toolTip.SetToolTip(this.creator_autosavetemplate, "If checked, automatically save template\r\n\'.dlc.xml\' file for user on application " +
                     "exit.\r\n\r\nWARNING\r\n------------\r\nIf uncheck, templates must be saved\r\nmanually by" +
@@ -159,7 +202,7 @@
             this.creator_fixlowbass.Name = "creator_fixlowbass";
             this.creator_fixlowbass.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_fixlowbass.Size = new System.Drawing.Size(124, 17);
-            this.creator_fixlowbass.TabIndex = 56;
+            this.creator_fixlowbass.TabIndex = 6;
             this.creator_fixlowbass.Text = "Fix Low Bass Tuning";
             this.toolTip.SetToolTip(this.creator_fixlowbass, "If checked, automatically\r\nfix low bass tuning errors.");
             this.creator_fixlowbass.UseVisualStyleBackColor = true;
@@ -169,11 +212,11 @@
             // 
             this.creator_fixmultitone.AutoSize = true;
             this.creator_fixmultitone.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_fixmultitone.Location = new System.Drawing.Point(195, 113);
+            this.creator_fixmultitone.Location = new System.Drawing.Point(197, 113);
             this.creator_fixmultitone.Name = "creator_fixmultitone";
             this.creator_fixmultitone.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_fixmultitone.Size = new System.Drawing.Size(115, 17);
-            this.creator_fixmultitone.TabIndex = 55;
+            this.creator_fixmultitone.TabIndex = 7;
             this.creator_fixmultitone.Text = "Fix Multitone Errors";
             this.toolTip.SetToolTip(this.creator_fixmultitone, "If checked, automatically fix multitone errors\r\nby converting to a single tone ar" +
                     "rangement.");
@@ -189,7 +232,7 @@
             0,
             0,
             65536});
-            this.creator_scrollspeed.Location = new System.Drawing.Point(122, 70);
+            this.creator_scrollspeed.Location = new System.Drawing.Point(122, 68);
             this.creator_scrollspeed.Maximum = new decimal(new int[] {
             45,
             0,
@@ -202,10 +245,10 @@
             0});
             this.creator_scrollspeed.Name = "creator_scrollspeed";
             this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
-            this.creator_scrollspeed.TabIndex = 11;
+            this.creator_scrollspeed.TabIndex = 3;
             this.creator_scrollspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.creator_scrollspeed.Value = new decimal(new int[] {
-            45,
+            20,
             0,
             0,
             65536});
@@ -216,7 +259,7 @@
             this.btnTonePath.Location = new System.Drawing.Point(473, 42);
             this.btnTonePath.Name = "btnTonePath";
             this.btnTonePath.Size = new System.Drawing.Size(34, 23);
-            this.btnTonePath.TabIndex = 53;
+            this.btnTonePath.TabIndex = 2;
             this.btnTonePath.Text = "...";
             this.btnTonePath.UseVisualStyleBackColor = true;
             this.btnTonePath.Click += new System.EventHandler(this.btnTonePath_Click);
@@ -225,7 +268,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(12, 72);
+            this.label1.Location = new System.Drawing.Point(9, 70);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(107, 13);
@@ -235,17 +278,17 @@
             // 
             // creator_defaulttone
             // 
-            this.creator_defaulttone.Cue = "Default tone used for new projects";
+            this.creator_defaulttone.Cue = "Select default tone used for new projects";
             this.creator_defaulttone.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.creator_defaulttone.ForeColor = System.Drawing.Color.Gray;
             this.creator_defaulttone.Location = new System.Drawing.Point(122, 44);
             this.creator_defaulttone.Multiline = true;
             this.creator_defaulttone.Name = "creator_defaulttone";
+            this.creator_defaulttone.ReadOnly = true;
             this.creator_defaulttone.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.creator_defaulttone.Size = new System.Drawing.Size(345, 20);
             this.creator_defaulttone.TabIndex = 52;
             this.toolTip.SetToolTip(this.creator_defaulttone, "Set a default tone used in new projects");
-            this.creator_defaulttone.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label16
             // 
@@ -264,24 +307,24 @@
             this.btnProjectDir.Location = new System.Drawing.Point(473, 16);
             this.btnProjectDir.Name = "btnProjectDir";
             this.btnProjectDir.Size = new System.Drawing.Size(34, 23);
-            this.btnProjectDir.TabIndex = 50;
+            this.btnProjectDir.TabIndex = 1;
             this.btnProjectDir.Text = "...";
             this.btnProjectDir.UseVisualStyleBackColor = true;
             this.btnProjectDir.Click += new System.EventHandler(this.btnProjectDir_Click);
             // 
             // creator_defaultproject
             // 
-            this.creator_defaultproject.Cue = "Default (root) folder used to hold new project files";
+            this.creator_defaultproject.Cue = "Select default (root) folder used to hold new project files";
             this.creator_defaultproject.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.creator_defaultproject.ForeColor = System.Drawing.Color.Gray;
             this.creator_defaultproject.Location = new System.Drawing.Point(122, 18);
             this.creator_defaultproject.Multiline = true;
             this.creator_defaultproject.Name = "creator_defaultproject";
+            this.creator_defaultproject.ReadOnly = true;
             this.creator_defaultproject.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.creator_defaultproject.Size = new System.Drawing.Size(345, 20);
             this.creator_defaultproject.TabIndex = 49;
             this.toolTip.SetToolTip(this.creator_defaultproject, "Set a default CDLC project folder");
-            this.creator_defaultproject.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label15
             // 
@@ -299,11 +342,11 @@
             // 
             this.creator_usedefaultauthor.AutoSize = true;
             this.creator_usedefaultauthor.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_usedefaultauthor.Location = new System.Drawing.Point(252, 93);
+            this.creator_usedefaultauthor.Location = new System.Drawing.Point(252, 94);
             this.creator_usedefaultauthor.Name = "creator_usedefaultauthor";
             this.creator_usedefaultauthor.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_usedefaultauthor.Size = new System.Drawing.Size(215, 17);
-            this.creator_usedefaultauthor.TabIndex = 46;
+            this.creator_usedefaultauthor.TabIndex = 5;
             this.creator_usedefaultauthor.Text = "Album Sort Defaults To Package Author";
             this.toolTip.SetToolTip(this.creator_usedefaultauthor, "If checked, the configuration Package Author\r\nwill be used by default for the Alb" +
                     "um Sort\r\ntextbox field in the Creator GUI.");
@@ -314,11 +357,11 @@
             // 
             this.creator_useacronyms.AutoSize = true;
             this.creator_useacronyms.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_useacronyms.Location = new System.Drawing.Point(226, 71);
+            this.creator_useacronyms.Location = new System.Drawing.Point(226, 73);
             this.creator_useacronyms.Name = "creator_useacronyms";
             this.creator_useacronyms.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_useacronyms.Size = new System.Drawing.Size(241, 17);
-            this.creator_useacronyms.TabIndex = 13;
+            this.creator_useacronyms.TabIndex = 4;
             this.creator_useacronyms.Text = "Use Artist Name Acronym When Naming Files";
             this.toolTip.SetToolTip(this.creator_useacronyms, "If checked, creates shorter file names.");
             this.creator_useacronyms.UseVisualStyleBackColor = true;
@@ -344,7 +387,7 @@
             this.general_defaultgameversion.Margin = new System.Windows.Forms.Padding(2);
             this.general_defaultgameversion.Name = "general_defaultgameversion";
             this.general_defaultgameversion.Size = new System.Drawing.Size(120, 21);
-            this.general_defaultgameversion.TabIndex = 10;
+            this.general_defaultgameversion.TabIndex = 7;
             this.general_defaultgameversion.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // creator_structured
@@ -418,7 +461,7 @@
             this.gbGeneral.Name = "gbGeneral";
             this.gbGeneral.Padding = new System.Windows.Forms.Padding(2);
             this.gbGeneral.Size = new System.Drawing.Size(514, 213);
-            this.gbGeneral.TabIndex = 14;
+            this.gbGeneral.TabIndex = 0;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
             // 
@@ -453,7 +496,7 @@
             this.general_defaultplatform.Margin = new System.Windows.Forms.Padding(2);
             this.general_defaultplatform.Name = "general_defaultplatform";
             this.general_defaultplatform.Size = new System.Drawing.Size(120, 21);
-            this.general_defaultplatform.TabIndex = 104;
+            this.general_defaultplatform.TabIndex = 8;
             this.general_defaultplatform.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label17
@@ -473,22 +516,25 @@
             this.btnWwisePath.Location = new System.Drawing.Point(473, 158);
             this.btnWwisePath.Name = "btnWwisePath";
             this.btnWwisePath.Size = new System.Drawing.Size(34, 23);
-            this.btnWwisePath.TabIndex = 102;
+            this.btnWwisePath.TabIndex = 6;
             this.btnWwisePath.Text = "...";
             this.btnWwisePath.UseVisualStyleBackColor = true;
             this.btnWwisePath.Click += new System.EventHandler(this.btnWwisePath_Click);
             // 
             // general_wwisepath
             // 
-            this.general_wwisepath.Cue = "Wwise v2013.2.x, v2014.1.x, 2015.1.x, or 2016.2.x build series";
+            this.general_wwisepath.Cue = "Select WwiseCLI.exe installation path";
             this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
             this.general_wwisepath.Location = new System.Drawing.Point(122, 160);
             this.general_wwisepath.Multiline = true;
             this.general_wwisepath.Name = "general_wwisepath";
+            this.general_wwisepath.ReadOnly = true;
             this.general_wwisepath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.general_wwisepath.Size = new System.Drawing.Size(345, 20);
             this.general_wwisepath.TabIndex = 101;
+            this.toolTip.SetToolTip(this.general_wwisepath, "Compatible with Wwise v2013.2.x, v2014.1.x, \r\n2015.1.x, 2016.2.x and 2017.1.x bui" +
+                    "ld series");
             // 
             // label14
             // 
@@ -497,9 +543,9 @@
             this.label14.Location = new System.Drawing.Point(53, 163);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(66, 13);
+            this.label14.Size = new System.Drawing.Size(67, 13);
             this.label14.TabIndex = 103;
-            this.label14.Text = "Wwise path:";
+            this.label14.Text = "Wwise Path:";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label12
@@ -514,6 +560,7 @@
             // 
             // gbAutoUpdate
             // 
+            this.gbAutoUpdate.Controls.Add(this.general_autoupdate);
             this.gbAutoUpdate.Controls.Add(this.general_replacerepo);
             this.gbAutoUpdate.Controls.Add(this.general_usebeta);
             this.gbAutoUpdate.ForeColor = System.Drawing.Color.DodgerBlue;
@@ -522,7 +569,20 @@
             this.gbAutoUpdate.Size = new System.Drawing.Size(127, 62);
             this.gbAutoUpdate.TabIndex = 99;
             this.gbAutoUpdate.TabStop = false;
-            this.gbAutoUpdate.Text = "Auto-update";
+            this.gbAutoUpdate.Text = "Auto-Update      ";
+            // 
+            // general_autoupdate
+            // 
+            this.general_autoupdate.AutoSize = true;
+            this.general_autoupdate.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.general_autoupdate.Location = new System.Drawing.Point(72, 0);
+            this.general_autoupdate.Name = "general_autoupdate";
+            this.general_autoupdate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.general_autoupdate.Size = new System.Drawing.Size(15, 14);
+            this.general_autoupdate.TabIndex = 10;
+            this.toolTip.SetToolTip(this.general_autoupdate, "If checked, updates are enabled.\r\nIf not checked, updates are disabled.");
+            this.general_autoupdate.UseVisualStyleBackColor = true;
+            this.general_autoupdate.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // general_replacerepo
             // 
@@ -544,7 +604,7 @@
             this.btnRs2014Path.Location = new System.Drawing.Point(473, 134);
             this.btnRs2014Path.Name = "btnRs2014Path";
             this.btnRs2014Path.Size = new System.Drawing.Size(34, 23);
-            this.btnRs2014Path.TabIndex = 7;
+            this.btnRs2014Path.TabIndex = 5;
             this.btnRs2014Path.Text = "...";
             this.btnRs2014Path.UseVisualStyleBackColor = true;
             this.btnRs2014Path.Click += new System.EventHandler(this.btnRs2014Path_Click);
@@ -554,23 +614,23 @@
             this.btnRs1Path.Location = new System.Drawing.Point(473, 108);
             this.btnRs1Path.Name = "btnRs1Path";
             this.btnRs1Path.Size = new System.Drawing.Size(34, 23);
-            this.btnRs1Path.TabIndex = 5;
+            this.btnRs1Path.TabIndex = 4;
             this.btnRs1Path.Text = "...";
             this.btnRs1Path.UseVisualStyleBackColor = true;
             this.btnRs1Path.Click += new System.EventHandler(this.btnRs1Path_Click);
             // 
             // general_rs2014path
             // 
-            this.general_rs2014path.Cue = "Rocksmith 2014 Path";
+            this.general_rs2014path.Cue = "Select Rocksmith 2014 installation path";
             this.general_rs2014path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.general_rs2014path.ForeColor = System.Drawing.Color.Gray;
             this.general_rs2014path.Location = new System.Drawing.Point(122, 136);
             this.general_rs2014path.Multiline = true;
             this.general_rs2014path.Name = "general_rs2014path";
+            this.general_rs2014path.ReadOnly = true;
             this.general_rs2014path.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.general_rs2014path.Size = new System.Drawing.Size(345, 20);
             this.general_rs2014path.TabIndex = 6;
-            this.general_rs2014path.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label11
             // 
@@ -586,16 +646,16 @@
             // 
             // general_rs1path
             // 
-            this.general_rs1path.Cue = "Rocksmith Path";
+            this.general_rs1path.Cue = "Select Rocksmith installation path";
             this.general_rs1path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.general_rs1path.ForeColor = System.Drawing.Color.Gray;
             this.general_rs1path.Location = new System.Drawing.Point(122, 110);
             this.general_rs1path.Multiline = true;
             this.general_rs1path.Name = "general_rs1path";
+            this.general_rs1path.ReadOnly = true;
             this.general_rs1path.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.general_rs1path.Size = new System.Drawing.Size(345, 20);
             this.general_rs1path.TabIndex = 4;
-            this.general_rs1path.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label10
             // 
@@ -670,7 +730,7 @@
             this.gbDDC.Location = new System.Drawing.Point(4, 409);
             this.gbDDC.Name = "gbDDC";
             this.gbDDC.Size = new System.Drawing.Size(516, 100);
-            this.gbDDC.TabIndex = 15;
+            this.gbDDC.TabIndex = 3;
             this.gbDDC.TabStop = false;
             this.gbDDC.Text = "DDC";
             // 
@@ -682,11 +742,11 @@
             this.ddc_autogen.Name = "ddc_autogen";
             this.ddc_autogen.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ddc_autogen.Size = new System.Drawing.Size(121, 17);
-            this.ddc_autogen.TabIndex = 48;
+            this.ddc_autogen.TabIndex = 4;
             this.ddc_autogen.Text = "Auto Generate DDC";
             this.toolTip.SetToolTip(this.ddc_autogen, "If checked, DDC will be automatically added to\r\nthe CDLC when \'Generate\' is press" +
-                    "ed in the\r\n\'CDLC Creator\' tab.  CDLC must have DD in order\r\nto play properly in " +
-                    "Rocksmith 2014 Remastered.");
+                    "ed in the\r\n\'CDLC Creator\' tab. \r\n\r\nNOTE: CDLC must have DD for them to work\r\npro" +
+                    "perly with Rocksmith 2014 Remastered.");
             this.ddc_autogen.UseVisualStyleBackColor = true;
             this.ddc_autogen.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -711,7 +771,7 @@
             this.ddc_phraselength.Name = "ddc_phraselength";
             this.ddc_phraselength.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.ddc_phraselength.Size = new System.Drawing.Size(52, 20);
-            this.ddc_phraselength.TabIndex = 16;
+            this.ddc_phraselength.TabIndex = 5;
             this.ddc_phraselength.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.ddc_phraselength.ThousandsSeparator = true;
             this.ddc_phraselength.Value = new decimal(new int[] {
@@ -729,7 +789,7 @@
             this.ddc_removesustain.Name = "ddc_removesustain";
             this.ddc_removesustain.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ddc_removesustain.Size = new System.Drawing.Size(109, 17);
-            this.ddc_removesustain.TabIndex = 17;
+            this.ddc_removesustain.TabIndex = 3;
             this.ddc_removesustain.Text = "Remove Sustains";
             this.ddc_removesustain.UseVisualStyleBackColor = true;
             this.ddc_removesustain.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -779,7 +839,7 @@
             this.ddc_config.Name = "ddc_config";
             this.ddc_config.Size = new System.Drawing.Size(171, 21);
             this.ddc_config.Sorted = true;
-            this.ddc_config.TabIndex = 15;
+            this.ddc_config.TabIndex = 2;
             this.ddc_config.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // ddc_rampup
@@ -792,7 +852,7 @@
             this.ddc_rampup.Name = "ddc_rampup";
             this.ddc_rampup.Size = new System.Drawing.Size(171, 21);
             this.ddc_rampup.Sorted = true;
-            this.ddc_rampup.TabIndex = 14;
+            this.ddc_rampup.TabIndex = 1;
             this.ddc_rampup.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // gbConverter
@@ -805,7 +865,7 @@
             this.gbConverter.Location = new System.Drawing.Point(4, 359);
             this.gbConverter.Name = "gbConverter";
             this.gbConverter.Size = new System.Drawing.Size(516, 45);
-            this.gbConverter.TabIndex = 50;
+            this.gbConverter.TabIndex = 2;
             this.gbConverter.TabStop = false;
             this.gbConverter.Text = "Converter";
             // 
@@ -819,7 +879,7 @@
             this.converter_target.Name = "converter_target";
             this.converter_target.Size = new System.Drawing.Size(120, 21);
             this.converter_target.Sorted = true;
-            this.converter_target.TabIndex = 19;
+            this.converter_target.TabIndex = 1;
             this.converter_target.SelectedIndexChanged += new System.EventHandler(this.ConfigurationChanged);
             this.converter_target.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -837,7 +897,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label8.Location = new System.Drawing.Point(34, 18);
+            this.label8.Location = new System.Drawing.Point(32, 18);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(85, 13);
@@ -855,20 +915,20 @@
             this.converter_source.Name = "converter_source";
             this.converter_source.Size = new System.Drawing.Size(120, 21);
             this.converter_source.Sorted = true;
-            this.converter_source.TabIndex = 18;
+            this.converter_source.TabIndex = 0;
             this.converter_source.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
-            // closeConfigButton
+            // btnCloseConfig
             // 
-            this.closeConfigButton.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.closeConfigButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeConfigButton.Location = new System.Drawing.Point(395, 523);
-            this.closeConfigButton.Name = "closeConfigButton";
-            this.closeConfigButton.Size = new System.Drawing.Size(116, 29);
-            this.closeConfigButton.TabIndex = 0;
-            this.closeConfigButton.Text = "Close";
-            this.closeConfigButton.UseVisualStyleBackColor = false;
-            this.closeConfigButton.Click += new System.EventHandler(this.closeConfigButton_Click);
+            this.btnCloseConfig.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.btnCloseConfig.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCloseConfig.Location = new System.Drawing.Point(395, 523);
+            this.btnCloseConfig.Name = "btnCloseConfig";
+            this.btnCloseConfig.Size = new System.Drawing.Size(116, 29);
+            this.btnCloseConfig.TabIndex = 0;
+            this.btnCloseConfig.Text = "Close";
+            this.btnCloseConfig.UseVisualStyleBackColor = false;
+            this.btnCloseConfig.Click += new System.EventHandler(this.btnCloseConfig_Click);
             // 
             // toolTip
             // 
@@ -892,7 +952,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.lblFirstRun);
-            this.Controls.Add(this.closeConfigButton);
+            this.Controls.Add(this.btnCloseConfig);
             this.Controls.Add(this.gbConverter);
             this.Controls.Add(this.gbDDC);
             this.Controls.Add(this.gbGeneral);
@@ -901,6 +961,7 @@
             this.Size = new System.Drawing.Size(525, 560);
             this.gbCreator.ResumeLayout(false);
             this.gbCreator.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).EndInit();
             this.gbGeneral.ResumeLayout(false);
             this.gbGeneral.PerformLayout();
@@ -942,7 +1003,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox converter_source;
         private System.Windows.Forms.CheckBox creator_useacronyms;
-        private System.Windows.Forms.Button closeConfigButton;
+        private System.Windows.Forms.Button btnCloseConfig;
         private System.Windows.Forms.Label label9;
         private CueTextBox general_defaultauthor;
         private CueTextBox general_rs1path;
@@ -976,5 +1037,8 @@
         private System.Windows.Forms.CheckBox creator_autosavetemplate;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.CheckBox general_lockappid;
+        private System.Windows.Forms.CheckBox general_autoupdate;
+        private System.Windows.Forms.Label label19;
+        private DLCPackageCreator.NumericUpDownFixed creator_qualityfactor;
     }
 }

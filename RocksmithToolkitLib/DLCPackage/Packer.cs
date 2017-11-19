@@ -585,6 +585,14 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             try
             {
+                // delete template xml remnants that may have been added by SaveTemplateFile method
+                foreach (var file in Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories).Where(s => s.EndsWith("RS2012.dlc.xml") || s.EndsWith("RS2014.dlc.xml")))
+                    File.Delete(file);
+
+                // delete preview audio file remnants that may have been added by LoadFromFolder method
+                foreach (var file in Directory.EnumerateFiles(sourcePath, "*_preview.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))
+                    File.Delete(file);
+
                 foreach (var file in Directory.EnumerateFiles(sourcePath, "*_fixed.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))
                     if (File.Exists(file)) File.Delete(file);
             }
@@ -911,8 +919,8 @@ namespace RocksmithToolkitLib.DLCPackage
             // Generate Showlights
             var showlight = new Showlights();
             showlight.CreateShowlights(info);
-            // TODO: determine minimum number of showlight elements to still be valid
-            if (showlight.ShowlightList.Count > 6)
+            // need at least two showlight elements to be valid
+            if (showlight.ShowlightList.Count > 1)
             {
                 var showlightStream = new MemoryStream();
                 showlight.Serialize(showlightStream);

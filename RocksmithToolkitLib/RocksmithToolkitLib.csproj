@@ -33,12 +33,6 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CFSM.AudioTools">
-      <HintPath>..\lib\AudioTools\CFSM.AudioTools.dll</HintPath>
-    </Reference>
-    <Reference Include="CFSM.ImageTools">
-      <HintPath>..\lib\ImageTools\CFSM.ImageTools.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\lib\ZLib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
@@ -89,6 +83,7 @@
     <Compile Include="DLCPackage\Manifest\Tone\Manifest.cs" />
     <Compile Include="DLCPackage\Manifest\Tone\Pedal.cs" />
     <Compile Include="DLCPackage\Manifest\Tone\Tone.cs" />
+    <Compile Include="XmlRepository\Config.cs" />
     <Compile Include="XML\Showlights.cs" />
     <Compile Include="DLCPackage\XBlock\XblockX.cs" />
     <Compile Include="Extensions\BetterDialog2.cs">
@@ -187,7 +182,6 @@
     <Compile Include="Sng\SngFile.cs" />
     <Compile Include="Sng\SngFileWriter.cs" />
     <Compile Include="ToolkitVersion.cs" />
-    <Compile Include="XmlRepository\Config.cs" />
     <Compile Include="XmlRepository\ConfigRepository.cs" />
     <Compile Include="XmlRepository\TuningDefinitionRepository.cs" />
     <Compile Include="XmlRepository\TuningDefinition.cs" />
@@ -231,9 +225,6 @@
     <None Include="Resources\XBox360_DLC_image2014.png" />
     <None Include="Resources\cgm_default_icon.png" />
     <None Include="Resources\cgm_default_inlay.png" />
-    <Content Include="DF_DDSImage.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="PsarcLoader\ReadMe.txt" />
     <Content Include="RocksmithToolkitLib.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -241,6 +232,7 @@
     </Content>
     <Content Include="RocksmithToolkitLib.TuningDefinition.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\pedals.json" />
     <Content Include="RocksmithToolkitLib.SongAppId.xml">

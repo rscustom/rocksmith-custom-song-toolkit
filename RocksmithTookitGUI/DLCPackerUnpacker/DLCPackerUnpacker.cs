@@ -37,12 +37,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             try
             {
-                var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
-                gameVersionList.Remove("None");
-                cmbGameVersion.DataSource = gameVersionList;
-                cmbGameVersion.SelectedItem = ConfigRepository.Instance()["general_defaultgameversion"];
-                gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
-                PopulateAppIdCombo(gameVersion);
+                PopulateGameVersionCombo();
             }
             catch { /*For mono compatibility*/ }
 
@@ -71,6 +66,17 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private bool UpdateSng
         {
             get { return chkUpdateSng.Checked; }
+        }
+
+        private void PopulateGameVersionCombo()
+        {
+            var gameVersionList = Enum.GetNames(typeof(GameVersion)).ToList<string>();
+            gameVersionList.Remove("None");
+            cmbGameVersion.Items.Clear();
+            foreach (var version in gameVersionList)
+                cmbGameVersion.Items.Add(version);
+
+            cmbGameVersion.SelectedItem = ConfigRepository.Instance()["general_defaultgameversion"];
         }
 
         private void PopulateAppIdCombo(GameVersion gameVersion)
@@ -175,7 +181,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             Thread.Sleep(100); // give Globals a chance to initialize
 
             var structured = ConfigRepository.Instance().GetBoolean("creator_structured");
-            var step = (int)Math.Floor(100.0 / (sourceFileNames.Count() * (structured ? 2.0F : 1.0F))); // Math.Floor prevents roundup errors
+            var step = (int)Math.Floor(100.0 / (sourceFileNames.Count() * 2)); // Math.Floor prevents roundup errors
             int progress = 0;
             Stopwatch sw = new Stopwatch();
             sw.Restart();
@@ -191,18 +197,42 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     Platform platform = sourceFileName.GetPlatform();
                     var unpackedDir = Packer.Unpack(sourceFileName, destPath, decode, overwrite, platform);
 
-                    //  if (structured && platform.version == GameVersion.RS2014)
+                    // added a bulk process to create template xml files here so unpacked folders may be loaded quickly in CDLC Creator if desired
+                    progress += step;
+                    GlobalExtension.ShowProgress(String.Format("Creating Template XML file for: '{0}'", Path.GetFileName(sourceFileName)), progress);
+                    using (var packageCreator = new DLCPackageCreator.DLCPackageCreator())
                     {
-                        progress += step;
-                        GlobalExtension.ShowProgress(String.Format("Doing Like Project: '{0}'", Path.GetFileName(sourceFileName)), progress);
+                        DLCPackageData info = null;
+                        if (platform.version == GameVersion.RS2014)
+                            info = DLCPackageData.LoadFromFolder(unpackedDir, platform, platform, true, true);
+                        else
+                            info = DLCPackageData.RS1LoadFromFolder(unpackedDir, platform, false);
 
-                        using (var packageCreator = new DLCPackageCreator.DLCPackageCreator())
+                        info.GameVersion = platform.version;
+
+                        switch (platform.platform)
                         {
-                            // unpackedDir = DLCPackageData.DoLikeProject(unpackedDir);
-                            var info = DLCPackageData.LoadFromFolder(unpackedDir, platform, platform, true, true);
-                            packageCreator.FillPackageCreatorForm(info, unpackedDir);
-                            packageCreator.SaveTemplateFile(unpackedDir, false);
+                            case GamePlatform.Pc:
+                                info.Pc = true;
+                                break;
+                            case GamePlatform.Mac:
+                                info.Mac = true;
+                                break;
+                            case GamePlatform.XBox360:
+                                info.XBox360 = true;
+                                break;
+                            case GamePlatform.PS3:
+                                info.PS3 = true;
+                                break;
                         }
+
+                        packageCreator.FillPackageCreatorForm(info, unpackedDir);
+                        // fix descrepancies
+                        packageCreator.CurrentGameVersion = platform.version;
+                        //packageCreator.SelectComboAppId(info.AppId);
+                        packageCreator.AppId = info.AppId;
+                        // save template xml file
+                        packageCreator.SaveTemplateFile(unpackedDir, false);
                     }
                 }
                 catch (Exception ex)
@@ -458,9 +488,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 GlobalExtension.ShowProgress(String.Format("Repackaging '{0}' ...", Path.GetFileName(srcPath)), 80);
                 // TODO consider user of regular packer here
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(destPath, info, packagePlatform);
-#if !DEBUG
-                DirectoryExtension.SafeDelete(unpackedDir);
-#endif
+
+                if (!GeneralExtensions.IsInDesignMode)
+                    DirectoryExtension.SafeDelete(unpackedDir);
             }
 
             sw.Stop();
@@ -493,7 +523,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
             GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
             Thread.Sleep(100); // give Globals a chance to initialize
-            GlobalExtension.ShowProgress("Packing archive ...");
+            GlobalExtension.ShowProgress("Packing archive ...", 30);
             Application.DoEvents();
 
             try
@@ -555,7 +585,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
             GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
             Thread.Sleep(100); // give Globals a chance to initialize
-            GlobalExtension.ShowProgress("Packing archive ...");
+            GlobalExtension.ShowProgress("Packing archive ...", 30);
             Application.DoEvents();
             var errMsg = String.Empty;
 
@@ -670,7 +700,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         private void cmbGameVersion_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GameVersion gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
+            gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
             PopulateAppIdCombo(gameVersion);
         }
 

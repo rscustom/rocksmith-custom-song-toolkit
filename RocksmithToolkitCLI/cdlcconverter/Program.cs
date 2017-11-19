@@ -15,6 +15,7 @@ namespace cdlcconverter
         public Platform TargetPlatform;
         public string Input;
         public string AppId;
+        public bool Verbose = false;
     }
 
     static class Program
@@ -24,14 +25,16 @@ namespace cdlcconverter
             return new OptionSet
             {
                 { "h|?|help", "Show this help message and exit", v => outputArguments.ShowHelp = v != null },
-                { "sp|sourceplatform=", "Source platform (valid values: Pc, Mac, XBox360 or PS3)", v => outputArguments.SourcePlatform = GetPlatform(v) },
-                { "tp|targetplatform=", "Target platform (valid values: Pc, Mac, XBox360 or PS3)", v => outputArguments.TargetPlatform = GetPlatform(v) },
+                { "s|sourceplatform=", "Source platform (valid values: Pc, Mac, XBox360 or PS3)", v => outputArguments.SourcePlatform = GetPlatform(v) },
+                { "t|targetplatform=", "Target platform (valid values: Pc, Mac, XBox360 or PS3)", v => outputArguments.TargetPlatform = GetPlatform(v) },
                 { "i|input=", "The input file or directory (multiple allowed)", v => outputArguments.Input = v },
-                { "appid=", "AppId (required for Pc and Mac platforms)", v => outputArguments.AppId = v }
+                { "a|appid=", "AppId (required for Pc and Mac platforms)", v => outputArguments.AppId = v },
+                { "v|verbose", "Show verbose conversion output (default is false)", v => { if (v != null) outputArguments.Verbose = true; }}
             };
         }
 
-        private static Platform GetPlatform(string platformString) {
+        private static Platform GetPlatform(string platformString)
+        {
             GamePlatform p;
             var validPlatform = Enum.TryParse(platformString, true, out p);
             if (!validPlatform)
@@ -39,6 +42,7 @@ namespace cdlcconverter
                 ShowHelpfulError(String.Format("{0} is not a valid platform.", platformString));
                 return new Platform(GamePlatform.None, GameVersion.None);
             }
+
             return new Platform(p, GameVersion.RS2014);
         }
 
@@ -48,6 +52,28 @@ namespace cdlcconverter
         [STAThread]
         static int Main(string[] args)
         {
+            try
+            {
+                Console.SetWindowSize(85, 40);
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+            catch {/* DO NOTHING */}
+
+#if (DEBUG)
+            // give the progie some dumby data to work with
+            args = new string[]
+            {
+                "-input=D:\\Temp\\PeppaPig_p.psarc", 
+                "-sourceplatform=Pc", 
+                "-targetplatform=Mac", 
+                "-appid=248750",
+                "-v"
+            };
+
+            // args = new string[] {"-?"};
+            Console.WriteLine("Running in Debug Mode ... help is not available");
+#endif
             var arguments = new Arguments();
             var options = GetOptions(arguments);
 
@@ -57,6 +83,9 @@ namespace cdlcconverter
                 if (arguments.ShowHelp)
                 {
                     options.WriteOptionDescriptions(Console.Out);
+                    Console.WriteLine("");
+                    Console.WriteLine("Press any key to close window ...");
+                    Console.ReadLine();
                     return 0;
                 }
 
@@ -84,6 +113,7 @@ namespace cdlcconverter
                     ShowHelpfulError("'appid' is required for 'Pc' or 'Mac' target platform.");
                     return 1;
                 }
+
 
                 // CONVERSION
                 var packageFilter = "*.psarc";
@@ -133,8 +163,17 @@ namespace cdlcconverter
                             }
                         }
 
+                        // hide console output from DLCPackageConverter library
+                        var tw = Console.Out;
+                        if (!arguments.Verbose)
+                            Console.SetOut(TextWriter.Null);
+
                         // CONVERT
                         var output = DLCPackageConverter.Convert(sourcePackage, arguments.SourcePlatform, arguments.TargetPlatform, arguments.AppId);
+
+                        // show console output again
+                        Console.SetOut(tw);
+
                         if (!String.IsNullOrEmpty(output))
                         {
                             // This should not happen..
@@ -147,7 +186,8 @@ namespace cdlcconverter
 
                         dlcSuccessfulCount++;
                     }
-                    catch (Exception e) {
+                    catch (Exception e)
+                    {
                         Console.WriteLine(String.Format("ERROR: Couldn't convert DLC because of error '{0}' - skip file '{1}'", e.Message, Path.GetFileName(sourcePackage)));
                         dlcErrorList.Add(Path.GetFullPath(sourcePackage));
                     }
@@ -175,7 +215,11 @@ namespace cdlcconverter
                 return 1;
             }
 
-
+#if DEBUG
+            Console.WriteLine("");
+            Console.WriteLine("Press any key to close window ...");
+            Console.ReadLine();
+#endif
             return 0;
         }
 

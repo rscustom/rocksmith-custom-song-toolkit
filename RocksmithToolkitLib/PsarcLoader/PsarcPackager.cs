@@ -16,22 +16,33 @@ namespace RocksmithToolkitLib.PsarcLoader
             _deleteOnClose = deleteOnClose;
         }
 
-        public DLCPackageData ReadPackage(string inputPath, bool ignoreMultitoneEx = false)
+        /// <summary>
+        /// Unpacks and Reads DLCPackageData
+        /// </summary>
+        /// <param name="fixMultitoneEx">convert multi tones to single tone, prevents some in-game hangs</param>
+        /// <param name="fixLowBass">fix low bass tuning issues</param>
+        /// <param name="decodeAudio">converts wem to ogg files</param>
+        /// <returns>DLCPackageData</returns>
+        public DLCPackageData ReadPackage(string srcPath, bool fixMultitoneEx = false, bool fixLowBass = false, bool decodeAudio = false)
         {
             // UNPACK
-            packageDir = Packer.Unpack(inputPath, Path.GetTempPath(), true);
+            packageDir = Packer.Unpack(srcPath, Path.GetTempPath(), decodeAudio);
 
             // REORGANIZE
             packageDir = DLCPackageData.DoLikeProject(packageDir);
 
             // LOAD DATA
             DLCPackageData info = new DLCPackageData();
-            var packagePlatform = inputPath.GetPlatform();
-            info = DLCPackageData.LoadFromFolder(packageDir, packagePlatform, packagePlatform, ignoreMultitoneEx);
+            var packagePlatform = srcPath.GetPlatform();
+            info = DLCPackageData.LoadFromFolder(packageDir, packagePlatform, packagePlatform, fixMultitoneEx, fixLowBass);
 
             return info;
         }
 
+        /// <summary>
+        /// Repacks DLCPackage Data
+        /// </summary>
+        /// <param name="srcPath">if provided (optional) sets the Platform to same as source file</param>
         public void WritePackage(string destPath, DLCPackageData packageData, string srcPath = "")
         {
             // if the srcPath does not exist GetPlatform returns 'None'

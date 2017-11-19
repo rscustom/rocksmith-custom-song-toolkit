@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>songcreator.ico</ApplicationIcon>
+    <ApplicationIcon>autoupdater.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>RocksmithToolkitUpdater.Program</StartupObject>
@@ -55,16 +55,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyCaller.cs" />
-    <Compile Include="AutoUpdater.cs">
+    <Compile Include="AutoUpdaterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AutoUpdater.Designer.cs">
-      <DependentUpon>AutoUpdater.cs</DependentUpon>
+    <Compile Include="AutoUpdaterForm.Designer.cs">
+      <DependentUpon>AutoUpdaterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AutoUpdater.resx">
-      <DependentUpon>AutoUpdater.cs</DependentUpon>
+    <EmbeddedResource Include="AutoUpdaterForm.resx">
+      <DependentUpon>AutoUpdaterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -90,19 +91,18 @@
     <None Include="Resources\guitar_256.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="songcreator.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RocksmithToolkitLib\RocksmithToolkitLib.csproj">
-      <Project>{2231C13A-14F6-478A-96D7-D1D3E1094CD6}</Project>
-      <Name>RocksmithToolkitLib</Name>
-      <Private>False</Private>
-    </ProjectReference>
+    <Content Include="autoupdater.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

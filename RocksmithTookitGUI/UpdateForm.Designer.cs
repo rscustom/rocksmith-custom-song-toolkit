@@ -32,16 +32,16 @@
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.currentVersionLabel = new System.Windows.Forms.Label();
-            this.newVersionLabel = new System.Windows.Forms.Label();
-            this.installButton = new System.Windows.Forms.Button();
-            this.cancelButton = new System.Windows.Forms.Button();
+            this.lblCurrentVersion = new System.Windows.Forms.Label();
+            this.lblNewVersion = new System.Windows.Forms.Label();
+            this.btnInstall = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.dateLabel = new System.Windows.Forms.Label();
-            this.commitMessageDataGrid = new System.Windows.Forms.DataGridView();
+            this.lblNewVersionDate = new System.Windows.Forms.Label();
+            this.dgvCommitMessage = new System.Windows.Forms.DataGridView();
             this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.commitMessageDataGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCommitMessage)).BeginInit();
             this.SuspendLayout();
             // 
             // logoPictureBox
@@ -60,99 +60,100 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(137, 8);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 13);
+            this.label1.Size = new System.Drawing.Size(131, 13);
             this.label1.TabIndex = 99;
-            this.label1.Text = "Current version:";
+            this.label1.Text = "Currently Installed Version:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(137, 31);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(69, 13);
+            this.label2.Size = new System.Drawing.Size(110, 13);
             this.label2.TabIndex = 99;
-            this.label2.Text = "New version:";
+            this.label2.Text = "Latest Online Version:";
             // 
-            // currentVersionLabel
+            // lblCurrentVersion
             // 
-            this.currentVersionLabel.AutoSize = true;
-            this.currentVersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.currentVersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.currentVersionLabel.Location = new System.Drawing.Point(264, 8);
-            this.currentVersionLabel.Name = "currentVersionLabel";
-            this.currentVersionLabel.Size = new System.Drawing.Size(85, 13);
-            this.currentVersionLabel.TabIndex = 99;
-            this.currentVersionLabel.Text = "{current version}";
+            this.lblCurrentVersion.AutoSize = true;
+            this.lblCurrentVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurrentVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.lblCurrentVersion.Location = new System.Drawing.Point(279, 8);
+            this.lblCurrentVersion.Name = "lblCurrentVersion";
+            this.lblCurrentVersion.Size = new System.Drawing.Size(102, 13);
+            this.lblCurrentVersion.TabIndex = 99;
+            this.lblCurrentVersion.Text = "{current version}";
             // 
-            // newVersionLabel
+            // lblNewVersion
             // 
-            this.newVersionLabel.AutoSize = true;
-            this.newVersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newVersionLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.newVersionLabel.Location = new System.Drawing.Point(264, 31);
-            this.newVersionLabel.Name = "newVersionLabel";
-            this.newVersionLabel.Size = new System.Drawing.Size(85, 13);
-            this.newVersionLabel.TabIndex = 99;
-            this.newVersionLabel.Text = "{new version}";
+            this.lblNewVersion.AutoSize = true;
+            this.lblNewVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNewVersion.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lblNewVersion.Location = new System.Drawing.Point(279, 31);
+            this.lblNewVersion.Name = "lblNewVersion";
+            this.lblNewVersion.Size = new System.Drawing.Size(85, 13);
+            this.lblNewVersion.TabIndex = 99;
+            this.lblNewVersion.Text = "{new version}";
             // 
-            // installButton
+            // btnInstall
             // 
-            this.installButton.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.installButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.installButton.Location = new System.Drawing.Point(365, 266);
-            this.installButton.Name = "installButton";
-            this.installButton.Size = new System.Drawing.Size(97, 29);
-            this.installButton.TabIndex = 0;
-            this.installButton.Text = "Install Update";
-            this.installButton.UseVisualStyleBackColor = false;
-            this.installButton.Click += new System.EventHandler(this.installButton_Click);
+            this.btnInstall.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.btnInstall.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnInstall.Location = new System.Drawing.Point(365, 266);
+            this.btnInstall.Name = "btnInstall";
+            this.btnInstall.Size = new System.Drawing.Size(97, 29);
+            this.btnInstall.TabIndex = 0;
+            this.btnInstall.Text = "Install Update";
+            this.btnInstall.UseVisualStyleBackColor = false;
+            this.btnInstall.Click += new System.EventHandler(this.btnInstall_Click);
             // 
-            // cancelButton
+            // btnCancel
             // 
-            this.cancelButton.BackColor = System.Drawing.SystemColors.Control;
-            this.cancelButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.cancelButton.Location = new System.Drawing.Point(468, 266);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(97, 29);
-            this.cancelButton.TabIndex = 1;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = false;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            this.btnCancel.BackColor = System.Drawing.SystemColors.Control;
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.btnCancel.Location = new System.Drawing.Point(468, 266);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(97, 29);
+            this.btnCancel.TabIndex = 1;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(137, 56);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(93, 13);
+            this.label3.Size = new System.Drawing.Size(136, 13);
             this.label3.TabIndex = 99;
-            this.label3.Text = "New version date:";
+            this.label3.Text = "Latest Online Version Date:";
             // 
-            // dateLabel
+            // lblNewVersionDate
             // 
-            this.dateLabel.AutoSize = true;
-            this.dateLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateLabel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.dateLabel.Location = new System.Drawing.Point(264, 56);
-            this.dateLabel.Name = "dateLabel";
-            this.dateLabel.Size = new System.Drawing.Size(114, 13);
-            this.dateLabel.TabIndex = 99;
-            this.dateLabel.Text = "{new version date}";
+            this.lblNewVersionDate.AutoSize = true;
+            this.lblNewVersionDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNewVersionDate.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lblNewVersionDate.Location = new System.Drawing.Point(279, 56);
+            this.lblNewVersionDate.Name = "lblNewVersionDate";
+            this.lblNewVersionDate.Size = new System.Drawing.Size(114, 13);
+            this.lblNewVersionDate.TabIndex = 99;
+            this.lblNewVersionDate.Text = "{new version date}";
             // 
-            // commitMessageDataGrid
+            // dgvCommitMessage
             // 
-            this.commitMessageDataGrid.AllowUserToAddRows = false;
-            this.commitMessageDataGrid.AllowUserToDeleteRows = false;
-            this.commitMessageDataGrid.AllowUserToResizeColumns = false;
-            this.commitMessageDataGrid.AllowUserToResizeRows = false;
-            this.commitMessageDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.commitMessageDataGrid.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.commitMessageDataGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
-            this.commitMessageDataGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
-            this.commitMessageDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.commitMessageDataGrid.ColumnHeadersVisible = false;
-            this.commitMessageDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvCommitMessage.AllowUserToAddRows = false;
+            this.dgvCommitMessage.AllowUserToDeleteRows = false;
+            this.dgvCommitMessage.AllowUserToResizeColumns = false;
+            this.dgvCommitMessage.AllowUserToResizeRows = false;
+            this.dgvCommitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvCommitMessage.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dgvCommitMessage.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.dgvCommitMessage.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
+            this.dgvCommitMessage.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvCommitMessage.ColumnHeadersVisible = false;
+            this.dgvCommitMessage.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Message});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
@@ -161,24 +162,24 @@
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.commitMessageDataGrid.DefaultCellStyle = dataGridViewCellStyle1;
-            this.commitMessageDataGrid.GridColor = System.Drawing.SystemColors.AppWorkspace;
-            this.commitMessageDataGrid.Location = new System.Drawing.Point(140, 81);
-            this.commitMessageDataGrid.Name = "commitMessageDataGrid";
-            this.commitMessageDataGrid.ReadOnly = true;
-            this.commitMessageDataGrid.RowHeadersWidth = 4;
-            this.commitMessageDataGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dgvCommitMessage.DefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvCommitMessage.GridColor = System.Drawing.SystemColors.AppWorkspace;
+            this.dgvCommitMessage.Location = new System.Drawing.Point(140, 81);
+            this.dgvCommitMessage.Name = "dgvCommitMessage";
+            this.dgvCommitMessage.ReadOnly = true;
+            this.dgvCommitMessage.RowHeadersWidth = 4;
+            this.dgvCommitMessage.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
-            this.commitMessageDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            this.commitMessageDataGrid.RowTemplate.ErrorText = "#####";
-            this.commitMessageDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.commitMessageDataGrid.ShowEditingIcon = false;
-            this.commitMessageDataGrid.Size = new System.Drawing.Size(425, 179);
-            this.commitMessageDataGrid.StandardTab = true;
-            this.commitMessageDataGrid.TabIndex = 99;
-            this.commitMessageDataGrid.Visible = false;
+            this.dgvCommitMessage.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvCommitMessage.RowTemplate.ErrorText = "#####";
+            this.dgvCommitMessage.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvCommitMessage.ShowEditingIcon = false;
+            this.dgvCommitMessage.Size = new System.Drawing.Size(425, 179);
+            this.dgvCommitMessage.StandardTab = true;
+            this.dgvCommitMessage.TabIndex = 99;
+            this.dgvCommitMessage.Visible = false;
             // 
             // Message
             // 
@@ -193,13 +194,13 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(572, 301);
-            this.Controls.Add(this.commitMessageDataGrid);
-            this.Controls.Add(this.dateLabel);
+            this.Controls.Add(this.dgvCommitMessage);
+            this.Controls.Add(this.lblNewVersionDate);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.installButton);
-            this.Controls.Add(this.newVersionLabel);
-            this.Controls.Add(this.currentVersionLabel);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnInstall);
+            this.Controls.Add(this.lblNewVersion);
+            this.Controls.Add(this.lblCurrentVersion);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.logoPictureBox);
@@ -212,9 +213,9 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Update Avaiable";
+            this.Text = "Toolkit Update Is Available ...";
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.commitMessageDataGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCommitMessage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -225,13 +226,13 @@
         private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label currentVersionLabel;
-        private System.Windows.Forms.Label newVersionLabel;
-        private System.Windows.Forms.Button installButton;
-        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Label lblCurrentVersion;
+        private System.Windows.Forms.Label lblNewVersion;
+        private System.Windows.Forms.Button btnInstall;
+        private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label dateLabel;
-        private System.Windows.Forms.DataGridView commitMessageDataGrid;
+        private System.Windows.Forms.Label lblNewVersionDate;
+        private System.Windows.Forms.DataGridView dgvCommitMessage;
         private System.Windows.Forms.DataGridViewTextBoxColumn Message;
     }
 }

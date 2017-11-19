@@ -8,6 +8,10 @@ using System.Windows.Forms;
 using RocksmithToolkitLib;
 using System.IO;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitUpdater;
+using System.Diagnostics;
+using RocksmithToolkitLib.XmlRepository;
+using System.Threading.Tasks;
 
 namespace RocksmithToolkitGUI
 {
@@ -17,7 +21,7 @@ namespace RocksmithToolkitGUI
         private const string APP_UPDATER = "RocksmithToolkitUpdater.exe";
         private const string APP_UPDATING = "RocksmithToolkitUpdating.exe";
 
-        private string RootDirectory
+        private string localToolkitDir
         {
             get
             {
@@ -33,138 +37,113 @@ namespace RocksmithToolkitGUI
         public void Init(ToolkitVersionOnline onlineVersion)
         {
             // DELETE OLD UPDATER APP IF EXISTS
-            var updatingApp = Path.Combine(RootDirectory, APP_UPDATING);
-            if (File.Exists(updatingApp))
-                File.Delete(updatingApp);
+            var updatingAppPath = Path.Combine(localToolkitDir, APP_UPDATING);
+            if (File.Exists(updatingAppPath))
+                File.Delete(updatingAppPath);
 
-            currentVersionLabel.Text = ToolkitVersion.RSTKGuiVersion;
-            newVersionLabel.Text = String.Format("{0}-{1}", onlineVersion.Version, onlineVersion.Revision);
-            dateLabel.Text = onlineVersion.Date.ToShortDateString();
+            var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
+            lblCurrentVersion.Text = ToolkitVersion.RSTKGuiVersion;
+            lblNewVersion.Text = String.Format("{0}-{1} {2}", onlineVersion.Version, onlineVersion.Revision, useBeta ? "BETA" : "");
+            lblNewVersionDate.Text = onlineVersion.Date.ToShortDateString();
 
             if (onlineVersion.CommitMessages != null)
             {
-                commitMessageDataGrid.Visible = true;
-                commitMessageDataGrid.Rows.Clear();
+                dgvCommitMessage.Visible = true;
+                dgvCommitMessage.Rows.Clear();
                 for (var i = 0; i < onlineVersion.CommitMessages.Length; i++)
                 {
-                    commitMessageDataGrid.Rows.Add();
-                    commitMessageDataGrid.Rows[i].Cells["Message"].Value = onlineVersion.CommitMessages[i];
+                    dgvCommitMessage.Rows.Add();
+                    dgvCommitMessage.Rows[i].Cells["Message"].Value = onlineVersion.CommitMessages[i];
                 }
             }
         }
 
-        #region Assembly Attribute Accessors
-
-        public string AssemblyTitle
-        {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-                    if (titleAttribute.Title != "")
-                    {
-                        return titleAttribute.Title;
-                    }
-                }
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
-            }
-        }
-
-        public string AssemblyVersion
-        {
-            get
-            {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            }
-        }
-
-        public string AssemblyDescription
-        {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return "";
-                }
-                return ((AssemblyDescriptionAttribute)attributes[0]).Description;
-            }
-        }
-
-        public string AssemblyProduct
-        {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return "";
-                }
-                return ((AssemblyProductAttribute)attributes[0]).Product;
-            }
-        }
-
-        public string AssemblyCopyright
-        {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return "";
-                }
-                return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
-            }
-        }
-
-        public string AssemblyCompany
-        {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return "";
-                }
-                return ((AssemblyCompanyAttribute)attributes[0]).Company;
-            }
-        }
-        #endregion
-
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void installButton_Click(object sender, EventArgs e)
+        private void btnInstall_Click(object sender, EventArgs e)
         {
-            var updaterApp = Path.Combine(RootDirectory, APP_UPDATER);
-            var updatingApp = Path.Combine(RootDirectory, APP_UPDATING);
+            btnInstall.Enabled = false;
+            // reset to display the revision note on next restart
+            ConfigRepository.Instance()["general_showrevnote"] = "true";
 
-            if (File.Exists(updaterApp))
+            var tempToolkitDir = Path.Combine(Path.GetTempPath(), "RocksmithToolkit");
+            var updaterAppPath = Path.Combine(localToolkitDir, APP_UPDATER);
+            var updatingAppPath = Path.Combine(tempToolkitDir, APP_UPDATING);
+
+            if (!File.Exists(updaterAppPath))
             {
-                // COPY TO NOT LOCK PROCESS ON UPDATE
-                File.Copy(updaterApp, updatingApp, true);
-                try
-                {
-                    // START AUTO UPDATE
-                    GeneralExtensions.RunExternalExecutable(updatingApp);
-                }
-                catch( Exception)
-                {
-                    throw new FileLoadException("Could not run " + updatingApp);
-                }
-
-                // EXIT TOOLKIT
-                Application.Exit();
+                var errMsg = "Could not find file: " + APP_UPDATER + Environment.NewLine + "Please reinstall the toolkit manually.";
+                BetterDialog2.ShowDialog(errMsg, "Toolkit Updater Error", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                return;
             }
-            else
+
+            // create temp process backup folder 
+            if (Directory.Exists(tempToolkitDir))
+                Directory.Delete(tempToolkitDir, true);
+
+            Directory.CreateDirectory(tempToolkitDir);
+
+            try
             {
-                var errMsg = "Could not find " + updaterApp + Environment.NewLine + "Please reinstall/update the toolkit manually.";
+                // make a copy of AutoUpdater to prevent locking the process during update
+                File.Copy(updaterAppPath, updatingAppPath, true);
+
+                if (GeneralExtensions.IsInDesignMode) // allow updater to be run in design mode for developers
+                {
+                    var args = new string[] { localToolkitDir, tempToolkitDir };
+                    using (var autoUpdater = new AutoUpdaterForm(args))
+                        autoUpdater.Show();
+                }
+                else
+                {
+                    // passing args for process and backup directories to RocksmithToolkitUpdating.exe (Primary Usage Mode)
+                    var cmdArgs = String.Format("\"{0}\" \"{1}\"", localToolkitDir, tempToolkitDir);
+
+                    try // different AutoUpdater shells for MacWine testing
+                    {
+                        GeneralExtensions.RunExternalExecutable(updatingAppPath, arguments: cmdArgs);
+                    }
+                    catch (Exception ex)
+                    {
+                        // changed external process call for MacWine debugging
+                        MessageBox.Show("Report hit updater try #2 to the developers: " + Environment.NewLine + ex.Message);
+
+                        var startInfo = new ProcessStartInfo
+                        {
+                            FileName = updatingAppPath,
+                            Arguments = cmdArgs,
+                            UseShellExecute = false,
+                            CreateNoWindow = true, // hide command window
+                        };
+
+                        using (var updater = new Process())
+                        {
+                            updater.StartInfo = startInfo;
+                            updater.Start();
+                        }
+                    }
+
+                    // Kill current toolkit process now that AutoUpdater process is started
+                    Environment.Exit(0);
+                }
+            }
+            catch(ObjectDisposedException)
+            {                
+                /* Do nothing  - user cancelled the download */
+            }
+            catch (Exception ex)
+            {
+                var errMsg = "Could not run file: " + APP_UPDATING + Environment.NewLine +
+                    "Please reinstall the toolkit manually." + Environment.NewLine +
+                    ex.Message;
                 BetterDialog2.ShowDialog(errMsg, "Toolkit Updater Error", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
             }
+
+            btnInstall.Enabled = true;
         }
+
     }
 }

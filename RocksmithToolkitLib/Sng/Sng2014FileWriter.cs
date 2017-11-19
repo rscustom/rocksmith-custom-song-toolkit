@@ -10,7 +10,7 @@ using MiscUtil.IO;
 using MiscUtil.Conversion;
 using CON = RocksmithToolkitLib.Sng.Constants;
 
-// TODO: new phylosophy ... charting tweaks should be done in EOF by the charter
+// TODO: new philosophy ... charting tweaks should be done in EOF by the charter
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {
@@ -120,16 +120,17 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     GetMidiNote(tuning, (Byte)4, (Byte)handShape[crd.ChordId].Fret4, bass, capo),
                     GetMidiNote(tuning, (Byte)5, (Byte)handShape[crd.ChordId].Fret5, bass, capo)
                 });
-                //Cleanup for -1 notes
+                // Cleanup for -1 notes
                 var cOut = cNote.Where(c => c > 0).ToList();
                 if (cOut.Count < 1)
                     return 35;
-                //Return bass note for doublestops
+                // Return bass note for doublestops
                 if (cOut.Count < 3 && cOut[0] > cOut[1])
                     return cOut[1];
-                //Return most used note
+                // Return most used note
                 return cOut.Count > 3 ? cOut.FirstOrDefault(n => cOut.Any(t => t > n)) : cOut[0];
-            } return 35;
+            } 
+            return 35;
         }
 
         private Int32 getMaxDifficulty(Song2014 xml)

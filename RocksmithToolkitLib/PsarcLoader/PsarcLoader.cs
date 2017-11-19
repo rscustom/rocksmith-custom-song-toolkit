@@ -5,13 +5,14 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CFSM.AudioTools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.Ogg;
+using System.Windows.Forms;
 
 namespace RocksmithToolkitLib.PsarcLoader
 {
@@ -264,65 +265,6 @@ namespace RocksmithToolkitLib.PsarcLoader
             return imageData;
         }
 
-        // old slower static method
-        public static List<Entry> ExtractAudioEntry(string archiveName, string audioName, string previewName)
-        {
-            bool result = false;
-            if (String.IsNullOrEmpty(audioName))
-                return null; // false;
-
-            GlobalExtension.ShowProgress("Extracting Audio ...");
-            List<Entry> wems;
-
-            using (var archive = new PSARC(true))
-            using (var stream = File.OpenRead(archiveName))
-            {
-                archive.Read(stream, true);
-                wems = archive.TOC.Where(entry => entry.Name.StartsWith("audio/windows") && entry.Name.EndsWith(".wem")).ToList();
-
-                if (wems.Count > 1)
-                {
-                    wems.Sort((e1, e2) =>
-                    {
-                        if (e1.Length < e2.Length)
-                            return 1;
-                        if (e1.Length > e2.Length)
-                            return -1;
-                        return 0;
-                    });
-                }
-
-                if (wems.Count > 0)
-                {
-                    var top = wems[0]; // wem audio with internal TOC path
-                    archive.InflateEntry(top);
-                    top.Data.Position = 0;
-                    using (var FS = File.Create(audioName))
-                    {
-                        WwiseToOgg w2o = new WwiseToOgg(top.Data, FS);
-                        result = w2o.ConvertToOgg();
-                    }
-                }
-
-                if (!String.IsNullOrEmpty(previewName) && result && wems.Count > 0)
-                {
-                    var bottom = wems.Last();
-                    archive.InflateEntry(bottom);
-                    bottom.Data.Position = 0;
-                    using (var FS = File.Create(previewName))
-                    {
-                        WwiseToOgg w2o = new WwiseToOgg(bottom.Data, FS);
-                        result = w2o.ConvertToOgg();
-                    }
-                }
-            }
-
-            // confirmed this output is same as old exe converter method both are 44KHz VBR
-            if (!result)
-                return null;
-
-            return wems;
-        }
 
         /// <summary>
         /// Convert wem archive entries to ogg files
@@ -333,6 +275,8 @@ namespace RocksmithToolkitLib.PsarcLoader
         /// <returns></returns>
         public bool ConvertWemEntries(List<Entry> wems, string audioOggPath, string previewOggPath = "")
         {
+            // TODO: Debug this untested revised code before first use
+
             bool result = false;
 
             if (wems.Count > 1)
@@ -350,28 +294,46 @@ namespace RocksmithToolkitLib.PsarcLoader
             if (wems.Count > 0)
             {
                 var top = wems[0]; // wem audio with internal TOC path
+                var tempAudioPath = Path.Combine(Path.GetTempPath(), top.Name);
                 top.Data.Position = 0;
-                using (var FS = File.Create(audioOggPath))
+
+                using (var fs = File.Create(tempAudioPath))
                 {
-                    WwiseToOgg w2o = new WwiseToOgg(top.Data, FS);
-                    result = w2o.ConvertToOgg();
+                    top.Data.CopyTo(fs);
+                    try
+                    {
+                        OggFile.Revorb(tempAudioPath, audioOggPath, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(tempAudioPath).GetWwiseVersion());
+                        result = true;
+                    }
+                    catch
+                    {
+                        result = false;
+                    }
                 }
             }
 
             if (!String.IsNullOrEmpty(previewOggPath) && result && wems.Count > 0)
             {
                 var bottom = wems.Last();
+                var tempAudioPath = Path.Combine(Path.GetTempPath(), bottom.Name);
                 bottom.Data.Position = 0;
-                using (var FS = File.Create(previewOggPath))
+                using (var fs = File.Create(tempAudioPath))
                 {
-                    WwiseToOgg w2o = new WwiseToOgg(bottom.Data, FS);
-                    result = w2o.ConvertToOgg();
+                    bottom.Data.CopyTo(fs);
+                    try
+                    {
+                        OggFile.Revorb(tempAudioPath, previewOggPath, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(tempAudioPath).GetWwiseVersion());
+                        result = true;
+                    }
+                    catch
+                    {
+                        result = false;
+                    }
                 }
             }
 
             return result;
         }
-
 
         public void Dispose()
         {

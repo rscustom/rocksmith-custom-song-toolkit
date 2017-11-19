@@ -10,7 +10,12 @@ using System.ComponentModel;
 using System.Globalization;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.XmlRepository;
-
+using System.Threading;
+//
+// NOTE TO DEVS: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT ...
+// Modify the RocksmithToolkitLib prebuild event which will update the
+// PatchAssemblyVersion.ps1 file '$AssemblyVersion' and '$AssemblyConfiguration' values 
+//
 namespace RocksmithToolkitGUI
 {
     public partial class MainForm : Form
@@ -18,52 +23,58 @@ namespace RocksmithToolkitGUI
         internal BackgroundWorker bWorker;
         private ToolkitVersionOnline onlineVersion;
 
-        public static bool IsInDesignMode
-        {
-            get
-            {
-                return Application.ExecutablePath.IndexOf("devenv.exe", StringComparison.OrdinalIgnoreCase) > -1 || Debugger.IsAttached;
-            }
-        }
-
         public MainForm(string[] args)
         {
+            // load order is important
             InitializeComponent();
-            // EH keeps main form responsive/refreshed
-            this.Shown += MainForm_Splash;
 
             var ci = new CultureInfo("en-US");
             var thread = System.Threading.Thread.CurrentThread;
             Application.CurrentCulture = thread.CurrentCulture = thread.CurrentUICulture = ci;
             Application.CurrentInputLanguage = InputLanguage.FromCulture(ci);
 
-            if (args.Length > 0 && File.Exists(args[0]))
-                LoadTemplate(args[0]);
+            // EH keeps main form responsive/refreshed
+            this.Load += MainForm_Load;
+            this.Shown += MainForm_Splash;
+
+            // more easter eggs ... commented out bad practice
+            //if (args.Length > 0 && File.Exists(args[0]))
+            //    LoadTemplate(args[0]); 
+
+            // it is better to be hidden initially and then unhide when needed
+            if (GeneralExtensions.IsInDesignMode)
+                btnDevTestMethod.Visible = true;
 
             InitMainForm();
         }
 
         private void InitMainForm()
         {
-            // NOTE TO DEVS: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT ...
-            // Modify the RocksmithToolkitLib prebuild event which will update the
-            // PatchAssemblyVersion.ps1 file '$AssemblyVersion' and '$AssemblyConfiguration' values 
+            this.Text = String.Format("Song Creator Toolkit for Rocksmith (v{0})", ToolkitVersion.RSTKGuiVersion);
 
-            this.Text = String.Format("Rocksmith Custom Song Toolkit (v{0})", ToolkitVersion.RSTKGuiVersion);
+            btnUpdate.FlatStyle = FlatStyle.Flat;
+            btnUpdate.BackColor = SystemColors.Control;
+            btnUpdate.Text = "Updates are disabled";
+            btnUpdate.Enabled = false;
 
-            if (Environment.OSVersion.Platform == PlatformID.MacOSX)
-            {// Disable updates for Mac (speedup) -1.5 seconds here
-                updateButton.Enabled = false;
-                updateButton.Text = "Updates Disabled";
-                updateButton.Visible = true;
-            }
-            else
+            try
             {
-                bWorker = new BackgroundWorker();
-                bWorker.DoWork += CheckForUpdate;
-                bWorker.RunWorkerCompleted += EnableUpdate;
-                bWorker.RunWorkerAsync();
+                // always disable updates on Mac or according to general_autoupdate setting
+                if (Environment.OSVersion.Platform != PlatformID.MacOSX &&
+                    ConfigRepository.Instance().GetBoolean("general_autoupdate"))
+                {
+                    btnUpdate.Text = "Updates are enabled";
+
+                    bWorker = new BackgroundWorker();
+                    bWorker.DoWork += CheckForUpdate;
+                    bWorker.RunWorkerCompleted += EnableUpdate;
+                    bWorker.RunWorkerAsync();
+                }
+
+                // write a new VersionInfo.txt file to toolkit root
+                ToolkitVersion.UpdateVersionInfoFile();
             }
+            catch {/* DO NOTHING */}
         }
 
         public sealed override string Text
@@ -72,9 +83,10 @@ namespace RocksmithToolkitGUI
             set { base.Text = value; }
         }
 
-        //TODO: keep tabs data please.
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // EH Load happens before EH Splash
+
             // Show this tab only by 'Configuration' click
             tabControl1.TabPages.Remove(GeneralConfigTab);
 
@@ -87,8 +99,9 @@ namespace RocksmithToolkitGUI
 
         private void CheckForUpdate(object sender, DoWorkEventArgs e)
         {
+            // CHECK FOR NEW AVAILABLE REVISION AND ENABLE UPDATE
             try
-            {// CHECK FOR NEW AVAILABLE VERSION AND ENABLE UPDATE
+            {
                 onlineVersion = ToolkitVersionOnline.Load();
             }
             catch (WebException) { /* Do nothing on 404 */ }
@@ -100,36 +113,50 @@ namespace RocksmithToolkitGUI
 
         private void EnableUpdate(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (onlineVersion == null) return;
-            if (ToolkitVersion.AssemblyInformationVersion != "nongit")
-                updateButton.Visible = updateButton.Enabled = onlineVersion.UpdateAvailable;
+            if (onlineVersion == null)
+            {
+                MessageBox.Show("Check Internet Connection ... ToolkitVersionOnline: null");
+                return;
+            }
+
+            //MessageBox.Show("ToolkitVersionOnline.UpdateAvailable: " + onlineVersion.UpdateAvailable + Environment.NewLine +
+            //   "ToolkitVersionOnline.Revision: " + onlineVersion.Revision, "DEBUG ME");
+
+            //if (true) // for debugging and testing
+            if (onlineVersion.UpdateAvailable || GeneralExtensions.IsInDesignMode)
+            {
+                btnUpdate.BackColor = Color.LightSteelBlue;
+                btnUpdate.FlatStyle = FlatStyle.Standard;
+                btnUpdate.Text = "Click here to update";
+                btnUpdate.Enabled = true;
+            }
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            // hidden easter eggs ...
-            if (!e.Control || !e.Shift) return;
-            switch (e.KeyCode)
-            {
-                case Keys.O: //<< Load Template
-                    dlcPackageCreator1.btnTemplateLoad_Click();
-                    break;
-                case Keys.S: //<< Save Template
-                    dlcPackageCreator1.SaveTemplateFile();
-                    break;
-                case Keys.I: //<< Import Package
-                    dlcPackageCreator1.btnPackageImport_Click();
-                    break;
-                case Keys.G: //<< Generate Package
-                    dlcPackageCreator1.btnPackageGenerate_Click();
-                    break;
-                case Keys.A: //<< Add Arrangement
-                    dlcPackageCreator1.btnArrangementAdd_Click();
-                    break;
-                case Keys.T: //<< Add Tone
-                    dlcPackageCreator1.btnToneAdd_Click();
-                    break;
-            }
+            // hidden easter eggs ... commented out bad practice
+            //if (!e.Control || !e.Shift) return;
+            //switch (e.KeyCode)
+            //{
+            //    case Keys.O: //<< Load Template
+            //        dlcPackageCreator1.btnTemplateLoad_Click();
+            //        break;
+            //    case Keys.S: //<< Save Template
+            //        dlcPackageCreator1.SaveTemplateFile();
+            //        break;
+            //    case Keys.I: //<< Import Package
+            //        dlcPackageCreator1.btnPackageImport_Click();
+            //        break;
+            //    case Keys.G: //<< Generate Package
+            //        dlcPackageCreator1.btnPackageGenerate_Click();
+            //        break;
+            //    case Keys.A: //<< Add Arrangement
+            //        dlcPackageCreator1.btnArrangementAdd_Click();
+            //        break;
+            //    case Keys.T: //<< Add Tone
+            //        dlcPackageCreator1.btnToneAdd_Click();
+            //        break;
+            //}
         }
 
         private void restartToolStripMenuItem_Click(object sender, EventArgs e)
@@ -158,19 +185,17 @@ namespace RocksmithToolkitGUI
             }
         }
 
-        private void updateButton_Click(object sender, EventArgs e)
+        private void btnUpdate_Click(object sender, EventArgs e)
         {
+            btnUpdate.Enabled = false;
+
             using (var u = new UpdateForm())
             {
                 u.Init(onlineVersion);
                 u.ShowDialog();
             }
 
-            // reset to display the revision note
-            ConfigRepository.Instance()["general_showrevnote"] = "true";
-
-            // write new VersionInfo.txt file to toolkit root
-            ToolkitVersion.UpdateVersionInfoFile();
+            btnUpdate.Enabled = true;
         }
 
         private void configurationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -182,15 +207,14 @@ namespace RocksmithToolkitGUI
         {
             configurationToolStripMenuItem.Enabled = false;
 
-            // Save Data
+            // Save data
             //GeneralConfigTab.cachedTabs = tabControl1.TabPages;
 
             // Remove all tabs
             tabControl1.TabPages.Clear();
 
-            // Add config
-            if (!tabControl1.TabPages.Contains(GeneralConfigTab))
-                tabControl1.TabPages.Add(GeneralConfigTab);
+            // Add config tab
+            tabControl1.TabPages.Add(GeneralConfigTab);
         }
 
         public void ReloadControls()
@@ -204,37 +228,43 @@ namespace RocksmithToolkitGUI
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // autosave the dlc.xml template on closing
-            if (dlcPackageCreator1.IsDirty && ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
-                dlcPackageCreator1.SaveTemplateFile(dlcPackageCreator1.UnpackedDir, false);
+            //if (dlcPackageCreator1.IsDirty && ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
+            //    dlcPackageCreator1.SaveTemplateFile(dlcPackageCreator1.UnpackedDir, false);
+
+            // leave temp folder contents for developer debugging
+            if (GeneralExtensions.IsInDesignMode)
+                return;
 
             // cleanup temp folder garbage carefully
-#if !DEBUG
-            var di = new DirectoryInfo(Path.GetTempPath());
-
             // confirm this is the 'Local Settings\Temp' directory
+            var di = new DirectoryInfo(Path.GetTempPath());
             if (di.Parent != null)
-                if (di.Parent.Name == "Local Settings" && di.Name == "Temp")
-                {
-                    foreach (FileInfo file in di.GetFiles())
-                        try
-                        {
-                            file.Delete();
-                        }
-                        catch { /*Don't worry just skip locked file*/ }
+                return;
 
-                    foreach (DirectoryInfo dir in di.GetDirectories())
-                        try
-                        {
-                            dir.Delete(true);
-                        }
-                        catch { /*Don't worry just skip locked directory*/ }
-                }
-#endif
+            if (di.Parent.Name == "Local Settings" && di.Name == "Temp")
+            {
+                foreach (FileInfo file in di.GetFiles())
+                    try
+                    {
+                        file.Delete();
+                    }
+                    catch {/*Don't worry just skip locked file*/}
+
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                    try
+                    {
+                        dir.Delete(true);
+                    }
+                    catch {/*Don't worry just skip locked directory*/}
+            }
         }
 
         private void MainForm_Splash(object sender, EventArgs e)
         {
-#if !DEBUG  // don't bug the Developers when in debug mode ;)
+            // don't bug the Developers when in design mode ;)
+            if (GeneralExtensions.IsInDesignMode)
+                return;
+
             bool showRevNote = ConfigRepository.Instance().GetBoolean("general_showrevnote");
             if (showRevNote)
             {
@@ -251,16 +281,16 @@ namespace RocksmithToolkitGUI
             bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
             if (!firstRun)
                 return;
+
             MessageBox.Show(new Form { TopMost = true },
                 "    Welcome to the Song Creator Toolkit for Rocksmith." + Environment.NewLine +
                 "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
                 "It looks like this may be your first time running the toolkit.  " + Environment.NewLine +
-                "  Please fill in the Configuration menu with your selections.", "Song Creator Toolkit for Rocksmith ... First Run",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                "Please fill in the Configuration menu with your selections.",
+                "Song Creator Toolkit for Rocksmith - FIRST RUN", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             ShowConfigScreen();
             BringToFront();
-#endif
         }
 
         private void ShowHelpForm()
@@ -270,13 +300,38 @@ namespace RocksmithToolkitGUI
             {
                 using (var helpViewer = new HelpForm())
                 {
-                    helpViewer.Text = String.Format("{0}", "TOOLKIT BETA RELEASE MESSAGE ...");
+                    helpViewer.Text = String.Format("{0}", "TOOLKIT BETA REVISION MESSAGE ...");
                     helpViewer.PopulateRichText(streamBetaInfo);
                     helpViewer.ShowDialog();
                 }
             }
         }
 
+        // area for developer testing 
+        private void DevTestMethod()
+        {
+            var args = new string[]
+            {
+                "-u",
+                "-input=D:\\Temp\\PeppaPig_p.psarc", 
+                "-x", 
+                "-d",
+                "-f=Pc",
+                "-v=RS2014",
+                "-output=D:\\Temp",
+                "-c"
+            };
+
+            var cmdArgs = String.Join(" ", args);
+            var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var cliPath = Path.Combine(appDir, "packer.exe");
+            GeneralExtensions.RunExternalExecutable(cliPath, arguments: cmdArgs);
+        }
+
+        private void btnDevTestMethod_Click(object sender, EventArgs e)
+        {
+            DevTestMethod();
+        }
 
     }
 }

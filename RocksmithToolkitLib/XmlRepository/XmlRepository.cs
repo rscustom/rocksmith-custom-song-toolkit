@@ -138,6 +138,7 @@ namespace RocksmithToolkitLib.XmlRepository
 
         /// <summary>
         /// Merge two xml repositories into one
+        /// <para>see usage in AutoUpdater</para>
         /// </summary>
         /// <param name="sourceFile">XML source file</param>
         /// <param name="destinationFile">XML destination file</param>

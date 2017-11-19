@@ -10,6 +10,7 @@ using RocksmithToolkitLib.Conversion;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitGUI.CDLC2Tab
 {
@@ -26,7 +27,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
             InitializeComponent();
             try
             {
-                if (!MainForm.IsInDesignMode)
+                if (!GeneralExtensions.IsInDesignMode)
                     InitOutputDir();
             }
             catch { /*For mono compatibility*/ }

@@ -297,7 +297,7 @@ namespace RocksmithToolkitLib.Extensions
 
         public static int ToInt32(this string value)
         {
-			int v;
+            int v;
             if (!Int32.TryParse(value, out v))
                 return -1;
             return v;
@@ -324,6 +324,34 @@ namespace RocksmithToolkitLib.Extensions
                 c.Invoke(new Action(() => action(c)));
             else
                 action(c);
+        }
+
+        public static bool IsInDesignMode
+        {
+            get
+            {
+                var bVshostCheck = Process.GetCurrentProcess().ProcessName.IndexOf("vshost", StringComparison.OrdinalIgnoreCase) > -1 ? true : false;
+                var bUsageCheck = LicenseManager.UsageMode == LicenseUsageMode.Designtime ? true : false;
+                var bDevEnvCheck = Application.ExecutablePath.IndexOf("devenv", StringComparison.OrdinalIgnoreCase) > -1 ? true : false;
+                var bDebuggerAttached = Debugger.IsAttached;
+
+#if DEBUG
+                var bModeCheck = true;
+#else
+                var bModeCheck = false;
+#endif
+
+                //MessageBox.Show("bVshostCheck = " + bVshostCheck + Environment.NewLine +
+                //                "bModeCheck = " + bUsageCheck + Environment.NewLine +
+                //                "bDevEnvCheck = " + bDevEnvCheck + Environment.NewLine +
+                //                "bDebuggerAttached = " + bDebuggerAttached + Environment.NewLine +
+                //                "bModeCheck = " + bModeCheck, "DEBUG ME");
+
+                if (bDebuggerAttached || bDevEnvCheck || bUsageCheck || bVshostCheck || bModeCheck)
+                    return true;
+
+                return false;
+            }
         }
 
     }

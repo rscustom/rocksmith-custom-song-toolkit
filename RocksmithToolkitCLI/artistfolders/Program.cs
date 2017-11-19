@@ -10,9 +10,13 @@ namespace ArtistFolderCreator
     {
         static int Main(string[] args)
         {
-            Console.WindowWidth = 85;
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Green;
+            try
+            {
+                Console.SetWindowSize(85, 40);
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+            catch {/* DO NOTHING */}
 
 #if (DEBUG)
             // give the progie some dumby file to work on

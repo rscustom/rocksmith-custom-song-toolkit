@@ -27,6 +27,7 @@ namespace packer
         public bool UpdateManifest;
         public bool OverwriteSongXml;
         public Platform Platform;
+        public bool CreateTemplateXml = false;
     }
 
     static class Program
@@ -49,13 +50,14 @@ namespace packer
                 { "b|build", "Build a song package from 'Rocksmith DLC template' (*.dlc.xml)", v => outputArguments.Build = v != null },
                 { "i|input=", "The input file or directory (multiple allowed, use ; to split paths)", v => outputArguments.Input = v.Split( new[]{';'}, 2) },
                 { "o|output=", "The output file or directory", v => outputArguments.Output = v },
-                { "t|template=", "The template file for building package", v => outputArguments.Template = v },
+                { "t|loadtemplate=", "The template file for building package", v => outputArguments.Template = v },
                 { "f|platform=", "Platform to pack package [Pc, Mac, XBox360, PS3]", v => outputArguments.SetPlatform(v) },
                 { "v|version=", "Version of the Rocksmith Game [RS2012 or RS2014]", v => outputArguments.SetVersion(v) },
-                { "ogg|decodeogg", "Decode ogg file when unpack a song (default is true)", v => { if (v != null) outputArguments.DecodeOGG = true; }},
-                { "sng|updatesng", "Recreate SNG files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateSng = true; }},
-                { "jsn|updatejsn", "Updates manifest files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateManifest = true; }},
-                { "xml|overwritexml", "Overwrite EOF XML files with XML from SNG files (default is false)", v => { if (v != null) outputArguments.OverwriteSongXml = true; }}
+                { "d|decodeogg", "Decode ogg file when unpack a song (default is true)", v => { if (v != null) outputArguments.DecodeOGG = true; }},
+                { "s|updatesng", "Recreate SNG files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateSng = true; }},
+                { "j|updatejsn", "Updates manifest files when pack a song (default is false)", v => { if (v != null) outputArguments.UpdateManifest = true; }},
+                { "x|overwritexml", "Overwrite EOF XML files with XML from SNG files (default is false)", v => { if (v != null) outputArguments.OverwriteSongXml = true; }},
+                { "c|createtemplate", "Create Template XML file (default is false", v => { if (v != null) outputArguments.CreateTemplateXml = true; }},
             };
         }
 
@@ -63,7 +65,7 @@ namespace packer
         {
             if (arguments.Platform == null)
                 arguments.Platform = new Platform(GamePlatform.None, GameVersion.None);
-            
+
             GamePlatform p;
             var validPlatform = Enum.TryParse(platformString, true, out p);
             if (!validPlatform)
@@ -78,7 +80,7 @@ namespace packer
         {
             if (arguments.Platform == null)
                 arguments.Platform = new Platform(GamePlatform.None, GameVersion.None);
-            
+
             GameVersion v;
             var validVersion = Enum.TryParse(versionString, true, out v);
             if (!validVersion)
@@ -95,6 +97,32 @@ namespace packer
         [STAThread]
         static int Main(string[] args)
         {
+            try
+            {
+                Console.SetWindowSize(85, 40); // to prevent ioexceptions
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+            catch {/* DO NOTHING */}
+
+#if (DEBUG)
+            // give the progie some dumby data to work with
+            args = new string[]
+            {
+                "-u",
+                "-input=D:\\Temp\\PeppaPig_p.psarc", 
+                "-x", 
+                "-d",
+                "-f=Pc",
+                "-v=RS2014",
+                "-output=D:\\Temp",
+                "-c"
+            };
+
+            // args = new string[] {"-?"};
+            Console.WriteLine("Running in Debug Mode ... help is not available");
+#endif
+
             var arguments = DefaultArguments();
             var options = GetOptions(arguments);
 
@@ -104,6 +132,9 @@ namespace packer
                 if (arguments.ShowHelp)
                 {
                     options.WriteOptionDescriptions(Console.Out);
+                    Console.WriteLine("");
+                    Console.WriteLine("Press any key to close window ...");
+                    Console.ReadLine();
                     return 0;
                 }
 
@@ -132,16 +163,18 @@ namespace packer
                         return 1;
                     }
                     if ((arguments.Platform.platform == GamePlatform.None && arguments.Platform.version != GameVersion.None) ||
-                        (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version == GameVersion.None)) {
-                            ShowHelpfulError("'platform' argument require 'version' and vice-versa to define platform. Use this option only if you have problem with platform auto identifier");
-                            return 1;
+                        (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version == GameVersion.None))
+                    {
+                        ShowHelpfulError("'platform' argument require 'version' and vice-versa to define platform. Use this option only if you have problem with platform auto identifier");
+                        return 1;
                     }
                 }
 
                 // BUILD PACKAGE FROM TEMPLATE
                 if (arguments.Build)
                 {
-                    if (string.IsNullOrEmpty(arguments.Template)) {
+                    if (string.IsNullOrEmpty(arguments.Template))
+                    {
                         ShowHelpfulError("Must specify an 'template' argument with path of the Rocksmith DLC template (*.dlc.xml).");
                         return 1;
                     }
@@ -181,7 +214,6 @@ namespace packer
                             DLCPackageCreator.Generate(Path.Combine(Path.GetDirectoryName(arguments.Output), Path.GetFileNameWithoutExtension(arguments.Output)), info, new Platform(GamePlatform.PS3, gameVersion));
 
                         Console.WriteLine("Package was generated.");
-                        return 0;
                     }
                     catch (Exception ex)
                     {
@@ -209,16 +241,15 @@ namespace packer
                             else
                                 Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, updateManifest: arguments.UpdateManifest);
 
-                                Console.WriteLine("Packing is complete.");
-                                return 0;
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(String.Format("Packing error!\nFile: {0}\n{1}\n{2}", srcFileName, ex.Message, ex.InnerException));
-                                return 1;
-                            }
+                            Console.WriteLine("Packing is complete.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(String.Format("Packing error!\nFile: {0}\n{1}\n{2}", srcFileName, ex.Message, ex.InnerException));
+                            return 1;
                         }
                     }
+                }
 
                 // UNPACK A PACKAGE FILE
                 if (arguments.Unpack)
@@ -230,16 +261,18 @@ namespace packer
                     }
 
                     var srcFiles = new List<string>();
-                    
-                    foreach (var name in arguments.Input) {
-                        if(name.IsDirectory())
+
+                    foreach (var name in arguments.Input)
+                    {
+                        if (name.IsDirectory())
                             srcFiles.AddRange(Directory.EnumerateFiles(Path.GetFullPath(name), "*.psarc", SearchOption.AllDirectories));
-                        if(File.Exists(name))
+                        if (File.Exists(name))
                             srcFiles.Add(name);
                     }
 
                     foreach (string srcFileName in srcFiles)
                     {
+                        Console.WriteLine(String.Format("Unpacking File: {0}", srcFileName));
                         Platform platform = Packer.GetPlatform(srcFileName);
                         if (platform.platform == GamePlatform.None)
                         {
@@ -249,7 +282,14 @@ namespace packer
 
                         try
                         {
-                            Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.DecodeOGG, arguments.OverwriteSongXml);
+                            var unpackedDir = Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.DecodeOGG, arguments.OverwriteSongXml);
+
+                            // create template xml file
+                            if (arguments.CreateTemplateXml)
+                            {
+                                Console.WriteLine(String.Format("Creating Template XML file for: '{0}'", Path.GetFileName(srcFileName)));
+                                CreateTemplate(unpackedDir, platform);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -257,10 +297,9 @@ namespace packer
                             return 1;
                         }
                     }
-                    Console.WriteLine("Unpacking is complete.");
-                    return 0;
-                }
 
+                    Console.WriteLine("Unpacking is complete.");
+                }
             }
             catch (OptionException ex)
             {
@@ -268,6 +307,11 @@ namespace packer
                 return 1;
             }
 
+#if DEBUG
+            Console.WriteLine("");
+            Console.WriteLine("Press any key to close window ...");
+            Console.ReadLine();
+#endif
             return 0;
         }
 
@@ -288,7 +332,8 @@ namespace packer
                 if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                     isDirectory = true;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ShowHelpfulError("Invalid file or directory." + Environment.NewLine + ex.Message);
             }
 
@@ -297,7 +342,8 @@ namespace packer
 
         private static void FixPaths(DLCPackageData info, string templateDir, GameVersion gameVersion)
         {
-            foreach (var arr in info.Arrangements) {
+            foreach (var arr in info.Arrangements)
+            {
                 arr.SongXml.File = Path.Combine(Path.GetDirectoryName(templateDir), arr.SongXml.File);
                 if (gameVersion == GameVersion.RS2014)
                     UpdateTones(arr);
@@ -346,5 +392,45 @@ namespace packer
                     arrangement.ToneD = null;
             }
         }
+
+        private static void CreateTemplate(string unpackedDir, Platform platform)
+        {
+            // create template xml files
+            using (var packageCreator = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator())
+            {
+                DLCPackageData info = null;
+                if (platform.version == GameVersion.RS2014)
+                    info = DLCPackageData.LoadFromFolder(unpackedDir, platform, platform, true, true);
+                else
+                    info = DLCPackageData.RS1LoadFromFolder(unpackedDir, platform, false);
+
+                info.GameVersion = platform.version;
+
+                switch (platform.platform)
+                {
+                    case GamePlatform.Pc:
+                        info.Pc = true;
+                        break;
+                    case GamePlatform.Mac:
+                        info.Mac = true;
+                        break;
+                    case GamePlatform.XBox360:
+                        info.XBox360 = true;
+                        break;
+                    case GamePlatform.PS3:
+                        info.PS3 = true;
+                        break;
+                }
+
+                packageCreator.FillPackageCreatorForm(info, unpackedDir);
+                // fix descrepancies
+                packageCreator.CurrentGameVersion = platform.version;
+                //packageCreator.SelectComboAppId(info.AppId);
+                packageCreator.AppId = info.AppId;
+                // save template xml file
+                packageCreator.SaveTemplateFile(unpackedDir, false);
+            }
+        }
+
     }
 }

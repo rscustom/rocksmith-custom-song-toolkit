@@ -18,7 +18,7 @@ PAUSE>NUL|SET /P "= Press any key to contiune or Ctrl-C to escape ..."
 echo.
 @echo on
 
-%UP% -u -xml -ogg -f=Pc -v=RS2014 -i=%1 -o=%~d1\Temp
+%UP% -u -x -d -c -f=Pc -v=RS2014 -i=%1 -o=%~d1\Temp
 
 @echo off
 echo.

@@ -1,23 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ArrayOfConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <!-- general config key count = 15 -->"
+  <!-- general config key count = 17 -->"
+  <Config Key="general_configversion" Value="3" />
   <Config Key="general_firstrun" Value="true" />
   <Config Key="general_showrevnote" Value="true" />
+  <Config Key="general_autoupdate" Value="true" />
   <Config Key="general_usebeta" Value="true" />
-  <Config Key="general_replacerepo" Value="false" />
+  <Config Key="general_replacerepo" Value="true" />
   <Config Key="general_urllastestrelease" Value="https://www.rscustom.net/builds/latest" />
-  <Config Key="general_urllastestbuild" Value="https://www.rscustom.net/builds/latest_test" />
+  <Config Key="general_urllastestbeta" Value="https://www.rscustom.net/builds/latest_test" />
   <Config Key="general_defaultappid_RS2012" Value="206102"  />
   <Config Key="general_defaultappid_RS2014" Value="248750"  />
-  <Config Key="general_lockappid" Value="true"  />
+  <Config Key="general_lockappid" Value="false"  />
   <Config Key="general_defaultauthor" Value="Custom Song Creator" />
   <Config Key="general_rs1path" Value="C:\PROGRAM FILES (x86)\Steam\steamapps\common\Rocksmith" />
   <Config Key="general_rs2014path" Value="C:\PROGRAM FILES (x86)\Steam\steamapps\common\Rocksmith2014" />
   <Config Key="general_wwisepath" Value="" />
   <Config Key="general_defaultgameversion" Value="RS2014" />
   <Config Key="general_defaultplatform" Value="Pc" />
-  <!-- creator config key count = 9 -->"
+  <!-- creator config key count = 10 -->"
   <Config Key="creator_scrollspeed" Value="2.0" />
+  <Config Key="creator_qualityfactor" Value="4.0" />
   <Config Key="creator_structured" Value="true" />
   <Config Key="creator_useacronyms" Value="false" />
   <Config Key="creator_usedefaultauthor" Value="false" />
@@ -25,8 +28,8 @@
   <Config Key="creator_defaulttone" Value="" />
   <Config Key="creator_fixmultitone" Value="true" />
   <Config Key="creator_fixlowbass" Value="true" />
-  <Config Key="creator_autosavetemplate" Value="true" />
 
+  <Config Key="creator_autosavetemplate" Value="true" />
   <!-- converter config key count = 2 -->"
   <Config Key="converter_source" Value="Pc" />
   <Config Key="converter_target" Value="XBox360" />

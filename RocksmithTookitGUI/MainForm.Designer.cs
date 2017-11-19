@@ -20,10 +20,11 @@
             base.Dispose(disposing);
         }
 
-        protected void LoadTemplate(string path)
-        {
-            this.dlcPackageCreator1.LoadTemplateFile(path);
-        }
+        // hidden easter egg - commented out bad practice
+        //protected void LoadTemplate(string path)
+        //{
+        //    this.dlcPackageCreator1.LoadTemplateFile(path);
+        //}
 
         #region Windows Form Designer generated code
 
@@ -33,6 +34,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -65,7 +67,9 @@
             this.GeneralConfigTab = new System.Windows.Forms.TabPage();
             this.generalConfig1 = new RocksmithToolkitGUI.Config.GeneralConfig();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.updateButton = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.btnDevTestMethod = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.dlcPackageCreatorTab.SuspendLayout();
@@ -191,12 +195,13 @@
             this.dlcPackageCreator1.Album = "";
             this.dlcPackageCreator1.AlbumSort = "";
             this.dlcPackageCreator1.AlbumYear = "";
-            // this.dlcPackageCreator1.AppId = "";  // commented out to prevent changing default
+            this.dlcPackageCreator1.AppId = "";
             this.dlcPackageCreator1.Artist = "";
             this.dlcPackageCreator1.ArtistSort = "";
             this.dlcPackageCreator1.AverageTempo = "";
             this.dlcPackageCreator1.CurrentGameVersion = RocksmithToolkitLib.GameVersion.RS2014;
             this.dlcPackageCreator1.DLCKey = "";
+            this.dlcPackageCreator1.IsDirty = false;
             this.dlcPackageCreator1.JavaBool = false;
             this.dlcPackageCreator1.Location = new System.Drawing.Point(17, 1);
             this.dlcPackageCreator1.LyricArtPath = null;
@@ -209,6 +214,7 @@
             this.dlcPackageCreator1.SongTitleSort = "";
             this.dlcPackageCreator1.TabIndex = 0;
             this.dlcPackageCreator1.ToolkitVers = null;
+            this.dlcPackageCreator1.UnpackedDir = null;
             // 
             // dlcPackerUnpackerTab
             // 
@@ -227,7 +233,7 @@
             this.dlcPackerUnpacker1.Location = new System.Drawing.Point(43, 14);
             this.dlcPackerUnpacker1.MinimumSize = new System.Drawing.Size(400, 308);
             this.dlcPackerUnpacker1.Name = "dlcPackerUnpacker1";
-            this.dlcPackerUnpacker1.Size = new System.Drawing.Size(450, 403);
+            this.dlcPackerUnpacker1.Size = new System.Drawing.Size(448, 462);
             this.dlcPackerUnpacker1.TabIndex = 0;
             // 
             // dlcConverterTab
@@ -244,7 +250,6 @@
             // 
             // dlcConverter1
             // 
-            this.dlcConverter1.AppId = "";
             this.dlcConverter1.Location = new System.Drawing.Point(65, 19);
             this.dlcConverter1.MinimumSize = new System.Drawing.Size(400, 279);
             this.dlcConverter1.Name = "dlcConverter1";
@@ -394,25 +399,47 @@
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
             // 
-            // updateButton
+            // btnUpdate
             // 
-            this.updateButton.FlatAppearance.BorderSize = 0;
-            this.updateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.updateButton.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.updateButton.Location = new System.Drawing.Point(467, 0);
-            this.updateButton.Name = "updateButton";
-            this.updateButton.Size = new System.Drawing.Size(117, 24);
-            this.updateButton.TabIndex = 0;
-            this.updateButton.Text = "Click here to update";
-            this.updateButton.UseVisualStyleBackColor = true;
-            this.updateButton.Visible = false;
-            this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
+            this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUpdate.BackColor = System.Drawing.SystemColors.Control;
+            this.btnUpdate.FlatAppearance.BorderSize = 0;
+            this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUpdate.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnUpdate.Location = new System.Drawing.Point(475, 0);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(117, 24);
+            this.btnUpdate.TabIndex = 0;
+            this.btnUpdate.Text = "Click here to update";
+            this.toolTip.SetToolTip(this.btnUpdate, " -- Toolkit AutoUpdater --\r\nAn update is available for\r\ndownload if button is ena" +
+                    "bled.");
+            this.btnUpdate.UseVisualStyleBackColor = false;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // toolTip
+            // 
+            this.toolTip.AutomaticDelay = 100;
+            this.toolTip.AutoPopDelay = 8000;
+            this.toolTip.InitialDelay = 100;
+            this.toolTip.ReshowDelay = 20;
+            // 
+            // btnDevTestMethod
+            // 
+            this.btnDevTestMethod.Location = new System.Drawing.Point(368, 0);
+            this.btnDevTestMethod.Name = "btnDevTestMethod";
+            this.btnDevTestMethod.Size = new System.Drawing.Size(75, 24);
+            this.btnDevTestMethod.TabIndex = 17;
+            this.btnDevTestMethod.Text = "Dev Use";
+            this.btnDevTestMethod.UseVisualStyleBackColor = true;
+            this.btnDevTestMethod.Visible = false;
+            this.btnDevTestMethod.Click += new System.EventHandler(this.btnDevTestMethod_Click);
             // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(592, 694);
-            this.Controls.Add(this.updateButton);
+            this.Controls.Add(this.btnDevTestMethod);
+            this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
@@ -423,9 +450,8 @@
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 688);
             this.Name = "MainForm";
-            this.Text = "Custom Song Creator Toolkit";
+            this.Text = "Song Creator Toolkit for Rocksmith";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -450,7 +476,7 @@
 
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button updateButton;
+        private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
@@ -473,13 +499,15 @@
         private OggConverter.OggConverter oggConverter1;
         private DLCInlayCreator.DLCInlayCreator dlcInlayCreator1;
         private Config.GeneralConfig generalConfig1;
-        private DLCPackerUnpacker.DLCPackerUnpacker dlcPackerUnpacker1;
         private ZpeConverter.ZpeConverter zpeConverter1;
         private DDC.DDC ddc1;
         private SngConverter.SngConverter sngConverter1;
         private DLCConverter.DLCConverter dlcConverter1;
         private System.Windows.Forms.TabPage dlcPackageCreatorTab;
         private DLCPackageCreator.DLCPackageCreator dlcPackageCreator1;
-     }
+        private DLCPackerUnpacker.DLCPackerUnpacker dlcPackerUnpacker1;
+        private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.Button btnDevTestMethod;
+    }
 }
 
