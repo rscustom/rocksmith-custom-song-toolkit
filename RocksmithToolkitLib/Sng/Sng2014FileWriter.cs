@@ -1147,50 +1147,75 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         a.Notes.Notes[j - 1].NextIterNote = -1;
                 }
 
-                for (int j = 1; j < a.Notes.Notes.Length; j++)
+                // Connect parent notes with child notes (linkNext)
+                for (int j = 0; j < a.Notes.Notes.Length; j++)
                 {
+                    // Look for notes with PARENT mask (linkNext=1)
                     var n = a.Notes.Notes[j];
-                    var p = a.Notes.Notes[j - 1];
-                    int prvnote = 1; //set current + prev note + initialize prvnote variable
-                    //do not do this searching for a parent, if the previous note timestamp != current time stamp
-                    if (n.Time != p.Time) prvnote = 1;
-                    else
+                    if ((n.NoteMask & CON.NOTE_MASK_PARENT) != 0)
                     {
-                        for (int x = 1; x < (a.Notes.Notes.Length); x++) //search up till the beginning of iteration 
+                        if (n.ChordId == -1) // Single note
                         {
-                            if (j - x < 1) //don't search past the first note in iteration
+                            // Find the next note on the same string
+                            int x = j + 1;
+                            while (x < a.Notes.Notes.Length)
                             {
-                                prvnote = x;
-                                x = a.Notes.Notes.Length + 2;
-                                break; // stop searching for a match we reached the beginning
-                            }
-                            var prv = a.Notes.Notes[j - x]; // get the info for the note we are checking against
-                            if (prv.Time != n.Time)
-                            {
-                                //now check the timestamp if its the same timestamp then keep looking
-                                if (prv.ChordId != -1)
+                                var nextnote = a.Notes.Notes[x];
+                                if (nextnote.StringIndex == n.StringIndex)
                                 {
-                                    //check if its a chord
-                                    prvnote = x;
-                                    x = a.Notes.Notes.Length + 2;
-                                    break; //stop here, its a chord so don't need to check the strings
+                                    nextnote.ParentPrevNote = (short)(n.NextIterNote - 1);
+                                    nextnote.NoteMask |= CON.NOTE_MASK_CHILD;
+
+                                    break;
                                 }
-                                if (prv.StringIndex == n.StringIndex)
+                                x++;
+                            }
+                            if (x == a.Notes.Notes.Length)
+                            {
+                                // Ran out of notes in the difficulty level without finding a child note
+                                // Possible to end up here due to poorly placed phrase or due to DDC moving phrases
+                                // Doesn't crash the game or anything so do nothing for now
+                            }
+                        }
+                        else // Chord
+                        {
+                            // Chordnotes should always be present
+                            if (n.ChordNotesId != -1)
+                            {
+                                var chordnotes = cns[n.ChordNotesId];
+
+                                // Check which chordNotes have linknext
+                                for (int cnString = 0; cnString < 6; cnString++)
                                 {
-                                    //check to see if we are looking at the same string
-                                    prvnote = x;
-                                    x = a.Notes.Notes.Length + 2;
-                                    break; //stop here we found the same string, at a different timestamp, thats not a chord
+                                    if ((chordnotes.NoteMask[cnString] & CON.NOTE_MASK_PARENT) != 0)
+                                    {
+                                        // Find the next note on the same string
+                                        int x = j + 1;
+                                        while (x < a.Notes.Notes.Length)
+                                        {
+                                            var nextnote = a.Notes.Notes[x];
+                                            if (nextnote.StringIndex == cnString)
+                                            {
+                                                // HACK for XML files that do not match official usage re linkNext (allow 1ms margin of error)
+                                                if (nextnote.Time - (n.Time + n.Sustain) > 0.001)
+                                                    break;
+
+                                                nextnote.ParentPrevNote = (short)(n.NextIterNote - 1);
+                                                nextnote.NoteMask |= CON.NOTE_MASK_CHILD;
+
+                                                break;
+                                            }
+                                            x++;
+                                        }
+                                        if (x == a.Notes.Notes.Length)
+                                        {
+                                            // Ran out of notes in the difficulty level without finding a child note
+                                            // Possible to end up here due to poorly placed phrase or due to DDC moving phrases
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
-
-                    var prev = a.Notes.Notes[j - prvnote]; //this will be either the first note of piter, or the last note on the same string at previous timestamp
-                    if ((prev.NoteMask & CON.NOTE_MASK_PARENT) != 0)
-                    {
-                        n.ParentPrevNote = (short)(prev.NextIterNote - 1);
-                        n.NoteMask |= CON.NOTE_MASK_CHILD; //set the ParentPrevNote# = the matched Note#//add CHILD flag
                     }
                 }
 
