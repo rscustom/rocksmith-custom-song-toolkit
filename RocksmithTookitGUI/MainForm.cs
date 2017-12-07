@@ -296,7 +296,7 @@ namespace RocksmithToolkitGUI
         private void ShowHelpForm()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            using (Stream streamBetaInfo = assembly.GetManifestResourceStream("RocksmithToolkitGUI.Resources.BetaInfo.rtf"))
+            using (Stream streamBetaInfo = assembly.GetManifestResourceStream("RocksmithToolkitGUI.BetaInfo.rtf")) //RocksmithToolkitGUI.Resources.
             {
                 using (var helpViewer = new HelpForm())
                 {

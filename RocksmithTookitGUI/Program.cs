@@ -42,7 +42,7 @@ namespace RocksmithToolkitGUI
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 var exception = e.ExceptionObject as Exception;
-                Log.Error(exception, "\n{0}\n{1}\nException catched:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
+                Log.Error(exception, "\n{0}\n{1}\nException cached:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
                 //Log.Error("Application Stdout:\n\n{0}", new StreamReader(_stdout.ToString()).ReadToEnd());
 
                 if (MessageBox.Show(String.Format("Application.ThreadException met.\n\n\"{0}\"\n\n{1}\n\nPlease send us \"{2}\", open log file now?",
@@ -59,7 +59,7 @@ namespace RocksmithToolkitGUI
             Application.ThreadException += (s, e) =>
             {
                 var exception = e.Exception;
-                Log.Error(exception, "\n{0}\n{1}\nException catched:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
+                Log.Error(exception, "\n{0}\n{1}\nException cached:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
                 //Log.Error("Application Stdout:\n\n{0}", new StreamReader(_stdout.ToString()).ReadToEnd());
 
                 if (MessageBox.Show(String.Format("Application.ThreadException met.\n\n\"{0}\"\n\n{1}\n\nPlease send us \"{2}\", open log file now?",

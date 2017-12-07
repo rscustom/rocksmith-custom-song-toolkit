@@ -48,7 +48,7 @@ namespace RocksmithToolkitLib.XML
             }
         }
 
-        public void Serialize(Stream stream)
+        public void Serialize(Stream stream, bool omitXmlDeclaration = false)
         {
             var ns = new XmlSerializerNamespaces();
             ns.Add("", "");
@@ -56,7 +56,7 @@ namespace RocksmithToolkitLib.XML
             using (var writer = XmlWriter.Create(stream, new XmlWriterSettings
             {
                 Indent = true,
-                OmitXmlDeclaration = false,
+                OmitXmlDeclaration = omitXmlDeclaration,
                 Encoding = new UTF8Encoding(false)
             }))
             {

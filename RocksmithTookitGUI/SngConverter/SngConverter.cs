@@ -177,7 +177,7 @@ namespace RocksmithToolkitGUI.SngConverter
                 var outputFile = Path.Combine(Path.GetDirectoryName(ConverterSngXmlFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(ConverterSngXmlFile)));
                 using (FileStream outputStream = new FileStream(outputFile, FileMode.Create, FileAccess.ReadWrite))
                 {
-                    dynamic xml = null;
+                    dynamic xml = null; 
 
                     if (ConverterArrangementType == ArrangementType.Vocal)
                         xml = new Vocals(sng);
