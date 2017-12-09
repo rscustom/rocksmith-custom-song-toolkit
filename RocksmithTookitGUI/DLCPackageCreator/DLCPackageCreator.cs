@@ -115,7 +115,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public string AppId
         {
             get { return txtAppId.Text; }
-            set { txtAppId.Text = value.GetValidAppIdSixDigits(); }
+            set
+            {
+                // added default to prevent blank AppId
+                if (String.IsNullOrEmpty(txtAppId.Text))
+                    value = "248750";
+
+                txtAppId.Text = value.GetValidAppIdSixDigits();
+            }
         }
 
         public string Artist
