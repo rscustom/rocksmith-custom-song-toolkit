@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Conversion\Rs1Converter.cs" />
     <Compile Include="Conversion\Rs2014Converter.cs" />
+    <Compile Include="DLCPackage\DDCreator.cs" />
     <Compile Include="SngToTab\Common.cs" />
     <Compile Include="SngToTab\Sng2Tab.cs" />
     <Compile Include="SngToTab\TabBeat.cs" />

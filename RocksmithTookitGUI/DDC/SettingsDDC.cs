@@ -5,6 +5,7 @@ using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitGUI.DDC
 {
+    [Obsolete("Depricated, please use RocksmithToolkitLib.DDCSettings.", true)]
     public class SettingsDDC
     {
         public int PhraseLen { get; private set; }

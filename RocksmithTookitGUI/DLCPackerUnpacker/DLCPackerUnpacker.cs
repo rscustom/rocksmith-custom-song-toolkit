@@ -231,8 +231,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                         packageCreator.CurrentGameVersion = platform.version;
                         //packageCreator.SelectComboAppId(info.AppId);
                         packageCreator.AppId = info.AppId;
-                        // save template xml file
-                        packageCreator.SaveTemplateFile(unpackedDir, false);
+                        // save template xml file except when SongPack
+                        if (!sourceFileName.Contains("_sp_") && !sourceFileName.Contains("_songpack_"))
+                            packageCreator.SaveTemplateFile(unpackedDir, false);
                     }
                 }
                 catch (Exception ex)
