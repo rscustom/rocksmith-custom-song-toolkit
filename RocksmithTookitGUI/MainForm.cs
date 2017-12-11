@@ -29,15 +29,15 @@ namespace RocksmithToolkitGUI
             InitializeComponent();
 
             var ci = new CultureInfo("en-US");
-            var thread = System.Threading.Thread.CurrentThread;
+            var thread = Thread.CurrentThread;
             Application.CurrentCulture = thread.CurrentCulture = thread.CurrentUICulture = ci;
-            Application.CurrentInputLanguage = InputLanguage.FromCulture(ci);
+            //Application.CurrentInputLanguage = InputLanguage.FromCulture(ci); //may cause issues for non us cultures esp on wineMAC build got report of such issue.
 
             // EH keeps main form responsive/refreshed
             this.Load += MainForm_Load;
             this.Shown += MainForm_Splash;
 
-            // more easter eggs ... commented out bad practice
+            // EGG: more easter eggs ... commented out bad practice
             //if (args.Length > 0 && File.Exists(args[0]))
             //    LoadTemplate(args[0]); 
 

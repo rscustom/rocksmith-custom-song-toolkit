@@ -29,4 +29,3 @@ using System.Resources;
 [assembly: AssemblyVersion("2.8.4.1")]
 [assembly: AssemblyInformationalVersion("4438942a")]
 [assembly: AssemblyConfiguration("BETA")]
-[assembly: NeutralResourcesLanguageAttribute("en")]
