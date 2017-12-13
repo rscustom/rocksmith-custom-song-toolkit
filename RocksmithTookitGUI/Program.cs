@@ -28,7 +28,7 @@ namespace RocksmithToolkitGUI
             //I should figure out way for native mac\linux OS
             var logPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "_RSToolkit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".log");
             
-            // added for Win10 compatiblity
+            // workaround fix for Win10 NET4.6 compatiblity issue
             var updaterVersion = "Null";
             try
             {

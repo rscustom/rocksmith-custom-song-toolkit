@@ -114,6 +114,7 @@ CleanupBeforeGitPullRequest.bat
 RevisionLog.txt
 *.rar
 OpenCmd.bat
+ShareReleaseLibs.bat
 
 # Python
 # Byte-compiled / optimized / DLL files

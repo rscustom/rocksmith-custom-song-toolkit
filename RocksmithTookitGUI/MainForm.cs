@@ -325,7 +325,11 @@ namespace RocksmithToolkitGUI
             var cmdArgs = String.Join(" ", args);
             var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var cliPath = Path.Combine(appDir, "packer.exe");
-            GeneralExtensions.RunExternalExecutable(cliPath, arguments: cmdArgs);
+
+            if (File.Exists(cliPath))
+                GeneralExtensions.RunExternalExecutable(cliPath, arguments: cmdArgs);
+            else
+                MessageBox.Show("'Build, Rebuild Solution' while configuration is set to 'Debug w CLI'", "WRONG CONFIGURATION IS SELECTED ...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void btnDevTestMethod_Click(object sender, EventArgs e)
