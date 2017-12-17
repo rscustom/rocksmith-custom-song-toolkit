@@ -28,10 +28,22 @@ namespace RocksmithToolkitGUI
             //I should figure out way for native mac\linux OS
             var logPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "_RSToolkit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".log");
 
+            // workaround fix for Win10 NET4.6 compatiblity issue
+            var updaterVersion = "Null";
+            try
+            {
+                updaterVersion = ToolkitVersion.RSTKUpdaterVersion();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\n\n" + e.ToString());
+                /* DO NOTHING */
+            }
+
             Log.Info(//OSVersion on unix will return it's Kernel version, urgh.
                 String.Format("RocksmithToolkitGUI: v{0}\r\n ", ToolkitVersion.RSTKGuiVersion) +
                 String.Format("RocksmithToolkitLib: v{0}\r\n ", ToolkitVersion.RSTKLibVersion()) +
-                String.Format("RocksmithToolkitUpdater: v{0}\r\n ", ToolkitVersion.RSTKUpdaterVersion()) +
+                String.Format("RocksmithToolkitUpdater: v{0}\r\n ", updaterVersion) +
                 String.Format("OS: {0} ({1} bit)\r\n ", Environment.OSVersion, Environment.Is64BitOperatingSystem ? "64" : "32") +
                 String.Format("Runtime: v{0}\r\n ", Environment.Version) +
                 String.Format("JIT: {0}\r\n ", JitVersionInfo.GetJitVersion()) +
