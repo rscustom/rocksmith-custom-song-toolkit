@@ -222,6 +222,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { txtVersion.Text = String.IsNullOrEmpty(value) ? "" : value.GetValidVersion(); }
         }
 
+        public string JapaneseArtist
+        {
+            get { return txtJapaneseArtist.Text; }
+            set { txtJapaneseArtist.Text = value; }
+        }
+
         public string JapaneseSongTitle
         {
             get { return txtJapaneseSongTitle.Text; }
@@ -826,7 +832,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             txtAlbum.Text = info.SongInfo.Album;
             txtAlbumSort.Text = info.SongInfo.AlbumSort;
             txtJapaneseSongTitle.Text = info.SongInfo.JapaneseSongName;
-            cbJapaneseTitle.Checked = !string.IsNullOrEmpty(txtJapaneseSongTitle.Text);
+            txtJapaneseArtist.Text = info.SongInfo.JapaneseArtist;
+            cbJapaneseTitle.Checked = !string.IsNullOrEmpty(txtJapaneseSongTitle.Text) || !string.IsNullOrEmpty(txtJapaneseArtist.Text);
             txtSongTitle.Text = info.SongInfo.SongDisplayName;
             txtSongTitleSort.Text = info.SongInfo.SongDisplayNameSort;
             txtYear.Text = info.SongInfo.SongYear.ToString();
@@ -953,12 +960,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 //    DlcKeyTB.Focus();
                 //    return null;
                 //}
-
+                /* //ignore since optional
                 if (txtJapaneseSongTitle.Enabled && String.IsNullOrEmpty(JapaneseSongTitle))
                 {
                     txtJapaneseSongTitle.Focus();
                     return null;
                 }
+                if (txtJapaneseArtist.Enabled && String.IsNullOrEmpty(JapaneseArtist))
+                {
+                    txtJapaneseArtist.Focus();
+                    return null;
+                }*/
                 if (String.IsNullOrEmpty(SongTitle))
                 {
                     txtSongTitle.Focus();
@@ -1202,6 +1214,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     SongInfo = new SongInfo
                         {
+                            JapaneseArtist = this.JapaneseArtist,
                             JapaneseSongName = this.JapaneseSongTitle,
                             SongDisplayName = this.SongTitle,
                             SongDisplayNameSort = this.SongTitleSort,
@@ -2596,7 +2609,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void cbJapaneseTitle_CheckedChanged(object sender, EventArgs e)
         {
-            txtJapaneseSongTitle.Enabled = ((CheckBox)sender).Checked;
+            txtJapaneseSongTitle.Enabled = txtJapaneseArtist.Enabled =((CheckBox)sender).Checked;
+
         }
 
         private void txtJapaneseSongTitle_Validating(object sender, CancelEventArgs e)
@@ -2608,6 +2622,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             cbJapaneseTitle.Checked = !((CheckBox)sender).Checked;
             if (!string.IsNullOrEmpty(txtJapaneseSongTitle.Text))
+            {
+                cbJapaneseTitle.Checked = true;
+            }
+            else if (!string.IsNullOrEmpty(txtJapaneseArtist.Text))
             {
                 cbJapaneseTitle.Checked = true;
             }

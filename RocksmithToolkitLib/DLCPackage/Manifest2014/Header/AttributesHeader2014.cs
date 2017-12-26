@@ -61,6 +61,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public string SongNameSort { get; set; }
         public int? SongYear { get; set; }
         public string JapaneseSongName { get; set; } //Unicode string, be cautious
+        public string JapaneseArtist { get; set; } //Unicode string, be cautious
         public TuningStrings Tuning { get; set; }
         public string PersistentID { get; set; }
 
@@ -141,6 +142,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             SongName = info.SongInfo.SongDisplayName;
             SongNameSort = info.SongInfo.SongDisplayNameSort;
             JapaneseSongName = info.SongInfo.JapaneseSongName;
+            JapaneseArtist = info.SongInfo.JapaneseArtist;
             SongYear = info.SongInfo.SongYear;
 
             //Detect tuning
