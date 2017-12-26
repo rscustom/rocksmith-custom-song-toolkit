@@ -222,6 +222,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { txtVersion.Text = String.IsNullOrEmpty(value) ? "" : value.GetValidVersion(); }
         }
 
+        public string JapaneseSongTitle
+        {
+            get { return txtJapaneseSongTitle.Text; }
+            set { txtJapaneseSongTitle.Text = value; }
+        }
+
         public string SongTitle
         {
             get { return txtSongTitle.Text; }
@@ -819,6 +825,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             txtAlbum.Text = info.SongInfo.Album;
             txtAlbumSort.Text = info.SongInfo.AlbumSort;
+            txtJapaneseSongTitle.Text = info.SongInfo.JapaneseSongName;
+            cbJapaneseTitle.Checked = !string.IsNullOrEmpty(txtJapaneseSongTitle.Text);
             txtSongTitle.Text = info.SongInfo.SongDisplayName;
             txtSongTitleSort.Text = info.SongInfo.SongDisplayNameSort;
             txtYear.Text = info.SongInfo.SongYear.ToString();
@@ -946,6 +954,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 //    return null;
                 //}
 
+                if (txtJapaneseSongTitle.Enabled && String.IsNullOrEmpty(JapaneseSongTitle))
+                {
+                    txtJapaneseSongTitle.Focus();
+                    return null;
+                }
                 if (String.IsNullOrEmpty(SongTitle))
                 {
                     txtSongTitle.Focus();
@@ -1189,13 +1202,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     SongInfo = new SongInfo
                         {
-                            SongDisplayName = txtSongTitle.Text,
-                            SongDisplayNameSort = String.IsNullOrEmpty(txtSongTitleSort.Text.Trim()) ? txtSongTitle.Text : txtSongTitleSort.Text,
-                            Album = txtAlbum.Text,
-                            AlbumSort = txtAlbumSort.Text,
+                            JapaneseSongName = this.JapaneseSongTitle,
+                            SongDisplayName = this.SongTitle,
+                            SongDisplayNameSort = this.SongTitleSort,
+                            Album = this.Album,
+                            AlbumSort = this.AlbumSort,
                             SongYear = year,
-                            Artist = txtArtist.Text,
-                            ArtistSort = String.IsNullOrEmpty(txtArtistSort.Text.Trim()) ? txtArtist.Text : txtArtistSort.Text,
+                            Artist = this.Artist,
+                            ArtistSort = this.ArtistSort,
                             AverageTempo = tempo
                         },
 
@@ -2577,6 +2591,25 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (ReferenceEquals(obj, null))
                     return 0;
                 return obj.Code.GetHashCode() | obj.Time.GetHashCode();
+            }
+        }
+
+        private void cbJapaneseTitle_CheckedChanged(object sender, EventArgs e)
+        {
+            txtJapaneseSongTitle.Enabled = ((CheckBox)sender).Checked;
+        }
+
+        private void txtJapaneseSongTitle_Validating(object sender, CancelEventArgs e)
+        {
+            ((CueTextBox)sender).Text = ((CueTextBox)sender).Text.TrimEnd();
+        }
+
+        private void cbJapaneseTitle_Click(object sender, EventArgs e)
+        {
+            cbJapaneseTitle.Checked = !((CheckBox)sender).Checked;
+            if (!string.IsNullOrEmpty(txtJapaneseSongTitle.Text))
+            {
+                cbJapaneseTitle.Checked = true;
             }
         }
     }

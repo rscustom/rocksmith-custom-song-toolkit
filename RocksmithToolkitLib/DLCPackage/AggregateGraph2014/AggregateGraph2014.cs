@@ -253,7 +253,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 dds.UUID = IdGenerator.Guid();
                 dds.LLID = IdGenerator.LLIDGuid();
                 dds.Name = String.Format("lyrics_{0}", dlcName);
-                dds.RelPathFile = dds.Name;
+                dds.RelPathFile = String.Format("{0}.dds", dds.Name); //keep extension
                 dds.LogPathFile = dds.RelPathFile;
                 ImageArt.Add(dds);
             }

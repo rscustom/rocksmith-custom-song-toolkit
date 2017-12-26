@@ -153,6 +153,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
                     attribute.AverageTempo = songInfo.AverageTempo;
                     attribute.RepresentativeArrangement = true;
+                    attribute.JapaneseSongName = songInfo.JapaneseSongName;
                     attribute.SongPartition = songPartition.GetSongPartition(x.Name, x.ArrangementType);
                     attribute.SongLength = (float)Math.Round((decimal)song.SongLength, 3, MidpointRounding.AwayFromZero); //rounded
                     attribute.LastConversionDateTime = song.LastConversionDateTime;

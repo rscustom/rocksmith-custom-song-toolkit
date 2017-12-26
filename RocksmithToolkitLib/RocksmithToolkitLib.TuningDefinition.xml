@@ -77,6 +77,9 @@
   <TuningDefinition Version="RS2014" Name="EADGAe" UIName="EADGAe" Custom="true">
     <Tuning string0="0" string1="0" string2="0" string3="0" string4="-2" string5="0" />
   </TuningDefinition>
+  <TuningDefinition Version="RS2014" Name="EADGcf" UIName="All Fourth" Custom="true">
+    <Tuning string0="0" string1="0" string2="0" string3="0" string4="2" string5="2" />
+  </TuningDefinition>
   <TuningDefinition Version="RS2014" Name="CFCFAC" UIName="Open F" Custom="true">
     <Tuning string0="-4" string1="-4" string2="-2" string3="-2" string4="-2" string5="-4" />
   </TuningDefinition>

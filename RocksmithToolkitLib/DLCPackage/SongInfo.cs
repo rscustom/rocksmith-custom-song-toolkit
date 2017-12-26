@@ -12,6 +12,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public int AverageTempo { get; set; }
         public string SongDisplayName { get; set; }
         public string SongDisplayNameSort { get; set; }
+        public string JapaneseSongName { get; set; } // new, optional
         public int SongYear { get; set; }
     }
 }
