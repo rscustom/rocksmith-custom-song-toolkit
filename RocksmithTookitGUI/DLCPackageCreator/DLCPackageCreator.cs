@@ -2609,8 +2609,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void cbJapaneseTitle_CheckedChanged(object sender, EventArgs e)
         {
-            txtJapaneseSongTitle.Enabled = txtJapaneseArtist.Enabled =((CheckBox)sender).Checked;
-
+            if (((CheckBox)sender).Checked)
+            {
+                txtJapaneseSongTitle.BringToFront();
+                txtJapaneseArtist.BringToFront();
+            }
+            else
+            {
+                txtJapaneseSongTitle.SendToBack();
+                txtJapaneseArtist.SendToBack();
+            }
         }
 
         private void txtJapaneseSongTitle_Validating(object sender, CancelEventArgs e)
@@ -2621,14 +2629,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void cbJapaneseTitle_Click(object sender, EventArgs e)
         {
             cbJapaneseTitle.Checked = !((CheckBox)sender).Checked;
-            if (!string.IsNullOrEmpty(txtJapaneseSongTitle.Text))
-            {
-                cbJapaneseTitle.Checked = true;
-            }
-            else if (!string.IsNullOrEmpty(txtJapaneseArtist.Text))
-            {
-                cbJapaneseTitle.Checked = true;
-            }
         }
     }
 }
