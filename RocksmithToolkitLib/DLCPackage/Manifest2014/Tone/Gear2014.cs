@@ -35,10 +35,12 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Tone
                 myPropInfo.SetValue(this, value, null);
             }
         }
+
         public bool IsNull()
         {
             return ReferenceEquals(Amp, null) && ReferenceEquals(Cabinet, null);
         }
+
         public int SlotsUsed()
         {
             int i = 0;

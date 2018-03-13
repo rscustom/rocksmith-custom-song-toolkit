@@ -7,6 +7,8 @@ using NLog;
 using NLog.Fluent;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib;
+using RocksmithToolkitLib.XmlRepository;
+using System.Threading;
 
 namespace RocksmithToolkitGUI
 {
@@ -49,6 +51,26 @@ namespace RocksmithToolkitGUI
                 String.Format("JIT: {0}\r\n ", JitVersionInfo.GetJitVersion()) +
                 String.Format("Wine: {0}", GeneralExtensions._wine())
             );
+
+            if (!Environment.Version.ToString().Contains("4.0.30319") &&
+                ConfigRepository.Instance().GetBoolean("general_firstrun"))
+            {
+                var envMsg = "The toolkit runs best with .NET 4.0.30319 installed." + Environment.NewLine +
+                    "You are currently running .NET " + Environment.Version.ToString() + Environment.NewLine +
+                    "Install the correct version if you experinece problems running the toolkit.   " + Environment.NewLine + Environment.NewLine +
+                    "Click 'Yes' to download and install the correct version now from:" + Environment.NewLine +
+                    "https://www.microsoft.com/en-us/download/confirmation.aspx?id=17718";
+
+                if (MessageBox.Show(envMsg, "Incorrect .NET Version ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    Process.Start("https://www.microsoft.com/en-us/download/confirmation.aspx?id=17718");
+                    Thread.Sleep(500);
+                    Process.Start("https://www.howtogeek.com/118869/how-to-easily-install-previous-versions-of-the-.net-framework-in-windows-8");
+
+                    // Kill current toolkit process now that download process is started
+                    Environment.Exit(0);
+                }
+            }
 
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>

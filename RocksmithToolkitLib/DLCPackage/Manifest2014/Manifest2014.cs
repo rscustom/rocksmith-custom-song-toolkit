@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest2014
 {
+    // JSON manifest file structure where <T> is <Attributes2014> 
+    // which also contains <AttributesHeader2014> by inheritence
     public class Manifest2014<T>
     {
         public Dictionary<string, Dictionary<string, T>> Entries { get; set; }

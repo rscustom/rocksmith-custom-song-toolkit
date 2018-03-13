@@ -14,6 +14,8 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Ogg;
 using System.Windows.Forms;
 
+// tools for future use
+
 namespace RocksmithToolkitLib.PsarcLoader
 {
     public sealed class PsarcLoader : IDisposable
@@ -202,10 +204,10 @@ namespace RocksmithToolkitLib.PsarcLoader
             else
             {
                 // this helps prevent null exceptions
-                tkInfo.ToolkitVersion = "N/A";
+                tkInfo.ToolkitVersion = "None";
                 tkInfo.PackageAuthor = "Ubisoft";
-                tkInfo.PackageVersion = "N/A";
-                tkInfo.PackageComment = "N/A";
+                tkInfo.PackageVersion = "None";
+                tkInfo.PackageComment = "None";
             }
 
             return tkInfo;
