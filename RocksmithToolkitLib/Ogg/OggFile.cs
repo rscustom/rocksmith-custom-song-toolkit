@@ -57,11 +57,12 @@ namespace RocksmithToolkitLib.Ogg
         #endregion
 
         public static void Revorb(string file, string outputFileName, string appPath, WwiseVersion wwiseVersion)
-        {
-            var ww2oggPath = Path.Combine(appPath, "ww2ogg.exe");
-            var revorbPath = Path.Combine(appPath, "revorb.exe");
-            var codebooksPath = Path.Combine(appPath, "packed_codebooks.bin"); // Default
-            var codebooks603Path = Path.Combine(appPath, "packed_codebooks_aoTuV_603.bin"); // RS2014
+        {//RE: ExternalApps used
+            var subroot = "tools";
+            var ww2oggPath = Path.Combine(appPath, subroot, "ww2ogg.exe");
+            var revorbPath = Path.Combine(appPath, subroot, "revorb.exe");
+            var codebooksPath = Path.Combine(appPath, subroot, "packed_codebooks.bin"); // Default
+            var codebooks603Path = Path.Combine(appPath, subroot, "packed_codebooks_aoTuV_603.bin"); // RS2014
 
             // Verifying if third part apps is in root application directory
             if (!File.Exists(ww2oggPath))

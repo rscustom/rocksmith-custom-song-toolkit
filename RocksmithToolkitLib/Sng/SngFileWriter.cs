@@ -89,7 +89,7 @@ namespace RocksmithToolkitLib.Sng
                     var song = (Song)serializer.Deserialize(reader);
 
                     // TODO: song.Tuning is null in toolkit generated RS1 Xml files
-                    // TODO: this is only a quick fix of the root problem
+                    // HACK: this is only a quick fix of the root problem
                     var tuning = new Int16[] { 0, 0, 0, 0, 0, 0 };
                     if (song.Tuning != null) tuning = song.Tuning.ToArray();
 
@@ -636,7 +636,7 @@ namespace RocksmithToolkitLib.Sng
                     //    throw new Exception(string.Format("No end phrase iteration found with matching time for section {0}.", i.ToString()));
                 }
 
-                // series of 8 unknown bytes (look like flags)? below logic is wrong, just defaulting for now
+                // HACK: series of 8 unknown bytes (look like flags)? below logic is wrong, just defaulting for now
                 w.Write(true);
                 w.Write(true);
                 w.Write(true);

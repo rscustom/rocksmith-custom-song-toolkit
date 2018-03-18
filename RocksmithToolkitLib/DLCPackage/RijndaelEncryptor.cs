@@ -397,7 +397,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
         internal static string EdatCrypto(string command)
         {// Encrypt/decrypt using TrueAncestor Edat Rebuilder v1.4c
-            string core = Path.Combine(toolkitPath, "tool/core.jar");
+            string core = "tools/core.jar"; //RE: should we just move it over to ExternalApps?
+            string core_path = Path.Combine(toolkitPath, core);
             string APP = "java";
 
             Process PS3Process = new Process();

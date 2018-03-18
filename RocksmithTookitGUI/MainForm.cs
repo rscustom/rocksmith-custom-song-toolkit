@@ -179,10 +179,7 @@ namespace RocksmithToolkitGUI
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var h = new HelpForm())
-            {
-                h.ShowDialog();
-            }
+            ShowHelpForm(); //Just show initial help form here!
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
