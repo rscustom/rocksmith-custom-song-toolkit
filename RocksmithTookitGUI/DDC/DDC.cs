@@ -33,6 +33,7 @@ namespace RocksmithToolkitGUI.DDC
         internal Dictionary<string, string> ConfigDb;
         internal static string AppDir = AppDomain.CurrentDomain.BaseDirectory;
         internal static string DdcDir = Path.Combine(AppDir, "ddc");
+        internal static string DdcPath = Path.Combine(DdcDir, "ddc.exe");
         internal Color EnabledColor = Color.Black;
         internal Color DisabledColor = Color.Gray;
 
@@ -53,21 +54,30 @@ namespace RocksmithToolkitGUI.DDC
             this.bw.ProgressChanged += bw_ProgressChanged;
             this.bw.RunWorkerCompleted += bw_Completed;
             this.bw.WorkerReportsProgress = true;
+            // Do IO stuff here so ddc tab will be up faster aslo don't lock main thread
+            new System.Threading.Thread(new System.Threading.ThreadStart(LoadBackgroundVersion)).Start();
         }
 
         private void DDC_Load(object sender, EventArgs e)
         {
+            PopMDLs();
+            PopCFGs();
+            SetDefaultFromConfig();
+        }
+
+        private void LoadBackgroundVersion()
+        {
             try
             {
-                string ddcPath = Path.Combine(AppDir, "ddc", "ddc.exe");
-                if (!this.DesignMode && File.Exists(ddcPath))
+                if (!this.DesignMode && File.Exists(DdcPath))
                 {
-                    var vi = FileVersionInfo.GetVersionInfo(ddcPath).ProductVersion;
-                    ddcVersion.Text = String.Format("v{0}", vi);
+                    var ver = FileVersionInfo.GetVersionInfo(DdcPath).ProductVersion;
+                    if (ddcVersion.InvokeRequired)
+                    {
+                        ddcVersion.Invoke(new Action(() => ddcVersion.Text = String.Format("v{0}", ver)));
+                    }
+                    else ddcVersion.Text = String.Format("v{0}", ver);
                 }
-                PopMDLs();
-                PopCFGs();
-                SetDefaultFromConfig();
             }
             catch { /*For mono compatibility*/ }
         }
