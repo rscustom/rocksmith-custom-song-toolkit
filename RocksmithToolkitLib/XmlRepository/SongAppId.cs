@@ -5,9 +5,9 @@ namespace RocksmithToolkitLib.XmlRepository {
         [XmlAttribute("Version")]
         public GameVersion GameVersion { get; set; }
         [XmlAttribute]
-        public string Name { get; set; }
-        [XmlAttribute]
         public string AppId { get; set; }
+        [XmlAttribute]
+        public string Name { get; set; }
 
         [XmlIgnore]
         public string DisplayName {

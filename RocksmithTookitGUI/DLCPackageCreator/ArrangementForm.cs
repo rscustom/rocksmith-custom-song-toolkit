@@ -134,13 +134,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 };
 
             // this EH may cause serious brain damage
-            cmbTuningName.SelectedValueChanged += (sender, e) =>
-                {
-                    // Selecting defaults
-                    var selectedType = (ArrangementType)cmbArrangementType.SelectedItem;
-                    var selectedTuning = (TuningDefinition)((ComboBox)sender).SelectedItem;
-                    btnEditTuning.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight) && selectedTuning != null;
-                };
+            cmbTuningName.SelectedValueChanged += cmbTuningName_SelectedValueChanged;
 
             #endregion
 
@@ -477,7 +471,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Arrangement.Tuning = tuning.UIName;
             Arrangement.TuningStrings = tuning.Tuning;
             UpdateCentOffset();
-
+            // RE: annoying stuff. ony indicate that arrangement isn't autofixed since you won't name tuning that way.
             if ((Arrangement.TuningPitch == 220.00 && !Arrangement.Tuning.Contains("Fixed")) ||
                 (Arrangement.TuningPitch != 220.00 && Arrangement.Tuning.Contains("Fixed")))
             {
@@ -541,7 +535,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             combo.Items.Clear();
             if (!isBase)
                 combo.Items.Add("");
-
+            //TODO: filter out bass tones from guitar tones so you won't mess things out here and reduce tones list a bit.
             foreach (var tone in toneNames)
                 combo.Items.Add(tone);
 
@@ -560,8 +554,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // tuningComboBox list is being updated with custom tuning info
             // so refilling the combo-box is required to produce the expected results
             // for now using old fashioned non-LINQ method
+            // also add tuning from songXml used (just populate tuning definitions while loading *.dlc.xml)
             var tuningDefinitions = TuningDefinitionRepository.Instance.LoadTuningDefinitions(gameVersion);
-            foreach (var tuning in tuningDefinitions) //also add tuning from songXml used
+            foreach (var tuning in tuningDefinitions)
             {
                 cmbTuningName.Items.Add(tuning);
             }
@@ -840,7 +835,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void ToneComboEnabled(bool enabled)
         {
             // Not disabling in gbTone to not disable labels
-            cmbToneBase.Enabled = enabled;
+            cmbToneBase.Enabled = enabled; //TODO: check if this required to be disabled if we've got autotone changes.
             cmbToneA.Enabled = enabled;
             cmbToneB.Enabled = enabled;
             cmbToneC.Enabled = enabled;
@@ -1029,7 +1024,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void chkTonesDisabled_CheckedChanged(object sender, EventArgs e)
         {
-            var enabled = !chkTonesDisabled.Checked;
+            var enabled = !((CheckBox)sender).Checked;
             ToneComboEnabled(enabled);
             if (enabled)
                 SequencialToneComboEnabling();
@@ -1049,6 +1044,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             var bFreq = ((CueTextBox)sender).Name.StartsWith("txtFrequency");
             UpdateCentOffset(bFreq ? "HZ" : "c");
+        }
+
+        private void cmbTuningName_SelectedValueChanged(object sender, EventArgs e)
+        {
+            // Selecting defaults
+            var selectedType = (ArrangementType)cmbArrangementType.SelectedItem;
+            var selectedTuning = (TuningDefinition)((ComboBox)sender).SelectedItem;
+            btnEditTuning.Enabled = (selectedType != ArrangementType.Vocal && selectedType != ArrangementType.ShowLight) && selectedTuning != null;
         }
     }
 }

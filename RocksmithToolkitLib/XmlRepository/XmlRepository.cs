@@ -59,7 +59,7 @@ namespace RocksmithToolkitLib.XmlRepository
 
             lock (List)
             {
-                using (var writer = File.Create(FilePath))
+                using (var writer = new StreamWriter(FilePath, false, System.Text.Encoding.GetEncoding("utf-8")))
                 {
                     new XmlSerializer(List.GetType()).Serialize(writer, List);
                 }
