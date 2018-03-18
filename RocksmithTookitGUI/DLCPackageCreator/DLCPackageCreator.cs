@@ -222,10 +222,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { txtVersion.Text = String.IsNullOrEmpty(value) ? "" : value.GetValidVersion(); }
         }
 
-        public string JapaneseArtist
+        public string JapaneseArtistName
         {
-            get { return txtJapaneseArtist.Text; }
-            set { txtJapaneseArtist.Text = value; }
+            get { return txtJapaneseArtistName.Text; }
+            set { txtJapaneseArtistName.Text = value; }
         }
 
         public string JapaneseSongTitle
@@ -832,8 +832,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             txtAlbum.Text = info.SongInfo.Album;
             txtAlbumSort.Text = info.SongInfo.AlbumSort;
             txtJapaneseSongTitle.Text = info.SongInfo.JapaneseSongName;
-            txtJapaneseArtist.Text = info.SongInfo.JapaneseArtist;
-            cbJapaneseTitle.Checked = !string.IsNullOrEmpty(txtJapaneseSongTitle.Text) || !string.IsNullOrEmpty(txtJapaneseArtist.Text);
+            txtJapaneseArtistName.Text = info.SongInfo.JapaneseArtistName;
+            cbJapaneseTitle.Checked = !string.IsNullOrEmpty(txtJapaneseSongTitle.Text) || !string.IsNullOrEmpty(txtJapaneseArtistName.Text);
             txtSongTitle.Text = info.SongInfo.SongDisplayName;
             txtSongTitleSort.Text = info.SongInfo.SongDisplayNameSort;
             txtYear.Text = info.SongInfo.SongYear.ToString();
@@ -1214,7 +1214,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     SongInfo = new SongInfo
                         {
-                            JapaneseArtist = this.JapaneseArtist,
+                            JapaneseArtistName = this.JapaneseArtistName,
                             JapaneseSongName = this.JapaneseSongTitle,
                             SongDisplayName = this.SongTitle,
                             SongDisplayNameSort = this.SongTitleSort,
@@ -2612,12 +2612,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (((CheckBox)sender).Checked)
             {
                 txtJapaneseSongTitle.BringToFront();
-                txtJapaneseArtist.BringToFront();
+                txtJapaneseArtistName.BringToFront();
             }
             else
             {
                 txtJapaneseSongTitle.SendToBack();
-                txtJapaneseArtist.SendToBack();
+                txtJapaneseArtistName.SendToBack();
             }
         }
 

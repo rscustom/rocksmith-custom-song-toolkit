@@ -66,7 +66,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public int? SongYear { get; set; }
         // strings are not serialized if the value has not been initialized
         public string JapaneseSongName { get; set; } //Unicode string, be cautious
-        public string JapaneseArtist { get; set; } //Unicode string, be cautious
+        public string JapaneseArtistName { get; set; } //Unicode string, be cautious
         public TuningStrings Tuning { get; set; }
         public string PersistentID { get; set; }
 
@@ -146,8 +146,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             SongLength = Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
             SongName = info.SongInfo.SongDisplayName;
             SongNameSort = info.SongInfo.SongDisplayNameSort;
-            JapaneseSongName = info.SongInfo.JapaneseSongName;
-            JapaneseArtist = info.SongInfo.JapaneseArtist;
+            JapaneseSongName = string.IsNullOrEmpty(info.SongInfo.JapaneseSongName) ? null : info.SongInfo.JapaneseSongName;
+            JapaneseArtistName = string.IsNullOrEmpty(info.SongInfo.JapaneseArtistName) ? null : info.SongInfo.JapaneseArtistName;
             SongYear = info.SongInfo.SongYear;
 
             //Detect tuning
