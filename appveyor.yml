@@ -57,7 +57,7 @@ after_build:
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - 7z a %PkgName%-mac.zip "%BIN%\RocksmithCustomSongToolkit.app\"
   - rem Sign artifacts to avoid lockups
-  - if defined cert_url signtool sign /v /f selfsigned2017.pfx /p "%cert_pass%" /t http://timestamp.verisign.com/scripts/timstamp.dll "%PkgName%-win.zip" "%PkgName%-mac.zip"
+  - rem can't really sign any zip file tho
 
 
 artifacts:
