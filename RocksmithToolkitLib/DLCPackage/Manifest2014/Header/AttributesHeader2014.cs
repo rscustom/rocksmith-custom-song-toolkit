@@ -138,28 +138,29 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             // TODO: use ManifestFunctions.GetSongDifficulty() method (fix generation algorithm)
             // TODO: improve calculation
 
-            int techCoeff = arrangement.ArrangementPropeties.NonStandardChords +
-                            3 * arrangement.ArrangementPropeties.BarreChords +
-                            (arrangement.ArrangementPropeties.PowerChords | arrangement.ArrangementPropeties.DoubleStops) +
-                            arrangement.ArrangementPropeties.DropDPower +
-                            2 * arrangement.ArrangementPropeties.OpenChords +
-                            arrangement.ArrangementPropeties.FingerPicking +
-                            arrangement.ArrangementPropeties.TwoFingerPicking +
-                            arrangement.ArrangementPropeties.PalmMutes +
-                            arrangement.ArrangementPropeties.Harmonics +
-                            3 * arrangement.ArrangementPropeties.PinchHarmonics +
-                            arrangement.ArrangementPropeties.Hopo +
-                            arrangement.ArrangementPropeties.Tremolo +
-                            (arrangement.ArrangementPropeties.PathBass == 1 ? 4 : 1) * arrangement.ArrangementPropeties.Slides +
-                            arrangement.ArrangementPropeties.UnpitchedSlides +
-                            3 * arrangement.ArrangementPropeties.Bends +
-                            4 * arrangement.ArrangementPropeties.Tapping +
-                            2 * arrangement.ArrangementPropeties.Vibrato +
-                            arrangement.ArrangementPropeties.FretHandMutes +
-                            arrangement.ArrangementPropeties.SlapPop +
-                            arrangement.ArrangementPropeties.Sustain +
-                            arrangement.ArrangementPropeties.FifthsAndOctaves +
-                            arrangement.ArrangementPropeties.Syncopation;
+            var arrProrp = SongContent.ArrangementProperties;
+            int techCoeff = arrProrp.NonStandardChords +
+                            3 * arrProrp.BarreChords +
+                            (arrProrp.PowerChords | arrProrp.DoubleStops) +
+                            arrProrp.DropDPower +
+                            2 * arrProrp.OpenChords +
+                            arrProrp.FingerPicking +
+                            arrProrp.TwoFingerPicking +
+                            arrProrp.PalmMutes +
+                            arrProrp.Harmonics +
+                            3 * arrProrp.PinchHarmonics +
+                            arrProrp.Hopo +
+                            arrProrp.Tremolo +
+                            (arrProrp.PathBass == 1 ? 4 : 1) * arrProrp.Slides +
+                            arrProrp.UnpitchedSlides +
+                            3 * arrProrp.Bends +
+                            4 * arrProrp.Tapping +
+                            2 * arrProrp.Vibrato +
+                            arrProrp.FretHandMutes +
+                            arrProrp.SlapPop +
+                            arrProrp.Sustain +
+                            arrProrp.FifthsAndOctaves +
+                            arrProrp.Syncopation;
 
             if (techCoeff <= 4)
                 techCoeff += 4;
