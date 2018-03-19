@@ -410,7 +410,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillPackageCreatorForm(info, templatePath);
 
             // Application.DoEvents();
-            MessageBox.Show(CurrentRocksmithTitle + " CDLC template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show(CurrentRocksmithTitle + " CDLC template was loaded.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
             Parent.Focus();
         }
 

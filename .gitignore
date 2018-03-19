@@ -121,3 +121,5 @@ __pycache__/
 *.egg
 *.userprefs
 
+/.vs/RocksmithCustomSongCreator/v15/Server/sqlite3
+/.vs/RocksmithCustomSongCreator/v15/sqlite3

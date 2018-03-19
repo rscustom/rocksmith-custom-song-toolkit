@@ -227,7 +227,6 @@
     <None Include="Resources\cgm_default_inlay.png" />
     <Content Include="PsarcLoader\ReadMe.txt" />
     <Content Include="RocksmithToolkitLib.Config.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
     <Content Include="RocksmithToolkitLib.TuningDefinition.xml">
