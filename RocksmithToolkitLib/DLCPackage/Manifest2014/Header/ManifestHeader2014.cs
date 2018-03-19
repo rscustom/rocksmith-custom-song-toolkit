@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
 {
+    // HSAN manifest file structure where <T> is <AttributesHeader2014>
     public class ManifestHeader2014<T>
     {
         public Dictionary<string, Dictionary<string, T>> Entries { get; set; }
@@ -12,7 +13,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public int? IterationVersion { get; set; }
         public String InsertRoot { get; set; }
 
-        public ManifestHeader2014() { }
+        public ManifestHeader2014() { } 
 
         public ManifestHeader2014(Platform platform, DLCPackageType dlcType = DLCPackageType.Song)
         {
@@ -22,7 +23,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
                         ModelName = "RSEnumerable_Song_Header";
                         IterationVersion = 2;
                     }
-                    InsertRoot = "Static.Songs.Headers";
+                    InsertRoot = "Static.Songs.Headers"; 
                     Entries = new Dictionary<string, Dictionary<string, T>>();
                     break;
                 case DLCPackageType.Lesson:

@@ -970,8 +970,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 a.Fingerprints2.Count = fp2.Count;
                 a.Fingerprints2.Fingerprints = fp2.ToArray();
 
-                // calculated as we go through notes, seems to work
-                // NotesInIteration1 is count without ignore="1" notes
+                // Calculated as we go through notes, seems to work
+                // NotesInIteration1 is count of notes without ignore="1" flag
                 a.PhraseIterationCount1 = xml.PhraseIterations.Length;
                 a.NotesInIteration1 = new Int32[a.PhraseIterationCount1];
                 // NotesInIteration2 seems to be the full count
@@ -1055,7 +1055,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     Console.WriteLine(@" -- CDLC contains note time errors and may not play properly"); // + ex.Message);
                 }
 
-                // TODO: new phylosophy ... charting tweaks should be done in EOF by the charter
                 foreach (var n in notes)
                 {
                     for (Int16 id = 0; id < fp1.Count; id++) //FingerPrints 1st level (common handshapes?)

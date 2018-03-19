@@ -63,6 +63,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public string SongEvent { get; set; }
         public string SongKey { get; set; } // where is DLCKey?
         public float SongLength { get; set; }
+        public string JapaneseSongName { get; set; } //new, optional
+        public string JapaneseArtist { get; set; } //new, optional
         public string SongName { get; set; }
         public string SongNameSort { get; set; }
         public int SongPartition { get; set; }

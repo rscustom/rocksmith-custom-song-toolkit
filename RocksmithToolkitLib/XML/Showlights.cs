@@ -37,6 +37,7 @@ using RocksmithToolkitLib.Sng2014HSL;
   * Notes 60-62 causes game hangs
   * Unknown: 63-65
   * Unknown: 68-69
+  * Unknown: 42 - used in "My Generation" 53, 42, 55
   *
   * CAUTION - showlights can be major cause of in-game crashes
   * Initialize Fog and Beam in first two elements to avoid in-game crashes
@@ -52,6 +53,17 @@ using RocksmithToolkitLib.Sng2014HSL;
   * 
   * Strobe effect can be acheived by changing between two fog colors every 0.2 seconds.
   * thanks to iminash's for sharing research about showlights
+  * 
+  * Each stage has 4 zones of lights, large venues can have led lights and has no spawners limitation
+  * effects type:
+  * blinder lights - those stacks of lamps at the back
+  * par can lights - those colorful projectors always there
+  * intelligent laser - those stripes you hate
+  * intelligent streak - ?derectional beam of light
+  * intelligent bright - ?bidirectional light for doing common lightning
+  * Disabled:
+  * led lights - maybe not that useful or I missed it?
+  * 
   * 
  */
 

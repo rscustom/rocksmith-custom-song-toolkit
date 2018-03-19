@@ -6,6 +6,8 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.XmlRepository;
+using System.Xml.Serialization;
+using System.ComponentModel;
 
 namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
 {
@@ -15,12 +17,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public static readonly string URN_TEMPLATE = "urn:{0}:{1}:{2}";
         public static readonly string URN_TEMPLATE_SHORT = "urn:{0}:{1}";
 
-        [JsonIgnore]
         internal bool IsVocal = false;
-        [JsonIgnore]
         internal Song2014 SongContent = null;
-        [JsonIgnore]
-        public bool SerializeBassInfo { get; set; }
 
         public string AlbumArt { get; set; }
         public string AlbumName { get; set; }
@@ -28,21 +26,25 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public string ArrangementName { get; set; }
         public string ArtistName { get; set; }
         public string ArtistNameSort { get; set; }
-        // apply conditional serialization to BassPick
+        // apply conditional serialization to BassPick - see comments at bottom of page
         public int BassPick { get; set; } // added to resolve issue #272
         public decimal CapoFret { get; set; }
         public double? CentOffset { get; set; } // tuning frequency, see Cents2Frequency method
         public bool DLC { get; set; }
-        public string DLCKey { get; set; } // <=> SongKey
+        // usually DLCKey = SongKey, except that songs.psarc does not contain a DLCKey
+        // in compatiblity packs DLCKey is always equal to RS1CompatibilityDisc
+        // in ODLC/CDLC DLCKey is always equal to SongKey which is SongName with all spaces removed
+        public string DLCKey { get; set; } 
         public double? DNA_Chords { get; set; }
         public double? DNA_Riffs { get; set; }
         public double? DNA_Solo { get; set; }
         public double? EasyMastery { get; set; }
-        public bool? JapaneseVocal { get; set; }
+        [DefaultValue(false)] // only serialize a non-false value
+        public bool JapaneseVocal { get; set; }
         public int LeaderboardChallengeRating { get; set; }
         public string ManifestUrn { get; set; }
         public int MasterID_RDV { get; set; }
-        public int? Metronome { get; set; }
+        public int? Metronome { get; set; } // see comments at bottom
         public double? MediumMastery { get; set; }
         public double? NotesEasy { get; set; }
         public double? NotesHard { get; set; }
@@ -55,11 +57,16 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public double? SongDiffHard { get; set; }
         public double? SongDiffMed { get; set; }
         public double? SongDifficulty { get; set; }
-        public string SongKey { get; set; } // <=> DLCKey
+        // usually SongKey = DLCKey, except that songs.psarc does not contain a DLCKey
+        // usually SongKey is the SongName with all spaces removed
+        public string SongKey { get; set; }
         public double? SongLength { get; set; }
         public string SongName { get; set; }
         public string SongNameSort { get; set; }
         public int? SongYear { get; set; }
+        // strings are not serialized if the value has not been initialized
+        public string JapaneseSongName { get; set; } //Unicode string, be cautious
+        public string JapaneseArtistName { get; set; } //Unicode string, be cautious
         public TuningStrings Tuning { get; set; }
         public string PersistentID { get; set; }
 
@@ -107,11 +114,11 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             ArtistNameSort = info.SongInfo.ArtistSort;
             if (arrangement.ArrangementType == ArrangementType.Bass)
             {
-                SerializeBassInfo = true;
-                BassPick = (int) arrangement.PluckedType;
+                SerializeBassPick = true;
+                BassPick = (int)arrangement.PluckedType;
             }
             else
-                SerializeBassInfo = false;
+                SerializeBassPick = false;
 
             CapoFret = (arrangement.Sng2014.Metadata.CapoFretId == 0xFF) ? CapoFret = 0 : Convert.ToDecimal(arrangement.Sng2014.Metadata.CapoFretId);
             DNA_Chords = arrangement.Sng2014.DNACount[(int)DNAId.Chord];
@@ -125,7 +132,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             Metronome = (int?)arrangement.Metronome;
             // TODO: check for bug here 
             // if there is an equivalent bonus arrangement then Representative is set to "1" otherwise "0"
-            Representative = Convert.ToInt32(!arrangement.BonusArr); 
+            Representative = Convert.ToInt32(!arrangement.BonusArr);
             RouteMask = (int)arrangement.RouteMask;
 
             // TODO: use ManifestFunctions.GetSongDifficulty() method (fix generation algorithm)
@@ -165,6 +172,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             SongLength = Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
             SongName = info.SongInfo.SongDisplayName;
             SongNameSort = info.SongInfo.SongDisplayNameSort;
+            JapaneseSongName = string.IsNullOrEmpty(info.SongInfo.JapaneseSongName) ? null : info.SongInfo.JapaneseSongName;
+            JapaneseArtistName = string.IsNullOrEmpty(info.SongInfo.JapaneseArtistName) ? null : info.SongInfo.JapaneseArtistName;
             SongYear = info.SongInfo.SongYear;
 
             //Detect tuning
@@ -173,11 +182,26 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         }
 
         // semi-undocumented feature of Newtonsoft.Json selective conditional serialization
+        // see www.geekytidbits.com/conditional-serialization-with-json-net
+        // Newtonsoft.Json will look for this property at runtime
         public bool ShouldSerializeBassPick()
         {
             // only serialize if ArrangmentType is Bass
-            return (this.SerializeBassInfo);
+            return (this.SerializeBassPick);
         }
 
+        // this property allows control over conditional serialization
+        [XmlIgnore]
+        [JsonIgnore]
+        public bool SerializeBassPick { get; set; }
+
+        // see stackoverflow.com/a/5818571
+        // conditional serializer - prevents serialization when value is null
+        public bool ShouldSerializeMetronome()
+        {
+            return Metronome.HasValue;
+        }
+
+        
     }
 }

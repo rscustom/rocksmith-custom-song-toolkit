@@ -6,13 +6,14 @@ namespace RocksmithToolkitLib.Extensions
 {
     public static class ExternalApps
     {
-        private const string APP_TOPNG = "topng.exe";
-        private const string APP_7Z = "7za.exe";
-        private const string APP_NVDXT = "nvdxt.exe";
-        private const string APP_PACKER = "packer.exe";
-        private const string APP_OGGCUT = "oggCut.exe";
-        private const string APP_OGGDEC = "oggdec.exe";
-        private const string APP_OGGENC = "oggenc.exe";
+        private const string APP_ROOT = @"tools\";
+        private const string APP_TOPNG = APP_ROOT + "topng.exe";
+        private const string APP_7Z = APP_ROOT + "7za.exe";
+        private const string APP_NVDXT = APP_ROOT + "nvdxt.exe";
+        private const string APP_PACKER = APP_ROOT + "packer.exe";
+        private const string APP_OGGCUT = APP_ROOT + "oggCut.exe";
+        private const string APP_OGGDEC = APP_ROOT + "oggdec.exe";
+        private const string APP_OGGENC = APP_ROOT + "oggenc.exe";
 
         public static void VerifyExternalApps()
         {

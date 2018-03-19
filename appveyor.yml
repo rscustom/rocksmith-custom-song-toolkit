@@ -56,6 +56,9 @@ after_build:
   - copy "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithCustomSongToolkit.exe"
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\RocksmithToolkitGUI.exe"
   - 7z a %PkgName%-mac.zip "%BIN%\RocksmithCustomSongToolkit.app\"
+  - rem Sign artifacts to avoid lockups
+  - rem can't really sign any zip file tho
+
 
 artifacts:
   - path: '*-win.zip'
@@ -63,7 +66,7 @@ artifacts:
   - path: '*-mac.zip'
     name: Mac
 
-#	
+# let us know about build state
 notifications:
   - provider: Webhook
     url: "http://hook.rscustom.net/appveyor"

@@ -33,6 +33,7 @@ namespace RocksmithToolkitGUI.DDC
         internal Dictionary<string, string> ConfigDb;
         internal static string AppDir = AppDomain.CurrentDomain.BaseDirectory;
         internal static string DdcDir = Path.Combine(AppDir, "ddc");
+        internal static string DdcPath = Path.Combine(DdcDir, "ddc.exe");
         internal Color EnabledColor = Color.Black;
         internal Color DisabledColor = Color.Gray;
 
@@ -53,21 +54,30 @@ namespace RocksmithToolkitGUI.DDC
             this.bw.ProgressChanged += bw_ProgressChanged;
             this.bw.RunWorkerCompleted += bw_Completed;
             this.bw.WorkerReportsProgress = true;
+            // Do IO stuff here so ddc tab will be up faster aslo don't lock main thread
+            new System.Threading.Thread(new System.Threading.ThreadStart(LoadBackgroundVersion)).Start();
         }
 
         private void DDC_Load(object sender, EventArgs e)
         {
+            PopMDLs();
+            PopCFGs();
+            SetDefaultFromConfig();
+        }
+
+        private void LoadBackgroundVersion()
+        {
             try
             {
-                string ddcPath = Path.Combine(AppDir, "ddc", "ddc.exe");
-                if (!this.DesignMode && File.Exists(ddcPath))
+                if (!this.DesignMode && File.Exists(DdcPath))
                 {
-                    var vi = FileVersionInfo.GetVersionInfo(ddcPath).ProductVersion;
-                    ddcVersion.Text = String.Format("v{0}", vi);
+                    var ver = FileVersionInfo.GetVersionInfo(DdcPath).ProductVersion;
+                    if (ddcVersion.InvokeRequired)
+                    {
+                        ddcVersion.Invoke(new Action(() => ddcVersion.Text = String.Format("v{0}", ver)));
+                    }
+                    else ddcVersion.Text = String.Format("v{0}", ver);
                 }
-                PopMDLs();
-                PopCFGs();
-                SetDefaultFromConfig();
             }
             catch { /*For mono compatibility*/ }
         }
@@ -178,7 +188,7 @@ namespace RocksmithToolkitGUI.DDC
                 switch (Path.GetExtension(file.Value))
                 {
                     case ".xml":   // Arrangement
-                        ApplyDD(file.Value, (int)cmbPhraseLen.Value, chkRemoveSustains.Checked, rampPath, cfgPath, out consoleOutput, chkOverwrite.Checked, chkGenLogFile.Checked);
+                        DDCreator.ApplyDD(file.Value, (int)cmbPhraseLen.Value, chkRemoveSustains.Checked, rampPath, cfgPath, out consoleOutput, chkOverwrite.Checked, chkGenLogFile.Checked);
                         break;
                     case ".psarc": // PC / Mac (RS2014)
                     case ".dat":   // PC (RS1)
@@ -209,6 +219,7 @@ namespace RocksmithToolkitGUI.DDC
             e.Result = errorCount; // No Errors = 0
         }
 
+        [Obsolete("Depricated, please use RocksmithToolkitLib.DDCreator.", true)]
         public int ApplyDD(string filePath, int phraseLen, bool removeSus, string rampPath, string cfgPath, out string consoleOutput, bool overWrite = false, bool keepLog = false)
         {
             var startInfo = new ProcessStartInfo
@@ -291,7 +302,7 @@ namespace RocksmithToolkitGUI.DDC
                 Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
 
                 // apply DD to xml arrangments... 0 = Ends normally with no error
-                result = ApplyDD(arr.SongXml.File, phraseLen, removeSus, rampPath, cfgPath, out consoleOutput, true, keepLog);
+                result = DDCreator.ApplyDD(arr.SongXml.File, phraseLen, removeSus, rampPath, cfgPath, out consoleOutput, true, keepLog);
                 if (result == 1) // Ends with system error
                 {
                     consoleOutput = "DDC System Error: " + Environment.NewLine +

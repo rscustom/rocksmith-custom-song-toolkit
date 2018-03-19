@@ -111,7 +111,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014 {
            // set { }
         }
         public string RelPathDirectory { get; set; }
-        public string RelPathFile { get; set; }
+        public string RelPathFile { get; set; } //RE: Including extension
 
         public GraphItem() {}
 

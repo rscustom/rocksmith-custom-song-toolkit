@@ -112,6 +112,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { txtYear.Text = value.GetValidYear(); }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent an empty AppId
         public string AppId
         {
             get { return txtAppId.Text; }
@@ -219,6 +220,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             get { return txtVersion.Text; }
             set { txtVersion.Text = String.IsNullOrEmpty(value) ? "" : value.GetValidVersion(); }
+        }
+
+        public string JapaneseArtistName
+        {
+            get { return txtJapaneseArtistName.Text; }
+            set { txtJapaneseArtistName.Text = value; }
+        }
+
+        public string JapaneseSongTitle
+        {
+            get { return txtJapaneseSongTitle.Text; }
+            set { txtJapaneseSongTitle.Text = value; }
         }
 
         public string SongTitle
@@ -818,6 +831,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             txtAlbum.Text = info.SongInfo.Album;
             txtAlbumSort.Text = info.SongInfo.AlbumSort;
+            txtJapaneseSongTitle.Text = info.SongInfo.JapaneseSongName;
+            txtJapaneseArtistName.Text = info.SongInfo.JapaneseArtistName;
+            cbJapaneseTitle.Checked = !string.IsNullOrEmpty(txtJapaneseSongTitle.Text) || !string.IsNullOrEmpty(txtJapaneseArtistName.Text);
             txtSongTitle.Text = info.SongInfo.SongDisplayName;
             txtSongTitleSort.Text = info.SongInfo.SongDisplayNameSort;
             txtYear.Text = info.SongInfo.SongYear.ToString();
@@ -944,7 +960,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 //    DlcKeyTB.Focus();
                 //    return null;
                 //}
-
+                /* //ignore since optional
+                if (txtJapaneseSongTitle.Enabled && String.IsNullOrEmpty(JapaneseSongTitle))
+                {
+                    txtJapaneseSongTitle.Focus();
+                    return null;
+                }
+                if (txtJapaneseArtist.Enabled && String.IsNullOrEmpty(JapaneseArtist))
+                {
+                    txtJapaneseArtist.Focus();
+                    return null;
+                }*/
                 if (String.IsNullOrEmpty(SongTitle))
                 {
                     txtSongTitle.Focus();
@@ -1188,13 +1214,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     SongInfo = new SongInfo
                         {
-                            SongDisplayName = txtSongTitle.Text,
-                            SongDisplayNameSort = String.IsNullOrEmpty(txtSongTitleSort.Text.Trim()) ? txtSongTitle.Text : txtSongTitleSort.Text,
-                            Album = txtAlbum.Text,
-                            AlbumSort = txtAlbumSort.Text,
+                            JapaneseArtistName = this.JapaneseArtistName,
+                            JapaneseSongName = this.JapaneseSongTitle,
+                            SongDisplayName = this.SongTitle,
+                            SongDisplayNameSort = this.SongTitleSort,
+                            Album = this.Album,
+                            AlbumSort = this.AlbumSort,
                             SongYear = year,
-                            Artist = txtArtist.Text,
-                            ArtistSort = String.IsNullOrEmpty(txtArtistSort.Text.Trim()) ? txtArtist.Text : txtArtistSort.Text,
+                            Artist = this.Artist,
+                            ArtistSort = this.ArtistSort,
                             AverageTempo = tempo
                         },
 
@@ -1659,12 +1687,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // declare one time for DDC generation   
             var consoleOutput = String.Empty;
-            SettingsDDC.Instance.LoadConfigXml();
-            var phraseLen = SettingsDDC.Instance.PhraseLen;
+            DDCSettings.Instance.LoadConfigXml();
+            var phraseLen = DDCSettings.Instance.PhraseLen;
             // removeSus may be depricated in latest DDC but left here for comptiblity
-            var removeSus = SettingsDDC.Instance.RemoveSus;
-            var rampPath = SettingsDDC.Instance.RampPath;
-            var cfgPath = SettingsDDC.Instance.CfgPath;
+            var removeSus = DDCSettings.Instance.RemoveSus;
+            var rampPath = DDCSettings.Instance.RampPath;
+            var cfgPath = DDCSettings.Instance.CfgPath;
 
             foreach (var arr in packageData.Arrangements)
             {
@@ -1718,21 +1746,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     // Important ... don't overwrite author's DD if it is already present in any arragement
                     if (!isDD)
                     {
-                        using (var ddc = new DDC.DDC())
+                        // apply DD to xml arrangments
+                        var result = DDCreator.ApplyDD(arr.SongXml.File, phraseLen, removeSus, rampPath, cfgPath, out consoleOutput, true);
+                        if (result == 1)
                         {
-                            // apply DD to xml arrangments
-                            var singleResult = ddc.ApplyDD(arr.SongXml.File, phraseLen, removeSus, rampPath, cfgPath, out consoleOutput, true);
-                            if (singleResult == 1)
-                            {
-                                var errMsg = "DDC generated an error while processing arrangement:" + Environment.NewLine + arr.SongXml.File + Environment.NewLine;
-                                BetterDialog2.ShowDialog(errMsg, "DDC Generated Error", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
-                            }
+                            var errMsg = "DDC generated an error while processing arrangement:" + Environment.NewLine + arr.SongXml.File + Environment.NewLine;
+                            BetterDialog2.ShowDialog(errMsg, "DDC Generated Error", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                        }
 
-                            if (singleResult == 2)
-                            {
-                                consoleOutput = String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(arr.SongXml.File), consoleOutput);
-                                BetterDialog2.ShowDialog(consoleOutput, "DDC Generation Info", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
-                            }
+                        if (result == 2)
+                        {
+                            consoleOutput = String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(arr.SongXml.File), consoleOutput);
+                            BetterDialog2.ShowDialog(consoleOutput, "DDC Generation Info", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
                         }
                     }
                     else
@@ -2580,6 +2605,30 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return 0;
                 return obj.Code.GetHashCode() | obj.Time.GetHashCode();
             }
+        }
+
+        private void cbJapaneseTitle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((CheckBox)sender).Checked)
+            {
+                txtJapaneseSongTitle.BringToFront();
+                txtJapaneseArtistName.BringToFront();
+            }
+            else
+            {
+                txtJapaneseSongTitle.SendToBack();
+                txtJapaneseArtistName.SendToBack();
+            }
+        }
+
+        private void txtJapaneseSongTitle_Validating(object sender, CancelEventArgs e)
+        {
+            ((CueTextBox)sender).Text = ((CueTextBox)sender).Text.TrimEnd();
+        }
+
+        private void cbJapaneseTitle_Click(object sender, EventArgs e)
+        {
+            cbJapaneseTitle.Checked = !((CheckBox)sender).Checked;
         }
     }
 }

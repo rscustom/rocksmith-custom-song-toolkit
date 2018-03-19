@@ -7,6 +7,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Properties;
+using RocksmithToolkitLib.XML;
+using System.Diagnostics;
+using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
 {
@@ -249,7 +253,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 dds.UUID = IdGenerator.Guid();
                 dds.LLID = IdGenerator.LLIDGuid();
                 dds.Name = String.Format("lyrics_{0}", dlcName);
-                dds.RelPathFile = dds.Name;
+                dds.RelPathFile = String.Format("{0}.dds", dds.Name); //keep extension
                 dds.LogPathFile = dds.RelPathFile;
                 ImageArt.Add(dds);
             }
@@ -626,9 +630,55 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             foreach (var sng in sngFiles)
                 File.Copy(sng, Path.Combine(binGenericDir, Path.GetFileName(sng)));
 
+            // declare variables one time for use in DDC generation   
+            DDCSettings.Instance.LoadConfigXml();
+            var phraseLen = DDCSettings.Instance.PhraseLen;
+            // removeSus may be depricated in latest DDC but left here for comptiblity
+            var removeSus = DDCSettings.Instance.RemoveSus;
+            var rampPath = DDCSettings.Instance.RampPath;
+            var cfgPath = DDCSettings.Instance.CfgPath;
+
+            // generate SongPack comment
+            var spComment = "(Remastered by SongPack Maker)";
+            var addDD = false;
+            if (ConfigRepository.Instance().GetBoolean("ddc_autogen"))
+            {
+                addDD = true;
+                spComment += " " + "(DDC by SongPack Maker)";
+            }
+
             var xmlFiles = Directory.EnumerateFiles(srcPath, "*.xml", SearchOption.AllDirectories).ToArray();
             foreach (var xml in xmlFiles)
-                File.Copy(xml, Path.Combine(songsArrDir, Path.GetFileName(xml)));
+            {
+                // completely skip dlc.xml template files
+                if (xml.EndsWith("_RS2014.dlc.xml"))
+                    continue;
+
+                var xmlSongPack = Path.Combine(songsArrDir, Path.GetFileName(xml));
+                File.Copy(xml, xmlSongPack);
+
+                // skip vocal and showlight xml files
+                if (xml.EndsWith("_vocals.xml") || xml.EndsWith("_showlights.xml"))
+                    continue;
+
+                // add DDC to xml arrangement
+                if (addDD)
+                {
+                    // check if arrangment has pre existing DD and do not overwrite
+                    var songXml = Song2014.LoadFromFile(xml);
+                    var mf = new ManifestFunctions(GameVersion.RS2014);
+                    if (mf.GetMaxDifficulty(songXml) == 0)
+                    {
+                        var consoleOutput = String.Empty;
+                        // apply DD to xml arrangments... 0 = Ends normally with no error
+                        var result = DDCreator.ApplyDD(xmlSongPack, phraseLen, removeSus, rampPath, cfgPath, out consoleOutput, true);
+                        if (result == 1)
+                            Debug.WriteLine(String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(xml), "DDC ended with system error " + consoleOutput));
+                        else if (result == 2)
+                            Debug.WriteLine(String.Format("Arrangement file '{0}' => {1}", Path.GetFileNameWithoutExtension(xml), "DDC ended with application error " + consoleOutput));
+                    }
+                }
+            }
 
             // generate new Aggregate Graph
             var aggGraphPack = new AggregateGraph2014();
@@ -699,7 +749,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             using (var fs = new FileStream(toolkitVersionFile, FileMode.Create))
             using (var ms = new MemoryStream())
             {
-                DLCPackageCreator.GenerateToolkitVersion(ms, packageComment: "SongPack Maker v1.1");
+                DLCPackageCreator.GenerateToolkitVersion(ms, packageVersion: "SongPack Maker v1.2", packageComment: spComment);
                 ms.Flush();
                 ms.Seek(0, SeekOrigin.Begin);
                 ms.CopyTo(fs);

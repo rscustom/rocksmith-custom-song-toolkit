@@ -29,15 +29,15 @@ namespace RocksmithToolkitGUI
             InitializeComponent();
 
             var ci = new CultureInfo("en-US");
-            var thread = System.Threading.Thread.CurrentThread;
+            var thread = Thread.CurrentThread;
             Application.CurrentCulture = thread.CurrentCulture = thread.CurrentUICulture = ci;
-            Application.CurrentInputLanguage = InputLanguage.FromCulture(ci);
+            //Application.CurrentInputLanguage = InputLanguage.FromCulture(ci); //may cause issues for non us cultures esp on wineMAC build got report of such issue.
 
             // EH keeps main form responsive/refreshed
             this.Load += MainForm_Load;
             this.Shown += MainForm_Splash;
 
-            // more easter eggs ... commented out bad practice
+            // EGG: more easter eggs ... commented out bad practice
             //if (args.Length > 0 && File.Exists(args[0]))
             //    LoadTemplate(args[0]); 
 
@@ -179,10 +179,7 @@ namespace RocksmithToolkitGUI
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var h = new HelpForm())
-            {
-                h.ShowDialog();
-            }
+            ShowHelpForm(); //Just show initial help form here!
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
@@ -296,7 +293,7 @@ namespace RocksmithToolkitGUI
         private void ShowHelpForm()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            using (Stream streamBetaInfo = assembly.GetManifestResourceStream("RocksmithToolkitGUI.Resources.BetaInfo.rtf"))
+            using (Stream streamBetaInfo = assembly.GetManifestResourceStream("RocksmithToolkitGUI.BetaInfo.rtf")) //RocksmithToolkitGUI.Resources.
             {
                 using (var helpViewer = new HelpForm())
                 {
@@ -325,7 +322,11 @@ namespace RocksmithToolkitGUI
             var cmdArgs = String.Join(" ", args);
             var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var cliPath = Path.Combine(appDir, "packer.exe");
-            GeneralExtensions.RunExternalExecutable(cliPath, arguments: cmdArgs);
+
+            if (File.Exists(cliPath))
+                GeneralExtensions.RunExternalExecutable(cliPath, arguments: cmdArgs);
+            else
+                MessageBox.Show("'Build, Rebuild Solution' while configuration is set to 'Debug w CLI'", "WRONG CONFIGURATION IS SELECTED ...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void btnDevTestMethod_Click(object sender, EventArgs e)

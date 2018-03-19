@@ -98,19 +98,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
-            // commented out for now as unnecssary code
-            //if (File.Exists(SngPath) && File.Exists(ArtPath) || !IsCustom)
-            //{
-            //    if (!IsCustom)
-            //        SngPath = "";
-
             this.DialogResult = DialogResult.OK;
             Close();
-            //}
-            //else
-            //{
-            //    MessageBox.Show("One of required files are missing, please select both required files and try again.\r\n", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //}
         }
 
         private void btnVocalsDdsPath_Click(object sender, EventArgs e)

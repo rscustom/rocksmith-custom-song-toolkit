@@ -12,6 +12,16 @@ namespace RocksmithToolkitLib.XmlRepository {
 
         public SongAppIdRepository() : base(FILENAME, new AppIdComparer()) { }
 
+        public SongAppIdRepository Load(string appidXml)
+        {
+            if (!string.IsNullOrEmpty(appidXml))
+            {
+                FileName = appidXml;
+                Load();
+            }
+            return this;
+        }
+
         public SongAppId Select(string appId, GameVersion gameVersion)
         {
             if (List.Any(s => s.AppId == appId && s.GameVersion == gameVersion))

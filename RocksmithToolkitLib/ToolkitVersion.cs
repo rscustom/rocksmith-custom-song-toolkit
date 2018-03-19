@@ -20,7 +20,7 @@ namespace RocksmithToolkitLib
         // Alternatively prior to committing major revisions/releases ...
         // the 'AssemblyVersion' and 'AssemblyConfiguration' values must be edited in 
         // the 'PatchAssemblyVersion.ps1' file as needed.
-  
+
         // assemblyVersion e.g. "1.2.3.4"
         public static string AssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
@@ -55,18 +55,20 @@ namespace RocksmithToolkitLib
 
         public static string RSTKLibVersion()
         {
-            var assemblyVersion = Assembly.LoadFrom("RocksmithToolkitLib.dll").GetName().Version.ToString();
-            var assemblyInformationVersion = Assembly.LoadFrom("RocksmithToolkitLib.dll").GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).Cast<AssemblyInformationalVersionAttribute>().FirstOrDefault().InformationalVersion.ToString();
-            var assemblyConfiguration = Assembly.LoadFrom("RocksmithToolkitLib.dll").GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
+            var assembly = Assembly.LoadFile(Path.GetFullPath("RocksmithToolkitLib.dll"));
+            var assemblyVersion = assembly.GetName().Version.ToString();
+            var assemblyInformationVersion = assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).Cast<AssemblyInformationalVersionAttribute>().FirstOrDefault().InformationalVersion.ToString();
+            var assemblyConfiguration = assembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
 
             return String.Format("{0}-{1} {2}", assemblyVersion, assemblyInformationVersion, assemblyConfiguration);
         }
 
         public static string RSTKUpdaterVersion()
         {
-            var assemblyVersion = Assembly.LoadFrom("RocksmithToolkitUpdater.exe").GetName().Version.ToString();
-            var assemblyInformationVersion = Assembly.LoadFrom("RocksmithToolkitUpdater.exe").GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).Cast<AssemblyInformationalVersionAttribute>().FirstOrDefault().InformationalVersion.ToString();
-            var assemblyConfiguration = Assembly.LoadFrom("RocksmithToolkitUpdater.exe").GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
+            var assembly = Assembly.LoadFile(Path.GetFullPath("RocksmithToolkitUpdater.exe"));
+            var assemblyVersion = assembly.GetName().Version.ToString();
+            var assemblyInformationVersion = assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).Cast<AssemblyInformationalVersionAttribute>().FirstOrDefault().InformationalVersion.ToString();
+            var assemblyConfiguration = assembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
 
             return String.Format("{0}-{1} {2}", assemblyVersion, assemblyInformationVersion, assemblyConfiguration);
         }
