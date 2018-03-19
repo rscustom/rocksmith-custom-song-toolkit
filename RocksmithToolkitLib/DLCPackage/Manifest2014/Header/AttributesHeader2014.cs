@@ -129,11 +129,37 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             RouteMask = (int)arrangement.RouteMask;
 
             // TODO: use ManifestFunctions.GetSongDifficulty() method (fix generation algorithm)
-            // TODO: round to 9 decimal places and improve calculation
-            // TODO: fix SongDiff calculations
-            SongDiffEasy = SongContent.SongLength / NotesEasy;
-            SongDiffMed = SongContent.SongLength / NotesMedium;
-            SongDiffHard = SongContent.SongLength / NotesHard;
+            // TODO: improve calculation
+
+            int techCoeff = arrangement.ArrangementPropeties.NonStandardChords +
+                            3 * arrangement.ArrangementPropeties.BarreChords +
+                            (arrangement.ArrangementPropeties.PowerChords | arrangement.ArrangementPropeties.DoubleStops) +
+                            arrangement.ArrangementPropeties.DropDPower +
+                            2 * arrangement.ArrangementPropeties.OpenChords +
+                            arrangement.ArrangementPropeties.FingerPicking +
+                            arrangement.ArrangementPropeties.TwoFingerPicking +
+                            arrangement.ArrangementPropeties.PalmMutes +
+                            arrangement.ArrangementPropeties.Harmonics +
+                            3 * arrangement.ArrangementPropeties.PinchHarmonics +
+                            arrangement.ArrangementPropeties.Hopo +
+                            arrangement.ArrangementPropeties.Tremolo +
+                            (arrangement.ArrangementPropeties.PathBass == 1 ? 4 : 1) * arrangement.ArrangementPropeties.Slides +
+                            arrangement.ArrangementPropeties.UnpitchedSlides +
+                            3 * arrangement.ArrangementPropeties.Bends +
+                            4 * arrangement.ArrangementPropeties.Tapping +
+                            2 * arrangement.ArrangementPropeties.Vibrato +
+                            arrangement.ArrangementPropeties.FretHandMutes +
+                            arrangement.ArrangementPropeties.SlapPop +
+                            arrangement.ArrangementPropeties.Sustain +
+                            arrangement.ArrangementPropeties.FifthsAndOctaves +
+                            arrangement.ArrangementPropeties.Syncopation;
+
+            if (techCoeff <= 4)
+                techCoeff += 4;
+
+            SongDiffHard = Math.Round(techCoeff * (double)NotesHard / SongContent.SongLength / 100, 9);
+            SongDiffMed = Math.Round(techCoeff * (double)NotesMedium / SongContent.SongLength / 50, 9);
+            SongDiffEasy = Math.Round(techCoeff * (double)NotesEasy / SongContent.SongLength / 25, 9);
             SongDifficulty = SongDiffHard;
 
             SongLength = Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
