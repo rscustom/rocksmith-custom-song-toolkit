@@ -19,7 +19,8 @@ using RocksmithToolkitLib.Sng2014HSL;
   * 32(G#) = Dark Orange;               33(A#) = LtBlue(D like)
   * 34(A)  = Yellow(A# like)            35(B)  = Dark Violet(F like)
   * 
-  * Spotlights midi notes: 48-59 (may be venue dependent), 42 is off
+  * Spotlights midi notes: 42, 48-59 (may be venue dependent)
+  * 42 = Off
   * 48(C)  = Green;                     49(C#) = Dark Red(G like)
   * 50(D)  = Medium Turquoise(C# like); 51(D#) = Brown(A like)
   * 52(E)  = Blue(D# like);             53(F)  = LtGreen(B like)
@@ -37,7 +38,6 @@ using RocksmithToolkitLib.Sng2014HSL;
   * Notes 60-62 causes game hangs
   * Unknown: 63-65
   * Unknown: 68-69
-  * Unknown: 42 - used in "My Generation" 53, 42, 55
   *
   * CAUTION - showlights can be major cause of in-game crashes
   * Initialize Fog and Beam in first two elements to avoid in-game crashes
@@ -51,8 +51,8 @@ using RocksmithToolkitLib.Sng2014HSL;
   * ? 67, 54, 66 turns off all spots and lasers except back four spot
   * ? 42, 54 turns on back spot, search and laser lights.
   * 
-  * Strobe effect can be acheived by changing between two fog colors every 0.2 seconds.
-  * thanks to iminash's for sharing research about showlights
+  * Strobe effect can be achieved by changing between two fog colors very quickly (e.g. every 0.2 seconds).
+  * thanks to iminashi for sharing research about showlights
   * 
   * Each stage has 4 zones of lights, large venues can have led lights and has no spawners limitation
   * effects type:

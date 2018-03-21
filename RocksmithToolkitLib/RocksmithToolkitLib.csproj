@@ -237,6 +237,7 @@
     <Content Include="PsarcLoader\ReadMe.txt" />
     <Content Include="RocksmithToolkitLib.Config.xml">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="RocksmithToolkitLib.TuningDefinition.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
