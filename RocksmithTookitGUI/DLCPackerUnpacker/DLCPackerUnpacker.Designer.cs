@@ -34,6 +34,7 @@
             this.btnPack = new System.Windows.Forms.Button();
             this.btnRepackAppId = new System.Windows.Forms.Button();
             this.gbAppIdUpdater = new System.Windows.Forms.GroupBox();
+            this.btnRepackFolder = new System.Windows.Forms.Button();
             this.lblAppId = new System.Windows.Forms.Label();
             this.cmbGameVersion = new System.Windows.Forms.ComboBox();
             this.txtAppId = new System.Windows.Forms.TextBox();
@@ -94,9 +95,9 @@
             // 
             this.btnRepackAppId.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRepackAppId.ForeColor = System.Drawing.Color.Black;
-            this.btnRepackAppId.Location = new System.Drawing.Point(297, 42);
+            this.btnRepackAppId.Location = new System.Drawing.Point(244, 41);
             this.btnRepackAppId.Name = "btnRepackAppId";
-            this.btnRepackAppId.Size = new System.Drawing.Size(128, 23);
+            this.btnRepackAppId.Size = new System.Drawing.Size(85, 23);
             this.btnRepackAppId.TabIndex = 7;
             this.btnRepackAppId.Text = "Repack AppId";
             this.toolTip.SetToolTip(this.btnRepackAppId, "You can also try checking the SNG to XML box if you \r\nreceive an error message wh" +
@@ -106,6 +107,7 @@
             // 
             // gbAppIdUpdater
             // 
+            this.gbAppIdUpdater.Controls.Add(this.btnRepackFolder);
             this.gbAppIdUpdater.Controls.Add(this.lblAppId);
             this.gbAppIdUpdater.Controls.Add(this.cmbGameVersion);
             this.gbAppIdUpdater.Controls.Add(this.txtAppId);
@@ -120,6 +122,20 @@
             this.gbAppIdUpdater.TabIndex = 13;
             this.gbAppIdUpdater.TabStop = false;
             this.gbAppIdUpdater.Text = "App ID Updater";
+            // 
+            // btnRepackFolder
+            // 
+            this.btnRepackFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRepackFolder.ForeColor = System.Drawing.Color.Black;
+            this.btnRepackFolder.Location = new System.Drawing.Point(335, 41);
+            this.btnRepackFolder.Name = "btnRepackFolder";
+            this.btnRepackFolder.Size = new System.Drawing.Size(90, 23);
+            this.btnRepackFolder.TabIndex = 42;
+            this.btnRepackFolder.Text = "Repack Folder";
+            this.toolTip.SetToolTip(this.btnRepackFolder, "You can also try checking the SNG to XML box if you \r\nreceive an error message wh" +
+        "en using Repack AppId.");
+            this.btnRepackFolder.UseVisualStyleBackColor = true;
+            this.btnRepackFolder.Click += new System.EventHandler(this.btnRepackFolder_Click);
             // 
             // lblAppId
             // 
@@ -483,5 +499,6 @@
         private System.Windows.Forms.CheckBox chkVerbose;
         private System.Windows.Forms.CheckBox chkUpdateManifest;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnRepackFolder;
     }
 }
