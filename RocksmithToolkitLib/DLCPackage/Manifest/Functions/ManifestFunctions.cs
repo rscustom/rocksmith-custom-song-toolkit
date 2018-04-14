@@ -80,16 +80,15 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                     SectionUINames.Add("riff", "$[34298] Riff [1]");
                     SectionUINames.Add("rifff", "$[34298] Riff [1]"); //incorrect name in some adverse cases
                     SectionUINames.Add("silence", "$[34299] Silence [1]");
-                    SectionUINames.Add("shifts", "$[34308] Shifts [1]");
-                    SectionUINames.Add("slides", "$[35872] Slides [1]");
                     SectionUINames.Add("solo", "$[34300] Solo [1]");
                     SectionUINames.Add("tapping", "$[34305] Tapping [1]");
-                    SectionUINames.Add("taps", "$[34313] Taps [1]");
                     SectionUINames.Add("transition", "$[34301] Transition [1]");
                     SectionUINames.Add("vamp", "$[34302] Vamp [1]");
                     SectionUINames.Add("variation", "$[34303] Variation [1]");
                     SectionUINames.Add("verse", "$[34304] Verse [1]");
                     SectionUINames.Add("noguitar", "$[6091] No Guitar [1]");
+                    // Generic name, not used in official content
+                    //SectionUINames.Add("phrase", "$[34306] Phrase [1]");
                     break;
             }
         }
@@ -285,42 +284,41 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
 
         public static void GetSongDifficulty(AttributesHeader2014 attribute, Song2014 song)
         {
-            var easyArray = new List<int>();
-            var mediumArray = new List<int>();
-            var hardArray = new List<int>();
+            // This is not the way official values are calculated, but sometimes gets pretty close
+            // TODO: improve calculation
 
-            for (int i = 0; i < song.PhraseIterations.Length; i++)
-            {
-                var pt = song.PhraseIterations[i];
-                var hard = song.Phrases[pt.PhraseId].MaxDifficulty;
-                if (pt.HeroLevels != null)
-                    foreach (var h in pt.HeroLevels)
-                    {
-                        switch (h.Hero)
-                        {
-                            case 1:
-                                easyArray.Add(h.Difficulty);
-                                break;
-                            case 2:
-                                mediumArray.Add(h.Difficulty);
-                                break;
-                            case 3:
-                                hard = h.Difficulty;
-                                break;
-                        }
-                        hardArray.Add(hard);
-                    }
-            }
+            var arrProrp = song.ArrangementProperties;
+            int techCoeff = arrProrp.NonStandardChords +
+                            3 * arrProrp.BarreChords +
+                            (arrProrp.PowerChords | arrProrp.DoubleStops) +
+                            arrProrp.DropDPower +
+                            2 * arrProrp.OpenChords +
+                            arrProrp.FingerPicking +
+                            arrProrp.TwoFingerPicking +
+                            arrProrp.PalmMutes +
+                            2 * arrProrp.Harmonics +
+                            3 * arrProrp.PinchHarmonics +
+                            arrProrp.Hopo +
+                            arrProrp.Tremolo +
+                            (arrProrp.PathBass == 1 ? 4 : 1) * arrProrp.Slides +
+                            arrProrp.UnpitchedSlides +
+                            3 * arrProrp.Bends +
+                            4 * arrProrp.Tapping +
+                            2 * arrProrp.Vibrato +
+                            arrProrp.FretHandMutes +
+                            arrProrp.SlapPop +
+                            arrProrp.Sustain +
+                            arrProrp.FifthsAndOctaves +
+                            arrProrp.Syncopation;
 
-            // Is not the way of official are calculated, but is a way to calculate unique values for custom
-            // Could be rewritten with the correct way or a better way to get this value
-            var itCount = song.PhraseIterations.Length;
-            var ifAny = easyArray.Count > 0;
+            // Arrangements with few/no techniques get very low values otherwise
+            if (techCoeff <= 5)
+                techCoeff += 4;
 
-            // TODO: round to 9 decimal places and improve calculation
-            attribute.SongDiffEasy = ifAny ? easyArray.Average() / itCount : 0;
-            attribute.SongDiffMed = ifAny ? mediumArray.Average() / itCount : 0;
-            attribute.SongDiffHard = ifAny ? hardArray.Average() / itCount : 0;
+            // In official content maximum value for SongDiffHard is 1.0
+            attribute.SongDiffHard = Math.Round(techCoeff * (double)attribute.NotesHard / song.SongLength / 100, 9);
+            attribute.SongDiffMed = Math.Round(techCoeff * (double)attribute.NotesMedium / song.SongLength / 50, 9);
+            attribute.SongDiffEasy = Math.Round(techCoeff * (double)attribute.NotesEasy / song.SongLength / 25, 9);
             attribute.SongDifficulty = attribute.SongDiffHard;
         }
 
@@ -431,14 +429,17 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                 return;
 
             foreach (var y in song.ChordTemplates)
+            {
                 if (!String.IsNullOrEmpty(y.ChordName)) //Only add chords with name, checked in RS1 and RS14 packages
                     attribute.ChordTemplates.Add(new ChordTemplate
                     {
-                        ChordId = ind++,
+                        ChordId = ind,
                         ChordName = y.ChordName,
                         Fingers = new List<int> { y.Finger0, y.Finger1, y.Finger2, y.Finger3, y.Finger4, y.Finger5 },
                         Frets = new List<int> { y.Fret0, y.Fret1, y.Fret2, y.Fret3, y.Fret4, y.Fret5 }
                     });
+                ind++;
+            }
         }
 
         //TODO: investigate on values 0.9 and lower, spotted in DLC
@@ -478,7 +479,11 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
                         }
                         else
                         {
-                            attribute.DynamicVisualDensity.Add((float)(beginSpeed * Math.Pow(factor, i)));
+                            double speed = beginSpeed * Math.Pow(factor, i);
+                            if (version == GameVersion.RS2014)
+                                speed = Math.Round(speed, 1);
+
+                            attribute.DynamicVisualDensity.Add((float)speed);
                         }
                     }
                 }

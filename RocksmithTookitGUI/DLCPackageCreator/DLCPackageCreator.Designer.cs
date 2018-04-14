@@ -416,7 +416,7 @@
             this.label2.Size = new System.Drawing.Size(424, 13);
             this.label2.TabIndex = 6;
             this.label2.Text = "Song preview is generated automatically if not provided in format \'filename_previ" +
-                "ew.wem\'\r\n";
+    "ew.wem\'\r\n";
             // 
             // txtAlbumArtPath
             // 
@@ -507,7 +507,7 @@
             this.label1.Size = new System.Drawing.Size(495, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Use \"Up/Down\" keys to change order of the tones, use \"Delete\" to delete and \"D\" t" +
-                "o duplicate a tone.";
+    "o duplicate a tone.";
             // 
             // gbArrangements
             // 
@@ -636,8 +636,8 @@
             this.txtDlcKey.TabIndex = 3;
             this.txtDlcKey.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolTip.SetToolTip(this.txtDlcKey, "DLC Key (aka Song Key):\nA unique humanly readable song key.\nNo spaces or special " +
-                    "characters allowed.\n\nUse the Configuration menu to \nsave your Charter Name so th" +
-                    "at \nDLC Key is auto formatted properly.");
+        "characters allowed.\n\nUse the Configuration menu to \nsave your Charter Name so th" +
+        "at \nDLC Key is auto formatted properly.");
             // 
             // txtAlbumSort
             // 
@@ -687,7 +687,7 @@
             // 
             this.numVolPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.numVolPreview.DecimalPlaces = 1;
-            this.numVolPreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.numVolPreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numVolPreview.ForeColor = System.Drawing.SystemColors.ControlText;
             this.numVolPreview.Increment = new decimal(new int[] {
             5,
@@ -730,30 +730,6 @@
             this.txtVersion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolTip.SetToolTip(this.txtVersion, "Song Version");
             this.txtVersion.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtVersion_KeyPress);
-            // 
-            // txtSongTitle
-            // 
-            this.txtSongTitle.BackColor = System.Drawing.SystemColors.Window;
-            this.txtSongTitle.Cue = "Song Title";
-            this.txtSongTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtSongTitle.ForeColor = System.Drawing.Color.Gray;
-            this.txtSongTitle.Location = new System.Drawing.Point(168, 17);
-            this.txtSongTitle.Name = "txtSongTitle";
-            this.txtSongTitle.Size = new System.Drawing.Size(170, 20);
-            this.txtSongTitle.TabIndex = 1;
-            this.toolTip.SetToolTip(this.txtSongTitle, "Song Title");
-            // 
-            // txtArtist
-            // 
-            this.txtArtist.BackColor = System.Drawing.SystemColors.Window;
-            this.txtArtist.Cue = "Artist";
-            this.txtArtist.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.txtArtist.ForeColor = System.Drawing.Color.Gray;
-            this.txtArtist.Location = new System.Drawing.Point(8, 17);
-            this.txtArtist.Name = "txtArtist";
-            this.txtArtist.Size = new System.Drawing.Size(154, 20);
-            this.txtArtist.TabIndex = 0;
-            this.toolTip.SetToolTip(this.txtArtist, "Artist");
             // 
             // txtAlbum
             // 
@@ -861,15 +837,50 @@
             this.label4.TabIndex = 14;
             this.label4.Text = "dB";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label9.ForeColor = System.Drawing.Color.MediumSlateBlue;
+            this.label9.Location = new System.Drawing.Point(139, 92);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(32, 12);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "EN/JP";
+            // 
+            // txtArtist
+            // 
+            this.txtArtist.BackColor = System.Drawing.SystemColors.Window;
+            this.txtArtist.Cue = "Artist";
+            this.txtArtist.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtArtist.ForeColor = System.Drawing.Color.Gray;
+            this.txtArtist.Location = new System.Drawing.Point(8, 17);
+            this.txtArtist.Name = "txtArtist";
+            this.txtArtist.Size = new System.Drawing.Size(154, 20);
+            this.txtArtist.TabIndex = 0;
+            this.toolTip.SetToolTip(this.txtArtist, "Artist");
+            // 
+            // txtSongTitle
+            // 
+            this.txtSongTitle.BackColor = System.Drawing.SystemColors.Window;
+            this.txtSongTitle.Cue = "Song Title";
+            this.txtSongTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.txtSongTitle.ForeColor = System.Drawing.Color.Gray;
+            this.txtSongTitle.Location = new System.Drawing.Point(168, 17);
+            this.txtSongTitle.Name = "txtSongTitle";
+            this.txtSongTitle.Size = new System.Drawing.Size(170, 20);
+            this.txtSongTitle.TabIndex = 1;
+            this.toolTip.SetToolTip(this.txtSongTitle, "Song Title");
+            // 
             // txtJapaneseArtistName
             // 
             this.txtJapaneseArtistName.BackColor = System.Drawing.SystemColors.Window;
             this.txtJapaneseArtistName.Cue = "日本語 Artist";
-            this.txtJapaneseArtistName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.txtJapaneseArtistName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtJapaneseArtistName.ForeColor = System.Drawing.Color.Gray;
             this.txtJapaneseArtistName.Location = new System.Drawing.Point(8, 17);
-            this.txtJapaneseArtistName.Name = "txtJapaneseArtist";
-            this.txtJapaneseArtistName.Size = new System.Drawing.Size(154, 21);
+            this.txtJapaneseArtistName.Name = "txtJapaneseArtistName";
+            this.txtJapaneseArtistName.Size = new System.Drawing.Size(154, 20);
             this.txtJapaneseArtistName.TabIndex = 20;
             this.toolTip.SetToolTip(this.txtJapaneseArtistName, "日本語 Artist");
             this.txtJapaneseArtistName.Validating += new System.ComponentModel.CancelEventHandler(this.txtJapaneseSongTitle_Validating);
@@ -878,11 +889,11 @@
             // 
             this.txtJapaneseSongTitle.BackColor = System.Drawing.SystemColors.Window;
             this.txtJapaneseSongTitle.Cue = "日本語 Title";
-            this.txtJapaneseSongTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.txtJapaneseSongTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtJapaneseSongTitle.ForeColor = System.Drawing.Color.Gray;
             this.txtJapaneseSongTitle.Location = new System.Drawing.Point(168, 17);
             this.txtJapaneseSongTitle.Name = "txtJapaneseSongTitle";
-            this.txtJapaneseSongTitle.Size = new System.Drawing.Size(170, 21);
+            this.txtJapaneseSongTitle.Size = new System.Drawing.Size(170, 20);
             this.txtJapaneseSongTitle.TabIndex = 19;
             this.toolTip.SetToolTip(this.txtJapaneseSongTitle, "日本語 Song Title");
             this.txtJapaneseSongTitle.Validating += new System.ComponentModel.CancelEventHandler(this.txtJapaneseSongTitle_Validating);
@@ -965,21 +976,10 @@
             this.btnDevUse.TabIndex = 8;
             this.btnDevUse.Text = "DEV";
             this.toolTip.SetToolTip(this.btnDevUse, "Developer User Only - For Debugging\r\nUse to load a folder containing song artifac" +
-                    "ts\r\n(a previously unpacked CDLC archive)");
+        "ts\r\n(a previously unpacked CDLC archive)");
             this.btnDevUse.UseVisualStyleBackColor = false;
             this.btnDevUse.Visible = false;
             this.btnDevUse.Click += new System.EventHandler(this.btnDevUse_Click);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label9.ForeColor = System.Drawing.Color.MediumSlateBlue;
-            this.label9.Location = new System.Drawing.Point(139, 92);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(32, 12);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "EN/JP";
             // 
             // DLCPackageCreator
             // 
