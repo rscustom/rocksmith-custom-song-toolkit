@@ -109,6 +109,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             ArrangementProperties.PathRhythm = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Rhythm);
             ArrangementProperties.PathBass = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Bass);
             ArrangementProperties.RouteMask = (int)arrangement.RouteMask;
+            // Automatically set as two finger style if pick is not used
+            ArrangementProperties.TwoFingerPicking = ArrangementProperties.PathBass == 1 && ArrangementProperties.BassPick == 0 ? 1 : 0;
 
             // BONUS ARRANGEMENT
             ArrangementProperties.BonusArr = Convert.ToInt32(arrangement.BonusArr);
@@ -144,7 +146,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             manifestFunctions.GenerateSectionData(this, SongContent);
 
             SongAverageTempo = SongContent.AverageTempo;
-            SongOffset = arrangement.Sng2014.Metadata.StartTime * -1;
+            SongOffset = -SongContent.StartBeat; //arrangement.Sng2014.Metadata.StartTime * -1;
 
             //SongPartition  -- Generated in DLCPackageCreator after this constructor
 

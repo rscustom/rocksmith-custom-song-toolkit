@@ -2,6 +2,7 @@
 using System.Reflection;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph2014;
+using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.Extensions;
@@ -27,7 +28,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public string ArtistName { get; set; }
         public string ArtistNameSort { get; set; }
         // apply conditional serialization to BassPick - see comments at bottom of page
-        public int BassPick { get; set; } // added to resolve issue #272
+        public int BassPick { get; set; } // added to resolve issue #272, header only
         public decimal CapoFret { get; set; }
         public double? CentOffset { get; set; } // tuning frequency, see Cents2Frequency method
         public bool DLC { get; set; }
@@ -39,7 +40,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public double? DNA_Riffs { get; set; }
         public double? DNA_Solo { get; set; }
         public double? EasyMastery { get; set; }
-        [DefaultValue(false)] // only serialize a non-false value
+        // strings are not serialized if the value has not been initialized
+        public string JapaneseArtistName { get; set; } //Unicode string, be cautious
+        public string JapaneseSongName { get; set; } //Unicode string, be cautious
         public bool JapaneseVocal { get; set; }
         public int LeaderboardChallengeRating { get; set; }
         public string ManifestUrn { get; set; }
@@ -64,9 +67,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public string SongName { get; set; }
         public string SongNameSort { get; set; }
         public int? SongYear { get; set; }
-        // strings are not serialized if the value has not been initialized
-        public string JapaneseSongName { get; set; } //Unicode string, be cautious
-        public string JapaneseArtistName { get; set; } //Unicode string, be cautious
         public TuningStrings Tuning { get; set; }
         public string PersistentID { get; set; }
 
@@ -112,14 +112,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             ArtistName = info.SongInfo.Artist;
             CentOffset = (!arrangement.TuningPitch.Equals(0)) ? TuningFrequency.Frequency2Cents(arrangement.TuningPitch) : 0.0;
             ArtistNameSort = info.SongInfo.ArtistSort;
-            if (arrangement.ArrangementType == ArrangementType.Bass)
-            {
-                SerializeBassPick = true;
-                BassPick = (int)arrangement.PluckedType;
-            }
-            else
-                SerializeBassPick = false;
-
+            BassPick = arrangement.ArrangementType == ArrangementType.Bass ? (int)arrangement.PluckedType : 0;
             CapoFret = (arrangement.Sng2014.Metadata.CapoFretId == 0xFF) ? CapoFret = 0 : Convert.ToDecimal(arrangement.Sng2014.Metadata.CapoFretId);
             DNA_Chords = arrangement.Sng2014.DNACount[(int)DNAId.Chord];
             DNA_Riffs = arrangement.Sng2014.DNACount[(int)DNAId.Riff];
@@ -127,48 +120,15 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             NotesEasy = arrangement.Sng2014.NoteCount[0];
             NotesMedium = arrangement.Sng2014.NoteCount[1];
             NotesHard = arrangement.Sng2014.NoteCount[2];
-            EasyMastery = NotesEasy / NotesHard;
-            MediumMastery = NotesMedium / NotesHard;
-            Metronome = (int?)arrangement.Metronome;
+            EasyMastery = Math.Round((double)(NotesEasy / NotesHard), 9);
+            MediumMastery = Math.Round((double)(NotesMedium / NotesHard), 9);
+            Metronome = arrangement.Metronome == Sng.Metronome.None ? null : (int?)arrangement.Metronome;
             // TODO: check for bug here 
             // if there is an equivalent bonus arrangement then Representative is set to "1" otherwise "0"
             Representative = Convert.ToInt32(!arrangement.BonusArr);
             RouteMask = (int)arrangement.RouteMask;
 
-            // TODO: use ManifestFunctions.GetSongDifficulty() method (fix generation algorithm)
-            // TODO: improve calculation
-
-            var arrProrp = SongContent.ArrangementProperties;
-            int techCoeff = arrProrp.NonStandardChords +
-                            3 * arrProrp.BarreChords +
-                            (arrProrp.PowerChords | arrProrp.DoubleStops) +
-                            arrProrp.DropDPower +
-                            2 * arrProrp.OpenChords +
-                            arrProrp.FingerPicking +
-                            arrProrp.TwoFingerPicking +
-                            arrProrp.PalmMutes +
-                            arrProrp.Harmonics +
-                            3 * arrProrp.PinchHarmonics +
-                            arrProrp.Hopo +
-                            arrProrp.Tremolo +
-                            (arrProrp.PathBass == 1 ? 4 : 1) * arrProrp.Slides +
-                            arrProrp.UnpitchedSlides +
-                            3 * arrProrp.Bends +
-                            4 * arrProrp.Tapping +
-                            2 * arrProrp.Vibrato +
-                            arrProrp.FretHandMutes +
-                            arrProrp.SlapPop +
-                            arrProrp.Sustain +
-                            arrProrp.FifthsAndOctaves +
-                            arrProrp.Syncopation;
-
-            if (techCoeff <= 4)
-                techCoeff += 4;
-
-            SongDiffHard = Math.Round(techCoeff * (double)NotesHard / SongContent.SongLength / 100, 9);
-            SongDiffMed = Math.Round(techCoeff * (double)NotesMedium / SongContent.SongLength / 50, 9);
-            SongDiffEasy = Math.Round(techCoeff * (double)NotesEasy / SongContent.SongLength / 25, 9);
-            SongDifficulty = SongDiffHard;
+            ManifestFunctions.GetSongDifficulty(this, SongContent);
 
             SongLength = Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
             SongName = info.SongInfo.SongDisplayName;
@@ -182,27 +142,28 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             Tuning = tuning.Tuning; //can we just use SongContent.Tuning
         }
 
-        // semi-undocumented feature of Newtonsoft.Json selective conditional serialization
+        // Conditionally serialized properties
         // see www.geekytidbits.com/conditional-serialization-with-json-net
-        // Newtonsoft.Json will look for this property at runtime
+        // Newtonsoft.Json will look for these methods at runtime
+
+        // Only serialize if picked and header ("BassPick: 0" never found in ODLC headers)
         public bool ShouldSerializeBassPick()
         {
-            // only serialize if ArrangmentType is Bass
-            return (this.SerializeBassPick);
+            return BassPick == 1 && !(this is Attributes2014);
         }
-
-        // this property allows control over conditional serialization
-        [XmlIgnore]
-        [JsonIgnore]
-        public bool SerializeBassPick { get; set; }
-
-        // see stackoverflow.com/a/5818571
-        // conditional serializer - prevents serialization when value is null
-        public bool ShouldSerializeMetronome()
+        // Only serialize if header
+        public bool ShouldSerializeRepresentative()
         {
-            return Metronome.HasValue;
+            return !(this is Attributes2014);
         }
-
-        
+        public bool ShouldSerializeRouteMask()
+        {
+            return !(this is Attributes2014);
+        }
+        // Only serialize if true
+        public bool ShouldSerializeJapaneseVocal()
+        {
+            return JapaneseVocal;
+        }
     }
 }
