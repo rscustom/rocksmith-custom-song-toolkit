@@ -161,6 +161,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             btnPack.Enabled = enable;
             btnPackSongPack.Enabled = enable;
             btnRepackAppId.Enabled = enable;
+            btnRepackFolder.Enabled = enable;
             btnSelectSongs.Enabled = enable;
             btnUnpack.Enabled = enable;
             chkDecodeAudio.Enabled = enable;
@@ -631,6 +632,35 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     lblCurrentOperation.Visible = true;
                     ToggleUIControls(false);
                     bwRepack.RunWorkerAsync(ofd.FileNames);
+                }
+            }
+        }
+
+        private void btnRepackFolder_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new VistaFolderBrowserDialog())
+            {
+                string filter;
+
+                if ((GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString()) == GameVersion.RS2012)
+                    filter = "*.dat";
+                else
+                    filter = "*.psarc";
+
+                fbd.Description = "Select a CDLC folder to update";
+                fbd.SelectedPath = destPath;
+                if (fbd.ShowDialog() != DialogResult.OK)
+                    return;
+
+                var files = Directory.EnumerateFiles(fbd.SelectedPath, filter, SearchOption.AllDirectories).ToArray();
+
+                if (!bwRepack.IsBusy && files.Length > 0)
+                {
+                    pbUpdateProgress.Value = 0;
+                    pbUpdateProgress.Visible = true;
+                    lblCurrentOperation.Visible = true;
+                    ToggleUIControls(false);
+                    bwRepack.RunWorkerAsync(files);
                 }
             }
         }
