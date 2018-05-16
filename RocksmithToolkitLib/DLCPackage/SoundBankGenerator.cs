@@ -9,6 +9,7 @@ using RocksmithToolkitLib.Properties;
 using RocksmithToolkitLib.Sng;
 using MiscUtil.Conversion;
 using MiscUtil.IO;
+using System.Diagnostics;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -23,7 +24,8 @@ namespace RocksmithToolkitLib.DLCPackage
         private static readonly int[] bnkPCOffsets = { 0x2c, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
         private static readonly int[] bnkConsoleOffsets = { 0x7ec, 0x1d, 0x17, 0xfa, 0xc8, 0x14, 0xc };
 
-        public static IList<int> GetOffsets(this Platform platform) {
+        public static IList<int> GetOffsets(this Platform platform)
+        {
             switch (platform.version)
             {
                 case GameVersion.RS2012:
@@ -47,7 +49,8 @@ namespace RocksmithToolkitLib.DLCPackage
             char[] bytes = str.ToLower().ToCharArray();
             uint hash = 2166136261;
 
-            for (var i = 0; i < str.Length; i++) {
+            for (var i = 0; i < str.Length; i++)
+            {
                 hash *= 16777619;
                 hash = hash ^ bytes[i];
             }
@@ -159,24 +162,29 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static float ReadBNKVolume(Stream inputStream, Platform platform, GameVersion version) //rs2014 only
         {
-            //verify header + detect endianness
+            // TODO: FixMe not working for PC=>Xbox360 conversions
+            // verify header + detect endianness
             using (var v = new EndianBinaryReader(platform.GetBitConverter, inputStream))
             {
                 if (v.ReadInt32() != 1145588546) //BKHD
-                    throw new Exception("Unknown BNK file format!");
+                {
+                    // throw new Exception("Unknown BNK file format!");
+                    Debug.WriteLine("Unknown BNK file format: " + v.ReadInt32());
+                    return -7; // for now until this is fixed
+                }
+
                 v.ReadBytes(v.ReadInt32());
 
-                //offset till HRIC (chunk len+8)
-                while (v.ReadInt32() != 1129466184 && (inputStream.Position < inputStream.Length-1))
-                {
+                // offset till HRIC (chunk len+8)
+                while (v.ReadInt32() != 1129466184 && (inputStream.Position < inputStream.Length - 1))
                     v.ReadBytes(v.ReadInt32());
-                }
-                //ok we're in Hric now, let's validate again!
+
+                // ok we're in Hric now, let's validate again!
                 v.BaseStream.Position -= 4;
                 if (v.ReadInt32() != 1129466184)
                     throw new Exception("Something goes wrong with bnk parser.");
 
-                //get HRIC size
+                // get HRIC size
                 var len = v.ReadInt32();
                 var obj = v.ReadInt32();
                 for (var o = 0; o < obj; o++)
@@ -188,12 +196,14 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         //skip 46 bytes to find volume
                         v.ReadBytes(46);
+                        
                         return v.ReadSingle();
                     }
+
                     v.ReadBytes(length);
                 }
             }
-            //if frequired read filename from StringID to get it's type (preview or regular)
+            // if required read filename from StringID to get it's type (preview or regular)
             return -7;
         }
 

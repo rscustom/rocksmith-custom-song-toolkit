@@ -55,7 +55,8 @@ namespace RocksmithToolkitLib.Ogg
                 wwiseRoot = ConfigRepository.Instance()["general_wwisepath"]; //could point to wrong dir, so chech back again.
 
             if (String.IsNullOrEmpty(wwiseRoot))
-                throw new FileNotFoundException("Could not find Audiokinetic Wwise installation." + Environment.NewLine + "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed.");
+                throw new FileNotFoundException("Could not find Audiokinetic Wwise installation." + Environment.NewLine + 
+                    "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed.");
 
             var wwiseCLIPath = Directory.EnumerateFiles(wwiseRoot, "WwiseCLI.exe", SearchOption.AllDirectories);
             if (!wwiseCLIPath.Any())
@@ -66,7 +67,8 @@ namespace RocksmithToolkitLib.Ogg
             }
 
             if (!wwiseCLIPath.Any())
-                throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwiseRoot + Environment.NewLine + "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed.");
+                throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwiseRoot + Environment.NewLine + 
+                    "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed.");
 
             //win32 = 32bit x64 = 64bit
             string wwiseCLIexe = wwiseCLIPath.AsParallel().SingleOrDefault(e => e.Contains("Authoring\\Win32"));
@@ -97,9 +99,10 @@ namespace RocksmithToolkitLib.Ogg
                 Selected = OggFile.WwiseVersion.None;
 
              if (Selected == OggFile.WwiseVersion.None)
-                throw new FileNotFoundException("You have no compatible version of Audiokinetic Wwise installed." +
-                Environment.NewLine + "Install supportend Wwise version, which are v2013.2.x || v2014.1.x || v2015.1.x || v2016.2.x series" +
-                Environment.NewLine + " if you would like to use our Wwise autoconvert feature.");
+                throw new FileNotFoundException("You have no compatible version of Audiokinetic Wwise installed." + Environment.NewLine + 
+                    "Install supportend Wwise version, which are v2013.2.x || v2014.1.x || v2015.1.x || v2016.2.x series  " + Environment.NewLine + 
+                    "if you would like to use toolkit's Wwise autoconvert feature.   Did you remember to set the Wwise" + Environment.NewLine + 
+                    "installation path in the toolkit General Config menu?");
 
              return wwiseCLIexe;
         }

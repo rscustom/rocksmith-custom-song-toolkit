@@ -160,8 +160,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             btnFixLowBassTuning.Enabled = enable;
             btnPack.Enabled = enable;
             btnPackSongPack.Enabled = enable;
-            btnRepackAppId.Enabled = enable;
-            btnRepackFolder.Enabled = enable;
+            btnAppIdSong.Enabled = enable;
+            btnAppIdFolder.Enabled = enable;
             btnSelectSongs.Enabled = enable;
             btnUnpack.Enabled = enable;
             chkDecodeAudio.Enabled = enable;

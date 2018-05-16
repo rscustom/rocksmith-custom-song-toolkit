@@ -32,9 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DLCPackerUnpacker));
             this.btnUnpack = new System.Windows.Forms.Button();
             this.btnPack = new System.Windows.Forms.Button();
-            this.btnRepackAppId = new System.Windows.Forms.Button();
+            this.btnAppIdSong = new System.Windows.Forms.Button();
             this.gbAppIdUpdater = new System.Windows.Forms.GroupBox();
-            this.btnRepackFolder = new System.Windows.Forms.Button();
+            this.btnAppIdFolder = new System.Windows.Forms.Button();
             this.lblAppId = new System.Windows.Forms.Label();
             this.cmbGameVersion = new System.Windows.Forms.ComboBox();
             this.txtAppId = new System.Windows.Forms.TextBox();
@@ -91,28 +91,28 @@
             this.btnPack.UseVisualStyleBackColor = true;
             this.btnPack.Click += new System.EventHandler(this.btnPack_Click);
             // 
-            // btnRepackAppId
+            // btnAppIdSong
             // 
-            this.btnRepackAppId.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRepackAppId.ForeColor = System.Drawing.Color.Black;
-            this.btnRepackAppId.Location = new System.Drawing.Point(244, 41);
-            this.btnRepackAppId.Name = "btnRepackAppId";
-            this.btnRepackAppId.Size = new System.Drawing.Size(85, 23);
-            this.btnRepackAppId.TabIndex = 7;
-            this.btnRepackAppId.Text = "Repack AppId";
-            this.toolTip.SetToolTip(this.btnRepackAppId, "You can also try checking the SNG to XML box if you \r\nreceive an error message wh" +
-                    "en using Repack AppId.");
-            this.btnRepackAppId.UseVisualStyleBackColor = true;
-            this.btnRepackAppId.Click += new System.EventHandler(this.btnRepackAppId_Click);
+            this.btnAppIdSong.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAppIdSong.ForeColor = System.Drawing.Color.Black;
+            this.btnAppIdSong.Location = new System.Drawing.Point(250, 42);
+            this.btnAppIdSong.Name = "btnAppIdSong";
+            this.btnAppIdSong.Size = new System.Drawing.Size(84, 23);
+            this.btnAppIdSong.TabIndex = 7;
+            this.btnAppIdSong.Text = "Update Song";
+            this.toolTip.SetToolTip(this.btnAppIdSong, "Update the AppID of a single CDLC.\r\n\r\nNOTE:\r\nTry checking the SNG to XML box if y" +
+                    "ou\r\nreceive an error message when using \r\nApp ID Updater.");
+            this.btnAppIdSong.UseVisualStyleBackColor = true;
+            this.btnAppIdSong.Click += new System.EventHandler(this.btnRepackAppId_Click);
             // 
             // gbAppIdUpdater
             // 
-            this.gbAppIdUpdater.Controls.Add(this.btnRepackFolder);
+            this.gbAppIdUpdater.Controls.Add(this.btnAppIdFolder);
             this.gbAppIdUpdater.Controls.Add(this.lblAppId);
             this.gbAppIdUpdater.Controls.Add(this.cmbGameVersion);
             this.gbAppIdUpdater.Controls.Add(this.txtAppId);
             this.gbAppIdUpdater.Controls.Add(this.cmbAppId);
-            this.gbAppIdUpdater.Controls.Add(this.btnRepackAppId);
+            this.gbAppIdUpdater.Controls.Add(this.btnAppIdSong);
             this.gbAppIdUpdater.ForeColor = System.Drawing.Color.Firebrick;
             this.gbAppIdUpdater.Location = new System.Drawing.Point(8, 102);
             this.gbAppIdUpdater.Margin = new System.Windows.Forms.Padding(2);
@@ -123,19 +123,18 @@
             this.gbAppIdUpdater.TabStop = false;
             this.gbAppIdUpdater.Text = "App ID Updater";
             // 
-            // btnRepackFolder
+            // btnAppIdFolder
             // 
-            this.btnRepackFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRepackFolder.ForeColor = System.Drawing.Color.Black;
-            this.btnRepackFolder.Location = new System.Drawing.Point(335, 41);
-            this.btnRepackFolder.Name = "btnRepackFolder";
-            this.btnRepackFolder.Size = new System.Drawing.Size(90, 23);
-            this.btnRepackFolder.TabIndex = 42;
-            this.btnRepackFolder.Text = "Repack Folder";
-            this.toolTip.SetToolTip(this.btnRepackFolder, "You can also try checking the SNG to XML box if you \r\nreceive an error message wh" +
-        "en using Repack AppId.");
-            this.btnRepackFolder.UseVisualStyleBackColor = true;
-            this.btnRepackFolder.Click += new System.EventHandler(this.btnRepackFolder_Click);
+            this.btnAppIdFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAppIdFolder.ForeColor = System.Drawing.Color.Black;
+            this.btnAppIdFolder.Location = new System.Drawing.Point(341, 42);
+            this.btnAppIdFolder.Name = "btnAppIdFolder";
+            this.btnAppIdFolder.Size = new System.Drawing.Size(84, 23);
+            this.btnAppIdFolder.TabIndex = 42;
+            this.btnAppIdFolder.Text = "Update Folder";
+            this.toolTip.SetToolTip(this.btnAppIdFolder, "Update the AppID of all CDLC in a folder.");
+            this.btnAppIdFolder.UseVisualStyleBackColor = true;
+            this.btnAppIdFolder.Click += new System.EventHandler(this.btnRepackFolder_Click);
             // 
             // lblAppId
             // 
@@ -162,7 +161,7 @@
             // 
             this.txtAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtAppId.ForeColor = System.Drawing.Color.Gray;
-            this.txtAppId.Location = new System.Drawing.Point(156, 44);
+            this.txtAppId.Location = new System.Drawing.Point(150, 43);
             this.txtAppId.Name = "txtAppId";
             this.txtAppId.Size = new System.Drawing.Size(82, 20);
             this.txtAppId.TabIndex = 41;
@@ -242,8 +241,8 @@
             this.chkOverwriteSongXml.Size = new System.Drawing.Size(86, 17);
             this.chkOverwriteSongXml.TabIndex = 1;
             this.chkOverwriteSongXml.Text = "SNG to XML";
-            this.toolTip.SetToolTip(this.chkOverwriteSongXml, "If checked generates fresh XML files from SNG info\r\n\r\nYou can also check this box" +
-                    " if you are trying to \r\nRepack AppId and receive an error message.");
+            this.toolTip.SetToolTip(this.chkOverwriteSongXml, "If checked generates fresh XML files\r\nfrom the SNG information.\r\n\r\nTry checking t" +
+                    "he SNG to XML box if you\r\nreceive an error message when using \r\nApp ID Updater.");
             this.chkOverwriteSongXml.UseVisualStyleBackColor = true;
             // 
             // gbPacker
@@ -473,7 +472,7 @@
         private System.Windows.Forms.Button btnUnpack;
         private System.Windows.Forms.Button btnPack;
         private System.Windows.Forms.PictureBox picLogo;
-        private System.Windows.Forms.Button btnRepackAppId;
+        private System.Windows.Forms.Button btnAppIdSong;
         private System.Windows.Forms.GroupBox gbAppIdUpdater;
         private System.Windows.Forms.ComboBox cmbAppId;
         private System.Windows.Forms.TextBox txtAppId;
@@ -499,6 +498,6 @@
         private System.Windows.Forms.CheckBox chkVerbose;
         private System.Windows.Forms.CheckBox chkUpdateManifest;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnRepackFolder;
+        private System.Windows.Forms.Button btnAppIdFolder;
     }
 }

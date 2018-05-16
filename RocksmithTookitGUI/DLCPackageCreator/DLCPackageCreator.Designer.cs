@@ -416,7 +416,7 @@
             this.label2.Size = new System.Drawing.Size(424, 13);
             this.label2.TabIndex = 6;
             this.label2.Text = "Song preview is generated automatically if not provided in format \'filename_previ" +
-    "ew.wem\'\r\n";
+                "ew.wem\'\r\n";
             // 
             // txtAlbumArtPath
             // 
@@ -507,7 +507,7 @@
             this.label1.Size = new System.Drawing.Size(495, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Use \"Up/Down\" keys to change order of the tones, use \"Delete\" to delete and \"D\" t" +
-    "o duplicate a tone.";
+                "o duplicate a tone.";
             // 
             // gbArrangements
             // 
@@ -636,8 +636,8 @@
             this.txtDlcKey.TabIndex = 3;
             this.txtDlcKey.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolTip.SetToolTip(this.txtDlcKey, "DLC Key (aka Song Key):\nA unique humanly readable song key.\nNo spaces or special " +
-        "characters allowed.\n\nUse the Configuration menu to \nsave your Charter Name so th" +
-        "at \nDLC Key is auto formatted properly.");
+                    "characters allowed.\n\nUse the Configuration menu to \nsave your Charter Name so th" +
+                    "at \nDLC Key is auto formatted properly.");
             // 
             // txtAlbumSort
             // 
@@ -696,12 +696,12 @@
             65536});
             this.numVolPreview.Location = new System.Drawing.Point(72, 69);
             this.numVolPreview.Maximum = new decimal(new int[] {
-            0,
+            30,
             0,
             0,
             0});
             this.numVolPreview.Minimum = new decimal(new int[] {
-            100,
+            30,
             0,
             0,
             -2147483648});
@@ -781,12 +781,12 @@
             65536});
             this.numVolSong.Location = new System.Drawing.Point(8, 69);
             this.numVolSong.Maximum = new decimal(new int[] {
-            0,
+            30,
             0,
             0,
             0});
             this.numVolSong.Minimum = new decimal(new int[] {
-            100,
+            30,
             0,
             0,
             -2147483648});
@@ -976,7 +976,7 @@
             this.btnDevUse.TabIndex = 8;
             this.btnDevUse.Text = "DEV";
             this.toolTip.SetToolTip(this.btnDevUse, "Developer User Only - For Debugging\r\nUse to load a folder containing song artifac" +
-        "ts\r\n(a previously unpacked CDLC archive)");
+                    "ts\r\n(a previously unpacked CDLC archive)");
             this.btnDevUse.UseVisualStyleBackColor = false;
             this.btnDevUse.Visible = false;
             this.btnDevUse.Click += new System.EventHandler(this.btnDevUse_Click);

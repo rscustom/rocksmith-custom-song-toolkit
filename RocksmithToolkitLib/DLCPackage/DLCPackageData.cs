@@ -412,6 +412,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (!convert && !audioFiles[i].Contains("_fixed.ogg"))
                     break;
             }
+
             // FIXME: platform specific decode is broken
             var sourcePlatform = unpackedDir.GetPlatform();
             if (targetPlatform.IsConsole != (sourcePlatform = audioFiles[i].GetAudioPlatform()).IsConsole)
@@ -558,16 +559,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 else if (xmlFile.ToLower().Contains("vocals")) // detect both jvocals and vocals
                 {
                     //var debugMe = "Confirm XML comments were preserved.";
-                    var voc = new Arrangement
-                        {
-                            Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals,
-                            ArrangementType = ArrangementType.Vocal,
-                            ScrollSpeed = 20,
-                            SongXml = new SongXML { File = xmlFile },
-                            SongFile = new SongFile { File = "" },
-                            CustomFont = attr.JapaneseVocal == true,
-                            XmlComments = Song2014.ReadXmlComments(xmlFile)
-                        };
+                    var voc = new Arrangement { Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals, ArrangementType = ArrangementType.Vocal, ScrollSpeed = 20, SongXml = new SongXML { File = xmlFile }, SongFile = new SongFile { File = "" }, CustomFont = attr.JapaneseVocal == true, XmlComments = Song2014.ReadXmlComments(xmlFile) };
 
                     // Get symbols stuff from vocals.xml
                     var fontSng = Path.Combine(unpackedDir, xmlName + ".sng");
@@ -588,6 +580,23 @@ namespace RocksmithToolkitLib.DLCPackage
                     data.Arrangements.Add(voc);
                 }
             }
+
+            // TODO: FixMe PC=>Xbox conversion not working
+            // This is being called by CDLC Converter ... TODO: check it out
+            // very slow method so skip if not necessary
+            if (!targetPlatform.IsConsole && _volume != null)
+            {
+                // Read volume from BNK if it was not found in Manifest
+                var bnkfiles = Directory.EnumerateFiles(unpackedDir, "*.bnk", SearchOption.AllDirectories).ToArray();
+                if (bnkfiles.Length == 2)
+                {
+                    _volume = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[0]), targetPlatform, GameVersion.RS2014);
+                    _volume_preview = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[1]), targetPlatform, GameVersion.RS2014);
+                }
+            }
+
+            data.Volume = _volume ?? -7.0f;
+            data.PreviewVolume = _volume_preview ?? _volume;
 
             //ShowLights XML
             var xmlShowLights = Directory.EnumerateFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).FirstOrDefault();
@@ -634,21 +643,6 @@ namespace RocksmithToolkitLib.DLCPackage
             var lyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).ToArray();
             if (lyricArt.Any())
                 data.LyricArtPath = lyricArt.FirstOrDefault();
-
-            // Get other files //
-
-            // Volume from BNK
-            var bnkfiles = Directory.EnumerateFiles(unpackedDir, "*.bnk", SearchOption.AllDirectories).ToArray();
-            if (bnkfiles.Length == 2)
-            {
-                data.Volume = _volume ?? SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[0]), targetPlatform, GameVersion.RS2014);
-                data.PreviewVolume = _volume_preview ?? SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[1]), targetPlatform, GameVersion.RS2014);
-            }
-            else
-            {
-                data.Volume = _volume ?? -7F;
-                data.PreviewVolume = _volume_preview ?? _volume;
-            }
 
             // Audio files
             var targetAudioFiles = new List<string>();
