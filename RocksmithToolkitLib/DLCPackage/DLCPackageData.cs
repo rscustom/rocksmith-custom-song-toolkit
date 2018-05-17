@@ -372,7 +372,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     catch (Exception ex)
                     {
                         // mainly for the benefit of convert2012 CLI users
-                        Console.WriteLine(@"This CDLC could not be auto converted." + Environment.NewLine + "You can still try manually adding the arrangements and assets." + Environment.NewLine + ex.Message);
+                        Console.WriteLine(@"This CDLC could not be auto converted." + Environment.NewLine + 
+                            "You can still try manually adding the arrangements and assets." + Environment.NewLine +
+                            ex.Message);
                     }
                 }
             }
@@ -393,7 +395,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var targetArtFiles = new List<DDSConvertedFile>();
             data.AlbumArtPath = artFiles[0];
-            targetArtFiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = artFiles[0], destinationFile = artFiles[0].CopyToTempFile(".dds") });
+            targetArtFiles.Add(new DDSConvertedFile()
+                {
+                    sizeX = 256, 
+                    sizeY = 256, 
+                    sourceFile = artFiles[0], 
+                    destinationFile = artFiles[0].CopyToTempFile(".dds")
+                });
             data.ArtFiles = targetArtFiles;
 
             //Audio files
@@ -513,7 +521,19 @@ namespace RocksmithToolkitLib.DLCPackage
                         _volume_preview = attr.PreviewVolume ?? _volume;
 
                         // Fill SongInfo
-                        data.SongInfo = new SongInfo { JapaneseArtistName = attr.JapaneseArtistName, JapaneseSongName = attr.JapaneseSongName, SongDisplayName = attr.SongName, SongDisplayNameSort = attr.SongNameSort, Album = attr.AlbumName, AlbumSort = attr.AlbumNameSort, SongYear = attr.SongYear ?? 0, Artist = attr.ArtistName, ArtistSort = attr.ArtistNameSort, AverageTempo = (int)attr.SongAverageTempo };
+                        data.SongInfo = new SongInfo
+                            {
+                                JapaneseArtistName = attr.JapaneseArtistName,
+                                JapaneseSongName = attr.JapaneseSongName,
+                                SongDisplayName = attr.SongName,
+                                SongDisplayNameSort = attr.SongNameSort,
+                                Album = attr.AlbumName,
+                                AlbumSort = attr.AlbumNameSort,
+                                SongYear = attr.SongYear ?? 0,
+                                Artist = attr.ArtistName,
+                                ArtistSort = attr.ArtistNameSort,
+                                AverageTempo = (int)attr.SongAverageTempo
+                            };
                     }
 
                     // Adding Arrangement
@@ -559,7 +579,16 @@ namespace RocksmithToolkitLib.DLCPackage
                 else if (xmlFile.ToLower().Contains("vocals")) // detect both jvocals and vocals
                 {
                     //var debugMe = "Confirm XML comments were preserved.";
-                    var voc = new Arrangement { Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals, ArrangementType = ArrangementType.Vocal, ScrollSpeed = 20, SongXml = new SongXML { File = xmlFile }, SongFile = new SongFile { File = "" }, CustomFont = attr.JapaneseVocal == true, XmlComments = Song2014.ReadXmlComments(xmlFile) };
+                    var voc = new Arrangement
+                        {
+                            Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals, 
+                            ArrangementType = ArrangementType.Vocal, 
+                            ScrollSpeed = 20, 
+                            SongXml = new SongXML { File = xmlFile }, 
+                            SongFile = new SongFile { File = "" }, 
+                            CustomFont = attr.JapaneseVocal == true, 
+                            XmlComments = Song2014.ReadXmlComments(xmlFile)
+                        };
 
                     // Get symbols stuff from vocals.xml
                     var fontSng = Path.Combine(unpackedDir, xmlName + ".sng");
@@ -581,20 +610,18 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
 
-            // TODO: FixMe PC=>Xbox conversion not working
-            // This is being called by CDLC Converter ... TODO: check it out
-            // very slow method so skip if not necessary
-            if (!targetPlatform.IsConsole && _volume != null)
+            // Read volume from BNK if it was not found in Manifest
+            if (_volume == null)
             {
-                // Read volume from BNK if it was not found in Manifest
                 var bnkfiles = Directory.EnumerateFiles(unpackedDir, "*.bnk", SearchOption.AllDirectories).ToArray();
                 if (bnkfiles.Length == 2)
                 {
-                    _volume = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[0]), targetPlatform, GameVersion.RS2014);
-                    _volume_preview = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[1]), targetPlatform, GameVersion.RS2014);
+                    _volume = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[0]), sourcePlatform, GameVersion.RS2014);
+                    _volume_preview = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[1]), sourcePlatform, GameVersion.RS2014);
                 }
             }
 
+            // Set volume defaults if null
             data.Volume = _volume ?? -7.0f;
             data.PreviewVolume = _volume_preview ?? _volume;
 

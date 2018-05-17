@@ -255,9 +255,11 @@ namespace RocksmithToolkitGUI.DLCConverter
                 {
                     errorsFound.AppendLine(String.Format("{0}\n{1}\n", ex.Message, ex.StackTrace));
                 }
+
                 progress += step;
                 bwConvert.ReportProgress(progress);
             }
+
             bwConvert.ReportProgress(100);
             e.Result = "done";
         }

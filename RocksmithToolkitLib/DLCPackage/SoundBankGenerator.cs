@@ -162,7 +162,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static float ReadBNKVolume(Stream inputStream, Platform platform, GameVersion version) //rs2014 only
         {
-            // TODO: FixMe not working for PC=>Xbox360 conversions
             // verify header + detect endianness
             using (var v = new EndianBinaryReader(platform.GetBitConverter, inputStream))
             {
