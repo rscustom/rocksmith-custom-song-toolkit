@@ -372,7 +372,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     catch (Exception ex)
                     {
                         // mainly for the benefit of convert2012 CLI users
-                        Console.WriteLine(@"This CDLC could not be auto converted." + Environment.NewLine + 
+                        Console.WriteLine(@"This CDLC could not be auto converted." + Environment.NewLine +
                             "You can still try manually adding the arrangements and assets." + Environment.NewLine +
                             ex.Message);
                     }
@@ -397,9 +397,9 @@ namespace RocksmithToolkitLib.DLCPackage
             data.AlbumArtPath = artFiles[0];
             targetArtFiles.Add(new DDSConvertedFile()
                 {
-                    sizeX = 256, 
-                    sizeY = 256, 
-                    sourceFile = artFiles[0], 
+                    sizeX = 256,
+                    sizeY = 256,
+                    sourceFile = artFiles[0],
                     destinationFile = artFiles[0].CopyToTempFile(".dds")
                 });
             data.ArtFiles = targetArtFiles;
@@ -500,8 +500,9 @@ namespace RocksmithToolkitLib.DLCPackage
             data.TonesRS2014 = new List<Tone2014>();
 
             //Load files
-            float? _volume = null;
-            float? _volume_preview = null;
+            float defaultVolume = -7.0f;
+            float? mainVolume = null;
+            float? previewVolume = null;
             var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray();
             foreach (var json in jsonFiles)
             {
@@ -517,8 +518,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         data.Name = attr.DLCKey;
 
                         // Get song volume
-                        _volume = attr.SongVolume;
-                        _volume_preview = attr.PreviewVolume ?? _volume;
+                        mainVolume = attr.SongVolume;
+                        previewVolume = attr.PreviewVolume ?? mainVolume;
 
                         // Fill SongInfo
                         data.SongInfo = new SongInfo
@@ -581,12 +582,12 @@ namespace RocksmithToolkitLib.DLCPackage
                     //var debugMe = "Confirm XML comments were preserved.";
                     var voc = new Arrangement
                         {
-                            Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals, 
-                            ArrangementType = ArrangementType.Vocal, 
-                            ScrollSpeed = 20, 
-                            SongXml = new SongXML { File = xmlFile }, 
-                            SongFile = new SongFile { File = "" }, 
-                            CustomFont = attr.JapaneseVocal == true, 
+                            Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals,
+                            ArrangementType = ArrangementType.Vocal,
+                            ScrollSpeed = 20,
+                            SongXml = new SongXML { File = xmlFile },
+                            SongFile = new SongFile { File = "" },
+                            CustomFont = attr.JapaneseVocal == true,
                             XmlComments = Song2014.ReadXmlComments(xmlFile)
                         };
 
@@ -611,19 +612,26 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             // Read volume from BNK if it was not found in Manifest
-            if (_volume == null)
+            if (mainVolume == null)
             {
                 var bnkfiles = Directory.EnumerateFiles(unpackedDir, "*.bnk", SearchOption.AllDirectories).ToArray();
-                if (bnkfiles.Length == 2)
+                if (bnkfiles.Any())
                 {
-                    _volume = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[0]), sourcePlatform, GameVersion.RS2014);
-                    _volume_preview = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkfiles[1]), sourcePlatform, GameVersion.RS2014);
+                    var bnkMain = bnkfiles.FirstOrDefault(x => !x.Contains("_preview.bnk"));
+                    if (!String.IsNullOrEmpty(bnkMain))
+                    {
+                        mainVolume = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkMain), sourcePlatform, defaultVolume);
+
+                        var bnkPreview = bnkfiles.FirstOrDefault(x => x.Contains("_preview.bnk"));
+                        if (!String.IsNullOrEmpty(bnkPreview))
+                            previewVolume = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkPreview), sourcePlatform, defaultVolume);
+                    }
                 }
             }
 
             // Set volume defaults if null
-            data.Volume = _volume ?? -7.0f;
-            data.PreviewVolume = _volume_preview ?? _volume;
+            data.Volume = mainVolume ?? defaultVolume;
+            data.PreviewVolume = previewVolume ?? mainVolume;
 
             //ShowLights XML
             var xmlShowLights = Directory.EnumerateFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).FirstOrDefault();
