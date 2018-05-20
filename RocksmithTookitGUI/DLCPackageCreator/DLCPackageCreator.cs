@@ -2187,9 +2187,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Control control = (Control)sender;
             string name = control.Name;
             if (name == "numVolSong")
-                tt.SetToolTip(numVolSong, "Higher 0,-1,-2,-3,..., Average -12 ,...,-16,-17 Lower");
-            else
-                tt.SetToolTip(numVolPreview, "Higher 0,-1,-2,-3,..., Average -12 ,...,-16,-17 Lower");
+                tt.SetToolTip(numVolSong, "Softer 0, -1, -2 ... Default -7 ... -18, -19, -20 Louder");
+            else // TODO: consider changing preview default to -5.0
+                tt.SetToolTip(numVolPreview, "Softer 0, -1, -2 ... Default -5 ... -18, -19, -20 Louder");
         }
 
         private void btnAlbumArt_Click(object sender, EventArgs e)

@@ -25,6 +25,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
     public class DLCPackageData
     {
+        private const float DEFAULT_AUDIO_VOLUME = -7.0f;
+        private const float DEFAULT_PREVIEW_VOLUME = -5.0f; 
+
         // DO NOT change variable names ... there are hidden dependancies
         public GameVersion GameVersion;
         public bool Pc { get; set; }
@@ -101,8 +104,8 @@ namespace RocksmithToolkitLib.DLCPackage
             data.SignatureType = PackageMagic.CON;
 
             // set default volumes
-            data.Volume = -7;
-            data.PreviewVolume = data.Volume;
+            data.Volume = DEFAULT_AUDIO_VOLUME;
+            data.PreviewVolume = DEFAULT_PREVIEW_VOLUME;
 
             //Load song manifest
             var songsManifestJson = Directory.GetFiles(unpackedDir, "songs.manifest.json", SearchOption.AllDirectories);
@@ -500,8 +503,7 @@ namespace RocksmithToolkitLib.DLCPackage
             data.TonesRS2014 = new List<Tone2014>();
 
             //Load files
-            float defaultVolume = -7.0f;
-            float? mainVolume = null;
+            float? audioVolume = null;
             float? previewVolume = null;
             var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray();
             foreach (var json in jsonFiles)
@@ -518,8 +520,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         data.Name = attr.DLCKey;
 
                         // Get song volume
-                        mainVolume = attr.SongVolume;
-                        previewVolume = attr.PreviewVolume ?? mainVolume;
+                        audioVolume = attr.SongVolume;
+                        previewVolume = attr.PreviewVolume;
 
                         // Fill SongInfo
                         data.SongInfo = new SongInfo
@@ -612,26 +614,24 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             // Read volume from BNK if it was not found in Manifest
-            if (mainVolume == null)
+            if (audioVolume == null)
             {
                 var bnkfiles = Directory.EnumerateFiles(unpackedDir, "*.bnk", SearchOption.AllDirectories).ToArray();
                 if (bnkfiles.Any())
                 {
-                    var bnkMain = bnkfiles.FirstOrDefault(x => !x.Contains("_preview.bnk"));
-                    if (!String.IsNullOrEmpty(bnkMain))
-                    {
-                        mainVolume = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkMain), sourcePlatform, defaultVolume);
+                    var bnkAudio = bnkfiles.FirstOrDefault(x => !x.EndsWith("_preview.bnk"));
+                    if (!String.IsNullOrEmpty(bnkAudio))
+                        audioVolume = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkAudio), sourcePlatform);
 
-                        var bnkPreview = bnkfiles.FirstOrDefault(x => x.Contains("_preview.bnk"));
-                        if (!String.IsNullOrEmpty(bnkPreview))
-                            previewVolume = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkPreview), sourcePlatform, defaultVolume);
-                    }
+                    var bnkPreview = bnkfiles.FirstOrDefault(x => x.EndsWith("_preview.bnk"));
+                    if (!String.IsNullOrEmpty(bnkPreview))
+                        previewVolume = SoundBankGenerator2014.ReadBNKVolume(File.OpenRead(bnkPreview), sourcePlatform);
                 }
             }
 
-            // Set volume defaults if null
-            data.Volume = mainVolume ?? defaultVolume;
-            data.PreviewVolume = previewVolume ?? mainVolume;
+            // Use default volume if still null
+            data.Volume = audioVolume ?? DEFAULT_AUDIO_VOLUME;
+            data.PreviewVolume = previewVolume ?? DEFAULT_PREVIEW_VOLUME;
 
             //ShowLights XML
             var xmlShowLights = Directory.EnumerateFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).FirstOrDefault();
