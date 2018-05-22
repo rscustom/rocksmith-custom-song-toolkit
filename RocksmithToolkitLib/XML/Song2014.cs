@@ -15,6 +15,7 @@ using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using CON = RocksmithToolkitLib.Sng.Constants;
+using System.Text.RegularExpressions;
 
 namespace RocksmithToolkitLib.XML
 {
@@ -346,37 +347,85 @@ namespace RocksmithToolkitLib.XML
 
             if (commentNodes != null)
             {
-                // add back all non-magic (DDC, EOF, custom) comments first
-                foreach (var commentNode in commentNodes.Reverse())
-                {
-                    if (!commentNode.ToString().Contains(CST_MAGIC))
-                        rootnode.AddFirst(new XComment(commentNode));
+                // uncomment this code to make XML comments compatible with EOF versions before (5-22-2018)                 
+                //double eofVersionNumber = 1.812;  // EOF version when comments come before first node
+                //var eofCommentNode = commentNodes.FirstOrDefault(x => x.Value.Contains("EOF"));
+                //if (eofCommentNode != null)
+                //{
+                //    var eofCommentString = eofCommentNode.ToString(); // <!-- EOF v1.8RC12 (12-22-2016) -->
+                //    var eofVersionString = Regex.Replace(eofCommentString, "[^.0-9]", ""); // 1.81212222016
+                //    eofVersionNumber = Double.Parse(eofVersionString);
+                //}
 
-                    if (!String.IsNullOrEmpty(customComment) && commentNode.ToString().Contains(customComment))
-                        sameComment = true;
-                }
-
-                // add back old version info
-                foreach (var commentNode in commentNodes.Reverse())
+                // place comments before the 'vocals' node to be compatible with old versions of EOF
+                if (rootElement == "vocals") // && eofVersionNumber < 1.813)
                 {
-                    if (commentNode.ToString().Contains(CST_MAGIC))
+                    foreach (var commentNode in commentNodes.Reverse())
                     {
-                        if (!commentNode.ToString().Contains(ToolkitVersion.RSTKGuiVersion))
-                        {
-                            if (saveOldVers)
-                                rootnode.AddFirst(new XComment(commentNode));
-                        }
-                        else
-                            sameVersion = true;
+                        if (!commentNode.ToString().Contains(CST_MAGIC))
+                            rootnode.AddBeforeSelf(new XComment(commentNode));
+
+                        if (!String.IsNullOrEmpty(customComment) && commentNode.ToString().Contains(customComment))
+                            sameComment = true;
                     }
+
+                    // add back old version info
+                    foreach (var commentNode in commentNodes.Reverse())
+                    {
+                        if (commentNode.ToString().Contains(CST_MAGIC))
+                        {
+                            if (!commentNode.ToString().Contains(ToolkitVersion.RSTKGuiVersion))
+                            {
+                                if (saveOldVers)
+                                    rootnode.AddBeforeSelf(new XComment(commentNode));
+                            }
+                            else
+                                sameVersion = true;
+                        }
+                    }
+
+                    if (!sameComment && !String.IsNullOrEmpty(customComment))
+                        rootnode.AddBeforeSelf(new XComment(" " + customComment + " "));
+
+                    // always put current CST version info first
+                    if (sameVersion || writeNewVers)
+                        rootnode.AddBeforeSelf(new XComment(CST_MAGIC + ToolkitVersion.RSTKGuiVersion + " "));
+
                 }
+                else // place comments after the 'songs' node be compatible with EOF
+                {
+                    // add back all non-magic (DDC, EOF, custom) comments first
+                    foreach (var commentNode in commentNodes.Reverse())
+                    {
+                        if (!commentNode.ToString().Contains(CST_MAGIC))
+                            rootnode.AddFirst(new XComment(commentNode));
 
-                if (!sameComment && !String.IsNullOrEmpty(customComment))
-                    rootnode.AddFirst(new XComment(" " + customComment + " "));
+                        if (!String.IsNullOrEmpty(customComment) && commentNode.ToString().Contains(customComment))
+                            sameComment = true;
+                    }
 
-                // always put current CST version info first
-                if (sameVersion || writeNewVers)
-                    rootnode.AddFirst(new XComment(CST_MAGIC + ToolkitVersion.RSTKGuiVersion + " "));
+                    // add back old version info
+                    foreach (var commentNode in commentNodes.Reverse())
+                    {
+                        if (commentNode.ToString().Contains(CST_MAGIC))
+                        {
+                            if (!commentNode.ToString().Contains(ToolkitVersion.RSTKGuiVersion))
+                            {
+                                if (saveOldVers)
+                                    rootnode.AddFirst(new XComment(commentNode));
+                            }
+                            else
+                                sameVersion = true;
+                        }
+                    }
+
+                    if (!sameComment && !String.IsNullOrEmpty(customComment))
+                        rootnode.AddFirst(new XComment(" " + customComment + " "));
+
+                    // always put current CST version info first
+                    if (sameVersion || writeNewVers)
+                        rootnode.AddFirst(new XComment(CST_MAGIC + ToolkitVersion.RSTKGuiVersion + " "));
+                }
             }
 
             // xml.Declaration = new XDeclaration("1.0", "utf-8", null);

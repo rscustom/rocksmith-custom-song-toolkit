@@ -196,7 +196,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     // find correct object type - SFXV
                     if (type == 2)
                     {
-                        //skip 46 bytes to find volume
+                        // skip 46 bytes to find volume
                         v.ReadBytes(46);
 
                         return v.ReadSingle();

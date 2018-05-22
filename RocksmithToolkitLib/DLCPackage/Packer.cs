@@ -179,7 +179,12 @@ namespace RocksmithToolkitLib.DLCPackage
                         xmlContent.Serialize(outputStream);
                     }
 
-                    // correct old toolkit/EOF xml (tuning) issues ... sync with SNG data
+                    // capture/preserve any existing xml comments
+                    IEnumerable<XComment> xmlComments = null;
+                    if (File.Exists(xmlEofFile))
+                        xmlComments = Song2014.ReadXmlComments(xmlEofFile);
+
+                    // correct old toolkit/EOF xml (tuning) issues by syncing with SNG data
                     if (File.Exists(xmlEofFile) && !overwriteSongXml && arrType != ArrangementType.Vocal)
                     {
                         var eofSong = Song2014.LoadFromFile(xmlEofFile);
@@ -187,7 +192,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         if (eofSong.Tuning != sngSong.Tuning)
                         {
                             eofSong.Tuning = sngSong.Tuning;
-                            var xmlComments = Song2014.ReadXmlComments(xmlEofFile);
 
                             using (var stream = File.Open(xmlEofFile, FileMode.Create))
                                 eofSong.Serialize(stream, true);
@@ -199,12 +203,12 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
                     else if (File.Exists(xmlEofFile) && !overwriteSongXml && arrType == ArrangementType.Vocal)
                     {
-                        // preserves vocal xml comments
+                        // preserves xml comments from vocals
                     }
-                    else
+                    else // SNG => XML
                     {
                         if (!isODLC)
-                            Song2014.WriteXmlComments(xmlSngFile, customComment: "Generated from SNG file");
+                            Song2014.WriteXmlComments(xmlSngFile, xmlComments, customComment: "Generated from SNG file");
 
                         File.Copy(xmlSngFile, xmlEofFile, true);
                     }
