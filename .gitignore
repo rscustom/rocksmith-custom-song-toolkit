@@ -125,4 +125,4 @@ __pycache__/
 
 /.vs/RocksmithCustomSongCreator/v15/Server/sqlite3
 /.vs/RocksmithCustomSongCreator/v15/sqlite3
-/.vs/*
+.vs/
