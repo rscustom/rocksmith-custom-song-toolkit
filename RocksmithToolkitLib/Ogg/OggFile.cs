@@ -57,8 +57,9 @@ namespace RocksmithToolkitLib.Ogg
         #endregion
 
         public static void Revorb(string file, string outputFileName, string appPath, WwiseVersion wwiseVersion)
-        {//RE: ExternalApps used
-            var subroot = "tools";
+        {
+            // LOOK HERE - if there are issues with third party applications, e.g. CFSM
+            var subroot = "tools"; // DO NOT CHANGE
             var ww2oggPath = Path.Combine(appPath, subroot, "ww2ogg.exe");
             var revorbPath = Path.Combine(appPath, subroot, "revorb.exe");
             var codebooksPath = Path.Combine(appPath, subroot, "packed_codebooks.bin"); // Default
@@ -66,16 +67,16 @@ namespace RocksmithToolkitLib.Ogg
 
             // Verifying if third part apps is in root application directory
             if (!File.Exists(ww2oggPath))
-                throw new FileNotFoundException("ww2ogg executable not found!");
+                throw new FileNotFoundException("ww2ogg.exe not found in: " + Path.GetDirectoryName(ww2oggPath));
 
             if (!File.Exists(revorbPath))
-                throw new FileNotFoundException("revorb executable not found!");
+                throw new FileNotFoundException("revorb.exe not found in: " + Path.GetDirectoryName(revorbPath));
 
             if (!File.Exists(codebooksPath))
-                throw new FileNotFoundException("packed_codebooks.bin not found!");
+                throw new FileNotFoundException("packed_codebooks.bin not found in: " + Path.GetDirectoryName(codebooksPath));
 
             if (!File.Exists(codebooks603Path))
-                throw new FileNotFoundException("packed_codebooks_aoTuV_603.bin not found!");
+                throw new FileNotFoundException("packed_codebooks_aoTuV_603.bin not found in: " + Path.GetDirectoryName(codebooks603Path));
 
             // Processing with ww2ogg
             Process ww2oggProcess = new Process();
