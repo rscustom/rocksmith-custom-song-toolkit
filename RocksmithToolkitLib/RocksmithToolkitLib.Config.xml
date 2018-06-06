@@ -19,7 +19,7 @@
   <Config Key="general_defaultgameversion" Value="RS2014" />
   <Config Key="general_defaultplatform" Value="Pc" />
   <!-- creator config key count = 10 -->"
-  <Config Key="creator_scrollspeed" Value="2.0" />
+  <Config Key="creator_scrollspeed" Value="1.3" />
   <Config Key="creator_qualityfactor" Value="4.0" />
   <Config Key="creator_structured" Value="true" />
   <Config Key="creator_useacronyms" Value="false" />
