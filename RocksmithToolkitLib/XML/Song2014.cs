@@ -939,6 +939,7 @@ namespace RocksmithToolkitLib.XML
         [XmlAttribute("harmonic")]
         public Byte Harmonic { get; set; }
 
+        // FIXME: either hopo is missing or it does not exist ... always zero
         [XmlAttribute("hopo")]
         public Byte Hopo { get; set; }
 
@@ -1137,6 +1138,9 @@ namespace RocksmithToolkitLib.XML
                 p &= ~CON.NOTE_MASK_PULLOFF;
                 this.PullOff = 1;
             }
+            
+            // FIXME: either hopo is missing or it does not exist
+
             if ((p & CON.NOTE_MASK_HARMONIC) != 0)
             {
                 p &= ~CON.NOTE_MASK_HARMONIC;
@@ -1222,6 +1226,7 @@ namespace RocksmithToolkitLib.XML
         [XmlAttribute("palmMute")]
         public Int32 PalmMute { get; set; }
 
+        // FIXME: no usage ... always zero
         [XmlAttribute("hopo")]
         public Int32 Hopo { get; set; }
 

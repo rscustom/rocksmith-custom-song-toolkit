@@ -305,12 +305,13 @@ namespace RocksmithToolkitLib.Ogg
             //switch to verify headers instead, maybe Plus current implmentation bugged as for me.
             if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".ogg") //in RS1 ogg was actually wwise
             {
-                ExternalApps.Ogg2Wav(audioPath, wavPath); //detect quality here
+                // create ogg preview if it does not exist
                 if (!File.Exists(oggPreviewPath))
-                {
                     ExternalApps.Ogg2Preview(audioPath, oggPreviewPath, previewLength, chorusTime);
-                    ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
-                }
+
+                // convert ogg to wav
+                ExternalApps.Ogg2Wav(audioPath, wavPath); //detect quality here
+                ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                 audioPath = wavPath;
             }
 
@@ -318,14 +319,15 @@ namespace RocksmithToolkitLib.Ogg
             {
                 if (!File.Exists(wavPreviewPath))
                 {
+                    // may cause issues if you've got another guitar.ogg in folder, but it's extremely rare.
                     if (!File.Exists(oggPath))
-                    {
-                        //may cause issues if you've got another guitar.ogg in folder, but it's extremely rare.
                         ExternalApps.Wav2Ogg(audioPath, oggPath, audioQuality); // 4
-                    }
+
+                    // create preview from ogg and then convert back to wav
                     ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, previewLength, chorusTime);
                     ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
                 }
+
                 Wwise.Wav2Wem(audioPath, wemPath, audioQuality);
                 audioPath = wemPath;
             }
