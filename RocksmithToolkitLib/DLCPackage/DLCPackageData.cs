@@ -26,7 +26,7 @@ namespace RocksmithToolkitLib.DLCPackage
     public class DLCPackageData
     {
         private const float DEFAULT_AUDIO_VOLUME = -7.0f;
-        private const float DEFAULT_PREVIEW_VOLUME = -5.0f; 
+        private const float DEFAULT_PREVIEW_VOLUME = -5.0f;
 
         // DO NOT change variable names ... there are hidden dependancies
         public GameVersion GameVersion;
@@ -784,82 +784,63 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         /// <summary>
-        /// Transforms unpacked Song into project-like folder structure.
+        /// Transforms song artifacts into project-like folder structure
+        /// unpackedDir is recycled
         /// </summary>
-        /// <returns>Output folder path.</returns>
-        /// <param name="unpackedDir">Unpacked dir.</param>
+        /// <param name="unpackedDir"></param>
         public static string DoLikeProject(string unpackedDir)
         {
             const string EOF = "EOF";
             const string KIT = "Toolkit";
-            string SongName = "SongName";
-            string songVersion = "v0";
 
-            // Get name for a new folder
-            var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray();
-            var attr = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
-            var fileNameParts = Path.GetFileNameWithoutExtension(unpackedDir).Split('_');
-            if (fileNameParts.Length > 3)
-                songVersion = fileNameParts[2];
-            SongName = attr.FullName.Split('_')[0];
+            // Create temporary project directory structure
+            var tmpProjectDir = Path.Combine(Path.GetTempPath(), "ProjectFiles", Path.GetFileName(unpackedDir));
+            var eofDir = Path.Combine(tmpProjectDir, EOF);
+            var kitDir = Path.Combine(tmpProjectDir, KIT);
 
-            //Create dir struct
-            var outdir = Path.Combine(Path.GetDirectoryName(unpackedDir), String.Format("{0}_{1}", SongName, songVersion).Replace(" ", "-"));
-            var eofdir = Path.Combine(outdir, EOF);
-            var kitdir = Path.Combine(outdir, KIT);
-            attr = null; //dispose
+            Directory.CreateDirectory(tmpProjectDir);
+            Directory.CreateDirectory(eofDir);
+            Directory.CreateDirectory(kitDir);
 
-            // Don't work in same dir
-            if (Directory.Exists(outdir))
-            {
-                if (outdir == unpackedDir)
-                    return unpackedDir;
-                DirectoryExtension.SafeDelete(outdir);
-            }
-
-            Directory.CreateDirectory(outdir);
-            Directory.CreateDirectory(eofdir);
-            Directory.CreateDirectory(kitdir);
-
+            // Gather up the project files and songName
             var xmlFiles = Directory.EnumerateFiles(unpackedDir, "*.xml", SearchOption.AllDirectories).ToArray();
-            // var sngFiles = Directory.EnumerateFiles(unpackedDir, "*vocals.sng", SearchOption.AllDirectories).ToArray();
+            var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray();
+            string songName = "SongName";
+            var attr = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
+            songName = attr.FullName.Split('_')[0];
+            attr = null; // dispose
 
             foreach (var json in jsonFiles)
             {
                 var name = Path.GetFileNameWithoutExtension(json);
                 var xmlFile = xmlFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
-                // var sngFile = sngFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
 
                 //Move all pair JSON\XML
-                File.Move(json, Path.Combine(kitdir, name + ".json"));
-                File.Move(xmlFile, Path.Combine(eofdir, name + ".xml"));
-
-                //if (name.EndsWith("vocals", StringComparison.Ordinal))
-                //    if (sngFile != null)
-                //        File.Move(sngFile, Path.Combine(kitdir, name + ".sng"));
+                File.Move(json, Path.Combine(kitDir, name + ".json"));
+                File.Move(xmlFile, Path.Combine(eofDir, name + ".xml"));
             }
 
             // move showlights.xml
             var showlightPath = Directory.EnumerateFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).ToArray();
             if (showlightPath.Any())
-                File.Move(showlightPath[0], Path.Combine(eofdir, Path.GetFileName(showlightPath[0])));
+                File.Move(showlightPath[0], Path.Combine(eofDir, Path.GetFileName(showlightPath[0])));
 
             //Move all art_size.dds to KIT folder
             var artFiles = Directory.EnumerateFiles(unpackedDir, "album_*_*.dds", SearchOption.AllDirectories).ToArray();
             if (artFiles.Any())
                 foreach (var art in artFiles)
-                    File.Move(art, Path.Combine(kitdir, Path.GetFileName(art)));
+                    File.Move(art, Path.Combine(kitDir, Path.GetFileName(art)));
 
             var lyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).ToArray();
             if (lyricArt.Any())
                 foreach (var art in lyricArt)
-                    File.Move(art, Path.Combine(kitdir, Path.GetFileName(art)));
+                    File.Move(art, Path.Combine(kitDir, Path.GetFileName(art)));
 
             //Move all .BNK to KIT folder
             var bnkFiles = Directory.EnumerateFiles(unpackedDir, "song_*.bnk", SearchOption.AllDirectories).ToArray();
             if (bnkFiles.Any())
                 foreach (var bnk in bnkFiles)
-                    File.Move(bnk, Path.Combine(kitdir, Path.GetFileName(bnk)));
+                    File.Move(bnk, Path.Combine(kitDir, Path.GetFileName(bnk)));
 
             //Move ogg to EOF folder + rename
             var oggFiles = Directory.EnumerateFiles(unpackedDir, "*_fixed.ogg", SearchOption.AllDirectories).ToArray();
@@ -877,17 +858,17 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     if (a0.Length > b0.Length)
                     {
-                        File.Move(a0.FullName, Path.Combine(eofdir, SongName + ".ogg"));
-                        File.Move(b0.FullName, Path.Combine(eofdir, SongName + "_preview.ogg"));
+                        File.Move(a0.FullName, Path.Combine(eofDir, songName + ".ogg"));
+                        File.Move(b0.FullName, Path.Combine(eofDir, songName + "_preview.ogg"));
                     }
                     else
                     {
-                        File.Move(b0.FullName, Path.Combine(eofdir, SongName + ".ogg"));
-                        File.Move(a0.FullName, Path.Combine(eofdir, SongName + "_preview.ogg"));
+                        File.Move(b0.FullName, Path.Combine(eofDir, songName + ".ogg"));
+                        File.Move(a0.FullName, Path.Combine(eofDir, songName + "_preview.ogg"));
                     }
                 }
                 else
-                    File.Move(a0.FullName, Path.Combine(eofdir, SongName + ".ogg"));
+                    File.Move(a0.FullName, Path.Combine(eofDir, songName + ".ogg"));
             }
 
             //Move wem to KIT folder + rename
@@ -905,32 +886,36 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 if (a1.Length > b1.Length)
                 {
-                    File.Move(a1.FullName, Path.Combine(kitdir, SongName + ".wem"));
-                    File.Move(b1.FullName, Path.Combine(kitdir, SongName + "_preview.wem"));
+                    File.Move(a1.FullName, Path.Combine(kitDir, songName + ".wem"));
+                    File.Move(b1.FullName, Path.Combine(kitDir, songName + "_preview.wem"));
                 }
                 else
                 {
-                    File.Move(b1.FullName, Path.Combine(kitdir, SongName + ".wem"));
-                    File.Move(a1.FullName, Path.Combine(kitdir, SongName + "_preview.wem"));
+                    File.Move(b1.FullName, Path.Combine(kitDir, songName + ".wem"));
+                    File.Move(a1.FullName, Path.Combine(kitDir, songName + "_preview.wem"));
                 }
             }
             else
-                File.Move(a1.FullName, Path.Combine(kitdir, SongName + ".wem"));
+                File.Move(a1.FullName, Path.Combine(kitDir, songName + ".wem"));
 
             //Move Appid for correct template generation.
             var appidFile = Directory.EnumerateFiles(unpackedDir, "*.appid", SearchOption.AllDirectories).FirstOrDefault();
             if (appidFile != null)
-                File.Move(appidFile, Path.Combine(kitdir, Path.GetFileName(appidFile)));
+                File.Move(appidFile, Path.Combine(kitDir, Path.GetFileName(appidFile)));
 
             //Move toolkit.version
             var toolkitVersion = Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).FirstOrDefault();
             if (toolkitVersion != null)
-                File.Move(toolkitVersion, Path.Combine(kitdir, Path.GetFileName(toolkitVersion)));
+                File.Move(toolkitVersion, Path.Combine(kitDir, Path.GetFileName(toolkitVersion)));
 
-            //Remove old folder
+            //Remove old unpackedDir
             DirectoryExtension.SafeDelete(unpackedDir);
 
-            return outdir;
+            //Move projectDir to unpackedDir
+            Directory.Move(tmpProjectDir, unpackedDir);
+            DirectoryExtension.SafeDelete(Path.GetDirectoryName(tmpProjectDir));
+
+            return unpackedDir;
         }
         #endregion
     }

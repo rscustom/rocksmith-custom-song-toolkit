@@ -434,7 +434,8 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>xcopy /S /Y "$(SolutionDir)Third-party Apps"
+    <PostBuildEvent>REM copy support files
+xcopy /S /Y "$(SolutionDir)Third-party Apps"
 
 rem do some cleanup only if Release
 

@@ -17,11 +17,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{1940BBE3-640F-499C-80BC-2291585406D2}</ProjectGuid>
+    <ProjectGuid>{B3C42137-BB4C-4CBC-875F-F7104145598B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RocksmithToolkitLibTest</RootNamespace>
-    <AssemblyName>RocksmithToolkitLibTest</AssemblyName>
+    <RootNamespace>RocksmithToolkitLib.Tests</RootNamespace>
+    <AssemblyName>RocksmithToolkitLib.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProductVersion>10.0.0</ProductVersion>
@@ -30,23 +30,17 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="nunit.framework">
       <HintPath>..\lib\NUnit\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestSettings.cs" />
+    <Compile Include="UnpackTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XmlRepository\TuningDefinitionTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="ToolkitTests.nunit" />
+    <Compile Include="Sng2014FileTest.cs" />
+    <Compile Include="TuningDefinitionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RocksmithTookitGUI\RocksmithToolkitGUI.csproj">
@@ -58,7 +52,27 @@
       <Name>RocksmithToolkitLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="Resources\PepaPigv1_m.psarc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PepaPigv1_p.psarc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PepaPigv1_ps3.psarc.edat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PepaPigv1_xbox">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ReadMe.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>REM copy support files
+xcopy /S /Y "$(SolutionDir)Third-party Apps" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

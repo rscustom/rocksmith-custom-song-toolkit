@@ -34,8 +34,10 @@ namespace RocksmithToolkitLib.DLCPackage
     {
         #region CONSTANT
 
-        private static readonly string XBOX_WORKDIR = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "xboxpackage");
-        private static readonly string PS3_WORKDIR = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "edat");
+        // path fixed for unit testing compatiblity
+        private static readonly string XBOX_WORKDIR = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "xboxpackage");
+        // path fixed for unit testing compatiblity
+        private static readonly string PS3_WORKDIR = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "edat");
 
         private static readonly string[] PATH_PC = { "Windows", "Generic", "_p" };
         private static readonly string[] PATH_MAC = { "Mac", "MacOS", "_m" };
@@ -164,6 +166,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         BuildXBox360Package(songFileName, info, FILES_XBOX, platform.version, dlcType);
                         break;
                     case GamePlatform.PS3:
+                        // FIXME: this could change the destPath
                         EncryptPS3EdatFiles(songFileName + ".psarc", platform);
                         break;
                 }
@@ -181,7 +184,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region XBox360
 
-        public static void BuildXBox360Package(string songFileName, DLCPackageData info, IEnumerable<string> xboxFiles, GameVersion gameVersion, DLCPackageType dlcType = DLCPackageType.Song)
+        public static void BuildXBox360Package(string destPath, DLCPackageData info, IEnumerable<string> xboxFiles, GameVersion gameVersion, DLCPackageType dlcType = DLCPackageType.Song)
         {
             LogRecord x = new LogRecord();
             RSAParams xboxRSA = info.SignatureType == PackageMagic.CON ? new RSAParams(new DJsIO(Resources.XBox360_KV, true)) : new RSAParams(StrongSigned.LIVE);
@@ -190,7 +193,7 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (string file in xboxFiles)
                 xboxSTFS.AddFile(file, Path.GetFileName(file));
 
-            STFSPackage xboxPackage = new STFSPackage(xboxSTFS, xboxRSA, songFileName, x);
+            STFSPackage xboxPackage = new STFSPackage(xboxSTFS, xboxRSA, destPath, x);
             var generated = xboxPackage.RebuildPackage(xboxRSA);
             if (!generated)
                 throw new InvalidOperationException("Error on create XBox360 package, details: \n" + x.Log);
@@ -249,13 +252,18 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PS3
 
-        public static void EncryptPS3EdatFiles(string songFileName, Platform platform)
+        // TODO: elimate redundancy
+        // this method is almost the same as as Packer.PackPS3 method
+        public static string EncryptPS3EdatFiles(string srcPath, Platform platform)
         {
+            // source file must be in "/edat" folder in application root directory
+            var destPath = String.Empty;
+    
             // Due to PS3 encryption limitation - replace spaces in fname with '_'
-            if (Path.GetFileName(songFileName).Contains(" "))
-                songFileName = Path.Combine(Path.GetDirectoryName(songFileName), Path.GetFileName(songFileName).Replace(" ", "_"));
+            if (Path.GetFileName(srcPath).Contains(" "))
+                srcPath = Path.Combine(Path.GetDirectoryName(srcPath), Path.GetFileName(srcPath).Replace(" ", "_"));
 
-            // Cleaning work dir, beware there is .psarcthat we need.
+            // Cleaning work dir, beware there is .psarc that we need.
             var junkFiles = Directory.EnumerateFiles(PS3_WORKDIR, "*.*").Where(e => !e.EndsWith(".psarc"));
             foreach (var junk in junkFiles)
                 File.Delete(junk);
@@ -267,13 +275,14 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (File.Exists(FILES_PS3[0]))
                     {
                         var oldName = FILES_PS3[0].Clone().ToString();
-                        FILES_PS3[0] = Path.Combine(Path.GetDirectoryName(FILES_PS3[0]), Path.GetFileName(songFileName));
+                        FILES_PS3[0] = Path.Combine(Path.GetDirectoryName(FILES_PS3[0]), Path.GetFileName(srcPath));
 
                         if (File.Exists(FILES_PS3[0]))
                             File.Delete(FILES_PS3[0]);
                         File.Move(oldName, FILES_PS3[0]);
                     }
             }
+
             string encryptResult = RijndaelEncryptor.EncryptPS3Edat();
 
             // Delete .psarc files
@@ -285,25 +294,27 @@ namespace RocksmithToolkitLib.DLCPackage
             if (platform.version == GameVersion.RS2014)
             {
                 var encryptedFile = String.Format("{0}.edat", FILES_PS3[0]);
-                var userSavePath = String.Format("{0}.edat", songFileName);
+                destPath = String.Format("{0}.edat", srcPath);
 
-                if (File.Exists(userSavePath))
-                    File.Delete(userSavePath);
+                if (File.Exists(destPath))
+                    File.Delete(destPath);
 
                 if (File.Exists(encryptedFile))
-                    File.Move(encryptedFile, userSavePath);
+                    File.Move(encryptedFile, destPath);
             }
             else
             {
                 if (Directory.Exists(PS3_WORKDIR))
-                    DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", songFileName));
+                    DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", srcPath), true);
             }
 
             if (encryptResult.IndexOf("No JDK or JRE is installed on your machine") > 0)
                 throw new InvalidOperationException("You need install Java SE 7 (x86) or higher on your machine. The Java path should be in PATH Environment Variable:" + Environment.NewLine + Environment.NewLine + encryptResult);
 
-            if (encryptResult.IndexOf("Encrypt all EDAT files successfully") < 0)
+            if (encryptResult.IndexOf(Packer.EDAT_MSG) < 0)
                 throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output bellow:" + Environment.NewLine + Environment.NewLine + encryptResult);
+
+            return destPath;
         }
 
         #endregion

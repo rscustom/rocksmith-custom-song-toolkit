@@ -59,11 +59,10 @@ namespace RocksmithToolkitLib.Ogg
         public static void Revorb(string file, string outputFileName, string appPath, WwiseVersion wwiseVersion)
         {
             // LOOK HERE - if there are issues with third party applications, e.g. CFSM
-            var subroot = "tools"; // DO NOT CHANGE
-            var ww2oggPath = Path.Combine(appPath, subroot, "ww2ogg.exe");
-            var revorbPath = Path.Combine(appPath, subroot, "revorb.exe");
-            var codebooksPath = Path.Combine(appPath, subroot, "packed_codebooks.bin"); // Default
-            var codebooks603Path = Path.Combine(appPath, subroot, "packed_codebooks_aoTuV_603.bin"); // RS2014
+            var ww2oggPath = Path.Combine(appPath, "tools", "ww2ogg.exe");
+            var revorbPath = Path.Combine(appPath, "tools", "revorb.exe");
+            var codebooksPath = Path.Combine(appPath, "tools", "packed_codebooks.bin"); // Default
+            var codebooks603Path = Path.Combine(appPath, "tools", "packed_codebooks_aoTuV_603.bin"); // RS2014
 
             // Verifying if third part apps is in root application directory
             if (!File.Exists(ww2oggPath))

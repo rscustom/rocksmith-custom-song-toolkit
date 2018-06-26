@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-//using RocksmithToolkitGUI.DLCPackageCreator;
-using RocksmithToolkitLib;
 using NUnit.Framework;
-using RocksmithToolkitLib.Sng;
-using RocksmithToolkitLib.Xml;
-using RocksmithToolkitLib.DLCPackage.Showlight;
+using RocksmithToolkitLib.XmlRepository;
+using RocksmithToolkitLib.XML;
 
-namespace RocksmithToolkitLibTest
+namespace RocksmithToolkitLib.Tests
 {
     [TestFixture]
     public class TuningDefinitionTests

@@ -11,7 +11,7 @@ namespace RocksmithToolkitLib.Extensions
 
             if (String.IsNullOrWhiteSpace(sourceDirName)) { throw new ArgumentNullException("sourceDirName", "The source directory cannot be null."); }
             if (String.IsNullOrWhiteSpace(destDirName)) { throw new ArgumentNullException("destDirName", "The destination directory cannot be null."); }
- 
+
             sourceDirName = sourceDirName.Trim();
             destDirName = destDirName.Trim();
 
@@ -32,12 +32,19 @@ namespace RocksmithToolkitLib.Extensions
             {
                 if (overwrite)
                     SafeDelete(destDirName, true);
+
+                // make sure the destination subroot directory exists to avoid
+                // throwing System.IO error 'Could not find a part of path' 
+                if (!Directory.Exists(Path.GetDirectoryName(destDirName)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(destDirName));
+
                 Directory.Move(sourceDirName, destDirName);
             }
             else
             {
                 if (overwrite)
                     SafeDelete(destDirName, true);
+
                 Directory.CreateDirectory(destDirName);
 
                 FileInfo[] files = sourceDir.GetFiles();
@@ -74,7 +81,7 @@ namespace RocksmithToolkitLib.Extensions
         /// <param name="objectPath">Full path to the File or Folder</param>
         /// <param name="basePath">Base folder</param>
         /// <returns>Convert to rel path "absolutePath"</returns>
-        public static string RelativeTo(this string objectPath, string basePath )
+        public static string RelativeTo(this string objectPath, string basePath)
         {
             string[] absoluteDirectories = basePath.Split('\\');
             string[] relativeDirectories = objectPath.Split('\\');
@@ -117,5 +124,49 @@ namespace RocksmithToolkitLib.Extensions
         {
             return Path.GetFullPath(Path.Combine(basePath, relPath));
         }
+
+        public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            // If the source directory does not exist, throw an exception.
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException("Source directory does not exist or could not be found: " + sourceDirName);
+            }
+
+            // If the destination directory does not exist, create it.
+            if (!Directory.Exists(destDirName))
+            {
+                Directory.CreateDirectory(destDirName);
+            }
+
+            // Get the file contents of the directory to copy.
+            FileInfo[] files = dir.GetFiles();
+
+            foreach (FileInfo file in files)
+            {
+                // Create the path to the new copy of the file.
+                string temppath = Path.Combine(destDirName, file.Name);
+
+                // Copy the file.
+                file.CopyTo(temppath, false);
+            }
+
+            // If copySubDirs is true, copy the subdirectories.
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    // Create the subdirectory.
+                    string temppath = Path.Combine(destDirName, subdir.Name);
+
+                    // Copy the subdirectories.
+                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
+
     }
 }

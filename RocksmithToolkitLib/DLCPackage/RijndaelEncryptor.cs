@@ -8,6 +8,7 @@ using MiscUtil.Conversion;
 using MiscUtil.IO;
 using zlib;
 using System.Linq;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -311,7 +312,6 @@ namespace RocksmithToolkitLib.DLCPackage
                              Version = "03";  //02 or 03
         private const string kLic = "CB4A06E85378CED307E63EFD1084C19D";
         private const string ContentID = "UP0001-BLUS30670_00-RS001PACK0000003";
-        private static readonly string toolkitPath = Path.GetDirectoryName(Application.ExecutablePath);
 
         /// <summary>
         /// Ensure that we running JVM x86
@@ -336,6 +336,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     var output = version.StandardError.ReadLine();
                     if (!output.Contains("java version"))
                         return false;
+
                     // Parse java version and detect if it's good.
                     var javaVer = output.Split('\"')[1].Split('.');
                     int maj = int.Parse(javaVer[0]);
@@ -354,7 +355,8 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         /// <summary>
-        /// Encrypt using TrueAncestor Edat Rebuilder (files must be in "/edat" folder in application root directory)
+        /// Encrypt using TrueAncestor Edat Rebuilder 
+        /// NOTE: source files must be in "/edat" folder in application root directory
         /// </summary>
         /// <returns>Output message from execution</returns>
         public static string EncryptPS3Edat()
@@ -362,20 +364,25 @@ namespace RocksmithToolkitLib.DLCPackage
             if (!IsJavaInstalled())
                 return "No JDK or JRE is installed on your machine";
 
-            string errors = string.Empty;
-            var files = Directory.EnumerateFiles(Path.Combine(toolkitPath, "edat"), "*.psarc");
+            var errors = String.Empty;
+            var files = Directory.EnumerateFiles(Path.Combine(ExternalApps.TOOLKIT_ROOT, "edat"), "*.psarc");
+            
             foreach (var InFile in files)
             {
-                string OutFile = InFile + ".edat";
-                string command = String.Format("EncryptEDAT \"{0}\" \"{1}\" {2} {3} {4} {5} {6}",
+                var OutFile = InFile + ".edat";
+                var command = String.Format("EncryptEDAT \"{0}\" \"{1}\" {2} {3} {4} {5} {6}",
                     InFile, OutFile, kLic, ContentID, Flags, Type, Version);
+                
                 errors += EdatCrypto(command);
             }
-            return String.IsNullOrEmpty(errors) ? "Encrypt all EDAT files successfully" : errors;
+
+        
+            return String.IsNullOrEmpty(errors) ? Packer.EDAT_MSG : errors;
         }
 
         /// <summary>
-        /// Decrypt using TrueAncestor Edat Rebuilder (files must be in "/edat" folder in application root directory)
+        /// Decrypt using TrueAncestor Edat Rebuilder 
+        /// NOTE: files must be in "/edat" folder in application root directory
         /// </summary>
         /// <returns>Output message from execution</returns>
         public static string DecryptPS3Edat()
@@ -383,40 +390,40 @@ namespace RocksmithToolkitLib.DLCPackage
             if (!IsJavaInstalled())
                 return "No JDK or JRE is installed on your machine";
 
-            string errors = string.Empty;
-            var files = Directory.EnumerateFiles(Path.Combine(toolkitPath, "edat"), "*.edat");
+            var errors = String.Empty;
+            var files = Directory.EnumerateFiles(Path.Combine(ExternalApps.TOOLKIT_ROOT, "edat"), "*.edat").ToList();
+            
             foreach (var InFile in files)
             {
-                string OutFile = Path.ChangeExtension(InFile, ".dat");
-                string command = String.Format("DecryptFree \"{0}\" \"{1}\" {2}",
-                    InFile, OutFile, kLic);
+                var OutFile = Path.ChangeExtension(InFile, ".dat");
+                var command = String.Format("DecryptFree \"{0}\" \"{1}\" {2}", InFile, OutFile, kLic);
                 errors += EdatCrypto(command);
             }
+
             return String.IsNullOrEmpty(errors) ? "Decrypt all EDAT files successfully" : errors;
         }
 
         internal static string EdatCrypto(string command)
-        {// Encrypt/decrypt using TrueAncestor Edat Rebuilder v1.4c
-            string core = "tools/core.jar"; //RE: should we just move it over to ExternalApps?
-            string core_path = Path.Combine(toolkitPath, core);
-            string APP = "java";
+        {
+            // Encrypt/decrypt using TrueAncestor Edat Rebuilder v1.4c
+            using (var PS3Process = new Process())
+            {
+                PS3Process.StartInfo.FileName = "java";
+                PS3Process.StartInfo.Arguments = String.Format("-cp \"{0}\" -Xms256m -Xmx1024m {1}", ExternalApps.APP_COREJAR, command);
+                PS3Process.StartInfo.WorkingDirectory = ExternalApps.TOOLKIT_ROOT;
+                PS3Process.StartInfo.UseShellExecute = false;
+                PS3Process.StartInfo.CreateNoWindow = true;
+                PS3Process.StartInfo.RedirectStandardError = true;
+                PS3Process.Start();
+                PS3Process.WaitForExit();
 
-            Process PS3Process = new Process();
-            PS3Process.StartInfo.FileName = APP;
-            PS3Process.StartInfo.Arguments = String.Format("-cp \"{0}\" -Xms256m -Xmx1024m {1}", core, command);
-            PS3Process.StartInfo.WorkingDirectory = toolkitPath;
-            PS3Process.StartInfo.UseShellExecute = false;
-            PS3Process.StartInfo.CreateNoWindow = true;
-            PS3Process.StartInfo.RedirectStandardError = true;
+                var stdout = PS3Process.StandardError.ReadToEnd();
+                //Improve me please
+                if (!String.IsNullOrEmpty(stdout))
+                    return String.Format("System error occurred {0}\n", stdout);
 
-            PS3Process.Start();
-            PS3Process.WaitForExit();
-
-            string stdout = PS3Process.StandardError.ReadToEnd();
-            //Improve me please
-            if (!String.IsNullOrEmpty(stdout))
-                return String.Format("System error occurred {0}\n", stdout);
-            return "";
+                return "";
+            }
         }
 
         #endregion

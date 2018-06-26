@@ -110,6 +110,7 @@ Backup*/
 UpgradeLog*.XML
 
 # Developer Only Custom Files
+*.DotSettings.user
 CleanupBeforeGitPullRequest.bat
 RevisionLog.txt
 *.rar

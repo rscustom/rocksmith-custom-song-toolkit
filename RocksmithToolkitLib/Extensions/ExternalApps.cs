@@ -6,38 +6,44 @@ namespace RocksmithToolkitLib.Extensions
 {
     public static class ExternalApps
     {
-        private const string APP_ROOT = @"tools\";
-        private const string APP_TOPNG = APP_ROOT + "topng.exe";
-        private const string APP_7Z = APP_ROOT + "7za.exe";
-        private const string APP_NVDXT = APP_ROOT + "nvdxt.exe";
-        private const string APP_PACKER = APP_ROOT + "packer.exe";
-        private const string APP_OGGCUT = APP_ROOT + "oggCut.exe";
-        private const string APP_OGGDEC = APP_ROOT + "oggdec.exe";
-        private const string APP_OGGENC = APP_ROOT + "oggenc.exe";
+        // toolkit path fixed for unit testing compatiblity
+        public static readonly string TOOLKIT_ROOT = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+        public static readonly string TOOLS_DIR = "tools";
+        public static readonly string APP_TOPNG = Path.Combine(TOOLS_DIR, "topng.exe");
+        public static readonly string APP_7Z = Path.Combine(TOOLS_DIR, "7za.exe");
+        public static readonly string APP_NVDXT = Path.Combine(TOOLS_DIR, "nvdxt.exe");
+        public static readonly string APP_PACKER = Path.Combine(TOOLS_DIR, "packer.exe");
+        public static readonly string APP_OGGCUT = Path.Combine(TOOLS_DIR, "oggCut.exe");
+        public static readonly string APP_OGGDEC = Path.Combine(TOOLS_DIR, "oggdec.exe");
+        public static readonly string APP_OGGENC = Path.Combine(TOOLS_DIR, "oggenc.exe");
+        public static readonly string APP_COREJAR = Path.Combine(TOOLS_DIR, "core.jar");
 
         public static void VerifyExternalApps()
         {
             // Verifying if third party app is in root application directory
-            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_TOPNG)))
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_TOPNG)))
                 throw new FileNotFoundException("topng.exe not found!");
 
-            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_7Z)))
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_7Z)))
                 throw new FileNotFoundException("7za.exe not found!");
 
-            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_NVDXT)))
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_NVDXT)))
                 throw new FileNotFoundException("nvdxt.exe not found!");
 
-            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_PACKER)))
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_PACKER)))
                 throw new FileNotFoundException("packer.exe not found!");
 
-            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_OGGCUT)))
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGCUT)))
                 throw new FileNotFoundException("oggCut.exe not found!");
 
-            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_OGGDEC)))
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGDEC)))
                 throw new FileNotFoundException("oggdec.exe not found!");
 
-            if (!File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), APP_OGGENC)))
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGENC)))
                 throw new FileNotFoundException("oggenc.exe not found!");
+
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_COREJAR)))
+                throw new FileNotFoundException("core.jar not found!");
         }
 
         public static void Dds2Png(string sourcePath, string destinationPath = null)

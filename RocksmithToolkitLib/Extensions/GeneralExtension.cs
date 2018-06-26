@@ -237,8 +237,7 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null)
         {
-            string toolkitRootPath = AppDomain.CurrentDomain.BaseDirectory; //Path.GetDirectoryName(Application.ExecutablePath);
-
+            string toolkitRootPath = AppDomain.CurrentDomain.BaseDirectory;
             var rootPath = toolkitRootFolder ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
 
             var startInfo = new ProcessStartInfo
