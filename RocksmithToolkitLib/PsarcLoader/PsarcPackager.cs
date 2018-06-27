@@ -26,7 +26,7 @@ namespace RocksmithToolkitLib.PsarcLoader
         public DLCPackageData ReadPackage(string srcPath, bool fixMultitoneEx = false, bool fixLowBass = false, bool decodeAudio = false)
         {
             // UNPACK
-            packageDir = Packer.Unpack(srcPath, Path.GetTempPath(), decodeAudio);
+            packageDir = Packer.Unpack(srcPath, Path.GetTempPath(), decodeAudio:decodeAudio);
 
             // REORGANIZE
             packageDir = DLCPackageData.DoLikeProject(packageDir);

@@ -237,9 +237,9 @@ namespace packer
                         try
                         {
                             if (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version != GameVersion.None)
-                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, arguments.UpdateManifest, arguments.Platform);
+                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.Platform, arguments.UpdateSng, arguments.UpdateManifest);
                             else
-                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, arguments.UpdateManifest);
+                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), null, arguments.UpdateSng, arguments.UpdateManifest);
 
                             Console.WriteLine("Packing is complete.");
                         }
@@ -282,7 +282,7 @@ namespace packer
 
                         try
                         {
-                            var unpackedDir = Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.DecodeOGG, arguments.OverwriteSongXml);
+                            var unpackedDir = Packer.Unpack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), null, arguments.DecodeOGG, arguments.OverwriteSongXml);
 
                             // create template xml file
                             if (arguments.CreateTemplateXml)

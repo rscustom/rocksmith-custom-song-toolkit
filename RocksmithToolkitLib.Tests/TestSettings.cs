@@ -36,12 +36,12 @@ namespace RocksmithToolkitLib.Tests
             
             foreach (var srcPath in SrcPaths)
             {
-                Platform platform = srcPath.GetPlatform();
-                if (platform == null || platform.platform == GamePlatform.None)
+                Platform srcPlatform = srcPath.GetPlatform();
+                if (srcPlatform == null || srcPlatform.platform == GamePlatform.None)
                     throw new Exception("GetPlatform Failed: " + Path.GetFileName(srcPath));
 
                 // unpack artifacts
-                var unpackedDir = Packer.Unpack(srcPath, DestDir, true, true, platform);
+                var unpackedDir = Packer.Unpack(srcPath, DestDir, srcPlatform, true, true);
                 unpackedDirs.Add(unpackedDir);
             }
 

@@ -188,8 +188,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                 try
                 {
-                    Platform platform = srcPath.GetPlatform();
-                    var unpackedDir = Packer.Unpack(srcPath, destPath, DecodeAudio, OverwriteSongXml, platform);
+                    Platform srcPlatform = srcPath.GetPlatform();
+                    var unpackedDir = Packer.Unpack(srcPath, destPath, srcPlatform, DecodeAudio, OverwriteSongXml);
 
                     // added a bulk process to create template xml files here so unpacked folders may be loaded quickly in CDLC Creator if desired
                     progress += step;
@@ -197,14 +197,14 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     using (var packageCreator = new DLCPackageCreator.DLCPackageCreator())
                     {
                         DLCPackageData info = null;
-                        if (platform.version == GameVersion.RS2014)
-                            info = DLCPackageData.LoadFromFolder(unpackedDir, platform, platform, true, true);
+                        if (srcPlatform.version == GameVersion.RS2014)
+                            info = DLCPackageData.LoadFromFolder(unpackedDir, srcPlatform, srcPlatform, true, true);
                         else
-                            info = DLCPackageData.RS1LoadFromFolder(unpackedDir, platform, false);
+                            info = DLCPackageData.RS1LoadFromFolder(unpackedDir, srcPlatform, false);
 
-                        info.GameVersion = platform.version;
+                        info.GameVersion = srcPlatform.version;
 
-                        switch (platform.platform)
+                        switch (srcPlatform.platform)
                         {
                             case GamePlatform.Pc:
                                 info.Pc = true;
@@ -222,9 +222,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                         packageCreator.FillPackageCreatorForm(info, unpackedDir);
                         // fix descrepancies
-                        packageCreator.CurrentGameVersion = platform.version;
+                        packageCreator.CurrentGameVersion = srcPlatform.version;
                         // console files do not have an AppId
-                        if (!platform.IsConsole)
+                        if (!srcPlatform.IsConsole)
                             packageCreator.AppId = info.AppId;
                         //packageCreator.SelectComboAppId(info.AppId);
                         // save template xml file except when SongPack
@@ -301,17 +301,17 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             foreach (string sourceFileName in sourceFileNames)
             {
                 Application.DoEvents();
-                var platform = sourceFileName.GetPlatform();
+                var srcPlatform = sourceFileName.GetPlatform();
                 bwRepack.ReportProgress(progress, String.Format("Updating '{0}'", Path.GetFileName(sourceFileName)));
 
-                if (!platform.IsConsole)
+                if (!srcPlatform.IsConsole)
                 {
                     try
                     {
                         var unpackedDir = Packer.Unpack(sourceFileName, tmpDir, overwriteSongXml: OverwriteSongXml);
-                        var appIdFile = Path.Combine(unpackedDir, (platform.version == GameVersion.RS2012) ? "APP_ID" : "appid.appid");
+                        var appIdFile = Path.Combine(unpackedDir, (srcPlatform.version == GameVersion.RS2012) ? "APP_ID" : "appid.appid");
                         File.WriteAllText(appIdFile, appId);
-                        Packer.Pack(unpackedDir, sourceFileName, UpdateSng, UpdateManifest, platform);
+                        Packer.Pack(unpackedDir, sourceFileName, srcPlatform, UpdateSng, UpdateManifest);
                     }
                     catch (Exception ex)
                     {
@@ -574,7 +574,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 srcPath = destPath = fbd.SelectedPath;
             }
 
-            destPath = Packer.RecycleArtifatsFolder(srcPath);
+            destPath = Packer.RecycleUnpackedDir(srcPath);
 
             using (var sfd = new SaveFileDialog())
             {
@@ -604,8 +604,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Restart();
-                var packagePlatform = srcPath.GetPlatform();
-                archivePath = Packer.Pack(srcPath, destPath, UpdateSng, UpdateManifest, packagePlatform);
+                var srcPlatform = srcPath.GetPlatform();
+                archivePath = Packer.Pack(srcPath, destPath, srcPlatform, UpdateSng, UpdateManifest);
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
             }

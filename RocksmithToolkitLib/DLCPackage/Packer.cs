@@ -41,33 +41,36 @@ namespace RocksmithToolkitLib.DLCPackage
         /// </summary>
         /// <param name="srcPath">Unpacked Artifacts Path</param>
         /// <param name="destPath">Destination Archive Path</param>
+        /// <param name="predifinedPlatform">Desired Output Platform</param>
         /// <param name="updateSng">If set to <c>true</c> update the SNG files</param>
         /// <param name="updateManifest">If set to <c>true</c> update the manifest files</param>
-        /// <param name="predifinedPlatform">Desired Output Platform</param>
         /// <returns>Archive Path</returns>
-        public static string Pack(string srcPath, string destPath, bool updateSng = false, bool updateManifest = false, Platform predefinedPlatform = null)
+        public static string Pack(string srcPath, string destPath,  Platform predefinedPlatform = null, bool updateSng = false, bool updateManifest = false)
         {
             var archivePath = String.Empty;
             DeleteFixedAudio(srcPath);
-            Platform platform = srcPath.GetPlatform();
+            Platform srcPlatform = srcPath.GetPlatform();
 
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
-                platform = predefinedPlatform;
+                srcPlatform = predefinedPlatform;
 
-            switch (platform.platform)
+            //TODO: check validity of file name here
+
+
+            switch (srcPlatform.platform)
             {
                 case GamePlatform.Pc:
                 case GamePlatform.Mac:
-                    if (platform.version == GameVersion.RS2012)
+                    if (srcPlatform.version == GameVersion.RS2012)
                         archivePath = PackPC(srcPath, destPath, true, updateSng);
-                    else if (platform.version == GameVersion.RS2014)
-                        archivePath = Pack2014(srcPath, destPath, platform, updateSng, updateManifest);
+                    else if (srcPlatform.version == GameVersion.RS2014)
+                        archivePath = Pack2014(srcPath, destPath, srcPlatform, updateSng, updateManifest);
                     break;
                 case GamePlatform.XBox360:
-                    archivePath = PackXBox360(srcPath, destPath, platform, updateSng, updateManifest);
+                    archivePath = PackXBox360(srcPath, destPath, srcPlatform, updateSng, updateManifest);
                     break;
                 case GamePlatform.PS3:
-                    archivePath = PackPS3(srcPath, destPath, platform, updateSng, updateManifest);
+                    archivePath = PackPS3(srcPath, destPath, srcPlatform, updateSng, updateManifest);
                     break;
                 case GamePlatform.None:
                     throw new InvalidOperationException(String.Format("Invalid directory structure of package. {0}Directory: {1}", Environment.NewLine, srcPath));
@@ -85,27 +88,27 @@ namespace RocksmithToolkitLib.DLCPackage
         /// </summary>
         /// <param name="srcPath">Source Archive Path</param>
         /// <param name="destPath">Unpacked Artifacts Path</param>
+        /// <param name="predefinedPlatform">Predefined source platform</param>
         /// <param name="decodeAudio">If set to <c>true</c> decode audio</param>
         /// <param name="overwriteSongXml">If set to <c>true</c> overwrite existing song (EOF) xml with SNG data</param>       
-        /// <param name="predefinedPlatform">Predefined source platform</param>
         /// <returns>Unpacked Directory Path</returns>
-        public static string Unpack(string srcPath, string destPath, bool decodeAudio = false, bool overwriteSongXml = false, Platform predefinedPlatform = null)
+        public static string Unpack(string srcPath, string destPath, Platform predefinedPlatform = null, bool decodeAudio = false, bool overwriteSongXml = false )
         {
-            Platform platform = srcPath.GetPlatform();
+            Platform srcPlatform = srcPath.GetPlatform();
 
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
-                platform = predefinedPlatform;
+                srcPlatform = predefinedPlatform;
 
-            var unpackedDir = GetUnpackDir(srcPath, destPath, platform);
-            var useCryptography = platform.version == GameVersion.RS2012; // Cryptography way is used only for PC in Rocksmith 1
+            var unpackedDir = GetUnpackedDir(srcPath, destPath, srcPlatform);
+            var useCryptography = srcPlatform.version == GameVersion.RS2012; // Cryptography way is used only for PC in Rocksmith 1
 
-            switch (platform.platform)
+            switch (srcPlatform.platform)
             {
                 case GamePlatform.Pc:
                 case GamePlatform.Mac:
-                    if (platform.version == GameVersion.RS2014)
+                    if (srcPlatform.version == GameVersion.RS2014)
                         using (var inputStream = File.OpenRead(srcPath))
-                            ExtractPSARC(srcPath, destPath, inputStream, platform);
+                            ExtractPSARC(srcPath, destPath, inputStream, srcPlatform);
                     else
                     {
                         using (var inputFileStream = File.OpenRead(srcPath))
@@ -116,15 +119,15 @@ namespace RocksmithToolkitLib.DLCPackage
                             else
                                 inputFileStream.CopyTo(inputStream);
 
-                            ExtractPSARC(srcPath, destPath, inputStream, platform);
+                            ExtractPSARC(srcPath, destPath, inputStream, srcPlatform);
                         }
                     }
                     break;
                 case GamePlatform.XBox360:
-                    UnpackXBox360Package(srcPath, destPath, platform);
+                    UnpackXBox360Package(srcPath, destPath, srcPlatform);
                     break;
                 case GamePlatform.PS3:
-                    UnpackPS3Package(srcPath, destPath, platform);
+                    UnpackPS3Package(srcPath, destPath, srcPlatform);
                     break;
                 case GamePlatform.None:
                     throw new InvalidOperationException("Platform not found :(");
@@ -152,7 +155,7 @@ namespace RocksmithToolkitLib.DLCPackage
             //overwriteSongXml = false;
 
             // Extract XML from SNG and check it against the EOF XML (correct bass tuning from older toolkit/EOF xml files)
-            if (platform.version == GameVersion.RS2014)
+            if (srcPlatform.version == GameVersion.RS2014)
             {
                 var sngFiles = Directory.EnumerateFiles(unpackedDir, "*.sng", SearchOption.AllDirectories).ToList();
                 var step = Math.Round(1.0 / sngFiles.Count * 100, 3);
@@ -162,7 +165,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 foreach (var sngFile in sngFiles)
                 {
                     var xmlEofFile = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
-                    xmlEofFile = xmlEofFile.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, platform.GetPathName()[1].ToLower()), "arr");
+                    xmlEofFile = xmlEofFile.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, srcPlatform.GetPathName()[1].ToLower()), "arr");
                     var xmlSngFile = xmlEofFile.Replace(".xml", ".sng.xml");
                     var arrType = ArrangementType.Guitar;
 
@@ -179,7 +182,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             att = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles).Entries.ToArray()[0].Value.ToArray()[0].Value;
                     }
 
-                    var sngContent = Sng2014File.LoadFromFile(sngFile, platform);
+                    var sngContent = Sng2014File.LoadFromFile(sngFile, srcPlatform);
                     using (var outputStream = new FileStream(xmlSngFile, FileMode.Create, FileAccess.ReadWrite))
                     {
                         dynamic xmlContent = null;
@@ -554,7 +557,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 archiveDestPath = destPath;
             else // destPath is a directory
             {
-                var archiveName = RecycleArtifatsFolder(srcPath);
+                var archiveName = RecycleUnpackedDir(srcPath);
                 archiveDestPath = Path.Combine(destPath, archiveName);
             }
             // =========================
@@ -1080,19 +1083,19 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         /// <summary>
-        /// Generate a uniform directory name with platform identifier for unpacked song artifacts source path
+        /// Get unpacked directory path name with platform identifier 
         /// </summary>
-        /// <param name="srcPath"></param>
-        /// <param name="destPath"></param>
-        /// <param name="platform"></param>
-        /// <returns>unpacked directory name/path</returns>
-        public static string GetUnpackDir(string srcPath, string destPath, Platform platform)
+        /// <param name="srcPath">Source Path</param>
+        /// <param name="destPath">Destination Path</param>
+        /// <param name="targetPlatform">Destination Platform</param>
+        /// <returns>Unpacked Directory Path Name</returns>
+        public static string GetUnpackedDir(string srcPath, string destPath, Platform targetPlatform)
         {
             var fnameWithoutExt = Path.GetFileNameWithoutExtension(srcPath);
-            if (platform.platform == GamePlatform.PS3)
+            if (targetPlatform.platform == GamePlatform.PS3)
                 fnameWithoutExt = fnameWithoutExt.Substring(0, fnameWithoutExt.LastIndexOf("."));
 
-            var unpackedDir = Path.Combine(destPath, String.Format("{0}_{1}", fnameWithoutExt, platform.platform));
+            var unpackedDir = Path.Combine(destPath, String.Format("{0}_{1}", fnameWithoutExt, targetPlatform.platform));
             if (Directory.Exists(unpackedDir))
                 DirectoryExtension.SafeDelete(unpackedDir);
 
@@ -1100,11 +1103,11 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         /// <summary>
-        /// Recycle artifacts folder name into archive file name
+        /// Recycle unpacked directory path into archive file name
         /// </summary>
         /// <param name="srcPath"></param>
         /// <returns>Archive File Name</returns>
-        public static string RecycleArtifatsFolder(string srcPath)
+        public static string RecycleUnpackedDir(string srcPath)
         {
             // looks for long endings first and then short endings
             var endings = new string[] { "_p_Pc", "_m_Mac", "_ps3_PS3", "_xbox_XBox360", "_Pc", "_Mac", "_PS3", "_XBox360" };
@@ -1125,6 +1128,19 @@ namespace RocksmithToolkitLib.DLCPackage
             return destFileName;
         }
 
+        public static string StripPlatformEndName(this string filePath)
+        {
+            if (filePath.EndsWith(GamePlatform.Pc.GetPathName()[2]) ||
+               filePath.EndsWith(GamePlatform.Mac.GetPathName()[2]) ||
+               filePath.EndsWith(GamePlatform.XBox360.GetPathName()[2]) ||
+               filePath.EndsWith(GamePlatform.PS3.GetPathName()[2]) ||
+               filePath.EndsWith(GamePlatform.PS3.GetPathName()[2] + ".psarc"))
+            {
+                return filePath.Substring(0, filePath.LastIndexOf("_"));
+            }
+
+            return filePath;
+        }
 
         #endregion
 

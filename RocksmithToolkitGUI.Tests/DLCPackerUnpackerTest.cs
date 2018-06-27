@@ -90,7 +90,7 @@ namespace RocksmithToolkitGUI.Tests
             archivePaths = new List<string>();
             foreach (var unpackedDir in unpackedDirs)
             {
-                var expArchivePath = Path.Combine(TestSettings.Instance.DestDir, Packer.RecycleArtifatsFolder(unpackedDir));
+                var expArchivePath = Path.Combine(TestSettings.Instance.DestDir, Packer.RecycleUnpackedDir(unpackedDir));
                 if (String.IsNullOrEmpty(expArchivePath))
                     Assert.Fail("RecycleArtifactsFolder Method Failed ...");
 

@@ -45,11 +45,11 @@ namespace RocksmithToolkitLib.Tests
         {
             foreach (var srcPath in TestSettings.Instance.SrcPaths)
             {
-                Platform platform = srcPath.GetPlatform();
-                if (platform == null)
+                Platform srcPlatform = srcPath.GetPlatform();
+                if (srcPlatform == null)
                     Assert.Fail("GetPlatform Failed: " + Path.GetFileName(srcPath));
 
-                var unpackedDir = Packer.Unpack(srcPath, TestSettings.Instance.DestDir, true, true, platform);
+                var unpackedDir = Packer.Unpack(srcPath, TestSettings.Instance.DestDir, srcPlatform, true, true);
                 unpackedDirs.Add(unpackedDir);
             }
 

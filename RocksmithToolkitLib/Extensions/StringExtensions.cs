@@ -590,20 +590,6 @@ namespace RocksmithToolkitLib.Extensions
             return result;
         }
 
-        public static string StripPlatformEndName(this string filePath)
-        {
-            if (filePath.EndsWith(GamePlatform.Pc.GetPathName()[2]) ||
-               filePath.EndsWith(GamePlatform.Mac.GetPathName()[2]) ||
-               filePath.EndsWith(GamePlatform.XBox360.GetPathName()[2]) ||
-               filePath.EndsWith(GamePlatform.PS3.GetPathName()[2]) ||
-               filePath.EndsWith(GamePlatform.PS3.GetPathName()[2] + ".psarc"))
-            {
-                return filePath.Substring(0, filePath.LastIndexOf("_"));
-            }
-
-            return filePath;
-        }
-
         public static string StripSpecialCharacters(this string value)
         {
             // TEST ()½!$€£Test$€£()½!  ()½!Test()½!

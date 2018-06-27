@@ -50,11 +50,11 @@ namespace RocksmithToolkitLib.Tests
                 if (platform == null)
                     Assert.Fail("GetPlatform Failed: " + Path.GetFileName(unpackedDir));
 
-                var expArchivePath = Path.Combine(TestSettings.Instance.DestDir, Packer.RecycleArtifatsFolder(unpackedDir));
+                var expArchivePath = Path.Combine(TestSettings.Instance.DestDir, Packer.RecycleUnpackedDir(unpackedDir));
                 if (String.IsNullOrEmpty(expArchivePath))
                     Assert.Fail("RecycleArtifactsFolder Method Failed ...");
 
-                var actArchivePath = Packer.Pack(unpackedDir, expArchivePath, true, true, platform);
+                var actArchivePath = Packer.Pack(unpackedDir, expArchivePath, platform, true, true);
 
                 if (!File.Exists(actArchivePath))
                     Assert.Fail("Pack Method Failed: " + Path.GetFileName(unpackedDir));

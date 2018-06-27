@@ -1893,8 +1893,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Application.DoEvents();
 
             // UNPACK            
-            var platform = srcPath.GetPlatform();            
-            UnpackedDir = Packer.Unpack(srcPath, destDir, true, predefinedPlatform: platform);
+            var srcPlatform = srcPath.GetPlatform();
+            UnpackedDir = Packer.Unpack(srcPath, destDir, srcPlatform, true);
 
             // REORGANIZE
             GlobalExtension.ShowProgress("Reorganizing Package Data ...", 35);
@@ -1906,12 +1906,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             GlobalExtension.ShowProgress("Loading Package Data ...", 70);
             DLCPackageData info = null; // DLCPackageData specific to RS2
             if (CurrentGameVersion == GameVersion.RS2014)
-                info = DLCPackageData.LoadFromFolder(UnpackedDir, platform, platform, fixMultiTone, fixLowBass);
+                info = DLCPackageData.LoadFromFolder(UnpackedDir, srcPlatform, srcPlatform, fixMultiTone, fixLowBass);
             else
-                info = DLCPackageData.RS1LoadFromFolder(UnpackedDir, platform, rbConvert.Checked);
+                info = DLCPackageData.RS1LoadFromFolder(UnpackedDir, srcPlatform, rbConvert.Checked);
 
 
-            switch (platform.platform)
+            switch (srcPlatform.platform)
             {
                 case GamePlatform.Pc:
                     info.Pc = true;
