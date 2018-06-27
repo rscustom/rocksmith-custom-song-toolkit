@@ -237,9 +237,9 @@ namespace packer
                         try
                         {
                             if (arguments.Platform.platform != GamePlatform.None && arguments.Platform.version != GameVersion.None)
-                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, arguments.Platform, arguments.UpdateManifest);
+                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, arguments.UpdateManifest, arguments.Platform);
                             else
-                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, updateManifest: arguments.UpdateManifest);
+                                Packer.Pack(Path.GetFullPath(srcFileName), Path.GetFullPath(arguments.Output), arguments.UpdateSng, arguments.UpdateManifest);
 
                             Console.WriteLine("Packing is complete.");
                         }

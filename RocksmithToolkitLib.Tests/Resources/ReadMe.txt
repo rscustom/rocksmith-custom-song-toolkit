@@ -1,6 +1,6 @@
 ﻿NOTE FOR DEVELOPERS
 ===================
-The 'Resources' folder contents are globally shared/used by all toolkit 
+The 'Resources' folder contents are globally shared and used by all toolkit 
 unit tests, e.g., RocksmithToolkitLib.Tests and RocksmithToolkitGUI.Tests
 
 Drop any CDLC file(s) into the Resources folder that you would like to use

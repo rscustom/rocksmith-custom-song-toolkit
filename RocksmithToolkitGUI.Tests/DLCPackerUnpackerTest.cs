@@ -23,7 +23,7 @@ namespace RocksmithToolkitGUI.Tests
     {
         private DLCPackerUnpacker.DLCPackerUnpacker packerUnpacker;
         private List<string> unpackedDirs;
-        private List<string> destPaths;
+        private List<string> archivePaths;
 
         [TestFixtureSetUp]
         public void Init()
@@ -87,22 +87,23 @@ namespace RocksmithToolkitGUI.Tests
             if (unpackedDirs == null)
                 TestUnpackSongs();
 
-            destPaths = new List<string>();
+            archivePaths = new List<string>();
             foreach (var unpackedDir in unpackedDirs)
             {
-                var destPath = Path.Combine(TestSettings.Instance.DestDir, packerUnpacker.RecycleFolderName(unpackedDir));
-                if (String.IsNullOrEmpty(destPath))
-                    Assert.Fail("RecycleFolderName Method Failed ...");
+                var expArchivePath = Path.Combine(TestSettings.Instance.DestDir, Packer.RecycleArtifatsFolder(unpackedDir));
+                if (String.IsNullOrEmpty(expArchivePath))
+                    Assert.Fail("RecycleArtifactsFolder Method Failed ...");
 
-                packerUnpacker.PackSong(unpackedDir, destPath);
+                var actArchivePath = packerUnpacker.PackSong(unpackedDir, expArchivePath);
 
-                if (!File.Exists(destPath))
-                    Assert.Fail("PackSong Method Failed: " + Path.GetFileName(unpackedDir));
+                if (!File.Exists(actArchivePath))
+                    Assert.Fail("Pack Method Failed: " + Path.GetFileName(unpackedDir));
 
-                destPaths.Add(destPath);
+                Assert.AreEqual(expArchivePath, actArchivePath);
+                archivePaths.Add(actArchivePath);
             }
 
-            Assert.AreEqual(destPaths.Count, unpackedDirs.Count);
+            Assert.AreEqual(archivePaths.Count, unpackedDirs.Count);
         }
 
         /// <summary>
@@ -117,35 +118,35 @@ namespace RocksmithToolkitGUI.Tests
         public void TestRepackAppId(string appId)
         {
             // confirm PackSong has been tested and saved
-            if (destPaths == null)
+            if (archivePaths == null)
                 TestPackSong();
 
             packerUnpacker.AppId = appId;
 
-            foreach (var destPath in destPaths)
+            foreach (var archivePath in archivePaths)
             {
                 // test AppId validation method
                 packerUnpacker.SelectComboAppId(packerUnpacker.AppId);
 
                 // console package does not have an AppId
-                var platform = destPath.GetPlatform();
+                var platform = archivePath.GetPlatform();
                 if (platform.IsConsole)
                 {
                     // NOTE: when unit test is finished, double click the test result to see this message
                     Debug.WriteLine("---------------------------------");
-                    Debug.WriteLine("TestRepackAppId skipped PS3 file: " + Path.GetFileName(destPath));
+                    Debug.WriteLine("TestRepackAppId skipped PS3 file: " + Path.GetFileName(archivePath));
                     Debug.WriteLine("---------------------------------");
                     continue;
                 }
 
                 // call background worker method from unit test to avoid threading issues
-                packerUnpacker.UpdateAppId(null, new DoWorkEventArgs(new string[] { destPath }));
+                packerUnpacker.UpdateAppId(null, new DoWorkEventArgs(new string[] { archivePath }));
 
-                if (!File.Exists(destPath))
-                    Assert.Fail("RepackAppId Method Failed: " + Path.GetFileName(destPath));
+                if (!File.Exists(archivePath))
+                    Assert.Fail("RepackAppId Method Failed: " + Path.GetFileName(archivePath));
 
                 // check if RepackAppId wrote the new AppId
-                var psarcLoader = new PsarcLoader(destPath, true);
+                var psarcLoader = new PsarcLoader(archivePath, true);
                 var entryAppId = psarcLoader.ExtractAppId();
 
                 Assert.AreEqual(packerUnpacker.AppId, entryAppId);
@@ -156,10 +157,3 @@ namespace RocksmithToolkitGUI.Tests
     }
 }
 
-/*
-            var xboxHeaderPaths = Directory.EnumerateFiles(srcPath, "*.txt", SearchOption.TopDirectoryOnly).ToList();
-            if (!xboxHeaderPaths.Any())
-                throw new FileLoadException("<ERROR> UnpackXbox360Package Failed.  Could not find psarc archive. ");
-            if (xboxHeaderPaths.Count > 1)
-                throw new FileLoadException("<ERROR> UnpackXbox360Package Failed.  Found more than one psarc archive. ");
-*/

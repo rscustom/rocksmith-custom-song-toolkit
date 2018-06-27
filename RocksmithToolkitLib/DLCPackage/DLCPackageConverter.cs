@@ -101,9 +101,9 @@ namespace RocksmithToolkitLib.DLCPackage
             // Packing
             var dirToPack = unpackedDir;
             if (sourcePlatform.platform == GamePlatform.XBox360)
-                dirToPack = Directory.GetDirectories(Path.Combine(unpackedDir, Packer.ROOT_XBox360))[0];
+                dirToPack = Directory.GetDirectories(Path.Combine(unpackedDir, Packer.ROOT_XBOX360))[0];
 
-            Packer.Pack(dirToPack, targetFileName, updateSNG, targetPlatform);
+            Packer.Pack(dirToPack, targetFileName, updateSNG, predefinedPlatform:targetPlatform);
             DirectoryExtension.SafeDelete(unpackedDir);
         }
 

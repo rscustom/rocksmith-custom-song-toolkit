@@ -36,6 +36,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PackTest.cs" />
     <Compile Include="TestSettings.cs" />
     <Compile Include="UnpackTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

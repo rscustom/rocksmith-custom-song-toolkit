@@ -123,26 +123,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Process.Start(destDirPath);
         }
 
-        public string RecycleFolderName(string srcPath)
-        {
-            // looks for long endings first and then short endings
-            var endings = new string[] { "_p_Pc", "_m_Mac", "_ps3_PS3", "_xbox_XBox360", "_Pc", "_Mac", "_PS3", "_XBox360" };
-            string[] extensions = { "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox", "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox" };
-
-            // reuse sanitized folder name as default file name if possible
-            var destFileName = Path.GetFileName(srcPath);
-            for (int ndx = 0; ndx < endings.Count(); ndx++)
-            {
-                if (destFileName.EndsWith(endings[ndx]))
-                {
-                    destFileName = destFileName.Substring(0, destFileName.LastIndexOf(endings[ndx], StringComparison.OrdinalIgnoreCase));
-                    destFileName = String.Format("{0}{1}", destFileName, extensions[ndx]);
-                    break;
-                }
-            }
-
-            return destFileName;
-        }
 
         public void SelectComboAppId(string appId)
         {
@@ -331,7 +311,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                         var unpackedDir = Packer.Unpack(sourceFileName, tmpDir, overwriteSongXml: OverwriteSongXml);
                         var appIdFile = Path.Combine(unpackedDir, (platform.version == GameVersion.RS2012) ? "APP_ID" : "appid.appid");
                         File.WriteAllText(appIdFile, appId);
-                        Packer.Pack(unpackedDir, sourceFileName, UpdateSng, platform, UpdateManifest);
+                        Packer.Pack(unpackedDir, sourceFileName, UpdateSng, UpdateManifest, platform);
                     }
                     catch (Exception ex)
                     {
@@ -594,7 +574,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 srcPath = destPath = fbd.SelectedPath;
             }
 
-            destPath = RecycleFolderName(srcPath);
+            destPath = Packer.RecycleArtifatsFolder(srcPath);
 
             using (var sfd = new SaveFileDialog())
             {
@@ -609,7 +589,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             PackSong(srcPath, destPath);
         }
 
-        public void PackSong(string srcPath, string destPath)
+        public string PackSong(string srcPath, string destPath)
         {
             ToggleUIControls(false);
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
@@ -618,13 +598,14 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             GlobalExtension.ShowProgress("Packing archive ...", 30);
             Application.DoEvents();
             var errMsg = String.Empty;
+            var archivePath = String.Empty;
 
             try
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Restart();
                 var packagePlatform = srcPath.GetPlatform();
-                Packer.Pack(srcPath, destPath, UpdateSng, packagePlatform, UpdateManifest);
+                archivePath = Packer.Pack(srcPath, destPath, UpdateSng, UpdateManifest, packagePlatform);
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
             }
@@ -638,6 +619,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             GlobalExtension.Dispose();
             ToggleUIControls(true);
+
+            return archivePath;
         }
 
         private void btnRepackAppId_Click(object sender, EventArgs e)
