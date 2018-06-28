@@ -9,11 +9,11 @@ namespace RocksmithToolkitLib.Extensions
         // update 'tools' folder apps/constants here as needed
         // toolkit path fixed for unit testing compatiblity
         public static readonly string TOOLKIT_ROOT = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+        public static readonly string APP_PACKER = "packer.exe";
         public static readonly string TOOLS_DIR = "tools";
         public static readonly string APP_TOPNG = Path.Combine(TOOLS_DIR, "topng.exe");
         public static readonly string APP_7Z = Path.Combine(TOOLS_DIR, "7za.exe");
         public static readonly string APP_NVDXT = Path.Combine(TOOLS_DIR, "nvdxt.exe");
-        public static readonly string APP_PACKER = Path.Combine(TOOLS_DIR, "packer.exe");
         public static readonly string APP_OGGCUT = Path.Combine(TOOLS_DIR, "oggCut.exe");
         public static readonly string APP_OGGDEC = Path.Combine(TOOLS_DIR, "oggdec.exe");
         public static readonly string APP_OGGENC = Path.Combine(TOOLS_DIR, "oggenc.exe");

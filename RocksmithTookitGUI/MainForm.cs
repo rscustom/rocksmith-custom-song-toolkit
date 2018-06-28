@@ -75,6 +75,8 @@ namespace RocksmithToolkitGUI
                 ToolkitVersion.UpdateVersionInfoFile();
             }
             catch {/* DO NOTHING */}
+
+            ExternalApps.VerifyExternalApps();
         }
 
         public sealed override string Text
