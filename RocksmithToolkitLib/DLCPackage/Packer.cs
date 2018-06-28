@@ -145,7 +145,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     var outputAudioFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
                     // path fixed for unit testing compatiblity
-                    OggFile.Revorb(file, outputAudioFileName, AppDomain.CurrentDomain.SetupInformation.ApplicationBase, Path.GetExtension(file).GetWwiseVersion());
+                    OggFile.Revorb(file, outputAudioFileName, Path.GetExtension(file).GetWwiseVersion());
                 }
 
                 //GlobalExtension.HideProgress();

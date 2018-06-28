@@ -77,8 +77,8 @@ namespace RocksmithToolkitGUI.Tests
                 info = packageCreator.PackageImport(srcPath, TestSettings.Instance.DestDir);
 
                 // validate critical packageCreator/info data
-                Assert.IsNotNullOrEmpty(packageCreator.DLCKey);
                 Assert.IsNotNull(info);
+                Assert.IsNotNullOrEmpty(packageCreator.DLCKey);
                 // consoles do not have AppId, test AppId all other platforms
                 if (!info.PS3 && !info.XBox360)
                     Assert.IsNotNullOrEmpty(info.AppId);
@@ -89,9 +89,7 @@ namespace RocksmithToolkitGUI.Tests
                 unpackedDirs.Add(packageCreator.UnpackedDir);
             }
 
-            // confirm PackageImport creeated unpackedDirs 
-            if (unpackedDirs.Count == 0)
-                Assert.Fail("PackageImport did not create any unpackDirs ...");
+            Assert.AreEqual(TestSettings.Instance.SrcPaths.Count, unpackedDirs.Count);
         }
 
         /// <summary>
@@ -101,6 +99,8 @@ namespace RocksmithToolkitGUI.Tests
         [Test]
         public void TestPackageGenerate()
         {
+            var archivePaths = new List<string>();
+            
             foreach (var srcPath in TestSettings.Instance.SrcPaths)
             {
                 // load info from srcPath
@@ -119,14 +119,14 @@ namespace RocksmithToolkitGUI.Tests
                 packageCreator.PlatformPS3 = true;
 
                 // set destPath and test getting the package data
-                var destPath = Path.Combine(TestSettings.Instance.DestDir, Path.GetFileName(srcPath));
-                packageCreator.DestPath = destPath;
+                var archivePath = Path.Combine(TestSettings.Instance.DestDir, Path.GetFileName(srcPath));
+                packageCreator.DestPath = archivePath;
                 var packageData = packageCreator.PackageGenerate();
                 Assert.NotNull(packageData);
 
                 // call background worker method from unit test to avoid threading issues
                 packageCreator.GeneratePackage(null, new DoWorkEventArgs(packageData));
-                var shortPath = destPath.Replace("_p.psarc", "").Replace("_m.psarc", "").Replace("_ps3.psarc.edat", "").Replace("_xbox", "");
+                var shortPath = archivePath.Replace("_p.psarc", "").Replace("_m.psarc", "").Replace("_ps3.psarc.edat", "").Replace("_xbox", "");
 
                 if (!File.Exists(shortPath + "_p.psarc"))
                     Assert.Fail("PC Package Generation Failed ...");
@@ -144,12 +144,16 @@ namespace RocksmithToolkitGUI.Tests
                 if (!info.PS3 && !info.XBox360)
                 {
                     // check if GeneratePackage wrote the new AppId
-                    var psarcLoader = new PsarcLoader(destPath, true);
+                    var psarcLoader = new PsarcLoader(archivePath, true);
                     var entryAppId = psarcLoader.ExtractAppId();
 
                     Assert.AreEqual(packageCreator.AppId, entryAppId);
                 }
+
+                archivePaths.Add(archivePath);
             }
+
+            Assert.AreEqual(TestSettings.Instance.SrcPaths.Count, archivePaths.Count);
         }
 
         /// <summary>
@@ -173,9 +177,7 @@ namespace RocksmithToolkitGUI.Tests
                 templatePaths.Add(templatePath);
             }
 
-            // confirm SaveTemplateFile created templatePaths 
-            if (templatePaths.Count == 0)
-                Assert.Fail("SaveTemplateFile did not create any templatePaths ...");
+            Assert.AreEqual(TestSettings.Instance.SrcPaths.Count, templatePaths.Count);
         }
 
         /// <summary>

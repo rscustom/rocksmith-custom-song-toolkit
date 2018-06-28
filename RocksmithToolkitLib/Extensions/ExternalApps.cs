@@ -6,6 +6,7 @@ namespace RocksmithToolkitLib.Extensions
 {
     public static class ExternalApps
     {
+        // update 'tools' folder apps/constants here as needed
         // toolkit path fixed for unit testing compatiblity
         public static readonly string TOOLKIT_ROOT = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
         public static readonly string TOOLS_DIR = "tools";
@@ -16,34 +17,50 @@ namespace RocksmithToolkitLib.Extensions
         public static readonly string APP_OGGCUT = Path.Combine(TOOLS_DIR, "oggCut.exe");
         public static readonly string APP_OGGDEC = Path.Combine(TOOLS_DIR, "oggdec.exe");
         public static readonly string APP_OGGENC = Path.Combine(TOOLS_DIR, "oggenc.exe");
+        public static readonly string APP_WW2OGG = Path.Combine(TOOLS_DIR, "ww2ogg.exe");
+        public static readonly string APP_REVORB = Path.Combine(TOOLS_DIR, "revorb.exe");
+        public static readonly string APP_CODEBOOKS = Path.Combine(TOOLS_DIR, "packed_codebooks.bin");
+        public static readonly string APP_CODEBOOKS_603 = Path.Combine(TOOLS_DIR, "packed_codebooks_aoTuV_603.bin");
         public static readonly string APP_COREJAR = Path.Combine(TOOLS_DIR, "core.jar");
 
         public static void VerifyExternalApps()
         {
             // Verifying if third party app is in root application directory
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_TOPNG)))
-                throw new FileNotFoundException("topng.exe not found!");
+                throw new FileNotFoundException(ExternalApps.APP_TOPNG);
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_7Z)))
-                throw new FileNotFoundException("7za.exe not found!");
+                throw new FileNotFoundException(ExternalApps.APP_7Z);
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_NVDXT)))
-                throw new FileNotFoundException("nvdxt.exe not found!");
+                throw new FileNotFoundException(ExternalApps.APP_NVDXT);
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_PACKER)))
-                throw new FileNotFoundException("packer.exe not found!");
+                throw new FileNotFoundException("packer.exe");
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGCUT)))
-                throw new FileNotFoundException("oggCut.exe not found!");
+                throw new FileNotFoundException("oggCut.exe");
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGDEC)))
-                throw new FileNotFoundException("oggdec.exe not found!");
+                throw new FileNotFoundException(ExternalApps.APP_OGGCUT);
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGENC)))
-                throw new FileNotFoundException("oggenc.exe not found!");
+                throw new FileNotFoundException(ExternalApps.APP_OGGENC);
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_COREJAR)))
-                throw new FileNotFoundException("core.jar not found!");
+                throw new FileNotFoundException(ExternalApps.APP_COREJAR);
+
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, ExternalApps.APP_WW2OGG)))
+                throw new FileNotFoundException(ExternalApps.APP_WW2OGG);
+
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, ExternalApps.APP_REVORB)))
+                throw new FileNotFoundException(ExternalApps.APP_REVORB);
+
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, ExternalApps.APP_CODEBOOKS)))
+                throw new FileNotFoundException(ExternalApps.APP_CODEBOOKS);
+
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, ExternalApps.APP_CODEBOOKS_603)))
+                throw new FileNotFoundException(ExternalApps.APP_CODEBOOKS_603);
         }
 
         public static void Dds2Png(string sourcePath, string destinationPath = null)

@@ -1,6 +1,6 @@
 ﻿NOTE FOR DEVELOPERS
 ===================
-The 'Resources' folder contents are globally shared and used by all toolkit 
+The 'Resources' folder contents are shared and used by the toolkit 
 unit tests, e.g., RocksmithToolkitLib.Tests and RocksmithToolkitGUI.Tests
 
 Drop any CDLC file(s) into the Resources folder that you would like to use
@@ -9,7 +9,7 @@ for unit testing.  Files from different platforms may be tested together.
 Change the Properties settings of each new 'Resources' file added to:
 =====================================================================
 Build Action = None
-Copy to Output Directory = Copy always
+Copy to Output Directory = Copy always (to test) or Do not copy (to not test)
 
 
 HOW TO QUICKLY RUN ALL SOLUTION UNIT TESTS
@@ -18,6 +18,10 @@ Before committing a revision to Github, while in Debug mode ...
 
 Right Mouse Click on 'Solution RocksmithCustomSongCreator'
 then select 'Run Unit Test' from dropdown list, or use Ctrl+U,R
+
+Select ReShaper, Windows, Unit Test Sessions to see unit test progress.
+It may be necessary to restart/reload the entire Solution if all the 
+unit test are not shown in the window (Reshaper issue/workaround).
 
 Note: Unit tests should always be run from Debug mode because the
 RocksmithToolkit*.Test projects are only built while in Debug mode.

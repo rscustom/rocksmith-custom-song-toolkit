@@ -306,7 +306,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                     top.Data.CopyTo(fs);
                     try
                     {
-                        OggFile.Revorb(tempAudioPath, audioOggPath, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(tempAudioPath).GetWwiseVersion());
+                        OggFile.Revorb(tempAudioPath, audioOggPath, Path.GetExtension(tempAudioPath).GetWwiseVersion());
                         result = true;
                     }
                     catch
@@ -326,7 +326,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                     bottom.Data.CopyTo(fs);
                     try
                     {
-                        OggFile.Revorb(tempAudioPath, previewOggPath, Path.GetDirectoryName(Application.ExecutablePath), Path.GetExtension(tempAudioPath).GetWwiseVersion());
+                        OggFile.Revorb(tempAudioPath, previewOggPath, Path.GetExtension(tempAudioPath).GetWwiseVersion());
                         result = true;
                     }
                     catch

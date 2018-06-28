@@ -56,31 +56,12 @@ namespace RocksmithToolkitLib.Ogg
 
         #endregion
 
-        public static void Revorb(string file, string outputFileName, string appPath, WwiseVersion wwiseVersion)
+        public static void Revorb(string file, string outputFileName, WwiseVersion wwiseVersion)
         {
-            // LOOK HERE - if there are issues with third party applications, e.g. CFSM
-            var ww2oggPath = Path.Combine(appPath, "tools", "ww2ogg.exe");
-            var revorbPath = Path.Combine(appPath, "tools", "revorb.exe");
-            var codebooksPath = Path.Combine(appPath, "tools", "packed_codebooks.bin"); // Default
-            var codebooks603Path = Path.Combine(appPath, "tools", "packed_codebooks_aoTuV_603.bin"); // RS2014
-
-            // Verifying if third part apps is in root application directory
-            if (!File.Exists(ww2oggPath))
-                throw new FileNotFoundException("ww2ogg.exe not found in: " + Path.GetDirectoryName(ww2oggPath));
-
-            if (!File.Exists(revorbPath))
-                throw new FileNotFoundException("revorb.exe not found in: " + Path.GetDirectoryName(revorbPath));
-
-            if (!File.Exists(codebooksPath))
-                throw new FileNotFoundException("packed_codebooks.bin not found in: " + Path.GetDirectoryName(codebooksPath));
-
-            if (!File.Exists(codebooks603Path))
-                throw new FileNotFoundException("packed_codebooks_aoTuV_603.bin not found in: " + Path.GetDirectoryName(codebooks603Path));
-
             // Processing with ww2ogg
             Process ww2oggProcess = new Process();
-            ww2oggProcess.StartInfo.FileName = ww2oggPath;
-            ww2oggProcess.StartInfo.WorkingDirectory = appPath;
+            ww2oggProcess.StartInfo.FileName = Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_WW2OGG);
+            ww2oggProcess.StartInfo.WorkingDirectory = ExternalApps.TOOLKIT_ROOT;
 
             switch (wwiseVersion)
             {
@@ -88,7 +69,7 @@ namespace RocksmithToolkitLib.Ogg
                     ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\"", file, outputFileName);
                     break;
                 case WwiseVersion.Wwise2013:
-                    ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\" --pcb \"{2}\"", file, outputFileName, codebooks603Path);
+                    ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\" --pcb \"{2}\"", file, outputFileName, Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_CODEBOOKS_603));
                     break;
                 default:
                     throw new InvalidOperationException("Wwise version not supported or invalid input file.");
@@ -107,8 +88,8 @@ namespace RocksmithToolkitLib.Ogg
 
             // Processing with revorb
             Process revorbProcess = new Process();
-            revorbProcess.StartInfo.FileName = revorbPath;
-            revorbProcess.StartInfo.WorkingDirectory = appPath;
+            revorbProcess.StartInfo.FileName = Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_REVORB);
+            revorbProcess.StartInfo.WorkingDirectory = ExternalApps.TOOLKIT_ROOT;
             revorbProcess.StartInfo.Arguments = String.Format("\"{0}\"", outputFileName);
             revorbProcess.StartInfo.UseShellExecute = false;
             revorbProcess.StartInfo.CreateNoWindow = true;
@@ -333,7 +314,7 @@ namespace RocksmithToolkitLib.Ogg
 
             if (audioPath.Substring(audioPath.Length - 4).ToLower() == ".wem" && !File.Exists(wemPreviewPath))
             {
-                Revorb(audioPath, oggPath, Path.GetDirectoryName(Application.ExecutablePath), WwiseVersion.Wwise2013);
+                Revorb(audioPath, oggPath, WwiseVersion.Wwise2013);
                 ExternalApps.Ogg2Wav(oggPath, wavPath);
                 ExternalApps.Ogg2Preview(oggPath, oggPreviewPath, previewLength, chorusTime);
                 ExternalApps.Ogg2Wav(oggPreviewPath, wavPreviewPath);
