@@ -45,9 +45,10 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="updateSng">If set to <c>true</c> update the SNG files</param>
         /// <param name="updateManifest">If set to <c>true</c> update the manifest files</param>
         /// <returns>Archive Path</returns>
-        public static string Pack(string srcPath, string destPath,  Platform predefinedPlatform = null, bool updateSng = false, bool updateManifest = false)
+        public static string Pack(string srcPath, string destPath, Platform predefinedPlatform = null, bool updateSng = false, bool updateManifest = false)
         {
             var archivePath = String.Empty;
+            ExternalApps.VerifyExternalApps();
             DeleteFixedAudio(srcPath);
             Platform srcPlatform = srcPath.GetPlatform();
 
@@ -55,7 +56,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 srcPlatform = predefinedPlatform;
 
             //TODO: check validity of file name here
-
 
             switch (srcPlatform.platform)
             {
@@ -92,8 +92,9 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="decodeAudio">If set to <c>true</c> decode audio</param>
         /// <param name="overwriteSongXml">If set to <c>true</c> overwrite existing song (EOF) xml with SNG data</param>       
         /// <returns>Unpacked Directory Path</returns>
-        public static string Unpack(string srcPath, string destPath, Platform predefinedPlatform = null, bool decodeAudio = false, bool overwriteSongXml = false )
+        public static string Unpack(string srcPath, string destPath, Platform predefinedPlatform = null, bool decodeAudio = false, bool overwriteSongXml = false)
         {
+            ExternalApps.VerifyExternalApps();
             Platform srcPlatform = srcPath.GetPlatform();
 
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)

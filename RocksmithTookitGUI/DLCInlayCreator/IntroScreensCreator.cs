@@ -634,8 +634,9 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             btnRestore.Enabled = true;
             btnSave.Enabled = true;
             Cursor.Current = Cursors.Default;
-
         }
+
+
 
     }
 }

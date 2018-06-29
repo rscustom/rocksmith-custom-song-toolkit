@@ -2,14 +2,12 @@
 using System.Diagnostics;
 using System.IO;
 using RocksmithToolkitLib.XmlRepository;
+using RocksmithToolkitLib.Extensions;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
     public static class DDCreator
     {
-        internal static string AppDir = AppDomain.CurrentDomain.BaseDirectory;
-        internal static string DdcDir = Path.Combine(AppDir, "ddc");
-
         /// <summary>
         /// Apply Dynamic Difficulty (DD) to an arrangement xml file
         /// </summary>
@@ -26,7 +24,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             var startInfo = new ProcessStartInfo
             {
-                FileName = Path.Combine(DdcDir, "ddc.exe"),
+                FileName = Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_DDC),
                 WorkingDirectory = Path.GetDirectoryName(filePath),
                 Arguments = String.Format("\"{0}\" -l {1} -s {2} -m \"{3}\" -c \"{4}\" -p {5} -t {6}",
                     Path.GetFileName(filePath), (UInt16)phraseLen, removeSus ? "Y" : "N",
@@ -70,15 +68,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public void LoadConfigXml()
         {
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            var ddcDir = Path.Combine(baseDir, "ddc");
             var configFile = ConfigRepository.Instance()["ddc_config"] + ".cfg";
             var rampupFile = ConfigRepository.Instance()["ddc_rampup"] + ".xml";
 
             PhraseLen = (int)ConfigRepository.Instance().GetDecimal("ddc_phraselength");
             RemoveSus = ConfigRepository.Instance().GetBoolean("ddc_removesustain");
-            RampPath = Path.Combine(ddcDir, rampupFile);
-            CfgPath = Path.Combine(ddcDir, configFile);
+            RampPath = Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.DDC_DIR, rampupFile);
+            CfgPath = Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.DDC_DIR, configFile);
 
             if (!File.Exists(RampPath) || !File.Exists(CfgPath))
                 throw new FileNotFoundException("DDC support files are missing");

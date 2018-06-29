@@ -45,6 +45,9 @@ namespace RocksmithToolkitGUI
             if (GeneralExtensions.IsInDesignMode)
                 btnDevTestMethod.Visible = true;
 
+            // verify external apps in 'tools' and 'ddc' directory
+            ExternalApps.VerifyExternalApps();
+
             InitMainForm();
         }
 
@@ -75,8 +78,6 @@ namespace RocksmithToolkitGUI
                 ToolkitVersion.UpdateVersionInfoFile();
             }
             catch {/* DO NOTHING */}
-
-            ExternalApps.VerifyExternalApps();
         }
 
         public sealed override string Text

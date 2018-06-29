@@ -1,15 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Text;
 
 namespace RocksmithToolkitLib.Extensions
 {
     public static class ExternalApps
     {
-        // update 'tools' folder apps/constants here as needed
+        // update 'tools' and 'ddc' folder apps/constants here as needed
         // toolkit path fixed for unit testing compatiblity
         public static readonly string TOOLKIT_ROOT = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-        public static readonly string APP_PACKER = "packer.exe";
         public static readonly string TOOLS_DIR = "tools";
         public static readonly string APP_TOPNG = Path.Combine(TOOLS_DIR, "topng.exe");
         public static readonly string APP_7Z = Path.Combine(TOOLS_DIR, "7za.exe");
@@ -22,45 +22,59 @@ namespace RocksmithToolkitLib.Extensions
         public static readonly string APP_CODEBOOKS = Path.Combine(TOOLS_DIR, "packed_codebooks.bin");
         public static readonly string APP_CODEBOOKS_603 = Path.Combine(TOOLS_DIR, "packed_codebooks_aoTuV_603.bin");
         public static readonly string APP_COREJAR = Path.Combine(TOOLS_DIR, "core.jar");
+        public static readonly string DDC_DIR = "ddc";
+        public static readonly string APP_DDC = Path.Combine(DDC_DIR, "ddc.exe");
+        public static readonly string APP_PACKER = "packer.exe";
 
-        public static void VerifyExternalApps()
+        public static bool VerifyExternalApps()
         {
+            var errMsg = new StringBuilder();
+
             // Verifying if third party app is in root application directory
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_TOPNG)))
-                throw new FileNotFoundException(ExternalApps.APP_TOPNG);
+                errMsg.AppendLine(APP_TOPNG);
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_7Z)))
-                throw new FileNotFoundException(ExternalApps.APP_7Z);
+                errMsg.AppendLine(APP_7Z);
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_NVDXT)))
-                throw new FileNotFoundException(ExternalApps.APP_NVDXT);
-
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_PACKER)))
-                throw new FileNotFoundException("packer.exe");
+                errMsg.AppendLine(APP_NVDXT);
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGCUT)))
-                throw new FileNotFoundException("oggCut.exe");
+                errMsg.AppendLine("oggCut.exe");
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGDEC)))
-                throw new FileNotFoundException(ExternalApps.APP_OGGCUT);
+                errMsg.AppendLine(APP_OGGCUT);
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGENC)))
-                throw new FileNotFoundException(ExternalApps.APP_OGGENC);
+                errMsg.AppendLine(APP_OGGENC);
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_COREJAR)))
-                throw new FileNotFoundException(ExternalApps.APP_COREJAR);
+                errMsg.AppendLine(APP_COREJAR);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, ExternalApps.APP_WW2OGG)))
-                throw new FileNotFoundException(ExternalApps.APP_WW2OGG);
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_WW2OGG)))
+                errMsg.AppendLine(APP_WW2OGG);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, ExternalApps.APP_REVORB)))
-                throw new FileNotFoundException(ExternalApps.APP_REVORB);
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_REVORB)))
+                errMsg.AppendLine(APP_REVORB);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, ExternalApps.APP_CODEBOOKS)))
-                throw new FileNotFoundException(ExternalApps.APP_CODEBOOKS);
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_CODEBOOKS)))
+                errMsg.AppendLine(APP_CODEBOOKS);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, ExternalApps.APP_CODEBOOKS_603)))
-                throw new FileNotFoundException(ExternalApps.APP_CODEBOOKS_603);
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_CODEBOOKS_603)))
+                errMsg.AppendLine(APP_CODEBOOKS_603);
+
+            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_DDC)))
+                errMsg.AppendLine(APP_DDC);
+
+            if (!GeneralExtensions.IsInDesignMode)
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_PACKER)))
+                    errMsg.AppendLine(APP_PACKER);
+
+            if (!String.IsNullOrEmpty(errMsg.ToString()))
+                throw new FileNotFoundException("<ERROR> Critical tooolkit files not found:" + Environment.NewLine + errMsg.ToString());
+
+            return true;
         }
 
         public static void Dds2Png(string sourcePath, string destinationPath = null)
@@ -98,13 +112,13 @@ namespace RocksmithToolkitLib.Extensions
         public static void UnpackPsarc(string sourcePath, string destinationPath, string targetPlatform)
         {
             var cmdArgs = String.Format(" --unpack --input=\"{0}\" --platform={2} --version=RS2014 --output=\"{1}\"", sourcePath, destinationPath, targetPlatform);
-            GeneralExtensions.RunExternalExecutable(APP_PACKER, true, true, true, cmdArgs);
+            GeneralExtensions.RunExternalExecutable(Path.Combine(TOOLKIT_ROOT, APP_PACKER), true, true, true, cmdArgs);
         }
-        //TODO: faster to use direct lib calls?? If this works lib calls will too.
+
         public static void RepackPsarc(string sourcePath, string destinationPath, string targetPlatform)
         {
             var cmdArgs = String.Format(" --pack --input=\"{0}\" --platform={2} --version=RS2014 --output=\"{1}\"", sourcePath, destinationPath, targetPlatform);
-            GeneralExtensions.RunExternalExecutable(APP_PACKER, true, true, true, cmdArgs);
+            GeneralExtensions.RunExternalExecutable(Path.Combine(TOOLKIT_ROOT, APP_PACKER), true, true, true, cmdArgs);
         }
 
         public static void InjectZip(string sourcePath, string destinationPath, bool recurseDir = false, bool filesOnly = false)

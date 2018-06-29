@@ -31,9 +31,6 @@ namespace RocksmithToolkitGUI.DDC
         internal Dictionary<string, string> FilesDb;
         internal Dictionary<string, string> RampUpDb;
         internal Dictionary<string, string> ConfigDb;
-        internal static string AppDir = AppDomain.CurrentDomain.BaseDirectory;
-        internal static string DdcDir = Path.Combine(AppDir, "ddc");
-        internal static string DdcPath = Path.Combine(DdcDir, "ddc.exe");
         internal Color EnabledColor = Color.Black;
         internal Color DisabledColor = Color.Gray;
 
@@ -69,9 +66,9 @@ namespace RocksmithToolkitGUI.DDC
         {
             try
             {
-                if (!this.DesignMode && File.Exists(DdcPath))
+                if (!this.DesignMode)
                 {
-                    var ver = FileVersionInfo.GetVersionInfo(DdcPath).ProductVersion;
+                    var ver = FileVersionInfo.GetVersionInfo(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_DDC)).ProductVersion;
                     if (ddcVersion.InvokeRequired)
                     {
                         ddcVersion.Invoke(new Action(() => ddcVersion.Text = String.Format("v{0}", ver)));
@@ -224,7 +221,7 @@ namespace RocksmithToolkitGUI.DDC
         {
             var startInfo = new ProcessStartInfo
                 {
-                    FileName = Path.Combine(DdcDir, "ddc.exe"),
+                    FileName = Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_DDC),
                     WorkingDirectory = Path.GetDirectoryName(filePath),
                     Arguments = String.Format("\"{0}\" -l {1} -s {2} -m \"{3}\" -c \"{4}\" -p {5} -t {6}",
                         Path.GetFileName(filePath), (UInt16)phraseLen, removeSus ? "Y" : "N",
@@ -596,42 +593,38 @@ namespace RocksmithToolkitGUI.DDC
 
         private void PopMDLs()
         {
-            if (Directory.Exists(DdcDir)) //@".\ddc\"
-            {
-                cmbRampUp.Items.Clear();
-                RampUpDb.Clear();
-                var filePaths = Directory.EnumerateFiles(DdcDir, "*.xml", SearchOption.AllDirectories);
+            cmbRampUp.Items.Clear();
+            RampUpDb.Clear();
+            var filePaths = Directory.EnumerateFiles(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.DDC_DIR), "*.xml", SearchOption.AllDirectories);
 
-                foreach (var filePath in filePaths)
-                {
-                    var fileName = Path.GetFileNameWithoutExtension(filePath);
-                    if (fileName.StartsWith("user_")) fileName = fileName.Remove(0, 5);
-                    cmbRampUp.Items.Add(fileName);
-                    cmbRampUp.SelectedIndex = cmbRampUp.FindStringExact("ddc_default");
-                    RampUpDb.Add(fileName, Path.GetFullPath(filePath));
-                }
-                cmbRampUp.Refresh();
+            foreach (var filePath in filePaths)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(filePath);
+                if (fileName.StartsWith("user_")) fileName = fileName.Remove(0, 5);
+                cmbRampUp.Items.Add(fileName);
+                cmbRampUp.SelectedIndex = cmbRampUp.FindStringExact("ddc_default");
+                RampUpDb.Add(fileName, Path.GetFullPath(filePath));
             }
+
+            cmbRampUp.Refresh();
         }
 
         private void PopCFGs()
         {
-            if (Directory.Exists(DdcDir))
-            {
-                cmbConfigFile.Items.Clear();
-                ConfigDb.Clear();
-                var filePaths = Directory.EnumerateFiles(DdcDir, "*.cfg", SearchOption.AllDirectories);
+            cmbConfigFile.Items.Clear();
+            ConfigDb.Clear();
+            var filePaths = Directory.EnumerateFiles(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.DDC_DIR), "*.cfg", SearchOption.AllDirectories);
 
-                foreach (var filePath in filePaths)
-                {
-                    var fileName = Path.GetFileNameWithoutExtension(filePath);
-                    if (fileName.StartsWith("user_")) fileName = fileName.Remove(0, 5);
-                    cmbConfigFile.Items.Add(fileName);
-                    cmbConfigFile.SelectedIndex = cmbConfigFile.FindStringExact("ddc_default");
-                    ConfigDb.Add(fileName, Path.GetFullPath(filePath));
-                }
-                cmbConfigFile.Refresh();
+            foreach (var filePath in filePaths)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(filePath);
+                if (fileName.StartsWith("user_")) fileName = fileName.Remove(0, 5);
+                cmbConfigFile.Items.Add(fileName);
+                cmbConfigFile.SelectedIndex = cmbConfigFile.FindStringExact("ddc_default");
+                ConfigDb.Add(fileName, Path.GetFullPath(filePath));
             }
+
+            cmbConfigFile.Refresh();
         }
 
         private void RemoveEntry(string path)

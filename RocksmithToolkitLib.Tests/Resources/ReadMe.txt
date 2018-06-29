@@ -20,8 +20,8 @@ Right Mouse Click on 'Solution RocksmithCustomSongCreator'
 then select 'Run Unit Test' from dropdown list, or use Ctrl+U,R
 
 Select ReShaper, Windows, Unit Test Sessions to see unit test progress.
-It may be necessary to restart/reload the entire Solution if all the 
-unit test are not shown in the window (Reshaper issue/workaround).
+NOTE: It may be necessary to restart/reload the entire RocksmithCustomSongCreator 
+Solution if all the unit test are not shown in the window (Reshaper issue/workaround).
 
 Note: Unit tests should always be run from Debug mode because the
 RocksmithToolkit*.Test projects are only built while in Debug mode.
