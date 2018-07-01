@@ -8,7 +8,7 @@ test: off
 
 environment:
   cert_url:
-    secure: +Hrnyb/2BCwM+8B+26euLJlIcgul2423FxzS82lgeI5UsoGAQG8jQ2NggFRFjVCl
+    secure: +Hrnyb/2BCwM+8B+26euLJlIcgul2423FxzS82lgeI4bu66pKrWt/QqkWxc5lNlV
   cert_pass:
     secure: qMlxBF8JbVTwM9vm3fYbCdbuI+0cD2ixtu61YzVoq2c=
 
@@ -42,7 +42,7 @@ after_build:
   - set BIN=%APPVEYOR_BUILD_FOLDER%\RocksmithTookitGUI\bin
   - rem Code signing
   - ps: if ($env:cert_url) { Start-FileDownload $env:cert_url }
-  - if defined cert_url signtool sign /v /f selfsigned2017.pfx /p "%cert_pass%" /t http://timestamp.verisign.com/scripts/timstamp.dll "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\Release\RocksmithToolkitUpdater.exe" "%BIN%\Release\RocksmithToolkitLib.dll"
+  - if defined cert_url signtool sign /v /f selfsigned2018.pfx /p "%cert_pass%" /t http://timestamp.verisign.com/scripts/timstamp.dll "%BIN%\Release\RocksmithToolkitGUI.exe" "%BIN%\Release\RocksmithToolkitUpdater.exe" "%BIN%\Release\RocksmithToolkitLib.dll"
   - rem General package variables
   - ps: $env:BuildVer = Select-String -Path $env:APPVEYOR_BUILD_FOLDER"\RocksmithToolkitLib\Properties\AssemblyInfo.cs" -Pattern '^\[assembly:\ AssemblyVersion\("(.*?)"\)\]' | % { $_.Matches } | % { $_.Groups[1].Value }
   - ps: $env:BuildCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
