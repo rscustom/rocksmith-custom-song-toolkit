@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeneralConfig));
             this.general_usebeta = new System.Windows.Forms.CheckBox();
             this.gbCreator = new System.Windows.Forms.GroupBox();
+            this.ddc_autogen = new System.Windows.Forms.CheckBox();
             this.label19 = new System.Windows.Forms.Label();
             this.creator_qualityfactor = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.creator_autosavetemplate = new System.Windows.Forms.CheckBox();
@@ -75,7 +76,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.general_defaultappid_RS2014 = new System.Windows.Forms.ComboBox();
             this.gbDDC = new System.Windows.Forms.GroupBox();
-            this.ddc_autogen = new System.Windows.Forms.CheckBox();
             this.ddc_phraselength = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.ddc_removesustain = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -116,6 +116,7 @@
             // 
             // gbCreator
             // 
+            this.gbCreator.Controls.Add(this.ddc_autogen);
             this.gbCreator.Controls.Add(this.label19);
             this.gbCreator.Controls.Add(this.creator_qualityfactor);
             this.gbCreator.Controls.Add(this.creator_autosavetemplate);
@@ -136,10 +137,24 @@
             this.gbCreator.Margin = new System.Windows.Forms.Padding(2);
             this.gbCreator.Name = "gbCreator";
             this.gbCreator.Padding = new System.Windows.Forms.Padding(2);
-            this.gbCreator.Size = new System.Drawing.Size(516, 135);
+            this.gbCreator.Size = new System.Drawing.Size(516, 161);
             this.gbCreator.TabIndex = 1;
             this.gbCreator.TabStop = false;
             this.gbCreator.Text = "CDLC Creator";
+            // 
+            // ddc_autogen
+            // 
+            this.ddc_autogen.AutoSize = true;
+            this.ddc_autogen.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ddc_autogen.Location = new System.Drawing.Point(346, 111);
+            this.ddc_autogen.Name = "ddc_autogen";
+            this.ddc_autogen.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ddc_autogen.Size = new System.Drawing.Size(124, 17);
+            this.ddc_autogen.TabIndex = 4;
+            this.ddc_autogen.Text = "Auto Generate DDC:";
+            this.toolTip.SetToolTip(this.ddc_autogen, resources.GetString("ddc_autogen.ToolTip"));
+            this.ddc_autogen.UseVisualStyleBackColor = true;
+            this.ddc_autogen.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label19
             // 
@@ -182,12 +197,12 @@
             // 
             this.creator_autosavetemplate.AutoSize = true;
             this.creator_autosavetemplate.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_autosavetemplate.Location = new System.Drawing.Point(344, 113);
+            this.creator_autosavetemplate.Location = new System.Drawing.Point(344, 132);
             this.creator_autosavetemplate.Name = "creator_autosavetemplate";
             this.creator_autosavetemplate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_autosavetemplate.Size = new System.Drawing.Size(123, 17);
+            this.creator_autosavetemplate.Size = new System.Drawing.Size(126, 17);
             this.creator_autosavetemplate.TabIndex = 8;
-            this.creator_autosavetemplate.Text = "Autosave Templates";
+            this.creator_autosavetemplate.Text = "Autosave Templates:";
             this.toolTip.SetToolTip(this.creator_autosavetemplate, "If checked, automatically save template\r\n\'.dlc.xml\' file for user on application " +
                     "exit.\r\n\r\nWARNING\r\n------------\r\nIf uncheck, templates must be saved\r\nmanually by" +
                     " pressing \'Save Template\'\r\nbutton.");
@@ -198,12 +213,12 @@
             // 
             this.creator_fixlowbass.AutoSize = true;
             this.creator_fixlowbass.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_fixlowbass.Location = new System.Drawing.Point(37, 113);
+            this.creator_fixlowbass.Location = new System.Drawing.Point(37, 132);
             this.creator_fixlowbass.Name = "creator_fixlowbass";
             this.creator_fixlowbass.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_fixlowbass.Size = new System.Drawing.Size(124, 17);
+            this.creator_fixlowbass.Size = new System.Drawing.Size(127, 17);
             this.creator_fixlowbass.TabIndex = 6;
-            this.creator_fixlowbass.Text = "Fix Low Bass Tuning";
+            this.creator_fixlowbass.Text = "Fix Low Bass Tuning:";
             this.toolTip.SetToolTip(this.creator_fixlowbass, "If checked, automatically\r\nfix low bass tuning errors.");
             this.creator_fixlowbass.UseVisualStyleBackColor = true;
             this.creator_fixlowbass.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -212,12 +227,12 @@
             // 
             this.creator_fixmultitone.AutoSize = true;
             this.creator_fixmultitone.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_fixmultitone.Location = new System.Drawing.Point(197, 113);
+            this.creator_fixmultitone.Location = new System.Drawing.Point(204, 132);
             this.creator_fixmultitone.Name = "creator_fixmultitone";
             this.creator_fixmultitone.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_fixmultitone.Size = new System.Drawing.Size(115, 17);
+            this.creator_fixmultitone.Size = new System.Drawing.Size(118, 17);
             this.creator_fixmultitone.TabIndex = 7;
-            this.creator_fixmultitone.Text = "Fix Multitone Errors";
+            this.creator_fixmultitone.Text = "Fix Multitone Errors:";
             this.toolTip.SetToolTip(this.creator_fixmultitone, "If checked, automatically fix multitone errors\r\nby converting to a single tone ar" +
                     "rangement.");
             this.creator_fixmultitone.UseVisualStyleBackColor = true;
@@ -342,12 +357,12 @@
             // 
             this.creator_usedefaultauthor.AutoSize = true;
             this.creator_usedefaultauthor.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_usedefaultauthor.Location = new System.Drawing.Point(252, 94);
+            this.creator_usedefaultauthor.Location = new System.Drawing.Point(252, 90);
             this.creator_usedefaultauthor.Name = "creator_usedefaultauthor";
             this.creator_usedefaultauthor.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_usedefaultauthor.Size = new System.Drawing.Size(215, 17);
+            this.creator_usedefaultauthor.Size = new System.Drawing.Size(218, 17);
             this.creator_usedefaultauthor.TabIndex = 5;
-            this.creator_usedefaultauthor.Text = "Album Sort Defaults To Package Author";
+            this.creator_usedefaultauthor.Text = "Album Sort Defaults To Package Author:";
             this.toolTip.SetToolTip(this.creator_usedefaultauthor, "If checked, the configuration Package Author\r\nwill be used by default for the Alb" +
                     "um Sort\r\ntextbox field in the Creator GUI.");
             this.creator_usedefaultauthor.UseVisualStyleBackColor = true;
@@ -357,12 +372,12 @@
             // 
             this.creator_useacronyms.AutoSize = true;
             this.creator_useacronyms.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_useacronyms.Location = new System.Drawing.Point(226, 73);
+            this.creator_useacronyms.Location = new System.Drawing.Point(226, 69);
             this.creator_useacronyms.Name = "creator_useacronyms";
             this.creator_useacronyms.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_useacronyms.Size = new System.Drawing.Size(241, 17);
+            this.creator_useacronyms.Size = new System.Drawing.Size(244, 17);
             this.creator_useacronyms.TabIndex = 4;
-            this.creator_useacronyms.Text = "Use Artist Name Acronym When Naming Files";
+            this.creator_useacronyms.Text = "Use Artist Name Acronym When Naming Files:";
             this.toolTip.SetToolTip(this.creator_useacronyms, "If checked, creates shorter file names.");
             this.creator_useacronyms.UseVisualStyleBackColor = true;
             this.creator_useacronyms.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -718,7 +733,6 @@
             // 
             // gbDDC
             // 
-            this.gbDDC.Controls.Add(this.ddc_autogen);
             this.gbDDC.Controls.Add(this.ddc_phraselength);
             this.gbDDC.Controls.Add(this.ddc_removesustain);
             this.gbDDC.Controls.Add(this.label6);
@@ -727,28 +741,12 @@
             this.gbDDC.Controls.Add(this.ddc_config);
             this.gbDDC.Controls.Add(this.ddc_rampup);
             this.gbDDC.ForeColor = System.Drawing.Color.IndianRed;
-            this.gbDDC.Location = new System.Drawing.Point(4, 409);
+            this.gbDDC.Location = new System.Drawing.Point(4, 430);
             this.gbDDC.Name = "gbDDC";
-            this.gbDDC.Size = new System.Drawing.Size(516, 100);
+            this.gbDDC.Size = new System.Drawing.Size(516, 77);
             this.gbDDC.TabIndex = 3;
             this.gbDDC.TabStop = false;
             this.gbDDC.Text = "DDC";
-            // 
-            // ddc_autogen
-            // 
-            this.ddc_autogen.AutoSize = true;
-            this.ddc_autogen.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.ddc_autogen.Location = new System.Drawing.Point(346, 48);
-            this.ddc_autogen.Name = "ddc_autogen";
-            this.ddc_autogen.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ddc_autogen.Size = new System.Drawing.Size(121, 17);
-            this.ddc_autogen.TabIndex = 4;
-            this.ddc_autogen.Text = "Auto Generate DDC";
-            this.toolTip.SetToolTip(this.ddc_autogen, "If checked, DDC will be automatically added to\r\nthe CDLC when \'Generate\' is press" +
-                    "ed in the\r\n\'CDLC Creator\' tab. \r\n\r\nNOTE: CDLC must have DD for them to work\r\npro" +
-                    "perly with Rocksmith 2014 Remastered.");
-            this.ddc_autogen.UseVisualStyleBackColor = true;
-            this.ddc_autogen.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // ddc_phraselength
             // 
@@ -757,7 +755,7 @@
             0,
             0,
             0});
-            this.ddc_phraselength.Location = new System.Drawing.Point(122, 74);
+            this.ddc_phraselength.Location = new System.Drawing.Point(415, 46);
             this.ddc_phraselength.Maximum = new decimal(new int[] {
             256,
             0,
@@ -788,9 +786,9 @@
             this.ddc_removesustain.Location = new System.Drawing.Point(358, 18);
             this.ddc_removesustain.Name = "ddc_removesustain";
             this.ddc_removesustain.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ddc_removesustain.Size = new System.Drawing.Size(109, 17);
+            this.ddc_removesustain.Size = new System.Drawing.Size(112, 17);
             this.ddc_removesustain.TabIndex = 3;
-            this.ddc_removesustain.Text = "Remove Sustains";
+            this.ddc_removesustain.Text = "Remove Sustains:";
             this.ddc_removesustain.UseVisualStyleBackColor = true;
             this.ddc_removesustain.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -798,7 +796,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label6.Location = new System.Drawing.Point(40, 77);
+            this.label6.Location = new System.Drawing.Point(336, 48);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(79, 13);
             this.label6.TabIndex = 47;
@@ -862,7 +860,7 @@
             this.gbConverter.Controls.Add(this.label8);
             this.gbConverter.Controls.Add(this.converter_source);
             this.gbConverter.ForeColor = System.Drawing.Color.IndianRed;
-            this.gbConverter.Location = new System.Drawing.Point(4, 359);
+            this.gbConverter.Location = new System.Drawing.Point(4, 383);
             this.gbConverter.Name = "gbConverter";
             this.gbConverter.Size = new System.Drawing.Size(516, 45);
             this.gbConverter.TabIndex = 2;
@@ -874,7 +872,7 @@
             this.converter_target.AllowDrop = true;
             this.converter_target.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.converter_target.FormattingEnabled = true;
-            this.converter_target.Location = new System.Drawing.Point(347, 15);
+            this.converter_target.Location = new System.Drawing.Point(350, 15);
             this.converter_target.MinimumSize = new System.Drawing.Size(20, 0);
             this.converter_target.Name = "converter_target";
             this.converter_target.Size = new System.Drawing.Size(120, 21);
@@ -933,7 +931,7 @@
             // toolTip
             // 
             this.toolTip.AutomaticDelay = 100;
-            this.toolTip.AutoPopDelay = 8000;
+            this.toolTip.AutoPopDelay = 20000;
             this.toolTip.InitialDelay = 100;
             this.toolTip.ReshowDelay = 100;
             // 

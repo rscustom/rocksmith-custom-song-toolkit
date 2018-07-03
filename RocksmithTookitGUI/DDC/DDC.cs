@@ -28,14 +28,14 @@ namespace RocksmithToolkitGUI.DDC
         private const string TKI_REMASTER = "(Remastered by DDC)";
         private BackgroundWorker bw;
         // key => fileName w/o Ext, value => filePath
-        internal Dictionary<string, string> FilesDb;
-        internal Dictionary<string, string> RampUpDb;
-        internal Dictionary<string, string> ConfigDb;
-        internal Color EnabledColor = Color.Black;
-        internal Color DisabledColor = Color.Gray;
-
-        internal bool IsNDD { get; set; }
-        internal string ProcessOutput { get; set; }
+        private  Dictionary<string, string> FilesDb;
+        private  Dictionary<string, string> RampUpDb;
+        private  Dictionary<string, string> ConfigDb;
+        private  Color EnabledColor = Color.Black;
+        private  Color DisabledColor = Color.Gray;
+        //
+        private  bool IsNDD { get; set; }
+        private  string ProcessOutput { get; set; }
         #endregion
 
         public DDC()
@@ -216,34 +216,6 @@ namespace RocksmithToolkitGUI.DDC
             e.Result = errorCount; // No Errors = 0
         }
 
-        [Obsolete("Depricated, please use RocksmithToolkitLib.DDCreator.", true)]
-        public int ApplyDD(string filePath, int phraseLen, bool removeSus, string rampPath, string cfgPath, out string consoleOutput, bool overWrite = false, bool keepLog = false)
-        {
-            var startInfo = new ProcessStartInfo
-                {
-                    FileName = Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_DDC),
-                    WorkingDirectory = Path.GetDirectoryName(filePath),
-                    Arguments = String.Format("\"{0}\" -l {1} -s {2} -m \"{3}\" -c \"{4}\" -p {5} -t {6}",
-                        Path.GetFileName(filePath), (UInt16)phraseLen, removeSus ? "Y" : "N",
-                        rampPath, cfgPath, overWrite ? "Y" : "N", keepLog ? "Y" : "N"
-                        ),
-                    UseShellExecute = false,
-                    CreateNoWindow = true,  // hide command window
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                };
-
-            using (var DDC = new Process())
-            {
-                DDC.StartInfo = startInfo;
-                DDC.Start();
-                consoleOutput = DDC.StandardOutput.ReadToEnd();
-                consoleOutput += DDC.StandardError.ReadToEnd();
-                DDC.WaitForExit(1000 * 60 * 15); //wait for 15 minutes, crunchy solution for AV-sandboxing issues
-                return DDC.ExitCode;
-            }
-        }
-
         private int ApplyPackageDD(string filePath, int phraseLen, bool removeSus, string rampPath, string cfgPath, out string consoleOutput, bool overWrite = false, bool keepLog = false)
         {
             int result = 0; // Ends normally with no error
@@ -295,7 +267,7 @@ namespace RocksmithToolkitGUI.DDC
                 using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
                     songXml.Serialize(stream, false);
 
-                // restore arrangment comments 
+                // restore arrangment comments before applying DD
                 Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
 
                 // apply DD to xml arrangments... 0 = Ends normally with no error
@@ -414,7 +386,7 @@ namespace RocksmithToolkitGUI.DDC
             var platform = filePath.GetPlatform();
             var ddcFilePath = Path.Combine(Path.GetDirectoryName(filePath), String.Format("{0}{1}{2}",
                 Path.GetFileNameWithoutExtension(filePath).StripPlatformEndName().GetValidFileName().Replace("_DD", "").Replace("_NDD", ""),
-                IsNDD ? "_NDD" : "", platform.GetPathName()[2]));
+                IsNDD ? "_NDD" : "_DD", platform.GetPathName()[2]));
             ddcFilePath = String.Format("{0}{1}", ddcFilePath, Path.GetExtension(filePath));
 
             return ddcFilePath;

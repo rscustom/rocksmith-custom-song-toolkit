@@ -120,6 +120,20 @@
   <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="ddc_autogen.ToolTip" xml:space="preserve">
+    <value>NOTE:  The checkbox action was recently changed!
+
+If checked, DD will be automatically added to any 
+arrangement that does not have DDC.  CDLC author's
+existing DDC is not be overwritten.
+
+All CDLC arrangements must have DDC for Rocksmith
+2014 Remastered Play Count to function properly.
+
+If you wish to overwrite existing DDC you must first
+remove the existing DDC from the CDLC.  DDC may 
+be removed using the main DDC tab menu feature.</value>
+  </data>
   <data name="general_lockappid.ToolTip" xml:space="preserve">
     <value>Lock App ID
 

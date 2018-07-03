@@ -36,8 +36,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         #region Constants
 
         private const string TKI_ARRID = "(Arrangement ID by CDLC Creator)";
-        private const string TKI_DDC = "(DDC by CDLC Creator)";
         private const string TKI_REMASTER = "(Remastered by CDLC Creator)";
+        private const string TKI_DDC = "(DDC by CDLC Creator)"; // used to identify config condition
 
         #endregion
 
@@ -1591,6 +1591,33 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void btnPackageGenerate_Click(object sender, EventArgs e)
         {
+            using (var sfd = new SaveFileDialog())
+            {
+                var versionPrefix = String.Empty;
+                switch (CurrentGameVersion)
+                {
+                    case GameVersion.RS2012:
+                        versionPrefix = "r"; // RS2012 CDLC
+                        break;
+                    case GameVersion.None:
+                        versionPrefix = "c"; // Converted RS1 CDLC
+                        break;
+                    default:
+                        versionPrefix = "v"; // RS2014 CDLC
+                        break;
+                }
+
+                var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
+                var fileName = StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                sfd.FileName = fileName.GetValidFileName();
+                sfd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
+
+                if (sfd.ShowDialog(this) != DialogResult.OK) // 'this' ensures sfd is topmost
+                    return;
+
+                DestPath = sfd.FileName;
+            }
+
             PackageGenerate();
         }
 
@@ -1609,54 +1636,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var errMsg = "This CDLC will likely crash if it is played in Rocksmith 2014 Remastered." + Environment.NewLine + "The combined number of guitar and bass arrangements" + Environment.NewLine + "(including bonus arrangements) is " + playableArrCount + ", which exceeds the limit of 5." + Environment.NewLine + Environment.NewLine + "Do you still want to package this CDLC?";
                 if (MessageBox.Show(errMsg, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
                     return null;
-            }
-
-            // check if ANY arrangment has pre existing DD
-            var hasDD = false;
-            foreach (var arr in packageData.Arrangements)
-            {
-                // skip vocal and showlight arrangements
-                if (arr.ArrangementType == ArrangementType.Vocal || arr.ArrangementType == ArrangementType.ShowLight)
-                    continue;
-
-                var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-                var mf = new ManifestFunctions(GameVersion.RS2014);
-                if (mf.GetMaxDifficulty(songXml) != 0)
-                {
-                    hasDD = true;
-                    break;
-                }
-            }
-
-            if (!Globals.IsUnitTest)
-            {
-                using (var sfd = new SaveFileDialog())
-                {
-                    var versionPrefix = String.Empty;
-                    switch (CurrentGameVersion)
-                    {
-                        case GameVersion.RS2012:
-                            versionPrefix = "r"; // RS2012 CDLC
-                            break;
-                        case GameVersion.None:
-                            versionPrefix = "c"; // Converted RS1 CDLC
-                            break;
-                        default:
-                            versionPrefix = "v"; // RS2014 CDLC
-                            break;
-                    }
-
-                    var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
-                    var ddAcronym = ConfigRepository.Instance().GetBoolean("ddc_autogen") || hasDD ? "" : "_NDD";
-                    var fileName = String.Format("{0}{1}", StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms")), ddAcronym);
-                    sfd.FileName = fileName.GetValidFileName();
-                    sfd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";
-
-                    if (sfd.ShowDialog(this) != DialogResult.OK) // 'this' ensures sfd is topmost
-                        return null;
-
-                    DestPath = sfd.FileName;
-                }
             }
 
             // showlights cause in game hanging for some RS1-RS2 conversions
@@ -1708,7 +1687,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             pbUpdateProgress.Value = 10;
             ShowCurrentOperation("Updating package data  ...");
             Application.DoEvents();
-
+          
             if (ConfigRepository.Instance().GetBoolean("ddc_autogen"))
             {
                 // add TKI_DDC comment
@@ -1782,16 +1761,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (IsDirty)
                     UpdateSongXml(arr, packageData);
 
-                // restore arrangement comments
+                // restore arrangement comments before applying DD
                 Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
 
-                // add DDC to arrangement
+                // add DDC to the arrangement
                 if (ConfigRepository.Instance().GetBoolean("ddc_autogen"))
                 {
-                    // Important ... don't overwrite author's DD if it is already present in any arragement
+                    var hasDD = false;
+                    var songXml = Song2014.LoadFromFile(arr.SongXml.File);
+                    var mf = new ManifestFunctions(GameVersion.RS2014);
+                    if (mf.GetMaxDifficulty(songXml) != 0)
+                        hasDD = true;
+
                     if (!hasDD)
                     {
-                        // apply DD to xml arrangments
+                        // apply DD to xml arrangment and add DDC comment
                         var result = DDCreator.ApplyDD(arr.SongXml.File, phraseLen, removeSus, rampPath, cfgPath, out consoleOutput, true);
                         if (result == 1)
                         {
@@ -1805,11 +1789,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             BetterDialog2.ShowDialog(consoleOutput, "DDC Generation Info", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
                         }
                     }
-                    else
+                    else // Don't overwrite existing DDC by CDLC author
                     {
                         // commented out ... don't nag user with this message
                         // MessageBox.Show("Existing DD content in arrangement: " + arr.Name + " was not changed", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        Console.WriteLine("Existing DD content in arrangement: " + arr.Name + " was not changed");
+                        Debug.WriteLine("Existing DD content in arrangement: " + arr.Name + " was not changed");
+                        ShowCurrentOperation("Existing DD content in arrangement: " + arr.Name + " was not changed");
+
+                        // add custom xml comment as needed
+                        var hasComment = arr.XmlComments.Any(x => x.ToString().Contains("DDC"));
+                        if (!hasComment)
+                            Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments, customComment: "DDC by CDLC author");
                     }
                 }
 

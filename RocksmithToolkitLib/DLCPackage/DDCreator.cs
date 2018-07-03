@@ -9,7 +9,7 @@ namespace RocksmithToolkitLib.DLCPackage
     public static class DDCreator
     {
         /// <summary>
-        /// Apply Dynamic Difficulty (DD) to an arrangement xml file
+        /// Apply Dynamic Difficulty (DD) to an arrangement xml file (adds DDC version/action comment)
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="phraseLen"></param>
