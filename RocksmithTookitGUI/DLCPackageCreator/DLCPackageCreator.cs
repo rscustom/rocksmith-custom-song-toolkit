@@ -1794,9 +1794,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         // commented out ... don't nag user with this message
                         // MessageBox.Show("Existing DD content in arrangement: " + arr.Name + " was not changed", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Debug.WriteLine("Existing DD content in arrangement: " + arr.Name + " was not changed");
-                        ShowCurrentOperation("Existing DD content in arrangement: " + arr.Name + " was not changed");
-
-                        // add custom xml comment as needed
+ 
+                        // add custom xml comment if needed
                         var hasComment = arr.XmlComments.Any(x => x.ToString().Contains("DDC"));
                         if (!hasComment)
                             Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments, customComment: "DDC by CDLC author");

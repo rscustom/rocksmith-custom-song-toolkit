@@ -267,15 +267,18 @@
 rem RocksmithPreBuild.exe takes care of updating Assembly.cs files and AppVeyor versioning information
 
 if $(ConfigurationName) == Debug (
-  CD "$(SolutionDir)"
+CD "$(SolutionDir)"
 
-  rem there are several alternate usages for RocksmithPreBuild.exe
+rem there are several alternate usages for RocksmithPreBuild.exe
+rem if a 'Type 1 Error' occures check the .git folder for missing critical contents
+rem usual this error occures after .git Garbage Cleanup
+rem resyncing the commit usual fixes the error
 
-         cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
-  rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.4.1 BETA"
-  rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.4.0 RELEASE"
+cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
+
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.4.1 BETA"
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.4.0 RELEASE"
 )
-
 rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj these call the 'prebuild.sh' file</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
