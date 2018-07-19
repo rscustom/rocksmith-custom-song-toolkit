@@ -1055,15 +1055,31 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     Console.WriteLine(@" -- CDLC contains note time errors and may not play properly"); // + ex.Message);
                 }
 
+                Dictionary<int, int> chordInHandshape1 = new Dictionary<int, int>();
+                Dictionary<int, int> chordInHandshape2 = new Dictionary<int, int>();
+
                 foreach (var n in notes)
                 {
                     for (Int16 id = 0; id < fp1.Count; id++) //FingerPrints 1st level (common handshapes?)
                         if (n.Time >= fp1[id].StartTime && n.Time < fp1[id].EndTime)
                         {
                             n.FingerPrintId[0] = id;
-                            // add STRUM to chords if highDensity = 0
-                            if (n.ChordId != -1 && (n.NoteMask & CON.NOTE_MASK_HIGHDENSITY) != CON.NOTE_MASK_HIGHDENSITY)
-                                n.NoteMask |= CON.NOTE_MASK_STRUM;
+
+                            // Add STRUM to first chord in the handshape
+                            if (n.ChordId != -1)
+                            {
+                                // There may be single notes before the first chord so can't use fp1[id].StartTime == n.Time
+                                if (!chordInHandshape1.ContainsKey(id))
+                                {
+                                    n.NoteMask |= CON.NOTE_MASK_STRUM;
+                                    chordInHandshape1.Add(id, n.ChordId);
+                                }
+                                else if (chordInHandshape1[id] != n.ChordId) // CDLC only?
+                                {
+                                    n.NoteMask |= CON.NOTE_MASK_STRUM;
+                                    chordInHandshape1[id] = n.ChordId;
+                                }
+                            }
                             if (fp1[id].Unk3_FirstNoteTime == 0)
                                 fp1[id].Unk3_FirstNoteTime = n.Time;
 
@@ -1078,9 +1094,21 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         if (n.Time >= fp2[id].StartTime && n.Time < fp2[id].EndTime)
                         {
                             n.FingerPrintId[1] = id;
-                            // add STRUM to chords
-                            if (fp2[id].StartTime == n.Time && n.ChordId != -1)
-                                n.NoteMask |= CON.NOTE_MASK_STRUM;
+
+                            // Add STRUM to first chord in the handshape
+                            if (n.ChordId != -1)
+                            {
+                                if (!chordInHandshape2.ContainsKey(id))
+                                {
+                                    n.NoteMask |= CON.NOTE_MASK_STRUM;
+                                    chordInHandshape2.Add(id, n.ChordId);
+                                }
+                                else if (chordInHandshape2[id] != n.ChordId) // CDLC only?
+                                {
+                                    n.NoteMask |= CON.NOTE_MASK_STRUM;
+                                    chordInHandshape2[id] = n.ChordId;
+                                }
+                            }
                             n.NoteMask |= CON.NOTE_MASK_ARPEGGIO;
                             if (fp2[id].Unk3_FirstNoteTime == 0)
                                 fp2[id].Unk3_FirstNoteTime = n.Time;
