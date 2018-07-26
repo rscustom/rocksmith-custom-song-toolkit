@@ -1258,12 +1258,6 @@ namespace RocksmithToolkitLib.XML
                 // TECHNIQUES
                 chord.parseChordMask(notesSection.Notes[i], notesSection.Notes[i].NoteMask);
 
-                // CHORD NOTES (WITHOUT TECHNIQUES) + NOT HIGH DENSITY
-                if (chord.HighDensity != 1)
-                {
-                    chord.ParseChordNotes(sngData.Chords.Chords[chord.ChordId]);
-                }
-
                 // CHORD NOTES (WITH TECHNIQUES)
                 var cnId = notesSection.Notes[i].ChordNotesId;
                 if (cnId != -1)
@@ -1271,6 +1265,11 @@ namespace RocksmithToolkitLib.XML
                     if (sngData.ChordNotes.ChordNotes.Length > cnId)
                         chord.ParseChordNotes(sngData.Chords.Chords[chord.ChordId], sngData.ChordNotes.ChordNotes[cnId], notesSection.Notes[i].Sustain);
                 }
+                /*else if (chord.Strum == "up")
+                {
+                    // CHORD NOTES (WITHOUT TECHNIQUES) + NOT HIGH DENSITY
+                    chord.ParseChordNotes(sngData.Chords.Chords[chord.ChordId]);
+                }*/
 
                 chords.Add(chord);
             }
