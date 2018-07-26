@@ -1120,7 +1120,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                                 }
                             }
                             n.NoteMask |= CON.NOTE_MASK_ARPEGGIO;
-                            if (fp2[id].Unk3_FirstNoteTime == 0)
+                            if (fp2[id].Unk3_FirstNoteTime == -1)
                                 fp2[id].Unk3_FirstNoteTime = n.Time;
 
                             float sustain = 0;
