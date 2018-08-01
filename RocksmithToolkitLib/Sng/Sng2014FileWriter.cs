@@ -142,24 +142,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
             return max;
         }
 
-        /// <summary>
-        /// Counts total ignore statuses for notes and chords.
-        /// </summary>
-        /// <param name="xml"></param>
-        /// <returns></returns>
-        private Int32 getIngoreCount(Song2014 xml)
-        {
-            var ctr = 0;
-            foreach (var l in xml.Levels)
-            {
-                ctr += l.Notes.Count(x => x.Ignore == 1);
-                ctr += l.Chords.Count(x => x.Ignore == 1);
-            }
-            return ctr;
-        }
-
         // Easy, Medium, Hard = 0, 1, 2
         public int[] NoteCount { get; set; }
+
+        // Number of ignored notes and chords when at max difficulty
+        private int IgnoreCount;
+
         private int getNoteCount(Sng2014File sng, int Level)
         {
             // time => note count
@@ -171,18 +159,24 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 var a = sng.Arrangements.Arrangements[i];
                 foreach (var n in a.Notes.Notes)
                 {
-                    if (i > sng.PhraseIterations.PhraseIterations[n.PhraseIterationId].Difficulty[Level])
-                        // this note is above requested level
+                    if (i != sng.PhraseIterations.PhraseIterations[n.PhraseIterationId].Difficulty[Level])
+                        // This note is above or below requested level
                         continue;
 
                     if (!notes.ContainsKey(n.Time))
                     {
+                        if (Level == 2 && (n.NoteMask & CON.NOTE_MASK_IGNORE) != 0)
+                            IgnoreCount++;
+
                         // 1 note at difficulty i
                         notes[n.Time] = 1;
                         level[n.Time] = i;
                     }
                     else if (i == level[n.Time])
                     {
+                        if (Level == 2 && (n.NoteMask & CON.NOTE_MASK_IGNORE) != 0)
+                            IgnoreCount++;
+
                         // we can add notes while still in the same difficulty
                         notes[n.Time] += 1;
                     }
@@ -201,14 +195,15 @@ namespace RocksmithToolkitLib.Sng2014HSL
             NoteCount = new int[3];
             NoteCount[0] = getNoteCount(sng, 0);
             NoteCount[1] = getNoteCount(sng, 1);
-            NoteCount[2] = getNoteCount(sng, 2);
+            IgnoreCount = 0;
+            NoteCount[2] = getNoteCount(sng, 2); // Calculates IgnoreCount
 
             sng.Metadata = new Metadata();
             sng.Metadata.MaxScore = 100000;
 
             sng.Metadata.MaxDifficulty = getMaxDifficulty(xml);
             sng.Metadata.MaxNotesAndChords = NoteCount[2];
-            sng.Metadata.MaxNotesAndChords_Real = sng.Metadata.MaxNotesAndChords - getIngoreCount(xml); //num "unique notes - ignored"
+            sng.Metadata.MaxNotesAndChords_Real = sng.Metadata.MaxNotesAndChords - IgnoreCount; //num "unique notes - ignored"
             sng.Metadata.PointsPerNote = sng.Metadata.MaxScore / sng.Metadata.MaxNotesAndChords;
 
             sng.Metadata.FirstBeatLength = xml.Ebeats[1].Time - xml.Ebeats[0].Time;
@@ -324,8 +319,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
             sng.ChordNotes.Count = sng.ChordNotes.ChordNotes.Length;
         }
 
-        private static List<ChordNotes> cns = new List<ChordNotes>();
-        private static Dictionary<UInt32, Int32> cnsId = new Dictionary<UInt32, Int32>();
+        private List<ChordNotes> cns = new List<ChordNotes>();
+        private Dictionary<UInt32, Int32> cnsId = new Dictionary<UInt32, Int32>();
+
         public Int32 addChordNotes(Sng2014File sng, SongChord2014 chord)
         {
             var c = new ChordNotes();
@@ -919,11 +915,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     else
                         // last phrase iteration = noguitar/end
                         anchor.EndBeatTime = xml.PhraseIterations[xml.PhraseIterations.Length - 1].Time;
-                    // TODO: not 100% clear
-                    // times will be updated later
-                    // these "garbage" values are everywhere!
-                    //anchor.Unk3_FirstNoteTime = (float) 3.4028234663852886e+38;
-                    //anchor.Unk4_LastNoteTime = (float) 1.1754943508222875e-38;
+
+                    // Times will be updated later
+
+                    // Uninitialized values are found on anchors in phrases without notes
+                    anchor.Unk3_FirstNoteTime = (float) 3.4028234663852886e+38;
+                    anchor.Unk4_LastNoteTime = (float) 1.1754943508222875e-38;
                     anchor.FretId = (byte)level.Anchors[j].Fret;
                     anchor.Width = (Int32)level.Anchors[j].Width;
                     anchor.PhraseIterationId = getPhraseIterationId(xml, anchor.StartBeatTime, false);
@@ -953,10 +950,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     {
                         ChordId = h.ChordId,
                         StartTime = h.StartTime,
-                        EndTime = h.EndTime
-                        // TODO: not always StartTime
-                        //fp.Unk3_FirstNoteTime = fp.StartTime;
-                        //fp.Unk4_LastNoteTime = fp.StartTime;
+                        EndTime = h.EndTime,
+                        Unk3_FirstNoteTime = -1, // -1 in empty handshapes
+                        Unk4_LastNoteTime = -1 // In empty handshapes, sometimes this is h.StartTime, sometimes -1
                     };
 
                     if (xml.ChordTemplates[fp.ChordId].DisplayName.EndsWith("arp"))
@@ -1055,34 +1051,76 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     Console.WriteLine(@" -- CDLC contains note time errors and may not play properly"); // + ex.Message);
                 }
 
+                // Fingerprint ID => Chord ID
+                Dictionary<int, int> chordInHandshape = new Dictionary<int, int>();
+                Dictionary<int, int> chordInArpeggio = new Dictionary<int, int>();
+
                 foreach (var n in notes)
                 {
-                    for (Int16 id = 0; id < fp1.Count; id++) //FingerPrints 1st level (common handshapes?)
+                    for (Int16 id = 0; id < fp1.Count; id++) // FingerPrints 1st level (common handshapes)
                         if (n.Time >= fp1[id].StartTime && n.Time < fp1[id].EndTime)
                         {
-                            n.FingerPrintId[0] = id;
-                            // add STRUM to chords if highDensity = 0
-                            if (n.ChordId != -1 && (n.NoteMask & CON.NOTE_MASK_HIGHDENSITY) != CON.NOTE_MASK_HIGHDENSITY)
-                                n.NoteMask |= CON.NOTE_MASK_STRUM;
-                            if (fp1[id].Unk3_FirstNoteTime == 0)
+                            // Handshapes can be inside other handshapes
+                            if (n.FingerPrintId[0] == -1)
+                                n.FingerPrintId[0] = id;
+
+                            // Add STRUM to first chord in the handshape (The chord will be rendered as a full chord panel)
+                            // In later DLC, frethand muted chords that start a handshape may not have STRUM
+                            if (n.ChordId != -1)
+                            {
+                                // There may be single notes before the first chord so can't use fp1[id].StartTime == n.Time
+                                if (!chordInHandshape.ContainsKey(id))
+                                {
+                                    n.NoteMask |= CON.NOTE_MASK_STRUM;
+                                    chordInHandshape.Add(id, n.ChordId);
+                                }
+                                else if (chordInHandshape[id] != n.ChordId)
+                                {
+                                    // This should not be necessary for official songs
+                                    n.NoteMask |= CON.NOTE_MASK_STRUM;
+                                    chordInHandshape[id] = n.ChordId;
+                                }
+                            }
+                            if (fp1[id].Unk3_FirstNoteTime == -1)
                                 fp1[id].Unk3_FirstNoteTime = n.Time;
 
-                            float sustain = 0;
-                            if (n.Time + n.Sustain < fp1[id].EndTime)
-                                sustain = n.Sustain;
-                            fp1[id].Unk4_LastNoteTime = n.Time + sustain;
-                            break;
+                            float noteEnd = n.Time + n.Sustain;
+                            if (noteEnd >= fp1[id].EndTime)
+                            {
+                                // Not entirely accurate, sometimes Unk4 is -1 even though there is a chord in the handshape...
+                                if (n.Time == fp1[id].StartTime)
+                                {
+                                   fp1[id].Unk4_LastNoteTime = fp1[id].EndTime;
+                                }
+                            }
+                            else
+                            {
+                                fp1[id].Unk4_LastNoteTime = noteEnd;
+                            }
                         }
 
-                    for (Int16 id = 0; id < fp2.Count; id++) //FingerPrints 2nd level (used for -arp(eggio) handshapes)
+                    for (Int16 id = 0; id < fp2.Count; id++) // FingerPrints 2nd level (used for -arp(eggio) handshapes)
                         if (n.Time >= fp2[id].StartTime && n.Time < fp2[id].EndTime)
                         {
                             n.FingerPrintId[1] = id;
-                            // add STRUM to chords
-                            if (fp2[id].StartTime == n.Time && n.ChordId != -1)
-                                n.NoteMask |= CON.NOTE_MASK_STRUM;
+
+                            // Add STRUM to first chord in the arpeggio handshape
+                            if (n.ChordId != -1)
+                            {
+                                if (!chordInArpeggio.ContainsKey(id))
+                                {
+                                    n.NoteMask |= CON.NOTE_MASK_STRUM;
+                                    chordInArpeggio.Add(id, n.ChordId);
+                                }
+                                else if (chordInArpeggio[id] != n.ChordId)
+                                {
+                                    // This should not be necessary for official songs
+                                    n.NoteMask |= CON.NOTE_MASK_STRUM;
+                                    chordInArpeggio[id] = n.ChordId;
+                                }
+                            }
                             n.NoteMask |= CON.NOTE_MASK_ARPEGGIO;
-                            if (fp2[id].Unk3_FirstNoteTime == 0)
+                            if (fp2[id].Unk3_FirstNoteTime == -1)
                                 fp2[id].Unk3_FirstNoteTime = n.Time;
 
                             float sustain = 0;
@@ -1098,7 +1136,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             n.AnchorWidth = (Byte)a.Anchors.Anchors[j].Width;
                             // anchor fret
                             n.AnchorFretId = (Byte)a.Anchors.Anchors[j].FretId;
-                            if (a.Anchors.Anchors[j].Unk3_FirstNoteTime == 0)
+                            if (a.Anchors.Anchors[j].Unk3_FirstNoteTime == (float)3.4028234663852886e+38)
                                 a.Anchors.Anchors[j].Unk3_FirstNoteTime = n.Time;
 
                             float sustain = 0;
@@ -1108,14 +1146,6 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             break;
                         }
                 }
-
-                // initialize times for empty anchors, based on 'lrocknroll'
-                foreach (var anchor in a.Anchors.Anchors)
-                    if (anchor.Unk3_FirstNoteTime == 0)
-                    {
-                        anchor.Unk3_FirstNoteTime = anchor.StartBeatTime;
-                        anchor.Unk4_LastNoteTime = anchor.StartBeatTime + (float)0.1;
-                    }
 
                 a.Notes = new NotesSection();
                 a.Notes.Count = notes.Count;
