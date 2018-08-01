@@ -15,6 +15,10 @@ TestResults
 *.user
 *.sln.docstates
 
+# Visual Studio temp something
+.vs/
+.vs/ProjectSettings.json 
+
 # Build results
 [Bb]in/
 [Dd]ebug/
@@ -117,6 +121,21 @@ RevisionLog.txt
 OpenCmd.bat
 ShareReleaseLibs.bat
 
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
+
+# Backup & report files from converting an old project file
+# to a newer Visual Studio version. Backup files are not needed,
+# because we have git ;-)
+_UpgradeReport_Files/
+Backup*/
+UpgradeLog*.XML
+UpgradeLog*.htm
+ServiceFabricBackup/
+*.rptproj.bak
+
 # Python
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -126,3 +145,4 @@ __pycache__/
 
 /.vs/RocksmithCustomSongCreator/v15/Server/sqlite3
 /.vs/RocksmithCustomSongCreator/v15/sqlite3
+
