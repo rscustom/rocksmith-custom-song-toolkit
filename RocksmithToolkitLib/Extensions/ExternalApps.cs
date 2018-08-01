@@ -7,8 +7,7 @@ namespace RocksmithToolkitLib.Extensions
 {
     public static class ExternalApps
     {
-        // update 'tools' and 'ddc' folder apps/constants here as needed
-        // toolkit path fixed for unit testing compatiblity
+        // path fixed for unit testing compatiblity
         public static readonly string TOOLKIT_ROOT = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
         public static readonly string TOOLS_DIR = "tools";
         public static readonly string APP_TOPNG = Path.Combine(TOOLS_DIR, "topng.exe");

@@ -30,7 +30,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private BackgroundWorker bwRepack = new BackgroundWorker();
         private string destPath;
         private StringBuilder errorsFound;
-        private GameVersion gameVersion;
 
         public DLCPackerUnpacker()
         {
@@ -73,12 +72,13 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             set { chkUpdateSng.Checked = value; }
         }
 
-        // TODO: add validation to AppId
         public string AppId
         {
             get { return txtAppId.Text; }
             set { txtAppId.Text = value; }
         }
+
+        public GameVersion Version { get; set; }
 
         private void PopulateGameVersionCombo()
         {
@@ -126,7 +126,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         public void SelectComboAppId(string appId)
         {
-            var songAppId = SongAppIdRepository.Instance().Select(appId, gameVersion);
+            var songAppId = SongAppIdRepository.Instance().Select(appId, Version);
             if (SongAppIdRepository.Instance().List.Any<SongAppId>(a => a.AppId == appId))
                 cmbAppId.SelectedItem = songAppId;
             else
@@ -308,6 +308,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 {
                     try
                     {
+                        // TODO: use PsarcLoader memory methods to plant a new AppId
                         var unpackedDir = Packer.Unpack(sourceFileName, tmpDir, overwriteSongXml: OverwriteSongXml);
                         var appIdFile = Path.Combine(unpackedDir, (srcPlatform.version == GameVersion.RS2012) ? "APP_ID" : "appid.appid");
                         File.WriteAllText(appIdFile, appId);
@@ -744,8 +745,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         private void cmbGameVersion_SelectedIndexChanged(object sender, EventArgs e)
         {
-            gameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
-            PopulateAppIdCombo(gameVersion);
+            Version = (GameVersion)Enum.Parse(typeof(GameVersion), cmbGameVersion.SelectedItem.ToString());
+            PopulateAppIdCombo(Version);
         }
 
         private void txtAppId_Validating(object sender, CancelEventArgs e)

@@ -36,7 +36,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppsTest.cs" />
+    <Compile Include="ExternalAppsTest.cs" />
     <Compile Include="PackTest.cs" />
     <Compile Include="TestSettings.cs" />
     <Compile Include="UnpackTest.cs" />
@@ -57,25 +57,31 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
-    <None Include="Resources\PepaPigv1_m.psarc">
+    <None Include="Resources\PeppaPig_v2_m.psarc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\PepaPigv1_p.psarc">
+    <None Include="Resources\PeppaPig_v2_p.psarc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\PepaPigv1_ps3.psarc.edat">
+    <None Include="Resources\PeppaPig_v2_ps3.psarc.edat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\PepaPigv1_xbox">
+    <None Include="Resources\PeppaPig_v2_xbox">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\ReadMe.txt" />
+    <None Include="Resources\HowToUnitTest.txt" />
+    <None Include="Resources\SuperMarioBros_r1.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>REM copy support files
 xcopy /S /Y "$(SolutionDir)Third-party Apps" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

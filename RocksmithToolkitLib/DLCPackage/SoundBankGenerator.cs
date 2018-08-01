@@ -160,55 +160,6 @@ namespace RocksmithToolkitLib.DLCPackage
             w.Write(chunkData);
         }
 
-        public static float? ReadBNKVolume(Stream inputStream, Platform platform)
-        {
-            // RS2014 only
-            if (platform.version != GameVersion.RS2014)
-                return null;
-
-            // verify header + detect endianness
-            using (var v = new EndianBinaryReader(platform.GetBitConverter, inputStream))
-            {
-                if (v.ReadInt32() != 1145588546) // BKHD
-                {
-                    Debug.WriteLine("Unknown BNK file format: " + v.ReadInt32());
-                    return null;
-                }
-
-                v.ReadBytes(v.ReadInt32());
-
-                // offset till HRIC (chunk len+8)
-                while (v.ReadInt32() != 1129466184 && (inputStream.Position < inputStream.Length - 1))
-                    v.ReadBytes(v.ReadInt32());
-
-                // ok we're in Hric now, let's validate again!
-                v.BaseStream.Position -= 4;
-                if (v.ReadInt32() != 1129466184)
-                    throw new Exception("Something goes wrong with bnk parser.");
-
-                // get HRIC size
-                var len = v.ReadInt32();
-                var obj = v.ReadInt32();
-                for (var o = 0; o < obj; o++)
-                {
-                    var type = v.ReadByte();
-                    var length = v.ReadInt32();
-                    // find correct object type - SFXV
-                    if (type == 2)
-                    {
-                        // skip 46 bytes to find volume
-                        v.ReadBytes(46);
-
-                        return v.ReadSingle();
-                    }
-
-                    v.ReadBytes(length);
-                }
-            }
-
-            return null;
-        }
-
         private static byte[] Header(int id, int didxSize, bool isConsole)
         {
             int soundbankVersion = 91;
@@ -557,5 +508,116 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public static int oldSoundID { get; set; }
         public static int oldFileID { get; set; }
+
+        /// <summary>
+        /// Given a .bnk file, validate the bnk file and version number
+        /// returns error message if not valid
+        /// </summary>
+        /// <param name="srcPath"></param>
+        /// <returns></returns>
+        public static string ValidateBnkFile(string srcPath, Platform platform)
+        {
+            using (var reader = new EndianBinaryReader(platform.GetBitConverter, File.OpenRead(srcPath)))
+            {
+                reader.Seek(0, SeekOrigin.Begin);
+                var magicBkhd = reader.ReadBytes(4); // BKHD 42 4B 48 44 
+
+                if (Encoding.ASCII.GetString(magicBkhd) != "BKHD")
+                    return "<ERROR> Did not find BKHD Header ..." + Environment.NewLine + srcPath;
+
+                var lenBKHD = reader.ReadUInt32(); // Length of BKHD Section (bytes)
+                var versionNumber = reader.ReadUInt32(); // BNK Version Number 91                
+
+                if (versionNumber != 91)
+                    return"<ERROR> Incorrect BNK Version Number - " + srcPath;
+
+                int offset = (int)lenBKHD + 8;  // 36
+                reader.Seek(offset, SeekOrigin.Begin); // DIDX Section
+                var magicDIDX = reader.ReadBytes(4); // DIDX 44 49 44 58
+
+                if (Encoding.ASCII.GetString(magicDIDX) != "DIDX")
+                    return"<ERROR> Did not find DIDX Header ..." + Environment.NewLine + srcPath;
+            }
+
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// Given a .bnk file, get the cross reference to corresponding .wem file
+        /// </summary>
+        /// <param name="srcPath"></param>
+        /// <returns></returns>
+        public static string ReadWemFileId(string srcPath, Platform platform)
+        {
+            using (var reader = new EndianBinaryReader(platform.GetBitConverter, File.OpenRead(srcPath)))
+            {
+                reader.ReadBytes(4); // BKHD 42 4B 48 44 
+                var lenBKHD = reader.ReadUInt32(); // Length of BKHD Section (bytes)
+                int offset = (int)lenBKHD + 8;  // 36
+                // DIDX Section has already been validated
+                reader.Seek(offset, SeekOrigin.Begin); // DIDX Section
+                reader.ReadBytes(4); // DIDX 44 49 44 58
+
+                var lenDIDX = reader.ReadUInt32(); // Length of DIDX Section (bytes)
+                if (lenDIDX / 12 > 1)
+                    throw new Exception("<ERROR> SoundBank Contains More than One WEM File ..." + Environment.NewLine + srcPath);
+
+                // read wem file id
+                var wemFileId = reader.ReadUInt32().ToString();
+                return wemFileId;
+            }
+        }
+
+        /// <summary>
+        /// Given a .bnk file, read the audio volume factor
+        /// </summary>
+        /// <param name="srcPath"></param>
+        /// <param name="platform"></param>
+        /// <returns></returns>
+        public static float? ReadVolumeFactor(string srcPath, Platform platform)
+        {
+            using (var reader = new EndianBinaryReader(platform.GetBitConverter, File.OpenRead(srcPath)))
+            {
+                // offset to find HIRC
+                while (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "HIRC" && reader.BaseStream.Position < reader.BaseStream.Length - 1)
+                    reader.ReadBytes((int)reader.ReadUInt32());
+
+                // ok we should be at HIRC now, let's confirm it!
+                reader.BaseStream.Position -= 4;
+                if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "HIRC")
+                    throw new Exception("<ERROR> Did not find HIRC Header ..." + Environment.NewLine + srcPath);
+
+                // get HIRC data
+                var lenHIRC = reader.ReadUInt32();
+                var objCount = reader.ReadUInt32();
+                for (var n = 0; n < objCount; n++)
+                {
+                    var typeId = reader.ReadByte();
+                    var lenSection = reader.ReadUInt32();
+
+                    // find correct object type - SFXV
+                    if (typeId == 2)
+                    {
+                        // skip 46 bytes to find volume factor
+                        reader.ReadBytes(46);
+
+                        return reader.ReadSingle();
+                    }
+
+                    reader.ReadBytes((int)lenSection);
+                }
+            }
+
+            return null;
+        }
+
     }
+
+    public class BnkWemData
+    {
+        public string BnkFileName { get; set; }
+        public string WemFileId { get; set; }
+        public float? VolumeFactor { get; set; }
+    }
+
 }

@@ -1,9 +1,0 @@
-﻿<NUnitProject>
-  <Settings activeconfig="Debug" processModel="Default" domainUsage="Default" />
-  <Config name="Debug" binpathtype="Auto">
-    <assembly path="bin\Debug\RocksmithToolkitLibTest.dll" />
-  </Config>
-  <Config name="Release" binpathtype="Auto">
-    <assembly path="bin\Release\RocksmithToolkitLibTest.dll" />
-  </Config>
-</NUnitProject>

@@ -9,6 +9,7 @@ using System.IO;
 using System.Xml.Linq;
 using Ookii.Dialogs;
 using System.Diagnostics;
+using RocksmithToolkitLib;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Sng;
@@ -28,14 +29,14 @@ namespace RocksmithToolkitGUI.DDC
         private const string TKI_REMASTER = "(Remastered by DDC)";
         private BackgroundWorker bw;
         // key => fileName w/o Ext, value => filePath
-        private  Dictionary<string, string> FilesDb;
-        private  Dictionary<string, string> RampUpDb;
-        private  Dictionary<string, string> ConfigDb;
-        private  Color EnabledColor = Color.Black;
-        private  Color DisabledColor = Color.Gray;
+        private Dictionary<string, string> FilesDb;
+        private Dictionary<string, string> RampUpDb;
+        private Dictionary<string, string> ConfigDb;
+        private Color EnabledColor = Color.Black;
+        private Color DisabledColor = Color.Gray;
         //
-        private  bool IsNDD { get; set; }
-        private  string ProcessOutput { get; set; }
+        private bool IsNDD { get; set; }
+        private string ProcessOutput { get; set; }
         #endregion
 
         public DDC()
@@ -216,7 +217,8 @@ namespace RocksmithToolkitGUI.DDC
             e.Result = errorCount; // No Errors = 0
         }
 
-        private int ApplyPackageDD(string filePath, int phraseLen, bool removeSus, string rampPath, string cfgPath, out string consoleOutput, bool overWrite = false, bool keepLog = false)
+        // method works with RS1 and RS2014 archives
+        private int ApplyPackageDD(string srcPath, int phraseLen, bool removeSus, string rampPath, string cfgPath, out string consoleOutput, bool overWrite = false, bool keepLog = false)
         {
             int result = 0; // Ends normally with no error
             DLCPackageData packageData;
@@ -225,15 +227,13 @@ namespace RocksmithToolkitGUI.DDC
             try
             {
                 using (var psarcOld = new PsarcPackager())
-                    packageData = psarcOld.ReadPackage(filePath);
+                    packageData = psarcOld.ReadPackage(srcPath);
             }
             catch (Exception ex)
             {
-                consoleOutput = "Error Reading : " + filePath + Environment.NewLine + ex.Message;
+                consoleOutput = "Error Reading : " + srcPath + Environment.NewLine + ex.Message;
                 return -1; // Read Error
             }
-
-            var ddcFilePath = GenerateDdcFilePath(filePath);
 
             // Update arrangement song info
             foreach (Arrangement arr in packageData.Arrangements)
@@ -252,39 +252,44 @@ namespace RocksmithToolkitGUI.DDC
                 if (arr.ArrangementType == ArrangementType.Vocal || arr.ArrangementType == ArrangementType.ShowLight)
                     continue;
 
-                // validate existing SongInfo
-                var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-                songXml.AlbumYear = packageData.SongInfo.SongYear.ToString().GetValidYear();
-                songXml.ArtistName = packageData.SongInfo.Artist.GetValidAtaSpaceName();
-                songXml.Title = packageData.SongInfo.SongDisplayName.GetValidAtaSpaceName();
-                songXml.AlbumName = packageData.SongInfo.Album.GetValidAtaSpaceName();
-                songXml.ArtistNameSort = packageData.SongInfo.ArtistSort.GetValidSortableName();
-                songXml.SongNameSort = packageData.SongInfo.SongDisplayNameSort.GetValidSortableName();
-                songXml.AlbumNameSort = packageData.SongInfo.AlbumSort.GetValidSortableName();
-                songXml.AverageTempo = Convert.ToSingle(packageData.SongInfo.AverageTempo.ToString().GetValidTempo());
+                // validate (QC) RS2014 packageData
+                if (packageData.GameVersion == GameVersion.RS2014)
+                {
+                    // validate existing SongInfo
+                    var songXml = Song2014.LoadFromFile(arr.SongXml.File);
+                    songXml.AlbumYear = packageData.SongInfo.SongYear.ToString().GetValidYear();
+                    songXml.ArtistName = packageData.SongInfo.Artist.GetValidAtaSpaceName();
+                    songXml.Title = packageData.SongInfo.SongDisplayName.GetValidAtaSpaceName();
+                    songXml.AlbumName = packageData.SongInfo.Album.GetValidAtaSpaceName();
+                    songXml.ArtistNameSort = packageData.SongInfo.ArtistSort.GetValidSortableName();
+                    songXml.SongNameSort = packageData.SongInfo.SongDisplayNameSort.GetValidSortableName();
+                    songXml.AlbumNameSort = packageData.SongInfo.AlbumSort.GetValidSortableName();
+                    songXml.AverageTempo = Convert.ToSingle(packageData.SongInfo.AverageTempo.ToString().GetValidTempo());
 
-                // write updated xml arrangement
-                using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
-                    songXml.Serialize(stream, false);
+                    // write updated xml arrangement
+                    using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
+                        songXml.Serialize(stream, false);
 
-                // restore arrangment comments before applying DD
-                Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
+                    // restore arrangment comments 
+                    Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
+                }
 
                 // apply DD to xml arrangments... 0 = Ends normally with no error
                 result = DDCreator.ApplyDD(arr.SongXml.File, phraseLen, removeSus, rampPath, cfgPath, out consoleOutput, true, keepLog);
-                if (result == 1) // Ends with system error
+                if (result == 0) // Ends normally with no error
+                { /* DO NOTHING */}
+                else if (result == 1) // Ends with system error
                 {
                     consoleOutput = "DDC System Error: " + Environment.NewLine +
                        "Arrangment file: " + Path.GetFileName(arr.SongXml.File) + Environment.NewLine +
-                       "CDLC file: " + filePath;
+                       "CDLC file: " + srcPath;
                     return result;
                 }
-
-                if (result == 2) // Ends with application error
+                else if (result == 2) // Ends with application error
                 {
                     consoleOutput = "DDC Application Error: " + Environment.NewLine +
                        "Arrangment file: " + Path.GetFileName(arr.SongXml.File) + Environment.NewLine +
-                       "CDLC file: " + filePath;
+                       "CDLC file: " + srcPath;
                     return result;
                 }
 
@@ -292,8 +297,8 @@ namespace RocksmithToolkitGUI.DDC
                 {
                     var unpackedDir = Path.GetDirectoryName(Path.GetDirectoryName(arr.SongXml.File));
                     var logFiles = Directory.EnumerateFiles(unpackedDir, "*.log", SearchOption.AllDirectories);
-                    var clogDir = Path.Combine(Path.GetDirectoryName(ddcFilePath), "DDC_Log");
-                    var plogDir = Path.Combine(clogDir, Path.GetFileNameWithoutExtension(ddcFilePath).StripPlatformEndName().Replace("_DD", "").Replace("_NDD", ""));
+                    var clogDir = Path.Combine(Path.GetDirectoryName(srcPath), "DDC_Log");
+                    var plogDir = Path.Combine(clogDir, Path.GetFileNameWithoutExtension(srcPath).StripPlatformEndName().Replace("_DD", "").Replace("_NDD", ""));
 
                     if (!Directory.Exists(clogDir))
                         Directory.CreateDirectory(clogDir);
@@ -339,20 +344,19 @@ namespace RocksmithToolkitGUI.DDC
             // validate packageData (important)
             packageData.Name = packageData.Name.GetValidKey(); // DLC Key
 
+            var destPath = srcPath;
+            if (!overWrite)
+                destPath = GenerateDdcFilePath(srcPath);
+
             try
             {
-                // let's not bug user with this ... they should know what they are doing, right?
-                //if (File.Exists(ddcFilePath) && !overWrite)
-                //    if (MessageBox.Show("Are you sure to overwrite file? " + Path.GetFileName(ddcFilePath), MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
-                //        return result;
-
-                // regenerates the SNG with the repair and repackages
+                // regenerates the archive with DDC changes and repairs
                 using (var psarcNew = new PsarcPackager(true))
-                    psarcNew.WritePackage(ddcFilePath, packageData, filePath);
+                    psarcNew.WritePackage(destPath, packageData, srcPath);
             }
             catch (Exception ex)
             {
-                consoleOutput = "Error Writing: " + filePath + Environment.NewLine + ex.Message;
+                consoleOutput = "Error Writing: " + srcPath + Environment.NewLine + ex.Message;
                 result = -2; // Write Error
             }
 
@@ -386,8 +390,7 @@ namespace RocksmithToolkitGUI.DDC
             var platform = filePath.GetPlatform();
             var ddcFilePath = Path.Combine(Path.GetDirectoryName(filePath), String.Format("{0}{1}{2}",
                 Path.GetFileNameWithoutExtension(filePath).StripPlatformEndName().GetValidFileName().Replace("_DD", "").Replace("_NDD", ""),
-                IsNDD ? "_NDD" : "_DD", platform.GetPathName()[2]));
-            ddcFilePath = String.Format("{0}{1}", ddcFilePath, Path.GetExtension(filePath));
+                IsNDD ? "_NDD" : "_DD", Packer.GetPlatformEndName(platform)));
 
             return ddcFilePath;
         }
@@ -421,7 +424,8 @@ namespace RocksmithToolkitGUI.DDC
         {
             using (var ofd = new VistaOpenFileDialog())
             {
-                ofd.Filter = "Select Package or Arrangement (*.psarc;*.dat;*.edat;*.xml)|*.psarc;*.dat;*.edat;*.xml|" + "All files|*.*";
+                ofd.Title = "Select Package or Arrangement ...";
+                ofd.Filter = "Filtered files (*.psarc;*.dat;*.edat;*.xml)|*.psarc;*.dat;*.edat;*.xml|" + "All files (*.*)|*.*";
                 ofd.FilterIndex = 0;
                 ofd.Multiselect = true;
                 ofd.ReadOnlyChecked = true;

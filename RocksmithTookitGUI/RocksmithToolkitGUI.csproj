@@ -288,6 +288,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Config\GeneralConfig.resx">
       <DependentUpon>GeneralConfig.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SngConverter\SngConverter.resx">
       <DependentUpon>SngConverter.cs</DependentUpon>
@@ -313,6 +314,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DLCPackerUnpacker\DLCPackerUnpacker.resx">
       <DependentUpon>DLCPackerUnpacker.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="HelpForm.resx">
       <DependentUpon>HelpForm.cs</DependentUpon>

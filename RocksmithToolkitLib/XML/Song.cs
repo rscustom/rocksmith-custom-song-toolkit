@@ -8,6 +8,7 @@ using System.Xml;
 using System.IO;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.Extensions;
+using System.Xml.Linq;
 
 namespace RocksmithToolkitLib.XML
 {
@@ -19,9 +20,6 @@ namespace RocksmithToolkitLib.XML
 
         [XmlElement("title")]
         public string Title { get; set; }
-
-        [XmlElement("artist")]
-        public string Artist { get; set; }
 
         [XmlElement("arrangement")]
         public string Arrangement { get; set; }
@@ -37,27 +35,6 @@ namespace RocksmithToolkitLib.XML
 
         [XmlElement("lastConversionDateTime")]
         public string LastConversionDateTime { get; set; }
-
-        [XmlElement("startBeat")]
-        public Single StartBeat { get; set; }
-
-        [XmlElement("averageTempo")]
-        public Single AverageTempo { get; set; }
-
-        [XmlElement("tuning")]
-        public TuningStrings Tuning { get; set; }
-
-        [XmlElement("artistName")]
-        public string ArtistName { get; set; }
-
-        [XmlElement("albumName")]
-        public string AlbumName { get; set; }
-
-        [XmlElement("albumYear")]
-        public string AlbumYear { get; set; }
-
-        [XmlElement("arrangementProperties")]
-        public SongArrangementProperties ArrangementProperties { get; set; }
 
         [XmlArray("phrases")]
         [XmlArrayItem("phrase")]
@@ -102,6 +79,38 @@ namespace RocksmithToolkitLib.XML
         [XmlArray("levels")]
         [XmlArrayItem("level")]
         public SongLevel[] Levels { get; set; }
+
+        #region EOF Elements
+
+        [XmlIgnore]
+        [XmlElement("startBeat")]
+        public Single StartBeat { get; set; }
+
+        [XmlIgnore]
+        [XmlElement("averageTempo")]
+        public Single AverageTempo { get; set; }
+
+        [XmlIgnore]
+        [XmlElement("tuning")]
+        public TuningStrings Tuning { get; set; }
+
+        [XmlIgnore]
+        [XmlElement("artistName")]
+        public string ArtistName { get; set; }
+
+        [XmlIgnore]
+        [XmlElement("albumName")]
+        public string AlbumName { get; set; }
+
+        [XmlIgnore]
+        [XmlElement("albumYear")]
+        public string AlbumYear { get; set; }
+
+        [XmlIgnore]
+        [XmlElement("arrangementProperties")]
+        public SongArrangementProperties ArrangementProperties { get; set; }
+
+        #endregion
 
         #region Old techniques
         //# RS1 old song xml have no arrangement properties
@@ -284,6 +293,51 @@ namespace RocksmithToolkitLib.XML
 
         #endregion
 
+        public void Serialize(Stream stream, bool omitXmlDeclaration = false)
+        {
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+
+            var song = new MemoryStream();
+            using (var writer = XmlWriter.Create(song, new XmlWriterSettings { Indent = true, OmitXmlDeclaration = omitXmlDeclaration, Encoding = new UTF8Encoding(false) }))
+            {
+                new XmlSerializer(typeof(Song)).Serialize(writer, this, ns);
+            }
+
+            FixArrayAttribs(song);
+            stream.Write(song.GetBuffer(), 0, (int)song.Position);
+            stream.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
+        }
+
+        /// <summary>
+        /// Writes attribute count for specific nodes (required/used by DDC)
+        /// </summary>
+        /// <param name="xml">Xml stream.</param>
+        private static void FixArrayAttribs(Stream xml)
+        {
+            string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs", "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes",
+                                  /*Required by DDC*/ "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes", "tones" };
+
+            xml.Position = 0;
+            var doc = XDocument.Load(xml);
+            foreach (var n in anodes)
+            {
+                var es = doc.Descendants(n).ToArray();
+                if (!es.Any()) continue;
+                foreach (var e in es)
+                {
+                    var ret = e.Attribute("count");
+                    if (ret == null)
+                        e.Add(new XAttribute("count", e.Elements().Count()));
+                    else
+                        ret.SetValue(e.Elements().Count());
+                }
+            }
+            xml.Position = 0;
+            doc.Save(xml);
+        }
+
         public static Song LoadFromFile(string xmlSongFile)
         {
             Song XmlSong = null;
@@ -295,24 +349,6 @@ namespace RocksmithToolkitLib.XML
             }
 
             return XmlSong;
-        }
-
-        public void Serialize(Stream stream, bool omitXmlDeclaration = false)
-        {
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-
-            using (var writer = XmlWriter.Create(stream, new XmlWriterSettings
-            {
-                Indent = true,
-                OmitXmlDeclaration = omitXmlDeclaration
-            }))
-            {
-                new XmlSerializer(typeof(Song)).Serialize(writer, this, ns);
-            }
-
-            stream.Flush();
-            stream.Seek(0, SeekOrigin.Begin);
         }
     }
 
@@ -690,7 +726,7 @@ namespace RocksmithToolkitLib.XML
         [XmlAttribute("finger5")]
         public Int32 Finger5 { get; set; }
     }
- 
+
     //TBD
     [XmlType("fretHandMuteTemplate")]
     public class SongFretHandMuteTemplate

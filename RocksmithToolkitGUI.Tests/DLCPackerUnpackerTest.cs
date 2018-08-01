@@ -29,7 +29,7 @@ namespace RocksmithToolkitGUI.Tests
         public void Init()
         {
             TestSettings.Instance.Load();
-            if (!TestSettings.Instance.SrcPaths.Any())
+            if (!TestSettings.Instance.ResourcePaths.Any())
                 Assert.Fail("TestSettings Load Failed ...");
 
             Globals.IsUnitTest = true;
@@ -39,9 +39,6 @@ namespace RocksmithToolkitGUI.Tests
             packerUnpacker.DecodeAudio = true;
             packerUnpacker.UpdateManifest = true;
             packerUnpacker.UpdateSng = true;
-
-            // empty the 'Local Settings/Temp' directory before starting
-            DirectoryExtension.SafeDelete(Path.GetTempPath());
         }
 
         [TestFixtureTearDown]
@@ -62,8 +59,8 @@ namespace RocksmithToolkitGUI.Tests
             // order is important to reduce redundant unit testing
             TestUnpackSongs();
             TestPackSong();
-            // valid ODLC Bob Marley, Three Little Birds - no messagebox 
-            TestRepackAppId("492988");
+            TestRepackAppId("492988", GameVersion.RS2014);
+            TestRepackAppId("206102", GameVersion.RS2012);
         }
 
         /// <summary>
@@ -72,9 +69,10 @@ namespace RocksmithToolkitGUI.Tests
         [Test]
         public void TestUnpackSongs()
         {
+            // work with original Resources
             unpackedDirs = new List<string>();
-            unpackedDirs = packerUnpacker.UnpackSongs(TestSettings.Instance.SrcPaths, TestSettings.Instance.DestDir);
-            Assert.AreEqual(TestSettings.Instance.SrcPaths.Count, unpackedDirs.Count);
+            unpackedDirs = packerUnpacker.UnpackSongs(TestSettings.Instance.ResourcePaths, TestSettings.Instance.TmpDestDir);
+            Assert.AreEqual(TestSettings.Instance.ResourcePaths.Count, unpackedDirs.Count);
         }
 
         /// <summary>
@@ -83,23 +81,33 @@ namespace RocksmithToolkitGUI.Tests
         [Test]
         public void TestPackSong()
         {
-            // confirm UnpackSongs has been tested/loaded
             if (unpackedDirs == null)
-                TestUnpackSongs();
+            {
+                TestSettings.Instance.UnpackResources();
+                if (!TestSettings.Instance.UnpackedDirs.Any())
+                    Assert.Fail("TestSettings UnpackResources Failed ...");
+
+                unpackedDirs = TestSettings.Instance.UnpackedDirs;
+            }
 
             archivePaths = new List<string>();
             foreach (var unpackedDir in unpackedDirs)
             {
-                var expArchivePath = Path.Combine(TestSettings.Instance.DestDir, Packer.RecycleUnpackedDir(unpackedDir));
-                if (String.IsNullOrEmpty(expArchivePath))
+                Platform platform = unpackedDir.GetPlatform();
+                if (platform == null || platform.platform == GamePlatform.None || platform.version == GameVersion.None)
+                    Assert.Fail("GetPlatform Failed: " + Path.GetFileName(unpackedDir));
+
+                var expArchiveName = Packer.RecycleUnpackedDir(unpackedDir);
+                if (String.IsNullOrEmpty(expArchiveName))
                     Assert.Fail("RecycleArtifactsFolder Method Failed ...");
 
-                var actArchivePath = packerUnpacker.PackSong(unpackedDir, expArchivePath);
+                var actArchivePath = packerUnpacker.PackSong(unpackedDir, expArchiveName);
 
                 if (!File.Exists(actArchivePath))
                     Assert.Fail("Pack Method Failed: " + Path.GetFileName(unpackedDir));
 
-                Assert.AreEqual(expArchivePath, actArchivePath);
+                Assert.AreEqual(expArchiveName, actArchivePath);
+
                 archivePaths.Add(actArchivePath);
             }
 
@@ -110,34 +118,38 @@ namespace RocksmithToolkitGUI.Tests
         /// Unit test for RepackAppId
         /// TestCases commented out to reduce messagebox verbosity
         ///</summary>        
-        // [TestCase("69")] // not valid 6 digits - show messagebox
-        // [TestCase("248769")] // not valid ODLC - show messagebox
-        [TestCase("492988")] // valid ODLC Bob Marley, Three Little Birds - no messagebox 
-
-
-        public void TestRepackAppId(string appId)
+        // [TestCase("69", GameVersion.RS2014)] // not valid 6 digits - show messagebox
+        // [TestCase("248769", GameVersion.RS2014)] // not valid ODLC - show messagebox
+        [TestCase("492988", GameVersion.RS2014)] // free ODLC Bob Marley, Three Little Birds - no messagebox 
+        [TestCase("206102", GameVersion.RS2012)] // free ODLC Holiday Song Pack - no messagebox
+        public void TestRepackAppId(string appId, GameVersion gameVersion)
         {
-            // confirm PackSong has been tested and saved
-            if (archivePaths == null)
-                TestPackSong();
+            // start fresh
+            TestSettings.Instance.CopyResources();
+            if (!TestSettings.Instance.ArchivePaths.Any())
+                Assert.Fail("TestSettings CopyResources Failed ...");
 
+            packerUnpacker.Version = gameVersion;
             packerUnpacker.AppId = appId;
 
-            foreach (var archivePath in archivePaths)
+            foreach (var archivePath in TestSettings.Instance.ArchivePaths)
             {
-                // test AppId validation method
-                packerUnpacker.SelectComboAppId(packerUnpacker.AppId);
+                var platform = archivePath.GetPlatform();
+                if (gameVersion != platform.version)
+                    continue;
 
                 // console package does not have an AppId
-                var platform = archivePath.GetPlatform();
                 if (platform.IsConsole)
                 {
                     // NOTE: when unit test is finished, double click the test result to see this message
                     Debug.WriteLine("---------------------------------");
-                    Debug.WriteLine("TestRepackAppId skipped PS3 file: " + Path.GetFileName(archivePath));
+                    Debug.WriteLine("TestRepackAppId skipped console files: " + Path.GetFileName(archivePath));
                     Debug.WriteLine("---------------------------------");
                     continue;
                 }
+
+                // test AppId validation method
+                packerUnpacker.SelectComboAppId(packerUnpacker.AppId);
 
                 // call background worker method from unit test to avoid threading issues
                 packerUnpacker.UpdateAppId(null, new DoWorkEventArgs(new string[] { archivePath }));
@@ -145,11 +157,15 @@ namespace RocksmithToolkitGUI.Tests
                 if (!File.Exists(archivePath))
                     Assert.Fail("RepackAppId Method Failed: " + Path.GetFileName(archivePath));
 
-                // check if RepackAppId wrote the new AppId
-                var psarcLoader = new PsarcLoader(archivePath, true);
-                var entryAppId = psarcLoader.ExtractAppId();
+                if (gameVersion == GameVersion.RS2012)
+                    continue;
 
-                Assert.AreEqual(packerUnpacker.AppId, entryAppId);
+                // check if RepackAppId wrote the new AppId (RS2014 ONLY)
+                using (var psarcLoader = new PsarcLoader(archivePath, true))
+                {
+                    var entryAppId = psarcLoader.ExtractAppId();
+                    Assert.AreEqual(packerUnpacker.AppId, entryAppId);
+                }
             }
         }
 

@@ -39,7 +39,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void okButton_Click(object sender, EventArgs e)
         {
             // removed limit ... set to 69 for testing
-            //TODO: max 6 gears allowed, 2 necessary and 4 extra.
+            // TODO: max 6 gears allowed, 2 necessary and 4 extra.
             switch (CurrentGameVersion)
             {
                 case GameVersion.RS2012:

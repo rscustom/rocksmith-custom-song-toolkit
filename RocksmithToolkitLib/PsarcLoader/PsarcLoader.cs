@@ -14,7 +14,9 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Ogg;
 using System.Windows.Forms;
 
-// tools for future use
+// PsarcLoader methods are used to load archives into memory
+// More efficient and faster than unpacking to physical files
+// RS2014 ONLY
 
 namespace RocksmithToolkitLib.PsarcLoader
 {
@@ -214,6 +216,7 @@ namespace RocksmithToolkitLib.PsarcLoader
 
             return tkInfo;
         }
+
         public string ExtractAppId()
         {
             var appId = String.Empty;

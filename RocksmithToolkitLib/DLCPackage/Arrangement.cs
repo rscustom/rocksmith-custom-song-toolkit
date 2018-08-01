@@ -97,7 +97,7 @@ namespace RocksmithToolkitLib.DLCPackage
             SetArrType(attr.ArrangementType);
 
             this.ArrangementPropeties = attr.ArrangementProperties;
-            this.ArrangementSort = attr.ArrangementSort;
+            this.ArrangementSort = attr.ArrangementSort;            
             this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
             this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last() * 10);
             this.PluckedType = (PluckedType)attr.ArrangementProperties.BassPick;
@@ -105,8 +105,9 @@ namespace RocksmithToolkitLib.DLCPackage
             this.BonusArr = attr.ArrangementProperties.BonusArr == 1;
             this.Metronome = (Metronome)attr.ArrangementProperties.Metronome;
             this.ToneMultiplayer = attr.Tone_Multiplayer;
+            this.TuningStrings = attr.Tuning;
             this.Id = Guid.Parse(attr.PersistentID);
-            this.MasterId = attr.MasterID_RDV;
+            this.MasterId = attr.MasterID_RDV;            
 
             // Save xml comments
             this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
@@ -114,6 +115,16 @@ namespace RocksmithToolkitLib.DLCPackage
             // Filter out showlights\vocals 
             if (ArrangementType != ArrangementType.Guitar && ArrangementType != ArrangementType.Bass)
                 return;
+
+            // set to standard tuning if no other tuning exists
+            if (this.TuningStrings == null)
+            {
+                if (song.Tuning == null)
+                    song.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
+
+                DetectTuning(song);
+                isDirty = true;
+            }
 
             // Tones
             if (attr.Tones == null) // RS2012
@@ -177,7 +188,6 @@ namespace RocksmithToolkitLib.DLCPackage
                             }
                         }
 
-
                     // song.Tones => id, name, time to apply tone is missing when song.Tones == null
                     if (song.Tones == null && toneId > 0)
                     {
@@ -203,15 +213,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     isDirty = true;
                 }
 
-                // set to standard tuning if no tuning exists
-                if (song.Tuning == null)
-                {
-                    song.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-                    isDirty = true;
-                }
-
-                this.TuningStrings = song.Tuning;
-
                 // NOTE: any serializing coverts abridged xml to standard xml arrangement
                 // so only serialize if necessary to fix errors
                 if (isDirty)
@@ -225,19 +226,22 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 // do a quick check/repair of low bass tuning, only for RS2014 bass arrangements
                 if (fixLowBass && song.Version == "7" && this.ArrangementType == ArrangementType.Bass)
+                {
                     if (attr.Tuning.String0 < -4 && attr.CentOffset != -1200.0)
+                    {
                         if (TuningFrequency.ApplyBassFix(this, fixLowBass))
                         {
                             attr.CentOffset = -1200.0; // Force 220Hz
                             song.Tuning = Song2014.LoadFromFile(xmlSongFile).Tuning;
                         }
+                    }
+                }
             }
 
-            // Set Final Tuning
-            DetectTuning(song);
             this.CapoFret = attr.CapoFret;
             if (attr.CentOffset != null)
                 this.TuningPitch = attr.CentOffset.Cents2Frequency();
+
         }
 
         /// <summary>
@@ -247,8 +251,8 @@ namespace RocksmithToolkitLib.DLCPackage
         private void DetectTuning(Song2014 song)
         {
             var t = TuningDefinitionRepository.Instance.Detect(song.Tuning, GameVersion.RS2014, ArrangementType == ArrangementType.Guitar);
-            Tuning = t.UIName;
-            TuningStrings = t.Tuning;
+            this.Tuning = t.UIName;
+            this.TuningStrings = t.Tuning;
         }
 
         /// <summary>

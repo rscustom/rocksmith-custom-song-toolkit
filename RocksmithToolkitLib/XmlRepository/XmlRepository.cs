@@ -30,7 +30,6 @@ namespace RocksmithToolkitLib.XmlRepository
         {
             // path fixed for unit testing compatiblity
             get { return Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, FileName); }
-            // get { return Path.Combine(Application.StartupPath, FileName); }
         }
 
         /// <summary>

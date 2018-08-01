@@ -22,13 +22,10 @@ namespace RocksmithToolkitLib.Tests
         public void Init()
         {
             TestSettings.Instance.Load();
-            if (!TestSettings.Instance.SrcPaths.Any())
+            if (!TestSettings.Instance.ResourcePaths.Any())
                 Assert.Fail("TestSettings Load Failed ...");
 
             unpackedDirs = new List<string>();
-
-            // empty the 'Local Settings/Temp' directory before starting
-            DirectoryExtension.SafeDelete(Path.GetTempPath());
         }
 
         [TestFixtureTearDown]
@@ -43,17 +40,17 @@ namespace RocksmithToolkitLib.Tests
         [Test]
         public void TestUnpack()
         {
-            foreach (var srcPath in TestSettings.Instance.SrcPaths)
+            foreach (var srcPath in TestSettings.Instance.ResourcePaths)
             {
                 Platform srcPlatform = srcPath.GetPlatform();
                 if (srcPlatform == null)
                     Assert.Fail("GetPlatform Failed: " + Path.GetFileName(srcPath));
 
-                var unpackedDir = Packer.Unpack(srcPath, TestSettings.Instance.DestDir, srcPlatform, true, true);
+                var unpackedDir = Packer.Unpack(srcPath, TestSettings.Instance.TmpDestDir, srcPlatform, true, true);
                 unpackedDirs.Add(unpackedDir);
             }
 
-            Assert.AreEqual(TestSettings.Instance.SrcPaths.Count, unpackedDirs.Count);
+            Assert.AreEqual(TestSettings.Instance.ResourcePaths.Count, unpackedDirs.Count);
         }
 
 

@@ -43,7 +43,7 @@ namespace RocksmithToolkitGUI.ZpeConverter.ZiggyProEditor
         private void AddSongMetadata(Song rsSong, ZpeSong zigSong)
         {
             rsSong.Arrangement = "Combo";
-            rsSong.Artist = "Unknown Artist";
+            rsSong.ArtistName = "Unknown Artist";
             rsSong.Title = zigSong.Name;
             rsSong.Offset = 0;
             rsSong.Part = 1;

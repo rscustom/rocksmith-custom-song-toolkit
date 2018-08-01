@@ -8,7 +8,7 @@ namespace RocksmithToolkitLib
 {
     public static class ToolkitVersion
     {
-        // NOTE FOR DEVS: 
+        // DEVNOTE: 
         // assembly variables are automatically updated by appveyor.yml and PatchAssemblyVersion.ps1
         //
         // DO NOT MAKE ANY CHANGES HERE ...

@@ -1,4 +1,4 @@
-﻿NOTE FOR DEVELOPERS
+﻿DEVNOTE:
 ===================
 The 'Resources' folder contents are shared and used by the toolkit 
 unit tests, e.g., RocksmithToolkitLib.Tests and RocksmithToolkitGUI.Tests
@@ -14,6 +14,8 @@ Copy to Output Directory = Copy always (to test) or Do not copy (to not test)
 
 HOW TO QUICKLY RUN ALL SOLUTION UNIT TESTS
 ==========================================
+NOTE: ReSharper must be installed in Visual Studio to run unit test.
+
 Before committing a revision to Github, while in Debug mode ...
 
 Right Mouse Click on 'Solution RocksmithCustomSongCreator'

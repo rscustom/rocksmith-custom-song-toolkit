@@ -47,14 +47,14 @@ namespace RocksmithToolkitGUI.Tests
         public void Init()
         {
             TestSettings.Instance.Load();
-            if (!TestSettings.Instance.SrcPaths.Any())
+            if (!TestSettings.Instance.ResourcePaths.Any())
                 Assert.Fail("TestSettings Load Failed ...");
 
             Globals.IsUnitTest = true;
             packageCreator = new DLCPackageCreator.DLCPackageCreator();
 
-            // empty the 'Local Settings/Temp' directory before starting
-            DirectoryExtension.SafeDelete(Path.GetTempPath());
+            // empty the 'Local Settings/Temp/UnitTest' directory before starting
+            DirectoryExtension.SafeDelete(TestSettings.Instance.TmpDestDir);
         }
 
         [TestFixtureTearDown]
@@ -71,10 +71,16 @@ namespace RocksmithToolkitGUI.Tests
         public void TestPackageImport()
         {
             unpackedDirs = new List<string>();
-            foreach (var srcPath in TestSettings.Instance.SrcPaths)
+            foreach (var srcPath in TestSettings.Instance.ResourcePaths)
             {
                 DLCPackageData info = new DLCPackageData();
-                info = packageCreator.PackageImport(srcPath, TestSettings.Instance.DestDir);
+                var platform = srcPath.GetPlatform();
+                if (platform.version == GameVersion.RS2012)
+                    packageCreator.CurrentGameVersion = GameVersion.RS2012;
+                else
+                    packageCreator.CurrentGameVersion = GameVersion.RS2014;
+
+                info = packageCreator.PackageImport(srcPath, TestSettings.Instance.TmpDestDir);
 
                 // validate critical packageCreator/info data
                 Assert.IsNotNull(info);
@@ -89,7 +95,7 @@ namespace RocksmithToolkitGUI.Tests
                 unpackedDirs.Add(packageCreator.UnpackedDir);
             }
 
-            Assert.AreEqual(TestSettings.Instance.SrcPaths.Count, unpackedDirs.Count);
+            Assert.AreEqual(TestSettings.Instance.ResourcePaths.Count, unpackedDirs.Count);
         }
 
         /// <summary>
@@ -100,60 +106,86 @@ namespace RocksmithToolkitGUI.Tests
         public void TestPackageGenerate()
         {
             var archivePaths = new List<string>();
-            
-            foreach (var srcPath in TestSettings.Instance.SrcPaths)
+
+            foreach (var srcPath in TestSettings.Instance.ResourcePaths)
             {
                 // load info from srcPath
                 DLCPackageData info = new DLCPackageData();
-                info = packageCreator.PackageImport(srcPath, TestSettings.Instance.DestDir);
+
+                var platform = srcPath.GetPlatform();
+                if (platform.version == GameVersion.RS2012)
+                    packageCreator.CurrentGameVersion = GameVersion.RS2012;
+                else
+                    packageCreator.CurrentGameVersion = GameVersion.RS2014;
+
+                info = packageCreator.PackageImport(srcPath, TestSettings.Instance.TmpDestDir);
 
                 // set package version, old srcPackage may not have it
                 packageCreator.PackageVersion = "8"; // make easy to identify
-                // consoles do not have AppId, test AppId all other platforms
-                if (!info.PS3 && !info.XBox360)
-                    packageCreator.AppId = "492988"; // use a free RS2014 RM song for test
+                packageCreator.AppId = "492988"; // free Bob Marley - Three Little Birds
                 // stress test package generation for all platforms
                 packageCreator.PlatformPC = true;
-                packageCreator.PlatformMAC = true;
                 packageCreator.PlatformXBox360 = true;
                 packageCreator.PlatformPS3 = true;
+                packageCreator.PlatformMAC = true;
+                // skip testing ddc generation
+                // ConfigRepository.Instance()["ddc_autogen"] = "false";
+
+                if (packageCreator.CurrentGameVersion == GameVersion.RS2012)
+                {
+                    packageCreator.AppId = "206102"; // free Holiday Song Pack
+                    packageCreator.PlatformPS3 = false;
+                    packageCreator.PlatformMAC = false;
+                }
 
                 // set destPath and test getting the package data
-                var archivePath = Path.Combine(TestSettings.Instance.DestDir, Path.GetFileName(srcPath));
+                var archivePath = Path.Combine(TestSettings.Instance.TmpDestDir, Path.GetFileName(srcPath));
                 packageCreator.DestPath = archivePath;
                 var packageData = packageCreator.PackageGenerate();
                 Assert.NotNull(packageData);
 
                 // call background worker method from unit test to avoid threading issues
                 packageCreator.GeneratePackage(null, new DoWorkEventArgs(packageData));
-                var shortPath = archivePath.Replace("_p.psarc", "").Replace("_m.psarc", "").Replace("_ps3.psarc.edat", "").Replace("_xbox", "");
+                var shortPath = archivePath.Replace("_p.psarc", "").Replace("_m.psarc", "").Replace("_ps3.psarc.edat", "").Replace("_xbox", "").Replace(".dat", "");
 
-                if (!File.Exists(shortPath + "_p.psarc"))
-                    Assert.Fail("PC Package Generation Failed ...");
-
-                if (!File.Exists(shortPath + "_m.psarc"))
-                    Assert.Fail("Mac Package Generation Failed ...");
-
-                if (!File.Exists(shortPath + "_xbox"))
-                    Assert.Fail("Xbox Package Generation Failed ...");
-
-                if (!File.Exists(shortPath + "_ps3.psarc.edat"))
-                    Assert.Fail("PS3 Package Generation Failed ...");
-
-                // console files do not contain an AppId
-                if (!info.PS3 && !info.XBox360)
+                if (packageCreator.CurrentGameVersion == GameVersion.RS2012)
                 {
-                    // check if GeneratePackage wrote the new AppId
-                    var psarcLoader = new PsarcLoader(archivePath, true);
-                    var entryAppId = psarcLoader.ExtractAppId();
+                    if (!File.Exists(shortPath + ".dat"))
+                        Assert.Fail("RS1 PC Package Generation Failed ...");
 
-                    Assert.AreEqual(packageCreator.AppId, entryAppId);
+                    if (!File.Exists(shortPath + "_xbox"))
+                        Assert.Fail("RS1 Xbox Package Generation Failed ...");
+                }
+                else
+                {
+                    if (!File.Exists(shortPath + "_p.psarc"))
+                        Assert.Fail("PC Package Generation Failed ...");
+
+                    if (!File.Exists(shortPath + "_m.psarc"))
+                        Assert.Fail("Mac Package Generation Failed ...");
+
+                    if (!File.Exists(shortPath + "_xbox"))
+                        Assert.Fail("Xbox Package Generation Failed ...");
+
+                    if (!File.Exists(shortPath + "_ps3.psarc.edat"))
+                        Assert.Fail("PS3 Package Generation Failed ...");
+
+                    // console files do not contain an AppId
+                    if (!info.PS3 && !info.XBox360)
+                    {
+                        // check if GeneratePackage wrote the new AppId
+                        using (var psarcLoader = new PsarcLoader(archivePath, true))
+                        {
+                            var entryAppId = psarcLoader.ExtractAppId();
+                            Assert.AreEqual(packageCreator.AppId, entryAppId);
+                        }
+                    }
                 }
 
                 archivePaths.Add(archivePath);
             }
 
-            Assert.AreEqual(TestSettings.Instance.SrcPaths.Count, archivePaths.Count);
+            Assert.AreEqual(TestSettings.Instance.ResourcePaths.Count, archivePaths.Count);
         }
 
         /// <summary>
@@ -164,9 +196,15 @@ namespace RocksmithToolkitGUI.Tests
         {
             templatePaths = new List<string>();
 
-            foreach (var srcPath in TestSettings.Instance.SrcPaths)
+            foreach (var srcPath in TestSettings.Instance.ResourcePaths)
             {
-                DLCPackageData info = packageCreator.PackageImport(srcPath, TestSettings.Instance.DestDir);
+                var platform = srcPath.GetPlatform();
+                if (platform.version == GameVersion.RS2012)
+                    packageCreator.CurrentGameVersion = GameVersion.RS2012;
+                else
+                    packageCreator.CurrentGameVersion = GameVersion.RS2014;
+
+                DLCPackageData info = packageCreator.PackageImport(srcPath, TestSettings.Instance.TmpDestDir);
                 // set package version because srcPackage may not have it
                 packageCreator.PackageVersion = "8"; // make easy to identify
                 var templatePath = packageCreator.SaveTemplateFile(packageCreator.UnpackedDir, true);
@@ -177,7 +215,7 @@ namespace RocksmithToolkitGUI.Tests
                 templatePaths.Add(templatePath);
             }
 
-            Assert.AreEqual(TestSettings.Instance.SrcPaths.Count, templatePaths.Count);
+            Assert.AreEqual(TestSettings.Instance.ResourcePaths.Count, templatePaths.Count);
         }
 
         /// <summary>

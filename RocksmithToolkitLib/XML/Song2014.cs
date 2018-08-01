@@ -464,18 +464,15 @@ namespace RocksmithToolkitLib.XML
             stream.Seek(0, SeekOrigin.Begin);
         }
 
+
         /// <summary>
-        /// Writes count attribute for chosen nodes.
+        /// Writes count attribute for chosen nodes (required/used by DDC)
         /// </summary>
         /// <param name="xml">Xml stream.</param>
         private static void FixArrayAttribs(Stream xml)
         {
-            //string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs",
-            //    "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes"/*DDC*/,
-            //    "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes", "tones"
-            //};
-
-            string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs", "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes" /*DDC*/, "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes", "tones" };
+            string[] anodes = { "phrases", "phraseIterations", "newLinkedDiffs", "linkedDiffs", "phraseProperties", "chordTemplates", "fretHandMuteTemplates", "fretHandMutes",
+                                  /*Required by DDC*/ "ebeats", "sections", "events", "levels", "notes", "chords", "anchors", "handShapes", "tones" };
 
             xml.Position = 0;
             var doc = XDocument.Load(xml);
@@ -1138,7 +1135,7 @@ namespace RocksmithToolkitLib.XML
                 p &= ~CON.NOTE_MASK_PULLOFF;
                 this.PullOff = 1;
             }
-            
+
             // FIXME: either hopo is missing or it does not exist
 
             if ((p & CON.NOTE_MASK_HARMONIC) != 0)
@@ -1255,6 +1252,8 @@ namespace RocksmithToolkitLib.XML
                 chord.Time = notesSection.Notes[i].Time;
                 // Console.WriteLine("Song2014 chord.ChordId = " + chord.ChordId);
 
+                // TODO: make changes here to fix 'strum =' issue
+
                 // TECHNIQUES
                 chord.parseChordMask(notesSection.Notes[i], notesSection.Notes[i].NoteMask);
 
@@ -1341,6 +1340,8 @@ namespace RocksmithToolkitLib.XML
                 p &= ~CON.NOTE_MASK_DOUBLESTOP;
             if ((p & CON.NOTE_MASK_ARPEGGIO) != 0)
                 p &= ~CON.NOTE_MASK_ARPEGGIO;
+
+            // TODO: make changes to fix inacurrate 'strum ='
 
             this.Strum = "down";
             if ((p & CON.NOTE_MASK_STRUM) != 0)

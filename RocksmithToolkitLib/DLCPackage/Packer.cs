@@ -37,10 +37,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region PACK
         /// <summary>
-        /// Pack song artifacts located in the source path and saves archive to the destination path file
+        /// Pack Song Artifacts into a Song Archive file
         /// </summary>
-        /// <param name="srcPath">Unpacked Artifacts Path</param>
-        /// <param name="destPath">Destination Archive Path</param>
+        /// <param name="srcPath">Unpacked Artifacts Directory Path</param>
+        /// <param name="destPath">Full Destination Archive Path (including file name and extension)</param>
         /// <param name="predifinedPlatform">Desired Output Platform</param>
         /// <param name="updateSng">If set to <c>true</c> update the SNG files</param>
         /// <param name="updateManifest">If set to <c>true</c> update the manifest files</param>
@@ -54,8 +54,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
                 srcPlatform = predefinedPlatform;
-
-            //TODO: check validity of file name here
 
             switch (srcPlatform.platform)
             {
@@ -84,15 +82,15 @@ namespace RocksmithToolkitLib.DLCPackage
         #region UNPACK
 
         /// <summary>
-        /// Unpack archive path and return the unpacked artifacts path
+        /// Unpack Song Archive file to an Artifacts Directory
         /// </summary>
-        /// <param name="srcPath">Source Archive Path</param>
-        /// <param name="destPath">Unpacked Artifacts Path</param>
+        /// <param name="srcPath">Full Source Archive Path</param>
+        /// <param name="destDirPath">Unpacked Artifacts Directory Path</param>
         /// <param name="predefinedPlatform">Predefined source platform</param>
         /// <param name="decodeAudio">If set to <c>true</c> decode audio</param>
         /// <param name="overwriteSongXml">If set to <c>true</c> overwrite existing song (EOF) xml with SNG data</param>       
         /// <returns>Unpacked Directory Path</returns>
-        public static string Unpack(string srcPath, string destPath, Platform predefinedPlatform = null, bool decodeAudio = false, bool overwriteSongXml = false)
+        public static string Unpack(string srcPath, string destDirPath, Platform predefinedPlatform = null, bool decodeAudio = false, bool overwriteSongXml = false)
         {
             ExternalApps.VerifyExternalApps();
             Platform srcPlatform = srcPath.GetPlatform();
@@ -100,8 +98,9 @@ namespace RocksmithToolkitLib.DLCPackage
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
                 srcPlatform = predefinedPlatform;
 
-            var unpackedDir = GetUnpackedDir(srcPath, destPath, srcPlatform);
-            var useCryptography = srcPlatform.version == GameVersion.RS2012; // Cryptography way is used only for PC in Rocksmith 1
+            // Cryptography way is used only for PC in Rocksmith 1            
+            var useCryptography = srcPlatform.version == GameVersion.RS2012;
+            var unpackedDir = String.Empty;
 
             switch (srcPlatform.platform)
             {
@@ -109,7 +108,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 case GamePlatform.Mac:
                     if (srcPlatform.version == GameVersion.RS2014)
                         using (var inputStream = File.OpenRead(srcPath))
-                            ExtractPSARC(srcPath, destPath, inputStream, srcPlatform);
+                        {
+                            unpackedDir = ExtractPSARC(srcPath, destDirPath, inputStream, srcPlatform);
+                        }
                     else
                     {
                         using (var inputFileStream = File.OpenRead(srcPath))
@@ -120,15 +121,16 @@ namespace RocksmithToolkitLib.DLCPackage
                             else
                                 inputFileStream.CopyTo(inputStream);
 
-                            ExtractPSARC(srcPath, destPath, inputStream, srcPlatform);
+                            unpackedDir = ExtractPSARC(srcPath, destDirPath, inputStream, srcPlatform);
                         }
                     }
+                    var debugMe = "Check the unpackedDir which now has original artifacts";
                     break;
                 case GamePlatform.XBox360:
-                    UnpackXBox360Package(srcPath, destPath, srcPlatform);
+                    unpackedDir = UnpackXBox360Package(srcPath, destDirPath, srcPlatform);
                     break;
                 case GamePlatform.PS3:
-                    UnpackPS3Package(srcPath, destPath, srcPlatform);
+                    unpackedDir = UnpackPS3Package(srcPath, destDirPath, srcPlatform);
                     break;
                 case GamePlatform.None:
                     throw new InvalidOperationException("Platform not found :(");
@@ -141,7 +143,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (decodeAudio)
             {
                 GlobalExtension.ShowProgress("Decoding Audio ...", 50);
-                var audioFiles = Directory.EnumerateFiles(unpackedDir, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
+                var audioFiles = Directory.EnumerateFiles(unpackedDir, "*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem"));
                 foreach (var file in audioFiles)
                 {
                     var outputAudioFileName = Path.Combine(Path.GetDirectoryName(file), String.Format("{0}_fixed{1}", Path.GetFileNameWithoutExtension(file), ".ogg"));
@@ -149,12 +151,21 @@ namespace RocksmithToolkitLib.DLCPackage
                     OggFile.Revorb(file, outputAudioFileName, Path.GetExtension(file).GetWwiseVersion());
                 }
 
-                //GlobalExtension.HideProgress();
+                // convert album artwork dds to common png
+                var ddsFiles = Directory.EnumerateFiles(unpackedDir, "*.dds", SearchOption.AllDirectories).ToList();
+                if (ddsFiles.Any())
+                {
+                    // use the best quality (largest) dds file for the conversion
+                    FileInfo[] fileInfos = ddsFiles.Select(fi => new FileInfo(fi)).ToArray();
+                    var ddsFile = fileInfos.OrderByDescending(fl => fl.Length).Select(fn => fn.FullName).FirstOrDefault();
+                    ExternalApps.Dds2Png(ddsFile);
+                }
             }
 
             // for debugging
             //overwriteSongXml = false;
 
+            // PERFORM QUALITY CONTROL CHECKS
             // Extract XML from SNG and check it against the EOF XML (correct bass tuning from older toolkit/EOF xml files)
             if (srcPlatform.version == GameVersion.RS2014)
             {
@@ -183,6 +194,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             att = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles).Entries.ToArray()[0].Value.ToArray()[0].Value;
                     }
 
+                    // create the xml file from sng file
                     var sngContent = Sng2014File.LoadFromFile(sngFile, srcPlatform);
                     using (var outputStream = new FileStream(xmlSngFile, FileMode.Create, FileAccess.ReadWrite))
                     {
@@ -320,18 +332,18 @@ namespace RocksmithToolkitLib.DLCPackage
         // NOTE: See COMMON FUNCTIONS below for PC/MAC UNPACK, aka ExtractPSARC method
 
         // Pack PC/MAC song artifacts located in the source path and save to the destination path file
-        private static string Pack2014(string srcPath, string destPath, Platform platform, bool updateSng, bool updateManifest)
+        private static string Pack2014(string srcDirPath, string destPath, Platform platform, bool updateSng, bool updateManifest)
         {
             using (var psarc = new PSARC.PSARC())
             using (var psarcStream = new MemoryStreamExtension())
             {
                 if (updateSng)
-                    UpdateSng2014(srcPath, platform);
+                    UpdateSng2014(srcDirPath, platform);
 
                 if (updateManifest)
-                    UpdateManifest2014(srcPath, platform);
+                    UpdateManifest2014(srcDirPath, platform);
 
-                WalkThroughDirectory("", srcPath, (a, b) =>
+                WalkThroughDirectory("", srcDirPath, (a, b) =>
                {
                    var fileStream = File.OpenRead(b);
                    psarc.AddEntry(a, fileStream);
@@ -354,13 +366,20 @@ namespace RocksmithToolkitLib.DLCPackage
         #region XBox 360
 
         // Pack Xbox360 song artifacts located in the source path and save to the destination path file
-        private static string PackXBox360(string srcPath, string destPath, Platform platform, bool updateSng, bool updateManifest)
+        private static string PackXBox360(string srcDirPath, string destPath, Platform sourcePlatform, bool updateSng, bool updateManifest)
         {
+            // apply conditional update of SNG and Manifest files
+            if (updateSng && sourcePlatform.version == GameVersion.RS2014)
+            {
+                UpdateSng2014(srcDirPath, new Platform(GamePlatform.XBox360, GameVersion.RS2014));
+                UpdateManifest2014(srcDirPath, new Platform(GamePlatform.XBox360, GameVersion.RS2014));
+            }
+
             var songData = new DLCPackageData();
-            var packageRootPath = Path.Combine(srcPath, ROOT_XBOX360);
+            var packageRoot = Path.Combine(srcDirPath, ROOT_XBOX360);
 
             // get songData from XML arrangement file
-            var xmlPaths = Directory.EnumerateFiles(srcPath, "*.xml", SearchOption.AllDirectories).ToList();
+            var xmlPaths = Directory.EnumerateFiles(srcDirPath, "*.xml", SearchOption.AllDirectories).ToList();
             xmlPaths = xmlPaths.Where(x => !x.Contains("showlight") && !x.Contains("vocal")).ToList();
             if (!xmlPaths.Any())
                 throw new FileLoadException("<ERROR> PackXbox360 Failed.  Could not find psarc archive. ");
@@ -372,45 +391,46 @@ namespace RocksmithToolkitLib.DLCPackage
             songData.SongInfo.Artist = song.ArtistName;
             songData.SignatureType = PackageMagic.CON;
 
-            // get DLCKey (aka Xbox360 artifact folder name) from an XML arrangment file
-            var artifactsFolder = song.AlbumArt.Substring(song.AlbumArt.IndexOf("_") + 1);
-            var artifactsPath = Path.Combine(packageRootPath, artifactsFolder);
-
+            // TODO: confirm/ensure compatibility RS1 and RS2014
             // If 'Root' directory doesn't exist the packing is a conversion process from another platform
-            // Create Xbox360 artifacts folder structure
-            if (!Directory.Exists(packageRootPath))
+            // create Xbox360 artifacts directory structure
+            if (!Directory.Exists(packageRoot))
             {
+                // get DLCKey (aka Xbox360 artifact folder name) from an XML arrangment file
+                var newSongFolder = song.AlbumArt.Substring(song.AlbumArt.IndexOf("_") + 1);
+                var newSongDir = Path.Combine(packageRoot, newSongFolder);
+
                 // Creating new directories
-                Directory.CreateDirectory(packageRootPath);
-                Directory.CreateDirectory(artifactsPath);
+                Directory.CreateDirectory(packageRoot);
+                Directory.CreateDirectory(newSongDir);
 
                 // Create PackageList file
-                var packListFile = Path.Combine(packageRootPath, "PackageList.txt");
-                File.WriteAllText(packListFile, artifactsFolder);
+                var packListFile = Path.Combine(packageRoot, "PackageList.txt");
+                File.WriteAllText(packListFile, newSongFolder);
 
-                var directoryList = Directory.GetDirectories(srcPath, "*", SearchOption.AllDirectories);
-                var fileList = Directory.EnumerateFiles(srcPath, "*.*", SearchOption.AllDirectories);
+                var directoryList = Directory.GetDirectories(srcDirPath, "*", SearchOption.AllDirectories);
+                var fileList = Directory.EnumerateFiles(srcDirPath, "*.*", SearchOption.AllDirectories);
 
                 // Move directories to new path
                 foreach (string dir in directoryList)
-                    Directory.CreateDirectory(dir.Replace(srcPath, artifactsPath));
+                    Directory.CreateDirectory(dir.Replace(srcDirPath, newSongDir));
 
                 // Move files to new path
                 foreach (string file in fileList)
-                    File.Move(file, file.Replace(srcPath, artifactsPath));
+                    File.Move(file, file.Replace(srcDirPath, newSongDir));
 
                 // Delete old empty directories
                 foreach (string emptyDir in directoryList)
                     DirectoryExtension.SafeDelete(emptyDir);
             }
 
-            foreach (var directory in Directory.EnumerateDirectories(packageRootPath))
-            {
-                PackInnerXBox360(packageRootPath, directory);
-            }
+            var packageRootTree = Directory.EnumerateDirectories(packageRoot).ToList();
+            // make psarc files out of all packageRoot directories
+            foreach (var directory in packageRootTree)
+                PackInnerXBox360(packageRoot, directory);
 
             // tweak the xboxHeaderFile 
-            IEnumerable<string> xboxHeaderFiles = Directory.EnumerateFiles(srcPath, "*.txt", SearchOption.TopDirectoryOnly);
+            var xboxHeaderFiles = Directory.EnumerateFiles(srcDirPath, "*.txt", SearchOption.TopDirectoryOnly).ToList();
             if (xboxHeaderFiles.Count() == 1)
             {
                 foreach (var file in xboxHeaderFiles)
@@ -458,23 +478,16 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
 
-            // coditionally update the SNG and Manifest files
-            if (updateSng && platform.version == GameVersion.RS2014)
-            {
-                UpdateSng2014(artifactsPath, platform);
-                UpdateManifest2014(artifactsPath, platform);
-            }
-
-            // let's pack this sucker
-            var xboxFiles = Directory.EnumerateFiles(packageRootPath).ToList();
-            DLCPackageCreator.BuildXBox360Package(destPath, songData, xboxFiles, platform.version);
+            // finally ... put it all together
+            var xboxFiles = Directory.EnumerateFiles(packageRoot).ToList();
+            var archivePath = DLCPackageCreator.BuildXBox360Package(destPath, songData, xboxFiles, sourcePlatform.version);
 
             // comment out to leave psarc for debugging if desired 
-            var psarcPaths = Directory.EnumerateFiles(srcPath, "*.psarc", SearchOption.AllDirectories).ToList();
+            var psarcPaths = Directory.EnumerateFiles(srcDirPath, "*.psarc", SearchOption.AllDirectories).ToList();
             foreach (var psarcPath in psarcPaths)
                 File.Delete(psarcPath);
 
-            return destPath;
+            return archivePath;
         }
 
         private static void PackInnerXBox360(string packageRoot, string directory)
@@ -498,7 +511,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         // Unpack XBox360 package source and return the unpacked directory path
-        private static string UnpackXBox360Package(string srcPath, string destPath, Platform platform)
+        private static string UnpackXBox360Package(string srcPath, string destDirPath, Platform platform)
         {
             LogRecord x = new LogRecord();
             STFSPackage xboxPackage = new STFSPackage(srcPath, x);
@@ -506,7 +519,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 throw new InvalidDataException("Invalid Rocksmith XBox 360 package!" + Environment.NewLine + x.Log);
 
             // always start fresh
-            var unpackedDir = Path.Combine(destPath, Path.GetFileNameWithoutExtension(srcPath)) + String.Format("_{0}", platform.platform.ToString());
+            var unpackedDir = GetUnpackedDir(srcPath, destDirPath, platform);
             DirectoryExtension.SafeDelete(unpackedDir);
             Directory.CreateDirectory(unpackedDir);
             xboxPackage.ExtractPayload(unpackedDir, true, true);
@@ -514,21 +527,19 @@ namespace RocksmithToolkitLib.DLCPackage
             var psarcPaths = Directory.EnumerateFiles(Path.Combine(unpackedDir, ROOT_XBOX360), "*.psarc").ToList();
             if (!psarcPaths.Any())
                 throw new FileLoadException("<ERROR> UnpackXbox360Package Failed.  Could not find psarc archive. ");
-            if (psarcPaths.Count > 1)
-                throw new FileLoadException("<ERROR> UnpackXbox360Package Failed.  Found more than one psarc archive. ");
 
             var artifactsPath = String.Empty;
-            var psarcPath = psarcPaths.First();
             var packageRoot = Path.Combine(unpackedDir, ROOT_XBOX360);
+            foreach (var psarcPath in psarcPaths)
+            {
+                using (var outputFileStream = File.OpenRead(psarcPath))
+                    artifactsPath = ExtractPSARC(psarcPath, packageRoot, outputFileStream, platform, false);
 
-            using (var outputFileStream = File.OpenRead(psarcPath))
-                artifactsPath = ExtractPSARC(psarcPath, packageRoot, outputFileStream, platform, false);
-
-            // comment out to leave psarc for debugging 
-            File.Delete(psarcPath);
+                // comment out to leave psarc for debugging 
+                File.Delete(psarcPath);
+            }
 
             xboxPackage.CloseIO();
-
             return unpackedDir;
         }
 
@@ -542,54 +553,34 @@ namespace RocksmithToolkitLib.DLCPackage
         #region PS3
 
         // Pack PS3 song artifacts located inside the source path and save to the destination path and/or file
-        private static string PackPS3(string srcPath, string destPath, Platform platform, bool updateSng, bool updateManifest)
+        private static string PackPS3(string srcDirPath, string destPath, Platform srcPlatform, bool updateSng, bool updateManifest)
         {
-            // always start with fresh edat subfolder
+            // start fresh
             DirectoryExtension.SafeDelete(PS3_EDAT);
             Directory.CreateDirectory(PS3_EDAT);
 
-            // =========================
-            // TODO: create a generic archive file name generator method for use by all packers
-            //
-            var archiveDestPath = String.Empty;
-            var fileName = Path.GetFileName(destPath);
-            // destPath already contains a valid filename            
-            if (fileName.EndsWith("_ps3.psarc.edat"))
-                archiveDestPath = destPath;
-            else // destPath is a directory
-            {
-                var archiveName = RecycleUnpackedDir(srcPath);
-                archiveDestPath = Path.Combine(destPath, archiveName);
-            }
-            // =========================
-
-            var psarcDestPath = archiveDestPath.Replace(".psarc", "").Replace(".edat", "");
-            var cleanPackagePath = Pack2014(srcPath, psarcDestPath, platform, updateSng, updateManifest);
+            var psarcDestDir = destPath.Replace(".psarc", "").Replace(".edat", "").Replace("_ps3", "") + "_ps3";
+            var cleanPackagePath = Pack2014(srcDirPath, psarcDestDir, srcPlatform, updateSng, updateManifest);
             var rootEdatPath = Path.Combine(PS3_EDAT, Path.GetFileName(cleanPackagePath));
             var encryptedPackagePath = rootEdatPath + ".edat";
 
-            if (File.Exists(cleanPackagePath))
-                File.Move(cleanPackagePath, rootEdatPath);
-            else
+            if (!File.Exists(cleanPackagePath))
                 throw new FileLoadException("<ERROR> Could not find: " + cleanPackagePath);
 
+            File.Move(cleanPackagePath, rootEdatPath);
             var outputMessage = RijndaelEncryptor.EncryptPS3Edat();
+
             if (!File.Exists(encryptedPackagePath) || !outputMessage.Equals(EDAT_MSG))
                 throw new FileLoadException("<ERROR> PS3 Encryption Failed ...");
-            else
-            {
-                if (File.Exists(archiveDestPath))
-                    File.Delete(archiveDestPath);
 
-                File.Copy(encryptedPackagePath, archiveDestPath);
-                // NOTE: edat subfolder contents are available for debugging
-            }
+            File.Copy(encryptedPackagePath, destPath, true);
+            // root edat subfolder contents are still available for debugging
 
-            return archiveDestPath;
+            return destPath;
         }
 
         // Unpack PS3 package and return the unpacked directory path
-        private static string UnpackPS3Package(string srcPath, string destPath, Platform platform)
+        private static string UnpackPS3Package(string srcPath, string destDirPath, Platform platform)
         {
             var outputFilename = Path.Combine(PS3_EDAT, Path.GetFileName(srcPath));
 
@@ -609,48 +600,43 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var psarcDatPaths = Directory.EnumerateFiles(PS3_EDAT, "*.psarc.dat").ToList();
             if (!psarcDatPaths.Any())
-                throw new FileLoadException("<ERROR> UnpackPS3Package Failed.  Could not find psarc.dat archive. ");
+                throw new FileLoadException("<ERROR> UnpackPS3Package Failed.  Could not find psarc.dat archive. " + Environment.NewLine + Environment.NewLine);
             if (psarcDatPaths.Count > 1)
-                throw new FileLoadException("<ERROR> UnpackPS3Package Failed.  Found more than one psarc.dat archive. ");
+                throw new FileLoadException("<ERROR> UnpackPS3Package Failed.  Found more than one psarc.dat archive. " + Environment.NewLine + Environment.NewLine);
 
+            // FIXME: this will blowup for RS1 PS3 files when implimented
             var psarcDatPath = psarcDatPaths.First();
+            var artifactsDir = String.Empty;
+
             using (var outputFileStream = File.OpenRead(psarcDatPath))
-                ExtractPSARC(psarcDatPath, Path.GetDirectoryName(psarcDatPath), outputFileStream, new Platform(GamePlatform.PS3, GameVersion.None));
+                artifactsDir = ExtractPSARC(psarcDatPath, Path.GetDirectoryName(psarcDatPath), outputFileStream, new Platform(GamePlatform.PS3, GameVersion.None));
 
             if (File.Exists(psarcDatPath))
                 File.Delete(psarcDatPath);
 
-            var outName = Path.GetFileNameWithoutExtension(srcPath);
-            var outputDir = Path.Combine(destPath, outName.Substring(0, outName.LastIndexOf(".")) + String.Format("_{0}", platform.platform.ToString()));
+            // always start fresh
+            var unpackedDir = GetUnpackedDir(srcPath, destDirPath, platform);
+            DirectoryExtension.SafeDelete(unpackedDir);
+            Directory.CreateDirectory(unpackedDir);
 
-            foreach (var unpackedDir in Directory.EnumerateDirectories(PS3_EDAT))
-                if (Directory.Exists(unpackedDir))
-                {
-                    if (Directory.Exists(outputDir))
-                        DirectoryExtension.SafeDelete(outputDir);
-
-                    DirectoryExtension.Move(unpackedDir, outputDir, true);
-                }
+            foreach (var edatDir in Directory.EnumerateDirectories(PS3_EDAT))
+                DirectoryExtension.Move(edatDir, unpackedDir, true);
 
             if (outputMessage.IndexOf("Decrypt all EDAT files successfully") < 0)
                 throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output below:" + Environment.NewLine + Environment.NewLine + outputMessage);
 
-            return outputDir;
+            return unpackedDir;
         }
 
         #endregion
 
         #region COMMON FUNCTIONS
 
-        private static string ExtractPSARC(string srcPath, string destPath, Stream inputStream, Platform platform, bool isExternalFile = true)
+        private static string ExtractPSARC(string srcPath, string destPath, Stream inputStream, Platform platform, bool isInitialCall = true)
         {
-            var artifactDirName = Path.GetFileNameWithoutExtension(srcPath);
-            if (isExternalFile)
-                artifactDirName += String.Format("_{0}", platform.platform);
-
-            var artifactDestPath = Path.Combine(destPath, artifactDirName);
-            if (Directory.Exists(artifactDestPath) && isExternalFile)
-                DirectoryExtension.SafeDelete(artifactDestPath);
+            // start fresh on initial call and internalize destPath for recursion
+            if (isInitialCall)
+                destPath = GetUnpackedDir(srcPath, destPath, platform);
 
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream, true);
@@ -659,25 +645,24 @@ namespace RocksmithToolkitLib.DLCPackage
             double progress = 0;
             GlobalExtension.ShowProgress("Inflating Entries ...");
 
+            // InflateEntries - compatible with RS1 and RS2014 files
             foreach (var entry in psarc.TOC)
             {
-                // custom InflateEntries
-                // var debugMe = "Check the TOC";
-                var fullfilename = Path.Combine(artifactDestPath, entry.Name);
+                var inputPath = Path.Combine(destPath, entry.Name);
 
                 if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
                 {
                     psarc.InflateEntry(entry);
-                    ExtractPSARC(fullfilename, artifactDestPath, entry.Data, platform, false);
+                    var outputPath = Path.Combine(destPath, Path.GetFileNameWithoutExtension(entry.Name));
+                    var debugMe = ExtractPSARC(inputPath, outputPath, entry.Data, platform, false);
                 }
                 else
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(fullfilename));
-                    psarc.InflateEntry(entry, fullfilename);
+                    Directory.CreateDirectory(Path.GetDirectoryName(inputPath));
+                    psarc.InflateEntry(entry, inputPath);
+                    // Close
                     if (entry.Data != null)
-                    {
-                        entry.Data.Dispose(); //Close();
-                    }
+                        entry.Data.Dispose();
                 }
 
                 if (!String.IsNullOrEmpty(psarc.ErrMSG)) throw new InvalidDataException(psarc.ErrMSG);
@@ -686,7 +671,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 GlobalExtension.UpdateProgress.Value = (int)progress;
             }
 
-            return artifactDestPath;
+            return destPath;
             // GlobalExtension.HideProgress();
         }
 
@@ -695,19 +680,23 @@ namespace RocksmithToolkitLib.DLCPackage
             try
             {
                 // delete template xml remnants that may have been added by SaveTemplateFile method
-                foreach (var file in Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories).Where(s => s.EndsWith("RS2012.dlc.xml") || s.EndsWith("RS2014.dlc.xml")))
-                    File.Delete(file);
+                var templateFiles = Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories).Where(fn => fn.EndsWith("RS2012.dlc.xml") || fn.EndsWith("RS2014.dlc.xml")).ToList();
+                foreach (var templateFile in templateFiles)
+                    File.Delete(templateFile);
 
-                // delete preview audio file remnants that may have been added by LoadFromFolder method
-                foreach (var file in Directory.EnumerateFiles(sourcePath, "*_preview.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))
-                    File.Delete(file);
+                // delete friendly name audio files that may have been added by LoadFromFolder method
+                var audioFiles = Directory.EnumerateFiles(sourcePath, "song_*.*", SearchOption.AllDirectories).Where(fn => fn.EndsWith(".ogg") || fn.EndsWith(".wem")).ToList();
+                foreach (var audioFile in audioFiles)
+                    File.Delete(audioFile);
 
-                foreach (var file in Directory.EnumerateFiles(sourcePath, "*_fixed.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ogg") || s.EndsWith(".wem")))
-                    if (File.Exists(file)) File.Delete(file);
+                // delete png album artwork files that may have been added by Unpack method (DO NOT DELETE any Xbox360 images)
+                var pngFiles = Directory.EnumerateFiles(sourcePath, "*.png", SearchOption.AllDirectories).Where(fp => !Path.GetFileName(fp).Equals("Package Image.png") && !Path.GetFileName(fp).Equals("Content Image.png")).ToList();
+                foreach (var pngFile in pngFiles)
+                    File.Delete(pngFile);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException(String.Format("Can't delete garbage Audio files!\r\n {0}", ex));
+                throw new InvalidOperationException(String.Format("Can't delete extraneous audio files!\r\n {0}", ex));
             }
         }
 
@@ -727,7 +716,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <returns></returns>
         public static Platform GetPlatform(this string srcPath)
         {
-            //TODO: validate Files by MIME type.
+            //TODO: Rewrite this method, validate Files by MIME type
             if (File.Exists(srcPath))
             {
                 // Get PLATFORM by Extension + Get PLATFORM by pkg EndName
@@ -736,28 +725,17 @@ namespace RocksmithToolkitLib.DLCPackage
                     case ".dat":
                         return new Platform(GamePlatform.Pc, GameVersion.RS2012);
                     case "":
-                        // old method was failing for RS2014 xbox so revised to read file header
-                        // return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
-                        const int HEADER_SIZE = 4;
-                        byte[] bytesFile = new byte[HEADER_SIZE];
-                        using (var fs = File.Open(srcPath, FileMode.Open))
-                        {
-                            fs.Read(bytesFile, 0, HEADER_SIZE);
-                            fs.Close();
-                        }
-
-                        // along with a little bit of belt and suspenders works nicely
-                        if (Encoding.UTF8.GetString(bytesFile) == "CON ")
-                            if (TryGetPlatformByEndName(srcPath).Equals(new Platform(GamePlatform.XBox360, GameVersion.RS2014)))
-                                return new Platform(GamePlatform.XBox360, GameVersion.RS2014);
-
-                        return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
+                        var fileName = Path.GetFileName(srcPath);
+                        if (!fileName.EndsWith("_xbox") && fileName.Length != 42)
+                            break; // keep looking
+                        // must get game version from ConfigRepository for UnitTest compatibility
+                        GameVersion xboxVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
+                        return new Platform(GamePlatform.XBox360, xboxVersion);
                     case ".edat":
                         // must get game version from ConfigRepository for UnitTest compatibility
-                        GameVersion version = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
-                        return new Platform(GamePlatform.PS3, version);
+                        GameVersion ps3Version = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
+                        return new Platform(GamePlatform.PS3, ps3Version);
                     case ".psarc":
-                        var debugMe = TryGetPlatformByEndName(srcPath);
                         return TryGetPlatformByEndName(srcPath);
                     default:
                         return new Platform(GamePlatform.None, GameVersion.None);
@@ -813,6 +791,13 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     return new Platform(GamePlatform.Mac, GameVersion.RS2014);
                 }
+
+                // some RS1 detection
+                if (srcPath.ToLower().EndsWith("_rs1_xbox"))
+                {
+                    return new Platform(GamePlatform.XBox360, GameVersion.RS2012);
+                }
+
 
                 // PS3 2012/2014
                 agg = fullPathInfo.EnumerateFiles("*.nt", SearchOption.TopDirectoryOnly).FirstOrDefault().FullName;
@@ -910,10 +895,12 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void UpdateSng2014(string srcPath, Platform targetPlatform)
+        private static void UpdateSng2014(string artifactsPath, Platform targetPlatform)
         {
-            var xmlFiles = Directory.EnumerateFiles(srcPath, "*_*.xml", SearchOption.AllDirectories).ToList();
-            var sngFolder = Path.Combine(srcPath, "songs", "bin", targetPlatform.GetPathName()[1].ToLower());
+            var xmlFiles = Directory.EnumerateFiles(artifactsPath, "*_*.xml", SearchOption.AllDirectories).ToList();
+            var sngFolder = Path.GetDirectoryName(Directory.EnumerateFiles(artifactsPath, "*_*.sng", SearchOption.AllDirectories).Where(fp => fp.Contains("songs\\bin")).FirstOrDefault());
+            if (String.IsNullOrEmpty(sngFolder))
+                throw new DirectoryNotFoundException("<ERROR> Did not find 'songs\bin' folder ...");
 
             foreach (var xmlFile in xmlFiles)
             {
@@ -964,11 +951,11 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         // Fixes missing and updates showlights to current standards
-        private static void UpdateShowlights(string songDirectory, Platform targetPlatform)
+        private static void UpdateShowlights(string srcPath, Platform targetPlatform)
         {
             bool hasShowlights = true;
             // TODO: provide some pb feedback for long process
-            var info = DLCPackageData.LoadFromFolder(songDirectory, targetPlatform);
+            var info = DLCPackageData.LoadFromFolder(srcPath, targetPlatform);
             var showlightsArr = info.Arrangements.Where(x => x.ArrangementType == ArrangementType.ShowLight).FirstOrDefault();
             var showlightFilePath = showlightsArr.SongXml.File;
 
@@ -1001,17 +988,17 @@ namespace RocksmithToolkitLib.DLCPackage
                 throw new InvalidOperationException("Detected insufficient showlight changes: " + showlight.ShowlightList.Count);
             }
 
-            if (!hasShowlights)
-                UpdateAggegrateGraph(songDirectory, targetPlatform, info);
+            if (!hasShowlights) // better not happen!
+                UpdateAggegrateGraph(srcPath, targetPlatform, info);
         }
 
-        private static void UpdateManifest2014(string songDirectory, Platform targetPlatform)
+        private static void UpdateManifest2014(string srcPath, Platform targetPlatform)
         {
             if (targetPlatform.version != GameVersion.RS2014)
                 return;
 
             string[] fileExt = new string[] { "hsan", "hson" };
-            var hsanFiles = Directory.EnumerateFiles(songDirectory, "*", SearchOption.AllDirectories).Where(fi => fileExt.Any(fi.ToLower().EndsWith)).ToList();
+            var hsanFiles = Directory.EnumerateFiles(srcPath, "*", SearchOption.AllDirectories).Where(fi => fileExt.Any(fi.ToLower().EndsWith)).ToList();
             if (!hsanFiles.Any())
                 throw new DataException("Error: could not find hsan/hson file");
             if (hsanFiles.Count > 1)
@@ -1019,8 +1006,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var manifestHeader = new ManifestHeader2014<AttributesHeader2014>(targetPlatform);
             var hsanFile = hsanFiles.First();
-            var jsonFiles = Directory.EnumerateFiles(songDirectory, "*.json", SearchOption.AllDirectories).ToList();
-            var xmlFiles = Directory.EnumerateFiles(songDirectory, "*.xml", SearchOption.AllDirectories).ToList();
+            var jsonFiles = Directory.EnumerateFiles(srcPath, "*.json", SearchOption.AllDirectories).ToList();
+            var xmlFiles = Directory.EnumerateFiles(srcPath, "*.xml", SearchOption.AllDirectories).ToList();
             //var songFiles = xmlFiles.Where(x => !x.ToLower().Contains("showlight") && !x.ToLower().Contains("vocal")).ToList();
             //var vocalFiles = xmlFiles.Where(x => x.ToLower().Contains("vocal")).ToList();
 
@@ -1080,57 +1067,136 @@ namespace RocksmithToolkitLib.DLCPackage
             manifestHeader.SaveToFile(hsanFile);
 
             // fix missing or upgrade existing showlights
-            UpdateShowlights(songDirectory, targetPlatform);
+            UpdateShowlights(srcPath, targetPlatform);
         }
 
         /// <summary>
-        /// Get unpacked directory path name with platform identifier 
+        /// Get unpacked directory path name or folder name with platform identifiers 
         /// </summary>
         /// <param name="srcPath">Source Path</param>
-        /// <param name="destPath">Destination Path</param>
-        /// <param name="targetPlatform">Destination Platform</param>
-        /// <returns>Unpacked Directory Path Name</returns>
-        public static string GetUnpackedDir(string srcPath, string destPath, Platform targetPlatform)
+        /// <param name="destPath">Destination Path (if 'null' returns an unpacked folder name)</param>
+        /// <param name="targetPlatform">Target Platform</param>
+        /// <param name="safeDelete">Delete unpacked directory if it already exists</param>
+        /// <returns>Unpacked Directory Path or Folder Name</returns>
+        public static string GetUnpackedDir(string srcPath, string destPath, Platform targetPlatform, bool safeDelete = true)
         {
-            var fnameWithoutExt = Path.GetFileNameWithoutExtension(srcPath);
-            if (targetPlatform.platform == GamePlatform.PS3)
-                fnameWithoutExt = fnameWithoutExt.Substring(0, fnameWithoutExt.LastIndexOf("."));
+            // org Xbox360 packages have random hexidecimal file name with no extension
+            var fnameWithoutExt = Path.GetFileName(srcPath);
+            string[] extensions = { "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox", ".dat" }; 
 
-            var unpackedDir = Path.Combine(destPath, String.Format("{0}_{1}", fnameWithoutExt, targetPlatform.platform));
-            if (Directory.Exists(unpackedDir))
-                DirectoryExtension.SafeDelete(unpackedDir);
+            foreach (string extension in extensions)
+            {
+                if (Path.GetFileName(srcPath).EndsWith(extension))
+                {
+                    fnameWithoutExt = Path.GetFileName(srcPath).Replace(extension, "");
+                    break;
+                }
+            }
+
+            var unpackedDir = String.Format("{0}_{1}", fnameWithoutExt, targetPlatform);
+
+            if (!String.IsNullOrEmpty(destPath))
+            {
+                unpackedDir = Path.Combine(destPath, unpackedDir);
+                if (Directory.Exists(unpackedDir) && safeDelete)
+                    DirectoryExtension.SafeDelete(unpackedDir);
+            }
 
             return unpackedDir;
         }
 
         /// <summary>
-        /// Recycle unpacked directory path into archive file name
+        /// Recycle an unpacked directory path or folder into archive file path or name
         /// </summary>
         /// <param name="srcPath"></param>
-        /// <returns>Archive File Name</returns>
+        /// <returns>Archive File Path or Name</returns>
         public static string RecycleUnpackedDir(string srcPath)
         {
-            // looks for long endings first and then short endings
-            var endings = new string[] { "_p_Pc", "_m_Mac", "_ps3_PS3", "_xbox_XBox360", "_Pc", "_Mac", "_PS3", "_XBox360" };
-            string[] extensions = { "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox", "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox" };
+            var destPath = String.Empty;
 
-            // reuse sanitized folder name as default file name if possible
-            var destFileName = Path.GetFileName(srcPath);
-            for (int ndx = 0; ndx < endings.Count(); ndx++)
+            // populate a lookup dictionary with all posible version_platform (keys) and archive file extension (values)
+            var versionPlatformExtension = new Dictionary<string, string>();
+            var versions = Enum.GetValues(typeof(GameVersion)).Cast<GameVersion>().ToList();
+            var platforms = Enum.GetValues(typeof(GamePlatform)).Cast<GamePlatform>().ToList();
+
+            foreach (var platform in platforms)
             {
-                if (destFileName.EndsWith(endings[ndx]))
+                foreach (var version in versions)
                 {
-                    destFileName = destFileName.Substring(0, destFileName.LastIndexOf(endings[ndx], StringComparison.OrdinalIgnoreCase));
-                    destFileName = String.Format("{0}{1}", destFileName, extensions[ndx]);
+                    var versionPlatform = String.Format("_{0}_{1}", version, platform);
+                    var fileExtension = ".TBD"; // To Be Determined
+
+                    if (version == GameVersion.RS2014)
+                    {
+                        switch (platform)
+                        {
+                            case GamePlatform.Pc:
+                                fileExtension = "_p.psarc";
+                                break;
+                            case GamePlatform.Mac:
+                                fileExtension = "_m.psarc";
+                                break;
+                            case GamePlatform.PS3:
+                                fileExtension = "_ps3.psarc.edat";
+                                break;
+                            case GamePlatform.XBox360:
+                                fileExtension = "_xbox";
+                                break;
+                            default:
+                                fileExtension = ".TBD"; // To Be Determined
+                                break;
+                        }
+                    }
+                    else if (version == GameVersion.RS2012)
+                    {
+                        switch (platform)
+                        {
+                            case GamePlatform.Pc:
+                                fileExtension = ".dat";
+                                break;
+                            case GamePlatform.PS3:
+                                fileExtension = "_ps3.dat"; // TODO: confirm extension
+                                break;
+                            case GamePlatform.XBox360:
+                                fileExtension = "_xbox";
+                                break;
+                            default:
+                                fileExtension = ".TBD"; // To Be Determined
+                                break;
+                        }
+                    }
+                    else if (version == GameVersion.None)
+                    {
+                        switch (platform)
+                        {
+                            default:
+                                fileExtension = ".TBD"; // To Be Determined
+                                break;
+                        }
+                    }
+
+                    versionPlatformExtension.Add(versionPlatform, fileExtension);
+                }
+            }
+
+            // now use the lookup dictionary to find the correct archive file extension
+            foreach (KeyValuePair<string, string> item in versionPlatformExtension)
+            {
+                if (srcPath.EndsWith(item.Key))
+                {
+                    var vpIndex = srcPath.LastIndexOf(item.Key, StringComparison.Ordinal);
+                    var pathWoVP = srcPath.Substring(0, vpIndex);
+                    destPath = String.Format("{0}{1}", pathWoVP, item.Value);
                     break;
                 }
             }
 
-            return destFileName;
+            return destPath;
         }
 
         public static string StripPlatformEndName(this string filePath)
         {
+
             if (filePath.EndsWith(GamePlatform.Pc.GetPathName()[2]) ||
                filePath.EndsWith(GamePlatform.Mac.GetPathName()[2]) ||
                filePath.EndsWith(GamePlatform.XBox360.GetPathName()[2]) ||
@@ -1141,6 +1207,64 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             return filePath;
+        }
+
+        public static string GetPlatformEndName(Platform srcPlatform)
+        {
+            var version = srcPlatform.version;
+            var platform = srcPlatform.platform;
+            var fileExtension = ".TBD"; // To Be Determined
+
+            if (version == GameVersion.RS2014)
+            {
+                switch (platform)
+                {
+                    case GamePlatform.Pc:
+                        fileExtension = "_p.psarc";
+                        break;
+                    case GamePlatform.Mac:
+                        fileExtension = "_m.psarc";
+                        break;
+                    case GamePlatform.PS3:
+                        fileExtension = "_ps3.psarc.edat";
+                        break;
+                    case GamePlatform.XBox360:
+                        fileExtension = "_xbox";
+                        break;
+                    default:
+                        fileExtension = ".TBD"; // To Be Determined
+                        break;
+                }
+            }
+            else if (version == GameVersion.RS2012)
+            {
+                switch (platform)
+                {
+                    case GamePlatform.Pc:
+                        fileExtension = ".dat";
+                        break;
+                    case GamePlatform.PS3:
+                        fileExtension = "_ps3.dat"; // TODO: confirm extension
+                        break;
+                    case GamePlatform.XBox360:
+                        fileExtension = "_xbox";
+                        break;
+                    default:
+                        fileExtension = ".TBD"; // To Be Determined
+                        break;
+                }
+            }
+            else if (version == GameVersion.None)
+            {
+                switch (platform)
+                {
+                    default:
+                        fileExtension = ".TBD"; // To Be Determined
+                        break;
+                }
+            }
+
+            return fileExtension;
         }
 
         #endregion

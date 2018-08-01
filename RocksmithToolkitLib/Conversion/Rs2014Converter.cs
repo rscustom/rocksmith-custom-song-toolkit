@@ -84,8 +84,8 @@ namespace RocksmithToolkitLib.Conversion
             rs1Song.SongLength = rs2014Song.SongLength;
             rs1Song.StartBeat = rs2014Song.StartBeat;
             rs1Song.AverageTempo = rs2014Song.AverageTempo;
-            rs1Song.Tuning = rs2014Song.Tuning;
-            rs1Song.Artist = rs2014Song.ArtistName;
+            rs1Song.Tuning = rs2014Song.Tuning;  
+            rs1Song.ArtistName = rs2014Song.ArtistName;
             rs1Song.AlbumName = rs2014Song.AlbumName;
             rs1Song.AlbumYear = rs2014Song.AlbumYear;
 

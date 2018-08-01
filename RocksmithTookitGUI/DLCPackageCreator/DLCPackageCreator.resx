@@ -130,6 +130,16 @@ or the CDLC is locking up in-game during
 startup, then try checking this box and
 regenerate the CDLC.</value>
   </data>
+  <data name="btnPackageImport.ToolTip" xml:space="preserve">
+    <value>NOTE:
+The 'Game Version' must be properly set in the
+'General Config' menu before attempting to
+import either Xbox360 or PS3 song packages.  
+
+For these two package types, the game version
+must match the version of package that is being
+imported, otherwise import errors will result.</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>29</value>
   </metadata>
