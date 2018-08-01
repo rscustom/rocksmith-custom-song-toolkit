@@ -180,6 +180,8 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                 }
             }
 
+            if (agGraphRef == null)
+                Console.WriteLine("<ERROR> Did not find AgType 'logpath' ...");
 
             return agGraphRef;
         }

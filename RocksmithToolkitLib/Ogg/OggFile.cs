@@ -66,7 +66,7 @@ namespace RocksmithToolkitLib.Ogg
             switch (wwiseVersion)
             {
                 case WwiseVersion.Wwise2010:
-                    ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\"", file, outputFileName);
+                    ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\" --pcb \"{2}\"", file, outputFileName, Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_CODEBOOKS));
                     break;
                 case WwiseVersion.Wwise2013:
                     ww2oggProcess.StartInfo.Arguments = String.Format("\"{0}\" -o \"{1}\" --pcb \"{2}\"", file, outputFileName, Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_CODEBOOKS_603));
@@ -272,8 +272,7 @@ namespace RocksmithToolkitLib.Ogg
         /// <returns>wemPath</returns>
         public static string Convert2Wem(string audioPath, int audioQuality = 4, long previewLength = 30000, long chorusTime = 4000)
         {
-            //TODO: check for converted wem's from GUI call and ask if we want generate over or use existing files.
-            // ExternalApps.VerifyExternalApps(); // for testing
+            // TODO: check for converted wem's from GUI call and ask if we want generate over or use existing files.
             var audioPathNoExt = Path.Combine(Path.GetDirectoryName(audioPath), Path.GetFileNameWithoutExtension(audioPath));
             var oggPath = String.Format(audioPathNoExt + ".ogg");
             var wavPath = String.Format(audioPathNoExt + ".wav");

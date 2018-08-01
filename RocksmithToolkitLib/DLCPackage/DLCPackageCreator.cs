@@ -95,14 +95,14 @@ namespace RocksmithToolkitLib.DLCPackage
         #region PACKAGE
 
         /// <summary>
-        /// Generates CDLC package into packagePath.
+        /// Generate package archive(s) (Song RS1 and RS2014, Lesson or Inlay) from DLCPackageData
         /// </summary>
-        /// <param name="packagePath">Package path.</param>
-        /// <param name="info">DLCPackageData.</param>
-        /// <param name="platform">Target platform.</param>
-        /// <param name="dlcType">Package type.</param>
-        /// <param name="pnum">Packages left. Used to control art cache.</param>
-        public static void Generate(string packagePath, DLCPackageData info, Platform platform, DLCPackageType dlcType = DLCPackageType.Song, int pnum = -1)
+        /// <param name="destPath">Archive destination path and file name with/or without extension</param>
+        /// <param name="info">DLCPackageData</param>
+        /// <param name="platform">Target Platform.</param>
+        /// <param name="dlcType">Package Type (Song, Lesson, or Inlay)</param>
+        /// <param name="pnum">Packages remaining to generate (used to control art cache)</param>
+        public static string Generate(string destPath, DLCPackageData info, Platform platform, DLCPackageType dlcType = DLCPackageType.Song, int pnum = -1)
         {
             switch (platform.platform)
             {
@@ -115,6 +115,12 @@ namespace RocksmithToolkitLib.DLCPackage
                         Directory.CreateDirectory(PS3_WORKDIR);
                     break;
             }
+
+            var packageName = Path.GetFileNameWithoutExtension(destPath).StripPlatformEndName();
+            var archivePath = Path.Combine(Path.GetDirectoryName(destPath), packageName);
+
+            if (platform.version == GameVersion.RS2014)
+                archivePath += platform.GetPathName()[2];
 
             using (var packPsarcStream = new MemoryStream())
             {
@@ -140,9 +146,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         throw new InvalidOperationException("Unexpected game version value");
                 }
 
-                var packageName = Path.GetFileNameWithoutExtension(packagePath).StripPlatformEndName();
-                var songFileName = String.Format("{0}{1}", Path.Combine(Path.GetDirectoryName(packagePath), packageName), platform.GetPathName()[2]);
-
                 // SAVE PACKAGE
                 switch (platform.platform)
                 {
@@ -151,11 +154,17 @@ namespace RocksmithToolkitLib.DLCPackage
                         switch (platform.version)
                         {
                             case GameVersion.RS2014:
-                                using (var fl = File.Create(songFileName + ".psarc"))
+                                if (!archivePath.EndsWith(".psarc"))
+                                    archivePath += ".psarc";
+
+                                using (var fl = File.Create(archivePath))
                                     packPsarcStream.CopyTo(fl);
                                 break;
                             case GameVersion.RS2012:
-                                using (var fl = File.Create(songFileName + ".dat"))
+                                if (!archivePath.EndsWith(".dat"))
+                                    archivePath += ".dat";
+
+                                using (var fl = File.Create(archivePath))
                                     RijndaelEncryptor.EncryptFile(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
                                 break;
                             default:
@@ -163,28 +172,36 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
                         break;
                     case GamePlatform.XBox360:
-                        BuildXBox360Package(songFileName, info, FILES_XBOX, platform.version, dlcType);
+                        if (!archivePath.EndsWith("_xbox"))
+                            archivePath += "_xbox";
+
+                        archivePath = BuildXBox360Package(archivePath, info, FILES_XBOX, platform.version, dlcType);
                         break;
                     case GamePlatform.PS3:
-                        // FIXME: this could change the destPath
-                        EncryptPS3EdatFiles(songFileName + ".psarc", platform);
+                        if (!archivePath.EndsWith(".psarc"))
+                            archivePath += ".psarc";
+
+                        archivePath = EncryptPS3EdatFiles(archivePath, platform);
                         break;
                 }
             }
 
-            packPsarc.Dispose();//test this too
+            if (packPsarc != null)
+                packPsarc.Dispose();
+
             FILES_XBOX.Clear();
             FILES_PS3.Clear();
             DeleteTmpFiles(TMPFILES_SNG);
+
             if (pnum <= 1)// doesn't trigger for last one, should be ? == 1 when last package generated.
-            {
                 DeleteTmpFiles(TMPFILES_ART);
-            }
+ 
+            return archivePath;
         }
 
         #region XBox360
 
-        public static void BuildXBox360Package(string destPath, DLCPackageData info, IEnumerable<string> xboxFiles, GameVersion gameVersion, DLCPackageType dlcType = DLCPackageType.Song)
+        public static string BuildXBox360Package(string destPath, DLCPackageData info, IEnumerable<string> xboxFiles, GameVersion gameVersion, DLCPackageType dlcType = DLCPackageType.Song)
         {
             LogRecord x = new LogRecord();
             RSAParams xboxRSA = info.SignatureType == PackageMagic.CON ? new RSAParams(new DJsIO(Resources.XBox360_KV, true)) : new RSAParams(StrongSigned.LIVE);
@@ -202,6 +219,11 @@ namespace RocksmithToolkitLib.DLCPackage
             xboxPackage.CloseIO();
 
             DirectoryExtension.SafeDelete(XBOX_WORKDIR);
+
+            if (File.Exists(destPath))
+                return destPath;
+
+            return String.Empty;
         }
 
         private static HeaderData GetSTFSHeader(this DLCPackageData info, GameVersion gameVersion, DLCPackageType dlcType)
@@ -258,7 +280,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             // source file must be in "/edat" folder in application root directory
             var destPath = String.Empty;
-    
+
             // Due to PS3 encryption limitation - replace spaces in fname with '_'
             if (Path.GetFileName(srcPath).Contains(" "))
                 srcPath = Path.Combine(Path.GetDirectoryName(srcPath), Path.GetFileName(srcPath).Replace(" ", "_"));
@@ -822,7 +844,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     var packageListWriter = new StreamWriter(packageListStream);
 
                     // TOOLKIT VERSION
-                    GenerateToolkitVersion(toolkitVersionStream);
+                    GenerateToolkitVersion(toolkitVersionStream, info.ToolkitInfo.PackageAuthor, info.ToolkitInfo.PackageVersion, info.ToolkitInfo.PackageComment);
                     packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
 
                     // APP ID

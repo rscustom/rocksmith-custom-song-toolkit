@@ -935,6 +935,7 @@
             this.btnPackageImport.Size = new System.Drawing.Size(97, 29);
             this.btnPackageImport.TabIndex = 0;
             this.btnPackageImport.Text = "Import Package";
+            this.toolTip.SetToolTip(this.btnPackageImport, resources.GetString("btnPackageImport.ToolTip"));
             this.btnPackageImport.UseVisualStyleBackColor = false;
             this.btnPackageImport.Click += new System.EventHandler(this.btnPackageImport_Click);
             // 
@@ -1055,12 +1056,10 @@
         private System.Windows.Forms.RadioButton rbRs2014;
         private System.Windows.Forms.GroupBox gbPlatform;
         private System.Windows.Forms.CheckBox chkPlatformMAC;
-        private System.Windows.Forms.GroupBox gbFiles;
         private System.Windows.Forms.GroupBox gbTones;
         private System.Windows.Forms.GroupBox gbArrangements;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label keyboardDescArrLabel;
-        private System.Windows.Forms.GroupBox gbSongInformation;
         private System.Windows.Forms.GroupBox gbGameVersion;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnToneDuplicate;
@@ -1086,5 +1085,7 @@
         private System.Windows.Forms.Label label8;
         private CueTextBox txtJapaneseArtistName;
         private System.Windows.Forms.Label label9;
+        public System.Windows.Forms.GroupBox gbFiles;
+        public System.Windows.Forms.GroupBox gbSongInformation;
     }
 }

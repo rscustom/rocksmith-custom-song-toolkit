@@ -45,9 +45,10 @@ namespace RocksmithToolkitGUI
             Log.Info(//OSVersion on unix will return it's Kernel version, urgh.
                 String.Format("RocksmithToolkitGUI: v{0}\r\n ", ToolkitVersion.RSTKGuiVersion) +
                 String.Format("RocksmithToolkitLib: v{0}\r\n ", ToolkitVersion.RSTKLibVersion()) +
-                String.Format("RocksmithToolkitUpdater: v{0}\r\n ", updaterVersion) +
+                String.Format("RocksmithToolkitUpdater: v{0}\r\n ", updaterVersion) +               
+                String.Format("Dynamic Difficulty Creator: v{0}\r\n ", FileVersionInfo.GetVersionInfo(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_DDC)).ProductVersion) +                
                 String.Format("OS: {0} ({1} bit)\r\n ", Environment.OSVersion, Environment.Is64BitOperatingSystem ? "64" : "32") +
-                String.Format("Runtime: v{0}\r\n ", Environment.Version) +
+                String.Format(".NET Framework Runtime: v{0}\r\n ", Environment.Version) +
                 String.Format("JIT: {0}\r\n ", JitVersionInfo.GetJitVersion()) +
                 String.Format("Wine: {0}", GeneralExtensions._wine())
             );

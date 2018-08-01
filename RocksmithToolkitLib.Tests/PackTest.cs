@@ -22,12 +22,14 @@ namespace RocksmithToolkitLib.Tests
         public void Init()
         {
             TestSettings.Instance.Load();
-            if (!TestSettings.Instance.SrcPaths.Any())
+            if (!TestSettings.Instance.ResourcePaths.Any())
                 Assert.Fail("TestSettings Load Failed ...");
 
-            TestSettings.Instance.Unpack();
+            TestSettings.Instance.UnpackResources();
             if (!TestSettings.Instance.UnpackedDirs.Any())
-                Assert.Fail("TestSettings Unpack Failed ...");
+                Assert.Fail("TestSettings UnpackResources Failed ...");
+
+            unpackedDirs = TestSettings.Instance.UnpackedDirs;
         }
 
         [TestFixtureTearDown]
@@ -44,13 +46,13 @@ namespace RocksmithToolkitLib.Tests
         {
             var archivePaths = new List<string>();
 
-            foreach (var unpackedDir in TestSettings.Instance.UnpackedDirs)
+            foreach (var unpackedDir in unpackedDirs)
             {
                 Platform platform = unpackedDir.GetPlatform();
-                if (platform == null)
-                    Assert.Fail("GetPlatform Failed: " + Path.GetFileName(unpackedDir));
+                if (platform == null || platform.platform == GamePlatform.None || platform.version == GameVersion.None)
+                    Assert.Fail("GetPlatform Method Failed: " + Path.GetFileName(unpackedDir));
 
-                var expArchivePath = Path.Combine(TestSettings.Instance.DestDir, Packer.RecycleUnpackedDir(unpackedDir));
+                var expArchivePath = Packer.RecycleUnpackedDir(unpackedDir);
                 if (String.IsNullOrEmpty(expArchivePath))
                     Assert.Fail("RecycleArtifactsFolder Method Failed ...");
 
@@ -59,11 +61,13 @@ namespace RocksmithToolkitLib.Tests
                 if (!File.Exists(actArchivePath))
                     Assert.Fail("Pack Method Failed: " + Path.GetFileName(unpackedDir));
 
-                Assert.AreEqual(expArchivePath, actArchivePath);
+                if (platform.version == GameVersion.RS2014)
+                    Assert.AreEqual(expArchivePath, actArchivePath);
+
                 archivePaths.Add(actArchivePath);
             }
 
-            Assert.AreEqual(TestSettings.Instance.SrcPaths.Count, archivePaths.Count);
+            Assert.AreEqual(TestSettings.Instance.ResourcePaths.Count, archivePaths.Count);
         }
 
 

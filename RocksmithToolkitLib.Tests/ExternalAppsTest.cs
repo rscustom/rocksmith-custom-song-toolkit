@@ -14,7 +14,7 @@ using RocksmithToolkitLib.Extensions;
 namespace RocksmithToolkitLib.Tests
 {
     [TestFixture]
-    public class AppsTest
+    public class ExternalAppsTest
     {
         private List<string> unpackedDirs;
 
@@ -22,11 +22,8 @@ namespace RocksmithToolkitLib.Tests
         public void Init()
         {
             TestSettings.Instance.Load();
-            if (!TestSettings.Instance.SrcPaths.Any())
+            if (!TestSettings.Instance.ResourcePaths.Any())
                 Assert.Fail("TestSettings Load Failed ...");
-
-            // empty the 'Local Settings/Temp' directory before starting
-            DirectoryExtension.SafeDelete(Path.GetTempPath());
         }
 
         [TestFixtureTearDown]

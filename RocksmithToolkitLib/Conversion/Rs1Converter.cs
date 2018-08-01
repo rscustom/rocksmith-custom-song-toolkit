@@ -9,6 +9,7 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.XML;
 
+
 namespace RocksmithToolkitLib.Conversion
 {
     public class Rs1Converter : IDisposable
@@ -47,10 +48,8 @@ namespace RocksmithToolkitLib.Conversion
                 outputPath = Path.Combine(outputDir, outputFile);
             }
 
-            using (var stream = File.OpenWrite(outputPath))
-            {
-                rsSong.Serialize(stream, false);
-            }
+             using (var stream = File.OpenWrite(outputPath))
+                rsSong.Serialize(stream, true);
 
             return outputPath;
         }
@@ -135,14 +134,13 @@ namespace RocksmithToolkitLib.Conversion
             rsSong2014.Offset = rsSong.Offset;
             rsSong2014.CentOffset = "0";
             rsSong2014.SongLength = rsSong.SongLength;
-            rsSong2014.LastConversionDateTime = DateTime.Now.ToString("MM-dd-yy HH:mm");
+            rsSong2014.LastConversionDateTime = DateTime.Now.ToString("MM-dd-yy HH:mm");           
             rsSong2014.StartBeat = rsSong.Ebeats[0].Time;
             // if RS1 CDLC Song XML originates from EOF it may
             // already contain AverageTempo otherwise it gets calculated 
             rsSong2014.AverageTempo = rsSong.AverageTempo == 0 ? AverageBPM(rsSong) : rsSong.AverageTempo;
-
             // tuning parsed from RS1 song.manifest.json file by RS1LoadFromFolder
-            rsSong2014.Tuning = rsSong.Tuning == null ? new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 } : rsSong.Tuning;
+            rsSong2014.Tuning = rsSong.Tuning == null ? new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 } : rsSong.Tuning;   
             rsSong2014.Capo = 0;
             rsSong2014.ArtistName = rsSong.ArtistName;
             rsSong2014.AlbumName = rsSong.AlbumName;
@@ -515,7 +513,7 @@ namespace RocksmithToolkitLib.Conversion
 
         #region RS1 Tone to RS2 Tone2014
 
-        public Tone2014 ToneToTone2014(Tone rs1Tone, Song rs1Song)
+        public Tone2014 ToneToTone2014(Tone rs1Tone)
         {
             Tone2014 tone2014 = new Tone2014();
             Pedal2014 amp = new Pedal2014();
@@ -534,7 +532,7 @@ namespace RocksmithToolkitLib.Conversion
 
             // setup some possible tone approximation conversions
             // no direct mapping for RS1 -> RS2 Tones
-            // look here IEnumerable<ToneDescriptor> List()
+            // so check IEnumerable<ToneDescriptor> List()
             // TODO: figure out better method for tone mapping
             if (tone2014.Key.ToUpper().Contains("COMBO"))
                 tone2014.Key = "Combo_OD";

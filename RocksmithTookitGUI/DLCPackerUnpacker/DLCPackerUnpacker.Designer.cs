@@ -202,7 +202,7 @@
             this.chkUpdateSng.Size = new System.Drawing.Size(49, 17);
             this.chkUpdateSng.TabIndex = 3;
             this.chkUpdateSng.Text = "SNG";
-            this.toolTip.SetToolTip(this.chkUpdateSng, "If checked generates fresh\r\nSNG files from XML info");
+            this.toolTip.SetToolTip(this.chkUpdateSng, "If checked generates fresh\r\nSNG files from XML info.");
             this.chkUpdateSng.UseVisualStyleBackColor = true;
             // 
             // gbUnpacker
@@ -283,7 +283,7 @@
             this.chkUpdateManifest.TabIndex = 5;
             this.chkUpdateManifest.Text = "Manifest";
             this.toolTip.SetToolTip(this.chkUpdateManifest, "If checked regenerates showlights\r\nand updates existing Manifest files\r\nfrom XML " +
-                    "info\r\n");
+                    "info.");
             this.chkUpdateManifest.UseVisualStyleBackColor = true;
             // 
             // lblCurrentOperation

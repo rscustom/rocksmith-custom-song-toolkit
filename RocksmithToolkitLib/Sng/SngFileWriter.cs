@@ -1088,7 +1088,7 @@ namespace RocksmithToolkitLib.Sng
             w.Write(new byte[32 - arrangement.Length]); //pad to 32 bytes
 
             // artist
-            string artistValue = string.IsNullOrEmpty(s.Artist) ? "DUMMY" : s.Artist;
+            string artistValue = string.IsNullOrEmpty(s.ArtistName) ? "DUMMY" : s.ArtistName;
             if (artistValue.Length > 32)
             {
                 artistValue = artistValue.Substring(0, 32);

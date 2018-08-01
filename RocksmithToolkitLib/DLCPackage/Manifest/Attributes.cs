@@ -83,7 +83,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public string VocalsAssetId { get; set; }
         public bool FirstArrangementInSong { get; set; }
         public float SongDifficulty { get; set; }
-        [JsonIgnore]
+        // [JsonIgnore]
         public int AverageTempo { get; set; }
         [JsonIgnore]
         public string CrowdTempo { get; set; }

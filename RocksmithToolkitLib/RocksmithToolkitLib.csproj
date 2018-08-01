@@ -235,7 +235,6 @@
     <None Include="Resources\XBox360_DLC_image2014.png" />
     <None Include="Resources\cgm_default_icon.png" />
     <None Include="Resources\cgm_default_inlay.png" />
-    <Content Include="PsarcLoader\ReadMe.txt" />
     <Content Include="RocksmithToolkitLib.Config.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -269,10 +268,11 @@ rem RocksmithPreBuild.exe takes care of updating Assembly.cs files and AppVeyor 
 if $(ConfigurationName) == Debug (
 CD "$(SolutionDir)"
 
-rem there are several alternate usages for RocksmithPreBuild.exe
 rem if a 'Type 1 Error' occures check the .git folder for missing critical contents
-rem usual this error occures after .git Garbage Cleanup
+rem usual this error occures after a .git Garbage Cleanup
 rem resyncing the commit usual fixes the error
+
+rem there are several alternate usages for RocksmithPreBuild.exe
 
 cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
 

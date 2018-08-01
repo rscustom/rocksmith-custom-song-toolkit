@@ -15,41 +15,65 @@ namespace RocksmithToolkitLib.Tests
     public class TestSettings : NotifyPropChangedBase
     {
         public string ResourcesDir { get; set; }
-        public List<string> SrcPaths { get; set; }
-        public string DestDir { get; set; }
+        public List<string> ResourcePaths { get; set; }
+        public List<string> ArchivePaths { get; set; }
+        public string TmpDestDir { get; set; }
         public List<string> UnpackedDirs { get; set; }
 
         public void Load()
         {
             ResourcesDir = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "Resources");
-            string[] fileExt = new string[] { "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox", "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox" };
-            SrcPaths = Directory.EnumerateFiles(ResourcesDir, "*", SearchOption.TopDirectoryOnly).Where(fi => fileExt.Any(fi.ToLower().EndsWith)).ToList();
-            if (!SrcPaths.Any())
+            string[] fileExt = new string[] { "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox", ".dat" };
+            ResourcePaths = Directory.EnumerateFiles(ResourcesDir, "*", SearchOption.TopDirectoryOnly).Where(fi => fileExt.Any(fi.ToLower().EndsWith)).ToList();
+            if (!ResourcePaths.Any())
                 throw new Exception("The 'Resources' directory contains no valid archive files ...");
 
-            DestDir = Path.Combine(Path.GetTempPath(), "UnitTest");
+            TmpDestDir = Path.Combine(Path.GetTempPath(), "UnitTest");
+
+            // start with clean 'Local Settings/Temp/UnitTest' directory
+            DirectoryExtension.SafeDelete(TmpDestDir);
+            Directory.CreateDirectory(TmpDestDir);
         }
 
-        public void Unpack()
+        public void CopyResources()
+        {
+            var archivePaths = new List<string>();
+
+            // copy original Resources (song archive files) to DestDir and populate ArchivePaths
+            foreach (var resourcePath in ResourcePaths)
+            {
+                var archivePath = Path.Combine(TmpDestDir, Path.GetFileName(resourcePath));
+                if (File.Exists(archivePath))
+                    File.Delete(archivePath);
+
+                File.Copy(resourcePath, archivePath);
+                archivePaths.Add(archivePath);
+            }
+
+            ArchivePaths = archivePaths;
+            if (ArchivePaths.Count != ResourcePaths.Count)
+                throw new Exception("<ERROR> ArchivePaths.Count does not equal ResourcesPaths.Count ...");
+        }
+
+        public void UnpackResources()
         {
             var unpackedDirs = new List<string>();
-            
-            foreach (var srcPath in SrcPaths)
+
+            // unpack original Resources
+            foreach (var srcPath in ResourcePaths)
             {
                 Platform srcPlatform = srcPath.GetPlatform();
                 if (srcPlatform == null || srcPlatform.platform == GamePlatform.None)
                     throw new Exception("GetPlatform Failed: " + Path.GetFileName(srcPath));
 
                 // unpack artifacts
-                var unpackedDir = Packer.Unpack(srcPath, DestDir, srcPlatform, true, true);
+                var unpackedDir = Packer.Unpack(srcPath, TmpDestDir, srcPlatform, true, true);
                 unpackedDirs.Add(unpackedDir);
             }
 
             UnpackedDirs = unpackedDirs;
-
-
-            if (SrcPaths.Count != UnpackedDirs.Count)
-                throw new Exception("SrcPaths.Count does not equal UnpackedDirs.Count");
+            if (UnpackedDirs.Count != ResourcePaths.Count)
+                throw new Exception("UnpackedDirs.Count does not equal ResourcePaths.Count ...");
         }
 
         private static TestSettings _instance;

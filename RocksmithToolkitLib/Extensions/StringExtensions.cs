@@ -220,7 +220,7 @@ namespace RocksmithToolkitLib.Extensions
         public static string GetValidShortFileName(string artist, string title, string version, bool acronym = false)
         {
             if (String.IsNullOrEmpty(artist) || String.IsNullOrEmpty(title) || String.IsNullOrEmpty(version))
-                throw new DataException("Artist, title, or version field is null or empty.");
+                throw new DataException("Artist, title, or version field is null or empty ...");
 
             string value;
             if (!acronym)

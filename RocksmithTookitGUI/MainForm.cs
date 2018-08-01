@@ -12,7 +12,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.XmlRepository;
 using System.Threading;
 //
-// NOTE TO DEVS: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT ...
+// DEVNOTE: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT ...
 // Modify the RocksmithToolkitLib prebuild event which will update the
 // PatchAssemblyVersion.ps1 file '$AssemblyVersion' and '$AssemblyConfiguration' values 
 //

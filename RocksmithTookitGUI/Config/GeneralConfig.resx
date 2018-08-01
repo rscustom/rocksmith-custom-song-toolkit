@@ -131,8 +131,8 @@ All CDLC arrangements must have DDC for Rocksmith
 2014 Remastered Play Count to function properly.
 
 If you wish to overwrite existing DDC you must first
-remove the existing DDC from the CDLC.  DDC may 
-be removed using the main DDC tab menu feature.</value>
+remove the existing DDC from the CDLC.  DDC may be
+removed/added using the main DDC tab menu feature.</value>
   </data>
   <data name="general_lockappid.ToolTip" xml:space="preserve">
     <value>Lock App ID
