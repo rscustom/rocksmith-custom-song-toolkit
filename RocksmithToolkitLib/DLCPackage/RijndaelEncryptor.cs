@@ -366,17 +366,17 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var errors = String.Empty;
             var files = Directory.EnumerateFiles(Path.Combine(ExternalApps.TOOLKIT_ROOT, "edat"), "*.psarc");
-            
+
             foreach (var InFile in files)
             {
                 var OutFile = InFile + ".edat";
                 var command = String.Format("EncryptEDAT \"{0}\" \"{1}\" {2} {3} {4} {5} {6}",
                     InFile, OutFile, kLic, ContentID, Flags, Type, Version);
-                
+
                 errors += EdatCrypto(command);
             }
 
-        
+
             return String.IsNullOrEmpty(errors) ? Packer.EDAT_MSG : errors;
         }
 
@@ -392,7 +392,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             var errors = String.Empty;
             var files = Directory.EnumerateFiles(Path.Combine(ExternalApps.TOOLKIT_ROOT, "edat"), "*.edat").ToList();
-            
+
             foreach (var InFile in files)
             {
                 var OutFile = Path.ChangeExtension(InFile, ".dat");
@@ -405,11 +405,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
         internal static string EdatCrypto(string command)
         {
-            // Encrypt/decrypt using TrueAncestor Edat Rebuilder v1.4c
+            // Encrypt/Decrypt using TrueAncestor Edat Rebuilder v1.4c
             using (var PS3Process = new Process())
             {
                 PS3Process.StartInfo.FileName = "java";
-                PS3Process.StartInfo.Arguments = String.Format("-cp \"{0}\" -Xms256m -Xmx1024m {1}", ExternalApps.APP_COREJAR, command);
+                PS3Process.StartInfo.Arguments = String.Format("-cp \"{0}\" -Xms256m -Xmx1024m {1}", Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_COREJAR), command);
                 PS3Process.StartInfo.WorkingDirectory = ExternalApps.TOOLKIT_ROOT;
                 PS3Process.StartInfo.UseShellExecute = false;
                 PS3Process.StartInfo.CreateNoWindow = true;

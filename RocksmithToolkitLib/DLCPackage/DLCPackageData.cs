@@ -760,6 +760,14 @@ namespace RocksmithToolkitLib.DLCPackage
                         var friendlyWemFile = Path.Combine(Path.GetDirectoryName(wemFile), Path.GetFileName(Path.ChangeExtension(item.BnkFileName, ".wem")));
                         File.Copy(wemFile, friendlyWemFile);
 
+                        // both bnk files may reference the same wem file 
+                        // where preview audio is the same as main audio
+                        if (wemFiles.Count == 1)
+                        {
+                            data.OggPath = friendlyWemFile;
+                            break;
+                        }
+
                         // more efficient to use friendly name wem files with CDLC Creator
                         if (Path.GetFileName(friendlyWemFile).EndsWith("_preview.wem"))
                             data.OggPreviewPath = friendlyWemFile;
