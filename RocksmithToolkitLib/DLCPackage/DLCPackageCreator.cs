@@ -218,7 +218,7 @@ namespace RocksmithToolkitLib.DLCPackage
             xboxPackage.FlushPackage(xboxRSA);
             xboxPackage.CloseIO();
 
-            DirectoryExtension.SafeDelete(XBOX_WORKDIR);
+            IOExtension.DeleteDirectory(XBOX_WORKDIR);
 
             if (File.Exists(destPath))
                 return destPath;
@@ -327,7 +327,7 @@ namespace RocksmithToolkitLib.DLCPackage
             else
             {
                 if (Directory.Exists(PS3_WORKDIR))
-                    DirectoryExtension.Move(PS3_WORKDIR, String.Format("{0}_PS3", srcPath), true);
+                    IOExtension.MoveDirectory(PS3_WORKDIR, String.Format("{0}_PS3", srcPath), true);
             }
 
             if (encryptResult.IndexOf("No JDK or JRE is installed on your machine") > 0)

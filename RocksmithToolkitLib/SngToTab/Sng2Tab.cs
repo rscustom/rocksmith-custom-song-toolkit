@@ -66,7 +66,7 @@ namespace RocksmithToolkitLib.SngToTab
                 Convert(sngFilePath, outputDir, allDif);
             }
 
-            DirectoryExtension.SafeDelete(sng2tabDir);
+            IOExtension.DeleteDirectory(sng2tabDir);
         }
 
         public void Dispose()

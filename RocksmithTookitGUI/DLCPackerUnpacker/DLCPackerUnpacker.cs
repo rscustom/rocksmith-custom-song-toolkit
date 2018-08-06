@@ -384,7 +384,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 //if (packagePlatform.platform == GamePlatform.XBox360)
                 //    destPath = String.Format("{0}_{1}", destPath, GamePlatform.XBox360.ToString());
 
-                DirectoryExtension.Move(unpackedDir, destPath, true);
+                IOExtension.MoveDirectory(unpackedDir, destPath, true);
                 unpackedDir = destPath;
 
                 // Low Bass Tuning Fix is for Rocksmith 2014 Only
@@ -446,7 +446,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     if (chkVerbose.Checked && !hasBass)
                         MessageBox.Show(Path.GetFileName(srcPath) + "  " + Environment.NewLine + "has no bass arrangement.  ", "Error ... Applying Low Bass Tuning Fix", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    DirectoryExtension.SafeDelete(unpackedDir);
+                    IOExtension.DeleteDirectory(unpackedDir);
                     continue;
                 }
 
@@ -496,7 +496,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(destPath, info, packagePlatform);
 
                 if (!GeneralExtensions.IsInDesignMode)
-                    DirectoryExtension.SafeDelete(unpackedDir);
+                    IOExtension.DeleteDirectory(unpackedDir);
             }
 
             sw.Stop();
@@ -544,7 +544,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                 // clean up now (song pack folder)
                 if (Directory.Exists(songPackDir))
-                    DirectoryExtension.SafeDelete(songPackDir);
+                    IOExtension.DeleteDirectory(songPackDir);
 
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);

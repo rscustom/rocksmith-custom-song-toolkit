@@ -421,7 +421,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 // Delete old empty directories
                 foreach (string emptyDir in directoryList)
-                    DirectoryExtension.SafeDelete(emptyDir);
+                    IOExtension.DeleteDirectory(emptyDir);
             }
 
             var packageRootTree = Directory.EnumerateDirectories(packageRoot).ToList();
@@ -520,7 +520,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // always start fresh
             var unpackedDir = GetUnpackedDir(srcPath, destDirPath, platform);
-            DirectoryExtension.SafeDelete(unpackedDir);
+            IOExtension.DeleteDirectory(unpackedDir);
             Directory.CreateDirectory(unpackedDir);
             xboxPackage.ExtractPayload(unpackedDir, true, true);
 
@@ -556,7 +556,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static string PackPS3(string srcDirPath, string destPath, Platform srcPlatform, bool updateSng, bool updateManifest)
         {
             // start fresh
-            DirectoryExtension.SafeDelete(PS3_EDAT);
+            IOExtension.DeleteDirectory(PS3_EDAT);
             Directory.CreateDirectory(PS3_EDAT);
 
             var psarcDestDir = destPath.Replace(".psarc", "").Replace(".edat", "").Replace("_ps3", "") + "_ps3";
@@ -583,7 +583,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static string UnpackPS3Package(string srcPath, string destDirPath, Platform platform)
         {
             // start fresh
-            DirectoryExtension.SafeDelete(PS3_EDAT);
+            IOExtension.DeleteDirectory(PS3_EDAT);
             Directory.CreateDirectory(PS3_EDAT);
 
             var outputFilename = Path.Combine(PS3_EDAT, Path.GetFileName(srcPath));
@@ -619,11 +619,11 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // start fresh
             var unpackedDir = GetUnpackedDir(srcPath, destDirPath, platform);
-            DirectoryExtension.SafeDelete(unpackedDir);
+            IOExtension.DeleteDirectory(unpackedDir);
             Directory.CreateDirectory(unpackedDir);
 
             foreach (var edatDir in Directory.EnumerateDirectories(PS3_EDAT))
-                DirectoryExtension.Move(edatDir, unpackedDir, true);
+                IOExtension.MoveDirectory(edatDir, unpackedDir, true);
 
             return unpackedDir;
         }
@@ -1099,7 +1099,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 unpackedDir = Path.Combine(destPath, unpackedDir);
                 if (Directory.Exists(unpackedDir) && safeDelete)
-                    DirectoryExtension.SafeDelete(unpackedDir);
+                    IOExtension.DeleteDirectory(unpackedDir);
             }
 
             return unpackedDir;

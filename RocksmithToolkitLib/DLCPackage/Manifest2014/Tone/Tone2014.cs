@@ -172,7 +172,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Tone
                         if (tones.All(a => a.Name != tone.Name))
                             tones.Add(tone);
 
-                DirectoryExtension.SafeDelete(tmpDir);
+                IOExtension.DeleteDirectory(tmpDir);
 
                 return tones;
             }
