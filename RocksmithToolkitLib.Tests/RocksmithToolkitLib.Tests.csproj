@@ -57,19 +57,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\PeppaPig_v2_m.psarc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\PeppaPig_v2_p.psarc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\PeppaPig_v2_ps3.psarc.edat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\PeppaPig_v2_xbox">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\HowToUnitTest.txt" />
+    <None Include="Resources\Peppa-Pig_v1_m.psarc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Peppa-Pig_v1_p.psarc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Peppa-Pig_v1_ps3.psarc.edat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Peppa-Pig_v1_xbox">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\SuperMarioBros_r1.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

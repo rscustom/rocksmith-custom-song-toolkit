@@ -303,7 +303,7 @@ namespace RocksmithToolkitGUI.DDC
                     if (!Directory.Exists(clogDir))
                         Directory.CreateDirectory(clogDir);
 
-                    DirectoryExtension.SafeDelete(plogDir);
+                    IOExtension.DeleteDirectory(plogDir);
                     Directory.CreateDirectory(plogDir);
 
                     foreach (var logFile in logFiles)

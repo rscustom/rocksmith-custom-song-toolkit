@@ -590,7 +590,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
             var binGenericDir = Path.Combine(songPackDir, "songs", "bin", "generic");
 
             if (Directory.Exists(songPackDir))
-                DirectoryExtension.SafeDelete(songPackDir);
+                IOExtension.DeleteDirectory(songPackDir);
 
             Directory.CreateDirectory(songPackDir);
             Directory.CreateDirectory(audioWindowDir);

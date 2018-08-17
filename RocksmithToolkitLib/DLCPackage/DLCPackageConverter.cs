@@ -48,7 +48,7 @@ namespace RocksmithToolkitLib.DLCPackage
             else
                 ConvertPackageForSimilarPlatform(unpackedDir, targetFileName, sourcePlatform, targetPlatform, appId);
 
-            DirectoryExtension.SafeDelete(unpackedDir);
+            IOExtension.DeleteDirectory(unpackedDir);
 
             return String.Empty;
         }
@@ -84,14 +84,14 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (dir.EndsWith(sourceDir0))
                 {
                     var newDir = dir.Substring(0, dir.LastIndexOf(sourceDir0)) + targetDir0;
-                    DirectoryExtension.SafeDelete(newDir);
-                    DirectoryExtension.Move(dir, newDir);
+                    IOExtension.DeleteDirectory(newDir);
+                    IOExtension.MoveDirectory(dir, newDir);
                 }
                 else if (dir.EndsWith(sourceDir1))
                 {
                     var newDir = dir.Substring(0, dir.LastIndexOf(sourceDir1)) + targetDir1;
-                    DirectoryExtension.SafeDelete(newDir);
-                    DirectoryExtension.Move(dir, newDir);
+                    IOExtension.DeleteDirectory(newDir);
+                    IOExtension.MoveDirectory(dir, newDir);
                 }
             }
 
@@ -104,7 +104,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 dirToPack = Directory.GetDirectories(Path.Combine(unpackedDir, Packer.ROOT_XBOX360))[0];
 
             Packer.Pack(dirToPack, targetFileName, targetPlatform, updateSNG);
-            DirectoryExtension.SafeDelete(unpackedDir);
+            IOExtension.DeleteDirectory(unpackedDir);
         }
 
         private static void ConvertPackageRebuilding(string unpackedDir, string targetFileName, Platform sourcePlatform, Platform targetPlatform, string appId)

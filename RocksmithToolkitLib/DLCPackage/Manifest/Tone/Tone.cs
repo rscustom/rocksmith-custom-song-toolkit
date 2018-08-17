@@ -234,7 +234,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Tone
             foreach (var file in toneManifestFiles)
                 tones.Add(ReadFromManifest(file));
 
-            DirectoryExtension.SafeDelete(unpackedDir);
+            IOExtension.DeleteDirectory(unpackedDir);
 
             return tones;
         }

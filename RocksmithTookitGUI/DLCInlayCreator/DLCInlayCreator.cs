@@ -251,7 +251,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
                 var unpackedFolder = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(customCGM));
 
                 if (Directory.Exists(unpackedFolder))
-                    DirectoryExtension.SafeDelete(unpackedFolder);
+                    IOExtension.DeleteDirectory(unpackedFolder);
 
                 ExternalApps.ExtractZip(customCGM, unpackedFolder);
 
@@ -330,7 +330,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             var tmpWorkDir = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(saveFile));
 
             if (Directory.Exists(tmpWorkDir))
-                DirectoryExtension.SafeDelete(tmpWorkDir);
+                IOExtension.DeleteDirectory(tmpWorkDir);
 
             if (!Directory.Exists(tmpWorkDir))
                 Directory.CreateDirectory(tmpWorkDir);
@@ -357,7 +357,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             // Delete temp work dir
             if (Directory.Exists(tmpWorkDir))
-                DirectoryExtension.SafeDelete(tmpWorkDir);
+                IOExtension.DeleteDirectory(tmpWorkDir);
 
             if (MessageBox.Show("Inlay template was saved." + Environment.NewLine + "Would you like to open the folder?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
             {
@@ -558,7 +558,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         public void DLCInlayCreator_Dispose(object sender, EventArgs e)
         {
             if (Directory.Exists(defaultDir))
-                DirectoryExtension.SafeDelete(defaultDir);
+                IOExtension.DeleteDirectory(defaultDir);
         }
 
         private void helpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

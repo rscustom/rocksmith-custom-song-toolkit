@@ -421,7 +421,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                 // Delete old empty directories
                 foreach (string emptyDir in directoryList)
-                    DirectoryExtension.SafeDelete(emptyDir);
+                    IOExtension.DeleteDirectory(emptyDir);
             }
 
             var packageRootTree = Directory.EnumerateDirectories(packageRoot).ToList();
@@ -520,7 +520,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             // always start fresh
             var unpackedDir = GetUnpackedDir(srcPath, destDirPath, platform);
-            DirectoryExtension.SafeDelete(unpackedDir);
+            IOExtension.DeleteDirectory(unpackedDir);
             Directory.CreateDirectory(unpackedDir);
             xboxPackage.ExtractPayload(unpackedDir, true, true);
 
@@ -556,7 +556,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private static string PackPS3(string srcDirPath, string destPath, Platform srcPlatform, bool updateSng, bool updateManifest)
         {
             // start fresh
-            DirectoryExtension.SafeDelete(PS3_EDAT);
+            IOExtension.DeleteDirectory(PS3_EDAT);
             Directory.CreateDirectory(PS3_EDAT);
 
             var psarcDestDir = destPath.Replace(".psarc", "").Replace(".edat", "").Replace("_ps3", "") + "_ps3";
@@ -582,11 +582,11 @@ namespace RocksmithToolkitLib.DLCPackage
         // Unpack PS3 package and return the unpacked directory path
         private static string UnpackPS3Package(string srcPath, string destDirPath, Platform platform)
         {
-            var outputFilename = Path.Combine(PS3_EDAT, Path.GetFileName(srcPath));
-
-            // always start fresh
-            DirectoryExtension.SafeDelete(PS3_EDAT);
+            // start fresh
+            IOExtension.DeleteDirectory(PS3_EDAT);
             Directory.CreateDirectory(PS3_EDAT);
+
+            var outputFilename = Path.Combine(PS3_EDAT, Path.GetFileName(srcPath));
 
             if (File.Exists(srcPath))
                 File.Copy(srcPath, outputFilename, true);
@@ -594,36 +594,36 @@ namespace RocksmithToolkitLib.DLCPackage
                 throw new FileNotFoundException(String.Format("File '{0}' not found.", srcPath));
 
             var outputMessage = RijndaelEncryptor.DecryptPS3Edat();
-
-            if (File.Exists(outputFilename))
-                File.Delete(outputFilename);
+            if (outputMessage.IndexOf("Decrypt all EDAT files successfully") < 0)
+                throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output below:" + Environment.NewLine + outputMessage + Environment.NewLine + Environment.NewLine);
 
             var psarcDatPaths = Directory.EnumerateFiles(PS3_EDAT, "*.psarc.dat").ToList();
             if (!psarcDatPaths.Any())
-                throw new FileLoadException("<ERROR> UnpackPS3Package Failed.  Could not find psarc.dat archive. " + Environment.NewLine + Environment.NewLine);
+                throw new FileLoadException("<ERROR> UnpackPS3Package Failed.  Could not find psarc.dat archive. " + Environment.NewLine + "Verify the OS Environmental Variable 'PATH' is configured properly for Java ..." + Environment.NewLine + Environment.NewLine);
             if (psarcDatPaths.Count > 1)
                 throw new FileLoadException("<ERROR> UnpackPS3Package Failed.  Found more than one psarc.dat archive. " + Environment.NewLine + Environment.NewLine);
 
-            // FIXME: this will blowup for RS1 PS3 files when implimented
+            // FIXME: this will blowup for RS1 PS3 files if/when implimented
             var psarcDatPath = psarcDatPaths.First();
             var artifactsDir = String.Empty;
 
             using (var outputFileStream = File.OpenRead(psarcDatPath))
                 artifactsDir = ExtractPSARC(psarcDatPath, Path.GetDirectoryName(psarcDatPath), outputFileStream, new Platform(GamePlatform.PS3, GameVersion.None));
 
+            // cleanup
+            if (File.Exists(outputFilename))
+                File.Delete(outputFilename);
+            
             if (File.Exists(psarcDatPath))
                 File.Delete(psarcDatPath);
 
-            // always start fresh
+            // start fresh
             var unpackedDir = GetUnpackedDir(srcPath, destDirPath, platform);
-            DirectoryExtension.SafeDelete(unpackedDir);
+            IOExtension.DeleteDirectory(unpackedDir);
             Directory.CreateDirectory(unpackedDir);
 
             foreach (var edatDir in Directory.EnumerateDirectories(PS3_EDAT))
-                DirectoryExtension.Move(edatDir, unpackedDir, true);
-
-            if (outputMessage.IndexOf("Decrypt all EDAT files successfully") < 0)
-                throw new InvalidOperationException("Rebuilder error, please check if .edat files are created correctly and see output below:" + Environment.NewLine + Environment.NewLine + outputMessage);
+                IOExtension.MoveDirectory(edatDir, unpackedDir, true);
 
             return unpackedDir;
         }
@@ -1082,7 +1082,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             // org Xbox360 packages have random hexidecimal file name with no extension
             var fnameWithoutExt = Path.GetFileName(srcPath);
-            string[] extensions = { "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox", ".dat" }; 
+            string[] extensions = { "_p.psarc", "_m.psarc", "_ps3.psarc.edat", "_xbox", ".dat" };
 
             foreach (string extension in extensions)
             {
@@ -1099,7 +1099,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 unpackedDir = Path.Combine(destPath, unpackedDir);
                 if (Directory.Exists(unpackedDir) && safeDelete)
-                    DirectoryExtension.SafeDelete(unpackedDir);
+                    IOExtension.DeleteDirectory(unpackedDir);
             }
 
             return unpackedDir;

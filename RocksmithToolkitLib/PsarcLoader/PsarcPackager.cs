@@ -63,8 +63,8 @@ namespace RocksmithToolkitLib.PsarcLoader
         protected virtual void Dispose(Boolean disposing)
         {
             if (disposing)
-                if (_deleteOnClose)
-                    DirectoryExtension.SafeDelete(packageDir);
+                if (_deleteOnClose && Directory.Exists(packageDir))
+                    IOExtension.DeleteDirectory(packageDir);
         }
 
         public void Dispose()

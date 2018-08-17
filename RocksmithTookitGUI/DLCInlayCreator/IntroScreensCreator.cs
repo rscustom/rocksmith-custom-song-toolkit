@@ -129,8 +129,10 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             // create temp folder for unzipping *.cis file
             var tmpUnzipDir = Path.Combine(tmpWorkDir, "cis_unzip");
-            if (Directory.Exists(tmpUnzipDir)) DirectoryExtension.SafeDelete(tmpUnzipDir, true);
-            if (!Directory.Exists(tmpUnzipDir)) Directory.CreateDirectory(tmpUnzipDir);
+            if (Directory.Exists(tmpUnzipDir))
+                IOExtension.DeleteDirectory(tmpUnzipDir, true);
+            if (!Directory.Exists(tmpUnzipDir)) 
+                Directory.CreateDirectory(tmpUnzipDir);
 
             var srcPath = cisPath;
             var destPath = tmpUnzipDir;
@@ -200,7 +202,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
 
             // Create temp folder for zipping files
             var tmpZipDir = Path.Combine(tmpWorkDir, "cis_zip");
-            if (Directory.Exists(tmpZipDir)) DirectoryExtension.SafeDelete(tmpZipDir, true);
+            if (Directory.Exists(tmpZipDir))
+                IOExtension.DeleteDirectory(tmpZipDir, true);
             Directory.CreateDirectory(tmpZipDir);
 
             // convert user png images to dds images
@@ -248,7 +251,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             if (!File.Exists(destPath)) File.Copy(srcPath, destPath, false);
 
             var tmpCisDir = Path.Combine(tmpWorkDir, "cis_cache");
-            if (Directory.Exists(tmpCisDir)) DirectoryExtension.SafeDelete(tmpCisDir, true);
+            if (Directory.Exists(tmpCisDir)) IOExtension.DeleteDirectory(tmpCisDir, true);
             // CRITCAL PATH
             Directory.CreateDirectory(Path.Combine(tmpCisDir, "cache4\\gfxassets\\views"));
             destPath = tmpCisDir;
@@ -305,7 +308,8 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             if (!File.Exists(destPath)) File.Copy(srcPath, destPath, false);
 
             var tmpModDir = Path.Combine(tmpWorkDir, "cis_static");
-            if (Directory.Exists(tmpModDir)) DirectoryExtension.SafeDelete(tmpModDir, true);
+            if (Directory.Exists(tmpModDir)) 
+                IOExtension.DeleteDirectory(tmpModDir, true);
             Directory.CreateDirectory(tmpModDir);
 
             destPath = tmpModDir;
@@ -584,7 +588,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         public void IntroScreensCreator_Dispose(object sender, EventArgs e)
         {
             if (Directory.Exists(tmpWorkDir))
-                DirectoryExtension.SafeDelete(tmpWorkDir);
+                IOExtension.DeleteDirectory(tmpWorkDir);
         }
 
         ////

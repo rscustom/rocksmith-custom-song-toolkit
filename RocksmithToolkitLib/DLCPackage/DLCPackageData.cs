@@ -760,6 +760,14 @@ namespace RocksmithToolkitLib.DLCPackage
                         var friendlyWemFile = Path.Combine(Path.GetDirectoryName(wemFile), Path.GetFileName(Path.ChangeExtension(item.BnkFileName, ".wem")));
                         File.Copy(wemFile, friendlyWemFile);
 
+                        // both bnk files may reference the same wem file 
+                        // where preview audio is the same as main audio
+                        if (wemFiles.Count == 1)
+                        {
+                            data.OggPath = friendlyWemFile;
+                            break;
+                        }
+
                         // more efficient to use friendly name wem files with CDLC Creator
                         if (Path.GetFileName(friendlyWemFile).EndsWith("_preview.wem"))
                             data.OggPreviewPath = friendlyWemFile;
@@ -843,10 +851,10 @@ namespace RocksmithToolkitLib.DLCPackage
             var toolkitDir = Path.Combine(tmpProjectDir, "Toolkit");
 
             // Start clean/fresh
-            DirectoryExtension.SafeDelete(tmpProjectDir);
-            Directory.CreateDirectory(tmpProjectDir);
-            Directory.CreateDirectory(eofDir);
-            Directory.CreateDirectory(toolkitDir);
+            IOExtension.DeleteDirectory(tmpProjectDir);
+            IOExtension.MakeDirectory(tmpProjectDir);
+            IOExtension.MakeDirectory(eofDir);
+            IOExtension.MakeDirectory(toolkitDir);
 
             // Gather up the project files and songName
             var xmlFiles = Directory.EnumerateFiles(unpackedDir, "*.xml", SearchOption.AllDirectories).ToArray();
@@ -862,43 +870,43 @@ namespace RocksmithToolkitLib.DLCPackage
                 var xmlFile = xmlFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
 
                 // Move all pair JSON\XML
-                File.Move(json, Path.Combine(toolkitDir, name + ".json"));
-                File.Move(xmlFile, Path.Combine(eofDir, name + ".xml"));
+                IOExtension.MoveFile(json, Path.Combine(toolkitDir, name + ".json"));
+                IOExtension.MoveFile(xmlFile, Path.Combine(eofDir, name + ".xml"));
             }
 
             // Move showlights.xml to EOF folder
             var showlightFile = Directory.EnumerateFiles(unpackedDir, "*_showlights.xml", SearchOption.AllDirectories).FirstOrDefault();
             if (!String.IsNullOrEmpty(showlightFile))
-                File.Move(showlightFile, Path.Combine(eofDir, Path.GetFileName(showlightFile)));
+                IOExtension.MoveFile(showlightFile, Path.Combine(eofDir, Path.GetFileName(showlightFile)));
 
             // Move artwork png to EOF folder
             var artPngFiles = Directory.EnumerateFiles(unpackedDir, "*.png", SearchOption.AllDirectories).Where(fp => !Path.GetFileName(fp).Equals("Package Image.png") && !Path.GetFileName(fp).Equals("Content Image.png")).ToList();
             foreach (var pngFile in artPngFiles)
-                File.Move(pngFile, Path.Combine(eofDir, Path.GetFileName(pngFile)));
+                IOExtension.MoveFile(pngFile, Path.Combine(eofDir, Path.GetFileName(pngFile)));
 
             // Move ogg to EOF folder
             var oggFiles = Directory.EnumerateFiles(unpackedDir, "*.ogg", SearchOption.AllDirectories).ToList();
             foreach (var oggFile in oggFiles)
-                File.Move(oggFile, Path.Combine(eofDir, Path.GetFileName(oggFile)));
+                IOExtension.MoveFile(oggFile, Path.Combine(eofDir, Path.GetFileName(oggFile)));
 
             // Move Xbox360 png files to Toolkit folder
             var xbox360PngFiles = Directory.EnumerateFiles(unpackedDir, "*.png", SearchOption.AllDirectories).Where(fp => Path.GetFileName(fp).Equals("Package Image.png") || Path.GetFileName(fp).Equals("Content Image.png")).ToList();
             foreach (var pngFile in xbox360PngFiles)
-                File.Move(pngFile, Path.Combine(toolkitDir, Path.GetFileName(pngFile)));
+                IOExtension.MoveFile(pngFile, Path.Combine(toolkitDir, Path.GetFileName(pngFile)));
 
             // Move art_size.dds to Toolkit folder
             var artFiles = Directory.EnumerateFiles(unpackedDir, "album_*_*.dds", SearchOption.AllDirectories).ToList();
             foreach (var art in artFiles)
-                File.Move(art, Path.Combine(toolkitDir, Path.GetFileName(art)));
+                IOExtension.MoveFile(art, Path.Combine(toolkitDir, Path.GetFileName(art)));
 
             var lyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).ToList();
             foreach (var art in lyricArt)
-                File.Move(art, Path.Combine(toolkitDir, Path.GetFileName(art)));
+                IOExtension.MoveFile(art, Path.Combine(toolkitDir, Path.GetFileName(art)));
 
             // Move song_*.bnk to Toolkit folder
             var bnkFiles = Directory.EnumerateFiles(unpackedDir, "song_*.bnk", SearchOption.AllDirectories).ToList();
             foreach (var bnkFile in bnkFiles)
-                File.Move(bnkFile, Path.Combine(toolkitDir, Path.GetFileName(bnkFile)));
+                IOExtension.MoveFile(bnkFile, Path.Combine(toolkitDir, Path.GetFileName(bnkFile)));
 
             // Move wem to Toolkit folder
             var wemFiles = Directory.EnumerateFiles(unpackedDir, "*.wem", SearchOption.AllDirectories).ToList();
@@ -906,22 +914,22 @@ namespace RocksmithToolkitLib.DLCPackage
                 throw new InvalidDataException("<ERROR> Audio files not found ..." + Environment.NewLine + Environment.NewLine);
 
             foreach (string wemFile in wemFiles)
-                File.Move(wemFile, Path.Combine(toolkitDir, Path.GetFileName(wemFile)));
+                IOExtension.MoveFile(wemFile, Path.Combine(toolkitDir, Path.GetFileName(wemFile)));
 
             // Move Appid for correct template generation.
             var appidFile = Directory.EnumerateFiles(unpackedDir, "*.appid", SearchOption.AllDirectories).FirstOrDefault();
             if (!String.IsNullOrEmpty(appidFile))
-                File.Move(appidFile, Path.Combine(toolkitDir, Path.GetFileName(appidFile)));
+                IOExtension.MoveFile(appidFile, Path.Combine(toolkitDir, Path.GetFileName(appidFile)));
 
             // Move toolkit.version
             var toolkitVersion = Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).FirstOrDefault();
             if (!String.IsNullOrEmpty(toolkitVersion))
-                File.Move(toolkitVersion, Path.Combine(toolkitDir, Path.GetFileName(toolkitVersion)));
+                IOExtension.MoveFile(toolkitVersion, Path.Combine(toolkitDir, Path.GetFileName(toolkitVersion)));
 
             // Remove old unpackedDir
-            DirectoryExtension.SafeDelete(unpackedDir);
+            IOExtension.DeleteDirectory(unpackedDir);
             // Move tmpProjectDir to unpackedDir
-            Directory.Move(tmpProjectDir, unpackedDir);
+            IOExtension.MoveDirectory(tmpProjectDir, unpackedDir);
 
             return unpackedDir;
         }

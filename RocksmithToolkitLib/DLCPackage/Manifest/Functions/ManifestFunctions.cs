@@ -442,7 +442,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             }
         }
 
-        //TODO: investigate on values 0.9 and lower, spotted in DLC
         public void GenerateDynamicVisualDensity(IAttributes attribute, dynamic song, Arrangement arrangement, GameVersion version)
         {
             if (arrangement.ArrangementType == ArrangementType.Vocal)
@@ -461,22 +460,21 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             {
                 const float floorLimit = 5f;
                 attribute.DynamicVisualDensity = new List<float>(20);
-                float endSpeed = Math.Min(45f, Math.Max(floorLimit, arrangement.ScrollSpeed)) / 10f;
+                float endSpeed = Math.Min(50f, Math.Max(floorLimit, arrangement.ScrollSpeed)) / 10f;
+
                 if (song.Levels.Length == 1)
-                {
                     attribute.DynamicVisualDensity = Enumerable.Repeat(endSpeed, 20).ToList();
-                }
                 else
                 {
-                    double beginSpeed = 4.5d;
+                    double beginSpeed = 5.0d;
                     double maxLevel = Math.Min(song.Levels.Length, 20d) - 1;
                     double factor = maxLevel > 0 ? Math.Pow(endSpeed / beginSpeed, 1d / maxLevel) : 1d;
                     for (int i = 0; i < 20; i++)
                     {
-                        if (i >= maxLevel)
-                        {
+                        if (i >= maxLevel - 1)
                             attribute.DynamicVisualDensity.Add(endSpeed);
-                        }
+                        else if (i == 0)
+                            attribute.DynamicVisualDensity.Add((float)beginSpeed);
                         else
                         {
                             double speed = beginSpeed * Math.Pow(factor, i);

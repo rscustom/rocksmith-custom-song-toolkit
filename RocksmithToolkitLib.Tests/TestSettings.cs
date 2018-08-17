@@ -31,7 +31,7 @@ namespace RocksmithToolkitLib.Tests
             TmpDestDir = Path.Combine(Path.GetTempPath(), "UnitTest");
 
             // start with clean 'Local Settings/Temp/UnitTest' directory
-            DirectoryExtension.SafeDelete(TmpDestDir);
+            IOExtension.DeleteDirectory(TmpDestDir);
             Directory.CreateDirectory(TmpDestDir);
         }
 

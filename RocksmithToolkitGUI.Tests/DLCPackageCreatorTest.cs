@@ -54,7 +54,7 @@ namespace RocksmithToolkitGUI.Tests
             packageCreator = new DLCPackageCreator.DLCPackageCreator();
 
             // empty the 'Local Settings/Temp/UnitTest' directory before starting
-            DirectoryExtension.SafeDelete(TestSettings.Instance.TmpDestDir);
+            IOExtension.DeleteDirectory(TestSettings.Instance.TmpDestDir);
         }
 
         [TestFixtureTearDown]

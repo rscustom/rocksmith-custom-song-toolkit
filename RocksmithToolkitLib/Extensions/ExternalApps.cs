@@ -23,7 +23,6 @@ namespace RocksmithToolkitLib.Extensions
         public static readonly string APP_COREJAR = Path.Combine(TOOLS_DIR, "core.jar");
         public static readonly string DDC_DIR = "ddc";
         public static readonly string APP_DDC = Path.Combine(DDC_DIR, "ddc.exe");
-        public static readonly string APP_PACKER = "packer.exe";
 
         public static bool VerifyExternalApps()
         {
@@ -66,12 +65,8 @@ namespace RocksmithToolkitLib.Extensions
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_DDC)))
                 errMsg.AppendLine(APP_DDC);
 
-            if (!GeneralExtensions.IsInDesignMode)
-                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_PACKER)))
-                    errMsg.AppendLine(APP_PACKER);
-
             if (!String.IsNullOrEmpty(errMsg.ToString()))
-                throw new FileNotFoundException("<ERROR> Critical tooolkit files not found:" + Environment.NewLine + errMsg.ToString());
+                throw new FileNotFoundException("<ERROR> Critical toolkit files not found:" + Environment.NewLine + errMsg.ToString());
 
             return true;
         }
@@ -111,13 +106,13 @@ namespace RocksmithToolkitLib.Extensions
         public static void UnpackPsarc(string sourcePath, string destinationPath, string targetPlatform)
         {
             var cmdArgs = String.Format(" --unpack --input=\"{0}\" --platform={2} --version=RS2014 --output=\"{1}\"", sourcePath, destinationPath, targetPlatform);
-            GeneralExtensions.RunExternalExecutable(Path.Combine(TOOLKIT_ROOT, APP_PACKER), true, true, true, cmdArgs);
+            GeneralExtensions.RunExternalExecutable(Path.Combine(TOOLKIT_ROOT, "packer.exe"), true, true, true, cmdArgs);
         }
 
         public static void RepackPsarc(string sourcePath, string destinationPath, string targetPlatform)
         {
             var cmdArgs = String.Format(" --pack --input=\"{0}\" --platform={2} --version=RS2014 --output=\"{1}\"", sourcePath, destinationPath, targetPlatform);
-            GeneralExtensions.RunExternalExecutable(Path.Combine(TOOLKIT_ROOT, APP_PACKER), true, true, true, cmdArgs);
+            GeneralExtensions.RunExternalExecutable(Path.Combine(TOOLKIT_ROOT, "packer.exe"), true, true, true, cmdArgs);
         }
 
         public static void InjectZip(string sourcePath, string destinationPath, bool recurseDir = false, bool filesOnly = false)
