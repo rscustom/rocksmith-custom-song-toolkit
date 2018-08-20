@@ -195,7 +195,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (pnum <= 1)// doesn't trigger for last one, should be ? == 1 when last package generated.
                 DeleteTmpFiles(TMPFILES_ART);
- 
+
             return archivePath;
         }
 
@@ -377,10 +377,12 @@ namespace RocksmithToolkitLib.DLCPackage
                                 new DDSConvertedFile() { sizeX = 128, destinationFile = d128 },
                                 new DDSConvertedFile() { sizeX = 256, destinationFile = d256 }
                             };
+
                             info.ArtFiles = _found;
                         }
                     }
                 }
+
                 if (info.ArtFiles == null)
                 {
                     //Generate art files
@@ -1080,7 +1082,7 @@ namespace RocksmithToolkitLib.DLCPackage
             switch (dlcType)
             {
                 case DLCPackageType.Song:
-                    args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -nomipmap -RescaleBox -dxt1a -overwrite -forcewrite";
+                    args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -nomipmap -RescaleBox -dxt1 -overwrite -forcewrite";
                     break;
                 case DLCPackageType.Lesson:
                     throw new NotImplementedException("Lesson package type not implemented yet :(");
@@ -1089,9 +1091,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -quality_highest -max -dxt5 -nomipmap -alpha -overwrite -forcewrite";
                     break;
             }
-            //RE: Another ExternalApps usage.
+
             foreach (var item in filesToConvert)
-                GeneralExtensions.RunExternalExecutable("tools/nvdxt.exe", true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
+                GeneralExtensions.RunExternalExecutable(ExternalApps.APP_NVDXT, true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
         }
 
         public static void GenerateToolkitVersion(Stream output, string packageAuthor = null, string packageVersion = null, string packageComment = null)
