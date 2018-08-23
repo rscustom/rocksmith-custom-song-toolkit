@@ -38,9 +38,6 @@ namespace RocksmithToolkitLib.Extensions
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_NVDXT)))
                 errMsg.AppendLine(APP_NVDXT);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGCUT)))
-                errMsg.AppendLine("oggCut.exe");
-
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGDEC)))
                 errMsg.AppendLine(APP_OGGCUT);
 
