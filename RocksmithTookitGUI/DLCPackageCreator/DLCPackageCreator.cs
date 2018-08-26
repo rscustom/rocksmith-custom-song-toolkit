@@ -2014,7 +2014,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             ResetPackageCreatorForm();
             GameVersion oldGameVersion;
             var btn = sender as RadioButton;
-           
+
             switch (btn.Text.ToLowerInvariant())
             {
                 case "rocksmith 2014":
@@ -2263,7 +2263,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Album Art File (*.bmp,*.dds,*.gif,*.jpg,*.jpeg,*.png)|*.bmp;*.dds;*.gif;*.jpg;*.jpeg;*.png";
+                ofd.Filter = "Album Art File (*.dds,*.gif,*.jpg,*.png,*.bmp)|*.dds;*.gif;*.jpg;*.png;*.bmp";
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     if (ofd.FileName.IsValidImage())

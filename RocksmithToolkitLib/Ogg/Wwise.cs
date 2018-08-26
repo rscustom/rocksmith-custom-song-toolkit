@@ -55,19 +55,19 @@ namespace RocksmithToolkitLib.Ogg
                 wwiseRoot = ConfigRepository.Instance()["general_wwisepath"]; //could point to wrong dir, so chech back again.
 
             if (String.IsNullOrEmpty(wwiseRoot))
-                throw new FileNotFoundException("Could not find Audiokinetic Wwise installation." + Environment.NewLine + 
+                throw new FileNotFoundException("Could not find Audiokinetic Wwise installation." + Environment.NewLine +
                     "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed.");
 
             var wwiseCLIPath = Directory.EnumerateFiles(wwiseRoot, "WwiseCLI.exe", SearchOption.AllDirectories);
             if (!wwiseCLIPath.Any())
             {
                 // Check for wwise root if user has bad custom path to wwise
-                if(!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WWISEROOT")))
+                if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("WWISEROOT")))
                     wwiseCLIPath = Directory.EnumerateFiles(Environment.GetEnvironmentVariable("WWISEROOT"), "WwiseCLI.exe", SearchOption.AllDirectories);
             }
 
             if (!wwiseCLIPath.Any())
-                throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwiseRoot + Environment.NewLine + 
+                throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwiseRoot + Environment.NewLine +
                     "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed.");
 
             //win32 = 32bit x64 = 64bit
@@ -98,13 +98,13 @@ namespace RocksmithToolkitLib.Ogg
             else
                 Selected = OggFile.WwiseVersion.None;
 
-             if (Selected == OggFile.WwiseVersion.None)
-                throw new FileNotFoundException("You have no compatible version of Audiokinetic Wwise installed." + Environment.NewLine + 
-                    "Install supportend Wwise version, which are v2013.2.x || v2014.1.x || v2015.1.x || v2016.2.x series  " + Environment.NewLine + 
-                    "if you would like to use toolkit's Wwise autoconvert feature.   Did you remember to set the Wwise" + Environment.NewLine + 
+            if (Selected == OggFile.WwiseVersion.None)
+                throw new FileNotFoundException("You have no compatible version of Audiokinetic Wwise installed." + Environment.NewLine +
+                    "Install supportend Wwise version, which are v2013.2.x || v2014.1.x || v2015.1.x || v2016.2.x series  " + Environment.NewLine +
+                    "if you would like to use toolkit's Wwise autoconvert feature.   Did you remember to set the Wwise" + Environment.NewLine +
                     "installation path in the toolkit General Config menu?");
 
-             return wwiseCLIexe;
+            return wwiseCLIexe;
         }
 
         /// <summary>
@@ -115,10 +115,10 @@ namespace RocksmithToolkitLib.Ogg
         /// <param name="audioQuality">Audio quality (-2 to 10).</param>
         public static string LoadWwiseTemplate(string sourcePath, int audioQuality)
         {
-            var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
-            var templateDir = Path.Combine(appRootDir, "Template");
+            // TODO: add Wwise template validation to ExternalApps
+            var templateDir = Path.Combine(ExternalApps.TOOLKIT_ROOT, "Template");
 
-            //Unpack required template here, based on Wwise version installed.
+            // Unpack required template here, based on Wwise version installed.
             switch (Selected)
             {
                 // add support for new versions of Wwise here
@@ -127,7 +127,7 @@ namespace RocksmithToolkitLib.Ogg
                 case OggFile.WwiseVersion.Wwise2015:
                 case OggFile.WwiseVersion.Wwise2016:
                 case OggFile.WwiseVersion.Wwise2017:
-                    ExtractTemplate(Path.Combine(appRootDir, Selected + ".tar.bz2"));
+                    ExtractTemplate(Path.Combine(ExternalApps.TOOLKIT_ROOT, Selected + ".tar.bz2"));
                     break;
                 default:
                     throw new FileNotFoundException("Wwise path is incompatible.");
