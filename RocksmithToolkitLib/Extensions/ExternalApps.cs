@@ -28,7 +28,7 @@ namespace RocksmithToolkitLib.Extensions
         {
             var errMsg = new StringBuilder();
 
-            // Verifying if third party app is in root application directory
+            // Verifying third party apps exist where toolkit expects to find them
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_TOPNG)))
                 errMsg.AppendLine(APP_TOPNG);
 

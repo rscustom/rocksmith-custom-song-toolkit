@@ -2362,6 +2362,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         ///         /// </summary>
         private void btnDevUse_Click(object sender, EventArgs e)
         {
+
+            IOExtension.DeleteDirectory(null);
+
             string srcPath;
             string destPath;
 
