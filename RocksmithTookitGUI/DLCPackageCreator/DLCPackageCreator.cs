@@ -2263,7 +2263,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Album Art File (*.dds,*.gif,*.jpg,*.png,*.bmp)|*.dds;*.gif;*.jpg;*.png;*.bmp";
+                ofd.Filter = "Album Art File (*.dds,*.gif,*.jpg,*.png)|*.dds;*.gif;*.jpg;*.png";
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     if (ofd.FileName.IsValidImage())
