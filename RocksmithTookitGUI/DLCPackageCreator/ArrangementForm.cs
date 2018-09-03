@@ -239,7 +239,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (String.IsNullOrEmpty(_parentControl.AlbumYear)) _parentControl.AlbumYear = _xmlSong.AlbumYear.GetValidYear();
                 // using first three letters of defaultAuthor to make DLCKey unique
                 if (String.IsNullOrEmpty(_parentControl.DLCKey)) _parentControl.DLCKey = String.Format("{0}{1}{2}",
-                                                                                                     defaultAuthor.Substring(0, Math.Min(3, defaultAuthor.Length)), _parentControl.Artist.GetValidAcronym(), _parentControl.SongTitle).GetValidKey(_parentControl.SongTitle);
+                    defaultAuthor.Substring(0, Math.Min(3, defaultAuthor.Length)), _parentControl.Artist.GetValidAcronym(), _parentControl.SongTitle).GetValidKey(_parentControl.SongTitle);
 
                 if (String.IsNullOrEmpty(_parentControl.AlbumSort))
                 {
@@ -271,12 +271,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             UpdateCentOffset();
 
-            // ToneSelector //TODO: add parsing tones events
-            Arrangement.ToneBase = cmbToneBase.SelectedItem.ToString();
-            Arrangement.ToneA = (cmbToneA.SelectedItem != null) ? cmbToneA.SelectedItem.ToString() : ""; //Only need if have more than one tone
-            Arrangement.ToneB = (cmbToneB.SelectedItem != null) ? cmbToneB.SelectedItem.ToString() : "";
-            Arrangement.ToneC = (cmbToneC.SelectedItem != null) ? cmbToneC.SelectedItem.ToString() : "";
-            Arrangement.ToneD = (cmbToneD.SelectedItem != null) ? cmbToneD.SelectedItem.ToString() : "";
+            try
+            {
+                // ToneSelector //TODO: add parsing tones events
+                Arrangement.ToneBase = cmbToneBase.SelectedItem.ToString();
+                Arrangement.ToneA = (cmbToneA.SelectedItem != null) ? cmbToneA.SelectedItem.ToString() : ""; //Only need if have more than one tone
+                Arrangement.ToneB = (cmbToneB.SelectedItem != null) ? cmbToneB.SelectedItem.ToString() : "";
+                Arrangement.ToneC = (cmbToneC.SelectedItem != null) ? cmbToneC.SelectedItem.ToString() : "";
+                Arrangement.ToneD = (cmbToneD.SelectedItem != null) ? cmbToneD.SelectedItem.ToString() : "";
+            }
+            catch (Exception ex)
+            {
+                // catch RS1 and do nothing 
+                var debugMe = ex.Message;
+            }
 
             // Gameplay Path
             Arrangement.RouteMask = RouteMask;
@@ -704,12 +712,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 toneNames.Add(arr.ToneD);
             }
 
-            // FILL TONE COMBO
-            FillToneCombo(cmbToneBase, toneNames, true);
-            FillToneCombo(cmbToneA, toneNames, false);
-            FillToneCombo(cmbToneB, toneNames, false);
-            FillToneCombo(cmbToneC, toneNames, false);
-            FillToneCombo(cmbToneD, toneNames, false);
+            try
+            {
+                // FILL TONE COMBO
+                FillToneCombo(cmbToneBase, toneNames, true);
+                FillToneCombo(cmbToneA, toneNames, false);
+                FillToneCombo(cmbToneB, toneNames, false);
+                FillToneCombo(cmbToneC, toneNames, false);
+                FillToneCombo(cmbToneD, toneNames, false);
+            }
+            catch (Exception ex)
+            {
+                // catch RS1 and do nothing 
+                var debugMe = ex.Message;
+            }
 
             // SELECTING TONES
             cmbToneBase.Enabled = true;

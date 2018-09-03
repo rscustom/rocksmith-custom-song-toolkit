@@ -63,9 +63,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             rbConvert.MouseEnter += rbConvert_MouseEnter;
             numVolSong.MouseEnter += Volume_MouseEnter;
             numVolPreview.MouseEnter += Volume_MouseEnter;
-            rbRs2012.MouseDown += GameVersion_MouseDown;
-            rbRs2014.MouseDown += GameVersion_MouseDown;
-            rbConvert.MouseDown += GameVersion_MouseDown;
+            rbRs2012.MouseUp += GameVersion_MouseUp;
+            rbRs2014.MouseUp += GameVersion_MouseUp;
+            rbConvert.MouseUp += GameVersion_MouseUp;
 
             // Generate package worker
             bwGenerate.DoWork += new DoWorkEventHandler(GeneratePackage);
@@ -2005,7 +2005,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //IsDirty = true;
         }
 
-        private void GameVersion_MouseDown(object sender, MouseEventArgs e)
+        private void GameVersion_MouseUp(object sender, MouseEventArgs e)
         {
             // GameVersion_CheckedChanged usage comes with problems
             // everytime the value of checked is changed the event handler fires
