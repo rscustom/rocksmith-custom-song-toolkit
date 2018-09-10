@@ -1082,7 +1082,7 @@ namespace RocksmithToolkitLib.DLCPackage
             switch (dlcType)
             {
                 case DLCPackageType.Song:
-                    args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -nomipmap -RescaleBox -dxt1 -overwrite -forcewrite";
+                    args = "-file \"{0}\" -output \"{1}\" -prescale {2} {3} -nomipmap -RescaleBox -dxt1a -overwrite -forcewrite";
                     break;
                 case DLCPackageType.Lesson:
                     throw new NotImplementedException("Lesson package type not implemented yet :(");

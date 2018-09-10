@@ -88,6 +88,9 @@ namespace RocksmithToolkitLib.Extensions
         /// <returns></returns>
         public static string GetValidAtaSpaceName(this string value)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             // ODLC artist, title, album character use allows these
             // allow use of accents Über ñice \\p{L} diacritics
             // allow use of unicode punctuation \\p{P\\{S} not currently implimented
@@ -265,6 +268,9 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string GetValidVersion(this string value)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             Regex rgx = new Regex(@"^[\d\.]*");
             var match = rgx.Match(value);
             if (match.Success)
@@ -276,6 +282,9 @@ namespace RocksmithToolkitLib.Extensions
 
         public static string GetValidYear(this string value)
         {
+            if (String.IsNullOrEmpty(value))
+                return String.Empty;
+
             // check for valid four digit song year 
             if (!Regex.IsMatch(value, "^(15[0-9][0-9]|16[0-9][0-9]|17[0-9][0-9]|18[0-9][0-9]|19[0-9][0-9]|20[0-1][0-9])"))
                 value = ""; // clear if not valid

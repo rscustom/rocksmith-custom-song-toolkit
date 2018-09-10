@@ -335,6 +335,7 @@
             this.rbRs2012.TabStop = true;
             this.rbRs2012.Text = "Rocksmith";
             this.rbRs2012.UseVisualStyleBackColor = true;
+            this.rbRs2012.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameVersion_MouseUp);
             // 
             // rbRs2014
             // 
@@ -349,6 +350,7 @@
             this.rbRs2014.TabStop = true;
             this.rbRs2014.Text = "Rocksmith 2014";
             this.rbRs2014.UseVisualStyleBackColor = true;
+            this.rbRs2014.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameVersion_MouseUp);
             // 
             // gbPlatform
             // 
@@ -652,6 +654,7 @@
             this.rbConvert.TabStop = true;
             this.rbConvert.Text = "Convert";
             this.rbConvert.UseVisualStyleBackColor = true;
+            this.rbConvert.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameVersion_MouseUp);
             // 
             // btnPackageImport
             // 
@@ -935,7 +938,7 @@
             // txtAlbumArtPath
             // 
             this.txtAlbumArtPath.BackColor = System.Drawing.SystemColors.Window;
-            this.txtAlbumArtPath.Cue = "Album Art [use 512x512 image size] (*.dds, *.gif, *.jpg, *.png, *.bmp)";
+            this.txtAlbumArtPath.Cue = "Album Art [use 512x512 image size] (*.dds, *.gif, *.jpg, *.png)";
             this.txtAlbumArtPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtAlbumArtPath.ForeColor = System.Drawing.Color.Gray;
             this.txtAlbumArtPath.Location = new System.Drawing.Point(7, 19);
@@ -944,7 +947,6 @@
             this.txtAlbumArtPath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtAlbumArtPath.Size = new System.Drawing.Size(389, 20);
             this.txtAlbumArtPath.TabIndex = 4;
-            this.toolTip.SetToolTip(this.txtAlbumArtPath, "32-bit bmp files only");
             // 
             // numAudioQuality
             // 
