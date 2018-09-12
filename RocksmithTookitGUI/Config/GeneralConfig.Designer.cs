@@ -166,7 +166,7 @@
             this.label19.Size = new System.Drawing.Size(112, 13);
             this.label19.TabIndex = 56;
             this.label19.Text = "Default Quality Factor:";
-            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // creator_qualityfactor
             // 
@@ -289,7 +289,7 @@
             this.label1.Size = new System.Drawing.Size(107, 13);
             this.label1.TabIndex = 41;
             this.label1.Text = "Default Scroll Speed:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // creator_defaulttone
             // 
@@ -309,13 +309,13 @@
             // 
             this.label16.AutoSize = true;
             this.label16.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label16.Location = new System.Drawing.Point(28, 47);
+            this.label16.Location = new System.Drawing.Point(25, 47);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(91, 13);
             this.label16.TabIndex = 54;
             this.label16.Text = "Default Tone File:";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnProjectDir
             // 
@@ -345,13 +345,13 @@
             // 
             this.label15.AutoSize = true;
             this.label15.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label15.Location = new System.Drawing.Point(7, 21);
+            this.label15.Location = new System.Drawing.Point(4, 21);
             this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(112, 13);
             this.label15.TabIndex = 51;
             this.label15.Text = "Default Project Folder:";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // creator_usedefaultauthor
             // 
@@ -386,13 +386,13 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(43, 189);
+            this.label3.Location = new System.Drawing.Point(40, 189);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(76, 13);
             this.label3.TabIndex = 44;
             this.label3.Text = "Game Version:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // general_defaultgameversion
             // 
@@ -424,13 +424,13 @@
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label2.Location = new System.Drawing.Point(46, 19);
+            this.label2.Location = new System.Drawing.Point(43, 19);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(73, 13);
             this.label2.TabIndex = 42;
             this.label2.Text = "App ID (RS1):";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // general_defaultappid_RS2012
             // 
@@ -538,7 +538,7 @@
             // 
             // general_wwisepath
             // 
-            this.general_wwisepath.Cue = "Select WwiseCLI.exe installation path";
+            this.general_wwisepath.Cue = "Select proper version WwiseCLI.exe installation path";
             this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
             this.general_wwisepath.Location = new System.Drawing.Point(122, 160);
@@ -549,19 +549,20 @@
             this.general_wwisepath.Size = new System.Drawing.Size(345, 20);
             this.general_wwisepath.TabIndex = 101;
             this.toolTip.SetToolTip(this.general_wwisepath, "Compatible with Wwise v2013.2.x, v2014.1.x, \r\n2015.1.x, 2016.2.x and 2017.1.x bui" +
-                    "ld series");
+                    "ld series,\r\nfor RS2014 audio conversions, and Wwise\r\nv2010.3.3 only for RS1 audi" +
+                    "o conversions.");
             // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label14.Location = new System.Drawing.Point(53, 163);
+            this.label14.Location = new System.Drawing.Point(49, 163);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(67, 13);
             this.label14.TabIndex = 103;
             this.label14.Text = "Wwise Path:";
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label12
             // 
@@ -651,13 +652,13 @@
             // 
             this.label11.AutoSize = true;
             this.label11.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label11.Location = new System.Drawing.Point(7, 139);
+            this.label11.Location = new System.Drawing.Point(4, 139);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(112, 13);
             this.label11.TabIndex = 50;
             this.label11.Text = "Rocksmith 2014 Path:";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // general_rs1path
             // 
@@ -676,25 +677,25 @@
             // 
             this.label10.AutoSize = true;
             this.label10.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label10.Location = new System.Drawing.Point(34, 112);
+            this.label10.Location = new System.Drawing.Point(31, 113);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(85, 13);
             this.label10.TabIndex = 48;
             this.label10.Text = "Rocksmith Path:";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label9.Location = new System.Drawing.Point(32, 70);
+            this.label9.Location = new System.Drawing.Point(29, 70);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(87, 13);
             this.label9.TabIndex = 47;
             this.label9.Text = "Package Author:";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // general_defaultauthor
             // 
@@ -711,13 +712,13 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label4.Location = new System.Drawing.Point(28, 44);
+            this.label4.Location = new System.Drawing.Point(25, 44);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(91, 13);
             this.label4.TabIndex = 45;
             this.label4.Text = "App ID (RS2014):";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // general_defaultappid_RS2014
             // 
@@ -813,7 +814,7 @@
             this.label13.Size = new System.Drawing.Size(59, 13);
             this.label13.TabIndex = 46;
             this.label13.Text = "Config File:";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label5
             // 
@@ -825,7 +826,7 @@
             this.label5.Size = new System.Drawing.Size(56, 13);
             this.label5.TabIndex = 46;
             this.label5.Text = "Rampage:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ddc_config
             // 

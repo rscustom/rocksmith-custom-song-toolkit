@@ -502,7 +502,7 @@ namespace RocksmithToolkitLib.Conversion
                 File.Copy(songFilePath, backupSrcPath);
             }
 
-            // write converted RS1 file
+            // write converted RS2014 file
             using (FileStream stream = new FileStream(songFilePath, FileMode.Create))
                 song2014.Serialize(stream, true);
 

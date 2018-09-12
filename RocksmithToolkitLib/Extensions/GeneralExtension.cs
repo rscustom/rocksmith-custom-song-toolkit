@@ -16,6 +16,7 @@ using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Sng2014HSL;
 using Action = System.Action;
 using ToolkitInfo = RocksmithToolkitLib.DLCPackage.ToolkitInfo;
+using System.Threading;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -235,41 +236,117 @@ namespace RocksmithToolkitLib.Extensions
             return tkInfo;
         }
 
+        private static StringBuilder sb;
+        private static HelpForm cmdWin;
         public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null)
         {
+
             string toolkitRootPath = AppDomain.CurrentDomain.BaseDirectory;
             var rootPath = toolkitRootFolder ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
 
             var startInfo = new ProcessStartInfo
-            {//use wine prefix here
-                FileName = _wine() + Path.Combine(rootPath, exeFileName),
-                WorkingDirectory = rootPath
-            };
-
-            if (runInBackground)
             {
-                startInfo.CreateNoWindow = true;
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
-            }
+                //use wine prefix here
+                FileName = _wine() + Path.Combine(rootPath, exeFileName),
+                WorkingDirectory = rootPath,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                // RedirectStandardError = true,
+                UseShellExecute = false
+            };
 
             if (!String.IsNullOrEmpty(arguments))
                 startInfo.Arguments = arguments;
 
-            Process process = new Process();
+            var process = new Process();
+            cmdWin = new HelpForm();
+            sb = new StringBuilder(startInfo.FileName + " " + startInfo.Arguments);
+
+            if (!runInBackground)
+            {
+                // setup a custom Command Window
+                cmdWin.Size = new Size(500, 500);
+                cmdWin.StartPosition = FormStartPosition.CenterScreen;
+                cmdWin.TopMost = true;
+                cmdWin.Text = "Toolkit Third Party Application Process Window ...";
+                cmdWin.okButton.Hide();
+                cmdWin.rtbBlank.BackColor = Color.Black;
+                cmdWin.rtbNotes.BackColor = Color.Black;
+                cmdWin.rtbNotes.ForeColor = Color.LimeGreen;
+                cmdWin.rtbNotes.ScrollBars = RichTextBoxScrollBars.None;
+                cmdWin.rtbNotes.Text = sb.ToString();
+                cmdWin.Show();
+                Application.DoEvents();
+
+                // FIXME: causing CrossThreading InvalidOperationException error
+                //process.OutputDataReceived += new DataReceivedEventHandler((s, e) => Process_DataReceived(s, e));
+                //process.ErrorDataReceived += new DataReceivedEventHandler((s, e) => Process_DataReceived(s, e));
+            }
+
+
             process.StartInfo = startInfo;
+            process.EnableRaisingEvents = true;
             process.Start();
 
+            if (!runInBackground && waitToFinish)
+            {
+                // FIXME: causing CrossThreading InvalidOperationException error
+                // process.BeginOutputReadLine();
+                // process.BeginErrorReadLine();
+
+                // TODO: this is temporary display method until CrossThreading is fixed
+                // NOTE: commented out when working of FIXME
+                while (!process.StandardOutput.EndOfStream)
+                {
+                    var line = process.StandardOutput.ReadLine();
+                    sb.AppendLine(line);
+                    UpdateCmdWin(line);
+                }
+            }
+
+            var exitCode = -1;
             if (waitToFinish)
+            {
                 process.WaitForExit();
+                exitCode = process.ExitCode;
 
-            var output = string.Empty;
+                if (!runInBackground)
+                {
+                    UpdateCmdWin("");
+                    UpdateCmdWin("");
+                    UpdateCmdWin("");
+                    Thread.Sleep(3000);
+                    cmdWin.Close();
+                }
+            }
 
-            if (runInBackground)
-                output = process.StandardOutput.ReadToEnd();
+            process.Dispose();
+            process = null;
+            var output = sb.ToString() + Environment.NewLine + "Exit Code: " + exitCode;
 
             return output;
         }
+
+        private static void Process_DataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Debug.WriteLine(e.Data);
+            sb.AppendLine(e.Data);
+            UpdateCmdWin(e.Data);
+        }
+
+        private static void UpdateCmdWin(string line)
+        {
+            InvokeIfRequired(cmdWin, a =>
+                {
+                    cmdWin.rtbNotes.Text += Environment.NewLine + line;
+                    cmdWin.rtbNotes.SelectionStart = cmdWin.rtbNotes.Text.Length;
+                    cmdWin.rtbNotes.ScrollToCaret();
+                    Application.DoEvents();                  
+                });
+
+            Debug.WriteLine(line);
+        }
+
 
         public static string[] SelectLines(this string[] content, string value)
         {
@@ -353,6 +430,6 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
-    
+
     }
 }

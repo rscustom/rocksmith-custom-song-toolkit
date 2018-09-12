@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" SchemaVersion="6">
+	<RootPaths>
+		<SourceFilesRoot>D:\VSProjects\rocksmith-custom-song-toolkit\Template\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\VSProjects\rocksmith-custom-song-toolkit\Template\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+	</RootPaths>
+	<Arguments />
+	<DialogueEvents />
+	<StreamedFiles>
+		<File Id="712580043" Language="SFX">
+			<ShortName>Audio.wav</ShortName>
+			<Path>SFX\Audio_4F0172B2.ogg</Path>
+		</File>
+	</StreamedFiles>
+	<SoundBanks>
+		<SoundBank Id="1160378735" Language="SFX">
+			<ShortName>Template</ShortName>
+			<Path>Template.bnk</Path>
+			<IncludedEvents />
+			<IncludedDialogueEvents />
+			<ReferencedStreamedFiles>
+				<File Id="712580043" />
+			</ReferencedStreamedFiles>
+			<IncludedFullFiles />
+			<IncludedPrefetchFiles>
+				<File Id="712580043" Language="SFX" PrefetchMilliseconds="100">
+					<ShortName>Audio.wav</ShortName>
+					<Path>SFX\Audio_4F0172B2.ogg</Path>
+				</File>
+			</IncludedPrefetchFiles>
+			<ExternalSources />
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+			<IncludedEvents />
+			<IncludedDialogueEvents />
+			<ReferencedStreamedFiles />
+			<IncludedFullFiles />
+			<IncludedPrefetchFiles />
+			<ExternalSources />
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>

@@ -70,6 +70,12 @@
     <Compile Include="Conversion\Rs1Converter.cs" />
     <Compile Include="Conversion\Rs2014Converter.cs" />
     <Compile Include="DLCPackage\DDCreator.cs" />
+    <Compile Include="Extensions\HelpForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Extensions\HelpForm.Designer.cs">
+      <DependentUpon>HelpForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\NotifyPropChangedBase.cs" />
     <Compile Include="SngToTab\Common.cs" />
     <Compile Include="SngToTab\Sng2Tab.cs" />
@@ -221,6 +227,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Extensions\BetterDialog2.resx">
       <DependentUpon>BetterDialog2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Extensions\HelpForm.resx">
+      <DependentUpon>HelpForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

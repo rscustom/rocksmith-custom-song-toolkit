@@ -99,6 +99,9 @@ namespace RocksmithToolkitGUI.OggConverter
                                 txtAudio2Wem.Text = file;
                                 OggFile.Convert2Wem(file, (int)audioQualityBox.Value, (long)Convert.ToDouble(lblChorusTime.Text) * 1000);
                                 break;
+
+                            // TODO: ogg2ww conversion
+                            // Ogg Vorbis to RIFF/WAVE (Wwise 2010) 
                         }
 
                         successFiles.Add(file);

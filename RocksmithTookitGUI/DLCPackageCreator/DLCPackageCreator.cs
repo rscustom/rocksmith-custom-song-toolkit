@@ -27,6 +27,7 @@ using RocksmithToolkitLib.XML;
 using Control = System.Windows.Forms.Control;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 using RocksmithToolkitGUI.Config;
+using RocksmithToolkitLib.Conversion;
 
 
 namespace RocksmithToolkitGUI.DLCPackageCreator
@@ -61,8 +62,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             lstArrangements.AllowDrop = true;
             numAudioQuality.MouseEnter += AudioQuality_MouseEnter;
             rbConvert.MouseEnter += rbConvert_MouseEnter;
+            rbRs2014.MouseEnter += rbRs2014_MouseEnter;
             numVolSong.MouseEnter += Volume_MouseEnter;
             numVolPreview.MouseEnter += Volume_MouseEnter;
+            rbRs2012.MouseDown += GameVersion_MouseDown;
+            rbRs2014.MouseDown += GameVersion_MouseDown;
+            rbConvert.MouseDown += GameVersion_MouseDown;
             rbRs2012.MouseUp += GameVersion_MouseUp;
             rbRs2014.MouseUp += GameVersion_MouseUp;
             rbConvert.MouseUp += GameVersion_MouseUp;
@@ -158,6 +163,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             get { return txtTempo.Text; }
             set { txtTempo.Text = value.GetValidTempo(); }
         }
+
+        public GameVersion PreviousGameVersion { get; set; }
 
         public GameVersion CurrentGameVersion
         {
@@ -1186,7 +1193,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             try
             {
                 if (CurrentGameVersion == GameVersion.RS2012 || Path.GetExtension(AudioPath) == "*.wem")
-                    AudioPath.VerifyHeaders();
+                {
+                    // commented out for RS2014 => RS1 Conversion Testing
+                    // AudioPath.VerifyHeaders();
+                }
             }
             catch (InvalidDataException ex)
             {
@@ -2005,28 +2015,82 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //IsDirty = true;
         }
 
+        private void GameVersion_MouseDown(object sender, MouseEventArgs e)
+        {
+            PreviousGameVersion = CurrentGameVersion;
+        }
+
         private void GameVersion_MouseUp(object sender, MouseEventArgs e)
         {
             // GameVersion_CheckedChanged usage comes with problems
             // everytime the value of checked is changed the event handler fires
-            // this is not what we want ... so use MouseDown instead to detect changes
 
-            ResetPackageCreatorForm();
-            GameVersion oldGameVersion;
-            var btn = sender as RadioButton;
-
-            switch (btn.Text.ToLowerInvariant())
+            // DO NOT ResetPackageCreatorForm if converting RS2014 => RS1
+            if (PreviousGameVersion == GameVersion.None || PreviousGameVersion == GameVersion.RS2012)
+                ResetPackageCreatorForm();
+            else if (!String.IsNullOrEmpty(DLCKey))
             {
-                case "rocksmith 2014":
-                    oldGameVersion = GameVersion.RS2014;
-                    break;
-                case "rocksmith":
-                    oldGameVersion = GameVersion.RS2012;
-                    break;
-                default:
-                    oldGameVersion = GameVersion.None;
-                    break;
+                // Convert Song2014 XML to Song XML
+                // ================================
+                DLCPackageData packageData = GetPackageData(true);
+                foreach (var arr in packageData.Arrangements)
+                {
+                    if (arr.ArrangementType == ArrangementType.Vocal)
+                        continue;
+                    if (arr.ArrangementType == ArrangementType.ShowLight)
+                    {
+                        // remove showlights from arrangement listbox
+                        var showlight = lstArrangements.Items.OfType<Arrangement>().First(x => x.ArrangementType == ArrangementType.ShowLight);
+                        lstArrangements.SelectedItems.Add(showlight);
+                        lstArrangements.Items.Remove(lstArrangements.SelectedItem);
+                        continue;
+                    }
+
+                    var songXmlPath = arr.SongXml.File;
+                    using (var obj = new Rs2014Converter())
+                        obj.Song2014File2SongFile(songXmlPath, true);
+                }
+
+                // Convert Tones2014 to Tone 
+                var tonesRS2014 = new List<Tone2014>();
+                tonesRS2014 = lstTones.Items.OfType<Tone2014>().ToList();
+                // packageData.Tones = new List<Tone>();
+                lstTones.Items.Clear();
+
+                foreach (var tone2014 in tonesRS2014)
+                {
+                    using (var obj1 = new Rs2014Converter())
+                    {
+                        var tone = obj1.Tone2014toTone(tone2014);
+                        // packageData.Tones.Add(tone);
+                        lstTones.Items.Add(tone);
+                    }
+                }
+
+                // TODO: Convert RS2014 to RS1 Audio 
+                // ogg2ww does not exist ... blah ... blah
+                var wwisePath = Wwise.GetWwisePath();
+                var wwiseVersion = FileVersionInfo.GetVersionInfo(wwisePath).ProductVersion;
+                if (!wwiseVersion.StartsWith("2010.3"))
+                    throw new Exception("<ERROR> WwiseCLI.exe path is not set properly for RS1 Conversions ...");
+               
+                var wem2014 = AudioPath;
+                var toolkitFolderPath = Path.GetDirectoryName(wem2014);
+                var eofFolderPath = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(wem2014)), "EOF");
+                var oggFile = Path.ChangeExtension(Path.GetFileName(wem2014), ".ogg");
+                var oggPath = Path.Combine(eofFolderPath, oggFile);
+                var wavFile = Path.ChangeExtension(Path.GetFileName(wem2014), ".wav");
+                var wavPath = Path.Combine(eofFolderPath, wavFile);
+                var wem2010File = Path.ChangeExtension(Path.GetFileName(wem2014), ".ogg");
+                var wem2010Path = Path.Combine(toolkitFolderPath, wem2010File);
+                ExternalApps.Ogg2Wav(oggPath, wavPath);
+                Wwise.Wav2Wem(wavPath, wem2010Path, (int)numAudioQuality.Value);
+
+                txtAudioPath.Clear();
+                txtAudioPath.Text = wem2010Path;
+                var debugMe = AudioPath;
             }
+            // ================================
 
             // MAC RS2014 only
             chkPlatformMAC.Enabled = CurrentGameVersion != GameVersion.RS2012;
@@ -2035,9 +2099,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             numVolPreview.Enabled = CurrentGameVersion != GameVersion.RS2012;
 
             PopulateAppIdCombo();
-            PopulateTonesLB(oldGameVersion);
-            PopulateArrangements(oldGameVersion);
-            PopulateAudioTB(oldGameVersion);
+            PopulateTonesLB(CurrentGameVersion);
+            PopulateArrangements(CurrentGameVersion);
+            PopulateAudioTB(CurrentGameVersion);
         }
 
         public void GeneratePackage(object sender, DoWorkEventArgs e)
@@ -2597,12 +2661,29 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tt.ShowAlways = true;
             tt.AutoPopDelay = 20000;
             tt.SetToolTip(rbConvert,
+                "DIY TIP: To Convert RS1 to RS2014 ..." + Environment.NewLine +
                 "1) Activate the 'Convert' radio button" + Environment.NewLine +
                 "2) Press the 'Import Package' button" + Environment.NewLine +
                 "   and select the RS1 CDLC to convert." + Environment.NewLine +
                 "3) Edit 'Song Information' (optional)." + Environment.NewLine +
                 "4) Next press the 'Generate' button" + Environment.NewLine +
                 "   and create the RS2014 CDLC ... Enjoy");
+        }
+
+        private void rbRs2014_MouseEnter(object sender, EventArgs e)
+        {
+            tt.IsBalloon = true;
+            tt.InitialDelay = 0;
+            tt.ShowAlways = true;
+            tt.AutoPopDelay = 20000;
+            tt.SetToolTip(rbRs2014,
+                "DIY TIP: To Convert RS2014 to RS1 ..." + Environment.NewLine +
+                "1) Activate the 'RS2014' radio button." + Environment.NewLine +
+                "2) Press the 'Import Package' button" + Environment.NewLine +
+                "   and select the RS2014 CDLC to convert." + Environment.NewLine +
+                "3) Change the GameVersion to 'RS2012'." + Environment.NewLine +
+                "4) Press the 'Generate' button" + Environment.NewLine +
+                "   and create the RS1 CDLC ... Enjoy");
         }
 
         private void txtAppId_Validating(object sender, CancelEventArgs e)

@@ -207,12 +207,6 @@
       <DependentUpon>DLCPackerUnpacker.cs</DependentUpon>
     </Compile>
     <Compile Include="ErrorDialog.cs" />
-    <Compile Include="HelpForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="HelpForm.Designer.cs">
-      <DependentUpon>HelpForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="OggConverter\OggConverter.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -315,9 +309,6 @@
     <EmbeddedResource Include="DLCPackerUnpacker\DLCPackerUnpacker.resx">
       <DependentUpon>DLCPackerUnpacker.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="HelpForm.resx">
-      <DependentUpon>HelpForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OggConverter\OggConverter.resx">
       <DependentUpon>OggConverter.cs</DependentUpon>

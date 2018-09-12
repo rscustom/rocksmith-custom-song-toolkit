@@ -335,7 +335,6 @@
             this.rbRs2012.TabStop = true;
             this.rbRs2012.Text = "Rocksmith";
             this.rbRs2012.UseVisualStyleBackColor = true;
-            this.rbRs2012.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameVersion_MouseUp);
             // 
             // rbRs2014
             // 
@@ -350,7 +349,6 @@
             this.rbRs2014.TabStop = true;
             this.rbRs2014.Text = "Rocksmith 2014";
             this.rbRs2014.UseVisualStyleBackColor = true;
-            this.rbRs2014.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameVersion_MouseUp);
             // 
             // gbPlatform
             // 
@@ -654,7 +652,6 @@
             this.rbConvert.TabStop = true;
             this.rbConvert.Text = "Convert";
             this.rbConvert.UseVisualStyleBackColor = true;
-            this.rbConvert.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameVersion_MouseUp);
             // 
             // btnPackageImport
             // 

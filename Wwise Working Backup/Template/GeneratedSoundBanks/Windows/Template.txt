@@ -1,0 +1,6 @@
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	712580043	Audio	D:\VSProjects\rocksmith-custom-song-toolkit\Template\.cache\Windows\SFX\Audio_4F0172B2.ogg		\Interactive Music Hierarchy\Default Work Unit\Audio\Audio		1193
+
+Streamed Audio	ID	Name	Audio source file	Generated audio file	Wwise Object Path	Notes
+	712580043	Audio	D:\VSProjects\rocksmith-custom-song-toolkit\Template\.cache\Windows\SFX\Audio_4F0172B2.ogg	712580043.ogg	\Interactive Music Hierarchy\Default Work Unit\Audio\Audio	
+

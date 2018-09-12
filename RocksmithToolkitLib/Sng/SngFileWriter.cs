@@ -91,7 +91,8 @@ namespace RocksmithToolkitLib.Sng
                     // TODO: song.Tuning is null in toolkit generated RS1 Xml files
                     // HACK: this is only a quick fix of the root problem
                     var tuning = new Int16[] { 0, 0, 0, 0, 0, 0 };
-                    if (song.Tuning != null) tuning = song.Tuning.ToArray();
+                    if (song.Tuning != null) 
+                        tuning = song.Tuning.ToArray();
 
                     WriteRocksmithSngFile(song, InstrumentTuningExtensions.GetTuningByOffsets(tuning), arrangementType, outputFile, bitConverter);
 

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using System.Text;
+using System.Diagnostics;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -40,7 +41,7 @@ namespace RocksmithToolkitLib.Extensions
 
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGDEC)))
                 errMsg.AppendLine(APP_OGGDEC);
-     
+
             if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGCUT)))
                 errMsg.AppendLine(APP_OGGCUT);
 
@@ -200,16 +201,24 @@ namespace RocksmithToolkitLib.Extensions
             GeneralExtensions.RunExternalExecutable(APP_OGGDEC, true, false, true, cmdArgs);
         }
 
-        public static void Wav2Wem(string wwiseCLIPath, string wwiseTemplateDir)
+        public static void Wav2Wem(string wwiseCLIPath, string wwiseTemplateDir, int magicDust = 0)
         {
             var templatePath = Path.Combine(wwiseTemplateDir, "Template.wproj");
             // -NoWwiseDat ignores cached wem's and will generate each time.
             // -ClearAudioFileCache force re-generate for wem's also deletes old and creates fresh new file.
             // -Save should help with updating project to new schema (may loose quality factor field)
-            var cmdArgs = String.Format(" \"{0}\" -GenerateSoundBanks -Platform Windows -Language English(US) -NoWwiseDat -ClearAudioFileCache -Save", templatePath);
+            var cmdArgs = String.Format("\"{0}\" -GenerateSoundBanks -Platform Windows -Language English(US) -NoWwiseDat -ClearAudioFileCache -Save", templatePath);
+            var output = GeneralExtensions.RunExternalExecutable(wwiseCLIPath, true, false, true, cmdArgs);
 
-            GeneralExtensions.RunExternalExecutable(wwiseCLIPath, true, false, true, cmdArgs);
+            if (output.Contains("Error: Project migration needed") && magicDust > 0)
+            {
+                Debug.WriteLine("WwiseCLI.exe Conversion Failed ...");
+                Debug.WriteLine("Applying Magic Dust #" + magicDust);
+                magicDust--;
+                Wav2Wem(wwiseCLIPath, wwiseTemplateDir, magicDust);
+            }
         }
+
 
     }
 }

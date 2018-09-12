@@ -1,0 +1,6011 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="Project" SchemaVersion="44">
+	<ProjectInfo>
+		<Project Name="Template" ID="{C96EF745-A0F5-401F-91A5-D4BE4EC6FFCA}">
+			<PropertyList>
+				<Property Name="DefaultLanguage" Type="int32">
+					<ValueList>
+						<Value Platform="Linked">12</Value>
+					</ValueList>
+				</Property>
+				<Property Name="ExternalSourcesInputPath" Type="string">
+					<ValueList>
+						<Value Platform="Windows"></Value>
+						<Value Platform="Wii"></Value>
+						<Value Platform="Xbox360"></Value>
+						<Value Platform="PS3"></Value>
+						<Value Platform="Mac"></Value>
+					</ValueList>
+				</Property>
+				<Property Name="ExternalSourcesOutputPath" Type="string">
+					<ValueList>
+						<Value Platform="Windows">GeneratedSoundBanks\Windows</Value>
+						<Value Platform="Wii">GeneratedSoundBanks\Wii</Value>
+						<Value Platform="Xbox360">GeneratedSoundBanks\XBox360</Value>
+						<Value Platform="PS3">GeneratedSoundBanks\PS3</Value>
+						<Value Platform="Mac">GeneratedSoundBanks\Mac</Value>
+					</ValueList>
+				</Property>
+				<Property Name="IsPlatformDisplayed" Type="bool">
+					<ValueList>
+						<Value Platform="Windows">True</Value>
+						<Value Platform="Wii">False</Value>
+						<Value Platform="Xbox360">False</Value>
+						<Value Platform="PS3">False</Value>
+						<Value Platform="Mac">False</Value>
+					</ValueList>
+				</Property>
+				<Property Name="SoundBankHeaderFilePath" Type="string">
+					<ValueList>
+						<Value Platform="Linked">GeneratedSoundBanks\</Value>
+					</ValueList>
+				</Property>
+				<Property Name="SoundBankPaths" Type="string">
+					<ValueList>
+						<Value Platform="Windows">GeneratedSoundBanks\Windows\</Value>
+						<Value Platform="Wii">GeneratedSoundBanks\Wii\</Value>
+						<Value Platform="Xbox360">GeneratedSoundBanks\XBox360\</Value>
+						<Value Platform="PS3">GeneratedSoundBanks\PS3\</Value>
+						<Value Platform="Mac">GeneratedSoundBanks\Mac\</Value>
+					</ValueList>
+				</Property>
+				<Property Name="SoundBankPostGenerateCustomCmdDescription" Type="string">
+					<ValueList>
+						<Value Platform="Windows">Copy Streamed Files</Value>
+						<Value Platform="Wii">Copy Streamed Files</Value>
+						<Value Platform="Xbox360">Copy Streamed Files</Value>
+						<Value Platform="PS3">Copy Streamed Files</Value>
+						<Value Platform="Mac">Copy Streamed Files</Value>
+					</ValueList>
+				</Property>
+				<Property Name="SoundBankPostGenerateCustomCmdLines" Type="string">
+					<ValueList>
+						<Value Platform="Windows">"$(WwiseExePath)\tools\AkCopyStreamedFiles.exe" -info "$(InfoFilePath)" -outputpath "$(SoundBankPath)" -hideprogressui $(IsRunningFromCmdLine) -autoclose true -banks "$(SoundBankList)" -languages "$(LanguageList)"</Value>
+						<Value Platform="Wii">"$(WwiseExePath)\tools\AkCopyStreamedFiles.exe" -info "$(InfoFilePath)" -outputpath "$(SoundBankPath)" -hideprogressui $(IsRunningFromCmdLine) -autoclose true -banks "$(SoundBankList)" -languages "$(LanguageList)"</Value>
+						<Value Platform="Xbox360">"$(WwiseExePath)\tools\AkCopyStreamedFiles.exe" -info "$(InfoFilePath)" -outputpath "$(SoundBankPath)" -hideprogressui $(IsRunningFromCmdLine) -autoclose true -banks "$(SoundBankList)" -languages "$(LanguageList)"</Value>
+						<Value Platform="PS3">"$(WwiseExePath)\tools\AkCopyStreamedFiles.exe" -info "$(InfoFilePath)" -outputpath "$(SoundBankPath)" -hideprogressui $(IsRunningFromCmdLine) -autoclose true -banks "$(SoundBankList)" -languages "$(LanguageList)"</Value>
+						<Value Platform="Mac">"$(WwiseExePath)\tools\AkCopyStreamedFiles.exe" -info "$(InfoFilePath)" -outputpath "$(SoundBankPath)" -hideprogressui $(IsRunningFromCmdLine) -autoclose true -banks "$(SoundBankList)" -languages "$(LanguageList)"</Value>
+					</ValueList>
+				</Property>
+				<Property Name="SoundBankPreGenerateCustomCmdDescription" Type="string">
+					<ValueList>
+						<Value Platform="Windows"></Value>
+						<Value Platform="Wii"></Value>
+						<Value Platform="Xbox360"></Value>
+						<Value Platform="PS3"></Value>
+						<Value Platform="Mac"></Value>
+					</ValueList>
+				</Property>
+				<Property Name="SoundBankPreGenerateCustomCmdLines" Type="string">
+					<ValueList>
+						<Value Platform="Windows"></Value>
+						<Value Platform="Wii"></Value>
+						<Value Platform="Xbox360"></Value>
+						<Value Platform="PS3"></Value>
+						<Value Platform="Mac"></Value>
+					</ValueList>
+				</Property>
+				<Property Name="VolumeThreshold" Type="Real64">
+					<ValueList>
+						<Value Platform="Windows">-96.3</Value>
+						<Value Platform="Wii">-96.3</Value>
+						<Value Platform="Xbox360">-96.3</Value>
+						<Value Platform="PS3">-96.3</Value>
+						<Value Platform="Mac">-96.3</Value>
+					</ValueList>
+				</Property>
+				<Property Name="WwiseVersionWhenCreated" Type="string">
+					<ValueList>
+						<Value Platform="Linked">Branch=wwise_v2010.3|Build=3773|VersionName=v2010.3.3|Config=Release</Value>
+					</ValueList>
+				</Property>
+			</PropertyList>
+			<SharedValues>
+				<SharedPropertyList ClassName="AudioSource" PluginType="0" CompanyID="1" PluginID="0">
+					<PropertyList>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VolumeOffset" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="PCM" PluginType="1" CompanyID="0" PluginID="1" />
+				<SharedPropertyList ClassName="Sound" PluginType="0" CompanyID="1" PluginID="1">
+					<PropertyList>
+						<Property Name="3DPositionSource" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BelowThresholdBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DivergenceCenter" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DynamicPositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnablePanner" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FollowListenerOrientation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsLoopingEnabled" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsLoopingInfinite" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsStreamingEnabled" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsZeroLantency" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LanguageExclusion" Type="int64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LoopCount" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">2</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionLowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePriority" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideVirtualVoice" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PositioningType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreFetchLength" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Priority" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceFactor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceOffset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Spatialization" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VirtualVoiceQueueBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Weight" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="ADPCM" PluginType="1" CompanyID="0" PluginID="2">
+					<PropertyList>
+						<Property Name="EncodingMode" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FixLoopMethod" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Project" PluginType="0" CompanyID="1" PluginID="3">
+					<PropertyList>
+						<Property Name="AutoDetectFFTWindowSize" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">512</Value>
+							</ValueList>
+						</Property>
+						<Property Name="AutoDetectThresholdHigh" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">-50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="AutoDetectThresholdLow" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">-30</Value>
+							</ValueList>
+						</Property>
+						<Property Name="AutoDetectThresholdMedium" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">-40</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CommPortDiscoveryBroadcast" Type="Uint16">
+							<ValueList>
+								<Value Platform="Linked">42042</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CommPortDiscoveryResponse" Type="Uint16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ConvertExternalSources" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DefaultLanguage" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ExternalSourcesInputPath" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="ExternalSourcesOutputPath" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsPlatformDisplayed" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxMessagesPerMessageId" Type="Uint32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankAllowExceedingSB" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankDefinitionFileFormat" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankGenerateDefinitionFile" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankGenerateHeaderFile" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankGenerateMaxAttenuationInfo" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankHeaderFilePath" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankIncludeSoundbankNamesStrings" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankPaths" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankPostGenerateCustomCmdDescription" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankPostGenerateCustomCmdLines" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankPreGenerateCustomCmdDescription" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankPreGenerateCustomCmdLines" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundBankUpdateAudioFiles" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseDefaultLanguage" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxMessagesPerMessageId" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VolumeThreshold" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">-96.3</Value>
+							</ValueList>
+						</Property>
+						<Property Name="WwiseVersionWhenCreated" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Vorbis" PluginType="1" CompanyID="0" PluginID="4">
+					<PropertyList>
+						<Property Name="AverageBitrate" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">64</Value>
+							</ValueList>
+						</Property>
+						<Property Name="AverageTrackSlewTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1.5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BitReservoirTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">2</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BitrateManagmentMode" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableAdvancedSettings" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableMaximumBitrate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableMinimumBitrate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaximumBitrate" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">64</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MinimumBitrate" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">64</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QualityFactor" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReservoirBiasFactor" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SeekTableGranularity" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">6</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Action" PluginType="0" CompanyID="1" PluginID="5">
+					<PropertyList>
+						<Property Name="Absolute" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Delay" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FadeCurve" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FadeTime" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MasterResume" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PauseDelayedResumeAction" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SeekPercent" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SeekTime" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SeekToMarker" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SeekType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VolumeTarget" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="State" PluginType="0" CompanyID="1" PluginID="6">
+					<PropertyList>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="StateGroup" PluginType="0" CompanyID="1" PluginID="7">
+					<PropertyList>
+						<Property Name="DefaultTransitionTime" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="ActorMixer" PluginType="0" CompanyID="1" PluginID="8">
+					<PropertyList>
+						<Property Name="3DPositionSource" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BelowThresholdBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DivergenceCenter" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DynamicPositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnablePanner" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FollowListenerOrientation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionLowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePriority" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideVirtualVoice" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PositioningType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Priority" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceFactor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceOffset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Spatialization" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VirtualVoiceQueueBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="RndSeqContainer" PluginType="0" CompanyID="1" PluginID="9">
+					<PropertyList>
+						<Property Name="3DPositionSource" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BelowThresholdBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DivergenceCenter" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DynamicPositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnablePanner" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FollowListenerOrientation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GlobalOrPerObject" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionLowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NormalOrShuffle" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePriority" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideVirtualVoice" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismInfiniteOrNumberOfLoops" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismLoop" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismLoopCount" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">2</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismResetPlaylistEachPlay" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismSpecialTransitions" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismSpecialTransitionsType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismSpecialTransitionsValue" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismStepOrContinuous" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PositioningType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Priority" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceFactor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceOffset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RandomAvoidRepeating" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RandomAvoidRepeatingCount" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RandomOrSequence" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RestartBeginningOrBackward" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Spatialization" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VirtualVoiceQueueBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Weight" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="SwitchContainer" PluginType="0" CompanyID="1" PluginID="10">
+					<PropertyList>
+						<Property Name="3DPositionSource" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BelowThresholdBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DivergenceCenter" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DynamicPositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnablePanner" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FollowListenerOrientation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GroupType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionLowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePriority" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideVirtualVoice" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PositioningType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Priority" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceFactor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceOffset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Spatialization" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SwitchBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VirtualVoiceQueueBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Weight" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Path" PluginType="0" CompanyID="1" PluginID="11">
+					<PropertyList>
+						<Property Name="AppendOffset" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Duration" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">5000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Flags" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LinearTime" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RandomX" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RandomY" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Position" PluginType="0" CompanyID="1" PluginID="12">
+					<PropertyList>
+						<Property Name="NewPathForEachSound" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PanX" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PanY" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">35</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismLoop" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismRandomOrSequence" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismStepOrContinuous" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismTransitionTime" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMechanismTransitionUse" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Curve" PluginType="0" CompanyID="1" PluginID="14">
+					<PropertyList>
+						<Property Name="Flags" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Modifier" PluginType="0" CompanyID="1" PluginID="15">
+					<PropertyList>
+						<Property Name="Enabled" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Max" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Min" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Effect" PluginType="0" CompanyID="1" PluginID="17">
+					<PropertyList>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="SoundBank" PluginType="0" CompanyID="1" PluginID="18">
+					<PropertyList>
+						<Property Name="Fill" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Maximum" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="SwitchGroup" PluginType="0" CompanyID="1" PluginID="19">
+					<PropertyList>
+						<Property Name="UseGameParameter" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Bus" PluginType="0" CompanyID="1" PluginID="21">
+					<PropertyList>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ChannelConfig" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">63</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableWiiCompressor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxDuckVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">-96.3</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RecoveryTime" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UsedForBackgroundMusic" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="GameParameter" PluginType="0" CompanyID="1" PluginID="23">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Max" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Min" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SimulationValue" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="ObjectSettingAssoc" PluginType="0" CompanyID="1" PluginID="24">
+					<PropertyList>
+						<Property Name="ContinuePlay" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FadeInTime" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FadeOutTime" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FirstOccurenceOnly" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OnSwitchChange" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MusicSegment" PluginType="0" CompanyID="1" PluginID="27">
+					<PropertyList>
+						<Property Name="3DPositionSource" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BelowThresholdBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DivergenceCenter" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DynamicPositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnablePanner" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EndPosition" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">4000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FollowListenerOrientation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GridFrequencyPreset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GridOffsetCustom" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GridOffsetPreset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionLowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideClockSettings" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePriority" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideVirtualVoice" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PositioningType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Priority" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceFactor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceOffset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Spatialization" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Tempo" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">120</Value>
+							</ValueList>
+						</Property>
+						<Property Name="TimeSignatureLower" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="TimeSignatureUpper" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VirtualVoiceQueueBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MusicTrack" PluginType="0" CompanyID="1" PluginID="28">
+					<PropertyList>
+						<Property Name="3DPositionSource" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BelowThresholdBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DivergenceCenter" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DynamicPositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnablePanner" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FollowListenerOrientation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsStreamingEnabled" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsZeroLantency" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LookAheadTime" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionLowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MusicTrackType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePriority" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideVirtualVoice" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PositioningType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreFetchLength" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Priority" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceFactor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceOffset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Spatialization" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VirtualVoiceQueueBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="BlendContainer" PluginType="0" CompanyID="1" PluginID="29">
+					<PropertyList>
+						<Property Name="3DPositionSource" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BelowThresholdBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DivergenceCenter" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DynamicPositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnablePanner" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FollowListenerOrientation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionLowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePriority" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideVirtualVoice" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PositioningType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Priority" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceFactor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceOffset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Spatialization" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VirtualVoiceQueueBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Weight" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="BlendTrack" PluginType="0" CompanyID="1" PluginID="30">
+					<PropertyList>
+						<Property Name="EnableCrossFading" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Query" PluginType="0" CompanyID="1" PluginID="32">
+					<PropertyList>
+						<Property Name="LogicalOperator" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ObjectType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Platform" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StartFromHereObject" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="SearchCriteria" PluginType="0" CompanyID="1" PluginID="33">
+					<PropertyList>
+						<Property Name="Attenuation" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="ConditionalOperator" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Conversion" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="CurveType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CurveUsage" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DefaultSwitchState" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="Effect" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="EffectClassID" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="EventsReferencedInOperator" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GameParameter" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="HasEmptyAssignation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Inclusion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsChecked" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsLinked" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsSpecialSearch" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsUsed" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LeftValue" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LogicalOperator" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Mode" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionDevice" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="MusicSegment" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="NumericOperator" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ObjectReferenced" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputBus" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="PropertyName" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="RTPCOperator" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RightValue" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RndSeqContainerType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SRConversionQuality" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SampleRateConversionType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SourceAudioFormat" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="SourceChannelsLFEOption" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">-1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SourceChannelsOthersCount" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SourceChannelsOthersOption" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">-1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SourceLanguage" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="SourceType" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="State" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="StateGroup" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="StatePropertyUsage" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SwitchGroup" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="SwitchingOperator" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Trigger" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="UIntValue" Type="Uint32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UserString" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="UsingOperator" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MusicRndSeqContainer" PluginType="0" CompanyID="1" PluginID="34">
+					<PropertyList>
+						<Property Name="3DPositionSource" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BelowThresholdBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DivergenceCenter" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DynamicPositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnablePanner" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FollowListenerOrientation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GridFrequencyPreset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GridOffsetCustom" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GridOffsetPreset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionLowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideClockSettings" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePriority" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideVirtualVoice" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PositioningType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Priority" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceFactor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceOffset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Spatialization" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Tempo" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">120</Value>
+							</ValueList>
+						</Property>
+						<Property Name="TimeSignatureLower" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="TimeSignatureUpper" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VirtualVoiceQueueBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MusicSwitchContainer" PluginType="0" CompanyID="1" PluginID="35">
+					<PropertyList>
+						<Property Name="3DPositionSource" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BelowThresholdBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ContinuePlay" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DivergenceCenter" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DynamicPositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnablePanner" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FollowListenerOrientation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GridFrequencyPreset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GridOffsetCustom" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GridOffsetPreset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GroupType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFEVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Lowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionLowpass" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MotionVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideClockSettings" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePriority" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideVirtualVoice" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PositioningType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Priority" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceFactor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceOffset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Spatialization" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Tempo" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">120</Value>
+							</ValueList>
+						</Property>
+						<Property Name="TimeSignatureLower" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="TimeSignatureUpper" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VirtualVoiceQueueBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MusicPlaylistItem" PluginType="0" CompanyID="1" PluginID="36">
+					<PropertyList>
+						<Property Name="LoopCount" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NormalOrShuffle" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayMode" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlaylistItemType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RandomAvoidRepeatingCount" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Weight" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MusicTransition" PluginType="0" CompanyID="1" PluginID="37">
+					<PropertyList>
+						<Property Name="DestinationJumpPositionPreset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableDestinationFadeIn" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableSourceFadeOut" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableTransitionFadeIn" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableTransitionFadeOut" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ExitSourceAt" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">7</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayDestinationPreEntry" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlaySourcePostExit" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayTransitionPostExit" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlayTransitionPreEntry" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseDestinationCustomJumpMarker" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseTransitionObject" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MusicStinger" PluginType="0" CompanyID="1" PluginID="38">
+					<PropertyList>
+						<Property Name="DontPlayAgainTime" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NumSegmentAdvance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlaySegmentAt" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MusicFade" PluginType="0" CompanyID="1" PluginID="39">
+					<PropertyList>
+						<Property Name="FadeCurve" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FadeOffset" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FadeTime" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FadeType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Trigger" PluginType="0" CompanyID="1" PluginID="40" />
+				<SharedPropertyList ClassName="Attenuation" PluginType="0" CompanyID="1" PluginID="41">
+					<PropertyList>
+						<Property Name="ConeAttenuation" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">-6</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ConeInnerAngle" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">90</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ConeLowPassFilterValue" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ConeOuterAngle" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">245</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ConeUse" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RadiusMax" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Panner" PluginType="0" CompanyID="1" PluginID="42">
+					<PropertyList>
+						<Property Name="PanX" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PanY" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="DialogueEvent" PluginType="0" CompanyID="1" PluginID="46">
+					<PropertyList>
+						<Property Name="Mode" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Probability" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MotionBus" PluginType="0" CompanyID="1" PluginID="47">
+					<PropertyList>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableWiiCompressor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxDuckVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">-96.3</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RecoveryTime" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UsedForBackgroundMusic" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MotionFX" PluginType="0" CompanyID="1" PluginID="48">
+					<PropertyList>
+						<Property Name="3DPositionSource" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BelowThresholdBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BypassEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DivergenceCenter" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DynamicPositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnablePanner" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FollowListenerOrientation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsLoopingEnabled" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsLoopingInfinite" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsStreamingEnabled" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IsZeroLantency" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LoopCount" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">2</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReachedBehavior" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxSoundPerInstance" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideEffect" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMaxSoundInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideMotionOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideOutput" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePositioning" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverridePriority" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideVirtualVoice" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PositioningType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreFetchLength" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Priority" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceFactor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PriorityDistanceOffset" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect0" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RenderEffect3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Spatialization" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseMaxSoundPerInstance" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VirtualVoiceQueueBehavior" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Weight" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MotionSource" PluginType="0" CompanyID="1" PluginID="49" />
+				<SharedPropertyList ClassName="UserProjectSettings" PluginType="0" CompanyID="1" PluginID="51">
+					<PropertyList>
+						<Property Name="DefaultSoundVolume" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MixingSession" PluginType="0" CompanyID="1" PluginID="53" />
+				<SharedPropertyList ClassName="PluginDataSource" PluginType="0" CompanyID="1" PluginID="54">
+					<PropertyList>
+						<Property Name="DataFileName" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Conversion" PluginType="0" CompanyID="1" PluginID="55">
+					<PropertyList>
+						<Property Name="Channels" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LRMix" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RemoveDCOffset" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SRConversionQuality" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SampleRate" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseDither" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseFilenameMarker" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="ExternalSourceFile" PluginType="0" CompanyID="1" PluginID="56">
+					<PropertyList>
+						<Property Name="OverrideConversion" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="ExternalSource" PluginType="0" CompanyID="1" PluginID="57">
+					<PropertyList>
+						<Property Name="HasLFE" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Sine" PluginType="2" CompanyID="0" PluginID="100">
+					<PropertyList>
+						<Property Name="ChannelMask" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SineDuration" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SineFrequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">440</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SineGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-12</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Silence" PluginType="2" CompanyID="0" PluginID="101">
+					<PropertyList>
+						<Property Name="Length" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LengthMax" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LengthMin" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Tone Generator" PluginType="2" CompanyID="0" PluginID="102">
+					<PropertyList>
+						<Property Name="AttackTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DecayTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DurMode" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FixDur" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReleaseTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StartFreq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StartFreqRandMax" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StartFreqRandMin" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StopFreq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StopFreqRandMax" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StopFreqRandMin" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SustainLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-12</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SustainTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SweepFreq" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SweepFreqType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="WaveGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-12</Value>
+							</ValueList>
+						</Property>
+						<Property Name="WaveType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="McDSP ML1" PluginType="3" CompanyID="256" PluginID="103">
+					<PropertyList>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Ceiling" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Knee" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Mode" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Release" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Threshold" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Parametric EQ" PluginType="3" CompanyID="0" PluginID="105">
+					<PropertyList>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FilterTypeBand1" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FilterTypeBand2" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">6</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FilterTypeBand3" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrequencyBand1" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrequencyBand2" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrequencyBand3" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">12000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GainBand1" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GainBand2" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GainBand3" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OnOffBand1" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OnOffBand2" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OnOffBand3" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ProcessLFE" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactorBand1" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactorBand2" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactorBand3" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Delay" PluginType="3" CompanyID="0" PluginID="106">
+					<PropertyList>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Feedback" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">15</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FeedbackEnabled" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ProcessLFE" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="WetDryMix" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">25</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Compressor" PluginType="3" CompanyID="0" PluginID="108">
+					<PropertyList>
+						<Property Name="AttackTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ChannelLink" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ProcessLFE" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Ratio" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1.5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReleaseTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Threshold" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Expander" PluginType="3" CompanyID="0" PluginID="109">
+					<PropertyList>
+						<Property Name="AttackTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ChannelLink" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ProcessLFE" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Ratio" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">3</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReleaseTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.01</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Threshold" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-40</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Peak Limiter" PluginType="3" CompanyID="0" PluginID="110">
+					<PropertyList>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ChannelLink" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LookAhead" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.01</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ProcessLFE" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Ratio" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReleaseTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Threshold" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="McDSP FutzBox" PluginType="3" CompanyID="256" PluginID="110">
+					<PropertyList>
+						<Property Name="Balance" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionAmount" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionEnable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionIntensity" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionMode" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionRectify" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EQEnable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EQFilterType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EQFreq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EQGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EQQ" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersEnable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersHPFFreq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">40</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersHPFQ" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersHPFSlope" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersLPFFreq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">18000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersLPFQ" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersLPFSlope" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateAttackTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateEnable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateHoldTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateRange" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateReleaseTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateThreshold" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-40</Value>
+							</ValueList>
+						</Property>
+						<Property Name="InputGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LoFiBitDepthType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LoFiDownSampleIndex" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LoFiEnable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LoFiFilter" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseEnable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseHPFFreq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">40</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseLPFFreq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">18000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-96</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseRange" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-20</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseRecovery" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">20</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseThresh" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SIMEnable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SIMTuning" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SIMType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Matrix Reverb" PluginType="3" CompanyID="0" PluginID="115">
+					<PropertyList>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayLengthsMode" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime1" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">13.62</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime10" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">26.09</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime11" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">26.55</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime12" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">26.91</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime13" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">28.04</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime14" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">29.09</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime15" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">29.9</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime16" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">30.86</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime2" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">15.66</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime3" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">17.52</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime4" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">19.02</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime5" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">20.83</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime6" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">22.6</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime7" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">24.05</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime8" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">24.78</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime9" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">25.6</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DryLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="HFRatio" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">2</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NumberOfDelays" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">8</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreDelay" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ProcessLFE" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReverbTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="WetLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-35</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="SoundSeed Impact" PluginType="3" CompanyID="0" PluginID="116">
+					<PropertyList>
+						<Property Name="BWAmt" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BWVar" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BandwidthStretchEnable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FreqAmt" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FreqVar" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrequencyStretchEnable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MagVar" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MagnitudeScalingEnable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModelQuality" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ResidualLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-96</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise RoomVerb" PluginType="3" CompanyID="0" PluginID="118">
+					<PropertyList>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CenterLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DCFilterCutFreq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">40</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DecayTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1.2</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Density" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">80</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DensityDelayMax" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DensityDelayMin" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">8</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DensityDelayRdmPerc" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">2</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Diffusion" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DiffusionDelayMax" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">15</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DiffusionDelayRdmPerc" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DiffusionDelayScalePerc" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">66</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DryLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ERFrontBackDelay" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ERLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-20</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ERPattern" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">23</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableEarlyReflections" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableToneControls" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter1Curve" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter1Freq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter1Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter1InsertPos" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">3</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter1Q" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter2Curve" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter2Freq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter2Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter2InsertPos" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">3</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter2Q" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter3Curve" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">2</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter3Freq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">10000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter3Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter3InsertPos" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">3</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Filter3Q" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrontLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="HFDamping" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">2.25</Value>
+							</ValueList>
+						</Property>
+						<Property Name="InputCenterLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="InputLFELevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-96</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFELevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-96</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreDelay" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">25</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Quality" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">8</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RearLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReverbLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-20</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReverbUnitInputDelay" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReverbUnitInputDelayRmdPerc" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RoomShape" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RoomShapeMax" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.8</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RoomShapeMin" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RoomSize" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StereoWidth" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">180</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="SoundSeed Air/SoundSeed Wind" PluginType="2" CompanyID="0" PluginID="119">
+					<PropertyList>
+						<Property Name="AttenuationRollOff" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="AverageVelocity" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="AverageVelocityAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="AverageVelocityRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ChannelMask" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Direction" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DirectionAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DirectionRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Duration" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DurationRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrequencyScale" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrequencyScaleAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrequencyScaleRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GainOffset" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GainOffsetAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GainOffsetRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Gustiness" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GustinessAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GustinessRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxDistance" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MinDistance" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlaybackRate" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactorScale" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactorScaleAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactorScaleRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Variability" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.25</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VariabilityAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VariabilityRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VelocityDynamicRange" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.5</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="SoundSeed Air/SoundSeed Woosh" PluginType="2" CompanyID="0" PluginID="120">
+					<PropertyList>
+						<Property Name="AttenuationRollOff" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ChannelMask" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistanceAttenuation" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Duration" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0.5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DurationRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrequencyScale" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrequencyScaleAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrequencyScaleRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GainOffset" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GainOffsetAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GainOffsetRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MinDistance" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseColor" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Oversampling" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PlaybackRate" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactorScale" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactorScaleAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactorScaleRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Speed" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SpeedAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SpeedPointSpeedRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SpeedPointTimeRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SpeedRandom" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VelocityDynamicRange" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Deflector" PluginType="0" CompanyID="0" PluginID="121">
+					<PropertyList>
+						<Property Name="Frequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">440</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PanX" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PanY" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactor" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">10</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Deflector" PluginType="0" CompanyID="0" PluginID="122">
+					<PropertyList>
+						<Property Name="Anchor" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Frequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">440</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="QFactor" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SectionRatio" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Flanger" PluginType="3" CompanyID="0" PluginID="125">
+					<PropertyList>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DelayTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DryLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EnableLFO" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FeedBackLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FeedForwardLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModDepth" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModFrequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModPWM" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModPhaseMode" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModPhaseOffset" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModPhaseSpread" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModSmoothing" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModWaveform" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ProcessCenter" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ProcessLFE" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="WetDryMix" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Guitar Distortion" PluginType="3" CompanyID="0" PluginID="126">
+					<PropertyList>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionDrive" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionTone" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand1Enable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand1FilterType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand1Frequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand1Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand1QFactor" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand2Enable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand2FilterType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand2Frequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand2Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand2QFactor" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand3Enable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand3FilterType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand3Frequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand3Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PostEQBand3QFactor" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand1Enable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand1FilterType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand1Frequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand1Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand1QFactor" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand2Enable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand2FilterType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand2Frequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand2Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand2QFactor" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand3Enable" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand3FilterType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand3Frequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand3Gain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreEQBand3QFactor" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Rectification" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="WetDryMix" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Convolution Reverb" PluginType="3" CompanyID="0" PluginID="127">
+					<PropertyList>
+						<Property Name="AlgoTypeSelect" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CenterLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DryLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrontLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrontRearDelay" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRChannelSelect" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRConvolutionSmooth" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRConvolutionSmoothMax" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRConvolutionStart" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRConvolutionStop" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRConvolutionThreshold" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-144</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IREQAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRLPFAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRLPFSlope" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">6</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRLevelAutomate" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="IRStretch" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="InputCenterLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="InputLFELevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-96</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFELevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-96</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PreDelay" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RearLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundEngineBlockSizeMac" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1024</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundEngineBlockSizePS3" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1024</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundEngineBlockSizeWindows" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1024</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundEngineBlockSizeXBox360" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">1024</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SoundEngineSampleRate" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">48000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StereoWidth" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">180</Value>
+							</ValueList>
+						</Property>
+						<Property Name="WetLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Meter" PluginType="3" CompanyID="0" PluginID="129">
+					<PropertyList>
+						<Property Name="AttackTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Hold" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Max" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MeterMode" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Min" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-48</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReleaseTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0.1</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Tremolo" PluginType="3" CompanyID="0" PluginID="131">
+					<PropertyList>
+						<Property Name="CanBeEnvironmental" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModDepth" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModFrequency" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModPWM" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModPhaseMode" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModPhaseOffset" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModPhaseSpread" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModSmoothing" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ModWaveform" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ProcessCenter" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ProcessLFE" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">True</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Audio Input" PluginType="2" CompanyID="0" PluginID="200">
+					<PropertyList>
+						<Property Name="AudioInputGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-12</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="MP3 Input" PluginType="2" CompanyID="0" PluginID="201">
+					<PropertyList>
+						<Property Name="Token" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="D-BOX™" PluginType="4" CompanyID="0" PluginID="401" />
+				<SharedPropertyList ClassName="D-BOX™ Wav" PluginType="5" CompanyID="0" PluginID="402">
+					<PropertyList>
+						<Property Name="Channels" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Duration" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FileName" Type="string">
+							<ValueList>
+								<Value Platform="Linked"></Value>
+							</ValueList>
+						</Property>
+						<Property Name="FixLoopPoints" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LRMix" Type="Real64">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RemoveDCOffset" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SRConversionQuality" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SampleRate" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">375</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseDither" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="UseFilenameMarker" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="VolumeOffset" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Tone Generator - Motion" PluginType="5" CompanyID="0" PluginID="403">
+					<PropertyList>
+						<Property Name="AttackTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DecayTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DurMode" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FixDur" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReleaseTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StartFreq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StartFreqRandMax" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StartFreqRandMin" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StopFreq" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StopFreqRandMax" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="StopFreqRandMin" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SustainLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-12</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SustainTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SweepFreq" Type="bool">
+							<ValueList>
+								<Value Platform="Linked">False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SweepFreqType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="WaveGain" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-12</Value>
+							</ValueList>
+						</Property>
+						<Property Name="WaveType" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Silence - Motion" PluginType="5" CompanyID="0" PluginID="404">
+					<PropertyList>
+						<Property Name="Length" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LengthMax" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LengthMin" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Motion Generator" PluginType="5" CompanyID="0" PluginID="405">
+					<PropertyList>
+						<Property Name="AttackTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DecayTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Duration" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DurationType" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Period" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PeriodMultiplier" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReleaseTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SustainLevel" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">-12</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SustainTime" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Controller" PluginType="4" CompanyID="0" PluginID="406" />
+				<SharedPropertyList ClassName="D-BOX Pitch-Roll-Heave" PluginType="5" CompanyID="0" PluginID="407">
+					<PropertyList>
+						<Property Name="BackLeft" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="BackRight" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Duration" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrontLeft" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FrontRight" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Heave" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Pitch1" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Roll" Type="Real32">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Stretch" Type="int16">
+							<ValueList>
+								<Value Platform="Linked">0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="DialogueEventEntry" PluginType="0" CompanyID="1" PluginID="10000">
+					<PropertyList>
+						<Property Name="Probability" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Weight" Type="int32">
+							<ValueList>
+								<Value Platform="Linked">50</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+			</SharedValues>
+			<UsedLanguageList>
+				<Language VolumeOffset="0">English(US)</Language>
+			</UsedLanguageList>
+			<EnvironmentalSettings>
+				<ObsOccCurves>
+					<Comment></Comment>
+					<ObsOccCurve CurveXType="Obstruction" CurveYType="Volume">
+						<PlatformCurve Platform="Linked" EnableCurve="true">
+							<Curve Name="" ID="{B51B82DE-C9B7-4AD0-AB12-BF2FFDC1F712}">
+								<PropertyList>
+									<Property Name="Flags" Type="int32">
+										<ValueList>
+											<Value Platform="NotApplicable">3</Value>
+										</ValueList>
+									</Property>
+								</PropertyList>
+								<PointList>
+									<Point>
+										<XPos>0</XPos>
+										<YPos>0</YPos>
+										<Flags>5</Flags>
+									</Point>
+									<Point>
+										<XPos>100</XPos>
+										<YPos>-96.3</YPos>
+										<Flags>37</Flags>
+									</Point>
+								</PointList>
+							</Curve>
+						</PlatformCurve>
+					</ObsOccCurve>
+					<ObsOccCurve CurveXType="Obstruction" CurveYType="LPF">
+						<PlatformCurve Platform="Linked" EnableCurve="true">
+							<Curve Name="" ID="{6224583B-2265-4AC1-8405-283B41E08ED5}">
+								<PropertyList>
+									<Property Name="Flags" Type="int32">
+										<ValueList>
+											<Value Platform="NotApplicable">1</Value>
+										</ValueList>
+									</Property>
+								</PropertyList>
+								<PointList>
+									<Point>
+										<XPos>0</XPos>
+										<YPos>0</YPos>
+										<Flags>5</Flags>
+									</Point>
+									<Point>
+										<XPos>100</XPos>
+										<YPos>100</YPos>
+										<Flags>37</Flags>
+									</Point>
+								</PointList>
+							</Curve>
+						</PlatformCurve>
+					</ObsOccCurve>
+					<ObsOccCurve CurveXType="Occlusion" CurveYType="Volume">
+						<PlatformCurve Platform="Linked" EnableCurve="true">
+							<Curve Name="" ID="{7F6E139C-A93E-410C-8505-00E029966A2F}">
+								<PropertyList>
+									<Property Name="Flags" Type="int32">
+										<ValueList>
+											<Value Platform="NotApplicable">3</Value>
+										</ValueList>
+									</Property>
+								</PropertyList>
+								<PointList>
+									<Point>
+										<XPos>0</XPos>
+										<YPos>0</YPos>
+										<Flags>5</Flags>
+									</Point>
+									<Point>
+										<XPos>100</XPos>
+										<YPos>-96.3</YPos>
+										<Flags>37</Flags>
+									</Point>
+								</PointList>
+							</Curve>
+						</PlatformCurve>
+					</ObsOccCurve>
+					<ObsOccCurve CurveXType="Occlusion" CurveYType="LPF">
+						<PlatformCurve Platform="Linked" EnableCurve="true">
+							<Curve Name="" ID="{637692B7-8434-41CF-B6C1-9409511EDAE7}">
+								<PropertyList>
+									<Property Name="Flags" Type="int32">
+										<ValueList>
+											<Value Platform="NotApplicable">1</Value>
+										</ValueList>
+									</Property>
+								</PropertyList>
+								<PointList>
+									<Point>
+										<XPos>0</XPos>
+										<YPos>0</YPos>
+										<Flags>5</Flags>
+									</Point>
+									<Point>
+										<XPos>100</XPos>
+										<YPos>100</YPos>
+										<Flags>37</Flags>
+									</Point>
+								</PointList>
+							</Curve>
+						</PlatformCurve>
+					</ObsOccCurve>
+				</ObsOccCurves>
+			</EnvironmentalSettings>
+			<MotionDeviceList />
+			<LogCentralIgnoreList />
+			<DefaultConversion Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" />
+		</Project>
+	</ProjectInfo>
+</WwiseDocument>

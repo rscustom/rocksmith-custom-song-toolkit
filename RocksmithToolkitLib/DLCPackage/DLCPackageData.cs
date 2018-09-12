@@ -108,26 +108,31 @@ namespace RocksmithToolkitLib.DLCPackage
             data.PreviewVolume = DEFAULT_PREVIEW_VOLUME;
 
             //Load song manifest
-            var songsManifestJson = Directory.GetFiles(unpackedDir, "songs.manifest.json", SearchOption.AllDirectories);
-            if (songsManifestJson.Length < 1)
-                throw new DataException("<ERROR> No songs.manifest.json file found." + Environment.NewLine +
+            string[] fileExt = new string[] { "songs.manifest.json", "songs_bass.manifest.json" };
+            var songsManifestJson = Directory.EnumerateFiles(unpackedDir, "*", SearchOption.AllDirectories).Where(fi => fileExt.Any(fi.ToLower().EndsWith)).ToList();
+            if (!songsManifestJson.Any())
+                throw new DataException("<CRITICAL ERROR> No songs.manifest.json file found." + Environment.NewLine +
                     "Please confirm " + Packer.RecycleUnpackedDir(unpackedDir) + " is an RS1 CDLC ..." + Environment.NewLine +
                     "The 'Game Version' must be properly set in the 'General Config' menu." + Environment.NewLine + Environment.NewLine);
-            if (songsManifestJson.Length > 1)
-                throw new DataException("<ERROR> More than one songs.manifest.json file found." + Environment.NewLine + Environment.NewLine);
+
+            // newer RS1 may have two manifest files
+            if (songsManifestJson.Count > 2)
+                throw new DataException("<ERROR> More than two *.manifest.json files found." + Environment.NewLine + Environment.NewLine);
 
             var attr = new List<Attributes>();
-            var songsManifest = Manifest.Manifest.LoadFromFile(songsManifestJson[0]).Entries.ToArray();
-
-            for (int smIndex = 0; smIndex < songsManifest.Count(); smIndex++)
+            foreach (var manifestFile in songsManifestJson)
             {
-                var smData = songsManifest[smIndex].Value.ToArray()[0].Value;
-                attr.Add(smData);
+                var songsManifest = Manifest.Manifest.LoadFromFile(manifestFile).Entries.ToArray();
+                for (int smIndex = 0; smIndex < songsManifest.Count(); smIndex++)
+                {
+                    var smData = songsManifest[smIndex].Value.ToArray()[0].Value;
+                    attr.Add(smData);
+                }
             }
 
             attr = attr.Where(x => !x.ArrangementName.Equals("Vocals")).ToList();
             if (!attr.Any())
-                throw new DataException("songs.manifest.json file did not parse correctly.");
+                throw new DataException("<ERROR> songs.manifest.json file did not parse correctly.");
 
             var attrFirst = attr.First();
             // Fill SongInfo
@@ -170,7 +175,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var tones2014 = new List<Tone2014>();
             var tones = new List<Tone>();
             var toneManifest = Manifest.Tone.Manifest.LoadFromFile(toneManifestJson[0]);
-
+  
             for (int tmIndex = 0; tmIndex < toneManifest.Entries.Count(); tmIndex++)
             {
                 var tmData = toneManifest.Entries[tmIndex];
@@ -198,7 +203,7 @@ namespace RocksmithToolkitLib.DLCPackage
             // Load xml arrangements
             var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
             if (xmlFiles.Length <= 0)
-                throw new DataException("Can not find any XML arrangement files");
+                throw new DataException("<ERROR> Can not find any XML arrangement files");
 
             foreach (var xmlFile in xmlFiles)
             {
@@ -234,11 +239,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (projectMap.Count > 0)
                     {
                         var result = projectMap.First(m => String.Equals(Path.GetFileName(m.SongXmlPath), Path.GetFileName(xmlFile), StringComparison.CurrentCultureIgnoreCase));
-                        if (result.Tones.Count != 1)
-                            throw new DataException("Invalid RS1 CDLC Tones Data");
-
                         tone = tones.First(t => t.Key == result.Tones[0]);
-                        arr = attr.First(s => s.SongXml.ToLower().Contains(result.LLID)); //FIXME: Sequence contains no matching element issue
+
+                        // now works for newer RS1 multitone CDLC
+                        arr = attr.First(s => s.SongXml.ToLower().Contains(result.LLID));
                     }
                     else // tone matching is not enabled (single tone)
                     {
@@ -394,9 +398,9 @@ namespace RocksmithToolkitLib.DLCPackage
             // Get Album Artwork DDS Files
             var artFiles = Directory.GetFiles(unpackedDir, "*.dds", SearchOption.AllDirectories);
             if (artFiles.Length < 1)
-                throw new DataException("No Album Artwork file found.");
+                throw new DataException("<ERROR> No Album Artwork file found.");
             if (artFiles.Length > 1)
-                throw new DataException("More than one Album Artwork file found.");
+                throw new DataException("<ERROR> More than one Album Artwork file found.");
 
             var targetArtFiles = new List<DDSConvertedFile>();
             data.AlbumArtPath = artFiles[0];
@@ -413,9 +417,9 @@ namespace RocksmithToolkitLib.DLCPackage
             var targetAudioFiles = new List<string>();
             var audioFiles = Directory.GetFiles(unpackedDir, "*.ogg", SearchOption.AllDirectories);
             if (audioFiles.Length < 1)
-                throw new DataException("No Audio file found.");
+                throw new DataException("<ERROR> No Audio file found.");
             if (audioFiles.Length > 2)
-                throw new DataException("Too many Audio files found.");
+                throw new DataException("<ERROR> Too many Audio files found.");
 
             int i;
             for (i = 0; i < audioFiles.Length; i++)
@@ -437,7 +441,7 @@ namespace RocksmithToolkitLib.DLCPackage
             targetAudioFiles.Add(audioFiles[i]);
 
             if (!targetAudioFiles.Any())
-                throw new DataException("Audio file not found.");
+                throw new DataException("<ERROR> Audio file not found.");
 
             var a = new FileInfo(audioFiles[i]);
             data.OggPath = a.FullName;

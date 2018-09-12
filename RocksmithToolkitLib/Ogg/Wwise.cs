@@ -34,7 +34,8 @@ namespace RocksmithToolkitLib.Ogg
                 // e.g., ‘RocksmithToolkitGUI.exe >console.log’ 
                 Console.WriteLine("WwiseCLI:\n\'" + wwiseCLIPath + "\'\n\nTemplate:\n\'" + wwiseTemplateDir + "\'");
 
-                ExternalApps.Wav2Wem(wwiseCLIPath, wwiseTemplateDir);
+                // apply magicDust to WwiseCLI.exe to force conversions (known Wwise2010 issue)
+                ExternalApps.Wav2Wem(wwiseCLIPath, wwiseTemplateDir, 10);
                 GetWwiseFiles(destinationPath, wwiseTemplateDir);
             }
             catch (Exception ex)
@@ -52,7 +53,7 @@ namespace RocksmithToolkitLib.Ogg
             if (String.IsNullOrEmpty(ConfigRepository.Instance()["general_wwisepath"]))
                 wwiseRoot = Environment.GetEnvironmentVariable("WWISEROOT");
             else
-                wwiseRoot = ConfigRepository.Instance()["general_wwisepath"]; //could point to wrong dir, so chech back again.
+                wwiseRoot = ConfigRepository.Instance()["general_wwisepath"];
 
             if (String.IsNullOrEmpty(wwiseRoot))
                 throw new FileNotFoundException("Could not find Audiokinetic Wwise installation." + Environment.NewLine +
@@ -82,7 +83,10 @@ namespace RocksmithToolkitLib.Ogg
 
             // a final error check
             var wwiseVersion = FileVersionInfo.GetVersionInfo(wwiseCLIexe).ProductVersion;
-            if (wwiseVersion.StartsWith("2013.2"))
+
+            if (wwiseVersion.StartsWith("2010.3"))
+                Selected = OggFile.WwiseVersion.Wwise2010;
+            else if (wwiseVersion.StartsWith("2013.2"))
                 Selected = OggFile.WwiseVersion.Wwise2013;
             else if (wwiseVersion.StartsWith("2014.1"))
                 Selected = OggFile.WwiseVersion.Wwise2014;
@@ -121,80 +125,89 @@ namespace RocksmithToolkitLib.Ogg
             // Unpack required template here, based on Wwise version installed.
             switch (Selected)
             {
-                // add support for new versions of Wwise here
+                // add legacy support for RS1 CDLC here
+                case OggFile.WwiseVersion.Wwise2010:
+                // add support for new versions of Wwise for RS2014 here
                 case OggFile.WwiseVersion.Wwise2013:
                 case OggFile.WwiseVersion.Wwise2014:
                 case OggFile.WwiseVersion.Wwise2015:
                 case OggFile.WwiseVersion.Wwise2016:
                 case OggFile.WwiseVersion.Wwise2017:
+                    // for fewer headaches ... start with fresh Wwise 2010 Template
+                    if (Directory.Exists(templateDir) && Selected == OggFile.WwiseVersion.Wwise2010)
+                        IOExtension.DeleteDirectory(templateDir, true);
+
                     ExtractTemplate(Path.Combine(ExternalApps.TOOLKIT_ROOT, Selected + ".tar.bz2"));
                     break;
                 default:
-                    throw new FileNotFoundException("Wwise path is incompatible.");
+                    throw new FileNotFoundException("<ERROR> Wwise path is incompatible.");
             }
 
-            var resString = String.Empty;
             var workUnitPath = Path.Combine(templateDir, "Interactive Music Hierarchy", "Default Work Unit.wwu");
             using (var sr = new StreamReader(File.OpenRead(workUnitPath)))
             {
-                resString = sr.ReadToEnd(); sr.Close();
-                resString = resString.Replace("%QF1%", Convert.ToString(audioQuality));
-                resString = resString.Replace("%QF2%", "4"); //preview
+                var workUnit = sr.ReadToEnd();
+                sr.Close();
+                workUnit = workUnit.Replace("%QF1%", Convert.ToString(audioQuality));
+
+                if (Selected != OggFile.WwiseVersion.Wwise2010)
+                    workUnit = workUnit.Replace("%QF2%", "4"); //preview audio
 
                 var tw = new StreamWriter(workUnitPath, false);
-                tw.Write(resString);
+                tw.Write(workUnit);
                 tw.Flush();
             }
 
-            //if nothing missing maybe just create one? what is prupouse of this?
-            var orgSfxDir = Path.Combine(templateDir, "Originals\\SFX");
-            if (!Directory.Exists(orgSfxDir))
-                throw new FileNotFoundException("Could not find Wwise template originals SFX directory.\r\nReinstall CST to fix problem.");
+            // use IOExtensions here for better control
+            // deleting GeneratedSoundBanks gives new hex value to wem/ogg files
+            var bnk = Path.Combine(templateDir, "GeneratedSoundBanks");
+            if (Directory.Exists(bnk))
+                IOExtension.DeleteDirectory(bnk, true);
+
+            var orgSfxDir = Path.Combine(templateDir, "Originals", "SFX");
+            if (Directory.Exists(Path.Combine(templateDir, "Originals")))
+                IOExtension.DeleteDirectory(Path.Combine(templateDir, "Originals"), true);
+            IOExtension.MakeDirectory(orgSfxDir);
+
+            var cacheWinSfxDir = Path.Combine(templateDir, ".cache", "Windows", "SFX");
+            if (Directory.Exists(Path.Combine(templateDir, ".cache")))
+                IOExtension.DeleteDirectory(Path.Combine(templateDir, ".cache"), true);
+            IOExtension.MakeDirectory(cacheWinSfxDir);
 
             var vcache = Directory.EnumerateFiles(templateDir, "Template.*.validationcache").FirstOrDefault();
             if (File.Exists(vcache))
-                File.Delete(vcache);
+                IOExtension.DeleteFile(vcache);
 
-            var cache = Path.Combine(templateDir, ".cache");
-            if (Directory.Exists(cache))
+            if (Selected != OggFile.WwiseVersion.Wwise2010)
             {
-                Directory.Delete(cache, true);
-                // WwiseCLI requires full .cache path be present??? Usually not.
-                Directory.CreateDirectory(Path.Combine(templateDir, ".cache\\Windows\\SFX"));
+                var dirName = Path.GetDirectoryName(sourcePath);
+                var fileName = Path.GetFileNameWithoutExtension(sourcePath);
+                var dirFileName = Path.Combine(dirName, fileName);
+                var sourcePreviewWave = String.Format("{0}_{1}.wav", dirFileName, "preview");
+                IOExtension.CopyFile(sourcePreviewWave, Path.Combine(orgSfxDir, "Audio_preview.wav"), true, false);
             }
 
-            // cleanup gives new hex value to WEM files
-            var bnk = Path.Combine(templateDir, "GeneratedSoundBanks");
-            if (Directory.Exists(bnk))
-                Directory.Delete(bnk, true);
-
-            var dirName = Path.GetDirectoryName(sourcePath);
-            var fileName = Path.GetFileNameWithoutExtension(sourcePath);
-            var dirFileName = Path.Combine(dirName, fileName);
-            var sourcePreviewWave = String.Format("{0}_{1}.wav", dirFileName, "preview");
-
-            File.Copy(sourcePath, Path.Combine(orgSfxDir, "Audio.wav"), true);
-            File.Copy(sourcePreviewWave, Path.Combine(orgSfxDir, "Audio_preview.wav"), true);
+            IOExtension.CopyFile(sourcePath, Path.Combine(orgSfxDir, "Audio.wav"), true, false);
 
             return templateDir;
         }
 
-        // about 800ms here, not that slow.
         public static void ExtractTemplate(string packedTemplatePath)
         {
-            var appRootDir = Path.GetDirectoryName(Application.ExecutablePath);
+            if (!File.Exists(packedTemplatePath))
+                throw new Exception("<ERROR> Could not find packed template: " + packedTemplatePath + Environment.NewLine + "Try re-installing the toolkit ...");
 
             using (var packedTemplate = File.OpenRead(packedTemplatePath))
             using (var bz2 = new BZip2InputStream(packedTemplate))
             using (var tar = TarArchive.CreateInputTarArchive(bz2))
             {
-                tar.ExtractContents(appRootDir);
+                tar.ExtractContents(ExternalApps.TOOLKIT_ROOT);
             }
         }
 
         public static void GetWwiseFiles(string destinationPath, string wwiseTemplateDir)
         {
-            const string wemDir = @".cache\Windows\SFX"; //could be platform dependent like "Mac" or "PS3"
+            var wemDir = Path.Combine(".cache", "Windows", "SFX"); //could be platform dependent like "Mac" or "PS3"
             var wemPath = Path.Combine(wwiseTemplateDir, wemDir);
             var wemPathInfo = new DirectoryInfo(wemPath);
             Console.WriteLine("Wwise '.cache': " + wemPath);
@@ -202,9 +215,13 @@ namespace RocksmithToolkitLib.Ogg
             if (!wemPathInfo.Exists)
                 throw new FileNotFoundException("Could not find Wwise template .cache Windows SFX directory");
 
-            var srcPaths = wemPathInfo.EnumerateFiles("*.wem", SearchOption.AllDirectories).ToArray();
-            if (srcPaths.Length != 2)
-                throw new Exception("Did not find converted Wem audio and preview files");
+            string[] fileExt = new string[] { ".wem", ".ogg" };
+            var srcPaths = wemPathInfo.EnumerateFiles("*", SearchOption.TopDirectoryOnly).Where(fi => fileExt.Any(fi.FullName.ToLower().EndsWith)).ToList();
+            if (!srcPaths.Any())
+                throw new Exception("<ERROR> Did not find any converted Wwise audio files ...");
+
+            if (Selected != OggFile.WwiseVersion.Wwise2010 && srcPaths.Count < 2)
+                throw new Exception("<ERROR> Did not find converted Wwise audio and preview files ...");
 
             //var destPreviewPath = Path.Combine(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + "_preview.wem");
             var destPreviewPath = string.Format("{0}_preview.wem", destinationPath.Substring(0, destinationPath.LastIndexOf(".", StringComparison.Ordinal)));

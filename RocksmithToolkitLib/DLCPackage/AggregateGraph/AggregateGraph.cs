@@ -170,8 +170,9 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                                             UUID = id.AgUrn,
                                             LLID = id.AgValue.Split(new Char[] { '-' })[0],
                                             SongXmlPath = valueXmlFile,
-                                            Tones = tonesList // RS1 should only have one tone
+                                            Tones = tonesList // newer RS1 may have multipble tones (guitar and bass)
                                         });
+                                  
                                     break;
                                 }
                             }
