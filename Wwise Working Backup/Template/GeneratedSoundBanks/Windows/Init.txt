@@ -1,3 +1,0 @@
-Audio Bus	ID	Name			Wwise Object Path	Notes
-	652183330	Master Audio Bus			\Default Work Unit\Master Audio Bus	
-
