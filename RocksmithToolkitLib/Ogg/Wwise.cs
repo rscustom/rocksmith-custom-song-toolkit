@@ -218,15 +218,17 @@ namespace RocksmithToolkitLib.Ogg
             if (!wemPathInfo.Exists)
                 throw new FileNotFoundException("Could not find Wwise template .cache Windows SFX directory");
 
-            string[] fileExt = new string[] { ".wem", ".ogg" };
-            var srcPaths = wemPathInfo.EnumerateFiles("*", SearchOption.TopDirectoryOnly).Where(fi => fileExt.Any(fi.FullName.ToLower().EndsWith)).ToList();
+            var fileExt = ".wem";
+            if (Selected == OggFile.WwiseVersion.Wwise2010)
+                fileExt = ".ogg";
+
+            var srcPaths = wemPathInfo.EnumerateFiles("*", SearchOption.TopDirectoryOnly).Where(fi => fi.FullName.ToLower().EndsWith(fileExt)).ToList();
             if (!srcPaths.Any())
                 throw new Exception("<ERROR> Did not find any converted Wwise audio files ...");
 
             if (Selected != OggFile.WwiseVersion.Wwise2010 && srcPaths.Count < 2)
                 throw new Exception("<ERROR> Did not find converted Wwise audio and preview files ...");
 
-            //var destPreviewPath = Path.Combine(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + "_preview.wem");
             var destPreviewPath = string.Format("{0}_preview.wem", destinationPath.Substring(0, destinationPath.LastIndexOf(".", StringComparison.Ordinal)));
             foreach (var srcPath in srcPaths)
             {
