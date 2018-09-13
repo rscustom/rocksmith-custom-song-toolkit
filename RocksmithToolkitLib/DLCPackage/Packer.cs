@@ -613,7 +613,7 @@ namespace RocksmithToolkitLib.DLCPackage
             // cleanup
             if (File.Exists(outputFilename))
                 File.Delete(outputFilename);
-            
+
             if (File.Exists(psarcDatPath))
                 File.Delete(psarcDatPath);
 
@@ -649,6 +649,10 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var entry in psarc.TOC)
             {
                 var inputPath = Path.Combine(destPath, entry.Name);
+
+                // for dev debugging invalid symbol usage in CDLC
+                // inputPath = inputPath.Replace("?", "i");
+                // inputPath = Path.Combine(destPath, StringExtensions.GetValidFileName(entry.Name));
 
                 if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
                 {

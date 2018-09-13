@@ -206,7 +206,7 @@ namespace RocksmithToolkitLib.Extensions
 
         public static bool MoveFile(string fileFrom, string fileTo, bool verbose = true)
         {
-            if (File.Exists(fileTo))
+             if (File.Exists(fileTo))
                 if (!verbose)
                     File.Delete(fileTo);
                 else if (!PromptOverwrite(fileTo))

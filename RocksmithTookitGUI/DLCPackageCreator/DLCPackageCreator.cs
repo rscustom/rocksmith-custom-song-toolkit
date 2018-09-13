@@ -1194,8 +1194,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 if (CurrentGameVersion == GameVersion.RS2012 || Path.GetExtension(AudioPath) == "*.wem")
                 {
-                    // commented out for RS2014 => RS1 Conversion Testing
-                    // AudioPath.VerifyHeaders();
+                    AudioPath.VerifyHeaders();
                 }
             }
             catch (InvalidDataException ex)
@@ -1607,9 +1606,26 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void btnPackageGenerate_Click(object sender, EventArgs e)
         {
+            var diaMsg = String.Empty;
+            var wwisePath = Wwise.GetWwisePath();
+            var wwiseVersion = FileVersionInfo.GetVersionInfo(wwisePath).ProductVersion;
+            if (CurrentGameVersion == GameVersion.RS2012 && !wwiseVersion.StartsWith("2010.3"))
+            {
+                diaMsg = "Configuration Wwise Path is not set properly for RS1 ...";
+                BetterDialog2.ShowDialog(diaMsg, "Generate Button", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                return;
+            }
+
+            if (CurrentGameVersion != GameVersion.RS2012 && wwiseVersion.StartsWith("2010"))
+            {
+                diaMsg = "Configuration Wwise Path is not set properly for RS2014 or Conversions ...";
+                BetterDialog2.ShowDialog(diaMsg, "Generate Button", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                return;
+            }
+
             if (String.IsNullOrEmpty(ArtistSort) || String.IsNullOrEmpty(SongTitleSort) || String.IsNullOrEmpty(PackageVersion) || String.IsNullOrEmpty(DLCKey))
             {
-                var diaMsg = "Can not 'Generate' a package quite yet ..." + Environment.NewLine + Environment.NewLine +
+                diaMsg = "Can not 'Generate' a package quite yet ..." + Environment.NewLine + Environment.NewLine +
                     "One or more fields are missing information." + Environment.NewLine +
                     "Try using the 'Import Package' button, or" + Environment.NewLine +
                     "manually 'Add' your EOF project data.";
@@ -2072,8 +2088,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var wwisePath = Wwise.GetWwisePath();
                 var wwiseVersion = FileVersionInfo.GetVersionInfo(wwisePath).ProductVersion;
                 if (!wwiseVersion.StartsWith("2010.3"))
-                    throw new Exception("<ERROR> WwiseCLI.exe path is not set properly for RS1 Conversions ...");
-               
+                    throw new Exception("<ERROR> Configuration Wwise Path is not set properly for RS1 ...");
+
                 var wem2014 = AudioPath;
                 var toolkitFolderPath = Path.GetDirectoryName(wem2014);
                 var eofFolderPath = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(wem2014)), "EOF");

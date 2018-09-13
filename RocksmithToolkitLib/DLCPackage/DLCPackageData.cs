@@ -175,7 +175,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var tones2014 = new List<Tone2014>();
             var tones = new List<Tone>();
             var toneManifest = Manifest.Tone.Manifest.LoadFromFile(toneManifestJson[0]);
-  
+
             for (int tmIndex = 0; tmIndex < toneManifest.Entries.Count(); tmIndex++)
             {
                 var tmData = toneManifest.Entries[tmIndex];
@@ -870,12 +870,14 @@ namespace RocksmithToolkitLib.DLCPackage
 
             foreach (var json in jsonFiles)
             {
+                // Move JSON
                 var name = Path.GetFileNameWithoutExtension(json);
-                var xmlFile = xmlFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
-
-                // Move all pair JSON\XML
                 IOExtension.MoveFile(json, Path.Combine(toolkitDir, name + ".json"));
-                IOExtension.MoveFile(xmlFile, Path.Combine(eofDir, name + ".xml"));
+
+                // Move matching XML
+                var xmlFile = xmlFiles.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x) == name);
+                if (!String.IsNullOrEmpty(xmlFile)) // in case there is no matching XML file
+                    IOExtension.MoveFile(xmlFile, Path.Combine(eofDir, name + ".xml"));
             }
 
             // Move showlights.xml to EOF folder
