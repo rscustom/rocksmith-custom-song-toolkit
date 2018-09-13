@@ -197,6 +197,9 @@ namespace RocksmithToolkitLib.Ogg
             if (!File.Exists(packedTemplatePath))
                 throw new Exception("<ERROR> Could not find packed template: " + packedTemplatePath + Environment.NewLine + "Try re-installing the toolkit ...");
 
+            var templateDir = Path.Combine(ExternalApps.TOOLKIT_ROOT, "Template");
+            IOExtension.DeleteDirectory(templateDir);
+
             using (var packedTemplate = File.OpenRead(packedTemplatePath))
             using (var bz2 = new BZip2InputStream(packedTemplate))
             using (var tar = TarArchive.CreateInputTarArchive(bz2))

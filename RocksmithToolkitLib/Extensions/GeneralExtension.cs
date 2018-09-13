@@ -260,7 +260,10 @@ namespace RocksmithToolkitLib.Extensions
 
             var process = new Process();
             cmdWin = new HelpForm();
-            sb = new StringBuilder(startInfo.FileName + " " + startInfo.Arguments);
+            sb = new StringBuilder();
+            sb.AppendLine("Please wait ...");
+            sb.AppendLine("");
+            sb.AppendLine(startInfo.FileName + " " + startInfo.Arguments);
 
             if (!runInBackground)
             {
@@ -302,6 +305,10 @@ namespace RocksmithToolkitLib.Extensions
                     sb.AppendLine(line);
                     UpdateCmdWin(line);
                 }
+
+                UpdateCmdWin("");
+                sb.AppendLine("Finished ...");
+                UpdateCmdWin("");
             }
 
             var exitCode = -1;
@@ -312,9 +319,6 @@ namespace RocksmithToolkitLib.Extensions
 
                 if (!runInBackground)
                 {
-                    UpdateCmdWin("");
-                    UpdateCmdWin("");
-                    UpdateCmdWin("");
                     Thread.Sleep(3000);
                     cmdWin.Close();
                 }
@@ -341,7 +345,7 @@ namespace RocksmithToolkitLib.Extensions
                     cmdWin.rtbNotes.Text += Environment.NewLine + line;
                     cmdWin.rtbNotes.SelectionStart = cmdWin.rtbNotes.Text.Length;
                     cmdWin.rtbNotes.ScrollToCaret();
-                    Application.DoEvents();                  
+                    Application.DoEvents();
                 });
 
             Debug.WriteLine(line);
