@@ -2083,12 +2083,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
 
-                // TODO: Convert RS2014 to RS1 Audio 
-                // ogg2ww does not exist ... blah ... blah
+                // Convert RS2014 to RS1 Audio 
                 var wwisePath = Wwise.GetWwisePath();
                 var wwiseVersion = FileVersionInfo.GetVersionInfo(wwisePath).ProductVersion;
                 if (!wwiseVersion.StartsWith("2010.3"))
-                    throw new Exception("<ERROR> Configuration Wwise Path is not set properly for RS1 ...");
+                    throw new Exception("<ERROR> Configuration Wwise Path is not set properly for RS1 ..." + Environment.NewLine);
 
                 var wem2014 = AudioPath;
                 var toolkitFolderPath = Path.GetDirectoryName(wem2014);

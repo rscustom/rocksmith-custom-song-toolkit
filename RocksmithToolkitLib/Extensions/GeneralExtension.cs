@@ -238,6 +238,7 @@ namespace RocksmithToolkitLib.Extensions
 
         private static StringBuilder sb;
         private static HelpForm cmdWin;
+
         public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null)
         {
 
@@ -282,8 +283,8 @@ namespace RocksmithToolkitLib.Extensions
                 Application.DoEvents();
 
                 // FIXME: causing CrossThreading InvalidOperationException error
-                //process.OutputDataReceived += new DataReceivedEventHandler((s, e) => Process_DataReceived(s, e));
-                //process.ErrorDataReceived += new DataReceivedEventHandler((s, e) => Process_DataReceived(s, e));
+                process.OutputDataReceived += new DataReceivedEventHandler((s, e) => Process_DataReceived(s, e));
+                // process.ErrorDataReceived += new DataReceivedEventHandler((s, e) => Process_DataReceived(s, e));
             }
 
 
@@ -293,22 +294,18 @@ namespace RocksmithToolkitLib.Extensions
 
             if (!runInBackground && waitToFinish)
             {
-                // FIXME: causing CrossThreading InvalidOperationException error
+                // FIXME: Async causing CrossThreading InvalidOperationException error
                 // process.BeginOutputReadLine();
                 // process.BeginErrorReadLine();
 
                 // TODO: this is temporary display method until CrossThreading is fixed
-                // NOTE: commented out when working of FIXME
+                // NOTE: commented out when working on FIXME
                 while (!process.StandardOutput.EndOfStream)
                 {
                     var line = process.StandardOutput.ReadLine();
                     sb.AppendLine(line);
                     UpdateCmdWin(line);
                 }
-
-                UpdateCmdWin("");
-                sb.AppendLine("Finished ...");
-                UpdateCmdWin("");
             }
 
             var exitCode = -1;
@@ -319,6 +316,9 @@ namespace RocksmithToolkitLib.Extensions
 
                 if (!runInBackground)
                 {
+                    UpdateCmdWin("");
+                    sb.AppendLine("Finished ...");
+                    UpdateCmdWin("");
                     Thread.Sleep(3000);
                     cmdWin.Close();
                 }
@@ -350,7 +350,6 @@ namespace RocksmithToolkitLib.Extensions
 
             Debug.WriteLine(line);
         }
-
 
         public static string[] SelectLines(this string[] content, string value)
         {
