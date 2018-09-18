@@ -19,6 +19,7 @@ using RocksmithToolkitLib.Ogg;
 using RocksmithToolkitLib.Sng;
 using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
 using RocksmithToolkitLib.Conversion;
+using RocksmithToolkitLib.XmlRepository;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -549,6 +550,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     // Adding Arrangement
                     data.Arrangements.Add(new Arrangement(attr, xmlFile, fixMultiTone, fixLowBass));
+
+                    // Add Tuning Name
+                    var tuningName = TuningDefinitionRepository.Instance.Detect(attr.Tuning, GameVersion.RS2014);
+                    data.Arrangements.Last().Tuning = tuningName.UIName;
 
                     // make a list of tone names used in arrangements
                     var toneNames = new List<string>();
