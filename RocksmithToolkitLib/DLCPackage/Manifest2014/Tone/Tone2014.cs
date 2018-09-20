@@ -94,6 +94,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Tone
         {
             List<Tone2014> tones = new List<Tone2014>();
 
+            if (filePath.EndsWith("_prfldb", StringComparison.OrdinalIgnoreCase))
+                return ReadFromProfile(filePath);
+
             var toneExtension = Path.GetExtension(filePath);
             switch (toneExtension)
             {
@@ -156,23 +159,18 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Tone
 
         private static List<Tone2014> ReadFromPackage(string packagePath, Platform platform)
         {
-            if (packagePath.ToLowerInvariant().EndsWith("_prfldb") || packagePath.ToLowerInvariant().EndsWith("_profile"))
-                return ReadFromProfile(packagePath);
-            else
-            {
-                var tones = new List<Tone2014>();
-                var tmpDir = Packer.Unpack(packagePath, Path.GetTempPath());
+            var tones = new List<Tone2014>();
+            var tmpDir = Packer.Unpack(packagePath, Path.GetTempPath());
 
-                var toneManifestFiles = Directory.EnumerateFiles(tmpDir, "*.json", SearchOption.AllDirectories);
-                foreach (var file in toneManifestFiles)
-                    foreach (Tone2014 tone in ReadFromManifest(file))
-                        if (tones.All(a => a.Name != tone.Name))
-                            tones.Add(tone);
+            var toneManifestFiles = Directory.EnumerateFiles(tmpDir, "*.json", SearchOption.AllDirectories);
+            foreach (var file in toneManifestFiles)
+                foreach (Tone2014 tone in ReadFromManifest(file))
+                    if (tones.All(a => a.Name != tone.Name))
+                        tones.Add(tone);
 
-                IOExtension.DeleteDirectory(tmpDir);
+            IOExtension.DeleteDirectory(tmpDir);
 
-                return tones;
-            }
+            return tones;
         }
 
         #endregion

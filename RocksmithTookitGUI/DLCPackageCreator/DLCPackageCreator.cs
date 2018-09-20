@@ -2600,12 +2600,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             foreach (var toneImportFile in toneImportFiles)
             {
-                var tif = toneImportFile;
-                // game may convert profiles to uppercase
-                if (tif.ToLower().Contains("prfldb"))
-                    tif = tif.ToLower();
-
-                ImportTone(tif);
+                ImportTone(toneImportFile);
             }
 
             var numTones = lstTones.Items.Count - preToneCount;
