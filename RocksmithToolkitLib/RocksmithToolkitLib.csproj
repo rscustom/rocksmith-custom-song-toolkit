@@ -278,16 +278,18 @@ if $(ConfigurationName) == Debug (
 CD "$(SolutionDir)"
 
 rem if a 'Type 1 Error' occures check the .git folder for missing critical contents
-rem usual this error occures after a .git Garbage Cleanup
+rem usual this error occures after a .git Garbage Cleanup - so don't use it!  DOH
 rem resyncing the commit usual fixes the error
 
 rem there are several alternate usages for RocksmithPreBuild.exe
 
-cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
+rem the next cmd is used for normal beta development
+rem cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
 
 rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.4.1 BETA"
-rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.4.0 RELEASE"
+cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.0.0 RELEASE"
 )
+
 rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj these call the 'prebuild.sh' file</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

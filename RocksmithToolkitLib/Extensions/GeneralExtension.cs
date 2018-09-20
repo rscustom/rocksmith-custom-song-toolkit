@@ -236,9 +236,7 @@ namespace RocksmithToolkitLib.Extensions
             return tkInfo;
         }
 
-        private static StringBuilder sb;
         private static HelpForm cmdWin;
-
         public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null)
         {
 
@@ -252,7 +250,6 @@ namespace RocksmithToolkitLib.Extensions
                 WorkingDirectory = rootPath,
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
-                // RedirectStandardError = true,
                 UseShellExecute = false
             };
 
@@ -260,8 +257,7 @@ namespace RocksmithToolkitLib.Extensions
                 startInfo.Arguments = arguments;
 
             var process = new Process();
-            cmdWin = new HelpForm();
-            sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("Please wait ...");
             sb.AppendLine("");
             sb.AppendLine(startInfo.FileName + " " + startInfo.Arguments);
@@ -269,6 +265,7 @@ namespace RocksmithToolkitLib.Extensions
             if (!runInBackground)
             {
                 // setup a custom Command Window
+                cmdWin = new HelpForm();
                 cmdWin.Size = new Size(500, 500);
                 cmdWin.StartPosition = FormStartPosition.CenterScreen;
                 cmdWin.TopMost = true;
@@ -281,10 +278,6 @@ namespace RocksmithToolkitLib.Extensions
                 cmdWin.rtbNotes.Text = sb.ToString();
                 cmdWin.Show();
                 Application.DoEvents();
-
-                // FIXME: causing CrossThreading InvalidOperationException error
-                process.OutputDataReceived += new DataReceivedEventHandler((s, e) => Process_DataReceived(s, e));
-                // process.ErrorDataReceived += new DataReceivedEventHandler((s, e) => Process_DataReceived(s, e));
             }
 
 
@@ -294,12 +287,6 @@ namespace RocksmithToolkitLib.Extensions
 
             if (!runInBackground && waitToFinish)
             {
-                // FIXME: Async causing CrossThreading InvalidOperationException error
-                // process.BeginOutputReadLine();
-                // process.BeginErrorReadLine();
-
-                // TODO: this is temporary display method until CrossThreading is fixed
-                // NOTE: commented out when working on FIXME
                 while (!process.StandardOutput.EndOfStream)
                 {
                     var line = process.StandardOutput.ReadLine();
@@ -308,11 +295,11 @@ namespace RocksmithToolkitLib.Extensions
                 }
             }
 
-            var exitCode = -1;
+            var exitCode = -1; // waitToFinish is false
             if (waitToFinish)
             {
-                process.WaitForExit();
-                exitCode = process.ExitCode;
+                process.WaitForExit(); // WaitForExit blocks EventHandler UI Threading
+                exitCode = process.ExitCode; // sucess = 0, failure = 1
 
                 if (!runInBackground)
                 {
@@ -322,31 +309,24 @@ namespace RocksmithToolkitLib.Extensions
                     Thread.Sleep(3000);
                     cmdWin.Close();
                 }
+             
+                process.Dispose();
+                process = null;
             }
 
-            process.Dispose();
-            process = null;
             var output = sb.ToString() + Environment.NewLine + "Exit Code: " + exitCode;
-
             return output;
-        }
-
-        private static void Process_DataReceived(object sender, DataReceivedEventArgs e)
-        {
-            Debug.WriteLine(e.Data);
-            sb.AppendLine(e.Data);
-            UpdateCmdWin(e.Data);
         }
 
         private static void UpdateCmdWin(string line)
         {
             InvokeIfRequired(cmdWin, a =>
-                {
-                    cmdWin.rtbNotes.Text += Environment.NewLine + line;
-                    cmdWin.rtbNotes.SelectionStart = cmdWin.rtbNotes.Text.Length;
-                    cmdWin.rtbNotes.ScrollToCaret();
-                    Application.DoEvents();
-                });
+              {
+                  cmdWin.rtbNotes.Text += Environment.NewLine + line;
+                  cmdWin.rtbNotes.SelectionStart = cmdWin.rtbNotes.Text.Length;
+                  cmdWin.rtbNotes.ScrollToCaret();
+                  Application.DoEvents();
+              });
 
             Debug.WriteLine(line);
         }
