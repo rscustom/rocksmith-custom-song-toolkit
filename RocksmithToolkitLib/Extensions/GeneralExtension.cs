@@ -280,7 +280,6 @@ namespace RocksmithToolkitLib.Extensions
                 Application.DoEvents();
             }
 
-
             process.StartInfo = startInfo;
             process.EnableRaisingEvents = true;
             process.Start();
@@ -309,7 +308,7 @@ namespace RocksmithToolkitLib.Extensions
                     Thread.Sleep(3000);
                     cmdWin.Close();
                 }
-             
+
                 process.Dispose();
                 process = null;
             }

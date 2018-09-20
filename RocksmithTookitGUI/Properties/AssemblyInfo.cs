@@ -28,6 +28,6 @@ using RocksmithToolkitLib;
 //      Revision
 //
 // THESE VALUES ARE PROGRAMMATICALLY GENERATED - DO NOT EDIT
-[assembly: AssemblyVersion("2.9.0.0")]
-[assembly: AssemblyInformationalVersion("0209bb11")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyVersion("2.9.1.0")]
+[assembly: AssemblyInformationalVersion("b1c03443")]
+[assembly: AssemblyConfiguration("BETA")]

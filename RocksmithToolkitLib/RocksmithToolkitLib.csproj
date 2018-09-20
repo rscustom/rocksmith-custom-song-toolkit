@@ -283,11 +283,14 @@ rem resyncing the commit usual fixes the error
 
 rem there are several alternate usages for RocksmithPreBuild.exe
 
-rem the next cmd is used for normal beta development
-rem cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
+rem the next cmd is used for normal beta development mode (default mode)
+cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
 
-rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.8.4.1 BETA"
-cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.0.0 RELEASE"
+rem before issuing new release make next cmd active and comment out the others
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.0.0 RELEASE"
+
+rem after making a Release must switch back to Beta using next cmd
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.1.0 BETA"
 )
 
 rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj these call the 'prebuild.sh' file</PreBuildEvent>
