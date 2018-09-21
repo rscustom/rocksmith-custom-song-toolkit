@@ -111,11 +111,7 @@ UpgradeLog*.XML
 
 # Developer Only Custom Files
 *.DotSettings.user
-CleanupBeforeGitPullRequest.bat
-RevisionLog.txt
-*.rar
-OpenCmd.bat
-ShareReleaseLibs.bat
+dev*.*
 
 # Python
 # Byte-compiled / optimized / DLL files
@@ -126,3 +122,4 @@ __pycache__/
 
 /.vs/RocksmithCustomSongCreator/v15/Server/sqlite3
 /.vs/RocksmithCustomSongCreator/v15/sqlite3
+
