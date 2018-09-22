@@ -17,11 +17,11 @@ namespace RocksmithToolkitGUI.Config
     {
         private const string MESSAGEBOX_CAPTION = "General Config";
         private bool loading = false;
-        
+
         public string GetConfigVersion() // also used by AutoUpdater and AssemblyCaller
         {
             // increment the Version here to force RocksmithToolkitUpdater to do a fresh install of RocksmithToolkitLib.*.xml
-            return (string) "3";
+            return (string)"3";
         }
 
         // only gets called one time
@@ -237,10 +237,14 @@ namespace RocksmithToolkitGUI.Config
             using (var fbd = new VistaFolderBrowserDialog())
             {
                 fbd.SelectedPath = general_wwisepath.Text;
-                fbd.Description = "Select Wwise CLI (*.exe) installation folder.";
+                fbd.Description = "Select Wwise CLI (*.exe) installation folder," + Environment.NewLine +
+                    "or press 'X' to close and clear the Wwise Path.";
 
                 if (fbd.ShowDialog() != DialogResult.OK)
-                    return;
+                {
+                    fbd.SelectedPath = ""; // allow user to clear the path
+                    // return; // leaves the path as-is
+                }
 
                 var wwisePath = fbd.SelectedPath;
                 general_wwisepath.Text = wwisePath;

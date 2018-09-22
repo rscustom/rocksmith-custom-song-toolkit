@@ -73,6 +73,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
@@ -92,7 +93,6 @@
     </Compile>
     <Compile Include="CDLC2Tab\CDLC2Gp5.cs" />
     <Compile Include="Config\Globals.cs" />
-    <Compile Include="DDC\SettingsDDC.cs" />
     <Compile Include="DLCInlayCreator\IntroScreensCreator.cs">
       <SubType>UserControl</SubType>
     </Compile>

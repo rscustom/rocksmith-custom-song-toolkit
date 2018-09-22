@@ -305,7 +305,7 @@ namespace RocksmithToolkitLib.Extensions
                     UpdateCmdWin("");
                     sb.AppendLine("Finished ...");
                     UpdateCmdWin("");
-                    Thread.Sleep(3000);
+                    Thread.Sleep(2500);
                     cmdWin.Close();
                 }
 

@@ -149,8 +149,9 @@ namespace RocksmithToolkitLib.Ogg
         }
 
         /// <summary>
-        /// Converts the audio files betewwn RIFF-RIFX platforms.
+        /// Converts the audio files between RIFF-RIFX platforms.
         /// Basically changes Magic and converts from Big to Little endian format.
+        /// RIFF is little endian, RIFX is big endian
         /// </summary>
         /// <returns>The audio platform.</returns>
         /// <param name="inputFile">Input file.</param>
@@ -161,12 +162,12 @@ namespace RocksmithToolkitLib.Ogg
 
             EndianBitConverter bitConverter;
             EndianBitConverter targetbitConverter;
-            if (!platform.IsConsole)
+            if (!platform.IsConsole) // little endian
             {
                 bitConverter = EndianBitConverter.Little;
                 targetbitConverter = EndianBitConverter.Big;
             }
-            else if (platform.IsConsole)
+            else if (platform.IsConsole) // big endian
             {
                 bitConverter = EndianBitConverter.Big;
                 targetbitConverter = EndianBitConverter.Little;
@@ -181,12 +182,13 @@ namespace RocksmithToolkitLib.Ogg
             {
                 // Process Header
                 UInt32 header = reader.ReadUInt32();
-                if (header == 1179011410)//RIFF header to RIFX
+                if (header == 1179011410) //RIFF header to RIFX
                     //raw
-                    writer.Write(1380533848);
+                    writer.Write(1380533848); // RIFX
                 else
                     //raw
-                    writer.Write(1179011410); // 1179011410
+                    writer.Write(1179011410); // RIFF
+
                 writer.Write(reader.ReadUInt32()); // Size of File
                 //raw
                 writer.Write(reader.ReadBytes(4)); // WAVE (RIFF type)
@@ -244,20 +246,32 @@ namespace RocksmithToolkitLib.Ogg
                     writer.Write(reader.ReadByte());
                 }
 
-                //stream
-                var streamsize = (end - start); //calculate the total stream size till End of File
-                for (int i = 0; i < streamsize; i++)
+                try
                 {
-                    UInt16 packetsize = reader.ReadUInt16(); // size of packet
-                    i++; // increase because two bytes read for size of packet
-                    writer.Write(packetsize);
-                    for (int z = 0; z < packetsize; z++)
+                    // stream
+                    var streamsize = (end - start); // calculate the total stream size till End of File
+                    for (int i = 0; i < streamsize; i++)
                     {
-                        Byte packet = reader.ReadByte();
-                        writer.Write(packet); // the packets are the same in both pc/console
-                        i++; // add the  bytes read to packetsize counter.
+                        UInt16 packetsize = reader.ReadUInt16(); // size of packet
+                        i++; // increase because two bytes read for size of packet
+                        writer.Write(packetsize);
+
+                        for (int z = 0; z < packetsize; z++)
+                        {
+                            Byte packet = reader.ReadByte();
+                            writer.Write(packet); // the packets are the same in both pc/console
+                            i++; // add the bytes read to packetsize counter.
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    // Incomplete/corrupt audio file may cause exception, e.g. 
+                    // "End of stream reached with 2 byte left to read"
+                    var errMsg = ex.Message + Environment.NewLine + Environment.NewLine + "USER README:" + Environment.NewLine + "Try generating the RS2012PC CDLC and then use 'Import Package' on generated PC file, then select a console and 'Generate' again.  If this fails then the audio must be remastered for console using the Wwise 2010 GUI :(" + Environment.NewLine;
+                    throw new InvalidDataException(errMsg);
+                }
+ 
                 return new MemoryStream(outputFileStream.GetBuffer(), 0, (int)outputFileStream.Length);
             }
         }

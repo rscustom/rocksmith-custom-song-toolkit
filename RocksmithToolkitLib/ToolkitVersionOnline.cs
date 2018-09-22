@@ -55,24 +55,18 @@ namespace RocksmithToolkitLib
 
             try
             {
-                if (GeneralExtensions.IsInDesignMode)
-                {
-                    // for debugging dumby JSON data
-                    versionInfoJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
-                    toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
-                }
-                else
+                // normal operation
+                if (!GeneralExtensions.IsInDesignMode)
                 {
                     versionInfoJson = new WebClient().DownloadString(versionInfoUrl);
                     toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
 
                     //  recommend update to latest revision under special conditions
                     var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
-                    
-                    if ((!useBeta && ToolkitVersion.AssemblyConfiguration == "BETA") || 
-                        (useBeta && ToolkitVersion.AssemblyConfiguration != "BETA") || 
-                        (String.IsNullOrEmpty(toolkitVersionOnline.Revision) && 
-                        !toolkitVersionOnline.UpdateAvailable))
+
+                    if ((!useBeta && ToolkitVersion.AssemblyConfiguration == "BETA") ||
+                        (useBeta && ToolkitVersion.AssemblyConfiguration != "BETA") ||
+                        String.IsNullOrEmpty(toolkitVersionOnline.Revision))
                     {
                         versionInfoJson = new WebClient().DownloadString(GetFileUrl());
                         toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
@@ -81,6 +75,26 @@ namespace RocksmithToolkitLib
                         toolkitVersionOnline.CommitMessages[1] = "Recommend installing the latest online version.";
                         toolkitVersionOnline.UpdateAvailable = true;
                     }
+                    else
+                    {
+                        var installedRevision = ToolkitVersion.AssemblyInformationVersion;
+                        // update available
+                        if (!installedRevision.Contains(toolkitVersionOnline.Revision))
+                            toolkitVersionOnline.UpdateAvailable = true;
+                        else
+                            toolkitVersionOnline.UpdateAvailable = false;
+                    }
+                }
+                else // dumby JSON data for debugging 
+                {
+                    versionInfoJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
+                    toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
+
+                    var installedRevision = ToolkitVersion.AssemblyInformationVersion;
+                    if (!installedRevision.Contains(toolkitVersionOnline.Revision))
+                        toolkitVersionOnline.UpdateAvailable = true;
+                    // alt debugging option
+                    // toolkitVersionOnline.UpdateAvailable = false;
                 }
             }
             catch (Exception ex)

@@ -47,13 +47,12 @@ namespace RocksmithToolkitLib.Ogg
 
         public static string GetWwisePath()
         {
-            string wwiseRoot;
-
             // Audiokinetic Wwise might not be installed in the default location ;<
+            // always use the Configuration Wwise Path if entered
+            var wwiseRoot = ConfigRepository.Instance()["general_wwisepath"];
+            // otherwise use the WWISEROOT Environmental Variable
             if (String.IsNullOrEmpty(ConfigRepository.Instance()["general_wwisepath"]))
                 wwiseRoot = Environment.GetEnvironmentVariable("WWISEROOT");
-            else
-                wwiseRoot = ConfigRepository.Instance()["general_wwisepath"];
 
             if (String.IsNullOrEmpty(wwiseRoot))
                 throw new FileNotFoundException("Could not find Audiokinetic Wwise installation." + Environment.NewLine +

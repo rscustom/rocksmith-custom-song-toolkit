@@ -13,7 +13,7 @@ using RocksmithToolkitLib.XmlRepository;
 using System.Threading;
 //
 // DEVNOTE: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT ...
-// Modify the RocksmithToolkitLib prebuild event which will update the
+// Modify the RocksmithToolkitLib prebuild event which will update
 // PatchAssemblyVersion.ps1 file '$AssemblyVersion' and '$AssemblyConfiguration' values 
 //
 namespace RocksmithToolkitGUI
@@ -32,14 +32,6 @@ namespace RocksmithToolkitGUI
             var thread = Thread.CurrentThread;
             Application.CurrentCulture = thread.CurrentCulture = thread.CurrentUICulture = ci;
             //Application.CurrentInputLanguage = InputLanguage.FromCulture(ci); //may cause issues for non us cultures esp on wineMAC build got report of such issue.
-
-            // EH keeps main form responsive/refreshed
-            this.Load += MainForm_Load;
-            this.Shown += MainForm_Splash;
-
-            // EGG: more easter eggs ... commented out bad practice
-            //if (args.Length > 0 && File.Exists(args[0]))
-            //    LoadTemplate(args[0]); 
 
             // it is better to be hidden initially and then unhide when needed
             if (GeneralExtensions.IsInDesignMode)
@@ -66,8 +58,6 @@ namespace RocksmithToolkitGUI
                 if (Environment.OSVersion.Platform != PlatformID.MacOSX &&
                     ConfigRepository.Instance().GetBoolean("general_autoupdate"))
                 {
-                    btnUpdate.Text = "Updates are enabled";
-
                     bWorker = new BackgroundWorker();
                     bWorker.DoWork += CheckForUpdate;
                     bWorker.RunWorkerCompleted += EnableUpdate;
@@ -76,6 +66,7 @@ namespace RocksmithToolkitGUI
 
                 // write a new VersionInfo.txt file to toolkit root
                 ToolkitVersion.UpdateVersionInfoFile();
+
             }
             catch {/* DO NOTHING */}
         }
@@ -88,8 +79,6 @@ namespace RocksmithToolkitGUI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            // EH Load happens before EH Splash
-
             // Show this tab only by 'Configuration' click
             tabControl1.TabPages.Remove(GeneralConfigTab);
 
@@ -122,17 +111,20 @@ namespace RocksmithToolkitGUI
                 return;
             }
 
-            //MessageBox.Show("ToolkitVersionOnline.UpdateAvailable: " + onlineVersion.UpdateAvailable + Environment.NewLine +
-            //   "ToolkitVersionOnline.Revision: " + onlineVersion.Revision, "DEBUG ME");
-
-            //if (true) // for debugging and testing
-            if (onlineVersion.UpdateAvailable || GeneralExtensions.IsInDesignMode)
+            if (onlineVersion.UpdateAvailable)
             {
-                btnUpdate.BackColor = Color.LightSteelBlue;
+                btnUpdate.BackColor = Color.Orange;
                 btnUpdate.FlatStyle = FlatStyle.Standard;
                 btnUpdate.Text = "Click here to update";
-                btnUpdate.Enabled = true;
             }
+            else
+            {
+                btnUpdate.BackColor = Color.LightGreen;
+                btnUpdate.FlatStyle = FlatStyle.Popup;
+                btnUpdate.Text = "Updates are enabled";
+            }
+  
+            btnUpdate.Enabled = true;
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -259,7 +251,7 @@ namespace RocksmithToolkitGUI
             }
         }
 
-        private void MainForm_Splash(object sender, EventArgs e)
+        private void MainForm_Shown(object sender, EventArgs e)
         {
             // don't bug the Developers when in design mode ;)
             if (GeneralExtensions.IsInDesignMode)

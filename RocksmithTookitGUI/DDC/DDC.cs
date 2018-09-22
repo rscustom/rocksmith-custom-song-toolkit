@@ -23,201 +23,44 @@ namespace RocksmithToolkitGUI.DDC
 {
     public partial class DDC : UserControl
     {
-        #region Fields
+        #region Constants
+
         private const string MESSAGEBOX_CAPTION = "Dynamic Difficulty Creator";
         private const string TKI_ARRID = "(Arrangement ID by DDC)";
         private const string TKI_REMASTER = "(Remastered by DDC)";
-        private BackgroundWorker bw;
+
+        #endregion
+
         // key => fileName w/o Ext, value => filePath
+        private Dictionary<string, string> ConfigDb;
+        private string DDC_Path = Path.GetTempPath();
+        private Color DisabledColor = Color.Gray;
+        private Color EnabledColor = Color.Black;
         private Dictionary<string, string> FilesDb;
         private Dictionary<string, string> RampUpDb;
-        private Dictionary<string, string> ConfigDb;
-        private Color EnabledColor = Color.Black;
-        private Color DisabledColor = Color.Gray;
-        //
-        private bool IsNDD { get; set; }
-        private string ProcessOutput { get; set; }
-        #endregion
+        private BackgroundWorker bw;
 
         public DDC()
         {
             InitializeComponent();
+
             // Init fields
-            bw = new BackgroundWorker();
             FilesDb = new Dictionary<string, string>();
             RampUpDb = new Dictionary<string, string>();
             ConfigDb = new Dictionary<string, string>();
+
             // Setup worker
-            this.bw.DoWork += bw_DoWork;
-            this.bw.ProgressChanged += bw_ProgressChanged;
-            this.bw.RunWorkerCompleted += bw_Completed;
-            this.bw.WorkerReportsProgress = true;
-            // Do IO stuff here so ddc tab will be up faster aslo don't lock main thread
-            new System.Threading.Thread(new System.Threading.ThreadStart(LoadBackgroundVersion)).Start();
+            bw = new BackgroundWorker();
+            bw.DoWork += bw_DoWork;
+            bw.ProgressChanged += bw_ProgressChanged;
+            bw.RunWorkerCompleted += bw_Completed;
+            bw.WorkerReportsProgress = true;
         }
 
-        private void DDC_Load(object sender, EventArgs e)
-        {
-            PopMDLs();
-            PopCFGs();
-            SetDefaultFromConfig();
-        }
+        //
+        private bool IsNDD { get; set; }
+        private string ProcessOutput { get; set; }
 
-        private void LoadBackgroundVersion()
-        {
-            try
-            {
-                if (!this.DesignMode)
-                {
-                    var ver = FileVersionInfo.GetVersionInfo(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_DDC)).ProductVersion;
-                    if (ddcVersion.InvokeRequired)
-                    {
-                        ddcVersion.Invoke(new Action(() => ddcVersion.Text = String.Format("v{0}", ver)));
-                    }
-                    else ddcVersion.Text = String.Format("v{0}", ver);
-                }
-            }
-            catch { /*For mono compatibility*/ }
-        }
-
-        private void SetDefaultFromConfig()
-        {
-            cmbRampUp.SelectedItem = ConfigRepository.Instance()["ddc_rampup"];
-            cmbConfigFile.SelectedItem = ConfigRepository.Instance()["ddc_config"];
-            cmbPhraseLen.Value = ConfigRepository.Instance().GetDecimal("ddc_phraselength");
-            chkRemoveSustains.Checked = ConfigRepository.Instance().GetBoolean("ddc_removesustain");
-        }
-
-        private void bw_Completed(object sender, RunWorkerCompletedEventArgs e)
-        {
-            var debugMe = e.Result;
-            // file overwriting is done here as last step
-            pbUpdateProgress.Value = 100;
-
-            foreach (var file in FilesDb)
-            {
-                switch (Path.GetExtension(file.Value))
-                {
-                    case ".xml": // Arrangement
-                        {
-                            var fileDir = Path.GetDirectoryName(file.Value);
-                            var ddcArrXML = Path.Combine(fileDir, String.Format("DDC_{0}.xml", file.Key));
-                            var srcShowlights = Path.Combine(fileDir, String.Format("{0}_showlights.xml", file.Key));
-                            var destShowlights = Path.Combine(fileDir, String.Format("DDC_{0}_showlights.xml", file.Key));
-
-                            if (!chkOverwrite.Checked && !File.Exists(destShowlights) && File.Exists(srcShowlights) && File.Exists(ddcArrXML))
-                                File.Copy(srcShowlights, destShowlights, true);
-                        }
-                        break;
-
-                    case ".psarc": // PC / Mac (RS2014)
-                    case ".dat":   // PC (RS1)
-                    case ".edat":  // PS3
-                    case "":       // XBox 360
-                        if (chkOverwrite.Checked)
-                        {
-                            var filePath = file.Value;
-                            var ddcFilePath = GenerateDdcFilePath(filePath);
-                            if (!ddcFilePath.Equals(filePath))
-                            {
-                                // File.Move is prone to exceptions
-                                File.Copy(ddcFilePath, filePath, true);
-                                File.Delete(ddcFilePath);
-                            }
-                        }
-                        break;
-                }
-
-                Invoke(new MethodInvoker(() => RemoveEntry(file.Value)));
-            }
-
-            FilesDb.Clear();
-
-            if (e.Result.Equals(0))
-                MessageBox.Show(String.Format("Dynamic difficulty {0} sucessfully.", IsNDD ? "removed" : "generated"), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            else
-                MessageBox.Show(String.Format("Dynamic difficulty {0} with errors: [" + e.Result + "]" + Environment.NewLine + "See DDC and Toolkit logs for details.", IsNDD ? "removed" : "generated"), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            btnGenerate.Enabled = true;
-            pbUpdateProgress.Visible = false;
-            pbUpdateProgress.MarqueeAnimationSpeed = 0;
-            pbUpdateProgress.Style = ProgressBarStyle.Continuous;
-            lblCurrentOperation.Visible = false;
-            lblStatus.Visible = false;
-            this.Focus();
-        }
-
-        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            pbUpdateProgress.Value = e.ProgressPercentage;
-        }
-
-        private void bw_DoWork(object sender, DoWorkEventArgs e)
-        {
-            ProcessOutput = String.Empty;
-            var rampPath = String.Empty;
-            var cfgPath = String.Empty;
-
-            this.Invoke(new MethodInvoker(() =>
-            {
-                rampPath = GetRampUpMdl();
-                cfgPath = GetConfig();
-            }));
-
-            var errorsFound = new StringBuilder();
-            var totalCount = FilesDb.Count;
-            var currentCount = 0;
-            var errorCount = 0;
-            // TODO: change progress reporting method so it is responsive for a single file
-            var step = (int)Math.Round(1.0 / FilesDb.Count * 100, 0);
-            var progress = 0;
-            bw.ReportProgress(progress);
-
-            foreach (var file in FilesDb)
-            {
-                var consoleOutput = String.Empty;
-                currentCount++;
-                int count = currentCount;
-                GeneralExtensions.InvokeIfRequired(lblStatus, delegate
-                {
-                    lblStatus.Text = String.Format("Processing file {0} of {1} ... Please wait.", count, totalCount);
-                });
-
-                switch (Path.GetExtension(file.Value))
-                {
-                    case ".xml":   // Arrangement
-                        DDCreator.ApplyDD(file.Value, (int)cmbPhraseLen.Value, chkRemoveSustains.Checked, rampPath, cfgPath, out consoleOutput, chkOverwrite.Checked, chkGenLogFile.Checked);
-                        break;
-                    case ".psarc": // PC / Mac (RS2014)
-                    case ".dat":   // PC (RS1)
-                    case ".edat":  // PS3
-                    case "":       // XBox 360
-                        ApplyPackageDD(file.Value, (int)cmbPhraseLen.Value, chkRemoveSustains.Checked, rampPath, cfgPath, out consoleOutput, chkOverwrite.Checked, chkGenLogFile.Checked);
-                        break;
-                }
-
-                if (!String.IsNullOrEmpty(consoleOutput))
-                {
-                    errorsFound.AppendLine(consoleOutput);
-                    errorCount++;
-                }
-
-                progress += step;
-                bw.ReportProgress(progress);
-            }
-
-            if (!String.IsNullOrEmpty(errorsFound.ToString()))
-                ProcessOutput = errorsFound.ToString();
-
-            GeneralExtensions.InvokeIfRequired(lblStatus, delegate
-            {
-                lblStatus.Text = String.Format("Sucessfully processed {0} of {1} files ...", totalCount - errorCount, totalCount);
-            });
-
-            e.Result = errorCount; // No Errors = 0
-        }
-
-        // method works with RS1 and RS2014 archives
         private int ApplyPackageDD(string srcPath, int phraseLen, bool removeSus, string rampPath, string cfgPath, out string consoleOutput, bool overWrite = false, bool keepLog = false)
         {
             int result = 0; // Ends normally with no error
@@ -281,15 +124,15 @@ namespace RocksmithToolkitGUI.DDC
                 else if (result == 1) // Ends with system error
                 {
                     consoleOutput = "DDC System Error: " + Environment.NewLine +
-                       "Arrangment file: " + Path.GetFileName(arr.SongXml.File) + Environment.NewLine +
-                       "CDLC file: " + srcPath;
+                                    "Arrangment file: " + Path.GetFileName(arr.SongXml.File) + Environment.NewLine +
+                                    "CDLC file: " + srcPath;
                     return result;
                 }
                 else if (result == 2) // Ends with application error
                 {
                     consoleOutput = "DDC Application Error: " + Environment.NewLine +
-                       "Arrangment file: " + Path.GetFileName(arr.SongXml.File) + Environment.NewLine +
-                       "CDLC file: " + srcPath;
+                                    "Arrangment file: " + Path.GetFileName(arr.SongXml.File) + Environment.NewLine +
+                                    "CDLC file: " + srcPath;
                     return result;
                 }
 
@@ -363,10 +206,11 @@ namespace RocksmithToolkitGUI.DDC
             return result;
         }
 
-        internal void FillDB()
+        private void FillDB()
         {
             int i = 0;
             DDCfilesDgw.Rows.Clear();
+
             foreach (var rowFile in FilesDb)
             {
                 if (DDCfilesDgw.Rows.Count <= i && i < FilesDb.Count) DDCfilesDgw.Rows.Add();
@@ -374,15 +218,8 @@ namespace RocksmithToolkitGUI.DDC
                 DDCfilesDgw.Rows[i].Cells["TypeColnm"].Value = Path.GetExtension(rowFile.Value);
                 i++;
             }
+
             DDCfilesDgw.Update();
-        }
-
-        private string GetRampUpMdl()
-        {
-            if (cmbRampUp.Text.Trim().Length > 0)
-                return String.Format("{0}", Path.GetFullPath(RampUpDb[cmbRampUp.Text]));
-
-            return "";
         }
 
         private string GenerateDdcFilePath(string filePath)
@@ -403,43 +240,111 @@ namespace RocksmithToolkitGUI.DDC
             return "";
         }
 
-        private void btnGenerate_Click(object sender, EventArgs e)
+        private string GetRampUpMdl()
         {
+            if (cmbRampUp.Text.Trim().Length > 0)
+                return String.Format("{0}", Path.GetFullPath(RampUpDb[cmbRampUp.Text]));
 
-            if (!this.bw.IsBusy && FilesDb.Count > 0)
+            return "";
+        }
+
+        private void PopCFGs()
+        {
+            cmbConfigFile.Items.Clear();
+            ConfigDb.Clear();
+            var filePaths = Directory.EnumerateFiles(DDC_Path, "*.cfg", SearchOption.AllDirectories).ToList();
+
+            foreach (var filePath in filePaths)
             {
-                pbUpdateProgress.Style = ProgressBarStyle.Marquee;
-                pbUpdateProgress.MarqueeAnimationSpeed = 60;
-                pbUpdateProgress.Visible = true;
-                lblCurrentOperation.Text = (IsNDD) ? "Removing DD Content ..." : "Generating DD Content ...";
-                lblCurrentOperation.Visible = true;
-                lblStatus.Visible = true;
-                this.Refresh();
-                btnGenerate.Enabled = false;
-                this.bw.RunWorkerAsync();
+                var fileName = Path.GetFileNameWithoutExtension(filePath);
+                if (fileName.StartsWith("user_")) fileName = fileName.Remove(0, 5);
+                cmbConfigFile.Items.Add(fileName);
+                cmbConfigFile.SelectedIndex = cmbConfigFile.FindStringExact("ddc_default");
+                ConfigDb.Add(fileName, Path.GetFullPath(filePath));
+            }
+
+            cmbConfigFile.Refresh();
+        }
+
+        private void PopMDLs()
+        {
+            cmbRampUp.Items.Clear();
+            RampUpDb.Clear();
+            var filePaths = Directory.EnumerateFiles(DDC_Path, "*.xml", SearchOption.AllDirectories).ToList();
+
+            foreach (var filePath in filePaths)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(filePath);
+                if (fileName.StartsWith("user_")) fileName = fileName.Remove(0, 5);
+                cmbRampUp.Items.Add(fileName);
+                cmbRampUp.SelectedIndex = cmbRampUp.FindStringExact("ddc_default");
+                RampUpDb.Add(fileName, Path.GetFullPath(filePath));
+            }
+
+            cmbRampUp.Refresh();
+        }
+
+        private void RemoveEntry(string path)
+        {
+            for (int i = DDCfilesDgw.RowCount - 1; i >= 0; i--)
+            {
+                if (DDCfilesDgw.Rows[i].Cells["PathColnm"].Value.Equals(path))
+                {
+                    DDCfilesDgw.Rows.RemoveAt(i);
+                    return;
+                }
             }
         }
 
-        private void btnAddArr_Click(object sender, EventArgs e)
+        private void SetDefaultFromConfig()
         {
-            using (var ofd = new VistaOpenFileDialog())
+            cmbRampUp.SelectedItem = ConfigRepository.Instance().GetString("ddc_rampup");
+            cmbConfigFile.SelectedItem = ConfigRepository.Instance().GetString("ddc_config");
+            cmbPhraseLen.Value = ConfigRepository.Instance().GetDecimal("ddc_phraselength");
+            chkRemoveSustains.Checked = ConfigRepository.Instance().GetBoolean("ddc_removesustain");
+        }
+
+        private void DDC_Load(object sender, EventArgs e)
+        {
+            // EH fires on initial load or after any configuration changes  ... just like we want
+            try
             {
-                ofd.Title = "Select Package or Arrangement ...";
-                ofd.Filter = "Filtered files (*.psarc;*.dat;*.edat;*.xml)|*.psarc;*.dat;*.edat;*.xml|" + "All files (*.*)|*.*";
-                ofd.FilterIndex = 0;
-                ofd.Multiselect = true;
-                ofd.ReadOnlyChecked = true;
-                ofd.CheckFileExists = true;
-                ofd.CheckPathExists = true;
-                ofd.RestoreDirectory = true;
+                if (!this.DesignMode) // prevents tab menu VS IDE errors
+                {
+                    // set DDC version info
+                    var ver = FileVersionInfo.GetVersionInfo(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_DDC)).ProductVersion;
+                    if (ddcVersion.InvokeRequired)
+                        ddcVersion.Invoke(new Action(() => ddcVersion.Text = String.Format("v{0}", ver)));
+                    else
+                        ddcVersion.Text = String.Format("v{0}", ver);
 
-                if (ofd.ShowDialog() != DialogResult.OK)
-                    return;
+                    // set the DDC_Path 
+                    DDC_Path = Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.DDC_DIR);
 
-                string[] filePaths = ofd.FileNames;
+                    // populate comboboxes
+                    PopMDLs();
+                    PopCFGs();
+                    SetDefaultFromConfig();
+                }
+            }
+            catch { /*For mono compatibility*/ }
+        }
+
+        private void DDCfilesDgw_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePaths = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 foreach (var filePath in filePaths)
                 {
+                    if (!(Path.GetExtension(filePath) == ".xml" ||
+                          Path.GetExtension(filePath) == ".dat" ||
+                          Path.GetExtension(filePath) == ".psarc" ||
+                          Path.GetExtension(filePath) == "" ||
+                          Path.GetExtension(filePath) == ".edat"))
+                        continue;
+
                     if (filePath.EndsWith("_showlights.xml") ||
                         filePath.EndsWith(".dlc.xml") ||
                         filePath.StartsWith("DDC_"))
@@ -448,75 +353,27 @@ namespace RocksmithToolkitGUI.DDC
                     if (!FilesDb.ContainsValue(filePath))
                         FilesDb.Add(Path.GetFileNameWithoutExtension(filePath), filePath);
                 }
-            }
 
-            FillDB();
-        }
-
-        private void btnRampUp_Click(object sender, EventArgs e)
-        {
-            using (var ofd = new VistaOpenFileDialog())
-            {
-                ofd.Filter = "DDC Ramp-Up model (*.xml)|*.xml";
-                ofd.CheckFileExists = true;
-                ofd.CheckPathExists = true;
-                ofd.Multiselect = true;
-                ofd.ReadOnlyChecked = true;
-                ofd.RestoreDirectory = true;
-
-                if (ofd.ShowDialog() != DialogResult.OK)
-                    return;
-
-                string[] filePaths = ofd.FileNames;
-
-                foreach (var filePath in filePaths)
-                {
-                    var fileName = Path.GetFileNameWithoutExtension(filePath);
-                    Directory.CreateDirectory(@".\ddc\umdls\");
-                    var path = String.Format(@".\ddc\umdls\user_{0}.xml", fileName);
-                    if (!cmbRampUp.Items.Contains(fileName))
-                    {
-                        try
-                        {
-                            File.Copy(filePath, path, true);
-                            cmbRampUp.Items.Add(fileName);
-                        }
-                        catch { }
-                    }
-                    cmbRampUp.SelectedIndex = cmbRampUp.FindStringExact(fileName);
-                }
+                FillDB();
             }
         }
 
-        private void btnConfigFile_Click(object sender, EventArgs e)
+        private void DDCfilesDgw_DragEnter(object sender, DragEventArgs e)
         {
-            using (var ofd = new VistaOpenFileDialog())
-            {
-                ofd.Filter = "DDC Config file (*.cfg)|*.cfg";
-                ofd.CheckFileExists = true;
-                ofd.CheckPathExists = true;
-                ofd.Multiselect = true;
-                ofd.ReadOnlyChecked = true;
-                ofd.RestoreDirectory = true;
+            e.Effect = DragDropEffects.Copy;
+        }
 
-                if (ofd.ShowDialog() != DialogResult.OK)
+        private void DDCfilesDgw_UserRemovingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            if (DDCfilesDgw.SelectedRows.Count > 0)
+            {
+                if (MessageBox.Show("Are you sure to remove the selected file?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                     return;
 
-                string[] filePaths = ofd.FileNames;
+                string file = e.Row.Cells["PathColnm"].Value.ToString();
+                string value = Path.GetFileNameWithoutExtension(file);
 
-                foreach (var filePath in filePaths)
-                {
-                    var fileName = Path.GetFileNameWithoutExtension(filePath);
-                    Directory.CreateDirectory(@".\ddc\ucfg\");
-                    var path = String.Format(@".\ddc\ucfg\user_{0}.cfg", fileName);
-                    if (!cmbConfigFile.Items.Contains(fileName))
-                    {
-                        try { File.Copy(filePath, path, true); }
-                        catch { }
-                        cmbConfigFile.Items.Add(fileName);
-                    }
-                    cmbConfigFile.SelectedIndex = cmbConfigFile.FindStringExact(fileName);
-                }
+                if (FilesDb != null) FilesDb.Remove(value);
             }
         }
 
@@ -567,73 +424,130 @@ namespace RocksmithToolkitGUI.DDC
             this.DescriptionDDC.Links[DescriptionDDC.Links.IndexOf(e.Link)].Visited = true;
         }
 
-        private void PopMDLs()
+        private void Highlight_CheckStateChanged(object sender, EventArgs e)
         {
-            cmbRampUp.Items.Clear();
-            RampUpDb.Clear();
-            var filePaths = Directory.EnumerateFiles(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.DDC_DIR), "*.xml", SearchOption.AllDirectories);
-
-            foreach (var filePath in filePaths)
-            {
-                var fileName = Path.GetFileNameWithoutExtension(filePath);
-                if (fileName.StartsWith("user_")) fileName = fileName.Remove(0, 5);
-                cmbRampUp.Items.Add(fileName);
-                cmbRampUp.SelectedIndex = cmbRampUp.FindStringExact("ddc_default");
-                RampUpDb.Add(fileName, Path.GetFullPath(filePath));
-            }
-
-            cmbRampUp.Refresh();
+            chkRemoveSustains.ForeColor = chkRemoveSustains.Checked ? EnabledColor : DisabledColor;
+            chkOverwrite.ForeColor = chkOverwrite.Checked ? EnabledColor : DisabledColor;
+            chkGenArrIds.ForeColor = chkGenArrIds.Checked ? EnabledColor : DisabledColor;
+            chkGenLogFile.ForeColor = chkGenLogFile.Checked ? EnabledColor : DisabledColor;
         }
 
-        private void PopCFGs()
+        private void btnAddArr_Click(object sender, EventArgs e)
         {
-            cmbConfigFile.Items.Clear();
-            ConfigDb.Clear();
-            var filePaths = Directory.EnumerateFiles(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.DDC_DIR), "*.cfg", SearchOption.AllDirectories);
-
-            foreach (var filePath in filePaths)
+            using (var ofd = new VistaOpenFileDialog())
             {
-                var fileName = Path.GetFileNameWithoutExtension(filePath);
-                if (fileName.StartsWith("user_")) fileName = fileName.Remove(0, 5);
-                cmbConfigFile.Items.Add(fileName);
-                cmbConfigFile.SelectedIndex = cmbConfigFile.FindStringExact("ddc_default");
-                ConfigDb.Add(fileName, Path.GetFullPath(filePath));
-            }
+                ofd.Title = "Select Package or Arrangement ...";
+                ofd.Filter = "Filtered files (*.psarc;*.dat;*.edat;*.xml)|*.psarc;*.dat;*.edat;*.xml|" + "All files (*.*)|*.*";
+                ofd.FilterIndex = 0;
+                ofd.Multiselect = true;
+                ofd.ReadOnlyChecked = true;
+                ofd.CheckFileExists = true;
+                ofd.CheckPathExists = true;
+                ofd.RestoreDirectory = true;
 
-            cmbConfigFile.Refresh();
-        }
-
-        private void RemoveEntry(string path)
-        {
-            for (int i = DDCfilesDgw.RowCount - 1; i >= 0; i--)
-            {
-                if (DDCfilesDgw.Rows[i].Cells["PathColnm"].Value.Equals(path))
-                { DDCfilesDgw.Rows.RemoveAt(i); return; }
-            }
-        }
-
-        private void DDCfilesDgw_UserRemovingRow(object sender, DataGridViewRowCancelEventArgs e)
-        {
-            if (DDCfilesDgw.SelectedRows.Count > 0)
-            {
-                if (MessageBox.Show("Are you sure to remove the selected file?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
-                string file = e.Row.Cells["PathColnm"].Value.ToString();
-                string value = Path.GetFileNameWithoutExtension(file);
+                string[] filePaths = ofd.FileNames;
 
-                if (FilesDb != null) FilesDb.Remove(value);
+                foreach (var filePath in filePaths)
+                {
+                    if (filePath.EndsWith("_showlights.xml") ||
+                        filePath.EndsWith(".dlc.xml") ||
+                        filePath.StartsWith("DDC_"))
+                        continue;
+
+                    if (!FilesDb.ContainsValue(filePath))
+                        FilesDb.Add(Path.GetFileNameWithoutExtension(filePath), filePath);
+                }
+            }
+
+            FillDB();
+        }
+
+        private void btnConfigFile_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new VistaOpenFileDialog())
+            {
+                ofd.Filter = "DDC Config file (*.cfg)|*.cfg";
+                ofd.CheckFileExists = true;
+                ofd.CheckPathExists = true;
+                ofd.Multiselect = true;
+                ofd.ReadOnlyChecked = true;
+                ofd.RestoreDirectory = true;
+
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+
+                string[] filePaths = ofd.FileNames;
+
+                foreach (var filePath in filePaths)
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(filePath);
+                    Directory.CreateDirectory(@".\ddc\ucfg\");
+                    var path = String.Format(@".\ddc\ucfg\user_{0}.cfg", fileName);
+                    if (!cmbConfigFile.Items.Contains(fileName))
+                    {
+                        try { File.Copy(filePath, path, true); }
+                        catch { }
+                        cmbConfigFile.Items.Add(fileName);
+                    }
+                    cmbConfigFile.SelectedIndex = cmbConfigFile.FindStringExact(fileName);
+                }
             }
         }
 
-        private void ramUpMdlsCbox_DropDown(object sender, EventArgs e)
+        private void btnGenerate_Click(object sender, EventArgs e)
         {
-            PopMDLs();
+
+            if (!this.bw.IsBusy && FilesDb.Count > 0)
+            {
+                pbUpdateProgress.Style = ProgressBarStyle.Marquee;
+                pbUpdateProgress.MarqueeAnimationSpeed = 60;
+                pbUpdateProgress.Visible = true;
+                lblCurrentOperation.Text = (IsNDD) ? "Removing DD Content ..." : "Generating DD Content ...";
+                lblCurrentOperation.Visible = true;
+                lblStatus.Visible = true;
+                this.Refresh();
+                btnGenerate.Enabled = false;
+                this.bw.RunWorkerAsync();
+            }
         }
 
-        private void ConfigFilesCbx_DropDown(object sender, EventArgs e)
+        private void btnRampUp_Click(object sender, EventArgs e)
         {
-            PopCFGs();
+            using (var ofd = new VistaOpenFileDialog())
+            {
+                ofd.Filter = "DDC Ramp-Up model (*.xml)|*.xml";
+                ofd.CheckFileExists = true;
+                ofd.CheckPathExists = true;
+                ofd.Multiselect = true;
+                ofd.ReadOnlyChecked = true;
+                ofd.RestoreDirectory = true;
+
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+
+                string[] filePaths = ofd.FileNames;
+
+                foreach (var filePath in filePaths)
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(filePath);
+                    Directory.CreateDirectory(@".\ddc\umdls\");
+                    var path = String.Format(@".\ddc\umdls\user_{0}.xml", fileName);
+                    if (!cmbRampUp.Items.Contains(fileName))
+                    {
+                        try
+                        {
+                            File.Copy(filePath, path, true);
+                            cmbRampUp.Items.Add(fileName);
+                        }
+                        catch { }
+                    }
+
+                    cmbRampUp.SelectedIndex = cmbRampUp.FindStringExact(fileName);
+                }
+            }
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
@@ -655,12 +569,143 @@ namespace RocksmithToolkitGUI.DDC
             }
         }
 
-        private void Highlight_CheckStateChanged(object sender, EventArgs e)
+        private void bw_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
-            chkRemoveSustains.ForeColor = chkRemoveSustains.Checked ? EnabledColor : DisabledColor;
-            chkOverwrite.ForeColor = chkOverwrite.Checked ? EnabledColor : DisabledColor;
-            chkGenArrIds.ForeColor = chkGenArrIds.Checked ? EnabledColor : DisabledColor;
-            chkGenLogFile.ForeColor = chkGenLogFile.Checked ? EnabledColor : DisabledColor;
+            var debugMe = e.Result;
+            // file overwriting is done here as last step
+            pbUpdateProgress.Value = 100;
+
+            foreach (var file in FilesDb)
+            {
+                switch (Path.GetExtension(file.Value))
+                {
+                    case ".xml": // Arrangement
+                        {
+                            var fileDir = Path.GetDirectoryName(file.Value);
+                            var ddcArrXML = Path.Combine(fileDir, String.Format("DDC_{0}.xml", file.Key));
+                            var srcShowlights = Path.Combine(fileDir, String.Format("{0}_showlights.xml", file.Key));
+                            var destShowlights = Path.Combine(fileDir, String.Format("DDC_{0}_showlights.xml", file.Key));
+
+                            if (!chkOverwrite.Checked && !File.Exists(destShowlights) && File.Exists(srcShowlights) && File.Exists(ddcArrXML))
+                                File.Copy(srcShowlights, destShowlights, true);
+                        }
+                        break;
+
+                    case ".psarc": // PC / Mac (RS2014)
+                    case ".dat":   // PC (RS1)
+                    case ".edat":  // PS3
+                    case "":       // XBox 360
+                        if (chkOverwrite.Checked)
+                        {
+                            var filePath = file.Value;
+                            var ddcFilePath = GenerateDdcFilePath(filePath);
+                            if (!ddcFilePath.Equals(filePath))
+                            {
+                                // File.Move is prone to exceptions
+                                File.Copy(ddcFilePath, filePath, true);
+                                File.Delete(ddcFilePath);
+                            }
+                        }
+                        break;
+                }
+
+                Invoke(new MethodInvoker(() => RemoveEntry(file.Value)));
+            }
+
+            FilesDb.Clear();
+
+            if (e.Result.Equals(0))
+                MessageBox.Show(String.Format("Dynamic difficulty {0} sucessfully.", IsNDD ? "removed" : "generated"), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
+                MessageBox.Show(String.Format("Dynamic difficulty {0} with errors: [" + e.Result + "]" + Environment.NewLine + "See DDC and Toolkit logs for details.", IsNDD ? "removed" : "generated"), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            btnGenerate.Enabled = true;
+            pbUpdateProgress.Visible = false;
+            pbUpdateProgress.MarqueeAnimationSpeed = 0;
+            pbUpdateProgress.Style = ProgressBarStyle.Continuous;
+            lblCurrentOperation.Visible = false;
+            lblStatus.Visible = false;
+            this.Focus();
+        }
+
+        private void bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            ProcessOutput = String.Empty;
+            var rampPath = String.Empty;
+            var cfgPath = String.Empty;
+
+            this.Invoke(new MethodInvoker(() =>
+                {
+                    rampPath = GetRampUpMdl();
+                    cfgPath = GetConfig();
+                }));
+
+            var errorsFound = new StringBuilder();
+            var totalCount = FilesDb.Count;
+            var currentCount = 0;
+            var errorCount = 0;
+            // TODO: change progress reporting method so it is responsive for a single file
+            var step = (int)Math.Round(1.0 / FilesDb.Count * 100, 0);
+            var progress = 0;
+            bw.ReportProgress(progress);
+
+            foreach (var file in FilesDb)
+            {
+                var consoleOutput = String.Empty;
+                currentCount++;
+                int count = currentCount;
+                GeneralExtensions.InvokeIfRequired(lblStatus, delegate
+                    {
+                        lblStatus.Text = String.Format("Processing file {0} of {1} ... Please wait.", count, totalCount);
+                    });
+
+                switch (Path.GetExtension(file.Value))
+                {
+                    case ".xml":   // Arrangement
+                        DDCreator.ApplyDD(file.Value, (int)cmbPhraseLen.Value, chkRemoveSustains.Checked, rampPath, cfgPath, out consoleOutput, chkOverwrite.Checked, chkGenLogFile.Checked);
+                        break;
+                    case ".psarc": // PC / Mac (RS2014)
+                    case ".dat":   // PC (RS1)
+                    case ".edat":  // PS3
+                    case "":       // XBox 360
+                        ApplyPackageDD(file.Value, (int)cmbPhraseLen.Value, chkRemoveSustains.Checked, rampPath, cfgPath, out consoleOutput, chkOverwrite.Checked, chkGenLogFile.Checked);
+                        break;
+                }
+
+                if (!String.IsNullOrEmpty(consoleOutput))
+                {
+                    errorsFound.AppendLine(consoleOutput);
+                    errorCount++;
+                }
+
+                progress += step;
+                bw.ReportProgress(progress);
+            }
+
+            if (!String.IsNullOrEmpty(errorsFound.ToString()))
+                ProcessOutput = errorsFound.ToString();
+
+            GeneralExtensions.InvokeIfRequired(lblStatus, delegate
+                {
+                    lblStatus.Text = String.Format("Sucessfully processed {0} of {1} files ...", totalCount - errorCount, totalCount);
+                });
+
+            e.Result = errorCount; // No Errors = 0
+        }
+
+        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            pbUpdateProgress.Value = e.ProgressPercentage;
+        }
+
+        private void cmbConfigFiles_DropDown(object sender, EventArgs e)
+        {
+            PopCFGs();
+        }
+
+        private void cmbRamUp_DropDown(object sender, EventArgs e)
+        {
+            PopMDLs();
         }
 
         private void cmbRampUp_SelectedIndexChanged(object sender, EventArgs e)
@@ -668,40 +713,6 @@ namespace RocksmithToolkitGUI.DDC
             IsNDD = ((ComboBox)sender).Text.Equals("ddc_dd_remover");
             btnGenerate.Text = (IsNDD) ? "Remove DD" : "Generate DD";
         }
-
-        private void DDCfilesDgw_DragDrop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                string[] filePaths = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-                foreach (var filePath in filePaths)
-                {
-                    if (!(Path.GetExtension(filePath) == ".xml" ||
-                          Path.GetExtension(filePath) == ".dat" ||
-                          Path.GetExtension(filePath) == ".psarc" ||
-                          Path.GetExtension(filePath) == "" ||
-                          Path.GetExtension(filePath) == ".edat"))
-                        continue;
-
-                    if (filePath.EndsWith("_showlights.xml") ||
-                        filePath.EndsWith(".dlc.xml") ||
-                        filePath.StartsWith("DDC_"))
-                        continue;
-
-                    if (!FilesDb.ContainsValue(filePath))
-                        FilesDb.Add(Path.GetFileNameWithoutExtension(filePath), filePath);
-                }
-
-                FillDB();
-            }
-        }
-
-        private void DDCfilesDgw_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.Copy;
-        }
-
     }
 }
 

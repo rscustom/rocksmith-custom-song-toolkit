@@ -29,5 +29,5 @@ using System.Resources;
 //
 // THESE VALUES ARE PROGRAMMATICALLY GENERATED - DO NOT EDIT
 [assembly: AssemblyVersion("2.9.1.0")]
-[assembly: AssemblyInformationalVersion("b1c03443")]
+[assembly: AssemblyInformationalVersion("c8f2ae18")]
 [assembly: AssemblyConfiguration("BETA")]

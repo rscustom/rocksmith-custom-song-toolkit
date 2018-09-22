@@ -2191,7 +2191,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
                 catch (Exception ex)
                 {
-                    errorsFound.AppendLine(String.Format("Error generating PS3 package: {0}{1}. {0}PS3 package require 'JAVA x86' (32 bits) installed on your machine to generate properly.{0}", Environment.NewLine, ex.StackTrace));
+                    errorsFound.AppendLine(String.Format("Error generating PS3 package: {0}{1}{0}{2}. {0}PS3 package require 'JAVA x86' (32 bits) installed on your machine to generate properly.{0}", Environment.NewLine, ex.Message, ex.StackTrace));
                 }
 
             // Cache cleanup so we don't serialize or reuse data that could be changed
@@ -2671,13 +2671,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tt.ShowAlways = true;
             tt.AutoPopDelay = 20000;
             tt.SetToolTip(rbConvert,
-                "DIY TIP: To Convert RS1 to RS2014 ..." + Environment.NewLine +
+                "HINT: To Convert RS1 to RS2014 ..." + Environment.NewLine + Environment.NewLine +
                 "1) Activate the 'Convert' radio button" + Environment.NewLine +
                 "2) Press the 'Import Package' button" + Environment.NewLine +
-                "   and select the RS1 CDLC to convert." + Environment.NewLine +
+                "    and select the RS1 CDLC to convert." + Environment.NewLine +
                 "3) Edit 'Song Information' (optional)." + Environment.NewLine +
                 "4) Next press the 'Generate' button" + Environment.NewLine +
-                "   and create the RS2014 CDLC ... Enjoy");
+                "    and create the RS2014 CDLC ... Enjoy");
         }
 
         private void rbRs2014_MouseEnter(object sender, EventArgs e)
@@ -2687,13 +2687,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tt.ShowAlways = true;
             tt.AutoPopDelay = 20000;
             tt.SetToolTip(rbRs2014,
-                "DIY TIP: To Convert RS2014 to RS1 ..." + Environment.NewLine +
+                "HINT: To Convert RS2014 to RS1 ..." + Environment.NewLine + Environment.NewLine +
                 "1) Activate the 'RS2014' radio button." + Environment.NewLine +
                 "2) Press the 'Import Package' button" + Environment.NewLine +
-                "   and select the RS2014 CDLC to convert." + Environment.NewLine +
+                "    and select the RS2014 CDLC to convert." + Environment.NewLine +
                 "3) Change the GameVersion to 'RS2012'." + Environment.NewLine +
                 "4) Press the 'Generate' button" + Environment.NewLine +
-                "   and create the RS1 CDLC ... Enjoy");
+                "    and create the RS1 CDLC ... Enjoy");
         }
 
         private void txtAppId_Validating(object sender, CancelEventArgs e)

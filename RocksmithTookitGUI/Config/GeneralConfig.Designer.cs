@@ -548,9 +548,7 @@
             this.general_wwisepath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.general_wwisepath.Size = new System.Drawing.Size(345, 20);
             this.general_wwisepath.TabIndex = 101;
-            this.toolTip.SetToolTip(this.general_wwisepath, "Compatible with Wwise v2013.2.x, v2014.1.x, \r\n2015.1.x, 2016.2.x and 2017.1.x bui" +
-                    "ld series,\r\nfor RS2014 audio conversions, and Wwise\r\nv2010.3.3 only for RS1 audi" +
-                    "o conversions.");
+            this.toolTip.SetToolTip(this.general_wwisepath, resources.GetString("general_wwisepath.ToolTip"));
             // 
             // label14
             // 

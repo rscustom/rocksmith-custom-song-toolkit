@@ -91,13 +91,8 @@ namespace RocksmithToolkitGUI
                 // make a copy of AutoUpdater to prevent locking the process during update
                 File.Copy(updaterAppPath, updatingAppPath, true);
 
-                if (GeneralExtensions.IsInDesignMode) // allow updater to be run in design mode for developers
-                {
-                    var args = new string[] { localToolkitDir, tempToolkitDir };
-                    using (var autoUpdater = new AutoUpdaterForm(args))
-                        autoUpdater.Show();
-                }
-                else
+                // normal operation
+                if (!GeneralExtensions.IsInDesignMode)
                 {
                     // passing args for process and backup directories to RocksmithToolkitUpdating.exe (Primary Usage Mode)
                     var cmdArgs = String.Format("\"{0}\" \"{1}\"", localToolkitDir, tempToolkitDir);
@@ -129,9 +124,15 @@ namespace RocksmithToolkitGUI
                     // Kill current toolkit process now that AutoUpdater process is started
                     Environment.Exit(0);
                 }
+                else // allow updater to be run in design mode for developers
+                {
+                    var args = new string[] { localToolkitDir, tempToolkitDir };
+                    using (var autoUpdater = new AutoUpdaterForm(args))
+                        autoUpdater.Show();
+                }
             }
-            catch(ObjectDisposedException)
-            {                
+            catch (ObjectDisposedException)
+            {
                 /* Do nothing  - user cancelled the download */
             }
             catch (Exception ex)
