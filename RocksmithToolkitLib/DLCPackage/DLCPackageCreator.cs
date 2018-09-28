@@ -470,7 +470,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     // TOOLKIT VERSION
                     var stopHere = info;
-                    GenerateToolkitVersion(toolkitVersionStream, info.ToolkitInfo.PackageAuthor, info.ToolkitInfo.PackageVersion, info.ToolkitInfo.PackageComment);
+                    GenerateToolkitVersion(toolkitVersionStream, info.ToolkitInfo.PackageAuthor, info.ToolkitInfo.PackageVersion, info.ToolkitInfo.PackageComment, info.ToolkitInfo.PackageRating);
                     packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
 
                     // APP ID
@@ -846,7 +846,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     var packageListWriter = new StreamWriter(packageListStream);
 
                     // TOOLKIT VERSION
-                    GenerateToolkitVersion(toolkitVersionStream, info.ToolkitInfo.PackageAuthor, info.ToolkitInfo.PackageVersion, info.ToolkitInfo.PackageComment);
+                    GenerateToolkitVersion(toolkitVersionStream, info.ToolkitInfo.PackageAuthor, info.ToolkitInfo.PackageVersion, info.ToolkitInfo.PackageComment, info.ToolkitInfo.PackageRating);
                     packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
 
                     // APP ID
@@ -1096,19 +1096,32 @@ namespace RocksmithToolkitLib.DLCPackage
                 GeneralExtensions.RunExternalExecutable(ExternalApps.APP_NVDXT, true, true, true, String.Format(args, item.sourceFile, item.destinationFile, item.sizeX, item.sizeY));
         }
 
-        public static void GenerateToolkitVersion(Stream output, string packageAuthor = null, string packageVersion = null, string packageComment = null)
+        /// <summary>
+        /// Generates memory stream for toolkit.version file
+        /// </summary>
+        /// <param name="output"></param>
+        /// <param name="packageAuthor"></param>
+        /// <param name="packageVersion">0.0 to 9.9 decimal or integer versioning system</param>
+        /// <param name="packageComment"></param>
+        /// <param name="packageRating">0 to 5 user rating system</param>
+        /// <param name="toolkitVersion">If left blank then the current toolkitversion is used</param>
+        public static void GenerateToolkitVersion(Stream output, string packageAuthor = null, string packageVersion = null, string packageComment = null, string packageRating = null, string toolkitVersion = null)
         {
+            var writer = new StreamWriter(output);
             if (String.IsNullOrEmpty(packageAuthor))
                 packageAuthor = ConfigRepository.Instance()["general_defaultauthor"];
-
-            var writer = new StreamWriter(output);
-            writer.WriteLine("Toolkit version: {0}", ToolkitVersion.RSTKGuiVersion);
+            if (String.IsNullOrEmpty(toolkitVersion))
+                toolkitVersion = ToolkitVersion.RSTKGuiVersion;           
+            if (!String.IsNullOrEmpty(toolkitVersion))
+                writer.WriteLine("Toolkit version: {0}", toolkitVersion);
             if (!String.IsNullOrEmpty(packageAuthor))
                 writer.WriteLine("Package Author: {0}", packageAuthor);
             if (!String.IsNullOrEmpty(packageVersion))
                 writer.WriteLine("Package Version: {0}", packageVersion);
             if (!String.IsNullOrEmpty(packageComment))
-                writer.Write("Package Comment: {0}", packageComment);
+                writer.WriteLine("Package Comment: {0}", packageComment);
+            if (!String.IsNullOrEmpty(packageRating))
+                writer.Write("Package Rating: {0}", packageRating);
 
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);

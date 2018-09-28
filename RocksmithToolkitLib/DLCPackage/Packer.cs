@@ -688,10 +688,15 @@ namespace RocksmithToolkitLib.DLCPackage
                 foreach (var templateFile in templateFiles)
                     File.Delete(templateFile);
 
-                // delete friendly name audio files that may have been added by LoadFromFolder method
+                // delete friendly name audio files that may have been added by new LoadFromFolder method
                 var audioFiles = Directory.EnumerateFiles(sourcePath, "song_*.*", SearchOption.AllDirectories).Where(fn => fn.EndsWith(".ogg") || fn.EndsWith(".wem")).ToList();
                 foreach (var audioFile in audioFiles)
                     File.Delete(audioFile);
+
+                // delete _fixed.ogg audio files that may have been added by old LoadFromFolder method
+                var fixedOggFiles = Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories).Where(fn => fn.EndsWith("_fixed.ogg")).ToList();
+                foreach (var fixedOggFile in fixedOggFiles)
+                    File.Delete(fixedOggFile);
 
                 // delete png album artwork files that may have been added by Unpack method (DO NOT DELETE any Xbox360 images)
                 var pngFiles = Directory.EnumerateFiles(sourcePath, "*.png", SearchOption.AllDirectories).Where(fp => !Path.GetFileName(fp).Equals("Package Image.png") && !Path.GetFileName(fp).Equals("Content Image.png")).ToList();

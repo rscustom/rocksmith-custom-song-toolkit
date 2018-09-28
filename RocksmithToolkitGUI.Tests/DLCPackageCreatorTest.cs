@@ -50,7 +50,7 @@ namespace RocksmithToolkitGUI.Tests
             if (!TestSettings.Instance.ResourcePaths.Any())
                 Assert.Fail("TestSettings Load Failed ...");
 
-            Globals.IsUnitTest = true;
+            GlobalExtension.IsUnitTest = true;
             packageCreator = new DLCPackageCreator.DLCPackageCreator();
 
             // empty the 'Local Settings/Temp/UnitTest' directory before starting
@@ -61,7 +61,7 @@ namespace RocksmithToolkitGUI.Tests
         public void Dispose()
         {
             packageCreator.Dispose();
-            Globals.IsUnitTest = false;
+            GlobalExtension.IsUnitTest = false;
         }
 
         /// <summary>

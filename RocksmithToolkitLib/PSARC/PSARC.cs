@@ -164,6 +164,7 @@ namespace RocksmithToolkitLib.PSARC
             entry.Data.Seek(0, SeekOrigin.Begin);
             entry.Data.Flush();
         }
+
         /// <summary>
         /// Inflates the entry.
         /// </summary>
@@ -172,6 +173,7 @@ namespace RocksmithToolkitLib.PSARC
         {
             InflateEntry(_toc.First(t => t.Name.EndsWith(name, StringComparison.Ordinal)));
         }
+
         /// <summary>
         /// Inflates all entries in current psarc.
         /// </summary>
@@ -254,6 +256,7 @@ namespace RocksmithToolkitLib.PSARC
                 Console.WriteLine("Deflating: " + ndx++);
             }
         }
+
         /// <summary>
         /// Reads file names from the manifest.
         /// </summary>
@@ -274,6 +277,7 @@ namespace RocksmithToolkitLib.PSARC
             }
             _toc.RemoveAt(0);
         }
+
         private void WriteManifest()
         {
             if (_toc.Count == 0)
@@ -297,6 +301,7 @@ namespace RocksmithToolkitLib.PSARC
             }
             _toc[0].Data = binaryWriter.BaseStream;//dunno how to get buffer, seek is required
         }
+
         public void AddEntry(string name, Stream data)
         {
             if (name == "NamesBlock.bin")
@@ -308,8 +313,10 @@ namespace RocksmithToolkitLib.PSARC
                 Data = data,
                 Length = (ulong)data.Length
             };
+
             AddEntry(entry);
         }
+
         public void AddEntry(Entry entry)
         {//important hierarchy
             _toc.Add(entry);

@@ -68,11 +68,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneSavePath;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = Globals.DefaultToneFile;
+                ofd.InitialDirectory = ConfigGlobals.DefaultToneFile;
                 ofd.Filter = CurrentOFDFilter;
                 if (ofd.ShowDialog() != DialogResult.OK) return;
 
-                toneSavePath = Globals.DefaultToneFile = ofd.FileName;
+                toneSavePath = ConfigGlobals.DefaultToneFile = ofd.FileName;
             }
 
             LoadToneFile(toneSavePath);
@@ -109,7 +109,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string toneSavePath;
             using (var ofd = new SaveFileDialog())
             {
-                ofd.InitialDirectory = Globals.DefaultToneFile;
+                ofd.InitialDirectory = ConfigGlobals.DefaultToneFile;
                 ofd.Filter = CurrentOFDFilter;
                 ofd.AddExtension = true;
                 if (CurrentGameVersion != GameVersion.RS2012)
@@ -120,7 +120,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
-                toneSavePath = Globals.DefaultToneFile = ofd.FileName;
+                toneSavePath = ConfigGlobals.DefaultToneFile = ofd.FileName;
             }
 
             var tone = toneControl.Tone;

@@ -248,6 +248,7 @@ namespace RocksmithToolkitLib.Extensions
             value = value.ShortWordMover(); // "The Beatles" becomes "Beatles, The"
             value = value.Capitalize(); // "blink-182" becomes "Blink 182"
             value = value.StripExcessWhiteSpace();
+            value = value.Replace(".", "");  // Remove periods from sortable fields, it screws up file naming ...
 
             return value;
         }

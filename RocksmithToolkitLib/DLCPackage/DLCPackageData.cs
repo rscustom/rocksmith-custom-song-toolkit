@@ -20,12 +20,15 @@ using RocksmithToolkitLib.Sng;
 using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
 using RocksmithToolkitLib.Conversion;
 using RocksmithToolkitLib.XmlRepository;
+using System.Diagnostics;
+using System.Drawing;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
 
     public class DLCPackageData
     {
+        private const string MESSAGEBOX_CAPTION = "DLCPackageData";
         private const float DEFAULT_AUDIO_VOLUME = -7.0f;
         private const float DEFAULT_PREVIEW_VOLUME = -5.0f;
 
@@ -47,12 +50,6 @@ namespace RocksmithToolkitLib.DLCPackage
         public float Volume { get; set; }
         public PackageMagic SignatureType { get; set; }
         public ToolkitInfo ToolkitInfo { get; set; }
-        // TODO: remove depricated fields when I'm dead
-        [Obsolete("Depricated, please use ToolkitInfo.PackageVersion.", true)]
-        public string PackageVersion { get; set; }
-        [Obsolete("Depricated, please use ToolkitInfo.PackageComment.", true)]
-        public string PackageComment { get; set; }
-
 
         // loads the old toolkit version info from template (if any)
         // writes current toolkit version to package template file
@@ -533,19 +530,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         bnkPreviewVolume = attr.PreviewVolume;
 
                         // Fill SongInfo
-                        data.SongInfo = new SongInfo
-                            {
-                                JapaneseArtistName = attr.JapaneseArtistName,
-                                JapaneseSongName = attr.JapaneseSongName,
-                                SongDisplayName = attr.SongName,
-                                SongDisplayNameSort = attr.SongNameSort,
-                                Album = attr.AlbumName,
-                                AlbumSort = attr.AlbumNameSort,
-                                SongYear = attr.SongYear ?? 0,
-                                Artist = attr.ArtistName,
-                                ArtistSort = attr.ArtistNameSort,
-                                AverageTempo = (int)attr.SongAverageTempo
-                            };
+                        data.SongInfo = new SongInfo { JapaneseArtistName = attr.JapaneseArtistName, JapaneseSongName = attr.JapaneseSongName, SongDisplayName = attr.SongName, SongDisplayNameSort = attr.SongNameSort, Album = attr.AlbumName, AlbumSort = attr.AlbumNameSort, SongYear = attr.SongYear ?? 0, Artist = attr.ArtistName, ArtistSort = attr.ArtistNameSort, AverageTempo = (int)attr.SongAverageTempo };
                     }
 
                     // Adding Arrangement
@@ -595,16 +580,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 else if (xmlFile.ToLower().Contains("vocals")) // detect both jvocals and vocals
                 {
                     //var debugMe = "Confirm XML comments were preserved.";
-                    var voc = new Arrangement
-                        {
-                            Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals,
-                            ArrangementType = ArrangementType.Vocal,
-                            ScrollSpeed = 20,
-                            SongXml = new SongXML { File = xmlFile },
-                            SongFile = new SongFile { File = "" },
-                            CustomFont = attr.JapaneseVocal == true,
-                            XmlComments = Song2014.ReadXmlComments(xmlFile)
-                        };
+                    var voc = new Arrangement { Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals, ArrangementType = ArrangementType.Vocal, ScrollSpeed = 20, SongXml = new SongXML { File = xmlFile }, SongFile = new SongFile { File = "" }, CustomFont = attr.JapaneseVocal == true, XmlComments = Song2014.ReadXmlComments(xmlFile) };
 
                     // Get symbols stuff from vocals.xml
                     var fontSng = Path.Combine(unpackedDir, xmlName + ".sng");
@@ -627,46 +603,45 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             // Enumerate *.bnk files
-            var bnkFiles = Directory.EnumerateFiles(unpackedDir, "song_*.bnk", SearchOption.AllDirectories).ToList();
-            if (!bnkFiles.Any())
-                throw new FileLoadException("<ERROR> Did not find any *.bnk files ..." + Environment.NewLine + Environment.NewLine);
-            if (bnkFiles.Count > 2)
-                throw new FileLoadException("<ERROR> Found too many *.bnk files ..." + Environment.NewLine + Environment.NewLine);
-
-            // extract .bnk file data
             var bnkWemList = new List<BnkWemData>();
-            foreach (var bnkFile in bnkFiles)
+            var bnkFiles = Directory.EnumerateFiles(unpackedDir, "song_*.bnk", SearchOption.AllDirectories).ToList();
+            if (!bnkFiles.Any()) // LOG, IGNORE, AND CONTINUE
             {
-                var bnkPlatform = sourcePlatform;
-                var sourceResult = SoundBankGenerator2014.ValidateBnkFile(bnkFile, sourcePlatform);
-                if (sourceResult.StartsWith("<ERROR>"))
+                var errMsg = "<WARNING> Did not find any *.bnk files ..." + Environment.NewLine + "You can still try loading an audio file by hand.  " + Environment.NewLine + Environment.NewLine;
+                GlobalExtension.Log.Info(errMsg);
+                BetterDialog2.ShowDialog(errMsg, MESSAGEBOX_CAPTION, null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning ...", 150, 150);
+            }
+            else if (bnkFiles.Count > 2)
+                throw new FileLoadException("<ERROR> Found too many *.bnk files ..." + Environment.NewLine + Environment.NewLine);
+            else
+            {
+                // extract .bnk file data
+                foreach (var bnkFile in bnkFiles)
                 {
-                    // maybe this .bnk already has targetPlatform endians
-                    var targetResult = SoundBankGenerator2014.ValidateBnkFile(bnkFile, targetPlatform);
-                    if (targetResult.StartsWith("<ERROR>"))
-                        throw new FormatException(sourceResult + Environment.NewLine + targetResult);
+                    var bnkPlatform = sourcePlatform;
+                    var sourceResult = SoundBankGenerator2014.ValidateBnkFile(bnkFile, sourcePlatform);
+                    if (sourceResult.StartsWith("<ERROR>"))
+                    {
+                        // maybe this .bnk already has targetPlatform endians
+                        var targetResult = SoundBankGenerator2014.ValidateBnkFile(bnkFile, targetPlatform);
+                        if (targetResult.StartsWith("<ERROR>"))
+                            throw new FormatException(sourceResult + Environment.NewLine + targetResult);
 
-                    bnkPlatform = targetPlatform;
+                        bnkPlatform = targetPlatform;
+                    }
+
+                    var bnkWemData = new BnkWemData { BnkFileName = bnkFile, WemFileId = SoundBankGenerator2014.ReadWemFileId(bnkFile, bnkPlatform), VolumeFactor = SoundBankGenerator2014.ReadVolumeFactor(bnkFile, bnkPlatform) };
+
+                    bnkWemList.Add(bnkWemData);
                 }
 
-                var bnkWemData = new BnkWemData
-                {
-                    BnkFileName = bnkFile,
-                    WemFileId = SoundBankGenerator2014.ReadWemFileId(bnkFile, bnkPlatform),
-                    VolumeFactor = SoundBankGenerator2014.ReadVolumeFactor(bnkFile, bnkPlatform)
-                };
+                // set volume from .bnk file
+                if (bnkAudioVolume == null)
+                    bnkAudioVolume = bnkWemList.Where(fn => !fn.BnkFileName.EndsWith("_preview.bnk")).Select(vf => vf.VolumeFactor).FirstOrDefault();
 
-                bnkWemList.Add(bnkWemData);
+                if (bnkPreviewVolume == null)
+                    bnkPreviewVolume = bnkWemList.Where(fn => fn.BnkFileName.EndsWith("_preview.bnk")).Select(vf => vf.VolumeFactor).FirstOrDefault();
             }
-
-            // set volume from .bnk file
-            if (bnkAudioVolume == null)
-                bnkAudioVolume = bnkWemList.Where(fn => !fn.BnkFileName.EndsWith("_preview.bnk"))
-                    .Select(vf => vf.VolumeFactor).FirstOrDefault();
-
-            if (bnkPreviewVolume == null)
-                bnkPreviewVolume = bnkWemList.Where(fn => fn.BnkFileName.EndsWith("_preview.bnk"))
-                    .Select(vf => vf.VolumeFactor).FirstOrDefault();
 
             // Use default volume if still null
             data.Volume = bnkAudioVolume ?? DEFAULT_AUDIO_VOLUME;
@@ -803,6 +778,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 data.ToolkitInfo = new ToolkitInfo();
                 data.ToolkitInfo.PackageVersion = "0";
                 data.ToolkitInfo.PackageAuthor = "Ubisoft";
+                data.ToolkitInfo.PackageRating = "0";
             }
 
             return data;

@@ -244,7 +244,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             sw.Stop();
             GlobalExtension.ShowProgress("Finished unpacking archive (elapsed time): " + sw.Elapsed, 100);
 
-            if (!Globals.IsUnitTest)
+            if (!GlobalExtension.IsUnitTest)
                 PromptComplete(destPath, false, errorsFound.ToString());
 
             GlobalExtension.Dispose();
@@ -615,7 +615,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 errMsg = String.Format("{0}\n{1}", ex.Message, ex.InnerException);
             }
 
-            if (!Globals.IsUnitTest)
+            if (!GlobalExtension.IsUnitTest)
                 PromptComplete(destPath, true, errMsg);
 
             GlobalExtension.Dispose();

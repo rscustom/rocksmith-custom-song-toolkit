@@ -64,7 +64,7 @@ namespace RocksmithToolkitGUI
                     bWorker.RunWorkerAsync();
                 }
 
-                // write a new VersionInfo.txt file to toolkit root
+                // update current VersionInfo.txt file based on what's running
                 ToolkitVersion.UpdateVersionInfoFile();
 
             }

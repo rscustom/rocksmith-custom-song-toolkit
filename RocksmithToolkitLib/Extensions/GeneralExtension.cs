@@ -124,6 +124,8 @@ namespace RocksmithToolkitLib.Extensions
                             tkInfo.PackageVersion = tokens[1]; break;
                         case "package comment":
                             tkInfo.PackageComment = tokens[1]; break;
+                        case "package rating":
+                            tkInfo.PackageRating = tokens[1]; break;
                         default:
                             Console.WriteLine("  Notice: Unknown key in toolkit.version: {0}", key);
                             break;
@@ -243,78 +245,113 @@ namespace RocksmithToolkitLib.Extensions
             string toolkitRootPath = AppDomain.CurrentDomain.BaseDirectory;
             var rootPath = toolkitRootFolder ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
 
-            var startInfo = new ProcessStartInfo
+            try
             {
-                //use wine prefix here
-                FileName = _wine() + Path.Combine(rootPath, exeFileName),
-                WorkingDirectory = rootPath,
-                CreateNoWindow = true,
-                RedirectStandardOutput = true,
-                UseShellExecute = false
-            };
-
-            if (!String.IsNullOrEmpty(arguments))
-                startInfo.Arguments = arguments;
-
-            var process = new Process();
-            var sb = new StringBuilder();
-            sb.AppendLine("Please wait ...");
-            sb.AppendLine("");
-            sb.AppendLine(startInfo.FileName + " " + startInfo.Arguments);
-
-            if (!runInBackground)
-            {
-                // setup a custom Command Window
-                cmdWin = new HelpForm();
-                cmdWin.Size = new Size(500, 500);
-                cmdWin.StartPosition = FormStartPosition.CenterScreen;
-                cmdWin.TopMost = true;
-                cmdWin.Text = "Toolkit Third Party Application Process Window ...";
-                cmdWin.okButton.Hide();
-                cmdWin.rtbBlank.BackColor = Color.Black;
-                cmdWin.rtbNotes.BackColor = Color.Black;
-                cmdWin.rtbNotes.ForeColor = Color.LimeGreen;
-                cmdWin.rtbNotes.ScrollBars = RichTextBoxScrollBars.None;
-                cmdWin.rtbNotes.Text = sb.ToString();
-                cmdWin.Show();
-                Application.DoEvents();
-            }
-
-            process.StartInfo = startInfo;
-            process.EnableRaisingEvents = true;
-            process.Start();
-
-            if (!runInBackground && waitToFinish)
-            {
-                while (!process.StandardOutput.EndOfStream)
+                // TODO: make Third Party Application Process Window compatible with Mac Mono/Wine
+                var startInfo = new ProcessStartInfo
                 {
-                    var line = process.StandardOutput.ReadLine();
-                    sb.AppendLine(line);
-                    UpdateCmdWin(line);
-                }
-            }
+                    //use wine prefix here
+                    FileName = _wine() + Path.Combine(rootPath, exeFileName),
+                    WorkingDirectory = rootPath,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false
+                };
 
-            var exitCode = -1; // waitToFinish is false
-            if (waitToFinish)
-            {
-                process.WaitForExit(); // WaitForExit blocks EventHandler UI Threading
-                exitCode = process.ExitCode; // sucess = 0, failure = 1
+                if (!String.IsNullOrEmpty(arguments))
+                    startInfo.Arguments = arguments;
+
+                var process = new Process();
+                var sb = new StringBuilder();
+                sb.AppendLine("Please wait ...");
+                sb.AppendLine("");
+                sb.AppendLine(startInfo.FileName + " " + startInfo.Arguments);
 
                 if (!runInBackground)
                 {
-                    UpdateCmdWin("");
-                    sb.AppendLine("Finished ...");
-                    UpdateCmdWin("");
-                    Thread.Sleep(2500);
-                    cmdWin.Close();
+                    // setup a custom Command Window
+                    cmdWin = new HelpForm();
+                    cmdWin.Size = new Size(500, 500);
+                    cmdWin.StartPosition = FormStartPosition.CenterScreen;
+                    cmdWin.TopMost = true;
+                    cmdWin.Text = "Toolkit Third Party Application Process Window ...";
+                    cmdWin.okButton.Hide();
+                    cmdWin.rtbBlank.BackColor = Color.Black;
+                    cmdWin.rtbNotes.BackColor = Color.Black;
+                    cmdWin.rtbNotes.ForeColor = Color.LimeGreen;
+                    cmdWin.rtbNotes.ScrollBars = RichTextBoxScrollBars.None;
+                    cmdWin.rtbNotes.Text = sb.ToString();
+                    cmdWin.Show();
+                    Application.DoEvents();
                 }
 
-                process.Dispose();
-                process = null;
-            }
+                process.StartInfo = startInfo;
+                process.EnableRaisingEvents = true;
+                process.Start();
 
-            var output = sb.ToString() + Environment.NewLine + "Exit Code: " + exitCode;
-            return output;
+                if (!runInBackground && waitToFinish)
+                {
+                    while (!process.StandardOutput.EndOfStream)
+                    {
+                        var line = process.StandardOutput.ReadLine();
+                        sb.AppendLine(line);
+                        UpdateCmdWin(line);
+                    }
+                }
+
+                var exitCode = -1; // waitToFinish is false
+                if (waitToFinish)
+                {
+                    process.WaitForExit(); // WaitForExit blocks EventHandler UI Threading
+                    exitCode = process.ExitCode; // sucess = 0, failure = 1
+
+                    if (!runInBackground)
+                    {
+                        UpdateCmdWin("");
+                        sb.AppendLine("Finished ...");
+                        UpdateCmdWin("");
+                        Thread.Sleep(2500);
+                        cmdWin.Close();
+                    }
+
+                    process.Dispose();
+                    process = null;
+                }
+
+                var output = sb.ToString() + Environment.NewLine + "Exit Code: " + exitCode;
+                return output;
+            }
+            catch // for Mac Mono/Wine third party processes compatiblity
+            {
+                var startInfo = new ProcessStartInfo
+                {//use wine prefix here
+                    FileName = _wine() + Path.Combine(rootPath, exeFileName),
+                    WorkingDirectory = rootPath
+                };
+
+                if (runInBackground)
+                {
+                    startInfo.CreateNoWindow = true;
+                    startInfo.UseShellExecute = false;
+                    startInfo.RedirectStandardOutput = true;
+                }
+
+                if (!String.IsNullOrEmpty(arguments))
+                    startInfo.Arguments = arguments;
+
+                Process process = new Process();
+                process.StartInfo = startInfo;
+                process.Start();
+
+                if (waitToFinish)
+                    process.WaitForExit();
+
+                var output = string.Empty;
+                if (runInBackground)
+                    output = process.StandardOutput.ReadToEnd();
+
+                return output;
+            }
         }
 
         private static void UpdateCmdWin(string line)

@@ -3,22 +3,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Security.Permissions;
-using NLog;
-using NLog.Fluent;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.XmlRepository;
 using System.Threading;
+using RocksmithToolkitGUI.Config;
+using NLog;
 
 namespace RocksmithToolkitGUI
 {
     static class Program
     {
-        /// <summary>
-        /// Usage: RocksmithToolkitGUI.log.Error(«ERROR: {0}», this.Text);
-        /// </summary>
-        public static Logger Log;
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -26,8 +21,9 @@ namespace RocksmithToolkitGUI
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
         static void Main(string[] args)
         {
-            Log = LogManager.GetCurrentClassLogger();
-            //I should figure out way for native mac\linux OS
+            // make the logger available globally in application
+            GlobalExtension.Log = LogManager.GetCurrentClassLogger();
+            // TODO: figure out way for native mac\linux OS
             var logPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "_RSToolkit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".log");
 
             // workaround fix for Win10 NET4.6 compatiblity issue
@@ -42,11 +38,11 @@ namespace RocksmithToolkitGUI
                 /* DO NOTHING */
             }
 
-            Log.Info(//OSVersion on unix will return it's Kernel version, urgh.
+            GlobalExtension.Log.Info(//OSVersion on unix will return it's Kernel version, urgh.
                 String.Format("RocksmithToolkitGUI: v{0}\r\n ", ToolkitVersion.RSTKGuiVersion) +
                 String.Format("RocksmithToolkitLib: v{0}\r\n ", ToolkitVersion.RSTKLibVersion()) +
-                String.Format("RocksmithToolkitUpdater: v{0}\r\n ", updaterVersion) +               
-                String.Format("Dynamic Difficulty Creator: v{0}\r\n ", FileVersionInfo.GetVersionInfo(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_DDC)).ProductVersion) +                
+                String.Format("RocksmithToolkitUpdater: v{0}\r\n ", updaterVersion) +
+                String.Format("Dynamic Difficulty Creator: v{0}\r\n ", FileVersionInfo.GetVersionInfo(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_DDC)).ProductVersion) +
                 String.Format("OS: {0} ({1} bit)\r\n ", Environment.OSVersion, Environment.Is64BitOperatingSystem ? "64" : "32") +
                 String.Format(".NET Framework Runtime: v{0}\r\n ", Environment.Version) +
                 String.Format("JIT: {0}\r\n ", JitVersionInfo.GetJitVersion()) +
@@ -77,7 +73,7 @@ namespace RocksmithToolkitGUI
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 var exception = e.ExceptionObject as Exception;
-                Log.Error(exception, "\n{0}\n{1}\nException cached:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
+                GlobalExtension.Log.Error(exception, "\n{0}\n{1}\nException cached:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
                 //Log.Error("Application Stdout:\n\n{0}", new StreamReader(_stdout.ToString()).ReadToEnd());
 
                 if (MessageBox.Show(String.Format("Application.ThreadException met.\n\n\"{0}\"\n\n{1}\n\nPlease send us \"{2}\", open log file now?",
@@ -94,7 +90,7 @@ namespace RocksmithToolkitGUI
             Application.ThreadException += (s, e) =>
             {
                 var exception = e.Exception;
-                Log.Error(exception, "\n{0}\n{1}\nException cached:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
+                GlobalExtension.Log.Error(exception, "\n{0}\n{1}\nException cached:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
                 //Log.Error("Application Stdout:\n\n{0}", new StreamReader(_stdout.ToString()).ReadToEnd());
 
                 if (MessageBox.Show(String.Format("Application.ThreadException met.\n\n\"{0}\"\n\n{1}\n\nPlease send us \"{2}\", open log file now?",

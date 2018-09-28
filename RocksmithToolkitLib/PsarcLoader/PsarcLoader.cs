@@ -210,8 +210,9 @@ namespace RocksmithToolkitLib.PsarcLoader
                 // this helps prevent null exceptions
                 tkInfo.ToolkitVersion = "Null";
                 tkInfo.PackageAuthor = "Ubisoft";
-                tkInfo.PackageVersion = "Null";
+                tkInfo.PackageVersion = "0";
                 tkInfo.PackageComment = "Null";
+                tkInfo.PackageRating = "5";
             }
 
             return tkInfo;

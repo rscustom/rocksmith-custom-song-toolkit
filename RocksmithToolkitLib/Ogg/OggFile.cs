@@ -271,7 +271,7 @@ namespace RocksmithToolkitLib.Ogg
                     var errMsg = ex.Message + Environment.NewLine + Environment.NewLine + "USER README:" + Environment.NewLine + "Try generating the RS2012PC CDLC and then use 'Import Package' on generated PC file, then select a console and 'Generate' again.  If this fails then the audio must be remastered for console using the Wwise 2010 GUI :(" + Environment.NewLine;
                     throw new InvalidDataException(errMsg);
                 }
- 
+
                 return new MemoryStream(outputFileStream.GetBuffer(), 0, (int)outputFileStream.Length);
             }
         }

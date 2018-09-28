@@ -12,6 +12,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public string PackageAuthor { get; set; }
         public string PackageVersion { get; set; }
         public string PackageComment { get; set; }
+        public string PackageRating { get; set; }
     }
 }
 

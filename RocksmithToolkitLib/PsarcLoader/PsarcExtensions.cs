@@ -48,20 +48,25 @@ namespace RocksmithToolkitLib.PsarcLoader
             return "Other";
         }
 
+
         public static bool RemoveArchiveEntry(string psarcPath, string entryName)
         {
             if (!File.Exists(psarcPath))
                 return false;
 
             using (PSARC archive = new PSARC(true))
+            using (var psarcStream = File.OpenRead(psarcPath))
             {
-                using (var psarcStream = File.OpenRead(psarcPath))
-                    archive.Read(psarcStream);
+                archive.Read(psarcStream);
+                psarcStream.Dispose(); // CRITICAL
 
                 var tocEntry = archive.TOC.FirstOrDefault(entry => entry.Name == entryName);
 
                 if (tocEntry == null)
+                {
+                    archive.Dispose(); // CRITICAL
                     return true;
+                }
 
                 archive.TOC.Remove(tocEntry);
                 archive.TOC.Insert(0, new Entry() { Name = "NamesBlock.bin" });
@@ -69,27 +74,15 @@ namespace RocksmithToolkitLib.PsarcLoader
                 using (var fs = File.Create(psarcPath))
                     archive.Write(fs, true);
 
+                archive.Dispose(); // CRITICAL
                 return true;
             }
         }
 
-        public static bool InjectArchiveEntry(string psarcPath, string entryName,
-            string sourcePath, bool updateToolkitVersion = false,
-            string packageAuthor = "", string packageVersion = "1", string packageComment = "")
+        public static bool InjectArchiveEntry(string psarcPath, string entryName, string sourcePath)
         {
             if (!File.Exists(psarcPath))
                 return false;
-
-            int injectionCount = 2;
-            if (!updateToolkitVersion)
-                injectionCount = 1;
-            else
-            {
-                if (String.IsNullOrEmpty(packageVersion))
-                    packageVersion = "1";
-                if (String.IsNullOrEmpty(packageAuthor))
-                    packageAuthor = Assembly.GetExecutingAssembly().GetName().ToString();
-            }
 
             using (PSARC archive = new PSARC(true))
             using (var psarcStream = File.OpenRead(psarcPath))
@@ -97,50 +90,87 @@ namespace RocksmithToolkitLib.PsarcLoader
                 try
                 {
                     archive.Read(psarcStream);
-                    psarcStream.Dispose();
+                    psarcStream.Dispose(); // CRITICAL
 
-                    for (int i = 0; i < injectionCount; i++)
+                    var entryStream = new MemoryStream();
+
+                    using (var sourceStream = File.OpenRead(sourcePath))
+                        sourceStream.CopyTo(entryStream);
+
+                    entryStream.Position = 0;
+                    Entry tocEntry = archive.TOC.FirstOrDefault(x => x.Name == entryName);
+
+                    if (tocEntry != null)
                     {
-                        var entryStream = new MemoryStream();
+                        tocEntry.Data.Dispose(); // CRITICAL
+                        tocEntry.Data = null;
+                        tocEntry.Data = entryStream;
+                    }
+                    else
+                    {
+                        archive.AddEntry(entryName, entryStream);
 
-                        switch (i)
-                        {
-                            case 0:
-                                using (var sourceStream = File.OpenRead(sourcePath))
-                                    sourceStream.CopyTo(entryStream);
-                                break;
-                            case 1:
-                                DLCPackageCreator.GenerateToolkitVersion(entryStream, packageAuthor, packageVersion, packageComment);
-                                entryName = "toolkit.version";
-                                break;
-                        }
-
-                        entryStream.Position = 0;
-                        Entry tocEntry = archive.TOC.FirstOrDefault(x => x.Name == entryName);
-
-                        if (tocEntry != null)
-                        {
-                            tocEntry.Data.Dispose();
-                            tocEntry.Data = null;
-                            tocEntry.Data = entryStream;
-                        }
-                        else
-                        {
-                            archive.AddEntry(entryName, entryStream);
-
-                            // evil genius ... ;) => forces archive update
-                            archive.TOC.Insert(0, new Entry() { Name = "NamesBlock.bin" });
-                        }
+                        // evil genius ... ;) => forces archive update
+                        archive.TOC.Insert(0, new Entry() { Name = "NamesBlock.bin" });
                     }
                 }
                 catch
                 {
+                    archive.Dispose(); // CRITICAL
                     return false;
                 }
 
                 using (var fs = File.Create(psarcPath))
                     archive.Write(fs, true);
 
+                archive.Dispose(); // CRITICAL
+                return true;
+            }
+        }
+
+        public static bool InjectArchiveEntry(string psarcPath, string entryName, Stream sourceStream)
+        {
+            if (!File.Exists(psarcPath))
+                return false;
+
+            using (PSARC archive = new PSARC(true))
+            using (var psarcStream = File.OpenRead(psarcPath))
+            {
+                try
+                {
+                    archive.Read(psarcStream);
+                    psarcStream.Dispose(); // CRITICAL
+
+                    var entryStream = new MemoryStream();
+                    sourceStream.CopyTo(entryStream);
+                    entryStream.Position = 0;
+                    Entry tocEntry = archive.TOC.FirstOrDefault(x => x.Name == entryName);
+
+                    if (tocEntry != null)
+                    {
+                        tocEntry.Data.Dispose(); // CRITICAL
+                        tocEntry.Data = null;
+                        tocEntry.Data = entryStream;
+                    }
+                    else
+                    {
+                        archive.AddEntry(entryName, entryStream);
+
+                        // evil genius ... ;) => forces archive update
+                        archive.TOC.Insert(0, new Entry() { Name = "NamesBlock.bin" });
+                    }
+
+                }
+                catch
+                {
+                    archive.Dispose(); // CRITICAL
+                    return false;
+                }
+
+                using (var fs = File.Create(psarcPath))
+                    archive.Write(fs, true);
+
+                archive.Dispose(); // CRITICAL
                 return true;
             }
         }
@@ -163,7 +193,7 @@ namespace RocksmithToolkitLib.PsarcLoader
 
                     archive.InflateEntry(tocEntry, Path.Combine(outputDir, Path.GetFileName(tocEntry.ToString())));
 
-                    return tocEntry.ToString();
+                    return Path.Combine(outputDir, tocEntry.ToString());
                 }
 
                 return "";
@@ -190,7 +220,6 @@ namespace RocksmithToolkitLib.PsarcLoader
 
             return null;
         }
-
 
         public static bool ReplaceData(this PSARC p, Func<Entry, bool> dataEntry, Stream newData)
         {
@@ -229,6 +258,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                     ms.Position = 0;
                     return ms;
                 }
+
                 return null;
             }
         }
