@@ -356,13 +356,10 @@ namespace RocksmithToolkitLib.Extensions
 
         private static void UpdateCmdWin(string line)
         {
-            InvokeIfRequired(cmdWin, a =>
-              {
-                  cmdWin.rtbNotes.Text += Environment.NewLine + line;
-                  cmdWin.rtbNotes.SelectionStart = cmdWin.rtbNotes.Text.Length;
-                  cmdWin.rtbNotes.ScrollToCaret();
-                  Application.DoEvents();
-              });
+            cmdWin.rtbNotes.Text += Environment.NewLine + line;
+            cmdWin.rtbNotes.SelectionStart = cmdWin.rtbNotes.Text.Length;
+            cmdWin.rtbNotes.ScrollToCaret();
+            Application.DoEvents();
 
             Debug.WriteLine(line);
         }
