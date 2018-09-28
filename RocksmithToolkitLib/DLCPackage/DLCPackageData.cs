@@ -580,7 +580,16 @@ namespace RocksmithToolkitLib.DLCPackage
                 else if (xmlFile.ToLower().Contains("vocals")) // detect both jvocals and vocals
                 {
                     //var debugMe = "Confirm XML comments were preserved.";
-                    var voc = new Arrangement { Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals, ArrangementType = ArrangementType.Vocal, ScrollSpeed = 20, SongXml = new SongXML { File = xmlFile }, SongFile = new SongFile { File = "" }, CustomFont = attr.JapaneseVocal == true, XmlComments = Song2014.ReadXmlComments(xmlFile) };
+                    var voc = new Arrangement
+                        {
+                            Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals,
+                            ArrangementType = ArrangementType.Vocal,
+                            ScrollSpeed = 20,
+                            SongXml = new SongXML { File = xmlFile },
+                            SongFile = new SongFile { File = "" },
+                            CustomFont = attr.JapaneseVocal == true,
+                            XmlComments = Song2014.ReadXmlComments(xmlFile)
+                        };
 
                     // Get symbols stuff from vocals.xml
                     var fontSng = Path.Combine(unpackedDir, xmlName + ".sng");

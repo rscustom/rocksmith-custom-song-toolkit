@@ -245,9 +245,41 @@ namespace RocksmithToolkitLib.Extensions
             string toolkitRootPath = AppDomain.CurrentDomain.BaseDirectory;
             var rootPath = toolkitRootFolder ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
 
-            try
+            // use old working Mac Mono/Wine external process method
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX)
             {
-                // TODO: make Third Party Application Process Window compatible with Mac Mono/Wine
+                var startInfo = new ProcessStartInfo
+                {//use wine prefix here
+                    FileName = _wine() + Path.Combine(rootPath, exeFileName),
+                    WorkingDirectory = rootPath
+                };
+
+                if (runInBackground)
+                {
+                    startInfo.CreateNoWindow = true;
+                    startInfo.UseShellExecute = false;
+                    startInfo.RedirectStandardOutput = true;
+                }
+
+                if (!String.IsNullOrEmpty(arguments))
+                    startInfo.Arguments = arguments;
+
+                Process process = new Process();
+                process.StartInfo = startInfo;
+                process.Start();
+
+                if (waitToFinish)
+                    process.WaitForExit();
+
+                var output = string.Empty;
+                if (runInBackground)
+                    output = process.StandardOutput.ReadToEnd();
+
+                return output;
+            }
+            else
+            {
+                // use Third Party Application Process Window
                 var startInfo = new ProcessStartInfo
                 {
                     //use wine prefix here
@@ -319,37 +351,6 @@ namespace RocksmithToolkitLib.Extensions
                 }
 
                 var output = sb.ToString() + Environment.NewLine + "Exit Code: " + exitCode;
-                return output;
-            }
-            catch // for Mac Mono/Wine third party processes compatiblity
-            {
-                var startInfo = new ProcessStartInfo
-                {//use wine prefix here
-                    FileName = _wine() + Path.Combine(rootPath, exeFileName),
-                    WorkingDirectory = rootPath
-                };
-
-                if (runInBackground)
-                {
-                    startInfo.CreateNoWindow = true;
-                    startInfo.UseShellExecute = false;
-                    startInfo.RedirectStandardOutput = true;
-                }
-
-                if (!String.IsNullOrEmpty(arguments))
-                    startInfo.Arguments = arguments;
-
-                Process process = new Process();
-                process.StartInfo = startInfo;
-                process.Start();
-
-                if (waitToFinish)
-                    process.WaitForExit();
-
-                var output = string.Empty;
-                if (runInBackground)
-                    output = process.StandardOutput.ReadToEnd();
-
                 return output;
             }
         }
