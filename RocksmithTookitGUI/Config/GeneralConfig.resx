@@ -151,8 +151,8 @@ imported package is preserved.</value>
 for RS2014 audio conversions, and Wwise
 v2010.3.3 (only) for RS1 audio conversions.
 
-If left blank then the Wwise Path defaults to
-the Environmental Variable for WWISEROOT.</value>
+If left blank then the Wwise Path defaults to the
+Environmental Variable (path) stored in WWISEROOT.</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>41</value>

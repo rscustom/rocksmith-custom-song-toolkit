@@ -538,7 +538,7 @@
             // 
             // general_wwisepath
             // 
-            this.general_wwisepath.Cue = "Select proper version WwiseCLI.exe installation path";
+            this.general_wwisepath.Cue = "Select proper version of WwiseCLI.exe installation path";
             this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
             this.general_wwisepath.Location = new System.Drawing.Point(122, 160);

@@ -238,18 +238,17 @@ namespace RocksmithToolkitLib.Extensions
             return tkInfo;
         }
 
-        private static HelpForm cmdWin;
         public static string RunExternalExecutable(string exeFileName, bool toolkitRootFolder = true, bool runInBackground = false, bool waitToFinish = false, string arguments = null)
         {
-
             string toolkitRootPath = AppDomain.CurrentDomain.BaseDirectory;
             var rootPath = toolkitRootFolder ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
 
-            // use old working Mac Mono/Wine external process method
+            // Mac Mono/Wine use process command window
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
             {
                 var startInfo = new ProcessStartInfo
-                {//use wine prefix here
+                {
+                    //use wine prefix here
                     FileName = _wine() + Path.Combine(rootPath, exeFileName),
                     WorkingDirectory = rootPath
                 };
@@ -279,11 +278,10 @@ namespace RocksmithToolkitLib.Extensions
             }
             else
             {
-                // use Third Party Application Process Window
+                // Windows ONLY Third Party Application Process Window
                 var startInfo = new ProcessStartInfo
                 {
-                    //use wine prefix here
-                    FileName = _wine() + Path.Combine(rootPath, exeFileName),
+                    FileName = Path.Combine(rootPath, exeFileName),
                     WorkingDirectory = rootPath,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
@@ -294,6 +292,7 @@ namespace RocksmithToolkitLib.Extensions
                     startInfo.Arguments = arguments;
 
                 var process = new Process();
+                var cmdWin = new HelpForm();
                 var sb = new StringBuilder();
                 sb.AppendLine("Please wait ...");
                 sb.AppendLine("");
@@ -302,7 +301,6 @@ namespace RocksmithToolkitLib.Extensions
                 if (!runInBackground)
                 {
                     // setup a custom Command Window
-                    cmdWin = new HelpForm();
                     cmdWin.Size = new Size(500, 500);
                     cmdWin.StartPosition = FormStartPosition.CenterScreen;
                     cmdWin.TopMost = true;
@@ -327,7 +325,10 @@ namespace RocksmithToolkitLib.Extensions
                     {
                         var line = process.StandardOutput.ReadLine();
                         sb.AppendLine(line);
-                        UpdateCmdWin(line);
+                        cmdWin.rtbNotes.Text += Environment.NewLine + line;
+                        cmdWin.rtbNotes.SelectionStart = cmdWin.rtbNotes.Text.Length;
+                        cmdWin.rtbNotes.ScrollToCaret();
+                        Application.DoEvents();
                     }
                 }
 
@@ -339,9 +340,13 @@ namespace RocksmithToolkitLib.Extensions
 
                     if (!runInBackground)
                     {
-                        UpdateCmdWin("");
+                        cmdWin.rtbNotes.Text += Environment.NewLine;
+                        cmdWin.rtbNotes.Text += Environment.NewLine + "Finished ...";
                         sb.AppendLine("Finished ...");
-                        UpdateCmdWin("");
+                        cmdWin.rtbNotes.Text += Environment.NewLine;
+                        cmdWin.rtbNotes.SelectionStart = cmdWin.rtbNotes.Text.Length;
+                        cmdWin.rtbNotes.ScrollToCaret();
+
                         Thread.Sleep(2500);
                         cmdWin.Close();
                     }
@@ -350,19 +355,11 @@ namespace RocksmithToolkitLib.Extensions
                     process = null;
                 }
 
+                cmdWin.Dispose();
+                cmdWin = null;
                 var output = sb.ToString() + Environment.NewLine + "Exit Code: " + exitCode;
                 return output;
             }
-        }
-
-        private static void UpdateCmdWin(string line)
-        {
-            cmdWin.rtbNotes.Text += Environment.NewLine + line;
-            cmdWin.rtbNotes.SelectionStart = cmdWin.rtbNotes.Text.Length;
-            cmdWin.rtbNotes.ScrollToCaret();
-            Application.DoEvents();
-
-            Debug.WriteLine(line);
         }
 
         public static string[] SelectLines(this string[] content, string value)

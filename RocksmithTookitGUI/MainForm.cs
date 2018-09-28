@@ -123,7 +123,7 @@ namespace RocksmithToolkitGUI
                 btnUpdate.FlatStyle = FlatStyle.Popup;
                 btnUpdate.Text = "Updates are enabled";
             }
-  
+
             btnUpdate.Enabled = true;
         }
 
