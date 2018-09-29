@@ -51,12 +51,12 @@ namespace RocksmithToolkitGUI.Config
                 PopulateRampUp();
                 PopulateConfigDDC();
 
-                // force static Wwise path and settings for Mac Wine packages on first run
-                if (Environment.OSVersion.Platform == PlatformID.MacOSX && ConfigRepository.Instance().GetBoolean("general_firstrun"))
+                // force static Wwise path and settings for Mac Mono/Wine packages on first run
+                if ((Environment.OSVersion.Platform == PlatformID.MacOSX || GeneralExtensions.IsWine()) && ConfigRepository.Instance().GetBoolean("general_firstrun"))
                 {
                     ConfigRepository.Instance()["general_autoupdate"] = "false";
                     ConfigRepository.Instance()["general_replacerepo"] = "true";
-                    ConfigRepository.Instance()["general_defaultauthor"] = "CST_MacWine";
+                    ConfigRepository.Instance()["general_defaultauthor"] = "CST_Mac";
                     ConfigRepository.Instance()["general_wwisepath"] = "C:\\Program Files\\Audiokinetic\\Wwise\\Authoring"; // interestingly the full path is not needed here
                     ConfigRepository.Instance()["general_replacerepo"] = "false";
                     ConfigRepository.Instance()["general_defaultplatform"] = "Mac";

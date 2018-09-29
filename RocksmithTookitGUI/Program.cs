@@ -46,7 +46,7 @@ namespace RocksmithToolkitGUI
                 String.Format("OS: {0} ({1} bit)\r\n ", Environment.OSVersion, Environment.Is64BitOperatingSystem ? "64" : "32") +
                 String.Format(".NET Framework Runtime: v{0}\r\n ", Environment.Version) +
                 String.Format("JIT: {0}\r\n ", JitVersionInfo.GetJitVersion()) +
-                String.Format("Wine: {0}", GeneralExtensions._wine())
+                String.Format("Wine: {0}", GeneralExtensions.IsWine())
             );
 
             if (!Environment.Version.ToString().Contains("4.0.30319") &&

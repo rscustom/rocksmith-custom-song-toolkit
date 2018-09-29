@@ -24,14 +24,12 @@ namespace RocksmithToolkitLib.Extensions
     {
         private static readonly Random randomNumber = new Random();
 
-        public static string _wine()
+        public static bool IsWine()
         {
-            //if (Environment.OSVersion.Platform == PlatformID.MacOSX)
             if (Environment.GetEnvironmentVariable("WINE_INSTALLED") == "1")
-            {
-                return "wine ";
-            }
-            return string.Empty;
+                return true;
+
+            return false;
         }
 
         public static bool Contains(this String obj, char[] chars)
@@ -246,11 +244,11 @@ namespace RocksmithToolkitLib.Extensions
             var rootPath = toolkitRootFolder ? toolkitRootPath : Path.GetDirectoryName(exeFileName);
 
             // for Mac Mono/Wine use old process command window
-            if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.GetEnvironmentVariable("WINE_INSTALLED") == "1")
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX || IsWine())
             {
                 var startInfo = new ProcessStartInfo
-                {//use wine prefix here
-                    FileName = _wine() + Path.Combine(rootPath, exeFileName),
+                {
+                    FileName = Path.Combine(rootPath, exeFileName),
                     WorkingDirectory = rootPath
                 };
 
@@ -282,8 +280,8 @@ namespace RocksmithToolkitLib.Extensions
                 {
                     // use custom Third Party Application Process window
                     var startInfo = new ProcessStartInfo
-                    {//use wine prefix here
-                        FileName = _wine() + Path.Combine(rootPath, exeFileName),
+                    {
+                        FileName = Path.Combine(rootPath, exeFileName),
                         WorkingDirectory = rootPath,
                         CreateNoWindow = true,
                         RedirectStandardOutput = true,
@@ -356,6 +354,7 @@ namespace RocksmithToolkitLib.Extensions
                 catch (Exception ex) // for Mac Wine/Mono compatiblity
                 {
                     GlobalExtension.Log.Info("RunExternalExecutable ...");
+                    GlobalExtension.Log.Info("If you are running toolkit on Mac Wine then the Environmental Variable 'WINE_INSTALLED' must be set to '1'");
                     GlobalExtension.Log.Info(ex.Message);
                 }
             }
@@ -377,6 +376,7 @@ namespace RocksmithToolkitLib.Extensions
             catch (Exception ex) // for Mac Wine/Mono compatiblity
             {
                 GlobalExtension.Log.Info("RunExternalExecutable ...");
+                GlobalExtension.Log.Info("If you are running toolkit on Mac Wine then the Environmental Variable 'WINE_INSTALLED' must be set to '1'");
                 GlobalExtension.Log.Info(ex.Message);
             }
 
