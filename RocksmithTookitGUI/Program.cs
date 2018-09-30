@@ -22,7 +22,7 @@ namespace RocksmithToolkitGUI
         static void Main(string[] args)
         {
             // make the logger available globally in application
-            GlobalExtension.Log = LogManager.GetCurrentClassLogger();
+            ConfigGlobals.Log = LogManager.GetCurrentClassLogger();
             // TODO: figure out way for native mac\linux OS
             var logPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "_RSToolkit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".log");
 
@@ -38,7 +38,7 @@ namespace RocksmithToolkitGUI
                 /* DO NOTHING */
             }
 
-            GlobalExtension.Log.Info(//OSVersion on unix will return it's Kernel version, urgh.
+            ConfigGlobals.Log.Info(//OSVersion on unix will return it's Kernel version, urgh.
                 String.Format("RocksmithToolkitGUI: v{0}\r\n ", ToolkitVersion.RSTKGuiVersion) +
                 String.Format("RocksmithToolkitLib: v{0}\r\n ", ToolkitVersion.RSTKLibVersion()) +
                 String.Format("RocksmithToolkitUpdater: v{0}\r\n ", updaterVersion) +
@@ -73,7 +73,7 @@ namespace RocksmithToolkitGUI
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 var exception = e.ExceptionObject as Exception;
-                GlobalExtension.Log.Error(exception, "\n{0}\n{1}\nException cached:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
+                ConfigGlobals.Log.Error(exception, "\n{0}\n{1}\nException cached:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
                 //Log.Error("Application Stdout:\n\n{0}", new StreamReader(_stdout.ToString()).ReadToEnd());
 
                 if (MessageBox.Show(String.Format("Application.ThreadException met.\n\n\"{0}\"\n\n{1}\n\nPlease send us \"{2}\", open log file now?",
@@ -90,7 +90,7 @@ namespace RocksmithToolkitGUI
             Application.ThreadException += (s, e) =>
             {
                 var exception = e.Exception;
-                GlobalExtension.Log.Error(exception, "\n{0}\n{1}\nException cached:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
+                ConfigGlobals.Log.Error(exception, "\n{0}\n{1}\nException cached:\n{2}\n\n", exception.Source, exception.TargetSite, exception.InnerException);
                 //Log.Error("Application Stdout:\n\n{0}", new StreamReader(_stdout.ToString()).ReadToEnd());
 
                 if (MessageBox.Show(String.Format("Application.ThreadException met.\n\n\"{0}\"\n\n{1}\n\nPlease send us \"{2}\", open log file now?",

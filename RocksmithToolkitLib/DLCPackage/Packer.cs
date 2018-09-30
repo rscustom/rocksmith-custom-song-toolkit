@@ -688,12 +688,12 @@ namespace RocksmithToolkitLib.DLCPackage
                 foreach (var templateFile in templateFiles)
                     File.Delete(templateFile);
 
-                // delete friendly name audio files that may have been added by new LoadFromFolder method
+                // delete friendly named ogg/wem audio files that may have been added by new LoadFromFolder method
                 var audioFiles = Directory.EnumerateFiles(sourcePath, "song_*.*", SearchOption.AllDirectories).Where(fn => fn.EndsWith(".ogg") || fn.EndsWith(".wem")).ToList();
                 foreach (var audioFile in audioFiles)
                     File.Delete(audioFile);
 
-                // delete _fixed.ogg audio files that may have been added by old LoadFromFolder method
+                // delete friendly named _fixed.ogg audio files that may have been added by LoadFromFolder method
                 var fixedOggFiles = Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories).Where(fn => fn.EndsWith("_fixed.ogg")).ToList();
                 foreach (var fixedOggFile in fixedOggFiles)
                     File.Delete(fixedOggFile);

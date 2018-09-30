@@ -617,7 +617,6 @@ namespace RocksmithToolkitLib.DLCPackage
             if (!bnkFiles.Any()) // LOG, IGNORE, AND CONTINUE
             {
                 var errMsg = "<WARNING> Did not find any *.bnk files ..." + Environment.NewLine + "You can still try loading an audio file by hand.  " + Environment.NewLine + Environment.NewLine;
-                GlobalExtension.Log.Info(errMsg);
                 BetterDialog2.ShowDialog(errMsg, MESSAGEBOX_CAPTION, null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning ...", 150, 150);
             }
             else if (bnkFiles.Count > 2)
@@ -721,13 +720,18 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     if (Path.GetFileName(fixedOggFile).Contains(item.WemFileId))
                     {
-                        var friendlyOggFile = Path.Combine(Path.GetDirectoryName(fixedOggFile), Path.GetFileName(Path.ChangeExtension(item.BnkFileName, ".ogg")));
-                        File.Move(fixedOggFile, friendlyOggFile);
+                        // some old RS2014 CDLC only have main audio and no preview audio file
+                        // these CDLC still may have two bnk files so need to catch that here
+                        if (!File.Exists(fixedOggFile))
+                            continue;
 
-                        if (Path.GetFileName(friendlyOggFile).EndsWith("_preview.wem"))
-                            data.OggPreviewPath = friendlyOggFile;
+                        var friendlyFixedOggFile = Path.Combine(Path.GetDirectoryName(fixedOggFile), String.Format("{0}_fixed.ogg", Path.GetFileNameWithoutExtension(item.BnkFileName)));
+                        File.Move(fixedOggFile, friendlyFixedOggFile);
+
+                        if (Path.GetFileName(friendlyFixedOggFile).EndsWith("_preview.wem"))
+                            data.OggPreviewPath = friendlyFixedOggFile;
                         else
-                            data.OggPath = friendlyOggFile;
+                            data.OggPath = friendlyFixedOggFile;
                     }
                 }
             }
@@ -880,8 +884,8 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var pngFile in artPngFiles)
                 IOExtension.MoveFile(pngFile, Path.Combine(eofDir, Path.GetFileName(pngFile)));
 
-            // Move ogg to EOF folder
-            var oggFiles = Directory.EnumerateFiles(unpackedDir, "*.ogg", SearchOption.AllDirectories).ToList();
+            // Move _fixed.ogg to EOF folder
+            var oggFiles = Directory.EnumerateFiles(unpackedDir, "*_fixed.ogg", SearchOption.AllDirectories).ToList();
             foreach (var oggFile in oggFiles)
                 IOExtension.MoveFile(oggFile, Path.Combine(eofDir, Path.GetFileName(oggFile)));
 

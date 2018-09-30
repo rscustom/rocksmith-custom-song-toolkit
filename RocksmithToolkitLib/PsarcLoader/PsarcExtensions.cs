@@ -103,7 +103,6 @@ namespace RocksmithToolkitLib.PsarcLoader
                     if (tocEntry != null)
                     {
                         tocEntry.Data.Dispose(); // CRITICAL
-                        tocEntry.Data = null;
                         tocEntry.Data = entryStream;
                     }
                     else
@@ -149,7 +148,6 @@ namespace RocksmithToolkitLib.PsarcLoader
                     if (tocEntry != null)
                     {
                         tocEntry.Data.Dispose(); // CRITICAL
-                        tocEntry.Data = null;
                         tocEntry.Data = entryStream;
                     }
                     else

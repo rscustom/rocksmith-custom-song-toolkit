@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using NLog;
-using NLog.Fluent;
+
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -74,9 +73,5 @@ namespace RocksmithToolkitLib.Extensions
             _updateProgress = null;
             _currentOperationLabel = null;
         }
-
-        public static Logger Log { get; set; }
-        public static bool IsUnitTest { get; set; }
-
     }
 }

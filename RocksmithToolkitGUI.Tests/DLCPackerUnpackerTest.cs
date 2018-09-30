@@ -32,7 +32,7 @@ namespace RocksmithToolkitGUI.Tests
             if (!TestSettings.Instance.ResourcePaths.Any())
                 Assert.Fail("TestSettings Load Failed ...");
 
-            GlobalExtension.IsUnitTest = true;
+            ConfigGlobals.IsUnitTest = true;
             packerUnpacker = new DLCPackerUnpacker.DLCPackerUnpacker();
             // stress test user selectable options
             packerUnpacker.OverwriteSongXml = true;
@@ -45,7 +45,7 @@ namespace RocksmithToolkitGUI.Tests
         public void Dispose()
         {
             packerUnpacker.Dispose();
-            GlobalExtension.IsUnitTest = false;
+            ConfigGlobals.IsUnitTest = false;
         }
 
         /// <summary>

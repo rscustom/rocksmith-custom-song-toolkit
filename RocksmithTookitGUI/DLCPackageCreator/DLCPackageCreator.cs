@@ -458,7 +458,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             FillPackageCreatorForm(info, templatePath);
 
-            if (!GlobalExtension.IsUnitTest)
+            if (!ConfigGlobals.IsUnitTest)
                 Parent.Focus();
         }
 
@@ -1693,7 +1693,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Update XML arrangements song info
             bool updateArrangmentID = false;
 
-            if (IsDirty && !GlobalExtension.IsUnitTest)
+            if (IsDirty && !ConfigGlobals.IsUnitTest)
             {
                 if (MessageBox.Show("The song information has been changed." + Environment.NewLine + "Do you want to update the 'Arrangement Identification'?  " + Environment.NewLine + "Answering 'Yes' will reduce the risk of CDLC" + Environment.NewLine + "in game hanging and song stats will be reset.", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                 {
@@ -1849,7 +1849,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // unit test does not behave well with async background worker
-            if (!GlobalExtension.IsUnitTest)
+            if (!ConfigGlobals.IsUnitTest)
             {
                 if (!bwGenerate.IsBusy && packageData != null)
                 {
@@ -1957,7 +1957,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillPackageCreatorForm(info, UnpackedDir);
             GlobalExtension.ShowProgress("Import Package Finished ...", 100);
 
-            if (!GlobalExtension.IsUnitTest)
+            if (!ConfigGlobals.IsUnitTest)
                 MessageBox.Show(CurrentRocksmithTitle + " CDLC package was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             // prevents possible cross threading
@@ -1968,7 +1968,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (!rbConvert.Checked)
                 IsDirty = true;
 
-            if (!GlobalExtension.IsUnitTest)
+            if (!ConfigGlobals.IsUnitTest)
                 Parent.Focus();
 
             return info;

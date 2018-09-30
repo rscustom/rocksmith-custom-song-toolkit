@@ -222,6 +222,7 @@ namespace RocksmithToolkitLib.Extensions
         /// <returns></returns>
         public static string GetValidShortFileName(string artist, string title, string version, bool acronym = false)
         {
+            // TODO remove periods may need to fix version
             if (String.IsNullOrEmpty(artist) || String.IsNullOrEmpty(title) || String.IsNullOrEmpty(version))
                 throw new DataException("Artist, title, or version field is null or empty ...");
 
@@ -232,6 +233,7 @@ namespace RocksmithToolkitLib.Extensions
                 value = String.Format("{0}_{1}_{2}", artist.GetValidAcronym(), title.GetValidAtaSpaceName(), version).Replace(" ", "-");
 
             value = value.GetValidFileName().StripExcessWhiteSpace();
+            // value = value.Replace(".", "");  // Remove all periods from file name without extension
             return value;
         }
 
@@ -272,7 +274,7 @@ namespace RocksmithToolkitLib.Extensions
             if (String.IsNullOrEmpty(value))
                 return String.Empty;
 
-            Regex rgx = new Regex(@"^[\d\.]*");
+            Regex rgx = new Regex(@"^[\d\.]*"); 
             var match = rgx.Match(value);
             if (match.Success)
                 return match.Value.Trim();
