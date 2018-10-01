@@ -745,6 +745,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             txtAlbum.Validating += ValidateName;
             txtAlbumSort.Validating += ValidateSortName;
             txtYear.Validating += ValidateYear;
+            txtVersion.Validating += ValidateVersion;
             txtDlcKey.Validating += ValidateDlcKey;
             txtVersion.Validating += ClickedInputControl;
             txtTempo.Validating += ValidateTempo;
@@ -867,16 +868,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             SelectComboAppId(AppId);
 
+            // validate on-load to address old CDLC issues
             txtAlbum.Text = info.SongInfo.Album;
-            txtAlbumSort.Text = info.SongInfo.AlbumSort;
+            txtAlbumSort.Text = info.SongInfo.AlbumSort.GetValidSortableName();
             txtJapaneseSongTitle.Text = info.SongInfo.JapaneseSongName;
             txtJapaneseArtistName.Text = info.SongInfo.JapaneseArtistName;
             cbJapaneseTitle.Checked = !string.IsNullOrEmpty(txtJapaneseSongTitle.Text) || !string.IsNullOrEmpty(txtJapaneseArtistName.Text);
             txtSongTitle.Text = info.SongInfo.SongDisplayName;
-            txtSongTitleSort.Text = info.SongInfo.SongDisplayNameSort;
+            txtSongTitleSort.Text = info.SongInfo.SongDisplayNameSort.GetValidSortableName();
             txtYear.Text = info.SongInfo.SongYear.ToString();
             txtArtist.Text = info.SongInfo.Artist;
-            txtArtistSort.Text = info.SongInfo.ArtistSort;
+            txtArtistSort.Text = info.SongInfo.ArtistSort.GetValidSortableName();
             txtTempo.Text = info.SongInfo.AverageTempo.ToString();
 
             // fill in the new AlbumSort textbox if it is empty
@@ -1648,7 +1650,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         break;
                 }
 
-                var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion.Replace(".", "_"));
+                var packageVersion = String.Format("{0}{1}", versionPrefix, PackageVersion);
                 var fileName = StringExtensions.GetValidShortFileName(ArtistSort, SongTitleSort, packageVersion, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                 sfd.FileName = fileName.GetValidFileName();
                 sfd.Filter = CurrentRocksmithTitle + " CDLC (*.*)|*.*";

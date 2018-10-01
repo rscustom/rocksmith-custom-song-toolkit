@@ -211,7 +211,7 @@ namespace packagecreator
                         var artist = packageData.SongInfo.ArtistSort;
                         var title = packageData.SongInfo.SongDisplayNameSort;
                         // var destDir = Path.Combine(arguments.Output, Path.GetFileName(srcDirs[i]).GetValidName());
-                        var fileName = StringExtensions.GetValidShortFileName(artist, title, arguments.Revision.Replace(".", "_"), ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
+                        var fileName = StringExtensions.GetValidShortFileName(artist, title, arguments.Revision, ConfigRepository.Instance().GetBoolean("creator_useacronyms"));
                         var destPath = Path.Combine(arguments.Output, fileName);
                         var fullFileName = String.Format("{0}{1}.psarc", fileName, DLCPackageCreator.GetPathName(arguments.Platform)[2]);
                         Console.WriteLine(@"Packing: " + Path.GetFileName(fullFileName));

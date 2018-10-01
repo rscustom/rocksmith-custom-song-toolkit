@@ -173,7 +173,6 @@ namespace RocksmithToolkitLib.Extensions
             GeneralExtensions.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
         }
 
-
         public static void Ogg2Preview(string sourcePath, string destinationPath, long msLength = 30000, long msStart = 4000)
         {
             var cmdArgs = String.Format(" -s {2} -l {3} \"{0}\" \"{1}\"", sourcePath, destinationPath, msStart, msLength);

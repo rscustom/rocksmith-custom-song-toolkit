@@ -222,9 +222,11 @@ namespace RocksmithToolkitLib.Extensions
         /// <returns></returns>
         public static string GetValidShortFileName(string artist, string title, string version, bool acronym = false)
         {
-            // TODO remove periods may need to fix version
             if (String.IsNullOrEmpty(artist) || String.IsNullOrEmpty(title) || String.IsNullOrEmpty(version))
                 throw new DataException("Artist, title, or version field is null or empty ...");
+
+            // cleanup version numbering
+            version = version.Replace(".", "_");
 
             string value;
             if (!acronym)
@@ -233,7 +235,6 @@ namespace RocksmithToolkitLib.Extensions
                 value = String.Format("{0}_{1}_{2}", artist.GetValidAcronym(), title.GetValidAtaSpaceName(), version).Replace(" ", "-");
 
             value = value.GetValidFileName().StripExcessWhiteSpace();
-            // value = value.Replace(".", "");  // Remove all periods from file name without extension
             return value;
         }
 
