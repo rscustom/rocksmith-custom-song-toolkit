@@ -2091,13 +2091,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var wem2014 = AudioPath;
                 var toolkitFolderPath = Path.GetDirectoryName(wem2014);
                 var eofFolderPath = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(wem2014)), "EOF");
-                var oggFile = Path.ChangeExtension(Path.GetFileName(wem2014), ".ogg");
-                var oggPath = Path.Combine(eofFolderPath, oggFile);
-                var wavFile = Path.ChangeExtension(Path.GetFileName(wem2014), ".wav");
+                var fixedOggFile = String.Format("{0}_fixed.ogg", Path.GetFileNameWithoutExtension(wem2014));
+                var fixedOggPath = Path.Combine(eofFolderPath, fixedOggFile);
+                var wavFile = String.Format("{0}.wav", Path.GetFileNameWithoutExtension(wem2014));
                 var wavPath = Path.Combine(eofFolderPath, wavFile);
                 var wem2010File = Path.ChangeExtension(Path.GetFileName(wem2014), ".ogg");
                 var wem2010Path = Path.Combine(toolkitFolderPath, wem2010File);
-                ExternalApps.Ogg2Wav(oggPath, wavPath);
+                ExternalApps.Ogg2Wav(fixedOggPath, wavPath);
                 Wwise.Wav2Wem(wavPath, wem2010Path, (int)numAudioQuality.Value);
 
                 txtAudioPath.Clear();

@@ -354,12 +354,14 @@ namespace RocksmithToolkitLib.Extensions
                 catch (Exception ex) // for Mac Wine/Mono compatiblity
                 {
                     var errMsg = new StringBuilder();
+                    errMsg.AppendLine("");
                     errMsg.AppendLine("RunExternalExecutable ...");
                     errMsg.AppendLine("If you are running toolkit on Mac Wine make sure Environmental Variable 'WINE_INSTALLED' is set to '1'");
                     errMsg.AppendLine(ex.Message);
-                    throw new SystemException(errMsg.ToString() + ex.Message);
+                    throw new SystemException(errMsg.ToString() + Environment.NewLine);
                 }
             }
+
             return output;
         }
 
@@ -378,10 +380,11 @@ namespace RocksmithToolkitLib.Extensions
             catch (Exception ex) // for Mac Wine/Mono compatiblity
             {
                 var errMsg = new StringBuilder();
-                errMsg.AppendLine("RunExternalExecutable ...");
+                errMsg.AppendLine("");
+                errMsg.AppendLine("UpdateCmdWin ...");
                 errMsg.AppendLine("If you are running toolkit on Mac Wine make sure Environmental Variable 'WINE_INSTALLED' is set to '1'");
-                errMsg.AppendLine(ex.Message);
-                throw new SystemException(errMsg.ToString() + ex.Message);
+                errMsg.AppendLine("");
+                throw new SystemException(errMsg.ToString() + ex.Message + Environment.NewLine);
             }
 
             Debug.WriteLine(line);
