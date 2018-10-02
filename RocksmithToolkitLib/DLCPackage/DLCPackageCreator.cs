@@ -1104,7 +1104,7 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name="packageVersion">0.0 to 9.9 decimal or integer versioning system</param>
         /// <param name="packageComment"></param>
         /// <param name="packageRating">0 to 5 user rating system</param>
-        /// <param name="toolkitVersion">If left blank then the current toolkitversion is used</param>
+        /// <param name="toolkitVersion">If null/empty then the current toolkitversion is used</param>
         public static void GenerateToolkitVersion(Stream output, string packageAuthor = null, string packageVersion = null, string packageComment = null, string packageRating = null, string toolkitVersion = null)
         {
             var writer = new StreamWriter(output);

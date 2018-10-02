@@ -392,10 +392,10 @@
             this.dlcPackageCreator1.PackageAuthor = null;
             this.dlcPackageCreator1.PackageComment = "(Remastered by CDLC Creator)";
             this.dlcPackageCreator1.PackageVersion = "";
-            this.dlcPackageCreator1.PlatformMAC = false;
-            this.dlcPackageCreator1.PlatformPC = false;
-            this.dlcPackageCreator1.PlatformPS3 = false;
-            this.dlcPackageCreator1.PlatformXBox360 = false;
+            //this.dlcPackageCreator1.PlatformMAC = false;
+            //this.dlcPackageCreator1.PlatformPC = false;
+            //this.dlcPackageCreator1.PlatformPS3 = false;
+            //this.dlcPackageCreator1.PlatformXBox360 = false;
             this.dlcPackageCreator1.PreviousGameVersion = RocksmithToolkitLib.GameVersion.RS2012;
             this.dlcPackageCreator1.Size = new System.Drawing.Size(507, 560);
             this.dlcPackageCreator1.SongTitle = "";
