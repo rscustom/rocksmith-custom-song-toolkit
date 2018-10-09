@@ -275,13 +275,40 @@ namespace RocksmithToolkitLib.Extensions
             if (String.IsNullOrEmpty(value))
                 return String.Empty;
 
-            Regex rgx = new Regex(@"^[\d\.]*"); 
+            Regex rgx = new Regex(@"^[\d\.]*");
             var match = rgx.Match(value);
             if (match.Success)
                 return match.Value.Trim();
 
             // force user to make entry rather than defaulting
             return "";
+        }
+
+        public static bool IsVolumeValid(this float? value, float defaultVolume = -7.0F)
+        {
+            if (value == null)
+                return false;
+
+            // check for valid volume
+            float volume = (float)Math.Round((double)value, 1);
+            if (volume > -30.0F && volume < 30.0F)
+                return true;
+
+             return false;
+        }
+
+        public static float GetValidVolume(this float? value, float defaultVolume = -7.0F)
+        {
+            if (value == null)
+                return defaultVolume;
+
+            // check for valid volume
+            float volume = (float)Math.Round((double)value, 1);
+            if (volume > -30.0F && volume < 30.0F)
+                return volume;
+
+            // use default volume
+            return defaultVolume;
         }
 
         public static string GetValidYear(this string value)

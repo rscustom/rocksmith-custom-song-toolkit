@@ -1,7 +1,21 @@
-﻿using System;
+﻿/*
+ * Custom dialog box to replace the standard message box 
+ *  
+ * Cozy1, Copyright 2015, massive mods and customizations
+ * includes algo for determinng parameter passing using a checkbyte 2^3
+ * 
+ * Inspired by Samuel Allen's BetterDialog.cs
+ * Dot Net Perls, http://dotnetperls.com/
+ * Looks like Samuel could have been inspired by Charles Pretzold's, 
+ * BetterDialog.cs Copyright 2001, but no specific credit was mentioned
+ * 
+ */
+
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace RocksmithToolkitLib.Extensions
 {
@@ -10,12 +24,21 @@ namespace RocksmithToolkitLib.Extensions
     /// </summary>
     public partial class BetterDialog2 : Form
     {
+        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        private const UInt32 SWP_NOSIZE = 0x0001;
+        private const UInt32 SWP_NOMOVE = 0x0002;
+        private const UInt32 TOPMOST_FLAGS = SWP_NOMOVE | SWP_NOSIZE;
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
         // System Icons example: Bitmap.FromHicon(SystemIcons.Exclamation.Handle)
         // Resource PNG Icons/Images example: Properties.Resources.LedGuitar
         //
         // Sample Usage: 
-        // result = BetterDialog2.ShowDialog(null, "Dialog Title", "Button1Text", "Button2Text", "Button3Text", Properties.Resources.IconImage or Bitmap.FromHicon(SystemIcons.Information.Handle), "IconMessage", 150, 150);
-        // if (BetterDialog2.ShowDialog(null, "Dialog Title", "Button1Text", "Button2Text", "Button3Text", Properties.Resources.IconImage or Bitmap.FromHicon(SystemIcons.Information.Handle), "IconMessage", 150, 150) == DialogResult.No)
+        // BetterDialog2.ShowDialog("Dialog Message", "Dialog Title", "Button1Text", "Button2Text", "Button3Text", Properties.Resources.IconImage, "IconMessage", 150, 150);
+        // result = BetterDialog2.ShowDialog(null, "Dialog Title", "Button1Text", "Button2Text", "Button3Text", Properties.Resources.IconImage, "IconMessage", 150, 150);
         //
         /// <summary>
         /// Custom Dialog Box to replace standard Message Box with positioning
@@ -24,9 +47,9 @@ namespace RocksmithToolkitLib.Extensions
         /// <param name="dialogIcon">Image displayed left side</param>
         /// <param name="iconMessage">Promenent bold message displayed to right of icon</param>
         /// <param name="dialogMessage">Main dialog message, if 'null' then not displayed</param>
-        /// <param name="textDialogButton1">Message box 1 button text, if 'null' then not displayed</param>
-        /// <param name="textDialogButton2">Message box 2 button text, if 'null' then not displayed</param>
-        /// <param name="textDialogButton3">Message box 3 button text, if 'null' then not displayed</param>
+        /// <param name="textDialogButton1">Message box 1 left button text, if 'null' then not displayed</param>
+        /// <param name="textDialogButton2">Message box 2 middle button text, if 'null' then not displayed</param>
+        /// <param name="textDialogButton3">Message box 3 right (first) button text, if 'null' then not displayed</param>
         /// <param name="topFromCenter">Positive pixel distance up from screen center, default location is centered on screen</param>
         /// <param name="leftFromCenter">Positive pixel distance left from screen center, default location is centered on screen</param>
         public static DialogResult ShowDialog(string dialogMessage, string dialogTitle,
@@ -41,10 +64,26 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
+        public void LoadDialog(string dialogMessage, string dialogTitle,
+            string textDialogButton1, string textDialogButton2, string textDialogButton3, Image dialogIcon, string iconMessage,
+            int topFromCenter = 0, int leftFromCenter = 0)
+        {
+            dialogMessage = dialogMessage;
+            dialogTitle = dialogTitle;
+            textDialogButton1 = textDialogButton1;
+            textDialogButton2 = textDialogButton2;
+            textDialogButton3 = textDialogButton3;
+            dialogIcon = dialogIcon;
+            iconMessage = dialogMessage;
+            topFromCenter = topFromCenter;
+            leftFromCenter = leftFromCenter;
+            this.Refresh();
+        }
+
         /// <summary>
-        /// The private constructor. This is only called by the static method ShowDialog.
+        /// The constructor. This called by the static method ShowDialog or may be used as popup window.
         /// </summary>
-        private BetterDialog2(string dialogMessage, string dialogTitle, string textDialogButton1, string textDialogButton2,
+        public BetterDialog2(string dialogMessage, string dialogTitle, string textDialogButton1, string textDialogButton2,
             string textDialogButton3, Image dialogIcon, string iconMessage, int topFromCenter, int leftFromCenter)
         {
             InitializeComponent();
@@ -61,7 +100,7 @@ namespace RocksmithToolkitLib.Extensions
             // visual adjustments
             int iconMessageTweak = 2;
             int dialogMessageTweak = 10;
-            int heightTweak = 50; // buttons only
+            int heightTweak = 60; // buttons only
             int widthTweak = 30;
             int minIconHeight = 48;
             int minIconWidth = 48;
@@ -78,12 +117,12 @@ namespace RocksmithToolkitLib.Extensions
             byte checkByte = 0x00;
             if (dialogIcon != null) checkByte += 0x01;
             else pbIcon.Dispose();
-            if (iconMessage != null) checkByte += 0x02;
+            if (!String.IsNullOrEmpty(iconMessage)) checkByte += 0x02;
             else lblIconMessage.Dispose();
-            if (dialogMessage != null) checkByte += 0x04;
+            if (!String.IsNullOrEmpty(dialogMessage)) checkByte += 0x04;
             else lblDialogMessage.Dispose();
 
-            Console.WriteLine("checkByte: " + checkByte.ToString("X"));
+            Debug.WriteLine("checkByte: " + checkByte.ToString("X"));
 
             // adjust dialog dimensions based on message strings
             using (Graphics graphics = this.CreateGraphics())
@@ -116,7 +155,7 @@ namespace RocksmithToolkitLib.Extensions
                 {
                     case 0x00: // no icon and no messages
                         Controls.Remove(tlpDialog);
-                        Console.WriteLine("No icon or messages");
+                        Debug.WriteLine("No icon or messages");
                         break;
 
                     case 0x01: // icon
@@ -130,7 +169,7 @@ namespace RocksmithToolkitLib.Extensions
                         // pbIcon.Dock = DockStyle.Fill;
 
                         pbIcon.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
-                        Console.WriteLine("Icon image");
+                        Debug.WriteLine("Icon image");
                         break;
 
                     case 0x02: // icon message 
@@ -144,12 +183,12 @@ namespace RocksmithToolkitLib.Extensions
 
                         lblIconMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         heightTweak = heightTweak + iconMessageTweak;
-                        Console.WriteLine("Icon message");
+                        Debug.WriteLine("Icon message");
                         break;
 
                     case 0x03: // icon and icon message
                         tlpDialog.RowCount = 1;
-                        Console.WriteLine("Icon image and icon message");
+                        Debug.WriteLine("Icon image and icon message");
 
                         if (iconMessageSize.Height < minIconHeight)
                             iconMessageSize.Height = minIconHeight;
@@ -170,13 +209,13 @@ namespace RocksmithToolkitLib.Extensions
                         lblDialogMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         // lblDialogMessage.Padding = new Padding(5, 5, 0, 0);
                         heightTweak = heightTweak + dialogMessageTweak;
-                        Console.WriteLine("Dialog message");
+                        Debug.WriteLine("Dialog message");
                         break;
 
                     case 0x05: // icon and dialog message
                         tlpDialog.RowCount = 1;
                         tlpDialog.SetRow(lblDialogMessage, 0);
-                        Console.WriteLine("Icon image with dialog message");
+                        Debug.WriteLine("Icon image with dialog message");
 
                         if (dialogMessageSize.Height < minIconHeight)
                             dialogMessageSize.Height = minIconHeight;
@@ -200,7 +239,7 @@ namespace RocksmithToolkitLib.Extensions
                         lblIconMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         lblDialogMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         heightTweak = heightTweak + iconMessageTweak + dialogMessageTweak;
-                        Console.WriteLine("Icon message and dialog message");
+                        Debug.WriteLine("Icon message and dialog message");
                         break;
 
                     case 0x07: // icon, icon message and dialog message
@@ -224,7 +263,7 @@ namespace RocksmithToolkitLib.Extensions
                         lblIconMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         lblDialogMessage.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
                         heightTweak = heightTweak + iconMessageTweak + dialogMessageTweak;
-                        Console.WriteLine("Icon image, icon message and dialog message");
+                        Debug.WriteLine("Icon image, icon message and dialog message");
                         break;
 
                     default:
@@ -254,12 +293,13 @@ namespace RocksmithToolkitLib.Extensions
                     this.Width = bigger + minIconWidth + widthTweak;
             }
 
-            int buttonCount = 1;
+            int buttonCount = 0;
+            if (!String.IsNullOrEmpty(textDialogButton3))
+                buttonCount++;
             if (!String.IsNullOrEmpty(textDialogButton2))
                 buttonCount++;
             if (!String.IsNullOrEmpty(textDialogButton1))
                 buttonCount++;
-
 
             // setup buttons
             switch (buttonCount)
@@ -288,7 +328,7 @@ namespace RocksmithToolkitLib.Extensions
                     this.AcceptButton = btn2;
                     buttonWidth = buttonWidth * 2;
                     break;
-                default:  // 1 button                  
+                case 1:  // 1 button                  
                     btn3.Text = textDialogButton3;
                     btn1.Visible = false;
                     btn2.Visible = false;
@@ -296,6 +336,14 @@ namespace RocksmithToolkitLib.Extensions
                     btn3.DialogResult = DialogResult.OK;
                     this.AcceptButton = btn3;
                     buttonWidth = buttonWidth * 2; // double wide
+                    break;
+                case 0:  // 0 button                  
+                    btn1.Visible = false;
+                    btn2.Visible = false;
+                    btn3.Visible = false;
+                    pbLine.Dispose();
+                    this.Height -= 30;
+                    tlpDialog.Dock = DockStyle.Fill;
                     break;
             }
 
@@ -311,6 +359,11 @@ namespace RocksmithToolkitLib.Extensions
                 if (this.Height < maxIconHeight)
                     this.Height = maxIconHeight;
             }
+        }
+
+        private void BetterDialog2_Load(object sender, EventArgs e)
+        {
+            SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
         }
 
 

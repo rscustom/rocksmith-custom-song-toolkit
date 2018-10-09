@@ -60,13 +60,12 @@ namespace RocksmithToolkitLib
                 {
                     versionInfoJson = new WebClient().DownloadString(versionInfoUrl);
                     toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
-
+                 
                     //  recommend update to latest revision under special conditions
                     var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
 
                     if ((!useBeta && ToolkitVersion.AssemblyConfiguration == "BETA") ||
-                        (useBeta && ToolkitVersion.AssemblyConfiguration != "BETA") ||
-                        String.IsNullOrEmpty(toolkitVersionOnline.Revision))
+                        (useBeta && ToolkitVersion.AssemblyConfiguration != "BETA"))
                     {
                         versionInfoJson = new WebClient().DownloadString(GetFileUrl());
                         toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
@@ -116,6 +115,7 @@ namespace RocksmithToolkitLib
             if (!addExtension)
                 return fileUrl;
 
+            // downloader is currently disable Mac Mono/Wine  
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
                 return fileUrl + ".tar.gz";
 

@@ -620,13 +620,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 else
                     songXml.ArrangementProperties.BassPick = 0;
 
+                // Commented out - EOF properly sets the bonus/represent elements
                 // TODO: monitor this new code for bugs
                 // represent is set to "1" by default, if there is a bonus then set represent to "0"
-                songXml.ArrangementProperties.Represent = arr.BonusArr ? 0 : 1;
+                //songXml.ArrangementProperties.Represent = arr.BonusArr ? 0 : 1;
 
-                // for alternate arrangement then both represent and bonus are set to "0"
-                if (songXml.Part > 1 && !arr.BonusArr)
-                    songXml.ArrangementProperties.Represent = 0;
+                //// for alternate arrangement then both represent and bonus are set to "0"
+                //if (songXml.Part > 1 && !arr.BonusArr)
+                //    songXml.ArrangementProperties.Represent = 0;
 
                 //TODO: before this, check somewhere if autotone present, like update arrangement info in GetPackageData section.
                 bool updTones = songXml.Tones != null;
@@ -2378,20 +2379,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void btnArrangementQuick_Click(object sender, EventArgs e)
         {
-            using (var ofd = new OpenFileDialog())
+            // use new Custom TreeViewOfd to keep arrangements in correct selected order
+            using (var ofd = new TreeViewOfd())
             {
                 ofd.InitialDirectory = ConfigGlobals.DefaultProjectDir;
-                ofd.Title = "Quick Add ... Multiselect Arrangements";
-                ofd.Filter = "Rocksmith EOF XML Files (*.xml)|*.xml";
+                ofd.Title = "Multiselect XML Arrangements and Arrange Order ...";
+                ofd.Filter = "Rocksmith Arrangement XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
                 ofd.Multiselect = true;
-                if (ofd.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
 
-                string[] xmlFilePaths = ofd.FileNames;
-                ConfigGlobals.DefaultProjectDir = xmlFilePaths[0];
-                AddArrangementsQuick(xmlFilePaths);
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
+
+                List<string> xmlFilePaths = ofd.FileNames;
+                ConfigGlobals.DefaultProjectDir = ofd.InitialDirectory;
+                AddArrangementsQuick(xmlFilePaths.ToArray());
             }
         }
 

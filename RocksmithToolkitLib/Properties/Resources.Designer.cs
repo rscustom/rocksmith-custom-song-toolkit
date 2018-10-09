@@ -109,6 +109,20 @@ namespace RocksmithToolkitLib.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap down {
+            get {
+                object obj = ResourceManager.GetObject("down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap left {
+            get {
+                object obj = ResourceManager.GetObject("left", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static byte[] PC_soundbank {
             get {
                 object obj = ResourceManager.GetObject("PC_soundbank", resourceCulture);
@@ -130,6 +144,13 @@ namespace RocksmithToolkitLib.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap right {
+            get {
+                object obj = ResourceManager.GetObject("right", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static byte[] rsenumerable_guitar {
             get {
                 object obj = ResourceManager.GetObject("rsenumerable_guitar", resourceCulture);
@@ -148,6 +169,20 @@ namespace RocksmithToolkitLib.Properties {
             get {
                 object obj = ResourceManager.GetObject("rsenumerable_song", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        public static System.Drawing.Icon TreeViewOfd {
+            get {
+                object obj = ResourceManager.GetObject("TreeViewOfd", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap up {
+            get {
+                object obj = ResourceManager.GetObject("up", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

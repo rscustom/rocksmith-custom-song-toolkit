@@ -146,7 +146,7 @@
             this.pbLine.TabIndex = 6;
             this.pbLine.TabStop = false;
             // 
-            // BetterDialog
+            // BetterDialog2
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
@@ -161,11 +161,12 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "BetterDialog";
+            this.Name = "BetterDialog2";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Dialog Title";
+            this.Load += new System.EventHandler(this.BetterDialog2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbIcon)).EndInit();
             this.tlpDialog.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbLine)).EndInit();

@@ -537,21 +537,23 @@ namespace RocksmithToolkitLib.DLCPackage
                         // MANIFEST
                         var manifest = new Manifest2014<Attributes2014>();
                         var attribute = new Attributes2014(arrangementFileName, arrangement, info, platform);
-                        if (arrangement.ArrangementType == ArrangementType.Bass || arrangement.ArrangementType == ArrangementType.Guitar)
-                        {
-                            // TODO: monitor this new code for bugs
-                            // represent is set to "1" by default, if there is a bonus then set represent to "0"
-                            attribute.Representative = arrangement.BonusArr ? 0 : 1;
-                            attribute.ArrangementProperties.Represent = arrangement.BonusArr ? 0 : 1;
 
-                            attribute.SongPartition = songPartitionCount.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
-                            if (attribute.SongPartition > 1 && !arrangement.BonusArr)
-                            {
-                                // for alternate arrangement then both represent and bonus are set to "0"
-                                attribute.Representative = 0;
-                                attribute.ArrangementProperties.Represent = 0;
-                            }
-                        }
+                        // Commented out - EOF properly sets the bonus/represent elements
+                        //if (arrangement.ArrangementType == ArrangementType.Bass || arrangement.ArrangementType == ArrangementType.Guitar)
+                        //{
+                        //    // TODO: monitor this new code for bugs
+                        //    // represent is set to "1" by default, if there is a bonus then set represent to "0"
+                        //    attribute.Representative = arrangement.BonusArr ? 0 : 1;
+                        //    attribute.ArrangementProperties.Represent = arrangement.BonusArr ? 0 : 1;
+
+                        //    attribute.SongPartition = songPartitionCount.GetSongPartition(arrangement.Name, arrangement.ArrangementType);
+                        //    if (attribute.SongPartition > 1 && !arrangement.BonusArr)
+                        //    {
+                        //        // for alternate arrangement then both represent and bonus are set to "0"
+                        //        attribute.Representative = 0;
+                        //        attribute.ArrangementProperties.Represent = 0;
+                        //    }
+                        //}
 
                         var attributeDictionary = new Dictionary<string, Attributes2014> { { "Attributes", attribute } };
                         manifest.Entries.Add(attribute.PersistentID, attributeDictionary);

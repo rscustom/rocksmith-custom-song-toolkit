@@ -77,6 +77,15 @@
       <DependentUpon>HelpForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions\NotifyPropChangedBase.cs" />
+    <Compile Include="Extensions\TreeViewBrowser.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Extensions\TreeViewOfd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Extensions\TreeViewOfd.designer.cs">
+      <DependentUpon>TreeViewOfd.cs</DependentUpon>
+    </Compile>
     <Compile Include="SngToTab\Common.cs" />
     <Compile Include="SngToTab\Sng2Tab.cs" />
     <Compile Include="SngToTab\TabBeat.cs" />
@@ -231,6 +240,12 @@
     <EmbeddedResource Include="Extensions\HelpForm.resx">
       <DependentUpon>HelpForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Extensions\TreeViewBrowser.resx">
+      <DependentUpon>TreeViewBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Extensions\TreeViewOFD.resx">
+      <DependentUpon>TreeViewOfd.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -244,6 +259,11 @@
     <None Include="Resources\XBox360_DLC_image2014.png" />
     <None Include="Resources\cgm_default_icon.png" />
     <None Include="Resources\cgm_default_inlay.png" />
+    <EmbeddedResource Include="Resources\down.png" />
+    <EmbeddedResource Include="Resources\left.png" />
+    <EmbeddedResource Include="Resources\right.png" />
+    <EmbeddedResource Include="Resources\up.png" />
+    <EmbeddedResource Include="Resources\TreeViewOfd.ico" />
     <Content Include="RocksmithToolkitLib.Config.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
