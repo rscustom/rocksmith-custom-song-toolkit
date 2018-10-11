@@ -13,6 +13,8 @@ namespace RocksmithToolkitLib.Extensions
     {
         /// <summary>
         /// Custom TreeView OpenFileDialog by Cozy1
+        /// <para>Output from FileNames property preserves</para>
+        /// <para>the selection and custom ordering of items</para>
         /// </summary>
         public TreeViewOfd()
         {
@@ -74,6 +76,8 @@ namespace RocksmithToolkitLib.Extensions
         private List<string> fileNames = new List<string>();
         /// <summary>
         /// Get/Set Custom TreeView Selected File Names/Paths
+        /// <para>Output from FileNames property preserves</para>
+        /// <para>the selection and custom ordering of items</para>
         /// </summary>
         public List<string> FileNames
         {
@@ -138,7 +142,7 @@ namespace RocksmithToolkitLib.Extensions
         {
             try
             {
-                // update imageList from browserTreeView.ImageList
+                // update imageList from treeViewBrowser.ImageList
                 imageList.Images.Clear();
                 foreach (Bitmap image in treeViewBrowser.ImageList.Images)
                     imageList.Images.Add(image);
@@ -167,48 +171,59 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
-        private void butDown_Click(object sender, System.EventArgs e)
+        private void ListViewUpDown(Keys key)
         {
+            // TODO: address movement of multi selection 
             try
             {
                 var index = listView.SelectedItems[0].Index;
                 var item = listView.Items[index];
-                if (index < listView.Items.Count - 1)
+                int newIndex = index;
+
+                switch (key)
                 {
-                    listView.SelectedItems.Clear();
-                    listView.Items.RemoveAt(index);
-                    listView.Items.Insert(index + 1, item);
-                    listView.Items[index + 1].Selected = true;
-                    listView.Items[index + 1].Focused = true;
-                    listView.Focus();
+                    case Keys.Up:
+                        newIndex--;
+                        break;
+                    case Keys.Down:
+                        newIndex++;
+                        break;
+                    default:
+                        return;
                 }
+
+                listView.SelectedItems.Clear();
+                listView.Items.RemoveAt(index);
+
+                if (newIndex >= 0 && newIndex <= listView.Items.Count)
+                {
+                    listView.Items.Insert(newIndex, item);
+                    listView.Items[newIndex].Selected = true;
+                    listView.Items[newIndex].Focused = true;
+                }
+                else
+                {
+                    listView.Items.Insert(index, item);
+                    listView.Items[index].Selected = true;
+                    listView.Items[index].Focused = true;
+                }
+
+                listView.Focus();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("<ERROR> Button Down: " + ex.Message);
+                Debug.WriteLine("<ERROR> ListViewUpDown: " + ex.Message);
             }
+        }
+
+        private void butDown_Click(object sender, System.EventArgs e)
+        {
+            ListViewUpDown(Keys.Down);
         }
 
         private void butUp_Click(object sender, System.EventArgs e)
         {
-            try
-            {
-                var index = listView.SelectedItems[0].Index;
-                var item = listView.Items[index];
-                if (index > 0)
-                {
-                    listView.SelectedItems.Clear();
-                    listView.Items.RemoveAt(index);
-                    listView.Items.Insert(index - 1, item);
-                    listView.Items[index - 1].Selected = true;
-                    listView.Items[index - 1].Focused = true;
-                    listView.Focus();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("<ERROR> Button Up: " + ex.Message);
-            }
+            ListViewUpDown(Keys.Up);
         }
 
         private void butRemove_Click(object sender, System.EventArgs e)
@@ -227,7 +242,6 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
-        private List<string> filePaths;
         private void btnOk_Click(object sender, EventArgs e)
         {
             var filePaths = new List<string>();
@@ -236,14 +250,17 @@ namespace RocksmithToolkitLib.Extensions
 
             FileNames = filePaths;
 
+            var initialDirectory = Path.GetDirectoryName(filePaths.FirstOrDefault());
+            if (!String.IsNullOrEmpty(initialDirectory))
+                InitialDirectory = initialDirectory;
+
             // (Optional) Save TreeView ExpandedState to a file
             if (!String.IsNullOrEmpty(ExpandedStateSavePath))
             {
                 var expandedState = treeViewBrowser.GetAllExpandedList();
-                InitialDirectory = expandedState.Last();
-
                 var selectedNode = treeViewBrowser.SelectedNodes[0] as TreeNode;
-                if (!String.IsNullOrEmpty(selectedNode.Tag.ToString()))
+
+                if (selectedNode != null && !String.IsNullOrEmpty(selectedNode.Tag.ToString()))
                 {
                     var selectedPath = selectedNode.Tag.ToString();
                     expandedState.Add(selectedPath);

@@ -958,7 +958,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = ConfigGlobals.DefaultProjectDir;
+                ofd.InitialDirectory = ConfigGlobals.DefaultProjectFolder;
                 ofd.Filter = "Rocksmith EOF XML Files (*.xml)|*.xml";
                 if (ofd.ShowDialog() != DialogResult.OK)
                 {
@@ -966,7 +966,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 XmlPath = ofd.FileName;
-                ConfigGlobals.DefaultProjectDir = Path.GetDirectoryName(XmlPath);
+                ConfigGlobals.DefaultProjectFolder = Path.GetDirectoryName(XmlPath);
 
                 if (IsAlreadyAdded(XmlPath))
                 {
@@ -1033,7 +1033,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
 
             LoadArrangementData(XmlPath);
-            ConfigGlobals.DefaultProjectDir = Path.GetDirectoryName(XmlPath);
+            ConfigGlobals.DefaultProjectFolder = Path.GetDirectoryName(XmlPath);
             DialogResult = DialogResult.OK;
             Close();
         }

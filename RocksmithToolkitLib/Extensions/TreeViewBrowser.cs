@@ -12,13 +12,13 @@ using System.Collections;
 namespace RocksmithToolkitLib.Extensions
 {
     /// <summary>
-    /// A Custom TreeView Browser by Cozy1
+    /// Custom TreeView Browser by Cozy1
     /// </summary>
     public class TreeViewBrowser : TreeView
     {
         #region TreeViewBrowser Code
-        // some credit goes here: https://github.com/ItsEddie/system-explorer-treeview
-        
+        // some code from: https://github.com/ItsEddie/system-explorer-treeview
+
         // set variables here for debugging
         private bool enableEventHandlers = true;
         private bool enableOverrides = true;
@@ -71,18 +71,12 @@ namespace RocksmithToolkitLib.Extensions
         public List<string> DefaultFolders
         {
             get { return defaultFolders; }
-            set
-            {
-                defaultFolders = value;
-
-                //if (!IsDesignerHosted)
-                //    InitTreeViewBrowser();
-            }
+            set { defaultFolders = value; }
         }
 
         private string initialDirectory = "";
         /// <summary>
-        /// Gets/Sets the TreeView starup state InitialDirectory
+        /// Gets/Sets the TreeView startup state InitialDirectory
         /// </summary>
         public string InitialDirectory
         {
@@ -382,7 +376,7 @@ namespace RocksmithToolkitLib.Extensions
         #endregion
 
         #region TreeViewMultiselect Code
-        // some credit goes here: https://www.codeproject.com/Articles/2756/C-TreeView-with-multiple-selection
+        // some code from: https://www.codeproject.com/Articles/2756/C-TreeView-with-multiple-selection
 
         protected override void OnPaint(PaintEventArgs pe)
         {

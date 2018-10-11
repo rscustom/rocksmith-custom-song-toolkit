@@ -1555,13 +1555,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void ReadConfigSettings()
         {
-            // read from RocksmithToolkitLib.Config.xml
             try
             {
                 numAudioQuality.Value = ConfigRepository.Instance().GetDecimal("creator_qualityfactor");
                 fixLowBass = ConfigRepository.Instance().GetBoolean("creator_fixlowbass");
                 fixMultiTone = ConfigRepository.Instance().GetBoolean("creator_fixmultitone");
-                ConfigGlobals.DefaultProjectDir = ConfigRepository.Instance()["creator_defaultproject"];
+                ConfigGlobals.DefaultProjectFolder = ConfigRepository.Instance()["creator_defaultproject"];
                 ConfigGlobals.DefaultToneFile = ConfigRepository.Instance()["creator_defaulttone"];
                 CurrentGameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
                 var defaultPlatform = (GamePlatform)Enum.Parse(typeof(GamePlatform), ConfigRepository.Instance()["general_defaultplatform"]);
@@ -1983,13 +1982,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string dlcTemplatePath;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = ConfigGlobals.DefaultProjectDir;
+                ofd.InitialDirectory = ConfigGlobals.DefaultProjectFolder;
                 ofd.SupportMultiDottedExtensions = true;
                 ofd.Filter = CurrentRocksmithTitle + " CDLC Template (*.dlc.xml)|*.dlc.xml";
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
-                dlcTemplatePath = ConfigGlobals.DefaultProjectDir = ofd.FileName;
+                dlcTemplatePath = ConfigGlobals.DefaultProjectFolder = ofd.FileName;
             }
 
             UnpackedDir = Path.GetDirectoryName(dlcTemplatePath);
@@ -2204,6 +2203,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         }
 
+        // capture listbox special keys
         private void ListBox_KeyDown(object sender, KeyEventArgs e)
         {
             var control = (ListBox)sender;
@@ -2382,7 +2382,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // use new Custom TreeViewOfd to keep arrangements in correct selected order
             using (var ofd = new TreeViewOfd())
             {
-                ofd.InitialDirectory = ConfigGlobals.DefaultProjectDir;
+                ofd.InitialDirectory = ConfigGlobals.DefaultProjectFolder;
                 ofd.Title = "Multiselect XML Arrangements and Arrange Order ...";
                 ofd.Filter = "Rocksmith Arrangement XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
                 ofd.Multiselect = true;
@@ -2390,8 +2390,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
+                // save last visited project folder (InitialDirectory) to configuration
+                ConfigGlobals.DefaultProjectFolder = ofd.InitialDirectory;
+                ConfigRepository.Instance()["creator_defaultproject"] = ofd.InitialDirectory;
+
                 List<string> xmlFilePaths = ofd.FileNames;
-                ConfigGlobals.DefaultProjectDir = ofd.InitialDirectory;
                 AddArrangementsQuick(xmlFilePaths.ToArray());
             }
         }
