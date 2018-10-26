@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -163,16 +164,19 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph
                                             tonesList.Add(entry.Key);
 
                                     if (!tonesList.Any())
-                                        tonesList.Add("Default");
+                                    {
+                                        // tonesList.Add("Default"); // this is not a good thing so throw an exception
+                                        throw new DataException("<ERROR> Tone list is empty ..." + Environment.NewLine);
+                                    }
 
                                     agGraphRef.Add(new AgGraphMap()
                                         {
                                             UUID = id.AgUrn,
                                             LLID = id.AgValue.Split(new Char[] { '-' })[0],
                                             SongXmlPath = valueXmlFile,
-                                            Tones = tonesList // newer RS1 may have multipble tones (guitar and bass)
+                                            Tones = tonesList // newer RS1 may have multiple tones
                                         });
-                                  
+
                                     break;
                                 }
                             }

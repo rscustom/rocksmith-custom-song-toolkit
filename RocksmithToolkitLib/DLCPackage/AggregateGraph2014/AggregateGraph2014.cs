@@ -115,7 +115,7 @@ namespace RocksmithToolkitLib.DLCPackage.AggregateGraph2014
                 if (arrangement.ArrangementType == Sng.ArrangementType.ShowLight)
                     continue;
 
-                var name = String.Format(NAME_ARRANGEMENT, dlcName, songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower());
+                var name = String.Format(NAME_ARRANGEMENT, dlcName, songPartition.GetArrangementFileName(arrangement.ArrangementName, arrangement.ArrangementType).ToLower());
 
                 // JsonDB
                 var json = new GraphItem();

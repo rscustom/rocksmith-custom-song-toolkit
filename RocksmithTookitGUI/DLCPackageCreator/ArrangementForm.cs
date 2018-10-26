@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -17,6 +18,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
+using System.Drawing;
 
 // do most work with the arrangment as memory variable
 
@@ -31,7 +33,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private GameVersion _gameVersion;
         private DLCPackageCreator _parentControl;
         private ToolTip _toolTip = new ToolTip();
-        private Song2014 _xmlSong;
+        private Song2014 _song2014;
 
         public ArrangementForm(DLCPackageCreator control, GameVersion gameVersion)
             : this(new Arrangement
@@ -100,9 +102,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     cmbTuningName.Enabled = guitarebass;
                     gbScrollSpeed.Enabled = guitarebass;
                     gbTuningPitch.Enabled = guitarebass && _gameVersion != GameVersion.RS2012;
-                    chkBonusArrangement.Enabled = gbTuningPitch.Enabled;
+                    pnlArrangementRepresentative.Enabled = guitarebass;
+                    rbArrangementBonus.Enabled = _gameVersion != GameVersion.RS2012;
                     chkMetronome.Enabled = gbTuningPitch.Enabled;
-                    //ltFixCb.Enabled = gbTuningPitch.Enabled;
 
                     // Gameplay Path
                     UpdateRouteMaskPath(selectedType, selectedArrangementName);
@@ -163,7 +165,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 //Arrangement Information
                 cmbArrangementType.SelectedItem = value.ArrangementType;
-                cmbArrangementName.SelectedItem = value.Name;
+                cmbArrangementName.SelectedItem = value.ArrangementName;
                 if (!String.IsNullOrEmpty(value.Tuning))
                     cmbTuningName.SelectedIndex = cmbTuningName.FindStringExact(value.Tuning);
 
@@ -176,8 +178,26 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 tbarScrollSpeed.Value = Math.Min(scrollSpeed, tbarScrollSpeed.Maximum);
                 UpdateScrollSpeedDisplay();
 
-                chkBassPicked.Checked = value.PluckedType == PluckedType.Picked;
-                chkBonusArrangement.Checked = value.BonusArr;
+                if (Arrangement.RouteMask == RouteMask.Bass)
+                    chkBassPicked.Checked = value.PluckedType == PluckedType.Picked;
+                // TODO: monitor this change
+                // for default => represent is true and bonus is false 
+                // for bonus => represent is false and bonus is true     
+                // for alternate => both represent and bonus are false
+                if (value.Represent && value.BonusArr)
+                {
+                    var diaMsg = "Illegal Arrangement Default/Bonus/Alternate Conditon ...  " + Environment.NewLine + Environment.NewLine +
+                                 "Toolkit will reset the arrangement to" + Environment.NewLine +
+                                 "the default represent condition." + Environment.NewLine;
+                    BetterDialog2.ShowDialog(diaMsg, "<WARNING> Arrangement Represent", null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
+                    value.Represent = true;
+                    value.BonusArr = false;
+                }
+
+                rbArrangementDefault.Checked = value.Represent;
+                rbArrangementBonus.Checked = value.BonusArr;
+                rbArrangementAlternate.Checked = !value.BonusArr && !value.Represent ? true : false;
+
                 chkMetronome.Checked = value.Metronome == Metronome.Generate;
                 RouteMask = value.RouteMask;
 
@@ -226,17 +246,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Arrangement.XmlComments = Song2014.ReadXmlComments(xmlFilePath);
 
             // Song Info
-            if (!ReferenceEquals(_xmlSong, null))
+            if (!ReferenceEquals(_song2014, null))
             {
                 var defaultAuthor = ConfigRepository.Instance()["general_defaultauthor"].Trim();
 
-                if (String.IsNullOrEmpty(_parentControl.SongTitle)) _parentControl.SongTitle = _xmlSong.Title.GetValidAtaSpaceName();
-                if (String.IsNullOrEmpty(_parentControl.SongTitleSort)) _parentControl.SongTitleSort = _xmlSong.SongNameSort.GetValidSortableName();
-                if (String.IsNullOrEmpty(_parentControl.AverageTempo)) _parentControl.AverageTempo = _xmlSong.AverageTempo.ToString().GetValidTempo();
-                if (String.IsNullOrEmpty(_parentControl.Artist)) _parentControl.Artist = _xmlSong.ArtistName.GetValidAtaSpaceName();
-                if (String.IsNullOrEmpty(_parentControl.ArtistSort)) _parentControl.ArtistSort = _xmlSong.ArtistNameSort.GetValidSortableName();
-                if (String.IsNullOrEmpty(_parentControl.Album)) _parentControl.Album = _xmlSong.AlbumName.GetValidAtaSpaceName();
-                if (String.IsNullOrEmpty(_parentControl.AlbumYear)) _parentControl.AlbumYear = _xmlSong.AlbumYear.GetValidYear();
+                if (String.IsNullOrEmpty(_parentControl.SongTitle)) _parentControl.SongTitle = _song2014.Title.GetValidAtaSpaceName();
+                if (String.IsNullOrEmpty(_parentControl.SongTitleSort)) _parentControl.SongTitleSort = _song2014.SongNameSort.GetValidSortableName();
+                if (String.IsNullOrEmpty(_parentControl.AverageTempo)) _parentControl.AverageTempo = _song2014.AverageTempo.ToString().GetValidTempo();
+                if (String.IsNullOrEmpty(_parentControl.Artist)) _parentControl.Artist = _song2014.ArtistName.GetValidAtaSpaceName();
+                if (String.IsNullOrEmpty(_parentControl.ArtistSort)) _parentControl.ArtistSort = _song2014.ArtistNameSort.GetValidSortableName();
+                if (String.IsNullOrEmpty(_parentControl.Album)) _parentControl.Album = _song2014.AlbumName.GetValidAtaSpaceName();
+                if (String.IsNullOrEmpty(_parentControl.AlbumYear)) _parentControl.AlbumYear = _song2014.AlbumYear.GetValidYear();
                 // using first three letters of defaultAuthor to make DLCKey unique
                 if (String.IsNullOrEmpty(_parentControl.DLCKey)) _parentControl.DLCKey = String.Format("{0}{1}{2}",
                     defaultAuthor.Substring(0, Math.Min(3, defaultAuthor.Length)), _parentControl.Artist.GetValidAcronym(), _parentControl.SongTitle).GetValidKey(_parentControl.SongTitle);
@@ -248,16 +268,23 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (useDefaultAuthor)
                         _parentControl.AlbumSort = defaultAuthor.GetValidSortableName();
                     else
-                        _parentControl.AlbumSort = _xmlSong.AlbumNameSort.GetValidSortableName();
+                        _parentControl.AlbumSort = _song2014.AlbumNameSort.GetValidSortableName();
                 }
             }
 
             // Arrangment Information
-            Arrangement.Name = (ArrangementName)cmbArrangementName.SelectedItem;
+            Arrangement.ArrangementName = (ArrangementName)cmbArrangementName.SelectedItem;
             Arrangement.ArrangementType = (ArrangementType)cmbArrangementType.SelectedItem;
             Arrangement.ScrollSpeed = tbarScrollSpeed.Value;
             Arrangement.PluckedType = chkBassPicked.Checked ? PluckedType.Picked : PluckedType.NotPicked;
-            Arrangement.BonusArr = chkBonusArrangement.Checked;
+            Arrangement.Represent = rbArrangementDefault.Checked;
+            Arrangement.BonusArr = rbArrangementBonus.Checked;
+            if (rbArrangementAlternate.Checked)
+            {
+                Arrangement.Represent = false;
+                Arrangement.BonusArr = false;
+            }
+
             Arrangement.Metronome = chkMetronome.Checked ? Metronome.Generate : Metronome.None;
 
             // Tuning
@@ -266,8 +293,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Arrangement.TuningStrings = tuning.Tuning;
 
             // TODO: Add capo selection to arrangement form
-            if (!ReferenceEquals(_xmlSong, null))
-                Arrangement.CapoFret = _xmlSong.Capo;
+            if (!ReferenceEquals(_song2014, null))
+                Arrangement.CapoFret = _song2014.Capo;
 
             UpdateCentOffset();
 
@@ -283,14 +310,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             catch (Exception ex)
             {
                 // catch RS1 and do nothing 
-                var debugMe = ex.Message;
+                Debug.WriteLine("LoadArrangementData: " + ex.Message);
             }
 
             // Gameplay Path
             Arrangement.RouteMask = RouteMask;
 
             // Xml data cleanup
-            _xmlSong = null;
+            _song2014 = null;
 
             // DLC IDs
             Guid guid;
@@ -306,9 +333,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Arrangement.MasterId = masterId;
         }
 
-        public bool LoadXmlArrangement(string xmlFilePath)
+        public bool AddXmlArrangement(string xmlFilePath)
         {
-            // only use this method when adding arrangements
+            // only use this method when adding new arrangements
             if (EditMode)
                 return false;
 
@@ -318,117 +345,129 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 SongXml = new SongXML { File = xmlFilePath }
             };
 
-            try
+            // SETUP FIELDS
+            if (xmlFilePath.ToLower().EndsWith("vocals.xml") || xmlFilePath.ToLower().EndsWith("vocals_rs2.xml"))
             {
-                // SETUP FIELDS
-                if (xmlFilePath.ToLower().EndsWith("vocals.xml") || xmlFilePath.ToLower().EndsWith("vocals_rs2.xml"))
-                {
-                    cmbArrangementType.SelectedItem = ArrangementType.Vocal;
-                    Arrangement.ArrangementType = ArrangementType.Vocal;
+                cmbArrangementType.SelectedItem = ArrangementType.Vocal;
+                Arrangement.ArrangementType = ArrangementType.Vocal;
 
-                    if (xmlFilePath.ToLower().EndsWith("_jvocals.xml") || xmlFilePath.ToLower().EndsWith("jvocals_rs2.xml"))
-                        cmbArrangementName.SelectedItem = ArrangementName.JVocals;
-                    else
-                        cmbArrangementName.SelectedItem = ArrangementName.Vocals;
-                }
-                else if (xmlFilePath.ToLower().EndsWith("_showlights.xml"))
+                if (xmlFilePath.ToLower().EndsWith("_jvocals.xml") || xmlFilePath.ToLower().EndsWith("jvocals_rs2.xml"))
+                    cmbArrangementName.SelectedItem = ArrangementName.JVocals;
+                else
+                    cmbArrangementName.SelectedItem = ArrangementName.Vocals;
+            }
+            else if (xmlFilePath.ToLower().EndsWith("_showlights.xml"))
+            {
+                cmbArrangementType.SelectedItem = ArrangementType.ShowLight;
+                Arrangement.ArrangementType = ArrangementType.ShowLight;
+            }
+            else // add Instrument Arrangement
+            {
+                _song2014 = Song2014.LoadFromFile(xmlFilePath);
+                if (_song2014 == null)
+                    return false;
+
+                // Detect Arrangement XML Version
+                var xmlVersion = GameVersion.None;
+                var verAttrib = Convert.ToInt32(_song2014.Version);
+                if (verAttrib < 7) // RS1 format
                 {
-                    cmbArrangementType.SelectedItem = ArrangementType.ShowLight;
-                    Arrangement.ArrangementType = ArrangementType.ShowLight;
+                    xmlVersion = GameVersion.RS2012;
+                }
+                else if (verAttrib > 6) // RS2014 format 
+                {
+                    // CAUTION newer RS1 use RS2014 XML Arrangement format
+                    xmlVersion = GameVersion.RS2014;
                 }
                 else
+                    throw new DataException("<ERROR> Unknown Arrangement XML Version: " + verAttrib + Environment.NewLine);
+
+                // Check tuning before converting
+                var hasTuning = _song2014.Tuning == null ? false : true;
+
+                // Convert RS1 to RS2014 XML Arrangement
+                if (_gameVersion == GameVersion.None && xmlVersion == GameVersion.RS2012)
                 {
-                    _xmlSong = Song2014.LoadFromFile(xmlFilePath);
-                    var version = GameVersion.None;
-                    // Detect Arrangement GameVersion
-                    if (_xmlSong != null && _xmlSong.Version != null)
+                    using (var obj = new Rs1Converter())
                     {
-                        var verAttrib = Convert.ToInt32(_xmlSong.Version);
-                        if (verAttrib <= 6) version = GameVersion.RS2012;
-                        else if (verAttrib >= 7) version = GameVersion.RS2014;
-                    }
-                    else
-                        switch (_gameVersion)
-                        {
-                            case GameVersion.RS2012:
-                                // add missing XML elements
-                                _xmlSong.Version = "4";
-                                _xmlSong.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-                                _xmlSong.ArrangementProperties = new SongArrangementProperties2014 { StandardTuning = 1 };
-                                version = GameVersion.RS2012;
-                                break;
-                            case GameVersion.None:
-                                using (var obj = new Rs1Converter())
-                                {
-                                    _xmlSong = null;
-                                    _xmlSong = obj.SongToSong2014(Song.LoadFromFile(xmlFilePath));
-                                }
-                                _gameVersion = GameVersion.RS2014;
-                                break;
-                            default:
-                                MessageBox.Show("Your version of EOF may be out of date, please update.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                break;
-                        }
-
-                    // TODO: fix error checking logic for new types of conversion
-                    if (_gameVersion != version && version != GameVersion.None)
-                    {
-                        Console.WriteLine("Please choose valid Rocksmith {0} Arrangement file!", _gameVersion);
-                        //XmlFilePath.Text = "";
-                        //return;
+                        _song2014 = null;
+                        _song2014 = obj.SongToSong2014(Song.LoadFromFile(xmlFilePath));
                     }
 
-                    // SONG AND ARRANGEMENT INFO / ROUTE MASK
-                    chkBonusArrangement.Checked = Equals(_xmlSong.ArrangementProperties.BonusArr, 1);
-                    chkMetronome.Checked = Equals(_xmlSong.ArrangementProperties.Metronome, 2);
-                    Arrangement.ArrangementPropeties = _xmlSong.ArrangementProperties;
-                    Arrangement.CapoFret = _xmlSong.Capo;
-                    Arrangement.TuningStrings = _xmlSong.Tuning;
+                    if (!hasTuning)
+                    {
+                        MessageBox.Show("<Warning> Default E Standard tuning was selected for" + Environment.NewLine +
+                                        "this RS1 arrangement.  Please confirm the arrangement  " + Environment.NewLine +
+                                        "tuning and all other data before leaving the editor.",
+                                        "Default Tuning Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
 
-                    if (!String.IsNullOrEmpty(_xmlSong.CentOffset))
-                        Arrangement.TuningPitch = Convert.ToDouble(_xmlSong.CentOffset).Cents2Frequency();
+                // SONG AND ARRANGEMENT INFO / ROUTE MASK
+                var arr = _song2014.Arrangement.ToLowerInvariant();
+
+                // TODO: monitor this code
+                if (arr.Contains("guitar") || arr.Contains("lead") || arr.Contains("rhythm") || arr.Contains("combo"))
+                {
+                    cmbArrangementType.SelectedItem = ArrangementType.Guitar;
+                    Arrangement.ArrangementType = ArrangementType.Guitar;
+
+                    if (arr.Contains("combo"))
+                    {
+                        cmbArrangementName.SelectedItem = ArrangementName.Combo;
+                        if (_gameVersion != GameVersion.RS2012)
+                            RouteMask = RouteMask.Lead;
+                    }
+                    else if (arr.Contains("guitar_22") || arr.Contains("lead") || Equals(_song2014.ArrangementProperties.PathLead, 1))
+                    {
+                        cmbArrangementName.SelectedItem = ArrangementName.Lead;
+                        if (_gameVersion != GameVersion.RS2012)
+                            RouteMask = RouteMask.Lead;
+                    }
+                    else if (arr.Contains("guitar") || arr.Contains("rhythm") || Equals(_song2014.ArrangementProperties.PathRhythm, 1))
+                    {
+                        cmbArrangementName.SelectedItem = ArrangementName.Rhythm;
+                        if (_gameVersion != GameVersion.RS2012)
+                            RouteMask = RouteMask.Rhythm;
+                    }
+                }
+                else if (arr.Contains("bass"))
+                {
+                    cmbArrangementType.SelectedItem = ArrangementType.Bass;
+                    Arrangement.ArrangementType = ArrangementType.Bass;
+                    chkBassPicked.Checked = Equals(_song2014.ArrangementProperties.BassPick, 1);
+                    if (_gameVersion != GameVersion.RS2012)
+                        RouteMask = RouteMask.Bass;
+                }
+
+                Arrangement.ArrangementPropeties = _song2014.ArrangementProperties != null ? _song2014.ArrangementProperties : new SongArrangementProperties2014();
+                rbArrangementDefault.Checked = true; // set initial default
+
+                // old RS1 and/or EOF Arrangement XML may fail here on loading
+                try
+                {
+                    rbArrangementDefault.Checked = Equals(_song2014.ArrangementProperties.Represent, 1);
+                    rbArrangementBonus.Checked = Equals(_song2014.ArrangementProperties.BonusArr, 1);
+                    if (!rbArrangementDefault.Checked && !rbArrangementBonus.Checked)
+                        rbArrangementAlternate.Checked = true;
+
+                    chkMetronome.Checked = Equals(_song2014.ArrangementProperties.Metronome, 2);
+                    Arrangement.CapoFret = _song2014.Capo;
+                    Arrangement.TuningStrings = _song2014.Tuning;
+
+                    if (!String.IsNullOrEmpty(_song2014.CentOffset))
+                        Arrangement.TuningPitch = Convert.ToDouble(_song2014.CentOffset).Cents2Frequency();
 
                     txtFrequency.Text = (Arrangement.TuningPitch > 0) ? Arrangement.TuningPitch.ToString() : "440.00";
-
-                    var arr = _xmlSong.Arrangement.ToLowerInvariant();
-
-                    if (arr.Contains("guitar") || arr.Contains("lead") || arr.Contains("rhythm") || arr.Contains("combo"))
-                    {
-                        cmbArrangementType.SelectedItem = ArrangementType.Guitar;
-                        Arrangement.ArrangementType = ArrangementType.Guitar;
-
-                        if (arr.Contains("combo"))
-                        {
-                            cmbArrangementName.SelectedItem = ArrangementName.Combo;
-                            if (_gameVersion != GameVersion.RS2012) RouteMask = RouteMask.Lead;
-                        }
-                        else if (arr.Contains("guitar_22") || arr.Contains("lead") || Equals(_xmlSong.ArrangementProperties.PathLead, 1))
-                        {
-                            cmbArrangementName.SelectedItem = ArrangementName.Lead;
-                            if (_gameVersion != GameVersion.RS2012) RouteMask = RouteMask.Lead;
-                        }
-                        else if (arr.Contains("guitar") || arr.Contains("rhythm") || Equals(_xmlSong.ArrangementProperties.PathRhythm, 1))
-                        {
-                            cmbArrangementName.SelectedItem = ArrangementName.Rhythm;
-                            if (_gameVersion != GameVersion.RS2012) RouteMask = RouteMask.Rhythm;
-                        }
-                    }
-                    else if (arr.Contains("bass"))
-                    {
-                        cmbArrangementType.SelectedItem = ArrangementType.Bass;
-                        Arrangement.ArrangementType = ArrangementType.Bass;
-                        chkBassPicked.Checked = Equals(_xmlSong.ArrangementProperties.BassPick, 1);
-                        if (_gameVersion != GameVersion.RS2012) RouteMask = RouteMask.Bass;
-                    }
 
                     if (_gameVersion != GameVersion.RS2012)
                     {
                         //Tones setup //TODO: add parsing tones events
-                        Arrangement.ToneBase = _xmlSong.ToneBase;
-                        Arrangement.ToneA = _xmlSong.ToneA;
-                        Arrangement.ToneB = _xmlSong.ToneB;
-                        Arrangement.ToneC = _xmlSong.ToneC;
-                        Arrangement.ToneD = _xmlSong.ToneD;
+                        Arrangement.ToneBase = _song2014.ToneBase;
+                        Arrangement.ToneA = _song2014.ToneA;
+                        Arrangement.ToneB = _song2014.ToneB;
+                        Arrangement.ToneC = _song2014.ToneC;
+                        Arrangement.ToneD = _song2014.ToneD;
                         Arrangement.ToneMultiplayer = null;
                         SetupTones(Arrangement);
                     }
@@ -437,10 +476,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         FixBassTuning();
 
                     SelectTuningName();
-                    CheckTuning();
+                    CheckBassTuning();
 
                     // save converted RS1 to RS2014 Song2014 XML
-                    if (version == GameVersion.None)
+                    if (_gameVersion == GameVersion.None && xmlVersion == GameVersion.RS2012)
                     {
                         var srcDir = Path.GetDirectoryName(xmlFilePath);
                         var srcName = Path.GetFileNameWithoutExtension(xmlFilePath);
@@ -451,24 +490,27 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                         // write converted RS1 file
                         using (var stream = new FileStream(xmlFilePath, FileMode.Create))
-                            _xmlSong.Serialize(stream, true);
+                            _song2014.Serialize(stream, true);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(@"Unable to get information from XML Arrangement:  " + Environment.NewLine +
-                                Path.GetFileName(xmlFilePath) + Environment.NewLine +
-                                @"It may not be a valid Arrangement or " + Environment.NewLine +
-                                @"your version of the EOF may be out of date." + Environment.NewLine +
-                                ex.Message, DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
+                catch (Exception ex)
+                {
+                    var diaMsg = "This " + xmlVersion + " arrangement has some invalid or" + Environment.NewLine +
+                                 "missing data: " + Path.GetFileName(xmlFilePath) + Environment.NewLine + Environment.NewLine +
+                                 ex.Message + Environment.NewLine +
+                                 "Make sure you are using the latest version of EOF." + Environment.NewLine + Environment.NewLine +
+                                 "Please select the correct tuning and confirm all" + Environment.NewLine +
+                                 "other data before leaving the arrangement editor.";
 
+
+                    BetterDialog2.ShowDialog(diaMsg, DLCPackageCreator.MESSAGEBOX_CAPTION, null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
+                    return false;
+                }
+            }
             return true;
         }
 
-        private bool CheckTuning()
+        private bool CheckBassTuning()
         {
             // for now just check bass arrangements
             if (Arrangement.ArrangementType != ArrangementType.Bass)
@@ -724,7 +766,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             catch (Exception ex)
             {
                 // catch RS1 and do nothing 
-                var debugMe = ex.Message;
+                Debug.WriteLine("SetupTones: " + ex.Message);
             }
 
             // SELECTING TONES
@@ -765,7 +807,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // get the latest comments from the XML to check if previous bass fixed is valid
             if (!String.IsNullOrEmpty(Arrangement.SongXml.File) && selectedType == ArrangementType.Bass)
             {
-                //var debugMe = "";
                 var xmlComments = Song2014.ReadXmlComments(Arrangement.SongXml.File);
                 var isBassFixed = xmlComments.Any(xComment => xComment.ToString().Contains("Low Bass Tuning Fixed")) || Convert.ToDouble(txtFrequency.Text) == 220.00;
 
@@ -950,7 +991,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     FixBassTuning();
 
                 SelectTuningName();
-                CheckTuning();
+                CheckBassTuning();
             }
         }
 
@@ -976,7 +1017,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return;
                 }
 
-                LoadXmlArrangement(XmlPath);
+                AddXmlArrangement(XmlPath);
             }
         }
 
@@ -1029,7 +1070,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
-            if (!CheckTuning())
+            if (!CheckBassTuning())
                 return;
 
             LoadArrangementData(XmlPath);

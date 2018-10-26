@@ -41,7 +41,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public SongArrangementProperties2014 ArrangementPropeties { get; set; }
         public ArrangementType ArrangementType { get; set; }
         public int ArrangementSort { get; set; }
-        public ArrangementName Name { get; set; }
+        public ArrangementName ArrangementName { get; set; }
         public string Tuning { get; set; } //tuning Name
         public TuningStrings TuningStrings { get; set; }
         public double TuningPitch { get; set; }
@@ -55,6 +55,7 @@ namespace RocksmithToolkitLib.DLCPackage
         // Gameplay Path
         public RouteMask RouteMask { get; set; }
         public bool BonusArr { get; set; }
+        public bool Represent { get; set; }
         // Tone Selector
         public string ToneBase { get; set; }
         public string ToneMultiplayer { get; set; }
@@ -88,26 +89,28 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             var isDirty = false;
             var song = Song2014.LoadFromFile(xmlSongFile);
-
             this.SongFile = new SongFile { File = "" };
-            this.SongXml = new SongXML { File = xmlSongFile };
+            // TODO: monitor this change
+            this.SongXml = new SongXML { File = xmlSongFile , Version = song.Version};
 
             //Properties
             Debug.Assert(attr.ArrangementType != null, "Missing information from manifest (ArrangementType)");
-            SetArrType(attr.ArrangementType);
+            // TODO: monitor this change
+            SetArrType(attr.ArrangementName); // set correct ArrangementType
 
             this.ArrangementPropeties = attr.ArrangementProperties;
-            this.ArrangementSort = attr.ArrangementSort;            
-            this.Name = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
+            this.ArrangementSort = attr.ArrangementSort;
+            this.ArrangementName = (ArrangementName)Enum.Parse(typeof(ArrangementName), attr.ArrangementName);
             this.ScrollSpeed = Convert.ToInt32(attr.DynamicVisualDensity.Last() * 10);
             this.PluckedType = (PluckedType)attr.ArrangementProperties.BassPick;
             this.RouteMask = (RouteMask)attr.ArrangementProperties.RouteMask;
             this.BonusArr = attr.ArrangementProperties.BonusArr == 1;
+            this.Represent = attr.ArrangementProperties.Represent == 1;
             this.Metronome = (Metronome)attr.ArrangementProperties.Metronome;
             this.ToneMultiplayer = attr.Tone_Multiplayer;
             this.TuningStrings = attr.Tuning;
             this.Id = Guid.Parse(attr.PersistentID);
-            this.MasterId = attr.MasterID_RDV;            
+            this.MasterId = attr.MasterID_RDV;
 
             // Save xml comments
             this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
@@ -256,12 +259,13 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         /// <summary>
-        /// Sets Arrangement Type
+        /// Sets ArrangementType from the ArrangementName
+        /// <para>RS1 may not have ArrangmentType property set</para>
         /// </summary>
         /// <param name="ArrNameType"></param>
-        private void SetArrType(int? arrNameType)
+        private void SetArrType(string arrName)
         {
-            switch ((ArrangementName)arrNameType)
+            switch ((ArrangementName)Enum.Parse(typeof(ArrangementName), arrName))
             {
                 case ArrangementName.Bass:
                     ArrangementType = ArrangementType.Bass;
@@ -313,9 +317,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     return String.Format("{0} [{1}{2}{3}] ({4}){5}", ArrangementType, Tuning, pitchInfo, capoInfo, toneDesc, metDesc);
                 case ArrangementType.Vocal:
                 case ArrangementType.ShowLight:
-                    return String.Format("{0}", Name);
+                    return String.Format("{0}", ArrangementName);
                 default:
-                    return String.Format("{0} - {1} [{2}{3}{4}] ({5}){6}", ArrangementType, Name, Tuning, pitchInfo, capoInfo, toneDesc, metDesc);
+                    return String.Format("{0} - {1} [{2}{3}{4}] ({5}){6}", ArrangementType, ArrangementName, Tuning, pitchInfo, capoInfo, toneDesc, metDesc);
             }
         }
 

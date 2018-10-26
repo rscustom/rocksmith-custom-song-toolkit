@@ -60,11 +60,13 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public bool SlapAndPop { get; set; }
         public bool Slides { get; set; }
         public string SongAsset { get; set; }
+        public float SongDifficulty { get; set; }
         public string SongEvent { get; set; }
         public string SongKey { get; set; } // where is DLCKey?
         public float SongLength { get; set; }
-        public string JapaneseSongName { get; set; } //new, optional
-        public string JapaneseArtist { get; set; } //new, optional
+        // only found in RS2014 ... these do not belong here
+        //public string JapaneseSongName { get; set; }
+        //public string JapaneseArtist { get; set; }
         public string SongName { get; set; }
         public string SongNameSort { get; set; }
         public int SongPartition { get; set; }
@@ -82,10 +84,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
         public bool Vibrato { get; set; }
         public string VocalsAssetId { get; set; }
         public bool FirstArrangementInSong { get; set; }
-        public float SongDifficulty { get; set; }
-        // [JsonIgnore]
+        [JsonIgnore] // not found in RS1
         public int AverageTempo { get; set; }
-        [JsonIgnore]
+        [JsonIgnore] // not found in RS1
         public string CrowdTempo { get; set; }
     }
 }

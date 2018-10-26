@@ -62,7 +62,7 @@ namespace RocksmithToolkitLib.DLCPackage.XBlock
                         if (arrangement.ArrangementType == ArrangementType.ShowLight) continue;
 
                         var entity = new Entity2014();
-                        var arrangementFileName = songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType);
+                        var arrangementFileName = songPartition.GetArrangementFileName(arrangement.ArrangementName, arrangement.ArrangementType);
 
                         entity.Id = arrangement.Id.ToLowerId();
                         entity.ModelName = "RSEnumerable_Song";

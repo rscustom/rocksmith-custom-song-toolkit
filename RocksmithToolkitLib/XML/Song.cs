@@ -15,7 +15,7 @@ namespace RocksmithToolkitLib.XML
     [XmlRoot("song", Namespace = "", IsNullable = false)]
     public class Song
     {
-        [XmlAttribute("version")] // RS1 is 4
+        [XmlAttribute("version")] // RS1 is null or 4
         public string Version { get; set; }
 
         [XmlElement("title")]
@@ -80,8 +80,11 @@ namespace RocksmithToolkitLib.XML
         [XmlArrayItem("level")]
         public SongLevel[] Levels { get; set; }
 
-        #region EOF Elements
+        // RS1 (before Bass Edition) did not have ArrangmentProperties
+        [XmlElement("arrangementProperties")]
+        public SongArrangementProperties ArrangementProperties { get; set; }
 
+        # region EOF non-compliant elements, not found in RS1
         [XmlIgnore]
         [XmlElement("startBeat")]
         public Single StartBeat { get; set; }
@@ -105,21 +108,12 @@ namespace RocksmithToolkitLib.XML
         [XmlIgnore]
         [XmlElement("albumYear")]
         public string AlbumYear { get; set; }
-
-        [XmlIgnore]
-        [XmlElement("arrangementProperties")]
-        public SongArrangementProperties ArrangementProperties { get; set; }
-
         #endregion
 
         #region Old techniques
-        //# RS1 old song xml have no arrangement properties
         private bool HasArrangementProperties
         {
-            get
-            {
-                return ArrangementProperties != null;
-            }
+            get { return ArrangementProperties != null; }
         }
 
         public bool HasPowerChords()
@@ -127,11 +121,15 @@ namespace RocksmithToolkitLib.XML
             if (HasArrangementProperties)
                 return ArrangementProperties.PowerChords == 1;
             else
-                return Levels.Any(c => c.Chords != null && HasPowerChords(c.Chords));
+            {
+                var result = Levels.Any(c => c.Chords != null && HasPowerChords(c.Chords));
+                return result;
+            }
         }
+
         private bool HasPowerChords(SongChord[] songChord)
         {
-            return true; //Pending (old song xml only)
+            return false; //Pending (old song xml only)
         }
 
         public bool HasBarChords()
@@ -139,11 +137,15 @@ namespace RocksmithToolkitLib.XML
             if (HasArrangementProperties)
                 return ArrangementProperties.BarreChords == 1;
             else
-                return Levels.Any(c => c.Chords != null && HasBarChords(c.Chords));
+            {
+                var result = Levels.Any(c => c.Chords != null && HasBarChords(c.Chords));
+                return result;
+            }
         }
+
         private bool HasBarChords(SongChord[] songChord)
         {
-            return true; //Pending (old song xml only)
+            return false; //Pending (old song xml only)
         }
 
         public bool HasOpenChords()
@@ -153,9 +155,10 @@ namespace RocksmithToolkitLib.XML
             else
                 return Levels.Any(c => c.Chords != null && HasOpenChords(c.Chords));
         }
+
         private bool HasOpenChords(SongChord[] songChord)
         {
-            return true; //Pending (old song xml only)
+            return false; //Pending (old song xml only)
         }
 
         public bool HasDoubleStops()
@@ -163,11 +166,15 @@ namespace RocksmithToolkitLib.XML
             if (HasArrangementProperties)
                 return ArrangementProperties.DoubleStops == 1;
             else
-                return Levels.Any(c => c.Chords != null && HasDoubleStops(c.Chords));
+            {
+                var result = Levels.Any(c => c.Chords != null && HasDoubleStops(c.Chords));
+                return result;
+            }
         }
+
         private bool HasDoubleStops(SongChord[] songChord)
         {
-            return true; //Pending (old song xml only)
+            return false; //Pending (old song xml only)
         }
 
         public bool HasDropDPowerChords()
@@ -175,11 +182,15 @@ namespace RocksmithToolkitLib.XML
             if (HasArrangementProperties)
                 return ArrangementProperties.DropDPower == 1;
             else
-                return Levels.Any(c => c.Chords != null && HasDropDPowerChords(c.Chords));
+            {
+                var result = Levels.Any(c => c.Chords != null && HasDropDPowerChords(c.Chords));
+                return result;
+            }
         }
+
         private bool HasDropDPowerChords(SongChord[] songChord)
         {
-            return true; //Pending (old song xml only)
+            return false; //Pending (old song xml only)
         }
 
         public bool HasBends()
@@ -187,7 +198,11 @@ namespace RocksmithToolkitLib.XML
             if (HasArrangementProperties)
                 return ArrangementProperties.Bends == 1;
             else
-                return Levels.Any(x => x.Notes != null && x.Notes.Any(y => y.Bend > 0));
+            {
+
+                var result = Levels.Any(x => x.Notes != null && x.Notes.Any(y => y.Bend > 0));
+                return result;
+            }
         }
 
         public bool HasSlapAndPop()
@@ -223,11 +238,14 @@ namespace RocksmithToolkitLib.XML
         }
 
         public bool HasPrebends()
-        { //Identify only bend, no definition in old XML
+        {
             if (HasArrangementProperties)
                 return ArrangementProperties.Bends == 1;
             else
-                return Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.Bend > 0);
+            {
+                var result = Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.Bend > 0);
+                return false; //No definition in old XML
+            }
         }
 
         public bool HasVibrato()
@@ -256,7 +274,8 @@ namespace RocksmithToolkitLib.XML
 
         public bool HasSustain()
         {
-            return Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.Sustain > 0);
+            var result = Levels.SelectMany(x => x.Notes ?? new SongNote[0]).Any(y => y.Sustain > 0);
+            return result;
         }
 
         public bool HasTremolo()
@@ -351,6 +370,8 @@ namespace RocksmithToolkitLib.XML
             return XmlSong;
         }
     }
+
+    # region RS1 (before Bass Edition) did not have ArrangmentProperties
 
     [XmlType("arrangementProperties")]
     public class SongArrangementProperties
@@ -463,6 +484,7 @@ namespace RocksmithToolkitLib.XML
         [XmlAttribute("sustain")]
         public Int32 Sustain { get; set; }
     }
+    #endregion
 
     // TODO: monitor that xml templates are properly serialized
     // the use of [Serializable] may causes malformed tunining elements in templates
@@ -859,50 +881,54 @@ namespace RocksmithToolkitLib.XML
     [XmlType("note")]
     public class SongNote
     {
-        [XmlAttribute("ignore")]
-        public Byte Ignore { get; set; }
-
         [XmlAttribute("time")]
         public Single Time { get; set; }
-
-        [XmlAttribute("tremolo")]
-        public Byte Tremolo { get; set; }
-
-        [XmlAttribute("sustain")]
-        public Single Sustain { get; set; }
-
-        [XmlAttribute("string")]
-        public Int32 String { get; set; }
-
-        [XmlAttribute("slideTo")]
-        public Int32 SlideTo { get; set; }
-
-        [XmlAttribute("pullOff")]
-        public Byte PullOff { get; set; }
-
-        [XmlAttribute("palmMute")]
-        public Byte PalmMute { get; set; }
-
-        [XmlAttribute("hopo")]
-        public Byte Hopo { get; set; }
-
-        [XmlAttribute("harmonic")]
-        public Byte Harmonic { get; set; }
-
-        [XmlAttribute("hammerOn")]
-        public Byte HammerOn { get; set; }
-
-        [XmlAttribute("fret")]
-        public Int32 Fret { get; set; }
 
         [XmlAttribute("bend")]
         public Int32 Bend { get; set; }
 
+        [XmlAttribute("fret")]
+        public Int32 Fret { get; set; }
+
+        [XmlAttribute("hammerOn")]
+        public Byte HammerOn { get; set; }
+
+        [XmlAttribute("harmonic")]
+        public Byte Harmonic { get; set; }
+
+        [XmlAttribute("hopo")]
+        public Byte Hopo { get; set; }
+
+        [XmlAttribute("ignore")]
+        public Byte Ignore { get; set; }
+
+        [XmlAttribute("palmMute")]
+        public Byte PalmMute { get; set; }
+
+        [XmlAttribute("pullOff")]
+        public Byte PullOff { get; set; }
+
+        [XmlAttribute("slideTo")]
+        public Int32 SlideTo { get; set; }
+
+        [XmlAttribute("string")]
+        public Int32 String { get; set; }
+
+        [XmlAttribute("sustain")]
+        public Single Sustain { get; set; }
+
+        [XmlAttribute("tremolo")]
+        public Byte Tremolo { get; set; }
+
+        # region EOF non-compliant elements, not found in RS1
+        [XmlIgnore]
         [XmlAttribute("pluck")]
         public Int32 Pluck { get; set; }
 
+        [XmlIgnore]
         [XmlAttribute("slap")]
         public Int32 Slap { get; set; }
+        #endregion
     }
 
     [XmlType("chord")]

@@ -59,6 +59,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                     break;
             }
+
             Saved = true;
             Close();
         }

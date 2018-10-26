@@ -202,7 +202,6 @@ namespace RocksmithToolkitLib.PsarcLoader
             if (toolkitVersionEntry != null)
             {
                 _archive.InflateEntry(toolkitVersionEntry);
-                toolkitVersionEntry.Data.Position = 0;
                 tkInfo = GeneralExtensions.GetToolkitInfo(new StreamReader(toolkitVersionEntry.Data));
             }
             else
@@ -347,11 +346,12 @@ namespace RocksmithToolkitLib.PsarcLoader
         {
             if (_fileStream != null)
             {
+                _fileStream.Close();
                 _fileStream.Dispose();
                 _fileStream = null;
             }
             if (_archive != null)
-            {
+            {                
                 _archive.Dispose();
                 _archive = null;
             }

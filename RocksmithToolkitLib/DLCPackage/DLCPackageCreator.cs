@@ -23,6 +23,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Properties;
 using RocksmithToolkitLib.Ogg;
 using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
+using RocksmithToolkitLib.PsarcLoader;
 
 
 namespace RocksmithToolkitLib.DLCPackage
@@ -140,7 +141,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
                         break;
                     case GameVersion.RS2012:
-                        GeneratePsarcsForRS1(packPsarcStream, info, platform);
+                        GenerateRS1Psarcs(packPsarcStream, info, platform);
                         break;
                     case GameVersion.None:
                         throw new InvalidOperationException("Unexpected game version value");
@@ -166,6 +167,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                                 using (var fl = File.Create(archivePath))
                                     RijndaelEncryptor.EncryptFile(packPsarcStream, fl, RijndaelEncryptor.DLCKey);
+
                                 break;
                             default:
                                 throw new InvalidOperationException("Unexpected game version value");
@@ -187,7 +189,10 @@ namespace RocksmithToolkitLib.DLCPackage
             }
 
             if (packPsarc != null)
+            {
                 packPsarc.Dispose();
+                packPsarc = null;
+            }
 
             FILES_XBOX.Clear();
             FILES_PS3.Clear();
@@ -469,7 +474,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 using (var xblockStream = new MemoryStream())
                 {
                     // TOOLKIT VERSION
-                    var stopHere = info;
                     GenerateToolkitVersion(toolkitVersionStream, info.ToolkitInfo.PackageAuthor, info.ToolkitInfo.PackageVersion, info.ToolkitInfo.PackageComment, info.ToolkitInfo.PackageRating);
                     packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
 
@@ -515,28 +519,28 @@ namespace RocksmithToolkitLib.DLCPackage
                     var songPartition = new SongPartition();
                     var songPartitionCount = new SongPartition();
 
-                    foreach (var arrangement in info.Arrangements)
+                    foreach (var arr in info.Arrangements)
                     {
-                        if (arrangement.ArrangementType == ArrangementType.ShowLight)
+                        if (arr.ArrangementType == ArrangementType.ShowLight)
                             continue;
 
-                        var arrangementFileName = songPartition.GetArrangementFileName(arrangement.Name, arrangement.ArrangementType).ToLower();
+                        var arrangementFileName = songPartition.GetArrangementFileName(arr.ArrangementName, arr.ArrangementType).ToLower();
 
                         // GAME SONG (SNG)
                         UpdateToneDescriptors(info);
-                        GenerateSNG(arrangement, platform);
-                        var sngSongFile = File.OpenRead(arrangement.SongFile.File);
+                        GenerateSNG(arr, platform); // RS2014
+                        var sngSongFile = File.OpenRead(arr.SongFile.File);
                         arrangementStream.Add(sngSongFile);
                         packPsarc.AddEntry(String.Format("songs/bin/{0}/{1}_{2}.sng", platform.GetPathName()[1].ToLower(), dlcName, arrangementFileName), sngSongFile);
 
                         // XML SONG
-                        var xmlSongFile = File.OpenRead(arrangement.SongXml.File);
+                        var xmlSongFile = File.OpenRead(arr.SongXml.File);
                         arrangementStream.Add(xmlSongFile);
                         packPsarc.AddEntry(String.Format("songs/arr/{0}_{1}.xml", dlcName, arrangementFileName), xmlSongFile);
 
                         // MANIFEST
                         var manifest = new Manifest2014<Attributes2014>();
-                        var attribute = new Attributes2014(arrangementFileName, arrangement, info, platform);
+                        var attribute = new Attributes2014(arrangementFileName, arr, info, platform);
 
                         // Commented out - EOF properly sets the bonus/represent elements
                         //if (arrangement.ArrangementType == ArrangementType.Bass || arrangement.ArrangementType == ArrangementType.Guitar)
@@ -663,190 +667,189 @@ namespace RocksmithToolkitLib.DLCPackage
         private static void GenerateRS2014InlayPsarc(Stream output, DLCPackageData info, Platform platform)
         {
             dlcName = info.Inlay.DLCSixName;
-            // TODO updateProgress remotely from here 
+            packPsarc = new PSARC.PSARC();
+
+            // Stream objects
+            Stream rsenumerableRootStream = null;
+            Stream rsenumerableGuitarStream = null;
+
+            try
             {
-                packPsarc = new PSARC.PSARC();
+                // ICON/INLAY FILES
+                var ddsfiles = info.ArtFiles;
 
-                // Stream objects
-                Stream rsenumerableRootStream = null,
-                       rsenumerableGuitarStream = null;
-
-                try
+                if (ddsfiles == null)
                 {
-                    // ICON/INLAY FILES
-                    var ddsfiles = info.ArtFiles;
-
-                    if (ddsfiles == null)
+                    string iconPath;
+                    if (File.Exists(info.Inlay.IconPath))
                     {
-                        string iconPath;
-                        if (File.Exists(info.Inlay.IconPath))
+                        iconPath = info.Inlay.IconPath;
+                    }
+                    else
+                    {
+                        using (var iconStream = new MemoryStream(Resources.cgm_default_icon))
                         {
-                            iconPath = info.Inlay.IconPath;
+                            iconPath = Path.ChangeExtension(Path.GetTempFileName(), ".png");
+                            iconStream.WriteFile(iconPath);
+                            TMPFILES_ART.Add(iconPath);
                         }
-                        else
-                        {
-                            using (var iconStream = new MemoryStream(Resources.cgm_default_icon))
-                            {
-                                iconPath = Path.ChangeExtension(Path.GetTempFileName(), ".png");
-                                iconStream.WriteFile(iconPath);
-                                TMPFILES_ART.Add(iconPath);
-                            }
-                        }
-
-                        string inlayPath;
-                        if (File.Exists(info.Inlay.InlayPath))
-                        {
-                            inlayPath = info.Inlay.InlayPath;
-                        }
-                        else
-                        {
-                            using (var inlayStream = new MemoryStream(Resources.cgm_default_inlay))
-                            {
-                                inlayPath = GeneralExtensions.GetTempFileName(".png");
-                                inlayStream.WriteFile(inlayPath);
-                                TMPFILES_ART.Add(inlayPath);
-                            }
-                        }
-
-                        ddsfiles = new List<DDSConvertedFile>();
-                        ddsfiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = iconPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-                        ddsfiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = iconPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-                        ddsfiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = iconPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-                        ddsfiles.Add(new DDSConvertedFile() { sizeX = 512, sizeY = 512, sourceFile = iconPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-                        ddsfiles.Add(new DDSConvertedFile() { sizeX = 1024, sizeY = 512, sourceFile = inlayPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-
-                        // Convert to DDS
-                        ToDDS(ddsfiles, DLCPackageType.Inlay);
-
-                        // Save for reuse
-                        info.ArtFiles = ddsfiles;
                     }
 
-                    foreach (var dds in info.ArtFiles)
-                        if (dds.sizeX == 1024)
-                            packPsarc.AddEntry(String.Format("assets/gameplay/inlay/inlay_{0}.dds", dlcName), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
-                        else
-                            packPsarc.AddEntry(String.Format("gfxassets/rewards/guitar_inlays/reward_inlay_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
-
-                    // FLAT MODEL
-                    rsenumerableRootStream = new MemoryStream(Resources.rsenumerable_root);
-                    packPsarc.AddEntry("flatmodels/rs/rsenumerable_root.flat", rsenumerableRootStream);
-                    rsenumerableGuitarStream = new MemoryStream(Resources.rsenumerable_guitar);
-                    packPsarc.AddEntry("flatmodels/rs/rsenumerable_guitars.flat", rsenumerableGuitarStream);
-
-                    using (var toolkitVersionStream = new MemoryStream())
-                    using (var appIdStream = new MemoryStream())
-                    using (var packageListStream = new MemoryStream())
-                    using (var aggregateGraphStream = new MemoryStream())
-                    using (var manifestStreamList = new DisposableCollection<Stream>())
-                    using (var manifestHeaderStream = new MemoryStream())
-                    using (var nifStream = new MemoryStream())
-                    using (var xblockStream = new MemoryStream())
+                    string inlayPath;
+                    if (File.Exists(info.Inlay.InlayPath))
                     {
-                        // TOOLKIT VERSION
-                        GenerateToolkitVersion(toolkitVersionStream);
-                        packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
-
-                        // APP ID
-                        if (!platform.IsConsole)
-                        {
-                            GenerateAppId(appIdStream, info.AppId, platform);
-                            packPsarc.AddEntry("appid.appid", appIdStream);
-                        }
-
-                        if (platform.platform == GamePlatform.XBox360)
-                        {
-                            var packageListWriter = new StreamWriter(packageListStream);
-                            packageListWriter.Write(dlcName);
-                            packageListWriter.Flush();
-                            packageListStream.Seek(0, SeekOrigin.Begin);
-                            const string packageList = "PackageList.txt";
-                            packageListStream.WriteTmpFile(packageList, platform);
-                        }
-
-                        // AGGREGATE GRAPH
-                        var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", dlcName);
-                        var aggregateGraph = new AggregateGraph2014.AggregateGraph2014(info, platform, DLCPackageType.Inlay);
-                        aggregateGraph.Serialize(aggregateGraphStream);
-                        aggregateGraphStream.Flush();
-                        aggregateGraphStream.Seek(0, SeekOrigin.Begin);
-                        packPsarc.AddEntry(aggregateGraphFileName, aggregateGraphStream);
-
-                        // MANIFEST
-                        var attribute = new InlayAttributes2014(info);
-                        var attributeDictionary = new Dictionary<string, InlayAttributes2014> { { "Attributes", attribute } };
-                        var manifest = new Manifest2014<InlayAttributes2014>(DLCPackageType.Inlay);
-                        manifest.Entries.Add(attribute.PersistentID, attributeDictionary);
-                        var manifestStream = new MemoryStream();
-                        manifestStreamList.Add(manifestStream);
-                        manifest.Serialize(manifestStream);
-                        manifestStream.Seek(0, SeekOrigin.Begin);
-                        const string jsonPathPC = "manifests/songs_dlc_{0}/dlc_guitar_{0}.json";
-                        const string jsonPathConsole = "manifests/songs_dlc/dlc_guitar_{0}.json";
-                        packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName), manifestStream);
-
-                        // MANIFEST HEADER
-                        var attributeHeaderDictionary = new Dictionary<string, InlayAttributes2014> { { "Attributes", attribute } };
-                        var manifestHeader = new ManifestHeader2014<InlayAttributes2014>(platform, DLCPackageType.Inlay);
-                        manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
-                        manifestHeader.Serialize(manifestHeaderStream);
-                        manifestHeaderStream.Seek(0, SeekOrigin.Begin);
-                        const string hsanPathPC = "manifests/songs_dlc_{0}/dlc_{0}.hsan";
-                        const string hsonPathConsole = "manifests/songs_dlc/dlc_{0}.hson";
-                        packPsarc.AddEntry(String.Format((platform.IsConsole ? hsonPathConsole : hsanPathPC), dlcName), manifestHeaderStream);
-
-                        // XBLOCK
-                        GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform, DLCPackageType.Inlay);
-                        game.SerializeXml(xblockStream);
-                        xblockStream.Flush();
-                        xblockStream.Seek(0, SeekOrigin.Begin);
-                        packPsarc.AddEntry(String.Format("gamexblocks/nguitars/guitar_{0}.xblock", dlcName), xblockStream);
-
-                        // INLAY NIF
-                        InlayNif nif = new InlayNif(info);
-                        nif.Serialize(nifStream);
-                        nifStream.Flush();
-                        nifStream.Seek(0, SeekOrigin.Begin);
-                        packPsarc.AddEntry(String.Format("assets/gameplay/inlay/{0}.nif", dlcName), nifStream);
-
-                        // WRITE PACKAGE
-                        packPsarc.Write(output, !platform.IsConsole);
-                        output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
+                        inlayPath = info.Inlay.InlayPath;
                     }
+                    else
+                    {
+                        using (var inlayStream = new MemoryStream(Resources.cgm_default_inlay))
+                        {
+                            inlayPath = GeneralExtensions.GetTempFileName(".png");
+                            inlayStream.WriteFile(inlayPath);
+                            TMPFILES_ART.Add(inlayPath);
+                        }
+                    }
+
+                    ddsfiles = new List<DDSConvertedFile>();
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = iconPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = iconPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = iconPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 512, sizeY = 512, sourceFile = iconPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsfiles.Add(new DDSConvertedFile() { sizeX = 1024, sizeY = 512, sourceFile = inlayPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+
+                    // Convert to DDS
+                    ToDDS(ddsfiles, DLCPackageType.Inlay);
+
+                    // Save for reuse
+                    info.ArtFiles = ddsfiles;
                 }
-                catch (Exception)
+
+                foreach (var dds in info.ArtFiles)
+                    if (dds.sizeX == 1024)
+                        packPsarc.AddEntry(String.Format("assets/gameplay/inlay/inlay_{0}.dds", dlcName), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
+                    else
+                        packPsarc.AddEntry(String.Format("gfxassets/rewards/guitar_inlays/reward_inlay_{0}_{1}.dds", dlcName, dds.sizeX), new FileStream(dds.destinationFile, FileMode.Open, FileAccess.Read, FileShare.Read));
+
+                // FLAT MODEL
+                rsenumerableRootStream = new MemoryStream(Resources.rsenumerable_root);
+                packPsarc.AddEntry("flatmodels/rs/rsenumerable_root.flat", rsenumerableRootStream);
+                rsenumerableGuitarStream = new MemoryStream(Resources.rsenumerable_guitar);
+                packPsarc.AddEntry("flatmodels/rs/rsenumerable_guitars.flat", rsenumerableGuitarStream);
+
+                using (var toolkitVersionStream = new MemoryStream())
+                using (var appIdStream = new MemoryStream())
+                using (var packageListStream = new MemoryStream())
+                using (var aggregateGraphStream = new MemoryStream())
+                using (var manifestStreamList = new DisposableCollection<Stream>())
+                using (var manifestHeaderStream = new MemoryStream())
+                using (var nifStream = new MemoryStream())
+                using (var xblockStream = new MemoryStream())
                 {
-                    throw;
-                }
-                finally
-                {
-                    // Dispose all objects
-                    if (rsenumerableRootStream != null)
-                        rsenumerableRootStream.Dispose();
-                    if (rsenumerableGuitarStream != null)
-                        rsenumerableGuitarStream.Dispose();
-                    DeleteTmpFiles(TMPFILES_ART);
+                    // TOOLKIT VERSION
+                    GenerateToolkitVersion(toolkitVersionStream);
+                    packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
+
+                    // APP ID
+                    if (!platform.IsConsole)
+                    {
+                        GenerateAppId(appIdStream, info.AppId, platform);
+                        packPsarc.AddEntry("appid.appid", appIdStream);
+                    }
+
+                    if (platform.platform == GamePlatform.XBox360)
+                    {
+                        var packageListWriter = new StreamWriter(packageListStream);
+                        packageListWriter.Write(dlcName);
+                        packageListWriter.Flush();
+                        packageListStream.Seek(0, SeekOrigin.Begin);
+                        const string packageList = "PackageList.txt";
+                        packageListStream.WriteTmpFile(packageList, platform);
+                    }
+
+                    // AGGREGATE GRAPH
+                    var aggregateGraphFileName = String.Format("{0}_aggregategraph.nt", dlcName);
+                    var aggregateGraph = new AggregateGraph2014.AggregateGraph2014(info, platform, DLCPackageType.Inlay);
+                    aggregateGraph.Serialize(aggregateGraphStream);
+                    aggregateGraphStream.Flush();
+                    aggregateGraphStream.Seek(0, SeekOrigin.Begin);
+                    packPsarc.AddEntry(aggregateGraphFileName, aggregateGraphStream);
+
+                    // MANIFEST
+                    var attribute = new InlayAttributes2014(info);
+                    var attributeDictionary = new Dictionary<string, InlayAttributes2014> { { "Attributes", attribute } };
+                    var manifest = new Manifest2014<InlayAttributes2014>(DLCPackageType.Inlay);
+                    manifest.Entries.Add(attribute.PersistentID, attributeDictionary);
+                    var manifestStream = new MemoryStream();
+                    manifestStreamList.Add(manifestStream);
+                    manifest.Serialize(manifestStream);
+                    manifestStream.Seek(0, SeekOrigin.Begin);
+                    const string jsonPathPC = "manifests/songs_dlc_{0}/dlc_guitar_{0}.json";
+                    const string jsonPathConsole = "manifests/songs_dlc/dlc_guitar_{0}.json";
+                    packPsarc.AddEntry(String.Format((platform.IsConsole ? jsonPathConsole : jsonPathPC), dlcName), manifestStream);
+
+                    // MANIFEST HEADER
+                    var attributeHeaderDictionary = new Dictionary<string, InlayAttributes2014> { { "Attributes", attribute } };
+                    var manifestHeader = new ManifestHeader2014<InlayAttributes2014>(platform, DLCPackageType.Inlay);
+                    manifestHeader.Entries.Add(attribute.PersistentID, attributeHeaderDictionary);
+                    manifestHeader.Serialize(manifestHeaderStream);
+                    manifestHeaderStream.Seek(0, SeekOrigin.Begin);
+                    const string hsanPathPC = "manifests/songs_dlc_{0}/dlc_{0}.hsan";
+                    const string hsonPathConsole = "manifests/songs_dlc/dlc_{0}.hson";
+                    packPsarc.AddEntry(String.Format((platform.IsConsole ? hsonPathConsole : hsanPathPC), dlcName), manifestHeaderStream);
+
+                    // XBLOCK
+                    GameXblock<Entity2014> game = GameXblock<Entity2014>.Generate2014(info, platform, DLCPackageType.Inlay);
+                    game.SerializeXml(xblockStream);
+                    xblockStream.Flush();
+                    xblockStream.Seek(0, SeekOrigin.Begin);
+                    packPsarc.AddEntry(String.Format("gamexblocks/nguitars/guitar_{0}.xblock", dlcName), xblockStream);
+
+                    // INLAY NIF
+                    InlayNif nif = new InlayNif(info);
+                    nif.Serialize(nifStream);
+                    nifStream.Flush();
+                    nifStream.Seek(0, SeekOrigin.Begin);
+                    packPsarc.AddEntry(String.Format("assets/gameplay/inlay/{0}.nif", dlcName), nifStream);
+
+                    // WRITE PACKAGE
+                    packPsarc.Write(output, !platform.IsConsole);
+                    output.WriteTmpFile(String.Format("{0}.psarc", dlcName), platform);
                 }
             }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                // Dispose all objects
+                if (rsenumerableRootStream != null)
+                    rsenumerableRootStream.Dispose();
+                if (rsenumerableGuitarStream != null)
+                    rsenumerableGuitarStream.Dispose();
+                DeleteTmpFiles(TMPFILES_ART);
+            }
+
         }
 
         #endregion
 
         #region Generate PSARC RS1
 
-        private static void GeneratePsarcsForRS1(Stream output, DLCPackageData info, Platform platform)
+        private static void GenerateRS1Psarcs(Stream output, DLCPackageData info, Platform platform)
         {
+            packPsarc = new PSARC.PSARC(); // a shared variable
             IList<Stream> toneStreams = new List<Stream>();
+
             using (var toolkitVersionStream = new MemoryStream())
             using (var appIdStream = new MemoryStream())
             using (var packageListStream = new MemoryStream())
             using (var songPsarcStream = new MemoryStream())
             {
+                var packageListWriter = new StreamWriter(packageListStream);
+
                 try
                 {
-                    var packPsarc = new PSARC.PSARC();
-                    var packageListWriter = new StreamWriter(packageListStream);
-
                     // TOOLKIT VERSION
                     GenerateToolkitVersion(toolkitVersionStream, info.ToolkitInfo.PackageAuthor, info.ToolkitInfo.PackageVersion, info.ToolkitInfo.PackageComment, info.ToolkitInfo.PackageRating);
                     packPsarc.AddEntry("toolkit.version", toolkitVersionStream);
@@ -859,64 +862,70 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
 
                     packageListWriter.WriteLine(info.Name);
-
-                    GenerateSongPsarcRS1(songPsarcStream, info, platform);
+                    GenerateRS1SongPsarc(songPsarcStream, info, platform);
                     string songFileName = String.Format("{0}.psarc", info.Name);
                     packPsarc.AddEntry(songFileName, songPsarcStream);
                     songPsarcStream.WriteTmpFile(songFileName, platform);
 
                     for (int i = 0; i < info.Tones.Count; i++)
                     {
+                        // TODO: monitor code changes here
                         var tone = info.Tones[i];
+                        var toneKey = tone.Key.GetValidKey(isTone: true); // validated JIC
+
+                        if (String.IsNullOrEmpty(toneKey))
+                            toneKey = tone.Name == null ? "Default" : tone.Name.GetValidKey(isTone: true);
+
                         var tonePsarcStream = new MemoryStream();
-                        // TODO: generate single tone.manifest.json file that has multiple tones
-                        // currently generating multiple tone.manifest.json files
-                        toneStreams.Add(tonePsarcStream);
-                        var toneKey = info.Name + "_" + tone.Name == null ? "Default" : tone.Name.Replace(' ', '_');
                         GenerateTonePsarc(tonePsarcStream, toneKey, tone);
                         string toneEntry = String.Format("DLC_Tone_{0}.psarc", toneKey);
                         packPsarc.AddEntry(toneEntry, tonePsarcStream);
                         tonePsarcStream.WriteTmpFile(toneEntry, platform);
+
                         if (i + 1 != info.Tones.Count)
                             packageListWriter.WriteLine("DLC_Tone_{0}", toneKey);
                         else
                             packageListWriter.Write("DLC_Tone_{0}", toneKey);
+
+                        // TODO: generate single tone.manifest.json file that has multiple tones
+                        // currently generating multiple tone.manifest.json files
+                        toneStreams.Add(tonePsarcStream); // currently has no purpose
                     }
 
                     packageListWriter.Flush();
                     packageListStream.Seek(0, SeekOrigin.Begin);
+
                     if (platform.platform != GamePlatform.PS3)
                     {
                         string packageList = "PackageList.txt";
                         packPsarc.AddEntry(packageList, packageListStream);
                         packageListStream.WriteTmpFile(packageList, platform);
                     }
+
                     packPsarc.Write(output, false);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("<ERROR> GenerateRS1Psarcs: " + ex.Message + Environment.NewLine);
                 }
                 finally
                 {
                     foreach (var stream in toneStreams)
-                    {
-                        try
-                        {
+                        if (stream != null)
                             stream.Dispose();
-                        }
-                        catch { }
-                    }
                 }
             }
         }
 
-        private static void GenerateSongPsarcRS1(Stream output, DLCPackageData info, Platform platform)
+        private static void GenerateRS1SongPsarc(Stream output, DLCPackageData info, Platform platform)
         {
             var soundBankName = String.Format("Song_{0}", info.Name);
+            Stream albumArtStream = null;
+            Stream audioStream = null;
+            string albumArtPath;
 
             try
             {
-                Stream albumArtStream = null,
-                       audioStream = null;
-
-                string albumArtPath;
                 if (File.Exists(info.AlbumArtPath))
                 {
                     albumArtPath = info.AlbumArtPath;
@@ -927,7 +936,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         albumArtPath = GeneralExtensions.GetTempFileName(".dds");
                         defaultArtStream.WriteFile(albumArtPath);
-                        defaultArtStream.Dispose();
                         TMPFILES_ART.Add(albumArtPath);
                     }
                 }
@@ -972,26 +980,23 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
                     };
 
-                    foreach (var x in info.Arrangements)
+                    foreach (var arr in info.Arrangements)
                     {
-                        //Generate sng file in execution time
-                        GenerateSNG(x, platform);
-
-                        manifestBuilder.AggregateGraph.SongFiles.Add(x.SongFile);
-                        manifestBuilder.AggregateGraph.SongXMLs.Add(x.SongXml);
+                        GenerateSNG(arr, platform); // RS1
+                        manifestBuilder.AggregateGraph.SongFiles.Add(arr.SongFile);
+                        manifestBuilder.AggregateGraph.SongXMLs.Add(arr.SongXml);
                     }
+
                     manifestBuilder.AggregateGraph.XBlock = new XBlockFile { File = info.Name + ".xblock" };
                     manifestBuilder.AggregateGraph.Write(info.Name, platform.GetPathName(), platform, aggregateGraphStream);
                     aggregateGraphStream.Flush();
                     aggregateGraphStream.Seek(0, SeekOrigin.Begin);
 
-                    {
-                        var manifestData = manifestBuilder.GenerateManifest(info.Name, info.Arrangements, info.SongInfo, platform);
-                        var writer = new StreamWriter(manifestStream);
-                        writer.Write(manifestData);
-                        writer.Flush();
-                        manifestStream.Seek(0, SeekOrigin.Begin);
-                    }
+                    var manifestData = manifestBuilder.GenerateManifest(info.Name, info.Arrangements, info.SongInfo, platform);
+                    var writer = new StreamWriter(manifestStream);
+                    writer.Write(manifestData);
+                    writer.Flush();
+                    manifestStream.Seek(0, SeekOrigin.Begin);
 
                     GameXblock<Entity>.Generate(info.Name, manifestBuilder.Manifest, manifestBuilder.AggregateGraph, xblockStream);
                     xblockStream.Flush();
@@ -1012,20 +1017,33 @@ namespace RocksmithToolkitLib.DLCPackage
                     songPsarc.AddEntry(String.Format("Audio/{0}/{1}.ogg", platform.GetPathName()[0], soundFileName), soundStream);
                     songPsarc.AddEntry(String.Format("GRAssets/AlbumArt/{0}.dds", manifestBuilder.AggregateGraph.AlbumArt.Name), albumArtStream);
 
-                    foreach (var x in info.Arrangements)
+                    foreach (var arr in info.Arrangements)
                     {
-                        var xmlFile = File.OpenRead(x.SongXml.File);
+                        if (!File.Exists(arr.SongFile.File) || !File.Exists(arr.SongXml.File))
+                            throw new FileNotFoundException("<ERROR> Can not find required SNG/XML file(s)" + Environment.NewLine);
+
+                        var xmlFile = File.OpenRead(arr.SongXml.File);
                         arrangementFiles.Add(xmlFile);
-                        var sngFile = File.OpenRead(x.SongFile.File);
+                        var sngFile = File.OpenRead(arr.SongFile.File);
                         arrangementFiles.Add(sngFile);
-                        songPsarc.AddEntry(String.Format("GR/Behaviors/Songs/{0}.xml", Path.GetFileNameWithoutExtension(x.SongXml.File)), xmlFile);
-                        songPsarc.AddEntry(String.Format("GRExports/{0}/{1}.sng", platform.GetPathName()[1], Path.GetFileNameWithoutExtension(x.SongFile.File)), sngFile);
+                        songPsarc.AddEntry(String.Format("GR/Behaviors/Songs/{0}.xml", Path.GetFileNameWithoutExtension(arr.SongXml.File)), xmlFile);
+                        songPsarc.AddEntry(String.Format("GRExports/{0}/{1}.sng", platform.GetPathName()[1], Path.GetFileNameWithoutExtension(arr.SongFile.File)), sngFile);
                     }
+
                     songPsarc.Write(output, false);
                 }
             }
+            catch (Exception ex)
+            {
+                throw new Exception("<ERROR> GenerateSongPsarcRS1: " + ex.Message + Environment.NewLine);
+            }
             finally
             {
+                if (albumArtStream != null)
+                    albumArtStream.Dispose();
+
+                if (audioStream != null)
+                    audioStream.Dispose();
             }
         }
 
@@ -1113,7 +1131,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (String.IsNullOrEmpty(packageAuthor))
                 packageAuthor = ConfigRepository.Instance()["general_defaultauthor"];
             if (String.IsNullOrEmpty(toolkitVersion))
-                toolkitVersion = ToolkitVersion.RSTKGuiVersion;           
+                toolkitVersion = ToolkitVersion.RSTKGuiVersion;
             if (!String.IsNullOrEmpty(toolkitVersion))
                 writer.WriteLine("Toolkit version: {0}", toolkitVersion);
             if (!String.IsNullOrEmpty(packageAuthor))
@@ -1162,18 +1180,19 @@ namespace RocksmithToolkitLib.DLCPackage
             switch (platform.version)
             {
                 case GameVersion.RS2012:
-                    SngFileWriter.Write(arr.SongXml.File, sngFile, arr.ArrangementType, platform);
+                    SngFileWriter.Write(arr, sngFile, platform);
                     break;
                 case GameVersion.RS2014:
+                    // Sng2014File can be reused when generating for multiple platforms from cached results
                     if (arr.Sng2014 == null)
                     {
-                        // Sng2014File can be reused when generating for multiple platforms
+                        SngFileWriter.Write(arr, sngFile, platform);
                         // cache results
-                        //
                         arr.Sng2014 = Sng2014File.ConvertXML(arr.SongXml.File, arr.ArrangementType, arr.FontSng);
                         if (arr.CustomFont)
                             arr.Sng2014.PopFontPath(dlcName);
                     }
+
                     using (var fs = new FileStream(sngFile, FileMode.Create))
                         arr.Sng2014.WriteSng(fs, platform);
                     break;
@@ -1183,8 +1202,8 @@ namespace RocksmithToolkitLib.DLCPackage
 
             if (arr.SongFile == null)
                 arr.SongFile = new SongFile { File = "" };
-            arr.SongFile.File = Path.GetFullPath(sngFile);
 
+            arr.SongFile.File = Path.GetFullPath(sngFile);
             TMPFILES_SNG.Add(sngFile);
         }
 

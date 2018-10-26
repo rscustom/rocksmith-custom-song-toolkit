@@ -141,6 +141,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                     psarcStream.Dispose(); // CRITICAL
 
                     var entryStream = new MemoryStream();
+                    sourceStream.Position = 0;
                     sourceStream.CopyTo(entryStream);
                     entryStream.Position = 0;
                     Entry tocEntry = archive.TOC.FirstOrDefault(x => x.Name == entryName);

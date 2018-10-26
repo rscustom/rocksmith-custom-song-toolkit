@@ -48,7 +48,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public void Init()
         {
-            toneNameBox.Cue = (CurrentGameVersion == GameVersion.RS2014) ? "Tone key" : "Tone Name";
+            toneNameBox.Cue = (CurrentGameVersion == GameVersion.RS2014) ? "Tone Key" : "Tone Name";
 
             InitializeToneInformation();
             InitializeComboBoxes();
@@ -124,9 +124,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             toneNameBox.TextChanged += (sender, e) =>
             {
                 var toneName = toneNameBox.Text;
-                tone.Key = toneName.GetValidKey(isTone: true);
-                tone.Name = tone.Key;
-                toneNameBox.Text = tone.Key;
+                toneName = toneName.GetValidAtaSpaceName();
+                // tone key has no spaces or special characters
+                // tone.Key = toneName.GetValidKey(isTone: true); 
+                tone.Name = toneName; // may contain spaces
+                toneNameBox.Text = toneName;
             };
 
             // VOLUME
@@ -299,8 +301,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void toneNameBox_Leave(object sender, EventArgs e)
         {
-            TextBox control = (TextBox)sender;
-            control.Text = control.Text.Trim().GetValidAtaSpaceName();
+            // final validation check and set tone.Name and tone.Key
+            var toneName = toneNameBox.Text;
+            toneName = toneName.GetValidAtaSpaceName();
+            // tone key has no spaces or special characters
+            tone.Key = toneName.GetValidKey(isTone: true); 
+            tone.Name = toneName; // may contain spaces
+            toneNameBox.Text = toneName;
         }
 
         // prevents multiple tool tip appearance and gives better action

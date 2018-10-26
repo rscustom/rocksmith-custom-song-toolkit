@@ -109,6 +109,7 @@ namespace RocksmithToolkitGUI.Tests
 
             foreach (var srcPath in TestSettings.Instance.ResourcePaths)
             {
+                Debug.WriteLine("Processing: " + srcPath);
                 // load info from srcPath
                 DLCPackageData info = new DLCPackageData();
 

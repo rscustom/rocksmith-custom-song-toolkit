@@ -167,7 +167,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                             {
                                 // corrupt CDLC zlib.net exception ... try to unpack
                                 if (String.IsNullOrEmpty(entry.Name))
-                                 entry.ErrMsg = String.Format(@"{1}CDLC contains a zlib exception.{1}Warning: {0}{1}", ex.Message, Environment.NewLine);
+                                    entry.ErrMsg = String.Format(@"{1}CDLC contains a zlib exception.{1}Warning: {0}{1}", ex.Message, Environment.NewLine);
                                 else
                                     entry.ErrMsg = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
 
@@ -296,6 +296,9 @@ namespace RocksmithToolkitLib.PsarcLoader
         public void ReadManifest()
         {
             var toc = _toc[0];
+            if (!String.IsNullOrEmpty(toc.Name))
+                throw new FileLoadException("<ERROR> expected empty _toc[0].Name, but found: " + _toc[0].Name);
+
             toc.Name = "NamesBlock.bin";
             InflateEntry(toc);
             using (var bReader = new StreamReader(toc.Data, true))
@@ -308,6 +311,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                             _toc[i + 1].Name = data[i];
                     });
             }
+
             _toc.RemoveAt(0);
         }
 
@@ -340,8 +344,10 @@ namespace RocksmithToolkitLib.PsarcLoader
                     binaryWriter.BaseStream.Position = 0;
                     continue;
                 }
+
                 binaryWriter.Write('\n'); //data.WriteByte(0x0A);
             }
+
             _toc[0].Data = binaryWriter.BaseStream; //dunno how to get buffer, seek is required
         }
 
@@ -976,7 +982,7 @@ namespace RocksmithToolkitLib.PsarcLoader
             return Zip(new MemoryStream(array), outStream, plainLen, rewind);
         }
 
-         public static void EncryptFile(Stream input, Stream output, byte[] key)
+        public static void EncryptFile(Stream input, Stream output, byte[] key)
         {
             using (var rij = new RijndaelManaged())
             {
@@ -1042,6 +1048,6 @@ namespace RocksmithToolkitLib.PsarcLoader
             output.Flush();
         }
 
-    
+
     }
 }

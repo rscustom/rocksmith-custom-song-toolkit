@@ -263,33 +263,48 @@ namespace RocksmithToolkitLib.PSARC
         public void ReadManifest()
         {
             var toc = _toc[0];
+            if (!String.IsNullOrEmpty(toc.Name))
+                MessageBox.Show("<ERROR> Expected empty _toc[0].Name," + Environment.NewLine +
+                   "but instead found: " + _toc[0].Name, "ReadManifest", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
             toc.Name = "NamesBlock.bin";
             InflateEntry(toc);
             using (var bReader = new StreamReader(toc.Data, true))
             {
                 var count = _toc.Count;
                 var data = bReader.ReadToEnd().Split('\n');//0x0A
+
                 Parallel.For(0, data.Length, i =>
                 {
-                    if (i+1 != count)
-                        _toc[i+1].Name = data[i];
+                    if (i + 1 != count)
+                        _toc[i + 1].Name = data[i];
                 });
             }
-            _toc.RemoveAt(0);
+
+            // comment out to leave NamesXblock.bin for debugging
+            // _toc.RemoveAt(0);
         }
 
         private void WriteManifest()
         {
-            if (_toc.Count == 0)
-            {
+           if (_toc.Count == 0)
                 _toc.Add(new Entry());
-            }
 
+            if (!String.IsNullOrEmpty(_toc[0].Name))
+                MessageBox.Show("<ERROR> Expected empty _toc[0].Name," + Environment.NewLine + 
+                    "but instead found: " + _toc[0].Name, "WriteManifest", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            // generate NamesBlock.bin content
             var binaryWriter = new BinaryWriter(new MemoryStream());
             for (int i = 1, len = _toc.Count; i < len; i++)
             {
                 //'/' - unix path separator
                 var bytes = Encoding.ASCII.GetBytes(_toc[i].Name);
+
+                // don't include toolkit.version in NamesBlock.bin
+                //if (Encoding.ASCII.GetString(bytes) == "toolkit.version")
+                //    continue;
+
                 binaryWriter.Write(bytes);
                 //'\n' - unix line separator
                 if (i == len - 1)
@@ -297,9 +312,12 @@ namespace RocksmithToolkitLib.PSARC
                     binaryWriter.BaseStream.Position = 0;
                     continue;
                 }
+
                 binaryWriter.Write('\n'); //data.WriteByte(0x0A);
             }
-            _toc[0].Data = binaryWriter.BaseStream;//dunno how to get buffer, seek is required
+
+            _toc[0].Data = binaryWriter.BaseStream;
+            _toc[0].Length = (ulong)binaryWriter.BaseStream.Length;
         }
 
         public void AddEntry(string name, Stream data)
@@ -318,13 +336,15 @@ namespace RocksmithToolkitLib.PSARC
         }
 
         public void AddEntry(Entry entry)
-        {//important hierarchy
+        {
+            //important hierarchy
             _toc.Add(entry);
             entry.Id = this.TOC.Count - 1;
         }
 
         void ParseTOC()
-        {// Parse TOC Entries
+        {
+            // Parse TOC Entries
             for (int i = 0, tocFiles = (int)_header.NumFiles; i < tocFiles; i++)
             {
                 _toc.Add(new Entry
@@ -351,6 +371,7 @@ namespace RocksmithToolkitLib.PSARC
             _toc.Clear();
             _reader = new BigEndianBinaryReader(psarc);
             _header.MagicNumber = _reader.ReadUInt32();
+
             if (_header.MagicNumber == 1347633490U)//PSAR (BE)
             {
                 //Parse Header
@@ -363,8 +384,10 @@ namespace RocksmithToolkitLib.PSARC
                 _header.ArchiveFlags = _reader.ReadUInt32();
                 //Read TOC
                 int tocSize = (int)(_header.TotalTOCSize - 32U);
+
                 if (_header.ArchiveFlags == 4)//TOC_ENCRYPTED
-                {// Decrypt TOC
+                {
+                    // Decrypt TOC
                     var tocStream = new MemoryStream();
                     using (var decStream = new MemoryStream())
                     {
@@ -381,14 +404,17 @@ namespace RocksmithToolkitLib.PSARC
                             tocStream.Write(buffer, 0, bytesRead);
                         }
                     }
+
                     tocStream.Position = 0;
                     _reader = new BigEndianBinaryReader(tocStream);
                 }
+
                 ParseTOC();
                 //Parse zBlocksSizeList
                 int tocChunkSize = (int)(_header.NumFiles * _header.TOCEntrySize);//(int)_reader.BaseStream.Position //don't alter this with. causes issues
                 int zNum = (tocSize - tocChunkSize) / bNum;
                 var zLengths = new uint[zNum];
+
                 for (int i = 0; i < zNum; i++)
                 {
                     switch (bNum)
@@ -404,8 +430,8 @@ namespace RocksmithToolkitLib.PSARC
                             break;
                     }
                 }
-                _zBlocksSizeList = zLengths;//TODO: validate
 
+                _zBlocksSizeList = zLengths;//TODO: validate
                 _reader.BaseStream.Flush();//Free tocStream resources
                 _reader = new BigEndianBinaryReader(psarc);
 
@@ -430,27 +456,42 @@ namespace RocksmithToolkitLib.PSARC
                         throw new InvalidDataException("Unknown compression.");
                 }
             }
+
             psarc.Flush();
         }
 
         private BigEndianBinaryWriter _writer;
+        /// <summary>
+        /// Writes to the inputStream
+        /// <para>Default 'seek' is true, flushes and seeks to the end of stream after write is finished</para>
+        /// <para>Eliminates the need for coding output.Flush() followed by output.Seek(0, SeekOrigin.Begin)</para>
+        /// </summary>
+        /// <param name="inputStream"></param>
+        /// <param name="encrypt"></param>
+        /// <param name="seek"></param>
         public void Write(Stream inputStream, bool encrypt = false, bool seek = true)
         {
             _header.ArchiveFlags = encrypt ? 4U : 0U;
             _header.TOCEntrySize = 30U;
+
+            // track artifacts
             WriteManifest();
+
             //Pack entries
             List<uint> zLengths;
             Dictionary<Entry, byte[]> zStreams;
             DeflateEntries(out zStreams, out zLengths);
+
             //Build zLengths
             _writer = new BigEndianBinaryWriter(inputStream);
             _header.TotalTOCSize = (uint)(32 + _toc.Count * _header.TOCEntrySize + zLengths.Count * bNum);
             _toc[0].Offset = _header.TotalTOCSize;
+
             for (int i = 1; i < _toc.Count; i++)
             {
                 _toc[i].Offset = _toc[i - 1].Offset + (ulong)(zStreams[_toc[i - 1]].Length);
             }
+
             //Write Header
             _writer.Write(_header.MagicNumber);
             _writer.Write(_header.VersionNumber);
@@ -460,6 +501,7 @@ namespace RocksmithToolkitLib.PSARC
             _writer.Write(_toc.Count);
             _writer.Write(_header.BlockSizeAlloc);
             _writer.Write(_header.ArchiveFlags);
+
             //Write Table of contents
             foreach (Entry current in _toc)
             {
@@ -469,6 +511,7 @@ namespace RocksmithToolkitLib.PSARC
                 _writer.WriteUInt40((ulong)current.Data.Length);//current.Length
                 _writer.WriteUInt40(current.Offset);
             }
+
             foreach (uint zLen in zLengths)
             {
                 switch (bNum)
@@ -545,11 +588,13 @@ namespace RocksmithToolkitLib.PSARC
                     encStream.CopyTo(inputStream, (int)_header.BlockSizeAlloc);
                 }
             }
-            if (seek) // May be redundant
+
+            if (seek)
             {
                 inputStream.Flush();
-                inputStream.Position = 0;
+                inputStream.Seek(0, SeekOrigin.Begin);
             }
+
             //GlobalExtension.HideProgress();
         }
 

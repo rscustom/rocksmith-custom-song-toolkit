@@ -93,6 +93,7 @@ namespace RocksmithToolkitLib.Extensions
 
             var tkInfo = new ToolkitInfo();
             string line = null;
+            reader.BaseStream.Position = 0;
             while ((line = reader.ReadLine()) != null)
             {
                 // we need to decipher what this line contains;

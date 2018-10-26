@@ -10,7 +10,6 @@ using MiscUtil.IO;
 using MiscUtil.Conversion;
 using CON = RocksmithToolkitLib.Sng.Constants;
 
-// TODO: new philosophy ... charting tweaks should be done in EOF by the charter
 
 namespace RocksmithToolkitLib.Sng2014HSL
 {
@@ -23,7 +22,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             Sng2014File sng;
             if (!String.IsNullOrEmpty(cdata))
                 sng = new Sng2014File(new FileStream(cdata, FileMode.Open));
-            else 
+            else
                 sng = new Sng2014File(new MemoryStream(Resources.VOCALS_RS2));
 
             var xml = Vocals.LoadFromFile(xmlFile);
@@ -129,7 +128,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     return cOut[1];
                 // Return most used note
                 return cOut.Count > 3 ? cOut.FirstOrDefault(n => cOut.Any(t => t > n)) : cOut[0];
-            } 
+            }
             return 35;
         }
 
@@ -532,7 +531,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 catch (Exception)
                 {
-                    throw new InvalidDataException("There is tone name error in XML Arrangement: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + Environment.NewLine + 
+                    throw new InvalidDataException("There is tone name error in XML Arrangement: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + Environment.NewLine +
                         "Use EOF to re-author custom tones or Notepad to attempt manual repair.");
                 }
             }
@@ -919,8 +918,8 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     // Times will be updated later
 
                     // Uninitialized values are found on anchors in phrases without notes
-                    anchor.Unk3_FirstNoteTime = (float) 3.4028234663852886e+38;
-                    anchor.Unk4_LastNoteTime = (float) 1.1754943508222875e-38;
+                    anchor.Unk3_FirstNoteTime = (float)3.4028234663852886e+38;
+                    anchor.Unk4_LastNoteTime = (float)1.1754943508222875e-38;
                     anchor.FretId = (byte)level.Anchors[j].Fret;
                     anchor.Width = (Int32)level.Anchors[j].Width;
                     anchor.PhraseIterationId = getPhraseIterationId(xml, anchor.StartBeatTime, false);
@@ -999,7 +998,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             break;
                         }
                     }
-            
+
                     if (note.SlideTo != -1)
                     {
                         var ae = new AnchorExtension();
@@ -1028,7 +1027,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             if (chord.Ignore == 0)
                                 ++a.NotesInIteration1[j - 1];
 
-                                ++a.NotesInIteration2[j - 1];
+                            ++a.NotesInIteration2[j - 1];
                             break;
                         }
                     }
@@ -1090,7 +1089,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                                 // Not entirely accurate, sometimes Unk4 is -1 even though there is a chord in the handshape...
                                 if (n.Time == fp1[id].StartTime)
                                 {
-                                   fp1[id].Unk4_LastNoteTime = fp1[id].EndTime;
+                                    fp1[id].Unk4_LastNoteTime = fp1[id].EndTime;
                                 }
                             }
                             else

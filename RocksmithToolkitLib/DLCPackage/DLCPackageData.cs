@@ -32,7 +32,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private const float DEFAULT_AUDIO_VOLUME = -7.0f;
         private const float DEFAULT_PREVIEW_VOLUME = -5.0f;
 
-        // DO NOT change variable names ... there are hidden dependancies
+        // DO NOT change these variable names ... there are hidden dependancies
         public GameVersion GameVersion;
         public bool Pc { get; set; }
         public bool Mac { get; set; }
@@ -117,22 +117,22 @@ namespace RocksmithToolkitLib.DLCPackage
             if (songsManifestJson.Count > 2)
                 throw new DataException("<ERROR> More than two *.manifest.json files found." + Environment.NewLine + Environment.NewLine);
 
-            var attr = new List<Attributes>();
+            var attrList = new List<Attributes>();
             foreach (var manifestFile in songsManifestJson)
             {
                 var songsManifest = Manifest.Manifest.LoadFromFile(manifestFile).Entries.ToArray();
                 for (int smIndex = 0; smIndex < songsManifest.Count(); smIndex++)
                 {
                     var smData = songsManifest[smIndex].Value.ToArray()[0].Value;
-                    attr.Add(smData);
+                    attrList.Add(smData);
                 }
             }
 
-            attr = attr.Where(x => !x.ArrangementName.Equals("Vocals")).ToList();
-            if (!attr.Any())
+            attrList = attrList.Where(x => !x.ArrangementName.Equals("Vocals")).ToList();
+            if (!attrList.Any())
                 throw new DataException("<ERROR> songs.manifest.json file did not parse correctly.");
 
-            var attrFirst = attr.First();
+            var attrFirst = attrList.First();
             // Fill SongInfo
             data.SongInfo = new SongInfo();
             data.Name = attrFirst.SongKey;
@@ -170,7 +170,6 @@ namespace RocksmithToolkitLib.DLCPackage
                 File.WriteAllText(toneManifestJson[0], json);
             }
 
-            var tones2014 = new List<Tone2014>();
             var tones = new List<Tone>();
             var toneManifest = Manifest.Tone.Manifest.LoadFromFile(toneManifestJson[0]);
 
@@ -199,91 +198,145 @@ namespace RocksmithToolkitLib.DLCPackage
             var projectMap = AggregateGraph.AggregateGraph.ProjectMap(aggGraphData, songsXblock, toneManifest);
 
             // Load xml arrangements
-            var xmlFiles = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
-            if (xmlFiles.Length <= 0)
+            var xmlFilePaths = Directory.GetFiles(unpackedDir, "*.xml", SearchOption.AllDirectories);
+            if (xmlFilePaths.Length <= 0)
                 throw new DataException("<ERROR> Can not find any XML arrangement files");
 
-            foreach (var xmlFile in xmlFiles)
+            foreach (var xmlFilePath in xmlFilePaths)
             {
-                if (xmlFile.ToLower().Contains("metadata"))
+                if (xmlFilePath.ToLower().Contains("metadata"))
                     continue;
 
                 // some poorly formed RS1 CDLC use just "vocal"
-                if (xmlFile.ToLower().Contains("vocal"))
+                if (xmlFilePath.ToLower().Contains("vocal"))
                 {
                     // Add Vocal Arrangement
                     data.Arrangements.Add(new Arrangement
                     {
-                        Name = ArrangementName.Vocals,
+                        ArrangementName = ArrangementName.Vocals,
                         ArrangementType = ArrangementType.Vocal,
                         ScrollSpeed = 20,
-                        SongXml = new SongXML { File = xmlFile },
+                        SongXml = new SongXML { File = xmlFilePath },
                         SongFile = new SongFile { File = "" },
                         CustomFont = false
                     });
                 }
                 else
                 {
+                    var attr = new Attributes();
                     var attr2014 = new Attributes2014();
-                    var rsSong = new Song();
-                    var rsSong2014 = new Song2014();
+                    var song2014 = Song2014.LoadFromFile(xmlFilePath);
 
-                    using (var obj1 = new Rs1Converter())
-                        rsSong = obj1.XmlToSong(xmlFile);
+                    // Detect Arrangement XML Version
+                    var xmlVersion = GameVersion.None;
+                    var verAttrib = Convert.ToInt32(song2014.Version);
+                    if (verAttrib < 7) // RS1 format
+                    {
+                        xmlVersion = GameVersion.RS2012;
+                    }
+                    else if (verAttrib > 6) // RS2014 format 
+                    {
+                        // CAUTION newer RS1 may use RS2014 XML Arrangement format
+                        xmlVersion = GameVersion.RS2014;
+                    }
+                    else
+                        throw new DataException("<ERROR> Unknown Arrangement XML Version: " + verAttrib + Environment.NewLine);
 
-                    Tone tone;
-                    Attributes arr;
                     // optimized tone matching effort using project mapping algo
+                    var tone = new Tone();
                     if (projectMap.Count > 0)
                     {
-                        var result = projectMap.First(m => String.Equals(Path.GetFileName(m.SongXmlPath), Path.GetFileName(xmlFile), StringComparison.CurrentCultureIgnoreCase));
+                        var result = projectMap.First(m => String.Equals(Path.GetFileName(m.SongXmlPath), Path.GetFileName(xmlFilePath), StringComparison.CurrentCultureIgnoreCase));
                         tone = tones.First(t => t.Key == result.Tones[0]);
 
-                        // now works for newer RS1 multitone CDLC
-                        arr = attr.First(s => s.SongXml.ToLower().Contains(result.LLID));
+                        // works with newer RS1 multitone CDLC
+                        attr = attrList.First(s => s.SongXml.ToLower().Contains(result.LLID));
                     }
-                    else // tone matching is not enabled (single tone)
+                    else // tone matching is not enabled (single tone only)
                     {
                         tone = tones.First();
-                        arr = attr.First();
+                        attr = attrList.First();
                     }
 
-                    // load attr2014 with RS1 mapped values for use by Arrangement()
-                    attr2014.CentOffset = 0;
-                    attr2014.DynamicVisualDensity = new List<float>() { 2 };
-                    attr2014.SongPartition = arr.SongPartition;
+                    // Convert RS1 to RS2014 XML Arrangement
+                    var tones2014 = new List<Tone2014>();
+                    var destPath = xmlFilePath;
+
+                    if (convert && xmlVersion == GameVersion.RS2012)
+                    {
+                        using (var obj = new Rs1Converter())
+                        {
+                            if (verAttrib < 7)
+                                song2014 = obj.SongToSong2014(Song.LoadFromFile(xmlFilePath));
+
+                            tones2014.Add(obj.ToneToTone2014(tone));
+                        }
+
+                        // get rid of duplicate tone names
+                        tones2014 = tones2014.Where(p => p.Name != null)
+                            .GroupBy(p => p.Name).Select(g => g.First()).ToList();
+
+                        data.TonesRS2014 = tones2014;
+
+                        // create a new Song2014 XML file name for converted arrangement
+                        var srcDir = Path.GetDirectoryName(xmlFilePath);
+                        var srcName = Path.GetFileNameWithoutExtension(xmlFilePath);
+                        destPath = String.Format("{0}_{1}.xml", Path.Combine(srcDir, srcName), "CNVRT");
+                    }
+
+                    // calculate tempo
+                    if (song2014.AverageTempo == 0.0F || data.SongInfo.AverageTempo == 0)
+                    {
+                        using (var obj1 = new Rs1Converter())
+                            song2014.AverageTempo = obj1.AverageBPM(song2014);
+
+                        data.SongInfo.AverageTempo = (int)song2014.AverageTempo;
+                    }
+
+                    if (song2014.ArrangementProperties == null)
+                        song2014.ArrangementProperties = new SongArrangementProperties2014();
+
+                    // use data from manefist where possible to improve Attributes2014 data
+                    attr2014.ArrangementProperties = song2014.ArrangementProperties;
+                    attr2014.Tone_Base = tone.Name;
                     attr2014.PersistentID = IdGenerator.Guid().ToString();
                     attr2014.MasterID_RDV = RandomGenerator.NextInt();
-                    attr2014.ArrangementProperties = new SongArrangementProperties2014();
-                    attr2014.Tone_Base = tone.Name;
+                    attr2014.CentOffset = String.IsNullOrEmpty(song2014.CentOffset) ? 0.0 : double.Parse(song2014.CentOffset);
+                    attr2014.SongPartition = attr.SongPartition;
+                    attr2014.DynamicVisualDensity = attr.DynamicVisualDensity == null ? new List<float>() { 2 } : attr.DynamicVisualDensity;
+                    attr2014.ArrangementProperties.Represent = attr.RepresentativeArrangement ? 1 : 0;
 
-                    if (arr.Tuning == "E Standard")
+                    if (attr.Tuning == "EStandard" || attr.Tuning == "E Standard")
                         attr2014.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-                    else if (arr.Tuning == "DropD")
+                    else if (attr.Tuning == "DropD" || attr.Tuning == "Drop D")
                         attr2014.Tuning = new TuningStrings { String0 = -2, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-                    else if (arr.Tuning == "OpenG")
+                    else if (attr.Tuning == "OpenG" || attr.Tuning == "Open G")
                         attr2014.Tuning = new TuningStrings { String0 = -2, String1 = -2, String2 = 0, String3 = 0, String4 = 0, String5 = -2 };
-                    else if (arr.Tuning == "EFlat")
+                    else if (attr.Tuning == "EFlat" || attr.Tuning == "E Flat")
                         attr2014.Tuning = new TuningStrings { String0 = -1, String1 = -1, String2 = -1, String3 = -1, String4 = -1, String5 = -1 };
                     else // default to standard tuning
                     {
-                        arr.Tuning = "E Standard";
+                        attr.Tuning = "E Standard";
                         attr2014.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
                     }
 
-                    // processing order is important - CAREFUL
+                    // use data from manefist to improve Song2014 XML Arrangement data
+                    song2014.Tuning = attr2014.Tuning;
+                    song2014.Part = (short)attr2014.SongPartition;
+                    song2014.ToneBase = attr2014.Tone_Base;
+
                     // RouteMask  None = 0, Lead = 1, Rhythm = 2, Any = 3, Bass = 4
                     // XML file names are usually meaningless to arrangement determination
-                    if (rsSong.Arrangement.ToLower().Contains("combo") || arr.ArrangementName.ToLower().Contains("combo"))
+                    if (song2014.Arrangement.ToLower().Contains("combo") || attr.ArrangementName.ToLower().Contains("combo"))
                     {
                         attr2014.ArrangementName = "Combo";
                         attr2014.ArrangementType = (int)ArrangementType.Guitar;
-                        attr2014.ArrangementProperties.RouteMask = arr.EffectChainName.ToLower().Contains("lead") ? (int)RouteMask.Lead : (int)RouteMask.Rhythm;
-                        attr2014.ArrangementProperties.PathLead = arr.EffectChainName.ToLower().Contains("lead") ? 1 : 0;
-                        attr2014.ArrangementProperties.PathRhythm = arr.EffectChainName.ToLower().Contains("lead") ? 0 : 1;
+                        attr2014.ArrangementProperties.RouteMask = attr.EffectChainName.ToLower().Contains("lead") ? (int)RouteMask.Lead : (int)RouteMask.Rhythm;
+                        attr2014.ArrangementProperties.PathLead = attr.EffectChainName.ToLower().Contains("lead") ? 1 : 0;
+                        attr2014.ArrangementProperties.PathRhythm = attr.EffectChainName.ToLower().Contains("lead") ? 0 : 1;
                         attr2014.ArrangementProperties.PathBass = 0;
                     }
-                    else if (rsSong.Arrangement.ToLower().Contains("rhythm") || arr.ArrangementName.ToLower().Contains("rhythm"))
+                    else if (song2014.Arrangement.ToLower().Contains("rhythm") || attr.ArrangementName.ToLower().Contains("rhythm"))
                     // || rsSong.Arrangement.ToLower().Contains("guitar"))
                     {
                         attr2014.ArrangementName = "Rhythm";
@@ -293,7 +346,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         attr2014.ArrangementProperties.PathRhythm = 1;
                         attr2014.ArrangementProperties.PathBass = 0;
                     }
-                    else if (rsSong.Arrangement.ToLower().Contains("lead") || arr.ArrangementName.ToLower().Contains("lead"))
+                    else if (song2014.Arrangement.ToLower().Contains("lead") || attr.ArrangementName.ToLower().Contains("lead"))
                     {
                         attr2014.ArrangementName = "Lead";
                         attr2014.ArrangementType = (int)ArrangementType.Guitar;
@@ -302,7 +355,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         attr2014.ArrangementProperties.PathRhythm = 0;
                         attr2014.ArrangementProperties.PathBass = 0;
                     }
-                    else if (rsSong.Arrangement.ToLower().Contains("bass")) // || arr.ArrangementName.ToLower().Contains("bass"))
+                    else if (song2014.Arrangement.ToLower().Contains("bass") || attr.ArrangementName.ToLower().Contains("bass"))
                     {
                         attr2014.ArrangementName = "Bass";
                         attr2014.ArrangementType = (int)ArrangementType.Bass;
@@ -321,59 +374,54 @@ namespace RocksmithToolkitLib.DLCPackage
                         attr2014.ArrangementProperties.PathRhythm = 0;
                         attr2014.ArrangementProperties.PathBass = 0;
 
-                        Console.WriteLine("RS1->RS2 CDLC Conversion defaulted to 'Lead' arrangement");
+                        Console.WriteLine("RS1 -> RS2014 CDLC Conversion defaulted to 'Lead' arrangement");
                     }
 
-                    if (convert) // RS1 -> RS2 magic
+                    // update ArrangementProperties
+                    song2014.ArrangementProperties.RouteMask = attr2014.ArrangementProperties.RouteMask;
+                    song2014.ArrangementProperties.PathLead = attr2014.ArrangementProperties.PathLead;
+                    song2014.ArrangementProperties.PathRhythm = attr2014.ArrangementProperties.PathRhythm;
+                    song2014.ArrangementProperties.PathBass = attr2014.ArrangementProperties.PathBass;
+                    song2014.ArrangementProperties.StandardTuning = (attr.Tuning == "E Standard" ? 1 : 0);
+
+                    // <note time="58.366" linkNext="0" accent="0" bend="0" fret="7" hammerOn="0" harmonic="0" hopo="0" ignore="0" leftHand="-1" mute="0" palmMute="0" pluck="-1" pullOff="0" slap="-1" slideTo="-1" string="3" sustain="0.108" tremolo="0" harmonicPinch="0" pickDirection="0" rightHand="-1" slideUnpitchTo="-1" tap="0" vibrato="0" />
+                    if (song2014.Levels.Any(sl => sl.Notes.Any(sln => sln.Bend != 0)))
+                        song2014.ArrangementProperties.Bends = 1;
+                    if (song2014.Levels.Any(sl => sl.Notes.Any(sln => sln.Hopo != 0)))
+                        song2014.ArrangementProperties.Hopo = 1;
+                    if (song2014.Levels.Any(sl => sl.Notes.Any(sln => sln.SlideTo != -1)))
+                        song2014.ArrangementProperties.Slides = 1;
+                    if (song2014.Levels.Any(sl => sl.Notes.Any(sln => sln.Sustain > 0)))
+                        song2014.ArrangementProperties.Sustain = 1;
+
+                    // fixing times that are off
+                    var lastEbeatsTime = song2014.Ebeats[song2014.Ebeats.Length - 1].Time;
+                    var lastPhraseIterationsTime = song2014.PhraseIterations[song2014.PhraseIterations.Length - 1].Time;
+
+                    // tested ... not source of in game hangs
+                    // confirm last PhraseIterations time is less than last Ebeats time
+                    if (lastPhraseIterationsTime > lastEbeatsTime)
                     {
-                        using (var obj1 = new Rs1Converter())
-                        {
-                            tones2014.Add(obj1.ToneToTone2014(tone));
-                            rsSong2014 = obj1.SongToSong2014(rsSong);
-                        }
+                        song2014.PhraseIterations[song2014.PhraseIterations.Length - 1].Time = lastEbeatsTime;
+                        song2014.Sections[song2014.Sections.Length - 1].StartTime = lastEbeatsTime;
+                    }
 
-                        // update ArrangementProperties
-                        rsSong2014.ArrangementProperties.RouteMask = attr2014.ArrangementProperties.RouteMask;
-                        rsSong2014.ArrangementProperties.PathLead = attr2014.ArrangementProperties.PathLead;
-                        rsSong2014.ArrangementProperties.PathRhythm = attr2014.ArrangementProperties.PathRhythm;
-                        rsSong2014.ArrangementProperties.PathBass = attr2014.ArrangementProperties.PathBass;
-                        rsSong2014.ArrangementProperties.StandardTuning = (arr.Tuning == "E Standard" ? 1 : 0);
+                    // tested ... not source of in game hangs
+                    // confirm SongLength at least equals last Ebeats time
+                    if (song2014.SongLength < lastEbeatsTime)
+                        song2014.SongLength = lastEbeatsTime;
 
-                        // <note time="58.366" linkNext="0" accent="0" bend="0" fret="7" hammerOn="0" harmonic="0" hopo="0" ignore="0" leftHand="-1" mute="0" palmMute="0" pluck="-1" pullOff="0" slap="-1" slideTo="-1" string="3" sustain="0.108" tremolo="0" harmonicPinch="0" pickDirection="0" rightHand="-1" slideUnpitchTo="-1" tap="0" vibrato="0" />
-                        if (rsSong2014.Levels.Any(sl => sl.Notes.Any(sln => sln.Bend != 0)))
-                            rsSong2014.ArrangementProperties.Bends = 1;
-                        if (rsSong2014.Levels.Any(sl => sl.Notes.Any(sln => sln.Hopo != 0)))
-                            rsSong2014.ArrangementProperties.Hopo = 1;
-                        if (rsSong2014.Levels.Any(sl => sl.Notes.Any(sln => sln.SlideTo != -1)))
-                            rsSong2014.ArrangementProperties.Slides = 1;
-                        if (rsSong2014.Levels.Any(sl => sl.Notes.Any(sln => sln.Sustain > 0)))
-                            rsSong2014.ArrangementProperties.Sustain = 1;
-
-                        // fixing times that are off
-                        var lastEbeatsTime = rsSong2014.Ebeats[rsSong2014.Ebeats.Length - 1].Time;
-                        var lastPhraseIterationsTime = rsSong2014.PhraseIterations[rsSong2014.PhraseIterations.Length - 1].Time;
-
-                        // tested ... not source of in game hangs
-                        // confirm last PhraseIterations time is less than last Ebeats time
-                        if (lastPhraseIterationsTime > lastEbeatsTime)
-                        {
-                            rsSong2014.PhraseIterations[rsSong2014.PhraseIterations.Length - 1].Time = lastEbeatsTime;
-                            rsSong2014.Sections[rsSong2014.Sections.Length - 1].StartTime = lastEbeatsTime;
-                        }
-
-                        // tested ... not source of in game hangs
-                        // confirm SongLength at least equals last Ebeats time
-                        if (rsSong2014.SongLength < lastEbeatsTime)
-                            rsSong2014.SongLength = lastEbeatsTime;
-
+                    // write changes to the XML Arrangement file
+                    if (convert && xmlVersion == GameVersion.RS2012)
+                    {
                         using (var obj2 = new Rs2014Converter())
-                            obj2.Song2014ToXml(rsSong2014, xmlFile, true);
+                            obj2.Song2014ToXml(song2014, destPath, true);
                     }
 
                     // Adding Song Arrangement
                     try
                     {
-                        data.Arrangements.Add(new Arrangement(attr2014, xmlFile));
+                        data.Arrangements.Add(new Arrangement(attr2014, xmlFilePath));
                     }
                     catch (Exception ex)
                     {
@@ -383,14 +431,6 @@ namespace RocksmithToolkitLib.DLCPackage
                             ex.Message);
                     }
                 }
-            }
-
-            if (convert)
-            {
-                // get rid of duplicate tone names
-                tones2014 = tones2014.Where(p => p.Name != null)
-                    .GroupBy(p => p.Name).Select(g => g.First()).ToList();
-                data.TonesRS2014 = tones2014;
             }
 
             // Get Album Artwork DDS Files
@@ -409,6 +449,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     sourceFile = artFiles[0],
                     destinationFile = artFiles[0].CopyToTempFile(".dds")
                 });
+
             data.ArtFiles = targetArtFiles;
 
             // Audio files
@@ -471,6 +512,15 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 data.ToolkitInfo.PackageComment += "(RS1 to RS2014 by CDLC Creator)";
                 data.Tones = null;
+            }
+            else
+            {
+                // apply consistent tone name/key naming throughout to minimize tone issues
+                foreach (var tone in data.Tones)
+                {
+                    tone.Name = tone.Name.GetValidAtaSpaceName();
+                    tone.Key = tone.Name.GetValidKey(isTone: true);
+                }
             }
 
             return data;
@@ -579,10 +629,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
                 else if (xmlFile.ToLower().Contains("vocals")) // detect both jvocals and vocals
                 {
-                    //var debugMe = "Confirm XML comments were preserved.";
                     var voc = new Arrangement
                         {
-                            Name = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals,
+                            ArrangementName = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals,
                             ArrangementType = ArrangementType.Vocal,
                             ScrollSpeed = 20,
                             SongXml = new SongXML { File = xmlFile },
@@ -678,7 +727,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 var shl = new Arrangement
                 {
                     ArrangementType = ArrangementType.ShowLight,
-                    Name = ArrangementName.ShowLights,
+                    ArrangementName = ArrangementName.ShowLights,
                     SongXml = new SongXML { File = xmlShowLights },
                     SongFile = new SongFile { File = "" },
                     XmlComments = Song2014.ReadXmlComments(xmlShowLights)

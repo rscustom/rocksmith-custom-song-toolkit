@@ -16,6 +16,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var id = IdGenerator.Guid().ToString().Replace("-", "");
             if (string.IsNullOrEmpty(tone.Name))
                 tone.Name = toneKey;
+            
             tone.Key = toneKey;
             tone.PersistentID = id;
             tone.BlockAsset = String.Format("urn:emergent-world:DLC_Tone_{0}", toneKey);

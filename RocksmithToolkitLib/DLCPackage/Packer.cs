@@ -49,7 +49,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             var archivePath = String.Empty;
             ExternalApps.VerifyExternalApps();
-            DeleteFixedAudio(srcPath);
+            CleanupArtifacts(srcPath);
             Platform srcPlatform = srcPath.GetPlatform();
 
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
@@ -98,7 +98,7 @@ namespace RocksmithToolkitLib.DLCPackage
             if (predefinedPlatform != null && predefinedPlatform.platform != GamePlatform.None && predefinedPlatform.version != GameVersion.None)
                 srcPlatform = predefinedPlatform;
 
-            // Cryptography way is used only for PC in Rocksmith 1            
+            // Cryptography RS1 ONLY            
             var useCryptography = srcPlatform.version == GameVersion.RS2012;
             var unpackedDir = String.Empty;
 
@@ -124,7 +124,6 @@ namespace RocksmithToolkitLib.DLCPackage
                             unpackedDir = ExtractPSARC(srcPath, destDirPath, inputStream, srcPlatform);
                         }
                     }
-                    var debugMe = "Check the unpackedDir which now has original artifacts";
                     break;
                 case GamePlatform.XBox360:
                     unpackedDir = UnpackXBox360Package(srcPath, destDirPath, srcPlatform);
@@ -262,10 +261,6 @@ namespace RocksmithToolkitLib.DLCPackage
 
         private static string PackPC(string srcPath, string destPath, bool useCryptography, bool updateSng)
         {
-            var bins = Directory.EnumerateFiles(srcPath, "NamesBlock.bin", SearchOption.AllDirectories).Where(File.Exists);
-            foreach (var namesBlock in bins)
-                File.Delete(namesBlock);
-
             if (Path.GetExtension(destPath) != ".dat")
                 destPath += ".dat";
 
@@ -280,19 +275,19 @@ namespace RocksmithToolkitLib.DLCPackage
                     psarc.AddEntry(Path.GetFileName(x), fileStream);
                 }
 
-                foreach (var directory in Directory.EnumerateDirectories(srcPath))
+                foreach (var srcInnerPath in Directory.EnumerateDirectories(srcPath))
                 {
                     var innerPsarcStream = new MemoryStream();
                     streamCollection.Add(innerPsarcStream);
-                    var directoryName = Path.GetFileName(directory);
+                    var srcInnerName = Path.GetFileName(srcInnerPath);
 
-                    // Recreate SNG
+                    // Regenerate SNG from XML
                     if (updateSng)
-                        if (directory.ToLower().IndexOf("dlc_tone_") < 0)
-                            UpdateSng(directory, new Platform(GamePlatform.Pc, GameVersion.RS2012));
+                        if (srcInnerPath.ToLower().IndexOf("dlc_tone_") < 0)
+                            UpdateSng(srcPath, srcInnerPath, new Platform(GamePlatform.Pc, GameVersion.RS2012));
 
-                    PackInnerPC(innerPsarcStream, directory);
-                    psarc.AddEntry(directoryName + ".psarc", innerPsarcStream);
+                    PackInnerPC(innerPsarcStream, srcInnerPath);
+                    psarc.AddEntry(srcInnerName + ".psarc", innerPsarcStream);
                 }
 
                 if (useCryptography)
@@ -322,6 +317,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     streamCollection.Add(fileStream);
                     innerPsarc.AddEntry(a, fileStream);
                 });
+
                 innerPsarc.Write(output, false, false);
             }
         }
@@ -658,7 +654,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     psarc.InflateEntry(entry);
                     var outputPath = Path.Combine(destPath, Path.GetFileNameWithoutExtension(entry.Name));
-                    var debugMe = ExtractPSARC(inputPath, outputPath, entry.Data, platform, false);
+                    ExtractPSARC(inputPath, outputPath, entry.Data, platform, false);
                 }
                 else
                 {
@@ -675,33 +671,44 @@ namespace RocksmithToolkitLib.DLCPackage
                 GlobalExtension.UpdateProgress.Value = (int)progress;
             }
 
+            if (psarc != null)
+            {
+                psarc.Dispose();
+                psarc = null;
+            }
+
             return destPath;
             // GlobalExtension.HideProgress();
         }
 
-        public static void DeleteFixedAudio(string sourcePath)
+        public static void CleanupArtifacts(string srcPath)
         {
             try
             {
                 // delete template xml remnants that may have been added by SaveTemplateFile method
-                var templateFiles = Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories).Where(fn => fn.EndsWith("RS2012.dlc.xml") || fn.EndsWith("RS2014.dlc.xml")).ToList();
+                var templateFiles = Directory.EnumerateFiles(srcPath, "*", SearchOption.AllDirectories).Where(fn => fn.EndsWith("RS2012.dlc.xml") || fn.EndsWith("RS2014.dlc.xml")).ToList();
                 foreach (var templateFile in templateFiles)
                     File.Delete(templateFile);
 
                 // delete friendly named ogg/wem audio files that may have been added by new LoadFromFolder method
-                var audioFiles = Directory.EnumerateFiles(sourcePath, "song_*.*", SearchOption.AllDirectories).Where(fn => fn.EndsWith(".ogg") || fn.EndsWith(".wem")).ToList();
+                var audioFiles = Directory.EnumerateFiles(srcPath, "song_*.*", SearchOption.AllDirectories).Where(fn => fn.EndsWith(".ogg") || fn.EndsWith(".wem")).ToList();
                 foreach (var audioFile in audioFiles)
                     File.Delete(audioFile);
 
                 // delete friendly named _fixed.ogg audio files that may have been added by LoadFromFolder method
-                var fixedOggFiles = Directory.EnumerateFiles(sourcePath, "*", SearchOption.AllDirectories).Where(fn => fn.EndsWith("_fixed.ogg")).ToList();
+                var fixedOggFiles = Directory.EnumerateFiles(srcPath, "*", SearchOption.AllDirectories).Where(fn => fn.EndsWith("_fixed.ogg")).ToList();
                 foreach (var fixedOggFile in fixedOggFiles)
                     File.Delete(fixedOggFile);
 
                 // delete png album artwork files that may have been added by Unpack method (DO NOT DELETE any Xbox360 images)
-                var pngFiles = Directory.EnumerateFiles(sourcePath, "*.png", SearchOption.AllDirectories).Where(fp => !Path.GetFileName(fp).Equals("Package Image.png") && !Path.GetFileName(fp).Equals("Content Image.png")).ToList();
+                var pngFiles = Directory.EnumerateFiles(srcPath, "*.png", SearchOption.AllDirectories).Where(fp => !Path.GetFileName(fp).Equals("Package Image.png") && !Path.GetFileName(fp).Equals("Content Image.png")).ToList();
                 foreach (var pngFile in pngFiles)
                     File.Delete(pngFile);
+
+                // delete NamesBlock.bin files
+                var bins = Directory.EnumerateFiles(srcPath, "NamesBlock.bin", SearchOption.AllDirectories).Where(File.Exists);
+                foreach (var namesBlock in bins)
+                    File.Delete(namesBlock);
             }
             catch (Exception ex)
             {
@@ -870,37 +877,14 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
-        private static void UpdateSng(string songDirectory, Platform targetPlatform)
+        private static void UpdateSng(string srcPath, string srcInnerPath, Platform targetPlatform)
         {
-            var xmlFiles = Directory.EnumerateFiles(Path.Combine(songDirectory, @"GR\Behaviors\Songs"));
+            var info = DLCPackageData.RS1LoadFromFolder(srcPath, targetPlatform, false);
 
-            foreach (var xmlFile in xmlFiles)
+            foreach (var arr in info.Arrangements)
             {
-                if (File.Exists(xmlFile) && Path.GetExtension(xmlFile) == ".xml")
-                {
-                    var sngFile = Path.Combine(songDirectory, "GRExports", targetPlatform.GetPathName()[1], Path.GetFileNameWithoutExtension(xmlFile) + ".sng");
-                    var arrType = ArrangementType.Guitar;
-
-                    if (Path.GetFileName(xmlFile).ToLower().Contains("vocal"))
-                    {
-                        arrType = ArrangementType.Vocal;
-                        SngFileWriter.Write(xmlFile, sngFile, arrType, targetPlatform);
-                    }
-                    else
-                    {
-                        Song song = Song.LoadFromFile(xmlFile);
-
-                        if (!Enum.TryParse<ArrangementType>(song.Arrangement, out arrType))
-                            if (song.Arrangement.ToLower().Contains("bass"))
-                                arrType = ArrangementType.Bass;
-                    }
-
-                    SngFileWriter.Write(xmlFile, sngFile, arrType, targetPlatform);
-                }
-                else
-                {
-                    throw new ArgumentException(String.Format("'{0}' is not a valid XML file.", xmlFile));
-                }
+                var sngPath = Path.Combine(srcInnerPath, "GRExports", targetPlatform.GetPathName()[1], Path.GetFileNameWithoutExtension(arr.SongXml.File) + ".sng");
+                SngFileWriter.Write(arr, sngPath, targetPlatform);
             }
         }
 
@@ -1035,21 +1019,21 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (!xmlName.ToLower().Contains("vocal"))
                 {
                     var manifestFunctions = new ManifestFunctions(targetPlatform.version);
-                    var xmlContent = Song2014.LoadFromFile(xmlFile);
+                    var song2014 = Song2014.LoadFromFile(xmlFile);
 
                     attr.PhraseIterations = new List<Manifest.PhraseIteration>();
-                    manifestFunctions.GeneratePhraseIterationsData(attr, xmlContent, targetPlatform.version);
+                    manifestFunctions.GeneratePhraseIterationsData(attr, song2014, targetPlatform.version);
 
                     attr.Phrases = new List<Manifest.Phrase>();
-                    manifestFunctions.GeneratePhraseData(attr, xmlContent);
+                    manifestFunctions.GeneratePhraseData(attr, song2014);
 
                     attr.Sections = new List<Manifest.Section>();
-                    manifestFunctions.GenerateSectionData(attr, xmlContent);
+                    manifestFunctions.GenerateSectionData(attr, song2014);
 
                     attr.Tuning = new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 };
-                    manifestFunctions.GenerateTuningData(attr, xmlContent);
+                    manifestFunctions.GenerateTuningData(attr, song2014);
 
-                    attr.MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(xmlContent);
+                    attr.MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(song2014);
                 }
 
                 // else { // TODO: good place to update vocals }

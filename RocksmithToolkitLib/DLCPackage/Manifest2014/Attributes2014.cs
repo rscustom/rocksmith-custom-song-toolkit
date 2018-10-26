@@ -26,6 +26,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
         public List<ChordTemplate> ChordTemplates { get; set; }
         public List<float> DynamicVisualDensity { get; set; }
         public string FullName { get; set; }
+        public string JapaneseSongName { get; set; } // optional (RS2014 ONLY)
+        public string JapaneseArtist { get; set; } // optional (RS2014 ONLY)
         public string LastConversionDateTime { get; set; }
         public int MasterID_PS3 { get; set; }
         public int MasterID_XBox360 { get; set; }
@@ -81,8 +83,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
 
             ArrangementSort = arrangement.ArrangementSort;
             BlockAsset = xblockUrn;
-            manifestFunctions.GenerateDynamicVisualDensity(this, SongContent, arrangement, GameVersion.RS2014);//2.0 constant for vocs in RS2
-            FullName = String.Format(AggregateGraph2014.AggregateGraph2014.NAME_ARRANGEMENT, info.Name, arrangement.Name);
+            manifestFunctions.GenerateDynamicVisualDensity(this, song2014, arrangement, GameVersion.RS2014);//2.0 constant for vocs in RS2
+            FullName = String.Format(AggregateGraph2014.AggregateGraph2014.NAME_ARRANGEMENT, info.Name, arrangement.ArrangementName);
             MasterID_PS3 = (IsVocal) ? -1 : arrangement.MasterId;
             MasterID_XBox360 = (IsVocal) ? -1 : arrangement.MasterId;
             PreviewBankPath = String.Format("song_{0}_preview.bnk", info.Name.ToLower());
@@ -103,7 +105,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             }
 
             // Only for instruments
-            ArrangementProperties = SongContent.ArrangementProperties;
+            ArrangementProperties = song2014.ArrangementProperties;
             ArrangementProperties.BassPick = (int)arrangement.PluckedType;
             ArrangementProperties.PathLead = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Lead);
             ArrangementProperties.PathRhythm = Convert.ToInt32(arrangement.RouteMask == DLCPackage.RouteMask.Rhythm);
@@ -118,46 +120,46 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             // Metronome
             ArrangementProperties.Metronome = (int)arrangement.Metronome;
 
-            if (arrangement.Name == Sng.ArrangementName.Combo)
+            if (arrangement.ArrangementName == Sng.ArrangementName.Combo)
             { //Exclusive condition
                 if (arrangement.RouteMask == DLCPackage.RouteMask.Lead)
                     ArrangementType = (int)Sng.ArrangementName.Lead;
                 else if (arrangement.RouteMask == DLCPackage.RouteMask.Rhythm)
                     ArrangementType = (int)Sng.ArrangementName.Rhythm;
                 else
-                    ArrangementType = (int)arrangement.Name;
+                    ArrangementType = (int)arrangement.ArrangementName;
             }
             else
-                ArrangementType = (int)arrangement.Name;
+                ArrangementType = (int)arrangement.ArrangementName;
 
-            LastConversionDateTime = SongContent.LastConversionDateTime;
-            MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(SongContent);
+            LastConversionDateTime = song2014.LastConversionDateTime;
+            MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(song2014);
 
             TargetScore = 100000;
             PhraseIterations = new List<PhraseIteration>();
-            manifestFunctions.GeneratePhraseIterationsData(this, SongContent, platform.version);
+            manifestFunctions.GeneratePhraseIterationsData(this, song2014, platform.version);
             //Score_MaxNotes -- Generated on function above
             //Score_PNV      -- Generated on function above
 
             Phrases = new List<Phrase>();
-            manifestFunctions.GeneratePhraseData(this, SongContent);
+            manifestFunctions.GeneratePhraseData(this, song2014);
 
             Sections = new List<Section>();
-            manifestFunctions.GenerateSectionData(this, SongContent);
+            manifestFunctions.GenerateSectionData(this, song2014);
 
-            SongAverageTempo = SongContent.AverageTempo;
-            SongOffset = -SongContent.StartBeat; //arrangement.Sng2014.Metadata.StartTime * -1;
+            SongAverageTempo = song2014.AverageTempo;
+            SongOffset = -song2014.StartBeat; //arrangement.Sng2014.Metadata.StartTime * -1;
 
             //SongPartition  -- Generated in DLCPackageCreator after this constructor
 
             ChordTemplates = new List<ChordTemplate>();
-            manifestFunctions.GenerateChordTemplateData(this, SongContent);
+            manifestFunctions.GenerateChordTemplateData(this, song2014);
 
             //Chords TODO: create me
             try
             {
                 // Commented out to check if this is cause of repeating chord display in game
-                manifestFunctions.GenerateChords(this, SongContent);
+                manifestFunctions.GenerateChords(this, song2014);
             }
             catch (Exception ex)
             {
@@ -168,7 +170,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             // not source of 100% bug
             try
             {
-                manifestFunctions.GenerateTechniques(this, SongContent);
+                manifestFunctions.GenerateTechniques(this, song2014);
             }
             catch (Exception ex)
             {

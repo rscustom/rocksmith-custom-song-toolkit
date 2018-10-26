@@ -20,6 +20,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             if (type == ArrangementType.Vocal) {
                 return Sng2014FileWriter.ReadVocals(xmlPath, cdata);
             }
+            
             return Sng2014File.ConvertSong(xmlPath);
         }
 

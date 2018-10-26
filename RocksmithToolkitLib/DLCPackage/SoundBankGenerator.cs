@@ -131,7 +131,7 @@ namespace RocksmithToolkitLib.DLCPackage
     }
 
     /// <summary>
-    /// RS2 SoundBank(.BNK) generator class
+    /// RS2014 SoundBank(.BNK) generator class
     /// </summary>
     public static class SoundBankGenerator2014
     {

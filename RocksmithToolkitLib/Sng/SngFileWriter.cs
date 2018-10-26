@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -8,6 +9,7 @@ using MiscUtil.Conversion;
 using MiscUtil.IO;
 using RocksmithToolkitLib.XML;
 using System.ComponentModel;
+using RocksmithToolkitLib.DLCPackage;
 
 namespace RocksmithToolkitLib.Sng
 {
@@ -72,6 +74,45 @@ namespace RocksmithToolkitLib.Sng
 
     public static class SngFileWriter
     {
+        /// <summary>
+        /// Preferred Write method
+        /// <para>Detects the Arrangment Tuning correctly</para>
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="outputFile"></param>
+        /// <param name="platform"></param>
+        public static void Write(Arrangement arr, string outputFile, Platform platform)
+        {
+            using (var reader = new StreamReader(arr.SongXml.File))
+            {
+                var bitConverter = platform.GetBitConverter;
+                if (arr.ArrangementType == ArrangementType.Vocal)
+                {
+                    var serializer = new XmlSerializer(typeof(Vocals));
+                    var vocals = (Vocals)serializer.Deserialize(reader);
+                    WriteVocalsFile(vocals, outputFile, bitConverter);
+                }
+                else
+                {
+                    var serializer = new XmlSerializer(typeof(Song));
+                    var song = (Song)serializer.Deserialize(reader);
+
+                    // apply proper fix for null tuning
+                    var tuning = new Int16[] { 0, 0, 0, 0, 0, 0 };
+                    if (arr.TuningStrings != null)
+                        tuning = arr.TuningStrings.ToArray();
+
+                    WriteSngFile(song, InstrumentTuningExtensions.GetTuningByOffsets(tuning), arr.ArrangementType, outputFile, bitConverter);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// WARNING: This method may not detect the Arrangment Tuning correctly
+        /// <para>Use the Write(Arrangement arr, string outputFile, Platform platform) method to detect tuning correctly ...</para>
+        /// </summary>
+        [Obsolete("Deprecated, please use Write(Arrangement arr, string outputFile, Platform platform) method.", false)]
         public static void Write(string inputFile, string outputFile, ArrangementType arrangementType, Platform platform)
         {
             using (var reader = new StreamReader(inputFile))
@@ -81,27 +122,29 @@ namespace RocksmithToolkitLib.Sng
                 {
                     var serializer = new XmlSerializer(typeof(Vocals));
                     var vocals = (Vocals)serializer.Deserialize(reader);
-                    WriteRocksmithVocalsFile(vocals, outputFile, bitConverter);
+                    WriteVocalsFile(vocals, outputFile, bitConverter);
                 }
                 else
                 {
                     var serializer = new XmlSerializer(typeof(Song));
                     var song = (Song)serializer.Deserialize(reader);
 
-                    // TODO: song.Tuning is null in toolkit generated RS1 Xml files
-                    // HACK: this is only a quick fix of the root problem
+                    // TODO: song.Tuning is null (does not exist in the XML Arrangement)
+                    // HACK: apply Standard E tuning
                     var tuning = new Int16[] { 0, 0, 0, 0, 0, 0 };
-                    if (song.Tuning != null) 
+                    if (song.Tuning != null)
                         tuning = song.Tuning.ToArray();
+                    else
+                        throw new DataException("<ERROR> Arrangement XML contains no tuning element" + Environment.NewLine +
+                                            "The arrangment will be defaulted to Standard E tuning" + Environment.NewLine);
 
-                    WriteRocksmithSngFile(song, InstrumentTuningExtensions.GetTuningByOffsets(tuning), arrangementType, outputFile, bitConverter);
-
+                    WriteSngFile(song, InstrumentTuningExtensions.GetTuningByOffsets(tuning), arrangementType, outputFile, bitConverter);
                 }
             }
         }
 
         // COMPLETE
-        private static void WriteRocksmithVocalsFile(Vocals vocals, string outputFile, EndianBitConverter bitConverter)
+        private static void WriteVocalsFile(Vocals vocals, string outputFile, EndianBitConverter bitConverter)
         {
             // WRITE THE .SNG FILE
             using (FileStream fs = new FileStream(outputFile, FileMode.Create))
@@ -148,9 +191,10 @@ namespace RocksmithToolkitLib.Sng
         }
 
         // COMPLETE
-        private static void WriteRocksmithSngFile(Song rocksmithSong, InstrumentTuning tuning, ArrangementType arrangementType, string outputFile, EndianBitConverter bitConverter)
+        private static void WriteSngFile(Song rocksmithSong, InstrumentTuning tuning, ArrangementType arrangementType, string outputFile, EndianBitConverter bitConverter)
         {
             var iterationInfo = CreatePhraseIterationInfo(rocksmithSong);
+
             // WRITE THE .SNG FILE
             using (FileStream fs = new FileStream(outputFile, FileMode.Create))
             using (EndianBinaryWriter w = new EndianBinaryWriter(bitConverter, fs))
@@ -1141,6 +1185,7 @@ namespace RocksmithToolkitLib.Sng
             // There seems to be 1 entry per letter in the chord templates, although there are songs with chord templates that don't have this section.
             w.Write(new byte[4]); // header with repeating array - only populated in limited songs
         }
+
     }
 }
 

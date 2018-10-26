@@ -19,7 +19,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public static readonly string URN_TEMPLATE_SHORT = "urn:{0}:{1}";
 
         internal bool IsVocal = false;
-        internal Song2014 SongContent = null;
+        internal Song2014 song2014 = null;
 
         public string AlbumArt { get; set; }
         public string AlbumName { get; set; }
@@ -85,7 +85,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
                 return;
 
             IsVocal = arrangement.ArrangementType == ArrangementType.Vocal;
-            SongContent = (IsVocal) ? null : Song2014.LoadFromFile(arrangement.SongXml.File);
+            song2014 = (IsVocal) ? null : Song2014.LoadFromFile(arrangement.SongXml.File);
             var dlcName = info.Name.ToLower();
 
             var albumUrn = String.Format(URN_TEMPLATE, TagValue.Image.GetDescription(), TagValue.DDS.GetDescription(), String.Format("album_{0}", dlcName));
@@ -93,8 +93,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
 
             //FILL ATTRIBUTES
             this.AlbumArt = albumUrn;
-            JapaneseVocal |= arrangement.Name == Sng.ArrangementName.JVocals;
-            ArrangementName = IsVocal ? Sng.ArrangementName.Vocals.ToString() : arrangement.Name.ToString(); //HACK: weird vocals stuff
+            JapaneseVocal |= arrangement.ArrangementName == Sng.ArrangementName.JVocals;
+            ArrangementName = IsVocal ? Sng.ArrangementName.Vocals.ToString() : arrangement.ArrangementName.ToString(); //HACK: weird vocals stuff
             DLC = true;
             DLCKey = info.Name;
             LeaderboardChallengeRating = 0;
@@ -128,9 +128,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             Representative = Convert.ToInt32(!arrangement.BonusArr);
             RouteMask = (int)arrangement.RouteMask;
 
-            ManifestFunctions.GetSongDifficulty(this, SongContent);
+            ManifestFunctions.GetSongDifficulty(this, song2014);
 
-            SongLength = Math.Round(SongContent.SongLength, 3, MidpointRounding.AwayFromZero);
+            SongLength = Math.Round(song2014.SongLength, 3, MidpointRounding.AwayFromZero);
             SongName = info.SongInfo.SongDisplayName;
             SongNameSort = info.SongInfo.SongDisplayNameSort;
             JapaneseSongName = string.IsNullOrEmpty(info.SongInfo.JapaneseSongName) ? null : info.SongInfo.JapaneseSongName;
@@ -138,7 +138,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             SongYear = info.SongInfo.SongYear;
 
             //Detect tuning
-            var tuning = TuningDefinitionRepository.Instance.Detect(SongContent.Tuning, platform.version, arrangement.ArrangementType == ArrangementType.Bass);
+            var tuning = TuningDefinitionRepository.Instance.Detect(song2014.Tuning, platform.version, arrangement.ArrangementType == ArrangementType.Bass);
             Tuning = tuning.Tuning; //can we just use SongContent.Tuning
         }
 

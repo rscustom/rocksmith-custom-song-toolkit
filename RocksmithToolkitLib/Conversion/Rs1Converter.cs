@@ -8,6 +8,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.SngToTab;
 using RocksmithToolkitLib.XML;
+using RocksmithToolkitLib.XmlRepository;
 
 
 namespace RocksmithToolkitLib.Conversion
@@ -48,7 +49,7 @@ namespace RocksmithToolkitLib.Conversion
                 outputPath = Path.Combine(outputDir, outputFile);
             }
 
-             using (var stream = File.OpenWrite(outputPath))
+            using (var stream = File.OpenWrite(outputPath))
                 rsSong.Serialize(stream, true);
 
             return outputPath;
@@ -125,8 +126,8 @@ namespace RocksmithToolkitLib.Conversion
             // Song to Song2014 Mapping
             Song2014 rsSong2014 = new Song2014();
 
-            // song info parsed and loaded later from 
-            // RS1 song.manifest.json file by RS1LoadFromFolder
+            // NOTE: better more accurate/complete song info may be parsed and loaded
+            // from the RS1 song.manifest.json file using RS1LoadFromFolder method
             rsSong2014.Version = "7";
             rsSong2014.Title = rsSong.Title;
             rsSong2014.Arrangement = rsSong.Arrangement;
@@ -134,55 +135,59 @@ namespace RocksmithToolkitLib.Conversion
             rsSong2014.Offset = rsSong.Offset;
             rsSong2014.CentOffset = "0";
             rsSong2014.SongLength = rsSong.SongLength;
-            rsSong2014.LastConversionDateTime = DateTime.Now.ToString("MM-dd-yy HH:mm");           
+            rsSong2014.LastConversionDateTime = DateTime.Now.ToString("MM-dd-yy HH:mm");
             rsSong2014.StartBeat = rsSong.Ebeats[0].Time;
             // if RS1 CDLC Song XML originates from EOF it may
             // already contain AverageTempo otherwise it gets calculated 
             rsSong2014.AverageTempo = rsSong.AverageTempo == 0 ? AverageBPM(rsSong) : rsSong.AverageTempo;
             // tuning parsed from RS1 song.manifest.json file by RS1LoadFromFolder
-            rsSong2014.Tuning = rsSong.Tuning == null ? new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 } : rsSong.Tuning;   
+            rsSong2014.Tuning = rsSong.Tuning == null ? new TuningStrings { String0 = 0, String1 = 0, String2 = 0, String3 = 0, String4 = 0, String5 = 0 } : rsSong.Tuning;
             rsSong2014.Capo = 0;
             rsSong2014.ArtistName = rsSong.ArtistName;
             rsSong2014.AlbumName = rsSong.AlbumName;
             rsSong2014.AlbumYear = rsSong.AlbumYear;
             rsSong2014.CrowdSpeed = "1";
 
-            // initialize arrangement properties
+            // RS1 before Bass Edition did not contain ArrangementProperties
+            if (rsSong.ArrangementProperties == null)
+                rsSong.ArrangementProperties = new SongArrangementProperties();
+            
+            // initialize arrangement properties with zero's
             rsSong2014.ArrangementProperties = new SongArrangementProperties2014
             {
-                Represent = 1,
-                StandardTuning = 1,
-                NonStandardChords = 0,
-                BarreChords = 0,
-                PowerChords = 0,
-                DropDPower = 0,
-                OpenChords = 0,
-                FingerPicking = 0,
-                PickDirection = 0,
-                DoubleStops = 0,
-                PalmMutes = 0,
-                Harmonics = 0,
-                PinchHarmonics = 0,
-                Hopo = 0,
-                Tremolo = 0,
-                Slides = 0,
-                UnpitchedSlides = 0,
-                Bends = 0,
-                Tapping = 0,
-                Vibrato = 0,
-                FretHandMutes = 0,
-                SlapPop = 0,
-                TwoFingerPicking = 0,
-                FifthsAndOctaves = 0,
-                Syncopation = 0,
-                BassPick = 0,
-                Sustain = 0,
-                BonusArr = 0,
-                RouteMask = 0,
-                PathLead = 0,
-                PathRhythm = 0,
-                PathBass = 0
+                Represent = rsSong.ArrangementProperties.Represent,
+                NonStandardChords = rsSong.ArrangementProperties.NonStandardChords,
+                BarreChords = rsSong.ArrangementProperties.BarreChords,
+                PowerChords = rsSong.ArrangementProperties.PowerChords,
+                DropDPower = rsSong.ArrangementProperties.DropDPower,
+                OpenChords = rsSong.ArrangementProperties.OpenChords,
+                FingerPicking = rsSong.ArrangementProperties.FingerPicking,
+                PickDirection = rsSong.ArrangementProperties.PickDirection,
+                DoubleStops = rsSong.ArrangementProperties.DoubleStops,
+                PalmMutes = rsSong.ArrangementProperties.PalmMutes,
+                Harmonics = rsSong.ArrangementProperties.Harmonics,
+                PinchHarmonics = rsSong.ArrangementProperties.PinchHarmonics,
+                Hopo = rsSong.ArrangementProperties.Hopo,
+                Tremolo = rsSong.ArrangementProperties.Tremolo,
+                Slides = rsSong.ArrangementProperties.Slides,
+                UnpitchedSlides = rsSong.ArrangementProperties.UnpitchedSlides,
+                Bends = rsSong.ArrangementProperties.Bends,
+                Tapping = rsSong.ArrangementProperties.Tapping,
+                Vibrato = rsSong.ArrangementProperties.Vibrato,
+                FretHandMutes = rsSong.ArrangementProperties.FretHandMutes,
+                SlapPop = rsSong.ArrangementProperties.SlapPop,
+                TwoFingerPicking = rsSong.ArrangementProperties.TwoFingerPicking,
+                FifthsAndOctaves = rsSong.ArrangementProperties.FifthsAndOctaves,
+                Syncopation = rsSong.ArrangementProperties.Syncopation,
+                BassPick = rsSong.ArrangementProperties.BassPick,
+                Sustain = rsSong.ArrangementProperties.Sustain
             };
+
+            var tuning = new TuningDefinition();
+            var tuningName = tuning.NameFromStrings(rsSong2014.Tuning);
+            rsSong2014.ArrangementProperties.StandardTuning = tuningName == "E Standard" ? 1 : 0;
+            rsSong2014.ArrangementProperties.Represent = 1;
+            rsSong2014.ArrangementProperties.BonusArr = 0;
 
             // initial SWAG based on RS1 arrangement element           
             rsSong2014.ArrangementProperties.RouteMask = rsSong.Arrangement.ToLower().Contains("lead") ? 1
@@ -264,11 +269,11 @@ namespace RocksmithToolkitLib.Conversion
             return rsSong2014;
         }
 
-        public float AverageBPM(Song rsSong)
+        public float AverageBPM(dynamic song)
         {
             // a rough approximation of BPM based on ebeats and time
-            float beats = rsSong.Ebeats.Length;
-            float endTimeMins = rsSong.Ebeats[rsSong.Ebeats.Length - 1].Time / 60;
+            float beats = song.Ebeats.Length;
+            float endTimeMins = song.Ebeats[song.Ebeats.Length - 1].Time / 60;
             // float endTimeMins = rsSong.SongLength / 60;
             float avgBPM = (float)Math.Round(beats / endTimeMins, 1);
 
@@ -410,22 +415,25 @@ namespace RocksmithToolkitLib.Conversion
                 bendValues.Add(new BendValue { Step = songNote.Bend, Time = (float)Math.Round((songNote.Sustain * 0.3333 / songNote.Bend) + songNote.Time, 3), Unk5 = 0 });
                 songNote2014.BendValues = bendValues.ToArray();
             }
-
+            
+            // RS1
+            // <note time="73.047" bend="0" fret="5" hammerOn="0" harmonic="0" hopo="0" ignore="0" palmMute="0" pullOff="0" slideTo="-1" string="1" sustain="0" tremolo="0"/>
+            songNote2014.Time = (float)songNote.Time;
+            songNote2014.Bend = (float) songNote.Bend;
             songNote2014.Fret = (sbyte)songNote.Fret;
             songNote2014.HammerOn = (byte)songNote.HammerOn;
             songNote2014.Harmonic = (byte)songNote.Harmonic;
             songNote2014.Hopo = (byte)songNote.Hopo;
             songNote2014.Ignore = (byte)songNote.Ignore;
             songNote2014.PalmMute = (byte)songNote.PalmMute;
-            songNote2014.Pluck = (sbyte)songNote.Pluck; // -1; // EOF is non-compliant
             songNote2014.PullOff = (byte)songNote.PullOff;
-            songNote2014.Slap = (sbyte)songNote.Slap; //  -1; // EOF is non-compliant
             songNote2014.SlideTo = (sbyte)songNote.SlideTo;
             songNote2014.String = (byte)songNote.String;
             songNote2014.Sustain = (float)songNote.Sustain;
-            songNote2014.Time = (float)songNote.Time;
             songNote2014.Tremolo = (byte)songNote.Tremolo;
             // initialize elements not present in RS1
+            songNote2014.Slap = 0; //  EOF is non-compliant     
+            songNote2014.Pluck = 0; //  EOF is non-compliant   
             songNote2014.LinkNext = 0;
             songNote2014.Accent = 0;
             songNote2014.LeftHand = -1;

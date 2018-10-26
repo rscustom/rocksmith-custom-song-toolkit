@@ -63,10 +63,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbXmlDefinition = new System.Windows.Forms.GroupBox();
             this.txtXmlPath = new RocksmithToolkitGUI.CueTextBox();
             this.gbArrInfo = new System.Windows.Forms.GroupBox();
+            this.pnlArrangementRepresentative = new System.Windows.Forms.Panel();
+            this.rbArrangementAlternate = new System.Windows.Forms.RadioButton();
+            this.rbArrangementDefault = new System.Windows.Forms.RadioButton();
+            this.rbArrangementBonus = new System.Windows.Forms.RadioButton();
             this.gbScrollSpeed = new System.Windows.Forms.GroupBox();
             this.btnEditType = new System.Windows.Forms.Button();
             this.btnEditTuning = new System.Windows.Forms.Button();
-            this.chkBonusArrangement = new System.Windows.Forms.CheckBox();
             this.gbTuningPitch = new System.Windows.Forms.GroupBox();
             this.label12 = new System.Windows.Forms.Label();
             this.lblRootNote = new System.Windows.Forms.Label();
@@ -88,6 +91,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbDLCId.SuspendLayout();
             this.gbXmlDefinition.SuspendLayout();
             this.gbArrInfo.SuspendLayout();
+            this.pnlArrangementRepresentative.SuspendLayout();
             this.gbScrollSpeed.SuspendLayout();
             this.gbTuningPitch.SuspendLayout();
             this.gbGameplayPath.SuspendLayout();
@@ -107,7 +111,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.btnOk.Location = new System.Drawing.Point(291, 440);
+            this.btnOk.Location = new System.Drawing.Point(291, 453);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(72, 29);
             this.btnOk.TabIndex = 22;
@@ -140,7 +144,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.btnCancel.Location = new System.Drawing.Point(369, 440);
+            this.btnCancel.Location = new System.Drawing.Point(369, 453);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(72, 29);
             this.btnCancel.TabIndex = 23;
@@ -212,7 +216,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             this.chkBassPicked.AutoSize = true;
             this.chkBassPicked.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.chkBassPicked.Location = new System.Drawing.Point(54, 122);
+            this.chkBassPicked.Location = new System.Drawing.Point(78, 134);
             this.chkBassPicked.Name = "chkBassPicked";
             this.chkBassPicked.Size = new System.Drawing.Size(85, 17);
             this.chkBassPicked.TabIndex = 8;
@@ -275,7 +279,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbTone.Controls.Add(this.lblToneA);
             this.gbTone.Controls.Add(this.cmbToneBase);
             this.gbTone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbTone.Location = new System.Drawing.Point(6, 267);
+            this.gbTone.Location = new System.Drawing.Point(6, 277);
             this.gbTone.Name = "gbTone";
             this.gbTone.Padding = new System.Windows.Forms.Padding(0);
             this.gbTone.Size = new System.Drawing.Size(435, 113);
@@ -405,7 +409,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbDLCId.Controls.Add(this.txtPersistentId);
             this.gbDLCId.Controls.Add(this.txtMasterId);
             this.gbDLCId.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbDLCId.Location = new System.Drawing.Point(6, 386);
+            this.gbDLCId.Location = new System.Drawing.Point(6, 396);
             this.gbDLCId.Name = "gbDLCId";
             this.gbDLCId.Size = new System.Drawing.Size(435, 47);
             this.gbDLCId.TabIndex = 33;
@@ -458,12 +462,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // gbArrInfo
             // 
+            this.gbArrInfo.Controls.Add(this.pnlArrangementRepresentative);
             this.gbArrInfo.Controls.Add(this.gbScrollSpeed);
             this.gbArrInfo.Controls.Add(this.btnEditType);
             this.gbArrInfo.Controls.Add(this.btnEditTuning);
-            this.gbArrInfo.Controls.Add(this.chkBonusArrangement);
-            this.gbArrInfo.Controls.Add(this.gbTuningPitch);
             this.gbArrInfo.Controls.Add(this.chkBassPicked);
+            this.gbArrInfo.Controls.Add(this.gbTuningPitch);
             this.gbArrInfo.Controls.Add(this.label4);
             this.gbArrInfo.Controls.Add(this.cmbArrangementType);
             this.gbArrInfo.Controls.Add(this.label1);
@@ -473,10 +477,59 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbArrInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbArrInfo.Location = new System.Drawing.Point(6, 64);
             this.gbArrInfo.Name = "gbArrInfo";
-            this.gbArrInfo.Size = new System.Drawing.Size(435, 147);
+            this.gbArrInfo.Size = new System.Drawing.Size(435, 157);
             this.gbArrInfo.TabIndex = 45;
             this.gbArrInfo.TabStop = false;
             this.gbArrInfo.Text = "Arrangement Information";
+            // 
+            // pnlArrangementRepresentative
+            // 
+            this.pnlArrangementRepresentative.Controls.Add(this.rbArrangementAlternate);
+            this.pnlArrangementRepresentative.Controls.Add(this.rbArrangementDefault);
+            this.pnlArrangementRepresentative.Controls.Add(this.rbArrangementBonus);
+            this.pnlArrangementRepresentative.Location = new System.Drawing.Point(10, 94);
+            this.pnlArrangementRepresentative.Name = "pnlArrangementRepresentative";
+            this.pnlArrangementRepresentative.Size = new System.Drawing.Size(198, 29);
+            this.pnlArrangementRepresentative.TabIndex = 46;
+            // 
+            // rbArrangementAlternate
+            // 
+            this.rbArrangementAlternate.AutoSize = true;
+            this.rbArrangementAlternate.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.rbArrangementAlternate.Location = new System.Drawing.Point(129, 6);
+            this.rbArrangementAlternate.Name = "rbArrangementAlternate";
+            this.rbArrangementAlternate.Size = new System.Drawing.Size(67, 17);
+            this.rbArrangementAlternate.TabIndex = 49;
+            this.rbArrangementAlternate.TabStop = true;
+            this.rbArrangementAlternate.Text = "Alternate";
+            this.toolTip.SetToolTip(this.rbArrangementAlternate, "Arrangement Represent");
+            this.rbArrangementAlternate.UseVisualStyleBackColor = true;
+            // 
+            // rbArrangementDefault
+            // 
+            this.rbArrangementDefault.AutoSize = true;
+            this.rbArrangementDefault.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.rbArrangementDefault.Location = new System.Drawing.Point(3, 6);
+            this.rbArrangementDefault.Name = "rbArrangementDefault";
+            this.rbArrangementDefault.Size = new System.Drawing.Size(59, 17);
+            this.rbArrangementDefault.TabIndex = 47;
+            this.rbArrangementDefault.TabStop = true;
+            this.rbArrangementDefault.Text = "Default";
+            this.toolTip.SetToolTip(this.rbArrangementDefault, "Arrangement Represent");
+            this.rbArrangementDefault.UseVisualStyleBackColor = true;
+            // 
+            // rbArrangementBonus
+            // 
+            this.rbArrangementBonus.AutoSize = true;
+            this.rbArrangementBonus.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.rbArrangementBonus.Location = new System.Drawing.Point(68, 6);
+            this.rbArrangementBonus.Name = "rbArrangementBonus";
+            this.rbArrangementBonus.Size = new System.Drawing.Size(55, 17);
+            this.rbArrangementBonus.TabIndex = 48;
+            this.rbArrangementBonus.TabStop = true;
+            this.rbArrangementBonus.Text = "Bonus";
+            this.toolTip.SetToolTip(this.rbArrangementBonus, "Arrangement Represent");
+            this.rbArrangementBonus.UseVisualStyleBackColor = true;
             // 
             // gbScrollSpeed
             // 
@@ -515,17 +568,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.btnEditTuning.UseVisualStyleBackColor = true;
             this.btnEditTuning.Click += new System.EventHandler(this.btnEditTuning_Click);
             // 
-            // chkBonusArrangement
-            // 
-            this.chkBonusArrangement.AutoSize = true;
-            this.chkBonusArrangement.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.chkBonusArrangement.Location = new System.Drawing.Point(54, 99);
-            this.chkBonusArrangement.Name = "chkBonusArrangement";
-            this.chkBonusArrangement.Size = new System.Drawing.Size(119, 17);
-            this.chkBonusArrangement.TabIndex = 7;
-            this.chkBonusArrangement.Text = "Bonus Arrangement";
-            this.chkBonusArrangement.UseVisualStyleBackColor = true;
-            // 
             // gbTuningPitch
             // 
             this.gbTuningPitch.Controls.Add(this.label12);
@@ -539,7 +581,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbTuningPitch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.gbTuningPitch.Location = new System.Drawing.Point(214, 79);
             this.gbTuningPitch.Name = "gbTuningPitch";
-            this.gbTuningPitch.Size = new System.Drawing.Size(211, 60);
+            this.gbTuningPitch.Size = new System.Drawing.Size(211, 67);
             this.gbTuningPitch.TabIndex = 43;
             this.gbTuningPitch.TabStop = false;
             this.gbTuningPitch.Text = "Tuning Pitch";
@@ -651,7 +693,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbGameplayPath.Controls.Add(this.rbRouteMaskRhythm);
             this.gbGameplayPath.Controls.Add(this.rbRouteMaskLead);
             this.gbGameplayPath.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.gbGameplayPath.Location = new System.Drawing.Point(6, 217);
+            this.gbGameplayPath.Location = new System.Drawing.Point(6, 227);
             this.gbGameplayPath.Name = "gbGameplayPath";
             this.gbGameplayPath.Size = new System.Drawing.Size(435, 44);
             this.gbGameplayPath.TabIndex = 34;
@@ -708,17 +750,25 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             this.chkMetronome.AutoSize = true;
             this.chkMetronome.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.chkMetronome.Location = new System.Drawing.Point(16, 447);
+            this.chkMetronome.Location = new System.Drawing.Point(16, 457);
             this.chkMetronome.Name = "chkMetronome";
             this.chkMetronome.Size = new System.Drawing.Size(209, 17);
             this.chkMetronome.TabIndex = 7;
             this.chkMetronome.Text = "Create Metronome Bonus Arrangement";
             this.chkMetronome.UseVisualStyleBackColor = true;
             // 
+            // toolTip
+            // 
+            this.toolTip.AutomaticDelay = 300;
+            this.toolTip.AutoPopDelay = 5000;
+            this.toolTip.InitialDelay = 300;
+            this.toolTip.IsBalloon = true;
+            this.toolTip.ReshowDelay = 60;
+            // 
             // ArrangementForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(450, 481);
+            this.ClientSize = new System.Drawing.Size(450, 494);
             this.Controls.Add(this.gbGameplayPath);
             this.Controls.Add(this.gbArrInfo);
             this.Controls.Add(this.chkMetronome);
@@ -744,6 +794,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbXmlDefinition.PerformLayout();
             this.gbArrInfo.ResumeLayout(false);
             this.gbArrInfo.PerformLayout();
+            this.pnlArrangementRepresentative.ResumeLayout(false);
+            this.pnlArrangementRepresentative.PerformLayout();
             this.gbScrollSpeed.ResumeLayout(false);
             this.gbScrollSpeed.PerformLayout();
             this.gbTuningPitch.ResumeLayout(false);
@@ -801,7 +853,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private System.Windows.Forms.GroupBox gbTuningPitch;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label lblRootNote;
-        private System.Windows.Forms.CheckBox chkBonusArrangement;
         private System.Windows.Forms.CheckBox chkTonesDisabled;
         private System.Windows.Forms.Button btnEditTuning;
         private System.Windows.Forms.Button btnEditType;
@@ -809,5 +860,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private System.Windows.Forms.ComboBox cmbToneA;
         private Label label12;
         private ToolTip toolTip;
+        private Panel pnlArrangementRepresentative;
+        private RadioButton rbArrangementAlternate;
+        private RadioButton rbArrangementDefault;
+        private RadioButton rbArrangementBonus;
     }
 }

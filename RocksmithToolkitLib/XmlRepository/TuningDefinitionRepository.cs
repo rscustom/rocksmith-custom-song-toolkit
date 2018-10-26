@@ -50,7 +50,7 @@ namespace RocksmithToolkitLib.XmlRepository
             var g = Select(tuningStrings, gameVersion);
             return g; //Accurate compare, no mercy for bass.
         }
- 
+
         public TuningDefinition SelectExact(TuningDefinition tuning)
         {
             return List.FirstOrDefault(s => s.GameVersion == tuning.GameVersion &&
@@ -64,23 +64,6 @@ namespace RocksmithToolkitLib.XmlRepository
             return List.FirstOrDefault(s => s.Tuning.ToArray().SequenceEqual(tuningStrings.ToArray()) && s.GameVersion == gameVersion);
         }
 
-        [Obsolete("Depricated, please use TuningDefinition Select() funtion.", true)]
-        public TuningDefinition Select(Int16[] tuningStrings, GameVersion gameVersion)
-        {
-            return List.FirstOrDefault(s => s.Tuning.ToArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
-        }
-
-        [Obsolete("Depricated, please use TuningDefinition Select() funtion.", true)]
-        public TuningDefinition SelectForBass(TuningStrings tuningStrings, GameVersion gameVersion)
-        {
-            return List.FirstOrDefault(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings.ToBassArray()) && s.GameVersion == gameVersion);
-        }
-
-        [Obsolete("Depricated, please use TuningDefinition Select() funtion.", true)]
-        public TuningDefinition SelectForBass(Int16[] tuningStrings, GameVersion gameVersion)
-        {
-            return List.FirstOrDefault(s => s.Tuning.ToBassArray().SequenceEqual(tuningStrings) && s.GameVersion == gameVersion);
-        }
         #endregion
 
         // LINQ method produces unexpected results on subsequent calls
@@ -121,10 +104,10 @@ namespace RocksmithToolkitLib.XmlRepository
             if (x == null || y == null)
                 return false;
 
-            return (x.GameVersion == y.GameVersion && 
+            return (x.GameVersion == y.GameVersion &&
                 x.Tuning == y.Tuning && x.Name == y.Name &&
                 x.UIName == y.UIName && x.Custom == y.Custom);
-         }
+        }
 
         public static void SaveUnique(TuningDefinition newDefinition, bool reload = true)
         {
@@ -151,7 +134,7 @@ namespace RocksmithToolkitLib.XmlRepository
             Instance.Add(newDefinition, reload);
             Instance.Save(reload);
         }
-    
+
     }
 
     internal class TuningComparer : IEqualityComparer<TuningDefinition>

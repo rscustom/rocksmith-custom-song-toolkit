@@ -67,7 +67,7 @@
             this.btnArrangementQuick = new System.Windows.Forms.Button();
             this.keyboardDescArrLabel = new System.Windows.Forms.Label();
             this.gbSongInformation = new System.Windows.Forms.GroupBox();
-            this.cbJapaneseTitle = new System.Windows.Forms.CheckBox();
+            this.chkJapaneseTitle = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.txtDlcKey = new RocksmithToolkitGUI.CueTextBox();
             this.txtAlbumSort = new RocksmithToolkitGUI.CueTextBox();
@@ -568,7 +568,7 @@
             // 
             // gbSongInformation
             // 
-            this.gbSongInformation.Controls.Add(this.cbJapaneseTitle);
+            this.gbSongInformation.Controls.Add(this.chkJapaneseTitle);
             this.gbSongInformation.Controls.Add(this.label8);
             this.gbSongInformation.Controls.Add(this.cmbAppIds);
             this.gbSongInformation.Controls.Add(this.txtDlcKey);
@@ -599,22 +599,22 @@
             this.gbSongInformation.TabStop = false;
             this.gbSongInformation.Text = "Song Information";
             // 
-            // cbJapaneseTitle
+            // chkJapaneseTitle
             // 
-            this.cbJapaneseTitle.AutoCheck = false;
-            this.cbJapaneseTitle.AutoSize = true;
-            this.cbJapaneseTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbJapaneseTitle.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.cbJapaneseTitle.Location = new System.Drawing.Point(147, 74);
-            this.cbJapaneseTitle.Margin = new System.Windows.Forms.Padding(1);
-            this.cbJapaneseTitle.Name = "cbJapaneseTitle";
-            this.cbJapaneseTitle.Size = new System.Drawing.Size(15, 14);
-            this.cbJapaneseTitle.TabIndex = 4;
-            this.toolTip.SetToolTip(this.cbJapaneseTitle, "日本のタイトルを使う");
-            this.cbJapaneseTitle.UseMnemonic = false;
-            this.cbJapaneseTitle.UseVisualStyleBackColor = true;
-            this.cbJapaneseTitle.CheckStateChanged += new System.EventHandler(this.cbJapaneseTitle_CheckedChanged);
-            this.cbJapaneseTitle.Click += new System.EventHandler(this.cbJapaneseTitle_Click);
+            this.chkJapaneseTitle.AutoCheck = false;
+            this.chkJapaneseTitle.AutoSize = true;
+            this.chkJapaneseTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkJapaneseTitle.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.chkJapaneseTitle.Location = new System.Drawing.Point(147, 74);
+            this.chkJapaneseTitle.Margin = new System.Windows.Forms.Padding(1);
+            this.chkJapaneseTitle.Name = "chkJapaneseTitle";
+            this.chkJapaneseTitle.Size = new System.Drawing.Size(15, 14);
+            this.chkJapaneseTitle.TabIndex = 4;
+            this.toolTip.SetToolTip(this.chkJapaneseTitle, "日本のタイトルを使う");
+            this.chkJapaneseTitle.UseMnemonic = false;
+            this.chkJapaneseTitle.UseVisualStyleBackColor = true;
+            this.chkJapaneseTitle.CheckStateChanged += new System.EventHandler(this.cbJapaneseTitle_CheckedChanged);
+            this.chkJapaneseTitle.Click += new System.EventHandler(this.cbJapaneseTitle_Click);
             // 
             // label8
             // 
@@ -1084,7 +1084,7 @@
         private CueTextBox txtAlbumSort;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.Button btnDevUse;
-        private System.Windows.Forms.CheckBox cbJapaneseTitle;
+        private System.Windows.Forms.CheckBox chkJapaneseTitle;
         private CueTextBox txtJapaneseSongTitle;
         private System.Windows.Forms.Label label8;
         private CueTextBox txtJapaneseArtistName;
