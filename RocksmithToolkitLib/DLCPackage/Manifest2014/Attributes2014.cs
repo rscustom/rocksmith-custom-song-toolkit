@@ -26,8 +26,6 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
         public List<ChordTemplate> ChordTemplates { get; set; }
         public List<float> DynamicVisualDensity { get; set; }
         public string FullName { get; set; }
-        public string JapaneseSongName { get; set; } // optional (RS2014 ONLY)
-        public string JapaneseArtist { get; set; } // optional (RS2014 ONLY)
         public string LastConversionDateTime { get; set; }
         public int MasterID_PS3 { get; set; }
         public int MasterID_XBox360 { get; set; }

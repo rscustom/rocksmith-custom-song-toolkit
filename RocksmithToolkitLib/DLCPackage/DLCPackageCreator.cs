@@ -1138,10 +1138,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 writer.WriteLine("Package Author: {0}", packageAuthor);
             if (!String.IsNullOrEmpty(packageVersion))
                 writer.WriteLine("Package Version: {0}", packageVersion);
-            if (!String.IsNullOrEmpty(packageComment))
-                writer.WriteLine("Package Comment: {0}", packageComment);
             if (!String.IsNullOrEmpty(packageRating))
-                writer.Write("Package Rating: {0}", packageRating);
+                writer.WriteLine("Package Rating: {0}", packageRating);
+            if (!String.IsNullOrEmpty(packageComment))
+                writer.Write("Package Comment: {0}", packageComment);
 
             writer.Flush();
             output.Seek(0, SeekOrigin.Begin);

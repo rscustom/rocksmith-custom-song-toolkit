@@ -189,6 +189,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                     break;
                 }
             } while (entry.Data.Length < (long)entry.Length);
+            
             entry.Data.Seek(0, SeekOrigin.Begin);
             entry.Data.Flush();
         }
