@@ -91,35 +91,43 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 ReadConfigSettings();
                 PopulateAppIdCombo();
                 PopulateTonesLB();
- 
             }
             catch
             {
                 /*For mono compatibility*/
             }
-            var debugMe = PlatformPC;
         }
 
         //dirty implementation, it's always true, consider undo\redo manager for actions made+logging maybe?
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool IsDirty { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public string UnpackedDir { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public string DestPath { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool PlatformPC
         {
             get { return chkPlatformPC.Checked; }
             set { chkPlatformPC.Checked = value; }
         }
+  
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool PlatformMAC
         {
             get { return chkPlatformMAC.Checked; }
             set { chkPlatformMAC.Checked = value; }
         }
+  
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool PlatformXBox360
         {
             get { return chkPlatformXBox360.Checked; }
             set { chkPlatformXBox360.Checked = value; }
         }
+ 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool PlatformPS3
         {
             get { return chkPlatformPS3.Checked; }
@@ -144,7 +152,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { txtYear.Text = value.GetValidYear(); }
         }
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent an empty AppId
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public string AppId
         {
             get { return txtAppId.Text; }
@@ -169,8 +177,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { txtTempo.Text = value.GetValidTempo(); }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public GameVersion PreviousGameVersion { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public GameVersion CurrentGameVersion
         {
             get
@@ -201,7 +211,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        public string CurrentOFDPackageFilter
+         public string CurrentOFDPackageFilter
         {
             get
             {
@@ -233,12 +243,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { txtDlcKey.Text = value.GetValidKey(); }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool JavaBool { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public string LyricArtPath { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public string ToolkitVers { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public string PackageAuthor { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public string PackageRating { get; set; }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public string PackageComment
         {
             get
@@ -287,12 +303,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { txtSongTitleSort.Text = String.IsNullOrEmpty(value) ? SongTitle.GetValidSortableName() : value.GetValidSortableName(); }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         private string AlbumArtPath // 512 (RS1)
         {
             get { return txtAlbumArtPath.Text; }
             set { txtAlbumArtPath.Text = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         private string AudioPath
         {
             get { return txtAudioPath.Text; }

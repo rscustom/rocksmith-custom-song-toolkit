@@ -36,7 +36,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,10 +83,6 @@
             this.tabControl1.SuspendLayout();
             this.DDCTab.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // menuStrip1
             // 
@@ -381,8 +376,6 @@
             this.dlcPackageCreator1.ArtistSort = "";
             this.dlcPackageCreator1.AverageTempo = "";
             this.dlcPackageCreator1.DLCKey = "";
-            this.dlcPackageCreator1.JapaneseArtistName = "";
-            this.dlcPackageCreator1.JapaneseSongTitle = "";
             this.dlcPackageCreator1.Location = new System.Drawing.Point(17, 1);
             this.dlcPackageCreator1.Name = "dlcPackageCreator1";
             this.dlcPackageCreator1.Size = new System.Drawing.Size(507, 560);
@@ -475,7 +468,6 @@
 
         #endregion
 
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.MenuStrip menuStrip1;

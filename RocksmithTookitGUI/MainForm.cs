@@ -16,10 +16,6 @@ using System.Threading;
 // Modify the RocksmithToolkitLib prebuild event which will update
 // PatchAssemblyVersion.ps1 file '$AssemblyVersion' and '$AssemblyConfiguration' values 
 //
-// MS VS2010 IDE has periodic glitch that adds values to dlcPackageCreator1 in MainForm.designer.cs
-// This prevents the Platform or GameVersion from being set correctly by GeneralConfig.cs
-//
-
 namespace RocksmithToolkitGUI
 {
     public partial class MainForm : Form
