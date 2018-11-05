@@ -91,11 +91,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 ReadConfigSettings();
                 PopulateAppIdCombo();
                 PopulateTonesLB();
+ 
             }
             catch
             {
                 /*For mono compatibility*/
             }
+            var debugMe = PlatformPC;
         }
 
         //dirty implementation, it's always true, consider undo\redo manager for actions made+logging maybe?
