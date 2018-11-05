@@ -1618,9 +1618,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (String.IsNullOrEmpty(ArtistSort) || String.IsNullOrEmpty(SongTitleSort) || String.IsNullOrEmpty(PackageVersion) || String.IsNullOrEmpty(DLCKey))
             {
                 diaMsg = "Can not 'Generate' a package quite yet ..." + Environment.NewLine + Environment.NewLine +
-                    "One or more fields are missing information." + Environment.NewLine +
-                    "Try using the 'Import Package' button, or" + Environment.NewLine +
-                    "manually 'Add' your EOF project data.";
+                         "One or more fields are missing information," + Environment.NewLine +
+                         "or contain invalid data.";
                 BetterDialog2.ShowDialog(diaMsg, "Generate Button", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
                 return;
             }
