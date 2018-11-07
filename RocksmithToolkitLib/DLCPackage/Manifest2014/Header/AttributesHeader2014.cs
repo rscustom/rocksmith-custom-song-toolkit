@@ -31,11 +31,11 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public int BassPick { get; set; } // added to resolve issue #272, header only
         public decimal CapoFret { get; set; }
         public double? CentOffset { get; set; } // tuning frequency, see Cents2Frequency method
-        public bool DLC { get; set; }
+        public bool DLC { get; set; } // tags DLC in setlist
         // usually DLCKey = SongKey, except that songs.psarc does not contain a DLCKey
         // in compatiblity packs DLCKey is always equal to RS1CompatibilityDisc
         // in ODLC/CDLC DLCKey is always equal to SongKey which is SongName with all spaces removed
-        public string DLCKey { get; set; } 
+        public string DLCKey { get; set; }
         public double? DNA_Chords { get; set; }
         public double? DNA_Riffs { get; set; }
         public double? DNA_Solo { get; set; }
@@ -55,7 +55,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public int? Representative { get; set; } // Header only
         public int? RouteMask { get; set; } // Header only
         public bool Shipping { get; set; }
-        public string SKU { get; set; }
+        public string SKU { get; set; } // determines tag text in setlist
         public double? SongDiffEasy { get; set; }
         public double? SongDiffHard { get; set; }
         public double? SongDiffMed { get; set; }
@@ -95,17 +95,30 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             this.AlbumArt = albumUrn;
             JapaneseVocal |= arrangement.ArrangementName == Sng.ArrangementName.JVocals;
             ArrangementName = IsVocal ? Sng.ArrangementName.Vocals.ToString() : arrangement.ArrangementName.ToString(); //HACK: weird vocals stuff
-            DLC = true;
-            DLCKey = info.Name;
+            DLCKey = info.Name; // in RS2 DLCKey = SongKey, in RS1 they are different
+            SongKey = info.Name; // in RS2 DLCKey = SongKey, in RS1 they are different
             LeaderboardChallengeRating = 0;
             ManifestUrn = jsonUrn;
             MasterID_RDV = arrangement.MasterId;
             PersistentID = arrangement.Id.ToString().Replace("-", "").ToUpper();
             Shipping = true;
-            SKU = "RS2";
-            SongKey = info.Name; // proof same same
 
-            if (IsVocal) return;
+            // TODO: monitor this change
+            if (info.ToolkitInfo == null || info.ToolkitInfo.PackageAuthor == "Ubisoft")
+                DLC = true; // shows album artwork marker in-game setlist
+            else
+                DLC = false; // hides album artwork marker in-game setlist
+
+            SKU = "RS2"; // shows purple marker w/ "DLC" text overlay
+            // SKU = ""; // or DLC = false hides marker for RS2
+
+            // this SKU and DLCKey combination shows black marker w/ "RS1" text overlay on album artwork in-game setlist
+            // SKU = "RS1";
+            // DLCKey = "RS1CompatibilityDisc";
+
+            if (IsVocal)
+                return;
+
             // added better AlbumNameSort feature
             AlbumName = info.SongInfo.Album;
             AlbumNameSort = info.SongInfo.AlbumSort;

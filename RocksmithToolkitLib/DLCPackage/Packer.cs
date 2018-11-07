@@ -1001,6 +1001,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var hsanFile = hsanFiles.First();
             var jsonFiles = Directory.EnumerateFiles(srcPath, "*.json", SearchOption.AllDirectories).ToList();
             var xmlFiles = Directory.EnumerateFiles(srcPath, "*.xml", SearchOption.AllDirectories).ToList();
+            var toolkitVersionFile = Directory.EnumerateFiles(srcPath, "toolkit.version", SearchOption.AllDirectories).FirstOrDefault();
             //var songFiles = xmlFiles.Where(x => !x.ToLower().Contains("showlight") && !x.ToLower().Contains("vocal")).ToList();
             //var vocalFiles = xmlFiles.Where(x => x.ToLower().Contains("vocal")).ToList();
 
@@ -1034,6 +1035,15 @@ namespace RocksmithToolkitLib.DLCPackage
                     manifestFunctions.GenerateTuningData(attr, song2014);
 
                     attr.MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(song2014);
+
+                    // TODO: monitor this change updates both json and hsan files
+                    attr.DLC = true; // shows album artwork marker in-game setlist
+                    if (!String.IsNullOrEmpty(toolkitVersionFile))
+                    {
+                        var tkInfo = GeneralExtensions.ReadToolkitInfo(toolkitVersionFile);
+                        if (tkInfo != null && tkInfo.PackageAuthor != "Ubisoft")
+                            attr.DLC = false;
+                    }
                 }
 
                 // else { // TODO: good place to update vocals }
