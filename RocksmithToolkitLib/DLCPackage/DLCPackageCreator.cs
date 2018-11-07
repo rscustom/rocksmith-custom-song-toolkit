@@ -357,10 +357,10 @@ namespace RocksmithToolkitLib.DLCPackage
             packPsarc = new PSARC.PSARC();
 
             // Stream objects
-            Stream soundStream = null,
-                   soundPreviewStream = null,
-                   rsenumerableRootStream = null,
-                   rsenumerableSongStream = null;
+            Stream soundStream = null;
+            Stream soundPreviewStream = null;
+            Stream rsenumerableRootStream = null;
+            Stream rsenumerableSongStream = null;
 
             try
             {
@@ -1183,10 +1183,9 @@ namespace RocksmithToolkitLib.DLCPackage
                     SngFileWriter.Write(arr, sngFile, platform);
                     break;
                 case GameVersion.RS2014:
-                    // Sng2014File can be reused when generating for multiple platforms from cached results
+                    // Sng2014File can be reused when generating multiple platforms from cached results
                     if (arr.Sng2014 == null)
                     {
-                        SngFileWriter.Write(arr, sngFile, platform);
                         // cache results
                         arr.Sng2014 = Sng2014File.ConvertXML(arr.SongXml.File, arr.ArrangementType, arr.FontSng);
                         if (arr.CustomFont)

@@ -96,10 +96,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             JapaneseVocal |= arrangement.ArrangementName == Sng.ArrangementName.JVocals;
             ArrangementName = IsVocal ? Sng.ArrangementName.Vocals.ToString() : arrangement.ArrangementName.ToString(); //HACK: weird vocals stuff
             DLCKey = info.Name; // in RS2 DLCKey = SongKey, in RS1 they are different
-            SongKey = info.Name; // in RS2 DLCKey = SongKey, in RS1 they are different
+            SongKey = info.Name;
             LeaderboardChallengeRating = 0;
             ManifestUrn = jsonUrn;
-            MasterID_RDV = arrangement.MasterId;
+            MasterID_RDV = arrangement.MasterId; // must be unique else in-game hang occures
             PersistentID = arrangement.Id.ToString().Replace("-", "").ToUpper();
             Shipping = true;
 
@@ -112,7 +112,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             SKU = "RS2"; // shows purple marker w/ "DLC" text overlay
             // SKU = ""; // or DLC = false hides marker for RS2
 
-            // this SKU and DLCKey combination shows black marker w/ "RS1" text overlay on album artwork in-game setlist
+            // SKU and DLCKey combination shows black marker w/ "RS1" text overlay on album artwork in-game setlist
             // SKU = "RS1";
             // DLCKey = "RS1CompatibilityDisc";
 

@@ -1042,7 +1042,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         var tkInfo = GeneralExtensions.ReadToolkitInfo(toolkitVersionFile);
                         if (tkInfo != null && tkInfo.PackageAuthor != "Ubisoft")
-                            attr.DLC = false;
+                            attr.DLC = false; // hides album artwork marker in-game setlist
                     }
                 }
 
