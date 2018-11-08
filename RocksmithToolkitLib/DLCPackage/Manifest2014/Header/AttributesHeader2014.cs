@@ -103,16 +103,17 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             PersistentID = arrangement.Id.ToString().Replace("-", "").ToUpper();
             Shipping = true;
 
+            // DLC controls wheter album artwork marker is shown in-game setlist, but has
+            // negative effect that 'Alternate Arrangements' are locked for new player profiles
+            DLC = true;
+
             // TODO: monitor this change
             if (info.ToolkitInfo == null || info.ToolkitInfo.PackageAuthor == "Ubisoft")
-                DLC = true; // shows album artwork marker in-game setlist
+                SKU = "RS2"; // shows purple marker w/ "DLC" text overlay
             else
-                DLC = false; // hides album artwork marker in-game setlist
+                SKU = ""; // hides album artwork marker in-game setlist
 
-            SKU = "RS2"; // shows purple marker w/ "DLC" text overlay
-            // SKU = ""; // or DLC = false hides marker for RS2
-
-            // SKU and DLCKey combination shows black marker w/ "RS1" text overlay on album artwork in-game setlist
+            // this SKU and DLCKey combination shows black marker w/ "RS1" text overlay on album artwork in-game setlist
             // SKU = "RS1";
             // DLCKey = "RS1CompatibilityDisc";
 

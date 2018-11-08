@@ -1037,12 +1037,13 @@ namespace RocksmithToolkitLib.DLCPackage
                     attr.MaxPhraseDifficulty = manifestFunctions.GetMaxDifficulty(song2014);
 
                     // TODO: monitor this change updates both json and hsan files
-                    attr.DLC = true; // shows album artwork marker in-game setlist
                     if (!String.IsNullOrEmpty(toolkitVersionFile))
                     {
                         var tkInfo = GeneralExtensions.ReadToolkitInfo(toolkitVersionFile);
+                        // hide album artwork marker in-game setlist
+                        // while leaving Alternate Arrangements unlocked for new user profile
                         if (tkInfo != null && tkInfo.PackageAuthor != "Ubisoft")
-                            attr.DLC = false; // hides album artwork marker in-game setlist
+                            attr.SKU = "";
                     }
                 }
 

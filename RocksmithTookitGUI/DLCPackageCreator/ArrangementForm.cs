@@ -175,18 +175,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var scrollSpeed = value.ScrollSpeed;
                 if (scrollSpeed == 0)
                     scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
+                
                 tbarScrollSpeed.Value = Math.Min(scrollSpeed, tbarScrollSpeed.Maximum);
                 UpdateScrollSpeedDisplay();
 
                 if (Arrangement.RouteMask == RouteMask.Bass)
                     chkBassPicked.Checked = value.PluckedType == PluckedType.Picked;
+
                 // TODO: monitor this change
-                // for default => represent is true and bonus is false 
-                // for bonus => represent is false and bonus is true     
-                // for alternate => both represent and bonus are false
+                // Default => represent is true and bonus is false 
+                // Bonus => represent is false and bonus is true     
+                // Alternate => both represent and bonus are false
+                // Unknown => both represent and bonus are true
                 if (value.Represent && value.BonusArr)
                 {
-                    var diaMsg = "Illegal Arrangement Default/Bonus/Alternate Conditon ...  " + Environment.NewLine + Environment.NewLine +
+                    var diaMsg = "Invalid Arrangement Default/Bonus/Alternate Conditon ...  " + Environment.NewLine + Environment.NewLine +
                                  "Toolkit will reset the arrangement to" + Environment.NewLine +
                                  "the default represent condition." + Environment.NewLine;
                     BetterDialog2.ShowDialog(diaMsg, "<WARNING> Arrangement Represent", null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
