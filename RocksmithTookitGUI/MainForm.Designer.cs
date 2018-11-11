@@ -343,7 +343,6 @@
             // 
             // dlcPackerUnpacker1
             // 
-            this.dlcPackerUnpacker1.AppId = "";
             this.dlcPackerUnpacker1.DecodeAudio = false;
             this.dlcPackerUnpacker1.Location = new System.Drawing.Point(43, 14);
             this.dlcPackerUnpacker1.MinimumSize = new System.Drawing.Size(400, 308);

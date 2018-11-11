@@ -319,6 +319,7 @@
             // 
             // label3
             // 
+            this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label3.Location = new System.Drawing.Point(54, 73);
@@ -326,6 +327,7 @@
             this.label3.Size = new System.Drawing.Size(16, 12);
             this.label3.TabIndex = 13;
             this.label3.Text = "LF";
+            this.toolTip.SetToolTip(this.label3, "Loudness Factor");
             // 
             // rbRs2012
             // 
@@ -841,6 +843,7 @@
             this.label4.Size = new System.Drawing.Size(16, 12);
             this.label4.TabIndex = 14;
             this.label4.Text = "LF";
+            this.toolTip.SetToolTip(this.label4, "Loudness Factor");
             // 
             // label9
             // 

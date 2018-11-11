@@ -16,17 +16,13 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 using RocksmithToolkitGUI.Config;
+using RocksmithToolkitLib.PsarcLoader;
 
 namespace RocksmithToolkitGUI.DLCPackerUnpacker
 {
     public partial class DLCPackerUnpacker : UserControl
     {
-        #region Constants
-
         private const string MESSAGEBOX_CAPTION = "CDLC Packer/Unpacker";
-
-        #endregion
-
         private BackgroundWorker bwRepack = new BackgroundWorker();
         private string destPath;
         private StringBuilder errorsFound;
@@ -48,36 +44,42 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             bwRepack.WorkerReportsProgress = true;
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool DecodeAudio
         {
             get { return chkDecodeAudio.Checked; }
             set { chkDecodeAudio.Checked = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool OverwriteSongXml
         {
             get { return chkOverwriteSongXml.Checked; }
             set { chkOverwriteSongXml.Checked = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool UpdateManifest
         {
             get { return chkUpdateManifest.Checked; }
             set { chkUpdateManifest.Checked = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool UpdateSng
         {
             get { return chkUpdateSng.Checked; }
             set { chkUpdateSng.Checked = value; }
         }
 
-        public string AppId
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
+        public string UpdatedAppId
         {
             get { return txtAppId.Text; }
-            set { txtAppId.Text = value; }
+            set { txtAppId.Text = value.GetValidAppIdSixDigits(); }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public GameVersion Version { get; set; }
 
         private void PopulateGameVersionCombo()
@@ -99,7 +101,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             var songAppId = SongAppIdRepository.Instance().Select((gameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], gameVersion);
             cmbAppId.SelectedItem = songAppId;
-            AppId = songAppId.AppId;
+            UpdatedAppId = songAppId.AppId;
         }
 
         private void PromptComplete(string destDirPath, bool actionPacking = true, string errMsg = null)
@@ -290,41 +292,61 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
         public void UpdateAppId(object sender, DoWorkEventArgs e)
         {
-            var sourceFileNames = e.Argument as string[];
+            var srcFilePaths = e.Argument as string[];
             errorsFound = new StringBuilder();
-            var step = (int)Math.Round(1.0 / sourceFileNames.Length * 100, 0);
+            var step = (int)Math.Round(1.0 / srcFilePaths.Length * 100, 0);
             int progress = 0;
+            
+            // show some initial progress if only one song
+            if (step > 99) progress = 50;
 
             var tmpDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
-            var appId = AppId;
+            var appId = UpdatedAppId;
+            if (String.IsNullOrEmpty(appId))
+                throw new InvalidDataException("<ERROR> AppID is null or empty ...");
 
-            foreach (string sourceFileName in sourceFileNames)
+            foreach (string srcFilePath in srcFilePaths)
             {
                 Application.DoEvents();
-                var srcPlatform = sourceFileName.GetPlatform();
-                bwRepack.ReportProgress(progress, String.Format("Updating '{0}'", Path.GetFileName(sourceFileName)));
+                var srcPlatform = srcFilePath.GetPlatform();
+                bwRepack.ReportProgress(progress, String.Format("Updating '{0}'", Path.GetFileName(srcFilePath)));
 
                 if (!srcPlatform.IsConsole)
                 {
+                    // TODO: monitor this change
+                    // proces is so fast we may need to add
+                    // Thread.Sleep(100);
+                    // if too many errors get thrown
+                    NoCloseStream dataStream = new NoCloseStream();
                     try
                     {
-                        // TODO: use PsarcLoader memory methods to plant a new AppId
-                        var unpackedDir = Packer.Unpack(sourceFileName, tmpDir, overwriteSongXml: OverwriteSongXml);
-                        var appIdFile = Path.Combine(unpackedDir, (srcPlatform.version == GameVersion.RS2012) ? "APP_ID" : "appid.appid");
-                        File.WriteAllText(appIdFile, appId);
-                        Packer.Pack(unpackedDir, sourceFileName, srcPlatform, UpdateSng, UpdateManifest);
+                        // use fast PsarcLoader memory methods to push a new AppId
+                        using (PSARC p = new PSARC(true))
+                        {
+                            using (var fs = File.OpenRead(srcFilePath))
+                                p.Read(fs);
+
+                            dataStream = p.ReplaceData(x => x.Name.Equals("appid.appid"), appId);
+
+                            using (var fs = File.Create(srcFilePath))
+                                p.Write(fs, true);
+                        }
                     }
                     catch (Exception ex)
                     {
-                        errorsFound.AppendLine(String.Format("Error trying repack file '{0}': {1}", Path.GetFileName(sourceFileName), ex.Message));
+                        errorsFound.AppendLine(String.Format("Error trying repack file '{0}': {1}", Path.GetFileName(srcFilePath), ex.Message));
                     }
+
+                    if (dataStream != null)
+                        dataStream.CloseEx();
 
                     progress += step;
                     bwRepack.ReportProgress(progress);
                 }
                 else
-                    errorsFound.AppendLine(String.Format("File '{0}' is not a valid desktop platform package.", Path.GetFileName(sourceFileName)));
+                    errorsFound.AppendLine(String.Format("File '{0}' is not a valid desktop platform package.", Path.GetFileName(srcFilePath)));
             }
+
             bwRepack.ReportProgress(100);
             e.Result = "repack";
         }
@@ -537,7 +559,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Stopwatch sw = new Stopwatch();
                 sw.Restart();
 
-                var songPackDir = AggregateGraph2014.DoLikeSongPack(srcPath, AppId);
+                var songPackDir = AggregateGraph2014.DoLikeSongPack(srcPath, UpdatedAppId);
                 destPath = Path.Combine(Path.GetDirectoryName(srcPath), String.Format("{0}_songpack_p.psarc", Path.GetFileName(srcPath)));
                 // PC Only for now can't mix platform packages
                 Packer.Pack(songPackDir, destPath, predefinedPlatform: new Platform(GamePlatform.Pc, GameVersion.RS2014));
@@ -740,7 +762,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
         {
             if (cmbAppId.SelectedItem != null)
-                AppId = ((SongAppId)cmbAppId.SelectedItem).AppId;
+                UpdatedAppId = ((SongAppId)cmbAppId.SelectedItem).AppId;
         }
 
         private void cmbGameVersion_SelectedIndexChanged(object sender, EventArgs e)

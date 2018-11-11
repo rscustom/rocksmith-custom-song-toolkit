@@ -122,6 +122,7 @@
             this.gbAppIdUpdater.TabIndex = 13;
             this.gbAppIdUpdater.TabStop = false;
             this.gbAppIdUpdater.Text = "App ID Updater";
+            this.toolTip.SetToolTip(this.gbAppIdUpdater, "A super fast/easy method to \r\nupdate the AppId in one, or \r\nmany CDLC.");
             // 
             // btnAppIdFolder
             // 

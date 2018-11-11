@@ -89,8 +89,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.gbTuning.TabIndex = 2;
             this.gbTuning.TabStop = false;
             this.gbTuning.Text = "Tuning (Low to High)";
-            this.toolTip.SetToolTip(this.gbTuning, "Enter the values as the number of \r\nhalf steps from E standard tuning\r\nwhich is s" +
-                    "hown as 0, 0, 0, 0, 0, 0.\r\nEntered Low to High.");
+            this.toolTip.SetToolTip(this.gbTuning, "Enter the values as the number\r\nof half steps above or below E \r\nstandard tuning " +
+                    "which is shown\r\nas 0, 0, 0, 0, 0, 0 (Low to High).");
             // 
             // label6
             // 

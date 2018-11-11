@@ -103,8 +103,8 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             PersistentID = arrangement.Id.ToString().Replace("-", "").ToUpper();
             Shipping = true;
 
-            // DLC controls wheter album artwork marker is shown in-game setlist, but has
-            // negative effect that 'Alternate Arrangements' are locked for new player profiles
+            // DLC property controls whether album artwork marker is shown in-game setlist, but
+            // has side effect that 'Alternate Arrangements' are locked for newer player profiles
             DLC = true;
 
             // TODO: monitor this change
