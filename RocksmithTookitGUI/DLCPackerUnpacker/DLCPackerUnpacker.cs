@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -17,12 +18,14 @@ using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 using RocksmithToolkitGUI.Config;
 using RocksmithToolkitLib.PsarcLoader;
+using PackageCreator = RocksmithToolkitLib.DLCPackage.DLCPackageCreator;
 
 namespace RocksmithToolkitGUI.DLCPackerUnpacker
 {
     public partial class DLCPackerUnpacker : UserControl
     {
         private const string MESSAGEBOX_CAPTION = "CDLC Packer/Unpacker";
+        private const string TKI_APPID = "(AppID by Packer/Unpacker)";
         private BackgroundWorker bwRepack = new BackgroundWorker();
         private string destPath;
         private StringBuilder errorsFound;
@@ -73,7 +76,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
-        public string UpdatedAppId
+        public string NewAppId
         {
             get { return txtAppId.Text; }
             set { txtAppId.Text = value.GetValidAppIdSixDigits(); }
@@ -101,7 +104,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             var songAppId = SongAppIdRepository.Instance().Select((gameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], gameVersion);
             cmbAppId.SelectedItem = songAppId;
-            UpdatedAppId = songAppId.AppId;
+            NewAppId = songAppId.AppId;
         }
 
         private void PromptComplete(string destDirPath, bool actionPacking = true, string errMsg = null)
@@ -261,9 +264,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             {
                 case "repack":
                     if (errorsFound.Length <= 0)
-                        MessageBox.Show("APP ID update is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("App ID update is complete.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else
-                        MessageBox.Show("APP ID update is complete with errors. See below: " + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("App ID update is complete with errors. See below: " + Environment.NewLine + errorsFound.ToString(), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                     break;
                 case "unpack":
@@ -296,12 +299,12 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             errorsFound = new StringBuilder();
             var step = (int)Math.Round(1.0 / srcFilePaths.Length * 100, 0);
             int progress = 0;
-            
+
             // show some initial progress if only one song
             if (step > 99) progress = 50;
 
             var tmpDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
-            var appId = UpdatedAppId;
+            var appId = NewAppId;
             if (String.IsNullOrEmpty(appId))
                 throw new InvalidDataException("<ERROR> AppID is null or empty ...");
 
@@ -313,16 +316,13 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                 if (!srcPlatform.IsConsole)
                 {
-                    // TODO: monitor this change
-                    // proces is so fast we may need to add
-                    // Thread.Sleep(100);
-                    // if too many errors get thrown
                     NoCloseStream dataStream = new NoCloseStream();
                     try
                     {
-                        // use fast PsarcLoader memory methods to push a new AppId
+                        // use fast PsarcLoader memory methods (respect processing order/grouping)
                         using (PSARC p = new PSARC(true))
                         {
+                            // write the new appid.appid
                             using (var fs = File.OpenRead(srcFilePath))
                                 p.Read(fs);
 
@@ -330,6 +330,32 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                             using (var fs = File.Create(srcFilePath))
                                 p.Write(fs, true);
+
+                            // update toolkit.version
+                            var tkStream = p.GetData(x => x.Name.Equals("toolkit.version"));
+                            if (tkStream != null)
+                            {
+                                using (var tkReader = new StreamReader(tkStream))
+                                {
+                                    var tkInfo = GeneralExtensions.GetToolkitInfo(tkReader);
+                                    var packageComment = tkInfo.PackageComment;
+                                    if (String.IsNullOrEmpty(packageComment))
+                                        packageComment = TKI_APPID;
+                                    else if (!packageComment.Contains(TKI_APPID))
+                                        packageComment = packageComment + " " + TKI_APPID;
+
+                                    var toolkitVersion = ToolkitVersion.RSTKGuiVersion;
+                                    if (!tkInfo.ToolkitVersion.Contains(toolkitVersion))
+                                        toolkitVersion = String.Format("{0} ({1})", toolkitVersion, tkInfo.ToolkitVersion);
+
+                                    using (var tkInfoStream = new MemoryStream())
+                                    {
+                                        PackageCreator.GenerateToolkitVersion(tkInfoStream, tkInfo.PackageAuthor, tkInfo.PackageVersion, packageComment, tkInfo.PackageRating, toolkitVersion);
+                                        PsarcExtensions.InjectArchiveEntry(srcFilePath, "toolkit.version", tkInfoStream);
+                                        tkInfoStream.Dispose(); // CRITICAL
+                                    }
+                                }
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -559,7 +585,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Stopwatch sw = new Stopwatch();
                 sw.Restart();
 
-                var songPackDir = AggregateGraph2014.DoLikeSongPack(srcPath, UpdatedAppId);
+                var songPackDir = AggregateGraph2014.DoLikeSongPack(srcPath, NewAppId);
                 destPath = Path.Combine(Path.GetDirectoryName(srcPath), String.Format("{0}_songpack_p.psarc", Path.GetFileName(srcPath)));
                 // PC Only for now can't mix platform packages
                 Packer.Pack(songPackDir, destPath, predefinedPlatform: new Platform(GamePlatform.Pc, GameVersion.RS2014));
@@ -762,7 +788,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private void cmbAppIds_SelectedValueChanged(object sender, EventArgs e)
         {
             if (cmbAppId.SelectedItem != null)
-                UpdatedAppId = ((SongAppId)cmbAppId.SelectedItem).AppId;
+                NewAppId = ((SongAppId)cmbAppId.SelectedItem).AppId;
         }
 
         private void cmbGameVersion_SelectedIndexChanged(object sender, EventArgs e)

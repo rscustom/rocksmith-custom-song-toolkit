@@ -130,7 +130,7 @@ namespace RocksmithToolkitGUI.Tests
                 Assert.Fail("TestSettings CopyResources Failed ...");
 
             packerUnpacker.Version = gameVersion;
-            packerUnpacker.UpdatedAppId = appId;
+            packerUnpacker.NewAppId = appId;
 
             foreach (var archivePath in TestSettings.Instance.ArchivePaths)
             {
@@ -149,7 +149,7 @@ namespace RocksmithToolkitGUI.Tests
                 }
 
                 // test AppId validation method
-                packerUnpacker.SelectComboAppId(packerUnpacker.UpdatedAppId);
+                packerUnpacker.SelectComboAppId(packerUnpacker.NewAppId);
 
                 // call background worker method from unit test to avoid threading issues
                 packerUnpacker.UpdateAppId(null, new DoWorkEventArgs(new string[] { archivePath }));
@@ -164,7 +164,7 @@ namespace RocksmithToolkitGUI.Tests
                 using (var psarcLoader = new PsarcLoader(archivePath, true))
                 {
                     var entryAppId = psarcLoader.ExtractAppId();
-                    Assert.AreEqual(packerUnpacker.UpdatedAppId, entryAppId);
+                    Assert.AreEqual(packerUnpacker.NewAppId, entryAppId);
                 }
             }
         }

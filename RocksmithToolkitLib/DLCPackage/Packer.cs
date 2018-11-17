@@ -150,7 +150,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     OggFile.Revorb(file, outputAudioFileName, Path.GetExtension(file).GetWwiseVersion());
                 }
 
-                // convert album artwork dds to common png
+                // convert album artwork dds to common friendly png
                 var ddsFiles = Directory.EnumerateFiles(unpackedDir, "*.dds", SearchOption.AllDirectories).ToList();
                 if (ddsFiles.Any())
                 {

@@ -291,19 +291,19 @@ namespace RocksmithToolkitLib.PsarcLoader
             NoCloseStream s = new NoCloseStream();
             using (var sr = new StreamWriter(s))
                 sr.Write(newData);
+            
             s.Position = 0;
+
             if (!ReplaceData(p, dataEntry, s))
             {
                 s.canClose = true;
                 s.Dispose();
                 return null;
-            }
+            }            
             return s;
         }
-
-
-
     }
+
 
     /// <summary>
     /// Useful when some other class(StreamReader/StreamReader...) tries to close the stream before it's supposed to be closed.

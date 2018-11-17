@@ -949,6 +949,15 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var pngFile in artPngFiles)
                 IOExtension.MoveFile(pngFile, Path.Combine(eofDir, Path.GetFileName(pngFile)));
 
+            // Convert tagger.org artwork to png and put into EOF folder
+            // Move original dds artwork to Toolkit folder
+            var taggerOrgFile = Directory.EnumerateFiles(unpackedDir, "tagger.org", SearchOption.AllDirectories).FirstOrDefault();
+            if (!String.IsNullOrEmpty(taggerOrgFile))
+            {
+                ExternalApps.Dds2Png(taggerOrgFile, Path.Combine(eofDir, "album_org_256.png"));
+                IOExtension.MoveFile(taggerOrgFile, Path.Combine(toolkitDir, "album_org_256.dds"));
+            }
+
             // Move _fixed.ogg to EOF folder
             var oggFiles = Directory.EnumerateFiles(unpackedDir, "*_fixed.ogg", SearchOption.AllDirectories).ToList();
             foreach (var oggFile in oggFiles)
