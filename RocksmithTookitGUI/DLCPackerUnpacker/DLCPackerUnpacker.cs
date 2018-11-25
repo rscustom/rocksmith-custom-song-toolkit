@@ -242,7 +242,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 }
                 catch (Exception ex)
                 {
-                    errorsFound.AppendLine(String.Format("Error unpacking file: '{0}' ... {1}", Path.GetFileName(srcPath), ex.Message));
+                    // ignore any 'Index out of range' exceptions
+                    if (!ex.Message.StartsWith("Index"))
+                        errorsFound.AppendLine(String.Format("<ERROR> Unpacking file: '{0}' ... {1}", Path.GetFileName(srcPath), ex.Message));
                 }
             }
 

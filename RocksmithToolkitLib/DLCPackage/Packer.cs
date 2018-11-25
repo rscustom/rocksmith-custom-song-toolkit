@@ -665,7 +665,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         entry.Data.Dispose();
                 }
 
-                if (!String.IsNullOrEmpty(psarc.ErrMSG)) throw new InvalidDataException(psarc.ErrMSG);
+                if (!String.IsNullOrEmpty(psarc.ErrMSG)) 
+                    throw new InvalidDataException(psarc.ErrMSG);
 
                 progress += step;
                 GlobalExtension.UpdateProgress.Value = (int)progress;
