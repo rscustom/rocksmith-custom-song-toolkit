@@ -856,7 +856,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 data.ToolkitInfo = new ToolkitInfo();
                 data.ToolkitInfo.PackageVersion = "0";
                 data.ToolkitInfo.PackageAuthor = "Ubisoft";
-                data.ToolkitInfo.PackageRating = "0";
+                data.ToolkitInfo.PackageRating = "5";
             }
 
             return data;
