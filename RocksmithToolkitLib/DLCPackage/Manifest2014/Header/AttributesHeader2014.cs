@@ -54,7 +54,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public double? NotesMedium { get; set; }
         public int? Representative { get; set; } // Header only
         public int? RouteMask { get; set; } // Header only
-        public bool Shipping { get; set; }
+        public bool Shipping { get; set; } // false = hidden arrangement
         public string SKU { get; set; } // determines tag text in setlist
         public double? SongDiffEasy { get; set; }
         public double? SongDiffHard { get; set; }
@@ -101,11 +101,11 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             ManifestUrn = jsonUrn;
             MasterID_RDV = arrangement.MasterId; // must be unique else in-game hang occures
             PersistentID = arrangement.Id.ToString().Replace("-", "").ToUpper();
-            Shipping = true;
+            Shipping = true; // false = hides the arrangement in-game
 
             // DLC property controls whether album artwork marker is shown in-game setlist, but
             // has side effect that 'Alternate Arrangements' are locked for newer player profiles
-            DLC = true;
+            DLC = true; // false = requires UPlay to unlock
 
             // TODO: monitor this change
             if (info.ToolkitInfo == null || info.ToolkitInfo.PackageAuthor == "Ubisoft")

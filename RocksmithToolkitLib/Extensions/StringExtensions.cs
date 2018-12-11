@@ -254,7 +254,8 @@ namespace RocksmithToolkitLib.Extensions
             value = value.ShortWordMover(); // "The Beatles" becomes "Beatles, The"
             value = value.Capitalize(); // "blink-182" becomes "Blink 182"
             value = value.StripExcessWhiteSpace();
-            value = value.Replace(".", "");  // Remove periods from sortable fields, it screws up file naming ...
+            // remove periods from sortable fields, periods screw up file naming
+            value = value.Replace(".", "");
 
             return value;
         }
@@ -554,8 +555,9 @@ namespace RocksmithToolkitLib.Extensions
             if (String.IsNullOrEmpty(value))
                 return String.Empty;
 
-            var shortWord = new string[] { "The ", "THE ", "the ", "A ", "a " };
-            var newEnding = new string[] { ", The", ", THE", ", the", ", A", ", a" };
+            // Artist Sort may begin with "A ", e.g. 'A Flock of Seaguls'
+            var shortWord = new string[] { "The ", "THE ", "the " };
+            var newEnding = new string[] { ", The", ", THE", ", the" };
 
             for (int i = 0; i < shortWord.Length; i++)
             {

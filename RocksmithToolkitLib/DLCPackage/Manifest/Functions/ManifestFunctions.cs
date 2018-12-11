@@ -442,6 +442,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest.Functions
             }
         }
 
+        // TODO: Trace Code
         public void GenerateDynamicVisualDensity(IAttributes attribute, dynamic song, Arrangement arrangement, GameVersion version)
         {
             if (arrangement.ArrangementType == ArrangementType.Vocal)
