@@ -212,8 +212,8 @@ namespace RocksmithToolkitUpdater
 
             try
             {
-                // www.rcustom.net/builds/latest.zip or *.tar.gz
-                // www.rcustom.net/builds/latest_test.zip or *.tar.gz
+                // www.rscustom.net/builds/latest.zip or *.tar.gz
+                // www.rscustom.net/builds/latest_test.zip or *.tar.gz
                 // get latest zip url
                 latestZipUrl = (string)AssemblyCaller.Call(Path.Combine(appExecDir, APP_RSLIB), "RocksmithToolkitLib.ToolkitVersionOnline", "GetFileUrl", null, true);
 
