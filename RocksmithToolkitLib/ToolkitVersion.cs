@@ -21,13 +21,13 @@ namespace RocksmithToolkitLib
         // the 'AssemblyVersion' and 'AssemblyConfiguration' values must be edited in 
         // the 'PatchAssemblyVersion.ps1' file as needed.
 
-        // assemblyVersion e.g. "1.2.3.4"
+        // AssemblyVersion e.g. "1.2.3.4"
         public static string AssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-        // assemblyInformationVersion (aka gitSubVersion) e.g. "ce57ebea"
+        // AssemblyInformationVersion (aka gitSubVersion) e.g. "ce57ebea"
         public static string AssemblyInformationVersion = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).Cast<AssemblyInformationalVersionAttribute>().FirstOrDefault().InformationalVersion.ToString();
 
-        // assemblyConfigurate e.g. "BETA" or blank
+        // AssemblyConfiguration e.g. "BETA" or blank
         public static string AssemblyConfiguration = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
 
         public static string RSTKGuiVersion

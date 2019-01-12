@@ -287,8 +287,9 @@ namespace packer
                             // create template xml file
                             if (arguments.CreateTemplateXml)
                             {
-                                Console.WriteLine(String.Format("Creating Template XML file for: '{0}'", Path.GetFileName(srcFileName)));
-                                CreateTemplate(unpackedDir, platform);
+                                throw new ApplicationException("<ERROR> Use the toolkit Packer/Unpacker tab menu if you want to create Template XML files ...");
+                                //Console.WriteLine(String.Format("Creating Template XML file for: '{0}'", Path.GetFileName(srcFileName)));
+                                //CreateTemplate(unpackedDir, platform);
                             }
                         }
                         catch (Exception ex)
@@ -393,44 +394,45 @@ namespace packer
             }
         }
 
-        private static void CreateTemplate(string unpackedDir, Platform platform)
-        {
-            // create template xml files
-            using (var packageCreator = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator())
-            {
-                DLCPackageData info = null;
-                if (platform.version == GameVersion.RS2014)
-                    info = DLCPackageData.LoadFromFolder(unpackedDir, platform, platform, true, true);
-                else
-                    info = DLCPackageData.RS1LoadFromFolder(unpackedDir, platform, false);
+        // really bad practice to call an exe from dll so code is depricated/commented out
+        //private static void CreateTemplate(string unpackedDir, Platform platform)
+        //{
+        //    // create template xml files
+        //    using (var packageCreator = new RocksmithToolkitGUI.DLCPackageCreator.DLCPackageCreator())
+        //    {
+        //        DLCPackageData info = null;
+        //        if (platform.version == GameVersion.RS2014)
+        //            info = DLCPackageData.LoadFromFolder(unpackedDir, platform, platform, true, true);
+        //        else
+        //            info = DLCPackageData.RS1LoadFromFolder(unpackedDir, platform, false);
 
-                info.GameVersion = platform.version;
+        //        info.GameVersion = platform.version;
 
-                switch (platform.platform)
-                {
-                    case GamePlatform.Pc:
-                        info.Pc = true;
-                        break;
-                    case GamePlatform.Mac:
-                        info.Mac = true;
-                        break;
-                    case GamePlatform.XBox360:
-                        info.XBox360 = true;
-                        break;
-                    case GamePlatform.PS3:
-                        info.PS3 = true;
-                        break;
-                }
+        //        switch (platform.platform)
+        //        {
+        //            case GamePlatform.Pc:
+        //                info.Pc = true;
+        //                break;
+        //            case GamePlatform.Mac:
+        //                info.Mac = true;
+        //                break;
+        //            case GamePlatform.XBox360:
+        //                info.XBox360 = true;
+        //                break;
+        //            case GamePlatform.PS3:
+        //                info.PS3 = true;
+        //                break;
+        //        }
 
-                packageCreator.FillPackageCreatorForm(info, unpackedDir);
-                // fix descrepancies
-                packageCreator.CurrentGameVersion = platform.version;
-                //packageCreator.SelectComboAppId(info.AppId);
-                packageCreator.AppId = info.AppId;
-                // save template xml file
-                packageCreator.SaveTemplateFile(unpackedDir, false);
-            }
-        }
+        //        packageCreator.FillPackageCreatorForm(info, unpackedDir);
+        //        // fix descrepancies
+        //        packageCreator.CurrentGameVersion = platform.version;
+        //        //packageCreator.SelectComboAppId(info.AppId);
+        //        packageCreator.AppId = info.AppId;
+        //        // save template xml file
+        //        packageCreator.SaveTemplateFile(unpackedDir, false);
+        //    }
+        //}
 
     }
 }

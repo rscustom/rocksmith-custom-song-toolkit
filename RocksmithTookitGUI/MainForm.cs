@@ -54,7 +54,7 @@ namespace RocksmithToolkitGUI
 
             try
             {
-                // always disable updates on Mac or according to general_autoupdate setting
+                // updates are disabled on real Mac platform, or according to general_autoupdate setting                
                 if (Environment.OSVersion.Platform != PlatformID.MacOSX &&
                     ConfigRepository.Instance().GetBoolean("general_autoupdate"))
                 {
@@ -97,9 +97,9 @@ namespace RocksmithToolkitGUI
                 onlineVersion = ToolkitVersionOnline.Load();
             }
             catch (WebException) { /* Do nothing on 404 */ }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 

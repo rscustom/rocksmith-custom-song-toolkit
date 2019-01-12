@@ -58,6 +58,18 @@
   <PropertyGroup>
     <NoWin32Manifest>false</NoWin32Manifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug w CLI|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -394,6 +406,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="BetaInfo.rtf" />
+    <Content Include="ReadMe.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="songcreator.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -434,7 +449,7 @@
     <PostBuildEvent>REM copy support files
 xcopy /S /Y "$(SolutionDir)Third-party Apps"
 
-rem do some cleanup only if Release
+rem do some cleanup if Release
 
 if $(ConfigurationName) == Release (
    del /S /Q "$(TargetDir)*.exe.config"
@@ -448,6 +463,30 @@ if $(ConfigurationName) == Release (
    del /S /Q "$(TargetDir)NLog.xml"
    del /S /Q "$(TargetDir)Newtonsoft.Json.xml"
    del /S /Q "$(TargetDir)X360.xml"
+
+   REM   del /S /Q "$(TargetDir)*.bat"
+   REM batch MOVE command does not seem to work in Build Events
+   REM move the contents from Release to Release/RocksmithToolkit
+
+   IF  EXIST "$(ProjectDir)bin\RocksmithToolkit" (
+       DEL /S /Q " "$(ProjectDir)bin\RocksmithToolkit\*.*"
+       RD /S /Q "$(ProjectDir)bin\RocksmithToolkit"
+    )
+   
+   MKDIR "$(ProjectDir)bin\RocksmithToolkit"
+   XCOPY /Y /E /D "$(TargetDir)*" "$(ProjectDir)bin\RocksmithToolkit\*"
+
+   IF  EXIST "$(TargetDir)" (
+       DEL /S /Q "$(TargetDir)*.*"
+       RD /S /Q "$(TargetDir)"
+    )
+
+   MKDIR "$(TargetDir)RocksmithToolkit"
+   XCOPY /Y /E /D "$(ProjectDir)bin\RocksmithToolkit\*" "$(TargetDir)RocksmithToolkit\*"
+   RD /S /Q "$(ProjectDir)bin\RocksmithToolkit"
+
+   COPY /Y "$(TargetDir)RocksmithToolkit\ReadMe.txt" "$(TargetDir)ReadMe.txt"
+   REM COPY /Y "$(TargetDir)RocksmithToolkit\RocksmithToolkitGUI.lnk"  "$(TargetDir)RocksmithToolkitGUI.lnk"
  )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

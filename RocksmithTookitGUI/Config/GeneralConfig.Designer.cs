@@ -34,17 +34,13 @@
             this.gbCreator = new System.Windows.Forms.GroupBox();
             this.ddc_autogen = new System.Windows.Forms.CheckBox();
             this.label19 = new System.Windows.Forms.Label();
-            this.creator_qualityfactor = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.creator_autosavetemplate = new System.Windows.Forms.CheckBox();
             this.creator_fixlowbass = new System.Windows.Forms.CheckBox();
             this.creator_fixmultitone = new System.Windows.Forms.CheckBox();
-            this.creator_scrollspeed = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.btnTonePath = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.creator_defaulttone = new RocksmithToolkitGUI.CueTextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.btnProjectDir = new System.Windows.Forms.Button();
-            this.creator_defaultproject = new RocksmithToolkitGUI.CueTextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.creator_usedefaultauthor = new System.Windows.Forms.CheckBox();
             this.creator_useacronyms = new System.Windows.Forms.CheckBox();
@@ -59,7 +55,6 @@
             this.general_defaultplatform = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
             this.btnWwisePath = new System.Windows.Forms.Button();
-            this.general_wwisepath = new RocksmithToolkitGUI.CueTextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.gbAutoUpdate = new System.Windows.Forms.GroupBox();
@@ -67,16 +62,12 @@
             this.general_replacerepo = new System.Windows.Forms.CheckBox();
             this.btnRs2014Path = new System.Windows.Forms.Button();
             this.btnRs1Path = new System.Windows.Forms.Button();
-            this.general_rs2014path = new RocksmithToolkitGUI.CueTextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.general_rs1path = new RocksmithToolkitGUI.CueTextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.general_defaultauthor = new RocksmithToolkitGUI.CueTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.general_defaultappid_RS2014 = new System.Windows.Forms.ComboBox();
             this.gbDDC = new System.Windows.Forms.GroupBox();
-            this.ddc_phraselength = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.ddc_removesustain = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -91,19 +82,31 @@
             this.btnCloseConfig = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblFirstRun = new System.Windows.Forms.Label();
+            this.ddc_phraselength = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
+            this.general_wwisepath = new RocksmithToolkitGUI.CueTextBox();
+            this.general_rs2014path = new RocksmithToolkitGUI.CueTextBox();
+            this.general_rs1path = new RocksmithToolkitGUI.CueTextBox();
+            this.general_defaultauthor = new RocksmithToolkitGUI.CueTextBox();
+            this.creator_qualityfactor = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
+            this.creator_scrollspeed = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
+            this.creator_defaulttone = new RocksmithToolkitGUI.CueTextBox();
+            this.creator_defaultproject = new RocksmithToolkitGUI.CueTextBox();
             this.gbCreator.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
             this.gbGeneral.SuspendLayout();
             this.gbAutoUpdate.SuspendLayout();
             this.gbDDC.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).BeginInit();
             this.gbConverter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).BeginInit();
             this.SuspendLayout();
             // 
             // general_usebeta
             // 
             this.general_usebeta.AutoSize = true;
+            this.general_usebeta.Checked = true;
+            this.general_usebeta.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.general_usebeta.Enabled = false;
             this.general_usebeta.ForeColor = System.Drawing.SystemColors.ControlText;
             this.general_usebeta.Location = new System.Drawing.Point(2, 19);
             this.general_usebeta.Name = "general_usebeta";
@@ -111,6 +114,7 @@
             this.general_usebeta.Size = new System.Drawing.Size(117, 17);
             this.general_usebeta.TabIndex = 8;
             this.general_usebeta.Text = "Use Beta Releases";
+            this.toolTip.SetToolTip(this.general_usebeta, "\r\n");
             this.general_usebeta.UseVisualStyleBackColor = true;
             this.general_usebeta.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -168,31 +172,6 @@
             this.label19.Text = "Default Quality Factor:";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // creator_qualityfactor
-            // 
-            this.creator_qualityfactor.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_qualityfactor.Location = new System.Drawing.Point(122, 91);
-            this.creator_qualityfactor.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.creator_qualityfactor.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.creator_qualityfactor.Name = "creator_qualityfactor";
-            this.creator_qualityfactor.Size = new System.Drawing.Size(48, 20);
-            this.creator_qualityfactor.TabIndex = 55;
-            this.creator_qualityfactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.creator_qualityfactor.Value = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.creator_qualityfactor.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
             // creator_autosavetemplate
             // 
             this.creator_autosavetemplate.AutoSize = true;
@@ -238,37 +217,6 @@
             this.creator_fixmultitone.UseVisualStyleBackColor = true;
             this.creator_fixmultitone.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
-            // creator_scrollspeed
-            // 
-            this.creator_scrollspeed.DecimalPlaces = 1;
-            this.creator_scrollspeed.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_scrollspeed.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Location = new System.Drawing.Point(122, 68);
-            this.creator_scrollspeed.Maximum = new decimal(new int[] {
-            45,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.creator_scrollspeed.Name = "creator_scrollspeed";
-            this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
-            this.creator_scrollspeed.TabIndex = 3;
-            this.creator_scrollspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.creator_scrollspeed.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            65536});
-            this.creator_scrollspeed.Leave += new System.EventHandler(this.ConfigurationChanged);
-            // 
             // btnTonePath
             // 
             this.btnTonePath.Location = new System.Drawing.Point(473, 42);
@@ -291,20 +239,6 @@
             this.label1.Text = "Default Scroll Speed:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // creator_defaulttone
-            // 
-            this.creator_defaulttone.Cue = "Select default tone used for new projects";
-            this.creator_defaulttone.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.creator_defaulttone.ForeColor = System.Drawing.Color.Gray;
-            this.creator_defaulttone.Location = new System.Drawing.Point(122, 44);
-            this.creator_defaulttone.Multiline = true;
-            this.creator_defaulttone.Name = "creator_defaulttone";
-            this.creator_defaulttone.ReadOnly = true;
-            this.creator_defaulttone.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.creator_defaulttone.Size = new System.Drawing.Size(345, 20);
-            this.creator_defaulttone.TabIndex = 52;
-            this.toolTip.SetToolTip(this.creator_defaulttone, "Set a default tone used in new projects");
-            // 
             // label16
             // 
             this.label16.AutoSize = true;
@@ -326,20 +260,6 @@
             this.btnProjectDir.Text = "...";
             this.btnProjectDir.UseVisualStyleBackColor = true;
             this.btnProjectDir.Click += new System.EventHandler(this.btnProjectDir_Click);
-            // 
-            // creator_defaultproject
-            // 
-            this.creator_defaultproject.Cue = "Select default (root) folder used to hold new project files";
-            this.creator_defaultproject.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.creator_defaultproject.ForeColor = System.Drawing.Color.Gray;
-            this.creator_defaultproject.Location = new System.Drawing.Point(122, 18);
-            this.creator_defaultproject.Multiline = true;
-            this.creator_defaultproject.Name = "creator_defaultproject";
-            this.creator_defaultproject.ReadOnly = true;
-            this.creator_defaultproject.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.creator_defaultproject.Size = new System.Drawing.Size(345, 20);
-            this.creator_defaultproject.TabIndex = 49;
-            this.toolTip.SetToolTip(this.creator_defaultproject, "Set a default CDLC project folder");
             // 
             // label15
             // 
@@ -536,20 +456,6 @@
             this.btnWwisePath.UseVisualStyleBackColor = true;
             this.btnWwisePath.Click += new System.EventHandler(this.btnWwisePath_Click);
             // 
-            // general_wwisepath
-            // 
-            this.general_wwisepath.Cue = "Select proper version of WwiseCLI.exe installation path";
-            this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
-            this.general_wwisepath.Location = new System.Drawing.Point(122, 160);
-            this.general_wwisepath.Multiline = true;
-            this.general_wwisepath.Name = "general_wwisepath";
-            this.general_wwisepath.ReadOnly = true;
-            this.general_wwisepath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.general_wwisepath.Size = new System.Drawing.Size(345, 20);
-            this.general_wwisepath.TabIndex = 101;
-            this.toolTip.SetToolTip(this.general_wwisepath, resources.GetString("general_wwisepath.ToolTip"));
-            // 
             // label14
             // 
             this.label14.AutoSize = true;
@@ -584,6 +490,7 @@
             this.gbAutoUpdate.TabIndex = 99;
             this.gbAutoUpdate.TabStop = false;
             this.gbAutoUpdate.Text = "Auto-Update      ";
+            this.toolTip.SetToolTip(this.gbAutoUpdate, "Monitor for updates and download\r\nthe latest beta release (default)");
             // 
             // general_autoupdate
             // 
@@ -633,19 +540,6 @@
             this.btnRs1Path.UseVisualStyleBackColor = true;
             this.btnRs1Path.Click += new System.EventHandler(this.btnRs1Path_Click);
             // 
-            // general_rs2014path
-            // 
-            this.general_rs2014path.Cue = "Select Rocksmith 2014 installation path";
-            this.general_rs2014path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_rs2014path.ForeColor = System.Drawing.Color.Gray;
-            this.general_rs2014path.Location = new System.Drawing.Point(122, 136);
-            this.general_rs2014path.Multiline = true;
-            this.general_rs2014path.Name = "general_rs2014path";
-            this.general_rs2014path.ReadOnly = true;
-            this.general_rs2014path.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.general_rs2014path.Size = new System.Drawing.Size(345, 20);
-            this.general_rs2014path.TabIndex = 6;
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -657,19 +551,6 @@
             this.label11.TabIndex = 50;
             this.label11.Text = "Rocksmith 2014 Path:";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // general_rs1path
-            // 
-            this.general_rs1path.Cue = "Select Rocksmith installation path";
-            this.general_rs1path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_rs1path.ForeColor = System.Drawing.Color.Gray;
-            this.general_rs1path.Location = new System.Drawing.Point(122, 110);
-            this.general_rs1path.Multiline = true;
-            this.general_rs1path.Name = "general_rs1path";
-            this.general_rs1path.ReadOnly = true;
-            this.general_rs1path.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.general_rs1path.Size = new System.Drawing.Size(345, 20);
-            this.general_rs1path.TabIndex = 4;
             // 
             // label10
             // 
@@ -694,17 +575,6 @@
             this.label9.TabIndex = 47;
             this.label9.Text = "Package Author:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // general_defaultauthor
-            // 
-            this.general_defaultauthor.Cue = "Package Author (Charter)";
-            this.general_defaultauthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.general_defaultauthor.ForeColor = System.Drawing.Color.Gray;
-            this.general_defaultauthor.Location = new System.Drawing.Point(122, 67);
-            this.general_defaultauthor.Name = "general_defaultauthor";
-            this.general_defaultauthor.Size = new System.Drawing.Size(209, 20);
-            this.general_defaultauthor.TabIndex = 3;
-            this.general_defaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // label4
             // 
@@ -746,37 +616,6 @@
             this.gbDDC.TabIndex = 3;
             this.gbDDC.TabStop = false;
             this.gbDDC.Text = "DDC";
-            // 
-            // ddc_phraselength
-            // 
-            this.ddc_phraselength.Increment = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.ddc_phraselength.Location = new System.Drawing.Point(415, 46);
-            this.ddc_phraselength.Maximum = new decimal(new int[] {
-            256,
-            0,
-            0,
-            0});
-            this.ddc_phraselength.Minimum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.ddc_phraselength.Name = "ddc_phraselength";
-            this.ddc_phraselength.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.ddc_phraselength.Size = new System.Drawing.Size(52, 20);
-            this.ddc_phraselength.TabIndex = 5;
-            this.ddc_phraselength.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.ddc_phraselength.ThousandsSeparator = true;
-            this.ddc_phraselength.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.ddc_phraselength.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // ddc_removesustain
             // 
@@ -945,6 +784,172 @@
             this.lblFirstRun.TabIndex = 51;
             this.lblFirstRun.Text = "First Run";
             // 
+            // ddc_phraselength
+            // 
+            this.ddc_phraselength.Increment = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.ddc_phraselength.Location = new System.Drawing.Point(415, 46);
+            this.ddc_phraselength.Maximum = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+            this.ddc_phraselength.Minimum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.ddc_phraselength.Name = "ddc_phraselength";
+            this.ddc_phraselength.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.ddc_phraselength.Size = new System.Drawing.Size(52, 20);
+            this.ddc_phraselength.TabIndex = 5;
+            this.ddc_phraselength.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ddc_phraselength.ThousandsSeparator = true;
+            this.ddc_phraselength.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.ddc_phraselength.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // general_wwisepath
+            // 
+            this.general_wwisepath.Cue = "Select proper version of WwiseCLI.exe installation path";
+            this.general_wwisepath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_wwisepath.ForeColor = System.Drawing.Color.Gray;
+            this.general_wwisepath.Location = new System.Drawing.Point(122, 160);
+            this.general_wwisepath.Multiline = true;
+            this.general_wwisepath.Name = "general_wwisepath";
+            this.general_wwisepath.ReadOnly = true;
+            this.general_wwisepath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.general_wwisepath.Size = new System.Drawing.Size(345, 20);
+            this.general_wwisepath.TabIndex = 101;
+            this.toolTip.SetToolTip(this.general_wwisepath, resources.GetString("general_wwisepath.ToolTip"));
+            // 
+            // general_rs2014path
+            // 
+            this.general_rs2014path.Cue = "Select Rocksmith 2014 installation path";
+            this.general_rs2014path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_rs2014path.ForeColor = System.Drawing.Color.Gray;
+            this.general_rs2014path.Location = new System.Drawing.Point(122, 136);
+            this.general_rs2014path.Multiline = true;
+            this.general_rs2014path.Name = "general_rs2014path";
+            this.general_rs2014path.ReadOnly = true;
+            this.general_rs2014path.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.general_rs2014path.Size = new System.Drawing.Size(345, 20);
+            this.general_rs2014path.TabIndex = 6;
+            // 
+            // general_rs1path
+            // 
+            this.general_rs1path.Cue = "Select Rocksmith installation path";
+            this.general_rs1path.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_rs1path.ForeColor = System.Drawing.Color.Gray;
+            this.general_rs1path.Location = new System.Drawing.Point(122, 110);
+            this.general_rs1path.Multiline = true;
+            this.general_rs1path.Name = "general_rs1path";
+            this.general_rs1path.ReadOnly = true;
+            this.general_rs1path.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.general_rs1path.Size = new System.Drawing.Size(345, 20);
+            this.general_rs1path.TabIndex = 4;
+            // 
+            // general_defaultauthor
+            // 
+            this.general_defaultauthor.Cue = "Package Author (Charter)";
+            this.general_defaultauthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.general_defaultauthor.ForeColor = System.Drawing.Color.Gray;
+            this.general_defaultauthor.Location = new System.Drawing.Point(122, 67);
+            this.general_defaultauthor.Name = "general_defaultauthor";
+            this.general_defaultauthor.Size = new System.Drawing.Size(209, 20);
+            this.general_defaultauthor.TabIndex = 3;
+            this.general_defaultauthor.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // creator_qualityfactor
+            // 
+            this.creator_qualityfactor.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_qualityfactor.Location = new System.Drawing.Point(122, 91);
+            this.creator_qualityfactor.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Name = "creator_qualityfactor";
+            this.creator_qualityfactor.Size = new System.Drawing.Size(48, 20);
+            this.creator_qualityfactor.TabIndex = 55;
+            this.creator_qualityfactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.creator_qualityfactor.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.creator_qualityfactor.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // creator_scrollspeed
+            // 
+            this.creator_scrollspeed.DecimalPlaces = 1;
+            this.creator_scrollspeed.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.creator_scrollspeed.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Location = new System.Drawing.Point(122, 68);
+            this.creator_scrollspeed.Maximum = new decimal(new int[] {
+            45,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.creator_scrollspeed.Name = "creator_scrollspeed";
+            this.creator_scrollspeed.Size = new System.Drawing.Size(48, 20);
+            this.creator_scrollspeed.TabIndex = 3;
+            this.creator_scrollspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.creator_scrollspeed.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            65536});
+            this.creator_scrollspeed.Leave += new System.EventHandler(this.ConfigurationChanged);
+            // 
+            // creator_defaulttone
+            // 
+            this.creator_defaulttone.Cue = "Select default tone used for new projects";
+            this.creator_defaulttone.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.creator_defaulttone.ForeColor = System.Drawing.Color.Gray;
+            this.creator_defaulttone.Location = new System.Drawing.Point(122, 44);
+            this.creator_defaulttone.Multiline = true;
+            this.creator_defaulttone.Name = "creator_defaulttone";
+            this.creator_defaulttone.ReadOnly = true;
+            this.creator_defaulttone.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.creator_defaulttone.Size = new System.Drawing.Size(345, 20);
+            this.creator_defaulttone.TabIndex = 52;
+            this.toolTip.SetToolTip(this.creator_defaulttone, "Set a default tone used in new projects");
+            // 
+            // creator_defaultproject
+            // 
+            this.creator_defaultproject.Cue = "Select default (root) folder used to hold new project files";
+            this.creator_defaultproject.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.creator_defaultproject.ForeColor = System.Drawing.Color.Gray;
+            this.creator_defaultproject.Location = new System.Drawing.Point(122, 18);
+            this.creator_defaultproject.Multiline = true;
+            this.creator_defaultproject.Name = "creator_defaultproject";
+            this.creator_defaultproject.ReadOnly = true;
+            this.creator_defaultproject.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.creator_defaultproject.Size = new System.Drawing.Size(345, 20);
+            this.creator_defaultproject.TabIndex = 49;
+            this.toolTip.SetToolTip(this.creator_defaultproject, "Set a default CDLC project folder");
+            // 
             // GeneralConfig
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -958,17 +963,17 @@
             this.Size = new System.Drawing.Size(525, 560);
             this.gbCreator.ResumeLayout(false);
             this.gbCreator.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).EndInit();
             this.gbGeneral.ResumeLayout(false);
             this.gbGeneral.PerformLayout();
             this.gbAutoUpdate.ResumeLayout(false);
             this.gbAutoUpdate.PerformLayout();
             this.gbDDC.ResumeLayout(false);
             this.gbDDC.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).EndInit();
             this.gbConverter.ResumeLayout(false);
             this.gbConverter.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ddc_phraselength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_qualityfactor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.creator_scrollspeed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
