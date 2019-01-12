@@ -64,22 +64,6 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
-        public void LoadDialog(string dialogMessage, string dialogTitle,
-            string textDialogButton1, string textDialogButton2, string textDialogButton3, Image dialogIcon, string iconMessage,
-            int topFromCenter = 0, int leftFromCenter = 0)
-        {
-            dialogMessage = dialogMessage;
-            dialogTitle = dialogTitle;
-            textDialogButton1 = textDialogButton1;
-            textDialogButton2 = textDialogButton2;
-            textDialogButton3 = textDialogButton3;
-            dialogIcon = dialogIcon;
-            iconMessage = dialogMessage;
-            topFromCenter = topFromCenter;
-            leftFromCenter = leftFromCenter;
-            this.Refresh();
-        }
-
         /// <summary>
         /// The constructor. This called by the static method ShowDialog or may be used as popup window.
         /// </summary>

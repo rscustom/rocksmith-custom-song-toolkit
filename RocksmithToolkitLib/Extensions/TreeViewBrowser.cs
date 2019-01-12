@@ -363,7 +363,7 @@ namespace RocksmithToolkitLib.Extensions
         /// <summary>
         /// Dispose of the TreeView
         /// </summary>
-        public void Dispose()
+        public void TreeViewDispose()
         {
             if (enableNodesClear)
                 Nodes.Clear();

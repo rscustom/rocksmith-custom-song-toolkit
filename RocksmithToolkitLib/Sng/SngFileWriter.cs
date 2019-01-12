@@ -112,7 +112,7 @@ namespace RocksmithToolkitLib.Sng
         /// WARNING: This method may not detect the Arrangment Tuning correctly
         /// <para>Use the Write(Arrangement arr, string outputFile, Platform platform) method to detect tuning correctly ...</para>
         /// </summary>
-        [Obsolete("Deprecated, please use Write(Arrangement arr, string outputFile, Platform platform) method.", false)]
+        // [Obsolete("Deprecated, please use Write(Arrangement arr, string outputFile, Platform platform) method.", false)]
         public static void Write(string inputFile, string outputFile, ArrangementType arrangementType, Platform platform)
         {
             using (var reader = new StreamReader(inputFile))

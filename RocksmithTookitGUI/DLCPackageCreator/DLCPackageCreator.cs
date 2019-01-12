@@ -112,21 +112,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             get { return chkPlatformPC.Checked; }
             set { chkPlatformPC.Checked = value; }
         }
-  
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool PlatformMAC
         {
             get { return chkPlatformMAC.Checked; }
             set { chkPlatformMAC.Checked = value; }
         }
-  
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool PlatformXBox360
         {
             get { return chkPlatformXBox360.Checked; }
             set { chkPlatformXBox360.Checked = value; }
         }
- 
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool PlatformPS3
         {
@@ -211,7 +211,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-         public string CurrentOFDPackageFilter
+        public string CurrentOFDPackageFilter
         {
             get
             {
@@ -2523,10 +2523,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         /// <summary>
         /// DEVELOPER DEBUG/TEST
-        ///         /// </summary>
+        /// </summary>
         private void btnDevUse_Click(object sender, EventArgs e)
         {
-
             PackageRating = "4";
             return;
 

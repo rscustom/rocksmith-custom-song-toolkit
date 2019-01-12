@@ -6,7 +6,6 @@ using RocksmithToolkitLib.XML;
 using System.IO;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
-using RocksmithToolkitLib.DLCPackage.Manifest.Tone;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
 
 namespace RocksmithToolkitLib.Conversion

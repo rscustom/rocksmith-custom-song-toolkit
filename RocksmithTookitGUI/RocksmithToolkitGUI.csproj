@@ -51,6 +51,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <NoWarn>0169, 0162</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>songcreator.ico</ApplicationIcon>
@@ -457,7 +458,7 @@ if $(ConfigurationName) == Release (
    del /S /Q "$(TargetDir)*.vshost.exe"
 
    del /S /Q "$(SolutionDir)*.pdb"
-   del /S /Q "$(SolutionDir)*.vshost.exe"
+   REM del /S /Q "$(SolutionDir)*.vshost.exe"
 
    del /S /Q "$(TargetDir)MiscUtil.xml"
    del /S /Q "$(TargetDir)NLog.xml"

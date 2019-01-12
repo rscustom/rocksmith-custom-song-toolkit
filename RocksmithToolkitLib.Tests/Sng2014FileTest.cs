@@ -7,7 +7,6 @@ using NUnit.Framework;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitGUI.Config;
 using RocksmithToolkitLib.Sng2014HSL;
-using System.Linq;
 using System.Diagnostics;
 using RocksmithToolkitLib.Sng;
 //
