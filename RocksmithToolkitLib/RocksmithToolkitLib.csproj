@@ -21,7 +21,8 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
-    <NoWarn>0169</NoWarn>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -29,7 +30,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <NoWarn>0169</NoWarn>
+    <NoWarn>0169, 0162</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>

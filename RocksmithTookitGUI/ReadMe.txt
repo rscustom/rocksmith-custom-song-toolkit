@@ -14,3 +14,4 @@ Open the 'RocksmithToolkit' folder and double click on
 the application name/icon 'RocksmithToolkitGUI.exe' to
 launch the program.  You can create a shortcut, and place
 it anywhere to make the program easier to launch.
+

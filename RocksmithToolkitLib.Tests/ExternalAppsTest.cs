@@ -16,8 +16,6 @@ namespace RocksmithToolkitLib.Tests
     [TestFixture]
     public class ExternalAppsTest
     {
-        private List<string> unpackedDirs;
-
         [TestFixtureSetUp]
         public void Init()
         {

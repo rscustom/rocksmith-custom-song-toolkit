@@ -354,7 +354,7 @@ namespace RocksmithToolkitLib.Extensions
         /// <summary>
         /// Clear the TreeView
         /// </summary>
-        public void Clear()
+        public void ClearTreeView()
         {
             if (enableNodesClear)
                 Nodes.Clear();
@@ -363,7 +363,7 @@ namespace RocksmithToolkitLib.Extensions
         /// <summary>
         /// Dispose of the TreeView
         /// </summary>
-        public void TreeViewDispose()
+        public void DisposeTreeView()
         {
             if (enableNodesClear)
                 Nodes.Clear();

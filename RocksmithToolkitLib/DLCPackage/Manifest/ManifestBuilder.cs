@@ -44,7 +44,7 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest
 
             var manifestFunctions = new ManifestFunctions(platform.version);
             var songPartition = new SongPartition();
- 
+
             foreach (var arr in arrangements)
             {
                 var isVocal = arr.ArrangementType == Sng.ArrangementType.Vocal;
