@@ -392,6 +392,9 @@
     <None Include="Resources\toolkit_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="songcreator.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\colored.png" />
     <None Include="Resources\brasil_logo.png" />
     <None Include="Resources\ddc-512.png" />
@@ -404,10 +407,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="BetaInfo.rtf" />
-    <Content Include="ReadMe.txt">
+    <None Include="ReadMe.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="songcreator.ico" />
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -447,14 +449,14 @@
     <PostBuildEvent>REM copy support files
 xcopy /S /Y "$(SolutionDir)Third-party Apps"
 
-rem do some cleanup only if Release
-
+REM Cleanup for Release (AppVeyor) Build
 if $(ConfigurationName) == Release (
    del /S /Q "$(TargetDir)*.exe.config"
    del /S /Q "$(TargetDir)*.pdb"
    del /S /Q "$(TargetDir)*.vshost.exe"
 
    del /S /Q "$(SolutionDir)*.pdb"
+   REM used by appVeyor so commented out
    REM del /S /Q "$(SolutionDir)*.vshost.exe"
 
    del /S /Q "$(TargetDir)MiscUtil.xml"
@@ -463,6 +465,7 @@ if $(ConfigurationName) == Release (
    del /S /Q "$(TargetDir)X360.xml"
  )
 
+REM Cleanup for Release (Mac Wineskin) Build
 if $(ConfigurationName) == RocksmithToolkit (
    del /S /Q "$(TargetDir)*.exe.config"
    del /S /Q "$(TargetDir)*.pdb"
@@ -477,6 +480,7 @@ if $(ConfigurationName) == RocksmithToolkit (
    del /S /Q "$(TargetDir)X360.xml"
 
    del /S /Q "$(TargetDir)*.bat"
+   del /S /Q "$(TargetDir)ReadMe.txt"
  )
 
 
