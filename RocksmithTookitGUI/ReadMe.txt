@@ -3,11 +3,11 @@ Commonly known as the Rocksmith Toolkit, or simply
 known as, 'the toolkit'.
 
 Drag and drop the 'RocksmithToolkit' folder, along
-with the helper app 'CreateToolkitShortcut.exe anywhere
+with the helper app 'CreateToolkitShortcut.exe' anywhere
 onto your computer, such as, Desktop, My Documents, or
 Programs Files folder.  There is no installer to run.
 
-Double click the 'CreateToolkitShortcut.exe app to quickly
+Double click the 'CreateToolkitShortcut.exe' app to quickly
 create a shortcut to 'RocksmithToolkitGUI.exe'.  Double
 click on the shortcut 'RocksmithToolkitGUI' to launch the
 toolkit.

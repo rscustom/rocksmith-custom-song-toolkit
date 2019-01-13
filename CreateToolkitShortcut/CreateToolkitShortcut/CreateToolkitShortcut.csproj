@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ApplicationIcon>CreateShortcut.ico</ApplicationIcon>
+    <ApplicationIcon>CreateToolkitShortcut.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -50,7 +50,7 @@
     <Compile Include="ShellShortcut.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CreateShortcut.ico" />
+    <Content Include="CreateToolkitShortcut.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
