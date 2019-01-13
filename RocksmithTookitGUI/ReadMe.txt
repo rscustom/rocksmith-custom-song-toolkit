@@ -1,17 +1,17 @@
 ﻿Welcome to the Song Creator Toolkit for Rocksmith.
-More commonly known as the Rocksmith Toolkit, or
-more simply as, 'the toolkit'.
+Commonly known as the Rocksmith Toolkit, or simply
+known as, 'the toolkit'.
 
-Drag and drop the 'RocksmithToolkit' folder anywhere
-onto your computer, such as, Desktop, My Documents, or 
+Drag and drop the 'RocksmithToolkit' folder, along
+with the helper app 'CreateToolkitShortcut.exe anywhere
+onto your computer, such as, Desktop, My Documents, or
 Programs Files folder.  There is no installer to run.
 
+Double click the 'CreateToolkitShortcut.exe app to quickly
+create a shortcut to 'RocksmithToolkitGUI.exe'.  Double
+click on the shortcut 'RocksmithToolkitGUI' to launch the
+toolkit.
+
 The toolkit does not use, or modify the system registry
-in any way.  The program is completely portable.
-You can even run it from a USB stick if you want to.
-
-Open the 'RocksmithToolkit' folder and double click on
-the application name/icon 'RocksmithToolkitGUI.exe' to
-launch the program.  You can create a shortcut, and place
-it anywhere to make the program easier to launch.
-
+in any way, and is completely portable.  You can even 
+run it from a USB stick if you want to.

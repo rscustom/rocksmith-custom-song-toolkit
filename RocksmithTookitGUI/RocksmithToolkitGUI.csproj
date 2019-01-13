@@ -61,7 +61,7 @@
   <PropertyGroup>
     <NoWin32Manifest>false</NoWin32Manifest>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'RocksmithToolkit|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'RocksmithToolkitMac|x86' ">
     <OutputPath>bin\RocksmithToolkit\</OutputPath>
     <Optimize>true</Optimize>
     <PlatformTarget>x86</PlatformTarget>
@@ -466,7 +466,7 @@ if $(ConfigurationName) == Release (
  )
 
 REM Cleanup for Release (Mac Wineskin) Build
-if $(ConfigurationName) == RocksmithToolkit (
+if $(ConfigurationName) == RocksmithToolkitMac (
    del /S /Q "$(TargetDir)*.exe.config"
    del /S /Q "$(TargetDir)*.pdb"
    del /S /Q "$(TargetDir)*.vshost.exe"
@@ -481,6 +481,8 @@ if $(ConfigurationName) == RocksmithToolkit (
 
    del /S /Q "$(TargetDir)*.bat"
    del /S /Q "$(TargetDir)ReadMe.txt"
+   del /S /Q "$(TargetDir)Tools\CreateToolkitShortcut.exe"
+   copy /Y "$(ProjectDir)songcreator.icns" "$(TargetDir)songcreator.icns"
  )
 
 

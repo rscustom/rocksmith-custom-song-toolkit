@@ -108,12 +108,12 @@
             this.general_usebeta.CheckState = System.Windows.Forms.CheckState.Checked;
             this.general_usebeta.Enabled = false;
             this.general_usebeta.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.general_usebeta.Location = new System.Drawing.Point(2, 19);
+            this.general_usebeta.Location = new System.Drawing.Point(7, 19);
             this.general_usebeta.Name = "general_usebeta";
             this.general_usebeta.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.general_usebeta.Size = new System.Drawing.Size(117, 17);
+            this.general_usebeta.Size = new System.Drawing.Size(112, 17);
             this.general_usebeta.TabIndex = 8;
-            this.general_usebeta.Text = "Use Beta Releases";
+            this.general_usebeta.Text = "Use Beta Release";
             this.toolTip.SetToolTip(this.general_usebeta, "\r\n");
             this.general_usebeta.UseVisualStyleBackColor = true;
             this.general_usebeta.Leave += new System.EventHandler(this.ConfigurationChanged);
