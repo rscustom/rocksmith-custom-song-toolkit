@@ -571,8 +571,8 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <summary>
         /// Given a .bnk file, read the audio volume factor
         /// </summary>
-        /// <param name="srcPath"></param>
-        /// <param name="platform"></param>
+        /// <param name="srcPath">Wwise bnk file</param>
+        /// <param name="platform">Game platform to detect endianness</param>
         /// <returns></returns>
         public static float? ReadVolumeFactor(string srcPath, Platform platform)
         {
@@ -598,9 +598,18 @@ namespace RocksmithToolkitLib.DLCPackage
                     // find correct object type - SFXV
                     if (typeId == 2)
                     {
-                        // skip 46 bytes to find volume factor
-                        reader.ReadBytes(46);
+                        // skip 42 bytes to get params count                        
+                        reader.ReadBytes(42);
 
+                        // new bnk has 4, old should have 3
+                        var pnum = reader.ReadByte();
+
+                        //we could do a toaster here to see where's volume value is
+                        //but I'm solidly hopping they won't hange it's order...
+                        //skip paramType section
+                        reader.ReadBytes(pnum);
+
+                        // fetch volume factor (Param0 value)
                         return reader.ReadSingle();
                     }
 
