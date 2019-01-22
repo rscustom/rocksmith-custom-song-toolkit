@@ -64,8 +64,8 @@ namespace RocksmithToolkitLib
                     //  recommend update to latest revision under special conditions
                     var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
 
-                    if ((!useBeta && ToolkitVersion.AssemblyConfiguration == "BUILD") ||
-                        (useBeta && ToolkitVersion.AssemblyConfiguration != "BUILD"))
+                    if ((!useBeta && ToolkitVersion.AssemblyConfiguration == "") ||
+                        (useBeta && ToolkitVersion.AssemblyConfiguration != ""))
                     {
                         versionInfoJson = new WebClient().DownloadString(GetFileUrl());
                         toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
