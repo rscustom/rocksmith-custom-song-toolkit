@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.IO;
+using RocksmithToolkitLib.Extensions;
 
 
 namespace RocksmithToolkitLib
@@ -27,13 +28,16 @@ namespace RocksmithToolkitLib
         // assemblyInformationVersion (aka gitSubVersion) e.g. "ce57ebea"
         public static string AssemblyInformationVersion = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).Cast<AssemblyInformationalVersionAttribute>().FirstOrDefault().InformationalVersion.ToString();
 
-        // assemblyConfigurate e.g. "BETA" or blank
+        // assemblyConfigurate e.g. "BUILD", "BETA", "RELEASE", or "" (blank) depending on RocksmithPreBuild.exe usage
         public static string AssemblyConfiguration = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
 
         public static string RSTKGuiVersion
         {
             get
             {
+                if (GeneralExtensions.IsInDesignMode)
+                    AssemblyConfiguration = "DEVELOPER";
+
                 return String.Format("{0}-{1} {2}", AssemblyVersion, AssemblyInformationVersion, AssemblyConfiguration);
             }
         }

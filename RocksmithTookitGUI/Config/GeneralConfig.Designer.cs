@@ -108,14 +108,15 @@
             this.general_usebeta.CheckState = System.Windows.Forms.CheckState.Checked;
             this.general_usebeta.Enabled = false;
             this.general_usebeta.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.general_usebeta.Location = new System.Drawing.Point(7, 19);
+            this.general_usebeta.Location = new System.Drawing.Point(312, 88);
             this.general_usebeta.Name = "general_usebeta";
             this.general_usebeta.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.general_usebeta.Size = new System.Drawing.Size(112, 17);
+            this.general_usebeta.Size = new System.Drawing.Size(187, 17);
             this.general_usebeta.TabIndex = 8;
-            this.general_usebeta.Text = "Use Beta Release";
-            this.toolTip.SetToolTip(this.general_usebeta, "\r\n");
+            this.general_usebeta.Text = "(Hidden) Always Use Beta Version";
+            this.toolTip.SetToolTip(this.general_usebeta, "Developer Use Only\r\nForce use of beta version");
             this.general_usebeta.UseVisualStyleBackColor = true;
+            this.general_usebeta.Visible = false;
             this.general_usebeta.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
             // gbCreator
@@ -329,7 +330,7 @@
             // 
             this.creator_structured.AutoSize = true;
             this.creator_structured.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_structured.Location = new System.Drawing.Point(341, 78);
+            this.creator_structured.Location = new System.Drawing.Point(341, 70);
             this.creator_structured.Name = "creator_structured";
             this.creator_structured.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.creator_structured.Size = new System.Drawing.Size(158, 17);
@@ -368,6 +369,7 @@
             // 
             this.gbGeneral.Controls.Add(this.label18);
             this.gbGeneral.Controls.Add(this.general_lockappid);
+            this.gbGeneral.Controls.Add(this.general_usebeta);
             this.gbGeneral.Controls.Add(this.general_defaultplatform);
             this.gbGeneral.Controls.Add(this.label17);
             this.gbGeneral.Controls.Add(this.btnWwisePath);
@@ -482,15 +484,14 @@
             // 
             this.gbAutoUpdate.Controls.Add(this.general_autoupdate);
             this.gbAutoUpdate.Controls.Add(this.general_replacerepo);
-            this.gbAutoUpdate.Controls.Add(this.general_usebeta);
             this.gbAutoUpdate.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.gbAutoUpdate.Location = new System.Drawing.Point(380, 10);
+            this.gbAutoUpdate.Location = new System.Drawing.Point(380, 15);
             this.gbAutoUpdate.Name = "gbAutoUpdate";
-            this.gbAutoUpdate.Size = new System.Drawing.Size(127, 62);
+            this.gbAutoUpdate.Size = new System.Drawing.Size(127, 47);
             this.gbAutoUpdate.TabIndex = 99;
             this.gbAutoUpdate.TabStop = false;
             this.gbAutoUpdate.Text = "Auto-Update      ";
-            this.toolTip.SetToolTip(this.gbAutoUpdate, "Monitor for updates and download\r\nthe latest beta release (default)");
+            this.toolTip.SetToolTip(this.gbAutoUpdate, "Monitor for updates and\r\ndownload the latest build");
             // 
             // general_autoupdate
             // 
@@ -509,7 +510,7 @@
             // 
             this.general_replacerepo.AutoSize = true;
             this.general_replacerepo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.general_replacerepo.Location = new System.Drawing.Point(4, 39);
+            this.general_replacerepo.Location = new System.Drawing.Point(4, 20);
             this.general_replacerepo.Name = "general_replacerepo";
             this.general_replacerepo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.general_replacerepo.Size = new System.Drawing.Size(115, 17);
@@ -771,6 +772,7 @@
             this.toolTip.AutomaticDelay = 100;
             this.toolTip.AutoPopDelay = 20000;
             this.toolTip.InitialDelay = 100;
+            this.toolTip.IsBalloon = true;
             this.toolTip.ReshowDelay = 100;
             // 
             // lblFirstRun

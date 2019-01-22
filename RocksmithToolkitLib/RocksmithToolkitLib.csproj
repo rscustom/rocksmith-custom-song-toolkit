@@ -295,7 +295,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>rem Only need to  make changes to version information below
-rem RocksmithPreBuild.exe takes care of updating Assembly.cs files and AppVeyor versioning information
+rem RocksmithPreBuild.exe automatically updates Assembly.cs files and AppVeyor versioning information
 
 if $(ConfigurationName) == Debug (
 CD "$(SolutionDir)"
@@ -306,14 +306,20 @@ rem resyncing the commit usual fixes the error
 
 rem there are several alternate usages for RocksmithPreBuild.exe
 
-rem the next cmd is used for normal beta development mode (default mode)
+rem the next cmd is used for normal development mode (default - reuse the existing version/type information)
 cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
+
+rem before issuing new (blank, i.e. no version type) make next cmd active and comment out the others
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.3.0 NONE"
+
+rem before issuing new build make next cmd active and comment out the others
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.2.0 BUILD"
+
+rem before issuing new beta make next cmd active and comment out the others
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.1.0 BETA"
 
 rem before issuing new release make next cmd active and comment out the others
 rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.0.0 RELEASE"
-
-rem after making a Release must switch back to Beta using next cmd
-rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.1.0 BETA"
 )
 
 rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj these call the 'prebuild.sh' file</PreBuildEvent>

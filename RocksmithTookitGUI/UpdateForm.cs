@@ -43,7 +43,7 @@ namespace RocksmithToolkitGUI
 
             var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
             lblCurrentVersion.Text = ToolkitVersion.RSTKGuiVersion;
-            lblNewVersion.Text = String.Format("{0}-{1} {2}", onlineVersion.Version, onlineVersion.Revision, useBeta ? "BETA" : "");
+            lblNewVersion.Text = String.Format("{0}-{1} {2}", onlineVersion.Version, onlineVersion.Revision, useBeta ? "BUILD" : "");
             lblNewVersionDate.Text = onlineVersion.Date.ToShortDateString();
 
             if (onlineVersion.CommitMessages != null)

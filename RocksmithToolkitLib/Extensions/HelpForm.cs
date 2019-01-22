@@ -48,7 +48,6 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
-
         public string AssemblyTitle
         {
             get

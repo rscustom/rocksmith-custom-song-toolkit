@@ -260,9 +260,7 @@ namespace RocksmithToolkitGUI
             bool showRevNote = ConfigRepository.Instance().GetBoolean("general_showrevnote");
             if (showRevNote)
             {
-                if (this.Text.ToUpper().Contains("BETA"))
-                    ShowHelpForm();
-
+                ShowHelpForm();
                 ConfigRepository.Instance()["general_showrevnote"] = "false";
             }
 
@@ -287,13 +285,12 @@ namespace RocksmithToolkitGUI
 
         private void ShowHelpForm()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            using (Stream streamBetaInfo = assembly.GetManifestResourceStream("RocksmithToolkitGUI.BetaInfo.rtf")) //RocksmithToolkitGUI.Resources.
+            using (Stream stream = File.OpenRead("ReleaseNotes.rtf"))
             {
                 using (var helpViewer = new HelpForm())
                 {
-                    helpViewer.Text = String.Format("{0}", "TOOLKIT BETA REVISION MESSAGE ...");
-                    helpViewer.PopulateRichText(streamBetaInfo);
+                    helpViewer.Text = String.Format("{0}", "Toolkit Release Notes ...");
+                    helpViewer.PopulateRichText(stream);
                     helpViewer.ShowDialog();
                 }
             }
