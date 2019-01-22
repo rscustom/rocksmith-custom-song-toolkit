@@ -81,8 +81,9 @@ namespace RocksmithToolkitLib.Extensions
         public static string GetTempFileName(string extension = ".tmp")
         {
             string re = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", Path.GetRandomFileName() + extension);
-            Directory.CreateDirectory(Path.GetDirectoryName(re));
-
+            // perma fix for album artwork tmp\*.dds 'Could not find file' error 
+            IOExtension.MakeDirectory(Path.GetDirectoryName(re));
+ 
             return re;
         }
 

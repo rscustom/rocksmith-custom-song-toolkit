@@ -692,7 +692,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     bnkWemList.Add(bnkWemData);
                 }
 
-                // set volume from .bnk file
+                // get volume from .bnk file
                 if (bnkAudioVolume == null)
                     bnkAudioVolume = bnkWemList.Where(fn => !fn.BnkFileName.EndsWith("_preview.bnk")).Select(vf => vf.VolumeFactor).FirstOrDefault();
 

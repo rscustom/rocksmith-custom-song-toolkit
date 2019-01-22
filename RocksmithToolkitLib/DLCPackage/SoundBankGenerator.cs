@@ -605,12 +605,13 @@ namespace RocksmithToolkitLib.DLCPackage
                         var pnum = reader.ReadByte();
 
                         //we could do a toaster here to see where's volume value is
-                        //but I'm solidly hopping they won't hange it's order...
+                        //but I'm solidly hopping they won't change it's order...
                         //skip paramType section
                         reader.ReadBytes(pnum);
 
                         // fetch volume factor (Param0 value)
-                        return reader.ReadSingle();
+                        var volFactor = reader.ReadSingle();
+                        return volFactor;
                     }
 
                     reader.ReadBytes((int)lenSection);

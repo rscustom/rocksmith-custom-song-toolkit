@@ -176,7 +176,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.tbarScrollSpeed.TabIndex = 9;
             this.tbarScrollSpeed.TabStop = false;
             this.tbarScrollSpeed.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.tbarScrollSpeed.Value = 20;
+            this.toolTip.SetToolTip(this.tbarScrollSpeed, "(Default Value 1.3)");
+            this.tbarScrollSpeed.Value = 13;
             this.tbarScrollSpeed.ValueChanged += new System.EventHandler(this.tbarScrollSpeed_ValueChanged);
             // 
             // label3
