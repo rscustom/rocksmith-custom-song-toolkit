@@ -60,7 +60,7 @@ namespace RocksmithToolkitLib
                 {
                     versionInfoJson = new WebClient().DownloadString(versionInfoUrl);
                     toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
-                 
+
                     //  recommend update to latest revision under special conditions
                     var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
 
@@ -106,6 +106,7 @@ namespace RocksmithToolkitLib
 
         public static string GetFileUrl(bool addExtension = false)
         {
+            // forcing use of beta version in GeneralConfig
             var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
             var lastestReleaseUrl = ConfigRepository.Instance()["general_urllastestrelease"];
             var lastestBetaUrl = ConfigRepository.Instance()["general_urllastestbeta"];
@@ -115,7 +116,7 @@ namespace RocksmithToolkitLib
             if (!addExtension)
                 return fileUrl;
 
-            // downloader is currently disable Mac Mono/Wine  
+            // downloader is currently disabled for Mac Mono
             if (Environment.OSVersion.Platform == PlatformID.MacOSX)
                 return fileUrl + ".tar.gz";
 
