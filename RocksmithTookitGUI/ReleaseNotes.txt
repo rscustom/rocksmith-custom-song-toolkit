@@ -1,0 +1,61 @@
+Rocksmith Toolkit Release Notes
+
+* Switched ReleaseNotes to ascii text file format for web browser viewing
+  
+* Updated RocksmithPreBuild.exe to include new versioning methods
+
+* improved ReadVolumeFactor parsing method to account for different bnk formats
+
+* Added new support for Mac Wineskin wrappers
+
+* Updated to DDC v3.6 thanks to Chlipouni
+
+* Revised sortable field validation to be more consistent with ODLC
+
+* Added support to CDLC Creator to preserve tagger.org artwork
+
+* Rewrote AppId Updater code as a memory process to improve overall performance 
+
+* Fixed typo/bug in GenerateSng
+
+* Correctly set manifest boolean property ‘SKU’ so that CDLC are not tagged as DLC in the in-game setlist.
+
+* Applied a perma fix to prevent creating property values in the designer when the CDLC Creator GUI design is modified (fixes empty PackageVersion and Platform issues)
+
+* Improved RS1 to RS2014 and RS2014 to RS1 conversions and better tone conversions
+
+* Improved RS1 Import Package function to collect more accurate package data.
+
+* Add arrangement represent (Default/Bonus/Alternate) validation to CDLC Creator.
+
+* Save most recent ‘Default Project Folder’ to Configuration from ‘Quick Add’.
+
+* Added volume validation check when loading data.
+
+* Toolkit CDLC Creator uses the EOF Track>Rocksmith>Arrangement type> Default, Bonus, Alternate properties as set by default by EOF or as selected by the charter in EOF.  The toolkit  alerts users if there are more than 5 usable instrument arrangements entered (Remastered Max5 Limit) into the CDLC Creator.
+
+* Added Custom Open File Dialog to CDLC Creator ‘Quick Add’ button which allows arrangements to be entered in any specified order.  The order of Arrangement and Tone lists can be changed using Shift+Up/Down Arrow (see popup tooltips in CDLC Creator).
+
+* Fixed Mac Wine/Mono third party application processing
+
+* Fixed audio file type filtering in CDLC Creator.
+
+* Remove all periods “.” from sortable fields to avoid issues with sorting and file naming.
+
+* Make _RSToolkit Logger available in application for Global use.
+
+* Added Package Rating to toolkit.version file to track user rating of CDLC
+
+* Fixed Toolkit Auto Updater button action and caption
+
+* Wwise Path can now be completely cleared and reset in the Configure menu so that it is possible for user to switch to/from Wwise versions as needed to convert RS2014 to RS1 and then switch back.
+
+* Fixed some VS IDE issues with DDC tab menu.
+
+* Added automatic RS2014 to RS1 CDLC Converter.  Hover mouse over RS2014 radio button in "Game Version" groupbox to see quick how-to instructions.  You must have Wwise 2010.3.3 exact version installed from http://www.saintsrowmods.com/forum/pages/wwise and also set toolkit >Configuration>Wwise Path for auto conversion to work.
+
+
+Please let the toolkit developers know if experience any issues with this beta (good reports or bug reports).  Always make sure you are able to reproduce the issue with the latest toolkit beta before filing a bug report. 
+
+
+User Tip:  Windows 10 users can unblock the toolkit DLL's and EXE's by running the following command in Windows PowerShell 'gci ./toolkit | unblock-file'.

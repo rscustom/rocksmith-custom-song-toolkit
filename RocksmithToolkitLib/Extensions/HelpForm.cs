@@ -44,6 +44,8 @@ namespace RocksmithToolkitLib.Extensions
             }
             else
             {
+                this.Size = new Size(780, 450);
+                rtbNotes.Font = new Font("Arial", 11.0F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
                 rtbNotes.Text = textNotes;
             }
         }

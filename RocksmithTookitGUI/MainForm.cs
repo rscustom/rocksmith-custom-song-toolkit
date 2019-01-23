@@ -285,20 +285,21 @@ namespace RocksmithToolkitGUI
 
         private void ShowHelpForm()
         {
-            using (Stream stream = File.OpenRead("ReleaseNotes.rtf"))
+            // using ascii text file for web browser viewing
+            using (var helpViewer = new HelpForm())
             {
-                using (var helpViewer = new HelpForm())
-                {
-                    helpViewer.Text = String.Format("{0}", "Toolkit Release Notes ...");
-                    helpViewer.PopulateRichText(stream);
-                    helpViewer.ShowDialog();
-                }
+                helpViewer.Text = String.Format("{0}", "Viewing ReleaseNotes.txt ...");
+                helpViewer.PopulateAsciiText(File.ReadAllText("ReleaseNotes.txt"));
+                helpViewer.ShowDialog();
             }
         }
 
         // area for developer testing 
         private void DevTestMethod()
         {
+            ShowHelpForm();
+            return;
+
             var args = new string[]
             {
                 "-u",

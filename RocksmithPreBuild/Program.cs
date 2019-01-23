@@ -70,7 +70,7 @@ namespace RocksmithPreBuild
                 Console.WriteLine("            e.g. cmd /c \"RocksmithPreBuild.exe PREBUILD 1.2.3.4 RELEASE\"");
                 Console.WriteLine("");
                 Console.WriteLine("Press any key to continue");
-                if (DebugMode) Console.Read();
+                Console.Read();
 
                 Environment.Exit(1);
             }
@@ -406,7 +406,10 @@ namespace RocksmithPreBuild
 
         private static string ProjectVersion()
         {
-            return String.Format("{0}.{1}.{2}", Assembly.GetExecutingAssembly().GetName().Version.Major, Assembly.GetExecutingAssembly().GetName().Version.Minor, Assembly.GetExecutingAssembly().GetName().Version.Build);
+            return String.Format("{0}.{1}.{2}", 
+                Assembly.GetExecutingAssembly().GetName().Version.Major, 
+                Assembly.GetExecutingAssembly().GetName().Version.Minor, 
+                Assembly.GetExecutingAssembly().GetName().Version.Build);
         }
 
         public static string GetStringInBetween(string strBegin, string strEnd, string strSource)

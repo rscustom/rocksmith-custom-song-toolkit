@@ -392,6 +392,9 @@
     <None Include="Resources\toolkit_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ReleaseNotes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="songcreator.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -404,9 +407,6 @@
     <None Include="Resources\music_edit.png" />
     <Content Include="..\VersionInfo.txt">
       <Link>VersionInfo.txt</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ReleaseNotes.rtf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="ReadMe.txt">
