@@ -38,10 +38,16 @@ namespace RocksmithToolkitUpdater
         {
             if (!File.Exists(assemblyPath))
             {
-                MessageBox.Show("<ERROR> PrivateCall file does not exist ..." + Environment.NewLine +
-                "assemblyPath = " + assemblyPath, "DEBUG ME");
-
-                return null;
+                // try to find RocksmithToolkitGUI.exe using enumeration
+                var toolkitPath = Directory.EnumerateFiles(Path.GetPathRoot(assemblyPath), "RocksmithToolkitGUI.exe", SearchOption.AllDirectories).FirstOrDefault();
+                if (String.IsNullOrEmpty(assemblyPath))
+                {
+                    MessageBox.Show("<ERROR> PrivateCall file does not exist ..." + Environment.NewLine +
+                                    "assemblyPath = " + assemblyPath, "DPDM");
+                    return null;
+                }
+                else
+                    assemblyPath = toolkitPath;
             }
 
             // a f'n nightmare to debug this shit ... here's another bad boy
@@ -59,8 +65,8 @@ namespace RocksmithToolkitUpdater
             catch (Exception ex)
             {
                 MessageBox.Show("<ERROR> PrivateCall instance failed ..." + Environment.NewLine +
-                "assemblyPath = " + assemblyPath + Environment.NewLine +
-                ex.InnerException.Message, "DEBUG ME");
+                                "assemblyPath = " + assemblyPath + Environment.NewLine +
+                                 ex.InnerException.Message, "DPDM");
             }
 
             return null;

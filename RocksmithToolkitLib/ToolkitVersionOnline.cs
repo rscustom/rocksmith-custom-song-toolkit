@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.XmlRepository;
+using System.Collections.Generic;
 
 namespace RocksmithToolkitLib
 {
@@ -16,7 +17,7 @@ namespace RocksmithToolkitLib
         public string Revision { get; set; }
 
         [JsonProperty("version")]
-        public string Version { get; set; }
+        public string OnlineVersion { get; set; }
 
         [JsonProperty("date")]
         public double UnixTimestamp { get; set; }
@@ -37,76 +38,81 @@ namespace RocksmithToolkitLib
                 return dateTime;
             }
         }
+
         /// <summary>
-        /// based on current installed revision get the latest online revision
-        /// <para>server will determine if local revision should be updated</para>
+        /// Get the latest online version info
         /// </summary>
+        /// <param name="gitSubversion">Get specified version info and force rollback</param>
         /// <returns></returns>
-        public static ToolkitVersionOnline Load(string versionInfoUrl = "")
+        public static ToolkitVersionOnline GetOnlineVersionInfo(string gitSubversion = "") // fe47c38
         {
+            // TODO: impliment TLS check (see way below)
             // No TLS 1.2 in WinXp, or before IE8 browser if OS is newer than WinXP 
             // Automatic updates do not work in WinXP (Win10 TLS 1.2 must be manually activated)
+            var versionOnline = new ToolkitVersionOnline();
+            var versionInfoUrl = String.Empty;
+            if (!String.IsNullOrEmpty(gitSubversion))
+                versionInfoUrl = String.Format("{0}/{1}", GetFileUrl(), gitSubversion);
+            else
+                versionInfoUrl = GetFileUrl(); // latest online version (default)
 
             var versionInfoJson = String.Empty;
-            var toolkitVersionOnline = new ToolkitVersionOnline();
-
-            if (String.IsNullOrEmpty(versionInfoUrl))
-                versionInfoUrl = String.Format("{0}/{1}", GetFileUrl(), ToolkitVersion.AssemblyInformationVersion);
-
-            try
+            if (!GeneralExtensions.IsInDesignMode)
             {
-                // normal operation
-                if (!GeneralExtensions.IsInDesignMode)
+                try
                 {
                     versionInfoJson = new WebClient().DownloadString(versionInfoUrl);
-                    toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
-
-                    //  recommend update to latest revision under special conditions
-                    var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
-
-                    if ((!useBeta && ToolkitVersion.AssemblyConfiguration == "") ||
-                        (useBeta && ToolkitVersion.AssemblyConfiguration != ""))
-                    {
-                        versionInfoJson = new WebClient().DownloadString(GetFileUrl());
-                        toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
-                        toolkitVersionOnline.CommitMessages = new string[2];
-                        toolkitVersionOnline.CommitMessages[0] = "<WARNING>: Special conditions were detected ...";
-                        toolkitVersionOnline.CommitMessages[1] = "Recommend installing the latest online version.";
-                        toolkitVersionOnline.UpdateAvailable = true;
-                    }
-                    else
-                    {
-                        var installedRevision = ToolkitVersion.AssemblyInformationVersion;
-                        // update available
-                        if (!installedRevision.Contains(toolkitVersionOnline.Revision))
-                            toolkitVersionOnline.UpdateAvailable = true;
-                        else
-                            toolkitVersionOnline.UpdateAvailable = false;
-                    }
                 }
-                else // dumby JSON data for debugging 
+                catch (Exception ex)
                 {
-                    versionInfoJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
-                    toolkitVersionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
-
-                    var installedRevision = ToolkitVersion.AssemblyInformationVersion;
-                    if (!installedRevision.Contains(toolkitVersionOnline.Revision))
-                        toolkitVersionOnline.UpdateAvailable = true;
-                    // alt debugging option
-                    // toolkitVersionOnline.UpdateAvailable = false;
+                    versionOnline.CommitMessages = new string[3];
+                    versionOnline.CommitMessages[0] = "<WARNING> Could not retreive online version info ...";
+                    versionOnline.CommitMessages[1] = "<WARNING> Check your internet connection ...";
+                    versionOnline.CommitMessages[2] = " - " + ex.Message;
+                    versionOnline.UpdateAvailable = true;
+                    return versionOnline;
                 }
             }
-            catch (Exception ex)
+            else // use some dumby JSON data for debugging 
+                versionInfoJson = "{\"version\":\"2.7.1.0\",\"date\":1470934174,\"update\":true,\"commits\":[\"<README> For Developer Use Only ...\",\"<README> This is dumby data for debugging ...\",\"2016-08-11:AppVeyour build failed so recommitting\",\"2016-08-11: Commit for Beta Version 2.7.1.0\"],\"revision\":\"7f8f5233\"}";
+
+            versionOnline = JsonConvert.DeserializeObject<ToolkitVersionOnline>(versionInfoJson);
+
+            var commitMessagesList = new List<string>();
+            if (String.IsNullOrEmpty(gitSubversion))
             {
-                Console.WriteLine("VersionInfoUrl Load Error: " + ex.Message);
+                // update if git subversions are different
+                var versionInstalled = ToolkitVersion.AssemblyInformationVersion;
+                if (!versionInstalled.Equals(versionOnline.Revision, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!GeneralExtensions.IsInDesignMode)
+                    {
+                        commitMessagesList.Add("<README> Sucessfully retrieved latest online version info  ...");
+                        commitMessagesList.Add("<README> An update is ready for download and installation  ...");
+                    }
+
+                    versionOnline.UpdateAvailable = true;
+                }
+                else
+                    versionOnline.UpdateAvailable = false;
+            }
+            else // forced update (custom rollback) to a specific version
+            {
+                commitMessagesList.Add("<README> This is a custom rollback installation ...");
+                versionOnline.UpdateAvailable = true;
             }
 
-            return toolkitVersionOnline;
+            if (versionOnline.CommitMessages != null)
+                for (int i = 0; i < versionOnline.CommitMessages.Length; i++)
+                    commitMessagesList.Add(versionOnline.CommitMessages[i]);
+
+            versionOnline.CommitMessages = commitMessagesList.ToArray();
+            return versionOnline;
         }
 
         public static string GetFileUrl(bool addExtension = false)
         {
-            // forcing use of beta version in GeneralConfig
+            // now forcing use of latest build (beta) in GeneralConfig
             var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
             var lastestReleaseUrl = ConfigRepository.Instance()["general_urllastestrelease"];
             var lastestBetaUrl = ConfigRepository.Instance()["general_urllastestbeta"];

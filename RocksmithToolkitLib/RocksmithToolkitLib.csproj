@@ -306,11 +306,14 @@ rem resyncing the commit usual fixes the error
 
 rem there are several alternate usages for RocksmithPreBuild.exe
 
+rem the next cmd is used for test Auto Update feature by setting git subversion to 00000000
+rem cmd /c "RocksmithPreBuild.exe PREBUILD READ READ 00000000"
+
 rem the next cmd is used for normal development mode (default - reuse the existing version/type information)
 cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
 
 rem before issuing new (blank, i.e. no version type) make next cmd active and comment out the others
-rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.3.0 NONE"
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.2.0 NONE"
 
 rem before issuing new build make next cmd active and comment out the others
 rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.2.0 BUILD"

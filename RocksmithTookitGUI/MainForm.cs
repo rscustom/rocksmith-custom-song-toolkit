@@ -94,7 +94,7 @@ namespace RocksmithToolkitGUI
             // CHECK FOR NEW AVAILABLE REVISION AND ENABLE UPDATE
             try
             {
-                onlineVersion = ToolkitVersionOnline.Load();
+                onlineVersion = ToolkitVersionOnline.GetOnlineVersionInfo();
             }
             catch (WebException) { /* Do nothing on 404 */ }
             catch (Exception)
@@ -285,10 +285,10 @@ namespace RocksmithToolkitGUI
 
         private void ShowHelpForm()
         {
-            // using ascii text file for web browser viewing
             using (var helpViewer = new HelpForm())
             {
                 helpViewer.Text = String.Format("{0}", "Viewing ReleaseNotes.txt ...");
+                // using ascii text file for web browser viewing
                 helpViewer.PopulateAsciiText(File.ReadAllText("ReleaseNotes.txt"));
                 helpViewer.ShowDialog();
             }

@@ -437,8 +437,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>REM copy support files
+xcopy /S /Y "$(SolutionDir)Third-party Apps"</PreBuildEvent>
     <!-- be sure to address all build types in the PostBuildEvent -->
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
       xcopy /S /Y "$(SolutionDir)Third-party Apps"
@@ -448,10 +448,8 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>REM copy support files
-xcopy /S /Y "$(SolutionDir)Third-party Apps"
+    <PostBuildEvent>REM Cleanup for Release (AppVeyor) Build
 
-REM Cleanup for Release (AppVeyor) Build
 if $(ConfigurationName) == Release (
    del /S /Q "$(TargetDir)*.exe.config"
    del /S /Q "$(TargetDir)*.pdb"
@@ -468,6 +466,7 @@ if $(ConfigurationName) == Release (
  )
 
 REM Cleanup for Release (Mac Wineskin) Build
+
 if $(ConfigurationName) == RocksmithToolkitMac (
    del /S /Q "$(TargetDir)*.exe.config"
    del /S /Q "$(TargetDir)*.pdb"

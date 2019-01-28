@@ -2,6 +2,9 @@
 using System.IO;
 using System.Text;
 using System.Reflection;
+using System.Diagnostics;
+using System.Windows.Forms;
+using CreateToolkitShortcut;
 
 
 namespace CreateShortcut
@@ -30,10 +33,10 @@ namespace CreateShortcut
             Console.WriteLine("Creating Shortcut ...");
             Console.WriteLine();
 
-            // force the use of developer's static arguments
+            // force the use of static arguments
             if (args.Length == 0)
             {
-                // give the progie some debug args to work with
+                // give the progie some args to work with
                 Console.WriteLine("Using Internal Static Arguments for RocksmithToolkitGUI ...");
                 Console.WriteLine();
                 args = new string[]
@@ -55,12 +58,13 @@ namespace CreateShortcut
                 Console.WriteLine();
                 Console.WriteLine(@" - Command Line Usage: CreateShortcut [arg1] [arg2] [arg3] [arg4]");
                 Console.WriteLine();
-                Console.WriteLine(@" - Where: [arg1] shortcut relative path, e.g. './new/myshortcut.lnk'");
+                Console.WriteLine(@" - Where: [arg1] shortcut relative path, e.g. 'myshortcut.lnk'");
                 Console.WriteLine(@"          [arg2] application relative path, e.g. './programs/myshortcut.exe'");
                 Console.WriteLine(@"          [arg3] icon relative path, e.g. './programs/myshortcut.ico'");
                 Console.WriteLine(@"          [arg4] icon index, e.g. '0'");
                 Console.WriteLine();
                 Console.WriteLine(@" - Note: The paths are relative to location of CreateShortcut.exe");
+                Console.WriteLine(@"         CreateToolkitShortcut.exe self destructs after sucessful completion");
                 Console.WriteLine();
                 Console.WriteLine(@"Press any key to continue ...");
                 Console.Read();
@@ -164,8 +168,10 @@ namespace CreateShortcut
 
                 Console.WriteLine(@"Press any key to continue ...");
                 Console.Read();
+                return result;
             }
 
+            SelfDestruct.DoIt();
             return result;
         }
 
@@ -176,6 +182,7 @@ namespace CreateShortcut
                                  Assembly.GetExecutingAssembly().GetName().Version.Minor,
                                  Assembly.GetExecutingAssembly().GetName().Version.Build);
         }
+
 
     }
 }

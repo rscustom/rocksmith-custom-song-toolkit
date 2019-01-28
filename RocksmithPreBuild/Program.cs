@@ -36,16 +36,13 @@ namespace RocksmithPreBuild
                 //args = new[] { "PREBUILDER", "1.2.3.4", "RELEASE" };
                 //args = new[] { "PREBUILDER", "1.2.3.4", "BETA" };
                 //args = new[] { "PREBUILDER", "1.2.3.4", "BUILD" };
-                args = new[] { "PREBUILDER", "1.2.3.4", "NONE" };
+                // args = new[] { "PREBUILDER", "1.2.3.4", "NONE" };
                 // args = new[] { "PREBUILDER", "READ", "READ" }; // use existing version/type
+                args = new[] { "PREBUILDER", "READ", "READ", "00000000" }; // use manually set git subversion
                 //args = new[] { "" }; // shows help
             }
 
-            if (args.Any() && args[0].ToUpper().Contains("CONVERT"))
-            {
-                // use the easter egg feature to convert non-VS2010 projects
-            }
-            else if (!args.Any() || args.Length != 3 || args[0].ToUpper().Contains("HELP") || args[0].Contains("?"))
+            if (!args.Any() || args[0].ToUpper().Contains("HELP") || args[0].Contains("?"))
             {
                 Console.WriteLine("");
                 Console.WriteLine(" CLI RocksmithPreBuild.exe");
@@ -61,9 +58,13 @@ namespace RocksmithPreBuild
                 Console.WriteLine("            [arg1] and [arg2] for read/write to 'PatchAssemblyVersion.ps1' file");
                 Console.WriteLine("            arg1 = 'READ' [AssemblyVersion Read Mode] ");
                 Console.WriteLine("            arg2 = 'READ' [AssemblyConfiguration Read Mode]");
+                Console.WriteLine("");
                 Console.WriteLine("            arg1 = '2.8.3.0' [AssemblyVersion Write Mode]");
                 Console.WriteLine("            arg2 = 'BUILD', 'BETA', 'RELEASE', or 'NONE' [AssemblyConfiguration Write Mode]");
-                Console.WriteLine("            'NONE' is converted to an empty/null string for use in the app");
+                Console.WriteLine("                   'NONE' is converted to an empty/null string for use in the app");
+                Console.WriteLine("");
+                Console.WriteLine(" - Optional: (write git subversion)");
+                Console.WriteLine("            arg3 = '00000000' [AssemblyInformationVersion Write Mode] aka gitsubversion");
                 Console.WriteLine("");
                 Console.WriteLine(" - Usage:   Run CLI RocksmithPreBuilder.exe with arguments from inside");
                 Console.WriteLine("            the VS2010 DEBUG MODE pre-build event in RocksmithToolkitLib");
@@ -75,7 +76,7 @@ namespace RocksmithPreBuild
                 Environment.Exit(1);
             }
 
-            // alternate CLI usage ... Easter Egg
+            // convert any VS Project to VS2010
             if (args[0].ToUpper().Contains("CONVERT"))
                 ConvertVsProject();
 
@@ -126,7 +127,11 @@ namespace RocksmithPreBuild
                 Environment.Exit(1);
             }
 
-            assemblyInformationVersion = lines[0].Substring(0, 8);
+            if (args.Length == 4)
+                assemblyInformationVersion = args[3];
+            else
+                assemblyInformationVersion = lines[0].Substring(0, 8);
+
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(" - gitSubVersion (AssemblyInformationVersion): " + assemblyInformationVersion);
             Console.ForegroundColor = ConsoleColor.Green;
@@ -137,7 +142,7 @@ namespace RocksmithPreBuild
             lines = File.ReadAllLines(patchAssemblyVersionPath).ToList();
             if (lines.Any())
             {
-                // $Assembly_Version = "0.0.0.0" 
+                // $Assembly_Version = "1.2.3.4" 
                 line = lines.Where(str => str.Contains("$Assembly_Version")).FirstOrDefault();
                 if (!string.IsNullOrEmpty(line))
                 {
@@ -231,7 +236,7 @@ namespace RocksmithPreBuild
                 lines = File.ReadAllLines(assemblyInfoPath).ToList();
                 if (lines.Any())
                 {
-                    // [assembly: AssemblyVersion("2.3.8.1")]  
+                    // [assembly: AssemblyVersion("1.2.3.4")]  
                     line = lines.FirstOrDefault(str => str.Contains("[assembly: AssemblyVersion(\""));
                     if (!string.IsNullOrEmpty(line))
                     {
@@ -253,7 +258,7 @@ namespace RocksmithPreBuild
                         }
                     }
 
-                    // [assembly: AssemblyInformationalVersion("9605d7f3")]
+                    // [assembly: AssemblyInformationalVersion("00000000")]
                     line = lines.FirstOrDefault(str => str.Contains("[assembly: AssemblyInformationalVersion(\""));
                     if (!string.IsNullOrEmpty(line))
                     {
@@ -406,9 +411,9 @@ namespace RocksmithPreBuild
 
         private static string ProjectVersion()
         {
-            return String.Format("{0}.{1}.{2}", 
-                Assembly.GetExecutingAssembly().GetName().Version.Major, 
-                Assembly.GetExecutingAssembly().GetName().Version.Minor, 
+            return String.Format("{0}.{1}.{2}",
+                Assembly.GetExecutingAssembly().GetName().Version.Major,
+                Assembly.GetExecutingAssembly().GetName().Version.Minor,
                 Assembly.GetExecutingAssembly().GetName().Version.Build);
         }
 
