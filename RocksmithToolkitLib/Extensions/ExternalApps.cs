@@ -27,47 +27,54 @@ namespace RocksmithToolkitLib.Extensions
 
         public static bool VerifyExternalApps()
         {
-            var errMsg = new StringBuilder();
+            try
+            {
+                var errMsg = new StringBuilder();
 
-            // Verifying third party apps exist where toolkit expects to find them
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_TOPNG)))
-                errMsg.AppendLine(APP_TOPNG);
+                // Verifying third party apps exist where toolkit expects to find them
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_TOPNG)))
+                    errMsg.AppendLine(APP_TOPNG);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_7Z)))
-                errMsg.AppendLine(APP_7Z);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_7Z)))
+                    errMsg.AppendLine(APP_7Z);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_NVDXT)))
-                errMsg.AppendLine(APP_NVDXT);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_NVDXT)))
+                    errMsg.AppendLine(APP_NVDXT);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGDEC)))
-                errMsg.AppendLine(APP_OGGDEC);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGDEC)))
+                    errMsg.AppendLine(APP_OGGDEC);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGCUT)))
-                errMsg.AppendLine(APP_OGGCUT);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGCUT)))
+                    errMsg.AppendLine(APP_OGGCUT);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGENC)))
-                errMsg.AppendLine(APP_OGGENC);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_OGGENC)))
+                    errMsg.AppendLine(APP_OGGENC);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_COREJAR)))
-                errMsg.AppendLine(APP_COREJAR);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_COREJAR)))
+                    errMsg.AppendLine(APP_COREJAR);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_WW2OGG)))
-                errMsg.AppendLine(APP_WW2OGG);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_WW2OGG)))
+                    errMsg.AppendLine(APP_WW2OGG);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_REVORB)))
-                errMsg.AppendLine(APP_REVORB);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_REVORB)))
+                    errMsg.AppendLine(APP_REVORB);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_CODEBOOKS)))
-                errMsg.AppendLine(APP_CODEBOOKS);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_CODEBOOKS)))
+                    errMsg.AppendLine(APP_CODEBOOKS);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_CODEBOOKS_603)))
-                errMsg.AppendLine(APP_CODEBOOKS_603);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_CODEBOOKS_603)))
+                    errMsg.AppendLine(APP_CODEBOOKS_603);
 
-            if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_DDC)))
-                errMsg.AppendLine(APP_DDC);
+                if (!File.Exists(Path.Combine(TOOLKIT_ROOT, APP_DDC)))
+                    errMsg.AppendLine(APP_DDC);
 
-            if (!String.IsNullOrEmpty(errMsg.ToString()))
-                throw new FileNotFoundException("<ERROR> Critical toolkit files not found:" + Environment.NewLine + errMsg.ToString());
+                if (!String.IsNullOrEmpty(errMsg.ToString()))
+                    throw new FileNotFoundException("<ERROR> Critical toolkit files not found:" + Environment.NewLine + errMsg.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new FileNotFoundException("<ERROR> Critical toolkit files not found:" + Environment.NewLine + ex.Message);
+            }
 
             return true;
         }

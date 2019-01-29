@@ -441,7 +441,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>REM copy support files
-xcopy /S /Y "$(SolutionDir)Third-party Apps"</PreBuildEvent>
+xcopy /E /S /Y "$(SolutionDir)ThirdPartyApps\*.*" "$(TargetDir)*.*"</PreBuildEvent>
     <!-- be sure to address all build types in the PostBuildEvent -->
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
       xcopy /S /Y "$(SolutionDir)Third-party Apps"
