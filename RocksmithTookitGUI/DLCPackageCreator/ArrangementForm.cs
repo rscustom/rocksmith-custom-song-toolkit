@@ -150,6 +150,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             set { txtXmlPath.Text = value; }
         }
 
+        // get/set data for JSON arrangement
         public Arrangement Arrangement
         {
             get
@@ -207,6 +208,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 //DLC ID
                 txtPersistentId.Text = value.Id.ToString().Replace("-", "").ToUpper();
                 txtMasterId.Text = value.MasterId.ToString();
+
+                // TODO: confirm XML gets updated after this somewhere
             }
         }
 
@@ -1076,6 +1079,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (!CheckBassTuning())
                 return;
 
+            // TODO: this should probably be a Save instead of Load
             LoadArrangementData(XmlPath);
             ConfigGlobals.DefaultProjectFolder = Path.GetDirectoryName(XmlPath);
             DialogResult = DialogResult.OK;

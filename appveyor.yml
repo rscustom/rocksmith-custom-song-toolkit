@@ -48,12 +48,12 @@ after_build:
   - ps: $env:BuildCommit = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
   - ps: $env:PkgName = "rstoolkit-" + $env:BuildVer + "-" + $env:BuildCommit
   - rem Windows package
-  - mkdir tmp
-  - xcopy /E "%BIN%\Release\*" "%BIN%\tmp\RocksmithToolkit\"
-  - copy "%BIN%\Release\ReadMe.txt" "%BIN%\tmp\ReadMe.txt"
-  - copy "%BIN%\Release\tools\CreateToolkitShortcut.exe" "%BIN%\tmp\CreateToolkitShortcut.exe"
-  - del "%BIN%\Release\ReadMe.txt"
-  - del "%BIN%\Release\tools\CreateToolkitShortcut.exe"
+  - mkdir "%BIN%\tmp"
+  - xcopy /S /Y "%BIN%\Release\*" "%BIN%\tmp\RocksmithToolkit\*"
+  - copy /Y "%BIN%\Release\ReadMe.txt" "%BIN%\tmp\ReadMe.txt"
+  - copy /Y "%BIN%\Release\tools\CreateToolkitShortcut.exe" "%BIN%\tmp\CreateToolkitShortcut.exe"
+  - del /Q "%BIN%\Release\ReadMe.txt"
+  - del /Q "%BIN%\Release\tools\CreateToolkitShortcut.exe"
   - 7z a %PkgName%-win.zip %BIN%\tmp\*
   - rem Mac package
   - del "%BIN%\RocksmithCustomSongToolkit.app\Contents\Resources\gitkeep.txt"

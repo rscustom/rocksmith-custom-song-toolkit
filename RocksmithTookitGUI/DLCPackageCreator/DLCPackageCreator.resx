@@ -121,14 +121,13 @@
     <value>23, 3</value>
   </metadata>
   <data name="chkShowlights.ToolTip" xml:space="preserve">
-    <value>CAUTION - FOR DEVELOPER USE ONLY -
-If checked, generates only the minimum
-required set of default Showlights.
-
-If toolkit throws errors during generation,
+    <value>If toolkit throws errors during generation,
 or the CDLC is locking up in-game during
 startup, then try checking this box and
-regenerate the CDLC.</value>
+regenerate the CDLC.
+
+If checked, generates only the minimum
+required set of default Showlights.</value>
   </data>
   <data name="btnPackageImport.ToolTip" xml:space="preserve">
     <value>NOTE:

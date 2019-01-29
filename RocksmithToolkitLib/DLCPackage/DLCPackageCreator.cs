@@ -546,15 +546,19 @@ namespace RocksmithToolkitLib.DLCPackage
 
                         if (false) // for debugging represent conflicts
                         {
+                            //infoArrangement.ArrangementPropeties.BonusArr = arr.BonusArr ? 1 : 0;
+                            //attribute.ArrangementProperties.BonusArr != infoArrangement.ArrangementPropeties.BonusArr;
+
+                            // get XML represent elements and compare to JSON represent elements
                             var infoArrangement = info.Arrangements.Where(x => x.ArrangementName == arr.ArrangementName).FirstOrDefault();
-                            if (arr.Represent != Convert.ToBoolean(infoArrangement.ArrangementPropeties.Represent))
+                            if (infoArrangement.ArrangementPropeties.Represent != (arr.Represent ? 1 : 0))
                                 Debug.WriteLine("PRE Conflicted XML/JSON Represent elements in: " + arr.ToString());
-                            if (arr.BonusArr != Convert.ToBoolean(infoArrangement.ArrangementPropeties.BonusArr))
+                            if (infoArrangement.ArrangementPropeties.BonusArr != (arr.BonusArr ? 1 : 0))
                                 Debug.WriteLine("PRE Conflicted XML/JSON BonusArr elements in: " + arr.ToString());
 
-                            if (attribute.ArrangementProperties.Represent != infoArrangement.ArrangementPropeties.Represent)
+                            if (infoArrangement.ArrangementPropeties.Represent != (arr.Represent ? 1 : 0))
                                 Debug.WriteLine("POST Conflicted XML/JSON Represent elements in: " + arr.ToString());
-                            if (attribute.ArrangementProperties.BonusArr != infoArrangement.ArrangementPropeties.BonusArr)
+                            if (infoArrangement.ArrangementPropeties.BonusArr != (arr.BonusArr ? 1 : 0))
                                 Debug.WriteLine("POST Conflicted XML/JSON BonusArr elements in: " + arr.ToString());
                         }
 

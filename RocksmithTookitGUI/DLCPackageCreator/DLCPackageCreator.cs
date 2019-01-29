@@ -670,8 +670,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // TODO: monitor this new code for bugs
             // represent is set to "1" by default, if there is a bonus then set represent to "0"
             //songXml.ArrangementProperties.Represent = arr.BonusArr ? 0 : 1;
-
-            //// for alternate arrangement then both represent and bonus are set to "0"
+            // for alternate arrangement then both represent and bonus are set to "0"
             //if (songXml.Part > 1 && !arr.BonusArr)
             //   songXml.ArrangementProperties.Represent = 0;
 

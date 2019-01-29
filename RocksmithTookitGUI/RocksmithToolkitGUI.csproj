@@ -347,9 +347,9 @@
     <EmbeddedResource Include="ZpeConverter\ZpeConverter.resx">
       <DependentUpon>ZpeConverter.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="App.config">
+    <None Include="app.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
