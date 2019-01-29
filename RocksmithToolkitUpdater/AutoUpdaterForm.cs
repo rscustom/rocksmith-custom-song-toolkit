@@ -340,31 +340,30 @@ namespace RocksmithToolkitUpdater
             if (File.Exists(latestZipPath))
                 File.Delete(latestZipPath);
 
-            // TODO: FIXME
-            // close localToolkitDir if it's open so it can be deleted
+            // find open localToolkitDir and close it so it can be deleted
             if (localToolkitDir != newLocalToolkitDir)
             {
                 var shellWindows = new SHDocVw.ShellWindows();
                 foreach (SHDocVw.InternetExplorer shellWindow in shellWindows)
                 {
-                    var debugMe = shellWindow.LocationURL.ToLower();
-
                     var processType = Path.GetFileNameWithoutExtension(shellWindow.FullName).ToLower();
-                    if (processType.Equals("explorer") &&
-                        shellWindow.LocationURL.ToLower().Replace(@"/", @"\").Contains(localToolkitDir.ToLower()))
+                    var cleanLocationUrl = shellWindow.LocationURL.ToLower().Replace(@"/", @"\");
+                    if (processType.Equals("explorer") && cleanLocationUrl.Contains(localToolkitDir.ToLower()))
                     {
+                        shellWindow.Quit();
+                        Thread.Sleep(100);
                         shellWindow.Quit();
                         Thread.Sleep(100);
 
                         if (isDebugMe)
                             MessageBox.Show("localToolkitDir: " + localToolkitDir + Environment.NewLine +
                                             "should now be closed ...", "DPDM");
+                        
+                        // attempt to delete the closed directory
+                        DeleteDirectory(localToolkitDir);
                         break;
                     }
                 }
-
-                // delete empty/closed directory
-                DeleteDirectory(localToolkitDir);
             }
 
             if (isDebugMe)

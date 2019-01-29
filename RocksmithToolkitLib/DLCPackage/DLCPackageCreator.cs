@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlTypes;
 using System.Drawing;
 using System.IO;
@@ -24,6 +25,7 @@ using RocksmithToolkitLib.Properties;
 using RocksmithToolkitLib.Ogg;
 using Tone = RocksmithToolkitLib.DLCPackage.Manifest.Tone.Tone;
 using RocksmithToolkitLib.PsarcLoader;
+using System.Diagnostics;
 
 
 namespace RocksmithToolkitLib.DLCPackage
@@ -541,6 +543,20 @@ namespace RocksmithToolkitLib.DLCPackage
                         // MANIFEST
                         var manifest = new Manifest2014<Attributes2014>();
                         var attribute = new Attributes2014(arrangementFileName, arr, info, platform);
+
+                        if (false) // for debugging represent conflicts
+                        {
+                            var infoArrangement = info.Arrangements.Where(x => x.ArrangementName == arr.ArrangementName).FirstOrDefault();
+                            if (arr.Represent != Convert.ToBoolean(infoArrangement.ArrangementPropeties.Represent))
+                                Debug.WriteLine("PRE Conflicted XML/JSON Represent elements in: " + arr.ToString());
+                            if (arr.BonusArr != Convert.ToBoolean(infoArrangement.ArrangementPropeties.BonusArr))
+                                Debug.WriteLine("PRE Conflicted XML/JSON BonusArr elements in: " + arr.ToString());
+
+                            if (attribute.ArrangementProperties.Represent != infoArrangement.ArrangementPropeties.Represent)
+                                Debug.WriteLine("POST Conflicted XML/JSON Represent elements in: " + arr.ToString());
+                            if (attribute.ArrangementProperties.BonusArr != infoArrangement.ArrangementPropeties.BonusArr)
+                                Debug.WriteLine("POST Conflicted XML/JSON BonusArr elements in: " + arr.ToString());
+                        }
 
                         // Commented out - EOF properly sets the bonus/represent elements
                         //if (arrangement.ArrangementType == ArrangementType.Bass || arrangement.ArrangementType == ArrangementType.Guitar)

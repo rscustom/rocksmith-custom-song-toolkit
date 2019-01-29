@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- add App.config file (fixes some Win10 errors)
 - fixed Auto Updater to work with new file directory structure and improved function
 - set "Auto Update" to true in GeneralConfig as default and force use of latest build
 - added 'assemblyPath' enumeration to Auto Update feature
