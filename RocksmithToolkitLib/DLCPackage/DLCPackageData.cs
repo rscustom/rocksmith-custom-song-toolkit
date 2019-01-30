@@ -743,7 +743,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 var ddsFilesC = new List<DDSConvertedFile>();
                 foreach (var file in ddsFiles)
-                    switch (Path.GetFileNameWithoutExtension(file).Split('_')[2])
+                    switch (Path.GetFileNameWithoutExtension(file).Split('_').Last())
                     {
 
                         case "256":

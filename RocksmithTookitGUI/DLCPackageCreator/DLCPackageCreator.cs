@@ -937,7 +937,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // Album art
-            AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
+            if (info.AlbumArtPath != null)
+                AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
             // forces the ArtFiles array to be generated from the AlbumArtPath
             if (!String.IsNullOrEmpty(AlbumArtPath))
                 info.ArtFiles = null;
