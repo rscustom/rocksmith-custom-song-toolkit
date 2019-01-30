@@ -659,7 +659,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // all other ArrangementProperties in the xml are set by EOF and not changed by Toolkit (currently)            
             song2014.ArrangementProperties = arr.ArrangementPropeties != null ? arr.ArrangementPropeties : new SongArrangementProperties2014();
             song2014.ArrangementProperties.Represent = arr.Represent ? 1 : 0;
-            song2014.ArrangementProperties.BonusArr = arr.BonusArr ? 1 : 0;        
+            song2014.ArrangementProperties.BonusArr = arr.BonusArr ? 1 : 0;
             song2014.ArrangementProperties.PathLead = Convert.ToInt32(arr.RouteMask == RouteMask.Lead);
             song2014.ArrangementProperties.PathRhythm = Convert.ToInt32(arr.RouteMask == RouteMask.Rhythm);
             song2014.ArrangementProperties.PathBass = Convert.ToInt32(arr.RouteMask == RouteMask.Bass);
@@ -938,10 +938,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // Album art
-            AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
-            // forces the ArtFiles array to be generated from the AlbumArtPath
-            if (!String.IsNullOrEmpty(AlbumArtPath))
+            if (!String.IsNullOrEmpty(info.AlbumArtPath))
+            {
+                AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
+                // forces the ArtFiles array to be generated from the AlbumArtPath
                 info.ArtFiles = null;
+            }
 
             // Lyric art
             if (!String.IsNullOrEmpty(info.LyricArtPath))

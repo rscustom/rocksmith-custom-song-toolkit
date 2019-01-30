@@ -743,9 +743,9 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 var ddsFilesC = new List<DDSConvertedFile>();
                 foreach (var file in ddsFiles)
-                    switch (Path.GetFileNameWithoutExtension(file).Split('_')[2])
+                {
+                    switch (Path.GetFileNameWithoutExtension(file).Split('_').Last())
                     {
-
                         case "256":
                             data.AlbumArtPath = file;
                             ddsFilesC.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = file, destinationFile = file.CopyToTempFile(".dds") });
@@ -757,6 +757,7 @@ namespace RocksmithToolkitLib.DLCPackage
                             ddsFilesC.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = file, destinationFile = file.CopyToTempFile(".dds") });
                             break;
                     }
+                }
 
                 data.ArtFiles = ddsFilesC;
             }
