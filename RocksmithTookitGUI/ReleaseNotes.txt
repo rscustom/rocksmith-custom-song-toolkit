@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- fixed arrangement represent bug
 - improved verification of external apps
 - added app.config file (may avoid some errors)
 - fixed Auto Updater to work with new file directory structure and improved function

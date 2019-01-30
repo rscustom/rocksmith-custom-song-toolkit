@@ -91,7 +91,7 @@ namespace RocksmithToolkitGUI
             // CHECK FOR NEW AVAILABLE REVISION AND ENABLE UPDATE
             try
             {
-                onlineVersion = ToolkitVersionOnline.GetOnlineVersionInfo();
+                onlineVersion = ToolkitVersionOnline.GetVersionInfo();
             }
             catch (WebException) { /* Do nothing on 404 */ }
             catch (Exception)

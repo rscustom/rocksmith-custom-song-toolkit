@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -655,10 +656,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             song2014.AverageTempo = info.SongInfo.AverageTempo;
             song2014.Tuning = arr.TuningStrings;
             song2014.Capo = (byte)arr.CapoFret;
-            // all other ArrangementProperties in the xml are set by EOF and not changed by Toolkit (currently)
+            // all other ArrangementProperties in the xml are set by EOF and not changed by Toolkit (currently)            
             song2014.ArrangementProperties = arr.ArrangementPropeties != null ? arr.ArrangementPropeties : new SongArrangementProperties2014();
             song2014.ArrangementProperties.Represent = arr.Represent ? 1 : 0;
-            song2014.ArrangementProperties.BonusArr = arr.BonusArr ? 1 : 0;
+            song2014.ArrangementProperties.BonusArr = arr.BonusArr ? 1 : 0;        
             song2014.ArrangementProperties.PathLead = Convert.ToInt32(arr.RouteMask == RouteMask.Lead);
             song2014.ArrangementProperties.PathRhythm = Convert.ToInt32(arr.RouteMask == RouteMask.Rhythm);
             song2014.ArrangementProperties.PathBass = Convert.ToInt32(arr.RouteMask == RouteMask.Bass);
@@ -666,8 +667,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             song2014.ArrangementProperties.StandardTuning = arr.Tuning == "E Standard" ? 1 : 0;
             song2014.ArrangementProperties.BassPick = arr.ArrangementType == ArrangementType.Bass ? (int)arr.PluckedType : 0;
 
-            // Commented out - EOF properly sets the bonus/represent elements
-            // TODO: monitor this new code for bugs
+            // TODO: monitor this change
+            // Commented out - EOF now properly sets the bonus/represent elements
             // represent is set to "1" by default, if there is a bonus then set represent to "0"
             //songXml.ArrangementProperties.Represent = arr.BonusArr ? 0 : 1;
             // for alternate arrangement then both represent and bonus are set to "0"

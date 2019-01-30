@@ -202,6 +202,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 rbArrangementBonus.Checked = value.BonusArr;
                 rbArrangementAlternate.Checked = !value.BonusArr && !value.Represent ? true : false;
 
+                var debugMe = "StopHere";
+
                 chkMetronome.Checked = value.Metronome == Metronome.Generate;
                 RouteMask = value.RouteMask;
 
@@ -1079,7 +1081,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (!CheckBassTuning())
                 return;
 
-            // TODO: this should probably be a Save instead of Load
             LoadArrangementData(XmlPath);
             ConfigGlobals.DefaultProjectFolder = Path.GetDirectoryName(XmlPath);
             DialogResult = DialogResult.OK;

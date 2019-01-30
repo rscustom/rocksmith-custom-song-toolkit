@@ -112,7 +112,9 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014
             // Automatically set as two finger style if pick is not used
             ArrangementProperties.TwoFingerPicking = ArrangementProperties.PathBass == 1 && ArrangementProperties.BassPick == 0 ? 1 : 0;
 
-            // BONUS ARRANGEMENT
+            // TODO: monitor this change
+            // EOF now properly sets the bonus/represent elements
+            ArrangementProperties.Represent = Convert.ToInt32(arrangement.Represent);
             ArrangementProperties.BonusArr = Convert.ToInt32(arrangement.BonusArr);
 
             // Metronome

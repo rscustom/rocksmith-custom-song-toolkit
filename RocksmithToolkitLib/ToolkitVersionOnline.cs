@@ -44,7 +44,7 @@ namespace RocksmithToolkitLib
         /// </summary>
         /// <param name="gitSubversion">Get specified version info and force rollback</param>
         /// <returns></returns>
-        public static ToolkitVersionOnline GetOnlineVersionInfo(string gitSubversion = "") // fe47c38
+        public static ToolkitVersionOnline GetVersionInfo(string gitSubversion = "") // fe47c38
         {
             // TODO: impliment TLS check (see way below)
             // No TLS 1.2 in WinXp, or before IE8 browser if OS is newer than WinXP 
