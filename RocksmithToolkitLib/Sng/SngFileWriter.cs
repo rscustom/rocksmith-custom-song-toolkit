@@ -10,6 +10,7 @@ using MiscUtil.IO;
 using RocksmithToolkitLib.XML;
 using System.ComponentModel;
 using RocksmithToolkitLib.DLCPackage;
+using System.Windows.Forms;
 
 namespace RocksmithToolkitLib.Sng
 {
@@ -129,14 +130,16 @@ namespace RocksmithToolkitLib.Sng
                     var serializer = new XmlSerializer(typeof(Song));
                     var song = (Song)serializer.Deserialize(reader);
 
-                    // TODO: song.Tuning is null (does not exist in the XML Arrangement)
                     // HACK: apply Standard E tuning
                     var tuning = new Int16[] { 0, 0, 0, 0, 0, 0 };
                     if (song.Tuning != null)
                         tuning = song.Tuning.ToArray();
                     else
-                        throw new DataException("<ERROR> Arrangement XML contains no tuning element" + Environment.NewLine +
-                                            "The arrangment will be defaulted to Standard E tuning" + Environment.NewLine);
+                    {
+                        var diaMsg = "<WARNING> Arrangement XML contains no tuning element ..." + Environment.NewLine +
+                                     "The arrangment will be defaulted to Standard E tuning.";
+                        MessageBox.Show(diaMsg, "SngFileWriter Null Tuning ...");
+                    }
 
                     WriteSngFile(song, InstrumentTuningExtensions.GetTuningByOffsets(tuning), arrangementType, outputFile, bitConverter);
                 }

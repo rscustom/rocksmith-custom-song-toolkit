@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- fixed CDLC 2 Tab menu generator
 - fixed AlbumArtPath exceptions caused by image file names that have extra underscores '_'
   (thanks to cu1t for the contribution and pull request) 
 - fixed arrangement represent bug

@@ -36,6 +36,9 @@ namespace RocksmithToolkitLib.XML
         [XmlElement("lastConversionDateTime")]
         public string LastConversionDateTime { get; set; }
 
+        [XmlElement("tuning")]
+        public TuningStrings Tuning { get; set; }
+
         [XmlArray("phrases")]
         [XmlArrayItem("phrase")]
         public SongPhrase[] Phrases { get; set; }
@@ -84,7 +87,7 @@ namespace RocksmithToolkitLib.XML
         [XmlElement("arrangementProperties")]
         public SongArrangementProperties ArrangementProperties { get; set; }
 
-        # region EOF non-compliant elements, not found in RS1
+        # region EOF non-compliant elements, not found in original RS1
         [XmlIgnore]
         [XmlElement("startBeat")]
         public Single StartBeat { get; set; }
@@ -92,10 +95,6 @@ namespace RocksmithToolkitLib.XML
         [XmlIgnore]
         [XmlElement("averageTempo")]
         public Single AverageTempo { get; set; }
-
-        [XmlIgnore]
-        [XmlElement("tuning")]
-        public TuningStrings Tuning { get; set; }
 
         [XmlIgnore]
         [XmlElement("artistName")]

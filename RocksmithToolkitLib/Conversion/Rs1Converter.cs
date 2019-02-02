@@ -37,17 +37,14 @@ namespace RocksmithToolkitLib.Conversion
         /// <param name="outputPath"></param>
         /// <param name="overWrite"></param>
         /// <returns>RS Song XML file path</returns>
-        public string SongToXml(Song rsSong, string outputPath, bool overWrite)
+        public string SongToXml(Song rsSong, string outputDir, bool overWrite)
         {
+            var outputFile = String.Format("{0}_{1}", rsSong.Title, rsSong.Arrangement);
+            outputFile = String.Format("{0}{1}", outputFile.GetValidFileName(), "_rs1.xml");
+            var outputPath = Path.Combine(outputDir, outputFile);
+
             if (File.Exists(outputPath) && overWrite)
                 File.Delete(outputPath);
-            else
-            {
-                var outputDir = Path.GetDirectoryName(outputPath);
-                var outputFile = String.Format("{0}_{1}", rsSong.Title, rsSong.Arrangement);
-                outputFile = String.Format("{0}{1}", outputFile.GetValidFileName(), "_rs1.xml");
-                outputPath = Path.Combine(outputDir, outputFile);
-            }
 
             using (var stream = File.OpenWrite(outputPath))
                 rsSong.Serialize(stream, true);
@@ -75,13 +72,13 @@ namespace RocksmithToolkitLib.Conversion
         /// Converts RS1 Song Object to *.sng File
         /// </summary>
         /// <param name="rs1Song"></param>
-        /// <param name="outputPath"></param>
+        /// <param name="outputDir"></param>
         /// <returns>Path to binary *.sng file</returns>
-        public string SongToSngFilePath(Song rs1Song, string outputPath)
+        public string SongToSngFilePath(Song rs1Song, string outputDir)
         {
             string rs1XmlPath;
             using (var obj = new Rs1Converter())
-                rs1XmlPath = obj.SongToXml(rs1Song, outputPath, true);
+                rs1XmlPath = obj.SongToXml(rs1Song, outputDir, true);
 
             ArrangementType arrangementType;
             if (rs1Song.Arrangement.ToLower() == "bass")
@@ -151,7 +148,7 @@ namespace RocksmithToolkitLib.Conversion
             // RS1 before Bass Edition did not contain ArrangementProperties
             if (rsSong.ArrangementProperties == null)
                 rsSong.ArrangementProperties = new SongArrangementProperties();
-            
+
             // initialize arrangement properties with zero's
             rsSong2014.ArrangementProperties = new SongArrangementProperties2014
             {
@@ -415,11 +412,11 @@ namespace RocksmithToolkitLib.Conversion
                 bendValues.Add(new BendValue { Step = songNote.Bend, Time = (float)Math.Round((songNote.Sustain * 0.3333 / songNote.Bend) + songNote.Time, 3), Unk5 = 0 });
                 songNote2014.BendValues = bendValues.ToArray();
             }
-            
+
             // RS1
             // <note time="73.047" bend="0" fret="5" hammerOn="0" harmonic="0" hopo="0" ignore="0" palmMute="0" pullOff="0" slideTo="-1" string="1" sustain="0" tremolo="0"/>
             songNote2014.Time = (float)songNote.Time;
-            songNote2014.Bend = (float) songNote.Bend;
+            songNote2014.Bend = (float)songNote.Bend;
             songNote2014.Fret = (sbyte)songNote.Fret;
             songNote2014.HammerOn = (byte)songNote.HammerOn;
             songNote2014.Harmonic = (byte)songNote.Harmonic;

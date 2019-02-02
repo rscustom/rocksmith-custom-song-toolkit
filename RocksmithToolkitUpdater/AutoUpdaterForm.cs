@@ -340,9 +340,9 @@ namespace RocksmithToolkitUpdater
             if (File.Exists(latestZipPath))
                 File.Delete(latestZipPath);
 
-            // find open localToolkitDir and close it so it can be deleted
             if (localToolkitDir != newLocalToolkitDir)
             {
+                // find open localToolkitDir and close it so it can be deleted
                 var shellWindows = new SHDocVw.ShellWindows();
                 foreach (SHDocVw.InternetExplorer shellWindow in shellWindows)
                 {
@@ -359,11 +359,12 @@ namespace RocksmithToolkitUpdater
                             MessageBox.Show("localToolkitDir: " + localToolkitDir + Environment.NewLine +
                                             "should now be closed ...", "DPDM");
                         
-                        // attempt to delete the closed directory
-                        DeleteDirectory(localToolkitDir);
                         break;
                     }
                 }
+
+                // attempt to delete the closed directory
+                DeleteDirectory(localToolkitDir);
             }
 
             if (isDebugMe)
