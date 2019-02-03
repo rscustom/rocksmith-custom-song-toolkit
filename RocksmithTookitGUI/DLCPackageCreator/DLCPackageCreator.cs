@@ -518,7 +518,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             var templatePath = String.Empty;
             var fileName = String.Empty;
-            DLCPackageData packageData = GetPackageData(validate);
+            var packageDataError = String.Empty;
+            DLCPackageData packageData = GetPackageData(validate, out packageDataError);
 
             try
             {
@@ -1013,8 +1014,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             IsDirty = CurrentGameVersion != GameVersion.RS2014;
         }
 
-        private DLCPackageData GetPackageData(bool validate = true)
+        string errorMsg;
+        private DLCPackageData GetPackageData(bool validate, out string errorMsg)
         {
+            errorMsg = String.Empty;
+
             if (validate)
             {
                 if (CurrentGameVersion != GameVersion.RS2012)
@@ -1037,6 +1041,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (String.IsNullOrEmpty(DLCKey))
                 {
                     txtDlcKey.Focus();
+                    errorMsg = "DLCKey is missing ...";
                     return null;
                 }
 
@@ -1065,41 +1070,48 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (String.IsNullOrEmpty(SongTitle))
                 {
                     txtSongTitle.Focus();
+                    errorMsg = "SongTitle is missing ...";
                     return null;
                 }
                 if (string.IsNullOrEmpty(Album))
                 {
                     txtAlbum.Focus();
+                    errorMsg = "Album is missing ...";
                     return null;
                 }
 
                 if (String.IsNullOrEmpty(Artist))
                 {
                     txtArtist.Focus();
+                    errorMsg = "Artist is missing ...";
                     return null;
                 }
 
                 if (string.IsNullOrEmpty(ArtistSort))
                 {
                     txtArtistSort.Focus();
+                    errorMsg = "ArtistSort is missing ...";
                     return null;
                 }
 
                 if (String.IsNullOrEmpty(SongTitleSort))
                 {
                     txtSongTitleSort.Focus();
+                    errorMsg = "SongTitleSort is missing ...";
                     return null;
                 }
 
                 if (String.IsNullOrEmpty(AlbumSort))
                 {
                     txtAlbumSort.Focus();
+                    errorMsg = "AlbumSort is missing ...";
                     return null;
                 }
 
                 if (String.IsNullOrEmpty(AppId))
                 {
                     txtAppId.Focus();
+                    errorMsg = "AppId is missing ...";
                     return null;
                 }
 
@@ -1107,6 +1119,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     // force user to make entry rather than defaulting
                     // PackageVersion = "1";
+                    errorMsg = "PackageVersion is missing ...";
                     txtVersion.Focus();
                     return null;
                 }
@@ -1135,6 +1148,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (!File.Exists(AudioPath))
                 {
                     txtAudioPath.Focus();
+                    errorMsg = "Audio file could not be found ...";
                     return null;
                 }
 
@@ -1146,7 +1160,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 txtYear.Focus();
 
                 if (validate)
+                {
+                    errorMsg = "Invalid Year ...";
                     return null;
+                }
             }
 
             int tempo;
@@ -1155,7 +1172,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 txtTempo.Focus();
 
                 if (validate)
+                {
+                    errorMsg = "Invalid AverageTempo ...";
                     return null;
+                }
             }
 
             var arrangements = lstArrangements.Items.OfType<Arrangement>().ToList();
@@ -1677,9 +1697,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public DLCPackageData PackageGenerate()
         {
-            var packageData = GetPackageData();
+            var packageDataError = String.Empty;
+            var packageData = GetPackageData(true, out packageDataError);
             if (packageData == null)
-                throw new InvalidDataException("<ERROR> DLCPackageData is null ...");
+                throw new InvalidDataException("<ERROR> DLCPackageData is null, " + packageDataError + Environment.NewLine + Environment.NewLine);
 
             var playableArrCount = packageData.Arrangements.Count(arr => arr.ArrangementType == ArrangementType.Guitar || arr.ArrangementType == ArrangementType.Bass);
             if (playableArrCount > 5) // may crash RS14R
@@ -2127,7 +2148,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // ======== Convert Song2014 XML to Song XML ======== 
             if (!String.IsNullOrEmpty(DLCKey))
             {
-                DLCPackageData packageData = GetPackageData(true);
+                var packageDataError = String.Empty;
+                DLCPackageData packageData = GetPackageData(true, out packageDataError);
                 foreach (var arr in packageData.Arrangements)
                 {
                     if (arr.ArrangementType == ArrangementType.Vocal)
