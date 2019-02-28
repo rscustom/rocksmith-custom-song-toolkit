@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- added tooltip warning to the audio path textbox about existing preview audio files
 - added verbose messages to '<ERROR> DLCPackageData is null' exception
 - fixed CDLC 2 Tab menu generator
 - fixed AlbumArtPath exceptions caused by image file names that have extra underscores '_'

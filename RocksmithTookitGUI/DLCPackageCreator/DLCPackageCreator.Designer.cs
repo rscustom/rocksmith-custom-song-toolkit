@@ -989,6 +989,7 @@
             this.txtAudioPath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtAudioPath.Size = new System.Drawing.Size(389, 20);
             this.txtAudioPath.TabIndex = 5;
+            this.toolTip.SetToolTip(this.txtAudioPath, resources.GetString("txtAudioPath.ToolTip"));
             // 
             // DLCPackageCreator
             // 

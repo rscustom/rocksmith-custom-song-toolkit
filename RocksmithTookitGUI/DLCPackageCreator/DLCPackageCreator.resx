@@ -120,6 +120,20 @@
   <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>23, 3</value>
   </metadata>
+  <data name="txtAudioPath.ToolTip" xml:space="preserve">
+    <value>WARNING: If the toolkit locates
+an existing *_preview.* audio file
+in the project folder then it will be
+used in the CDLC.
+
+This can produce undesired results.
+It is recommended that you delete
+any existing *_preview.* audio files
+first to ensure that the toolkit auto 
+generate them correctly.  Unless of
+course that is your desired effect to
+have customized preview audio.</value>
+  </data>
   <data name="chkShowlights.ToolTip" xml:space="preserve">
     <value>If toolkit throws errors during generation,
 or the CDLC is locking up in-game during
