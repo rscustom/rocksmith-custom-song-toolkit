@@ -165,13 +165,14 @@
             // btnUpdate
             // 
             this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUpdate.AutoSize = true;
             this.btnUpdate.BackColor = System.Drawing.SystemColors.Control;
             this.btnUpdate.FlatAppearance.BorderSize = 0;
             this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdate.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnUpdate.Location = new System.Drawing.Point(475, 0);
+            this.btnUpdate.Location = new System.Drawing.Point(474, 0);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(117, 24);
+            this.btnUpdate.Size = new System.Drawing.Size(118, 24);
             this.btnUpdate.TabIndex = 0;
             this.btnUpdate.Text = "Click here to update";
             this.toolTip.SetToolTip(this.btnUpdate, "Toolkit Auto Updater Status\r\n\r\nNOTE:\r\nAuto updater uses TLS 1.2\r\nWin10 users may " +
@@ -189,11 +190,12 @@
             // 
             // btnDevTestMethod
             // 
-            this.btnDevTestMethod.Location = new System.Drawing.Point(368, 0);
+            this.btnDevTestMethod.Location = new System.Drawing.Point(279, 0);
             this.btnDevTestMethod.Name = "btnDevTestMethod";
-            this.btnDevTestMethod.Size = new System.Drawing.Size(75, 24);
+            this.btnDevTestMethod.Size = new System.Drawing.Size(98, 24);
             this.btnDevTestMethod.TabIndex = 17;
-            this.btnDevTestMethod.Text = "Dev Use";
+            this.btnDevTestMethod.Text = "Dev Use Only";
+            this.toolTip.SetToolTip(this.btnDevTestMethod, "For Debugging");
             this.btnDevTestMethod.UseVisualStyleBackColor = true;
             this.btnDevTestMethod.Visible = false;
             this.btnDevTestMethod.Click += new System.EventHandler(this.btnDevTestMethod_Click);
@@ -343,16 +345,11 @@
             // 
             // dlcPackerUnpacker1
             // 
-            this.dlcPackerUnpacker1.DecodeAudio = false;
             this.dlcPackerUnpacker1.Location = new System.Drawing.Point(43, 14);
             this.dlcPackerUnpacker1.MinimumSize = new System.Drawing.Size(400, 308);
             this.dlcPackerUnpacker1.Name = "dlcPackerUnpacker1";
-            this.dlcPackerUnpacker1.OverwriteSongXml = false;
             this.dlcPackerUnpacker1.Size = new System.Drawing.Size(448, 462);
             this.dlcPackerUnpacker1.TabIndex = 0;
-            this.dlcPackerUnpacker1.UpdateManifest = false;
-            this.dlcPackerUnpacker1.UpdateSng = false;
-            this.dlcPackerUnpacker1.Version = RocksmithToolkitLib.GameVersion.RS2012;
             // 
             // dlcPackageCreatorTab
             // 
@@ -371,12 +368,18 @@
             this.dlcPackageCreator1.Album = "";
             this.dlcPackageCreator1.AlbumSort = "";
             this.dlcPackageCreator1.AlbumYear = "";
+            this.dlcPackageCreator1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dlcPackageCreator1.Artist = "";
             this.dlcPackageCreator1.ArtistSort = "";
+            this.dlcPackageCreator1.AutoSize = true;
             this.dlcPackageCreator1.AverageTempo = "";
             this.dlcPackageCreator1.DLCKey = "";
+            this.dlcPackageCreator1.JapaneseArtistName = "";
+            this.dlcPackageCreator1.JapaneseSongTitle = "";
             this.dlcPackageCreator1.Location = new System.Drawing.Point(17, 1);
             this.dlcPackageCreator1.Name = "dlcPackageCreator1";
+            this.dlcPackageCreator1.PackageVersion = "";
             this.dlcPackageCreator1.Size = new System.Drawing.Size(507, 560);
             this.dlcPackageCreator1.SongTitle = "";
             this.dlcPackageCreator1.SongTitleSort = "";
@@ -384,8 +387,7 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.dlcPackageCreatorTab);
             this.tabControl1.Controls.Add(this.dlcPackerUnpackerTab);
@@ -458,6 +460,7 @@
             this.dlcConverterTab.ResumeLayout(false);
             this.dlcPackerUnpackerTab.ResumeLayout(false);
             this.dlcPackageCreatorTab.ResumeLayout(false);
+            this.dlcPackageCreatorTab.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.DDCTab.ResumeLayout(false);
             this.ResumeLayout(false);

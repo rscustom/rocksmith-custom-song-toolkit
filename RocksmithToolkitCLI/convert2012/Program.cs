@@ -204,9 +204,9 @@ namespace convert2012
                 Console.WriteLine(@"Converting album artwork using: " + Path.GetFileName(albumArtPath));
                 var ddsFiles = new List<DDSConvertedFile>();
 
-                ddsFiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-                ddsFiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
-                ddsFiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                ddsFiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = albumArtPath, destinationFile = GeneralExtension.GetTempFileName(".dds") });
+                ddsFiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtension.GetTempFileName(".dds") });
+                ddsFiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtension.GetTempFileName(".dds") });
 
                 // Convert to correct dds file sizes
                 DLCPackageCreator.ToDDS(ddsFiles);

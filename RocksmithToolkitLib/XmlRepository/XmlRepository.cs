@@ -149,7 +149,7 @@ namespace RocksmithToolkitLib.XmlRepository
             FileName = sourceFile;
             List = Activator.CreateInstance<List<T>>();
             Load();
-            var sourceRepoList = GeneralExtensions.Copy(List);
+            var sourceRepoList = GeneralExtension.Copy(List);
 
             // Load destination repository
             FileName = destinationFile;

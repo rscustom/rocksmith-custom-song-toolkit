@@ -62,7 +62,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             InitializeComponent();
 
             // it is better to be hidden initially and then unhide when needed
-            if (GeneralExtensions.IsInDesignMode)
+            if (GeneralExtension.IsInDesignMode)
                 btnDevUse.Visible = true;
 
             lstArrangements.AllowDrop = true;
@@ -71,12 +71,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             rbRs2014.MouseEnter += rbRs2014_MouseEnter;
             numVolSong.MouseEnter += Volume_MouseEnter;
             numVolPreview.MouseEnter += Volume_MouseEnter;
-            rbRs2012.MouseDown += GameVersion_MouseDown;
-            rbRs2014.MouseDown += GameVersion_MouseDown;
-            rbConvert.MouseDown += GameVersion_MouseDown;
-            rbRs2012.MouseUp += GameVersion_MouseUp;
-            rbRs2014.MouseUp += GameVersion_MouseUp;
-            rbConvert.MouseUp += GameVersion_MouseUp;
+            // using MouseUp event may result in known VS double clicking glitch
+            // when one control is over another control and the topmost
+            // control is double clicked then the background control can
+            // inadvertantly intercept the second click as a MouseUp event 
+            // in this case it clears the GUI and produces undesired results
+            rbRs2012.MouseClick += GameVersion_MouseClick;
+            rbRs2014.MouseClick += GameVersion_MouseClick;
+            rbConvert.MouseClick += GameVersion_MouseClick;
+            gbGameVersion.MouseEnter += GameVersion_MouseEnter;
 
             // Generate package worker
             bwGenerate.DoWork += new DoWorkEventHandler(GeneratePackage);
@@ -392,7 +395,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public Arrangement GenMetronomeArr(Arrangement arr)
         {
-            var mArr = GeneralExtensions.Copy(arr);
+            var mArr = GeneralExtension.Copy(arr);
             var songXml = Song2014.LoadFromFile(mArr.SongXml.File);
             var newXml = Path.GetTempFileName();
             mArr.SongXml = new RocksmithToolkitLib.DLCPackage.AggregateGraph.SongXML { File = newXml };
@@ -813,11 +816,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 switch (CurrentGameVersion)
                 {
                     case GameVersion.RS2012:
-                        tone = GeneralExtensions.Copy<Tone>((Tone)lstTones.SelectedItem);
+                        tone = GeneralExtension.Copy<Tone>((Tone)lstTones.SelectedItem);
                         break;
                     case GameVersion.None:
                     case GameVersion.RS2014:
-                        tone = GeneralExtensions.Copy<Tone2014>((Tone2014)lstTones.SelectedItem);
+                        tone = GeneralExtension.Copy<Tone2014>((Tone2014)lstTones.SelectedItem);
                         break;
                 }
 
@@ -1524,7 +1527,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     form.CurrentGameVersion = CurrentGameVersion;
                     form.toneControl.CurrentGameVersion = CurrentGameVersion;
                     form.toneControl.Init();
-                    form.toneControl.Tone = GeneralExtensions.Copy(tone);
+                    form.toneControl.Tone = GeneralExtension.Copy(tone);
                     form.LoadToneFile(ConfigGlobals.DefaultToneFile, false);
                     lstTones.Items.Add(form.toneControl.Tone);
                 }
@@ -1875,7 +1878,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     // only validate lyrics that do not use a custom font (RS2014 ONLY)
                     if (!arr.CustomFont)
                     {
-                        var oldXml = GeneralExtensions.CopyToTempFile(arr.SongXml.File);
+                        var oldXml = GeneralExtension.CopyToTempFile(arr.SongXml.File);
                         using (var outputStream = new FileStream(arr.SongXml.File, FileMode.Create, FileAccess.ReadWrite))
                         {
                             var vocals2014 = RocksmithToolkitLib.Sng2014HSL.Sng2014FileWriter.ReadVocals(oldXml);
@@ -2104,7 +2107,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 form.CurrentGameVersion = CurrentGameVersion;
                 form.toneControl.CurrentGameVersion = CurrentGameVersion;
                 form.toneControl.Init();
-                form.toneControl.Tone = GeneralExtensions.Copy(tone);
+                form.toneControl.Tone = GeneralExtension.Copy(tone);
                 form.ShowDialog();
 
                 if (form.Saved)
@@ -2132,15 +2135,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             //IsDirty = true;
         }
 
-        private void GameVersion_MouseDown(object sender, MouseEventArgs e)
+        private void GameVersion_MouseEnter(object sender, EventArgs e)
         {
             PreviousGameVersion = CurrentGameVersion;
         }
 
-        private void GameVersion_MouseUp(object sender, MouseEventArgs e)
+        private void GameVersion_MouseClick(object sender, MouseEventArgs e)
         {
             // GameVersion_CheckedChanged usage comes with problems
             // everytime the value of checked is changed the event handler fires
+
+            // GameVersion_MouseUp has known VS glitch when one control is on top of another control
 
             // DO NOT ResetPackageCreatorForm if converting RS2014 => RS1
             if (PreviousGameVersion == GameVersion.None || PreviousGameVersion == GameVersion.RS2012)
@@ -2454,7 +2459,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (ofd.FileName.IsValidImage())
                         AlbumArtPath = ofd.FileName;
                     else
-                        MessageBox.Show("The selected image is not valid or not supported." + Environment.NewLine + "MimeType doesn't match with file extension!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show("The selected image is not valid or not supported." + Environment.NewLine +
+                            "MimeType doesn't match with file extension!", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
         }
@@ -2613,7 +2619,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     form.CurrentGameVersion = currentGameVersion;
                     form.toneControl.CurrentGameVersion = currentGameVersion;
                     form.toneControl.Init();
-                    form.toneControl.Tone = GeneralExtensions.Copy(tone);
+                    form.toneControl.Tone = GeneralExtension.Copy(tone);
                     form.ShowDialog();
 
                     if (form.Saved)
@@ -2878,5 +2884,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             txtDlcKey.Clear();
         }
 
+
+ 
     }
 }

@@ -17,10 +17,11 @@ using RocksmithToolkitLib.Sng2014HSL;
 using Action = System.Action;
 using ToolkitInfo = RocksmithToolkitLib.DLCPackage.ToolkitInfo;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace RocksmithToolkitLib.Extensions
 {
-    public static class GeneralExtensions
+    public static class GeneralExtension
     {
         private static readonly Random randomNumber = new Random();
 
@@ -83,7 +84,7 @@ namespace RocksmithToolkitLib.Extensions
             string re = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", Path.GetRandomFileName() + extension);
             // perma fix for album artwork tmp\*.dds 'Could not find file' error 
             IOExtension.MakeDirectory(Path.GetDirectoryName(re));
- 
+
             return re;
         }
 
@@ -472,6 +473,71 @@ namespace RocksmithToolkitLib.Extensions
 
                 return false;
             }
+        }
+
+        [DllImport("gdi32.dll")]
+        static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+
+        [Obfuscation(Exclude = false, Feature = "-rename")]
+        public enum DeviceCap
+        {
+            VERTRES = 10,
+            DESKTOPVERTRES = 117,
+        }
+
+        public static float GetDisplayScalingFactor(Control control)
+        {
+            var dpi = GetDisplayDpi(control);
+            float displayScalingFactor;
+
+            if (dpi > 96)
+            {
+                displayScalingFactor = dpi / 96;
+                return displayScalingFactor;
+            }
+
+            // this method is valid only for 96 DPI
+            Graphics g = Graphics.FromHwnd(IntPtr.Zero);
+            IntPtr desktop = g.GetHdc();
+            int LogicalScreenHeight = GetDeviceCaps(desktop, (int)DeviceCap.VERTRES);
+            int PhysicalScreenHeight = GetDeviceCaps(desktop, (int)DeviceCap.DESKTOPVERTRES);
+            displayScalingFactor = (float)PhysicalScreenHeight / (float)LogicalScreenHeight;
+
+            return displayScalingFactor; // 1.25 = 125%
+        }
+
+        public static float GetDisplayDpi(Control control)
+        {
+            var dpi = control.CreateGraphics().DpiX;
+            return dpi;
+        }
+
+        public static bool ValidateDisplaySettings(Form form, Control control, bool forceAdjustment = false, bool verbose = true)
+        {
+            // system settings can cause display issues for the application
+            var dpi = GetDisplayDpi(control);
+            var displayScalingFactor = GetDisplayScalingFactor(control);
+
+            if (dpi != 96 || displayScalingFactor != 1.0 || forceAdjustment)
+            {
+                if (verbose)
+                    MessageBox.Show(
+                        " - System Display DPI Setting (" + dpi + ")" + Environment.NewLine +
+                        " - System Display Screen Scale Factor (" + displayScalingFactor * 100 + "%)" + Environment.NewLine +
+                        " - Adjusted AutoScaleDimensions, AutoScaleMode, and AutoSize" + Environment.NewLine + Environment.NewLine +
+                        "If application does not display correctly then change system setting to:  " + Environment.NewLine +
+                        "Control Panel>Appearance and Personalization>Display>Smaller - 100%  ", "Validate Display Settings ...", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+
+                form.SuspendLayout();
+                form.AutoScaleDimensions = new SizeF(6F, 13F); // assuming 96 DPI
+                form.AutoScaleMode = AutoScaleMode.Font;
+                control.AutoSize = true;
+                form.ResumeLayout();
+
+                return false;
+            }
+
+            return true;
         }
 
 

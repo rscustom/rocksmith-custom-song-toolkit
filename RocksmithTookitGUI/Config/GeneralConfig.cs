@@ -52,7 +52,7 @@ namespace RocksmithToolkitGUI.Config
                 PopulateConfigDDC();
 
                 // force static Wwise path and settings for Mac Mono/Wine packages on first run
-                if ((Environment.OSVersion.Platform == PlatformID.MacOSX || GeneralExtensions.IsWine()) && ConfigRepository.Instance().GetBoolean("general_firstrun"))
+                if ((Environment.OSVersion.Platform == PlatformID.MacOSX || GeneralExtension.IsWine()) && ConfigRepository.Instance().GetBoolean("general_firstrun"))
                 {
                     ConfigRepository.Instance()["general_autoupdate"] = "false";
                     ConfigRepository.Instance()["general_replacerepo"] = "true";

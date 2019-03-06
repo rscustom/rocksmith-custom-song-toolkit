@@ -96,14 +96,14 @@ namespace RocksmithToolkitGUI
                 File.Copy(updaterAppPath, updatingAppPath, true);
 
                 // normal operation
-                if (!GeneralExtensions.IsInDesignMode)
+                if (!GeneralExtension.IsInDesignMode)
                 {
                     // passing args for process and backup directories to RocksmithToolkitUpdating.exe (Primary Usage Mode)
                     var cmdArgs = String.Format("\"{0}\" \"{1}\"", LocalToolkitDir, tempToolkitDir);
 
                     try // different AutoUpdater shells for MacWine testing
                     {
-                        GeneralExtensions.RunExternalExecutable(updatingAppPath, arguments: cmdArgs);
+                        GeneralExtension.RunExternalExecutable(updatingAppPath, arguments: cmdArgs);
                     }
                     catch (Exception ex)
                     {

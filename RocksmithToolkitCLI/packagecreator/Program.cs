@@ -311,11 +311,11 @@ namespace packagecreator
                 var ddsFiles = new List<DDSConvertedFile>();
 
                 if (!albumArtPath.Contains("_64"))
-                    ddsFiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsFiles.Add(new DDSConvertedFile() { sizeX = 64, sizeY = 64, sourceFile = albumArtPath, destinationFile = GeneralExtension.GetTempFileName(".dds") });
                 if (!albumArtPath.Contains("_128"))
-                    ddsFiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsFiles.Add(new DDSConvertedFile() { sizeX = 128, sizeY = 128, sourceFile = albumArtPath, destinationFile = GeneralExtension.GetTempFileName(".dds") });
                 if (!albumArtPath.Contains("_256"))
-                    ddsFiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtensions.GetTempFileName(".dds") });
+                    ddsFiles.Add(new DDSConvertedFile() { sizeX = 256, sizeY = 256, sourceFile = albumArtPath, destinationFile = GeneralExtension.GetTempFileName(".dds") });
 
                 // Convert to correct dds file sizes
                 DLCPackageCreator.ToDDS(ddsFiles);

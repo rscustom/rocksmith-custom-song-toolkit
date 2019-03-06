@@ -35,7 +35,7 @@ namespace RocksmithToolkitLib
         {
             get
             {
-                if (GeneralExtensions.IsInDesignMode)
+                if (GeneralExtension.IsInDesignMode)
                     AssemblyConfiguration = "DEBUG";
 
                 return String.Format("{0}-{1} {2}", AssemblyVersion, AssemblyInformationVersion, AssemblyConfiguration).Trim();

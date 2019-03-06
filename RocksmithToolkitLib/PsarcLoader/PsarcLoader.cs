@@ -202,7 +202,7 @@ namespace RocksmithToolkitLib.PsarcLoader
             if (toolkitVersionEntry != null)
             {
                 _archive.InflateEntry(toolkitVersionEntry);
-                tkInfo = GeneralExtensions.GetToolkitInfo(new StreamReader(toolkitVersionEntry.Data));
+                tkInfo = GeneralExtension.GetToolkitInfo(new StreamReader(toolkitVersionEntry.Data));
             }
             else
             {

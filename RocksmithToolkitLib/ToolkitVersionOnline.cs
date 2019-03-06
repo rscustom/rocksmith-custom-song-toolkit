@@ -57,7 +57,7 @@ namespace RocksmithToolkitLib
                 versionInfoUrl = GetFileUrl(); // latest online version (default)
 
             var versionInfoJson = String.Empty;
-            if (!GeneralExtensions.IsInDesignMode)
+            if (!GeneralExtension.IsInDesignMode)
             {
                 try
                 {
@@ -85,7 +85,7 @@ namespace RocksmithToolkitLib
                 var versionInstalled = ToolkitVersion.AssemblyInformationVersion;
                 if (!versionInstalled.Equals(versionOnline.Revision, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (!GeneralExtensions.IsInDesignMode)
+                    if (!GeneralExtension.IsInDesignMode)
                     {
                         commitMessagesList.Add("<README> Sucessfully retrieved latest online version info  ...");
                         commitMessagesList.Add("<README> An update is ready for download and installation  ...");

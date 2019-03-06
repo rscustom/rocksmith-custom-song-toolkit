@@ -1040,7 +1040,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     // TODO: monitor this change updates both json and hsan files
                     if (!String.IsNullOrEmpty(toolkitVersionFile))
                     {
-                        var tkInfo = GeneralExtensions.ReadToolkitInfo(toolkitVersionFile);
+                        var tkInfo = GeneralExtension.ReadToolkitInfo(toolkitVersionFile);
                         // hide album artwork marker in-game setlist
                         // while leaving Alternate Arrangements unlocked for new user profile
                         if (tkInfo != null && tkInfo.PackageAuthor != "Ubisoft")

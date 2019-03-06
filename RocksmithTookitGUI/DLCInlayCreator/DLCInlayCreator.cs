@@ -401,7 +401,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             packageData.Inlay.IconPath = IconFile;
             packageData.Inlay.Frets24 = Frets24;
             packageData.Inlay.Colored = Colored;
-            packageData.Inlay.DLCSixName = GeneralExtensions.RandomName(6);
+            packageData.Inlay.DLCSixName = GeneralExtension.RandomName(6);
 
             // CRITICAL - 24 fret inlays have naming dependencies
             if (Frets24) packageData.Inlay.DLCSixName = String.Format("24fret_{0}", packageData.Inlay.DLCSixName);

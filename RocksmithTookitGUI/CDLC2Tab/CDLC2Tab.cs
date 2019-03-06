@@ -27,7 +27,7 @@ namespace RocksmithToolkitGUI.CDLC2Tab
             InitializeComponent();
             try
             {
-                if (!GeneralExtensions.IsInDesignMode)
+                if (!GeneralExtension.IsInDesignMode)
                     InitOutputDir();
             }
             catch { /*For mono compatibility*/ }

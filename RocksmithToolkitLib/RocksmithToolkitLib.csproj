@@ -229,6 +229,7 @@
     <Compile Include="DLCPackage\ToolkitInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="Resources\albumart.dds" />
     <None Include="Resources\Console_soundbank.bnk" />
     <None Include="Resources\pedals2014.json" />
@@ -272,12 +273,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="RocksmithToolkitLib.TuningDefinition.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\pedals.json" />
     <Content Include="RocksmithToolkitLib.SongAppId.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
     <None Include="Resources\rsenumerable_root.flat" />

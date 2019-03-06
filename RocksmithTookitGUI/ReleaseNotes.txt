@@ -1,5 +1,8 @@
 Rocksmith Toolkit Release Notes
 
+- added system display setting logging and verification
+- fixed VS Sandbox error that occurs when using newer version of .NET Framework
+- fixed known VS MouseUp glitch in CDLC Creator GUI
 - added tooltip warning to the audio path textbox about existing preview audio files
 - added verbose messages to '<ERROR> DLCPackageData is null' exception
 - fixed CDLC 2 Tab menu generator

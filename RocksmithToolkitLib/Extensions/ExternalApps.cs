@@ -90,37 +90,37 @@ namespace RocksmithToolkitLib.Extensions
             {
                 cmdArgs = String.Format(" -overwrite -out png -o \"{1}\" \"{0}\"", sourcePath, destinationPath);
             }
-            GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(APP_TOPNG, true, true, true, cmdArgs);
         }
 
         public static void PngFlipX(string sourcePath)
         {
             var cmdArgs = String.Format("-overwrite -xflip \"{0}\"", sourcePath);
-            GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(APP_TOPNG, true, true, true, cmdArgs);
         }
 
         public static void PngFlipY(string sourcePath)
         {
             var cmdArgs = String.Format("-overwrite -yflip \"{0}\"", sourcePath);
-            GeneralExtensions.RunExternalExecutable(APP_TOPNG, true, true, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(APP_TOPNG, true, true, true, cmdArgs);
         }
 
         public static void Png2Dds(string sourcePath, string destinationPath, int xSize, int ySize)
         {
             var cmdArgs = String.Format(" -file \"{0}\" -prescale {2} {3} -quality_highest -max -dxt5 -nomipmap -alpha -overwrite -output \"{1}\"", sourcePath, destinationPath, xSize, ySize);
-            GeneralExtensions.RunExternalExecutable(APP_NVDXT, true, true, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(APP_NVDXT, true, true, true, cmdArgs);
         }
 
         public static void UnpackPsarc(string sourcePath, string destinationPath, string targetPlatform)
         {
             var cmdArgs = String.Format(" --unpack --input=\"{0}\" --platform={2} --version=RS2014 --output=\"{1}\"", sourcePath, destinationPath, targetPlatform);
-            GeneralExtensions.RunExternalExecutable(Path.Combine(TOOLKIT_ROOT, "packer.exe"), true, true, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(Path.Combine(TOOLKIT_ROOT, "packer.exe"), true, true, true, cmdArgs);
         }
 
         public static void RepackPsarc(string sourcePath, string destinationPath, string targetPlatform)
         {
             var cmdArgs = String.Format(" --pack --input=\"{0}\" --platform={2} --version=RS2014 --output=\"{1}\"", sourcePath, destinationPath, targetPlatform);
-            GeneralExtensions.RunExternalExecutable(Path.Combine(TOOLKIT_ROOT, "packer.exe"), true, true, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(Path.Combine(TOOLKIT_ROOT, "packer.exe"), true, true, true, cmdArgs);
         }
 
         public static void InjectZip(string sourcePath, string destinationPath, bool recurseDir = false, bool filesOnly = false)
@@ -130,7 +130,7 @@ namespace RocksmithToolkitLib.Extensions
             if (filesOnly) sourcePath = Path.Combine(sourcePath, "*");
             // CRITICAL spacing in cmdArgs
             var cmdArgs = String.Format(" a \"{0}\"{2} \"{1}\"", destinationPath, sourcePath, cmdSwitch);
-            GeneralExtensions.RunExternalExecutable(APP_7Z, true, true, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(APP_7Z, true, true, true, cmdArgs);
         }
 
         public static void ExtractZip(string sourcePath, string destinationPath, bool overwriteExisting = true, bool runInBackground = true)
@@ -142,11 +142,11 @@ namespace RocksmithToolkitLib.Extensions
             var cmdArgs = String.Format(" x \"{0}\"{2} -o\"{1}\"", sourcePath, destinationPath, cmdSwitch);
             if (runInBackground)
             {
-                GeneralExtensions.RunExternalExecutable(APP_7Z, true, true, true, cmdArgs);
+                GeneralExtension.RunExternalExecutable(APP_7Z, true, true, true, cmdArgs);
             }
             else
             {
-                GeneralExtensions.RunExternalExecutable(APP_7Z, true, false, true, cmdArgs);
+                GeneralExtension.RunExternalExecutable(APP_7Z, true, false, true, cmdArgs);
             }
         }
 
@@ -157,7 +157,7 @@ namespace RocksmithToolkitLib.Extensions
             // interestingly ODLC uses 44100 or 48000 interchangeably ... so resampling is not necessary
             var cmdArgs = String.Format(" -q {2} \"{0}\" -o \"{1}\"", sourcePath, destinationPath, Convert.ToString(qualityFactor));
 
-            GeneralExtensions.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
         }
 
         /// <summary>
@@ -177,21 +177,21 @@ namespace RocksmithToolkitLib.Extensions
             if (sampleRate > 0)
                 cmdArgs += String.Format(" --resample {0}\"", sampleRate);
 
-            GeneralExtensions.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(APP_OGGENC, true, false, true, cmdArgs);
         }
 
         public static void Ogg2Preview(string sourcePath, string destinationPath, long msLength = 30000, long msStart = 4000)
         {
             var cmdArgs = String.Format(" -s {2} -l {3} \"{0}\" \"{1}\"", sourcePath, destinationPath, msStart, msLength);
 
-            GeneralExtensions.RunExternalExecutable(APP_OGGCUT, true, false, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(APP_OGGCUT, true, false, true, cmdArgs);
         }
 
         public static void Ogg2Wav(string sourcePath, string destinationPath)
         {
             var cmdArgs = String.Format(" -o \"{1}\" \"{0}\"", sourcePath, destinationPath);
 
-            GeneralExtensions.RunExternalExecutable(APP_OGGDEC, true, false, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(APP_OGGDEC, true, false, true, cmdArgs);
         }
 
         public static void Preview2Wav(string sourcePath)
@@ -204,7 +204,7 @@ namespace RocksmithToolkitLib.Extensions
 
             var cmdArgs = String.Format(" -o \"{1}\" \"{0}\"", srcPath, destPath);
 
-            GeneralExtensions.RunExternalExecutable(APP_OGGDEC, true, false, true, cmdArgs);
+            GeneralExtension.RunExternalExecutable(APP_OGGDEC, true, false, true, cmdArgs);
         }
 
         public static void Wav2Wem(string wwiseCLIPath, string wwiseTemplateDir, int magicDust = 0)
@@ -214,7 +214,7 @@ namespace RocksmithToolkitLib.Extensions
             // -ClearAudioFileCache force re-generate for wem's also deletes old and creates fresh new file.
             // -Save should help with updating project to new schema (may loose quality factor field)
             var cmdArgs = String.Format("\"{0}\" -GenerateSoundBanks -Platform Windows -Language English(US) -NoWwiseDat -ClearAudioFileCache -Save", templatePath);
-            var output = GeneralExtensions.RunExternalExecutable(wwiseCLIPath, true, false, true, cmdArgs);
+            var output = GeneralExtension.RunExternalExecutable(wwiseCLIPath, true, false, true, cmdArgs);
 
             if (output.Contains("Error: Project migration needed") && magicDust > 0)
             {

@@ -58,7 +58,7 @@
     <PostBuildEvent>REM Copy CreateToolkitShortCut.exe to tools folder 
 
 if $(ConfigurationName) == Release (
-   COPY /Y "$(TargetDir)CreateToolkitShortcut.exe"  "$(SolutionDir)\..\Third-party Apps\tools\CreateToolkitShortcut.exe"
+   COPY /Y "$(TargetDir)CreateToolkitShortcut.exe"  "$(SolutionDir)\..\ThirdPartyApps\tools\CreateToolkitShortcut.exe"
 )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

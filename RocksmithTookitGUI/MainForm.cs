@@ -11,6 +11,7 @@ using System.Globalization;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.XmlRepository;
 using System.Threading;
+using RocksmithToolkitGUI.Config;
 //
 // DEVNOTE: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT ...
 // Modify the RocksmithToolkitLib prebuild event which will update
@@ -34,7 +35,7 @@ namespace RocksmithToolkitGUI
             //Application.CurrentInputLanguage = InputLanguage.FromCulture(ci); //may cause issues for non us cultures esp on wineMAC build got report of such issue.
 
             // it is better to be hidden initially and then unhide when needed
-            if (GeneralExtensions.IsInDesignMode)
+            if (GeneralExtension.IsInDesignMode)
                 btnDevTestMethod.Visible = true;
 
             InitMainForm();
@@ -84,6 +85,8 @@ namespace RocksmithToolkitGUI
                 this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2, (Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2);
             else
                 this.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2, 0);
+
+            // this.AutoScaleMode = AutoScaleMode.None; // preserve integrity of form dimensional layout
         }
 
         private void CheckForUpdate(object sender, DoWorkEventArgs e)
@@ -221,7 +224,7 @@ namespace RocksmithToolkitGUI
             //    dlcPackageCreator1.SaveTemplateFile(dlcPackageCreator1.UnpackedDir, false);
 
             // leave temp folder contents for developer debugging
-            if (GeneralExtensions.IsInDesignMode)
+            if (GeneralExtension.IsInDesignMode)
                 return;
 
             // cleanup temp folder garbage carefully
@@ -251,7 +254,7 @@ namespace RocksmithToolkitGUI
         private void MainForm_Shown(object sender, EventArgs e)
         {
             // don't bug the Developers when in design mode ;)
-            if (GeneralExtensions.IsInDesignMode)
+            if (GeneralExtension.IsInDesignMode)
                 return;
 
             bool showRevNote = ConfigRepository.Instance().GetBoolean("general_showrevnote");
@@ -263,15 +266,20 @@ namespace RocksmithToolkitGUI
 
             this.Refresh();
 
-
             // check for first run //Check if author set at least, then it's not a first run tho, but let it show msg anyways...
             bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
             if (!firstRun)
                 return;
 
+            // validate display setting
+            ConfigGlobals.Log.Info(" - System Display DPI Setting (" + GeneralExtension.GetDisplayDpi(this) + ")" + Environment.NewLine);
+            ConfigGlobals.Log.Info(" - System Display Screen Scale Factor (" + GeneralExtension.GetDisplayScalingFactor(this) * 100 + "%)  " + Environment.NewLine);
+            if (!GeneralExtension.ValidateDisplaySettings(this, this))
+                ConfigGlobals.Log.Info(" - Adjusted AutoScaleDimensions, AutoScaleMode, and AutoSize ..." + Environment.NewLine);
+
             MessageBox.Show(new Form { TopMost = true },
-                "    Welcome to the Song Creator Toolkit for Rocksmith." + Environment.NewLine +
-                "          Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
+                "Welcome to the Song Creator Toolkit for Rocksmith ..." + Environment.NewLine +
+                "Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
                 "It looks like this may be your first time running the toolkit.  " + Environment.NewLine +
                 "Please fill in the Configuration menu with your selections.",
                 "Song Creator Toolkit for Rocksmith - FIRST RUN", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -291,9 +299,12 @@ namespace RocksmithToolkitGUI
             }
         }
 
-        // area for developer testing 
         private void DevTestMethod()
         {
+            // developer sandbox debugging area
+            GeneralExtension.ValidateDisplaySettings(this, this, true, true);
+            return;
+
             ShowHelpForm();
             return;
 
@@ -314,7 +325,7 @@ namespace RocksmithToolkitGUI
             var cliPath = Path.Combine(appDir, "packer.exe");
 
             if (File.Exists(cliPath))
-                GeneralExtensions.RunExternalExecutable(cliPath, arguments: cmdArgs);
+                GeneralExtension.RunExternalExecutable(cliPath, arguments: cmdArgs);
             else
                 MessageBox.Show("'Build, Rebuild Solution' while configuration is set to 'Debug w CLI'", "WRONG CONFIGURATION IS SELECTED ...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }

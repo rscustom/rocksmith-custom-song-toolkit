@@ -654,7 +654,7 @@ namespace RocksmithToolkitGUI.DDC
                 var consoleOutput = String.Empty;
                 currentCount++;
                 int count = currentCount;
-                GeneralExtensions.InvokeIfRequired(lblStatus, delegate
+                GeneralExtension.InvokeIfRequired(lblStatus, delegate
                     {
                         lblStatus.Text = String.Format("Processing file {0} of {1} ... Please wait.", count, totalCount);
                     });
@@ -685,7 +685,7 @@ namespace RocksmithToolkitGUI.DDC
             if (!String.IsNullOrEmpty(errorsFound.ToString()))
                 ProcessOutput = errorsFound.ToString();
 
-            GeneralExtensions.InvokeIfRequired(lblStatus, delegate
+            GeneralExtension.InvokeIfRequired(lblStatus, delegate
                 {
                     lblStatus.Text = String.Format("Sucessfully processed {0} of {1} files ...", totalCount - errorCount, totalCount);
                 });

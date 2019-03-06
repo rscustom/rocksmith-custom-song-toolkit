@@ -1,6 +1,5 @@
 ﻿Welcome to the Song Creator Toolkit for Rocksmith.
-Commonly known as the Rocksmith Toolkit, or simply
-known as, 'the toolkit'.
+Commonly known as, 'the toolkit'.
 
 Drag and drop the 'RocksmithToolkit' folder, along
 with the helper app 'CreateToolkitShortcut.exe' anywhere

@@ -501,7 +501,7 @@ namespace RocksmithToolkitLib.DLCPackage
             // Package Info
             var versionFile = Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).FirstOrDefault();
             if (versionFile != null)
-                data.ToolkitInfo = GeneralExtensions.ReadToolkitInfo(versionFile);
+                data.ToolkitInfo = GeneralExtension.ReadToolkitInfo(versionFile);
             else
                 data.ToolkitInfo = new ToolkitInfo();
 
@@ -851,7 +851,7 @@ namespace RocksmithToolkitLib.DLCPackage
             // Package Info
             var versionFile = Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).FirstOrDefault();
             if (versionFile != null)
-                data.ToolkitInfo = GeneralExtensions.ReadToolkitInfo(versionFile);
+                data.ToolkitInfo = GeneralExtension.ReadToolkitInfo(versionFile);
             else
             {
                 data.ToolkitInfo = new ToolkitInfo();

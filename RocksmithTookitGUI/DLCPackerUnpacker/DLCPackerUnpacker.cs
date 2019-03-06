@@ -339,7 +339,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                             {
                                 using (var tkReader = new StreamReader(tkStream))
                                 {
-                                    var tkInfo = GeneralExtensions.GetToolkitInfo(tkReader);
+                                    var tkInfo = GeneralExtension.GetToolkitInfo(tkReader);
                                     var packageComment = tkInfo.PackageComment;
                                     if (String.IsNullOrEmpty(packageComment))
                                         packageComment = TKI_APPID;
@@ -545,7 +545,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 // TODO consider user of regular packer here
                 RocksmithToolkitLib.DLCPackage.DLCPackageCreator.Generate(destPath, info, packagePlatform);
 
-                if (!GeneralExtensions.IsInDesignMode)
+                if (!GeneralExtension.IsInDesignMode)
                     IOExtension.DeleteDirectory(unpackedDir);
             }
 
