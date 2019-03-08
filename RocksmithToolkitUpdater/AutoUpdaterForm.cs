@@ -270,9 +270,9 @@ namespace RocksmithToolkitUpdater
                     var lockedLocalFiles = DeleteDirectory(localToolkitDir);
                     if (lockedLocalFiles.Any())
                     {
-                        ShowCurrentOperation("<WARNING> localToolkitDir full cleanup failed ...");
-                        ShowLockedFiles(lockedLocalFiles);
-                        Environment.Exit(1);
+                        ShowCurrentOperation("<WARNING> Local toolkit directory cleanup failed ...");
+                        if (!ShowLockedFilesAndContinue(lockedLocalFiles))
+                            Environment.Exit(1);
                     }
                 }
 
@@ -287,10 +287,11 @@ namespace RocksmithToolkitUpdater
                 }
                 catch (Exception ex)
                 {
-                    if (MessageBox.Show("<ERROR> Could not unzip file: " + Path.GetFileName(latestZipPath) + Environment.NewLine + "The AutoUpdater can not continue." + Environment.NewLine + "Do you want to roll back the installation process?" + Environment.NewLine + ex.Message, "RocksmithToolkit AutoUpdater", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
-                    {
+                    if (DialogResult.No == MessageBox.Show("<ERROR> Could not unzip file: " + Path.GetFileName(latestZipPath) + Environment.NewLine +
+                        "The AutoUpdater can not continue." + Environment.NewLine +
+                        "Do you want to roll back the installation process?" + Environment.NewLine +
+                        ex.Message, "RocksmithToolkit AutoUpdater", MessageBoxButtons.YesNo, MessageBoxIcon.Error))
                         Environment.Exit(1);
-                    }
 
                     // rollback the process to its original state
                     DeleteDirectory(newLocalToolkitDir);
@@ -319,10 +320,7 @@ namespace RocksmithToolkitUpdater
                     {
                         File.Copy(cgmFile, cgmFile.Replace(tempToolkitDir, newLocalToolkitDir));
                     }
-                    catch
-                    {
-                        /* Do nothing */
-                    }
+                    catch {/* Do nothing */}
                 }
 
                 // TODO: merge custom/user dds xml/cfg files
@@ -332,8 +330,8 @@ namespace RocksmithToolkitUpdater
                 if (lockedTempFiles.Any())
                 {
                     ShowCurrentOperation("<WARNING> tempToolkitDir full cleanup failed ...");
-                    if (isDebugMe)
-                        ShowLockedFiles(lockedTempFiles);
+                    if (!ShowLockedFilesAndContinue(lockedTempFiles))
+                        Environment.Exit(1);
                 }
             }
 
@@ -342,7 +340,7 @@ namespace RocksmithToolkitUpdater
 
             if (localToolkitDir != newLocalToolkitDir)
             {
-                // find open localToolkitDir and close it so it can be deleted
+                // find open localToolkitDir and attempt to close it so it can be deleted
                 var shellWindows = new SHDocVw.ShellWindows();
                 foreach (SHDocVw.InternetExplorer shellWindow in shellWindows)
                 {
@@ -355,10 +353,11 @@ namespace RocksmithToolkitUpdater
                         shellWindow.Quit();
                         Thread.Sleep(100);
 
-                        if (isDebugMe)
-                            MessageBox.Show("localToolkitDir: " + localToolkitDir + Environment.NewLine +
-                                            "should now be closed ...", "DPDM");
-                        
+                        MessageBox.Show("The old local toolkit directory should now be closed: " + Environment.NewLine +
+                                        localToolkitDir + Environment.NewLine + Environment.NewLine +
+                                        "Manually close the directory if it is still open" + Environment.NewLine +
+                                        "before pressing 'OK' to continue.  The old toolkit" + Environment.NewLine +
+                                        "may be deleted after the update finishes ...", "Close Toolkit Directory ...", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                         break;
                     }
                 }
@@ -374,7 +373,7 @@ namespace RocksmithToolkitUpdater
                                 "Check latestZipPath deleted: " + latestZipPath, "DPDM");
 
             ShowCurrentOperation("Please wait ... Restarting ToolkitGUI ...");
-            Thread.Sleep(3000); // settle down before restart
+            Thread.Sleep(1000); // settle down before restart
             RestartToolkitGUI(newLocalToolkitDir);
         }
 
@@ -569,9 +568,11 @@ namespace RocksmithToolkitUpdater
             var lockedFiles = CopyDirectory(srcDir, destDir);
             if (lockedFiles.Any())
             {
-                ShowCurrentOperation("<ERROR> Backup failed, locked destination path ...");
-                ShowLockedFiles(lockedFiles);
-                return false;
+                ShowCurrentOperation("<ERROR> Backup failed ...");
+                if (!ShowLockedFilesAndContinue(lockedFiles))
+                    return false;
+
+                return true;
             }
 
             ShowCurrentOperation("Backup was sucessful ...");
@@ -721,26 +722,32 @@ namespace RocksmithToolkitUpdater
             if (lockedFiles.Any())
             {
                 ShowCurrentOperation("<ERROR> Rollback failed, locked files ...");
-                ShowLockedFiles(lockedFiles);
-                Environment.Exit(0);
+                if (!ShowLockedFilesAndContinue(lockedFiles))
+                    Environment.Exit(0);
             }
         }
 
-        private void ShowLockedFiles(List<string> lockedFiles)
+        private bool ShowLockedFilesAndContinue(List<string> lockedFiles)
         {
             if (!lockedFiles.Any())
-                return;
+                return true;
 
             var sb = new StringBuilder();
-            sb.AppendLine("<WARNING> The following file(s) are locked,");
-            sb.AppendLine("so they could not be processed correctly ...");
+            sb.AppendLine("<WARNING> Some files could not be programmatically deleted!");
+            sb.AppendLine("Please remember to deleted these after auto update is finished ...  ");
             sb.AppendLine("");
 
             foreach (var lockedFile in lockedFiles)
                 sb.AppendLine(lockedFile);
 
-            MessageBox.Show(sb.ToString(), "RocksmithToolkit AutoUpdater",
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            sb.AppendLine();
+            sb.AppendLine("Do you want continue?");
+
+            if (DialogResult.OK != MessageBox.Show(sb.ToString(), "RocksmithToolkit AutoUpdater",
+                 MessageBoxButtons.OKCancel, MessageBoxIcon.Error))
+                return false;
+
+            return true;
         }
 
         private void AutoUpdaterForm_FormClosing(object sender, FormClosingEventArgs e)

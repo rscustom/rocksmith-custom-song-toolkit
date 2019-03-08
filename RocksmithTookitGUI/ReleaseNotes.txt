@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- added additional popup messages to Auto Updater to help users with process
 - added system display setting logging and verification
 - fixed VS Sandbox error that occurs when using newer version of .NET Framework
 - fixed known VS MouseUp glitch in CDLC Creator GUI
