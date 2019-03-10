@@ -40,7 +40,12 @@ namespace RocksmithToolkitGUI
 
         public void Init(ToolkitVersionOnline onlineVersion)
         {
-            // DELETE OLD UPDATER APP IF EXISTS
+            if (onlineVersion.UpdateAvailable)
+                this.Text = "Toolkit update is available ...";
+            else
+                this.Text = "Toolkit is already up to date ...";
+
+            // delete old updater application
             var updatingAppPath = Path.Combine(LocalToolkitDir, APP_UPDATING);
             if (File.Exists(updatingAppPath))
                 File.Delete(updatingAppPath);

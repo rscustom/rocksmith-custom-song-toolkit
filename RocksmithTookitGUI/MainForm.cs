@@ -12,6 +12,7 @@ using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.XmlRepository;
 using System.Threading;
 using RocksmithToolkitGUI.Config;
+using System.Configuration;
 //
 // DEVNOTE: WHEN ISSUING NEW RELEASE VERION OF TOOLKIT ...
 // Modify the RocksmithToolkitLib prebuild event which will update
@@ -253,10 +254,23 @@ namespace RocksmithToolkitGUI
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
+            // confirm and log App.config was properly loaded at runtime
+            var appConfigStatus = "<ERROR> Load Failed";
+            if (Convert.ToBoolean(ConfigurationSettings.AppSettings["key"]))
+                appConfigStatus = "Load Successful";
+
+            ConfigGlobals.Log.Info("+ App.config Status (" + appConfigStatus + ")");
+
+            // validate and log runtime display setting
+            ConfigGlobals.Log.Info(" - System Display DPI Setting (" + GeneralExtension.GetDisplayDpi(this) + ")");
+            ConfigGlobals.Log.Info(" - System Display Screen Scale Factor (" + GeneralExtension.GetDisplayScalingFactor(this) * 100 + "%)");
+            if (!GeneralExtension.ValidateDisplaySettings(this, this))
+                ConfigGlobals.Log.Info(" - Adjusted AutoScaleDimensions, AutoScaleMode, and AutoSize ...");
+
             // don't bug the Developers when in design mode ;)
             if (GeneralExtension.IsInDesignMode)
                 return;
-
+            
             bool showRevNote = ConfigRepository.Instance().GetBoolean("general_showrevnote");
             if (showRevNote)
             {
@@ -270,12 +284,6 @@ namespace RocksmithToolkitGUI
             bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
             if (!firstRun)
                 return;
-
-            // validate display setting
-            ConfigGlobals.Log.Info(" - System Display DPI Setting (" + GeneralExtension.GetDisplayDpi(this) + ")" + Environment.NewLine);
-            ConfigGlobals.Log.Info(" - System Display Screen Scale Factor (" + GeneralExtension.GetDisplayScalingFactor(this) * 100 + "%)  " + Environment.NewLine);
-            if (!GeneralExtension.ValidateDisplaySettings(this, this))
-                ConfigGlobals.Log.Info(" - Adjusted AutoScaleDimensions, AutoScaleMode, and AutoSize ..." + Environment.NewLine);
 
             MessageBox.Show(new Form { TopMost = true },
                 "Welcome to the Song Creator Toolkit for Rocksmith ..." + Environment.NewLine +

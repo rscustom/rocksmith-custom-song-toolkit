@@ -213,7 +213,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Toolkit Update Is Available ...";
+            this.Text = "Toolkit update status ...";
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCommitMessage)).EndInit();
             this.ResumeLayout(false);

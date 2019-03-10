@@ -23,6 +23,7 @@
     <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <NoWarn>
     </NoWarn>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -31,6 +32,7 @@
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
     <NoWarn>0169, 0162</NoWarn>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
@@ -229,7 +231,6 @@
     <Compile Include="DLCPackage\ToolkitInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="Resources\albumart.dds" />
     <None Include="Resources\Console_soundbank.bnk" />
     <None Include="Resources\pedals2014.json" />

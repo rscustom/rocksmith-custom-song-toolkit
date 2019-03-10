@@ -270,7 +270,7 @@ namespace RocksmithToolkitUpdater
                     var lockedLocalFiles = DeleteDirectory(localToolkitDir);
                     if (lockedLocalFiles.Any())
                     {
-                        ShowCurrentOperation("<WARNING> Local toolkit directory cleanup failed ...");
+                        ShowCurrentOperation("<WARNING> localToolkitDir cleanup failed ...");
                         if (!ShowLockedFilesAndContinue(lockedLocalFiles))
                             Environment.Exit(1);
                     }
@@ -329,7 +329,7 @@ namespace RocksmithToolkitUpdater
                 var lockedTempFiles = DeleteDirectory(tempToolkitDir);
                 if (lockedTempFiles.Any())
                 {
-                    ShowCurrentOperation("<WARNING> tempToolkitDir full cleanup failed ...");
+                    ShowCurrentOperation("<WARNING> tempToolkitDir cleanup failed ...");
                     if (!ShowLockedFilesAndContinue(lockedTempFiles))
                         Environment.Exit(1);
                 }
@@ -379,6 +379,7 @@ namespace RocksmithToolkitUpdater
 
         private void DownloadFile(Uri downloadUri, string destPath, int attempts = 4)
         {
+            ShowCurrentOperation("Downloading: " + Path.GetFileName(destPath) + " ...");
             pbUpdate.Style = ProgressBarStyle.Continuous;
             pbUpdate.Refresh();
 
@@ -450,7 +451,7 @@ namespace RocksmithToolkitUpdater
             else if (e.Cancelled == true)
             {
                 dlStatus = DownloadStatus.CANCEL;
-                ShowCurrentOperation("Download cancelled ...");
+                ShowCurrentOperation("<WARNING> Download cancelled ...");
                 MessageBox.Show("Download has been canceled.");
             }
             else
@@ -721,7 +722,7 @@ namespace RocksmithToolkitUpdater
 
             if (lockedFiles.Any())
             {
-                ShowCurrentOperation("<ERROR> Rollback failed, locked files ...");
+                ShowCurrentOperation("<ERROR> Rollback failed ...");
                 if (!ShowLockedFilesAndContinue(lockedFiles))
                     Environment.Exit(0);
             }
