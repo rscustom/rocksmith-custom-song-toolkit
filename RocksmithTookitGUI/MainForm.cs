@@ -254,37 +254,35 @@ namespace RocksmithToolkitGUI
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
+            // check for first run
+            bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
+
             // confirm and log App.config was properly loaded at runtime
             var appConfigStatus = "<ERROR> Load Failed";
             if (Convert.ToBoolean(ConfigurationSettings.AppSettings["key"]))
                 appConfigStatus = "Load Successful";
 
-            ConfigGlobals.Log.Info("+ App.config Status (" + appConfigStatus + ")");
+            ConfigGlobals.Log.Info(" - App.config Status (" + appConfigStatus + ")");
 
             // validate and log runtime display setting
             ConfigGlobals.Log.Info(" - System Display DPI Setting (" + GeneralExtension.GetDisplayDpi(this) + ")");
             ConfigGlobals.Log.Info(" - System Display Screen Scale Factor (" + GeneralExtension.GetDisplayScalingFactor(this) * 100 + "%)");
-            if (!GeneralExtension.ValidateDisplaySettings(this, this))
+            if (!GeneralExtension.ValidateDisplaySettings(this, this, false, firstRun))
                 ConfigGlobals.Log.Info(" - Adjusted AutoScaleDimensions, AutoScaleMode, and AutoSize ...");
 
             // don't bug the Developers when in design mode ;)
-            if (GeneralExtension.IsInDesignMode)
-                return;
-            
             bool showRevNote = ConfigRepository.Instance().GetBoolean("general_showrevnote");
-            if (showRevNote)
+            if (showRevNote && !GeneralExtension.IsInDesignMode)
             {
                 ShowHelpForm();
                 ConfigRepository.Instance()["general_showrevnote"] = "false";
             }
 
-            this.Refresh();
-
-            // check for first run //Check if author set at least, then it's not a first run tho, but let it show msg anyways...
-            bool firstRun = ConfigRepository.Instance().GetBoolean("general_firstrun");
-            if (!firstRun)
+            // don't bug the Developers when in design mode ;)
+            if (!firstRun || GeneralExtension.IsInDesignMode)
                 return;
 
+            this.Refresh();
             MessageBox.Show(new Form { TopMost = true },
                 "Welcome to the Song Creator Toolkit for Rocksmith ..." + Environment.NewLine +
                 "Commonly known as, 'the toolkit'." + Environment.NewLine + Environment.NewLine +
