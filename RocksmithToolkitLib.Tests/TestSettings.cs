@@ -12,7 +12,7 @@ namespace RocksmithToolkitLib.Tests
     /// <summary>
     /// Initializes an instance of TestSettings global variables for Unit Testing
     /// </summary>
-    public class TestSettings : NotifyPropChangedBase
+    public class TestSettings
     {
         public string ResourcesDir { get; set; }
         public List<string> ResourcePaths { get; set; }

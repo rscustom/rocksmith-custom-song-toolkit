@@ -21,6 +21,7 @@ namespace RocksmithToolkitGUI
         // TODO: users may need to add both files to AV whitelist to run updater
         private const string APP_UPDATER = "RocksmithToolkitUpdater.exe";
         private const string APP_UPDATING = "RocksmithToolkitUpdating.exe";
+        private const string APP_CONFIG_EXT = ".config";
 
         private string LocalToolkitDir
         {
@@ -49,6 +50,10 @@ namespace RocksmithToolkitGUI
             var updatingAppPath = Path.Combine(LocalToolkitDir, APP_UPDATING);
             if (File.Exists(updatingAppPath))
                 File.Delete(updatingAppPath);
+
+            var updatingConfigPath = Path.Combine(LocalToolkitDir, APP_UPDATING + APP_CONFIG_EXT);
+            if (File.Exists(updatingConfigPath))
+                File.Delete(updatingConfigPath);
 
             var useBeta = ConfigRepository.Instance().GetBoolean("general_usebeta");
             lblCurrentVersion.Text = ToolkitVersion.RSTKGuiVersion;
@@ -81,6 +86,8 @@ namespace RocksmithToolkitGUI
             var tempToolkitDir = Path.Combine(Path.GetTempPath(), "RocksmithToolkit");
             var updaterAppPath = Path.Combine(LocalToolkitDir, APP_UPDATER);
             var updatingAppPath = Path.Combine(tempToolkitDir, APP_UPDATING);
+            var updaterConfigPath = Path.Combine(LocalToolkitDir, APP_UPDATER + APP_CONFIG_EXT);
+            var updatingConfigPath = Path.Combine(tempToolkitDir, APP_UPDATING + APP_CONFIG_EXT);
 
             if (!File.Exists(updaterAppPath))
             {
@@ -99,6 +106,7 @@ namespace RocksmithToolkitGUI
             {
                 // make a copy of AutoUpdater to prevent locking the process during update
                 File.Copy(updaterAppPath, updatingAppPath, true);
+                File.Copy(updaterConfigPath, updatingConfigPath, true);
 
                 // normal operation
                 if (!GeneralExtension.IsInDesignMode)
