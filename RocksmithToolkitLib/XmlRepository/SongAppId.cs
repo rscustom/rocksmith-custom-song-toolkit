@@ -1,7 +1,9 @@
 ﻿using System.Xml.Serialization;
 
-namespace RocksmithToolkitLib.XmlRepository {
-    public class SongAppId {
+namespace RocksmithToolkitLib.XmlRepository
+{
+    public class SongAppId
+    {
         [XmlAttribute("Version")]
         public GameVersion GameVersion { get; set; }
         [XmlAttribute]
@@ -10,11 +12,14 @@ namespace RocksmithToolkitLib.XmlRepository {
         public string Name { get; set; }
 
         [XmlIgnore]
-        public string DisplayName {
+        public string DisplayName
+        {
             get { return this.ToString(); }
         }
 
-        public override string ToString() {
+        // display custom object with ComboBox
+        public override string ToString()
+        {
             return string.Format("{0} - {1}", Name, AppId);
         }
     }

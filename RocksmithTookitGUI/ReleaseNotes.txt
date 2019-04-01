@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- added additional flexibility to Quick Add feature
 - only show the display setting warning on first run if applicable
 - improved App.config file compatibility
 - added additional popup messages to Auto Updater to help users with process

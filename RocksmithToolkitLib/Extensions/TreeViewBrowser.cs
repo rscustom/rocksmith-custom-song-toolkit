@@ -230,6 +230,9 @@ namespace RocksmithToolkitLib.Extensions
 
         private void TreeViewBrowser_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            // double click produces the undesired effect of opening folder in a new window
+            return; // so do nothing instead
+
             // opens the double clicked directory or file in windows explorer
             if (File.Exists(e.Node.Tag.ToString()) || Directory.Exists(e.Node.Tag.ToString()))
                 Process.Start(e.Node.Tag.ToString());
@@ -675,7 +678,13 @@ namespace RocksmithToolkitLib.Extensions
                     AddNodes(this, rootNode);
                 }
                 else
-                    throw new DirectoryNotFoundException("Did not find the rootNode text: " + rootPath);
+                {
+                    // accomodate user custom installations and Environmental Variables
+                    // reset InitialDirectory instead of throwing exception
+                    InitialDirectory = String.Empty;
+                    Debug.WriteLine("<Reset InitialDirecotry> Did not find the rootNode text: " + rootPath);
+                    // throw new DirectoryNotFoundException("Did not find the rootNode text: " + rootPath);
+                }
 
                 var childNode = rootNode;
 
@@ -689,13 +698,22 @@ namespace RocksmithToolkitLib.Extensions
                         childNode = subNode;
                     }
                     else
-                        throw new DirectoryNotFoundException("Did not find node text: " + pathParts[i]);
-
+                    {
+                        // reset InitialDirectory instead of throwing exception
+                        InitialDirectory = String.Empty;
+                        Debug.WriteLine("<Reset InitialDirecotry> Did not find node text: " + pathParts[i]);
+                        // throw new DirectoryNotFoundException("Did not find node text: " + pathParts[i]);
+                    }
                 }
 
                 var restoreNode = FindNodeByTagRecursive(rootNode, childNode.Tag);
                 if (restoreNode == null)
-                    throw new DirectoryNotFoundException("Could not restoreNode for: " + path);
+                {
+                    // reset InitialDirectory instead of throwing exception
+                    InitialDirectory = String.Empty;
+                    Debug.WriteLine("<Reset InitialDirecotry> Could not restoreNode for: " + path);
+                    // throw new DirectoryNotFoundException("Could not restoreNode for: " + path);
+                }
 
                 EndUpdate(); // enable TreeView redrawing and scrolling
                 Debug.WriteLine("Set InitialDirectory to: " + restoreNode.FullPath);
