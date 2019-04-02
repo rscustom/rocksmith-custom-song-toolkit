@@ -281,7 +281,18 @@ namespace RocksmithToolkitLib.Extensions
         {
             PopulateComboFilesOfType();
             // call InitBrowserTreeview ONLY after the form is fully loaded 
-            treeViewBrowser.InitTreeViewBrowser();
+            var errMsg = treeViewBrowser.InitTreeViewBrowser();
+
+            if (!String.IsNullOrEmpty(errMsg))
+            {
+                var diaMsg = "Your OS Customizations have prevented the" + Environment.NewLine +
+                             "TreeViewOfd feature from functioning normally ..." + Environment.NewLine + Environment.NewLine +
+                             StringExtensions.SplitString(errMsg, 48, true);
+
+                BetterDialog2.ShowDialog(diaMsg, "TreeViewOfd Failed ...", null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
+                this.DialogResult = DialogResult.Abort;
+                this.Close();
+            }
         }
 
         private void cmbFilesOfType_SelectedIndexChanged(object sender, EventArgs e)

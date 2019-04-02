@@ -2494,7 +2494,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 ofd.Title = "Multiselect XML Arrangements and Arrange Order ...";
                 ofd.Filter = "Rocksmith Arrangement XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
                 ofd.Multiselect = true;
-                
+
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
@@ -2885,6 +2885,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         }
 
 
- 
+
     }
 }

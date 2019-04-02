@@ -672,6 +672,50 @@ namespace RocksmithToolkitLib.Extensions
             return result;
         }
 
+        /// <summary>
+        /// Splits a text string so that it wraps to specified line length
+        /// </summary>
+        /// <param name="inputText"></param>
+        /// <param name="lineLength"></param>
+        /// <param name="splitOnSpace"></param>
+        /// <returns></returns>
+        public static string SplitString(string inputText, int lineLength, bool splitOnSpace = true)
+        {
+            var finalString = String.Empty;
+
+            if (splitOnSpace)
+            {
+                var delimiters = new[] { " " }; // , "\\" };
+                var stringSplit = inputText.Split(delimiters, StringSplitOptions.None);
+                var charCounter = 0;
+
+                for (int i = 0; i < stringSplit.Length; i++)
+                {
+                    finalString += stringSplit[i] + " ";
+                    charCounter += stringSplit[i].Length;
+
+                    if (charCounter > lineLength)
+                    {
+                        finalString += Environment.NewLine;
+                        charCounter = 0;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < inputText.Length; i += lineLength)
+                {
+                    if (i + lineLength > inputText.Length)
+                        lineLength = inputText.Length - i;
+
+                    finalString += inputText.Substring(i, lineLength) + Environment.NewLine;
+                }
+                finalString = finalString.TrimEnd(Environment.NewLine.ToCharArray());
+            }
+
+            return finalString;
+        }
+
         #endregion
     }
 }

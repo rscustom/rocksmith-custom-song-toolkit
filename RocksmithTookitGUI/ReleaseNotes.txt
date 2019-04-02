@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- added error handler for TreeViewOfd exceptions
 - added additional flexibility to Quick Add feature
 - only show the display setting warning on first run if applicable
 - improved App.config file compatibility

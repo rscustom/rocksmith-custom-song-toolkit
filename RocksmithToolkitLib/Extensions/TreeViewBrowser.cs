@@ -158,13 +158,14 @@ namespace RocksmithToolkitLib.Extensions
         /// <summary>
         /// Initialize a new browser TreeView
         /// </summary>
-        public void InitTreeViewBrowser()
+        public string InitTreeViewBrowser()
         {
+            var errMsg = String.Empty;
             if (IsDesignerHosted)
-                return;
+                return errMsg;
 
             if (DefaultFolders == null || DefaultFolders.Count == 0)
-                return;
+                return errMsg;
 
             ImageList = new ImageList();
             ImageList.ImageSize = new Size(16, 16);
@@ -177,11 +178,15 @@ namespace RocksmithToolkitLib.Extensions
             ToggleEventHandlers(true);
             m_coll = new ArrayList(); // start with fresh ArrayList
             InitDefaultFolders();
-            // de-activate EH's
+            // de-activate EH's            
             ToggleEventHandlers(false);
-            RestoreTreeView(new List<string>() { InitialDirectory });
+            
+            RestoreTreeView(new List<string>() { InitialDirectory }, "\\", out errMsg);
+            
             // re- activate EH's
             ToggleEventHandlers(true); // this trashes the InitialDirectory Restore
+
+            return errMsg;
         }
 
         private void ToggleEventHandlers(bool enable)
@@ -660,8 +665,10 @@ namespace RocksmithToolkitLib.Extensions
             }
         }
 
-        public void RestoreTreeView(List<string> paths, string separator = @"\")
+        string errMsg;
+        public void RestoreTreeView(List<string> paths, string separator, out string errMsg)
         {
+            errMsg = String.Empty;
             if (paths == null || paths.Count == 0)
                 return;
 
@@ -669,7 +676,7 @@ namespace RocksmithToolkitLib.Extensions
             {
                 BeginUpdate(); // prevent TreeView flickering and scrolling
 
-                var pathParts = path.Split(new[] { separator }, StringSplitOptions.None);
+                var pathParts = path.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
                 var rootPath = Path.GetPathRoot(path);
                 var rootNode = Nodes.Cast<TreeNode>().FirstOrDefault(n => n.Text == rootPath);
                 if (rootNode != null)
@@ -679,11 +686,8 @@ namespace RocksmithToolkitLib.Extensions
                 }
                 else
                 {
-                    // accomodate user custom installations and Environmental Variables
-                    // reset InitialDirectory instead of throwing exception
-                    InitialDirectory = String.Empty;
-                    Debug.WriteLine("<Reset InitialDirecotry> Did not find the rootNode text: " + rootPath);
-                    // throw new DirectoryNotFoundException("Did not find the rootNode text: " + rootPath);
+                    Debug.WriteLine("<WARNING> Did not find the rootNode text: " + rootPath);
+                    errMsg = "Did not find the rootNode text: " + rootPath;
                 }
 
                 var childNode = rootNode;
@@ -699,20 +703,16 @@ namespace RocksmithToolkitLib.Extensions
                     }
                     else
                     {
-                        // reset InitialDirectory instead of throwing exception
-                        InitialDirectory = String.Empty;
-                        Debug.WriteLine("<Reset InitialDirecotry> Did not find node text: " + pathParts[i]);
-                        // throw new DirectoryNotFoundException("Did not find node text: " + pathParts[i]);
+                        Debug.WriteLine("<WARNING> Did not find node text: " + pathParts[i]);
+                        errMsg = "Did not find node text: " + pathParts[i];
                     }
                 }
 
                 var restoreNode = FindNodeByTagRecursive(rootNode, childNode.Tag);
                 if (restoreNode == null)
                 {
-                    // reset InitialDirectory instead of throwing exception
-                    InitialDirectory = String.Empty;
-                    Debug.WriteLine("<Reset InitialDirecotry> Could not restoreNode for: " + path);
-                    // throw new DirectoryNotFoundException("Could not restoreNode for: " + path);
+                    Debug.WriteLine("<WARNING> Could not restoreNode for: " + path);
+                    errMsg = "Could not restoreNode for: " + path;
                 }
 
                 EndUpdate(); // enable TreeView redrawing and scrolling
