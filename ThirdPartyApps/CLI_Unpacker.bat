@@ -18,7 +18,7 @@ PAUSE>NUL|SET /P "= Press any key to contiune or Ctrl-C to escape ..."
 echo.
 @echo on
 
-%UP% -u -x -d -c -f=Pc -v=RS2014 -i=%1 -o=%~d1\Temp
+%UP% -u -x -d -c -i=%1 -o=%~d1\Temp -v=RS2014 -f=Pc 1>%~d1\Temp\standard.txt 2>%~d1\Temp\error.txt
 
 @echo off
 echo.

@@ -110,13 +110,13 @@ namespace packer
             args = new string[]
             {
                 "-u",
-                "-input=D:\\Temp\\PeppaPig_p.psarc", 
                 "-x", 
                 "-d",
-                "-f=Pc",
-                "-v=RS2014",
+                "-input=D:\\Temp\\PeppaPig_p.psarc", 
                 "-output=D:\\Temp",
-                "-c"
+                "-v=RS2014",
+                "-c",
+                "-f=Pc"
             };
 
             // args = new string[] {"-?"};

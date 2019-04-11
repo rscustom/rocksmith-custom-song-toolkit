@@ -79,17 +79,17 @@ namespace RocksmithToolkitLib.Extensions
             return true;
         }
 
-        public static void Dds2Png(string sourcePath, string destinationPath = null)
+        public static void Dds2Png(string sourcePath, string destinationPath = null, bool isQuiet = false)
         {
             var cmdArgs = String.Empty;
             if (destinationPath == null)
-            {
-                cmdArgs = String.Format(" -overwrite -out png \"{0}\"", sourcePath);
-            }
+                   cmdArgs = String.Format(" -overwrite -out png \"{0}\"", sourcePath);
             else
-            {
                 cmdArgs = String.Format(" -overwrite -out png -o \"{1}\" \"{0}\"", sourcePath, destinationPath);
-            }
+
+            if (isQuiet)
+                cmdArgs = String.Format(" -quiet{0}", cmdArgs);
+
             GeneralExtension.RunExternalExecutable(APP_TOPNG, true, true, true, cmdArgs);
         }
 

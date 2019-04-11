@@ -157,7 +157,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     // use the best quality (largest) dds file for the conversion
                     FileInfo[] fileInfos = ddsFiles.Select(fi => new FileInfo(fi)).ToArray();
                     var ddsFile = fileInfos.OrderByDescending(fl => fl.Length).Select(fn => fn.FullName).FirstOrDefault();
-                    ExternalApps.Dds2Png(ddsFile);
+                    ExternalApps.Dds2Png(ddsFile, isQuiet: true);
                 }
             }
 

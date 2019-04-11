@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- prevent Unpacker CLI from redirecting standard output for dds to png conversions
 - added error handler for TreeViewOfd exceptions
 - added additional flexibility to Quick Add feature
 - only show the display setting warning on first run if applicable

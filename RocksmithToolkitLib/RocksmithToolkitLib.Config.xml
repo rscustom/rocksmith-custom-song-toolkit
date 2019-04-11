@@ -31,7 +31,7 @@
   <Config Key="creator_autosavetemplate" Value="true" />
   <!-- converter config key count = 2 -->"
   <Config Key="converter_source" Value="Pc" />
-  <Config Key="converter_target" Value="XBox360" />
+  <Config Key="converter_target" Value="Mac" />
   <!-- ddc config key count = 5 -->"
   <Config Key="ddc_config" Value="ddc_default" />
   <Config Key="ddc_rampup" Value="ddc_default" />
