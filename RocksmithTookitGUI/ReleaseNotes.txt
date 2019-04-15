@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- fix invalid artifact naming so that unpacker can extract recoverable data
 - prevent Unpacker CLI from redirecting standard output for dds to png conversions
 - added error handler for TreeViewOfd exceptions
 - added additional flexibility to Quick Add feature
