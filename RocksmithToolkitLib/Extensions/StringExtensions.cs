@@ -98,7 +98,7 @@ namespace RocksmithToolkitLib.Extensions
             // allow use of only these special characters \\-_ /&.:',!?()\"#
             // allow use of alphanumerics a-zA-Z0-9
             // tested and working ... Üuber!@#$%^&*()_+=-09{}][":';<>.,?/ñice 
-
+            value = value.ReplaceSpecialCharacters();
             Regex rgx = new Regex("[^a-zA-Z0-9\\-_/&:',!.?()\"#\\p{L} ]*");
             value = rgx.Replace(value, "");
             // commented out because some ODLC have these
@@ -247,6 +247,7 @@ namespace RocksmithToolkitLib.Extensions
                 return String.Empty;
 
             // processing order is important to achieve output like ODLC
+            value = value.ReplaceSpecialCharacters();
             value = value.ReplaceAbbreviations();
             value = value.ReplaceDiacritics();
             value = value.StripSpecialCharacters();
@@ -535,6 +536,14 @@ namespace RocksmithToolkitLib.Extensions
         public static string ReplaceSpaceWith(this string value, string replacementValue = "_")
         {
             var result = Regex.Replace(value.Trim(), @"[\s]", replacementValue);
+            return result;
+        }
+
+
+        public static string ReplaceSpecialCharacters(this string value)
+        {
+            // tilde not used in ODLC
+            var result = value.Replace('~', '-');
             return result;
         }
 

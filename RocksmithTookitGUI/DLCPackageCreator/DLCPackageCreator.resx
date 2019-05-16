@@ -133,7 +133,7 @@ This can produce undesired results.
 It is recommended that you delete
 any existing *_preview.* audio files
 first to ensure that the toolkit auto 
-generate them correctly.  Unless of
+generates them correctly.  Unless of
 course that is your desired effect to
 have customized preview audio.</value>
   </data>

@@ -1,6 +1,10 @@
 Rocksmith Toolkit Release Notes
 
-- fix invalid artifact naming so that unpacker can extract recoverable data
+- DDC tab menu reports errors correctly instead of throwing a misleading exception
+- Import Package will autosave xml template if General Config>Autosave Templates is enabled
+  (turn off autosave if you do not want to unknowingly overwrite existing xml templates)
+- use existing wem files if provided without checking for Wwise installation
+- fix invalid artifact naming so that unpacker can extract any recoverable data
 - prevent Unpacker CLI from redirecting standard output for dds to png conversions
 - added error handler for TreeViewOfd exceptions
 - added additional flexibility to Quick Add feature

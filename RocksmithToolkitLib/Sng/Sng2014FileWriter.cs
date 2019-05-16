@@ -1308,13 +1308,21 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     continue;
                 }
 
-                // are we past phrase iteration boundary?
-                if (current.Time > sng.PhraseIterations.PhraseIterations[p].NextPhraseTime)
+                try
                 {
-                    // advance and re-run
-                    // will be repeated through empty iterations
-                    ++p;
-                    o = o - 1;
+                    // are we past phrase iteration boundary?
+                    if (current.Time > sng.PhraseIterations.PhraseIterations[p].NextPhraseTime)
+                    {
+                        // advance and re-run
+                        // will be repeated through empty iterations
+                        ++p;
+                        o = o - 1;
+                        continue;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // workaround for rare conversion exception 'Index was outside the bounds of the array' 
                     continue;
                 }
 

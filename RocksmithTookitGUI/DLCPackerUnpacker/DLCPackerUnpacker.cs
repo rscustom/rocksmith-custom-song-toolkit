@@ -225,17 +225,19 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                                 break;
                         }
 
-                        packageCreator.FillPackageCreatorForm(info, unpackedDir);
-                        // fix descrepancies
-                        packageCreator.CurrentGameVersion = srcPlatform.version;
-                        // console files do not have an AppId
-                        if (!srcPlatform.IsConsole)
-                            packageCreator.AppId = info.AppId;
-                        //packageCreator.SelectComboAppId(info.AppId);
-                        // save template xml file except when SongPack
-                        if (!srcPath.Contains("_sp_") && !srcPath.Contains("_songpack_"))
-                            packageCreator.SaveTemplateFile(unpackedDir, false);
+                        // save template xml file (except SongPacks)
+                        if (ConfigRepository.Instance().GetBoolean("creator_autosavetemplate") &&
+                            !srcPath.Contains("_sp_") && !srcPath.Contains("_songpack_"))
+                        {
+                            packageCreator.FillPackageCreatorForm(info, unpackedDir);
+                            // fix descrepancies
+                            packageCreator.CurrentGameVersion = srcPlatform.version;
+                            // console files do not have an AppId
+                            if (!srcPlatform.IsConsole)
+                                packageCreator.AppId = info.AppId;
 
+                            packageCreator.SaveTemplateFile(unpackedDir, false);
+                        }
                     }
 
                     unpackedDirs.Add(unpackedDir);

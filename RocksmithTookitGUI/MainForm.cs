@@ -221,8 +221,8 @@ namespace RocksmithToolkitGUI
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // autosave the dlc.xml template on closing
-            //if (dlcPackageCreator1.IsDirty && ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
-            //    dlcPackageCreator1.SaveTemplateFile(dlcPackageCreator1.UnpackedDir, false);
+            if (dlcPackageCreator1.IsDirty && ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
+                dlcPackageCreator1.SaveTemplateFile(dlcPackageCreator1.UnpackedDir, false);
 
             // leave temp folder contents for developer debugging
             if (GeneralExtension.IsInDesignMode)

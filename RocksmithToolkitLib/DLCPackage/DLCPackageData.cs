@@ -22,6 +22,7 @@ using RocksmithToolkitLib.Conversion;
 using RocksmithToolkitLib.XmlRepository;
 using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
 
 namespace RocksmithToolkitLib.DLCPackage
 {
@@ -568,13 +569,23 @@ namespace RocksmithToolkitLib.DLCPackage
                 var xmlName = attr.SongXml.Split(':')[3];
                 var xmlFile = Directory.EnumerateFiles(unpackedDir, xmlName + ".xml", SearchOption.AllDirectories).FirstOrDefault();
 
+                // throw exception for corrupt/missing XML file names
                 if (!File.Exists(xmlFile))
                 {
+                    var artifactsDir = unpackedDir;
+                    StackTrace stackTrace = new StackTrace();
+                    var callerName = stackTrace.GetFrame(1).GetMethod().Name;
+
+                    if (callerName.Equals("PackageImport") && ConfigRepository.Instance().GetBoolean("creator_structured"))
+                        artifactsDir = Path.Combine(unpackedDir, "EOF");
+
                     throw new DataException(Environment.NewLine + Environment.NewLine + "*** READ ME *** READ ME *** READ ME ***" + Environment.NewLine + Environment.NewLine +
                         "<WARNING> CDLC artifact file naming is corrupt ..." + Environment.NewLine +
-                        "1) Open the artifacts folder: " + Path.Combine(unpackedDir, "EOF") + Environment.NewLine +
+                        "1) Open the artifacts folder: " + artifactsDir + "   " + Environment.NewLine +
                         "2) Look for and rename any artifact file names that contain the '~' tilde character" + Environment.NewLine +
                         "3) (re)Author the CDLC like from an EOF project using: >CDLC Creator>Add>Edit>Generate" + Environment.NewLine + Environment.NewLine);
+
+                    GlobalExtension.HideProgress();
                 }
 
                 if (attr.Phrases != null)

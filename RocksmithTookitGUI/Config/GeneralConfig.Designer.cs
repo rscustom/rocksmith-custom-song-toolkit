@@ -107,13 +107,14 @@
             this.general_usebeta.Checked = true;
             this.general_usebeta.CheckState = System.Windows.Forms.CheckState.Checked;
             this.general_usebeta.Enabled = false;
+            this.general_usebeta.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.general_usebeta.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.general_usebeta.Location = new System.Drawing.Point(312, 88);
+            this.general_usebeta.Location = new System.Drawing.Point(289, 87);
             this.general_usebeta.Name = "general_usebeta";
             this.general_usebeta.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.general_usebeta.Size = new System.Drawing.Size(187, 17);
+            this.general_usebeta.Size = new System.Drawing.Size(210, 17);
             this.general_usebeta.TabIndex = 8;
-            this.general_usebeta.Text = "(Hidden) Always Use Beta Version";
+            this.general_usebeta.Text = "(Dev Hidden) Always Use Beta Version";
             this.toolTip.SetToolTip(this.general_usebeta, "Developer Use Only\r\nForce use of beta version");
             this.general_usebeta.UseVisualStyleBackColor = true;
             this.general_usebeta.Visible = false;
@@ -154,9 +155,9 @@
             this.ddc_autogen.Location = new System.Drawing.Point(346, 111);
             this.ddc_autogen.Name = "ddc_autogen";
             this.ddc_autogen.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ddc_autogen.Size = new System.Drawing.Size(124, 17);
+            this.ddc_autogen.Size = new System.Drawing.Size(121, 17);
             this.ddc_autogen.TabIndex = 4;
-            this.ddc_autogen.Text = "Auto Generate DDC:";
+            this.ddc_autogen.Text = "Auto Generate DDC";
             this.toolTip.SetToolTip(this.ddc_autogen, resources.GetString("ddc_autogen.ToolTip"));
             this.ddc_autogen.UseVisualStyleBackColor = true;
             this.ddc_autogen.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -168,9 +169,9 @@
             this.label19.Location = new System.Drawing.Point(4, 91);
             this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(112, 13);
+            this.label19.Size = new System.Drawing.Size(109, 13);
             this.label19.TabIndex = 56;
-            this.label19.Text = "Default Quality Factor:";
+            this.label19.Text = "Default Quality Factor";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // creator_autosavetemplate
@@ -180,9 +181,9 @@
             this.creator_autosavetemplate.Location = new System.Drawing.Point(344, 132);
             this.creator_autosavetemplate.Name = "creator_autosavetemplate";
             this.creator_autosavetemplate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_autosavetemplate.Size = new System.Drawing.Size(126, 17);
+            this.creator_autosavetemplate.Size = new System.Drawing.Size(123, 17);
             this.creator_autosavetemplate.TabIndex = 8;
-            this.creator_autosavetemplate.Text = "Autosave Templates:";
+            this.creator_autosavetemplate.Text = "Autosave Templates";
             this.toolTip.SetToolTip(this.creator_autosavetemplate, "If checked, automatically save template\r\n\'.dlc.xml\' file for user on application " +
                     "exit.\r\n\r\nWARNING\r\n------------\r\nIf uncheck, templates must be saved\r\nmanually by" +
                     " pressing \'Save Template\'\r\nbutton.");
@@ -196,9 +197,9 @@
             this.creator_fixlowbass.Location = new System.Drawing.Point(37, 132);
             this.creator_fixlowbass.Name = "creator_fixlowbass";
             this.creator_fixlowbass.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_fixlowbass.Size = new System.Drawing.Size(127, 17);
+            this.creator_fixlowbass.Size = new System.Drawing.Size(124, 17);
             this.creator_fixlowbass.TabIndex = 6;
-            this.creator_fixlowbass.Text = "Fix Low Bass Tuning:";
+            this.creator_fixlowbass.Text = "Fix Low Bass Tuning";
             this.toolTip.SetToolTip(this.creator_fixlowbass, "If checked, automatically\r\nfix low bass tuning errors.");
             this.creator_fixlowbass.UseVisualStyleBackColor = true;
             this.creator_fixlowbass.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -207,12 +208,12 @@
             // 
             this.creator_fixmultitone.AutoSize = true;
             this.creator_fixmultitone.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.creator_fixmultitone.Location = new System.Drawing.Point(204, 132);
+            this.creator_fixmultitone.Location = new System.Drawing.Point(195, 132);
             this.creator_fixmultitone.Name = "creator_fixmultitone";
             this.creator_fixmultitone.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_fixmultitone.Size = new System.Drawing.Size(118, 17);
+            this.creator_fixmultitone.Size = new System.Drawing.Size(115, 17);
             this.creator_fixmultitone.TabIndex = 7;
-            this.creator_fixmultitone.Text = "Fix Multitone Errors:";
+            this.creator_fixmultitone.Text = "Fix Multitone Errors";
             this.toolTip.SetToolTip(this.creator_fixmultitone, "If checked, automatically fix multitone errors\r\nby converting to a single tone ar" +
                     "rangement.");
             this.creator_fixmultitone.UseVisualStyleBackColor = true;
@@ -235,9 +236,9 @@
             this.label1.Location = new System.Drawing.Point(9, 70);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(107, 13);
+            this.label1.Size = new System.Drawing.Size(104, 13);
             this.label1.TabIndex = 41;
-            this.label1.Text = "Default Scroll Speed:";
+            this.label1.Text = "Default Scroll Speed";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label16
@@ -247,9 +248,9 @@
             this.label16.Location = new System.Drawing.Point(25, 47);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(91, 13);
+            this.label16.Size = new System.Drawing.Size(88, 13);
             this.label16.TabIndex = 54;
-            this.label16.Text = "Default Tone File:";
+            this.label16.Text = "Default Tone File";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnProjectDir
@@ -269,9 +270,9 @@
             this.label15.Location = new System.Drawing.Point(4, 21);
             this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(112, 13);
+            this.label15.Size = new System.Drawing.Size(109, 13);
             this.label15.TabIndex = 51;
-            this.label15.Text = "Default Project Folder:";
+            this.label15.Text = "Default Project Folder";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // creator_usedefaultauthor
@@ -281,9 +282,9 @@
             this.creator_usedefaultauthor.Location = new System.Drawing.Point(252, 90);
             this.creator_usedefaultauthor.Name = "creator_usedefaultauthor";
             this.creator_usedefaultauthor.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_usedefaultauthor.Size = new System.Drawing.Size(218, 17);
+            this.creator_usedefaultauthor.Size = new System.Drawing.Size(215, 17);
             this.creator_usedefaultauthor.TabIndex = 5;
-            this.creator_usedefaultauthor.Text = "Album Sort Defaults To Package Author:";
+            this.creator_usedefaultauthor.Text = "Album Sort Defaults To Package Author";
             this.toolTip.SetToolTip(this.creator_usedefaultauthor, "If checked, the configuration Package Author\r\nwill be used by default for the Alb" +
                     "um Sort\r\ntextbox field in the Creator GUI.");
             this.creator_usedefaultauthor.UseVisualStyleBackColor = true;
@@ -296,9 +297,9 @@
             this.creator_useacronyms.Location = new System.Drawing.Point(226, 69);
             this.creator_useacronyms.Name = "creator_useacronyms";
             this.creator_useacronyms.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.creator_useacronyms.Size = new System.Drawing.Size(244, 17);
+            this.creator_useacronyms.Size = new System.Drawing.Size(241, 17);
             this.creator_useacronyms.TabIndex = 4;
-            this.creator_useacronyms.Text = "Use Artist Name Acronym When Naming Files:";
+            this.creator_useacronyms.Text = "Use Artist Name Acronym When Naming Files";
             this.toolTip.SetToolTip(this.creator_useacronyms, "If checked, creates shorter file names.");
             this.creator_useacronyms.UseVisualStyleBackColor = true;
             this.creator_useacronyms.Leave += new System.EventHandler(this.ConfigurationChanged);
@@ -310,9 +311,9 @@
             this.label3.Location = new System.Drawing.Point(40, 189);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(76, 13);
+            this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 44;
-            this.label3.Text = "Game Version:";
+            this.label3.Text = "Game Version";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // general_defaultgameversion
@@ -348,9 +349,9 @@
             this.label2.Location = new System.Drawing.Point(43, 19);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(73, 13);
+            this.label2.Size = new System.Drawing.Size(70, 13);
             this.label2.TabIndex = 42;
-            this.label2.Text = "App ID (RS1):";
+            this.label2.Text = "App ID (RS1)";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // general_defaultappid_RS2012
@@ -443,9 +444,9 @@
             this.label17.Location = new System.Drawing.Point(295, 189);
             this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(48, 13);
+            this.label17.Size = new System.Drawing.Size(45, 13);
             this.label17.TabIndex = 105;
-            this.label17.Text = "Platform:";
+            this.label17.Text = "Platform";
             this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnWwisePath
@@ -465,9 +466,9 @@
             this.label14.Location = new System.Drawing.Point(49, 163);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(67, 13);
+            this.label14.Size = new System.Drawing.Size(64, 13);
             this.label14.TabIndex = 103;
-            this.label14.Text = "Wwise Path:";
+            this.label14.Text = "Wwise Path";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label12
@@ -548,9 +549,9 @@
             this.label11.Location = new System.Drawing.Point(4, 139);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(112, 13);
+            this.label11.Size = new System.Drawing.Size(109, 13);
             this.label11.TabIndex = 50;
-            this.label11.Text = "Rocksmith 2014 Path:";
+            this.label11.Text = "Rocksmith 2014 Path";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label10
@@ -560,9 +561,9 @@
             this.label10.Location = new System.Drawing.Point(31, 113);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(85, 13);
+            this.label10.Size = new System.Drawing.Size(82, 13);
             this.label10.TabIndex = 48;
-            this.label10.Text = "Rocksmith Path:";
+            this.label10.Text = "Rocksmith Path";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label9
@@ -572,9 +573,9 @@
             this.label9.Location = new System.Drawing.Point(29, 70);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(87, 13);
+            this.label9.Size = new System.Drawing.Size(84, 13);
             this.label9.TabIndex = 47;
-            this.label9.Text = "Package Author:";
+            this.label9.Text = "Package Author";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label4
@@ -584,9 +585,9 @@
             this.label4.Location = new System.Drawing.Point(25, 44);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(91, 13);
+            this.label4.Size = new System.Drawing.Size(88, 13);
             this.label4.TabIndex = 45;
-            this.label4.Text = "App ID (RS2014):";
+            this.label4.Text = "App ID (RS2014)";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // general_defaultappid_RS2014
@@ -625,9 +626,9 @@
             this.ddc_removesustain.Location = new System.Drawing.Point(358, 18);
             this.ddc_removesustain.Name = "ddc_removesustain";
             this.ddc_removesustain.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ddc_removesustain.Size = new System.Drawing.Size(112, 17);
+            this.ddc_removesustain.Size = new System.Drawing.Size(109, 17);
             this.ddc_removesustain.TabIndex = 3;
-            this.ddc_removesustain.Text = "Remove Sustains:";
+            this.ddc_removesustain.Text = "Remove Sustains";
             this.ddc_removesustain.UseVisualStyleBackColor = true;
             this.ddc_removesustain.Leave += new System.EventHandler(this.ConfigurationChanged);
             // 
@@ -637,9 +638,9 @@
             this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label6.Location = new System.Drawing.Point(336, 48);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(79, 13);
+            this.label6.Size = new System.Drawing.Size(76, 13);
             this.label6.TabIndex = 47;
-            this.label6.Text = "Phrase Length:";
+            this.label6.Text = "Phrase Length";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label13
@@ -649,9 +650,9 @@
             this.label13.Location = new System.Drawing.Point(60, 48);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(59, 13);
+            this.label13.Size = new System.Drawing.Size(56, 13);
             this.label13.TabIndex = 46;
-            this.label13.Text = "Config File:";
+            this.label13.Text = "Config File";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label5
@@ -661,9 +662,9 @@
             this.label5.Location = new System.Drawing.Point(63, 19);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(56, 13);
+            this.label5.Size = new System.Drawing.Size(53, 13);
             this.label5.TabIndex = 46;
-            this.label5.Text = "Rampage:";
+            this.label5.Text = "Rampage";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ddc_config
@@ -711,7 +712,7 @@
             this.converter_target.AllowDrop = true;
             this.converter_target.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.converter_target.FormattingEnabled = true;
-            this.converter_target.Location = new System.Drawing.Point(350, 15);
+            this.converter_target.Location = new System.Drawing.Point(347, 15);
             this.converter_target.MinimumSize = new System.Drawing.Size(20, 0);
             this.converter_target.Name = "converter_target";
             this.converter_target.Size = new System.Drawing.Size(120, 21);
@@ -726,9 +727,9 @@
             this.label7.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label7.Location = new System.Drawing.Point(261, 18);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(82, 13);
+            this.label7.Size = new System.Drawing.Size(79, 13);
             this.label7.TabIndex = 47;
-            this.label7.Text = "Target Platform:";
+            this.label7.Text = "Target Platform";
             // 
             // label8
             // 
@@ -737,9 +738,9 @@
             this.label8.Location = new System.Drawing.Point(32, 18);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(85, 13);
+            this.label8.Size = new System.Drawing.Size(82, 13);
             this.label8.TabIndex = 46;
-            this.label8.Text = "Source Platform:";
+            this.label8.Text = "Source Platform";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // converter_source
@@ -918,7 +919,7 @@
             this.creator_scrollspeed.TabIndex = 3;
             this.creator_scrollspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.creator_scrollspeed.Value = new decimal(new int[] {
-            20,
+            13,
             0,
             0,
             65536});

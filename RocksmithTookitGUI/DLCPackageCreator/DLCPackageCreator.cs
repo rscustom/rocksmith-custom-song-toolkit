@@ -594,6 +594,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (!String.IsNullOrEmpty(arr.FontSng))
                     arr.FontSng = arr.FontSng.RelativeTo(BasePath);
             }
+            
             try
             {
                 using (var stm = XmlWriter.Create(templatePath, new XmlWriterSettings { CheckCharacters = true, Indent = true }))
@@ -918,15 +919,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             SelectComboAppId(AppId);
 
             // validate on-load to address old CDLC issues
-            txtAlbum.Text = info.SongInfo.Album;
+            txtAlbum.Text = info.SongInfo.Album.GetValidAtaSpaceName();
             txtAlbumSort.Text = info.SongInfo.AlbumSort.GetValidSortableName();
             txtJapaneseSongTitle.Text = info.SongInfo.JapaneseSongName;
             txtJapaneseArtistName.Text = info.SongInfo.JapaneseArtistName;
             chkJapaneseTitle.Checked = !string.IsNullOrEmpty(txtJapaneseSongTitle.Text) || !string.IsNullOrEmpty(txtJapaneseArtistName.Text);
-            txtSongTitle.Text = info.SongInfo.SongDisplayName;
+            txtSongTitle.Text = info.SongInfo.SongDisplayName.GetValidAtaSpaceName();
             txtSongTitleSort.Text = info.SongInfo.SongDisplayNameSort.GetValidSortableName();
             txtYear.Text = info.SongInfo.SongYear.ToString();
-            txtArtist.Text = info.SongInfo.Artist;
+            txtArtist.Text = info.SongInfo.Artist.GetValidAtaSpaceName();
             txtArtistSort.Text = info.SongInfo.ArtistSort.GetValidSortableName();
             txtTempo.Text = info.SongInfo.AverageTempo.ToString();
 
@@ -1643,20 +1644,30 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void btnPackageGenerate_Click(object sender, EventArgs e)
         {
             var diaMsg = String.Empty;
-            var wwisePath = Wwise.GetWwisePath();
-            var wwiseVersion = FileVersionInfo.GetVersionInfo(wwisePath).ProductVersion;
-            if (CurrentGameVersion == GameVersion.RS2012 && !wwiseVersion.StartsWith("2010.3"))
-            {
-                diaMsg = "Configuration Wwise Path is not set properly for RS1 ...";
-                BetterDialog2.ShowDialog(diaMsg, "Generate Button", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
-                return;
-            }
 
-            if (CurrentGameVersion != GameVersion.RS2012 && wwiseVersion.StartsWith("2010"))
+            if (CurrentGameVersion == GameVersion.RS2014 &&
+                Path.GetExtension(AudioPath) == ".wem" &&
+                File.Exists(String.Format(Path.Combine(Path.GetDirectoryName(AudioPath), Path.GetFileNameWithoutExtension(AudioPath)) + "_preview.wem")))
             {
-                diaMsg = "Configuration Wwise Path is not set properly for RS2014 or Conversions ...";
-                BetterDialog2.ShowDialog(diaMsg, "Generate Button", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
-                return;
+                // use existing wem files without checking Wwise installation
+            }
+            else
+            {
+                var wwisePath = Wwise.GetWwisePath();
+                var wwiseVersion = FileVersionInfo.GetVersionInfo(wwisePath).ProductVersion;
+                if (CurrentGameVersion == GameVersion.RS2012 && !wwiseVersion.StartsWith("2010.3"))
+                {
+                    diaMsg = "Configuration Wwise Path is not set properly for RS1 ...";
+                    BetterDialog2.ShowDialog(diaMsg, "Generate Button", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                    return;
+                }
+
+                if (CurrentGameVersion != GameVersion.RS2012 && wwiseVersion.StartsWith("2010"))
+                {
+                    diaMsg = "Configuration Wwise Path is not set properly for RS2014 or Conversions ...";
+                    BetterDialog2.ShowDialog(diaMsg, "Generate Button", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
+                    return;
+                }
             }
 
             if (String.IsNullOrEmpty(ArtistSort) || String.IsNullOrEmpty(SongTitleSort) || String.IsNullOrEmpty(PackageVersion) || String.IsNullOrEmpty(DLCKey))
@@ -2005,6 +2016,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             PackageImport(srcPath, destDir);
+
+            // autosave the dlc.xml template on first load
+            if (ConfigRepository.Instance().GetBoolean("creator_autosavetemplate"))
+                SaveTemplateFile(UnpackedDir, false);
         }
 
         /// <summary>

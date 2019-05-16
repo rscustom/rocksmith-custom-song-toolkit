@@ -100,7 +100,6 @@ namespace RocksmithToolkitGUI.DDC
                 {
                     // validate existing SongInfo
                     var songXml = Song2014.LoadFromFile(arr.SongXml.File);
-                    songXml.AlbumYear = packageData.SongInfo.SongYear.ToString().GetValidYear();
                     songXml.ArtistName = packageData.SongInfo.Artist.GetValidAtaSpaceName();
                     songXml.Title = packageData.SongInfo.SongDisplayName.GetValidAtaSpaceName();
                     songXml.AlbumName = packageData.SongInfo.Album.GetValidAtaSpaceName();
@@ -108,6 +107,17 @@ namespace RocksmithToolkitGUI.DDC
                     songXml.SongNameSort = packageData.SongInfo.SongDisplayNameSort.GetValidSortableName();
                     songXml.AlbumNameSort = packageData.SongInfo.AlbumSort.GetValidSortableName();
                     songXml.AverageTempo = Convert.ToSingle(packageData.SongInfo.AverageTempo.ToString().GetValidTempo());
+                    songXml.AlbumYear = packageData.SongInfo.SongYear.ToString().GetValidYear();
+
+                    // update packageData with validated SongInfo
+                    packageData.SongInfo.Artist = songXml.ArtistName;
+                    packageData.SongInfo.SongDisplayName = songXml.Title;
+                    packageData.SongInfo.Album = songXml.AlbumName;
+                    packageData.SongInfo.ArtistSort = songXml.ArtistNameSort;
+                    packageData.SongInfo.SongDisplayNameSort = songXml.SongNameSort;
+                    packageData.SongInfo.AlbumSort = songXml.AlbumNameSort;
+                    packageData.SongInfo.AverageTempo = (int)songXml.AverageTempo;
+                    packageData.SongInfo.SongYear = Convert.ToInt32(songXml.AlbumYear);
 
                     // write updated xml arrangement
                     using (var stream = File.Open(arr.SongXml.File, FileMode.Create))
@@ -575,41 +585,44 @@ namespace RocksmithToolkitGUI.DDC
             // file overwriting is done here as last step
             pbUpdateProgress.Value = 100;
 
-            foreach (var file in FilesDb)
+            if (e.Result.Equals(0))
             {
-                switch (Path.GetExtension(file.Value))
+                foreach (var file in FilesDb)
                 {
-                    case ".xml": // Arrangement
-                        {
-                            var fileDir = Path.GetDirectoryName(file.Value);
-                            var ddcArrXML = Path.Combine(fileDir, String.Format("DDC_{0}.xml", file.Key));
-                            var srcShowlights = Path.Combine(fileDir, String.Format("{0}_showlights.xml", file.Key));
-                            var destShowlights = Path.Combine(fileDir, String.Format("DDC_{0}_showlights.xml", file.Key));
-
-                            if (!chkOverwrite.Checked && !File.Exists(destShowlights) && File.Exists(srcShowlights) && File.Exists(ddcArrXML))
-                                File.Copy(srcShowlights, destShowlights, true);
-                        }
-                        break;
-
-                    case ".psarc": // PC / Mac (RS2014)
-                    case ".dat":   // PC (RS1)
-                    case ".edat":  // PS3
-                    case "":       // XBox 360
-                        if (chkOverwrite.Checked)
-                        {
-                            var filePath = file.Value;
-                            var ddcFilePath = GenerateDdcFilePath(filePath);
-                            if (!ddcFilePath.Equals(filePath))
+                    switch (Path.GetExtension(file.Value))
+                    {
+                        case ".xml": // Arrangement
                             {
-                                // File.Move is prone to exceptions
-                                File.Copy(ddcFilePath, filePath, true);
-                                File.Delete(ddcFilePath);
-                            }
-                        }
-                        break;
-                }
+                                var fileDir = Path.GetDirectoryName(file.Value);
+                                var ddcArrXML = Path.Combine(fileDir, String.Format("DDC_{0}.xml", file.Key));
+                                var srcShowlights = Path.Combine(fileDir, String.Format("{0}_showlights.xml", file.Key));
+                                var destShowlights = Path.Combine(fileDir, String.Format("DDC_{0}_showlights.xml", file.Key));
 
-                Invoke(new MethodInvoker(() => RemoveEntry(file.Value)));
+                                if (!chkOverwrite.Checked && !File.Exists(destShowlights) && File.Exists(srcShowlights) && File.Exists(ddcArrXML))
+                                    File.Copy(srcShowlights, destShowlights, true);
+                            }
+                            break;
+
+                        case ".psarc": // PC / Mac (RS2014)
+                        case ".dat": // PC (RS1)
+                        case ".edat": // PS3
+                        case "": // XBox 360
+                            if (chkOverwrite.Checked)
+                            {
+                                var filePath = file.Value;
+                                var ddcFilePath = GenerateDdcFilePath(filePath);
+                                if (!ddcFilePath.Equals(filePath))
+                                {
+                                    // File.Move is prone to exceptions
+                                    File.Copy(ddcFilePath, filePath, true);
+                                    File.Delete(ddcFilePath);
+                                }
+                            }
+                            break;
+                    }
+
+                    Invoke(new MethodInvoker(() => RemoveEntry(file.Value)));
+                }
             }
 
             FilesDb.Clear();
