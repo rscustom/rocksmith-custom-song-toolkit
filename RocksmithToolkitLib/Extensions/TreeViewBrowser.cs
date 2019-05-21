@@ -180,9 +180,9 @@ namespace RocksmithToolkitLib.Extensions
             InitDefaultFolders();
             // de-activate EH's            
             ToggleEventHandlers(false);
-            
+
             RestoreTreeView(new List<string>() { InitialDirectory }, "\\", out errMsg);
-            
+
             // re- activate EH's
             ToggleEventHandlers(true); // this trashes the InitialDirectory Restore
 
@@ -294,7 +294,13 @@ namespace RocksmithToolkitLib.Extensions
 
                     foreach (var dir in directories)
                     {
-                        node.Nodes.Add(new TreeNode(Path.GetFileNameWithoutExtension(dir))
+                        // GetFileNameWithoutExtension method does not work with directory names that contain '.' periods
+                        // node.Nodes.Add(new TreeNode(Path.GetFileNameWithoutExtension(dir))
+                        // alt method
+                        // node.Nodes.Add(new TreeNode(Path.GetFileName(dir))
+                        var ndx = dir.LastIndexOf(Path.DirectorySeparatorChar);
+                        var dirName = dir.Substring(ndx + 1);
+                        node.Nodes.Add(new TreeNode(dirName)
                         {
                             Tag = dir,
                             ImageIndex = 0,
@@ -694,6 +700,9 @@ namespace RocksmithToolkitLib.Extensions
 
                 for (int i = 1; i < pathParts.Count(); i++)
                 {
+                    //var textNode = Path.Combine(childNode.Tag.ToString(), pathParts[i]);
+                    //TreeNode subNode = new TreeNode(textNode);
+
                     var subNode = childNode.Nodes.Cast<TreeNode>().FirstOrDefault(n => n.Text == pathParts[i]);
                     if (subNode != null)
                     {

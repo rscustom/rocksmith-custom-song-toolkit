@@ -1,5 +1,7 @@
 Rocksmith Toolkit Release Notes
 
+- fixed Quick Add to work with directory names that contain '.' periods
+- fixed representative arrangement bug
 - DDC tab menu reports errors correctly instead of throwing a misleading exception
 - Import Package will autosave xml template if General Config>Autosave Templates is enabled
   (turn off autosave if you do not want to unknowingly overwrite existing xml templates)
