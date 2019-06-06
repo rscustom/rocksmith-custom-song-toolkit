@@ -67,7 +67,7 @@ namespace RocksmithToolkitLib.Extensions
                 return string.Join(string.Empty, v.Select(s => s[0])).ToUpper();
 
             value = value.ReplaceDiacritics();
-            value = value.StripNonAlpaNumeric();
+            value = value.StripNonAlphaNumeric();
             return value;
         }
 
@@ -171,11 +171,11 @@ namespace RocksmithToolkitLib.Extensions
             if (String.IsNullOrEmpty(value))
                 return String.Empty;
 
-            value = value.StripNonAlpaNumeric();
+            value = value.StripNonAlphaNumeric();
 
             // CRITICAL: prevents RS1 in game hanging after tuning
             // check if same, if so then add 'Song' to make key unique, skip check if isTone
-            if (value == songTitle.StripNonAlpaNumeric() && !isTone)
+            if (value == songTitle.StripNonAlphaNumeric() && !isTone)
                 value = "Song" + value;
 
             // limit max Key length to 30
@@ -636,9 +636,13 @@ namespace RocksmithToolkitLib.Extensions
             return result;
         }
 
-        public static string StripNonAlpaNumeric(this string value)
+        /// <summary>
+        /// removes all non alphanumeric and all white space
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string StripNonAlphaNumeric(this string value)
         {
-            // removes all non alphanumeric and all white space
             Regex rgx = new Regex("[^a-zA-Z0-9_]+");
             var result = rgx.Replace(value, "");
             return result;

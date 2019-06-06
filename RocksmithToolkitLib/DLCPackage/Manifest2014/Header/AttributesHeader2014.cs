@@ -137,9 +137,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             EasyMastery = Math.Round((double)(NotesEasy / NotesHard), 9);
             MediumMastery = Math.Round((double)(NotesMedium / NotesHard), 9);
             Metronome = arrangement.Metronome == Sng.Metronome.None ? null : (int?)arrangement.Metronome;
+            
             // TODO: monitor this change
-            // Representative = Convert.ToInt32(!arrangement.BonusArr);
             Representative = arrangement.ArrangementPropeties.Represent;
+            
             RouteMask = (int)arrangement.RouteMask;
 
             ManifestFunctions.GetSongDifficulty(this, song2014);
