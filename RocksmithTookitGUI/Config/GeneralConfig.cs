@@ -51,16 +51,16 @@ namespace RocksmithToolkitGUI.Config
                 PopulateRampUp();
                 PopulateConfigDDC();
 
-                // force static Wwise path and settings for Mac Mono/Wine packages on first run
+                // CRITICAL - force static Wwise path and settings for Mac Mono/Wine packages on first run
                 if ((Environment.OSVersion.Platform == PlatformID.MacOSX || GeneralExtension.IsWine()) && ConfigRepository.Instance().GetBoolean("general_firstrun"))
                 {
                     ConfigRepository.Instance()["general_autoupdate"] = "false";
                     ConfigRepository.Instance()["general_replacerepo"] = "true";
                     ConfigRepository.Instance()["general_defaultauthor"] = "CST_Mac";
-                    ConfigRepository.Instance()["general_wwisepath"] = "C:\\Program Files\\Audiokinetic\\Wwise\\Authoring"; // interestingly the full path is not needed here
+                    ConfigRepository.Instance()["general_wwisepath"] = "C:\\Program Files (x86)\\Audiokinetic\\Wwise\\Authoring"; // interestingly the full path is not needed here
                     ConfigRepository.Instance()["general_replacerepo"] = "false";
                     ConfigRepository.Instance()["general_defaultplatform"] = "Mac";
-                    // TODO: identify these Mac paths if static
+                    // TODO: identify these Mac paths if static (they are not static)
                     ConfigRepository.Instance()["general_rs2014path"] = "";
                     ConfigRepository.Instance()["general_rs1path"] = "";
                 }
