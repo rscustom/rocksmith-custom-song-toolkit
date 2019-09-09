@@ -86,9 +86,15 @@ namespace RocksmithToolkitLib.PSARC
             if (_writer != null) _writer.Dispose();
         }
         #endregion
+
         #region Helpers Inflater/Deflater
 
-        public string ErrMSG;
+        private StringBuilder _errMsg;
+        public StringBuilder ErrMsg
+        {
+            get { return _errMsg ?? (_errMsg = new StringBuilder()); }
+            set { _errMsg = value; }
+        }
 
         /// <summary>
         /// Inflates selected entry.
@@ -103,7 +109,6 @@ namespace RocksmithToolkitLib.PSARC
             uint zChunkID = entry.zIndexBegin;
             int blockSize = (int)_header.BlockSizeAlloc;
             //bool isZlib = _header.CompressionMethod == 2053925218;
-
             if (destfilepath.Length > 0)
                 entry.Data = new FileStream(destfilepath, FileMode.Create, FileAccess.Write, FileShare.Read);
             else
@@ -133,15 +138,15 @@ namespace RocksmithToolkitLib.PSARC
                             {
                                 RijndaelEncryptor.Unzip(array, entry.Data, false);
                             }
-                            catch (Exception ex)//IOException
+                            catch (Exception ex) //IOException
                             {
                                 // corrupt CDLC zlib.net exception ... try to unpack
                                 if (String.IsNullOrEmpty(entry.Name))
-                                    ErrMSG = String.Format(@"{1}CDLC contains a zlib exception.{1}Warning: {0}{1}", ex.Message, Environment.NewLine);
+                                    ErrMsg.AppendLine(String.Format(@"CDLC contains a zlib exception.{1}Warning: {0}", ex.Message, Environment.NewLine));
                                 else
-                                    ErrMSG = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
+                                    ErrMsg.AppendLine(String.Format(@"CDLC contains a broken datachunk in file '{0}'.{2}Warning Type 1: {1}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine));
 
-                                Console.Write(ErrMSG);
+                                Debug.Write(ErrMsg.ToString());
                             }
                         }
                         else // raw. used only for data(chunks) smaller than 64 kb
@@ -149,18 +154,19 @@ namespace RocksmithToolkitLib.PSARC
                             entry.Data.Write(array, 0, array.Length);
                         }
                     }
-                    zChunkID += 1;
 
+                    zChunkID += 1;
                 }
                 catch (Exception ex) // index is outside the bounds of the array 
                 {
                     // corrupt CDLC data length ... try to unpack
-                    ErrMSG = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
-                    Console.Write(ErrMSG + Environment.NewLine);
+                    ErrMsg.AppendLine(String.Format(@"CDLC contains a broken datachunk in file '{0}'.{2}Warning Type 2: {1}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine));
+                    Debug.Write(ErrMsg.ToString());
                     break;
                 }
 
             } while (entry.Data.Length < (long)entry.Length);
+
             entry.Data.Seek(0, SeekOrigin.Begin);
             entry.Data.Flush();
         }
@@ -287,11 +293,11 @@ namespace RocksmithToolkitLib.PSARC
 
         private void WriteManifest()
         {
-           if (_toc.Count == 0)
+            if (_toc.Count == 0)
                 _toc.Add(new Entry());
 
             if (!String.IsNullOrEmpty(_toc[0].Name))
-                MessageBox.Show("<ERROR> Expected empty _toc[0].Name," + Environment.NewLine + 
+                MessageBox.Show("<ERROR> Expected empty _toc[0].Name," + Environment.NewLine +
                     "but instead found: " + _toc[0].Name, "WriteManifest", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             // generate NamesBlock.bin content

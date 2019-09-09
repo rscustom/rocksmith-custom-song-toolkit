@@ -79,12 +79,12 @@ namespace RocksmithToolkitLib.PsarcLoader
             }
         }
 
-        public static bool InjectArchiveEntry(string psarcPath, string entryName, string sourcePath)
+        public static bool InjectArchiveEntry(string psarcPath, string entryName, string sourcePath, bool useMemory = true)
         {
             if (!File.Exists(psarcPath))
                 return false;
 
-            using (PSARC archive = new PSARC(true))
+            using (PSARC archive = new PSARC(useMemory))
             using (var psarcStream = File.OpenRead(psarcPath))
             {
                 try
@@ -127,12 +127,12 @@ namespace RocksmithToolkitLib.PsarcLoader
             }
         }
 
-        public static bool InjectArchiveEntry(string psarcPath, string entryName, Stream sourceStream)
+        public static bool InjectArchiveEntry(string psarcPath, string entryName, Stream sourceStream, bool useMemory = true)
         {
             if (!File.Exists(psarcPath))
                 return false;
 
-            using (PSARC archive = new PSARC(true))
+            using (PSARC archive = new PSARC(useMemory))
             using (var psarcStream = File.OpenRead(psarcPath))
             {
                 try

@@ -97,17 +97,20 @@ namespace RocksmithToolkitLib.DLCPackage
             int len;
             var buffer = new byte[65536];
             var zOutputStream = new ZInputStream(str);
+
             while ((len = zOutputStream.read(buffer, 0, buffer.Length)) > 0)
-            {
                 outStream.Write(buffer, 0, len);
-            }
-            zOutputStream.Close(); buffer = null;
+
+            zOutputStream.Close();
+            buffer = null;
+
             if (rewind)
             {
                 outStream.Position = 0;
                 outStream.Flush();
             }
         }
+
         public static void Unzip(byte[] array, Stream outStream, bool rewind = true)
         {
             Unzip(new MemoryStream(array), outStream, rewind);

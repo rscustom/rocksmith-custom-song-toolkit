@@ -117,10 +117,10 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 actionMsg = "Unpacking";
 
             if (String.IsNullOrEmpty(errMsg))
-                errMsg = actionMsg + " is complete." + Environment.NewLine;
+                errMsg = actionMsg + " is complete." + Environment.NewLine + Environment.NewLine;
             else
-                errMsg = actionMsg + " is complete with the following errors:" + Environment.NewLine +
-                         errMsg + Environment.NewLine;
+                errMsg = actionMsg + " is complete with the following errors:" + Environment.NewLine + Environment.NewLine +
+                         errMsg;
 
             errMsg += "Would you like to open the destination path?  ";
 
@@ -173,6 +173,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         public List<string> UnpackSongs(IEnumerable<string> srcPaths, string destPath)
         {
             ToggleUIControls(false);
+            Packer.ErrMsg = new StringBuilder();
             errorsFound = new StringBuilder();
             GlobalExtension.UpdateProgress = this.pbUpdateProgress;
             GlobalExtension.CurrentOperationLabel = this.lblCurrentOperation;
@@ -190,12 +191,27 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 Application.DoEvents();
                 progress += step;
                 GlobalExtension.ShowProgress(String.Format("Unpacking: '{0}'", Path.GetFileName(srcPath)), progress);
+                Platform srcPlatform = srcPath.GetPlatform();
+                var unpackedDir = String.Empty;
 
                 try
                 {
-                    Platform srcPlatform = srcPath.GetPlatform();
-                    var unpackedDir = Packer.Unpack(srcPath, destPath, srcPlatform, DecodeAudio, OverwriteSongXml);
+                    unpackedDir = Packer.Unpack(srcPath, destPath, srcPlatform, DecodeAudio, OverwriteSongXml);
+                    unpackedDirs.Add(unpackedDir);
+                }
+                catch (Exception ex)
+                {
+                    errorsFound.AppendLine(String.Format("<ERROR> Unpacking file: {0}{1}{2}", Path.GetFileName(srcPath), Environment.NewLine, ex.Message));
+                    continue;
+                }
 
+                // ODLC status
+                var isODLC = !Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).Any();
+                if (isODLC || srcPlatform.platform == GamePlatform.None)
+                    continue;
+
+                try
+                {
                     // added a bulk process to create template xml files here so unpacked folders may be loaded quickly in CDLC Creator if desired
                     progress += step;
                     GlobalExtension.ShowProgress(String.Format("Creating Template XML file for: '{0}'", Path.GetFileName(srcPath)), progress);
@@ -225,9 +241,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                                 break;
                         }
 
-                        // save template xml file (except SongPacks)
-                        if (ConfigRepository.Instance().GetBoolean("creator_autosavetemplate") &&
-                            !srcPath.Contains("_sp_") && !srcPath.Contains("_songpack_"))
+                        // save template xml file (except SongPacks)                        
+                        if (ConfigRepository.Instance().GetBoolean("creator_autosavetemplate") && !srcPath.Contains("_sp_") && !srcPath.Contains("_songpack_"))
                         {
                             packageCreator.FillPackageCreatorForm(info, unpackedDir);
                             // fix descrepancies
@@ -239,19 +254,21 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                             packageCreator.SaveTemplateFile(unpackedDir, false);
                         }
                     }
-
-                    unpackedDirs.Add(unpackedDir);
                 }
                 catch (Exception ex)
                 {
-                    // ignore any 'Index out of range' exceptions
-                    if (!ex.Message.StartsWith("Index"))
-                        errorsFound.AppendLine(String.Format("<ERROR> Unpacking file: '{0}' ... {1}", Path.GetFileName(srcPath), ex.Message));
+                    if (ex.Message.Contains("Object reference"))
+                        errorsFound.AppendLine(String.Format("Could not create Template XML file for: {0}{1}", Path.GetFileName(srcPath) + new string(' ', 5), Environment.NewLine));
+                    else
+                        errorsFound.AppendLine(String.Format("Could not create Template XML file for: {0}{1}{2}{1}", Path.GetFileName(srcPath) + new string(' ', 5), Environment.NewLine, ex.Message));
                 }
             }
 
             sw.Stop();
             GlobalExtension.ShowProgress("Finished unpacking archive (elapsed time): " + sw.Elapsed, 100);
+
+            if (!String.IsNullOrEmpty(Packer.ErrMsg.ToString()))
+                errorsFound.Insert(0, Packer.ErrMsg.ToString());
 
             if (!ConfigGlobals.IsUnitTest)
                 PromptComplete(destPath, false, errorsFound.ToString());
@@ -424,7 +441,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 }
                 catch (Exception ex)
                 {
-                    errorsFound.AppendLine(String.Format("Error trying unpack file '{0}': {1}", Path.GetFileName(srcPath), ex.Message));
+                    errorsFound.AppendLine(String.Format("<Error> unpacking file '{0}': {1}", Path.GetFileName(srcPath), ex.Message));
                     continue;
                 }
 
@@ -770,7 +787,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 ofd.Filter = "All Files (*.*)|*.*|Rocksmith 1|*.dat|Rocksmith 2014 PC|*_p.psarc|Rocksmith 2014 Mac|*_m.psarc|Rocksmith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
                 ofd.Multiselect = true;
                 ofd.FilterIndex = 1;
-                ofd.FileName = destPath;
+                if (File.Exists(destPath))
+                    ofd.FileName = destPath;
 
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;

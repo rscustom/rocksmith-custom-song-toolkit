@@ -1,5 +1,7 @@
 Rocksmith Toolkit Release Notes
 
+- improved robustness of unpacker exception handling
+- extract remaining salvagable artifacts if archive is corrupt
 - fixed Quick Add to work with directory names that contain '.' periods
 - fixed representative arrangement bug
 - DDC tab menu reports errors correctly instead of throwing a misleading exception

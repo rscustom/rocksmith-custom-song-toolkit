@@ -169,7 +169,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                                 if (String.IsNullOrEmpty(entry.Name))
                                     entry.ErrMsg = String.Format(@"{1}CDLC contains a zlib exception.{1}Warning: {0}{1}", ex.Message, Environment.NewLine);
                                 else
-                                    entry.ErrMsg = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
+                                    entry.ErrMsg = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning Type 3:  {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
 
                                 Console.Write(entry.ErrMsg);
                             }
@@ -184,7 +184,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                 catch (Exception ex) // index is outside the bounds of the array 
                 {
                     // corrupt CDLC data length ... try to unpack
-                    entry.ErrMsg = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
+                    entry.ErrMsg = String.Format(@"{2}CDLC contains a broken datachunk in file '{0}'.{2}Warning Type 4: {1}{2}", entry.Name.Split('/').Last(), ex.Message, Environment.NewLine);
                     Console.Write(entry.ErrMsg + Environment.NewLine);
                     break;
                 }
@@ -938,6 +938,7 @@ namespace RocksmithToolkitLib.PsarcLoader
         {
             int len;
             var buffer = new byte[65536];
+
             var zOutputStream = new ZInputStream(str);
             while ((len = zOutputStream.read(buffer, 0, buffer.Length)) > 0)
             {

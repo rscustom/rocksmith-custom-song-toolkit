@@ -169,87 +169,97 @@ namespace RocksmithToolkitLib.DLCPackage
             // Extract XML from SNG and check it against the EOF XML (correct bass tuning from older toolkit/EOF xml files)
             if (srcPlatform.version == GameVersion.RS2014)
             {
-                var sngFiles = Directory.EnumerateFiles(unpackedDir, "*.sng", SearchOption.AllDirectories).ToList();
-                var step = Math.Round(1.0 / sngFiles.Count * 100, 3);
-                double progress = 0;
-                GlobalExtension.ShowProgress("Validating XML files ...");
-
-                foreach (var sngFile in sngFiles)
+                try
                 {
-                    var xmlEofFile = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
-                    xmlEofFile = xmlEofFile.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, srcPlatform.GetPathName()[1].ToLower()), "arr");
-                    var xmlSngFile = xmlEofFile.Replace(".xml", ".sng.xml");
-                    var arrType = ArrangementType.Guitar;
+                    var sngFiles = Directory.EnumerateFiles(unpackedDir, "*.sng", SearchOption.AllDirectories).ToList();
+                    var step = Math.Round(1.0 / sngFiles.Count * 100, 3);
+                    double progress = 0;
+                    GlobalExtension.ShowProgress("Validating XML files ...");
 
-                    if (Path.GetFileName(xmlSngFile).ToLower().Contains("vocal"))
-                        arrType = ArrangementType.Vocal;
-
-                    Attributes2014 att = null;
-                    if (arrType != ArrangementType.Vocal)
+                    foreach (var sngFile in sngFiles)
                     {
-                        // Some ODLC json files contain factory errors
-                        // Confirmed error in Chords (too many chords are reported in some difficulty levels)
-                        var jsonFiles = Directory.EnumerateFiles(unpackedDir, String.Format("{0}.json", Path.GetFileNameWithoutExtension(sngFile)), SearchOption.AllDirectories).FirstOrDefault();
-                        if (!String.IsNullOrEmpty(jsonFiles) && jsonFiles.Any())
-                            att = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles).Entries.ToArray()[0].Value.ToArray()[0].Value;
-                    }
+                        var xmlEofFile = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
+                        xmlEofFile = xmlEofFile.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, srcPlatform.GetPathName()[1].ToLower()), "arr");
+                        var xmlSngFile = xmlEofFile.Replace(".xml", ".sng.xml");
+                        var arrType = ArrangementType.Guitar;
 
-                    // create the xml file from sng file
-                    var sngContent = Sng2014File.LoadFromFile(sngFile, srcPlatform);
-                    using (var outputStream = new FileStream(xmlSngFile, FileMode.Create, FileAccess.ReadWrite))
-                    {
-                        dynamic xmlContent = null;
+                        if (Path.GetFileName(xmlSngFile).ToLower().Contains("vocal"))
+                            arrType = ArrangementType.Vocal;
 
-                        if (arrType == ArrangementType.Vocal)
-                            xmlContent = new Vocals(sngContent);
-                        else
-                            xmlContent = new Song2014(sngContent, att);
-
-                        xmlContent.Serialize(outputStream);
-                    }
-
-                    // capture/preserve any existing xml comments
-                    IEnumerable<XComment> xmlComments = null;
-                    if (File.Exists(xmlEofFile))
-                        xmlComments = Song2014.ReadXmlComments(xmlEofFile);
-
-                    // correct old toolkit/EOF xml (tuning) issues by syncing with SNG data
-                    if (File.Exists(xmlEofFile) && !overwriteSongXml && arrType != ArrangementType.Vocal)
-                    {
-                        var eofSong = Song2014.LoadFromFile(xmlEofFile);
-                        var sngSong = Song2014.LoadFromFile(xmlSngFile);
-                        if (eofSong.Tuning != sngSong.Tuning)
+                        Attributes2014 att = null;
+                        if (arrType != ArrangementType.Vocal)
                         {
-                            eofSong.Tuning = sngSong.Tuning;
-
-                            using (var stream = File.Open(xmlEofFile, FileMode.Create))
-                                eofSong.Serialize(stream, true);
-
-                            Song2014.WriteXmlComments(xmlEofFile, xmlComments, customComment: "Synced with SNG file");
-                            Console.WriteLine("Fixed Tuning Descrepancies: " + xmlEofFile);
-                            GlobalExtension.ShowProgress("Fixed tuning descepancies ...");
+                            // Some ODLC json files contain factory errors
+                            // Confirmed error in Chords (too many chords are reported in some difficulty levels)
+                            var jsonFiles = Directory.EnumerateFiles(unpackedDir, String.Format("{0}.json", Path.GetFileNameWithoutExtension(sngFile)), SearchOption.AllDirectories).FirstOrDefault();
+                            if (!String.IsNullOrEmpty(jsonFiles) && jsonFiles.Any())
+                                att = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles).Entries.ToArray()[0].Value.ToArray()[0].Value;
                         }
-                    }
-                    else if (File.Exists(xmlEofFile) && !overwriteSongXml && arrType == ArrangementType.Vocal)
-                    {
-                        // preserves xml comments from vocals
-                    }
-                    else // SNG => XML
-                    {
-                        if (!isODLC)
-                            Song2014.WriteXmlComments(xmlSngFile, xmlComments, customComment: "Generated from SNG file");
 
-                        File.Copy(xmlSngFile, xmlEofFile, true);
+                        // create the xml file from sng file
+                        var sngContent = Sng2014File.LoadFromFile(sngFile, srcPlatform);
+                        using (var outputStream = new FileStream(xmlSngFile, FileMode.Create, FileAccess.ReadWrite))
+                        {
+                            dynamic xmlContent = null;
+
+                            if (arrType == ArrangementType.Vocal)
+                                xmlContent = new Vocals(sngContent);
+                            else
+                                xmlContent = new Song2014(sngContent, att);
+
+                            xmlContent.Serialize(outputStream);
+                        }
+
+                        // capture/preserve any existing xml comments
+                        IEnumerable<XComment> xmlComments = null;
+                        if (File.Exists(xmlEofFile))
+                            xmlComments = Song2014.ReadXmlComments(xmlEofFile);
+
+                        // correct old toolkit/EOF xml (tuning) issues by syncing with SNG data
+                        if (File.Exists(xmlEofFile) && !overwriteSongXml && arrType != ArrangementType.Vocal)
+                        {
+                            var eofSong = Song2014.LoadFromFile(xmlEofFile);
+                            var sngSong = Song2014.LoadFromFile(xmlSngFile);
+                            if (eofSong.Tuning != sngSong.Tuning)
+                            {
+                                eofSong.Tuning = sngSong.Tuning;
+
+                                using (var stream = File.Open(xmlEofFile, FileMode.Create))
+                                    eofSong.Serialize(stream, true);
+
+                                Song2014.WriteXmlComments(xmlEofFile, xmlComments, customComment: "Synced with SNG file");
+                                Console.WriteLine("Fixed Tuning Descrepancies: " + xmlEofFile);
+                                GlobalExtension.ShowProgress("Fixed tuning descepancies ...");
+                            }
+                        }
+                        else if (File.Exists(xmlEofFile) && !overwriteSongXml && arrType == ArrangementType.Vocal)
+                        {
+                            // preserves xml comments from vocals
+                        }
+                        else // SNG => XML
+                        {
+                            if (!isODLC)
+                                Song2014.WriteXmlComments(xmlSngFile, xmlComments, customComment: "Generated from SNG file");
+
+                            File.Copy(xmlSngFile, xmlEofFile, true);
+                        }
+
+                        if (File.Exists(xmlSngFile))
+                            File.Delete(xmlSngFile);
+
+                        progress += step;
+                        GlobalExtension.UpdateProgress.Value = (int)progress;
                     }
 
-                    if (File.Exists(xmlSngFile))
-                        File.Delete(xmlSngFile);
-
-                    progress += step;
-                    GlobalExtension.UpdateProgress.Value = (int)progress;
+                    //GlobalExtension.HideProgress();
                 }
-
-                //GlobalExtension.HideProgress();
+                catch (Exception ex)
+                {
+                    if (ex.Message.Contains("Object reference"))
+                        ErrMsg.AppendLine(String.Format("CDLC quality check failed for: {0}{1}", Path.GetFileName(srcPath) + new string(' ', 5), Environment.NewLine));
+                    else
+                        ErrMsg.AppendLine(String.Format("CDLC quality check failed for: {0}{1}{2}{1}", Path.GetFileName(srcPath) + new string(' ', 5), Environment.NewLine, ex.Message));
+                }
             }
 
             return unpackedDir;
@@ -629,6 +639,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
         #region COMMON FUNCTIONS
 
+        private static StringBuilder _errMsg;
+        public static StringBuilder ErrMsg
+        {
+            get { return _errMsg ?? (_errMsg = new StringBuilder()); }
+            set { _errMsg = value; }
+        }
+
         private static string ExtractPSARC(string srcPath, string destPath, Stream inputStream, Platform platform, bool isInitialCall = true)
         {
             // start fresh on initial call and internalize destPath for recursion
@@ -638,43 +655,61 @@ namespace RocksmithToolkitLib.DLCPackage
             var psarc = new PSARC.PSARC();
             psarc.Read(inputStream, true);
 
-            var step = Math.Round(1.0 / (psarc.TOC.Count + 2) * 100, 3);
+            var step = Math.Round(1.0 / (psarc.TOC.Count + 2) * 100, 4);
             double progress = 0;
             GlobalExtension.ShowProgress("Inflating Entries ...");
-
-            // InflateEntries - compatible with RS1 and RS2014 files
-            foreach (var entry in psarc.TOC)
+            try
             {
-                // remove invalid characters from entry.Name so CDLC can be unpacked
-                var validEntryName = entry.Name.Replace("?", "~");
-                var inputPath = Path.Combine(destPath, validEntryName);
-
-                if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
+                // InflateEntries - compatible with RS1 and RS2014 files
+                foreach (var entry in psarc.TOC)
                 {
-                    psarc.InflateEntry(entry);
-                    var outputPath = Path.Combine(destPath, Path.GetFileNameWithoutExtension(validEntryName));
-                    ExtractPSARC(inputPath, outputPath, entry.Data, platform, false);
-                }
-                else
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(inputPath));
-                    psarc.InflateEntry(entry, inputPath);
-                    // Close
-                    if (entry.Data != null)
-                        entry.Data.Dispose();
-                }
+                    // remove invalid characters from entry.Name so CDLC can be unpacked
+                    var validEntryName = entry.Name.Replace("?", "~");
+                    var inputPath = Path.Combine(destPath, validEntryName);
 
-                if (!String.IsNullOrEmpty(psarc.ErrMSG))
-                    throw new InvalidDataException(psarc.ErrMSG);
+                    if (Path.GetExtension(entry.Name).ToLower() == ".psarc")
+                    {
+                        psarc.InflateEntry(entry);
+                        var outputPath = Path.Combine(destPath, Path.GetFileNameWithoutExtension(validEntryName));
+                        ExtractPSARC(inputPath, outputPath, entry.Data, platform, false);
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(inputPath));
+                        if (entry.Name.Contains("man_lead.xml"))
+                            Debug.WriteLine("Found it.");
 
-                progress += step;
-                GlobalExtension.UpdateProgress.Value = (int)progress;
+                        psarc.InflateEntry(entry, inputPath);
+                        // Close
+                        if (entry.Data != null)
+                            entry.Data.Dispose();
+                    }
+
+                    if (!String.IsNullOrEmpty(psarc.ErrMsg.ToString()))
+                    {
+                        ErrMsg.AppendLine(psarc.ErrMsg.ToString());
+                        psarc.ErrMsg = new StringBuilder(); // reset ErrMsg                       
+                    }
+
+                    progress += step;
+                    GlobalExtension.UpdateProgress.Value = (int)progress;
+                }
             }
-
-            if (psarc != null)
+            catch (Exception ex)
             {
-                psarc.Dispose();
-                psarc = null;
+                if (!ex.Message.StartsWith("Value"))
+                    ErrMsg.AppendLine(ex.Message);
+            }
+            finally
+            {
+                if (psarc != null)
+                {
+                    psarc.Dispose();
+                    psarc = null;
+                }
+
+                //if (!String.IsNullOrEmpty(errMsg.ToString()))
+                //    throw new InvalidDataException(errMsg.ToString());
             }
 
             return destPath;
