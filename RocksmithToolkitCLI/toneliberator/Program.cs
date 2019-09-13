@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using RocksmithToolkitLib.PsarcLoader;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Tone;
+using RocksmithToolkitLib.PSARC;
 
 namespace toneliberator
 {

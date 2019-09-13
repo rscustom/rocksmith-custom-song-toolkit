@@ -91,6 +91,9 @@
     <Compile Include="Extensions\TreeViewOfd.designer.cs">
       <DependentUpon>TreeViewOfd.cs</DependentUpon>
     </Compile>
+    <Compile Include="PSARC\PsarcExtensions.cs" />
+    <Compile Include="PSARC\PsarcLoader.cs" />
+    <Compile Include="PSARC\PsarcPackager.cs" />
     <Compile Include="SngToTab\Common.cs" />
     <Compile Include="SngToTab\Sng2Tab.cs" />
     <Compile Include="SngToTab\TabBeat.cs" />
@@ -128,11 +131,6 @@
     <Compile Include="Extensions\JitVersionInfo.cs" />
     <Compile Include="Extensions\MemoryStreamExtension.cs" />
     <Compile Include="Ogg\Wwise.cs" />
-    <Compile Include="PsarcLoader\Entry.cs" />
-    <Compile Include="PsarcLoader\PSARC.cs" />
-    <Compile Include="PsarcLoader\PsarcExtensions.cs" />
-    <Compile Include="PsarcLoader\PsarcLoader.cs" />
-    <Compile Include="PsarcLoader\PsarcPackager.cs" />
     <Compile Include="Sng\Constants.cs" />
     <Compile Include="ToolkitVersionOnline.cs" />
     <Compile Include="DLCPackage\DLCPackageConverter.cs" />

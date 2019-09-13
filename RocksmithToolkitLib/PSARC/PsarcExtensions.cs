@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using Newtonsoft.Json.Linq;
-using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
+using System.Linq;
+
 
 // future use code incubator 
 
-namespace RocksmithToolkitLib.PsarcLoader
+namespace RocksmithToolkitLib.PSARC
 {
     public static class PsarcExtensions
     {
@@ -291,7 +290,7 @@ namespace RocksmithToolkitLib.PsarcLoader
             NoCloseStream s = new NoCloseStream();
             using (var sr = new StreamWriter(s))
                 sr.Write(newData);
-            
+
             s.Position = 0;
 
             if (!ReplaceData(p, dataEntry, s))
@@ -299,7 +298,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                 s.canClose = true;
                 s.Dispose();
                 return null;
-            }            
+            }
             return s;
         }
     }

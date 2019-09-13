@@ -12,13 +12,12 @@ using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
 using RocksmithToolkitLib.Extensions;
 using RocksmithToolkitLib.Ogg;
-using System.Windows.Forms;
 
 // PsarcLoader methods are used to load archives into memory
 // More efficient and faster than unpacking to physical files
 // RS2014 ONLY
 
-namespace RocksmithToolkitLib.PsarcLoader
+namespace RocksmithToolkitLib.PSARC
 {
     public sealed class PsarcLoader : IDisposable
     {
@@ -91,8 +90,8 @@ namespace RocksmithToolkitLib.PsarcLoader
             foreach (var entry in _archive.TOC)
             {
                 _archive.InflateEntry(entry);
-                if (!String.IsNullOrEmpty(entry.ErrMsg))
-                    errorLog.Add(entry.ErrMsg);
+                if (!String.IsNullOrEmpty(_archive.ErrMsg.ToString()))
+                    errorLog.Add(_archive.ErrMsg.ToString());
 
                 if (entry.Data == null)
                     errorLog.Add("Null Entry Error: " + entry.Name);
@@ -351,7 +350,7 @@ namespace RocksmithToolkitLib.PsarcLoader
                 _fileStream = null;
             }
             if (_archive != null)
-            {                
+            {
                 _archive.Dispose();
                 _archive = null;
             }

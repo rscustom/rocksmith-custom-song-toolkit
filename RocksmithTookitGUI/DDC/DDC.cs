@@ -17,7 +17,7 @@ using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 using Control = System.Windows.Forms.Control;
 using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
-using PsarcPackager = RocksmithToolkitLib.PsarcLoader.PsarcPackager;
+using RocksmithToolkitLib.PSARC;
 
 namespace RocksmithToolkitGUI.DDC
 {
@@ -61,7 +61,7 @@ namespace RocksmithToolkitGUI.DDC
         private bool IsNDD { get; set; }
         private string ProcessOutput { get; set; }
 
-        private int ApplyPackageDD(string srcPath, int phraseLen, bool removeSus, string rampPath, string cfgPath, out string consoleOutput, bool overWrite = false, bool keepLog = false)
+        public int ApplyPackageDD(string srcPath, int phraseLen, bool removeSus, string rampPath, string cfgPath, out string consoleOutput, bool overWrite = false, bool keepLog = false)
         {
             int result = 0; // Ends normally with no error
             DLCPackageData packageData;
@@ -242,7 +242,7 @@ namespace RocksmithToolkitGUI.DDC
             return ddcFilePath;
         }
 
-        private string GetConfig()
+        public string GetConfig()
         {
             if (cmbConfigFile.Text.Trim().Length > 0)
                 return String.Format("{0}", Path.GetFullPath(ConfigDb[cmbConfigFile.Text]));
@@ -250,7 +250,7 @@ namespace RocksmithToolkitGUI.DDC
             return "";
         }
 
-        private string GetRampUpMdl()
+        public string GetRampUpMdl()
         {
             if (cmbRampUp.Text.Trim().Length > 0)
                 return String.Format("{0}", Path.GetFullPath(RampUpDb[cmbRampUp.Text]));

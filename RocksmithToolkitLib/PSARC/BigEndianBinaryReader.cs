@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+
 namespace RocksmithToolkitLib.PSARC
 {
 	public class BigEndianBinaryReader : IDisposable

@@ -13,11 +13,11 @@ using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib;
 using RocksmithToolkitLib.DLCPackage.AggregateGraph2014;
 using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.PSARC;
 using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 using RocksmithToolkitGUI.Config;
-using RocksmithToolkitLib.PsarcLoader;
 using PackageCreator = RocksmithToolkitLib.DLCPackage.DLCPackageCreator;
 
 namespace RocksmithToolkitGUI.DLCPackerUnpacker
@@ -267,6 +267,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             sw.Stop();
             GlobalExtension.ShowProgress("Finished unpacking archive (elapsed time): " + sw.Elapsed, 100);
 
+            // insert any Packer error messages
             if (!String.IsNullOrEmpty(Packer.ErrMsg.ToString()))
                 errorsFound.Insert(0, Packer.ErrMsg.ToString());
 

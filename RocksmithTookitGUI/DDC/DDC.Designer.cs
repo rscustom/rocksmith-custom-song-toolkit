@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnAddArr = new System.Windows.Forms.Button();
             this.btnRampUp = new System.Windows.Forms.Button();
@@ -50,6 +50,7 @@
             this.chkOverwrite = new System.Windows.Forms.CheckBox();
             this.cmbConfigFile = new System.Windows.Forms.ComboBox();
             this.btnConfigFile = new System.Windows.Forms.Button();
+            this.cmbPhraseLen = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.btnRemove = new System.Windows.Forms.Button();
@@ -62,12 +63,11 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblStatus = new System.Windows.Forms.Label();
             this.ddcVersion = new System.Windows.Forms.Label();
-            this.cmbPhraseLen = new RocksmithToolkitGUI.DLCPackageCreator.NumericUpDownFixed();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmbPhraseLen)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -185,22 +185,22 @@
             this.DDCfilesDgw.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.PathColnm,
             this.TypeColnm});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DDCfilesDgw.DefaultCellStyle = dataGridViewCellStyle1;
             this.DDCfilesDgw.GridColor = System.Drawing.SystemColors.AppWorkspace;
             this.DDCfilesDgw.Location = new System.Drawing.Point(6, 19);
             this.DDCfilesDgw.Name = "DDCfilesDgw";
-            this.DDCfilesDgw.RowHeadersWidth = 4;
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
-            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            this.DDCfilesDgw.RowHeadersVisible = false;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            this.DDCfilesDgw.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.DDCfilesDgw.RowTemplate.ErrorText = "#####";
             this.DDCfilesDgw.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DDCfilesDgw.ShowEditingIcon = false;
@@ -313,6 +313,37 @@
             this.btnConfigFile.Text = "Add";
             this.btnConfigFile.UseVisualStyleBackColor = true;
             this.btnConfigFile.Click += new System.EventHandler(this.btnConfigFile_Click);
+            // 
+            // cmbPhraseLen
+            // 
+            this.cmbPhraseLen.Increment = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.cmbPhraseLen.Location = new System.Drawing.Point(94, 81);
+            this.cmbPhraseLen.Maximum = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+            this.cmbPhraseLen.Minimum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.cmbPhraseLen.Name = "cmbPhraseLen";
+            this.cmbPhraseLen.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.cmbPhraseLen.Size = new System.Drawing.Size(52, 20);
+            this.cmbPhraseLen.TabIndex = 6;
+            this.cmbPhraseLen.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.cmbPhraseLen.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.cmbPhraseLen, "Number of Bars");
+            this.cmbPhraseLen.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
             // 
             // label5
             // 
@@ -440,37 +471,6 @@
             this.ddcVersion.TabIndex = 10;
             this.ddcVersion.Text = "v0.0";
             // 
-            // cmbPhraseLen
-            // 
-            this.cmbPhraseLen.Increment = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.cmbPhraseLen.Location = new System.Drawing.Point(94, 81);
-            this.cmbPhraseLen.Maximum = new decimal(new int[] {
-            256,
-            0,
-            0,
-            0});
-            this.cmbPhraseLen.Minimum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.cmbPhraseLen.Name = "cmbPhraseLen";
-            this.cmbPhraseLen.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.cmbPhraseLen.Size = new System.Drawing.Size(52, 20);
-            this.cmbPhraseLen.TabIndex = 6;
-            this.cmbPhraseLen.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.cmbPhraseLen.ThousandsSeparator = true;
-            this.toolTip.SetToolTip(this.cmbPhraseLen, "Number of Bars");
-            this.cmbPhraseLen.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            // 
             // DDC
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -493,8 +493,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.DDCfilesDgw)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cmbPhraseLen)).EndInit();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

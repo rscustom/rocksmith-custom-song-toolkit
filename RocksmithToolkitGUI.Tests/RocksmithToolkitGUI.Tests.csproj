@@ -36,6 +36,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DDCTest.cs" />
     <Compile Include="DLCPackageCreatorTest.cs" />
     <Compile Include="DLCPackerUnpackerTest.cs" />
     <Compile Include="NUnitDeploymentItem.cs" />

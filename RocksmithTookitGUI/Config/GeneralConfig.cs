@@ -238,7 +238,7 @@ namespace RocksmithToolkitGUI.Config
             using (var fbd = new VistaFolderBrowserDialog())
             {
                 fbd.SelectedPath = general_wwisepath.Text;
-                fbd.Description = "Select the WwiseCLI.exe installation folder," + Environment.NewLine +
+                fbd.Description = "Select the 'WwiseCLI.exe' installation folder," + Environment.NewLine +
                     "or press 'X' to close and clear the Wwise Path.";
 
                 if (fbd.ShowDialog() != DialogResult.OK)

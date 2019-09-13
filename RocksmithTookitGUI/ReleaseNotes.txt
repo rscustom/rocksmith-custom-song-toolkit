@@ -1,7 +1,10 @@
 Rocksmith Toolkit Release Notes
 
+- restored missing toolkit CLI executables
+- added DDC Unit Testing to RocksmithToolkitGUI.Tests
+- merged PsarcLoader into PSARC namespace
 - improved robustness of unpacker exception handling
-- extract remaining salvagable artifacts if archive is corrupt
+- extract remaining salvageable artifacts if archive is corrupt
 - fixed Quick Add to work with directory names that contain '.' periods
 - fixed representative arrangement bug
 - DDC tab menu reports errors correctly instead of throwing a misleading exception

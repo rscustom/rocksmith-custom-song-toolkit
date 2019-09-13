@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
 
-namespace RocksmithToolkitLib.PsarcLoader
+namespace RocksmithToolkitLib.PSARC
 {
     public class PsarcPackager : IDisposable
     {
@@ -30,7 +29,7 @@ namespace RocksmithToolkitLib.PsarcLoader
 
             // LOAD DLCPackageData
             var srcPlatform = Packer.GetPlatform(srcPath);
-            DLCPackageData info = null; 
+            DLCPackageData info = null;
             if (srcPlatform.version == GameVersion.RS2014)
             {
                 // REORGANIZE (RS2014)

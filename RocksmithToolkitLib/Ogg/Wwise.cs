@@ -67,7 +67,7 @@ namespace RocksmithToolkitLib.Ogg
             }
 
             if (!wwiseCLIPath.Any())
-                throw new FileNotFoundException("Could not find WwiseCLI.exe in " + wwiseRoot + Environment.NewLine +
+                throw new FileNotFoundException("Could not find 'WwiseCLI.exe' in " + wwiseRoot + Environment.NewLine +
                     "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed." + Environment.NewLine);
 
             //win32 = 32bit x64 = 64bit

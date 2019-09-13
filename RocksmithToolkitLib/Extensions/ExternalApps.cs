@@ -218,7 +218,7 @@ namespace RocksmithToolkitLib.Extensions
 
             if (output.Contains("Error: Project migration needed") && magicDust > 0)
             {
-                Debug.WriteLine("WwiseCLI.exe Conversion Failed ...");
+                Debug.WriteLine("'WwiseCLI.exe' Conversion Failed ...");
                 Debug.WriteLine("Applying Magic Dust #" + magicDust);
                 magicDust--;
                 Wav2Wem(wwiseCLIPath, wwiseTemplateDir, magicDust);

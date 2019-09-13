@@ -41,11 +41,19 @@ namespace RocksmithToolkitLib.PSARC
         public List<Entry> TOC { get { return _toc; } }
         private uint[] _zBlocksSizeList;
         private int bNum { get { return (int)Math.Log(_header.BlockSizeAlloc, byte.MaxValue + 1); } }
+        private bool UseMemory = false;
 
         public PSARC()
         {
             _header = new Header();
             _toc = new List<Entry> { new Entry() };
+        }
+
+        public PSARC(bool Memory)
+        {
+            _header = new Header();
+            _toc = new List<Entry> { new Entry() };
+            UseMemory = Memory;
         }
         /// <summary>
         /// Checks if psarc is not truncated.
@@ -53,8 +61,9 @@ namespace RocksmithToolkitLib.PSARC
         /// <returns>The psarc size.</returns>
         private long RequiredPsarcSize()
         {
+            // get last_entry.offset and it's size
             if (_toc.Count > 0)
-            {//get last_entry.offset+it's size
+            {
                 var last_entry = _toc[_toc.Count - 1];
                 var TotalLen = last_entry.Offset;
                 var zNum = _zBlocksSizeList.Length - last_entry.zIndexBegin;
@@ -65,7 +74,7 @@ namespace RocksmithToolkitLib.PSARC
                 }
                 return (long)TotalLen;
             }
-            return _header.TotalTOCSize;//already read
+            return _header.TotalTOCSize; // already read
         }
 
         #region IDisposable implementation
@@ -74,12 +83,14 @@ namespace RocksmithToolkitLib.PSARC
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing) return;
             _header = null;
             foreach (var entry in TOC.Where(entry => entry.Data != null))
                 entry.Data.Dispose();
+
             TOC.Clear();
 
             if (_reader != null) _reader.Dispose();
@@ -112,7 +123,12 @@ namespace RocksmithToolkitLib.PSARC
             if (destfilepath.Length > 0)
                 entry.Data = new FileStream(destfilepath, FileMode.Create, FileAccess.Write, FileShare.Read);
             else
-                entry.Data = new TempFileStream();
+            {
+                if (UseMemory)
+                    entry.Data = new MemoryStreamExtension();
+                else
+                    entry.Data = new TempFileStream();
+            }
 
             _reader.BaseStream.Position = (long)entry.Offset;
 
@@ -186,7 +202,8 @@ namespace RocksmithToolkitLib.PSARC
         public void InflateEntries()
         {
             foreach (var current in _toc)
-            {// We really can use Parallel here.
+            {
+                // We really can use Parallel here.
                 InflateEntry(current);
             }
         }
@@ -225,18 +242,19 @@ namespace RocksmithToolkitLib.PSARC
                     int plain_len = entry.Data.Read(array_i, 0, array_i.Length);
                     int packed_len = (int)RijndaelEncryptor.Zip(array_i, memoryStream, plain_len, false);
 
+                    // If packed data "worse" than plain (i.e. already packed) z = 0
                     if (packed_len >= plain_len)
-                    {// If packed data "worse" than plain (i.e. already packed) z = 0
+                    {
                         zList.Add(new Tuple<byte[], int>(array_i, plain_len));
                     }
-                    else
-                    {// If packed data is good
+                    else // If packed data is good
+                    {
                         if (packed_len < (blockSize - 1))
                         {// If packed data fits maximum packed block size z = packed_len
                             zList.Add(new Tuple<byte[], int>(array_o, packed_len));
                         }
-                        else
-                        {// Write plain. z = 0
+                        else // Write plain. z = 0
+                        {
                             zList.Add(new Tuple<byte[], int>(array_i, plain_len));
                         }
                     }
@@ -271,7 +289,8 @@ namespace RocksmithToolkitLib.PSARC
             var toc = _toc[0];
             if (!String.IsNullOrEmpty(toc.Name))
                 MessageBox.Show("<ERROR> Expected empty _toc[0].Name," + Environment.NewLine +
-                   "but instead found: " + _toc[0].Name, "ReadManifest", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                 "but instead found: " + _toc[0].Name, "ReadManifest", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            // throw new FileLoadException("<ERROR> Expected empty _toc[0].Name, but found: " + _toc[0].Name);
 
             toc.Name = "NamesBlock.bin";
             InflateEntry(toc);
@@ -287,24 +306,26 @@ namespace RocksmithToolkitLib.PSARC
                 });
             }
 
-            // comment out to leave NamesXblock.bin for debugging
+            // commented out to leave NamesXblock.bin for debugging
             // _toc.RemoveAt(0);
         }
 
         private void WriteManifest()
         {
             if (_toc.Count == 0)
-                _toc.Add(new Entry());
+                _toc.Add(new Entry() { Name = "NamesBlock.bin" });
 
-            if (!String.IsNullOrEmpty(_toc[0].Name))
-                MessageBox.Show("<ERROR> Expected empty _toc[0].Name," + Environment.NewLine +
-                    "but instead found: " + _toc[0].Name, "WriteManifest", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (_toc[0].Name == "")
+                _toc[0].Name = "NamesBlock.bin";
+
+            if (_toc[0].Name != "NamesBlock.bin")
+                _toc.Insert(0, new Entry() { Name = "NamesBlock.bin" });
 
             // generate NamesBlock.bin content
             var binaryWriter = new BinaryWriter(new MemoryStream());
             for (int i = 1, len = _toc.Count; i < len; i++)
             {
-                //'/' - unix path separator
+                // '/' - unix path separator
                 var bytes = Encoding.ASCII.GetBytes(_toc[i].Name);
 
                 // don't include toolkit.version in NamesBlock.bin
@@ -312,7 +333,7 @@ namespace RocksmithToolkitLib.PSARC
                 //    continue;
 
                 binaryWriter.Write(bytes);
-                //'\n' - unix line separator
+                // '\n' - unix line separator
                 if (i == len - 1)
                 {
                     binaryWriter.BaseStream.Position = 0;
@@ -343,7 +364,7 @@ namespace RocksmithToolkitLib.PSARC
 
         public void AddEntry(Entry entry)
         {
-            //important hierarchy
+            // important hierarchy
             _toc.Add(entry);
             entry.Id = this.TOC.Count - 1;
         }
@@ -605,5 +626,328 @@ namespace RocksmithToolkitLib.PSARC
         }
 
         #endregion
+
+        #region TempFileStream Methods
+
+        public class TempFileStream : FileStream
+        {
+            private const int _buffer_size = 65536;
+
+            public TempFileStream()
+                : base(Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.Read, _buffer_size, FileOptions.DeleteOnClose)
+            {
+            }
+
+            public TempFileStream(FileMode mode) // for Appending can not use FileAccess.ReadWrite
+                : base(Path.GetTempFileName(), mode, FileAccess.Write, FileShare.Read, _buffer_size, FileOptions.DeleteOnClose)
+            {
+            }
+
+            public TempFileStream(FileAccess access)
+                : base(Path.GetTempFileName(), FileMode.Create, access, FileShare.Read, _buffer_size, FileOptions.DeleteOnClose)
+            {
+            }
+
+            public TempFileStream(FileAccess access, FileShare share)
+                : base(Path.GetTempFileName(), FileMode.Create, access, share, _buffer_size, FileOptions.DeleteOnClose)
+            {
+            }
+
+            public TempFileStream(FileAccess access, FileShare share, int bufferSize)
+                : base(Path.GetTempFileName(), FileMode.Create, access, share, bufferSize, FileOptions.DeleteOnClose)
+            {
+            }
+
+            public TempFileStream(string path, FileMode mode)
+                : base(path, mode)
+            {
+            }
+        }
+        #endregion
+
+        /// MemoryStreamExtension is a re-implementation of MemoryStream that uses a dynamic list of byte arrays as a backing store,
+        /// instead of a single byte array, the allocation of which will fail for relatively small streams as it requires contiguous memory.
+        /// </summary>
+        public class MemoryStreamExtension : Stream /* http://msdn.microsoft.com/en-us/library/system.io.stream.aspx */
+        {
+            #region Constructors
+
+            public MemoryStreamExtension()
+            {
+                Position = 0;
+            }
+
+            public MemoryStreamExtension(byte[] source)
+            {
+                this.Write(source, 0, source.Length);
+                Position = 0;
+            }
+
+            /* length is ignored because capacity has no meaning unless we implement an artifical limit */
+
+            public MemoryStreamExtension(int length)
+            {
+                SetLength(length);
+                Position = length;
+                byte[] d = block; //access block to prompt the allocation of memory
+                Position = 0;
+            }
+
+            #endregion
+
+            #region Status Properties
+
+            public override bool CanRead
+            {
+                get { return true; }
+            }
+
+            public override bool CanSeek
+            {
+                get { return true; }
+            }
+
+            public override bool CanWrite
+            {
+                get { return true; }
+            }
+
+            #endregion
+
+            #region Public Properties
+
+            public override long Length
+            {
+                get { return length; }
+            }
+
+            public override long Position { get; set; }
+
+            #endregion
+
+            #region Members
+
+            protected long length = 0;
+
+            protected long blockSize = 65536;
+
+            protected List<byte[]> blocks = new List<byte[]>();
+
+            #endregion
+
+            #region Internal Properties
+
+            /* Use these properties to gain access to the appropriate block of memory for the current Position */
+
+            /// <summary>
+            /// The block of memory currently addressed by Position
+            /// </summary>
+            protected byte[] block
+            {
+                get
+                {
+                    while (blocks.Count <= blockId)
+                        blocks.Add(new byte[blockSize]);
+                    return blocks[(int)blockId];
+                }
+            }
+
+            /// <summary>
+            /// The id of the block currently addressed by Position
+            /// </summary>
+            protected long blockId
+            {
+                get { return Position / blockSize; }
+            }
+
+            /// <summary>
+            /// The offset of the byte currently addressed by Position, into the block that contains it
+            /// </summary>
+            protected long blockOffset
+            {
+                get { return Position % blockSize; }
+            }
+
+            #endregion
+
+            #region Public Stream Methods
+
+            public override void Flush()
+            {
+            }
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                long lcount = (long)count;
+
+                if (lcount < 0)
+                {
+                    throw new ArgumentOutOfRangeException("count", lcount, "Number of bytes to copy cannot be negative.");
+                }
+
+                long remaining = (length - Position);
+                if (lcount > remaining)
+                    lcount = remaining;
+
+                if (buffer == null)
+                {
+                    throw new ArgumentNullException("buffer", "Buffer cannot be null.");
+                }
+                if (offset < 0)
+                {
+                    throw new ArgumentOutOfRangeException("offset", offset, "Destination offset cannot be negative.");
+                }
+
+                int read = 0;
+                long copysize = 0;
+                do
+                {
+                    copysize = Math.Min(lcount, (blockSize - blockOffset));
+                    Buffer.BlockCopy(block, (int)blockOffset, buffer, offset, (int)copysize);
+                    lcount -= copysize;
+                    offset += (int)copysize;
+
+                    read += (int)copysize;
+                    Position += copysize;
+                } while (lcount > 0);
+
+                return read;
+            }
+
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                switch (origin)
+                {
+                    case SeekOrigin.Begin:
+                        Position = offset;
+                        break;
+                    case SeekOrigin.Current:
+                        Position += offset;
+                        break;
+                    case SeekOrigin.End:
+                        Position = Length - offset;
+                        break;
+                }
+                return Position;
+            }
+
+            public override void SetLength(long value)
+            {
+                length = value;
+            }
+
+            public override void Write(byte[] buffer, int offset, int count)
+            {
+                long initialPosition = Position;
+                int copysize;
+                try
+                {
+                    do
+                    {
+                        copysize = Math.Min(count, (int)(blockSize - blockOffset));
+
+                        EnsureCapacity(Position + copysize);
+
+                        Buffer.BlockCopy(buffer, (int)offset, block, (int)blockOffset, copysize);
+                        count -= copysize;
+                        offset += copysize;
+
+                        Position += copysize;
+                    } while (count > 0);
+                }
+                catch (Exception)
+                {
+                    Position = initialPosition;
+                    throw;
+                }
+            }
+
+            public override int ReadByte()
+            {
+                if (Position >= length)
+                    return -1;
+
+                byte b = block[blockOffset];
+                Position++;
+
+                return b;
+            }
+
+            public override void WriteByte(byte value)
+            {
+                EnsureCapacity(Position + 1);
+                block[blockOffset] = value;
+                Position++;
+            }
+
+            protected void EnsureCapacity(long intended_length)
+            {
+                if (intended_length > length)
+                    length = (intended_length);
+            }
+
+            #endregion
+
+            #region IDispose
+
+            /* http://msdn.microsoft.com/en-us/library/fs2xkftw.aspx */
+
+            protected override void Dispose(bool disposing)
+            {
+                /* We do not currently use unmanaged resources */
+                base.Dispose(disposing);
+            }
+
+            #endregion
+
+            #region Public Additional Helper Methods
+
+            /// <summary>
+            /// Returns the entire content of the stream as a byte array. This is not safe because the call to new byte[] may 
+            /// fail if the stream is large enough. Where possible use methods which operate on streams directly instead.
+            /// </summary>
+            /// <returns>A byte[] containing the current data in the stream</returns>
+            public byte[] ToArray()
+            {
+                long firstposition = Position;
+                Position = 0;
+                byte[] destination = new byte[Length];
+                Read(destination, 0, (int)Length);
+                Position = firstposition;
+                return destination;
+            }
+
+            /// <summary>
+            /// Reads length bytes from source into the this instance at the current position.
+            /// </summary>
+            /// <param name="source">The stream containing the data to copy</param>
+            /// <param name="length">The number of bytes to copy</param>
+            public void ReadFrom(Stream source, long length)
+            {
+                byte[] buffer = new byte[4096];
+                int read;
+                do
+                {
+                    read = source.Read(buffer, 0, (int)Math.Min(4096, length));
+                    length -= read;
+                    this.Write(buffer, 0, read);
+                } while (length > 0);
+            }
+
+            /// <summary>
+            /// Writes the entire stream into destination, regardless of Position, which remains unchanged.
+            /// </summary>
+            /// <param name="destination">The stream to write the content of this stream to</param>
+            public void WriteTo(Stream destination)
+            {
+                long initialpos = Position;
+                Position = 0;
+                this.CopyTo(destination);
+                Position = initialpos;
+            }
+
+            #endregion
+        }
+
     }
 }
