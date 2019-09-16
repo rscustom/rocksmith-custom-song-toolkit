@@ -191,7 +191,8 @@
             this.chkDecodeAudio.Size = new System.Drawing.Size(94, 17);
             this.chkDecodeAudio.TabIndex = 0;
             this.chkDecodeAudio.Text = "Decode Audio";
-            this.toolTip.SetToolTip(this.chkDecodeAudio, "If checked, decodes audio\r\nto a playable ogg format.");
+            this.toolTip.SetToolTip(this.chkDecodeAudio, "If checked, decodes audio\r\nto a playable ogg format.\r\n\r\nNOTE: Friendly file names" +
+                    " are \r\nproduced if \'Autosave Templates\'\r\nis also checked in \'General Config\'.");
             this.chkDecodeAudio.UseVisualStyleBackColor = true;
             // 
             // chkUpdateSng

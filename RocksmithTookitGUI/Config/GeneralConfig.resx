@@ -134,6 +134,18 @@ If you wish to overwrite existing DDC you must first
 remove the existing DDC from the CDLC.  DDC may be
 removed/added using the main DDC tab menu feature.</value>
   </data>
+  <data name="creator_autosavetemplate.ToolTip" xml:space="preserve">
+    <value>If checked automatically saves template
+'.dlc.xml' file on the application exit.
+
+If uncheck, templates must be saved
+manually by pressing 'Save Template'
+button.
+
+NOTE for Pack/Unpacker Usage:
+If checked produces friendly named
+audio files for non-songpack CDLC.</value>
+  </data>
   <data name="general_lockappid.ToolTip" xml:space="preserve">
     <value>Lock App ID
 

@@ -547,7 +547,6 @@ namespace RocksmithToolkitLib.DLCPackage
         /// <param name = "sourcePlatform"></param>
         /// <param name="fixMultiTone">If set to <c>true</c> fix low bass tuning </param>
         /// <param name="fixLowBass">If set to <c>true</c> fix multitone exceptions </param>
-        /// <param name="renameAudioPreview">If set to <c>true</c> rename preview audio with friendly name </param>
         public static DLCPackageData LoadFromFolder(string unpackedDir, Platform targetPlatform, Platform sourcePlatform = null, bool fixMultiTone = false, bool fixLowBass = false)
         {
             if (sourcePlatform == null || sourcePlatform.platform == GamePlatform.None || sourcePlatform.version == GameVersion.None)
@@ -701,7 +700,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 BetterDialog2.ShowDialog(errMsg, MESSAGEBOX_CAPTION, null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning ...", 150, 150);
             }
             else if (bnkFiles.Count > 2)
-                throw new FileLoadException("<ERROR> Found too many *.bnk files ..." + Environment.NewLine + Environment.NewLine);
+                throw new FileLoadException("<ERROR> Found too many *.bnk files.  SongPacks can not be auto loaded ..." + Environment.NewLine);
             else
             {
                 // extract .bnk file data

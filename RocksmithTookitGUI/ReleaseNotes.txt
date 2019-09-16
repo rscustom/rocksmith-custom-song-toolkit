@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- unpacker audio naming fixes
 - restored missing toolkit CLI executables
 - added DDC Unit Testing to RocksmithToolkitGUI.Tests
 - merged PsarcLoader into PSARC namespace

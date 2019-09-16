@@ -56,7 +56,7 @@ namespace RocksmithToolkitLib.Ogg
 
             if (String.IsNullOrEmpty(wwiseRoot))
                 throw new FileNotFoundException("Could not find Audiokinetic Wwise installation." + Environment.NewLine +
-                    "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed." + Environment.NewLine);
+                    "Download and install Wwise v2013.2.x from: ignition.customsforge.com/cfsm/wwise" + Environment.NewLine);
 
             var wwiseCLIPath = Directory.EnumerateFiles(wwiseRoot, "WwiseCLI.exe", SearchOption.AllDirectories);
             if (!wwiseCLIPath.Any())
@@ -68,7 +68,8 @@ namespace RocksmithToolkitLib.Ogg
 
             if (!wwiseCLIPath.Any())
                 throw new FileNotFoundException("Could not find 'WwiseCLI.exe' in " + wwiseRoot + Environment.NewLine +
-                    "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed." + Environment.NewLine);
+                    "Download and install Wwise v2013.2.x from: ignition.customsforge.com/cfsm/wwise" + Environment.NewLine);
+            // "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed." + Environment.NewLine);
 
             //win32 = 32bit x64 = 64bit
             string wwiseCLIexe = wwiseCLIPath.AsParallel().SingleOrDefault(e => e.Contains("Authoring\\Win32"));
@@ -103,9 +104,10 @@ namespace RocksmithToolkitLib.Ogg
 
             if (Selected == OggFile.WwiseVersion.None)
                 throw new FileNotFoundException("You have no compatible version of Audiokinetic Wwise installed." + Environment.NewLine +
-                    "Install supportend Wwise version, which are v2013.2.x || v2014.1.x || v2015.1.x || v2016.2.x series  " + Environment.NewLine +
+                    "Download and install Wwise v2013.2.x from: ignition.customsforge.com/cfsm/wwise" + Environment.NewLine +
+                    //"Install supported Wwise version, which are v2013.2.x || v2014.1.x || v2015.1.x || v2016.2.x series  " + Environment.NewLine +
                     "if you would like to use toolkit's Wwise autoconvert feature.   Did you remember to set the Wwise" + Environment.NewLine +
-                    "installation path in the toolkit General Config menu?" + Environment.NewLine);
+                    "installation path in the toolkit General Config menu if you have a custom Wwise installation?" + Environment.NewLine);
 
             return wwiseCLIexe;
         }

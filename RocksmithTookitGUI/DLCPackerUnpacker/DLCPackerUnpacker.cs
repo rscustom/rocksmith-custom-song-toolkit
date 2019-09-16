@@ -205,45 +205,49 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     continue;
                 }
 
-                // ODLC status
-                var isODLC = !Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).Any();
-                if (isODLC || srcPlatform.platform == GamePlatform.None)
-                    continue;
-
-                try
+                // added bulk process to create template xml files here so unpacked folders may be loaded quickly in CDLC Creator if desired
+                if (ConfigRepository.Instance().GetBoolean("creator_autosavetemplate")) // && !srcPath.Contains("_sp_") && !srcPath.Contains("_songpack_"))
                 {
-                    // added a bulk process to create template xml files here so unpacked folders may be loaded quickly in CDLC Creator if desired
-                    progress += step;
-                    GlobalExtension.ShowProgress(String.Format("Creating Template XML file for: '{0}'", Path.GetFileName(srcPath)), progress);
-                    using (var packageCreator = new DLCPackageCreator.DLCPackageCreator())
+                    try
                     {
-                        DLCPackageData info = null;
-                        if (srcPlatform.version == GameVersion.RS2014)
-                            info = DLCPackageData.LoadFromFolder(unpackedDir, srcPlatform, srcPlatform, true, true);
-                        else
-                            info = DLCPackageData.RS1LoadFromFolder(unpackedDir, srcPlatform, false);
+                        // check for ODLC/SongPack
+                        //var isODLC = !Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).Any();
+                        var isSongPack = Directory.EnumerateFiles(unpackedDir, "*.wem", SearchOption.AllDirectories).Count() > 2;
+                        if (isSongPack) //  && isODLC)
+                            throw new Exception("Found too many *.wem files.");
 
-                        info.GameVersion = srcPlatform.version;
+                        if (srcPlatform.platform == GamePlatform.None)
+                            throw new Exception("Could not determine GamePlatform.");
 
-                        switch (srcPlatform.platform)
+                        progress += step;
+                        GlobalExtension.ShowProgress(String.Format("Creating Template XML file for: '{0}'", Path.GetFileName(srcPath)), progress);
+
+                        using (var packageCreator = new DLCPackageCreator.DLCPackageCreator())
                         {
-                            case GamePlatform.Pc:
-                                info.Pc = true;
-                                break;
-                            case GamePlatform.Mac:
-                                info.Mac = true;
-                                break;
-                            case GamePlatform.XBox360:
-                                info.XBox360 = true;
-                                break;
-                            case GamePlatform.PS3:
-                                info.PS3 = true;
-                                break;
-                        }
+                            DLCPackageData info = null;
+                            if (srcPlatform.version == GameVersion.RS2014)
+                                info = DLCPackageData.LoadFromFolder(unpackedDir, srcPlatform, srcPlatform, true, true);
+                            else
+                                info = DLCPackageData.RS1LoadFromFolder(unpackedDir, srcPlatform, false);
 
-                        // save template xml file (except SongPacks)                        
-                        if (ConfigRepository.Instance().GetBoolean("creator_autosavetemplate") && !srcPath.Contains("_sp_") && !srcPath.Contains("_songpack_"))
-                        {
+                            info.GameVersion = srcPlatform.version;
+
+                            switch (srcPlatform.platform)
+                            {
+                                case GamePlatform.Pc:
+                                    info.Pc = true;
+                                    break;
+                                case GamePlatform.Mac:
+                                    info.Mac = true;
+                                    break;
+                                case GamePlatform.XBox360:
+                                    info.XBox360 = true;
+                                    break;
+                                case GamePlatform.PS3:
+                                    info.PS3 = true;
+                                    break;
+                            }
+
                             packageCreator.FillPackageCreatorForm(info, unpackedDir);
                             // fix descrepancies
                             packageCreator.CurrentGameVersion = srcPlatform.version;
@@ -254,13 +258,13 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                             packageCreator.SaveTemplateFile(unpackedDir, false);
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    if (ex.Message.Contains("Object reference"))
-                        errorsFound.AppendLine(String.Format("Could not create Template XML file for: {0}{1}", Path.GetFileName(srcPath) + new string(' ', 5), Environment.NewLine));
-                    else
-                        errorsFound.AppendLine(String.Format("Could not create Template XML file for: {0}{1}{2}{1}", Path.GetFileName(srcPath) + new string(' ', 5), Environment.NewLine, ex.Message));
+                    catch (Exception ex)
+                    {
+                        if (ex.Message.Contains("Object reference"))
+                            errorsFound.AppendLine(String.Format("Could not create Template XML file for: {0}{1}", Path.GetFileName(srcPath) + new string(' ', 5), Environment.NewLine));
+                        else
+                            errorsFound.AppendLine(String.Format("Could not create Template XML file for: {0}{1}{2}{1}", Path.GetFileName(srcPath) + new string(' ', 5), Environment.NewLine, ex.Message));
+                    }
                 }
             }
 
