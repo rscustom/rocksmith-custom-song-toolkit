@@ -210,11 +210,13 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 {
                     try
                     {
-                        // check for ODLC/SongPack
-                        //var isODLC = !Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).Any();
                         var isSongPack = Directory.EnumerateFiles(unpackedDir, "*.wem", SearchOption.AllDirectories).Count() > 2;
-                        if (isSongPack) //  && isODLC)
-                            throw new Exception("Found too many *.wem files.");
+                        if (isSongPack)
+                            throw new Exception("SongPacks have too many *.wem files to process and load.");
+
+                        //var isODLC = !Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).Any();
+                        //if (isODLC)
+                        //    throw new Exception("Uncheck 'Autosave Templates' in 'General Config' to avoid this error.");
 
                         if (srcPlatform.platform == GamePlatform.None)
                             throw new Exception("Could not determine GamePlatform.");

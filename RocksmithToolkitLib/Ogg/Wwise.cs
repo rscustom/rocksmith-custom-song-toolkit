@@ -47,16 +47,16 @@ namespace RocksmithToolkitLib.Ogg
 
         public static string GetWwisePath()
         {
-            // Audiokinetic Wwise might not be installed in the default location ;<
-            // always use the Configuration Wwise Path if entered
+            // support for Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series
+            // Wwise may not be installed in the default location so use the Configuration Wwise Path if entered
             var wwiseRoot = ConfigRepository.Instance()["general_wwisepath"];
             // otherwise use the WWISEROOT Environmental Variable
             if (String.IsNullOrEmpty(ConfigRepository.Instance()["general_wwisepath"]))
                 wwiseRoot = Environment.GetEnvironmentVariable("WWISEROOT");
 
             if (String.IsNullOrEmpty(wwiseRoot))
-                throw new FileNotFoundException("Could not find Audiokinetic Wwise installation." + Environment.NewLine +
-                    "Download and install Wwise v2013.2.x from: ignition.customsforge.com/cfsm/wwise" + Environment.NewLine);
+                throw new ApplicationException("Could not find Audiokinetic Wwise installation." + new string(' ', 2) +
+                    "Download and install Wwise v2013.2.x from: http://ignition.customsforge.com/cfsm/wwise" + Environment.NewLine);
 
             var wwiseCLIPath = Directory.EnumerateFiles(wwiseRoot, "WwiseCLI.exe", SearchOption.AllDirectories);
             if (!wwiseCLIPath.Any())
@@ -67,9 +67,8 @@ namespace RocksmithToolkitLib.Ogg
             }
 
             if (!wwiseCLIPath.Any())
-                throw new FileNotFoundException("Could not find 'WwiseCLI.exe' in " + wwiseRoot + Environment.NewLine +
-                    "Download and install Wwise v2013.2.x from: ignition.customsforge.com/cfsm/wwise" + Environment.NewLine);
-            // "Please confirm that either Wwise v2013.2.x v2014.1.x 2015.1.x or 2016.2.x series is installed." + Environment.NewLine);
+                throw new FileNotFoundException("Could not find 'WwiseCLI.exe' in " + wwiseRoot + " subfolders." + new string(' ', 2) +
+                    "Download and install Wwise v2013.2.x from: http://ignition.customsforge.com/cfsm/wwise" + Environment.NewLine);
 
             //win32 = 32bit x64 = 64bit
             string wwiseCLIexe = wwiseCLIPath.AsParallel().SingleOrDefault(e => e.Contains("Authoring\\Win32"));
@@ -103,11 +102,9 @@ namespace RocksmithToolkitLib.Ogg
                 Selected = OggFile.WwiseVersion.None;
 
             if (Selected == OggFile.WwiseVersion.None)
-                throw new FileNotFoundException("You have no compatible version of Audiokinetic Wwise installed." + Environment.NewLine +
-                    "Download and install Wwise v2013.2.x from: ignition.customsforge.com/cfsm/wwise" + Environment.NewLine +
-                    //"Install supported Wwise version, which are v2013.2.x || v2014.1.x || v2015.1.x || v2016.2.x series  " + Environment.NewLine +
-                    "if you would like to use toolkit's Wwise autoconvert feature.   Did you remember to set the Wwise" + Environment.NewLine +
-                    "installation path in the toolkit General Config menu if you have a custom Wwise installation?" + Environment.NewLine);
+                throw new ApplicationException("Could not find an installed compatible version of Audiokinetic Wwise." + new string(' ', 2) +
+                    "Download and install Wwise v2013.2.x from: http://ignition.customsforge.com/cfsm/wwise" + new string(' ', 5) +
+                    "Be sure to set the 'Wwise Path' in the General Config menu if you have a custom installation." + Environment.NewLine);
 
             return wwiseCLIexe;
         }
