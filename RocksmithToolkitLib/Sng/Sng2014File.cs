@@ -246,7 +246,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
             writeStruct(w, this.NLD);
             writeStruct(w, this.Actions);
             writeStruct(w, this.Events);
-            writeStruct(w, this.Tones);
+            writeStruct(w, this.Tones); // monitor for multitone exceptions
             writeStruct(w, this.DNAs);
             writeStruct(w, this.Sections);
             writeStruct(w, this.Arrangements);

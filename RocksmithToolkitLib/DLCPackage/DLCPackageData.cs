@@ -621,7 +621,7 @@ namespace RocksmithToolkitLib.DLCPackage
                     var tuningName = TuningDefinitionRepository.Instance.Detect(attr.Tuning, GameVersion.RS2014);
                     data.Arrangements.Last().Tuning = tuningName.UIName;
 
-                    // make a list of tone names used in arrangements
+                    // make a list of tone names used in arrangements                    
                     var toneNames = new List<string>();
                     foreach (var arr in data.Arrangements)
                     {

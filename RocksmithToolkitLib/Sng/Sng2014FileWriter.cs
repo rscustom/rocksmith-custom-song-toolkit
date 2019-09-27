@@ -9,6 +9,7 @@ using RocksmithToolkitLib.XML;
 using MiscUtil.IO;
 using MiscUtil.Conversion;
 using CON = RocksmithToolkitLib.Sng.Constants;
+using System.Diagnostics;
 
 
 namespace RocksmithToolkitLib.Sng2014HSL
@@ -511,13 +512,9 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                 try
                 {
-                    if (String.IsNullOrEmpty(xml.ToneBase))
-                        throw new InvalidDataException("ToneBase must be defined.");
-
-                    // fix for undefined tone name (tone name should be shorter)
                     if (xml.ToneBase.ToLower() == tn.Name.ToLower())
                         t.ToneId = 0;
-
+                    
                     if (xml.ToneA.ToLower() == tn.Name.ToLower())
                         t.ToneId = 0;
                     else if (xml.ToneB.ToLower() == tn.Name.ToLower())
@@ -529,10 +526,19 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                     sng.Tones.Tones[i] = t;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw new InvalidDataException("There is tone name error in XML Arrangement: " + xml.Arrangement + "  " + tn.Name + " is not properly defined." + Environment.NewLine +
-                        "Use EOF to re-author custom tones or Notepad to attempt manual repair.");
+                    Debug.WriteLine(ex.Message);
+
+                    if (String.IsNullOrEmpty(xml.ToneBase))
+                        throw new InvalidDataException("Missing XML <tonebase> element in arrangement '" + xml.Arrangement + "'" + Environment.NewLine +
+                            "Use EOF to re-author arrangement custom tones, or Notepad to attempt manual repair of XML <tonebase> element ..." + Environment.NewLine);
+                    else if (String.IsNullOrEmpty(xml.ToneA) || String.IsNullOrEmpty(xml.ToneB) || String.IsNullOrEmpty(xml.ToneC) || String.IsNullOrEmpty(xml.ToneD))
+                        throw new InvalidDataException("Corrupt XML multitone elements in arrangement '" + xml.Arrangement + "'" + Environment.NewLine +
+                            "Use toolkit 'CDLC Creator' to restore XML <tonea> thru <toned> elements, or re-author arrangement with EOF ..." + Environment.NewLine);
+                    else
+                        throw new InvalidDataException("There is tone name matching error in XML arrangement '" + xml.Arrangement + "'.  Tone name '" + tn.Name + "' is not properly defined ..." + Environment.NewLine +
+                            "Use EOF to re-author arrangement custom tones, or Notepad to attempt manual repair of XML <tonebase> thru <toned> elements ..." + Environment.NewLine);
                 }
             }
 

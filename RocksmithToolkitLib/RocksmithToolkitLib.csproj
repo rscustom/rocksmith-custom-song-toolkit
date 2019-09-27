@@ -20,7 +20,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
-    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;PREBUILD</DefineConstants>
     <NoWarn>
     </NoWarn>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -33,13 +33,15 @@
     <DebugType>none</DebugType>
     <NoWarn>0169, 0162</NoWarn>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Build CLI|x86'">
     <OutputPath>bin\x86\Debug Build CLI\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;PREBUILD</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
@@ -297,6 +299,8 @@
     <PreBuildEvent>rem Only need to  make changes to version information below
 rem RocksmithPreBuild.exe automatically updates Assembly.cs files and AppVeyor versioning information
 
+if $(DefineConstants.Contains('PREBUILD')) == true (
+
 if $(ConfigurationName) == Debug (
 CD "$(SolutionDir)"
 
@@ -323,6 +327,8 @@ rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.1.0 BETA"
 
 rem before issuing new release make next cmd active and comment out the others
 rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.0.0 RELEASE"
+)
+
 )
 
 rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj these call the 'prebuild.sh' file</PreBuildEvent>

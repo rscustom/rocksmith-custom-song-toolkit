@@ -10,6 +10,10 @@ namespace RocksmithToolkitLib.PSARC
         private string packageDir;
         private bool _deleteOnClose;
 
+        /// <summary>
+        /// Use for reading (unpacking) and writing (packing) packages as a composite in/out operation
+        /// <para>Ensure proper usage of deleteOnClose: [false] for [read], and [true] for [write] operations</para>
+        /// </summary>
         public PsarcPackager(bool deleteOnClose = false)
         {
             _deleteOnClose = deleteOnClose;

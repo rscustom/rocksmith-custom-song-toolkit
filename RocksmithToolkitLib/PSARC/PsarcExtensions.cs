@@ -18,8 +18,13 @@ namespace RocksmithToolkitLib.PSARC
             var jObj = JObject.Parse(tolkenTuning);
             TuningStrings songTuning = jObj.ToObject<TuningStrings>();
 
+            return TuningToName(songTuning, tuningXml);
+        }
+
+        public static string TuningToName(TuningStrings songTuning, List<TuningDefinition> tuningXml = null)
+        {
             // 2X speed hack ... use preloaded TuningDefinitionRepository
-            if (tuningXml == null)
+            if (tuningXml == null || tuningXml.Count == 0)
                 tuningXml = TuningDefinitionRepository.Instance.LoadTuningDefinitions(GameVersion.RS2014);
 
             foreach (var tuning in tuningXml)

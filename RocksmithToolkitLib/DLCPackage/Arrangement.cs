@@ -91,7 +91,7 @@ namespace RocksmithToolkitLib.DLCPackage
             var song = Song2014.LoadFromFile(xmlSongFile);
             this.SongFile = new SongFile { File = "" };
             // TODO: monitor this change
-            this.SongXml = new SongXML { File = xmlSongFile , Version = song.Version};
+            this.SongXml = new SongXML { File = xmlSongFile, Version = song.Version };
 
             //Properties
             Debug.Assert(attr.ArrangementType != null, "Missing information from manifest (ArrangementType)");
@@ -201,7 +201,11 @@ namespace RocksmithToolkitLib.DLCPackage
                             isDirty = true;
                         }
                         else
-                            throw new InvalidDataException("Tone data is missing in CDLC and multitones will not change properly in game." + Environment.NewLine + "Please re-author XML arrangements in EOF and repair multitones name and time changes.");
+                        {
+                            throw new InvalidDataException("Tone data is missing, and multitones will not change properly in game." + Environment.NewLine +
+                                "Please re-author XML arrangement '" + attr.ArrangementName + "' in EOF, and repair multitone names and time changes." + Environment.NewLine +
+                                "NOTE: toolkit can fix this error by converting to single tone if you check: tookit>General Config>Fix Multitone Errors" + Environment.NewLine);
+                        }
                     }
                 }
 
