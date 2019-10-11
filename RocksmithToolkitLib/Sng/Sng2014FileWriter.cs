@@ -532,13 +532,13 @@ namespace RocksmithToolkitLib.Sng2014HSL
 
                     if (String.IsNullOrEmpty(xml.ToneBase))
                         throw new InvalidDataException("Missing XML <tonebase> element in arrangement '" + xml.Arrangement + "'" + Environment.NewLine +
-                            "Use EOF to re-author arrangement custom tones, or Notepad to attempt manual repair of XML <tonebase> element ..." + Environment.NewLine);
+                            "Use EOF to re-author arrangement custom tones, or Notepad to attempt manual repair of XML <tonebase> element ...  " + Environment.NewLine);
                     else if (String.IsNullOrEmpty(xml.ToneA) || String.IsNullOrEmpty(xml.ToneB) || String.IsNullOrEmpty(xml.ToneC) || String.IsNullOrEmpty(xml.ToneD))
                         throw new InvalidDataException("Corrupt XML multitone elements in arrangement '" + xml.Arrangement + "'" + Environment.NewLine +
-                            "Use toolkit 'CDLC Creator' to restore XML <tonea> thru <toned> elements, or re-author arrangement with EOF ..." + Environment.NewLine);
+                            "Use toolkit 'CDLC Creator' to restore XML <tonea> thru <toned> elements, or re-author arrangement with EOF ...  " + Environment.NewLine);
                     else
                         throw new InvalidDataException("There is tone name matching error in XML arrangement '" + xml.Arrangement + "'.  Tone name '" + tn.Name + "' is not properly defined ..." + Environment.NewLine +
-                            "Use EOF to re-author arrangement custom tones, or Notepad to attempt manual repair of XML <tonebase> thru <toned> elements ..." + Environment.NewLine);
+                            "Use EOF to re-author arrangement custom tones, or Notepad to attempt manual repair of XML <tonebase> thru <toned> elements ...  " + Environment.NewLine);
                 }
             }
 

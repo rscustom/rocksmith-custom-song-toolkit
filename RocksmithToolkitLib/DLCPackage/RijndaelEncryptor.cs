@@ -85,6 +85,7 @@ namespace RocksmithToolkitLib.DLCPackage
         };
 
         #endregion
+
         /// <summary>
         /// Unpacks zipped data.
         /// </summary>
@@ -281,8 +282,17 @@ namespace RocksmithToolkitLib.DLCPackage
             }
         }
 
+        private static bool activated = false;
         private static void InitRijndael(Rijndael rij, byte[] key, CipherMode cipher)
         {
+            if (!activated)
+            {
+                // invoke Start method outside of ASP.NET
+                // WebActivatorEx.ActivationManager.RunPreStartMethods(true);
+                Startup.Start();
+                activated = true;
+            }
+
             rij.Padding = PaddingMode.None;
             rij.Mode = cipher;
             rij.BlockSize = 128;

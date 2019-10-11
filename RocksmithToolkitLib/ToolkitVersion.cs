@@ -2,9 +2,13 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.IO;
+using System.Security.Authentication;
 using RocksmithToolkitLib.Extensions;
+using System.Diagnostics;
+// using WebActivatorEx;
 
 
+// [assembly: PreApplicationStartMethod(typeof(RocksmithToolkitLib.Startup), "Start", RunInDesigner = true)]
 namespace RocksmithToolkitLib
 {
     public static class ToolkitVersion
@@ -77,5 +81,27 @@ namespace RocksmithToolkitLib
             return String.Format("{0}-{1} {2}", assemblyVersion, assemblyInformationVersion, assemblyConfiguration).Trim();
         }
 
+        public static bool IsRSTKLibValid()
+        {
+            // return false;
+            var rstkLibPath = typeof(RocksmithToolkitLib.ToolkitVersion).Assembly.Location;
+            var libDate = File.GetCreationTime(rstkLibPath);
+            if (DateTime.Now > libDate.AddDays(30))
+                return false;
+
+            return true;
+        }
     }
+
+    public static class Startup
+    {
+        // class library entry point hackery
+        public static void Start()
+        {
+            if (!ToolkitVersion.IsRSTKLibValid())
+                throw new ApplicationException("This version of RocksmithToolkitLib.dll has expired.  " + Environment.NewLine + 
+                                               "Please download and install the latest toolkit library.  " + Environment.NewLine);
+        }
+    }
+
 }

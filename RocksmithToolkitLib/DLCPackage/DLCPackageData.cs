@@ -578,11 +578,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (callerName.Equals("PackageImport") && ConfigRepository.Instance().GetBoolean("creator_structured"))
                         artifactsDir = Path.Combine(unpackedDir, "EOF");
 
-                    throw new DataException(Environment.NewLine + Environment.NewLine + "*** READ ME *** READ ME *** READ ME ***" + Environment.NewLine + Environment.NewLine +
-                        "<WARNING> CDLC artifact file naming is corrupt ..." + Environment.NewLine +
+                    throw new DataException("Corrupt CDLC artifact file naming." + Environment.NewLine + Environment.NewLine +
                         "1) Open the artifacts folder: " + artifactsDir + "   " + Environment.NewLine +
-                        "2) Look for and rename any artifact file names that contain the '~' tilde character" + Environment.NewLine +
-                        "3) (re)Author the CDLC like from an EOF project using: >CDLC Creator>Add>Edit>Generate" + Environment.NewLine + Environment.NewLine);
+                        "2) Look for and rename any artifact file names that contain special characters, e.g. '~' tilde" + Environment.NewLine +
+                        "3) Reauthor the CDLC using: >CDLC Creator>Add>Edit>Generate" + Environment.NewLine);
 
                     GlobalExtension.HideProgress();
                 }
