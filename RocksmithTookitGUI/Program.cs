@@ -9,6 +9,7 @@ using RocksmithToolkitLib.XmlRepository;
 using System.Threading;
 using RocksmithToolkitGUI.Config;
 using NLog;
+using System.Globalization;
 
 namespace RocksmithToolkitGUI
 {
@@ -47,6 +48,7 @@ namespace RocksmithToolkitGUI
                 String.Format(" - RocksmithToolkitUpdater: v{0}\r\n ", updaterVersion) +
                 String.Format(" - Dynamic Difficulty Creator: v{0}\r\n ", FileVersionInfo.GetVersionInfo(Path.Combine(ExternalApps.TOOLKIT_ROOT, ExternalApps.APP_DDC)).ProductVersion) +
                 String.Format(" - OS: {0} ({1} bit)\r\n ", Environment.OSVersion, Environment.Is64BitOperatingSystem ? "64" : "32") +
+                String.Format(" - CultureInfo: {0}\r\n ", CultureInfo.CurrentCulture.ToString()) +
                 String.Format(" - .NET Framework Runtime: v{0}\r\n ", Environment.Version) +
                 String.Format(" - JIT: {0}\r\n ", JitVersionInfo.GetJitVersion()) +
                 String.Format(" - WINE_INSTALLED: {0}\r\n ", GeneralExtension.IsWine()) +

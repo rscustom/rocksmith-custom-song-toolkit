@@ -5,10 +5,9 @@ using System.IO;
 using System.Security.Authentication;
 using RocksmithToolkitLib.Extensions;
 using System.Diagnostics;
-// using WebActivatorEx;
+using System.Globalization;
 
 
-// [assembly: PreApplicationStartMethod(typeof(RocksmithToolkitLib.Startup), "Start", RunInDesigner = true)]
 namespace RocksmithToolkitLib
 {
     public static class ToolkitVersion
@@ -86,7 +85,12 @@ namespace RocksmithToolkitLib
             // return false;
             var rstkLibPath = typeof(RocksmithToolkitLib.ToolkitVersion).Assembly.Location;
             var libDate = File.GetCreationTime(rstkLibPath);
-            if (DateTime.Now > libDate.AddDays(30))
+            // account for user's DateTime regional differences
+            CultureInfo cultureInfo = new CultureInfo("en-US");
+            DateTime libDT = DateTime.Parse(libDate.ToString(), cultureInfo, DateTimeStyles.NoCurrentDateDefault);
+            DateTime nowDT = DateTime.Parse(DateTime.Now.ToString(), cultureInfo, DateTimeStyles.NoCurrentDateDefault);
+
+            if (nowDT > libDT.AddDays(30))
                 return false;
 
             return true;
@@ -95,7 +99,7 @@ namespace RocksmithToolkitLib
 
     public static class Startup
     {
-        // class library entry point hackery
+        //  hackery used as class library entry point
         public static void Start()
         {
             if (!ToolkitVersion.IsRSTKLibValid())

@@ -1,6 +1,7 @@
 Rocksmith Toolkit Release Notes
 
-- simplified custom exception messages to encourage users to reads them completely
+- added OS, and CultureInfo to log
+- simplified custom exception messages to encourage users to read them
 - added toolkit library validation check
 - improved tone name error handling
 - unpacker audio naming fixes

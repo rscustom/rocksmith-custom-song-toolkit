@@ -287,9 +287,7 @@ namespace RocksmithToolkitLib.DLCPackage
         {
             if (!activated)
             {
-                // invoke Start method outside of ASP.NET
-                // WebActivatorEx.ActivationManager.RunPreStartMethods(true);
-                Startup.Start();
+                Startup.Start(); // invoke Start method
                 activated = true;
             }
 
