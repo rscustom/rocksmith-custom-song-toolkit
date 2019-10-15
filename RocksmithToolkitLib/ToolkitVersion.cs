@@ -85,12 +85,11 @@ namespace RocksmithToolkitLib
             // return false;
             var rstkLibPath = typeof(RocksmithToolkitLib.ToolkitVersion).Assembly.Location;
             var libDate = File.GetCreationTime(rstkLibPath);
-            // account for user's DateTime regional differences
-            CultureInfo cultureInfo = new CultureInfo("en-US");
-            DateTime libDT = DateTime.Parse(libDate.ToString(), cultureInfo, DateTimeStyles.NoCurrentDateDefault);
-            DateTime nowDT = DateTime.Parse(DateTime.Now.ToString(), cultureInfo, DateTimeStyles.NoCurrentDateDefault);
+            // use UTC to avoid regional DateTime issues
+            DateTime dtNow = DateTime.UtcNow;
+            DateTime dtLib = libDate.ToUniversalTime();
 
-            if (nowDT > libDT.AddDays(30))
+            if (dtNow > dtLib.AddDays(30))
                 return false;
 
             return true;
@@ -103,7 +102,7 @@ namespace RocksmithToolkitLib
         public static void Start()
         {
             if (!ToolkitVersion.IsRSTKLibValid())
-                throw new ApplicationException("This version of RocksmithToolkitLib.dll has expired.  " + Environment.NewLine + 
+                throw new ApplicationException("This version of RocksmithToolkitLib.dll has expired.  " + Environment.NewLine +
                                                "Please download and install the latest toolkit library.  " + Environment.NewLine);
         }
     }
