@@ -82,10 +82,14 @@ namespace RocksmithToolkitLib
 
         public static bool IsRSTKLibValid()
         {
+            // DOS COPY command and CreationTime caveat
+            // always delete any existing copy of a file at a location before ever
+            // using DOS to copy the library to preserve the correct library creation date
+            
             // return false;
             var rstkLibPath = typeof(RocksmithToolkitLib.ToolkitVersion).Assembly.Location;
-            var dtuLib = File.GetCreationTimeUtc(rstkLibPath);
-
+            var dtuLib = File.GetLastWriteTimeUtc(rstkLibPath);
+       
             // using UTC to avoid regional DateTime issues
             DateTime dtuNow = DateTime.UtcNow;
 
