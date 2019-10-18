@@ -1189,9 +1189,13 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (arr.Sng2014 == null)
                     {
                         // cache results
-                        arr.Sng2014 = Sng2014File.ConvertXML(arr.SongXml.File, arr.ArrangementType, arr.FontSng);
-                        if (arr.CustomFont)
+                        arr.Sng2014 = Sng2014File.ConvertXML(arr.SongXml.File, arr.ArrangementType);
+                        if (arr.HasCustomFont)
+                        {
                             arr.Sng2014.PopFontPath(dlcName);
+                            string glyphDefPath = Path.ChangeExtension(arr.LyricArt, ".glyphs.xml");
+                            GlyphDefinitions.WriteToSng(arr.Sng2014, glyphDefPath);
+                        }
                     }
 
                     using (var fs = new FileStream(sngFile, FileMode.Create))

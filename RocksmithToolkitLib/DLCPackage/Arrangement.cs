@@ -48,8 +48,7 @@ namespace RocksmithToolkitLib.DLCPackage
         public decimal CapoFret { get; set; }
         public int ScrollSpeed { get; set; }
         public PluckedType PluckedType { get; set; }
-        public bool CustomFont { get; set; } //true for JVocals and custom fonts (planned)
-        public string FontSng { get; set; }
+        public string LyricArt { get; set; }
         // cache parsing results (speeds up generating for multiple platforms)
         public Sng2014File Sng2014 { get; set; }
         // Gameplay Path
@@ -71,6 +70,14 @@ namespace RocksmithToolkitLib.DLCPackage
         // preserve EOF and DDC comments
         [IgnoreDataMember] // required for SaveTemplate feature to work
         public IEnumerable<XComment> XmlComments { get; set; }
+
+        public bool HasCustomFont
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(LyricArt);
+            }
+        }
 
         public Arrangement()
         {
@@ -315,11 +322,16 @@ namespace RocksmithToolkitLib.DLCPackage
             if (Metronome == Metronome.Generate)
                 metDesc = " +Metronome";
 
+            string custFont = String.Empty;
+            if (HasCustomFont)
+                custFont = "(Custom Font)";
+
             switch (ArrangementType)
             {
                 case ArrangementType.Bass:
                     return String.Format("{0} [{1}{2}{3}] ({4}){5}", ArrangementType, Tuning, pitchInfo, capoInfo, toneDesc, metDesc);
                 case ArrangementType.Vocal:
+                    return String.Format("{0} {1}", ArrangementName, custFont);
                 case ArrangementType.ShowLight:
                     return String.Format("{0}", ArrangementName);
                 default:

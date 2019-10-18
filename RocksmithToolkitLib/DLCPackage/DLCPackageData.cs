@@ -219,7 +219,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         ScrollSpeed = 20,
                         SongXml = new SongXML { File = xmlFilePath },
                         SongFile = new SongFile { File = "" },
-                        CustomFont = false
                     });
                 }
                 else
@@ -660,30 +659,15 @@ namespace RocksmithToolkitLib.DLCPackage
                 else if (xmlFile.ToLower().Contains("vocals")) // detect both jvocals and vocals
                 {
                     var voc = new Arrangement
-                        {
-                            ArrangementName = attr.JapaneseVocal == true ? ArrangementName.JVocals : ArrangementName.Vocals,
-                            ArrangementType = ArrangementType.Vocal,
-                            ScrollSpeed = 20,
-                            SongXml = new SongXML { File = xmlFile },
-                            SongFile = new SongFile { File = "" },
-                            CustomFont = attr.JapaneseVocal == true,
-                            XmlComments = Song2014.ReadXmlComments(xmlFile)
-                        };
-
-                    // Get symbols stuff from vocals.xml
-                    var fontSng = Path.Combine(unpackedDir, xmlName + ".sng");
-                    var vocSng = Sng2014FileWriter.ReadVocals(xmlFile);
-
-                    // TODO: explain/confirm function/usage of this conditional check
-                    if (vocSng.IsCustomFont()) // always seems to be false, even for jvocals
                     {
-                        voc.CustomFont = true;
-                        voc.FontSng = fontSng;
-                        vocSng.WriteChartData(fontSng, new Platform(GamePlatform.Pc, GameVersion.None));
-                        throw new Exception("<CRITICAL ERROR> vocSng.IsCustomFont: " + xmlFile + Environment.NewLine + "Please report this error to the toolkit developers along with the song that you are currently working on." + Environment.NewLine + "This is important!");
-                    }
-
-                    voc.Sng2014 = Sng2014File.ConvertXML(xmlFile, ArrangementType.Vocal, voc.FontSng);
+                        ArrangementName = attr.JapaneseVocal ? ArrangementName.JVocals : ArrangementName.Vocals,
+                        ArrangementType = ArrangementType.Vocal,
+                        ScrollSpeed = 20,
+                        SongXml = new SongXML { File = xmlFile },
+                        SongFile = new SongFile { File = "" },
+                        XmlComments = Song2014.ReadXmlComments(xmlFile)
+                        // A possible custom font is applied later when lyric art is processed
+                    };
 
                     // Adding Arrangement
                     data.Arrangements.Add(voc);
@@ -792,10 +776,36 @@ namespace RocksmithToolkitLib.DLCPackage
                 data.ArtFiles = ddsFilesC;
             }
 
-            // Lyric Art
-            var lyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).ToArray();
-            if (lyricArt.Any())
-                data.LyricArtPath = lyricArt.FirstOrDefault();
+            // Lyric Art (currently support for only one lyric art file)
+            var lyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).FirstOrDefault();
+            if (lyricArt != null)
+            {
+                data.LyricArtPath = lyricArt;
+
+                var glyphsFile = Directory.EnumerateFiles(unpackedDir, "*.glyphs.xml", SearchOption.AllDirectories).FirstOrDefault();
+                if(glyphsFile != null)
+                {
+                    var vocalArrangements = data.Arrangements
+                        .Where(arr => arr.ArrangementType == ArrangementType.Vocal)
+                        .ToList();
+
+                    // Decide which arrangement used the custom font based on the name of the glyph definitions file
+                    var jvocals = vocalArrangements.Find(arr => arr.ArrangementName == ArrangementName.JVocals);
+                    if (jvocals != null && glyphsFile.IndexOf("jvocal",StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        jvocals.LyricArt = lyricArt;
+                    }
+                    else if (vocalArrangements.Count > 0)
+                    {
+                        vocalArrangements.Find(arr => arr.ArrangementName == ArrangementName.Vocals).LyricArt = lyricArt;
+                    }
+
+                    // Ensure that the glyph definitions file is in the correct place
+                    string correctPath = Path.ChangeExtension(lyricArt, "glyphs.xml");
+                    if(glyphsFile != correctPath)
+                        IOExtension.MoveFile(glyphsFile, correctPath);
+                }
+            }
 
             // Audio Files
             // Give ogg files friendly names
@@ -1005,9 +1015,15 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var art in artFiles)
                 IOExtension.MoveFile(art, Path.Combine(toolkitDir, Path.GetFileName(art)));
 
+            // Move custom lyric art files to Toolkit folder
             var lyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).ToList();
             foreach (var art in lyricArt)
                 IOExtension.MoveFile(art, Path.Combine(toolkitDir, Path.GetFileName(art)));
+
+            // Move glyph definition files to Toolkit folder
+            var glyphDefs = Directory.EnumerateFiles(unpackedDir, "*.glyphs.xml", SearchOption.AllDirectories).ToList();
+            foreach (var glyphFile in glyphDefs)
+                IOExtension.MoveFile(glyphFile, Path.Combine(toolkitDir, Path.GetFileName(glyphFile)));
 
             // Move song_*.bnk to Toolkit folder
             var bnkFiles = Directory.EnumerateFiles(unpackedDir, "song_*.bnk", SearchOption.AllDirectories).ToList();
