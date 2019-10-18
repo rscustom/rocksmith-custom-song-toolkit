@@ -996,7 +996,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         var piter = xml.PhraseIterations[j];
 
                         // fix for 100% bug issue and improve mastery
-                        if (piter.Time > note.Time) // && j > 0)
+                        if (piter.Time > note.Time && j > 0)
                         {
                             if (note.Ignore == 0)
                                 ++a.NotesInIteration1[j - 1];
@@ -1029,7 +1029,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         var piter = xml.PhraseIterations[j];
 
                         // fix for 100% bug issue and improve mastery
-                        if (piter.Time > chord.Time) //  && j > 0)
+                        if (piter.Time > chord.Time && j > 0)
                         {
                             if (chord.Ignore == 0)
                                 ++a.NotesInIteration1[j - 1];

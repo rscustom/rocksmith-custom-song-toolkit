@@ -84,12 +84,12 @@ namespace RocksmithToolkitLib
         {
             // return false;
             var rstkLibPath = typeof(RocksmithToolkitLib.ToolkitVersion).Assembly.Location;
-            var libDate = File.GetCreationTime(rstkLibPath);
-            // use UTC to avoid regional DateTime issues
-            DateTime dtNow = DateTime.UtcNow;
-            DateTime dtLib = libDate.ToUniversalTime();
+            var dtuLib = File.GetCreationTimeUtc(rstkLibPath);
 
-            if (dtNow > dtLib.AddDays(30))
+            // using UTC to avoid regional DateTime issues
+            DateTime dtuNow = DateTime.UtcNow;
+
+            if (dtuNow > dtuLib.AddDays(30))
                 return false;
 
             return true;
