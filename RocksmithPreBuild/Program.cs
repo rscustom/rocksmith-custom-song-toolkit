@@ -14,7 +14,7 @@ namespace RocksmithPreBuild
             // common variables are here
             var assemblyVersion = "0.0.0.0";
             var assemblyInformationVersion = "00000000"; // aka gitSubVersion
-            var assemblyConfiguration = ""; // BUILD, BETA, RELEASE, or blank
+            var assemblyConfiguration = ""; // BUILD, BETA, RELEASE, empty string, or DateTime string
             var appExe = Assembly.GetExecutingAssembly().Location;
             var appPath = Path.GetDirectoryName(appExe);
             var parentPath = Path.GetDirectoryName(appPath);
@@ -31,17 +31,18 @@ namespace RocksmithPreBuild
             // Console.SetWindowSize(90, 35);
 
             // feed the CLI some data when working in debug mode
+            //#if (DEBUG)
             if (DebugMode)
             {
                 //args = new[] { "PREBUILDER", "1.2.3.4", "RELEASE" };
                 //args = new[] { "PREBUILDER", "1.2.3.4", "BETA" };
                 //args = new[] { "PREBUILDER", "1.2.3.4", "BUILD" };
                 // args = new[] { "PREBUILDER", "1.2.3.4", "NONE" };
-                // args = new[] { "PREBUILDER", "READ", "READ" }; // use existing version/type
-                args = new[] { "PREBUILDER", "READ", "READ", "00000000" }; // use manually set git subversion
+                args = new[] { "PREBUILDER", "READ", "READ" }; // default use existing version/type and set date
+                // args = new[] { "PREBUILDER", "READ", "READ", "00000000" }; // resets git subversion and AssemblyConfiguration
                 //args = new[] { "" }; // shows help
             }
-
+            //#endif
             if (!args.Any() || args[0].ToUpper().Contains("HELP") || args[0].Contains("?"))
             {
                 Console.WriteLine("");
@@ -60,8 +61,9 @@ namespace RocksmithPreBuild
                 Console.WriteLine("            arg2 = 'READ' [AssemblyConfiguration Read Mode]");
                 Console.WriteLine("");
                 Console.WriteLine("            arg1 = '2.8.3.0' [AssemblyVersion Write Mode]");
-                Console.WriteLine("            arg2 = 'BUILD', 'BETA', 'RELEASE', or 'NONE' [AssemblyConfiguration Write Mode]");
-                Console.WriteLine("                   'NONE' is converted to an empty/null string for use in the app");
+                Console.WriteLine("            arg2 = 'BUILD', 'BETA', 'RELEASE' sets [AssemblyConfiguration] to corresponding string");
+                Console.WriteLine("                   'DATE' sets [AssemblyConfiguration] to $env:APPVEYOR_REPO_COMMIT_TIMESTAMP");
+                Console.WriteLine("                   'NONE' sets [AssemblyConfiguration] to empty string");
                 Console.WriteLine("");
                 Console.WriteLine(" - Optional: (write git subversion)");
                 Console.WriteLine("            arg3 = '00000000' [AssemblyInformationVersion Write Mode] aka gitsubversion");
@@ -133,7 +135,7 @@ namespace RocksmithPreBuild
                 assemblyInformationVersion = lines[0].Substring(0, 8);
 
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(" - gitSubVersion (AssemblyInformationVersion): " + assemblyInformationVersion);
+            Console.WriteLine(" - gitSubVersion [AssemblyInformationVersion]: " + assemblyInformationVersion);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("");
 
@@ -162,16 +164,15 @@ namespace RocksmithPreBuild
                             File.WriteAllLines(patchAssemblyVersionPath, lines.ToArray());
                             Console.WriteLine(" - Updated $Assembly_Version: " + assemblyVersion);
                         }
-
-                        Console.ForegroundColor = ConsoleColor.Green;
                     }
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine(" - <ERROR> Could not find '$Assembly_Version' ...");
                         Console.WriteLine(patchAssemblyVersionPath);
-                        Console.ForegroundColor = ConsoleColor.Green;
                     }
+
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
 
                 // $Assembly_Configuration = "BETA" 
@@ -184,31 +185,41 @@ namespace RocksmithPreBuild
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         if (args[2].ToUpper() == "READ")
                         {
-                            assemblyConfiguration = GetStringInBetween("\"", "\"", line);
+                            // default AssemblyConfiguration
+                            if (String.IsNullOrEmpty(assemblyConfiguration))
+                                assemblyConfiguration = DateTime.UtcNow.ToString();
+                            else
+                                assemblyConfiguration = GetStringInBetween("\"", "\"", line);
+
                             Console.WriteLine(" - Read $Assembly_Configuration: " + assemblyConfiguration);
                         }
                         else
                         {
                             // convert configuration term 'RELEASE' to empty (blank)
-                            if (args[2].ToUpper() == "NONE")
+                            if (args[2].ToUpper() == "DATE")
+                                assemblyConfiguration = "$env:APPVEYOR_REPO_COMMIT_TIMESTAMP";
+                            else if (args[2].ToUpper() == "NONE")
                                 assemblyConfiguration = "";
                             else
                                 assemblyConfiguration = (args[2]);
 
-                            lines[idx] = "$Assembly_Configuration = \"" + assemblyConfiguration + "\"";
+                            if (args[2].ToUpper() == "DATE")
+                                lines[idx] = "$Assembly_Configuration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP";
+                            else
+                                lines[idx] = "$Assembly_Configuration = \"" + assemblyConfiguration + "\"";
+
                             File.WriteAllLines(patchAssemblyVersionPath, lines.ToArray());
                             Console.WriteLine(" - Updated $Assembly_Configuration: " + assemblyConfiguration);
                         }
-
-                        Console.ForegroundColor = ConsoleColor.Green;
                     }
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine(" - <ERROR> Could not find '$Assembly_Configuration' ...");
                         Console.WriteLine(patchAssemblyVersionPath);
-                        Console.ForegroundColor = ConsoleColor.Green;
                     }
+
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
 
                 Console.WriteLine("");
@@ -247,15 +258,15 @@ namespace RocksmithPreBuild
                             File.WriteAllLines(assemblyInfoPath, lines.ToArray());
                             Console.ForegroundColor = ConsoleColor.Cyan;
                             Console.WriteLine(" - Updated AssemblyVersion: " + assemblyVersion);
-                            Console.ForegroundColor = ConsoleColor.Green;
                         }
                         else
                         {
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine(" - <ERROR> Could not find 'AssemblyVersion' ...");
                             Console.WriteLine(assemblyInfoPath);
-                            Console.ForegroundColor = ConsoleColor.Green;
                         }
+
+                        Console.ForegroundColor = ConsoleColor.Green;
                     }
 
                     // [assembly: AssemblyInformationalVersion("00000000")]
@@ -269,15 +280,15 @@ namespace RocksmithPreBuild
                             File.WriteAllLines(assemblyInfoPath, lines.ToArray());
                             Console.ForegroundColor = ConsoleColor.Cyan;
                             Console.WriteLine(" - Updated AssemblyInformationalVersion: " + assemblyInformationVersion);
-                            Console.ForegroundColor = ConsoleColor.Green;
                         }
                         else
                         {
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine(" - <ERROR> Could not find 'AssemblyInformationalVersion' ...");
                             Console.WriteLine(assemblyInfoPath);
-                            Console.ForegroundColor = ConsoleColor.Green;
                         }
+
+                        Console.ForegroundColor = ConsoleColor.Green;
                     }
 
                     // [assembly: AssemblyConfiguration("BETA")]
@@ -291,15 +302,15 @@ namespace RocksmithPreBuild
                             File.WriteAllLines(assemblyInfoPath, lines.ToArray());
                             Console.ForegroundColor = ConsoleColor.Cyan;
                             Console.WriteLine(" - Updated AssemblyConfiguration: " + assemblyConfiguration);
-                            Console.ForegroundColor = ConsoleColor.Green;
                         }
                         else
                         {
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine(" - <ERROR> Could not find 'AssemblyConfiguration' ...");
                             Console.WriteLine(assemblyInfoPath);
-                            Console.ForegroundColor = ConsoleColor.Green;
                         }
+
+                        Console.ForegroundColor = ConsoleColor.Green;
                     }
                 }
 

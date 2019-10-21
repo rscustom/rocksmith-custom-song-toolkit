@@ -16,12 +16,13 @@ $env:GIT_HASH = $env:APPVEYOR_REPO_COMMIT.Substring(0, 8)
 $Assembly_Informational_Version = "$env:GIT_HASH"
 
 # NOTE TO DEVS
-# Manually edit the '$AssemblyVersion' and '$AssemblyConfiguration' values
+# Manually edit the '$AssemblyVersion' and '$AssemblyConfiguration' values here
 # before committing a major revisions/releases to github
 # these will be automatically applied to all AssemblyInfo.cs files by AppVeyor ...
-# $AssemblyConfiguration "BUILD", "BETA", "RELEASE", or (blank) "" 
-$Assembly_Version = "2.9.2.0"
-$Assembly_Configuration = ""
+$Assembly_Version = "2.9.2.1"
+# $AssemblyConfiguration = "BUILD", "BETA", "RELEASE", or (any other string) 
+# $AssemblyConfiguration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP
+$Assembly_Configuration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP
 
 Write-Host "- Patching: $Assembly_File"
 Write-Host "- AssemblyVersion: $Assembly_Version"

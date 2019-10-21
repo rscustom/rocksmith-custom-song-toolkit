@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rocksmith Custom Song Tookit CLI")]
 [assembly: AssemblyProduct("convert2012")]
-[assembly: AssemblyCopyright("Copyright ©  2015 CST Developer Team")]
+[assembly: AssemblyCopyright("Copyright © 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 // Setting ComVisible to false makes the types in this assembly not visible 

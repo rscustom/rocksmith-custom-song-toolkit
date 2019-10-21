@@ -11,7 +11,7 @@ using System;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Rocksmith Custom Song Project")]
 [assembly: AssemblyProduct("RocksmithToolkitLib")]
-[assembly: AssemblyCopyright("Copyright © 2017")]
+[assembly: AssemblyCopyright("Copyright © 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -28,6 +28,6 @@ using System;
 //      Revision
 //
 // THESE VALUES ARE PROGRAMMATICALLY GENERATED - DO NOT EDIT
-[assembly: AssemblyVersion("2.9.2.0")]
-[assembly: AssemblyInformationalVersion("013e9e81")]
+[assembly: AssemblyVersion("2.9.2.1")]
+[assembly: AssemblyInformationalVersion("")]
 [assembly: AssemblyConfiguration("")]

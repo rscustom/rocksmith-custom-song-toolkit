@@ -571,19 +571,18 @@ namespace RocksmithToolkitLib.DLCPackage
                 // throw exception for corrupt/missing XML file names
                 if (!File.Exists(xmlFile))
                 {
+                    GlobalExtension.HideProgress();
                     var artifactsDir = unpackedDir;
                     StackTrace stackTrace = new StackTrace();
                     var callerName = stackTrace.GetFrame(1).GetMethod().Name;
 
                     if (callerName.Equals("PackageImport") && ConfigRepository.Instance().GetBoolean("creator_structured"))
                         artifactsDir = Path.Combine(unpackedDir, "EOF");
-
+    
                     throw new DataException("Corrupt CDLC artifact file naming." + Environment.NewLine + Environment.NewLine +
                         "1) Open the artifacts folder: " + artifactsDir + "   " + Environment.NewLine +
                         "2) Look for and rename any artifact file names that contain special characters, e.g. '~' tilde" + Environment.NewLine +
                         "3) Reauthor the CDLC using: >CDLC Creator>Add>Edit>Generate" + Environment.NewLine);
-
-                    GlobalExtension.HideProgress();
                 }
 
                 if (attr.Phrases != null)

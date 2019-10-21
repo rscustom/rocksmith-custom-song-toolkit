@@ -39,9 +39,9 @@ namespace RocksmithToolkitLib
             get
             {
                 if (GeneralExtension.IsInDesignMode)
-                    AssemblyConfiguration = "DEBUG";
+                    return String.Format("{0}-{1} {2}", AssemblyVersion, AssemblyInformationVersion, "DEBUG").Trim();
 
-                return String.Format("{0}-{1} {2}", AssemblyVersion, AssemblyInformationVersion, AssemblyConfiguration).Trim();
+                return String.Format("{0}-{1}", AssemblyVersion, AssemblyInformationVersion).Trim();
             }
         }
 
@@ -67,7 +67,7 @@ namespace RocksmithToolkitLib
             var assemblyInformationVersion = assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).Cast<AssemblyInformationalVersionAttribute>().FirstOrDefault().InformationalVersion.ToString();
             var assemblyConfiguration = assembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
 
-            return String.Format("{0}-{1} {2}", assemblyVersion, assemblyInformationVersion, assemblyConfiguration).Trim();
+            return String.Format("{0}-{1}", assemblyVersion, assemblyInformationVersion).Trim();
         }
 
         public static string RSTKUpdaterVersion()
@@ -77,23 +77,25 @@ namespace RocksmithToolkitLib
             var assemblyInformationVersion = assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false).Cast<AssemblyInformationalVersionAttribute>().FirstOrDefault().InformationalVersion.ToString();
             var assemblyConfiguration = assembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
 
-            return String.Format("{0}-{1} {2}", assemblyVersion, assemblyInformationVersion, assemblyConfiguration).Trim();
+            return String.Format("{0}-{1}", assemblyVersion, assemblyInformationVersion).Trim();
         }
 
         public static bool IsRSTKLibValid()
         {
-            // DOS COPY command and CreationTime caveat
-            // always delete any existing copy of a file at a location before ever
-            // using DOS to copy the library to preserve the correct library creation date
-            
             // return false;
-            var rstkLibPath = typeof(RocksmithToolkitLib.ToolkitVersion).Assembly.Location;
-            var dtuLib = File.GetLastWriteTimeUtc(rstkLibPath);
-       
-            // using UTC to avoid regional DateTime issues
-            DateTime dtuNow = DateTime.UtcNow;
+            var assembly = Assembly.LoadFile(typeof(RocksmithToolkitLib.ToolkitVersion).Assembly.Location);
+            var assemblyConfiguration = assembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
 
-            if (dtuNow > dtuLib.AddDays(30))
+            // check if AssemblyConfiguration contains parsable DateTime
+            DateTime temp;
+            if (!DateTime.TryParse(assemblyConfiguration, out temp))
+                return false;
+
+            // working with UTC to avoid regional DateTime issues
+            DateTime dtuAssemblyConfig = DateTime.Parse(assemblyConfiguration, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
+            var dtuNow = DateTime.UtcNow;
+
+            if (dtuNow > dtuAssemblyConfig.AddDays(30))
                 return false;
 
             return true;

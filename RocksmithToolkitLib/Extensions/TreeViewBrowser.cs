@@ -236,7 +236,7 @@ namespace RocksmithToolkitLib.Extensions
         private void TreeViewBrowser_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             // double click produces the undesired effect of opening folder in a new window
-            return; // so do nothing instead
+            return; // do nothing instead for now
 
             // opens the double clicked directory or file in windows explorer
             if (File.Exists(e.Node.Tag.ToString()) || Directory.Exists(e.Node.Tag.ToString()))
