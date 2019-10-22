@@ -306,14 +306,13 @@ rem resyncing the commit usual fixes the error
 rem there are several alternate usages for RocksmithPreBuild.exe
 
 rem the next cmd is used for normal development mode (default - reuse version information, DateTime.UtcNow written to Assembly.Configuration)
-
 cmd /c "RocksmithPreBuild.exe PREBUILD READ READ" &gt; prebuild.log
+
+rem  reset the PatchAssemblyVersion.ps1 $Assembly_Configuration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.2.1 DATE"
 
 rem the next cmd is used for test Auto Update feature by setting git subversion to 00000000
 rem cmd /c "RocksmithPreBuild.exe PREBUILD READ READ 00000000"
-
-rem  reset the PatchAssemblyVersion.ps1 $Assembly_Configuration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP
-rem cmd /c "RocksmithPreBuild.exe PREBUILD 1.2.3.4 DATE"
 
 rem before issuing new (blank, i.e. no version type) make next cmd active and comment out the others
 rem cmd /c "RocksmithPreBuild.exe PREBUILD 1.2.3.4 NONE"

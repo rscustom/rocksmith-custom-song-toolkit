@@ -29,5 +29,5 @@ using System;
 //
 // THESE VALUES ARE PROGRAMMATICALLY GENERATED - DO NOT EDIT
 [assembly: AssemblyVersion("2.9.2.1")]
-[assembly: AssemblyInformationalVersion("")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyInformationalVersion("278f62ba")]
+[assembly: AssemblyConfiguration("2019-10-22T02:02:03")]

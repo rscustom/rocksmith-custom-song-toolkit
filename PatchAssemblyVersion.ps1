@@ -21,8 +21,8 @@ $Assembly_Informational_Version = "$env:GIT_HASH"
 # these will be automatically applied to all AssemblyInfo.cs files by AppVeyor ...
 $Assembly_Version = "2.9.2.1"
 # $AssemblyConfiguration = "BUILD", "BETA", "RELEASE", or (any other string) 
-# $AssemblyConfiguration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP
-$Assembly_Configuration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP
+# $AssemblyConfiguration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP.Substring(0,19)
+$Assembly_Configuration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP.Substring(0,19)
 
 Write-Host "- Patching: $Assembly_File"
 Write-Host "- AssemblyVersion: $Assembly_Version"

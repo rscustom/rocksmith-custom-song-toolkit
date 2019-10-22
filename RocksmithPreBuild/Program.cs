@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Globalization;
 
 
 namespace RocksmithPreBuild
@@ -185,9 +186,9 @@ namespace RocksmithPreBuild
                         Console.ForegroundColor = ConsoleColor.Cyan;
                         if (args[2].ToUpper() == "READ")
                         {
-                            // default AssemblyConfiguration
-                            if (String.IsNullOrEmpty(assemblyConfiguration))
-                                assemblyConfiguration = DateTime.UtcNow.ToString();
+                            // default AssemblyConfiguration sortable ISO8601 DateTime format (yyyy-MM-ddTHH:mm:ss) 2019-10-22T01:33:36
+                            if (line.Contains("APPVEYOR_REPO_COMMIT_TIMESTAMP"))
+                                assemblyConfiguration = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture);
                             else
                                 assemblyConfiguration = GetStringInBetween("\"", "\"", line);
 
@@ -195,21 +196,24 @@ namespace RocksmithPreBuild
                         }
                         else
                         {
-                            // convert configuration term 'RELEASE' to empty (blank)
+                            // get the appveyor DateTime environmental variable
                             if (args[2].ToUpper() == "DATE")
-                                assemblyConfiguration = "$env:APPVEYOR_REPO_COMMIT_TIMESTAMP";
+                                assemblyConfiguration = "$env:APPVEYOR_REPO_COMMIT_TIMESTAMP.Substring(0,19)";
                             else if (args[2].ToUpper() == "NONE")
                                 assemblyConfiguration = "";
                             else
                                 assemblyConfiguration = (args[2]);
 
                             if (args[2].ToUpper() == "DATE")
-                                lines[idx] = "$Assembly_Configuration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP";
+                            {
+                                lines[idx] = "$Assembly_Configuration = " + assemblyConfiguration;
+                                assemblyConfiguration = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture);
+                            }
                             else
                                 lines[idx] = "$Assembly_Configuration = \"" + assemblyConfiguration + "\"";
 
                             File.WriteAllLines(patchAssemblyVersionPath, lines.ToArray());
-                            Console.WriteLine(" - Updated $Assembly_Configuration: " + assemblyConfiguration);
+                            Console.WriteLine(" - Updated $Assembly_Configuration: " + assemblyConfiguration);                        
                         }
                     }
                     else
