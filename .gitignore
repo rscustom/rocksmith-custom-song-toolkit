@@ -121,3 +121,4 @@ __pycache__/
 *.userprefs
 
 .vs/
+*.vshost.exe

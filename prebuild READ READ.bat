@@ -16,7 +16,7 @@ echo.
 PAUSE>NUL|SET /P "= Press any key to contiune or Ctrl-C to escape ..."
 echo.
 echo.
-START /B /WAIT RocksmithPreBuild.exe PREBUILD READ READ
+START /B /WAIT "RocksmithPreBuild.exe PREBUILD READ READ" > prebuild.log
 echo.
 
 pause

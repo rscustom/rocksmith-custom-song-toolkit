@@ -514,7 +514,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 {
                     if (xml.ToneBase.ToLower() == tn.Name.ToLower())
                         t.ToneId = 0;
-                    
+
                     if (xml.ToneA.ToLower() == tn.Name.ToLower())
                         t.ToneId = 0;
                     else if (xml.ToneB.ToLower() == tn.Name.ToLower())
@@ -1000,7 +1000,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         {
                             if (note.Ignore == 0)
                                 ++a.NotesInIteration1[j - 1];
-                            
+
                             ++a.NotesInIteration2[j - 1];
                             break;
                         }
@@ -1327,7 +1327,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                         continue;
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     // workaround for rare conversion exception 'Index was outside the bounds of the array' 
                     continue;

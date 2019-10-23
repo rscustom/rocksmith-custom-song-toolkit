@@ -290,17 +290,12 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- CUSTOM PREBUILD EVENT - DO NOT MODIFY -->
-  <PropertyGroup>
-    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
-      "$(SolutionDir)prebuild.sh" "$(ProjectDir)" "$(ProjectDir)ToolkitVersion.cs"
-    </PreBuildEvent>
-  </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>rem Only need to  make changes to version information below
-rem RocksmithPreBuild.exe automatically updates Assembly.cs files and AppVeyor versioning information
+rem RocksmithPreBuild.exe automatically updates Assembly.cs files and 
+rem AppVeyor versioning information in PatchAssemblyVersion.ps1 file
 
-if $(DefineConstants.Contains('PREBUILD')) == true (
+if $(DefineConstants.Contains('PREBUILD')) == false goto :End
 
 if $(ConfigurationName) == Debug (
 CD "$(SolutionDir)"
@@ -311,14 +306,17 @@ rem resyncing the commit usual fixes the error
 
 rem there are several alternate usages for RocksmithPreBuild.exe
 
+rem the next cmd is used for normal development mode (default - reuse version information, DateTime.UtcNow written to Assembly.Configuration)
+cmd /c "RocksmithPreBuild.exe PREBUILD READ READ" &gt; prebuild.log
+
+rem  reset the PatchAssemblyVersion.ps1 $Assembly_Configuration = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.2.1 DATE"
+
 rem the next cmd is used for test Auto Update feature by setting git subversion to 00000000
 rem cmd /c "RocksmithPreBuild.exe PREBUILD READ READ 00000000"
 
-rem the next cmd is used for normal development mode (default - reuse the existing version/type information)
-cmd /c "RocksmithPreBuild.exe PREBUILD READ READ"
-
 rem before issuing new (blank, i.e. no version type) make next cmd active and comment out the others
-rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.2.0 NONE"
+rem cmd /c "RocksmithPreBuild.exe PREBUILD 1.2.3.4 NONE"
 
 rem before issuing new build make next cmd active and comment out the others
 rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.2.0 BUILD"
@@ -328,11 +326,19 @@ rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.1.0 BETA"
 
 rem before issuing new release make next cmd active and comment out the others
 rem cmd /c "RocksmithPreBuild.exe PREBUILD 2.9.0.0 RELEASE"
+rem )
 )
 
-)
+rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj these call the 'prebuild.sh' file
 
-rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj these call the 'prebuild.sh' file</PreBuildEvent>
+:End
+echo That's All Folk!</PreBuildEvent>
+  </PropertyGroup>
+  <!-- BEGIN CUSTOM PREBUILD EVENT - DO NOT MODIFY -->
+  <PropertyGroup>
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
+      "$(SolutionDir)prebuild.sh" "$(ProjectDir)" "$(ProjectDir)ToolkitVersion.cs"
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
