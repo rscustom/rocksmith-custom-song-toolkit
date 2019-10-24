@@ -77,6 +77,7 @@
     <Compile Include="Conversion\Rs1Converter.cs" />
     <Compile Include="Conversion\Rs2014Converter.cs" />
     <Compile Include="DLCPackage\DDCreator.cs" />
+    <Compile Include="XML\GlyphDefinitions.cs" />
     <Compile Include="Extensions\HelpForm.cs">
       <SubType>Form</SubType>
     </Compile>

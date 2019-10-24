@@ -19,6 +19,7 @@ using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.XML;
 using RocksmithToolkitLib.XmlRepository;
 using System.Drawing;
+using System.Xml;
 
 // do most work with the arrangment as memory variable
 
@@ -341,6 +342,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Arrangement.MasterId = masterId;
         }
 
+        private static ArrangementType DetectArrangementType(string filename)
+        {
+            using (XmlReader reader = XmlReader.Create(filename))
+            {
+                reader.MoveToContent();
+                if (reader.LocalName == "vocals")
+                    return ArrangementType.Vocal;
+                if (reader.LocalName == "showlights")
+                    return ArrangementType.ShowLight;
+
+                // Return guitar for everything else
+                return ArrangementType.Guitar;
+            }
+        }
+
         public bool AddXmlArrangement(string xmlFilePath)
         {
             // only use this method when adding new arrangements
@@ -353,18 +369,33 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 SongXml = new SongXML { File = xmlFilePath }
             };
 
+            var arrType = DetectArrangementType(xmlFilePath);
+
             // SETUP FIELDS
-            if (xmlFilePath.ToLower().EndsWith("vocals.xml") || xmlFilePath.ToLower().EndsWith("vocals_rs2.xml"))
+            if (arrType == ArrangementType.Vocal)
             {
                 cmbArrangementType.SelectedItem = ArrangementType.Vocal;
                 Arrangement.ArrangementType = ArrangementType.Vocal;
 
-                if (xmlFilePath.ToLower().EndsWith("_jvocals.xml") || xmlFilePath.ToLower().EndsWith("jvocals_rs2.xml"))
+                // Attempt to auto-detect Japanese vocals from filename
+                if (xmlFilePath.IndexOf("jvocal", StringComparison.OrdinalIgnoreCase) >= 0
+                   || xmlFilePath.IndexOf("jlyric", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
                     cmbArrangementName.SelectedItem = ArrangementName.JVocals;
+
+                    // Try to find a custom font texture with the filename lyrics.dds
+                    string fontTexture = Path.Combine(Path.GetDirectoryName(xmlFilePath), "lyrics.dds");
+                    if (File.Exists(fontTexture))
+                    {
+                        Arrangement.LyricArt = fontTexture;
+                    }
+                }
                 else
+                {
                     cmbArrangementName.SelectedItem = ArrangementName.Vocals;
+                }
             }
-            else if (xmlFilePath.ToLower().EndsWith("_showlights.xml"))
+            else if (arrType == ArrangementType.ShowLight)
             {
                 cmbArrangementType.SelectedItem = ArrangementType.ShowLight;
                 Arrangement.ArrangementType = ArrangementType.ShowLight;
@@ -559,31 +590,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void EditVocals()
         {
-            if (Arrangement.CustomFont)
-                MessageBox.Show("NOTICE: Expert Toolkit Users Only ..." + Environment.NewLine + Environment.NewLine +
-                                "A custom lyrics font is already" + Environment.NewLine +
-                                "defined for this arrangement.", DLCPackageCreator.MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-            using (var form = new VocalsForm(Arrangement.FontSng, _parentControl.LyricArtPath, Arrangement.CustomFont, Arrangement.SongXml.File))
+            using (var form = new VocalsForm(Arrangement.LyricArt, Arrangement.SongXml.File))
             {
                 if (DialogResult.OK != form.ShowDialog())
                     return;
 
-                Arrangement.FontSng = form.SngPath; // this is always null/empty
-                _parentControl.LyricArtPath = form.ArtPath;
-                Arrangement.CustomFont = form.IsCustom;
+                Arrangement.LyricArt = File.Exists(form.ArtPath) ? form.ArtPath : null;
 
                 if (!String.IsNullOrEmpty(form.VocalsPath))
                 {
                     XmlPath = form.VocalsPath;
                     Arrangement.SongXml.File = form.VocalsPath;
-                    if (XmlPath.ToLower().EndsWith("_jvocals.xml"))
-                        cmbArrangementName.SelectedItem = ArrangementName.JVocals;
-                    else
-                        cmbArrangementName.SelectedItem = ArrangementName.Vocals;
                 }
-
-
             }
         }
 

@@ -203,9 +203,22 @@ namespace RocksmithToolkitLib.DLCPackage
                             dynamic xmlContent = null;
 
                             if (arrType == ArrangementType.Vocal)
+                            {
                                 xmlContent = new Vocals(sngContent);
+
+                                // Save glyph definitions if a custom font is used
+                                if (sngContent.IsCustomFont())
+                                {
+                                    var glyphDefs = GlyphDefinitions.LoadFromSng(sngContent);
+                                    string filename = xmlSngFile.IndexOf("jvocal", StringComparison.OrdinalIgnoreCase) >= 0 ? "jvocals" : "vocals";
+                                    string glyphsFile = Path.Combine(Path.GetDirectoryName(xmlSngFile), String.Format("{0}.glyphs.xml", filename));
+                                    glyphDefs.Serialize(glyphsFile);
+                                }
+                            }
                             else
+                            {
                                 xmlContent = new Song2014(sngContent, att);
+                            }
 
                             xmlContent.Serialize(outputStream);
                         }

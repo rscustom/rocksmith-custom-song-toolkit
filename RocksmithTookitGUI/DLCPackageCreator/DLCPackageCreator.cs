@@ -250,8 +250,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public bool JavaBool { get; set; }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
-        public string LyricArtPath { get; set; }
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public string ToolkitVers { get; set; }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // perma fix to prevent creating a property value in designer
         public string PackageAuthor { get; set; }
@@ -591,10 +589,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     continue;
                 arr.SongXml.File = arr.SongXml.File.RelativeTo(BasePath);
                 arr.SongFile.File = "";
-                if (!String.IsNullOrEmpty(arr.FontSng))
-                    arr.FontSng = arr.FontSng.RelativeTo(BasePath);
+                if (!String.IsNullOrEmpty(arr.LyricArt))
+                    arr.LyricArt = arr.LyricArt.RelativeTo(BasePath);
             }
-            
+
             try
             {
                 using (var stm = XmlWriter.Create(templatePath, new XmlWriterSettings { CheckCharacters = true, Indent = true }))
@@ -612,8 +610,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         arr.SongXml.File = arr.SongXml.File.AbsoluteTo(BasePath);
                     if (!String.IsNullOrEmpty(arr.SongFile.File))
                         arr.SongFile.File = arr.SongFile.File.AbsoluteTo(BasePath);
-                    if (!String.IsNullOrEmpty(arr.FontSng))
-                        arr.FontSng = arr.FontSng.AbsoluteTo(BasePath);
+                    if (!String.IsNullOrEmpty(arr.LyricArt))
+                        arr.LyricArt = arr.LyricArt.AbsoluteTo(BasePath);
                 }
 
                 if (!String.IsNullOrEmpty(packageData.LyricArtPath))
@@ -627,8 +625,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     arr.SongXml.File = arr.SongXml.File.AbsoluteTo(BasePath);
                 if (!String.IsNullOrEmpty(arr.SongFile.File))
                     arr.SongFile.File = arr.SongFile.File.AbsoluteTo(BasePath);
-                if (!String.IsNullOrEmpty(arr.FontSng))
-                    arr.FontSng = arr.FontSng.AbsoluteTo(BasePath);
+                if (!String.IsNullOrEmpty(arr.LyricArt))
+                    arr.LyricArt = arr.LyricArt.AbsoluteTo(BasePath);
             }
 
             if (!String.IsNullOrEmpty(packageData.LyricArtPath))
@@ -949,10 +947,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 info.ArtFiles = null; // force ArtFiles array to be generated from the AlbumArtPath                
             }
 
-            // Lyric art
-            if (!String.IsNullOrEmpty(info.LyricArtPath))
-                LyricArtPath = info.LyricArtPath.AbsoluteTo(BasePath);
-
             // Audio file
             if (!String.IsNullOrEmpty(info.OggPath))
                 AudioPath = info.OggPath.AbsoluteTo(BasePath);
@@ -970,8 +964,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             {
                 arrangement.SongXml.File = arrangement.SongXml.File.AbsoluteTo(BasePath);
 
-                if (!String.IsNullOrEmpty(arrangement.FontSng))
-                    arrangement.FontSng = arrangement.FontSng.AbsoluteTo(BasePath);
+                if (!String.IsNullOrEmpty(arrangement.LyricArt))
+                    arrangement.LyricArt = arrangement.LyricArt.AbsoluteTo(BasePath);
 
                 arrangement.ClearCache();
 
@@ -1329,7 +1323,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         },
 
                     AlbumArtPath = AlbumArtPath,
-                    LyricArtPath = LyricArtPath,
+                    LyricArtPath = arrangements.Find(arr => arr.HasCustomFont)?.LyricArt,
                     OggPath = AudioPath,
                     OggPreviewPath = audioPreviewPath,
                     OggQuality = numAudioQuality.Value,
@@ -1886,16 +1880,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     if (packageData.GameVersion == GameVersion.RS2012)
                         continue;
 
-                    // only validate lyrics that do not use a custom font (RS2014 ONLY)
-                    if (!arr.CustomFont)
+                    // Only validate lyrics that do not use a custom font (RS2014 ONLY)
+                    if (!arr.HasCustomFont)
                     {
-                        var oldXml = GeneralExtension.CopyToTempFile(arr.SongXml.File);
-                        using (var outputStream = new FileStream(arr.SongXml.File, FileMode.Create, FileAccess.ReadWrite))
+                        var vocals = Vocals.LoadFromFile(arr.SongXml.File);
+                        foreach(var voc in vocals.Vocal)
                         {
-                            var vocals2014 = RocksmithToolkitLib.Sng2014HSL.Sng2014FileWriter.ReadVocals(oldXml);
-                            // validate lyrics
-                            var xmlContent = new Vocals(vocals2014, true);
-                            xmlContent.Serialize(outputStream);
+                            if(voc.Lyric.Length != voc.Lyric.GetValidLyric().Length)
+                            {
+                                var errMsg = Path.GetFileName(arr.SongXml.File) +
+                                    "\n\nThis lyrics file contains characters not included in the game's default font."
+                                    +"\nYou will have to use a custom font for them to show up in the game.";
+                                BetterDialog2.ShowDialog(errMsg, "Custom Font Needed", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
+
+                                break;
+                            }
                         }
                     }
 
