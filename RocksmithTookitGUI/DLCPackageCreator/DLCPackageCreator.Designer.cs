@@ -616,8 +616,8 @@
             this.toolTip.SetToolTip(this.chkJapaneseTitle, "日本のタイトルを使う");
             this.chkJapaneseTitle.UseMnemonic = false;
             this.chkJapaneseTitle.UseVisualStyleBackColor = true;
-            this.chkJapaneseTitle.CheckStateChanged += new System.EventHandler(this.cbJapaneseTitle_CheckedChanged);
-            this.chkJapaneseTitle.Click += new System.EventHandler(this.cbJapaneseTitle_Click);
+            this.chkJapaneseTitle.CheckStateChanged += new System.EventHandler(this.chkJapaneseTitle_CheckedChanged);
+            this.chkJapaneseTitle.Click += new System.EventHandler(this.chkJapaneseTitle_Click);
             // 
             // label8
             // 

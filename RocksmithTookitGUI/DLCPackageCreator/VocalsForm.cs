@@ -87,6 +87,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // The Toolkit writes this artifact to: /assets/ui/lyrics/{dlc name}/lyrics_{dlc name}.dds
             using (var f = new VistaOpenFileDialog())
             {
+                f.InitialDirectory = Path.GetDirectoryName(VocalsPath);
                 f.FileName = ArtPath;
                 f.Title = "Select a Custom Lyric Font DDS Texture";
                 f.Filter = "Custom Lyrics Font Files (*.dds)|*.dds";
@@ -101,6 +102,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var f = new VistaOpenFileDialog())
             {
+                f.InitialDirectory = Path.GetDirectoryName(VocalsPath);
                 f.FileName = VocalsPath;
                 f.Filter = "Rocksmith XML Vocals or JVocals Files (*vocals.xml)|*vocals.xml";
                 if (f.ShowDialog() == DialogResult.OK)

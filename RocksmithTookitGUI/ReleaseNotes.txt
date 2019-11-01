@@ -1,5 +1,8 @@
 Rocksmith Toolkit Release Notes
 
+- improved error checking in CDLC Creator
+- fixed issues with the way CDCL Creator handles jvocal repackaging
+- improved compatibility with CustomFontGenerator (special thanks to iminashi)
 - added CultureInfo to log
 - simplified custom exception messages to encourage users to read them
 - added toolkit library validation check

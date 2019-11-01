@@ -431,9 +431,13 @@ namespace RocksmithToolkitLib.DLCPackage
                     }
                 }
 
-                // Lyric Art Texture
-                if (File.Exists(info.LyricArtPath))
-                    packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(info.LyricArtPath, FileMode.Open, FileAccess.Read, FileShare.Read));
+                // FIND ART TEXTURE
+                var lyricArtPath = String.Empty;
+                if (info.Arrangements.Any(arr => arr.HasCustomFont))
+                    lyricArtPath = info.Arrangements.Find(arr => arr.HasCustomFont).LyricsArtPath;
+                // SET CORRECT TOC PATH
+                if (!String.IsNullOrEmpty(lyricArtPath))
+                    packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(lyricArtPath, FileMode.Open, FileAccess.Read, FileShare.Read));
 
                 // AUDIO
                 var audioFile = info.OggPath;
@@ -542,7 +546,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         // MANIFEST
                         var manifest = new Manifest2014<Attributes2014>();
                         var attribute = new Attributes2014(arrangementFileName, arr, info, platform);
-                    
+
                         // TODO: monitor this change
                         // Commented out - EOF now properly sets the bonus/represent elements
                         //if (arrangement.ArrangementType == ArrangementType.Bass || arrangement.ArrangementType == ArrangementType.Guitar)
@@ -1190,16 +1194,18 @@ namespace RocksmithToolkitLib.DLCPackage
                     {
                         // cache results
                         arr.Sng2014 = Sng2014File.ConvertXML(arr.SongXml.File, arr.ArrangementType);
+
+                        // GlyphDefinitions.UpdateCustomFontStatus(ref arr);
                         if (arr.HasCustomFont)
                         {
                             arr.Sng2014.PopFontPath(dlcName);
-                            string glyphDefPath = Path.ChangeExtension(arr.LyricArt, ".glyphs.xml");
-                            GlyphDefinitions.WriteToSng(arr.Sng2014, glyphDefPath);
+                            GlyphDefinitions.WriteToSng(arr.Sng2014, arr.GlyphsXmlPath);
                         }
                     }
 
                     using (var fs = new FileStream(sngFile, FileMode.Create))
                         arr.Sng2014.WriteSng(fs, platform);
+
                     break;
                 default:
                     throw new InvalidOperationException("Unexpected game version value");

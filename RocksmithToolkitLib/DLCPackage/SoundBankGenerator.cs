@@ -139,7 +139,7 @@ namespace RocksmithToolkitLib.DLCPackage
         private const string SONG = "Song_";
         private static EndianBitConverter _bitConverter;
 
-        private static uint HashString(String str)//FNV hash
+        private static uint HashString(String str) //FNV hash
         {
             char[] bytes = str.ToLower().ToCharArray();
             uint hash = 2166136261;
@@ -209,14 +209,15 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private const byte HIERARCHY_SOUND = 2;
+
         private static byte[] HierarchySound(int id, int fileid, int mixerid, float volume, bool preview, bool isConsole)
         {
             int soundID = id;
             int pluginID = 262145;
-            int streamType = 2;//enum<int>
+            int streamType = 2; //enum<int>
             int fileID = fileid;
             int sourceID = fileid;
-            byte languageSpecific = 0;//soundType = {SFX, Voice}
+            byte languageSpecific = 0; //soundType = {SFX, Voice}
             byte overrideParent = 0;
             byte numFX = 0;
             int parentBusID = RandomGenerator.NextInt();
@@ -300,10 +301,11 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private const byte HIERARCHY_ACTION = 3;
+
         private static byte[] HierarchyAction(int id, int objid, int bankid)
         {
             int actionID = id;
-            short actionType = 1027;//wrong
+            short actionType = 1027; //wrong
             int objectID = objid;
             byte isBus = 0;
             byte numParam = 0;
@@ -329,6 +331,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private const byte HIERARCHY_EVENT = 4;
+
         private static byte[] HierarchyEvent(int id, string name)
         {
             uint eventID = HashString(PLAY + name);
@@ -348,6 +351,7 @@ namespace RocksmithToolkitLib.DLCPackage
         }
 
         private const byte HIERARCHY_ACTORMIXER = 7;
+
         private static byte[] HierarchyActorMixer(int id, int soundid)
         {
             int mixerID = id;
@@ -481,7 +485,8 @@ namespace RocksmithToolkitLib.DLCPackage
             int soundbankID = RandomGenerator.NextInt();
             int fileID = sameID ? oldFileID : RandomGenerator.NextInt();
             int soundID = sameID ? oldSoundID : RandomGenerator.NextInt();
-            oldSoundID = soundID; oldFileID = fileID;
+            oldSoundID = soundID;
+            oldFileID = fileID;
 
             var audioReader = new EndianBinaryReader(_bitConverter, audioStream);
             byte[] dataChunk = audioReader.ReadBytes(51200); // wwise is based on audio length, we'll just make it up(prefetch lookup is 100ms)
@@ -529,14 +534,14 @@ namespace RocksmithToolkitLib.DLCPackage
                 var versionNumber = reader.ReadUInt32(); // BNK Version Number 91                
 
                 if (versionNumber != 91)
-                    return"<ERROR> Incorrect BNK Version Number - " + srcPath;
+                    return "<ERROR> Incorrect BNK Version Number - " + srcPath;
 
-                int offset = (int)lenBKHD + 8;  // 36
+                int offset = (int)lenBKHD + 8; // 36
                 reader.Seek(offset, SeekOrigin.Begin); // DIDX Section
                 var magicDIDX = reader.ReadBytes(4); // DIDX 44 49 44 58
 
                 if (Encoding.ASCII.GetString(magicDIDX) != "DIDX")
-                    return"<ERROR> Did not find DIDX Header ..." + Environment.NewLine + srcPath;
+                    return "<ERROR> Did not find DIDX Header ..." + Environment.NewLine + srcPath;
             }
 
             return String.Empty;
@@ -553,7 +558,7 @@ namespace RocksmithToolkitLib.DLCPackage
             {
                 reader.ReadBytes(4); // BKHD 42 4B 48 44 
                 var lenBKHD = reader.ReadUInt32(); // Length of BKHD Section (bytes)
-                int offset = (int)lenBKHD + 8;  // 36
+                int offset = (int)lenBKHD + 8; // 36
                 // DIDX Section has already been validated
                 reader.Seek(offset, SeekOrigin.Begin); // DIDX Section
                 reader.ReadBytes(4); // DIDX 44 49 44 58

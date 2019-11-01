@@ -86,7 +86,7 @@ namespace RocksmithToolkitLib
             var assembly = Assembly.LoadFile(typeof(RocksmithToolkitLib.ToolkitVersion).Assembly.Location);
             var assemblyConfiguration = assembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
 
-            // check if AssemblyConfiguration contains parsable DateTime
+            // check if AssemblyConfiguration contains a parsable DateTime
             DateTime temp;
             if (!DateTime.TryParse(assemblyConfiguration, out temp))
                 return false;

@@ -152,7 +152,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
 
                 // convert album artwork dds to common friendly png
-                var ddsFiles = Directory.EnumerateFiles(unpackedDir, "*.dds", SearchOption.AllDirectories).ToList();
+                var ddsFiles = Directory.EnumerateFiles(unpackedDir, "album_*.dds", SearchOption.AllDirectories).ToList();
                 if (ddsFiles.Any())
                 {
                     // use the best quality (largest) dds file for the conversion
@@ -160,6 +160,11 @@ namespace RocksmithToolkitLib.DLCPackage
                     var ddsFile = fileInfos.OrderByDescending(fl => fl.Length).Select(fn => fn.FullName).FirstOrDefault();
                     ExternalApps.Dds2Png(ddsFile, isQuiet: true);
                 }
+
+                // convert lyric dds to common friendly png - commented out for now
+                var ddsLyric = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).FirstOrDefault();
+                if (!String.IsNullOrEmpty(ddsLyric))
+                    ExternalApps.Dds2Png(ddsLyric, isQuiet: true);
             }
 
             // for debugging
@@ -183,18 +188,15 @@ namespace RocksmithToolkitLib.DLCPackage
                         var xmlSngFile = xmlEofFile.Replace(".xml", ".sng.xml");
                         var arrType = ArrangementType.Guitar;
 
-                        if (Path.GetFileName(xmlSngFile).ToLower().Contains("vocal"))
+                        if (xmlSngFile.ToLower().EndsWith("vocals.sng.xml"))
                             arrType = ArrangementType.Vocal;
 
                         Attributes2014 att = null;
-                        if (arrType != ArrangementType.Vocal)
-                        {
-                            // Some ODLC json files contain factory errors
-                            // Confirmed error in Chords (too many chords are reported in some difficulty levels)
-                            var jsonFiles = Directory.EnumerateFiles(unpackedDir, String.Format("{0}.json", Path.GetFileNameWithoutExtension(sngFile)), SearchOption.AllDirectories).FirstOrDefault();
-                            if (!String.IsNullOrEmpty(jsonFiles) && jsonFiles.Any())
-                                att = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles).Entries.ToArray()[0].Value.ToArray()[0].Value;
-                        }
+                        // Some ODLC json files contain factory errors
+                        // Confirmed error in Chords (too many chords are reported in some difficulty levels)
+                        var jsonFiles = Directory.EnumerateFiles(unpackedDir, String.Format("{0}.json", Path.GetFileNameWithoutExtension(sngFile)), SearchOption.AllDirectories).FirstOrDefault();
+                        if (!String.IsNullOrEmpty(jsonFiles) && jsonFiles.Any())
+                            att = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles).Entries.ToArray()[0].Value.ToArray()[0].Value;
 
                         // create the xml file from sng file
                         var sngContent = Sng2014File.LoadFromFile(sngFile, srcPlatform);
@@ -206,13 +208,15 @@ namespace RocksmithToolkitLib.DLCPackage
                             {
                                 xmlContent = new Vocals(sngContent);
 
-                                // Save glyph definitions if a custom font is used
+                                // produce glyphs.xml definitions file
                                 if (sngContent.IsCustomFont())
                                 {
+                                    var sngFileName = Path.GetFileNameWithoutExtension(sngFile);
+                                    var vocalType = sngFileName.IndexOf("jvocals", StringComparison.OrdinalIgnoreCase) >= 0 ? "jvocals" : "vocals";
+                                    var dlcName = att.DLCKey.ToLower();
+                                    var glyphsPath = Path.Combine(Path.GetDirectoryName(xmlSngFile), String.Format("lyrics_{0}_{1}.glyphs.xml", dlcName, vocalType));
                                     var glyphDefs = GlyphDefinitions.LoadFromSng(sngContent);
-                                    string filename = xmlSngFile.IndexOf("jvocal", StringComparison.OrdinalIgnoreCase) >= 0 ? "jvocals" : "vocals";
-                                    string glyphsFile = Path.Combine(Path.GetDirectoryName(xmlSngFile), String.Format("{0}.glyphs.xml", filename));
-                                    glyphDefs.Serialize(glyphsFile);
+                                    glyphDefs.Serialize(glyphsPath);
                                 }
                             }
                             else
@@ -364,10 +368,10 @@ namespace RocksmithToolkitLib.DLCPackage
                     UpdateManifest2014(srcDirPath, platform);
 
                 WalkThroughDirectory("", srcDirPath, (a, b) =>
-               {
-                   var fileStream = File.OpenRead(b);
-                   psarc.AddEntry(a, fileStream);
-               });
+                {
+                    var fileStream = File.OpenRead(b);
+                    psarc.AddEntry(a, fileStream);
+                });
 
                 psarc.Write(psarcStream, !platform.IsConsole);
 
@@ -945,8 +949,13 @@ namespace RocksmithToolkitLib.DLCPackage
 
             foreach (var xmlFile in xmlFiles)
             {
+
                 var xmlName = Path.GetFileNameWithoutExtension(xmlFile);
-                if (xmlName.ToLower().Contains("_showlights"))
+                if (xmlName.ToLower().EndsWith("_showlights"))
+                    continue;
+
+                // TODO: Monitor here for CustomFont issues
+                if (xmlName.ToLower().EndsWith(".glyphs"))
                     continue;
 
                 var sngFile = Path.Combine(sngFolder, xmlName + ".sng");
@@ -955,7 +964,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 if (xmlName.ToLower().Contains("vocal"))
                     arrType = ArrangementType.Vocal;
 
-                // TODO: Handle vocals custom font
+                // TODO: address vocals CustomFont
                 string fontSng = null;
                 if (arrType == ArrangementType.Vocal)
                 {

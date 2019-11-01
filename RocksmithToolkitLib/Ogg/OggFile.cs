@@ -227,7 +227,7 @@ namespace RocksmithToolkitLib.Ogg
                 // Process DATA section - contains size, seektable, codebook, stream (biggest part)
                 //raw data
                 writer.Write(reader.ReadBytes(4)); // the word data
-                writer.Write(reader.ReadUInt32()); //data size
+                writer.Write(reader.ReadUInt32()); // data size
 
                 //seektable
                 var y = seektablesize / 4;
@@ -451,3 +451,6 @@ namespace RocksmithToolkitLib.Ogg
         #endregion
     }
 }
+
+
+

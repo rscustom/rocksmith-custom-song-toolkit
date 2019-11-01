@@ -141,7 +141,7 @@ namespace RocksmithPreBuild
             Console.WriteLine("");
 
             // process (read or write) the PatchAssemblyVersion.ps1 file
-            Console.WriteLine(" - Reading: " + patchAssemblyVersionPath);
+            Console.Write(" - Reading: " + patchAssemblyVersionPath);
             lines = File.ReadAllLines(patchAssemblyVersionPath).ToList();
             if (lines.Any())
             {
@@ -156,6 +156,7 @@ namespace RocksmithPreBuild
                         if (args[1].ToUpper() == "READ")
                         {
                             assemblyVersion = GetStringInBetween("\"", "\"", line);
+                            
                             Console.WriteLine(" - Read $Assembly_Version: " + assemblyVersion);
                         }
                         else

@@ -177,7 +177,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var scrollSpeed = value.ScrollSpeed;
                 if (scrollSpeed == 0)
                     scrollSpeed = Convert.ToInt32(ConfigRepository.Instance().GetDecimal("creator_scrollspeed") * 10);
-                
+
                 tbarScrollSpeed.Value = Math.Min(scrollSpeed, tbarScrollSpeed.Maximum);
                 UpdateScrollSpeedDisplay();
 
@@ -194,7 +194,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     var diaMsg = "Invalid Arrangement Default/Bonus/Alternate Conditon ...  " + Environment.NewLine + Environment.NewLine +
                                  "Toolkit will reset the arrangement to" + Environment.NewLine +
                                  "the default represent condition." + Environment.NewLine;
-                    BetterDialog2.ShowDialog(diaMsg, "<WARNING> Arrangement Represent", null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
+                    BetterDialog2.ShowDialog(diaMsg, "Arrangement Represent ...", null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
                     value.Represent = true;
                     value.BonusArr = false;
                 }
@@ -369,7 +369,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 SongXml = new SongXML { File = xmlFilePath }
             };
 
-            var arrType = DetectArrangementType(xmlFilePath);
+            ArrangementType arrType = DetectArrangementType(xmlFilePath);
 
             // SETUP FIELDS
             if (arrType == ArrangementType.Vocal)
@@ -383,17 +383,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     cmbArrangementName.SelectedItem = ArrangementName.JVocals;
 
-                    // Try to find a custom font texture with the filename lyrics.dds
-                    string fontTexture = Path.Combine(Path.GetDirectoryName(xmlFilePath), "lyrics.dds");
-                    if (File.Exists(fontTexture))
-                    {
-                        Arrangement.LyricArt = fontTexture;
-                    }
+                    //// Try to find a custom font dds file
+                    //var projectDir = Path.GetDirectoryName(xmlFilePath);
+                    //// e.g. path D:\\Temp\RS Root\dlc\Nanase-Aikawa_Yumemiru-Shoujo-ja-Irarenai_v2_RS2014_Pc\EOF\innayumemirushoujojairarenai_jvocals.xml
+                    //if (Path.GetFileName(projectDir).Equals("EOF"))
+                    //    projectDir = Path.GetDirectoryName(projectDir);
+
+                    //var customFontPath = Directory.EnumerateFiles(projectDir, "*.dds", SearchOption.AllDirectories)
+                    //    .Where(fn => Path.GetFileName(fn).Equals("lyrics.dds") || Path.GetFileName(fn).StartsWith("lyrics_")).FirstOrDefault();
+
+                    //if (!String.IsNullOrEmpty(customFontPath))
+                    //    Arrangement.LyricArt = customFontPath;
                 }
                 else
-                {
                     cmbArrangementName.SelectedItem = ArrangementName.Vocals;
-                }
             }
             else if (arrType == ArrangementType.ShowLight)
             {
@@ -402,7 +405,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             else // add Instrument Arrangement
             {
-                _song2014 = Song2014.LoadFromFile(xmlFilePath);
+                try
+                {
+                    _song2014 = Song2014.LoadFromFile(xmlFilePath);
+                }
+                catch (Exception ex)
+                {
+                    BetterDialog2.ShowDialog("Could not add file to Arrangements: " + Path.GetFileName(xmlFilePath) + Environment.NewLine +
+                        ex.InnerException.Message, "Invalid Instrument Arrangement", null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
+                    return false;
+                }
+
                 if (_song2014 == null)
                     return false;
 
@@ -435,7 +448,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     if (!hasTuning)
                     {
-                        MessageBox.Show("<Warning> Default E Standard tuning was selected for" + Environment.NewLine +
+                        MessageBox.Show("<WARNING> Default E Standard tuning was selected for" + Environment.NewLine +
                                         "this RS1 arrangement.  Please confirm the arrangement  " + Environment.NewLine +
                                         "tuning and all other data before leaving the editor.",
                                         "Default Tuning Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -546,6 +559,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -590,12 +604,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void EditVocals()
         {
-            using (var form = new VocalsForm(Arrangement.LyricArt, Arrangement.SongXml.File))
+            using (var form = new VocalsForm(Arrangement.LyricsArtPath, Arrangement.SongXml.File))
             {
                 if (DialogResult.OK != form.ShowDialog())
                     return;
 
-                Arrangement.LyricArt = File.Exists(form.ArtPath) ? form.ArtPath : null;
+                Arrangement.LyricsArtPath = File.Exists(form.ArtPath) ? form.ArtPath : null;
 
                 if (!String.IsNullOrEmpty(form.VocalsPath))
                 {
@@ -676,14 +690,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         public bool IsAlreadyAdded(string xmlFilePath)
         {
+            var xmlFileName = Path.GetFileName(xmlFilePath);
             for (int i = 0; i < _parentControl.lstArrangements.Items.Count; i++)
             {
                 var selectedArrangement = (Arrangement)_parentControl.lstArrangements.Items[i];
+                var selectedArrangementFileName = Path.GetFileName(selectedArrangement.SongXml.File);
+                var arrangementFileName = Path.GetFileName(Arrangement.SongXml.File);
+                // potential issue using full path so just use file names
+                // D:\\Temp\RS Root\dlc\Font Test Project\innayumemirushoujojairarenai_jvocals.xml
+                // D:\Temp\RS Root\dlc\Font Test Project\innayumemirushoujojairarenai_jvocals.xml
 
-                if (!xmlFilePath.Equals(selectedArrangement.SongXml.File)) continue;
-                if (xmlFilePath.Equals(Arrangement.SongXml.File)) continue;
+                if (xmlFileName != selectedArrangementFileName)
+                    continue;
+                if (!String.IsNullOrEmpty(arrangementFileName) && xmlFileName != arrangementFileName)
+                    continue;
+
                 return true;
             }
+
             return false;
         }
 
@@ -1043,7 +1067,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return;
                 }
 
-                AddXmlArrangement(XmlPath);
+                if (!AddXmlArrangement(XmlPath))
+                    XmlPath = String.Empty;
             }
         }
 

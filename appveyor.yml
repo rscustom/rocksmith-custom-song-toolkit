@@ -20,6 +20,7 @@ build:
 install:
   - set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;%PATH%
 
+  
 # scripts to run before build  
 before_build: 
   - rem any PAUSE commands in a batch file will make AppVeyor hang ... 
@@ -28,14 +29,6 @@ before_build:
   - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithToolkitLib\Properties\AssemblyInfo.cs"
   - ps: .\PatchAssemblyVersion.ps1 "$env:APPVEYOR_BUILD_FOLDER\RocksmithToolkitUpdater\Properties\AssemblyInfo.cs"
   
-#
-# enable patching of AssemblyInfo.* files
-# assembly_info: breaks the $env:BuildVer variable
-#
-#assembly_info:
-#  patch: false
-#  file: AssemblyInfo.cs
-#  assembly_informational_version: '$(GIT_HASH)'
  
 # scripts to run after build 
 after_build:
@@ -75,6 +68,7 @@ artifacts:
   - path: '*-mac.zip'
     name: Mac
 
+    
 # let us know about build state
 notifications:
   - provider: Webhook

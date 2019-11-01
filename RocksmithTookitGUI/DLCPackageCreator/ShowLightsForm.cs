@@ -74,6 +74,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var f = new VistaOpenFileDialog())
             {
+                f.InitialDirectory = Path.GetDirectoryName(ShowLightsPath);
                 f.FileName = ShowLightsPath;
                 f.Filter = "Rocksmith 2014 ShowLight XML Files (*_showlights.xml)|*_showlights.xml";
                 if (f.ShowDialog() == DialogResult.OK)

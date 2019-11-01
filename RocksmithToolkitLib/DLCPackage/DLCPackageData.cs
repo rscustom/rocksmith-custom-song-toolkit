@@ -532,7 +532,10 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public List<Tone2014> TonesRS2014 { get; set; }
         public float? PreviewVolume { get; set; }
-        public string LyricArtPath { get; set; }
+
+        // TODO: remove these ... not needed
+        //public string LyricArtPath { get; set; }
+        //public string GlyphsPath { get; set; }
 
         // Cache art image conversion
         public List<DDSConvertedFile> ArtFiles { get; set; }
@@ -577,7 +580,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     if (callerName.Equals("PackageImport") && ConfigRepository.Instance().GetBoolean("creator_structured"))
                         artifactsDir = Path.Combine(unpackedDir, "EOF");
-    
+
                     throw new DataException("Corrupt CDLC artifact file naming." + Environment.NewLine + Environment.NewLine +
                         "1) Open the artifacts folder: " + artifactsDir + "   " + Environment.NewLine +
                         "2) Look for and rename any artifact file names that contain special characters, e.g. '~' tilde" + Environment.NewLine +
@@ -665,7 +668,6 @@ namespace RocksmithToolkitLib.DLCPackage
                         SongXml = new SongXML { File = xmlFile },
                         SongFile = new SongFile { File = "" },
                         XmlComments = Song2014.ReadXmlComments(xmlFile)
-                        // A possible custom font is applied later when lyric art is processed
                     };
 
                     // Adding Arrangement
@@ -775,39 +777,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 data.ArtFiles = ddsFilesC;
             }
 
-            // Lyric Art (currently support for only one lyric art file)
-            var lyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).FirstOrDefault();
-            if (lyricArt != null)
-            {
-                data.LyricArtPath = lyricArt;
-
-                var glyphsFile = Directory.EnumerateFiles(unpackedDir, "*.glyphs.xml", SearchOption.AllDirectories).FirstOrDefault();
-                if(glyphsFile != null)
-                {
-                    var vocalArrangements = data.Arrangements
-                        .Where(arr => arr.ArrangementType == ArrangementType.Vocal)
-                        .ToList();
-
-                    // Decide which arrangement used the custom font based on the name of the glyph definitions file
-                    var jvocals = vocalArrangements.Find(arr => arr.ArrangementName == ArrangementName.JVocals);
-                    if (jvocals != null && glyphsFile.IndexOf("jvocal",StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        jvocals.LyricArt = lyricArt;
-                    }
-                    else if (vocalArrangements.Count > 0)
-                    {
-                        vocalArrangements.Find(arr => arr.ArrangementName == ArrangementName.Vocals).LyricArt = lyricArt;
-                    }
-
-                    // Ensure that the glyph definitions file is in the correct place
-                    string correctPath = Path.ChangeExtension(lyricArt, "glyphs.xml");
-                    if(glyphsFile != correctPath)
-                        IOExtension.MoveFile(glyphsFile, correctPath);
-                }
-            }
-
-            // Audio Files
-            // Give ogg files friendly names
+            // Audio Files 
+            // Give ogg files friendly names  
             var fixedOggFiles = Directory.EnumerateFiles(unpackedDir, "*_fixed.ogg", SearchOption.AllDirectories).ToList();
             if (fixedOggFiles.Any())
             {
@@ -963,7 +934,7 @@ namespace RocksmithToolkitLib.DLCPackage
             // Gather up the project files and songName
             var xmlFiles = Directory.EnumerateFiles(unpackedDir, "*.xml", SearchOption.AllDirectories).ToArray();
             var jsonFiles = Directory.EnumerateFiles(unpackedDir, "*.json", SearchOption.AllDirectories).ToArray();
-            string songName = "SongName";
+            string songName = "SongName"; // dumby default
             var attr = Manifest2014<Attributes2014>.LoadFromFile(jsonFiles[0]).Entries.ToArray()[0].Value.ToArray()[0].Value;
             songName = attr.FullName.Split('_')[0];
             attr = null; // dispose
@@ -1014,15 +985,17 @@ namespace RocksmithToolkitLib.DLCPackage
             foreach (var art in artFiles)
                 IOExtension.MoveFile(art, Path.Combine(toolkitDir, Path.GetFileName(art)));
 
-            // Move custom lyric art files to Toolkit folder
-            var lyricArt = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).ToList();
-            foreach (var art in lyricArt)
-                IOExtension.MoveFile(art, Path.Combine(toolkitDir, Path.GetFileName(art)));
+            // Move custom lyric art files to eof folder
+            // D:\Temp\RS Root\dlc\Nanase-Aikawa_Yumemiru-Shoujo-ja-Irarenai_v2_RS2014_Pc\assets\ui\lyrics\innayumemirushoujojairarenai\lyrics_innayumemirushoujojairarenai.dds
+            var lyricArtFiles = Directory.EnumerateFiles(unpackedDir, "lyrics_*.dds", SearchOption.AllDirectories).ToList();
+            foreach (var lyricArtFile in lyricArtFiles)
+                IOExtension.MoveFile(lyricArtFile, Path.Combine(eofDir, Path.GetFileName(lyricArtFile)));
 
-            // Move glyph definition files to Toolkit folder
-            var glyphDefs = Directory.EnumerateFiles(unpackedDir, "*.glyphs.xml", SearchOption.AllDirectories).ToList();
-            foreach (var glyphFile in glyphDefs)
-                IOExtension.MoveFile(glyphFile, Path.Combine(toolkitDir, Path.GetFileName(glyphFile)));
+            // Move glyph definition files to eof folder 
+            // D:\Temp\RS Root\dlc\Nanase-Aikawa_Yumemiru-Shoujo-ja-Irarenai_v2_RS2014_Pc\songs\arr\jvocals.glyphs.xml
+            var glyphFiles = Directory.EnumerateFiles(unpackedDir, "*.glyphs.xml", SearchOption.AllDirectories).ToList();
+            foreach (var glyphFile in glyphFiles)
+                IOExtension.MoveFile(glyphFile, Path.Combine(eofDir, Path.GetFileName(glyphFile)));
 
             // Move song_*.bnk to Toolkit folder
             var bnkFiles = Directory.EnumerateFiles(unpackedDir, "song_*.bnk", SearchOption.AllDirectories).ToList();

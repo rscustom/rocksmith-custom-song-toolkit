@@ -259,7 +259,7 @@ namespace RocksmithToolkitGUI
 
             // confirm and log App.config was properly loaded at runtime
             var appConfigStatus = "<ERROR> Load Failed";
-            if (Convert.ToBoolean(ConfigurationSettings.AppSettings["key"]))
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings["key"]))
                 appConfigStatus = "Load Successful";
 
             // validate and log runtime display setting

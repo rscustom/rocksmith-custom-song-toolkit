@@ -129,6 +129,18 @@ are probably not structured correctly.
 Look at a freshly unpacked artifacts
 folder to see how it should be structured.</value>
   </data>
+  <data name="chkDecodeAudio.ToolTip" xml:space="preserve">
+    <value>If checked, decodes audio
+to a playable ogg format.
+
+NOTE: Friendly file names are 
+produced if 'Autosave Templates'
+is also checked in 'General Config'.
+
+Artifacts produced this way may
+not be directly Re-Packed without
+first removing the extra audio files.</value>
+  </data>
   <data name="lblHelp.Text" xml:space="preserve">
     <value>1.  Press Select Songs
      Multi select individual songs for the Song Pack

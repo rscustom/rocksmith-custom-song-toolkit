@@ -410,10 +410,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             for (var i = 0; i < ebeats.Length; i++)
             {
                 songEvents[i] = new RocksmithToolkitLib.XML.SongEvent
-                    {
-                        Code = ebeats[i].Measure == -1 ? "B1" : "B0",
-                        Time = ebeats[i].Time
-                    };
+                {
+                    Code = ebeats[i].Measure == -1 ? "B1" : "B0",
+                    Time = ebeats[i].Time
+                };
             }
 
             songXml.Events = songXml.Events.Union(songEvents, new EqSEvent()).OrderBy(x => x.Time).ToArray();
@@ -566,22 +566,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
-            //Make the paths relative
+            // Make the paths relative
             var BasePath = Path.GetDirectoryName(templatePath);
             if (String.IsNullOrEmpty(UnpackedDir))
                 UnpackedDir = BasePath;
 
+            if (!String.IsNullOrEmpty(packageData.OggPath))
+                packageData.OggPath = packageData.OggPath.RelativeTo(BasePath);
+            if (!String.IsNullOrEmpty(packageData.OggPreviewPath))
+                packageData.OggPreviewPath = packageData.OggPreviewPath.RelativeTo(BasePath);
             if (!string.IsNullOrEmpty(packageData.AlbumArtPath))
                 packageData.AlbumArtPath = packageData.AlbumArtPath.RelativeTo(BasePath);
-
-            string audioPath = packageData.OggPath;
-            string audioPreviewPath = packageData.OggPreviewPath;
-            if (!String.IsNullOrEmpty(audioPath))
-                packageData.OggPath = audioPath.RelativeTo(BasePath);
-            if (!String.IsNullOrEmpty(audioPreviewPath))
-                packageData.OggPreviewPath = audioPreviewPath.RelativeTo(BasePath);
-            if (!String.IsNullOrEmpty(packageData.LyricArtPath))
-                packageData.LyricArtPath = packageData.LyricArtPath.RelativeTo(BasePath);
 
             foreach (var arr in packageData.Arrangements)
             {
@@ -589,12 +584,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     continue;
                 arr.SongXml.File = arr.SongXml.File.RelativeTo(BasePath);
                 arr.SongFile.File = "";
-                if (!String.IsNullOrEmpty(arr.LyricArt))
-                    arr.LyricArt = arr.LyricArt.RelativeTo(BasePath);
+                if (!String.IsNullOrEmpty(arr.LyricsArtPath))
+                    arr.LyricsArtPath = arr.LyricsArtPath.RelativeTo(BasePath);
+                if (!String.IsNullOrEmpty(arr.GlyphsXmlPath))
+                    arr.GlyphsXmlPath = arr.GlyphsXmlPath.RelativeTo(BasePath);
             }
 
             try
             {
+                // Write Template with Relative Paths
                 using (var stm = XmlWriter.Create(templatePath, new XmlWriterSettings { CheckCharacters = true, Indent = true }))
                 {
                     new DataContractSerializer(typeof(DLCPackageData)).WriteObject(stm, packageData);
@@ -603,34 +601,26 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             catch
             {
-                //Re-absolutize the paths
-                foreach (var arr in packageData.Arrangements)
-                {
-                    if (!String.IsNullOrEmpty(arr.SongXml.File))
-                        arr.SongXml.File = arr.SongXml.File.AbsoluteTo(BasePath);
-                    if (!String.IsNullOrEmpty(arr.SongFile.File))
-                        arr.SongFile.File = arr.SongFile.File.AbsoluteTo(BasePath);
-                    if (!String.IsNullOrEmpty(arr.LyricArt))
-                        arr.LyricArt = arr.LyricArt.AbsoluteTo(BasePath);
-                }
-
-                if (!String.IsNullOrEmpty(packageData.LyricArtPath))
-                    packageData.LyricArtPath = packageData.LyricArtPath.AbsoluteTo(BasePath);
+                // DO NOTHING //
             }
 
-            //Re-absolutize the paths
+            // Re-Absolutize the paths
+            if (!String.IsNullOrEmpty(packageData.OggPath))
+                packageData.OggPath = packageData.OggPath.AbsoluteTo(BasePath);
+            if (!String.IsNullOrEmpty(packageData.OggPreviewPath))
+                packageData.OggPreviewPath = packageData.OggPreviewPath.AbsoluteTo(BasePath);
+            if (!string.IsNullOrEmpty(packageData.AlbumArtPath))
+                packageData.AlbumArtPath = packageData.AlbumArtPath.AbsoluteTo(BasePath);
+
             foreach (var arr in packageData.Arrangements)
             {
                 if (!String.IsNullOrEmpty(arr.SongXml.File))
                     arr.SongXml.File = arr.SongXml.File.AbsoluteTo(BasePath);
-                if (!String.IsNullOrEmpty(arr.SongFile.File))
-                    arr.SongFile.File = arr.SongFile.File.AbsoluteTo(BasePath);
-                if (!String.IsNullOrEmpty(arr.LyricArt))
-                    arr.LyricArt = arr.LyricArt.AbsoluteTo(BasePath);
+                if (!String.IsNullOrEmpty(arr.LyricsArtPath))
+                    arr.LyricsArtPath = arr.LyricsArtPath.AbsoluteTo(BasePath);
+                if (!String.IsNullOrEmpty(arr.GlyphsXmlPath))
+                    arr.GlyphsXmlPath = arr.GlyphsXmlPath.AbsoluteTo(BasePath);
             }
-
-            if (!String.IsNullOrEmpty(packageData.LyricArtPath))
-                packageData.LyricArtPath = packageData.LyricArtPath.AbsoluteTo(BasePath);
 
             if (String.IsNullOrEmpty(templateDir)) //if in GUI mode.
                 MessageBox.Show(CurrentRocksmithTitle + " CDLC template was saved.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -756,9 +746,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Arrangement arrangement = null;
             using (var form = new ArrangementForm(this, CurrentGameVersion))
             {
-                if (form.IsAlreadyAdded(xmlFilePath))
-                    return;
-
                 form.EditMode = false;
 
                 if (!String.IsNullOrEmpty(xmlFilePath))
@@ -775,10 +762,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 arrangement = form.Arrangement;
+
+                if (arrangement == null || form.IsAlreadyAdded(arrangement.SongXml.File))
+                    return;
             }
 
-            if (arrangement == null)
-                return;
+            // respect processing order (must come before arrangement is added)       
+            // creates the appropriate arrangement identifier string
+            if (GlyphDefinitions.UpdateCustomFontStatus(ref arrangement, UnpackedDir))
+                Debug.WriteLine(arrangement.SongXml.File + " HasCustomFont");
 
             lstArrangements.Items.Add(arrangement);
             IsDirty = true;
@@ -921,7 +913,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             txtAlbumSort.Text = info.SongInfo.AlbumSort.GetValidSortableName();
             txtJapaneseSongTitle.Text = info.SongInfo.JapaneseSongName;
             txtJapaneseArtistName.Text = info.SongInfo.JapaneseArtistName;
-            chkJapaneseTitle.Checked = !string.IsNullOrEmpty(txtJapaneseSongTitle.Text) || !string.IsNullOrEmpty(txtJapaneseArtistName.Text);
+            chkJapaneseTitle.Checked = !String.IsNullOrEmpty(info.SongInfo.JapaneseSongName) || !String.IsNullOrEmpty(info.SongInfo.JapaneseArtistName);
             txtSongTitle.Text = info.SongInfo.SongDisplayName.GetValidAtaSpaceName();
             txtSongTitleSort.Text = info.SongInfo.SongDisplayNameSort.GetValidSortableName();
             txtYear.Text = info.SongInfo.SongYear.ToString();
@@ -940,14 +932,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     AlbumSort = Album.GetValidSortableName();
             }
 
-            // Album art
+            // AlbumArtPath from template RelativeTo path must be re-converted AbsoluteTo path
             if (!String.IsNullOrEmpty(info.AlbumArtPath))
             {
                 AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
                 info.ArtFiles = null; // force ArtFiles array to be generated from the AlbumArtPath                
             }
 
-            // Audio file
+            // OggPath from template RelativeTo path must be re-converted AbsoluteTo path
             if (!String.IsNullOrEmpty(info.OggPath))
                 AudioPath = info.OggPath.AbsoluteTo(BasePath);
 
@@ -960,12 +952,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 numAudioQuality.Value = 4;
 
             lstArrangements.Items.Clear();
-            foreach (var arrangement in info.Arrangements)
+            for (int i = 0; i < info.Arrangements.Count; i++)
             {
-                arrangement.SongXml.File = arrangement.SongXml.File.AbsoluteTo(BasePath);
+                var arrangement = info.Arrangements[i];
 
-                if (!String.IsNullOrEmpty(arrangement.LyricArt))
-                    arrangement.LyricArt = arrangement.LyricArt.AbsoluteTo(BasePath);
+                // Template RelativeTo paths must be re-converted AbsoluteTo paths
+                arrangement.SongXml.File = arrangement.SongXml.File.AbsoluteTo(BasePath);
+                if (!String.IsNullOrEmpty(arrangement.LyricsArtPath))
+                    arrangement.LyricsArtPath = arrangement.LyricsArtPath.AbsoluteTo(BasePath);
+                if (!String.IsNullOrEmpty(arrangement.GlyphsXmlPath))
+                    arrangement.GlyphsXmlPath = arrangement.GlyphsXmlPath.AbsoluteTo(BasePath);
 
                 arrangement.ClearCache();
 
@@ -1004,6 +1000,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         /* ignore old types of *.dlc.xml */
                     }
                 }
+
+                // respect processing order (must come before arrangement is added)
+                // creates the appropriate arrangement identifier string
+                if (GlyphDefinitions.UpdateCustomFontStatus(ref arrangement, UnpackedDir))
+                    Debug.WriteLine(arrangement.SongXml.File + " HasCustomFont");
 
                 lstArrangements.Items.Add(arrangement);
             }
@@ -1146,7 +1147,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 if (!File.Exists(AudioPath))
                 {
                     txtAudioPath.Focus();
-                    errorMsg = "Audio file could not be found ...";
+                    errorMsg = "AudioPath file could not be found ...";
                     return null;
                 }
 
@@ -1323,7 +1324,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                         },
 
                     AlbumArtPath = AlbumArtPath,
-                    LyricArtPath = arrangements.Find(arr => arr.HasCustomFont)?.LyricArt,
                     OggPath = AudioPath,
                     OggPreviewPath = audioPreviewPath,
                     OggQuality = numAudioQuality.Value,
@@ -1637,8 +1637,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void btnPackageGenerate_Click(object sender, EventArgs e)
         {
-            var diaMsg = String.Empty;
-
+            // perform an intial check of Wwise configuration before attempting PackageGeneration
             if (CurrentGameVersion == GameVersion.RS2014 &&
                 Path.GetExtension(AudioPath) == ".wem" &&
                 File.Exists(String.Format(Path.Combine(Path.GetDirectoryName(AudioPath), Path.GetFileNameWithoutExtension(AudioPath)) + "_preview.wem")))
@@ -1651,28 +1650,24 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 var wwiseVersion = FileVersionInfo.GetVersionInfo(wwisePath).ProductVersion;
                 if (CurrentGameVersion == GameVersion.RS2012 && !wwiseVersion.StartsWith("2010.3"))
                 {
-                    diaMsg = "Configuration Wwise Path is not set properly for RS1 ...";
+                    var diaMsg = "Configuration Wwise Path is not set properly for RS1 ...";
                     BetterDialog2.ShowDialog(diaMsg, "Generate Button", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
                     return;
                 }
 
                 if (CurrentGameVersion != GameVersion.RS2012 && wwiseVersion.StartsWith("2010"))
                 {
-                    diaMsg = "Configuration Wwise Path is not set properly for RS2014 or Conversions ...";
+                    var diaMsg = "Configuration Wwise Path is not set properly for RS2014 or Conversions ...";
                     BetterDialog2.ShowDialog(diaMsg, "Generate Button", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
                     return;
                 }
             }
 
-            if (String.IsNullOrEmpty(ArtistSort) || String.IsNullOrEmpty(SongTitleSort) || String.IsNullOrEmpty(PackageVersion) || String.IsNullOrEmpty(DLCKey))
-            {
-                diaMsg = "Can not 'Generate' a package quite yet ..." + Environment.NewLine + Environment.NewLine +
-                         "One or more fields are missing information," + Environment.NewLine +
-                         "or contain invalid data.";
-                BetterDialog2.ShowDialog(diaMsg, "Generate Button", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Error.Handle), "Error", 150, 150);
-                return;
-            }
+            PackageGenerate();
+        }
 
+        private void PackageGenerate_SFD()
+        {
             using (var sfd = new SaveFileDialog())
             {
                 var versionPrefix = String.Empty;
@@ -1699,17 +1694,22 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                 DestPath = sfd.FileName;
             }
-
-            PackageGenerate();
         }
 
         public DLCPackageData PackageGenerate()
         {
             var packageDataError = String.Empty;
             var packageData = GetPackageData(true, out packageDataError);
-            // TODO: may want to change this to a MessageBox with return instead of throwing exception
             if (packageData == null)
-                throw new InvalidDataException("<ERROR> DLCPackageData is null, " + packageDataError + Environment.NewLine + Environment.NewLine);
+            {
+                var diaMsg = "Can not generate package ..." + Environment.NewLine +
+                             "One or more fields are missing information, or" + Environment.NewLine +
+                             "contain invalid data.  Please recheck Song Information " + Environment.NewLine +
+                             "and correct the following PackageData error:" + Environment.NewLine + Environment.NewLine +
+                             packageDataError;
+                BetterDialog2.ShowDialog(diaMsg, "PackageGenerate", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Warning.Handle), "WARNING", 150, 150);
+                return null;
+            }
 
             var playableArrCount = packageData.Arrangements.Count(arr => arr.ArrangementType == ArrangementType.Guitar || arr.ArrangementType == ArrangementType.Bass);
             if (playableArrCount > 5) // may crash RS14R
@@ -1719,47 +1719,46 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return null;
             }
 
+            // check if CustomFont is required and available for vocal XML file
+            if (packageData.GameVersion == GameVersion.RS2014)
+                foreach (var arr in packageData.Arrangements.Where(arr => arr.ArrangementType == ArrangementType.Vocal))
+                {
+                    if (!arr.HasCustomFont)
+                    {
+                        var vocals = Vocals.LoadFromFile(arr.SongXml.File);
+                        foreach (var voc in vocals.Vocal)
+                        {
+                            if (voc.Lyric.Length != voc.Lyric.GetValidLyric().Length)
+                            {
+                                // TODO: autorun CustomFontGenerator CLI and generate the lyrics.dds and lyrics.glyphs.xml files for the user
+                                var errMsg = Path.GetFileName(arr.SongXml.File) + Environment.NewLine + Environment.NewLine +
+                                    "This lyrics file contains characters not included in the game's default font." + Environment.NewLine + Environment.NewLine;
+
+                                if (String.IsNullOrEmpty(arr.LyricsArtPath))
+                                    errMsg = errMsg + "<WARNING> The required Lyric Artwork DDS file was not found." + Environment.NewLine;
+
+                                if (String.IsNullOrEmpty(arr.GlyphsXmlPath))
+                                    errMsg = errMsg + "<WARNING> The required Glyphs Definition XML file was not found." + Environment.NewLine;
+
+                                errMsg = errMsg.TrimEnd();
+                                errMsg = errMsg + Environment.NewLine + Environment.NewLine +
+                                    "You will have to use a custom font for lyrics to show up properly in the game," + Environment.NewLine +
+                                    "or remove this vocal arrangement before packaging with the standard font." + Environment.NewLine +
+                                    "For information about the Custom Font Generator appliction, and how to" + Environment.NewLine +
+                                    "generate the required lyrics.dds and lyrics.glyphs.xml files, see:" + Environment.NewLine +
+                                    "http://customsforge.com/topic/47416-custom-font-generator-testing/?p=290685";
+
+
+                                BetterDialog2.ShowDialog(errMsg, "Custom Font Files Required", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
+                                return null;
+                            }
+                        }
+                    }
+                }
+
             // TODO: monitor this change
             var invalidRepresent = packageData.Arrangements.Any(ar => ar.Represent && ar.BonusArr);
             var hasRepresent = packageData.Arrangements.Any(ar => ar.Represent == true);
-
-            // TODO: confirm before releasing
-            // check for duplicate represent/bonus conditions within each RouteMask groups
-            //var routeGroup = packageData.Arrangements.GroupBy(x => x.RouteMask).Where(grp => grp.Count() > 1).ToList();
-            //foreach (var route in routeGroup)
-            //{
-            //    var isDefault = false;
-            //    var isBonus = false;
-            //    var isAlt = false;
-
-            //    foreach (var arrangement in route)
-            //    {
-            //        if (arrangement.RouteMask == RouteMask.None)
-            //            continue;
-
-            //        if (arrangement.Represent && !arrangement.BonusArr)
-            //        {
-            //            if (isDefault)
-            //                illegalRepresent = true;
-            //            else
-            //                isDefault = true;
-            //        }
-            //        else if (!arrangement.Represent && arrangement.BonusArr)
-            //        {
-            //            if (isBonus)
-            //                illegalRepresent = true;
-            //            else
-            //                isBonus = true;
-            //        }
-            //        else if (!arrangement.Represent && !arrangement.BonusArr)
-            //        {
-            //            if (isAlt)
-            //                illegalRepresent = true;
-            //            else
-            //                isAlt = true;
-            //        }
-            //    }
-            //}
 
             if (invalidRepresent && !hasRepresent)
             {
@@ -1813,6 +1812,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     packageData.ToolkitInfo.PackageComment = arrIdComment;
                 }
             }
+
+            // open PackageGenerate save file dialog
+            if (!ConfigGlobals.IsUnitTest)
+                PackageGenerate_SFD();
 
             // fire up a fake progress bar to show app is alive and well
             var step = (int)Math.Round(1.0 / playableArrCount * 100, 3);
@@ -1879,24 +1882,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 {
                     if (packageData.GameVersion == GameVersion.RS2012)
                         continue;
-
-                    // Only validate lyrics that do not use a custom font (RS2014 ONLY)
-                    if (!arr.HasCustomFont)
-                    {
-                        var vocals = Vocals.LoadFromFile(arr.SongXml.File);
-                        foreach(var voc in vocals.Vocal)
-                        {
-                            if(voc.Lyric.Length != voc.Lyric.GetValidLyric().Length)
-                            {
-                                var errMsg = Path.GetFileName(arr.SongXml.File) +
-                                    "\n\nThis lyrics file contains characters not included in the game's default font."
-                                    +"\nYou will have to use a custom font for them to show up in the game.";
-                                BetterDialog2.ShowDialog(errMsg, "Custom Font Needed", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
-
-                                break;
-                            }
-                        }
-                    }
 
                     Song2014.WriteXmlComments(arr.SongXml.File, arr.XmlComments);
                     continue;
@@ -2136,11 +2121,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             // Default 4 ~ 128kbps
             tt.IsBalloon = true;
-            tt.InitialDelay = 0;
+            tt.InitialDelay = 500;
+            tt.ReshowDelay = 500;
+            tt.AutoPopDelay = 12000;
             tt.ShowAlways = true;
-            tt.SetToolTip(numAudioQuality, "High Quality 6 ... ODLC Quality 4" +
-                                           Environment.NewLine + "Leave audio quality set to (4)" +
-                                           Environment.NewLine + "if source audio quality is unknown");
+            var ttMsg = "Audio quality effects CDLC file size." + Environment.NewLine +
+                "High Quality 6 ... ODLC Quality 4" + Environment.NewLine +
+                "Leave audio quality set to [ 4 ] if" + Environment.NewLine +
+                "the source audio quality is unknown," + Environment.NewLine +
+                "or has a bitrate less than 128 kbps.";
+            tt.SetToolTip(numAudioQuality, ttMsg);
         }
 
         private void ClickedInputControl(object sender, EventArgs e)
@@ -2447,7 +2437,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void Volume_MouseEnter(object sender, EventArgs e)
         {
             tt.IsBalloon = true;
-            tt.InitialDelay = 0;
+            tt.InitialDelay = 500;
+            tt.ReshowDelay = 500;
+            tt.AutoPopDelay = 12000;
             tt.ShowAlways = true;
             Control control = (Control)sender;
             string name = control.Name;
@@ -2526,9 +2518,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tt.ToolTipTitle = "USAGE TIP:";
             tt.ToolTipIcon = ToolTipIcon.Info;
             tt.IsBalloon = true;
-            tt.InitialDelay = 0;
+            tt.InitialDelay = 500;
+            tt.ReshowDelay = 500;
+            tt.AutoPopDelay = 12000;
             tt.ShowAlways = true;
-
             tt.SetToolTip(btnArrangementQuick,
                           "Add multiple arrangements quickly. Use the " + Environment.NewLine +
                           "file dialog to multiselect arrangements." + Environment.NewLine +
@@ -2798,9 +2791,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void rbConvert_MouseEnter(object sender, EventArgs e)
         {
             tt.IsBalloon = true;
-            tt.InitialDelay = 0;
-            tt.ShowAlways = true;
+            tt.InitialDelay = 500;
+            tt.ReshowDelay = 500;
             tt.AutoPopDelay = 20000;
+            tt.ShowAlways = true;
             tt.SetToolTip(rbConvert,
                 "HINT: To Convert RS1 to RS2014 ..." + Environment.NewLine + Environment.NewLine +
                 "1) Activate the 'Convert' radio button" + Environment.NewLine +
@@ -2814,9 +2808,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void rbRs2014_MouseEnter(object sender, EventArgs e)
         {
             tt.IsBalloon = true;
-            tt.InitialDelay = 0;
-            tt.ShowAlways = true;
+            tt.InitialDelay = 500;
+            tt.ReshowDelay = 500;
             tt.AutoPopDelay = 20000;
+            tt.ShowAlways = true;
             tt.SetToolTip(rbRs2014,
                 "HINT: To Convert RS2014 to RS1 ..." + Environment.NewLine + Environment.NewLine +
                 "1) Activate the 'RS2014' radio button." + Environment.NewLine +
@@ -2857,7 +2852,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
         }
 
-        private void cbJapaneseTitle_CheckedChanged(object sender, EventArgs e)
+        private void chkJapaneseTitle_CheckedChanged(object sender, EventArgs e)
         {
             if (((CheckBox)sender).Checked)
             {
@@ -2876,7 +2871,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             ((CueTextBox)sender).Text = ((CueTextBox)sender).Text.TrimEnd();
         }
 
-        private void cbJapaneseTitle_Click(object sender, EventArgs e)
+        private void chkJapaneseTitle_Click(object sender, EventArgs e)
         {
             chkJapaneseTitle.Checked = !((CheckBox)sender).Checked;
         }

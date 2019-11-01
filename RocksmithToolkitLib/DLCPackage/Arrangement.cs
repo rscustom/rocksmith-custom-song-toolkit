@@ -48,7 +48,6 @@ namespace RocksmithToolkitLib.DLCPackage
         public decimal CapoFret { get; set; }
         public int ScrollSpeed { get; set; }
         public PluckedType PluckedType { get; set; }
-        public string LyricArt { get; set; }
         // cache parsing results (speeds up generating for multiple platforms)
         public Sng2014File Sng2014 { get; set; }
         // Gameplay Path
@@ -71,11 +70,15 @@ namespace RocksmithToolkitLib.DLCPackage
         [IgnoreDataMember] // required for SaveTemplate feature to work
         public IEnumerable<XComment> XmlComments { get; set; }
 
+        public string LyricsArtPath { get; set; }
+        public string GlyphsXmlPath { get; set; }
+        // both lyricsFile and glyphsFile are required to produce CDLC with CustomFont
         public bool HasCustomFont
         {
             get
             {
-                return !string.IsNullOrEmpty(LyricArt);
+                var hasCustomFont = !String.IsNullOrEmpty(LyricsArtPath) && !String.IsNullOrEmpty(GlyphsXmlPath);
+                return hasCustomFont;
             }
         }
 
@@ -296,7 +299,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public override string ToString()
         {
-            // generates lstArrangement string format
+            // generates lstArrangement identifier string format
             var toneDesc = String.Empty;
             if (!String.IsNullOrEmpty(ToneBase))
                 toneDesc = ToneBase;
@@ -322,9 +325,9 @@ namespace RocksmithToolkitLib.DLCPackage
             if (Metronome == Metronome.Generate)
                 metDesc = " +Metronome";
 
-            string custFont = String.Empty;
+            var custFont = String.Empty;
             if (HasCustomFont)
-                custFont = "(Custom Font)";
+                custFont = "(Custom Font)"; // either jvocals or vocals may have a CustomFont
 
             switch (ArrangementType)
             {

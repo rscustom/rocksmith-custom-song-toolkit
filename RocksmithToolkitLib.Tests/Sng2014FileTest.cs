@@ -60,6 +60,9 @@ namespace RocksmithToolkitLib.Tests
                     if (song == null)
                         Assert.Fail("LoadFromFile Failed: " + Path.GetFileName(unpackedDir));
 
+                    if (sngPath.ToLower().EndsWith("vocals.sng"))
+                        continue;
+
                     if (!song.Arrangements.Arrangements.Any())
                         Assert.Fail("LoadFromFile Arrangements Failed: " + Path.GetFileName(unpackedDir));
                 }

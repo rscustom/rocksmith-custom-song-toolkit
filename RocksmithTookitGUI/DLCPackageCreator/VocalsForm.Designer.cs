@@ -77,6 +77,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             this.txtVocalsDdsPath.Location = new System.Drawing.Point(10, 69);
             this.txtVocalsDdsPath.Multiline = true;
             this.txtVocalsDdsPath.Name = "txtVocalsDdsPath";
+            this.txtVocalsDdsPath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtVocalsDdsPath.Size = new System.Drawing.Size(510, 20);
             this.txtVocalsDdsPath.TabIndex = 3;
             // 
@@ -102,9 +103,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // rtbVocals
             // 
-            this.rtbVocals.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbVocals.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbVocals.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.rtbVocals.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtbVocals.Location = new System.Drawing.Point(21, 118);
@@ -116,9 +117,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // rtbBlank
             // 
-            this.rtbBlank.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbBlank.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbBlank.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.rtbBlank.Location = new System.Drawing.Point(10, 106);
             this.rtbBlank.Name = "rtbBlank";
@@ -148,20 +149,21 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // txtVocalsXmlPath
             // 
             this.txtVocalsXmlPath.Cue = "Select vocals.xml or jvocals.xml file here or in Creator GUI Arrangment group box" +
-    "";
+                "";
             this.txtVocalsXmlPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.txtVocalsXmlPath.ForeColor = System.Drawing.Color.Gray;
             this.txtVocalsXmlPath.Location = new System.Drawing.Point(10, 23);
             this.txtVocalsXmlPath.Multiline = true;
             this.txtVocalsXmlPath.Name = "txtVocalsXmlPath";
+            this.txtVocalsXmlPath.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtVocalsXmlPath.Size = new System.Drawing.Size(510, 19);
             this.txtVocalsXmlPath.TabIndex = 35;
             this.toolTip.SetToolTip(this.txtVocalsXmlPath, "TIP: Use jvocals.xml when working with custom lyric fonts files.");
             // 
             // lblKey
             // 
-            this.lblKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.lblKey.AutoSize = true;
             this.lblKey.Location = new System.Drawing.Point(565, 106);
             this.lblKey.Name = "lblKey";
@@ -171,8 +173,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // 
             // lstKey
             // 
-            this.lstKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.lstKey.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.lstKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstKey.FormattingEnabled = true;

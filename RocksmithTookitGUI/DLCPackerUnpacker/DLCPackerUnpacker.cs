@@ -212,7 +212,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     {
                         var isSongPack = Directory.EnumerateFiles(unpackedDir, "*.wem", SearchOption.AllDirectories).Count() > 2;
                         if (isSongPack)
-                            throw new Exception("SongPacks have too many *.wem files to process and load.");
+                            throw new Exception("<ERROR> Found too many *.wem files for template to" + Environment.NewLine +
+                                                "process and load.  Uncheck the Autosave Template" + Environment.NewLine +
+                                                "checkbox in General Config to prevent this exception." + Environment.NewLine);
 
                         //var isODLC = !Directory.EnumerateFiles(unpackedDir, "toolkit.version", SearchOption.AllDirectories).Any();
                         //if (isODLC)
@@ -263,9 +265,9 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                     catch (Exception ex)
                     {
                         if (ex.Message.Contains("Object reference"))
-                            errorsFound.AppendLine(String.Format("Could not create Template XML file for: {0}{1}", Path.GetFileName(srcPath) + new string(' ', 5), Environment.NewLine));
+                            errorsFound.AppendLine(String.Format("Could not create Template XML file for:{0}{1}", Environment.NewLine, Path.GetFileName(srcPath) + new string(' ', 5)));
                         else
-                            errorsFound.AppendLine(String.Format("Could not create Template XML file for: {0}{1}{2}{1}", Path.GetFileName(srcPath) + new string(' ', 5), Environment.NewLine, ex.Message));
+                            errorsFound.AppendLine(String.Format("Could not create Template XML file for:{0}{1}{0}{0}{2}", Environment.NewLine, Path.GetFileName(srcPath) + new string(' ', 5), ex.Message));
                     }
                 }
             }
@@ -639,7 +641,6 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
         private void btnPack_Click(object sender, EventArgs e)
         {
             var srcPath = String.Empty;
-            var destPath = String.Empty;
 
             using (var fbd = new VistaFolderBrowserDialog())
             {

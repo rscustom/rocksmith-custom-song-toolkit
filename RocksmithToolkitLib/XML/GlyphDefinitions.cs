@@ -1,4 +1,5 @@
 ﻿using RocksmithToolkitLib.Extensions;
+using RocksmithToolkitLib.Sng;
 using RocksmithToolkitLib.Sng2014HSL;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,8 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Drawing;
+using System.Linq;
 
 namespace RocksmithToolkitLib.XML
 {
@@ -21,7 +24,7 @@ namespace RocksmithToolkitLib.XML
         [XmlElement("GlyphDefinition")]
         public List<GlyphDefinition> Glyphs { get; set; }
 
-        public void Serialize(string filename)
+        public void Serialize(string destPath)
         {
             var nameSpace = new XmlSerializerNamespaces();
             nameSpace.Add("", "");
@@ -29,7 +32,7 @@ namespace RocksmithToolkitLib.XML
             var serializer = new XmlSerializer(typeof(GlyphDefinitions));
             var settings = new XmlWriterSettings { Indent = true };
 
-            using (XmlWriter writer = XmlWriter.Create(filename, settings))
+            using (XmlWriter writer = XmlWriter.Create(destPath, settings))
             {
                 serializer.Serialize(writer, this, nameSpace);
             }
@@ -38,7 +41,7 @@ namespace RocksmithToolkitLib.XML
         public static GlyphDefinitions LoadFromSng(Sng2014File sng)
         {
             var glyphs = new List<GlyphDefinition>(sng.SymbolsDefinition.Count);
-            foreach(var glyph in sng.SymbolsDefinition.SymbolDefinitions)
+            foreach (var glyph in sng.SymbolsDefinition.SymbolDefinitions)
             {
                 glyphs.Add(new GlyphDefinition()
                 {
@@ -110,6 +113,90 @@ namespace RocksmithToolkitLib.XML
                 SymbolDefinitions = symbolDefs.ToArray()
             };
         }
+
+        /// <summary>
+        /// Updates CustomFont status by setting LyricsArtPath, GlyphsXmlPath, and HasCustomFont values
+        /// <para>Method may not be called from within a foreach loop or used with other types of enumeration</para>
+        /// <para>Default vocals (non-jvocals) may also have CustomFonts if '*_jvocals.xml' file does not exist</para>
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <returns></returns>
+        public static bool UpdateCustomFontStatus(ref DLCPackage.Arrangement arr, string projectDir = "")
+        {
+            //
+            // Respect Processing Order
+            //
+            // skip non-vocal arrangements
+            if (arr.ArrangementType != ArrangementType.Vocal)
+                return false;
+
+            // skip arrangements that already have custom font
+            if (arr.HasCustomFont)
+                return true;
+
+            // determine vocal type
+            var vocalType = arr.SongXml.File.IndexOf("jvocals", StringComparison.OrdinalIgnoreCase) >= 0 ? "jvocals" : "vocals";
+            if (arr.ArrangementName == ArrangementName.JVocals && vocalType != "jvocals")
+                return false;
+            if (arr.ArrangementName == ArrangementName.Vocals && vocalType != "vocals")
+                return false;
+
+            // determine if the vocal xml arrangement uses a CustomFont
+            var useCustomFont = false;
+            var vocals = Vocals.LoadFromFile(arr.SongXml.File);
+            foreach (var voc in vocals.Vocal)
+            {
+                if (voc.Lyric.Length != voc.Lyric.GetValidLyric().Length)
+                {
+                    useCustomFont = true;
+                    break;
+                }
+            }
+
+            // establish the root of the project directory
+            if (String.IsNullOrEmpty(projectDir))
+                projectDir = Path.GetDirectoryName(arr.SongXml.File);
+            // D:\\Temp\RS Root\dlc\Nanase-Aikawa_Yumemiru-Shoujo-ja-Irarenai_v2_RS2014_Pc\EOF\innayumemirushoujojairarenai_jvocals.xml
+            // D:\Temp\RS Root\dlc\Nanase-Aikawa_Yumemiru-Shoujo-ja-Irarenai_v2_RS2014_Pc\assets\ui\lyrics\innayumemirushoujojairarenai\lyrics_innayumemirushoujojairarenai.dds
+            if (Path.GetFileName(projectDir).Equals("EOF") || Path.GetFileName(projectDir).Equals("Toolkit"))
+                projectDir = Path.GetDirectoryName(projectDir);
+
+            // find first custom font dds file
+            var lyricsFile = Directory.EnumerateFiles(projectDir, "*.dds", SearchOption.AllDirectories)
+                .Where(fn => Path.GetFileName(fn).Equals("lyrics.dds") || Path.GetFileName(fn).StartsWith("lyrics_")).FirstOrDefault();
+
+            // find first glyphs.xml file
+            var glyphsFile = Directory.EnumerateFiles(projectDir, "*.glyphs.xml", SearchOption.AllDirectories).FirstOrDefault();
+
+            // glphyType and jvocalsXmlExists can override useCustomFont i.e. non-jvocals may have/use CustomsFont
+            if (!String.IsNullOrEmpty(glyphsFile))
+            {
+                var glyphType = glyphsFile.IndexOf("jvocals", StringComparison.OrdinalIgnoreCase) >= 0 ? "jvocals" : "vocals";
+                var jvocalsXmlExists = Directory.EnumerateFiles(projectDir, "*_jvocals.xml", SearchOption.AllDirectories).Any();
+
+                if (arr.ArrangementName == ArrangementName.JVocals && (glyphType == "jvocals" || jvocalsXmlExists))
+                    useCustomFont = true;
+
+                if (arr.ArrangementName == ArrangementName.Vocals && glyphType == "vocals" && !jvocalsXmlExists)
+                    useCustomFont = true;
+            }
+
+            if (!useCustomFont)
+                return false;
+
+            if (!String.IsNullOrEmpty(lyricsFile))
+                arr.LyricsArtPath = lyricsFile;
+
+            if (!String.IsNullOrEmpty(glyphsFile))
+                arr.GlyphsXmlPath = glyphsFile;
+
+            // both lyricsFile and glyphsFile are required to produce CDLC with CustomFont
+            if (!String.IsNullOrEmpty(lyricsFile) && !String.IsNullOrEmpty(glyphsFile)) // => HasCustomFont
+                return true;
+
+            return false;
+        }
+
     }
 
     [XmlRoot(Namespace = "")]
@@ -142,4 +229,5 @@ namespace RocksmithToolkitLib.XML
         [XmlAttribute]
         public float OuterXMax { get; set; }
     }
+
 }

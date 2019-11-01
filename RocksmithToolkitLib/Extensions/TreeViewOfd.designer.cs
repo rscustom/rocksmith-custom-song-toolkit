@@ -48,7 +48,7 @@ namespace RocksmithToolkitLib.Extensions
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(413, 222);
+            this.btnOk.Location = new System.Drawing.Point(405, 222);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 21);
             this.btnOk.TabIndex = 16;
@@ -58,8 +58,9 @@ namespace RocksmithToolkitLib.Extensions
             // 
             // butDown
             // 
+            this.butDown.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.butDown.Image = global::RocksmithToolkitLib.Properties.Resources.down;
-            this.butDown.Location = new System.Drawing.Point(351, 162);
+            this.butDown.Location = new System.Drawing.Point(308, 163);
             this.butDown.Name = "butDown";
             this.butDown.Size = new System.Drawing.Size(32, 32);
             this.butDown.TabIndex = 15;
@@ -69,8 +70,9 @@ namespace RocksmithToolkitLib.Extensions
             // 
             // butUp
             // 
+            this.butUp.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.butUp.Image = global::RocksmithToolkitLib.Properties.Resources.up;
-            this.butUp.Location = new System.Drawing.Point(351, 115);
+            this.butUp.Location = new System.Drawing.Point(308, 116);
             this.butUp.Name = "butUp";
             this.butUp.Size = new System.Drawing.Size(32, 32);
             this.butUp.TabIndex = 14;
@@ -80,8 +82,9 @@ namespace RocksmithToolkitLib.Extensions
             // 
             // butRemove
             // 
+            this.butRemove.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.butRemove.Image = global::RocksmithToolkitLib.Properties.Resources.left;
-            this.butRemove.Location = new System.Drawing.Point(351, 68);
+            this.butRemove.Location = new System.Drawing.Point(308, 69);
             this.butRemove.Name = "butRemove";
             this.butRemove.Size = new System.Drawing.Size(32, 32);
             this.butRemove.TabIndex = 12;
@@ -90,14 +93,13 @@ namespace RocksmithToolkitLib.Extensions
             // 
             // listView
             // 
-            this.listView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
+            this.listView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.listView.BackColor = System.Drawing.SystemColors.Window;
             this.listView.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.listView.Location = new System.Drawing.Point(393, 8);
+            this.listView.Location = new System.Drawing.Point(353, 8);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(215, 203);
+            this.listView.Size = new System.Drawing.Size(247, 203);
             this.listView.SmallImageList = this.imageList;
             this.listView.TabIndex = 11;
             this.toolTip.SetToolTip(this.listView, "The Bass arrangement (if present) should be\r\nselected first so that toolkit popul" +
@@ -113,8 +115,9 @@ namespace RocksmithToolkitLib.Extensions
             // 
             // butAdd
             // 
+            this.butAdd.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.butAdd.Image = global::RocksmithToolkitLib.Properties.Resources.right;
-            this.butAdd.Location = new System.Drawing.Point(351, 21);
+            this.butAdd.Location = new System.Drawing.Point(308, 22);
             this.butAdd.Name = "butAdd";
             this.butAdd.Size = new System.Drawing.Size(32, 32);
             this.butAdd.TabIndex = 10;
@@ -133,8 +136,7 @@ namespace RocksmithToolkitLib.Extensions
             // 
             // cmbFilesOfType
             // 
-            this.cmbFilesOfType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbFilesOfType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cmbFilesOfType.FormattingEnabled = true;
             this.cmbFilesOfType.Location = new System.Drawing.Point(81, 222);
             this.cmbFilesOfType.Name = "cmbFilesOfType";
@@ -145,7 +147,7 @@ namespace RocksmithToolkitLib.Extensions
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(510, 222);
+            this.btnCancel.Location = new System.Drawing.Point(502, 222);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 21);
             this.btnCancel.TabIndex = 21;
@@ -175,7 +177,7 @@ namespace RocksmithToolkitLib.Extensions
             this.treeViewBrowser.Multiselect = false;
             this.treeViewBrowser.Name = "treeViewBrowser";
             this.treeViewBrowser.SelectedNodes = ((System.Collections.ArrayList)(resources.GetObject("treeViewBrowser.SelectedNodes")));
-            this.treeViewBrowser.Size = new System.Drawing.Size(334, 203);
+            this.treeViewBrowser.Size = new System.Drawing.Size(287, 203);
             this.treeViewBrowser.TabIndex = 22;
             this.toolTip.SetToolTip(this.treeViewBrowser, "Use Shift+Left Click to quickly select mutiple\r\narrangements in the desired order" +
                     " of appearance. ");
@@ -184,7 +186,7 @@ namespace RocksmithToolkitLib.Extensions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(617, 252);
+            this.ClientSize = new System.Drawing.Size(609, 252);
             this.Controls.Add(this.treeViewBrowser);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.cmbFilesOfType);
