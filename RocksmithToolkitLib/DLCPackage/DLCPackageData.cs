@@ -533,10 +533,6 @@ namespace RocksmithToolkitLib.DLCPackage
         public List<Tone2014> TonesRS2014 { get; set; }
         public float? PreviewVolume { get; set; }
 
-        // TODO: remove these ... not needed
-        //public string LyricArtPath { get; set; }
-        //public string GlyphsPath { get; set; }
-
         // Cache art image conversion
         public List<DDSConvertedFile> ArtFiles { get; set; }
 
@@ -587,8 +583,11 @@ namespace RocksmithToolkitLib.DLCPackage
                         "3) Reauthor the CDLC using: >CDLC Creator>Add>Edit>Generate" + Environment.NewLine);
                 }
 
-                if (attr.Phrases != null)
+                ArrangementType arrType = Song2014.DetectArrangementType(xmlFile);
+
+                if (arrType == ArrangementType.Bass || arrType == ArrangementType.Guitar)
                 {
+                    // only done 1X to speed up process
                     if (data.SongInfo == null)
                     {
                         // Fill Package Data
@@ -598,7 +597,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         bnkAudioVolume = attr.SongVolume;
                         bnkPreviewVolume = attr.PreviewVolume;
 
-                        // Fill SongInfo
+                        // Fill SongInfo from Manifest
                         data.SongInfo = new SongInfo
                             {
                                 JapaneseArtistName = attr.JapaneseArtistName,
@@ -658,7 +657,7 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
                     }
                 }
-                else if (xmlFile.ToLower().Contains("vocals")) // detect both jvocals and vocals
+                else if (arrType == ArrangementType.Vocal) // detects jvocals and vocals
                 {
                     var voc = new Arrangement
                     {
@@ -669,6 +668,8 @@ namespace RocksmithToolkitLib.DLCPackage
                         SongFile = new SongFile { File = "" },
                         XmlComments = Song2014.ReadXmlComments(xmlFile)
                     };
+                    
+                    GlyphDefinitions.UpdateCustomFontStatus(ref voc);
 
                     // Adding Arrangement
                     data.Arrangements.Add(voc);

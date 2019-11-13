@@ -5,6 +5,8 @@ namespace RocksmithToolkitLib.DLCPackage
     public class SongInfo
     {
         // DO NOT change variable names ... hidden dependancies
+        // REM This is Manifest JSON File Data
+        //
         public string Album { get; set; }
         public string AlbumSort { get; set; } // new
         public string Artist { get; set; }

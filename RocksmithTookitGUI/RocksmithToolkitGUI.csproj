@@ -111,7 +111,7 @@
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CDLC2Tab\CDLC2Gp5.cs" />
-    <Compile Include="Config\ConfigGlobals.cs" />
+    <Compile Include="Config\GlobalsConfig.cs" />
     <Compile Include="DLCInlayCreator\IntroScreensCreator.cs">
       <SubType>UserControl</SubType>
     </Compile>

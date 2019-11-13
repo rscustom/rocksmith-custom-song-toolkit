@@ -435,7 +435,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 var lyricArtPath = String.Empty;
                 if (info.Arrangements.Any(arr => arr.HasCustomFont))
                     lyricArtPath = info.Arrangements.Find(arr => arr.HasCustomFont).LyricsArtPath;
-                // SET CORRECT TOC PATH
+                // SET CORRECT TOC ENTRY PATH
                 if (!String.IsNullOrEmpty(lyricArtPath))
                     packPsarc.AddEntry(String.Format("assets/ui/lyrics/{0}/lyrics_{0}.dds", dlcName), new FileStream(lyricArtPath, FileMode.Open, FileAccess.Read, FileShare.Read));
 

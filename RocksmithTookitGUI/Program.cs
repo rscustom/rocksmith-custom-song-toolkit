@@ -25,7 +25,7 @@ namespace RocksmithToolkitGUI
         static void Main(string[] args)
         {
             // make the logger available globally in application
-            ConfigGlobals.Log = LogManager.GetCurrentClassLogger();
+            GlobalsConfig.Log = LogManager.GetCurrentClassLogger();
             // TODO: figure out way for native mac\linux OS
             var logPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "_RSToolkit_" + DateTime.Now.ToString("yyyy-MM-dd") + ".log");
 
@@ -48,7 +48,7 @@ namespace RocksmithToolkitGUI
             var assemblyConfiguration = assembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
             var dtuLib = DateTime.Parse(assemblyConfiguration, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
 
-            ConfigGlobals.Log.Info(//OSVersion on unix will return it's Kernel version, urgh.
+            GlobalsConfig.Log.Info(//OSVersion on unix will return it's Kernel version, urgh.
                 String.Format(" - RocksmithToolkitGUI: v{0}\r\n ", ToolkitVersion.RSTKGuiVersion) +
                 String.Format(" - RocksmithToolkitLib: v{0} [{1}]\r\n ", ToolkitVersion.RSTKLibVersion(), dtuLib) +
                 String.Format(" - RocksmithToolkitUpdater: v{0}\r\n ", updaterVersion) +
@@ -88,45 +88,45 @@ namespace RocksmithToolkitGUI
             {
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+                {
+                    var exception = e.ExceptionObject as Exception;
+                    GlobalsConfig.Log.Error(" - Unhandled.Exception:\nSource: {0}\nTarget: {1}\n{2}", exception.Source, exception.TargetSite, exception.ToString());
+
+                    if (MessageBox.Show(String.Format("Unhandled.Exception:\n\n{0}\nPlease send us the {1} file if you need help.  Open log file now?", exception.Message.ToString(), Path.GetFileName(logPath)), "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
-                        var exception = e.ExceptionObject as Exception;
-                        ConfigGlobals.Log.Error(" - Unhandled.Exception:\nSource: {0}\nTarget: {1}\n{2}", exception.Source, exception.TargetSite, exception.ToString());
+                        Process.Start(logPath);
+                    }
 
-                        if (MessageBox.Show(String.Format("Unhandled.Exception:\n\n{0}\nPlease send us the {1} file if you need help.  Open log file now?", exception.Message.ToString(), Path.GetFileName(logPath)), "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                        {
-                            Process.Start(logPath);
-                        }
-
-                        GlobalExtension.HideProgress();
-                    };
+                    GlobalExtension.HideProgress();
+                };
 
                 // UI thread exceptions handling.
                 Application.ThreadException += (s, e) =>
+                {
+                    var exception = e.Exception;
+                    var packerErrMsg = RocksmithToolkitLib.DLCPackage.Packer.ErrMsg.ToString();
+
+                    if (String.IsNullOrEmpty(packerErrMsg))
+                        GlobalsConfig.Log.Error(" - Application.ThreadException\n\nSource: {0}\nTarget: {1}\n{2}", exception.Source, exception.TargetSite, exception.ToString());
+                    else
+                        GlobalsConfig.Log.Error(" - Application.ThreadException\n\nSource: {0}\nTarget: {1}\n{2}\n\nPacker.ThreadException (Corrupt CDLC): {3}", exception.Source, exception.TargetSite, exception.ToString(), packerErrMsg.Trim());
+
+                    if (exception.Message != null && exception.Message.Contains("expired"))
                     {
-                        var exception = e.Exception;
-                        var packerErrMsg = RocksmithToolkitLib.DLCPackage.Packer.ErrMsg.ToString();
-
-                        if (String.IsNullOrEmpty(packerErrMsg))
-                            ConfigGlobals.Log.Error(" - Application.ThreadException\n\nSource: {0}\nTarget: {1}\n{2}", exception.Source, exception.TargetSite, exception.ToString());
-                        else
-                            ConfigGlobals.Log.Error(" - Application.ThreadException\n\nSource: {0}\nTarget: {1}\n{2}\n\nPacker.ThreadException (Corrupt CDLC): {3}", exception.Source, exception.TargetSite, exception.ToString(), packerErrMsg.Trim());
-
-                        if (exception.Message != null && exception.Message.Contains("expired"))
+                        MessageBox.Show(String.Format("Activation.ThreadException:\n\n{0}", exception.Message), "Please Read This Important Message Completely ...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        Application.Exit();
+                    }
+                    else
+                    {
+                        var exMessage = String.IsNullOrEmpty(packerErrMsg) ? exception.Message : String.Format("{0}\nPacker.ThreadException (Corrupt CDLC):\n{1}\n", exception.Message, packerErrMsg.Trim());
+                        if (MessageBox.Show(String.Format("Application.ThreadException:\n{0}\nPlease send us the {1} file if you need help.  Open log file now?", exMessage, Path.GetFileName(logPath)), "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                         {
-                            MessageBox.Show(String.Format("Activation.ThreadException:\n\n{0}", exception.Message), "Please Read This Important Message Completely ...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            Application.Exit();
+                            Process.Start(logPath);
                         }
-                        else
-                        {
-                            var exMessage = String.IsNullOrEmpty(packerErrMsg) ? exception.Message : String.Format("{0}\nPacker.ThreadException (Corrupt CDLC):\n{1}\n", exception.Message, packerErrMsg.Trim());
-                            if (MessageBox.Show(String.Format("Application.ThreadException:\n{0}\nPlease send us the {1} file if you need help.  Open log file now?", exMessage, Path.GetFileName(logPath)), "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                            {
-                                Process.Start(logPath);
-                            }
-                        }
+                    }
 
-                        GlobalExtension.HideProgress();
-                    };
+                    GlobalExtension.HideProgress();
+                };
             }
 
             Application.EnableVisualStyles();

@@ -74,6 +74,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalsLib.cs" />
     <Compile Include="Conversion\Rs1Converter.cs" />
     <Compile Include="Conversion\Rs2014Converter.cs" />
     <Compile Include="DLCPackage\DDCreator.cs" />
@@ -333,7 +334,7 @@ rem )
 rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj these call the 'prebuild.sh' file
 
 :End
-echo Good job ... That's All Folk!</PreBuildEvent>
+echo That's All Folks!</PreBuildEvent>
   </PropertyGroup>
   <!-- BEGIN CUSTOM PREBUILD EVENT - DO NOT MODIFY -->
   <PropertyGroup>

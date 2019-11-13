@@ -123,9 +123,9 @@ namespace RocksmithToolkitLib.XML
         /// <returns></returns>
         public static bool UpdateCustomFontStatus(ref DLCPackage.Arrangement arr, string projectDir = "")
         {
-            //
+            // ========================
             // Respect Processing Order
-            //
+            // ========================
             // skip non-vocal arrangements
             if (arr.ArrangementType != ArrangementType.Vocal)
                 return false;

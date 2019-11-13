@@ -279,7 +279,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             if (!String.IsNullOrEmpty(Packer.ErrMsg.ToString()))
                 errorsFound.Insert(0, Packer.ErrMsg.ToString());
 
-            if (!ConfigGlobals.IsUnitTest)
+            if (!GlobalsLib.IsUnitTest)
                 PromptComplete(destPath, false, errorsFound.ToString());
 
             GlobalExtension.Dispose();
@@ -446,7 +446,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 string unpackedDir;
                 try
                 {
-                    unpackedDir = Packer.Unpack(srcPath, tmpPath, overwriteSongXml: true, predefinedPlatform: packagePlatform);
+                    unpackedDir = Packer.Unpack(srcPath, tmpPath, overwriteSongXml: true, overridePlatform: packagePlatform);
                 }
                 catch (Exception ex)
                 {
@@ -617,8 +617,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
                 var songPackDir = AggregateGraph2014.DoLikeSongPack(srcPath, NewAppId);
                 destPath = Path.Combine(Path.GetDirectoryName(srcPath), String.Format("{0}_songpack_p.psarc", Path.GetFileName(srcPath)));
-                // PC Only for now can't mix platform packages
-                Packer.Pack(songPackDir, destPath, predefinedPlatform: new Platform(GamePlatform.Pc, GameVersion.RS2014));
+                // Pc:RS2014 Only for now can't mix platform packages
+                Packer.Pack(songPackDir, destPath, overridePlatform: new Platform(GamePlatform.Pc, GameVersion.RS2014));
 
                 // clean up now (song pack folder)
                 if (Directory.Exists(songPackDir))
@@ -682,17 +682,17 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Restart();
-                var srcPlatform = srcPath.GetPlatform();
-                archivePath = Packer.Pack(srcPath, destPath, srcPlatform, UpdateSng, UpdateManifest);
+                archivePath = Packer.Pack(srcPath, destPath, updateSng:UpdateSng, updateManifest:UpdateManifest);
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
             }
             catch (Exception ex)
             {
-                errMsg = String.Format("{0}\n{1}", ex.Message, ex.InnerException);
+                errMsg = String.Format("{0}\n{1}", ex.Message, ex.InnerException) + Environment.NewLine + Environment.NewLine +
+                "Confirm GamePlatform and GameVersion are set correctly for desired destination in GeneraConfig";
             }
 
-            if (!ConfigGlobals.IsUnitTest)
+            if (!GlobalsLib.IsUnitTest)
                 PromptComplete(destPath, true, errMsg);
 
             GlobalExtension.Dispose();
@@ -792,7 +792,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Filter = "All Files (*.*)|*.*|Rocksmith 1|*.dat|Rocksmith 2014 PC|*_p.psarc|Rocksmith 2014 Mac|*_m.psarc|Rocksmith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
+                ofd.Filter = "All Files (*.*)|*.*|Rocksmith 2012|*.dat|Rocksmith 2014 PC|*_p.psarc|Rocksmith 2014 Mac|*_m.psarc|Rocksmith 2014 Xbox|*_xbox|Rocksmith 2014 PS3|*.edat";
                 ofd.Multiselect = true;
                 ofd.FilterIndex = 1;
                 if (File.Exists(destPath))

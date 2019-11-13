@@ -15,14 +15,13 @@ using System.Windows.Forms;
 namespace RocksmithToolkitLib.Sng
 {
     public enum ArrangementName { Lead = 0/* Single notes */, Rhythm /* Chords */, Combo /* Combo */, Bass, Vocals, JVocals, ShowLights };
-    public enum ArrangementType { Guitar, Bass, Vocal, ShowLight };
+    public enum ArrangementType { Guitar, Bass, Vocal, ShowLight, Unknown };
     public enum InstrumentTuning { [Description("E Standard")] Standard, [Description("Drop D")] DropD, [Description("Eb")] EFlat, [Description("Open G")] OpenG };
     public enum PluckedType { NotPicked = 0, Picked = 1 };
     public enum Metronome { None, Itself, Generate };
 
     public static class InstrumentTuningExtensions
     {
-
         private static readonly Int16[] StandardOffsets = { 0, 0, 0, 0, 0, 0 };
         private static readonly Int16[] DropDOffsets = { -2, 0, 0, 0, 0, 0 };
         private static readonly Int16[] EFlatOffsets = { -1, -1, -1, -1, -1, -1 };
@@ -65,7 +64,7 @@ namespace RocksmithToolkitLib.Sng
 
             return strNote + fret;
         }
-    };
+    }
 
     public struct TimeLinkedEntity
     {

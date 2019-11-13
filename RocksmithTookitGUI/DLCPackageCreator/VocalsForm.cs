@@ -84,7 +84,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void btnVocalsDdsPath_Click(object sender, EventArgs e)
         {
-            // The Toolkit writes this artifact to: /assets/ui/lyrics/{dlc name}/lyrics_{dlc name}.dds
+            // The Toolkit writes this artifact to: /assets/ui/lyrics/[dlcName]/lyrics_[dlcName].dds
             using (var f = new VistaOpenFileDialog())
             {
                 f.InitialDirectory = Path.GetDirectoryName(VocalsPath);

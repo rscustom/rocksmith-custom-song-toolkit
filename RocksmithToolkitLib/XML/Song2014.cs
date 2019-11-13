@@ -74,7 +74,7 @@ namespace RocksmithToolkitLib.XML
         [XmlElement("albumYear")]
         public string AlbumYear { get; set; }
 
-        [XmlElement("albumArt")]
+        [XmlElement("albumArt")] // for xbox360, used as dlcName substitute
         public string AlbumArt { get; set; }
 
         [XmlElement("crowdSpeed")]
@@ -85,6 +85,10 @@ namespace RocksmithToolkitLib.XML
 
         [XmlElement("lastConversionDateTime")]
         public string LastConversionDateTime { get; set; }
+
+        // new XML element for tracking optional jvocals
+        [XmlElement("optionalProperties")]
+        public OptionalProperties OptionalProperties { get; set; }
 
         [XmlArray("phrases")]
         [XmlArrayItem("phrase")]
@@ -218,6 +222,17 @@ namespace RocksmithToolkitLib.XML
                 AlbumArt = attr.AlbumArt;
                 ArrangementProperties = attr.ArrangementProperties;
                 LastConversionDateTime = attr.LastConversionDateTime;
+
+                // optional properties (these are new optional XML elements)
+                if (!String.IsNullOrEmpty(attr.JapaneseSongName) || !String.IsNullOrEmpty(attr.JapaneseArtistName))
+                {
+                    OptionalProperties = new OptionalProperties()
+                    {
+                        JapaneseSongName = attr.JapaneseSongName,
+                        JapaneseArtistName = attr.JapaneseArtistName
+                        // JapaneseVocal = attr.JapaneseVocal
+                    };
+                }
 
                 ToneBase = attr.Tone_Base;
                 ToneA = attr.Tone_A;
@@ -492,6 +507,41 @@ namespace RocksmithToolkitLib.XML
             xml.Position = 0;
             doc.Save(xml);
         }
+
+        /// <summary>
+        /// Detect the ArrangementType of an XML file
+        /// </summary>
+        /// <param name="xmlFile"></param>
+        /// <returns></returns>
+        public static ArrangementType DetectArrangementType(string xmlFile)
+        {
+            using (XmlReader reader = XmlReader.Create(xmlFile))
+            {
+                reader.MoveToContent();
+
+                if (reader.LocalName == "vocals")
+                    return ArrangementType.Vocal;
+
+                if (reader.LocalName == "showlights")
+                    return ArrangementType.ShowLight;
+
+                // move to arrangement attribute (decendant)
+                if (reader.LocalName == "song")
+                {
+                    if (reader.ReadToDescendant("arrangement"))
+                    {
+                        reader.Read(); // move to next node
+                        if (reader.Value.ToLower().Contains("bass"))
+                            return ArrangementType.Bass;
+
+                        return ArrangementType.Guitar;
+                    }
+                }
+
+                return ArrangementType.Unknown;
+            }
+        }
+
     }
 
     public class SongArrangementProperties2014 : SongArrangementProperties
@@ -827,6 +877,18 @@ namespace RocksmithToolkitLib.XML
             }
             return chordTemplates;
         }
+    }
+
+    public class OptionalProperties
+    {
+        [XmlAttribute("japaneseArtistName")]
+        public string JapaneseArtistName { get; set; }
+
+        [XmlAttribute("japaneseSongName")]
+        public string JapaneseSongName { get; set; }
+
+        //[XmlAttribute("japaneseVocal")]
+        //public bool JapaneseVocal { get; set; }
     }
 
     public class TranscriptionTrack2014

@@ -172,7 +172,7 @@ namespace RocksmithToolkitLib.Ogg
 
                 if (this._fmtChunkSize == 0x28)
                 {
-                    byte[] unknownBufferCheck = new byte[] {1, 0, 0, 0, 0, 0, 0x10, 0, 0x80, 0, 0, 0xAA, 0, 0x38, 0x9b, 0x71};
+                    byte[] unknownBufferCheck = new byte[] { 1, 0, 0, 0, 0, 0, 0x10, 0, 0x80, 0, 0, 0xAA, 0, 0x38, 0x9b, 0x71 };
                     byte[] unknownBuffer;
 
                     unknownBuffer = br.ReadBytes(16);
@@ -334,3 +334,41 @@ namespace RocksmithToolkitLib.Ogg
 
     }
 }
+
+/* EXAMPLE USAGE:
+// get main wem audio bitrate (kbps)
+var wems = _archive.TOC.Where(entry => entry.Name.StartsWith("audio/") && entry.Name.EndsWith(".wem")).ToList();
+if (wems.Count > 1)
+{
+    wems.Sort((e1, e2) =>
+        {
+            if (e1.Length < e2.Length)
+                return 1;
+            if (e1.Length > e2.Length)
+                return -1;
+            return 0;
+        });
+}
+
+// assumes main audio is larger wem file (may not always be correct)
+if (wems.Count > 0)
+{
+    var top = wems[0];
+    _archive.InflateEntry(top);
+    top.Data.Position = 0;
+    var wemSize = top.Data.Length;
+
+    // slow actual kbps
+    WemFile wemFile = new WemFile(top.Data, platform);
+    var kbpsActual = (int)wemFile.AverageBytesPerSecond * 8 / 1000;
+
+    // fast approximate kbps (very close)
+    var kbpsApprox = (int)(wemSize * 8 / song.SongLength / 1000);
+    song.AudioBitRate = kbpsApprox;
+}
+*/
+
+
+
+
+ 

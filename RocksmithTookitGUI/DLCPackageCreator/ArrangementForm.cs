@@ -194,7 +194,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     var diaMsg = "Invalid Arrangement Default/Bonus/Alternate Conditon ...  " + Environment.NewLine + Environment.NewLine +
                                  "Toolkit will reset the arrangement to" + Environment.NewLine +
                                  "the default represent condition." + Environment.NewLine;
-                    BetterDialog2.ShowDialog(diaMsg, "Arrangement Represent ...", null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
+                    BetterDialog2.ShowDialog(diaMsg, "Arrangement Represent", null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
                     value.Represent = true;
                     value.BonusArr = false;
                 }
@@ -342,34 +342,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 Arrangement.MasterId = masterId;
         }
 
-        private static ArrangementType DetectArrangementType(string filename)
-        {
-            using (XmlReader reader = XmlReader.Create(filename))
-            {
-                reader.MoveToContent();
-                if (reader.LocalName == "vocals")
-                    return ArrangementType.Vocal;
-                if (reader.LocalName == "showlights")
-                    return ArrangementType.ShowLight;
-
-                // Return guitar for everything else
-                return ArrangementType.Guitar;
-            }
-        }
-
         public bool AddXmlArrangement(string xmlFilePath)
         {
             // only use this method when adding new arrangements
             if (EditMode)
                 return false;
 
-            Arrangement = new Arrangement
-            {
-                SongFile = new SongFile { File = "" },
-                SongXml = new SongXML { File = xmlFilePath }
-            };
+            Arrangement = new Arrangement { SongFile = new SongFile { File = "" }, SongXml = new SongXML { File = xmlFilePath } };
 
-            ArrangementType arrType = DetectArrangementType(xmlFilePath);
+            ArrangementType arrType = Song2014.DetectArrangementType(xmlFilePath);
+            if (arrType == ArrangementType.Unknown)
+            {
+                BetterDialog2.ShowDialog("Unknown Arrangement Type" + Environment.NewLine + "Could not add file: " + Path.GetFileName(xmlFilePath), "Invalid Arrangement", null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
+                return false;
+            }
 
             // SETUP FIELDS
             if (arrType == ArrangementType.Vocal)
@@ -382,39 +368,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                    || xmlFilePath.IndexOf("jlyric", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     cmbArrangementName.SelectedItem = ArrangementName.JVocals;
-
-                    //// Try to find a custom font dds file
-                    //var projectDir = Path.GetDirectoryName(xmlFilePath);
-                    //// e.g. path D:\\Temp\RS Root\dlc\Nanase-Aikawa_Yumemiru-Shoujo-ja-Irarenai_v2_RS2014_Pc\EOF\innayumemirushoujojairarenai_jvocals.xml
-                    //if (Path.GetFileName(projectDir).Equals("EOF"))
-                    //    projectDir = Path.GetDirectoryName(projectDir);
-
-                    //var customFontPath = Directory.EnumerateFiles(projectDir, "*.dds", SearchOption.AllDirectories)
-                    //    .Where(fn => Path.GetFileName(fn).Equals("lyrics.dds") || Path.GetFileName(fn).StartsWith("lyrics_")).FirstOrDefault();
-
-                    //if (!String.IsNullOrEmpty(customFontPath))
-                    //    Arrangement.LyricArt = customFontPath;
                 }
                 else
+                {
                     cmbArrangementName.SelectedItem = ArrangementName.Vocals;
+                }
             }
             else if (arrType == ArrangementType.ShowLight)
             {
                 cmbArrangementType.SelectedItem = ArrangementType.ShowLight;
                 Arrangement.ArrangementType = ArrangementType.ShowLight;
             }
-            else // add Instrument Arrangement
+            else // Instrument Arrangements (Bass and Guitar)
             {
-                try
-                {
-                    _song2014 = Song2014.LoadFromFile(xmlFilePath);
-                }
-                catch (Exception ex)
-                {
-                    BetterDialog2.ShowDialog("Could not add file to Arrangements: " + Path.GetFileName(xmlFilePath) + Environment.NewLine +
-                        ex.InnerException.Message, "Invalid Instrument Arrangement", null, null, "OK", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150);
-                    return false;
-                }
+                _song2014 = Song2014.LoadFromFile(xmlFilePath);
 
                 if (_song2014 == null)
                     return false;
@@ -455,11 +422,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     }
                 }
 
-                // SONG AND ARRANGEMENT INFO / ROUTE MASK
+                // DECIPHER CORRECT ROUTE MASK
                 var arr = _song2014.Arrangement.ToLowerInvariant();
 
-                // TODO: monitor this code
-                if (arr.Contains("guitar") || arr.Contains("lead") || arr.Contains("rhythm") || arr.Contains("combo"))
+                if (arrType == ArrangementType.Guitar)
                 {
                     cmbArrangementType.SelectedItem = ArrangementType.Guitar;
                     Arrangement.ArrangementType = ArrangementType.Guitar;
@@ -483,7 +449,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                             RouteMask = RouteMask.Rhythm;
                     }
                 }
-                else if (arr.Contains("bass"))
+                else if (arrType == ArrangementType.Bass) //(arr.Contains("bass"))
                 {
                     cmbArrangementType.SelectedItem = ArrangementType.Bass;
                     Arrangement.ArrangementType = ArrangementType.Bass;
@@ -1049,7 +1015,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = ConfigGlobals.DefaultProjectFolder;
+                ofd.InitialDirectory = GlobalsConfig.DefaultProjectFolder;
                 ofd.Filter = "Rocksmith EOF XML Files (*.xml)|*.xml";
                 if (ofd.ShowDialog() != DialogResult.OK)
                 {
@@ -1057,7 +1023,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
                 XmlPath = ofd.FileName;
-                ConfigGlobals.DefaultProjectFolder = Path.GetDirectoryName(XmlPath);
+                GlobalsConfig.DefaultProjectFolder = Path.GetDirectoryName(XmlPath);
 
                 if (IsAlreadyAdded(XmlPath))
                 {
@@ -1125,7 +1091,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 return;
 
             LoadArrangementData(XmlPath);
-            ConfigGlobals.DefaultProjectFolder = Path.GetDirectoryName(XmlPath);
+            GlobalsConfig.DefaultProjectFolder = Path.GetDirectoryName(XmlPath);
             DialogResult = DialogResult.OK;
             Close();
         }

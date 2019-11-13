@@ -267,7 +267,7 @@ namespace RocksmithToolkitGUI
             if (!GeneralExtension.ValidateDisplaySettings(this, this, false, firstRun))
                 displaySettings = "\r\n  - Adjusted AutoScaleDimensions, AutoScaleMode, and AutoSize";
 
-            ConfigGlobals.Log.Info(
+            GlobalsConfig.Log.Info(
                 String.Format(" - App.config Status ({0})\r\n ", appConfigStatus) +
                 String.Format(" - System Display DPI Setting ({0})\r\n ", GeneralExtension.GetDisplayDpi(this)) + // validate and log runtime display setting
                 String.Format(" - System Display Screen Scale Factor ({0}%) ", GeneralExtension.GetDisplayScalingFactor(this) * 100) +

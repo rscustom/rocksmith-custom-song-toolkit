@@ -1,5 +1,9 @@
 Rocksmith Toolkit Release Notes
 
+- fixed LoadFromFolder custom font handling
+- improved arrangement detection/validation
+- improvements to Xbox360 GameVersion detection
+- added optionalProperties metadata to Song2014 xml for Japanese Artist and Song
 - improved error checking in CDLC Creator
 - fixed issues with the way CDCL Creator handles jvocal repackaging
 - improved compatibility with CustomFontGenerator (special thanks to iminashi)

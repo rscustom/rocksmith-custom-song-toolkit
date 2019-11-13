@@ -40,10 +40,12 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
         public double? DNA_Riffs { get; set; }
         public double? DNA_Solo { get; set; }
         public double? EasyMastery { get; set; }
-        // strings are not serialized if the value has not been initialized
-        public string JapaneseArtistName { get; set; } //Unicode string, be cautious
-        public string JapaneseSongName { get; set; } //Unicode string, be cautious
+        // REM strings are not serialized if the value has not been initialized
+        // new optional attributes
+        public string JapaneseArtistName { get; set; } // Unicode string, be cautious
+        public string JapaneseSongName { get; set; } // Unicode string, be cautious
         public bool JapaneseVocal { get; set; }
+        //
         public int LeaderboardChallengeRating { get; set; }
         public string ManifestUrn { get; set; }
         public int MasterID_RDV { get; set; }
@@ -137,10 +139,10 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             EasyMastery = Math.Round((double)(NotesEasy / NotesHard), 9);
             MediumMastery = Math.Round((double)(NotesMedium / NotesHard), 9);
             Metronome = arrangement.Metronome == Sng.Metronome.None ? null : (int?)arrangement.Metronome;
-            
+
             // TODO: monitor this change
             Representative = arrangement.ArrangementPropeties.Represent;
-            
+
             RouteMask = (int)arrangement.RouteMask;
 
             ManifestFunctions.GetSongDifficulty(this, song2014);
@@ -148,13 +150,15 @@ namespace RocksmithToolkitLib.DLCPackage.Manifest2014.Header
             SongLength = Math.Round(song2014.SongLength, 3, MidpointRounding.AwayFromZero);
             SongName = info.SongInfo.SongDisplayName;
             SongNameSort = info.SongInfo.SongDisplayNameSort;
-            JapaneseSongName = string.IsNullOrEmpty(info.SongInfo.JapaneseSongName) ? null : info.SongInfo.JapaneseSongName;
-            JapaneseArtistName = string.IsNullOrEmpty(info.SongInfo.JapaneseArtistName) ? null : info.SongInfo.JapaneseArtistName;
             SongYear = info.SongInfo.SongYear;
 
             //Detect tuning
             var tuning = TuningDefinitionRepository.Instance.Detect(song2014.Tuning, platform.version, arrangement.ArrangementType == ArrangementType.Bass);
             Tuning = tuning.Tuning; //can we just use SongContent.Tuning
+
+            // optional properties
+            JapaneseSongName = string.IsNullOrEmpty(info.SongInfo.JapaneseSongName) ? null : info.SongInfo.JapaneseSongName;
+            JapaneseArtistName = string.IsNullOrEmpty(info.SongInfo.JapaneseArtistName) ? null : info.SongInfo.JapaneseArtistName;            
         }
 
         // Conditionally serialized properties

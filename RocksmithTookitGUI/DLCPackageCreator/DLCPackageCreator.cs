@@ -509,7 +509,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             chkJapaneseTitle.Enabled = CurrentGameVersion != GameVersion.RS2012;
             chkShowlights.Enabled = CurrentGameVersion != GameVersion.RS2012;
 
-            if (!ConfigGlobals.IsUnitTest)
+            if (!GlobalsLib.IsUnitTest)
                 Parent.Focus();
         }
 
@@ -528,8 +528,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("CDLC template can not be autosaved." + Environment.NewLine +
-                    ex.Message, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (DialogResult.Yes == MessageBox.Show("CDLC template can not be autosaved." + Environment.NewLine +
+                    ex.Message + Environment.NewLine + Environment.NewLine + "Exit without saving?", MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
+                {
+                    return String.Empty;
+                }
             }
 
             if (!String.IsNullOrEmpty(templateDir) && !String.IsNullOrEmpty(fileName))
@@ -647,6 +650,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             song2014.SongNameSort = info.SongInfo.SongDisplayNameSort;
             song2014.AlbumNameSort = info.SongInfo.AlbumSort;
             song2014.AverageTempo = info.SongInfo.AverageTempo;
+
+            // add optional properties
+            if (!String.IsNullOrEmpty(info.SongInfo.JapaneseSongName) || !String.IsNullOrEmpty(info.SongInfo.JapaneseArtistName))
+            {
+                song2014.OptionalProperties = new OptionalProperties()
+                {
+                    JapaneseArtistName = info.SongInfo.JapaneseArtistName,
+                    JapaneseSongName = info.SongInfo.JapaneseSongName
+                };
+            }
+
             song2014.Tuning = arr.TuningStrings;
             song2014.Capo = (byte)arr.CapoFret;
             // all other ArrangementProperties in the xml are set by EOF and not changed by Toolkit (currently)            
@@ -909,6 +923,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             SelectComboAppId(AppId);
 
             // validate on-load to address old CDLC issues
+            // REM info.SongInfo is from Manifest JSON File Data
             txtAlbum.Text = info.SongInfo.Album.GetValidAtaSpaceName();
             txtAlbumSort.Text = info.SongInfo.AlbumSort.GetValidSortableName();
             txtJapaneseSongTitle.Text = info.SongInfo.JapaneseSongName;
@@ -1513,7 +1528,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             lstTones.Items.Clear();
 
             // check if user has assigned default tone and it exists
-            if (!String.IsNullOrEmpty(ConfigGlobals.DefaultToneFile) && File.Exists(ConfigGlobals.DefaultToneFile))
+            if (!String.IsNullOrEmpty(GlobalsConfig.DefaultToneFile) && File.Exists(GlobalsConfig.DefaultToneFile))
             {
                 var tone = CreateNewTone();
                 using (var form = new ToneForm())
@@ -1523,7 +1538,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     form.toneControl.CurrentGameVersion = CurrentGameVersion;
                     form.toneControl.Init();
                     form.toneControl.Tone = GeneralExtension.Copy(tone);
-                    form.LoadToneFile(ConfigGlobals.DefaultToneFile, false);
+                    form.LoadToneFile(GlobalsConfig.DefaultToneFile, false);
                     lstTones.Items.Add(form.toneControl.Tone);
                 }
             }
@@ -1590,8 +1605,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 numAudioQuality.Value = ConfigRepository.Instance().GetDecimal("creator_qualityfactor");
                 fixLowBass = ConfigRepository.Instance().GetBoolean("creator_fixlowbass");
                 fixMultiTone = ConfigRepository.Instance().GetBoolean("creator_fixmultitone");
-                ConfigGlobals.DefaultProjectFolder = ConfigRepository.Instance()["creator_defaultproject"];
-                ConfigGlobals.DefaultToneFile = ConfigRepository.Instance()["creator_defaulttone"];
+                GlobalsConfig.DefaultProjectFolder = ConfigRepository.Instance()["creator_defaultproject"];
+                GlobalsConfig.DefaultToneFile = ConfigRepository.Instance()["creator_defaulttone"];
                 CurrentGameVersion = (GameVersion)Enum.Parse(typeof(GameVersion), ConfigRepository.Instance()["general_defaultgameversion"]);
                 var defaultPlatform = (GamePlatform)Enum.Parse(typeof(GamePlatform), ConfigRepository.Instance()["general_defaultplatform"]);
 
@@ -1786,7 +1801,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // Update XML arrangements song info
             bool updateArrangmentID = false;
 
-            if (IsDirty && !ConfigGlobals.IsUnitTest)
+            if (IsDirty && !GlobalsLib.IsUnitTest)
             {
                 var diaMsg = "The song information has been changed ..." + Environment.NewLine +
                              "Do you want to update 'Arrangement Identification'?  " + Environment.NewLine + Environment.NewLine +
@@ -1814,7 +1829,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // open PackageGenerate save file dialog
-            if (!ConfigGlobals.IsUnitTest)
+            if (!GlobalsLib.IsUnitTest)
                 PackageGenerate_SFD();
 
             // fire up a fake progress bar to show app is alive and well
@@ -1947,7 +1962,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // unit test does not behave well with async background worker
-            if (!ConfigGlobals.IsUnitTest)
+            if (!GlobalsLib.IsUnitTest)
             {
                 if (!bwGenerate.IsBusy && packageData != null)
                 {
@@ -1984,7 +1999,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (CurrentGameVersion == GameVersion.RS2014)
                 if (!srcPath.IsValidPSARC())
                 {
-                    MessageBox.Show(String.Format("Invalid File Exception:  File '{0}' can not be used by current process.", Path.GetFileName(srcPath)), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(String.Format("Invalid File Exception:" + Environment.NewLine +
+                        "File '{0}' can not be used by current process." + Environment.NewLine +
+                        "Try changing the Game Version.", Path.GetFileName(srcPath)), MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -2022,10 +2039,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // UNPACK            
             var srcPlatform = srcPath.GetPlatform();
-            if (Path.GetFileNameWithoutExtension(srcPath).EndsWith("_xbox"))
-                srcPlatform.version = CurrentGameVersion;
 
-            UnpackedDir = Packer.Unpack(srcPath, destDir, srcPlatform, true);
+            // version override for Xbox360 use CurrentGameVersion for GameVersion
+            var fileName = Path.GetFileName(srcPath);
+            if (fileName.EndsWith("_xbox") || fileName.Length == 42)
+                srcPlatform = new Platform(GamePlatform.XBox360, CurrentGameVersion);
+
+            UnpackedDir = Packer.Unpack(srcPath, destDir, overridePlatform: srcPlatform, decodeAudio: true);
 
             // REORGANIZE
             GlobalExtension.ShowProgress("Reorganizing Package Data ...", 35);
@@ -2061,7 +2081,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             FillPackageCreatorForm(info, UnpackedDir);
             GlobalExtension.ShowProgress("Import Package Finished ...", 100);
 
-            if (!ConfigGlobals.IsUnitTest)
+            if (!GlobalsLib.IsUnitTest)
                 MessageBox.Show(CurrentRocksmithTitle + " CDLC package was imported.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             // prevents possible cross threading
@@ -2072,7 +2092,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             if (!rbConvert.Checked)
                 IsDirty = true;
 
-            if (!ConfigGlobals.IsUnitTest)
+            if (!GlobalsLib.IsUnitTest)
                 Parent.Focus();
 
             return info;
@@ -2084,13 +2104,13 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             string dlcTemplatePath;
             using (var ofd = new OpenFileDialog())
             {
-                ofd.InitialDirectory = ConfigGlobals.DefaultProjectFolder;
+                ofd.InitialDirectory = GlobalsConfig.DefaultProjectFolder;
                 ofd.SupportMultiDottedExtensions = true;
                 ofd.Filter = CurrentRocksmithTitle + " CDLC Template (*.dlc.xml)|*.dlc.xml";
                 if (ofd.ShowDialog() != DialogResult.OK)
                     return;
 
-                dlcTemplatePath = ConfigGlobals.DefaultProjectFolder = ofd.FileName;
+                dlcTemplatePath = GlobalsConfig.DefaultProjectFolder = ofd.FileName;
             }
 
             UnpackedDir = Path.GetDirectoryName(dlcTemplatePath);
@@ -2146,6 +2166,8 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void GameVersion_MouseClick(object sender, MouseEventArgs e)
         {
+            // debounce mouse click
+            Thread.Sleep(250);
             // GameVersion_CheckedChanged usage comes with problems
             // everytime the value of checked is changed the event handler fires
 
@@ -2496,7 +2518,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // use new Custom TreeViewOfd to keep arrangements in correct selected order
             using (var ofd = new TreeViewOfd())
             {
-                ofd.InitialDirectory = ConfigGlobals.DefaultProjectFolder;
+                ofd.InitialDirectory = GlobalsConfig.DefaultProjectFolder;
                 ofd.Title = "Multiselect XML Arrangements and Arrange Order ...";
                 ofd.Filter = "Rocksmith Arrangement XML Files (*.xml)|*.xml|All Files (*.*)|*.*";
                 ofd.Multiselect = true;
@@ -2505,7 +2527,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     return;
 
                 // save last visited project folder (InitialDirectory) to configuration
-                ConfigGlobals.DefaultProjectFolder = ofd.InitialDirectory;
+                GlobalsConfig.DefaultProjectFolder = ofd.InitialDirectory;
                 ConfigRepository.Instance()["creator_defaultproject"] = ofd.InitialDirectory;
 
                 List<string> xmlFilePaths = ofd.FileNames;

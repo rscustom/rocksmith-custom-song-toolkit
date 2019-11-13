@@ -27,3 +27,6 @@ Solution if all the unit test are not shown in the window (Reshaper issue/workar
 
 Note: Unit tests should always be run from Debug mode because the
 RocksmithToolkit*.Test projects are only built while in Debug mode.
+
+<WARNING>: The GameVersion must be properly set in the ConfigRepository when testing
+           Xbox360 CDLC.  RS1 and RS2014 Xbox360 CDLC can not be tested together.

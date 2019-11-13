@@ -72,7 +72,7 @@ namespace RocksmithToolkitLib.DLCPackage
 
         public string LyricsArtPath { get; set; }
         public string GlyphsXmlPath { get; set; }
-        // both lyricsFile and glyphsFile are required to produce CDLC with CustomFont
+        // both LyricsArtPath and GlyphsXmlPath are required to produce CDLC with CustomFont
         public bool HasCustomFont
         {
             get
@@ -121,7 +121,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.TuningStrings = attr.Tuning;
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
-
+ 
             // Save xml comments
             this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
 

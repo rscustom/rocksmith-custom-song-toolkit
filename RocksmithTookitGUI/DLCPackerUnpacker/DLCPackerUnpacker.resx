@@ -121,7 +121,10 @@
     <value>17, 6</value>
   </metadata>
   <data name="btnPack.ToolTip" xml:space="preserve">
-    <value>If you receive an error message, such as,
+    <value>Make sure the correct Game Version and
+Platform are selected in GeneralConfig.
+
+If you receive an error message, such as,
 'Object reference not set to an instance of an object''
 then the artifcacts folders and contents
 are probably not structured correctly.
