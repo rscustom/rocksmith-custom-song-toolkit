@@ -121,16 +121,17 @@
     <value>17, 17</value>
   </metadata>
   <data name="ddc_autogen.ToolTip" xml:space="preserve">
-    <value>NOTE:  The checkbox action was recently changed!
+    <value>Developer Use Only
+Force generation of DDC for RS 2014 Remastered
 
-If checked, DD will be automatically added to any 
+When checked, DD will be automatically added to any 
 arrangement that does not have DDC.  CDLC author's
-existing DDC is not be overwritten.
+existing custom DDC are never overwritten.
 
 All CDLC arrangements must have DDC for Rocksmith
 2014 Remastered Play Count to function properly.
 
-If you wish to overwrite existing DDC you must first
+If you wish to overwrite existing DDC, you must first
 remove the existing DDC from the CDLC.  DDC may be
 removed/added using the main DDC tab menu feature.</value>
   </data>

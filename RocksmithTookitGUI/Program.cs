@@ -90,7 +90,7 @@ namespace RocksmithToolkitGUI
                 AppDomain.CurrentDomain.UnhandledException += (s, e) =>
                 {
                     var exception = e.ExceptionObject as Exception;
-                    GlobalsConfig.Log.Error(" - Unhandled.Exception:\nSource: {0}\nTarget: {1}\n{2}", exception.Source, exception.TargetSite, exception.ToString());
+                    GlobalsConfig.Log.Error(" - Unhandled.Exception:\n\nSource: {0}\nTarget: {1}\n{2}", exception.Source, exception.TargetSite, exception.ToString());
 
                     if (MessageBox.Show(String.Format("Unhandled.Exception:\n\n{0}\nPlease send us the {1} file if you need help.  Open log file now?", exception.Message.ToString(), Path.GetFileName(logPath)), "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
@@ -119,7 +119,7 @@ namespace RocksmithToolkitGUI
                     else
                     {
                         var exMessage = String.IsNullOrEmpty(packerErrMsg) ? exception.Message : String.Format("{0}\nPacker.ThreadException (Corrupt CDLC):\n{1}\n", exception.Message, packerErrMsg.Trim());
-                        if (MessageBox.Show(String.Format("Application.ThreadException:\n{0}\nPlease send us the {1} file if you need help.  Open log file now?", exMessage, Path.GetFileName(logPath)), "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        if (MessageBox.Show(String.Format("Application.ThreadException:\n\n{0}\n\nPlease send us the {1} file if you need help.  Open log file now?", exMessage, Path.GetFileName(logPath)), "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                         {
                             Process.Start(logPath);
                         }

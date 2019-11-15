@@ -76,8 +76,7 @@
             this.btnUnpack.Size = new System.Drawing.Size(75, 23);
             this.btnUnpack.TabIndex = 2;
             this.btnUnpack.Text = "Unpack";
-            this.toolTip.SetToolTip(this.btnUnpack, "Make sure the correct Game Version and\r\nPlatform are selected in GeneralConfig.\r\n" +
-                    "\r\n");
+            this.toolTip.SetToolTip(this.btnUnpack, "Make sure the correct Game Version and\r\nPlatform are selected in GeneralConfig.");
             this.btnUnpack.UseVisualStyleBackColor = true;
             this.btnUnpack.Click += new System.EventHandler(this.btnUnpack_Click);
             // 

@@ -426,9 +426,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         public void LoadTemplateFile(string templatePath)
         {
             // Make the paths relative
-            var BasePath = Path.GetDirectoryName(templatePath);
+            var basePath = Path.GetDirectoryName(templatePath);
             if (String.IsNullOrEmpty(UnpackedDir))
-                UnpackedDir = BasePath;
+                UnpackedDir = basePath;
 
             DLCPackageData info = null;
 
@@ -463,7 +463,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             foreach (var arr in info.Arrangements)
             {
                 // load xml comments
-                arr.XmlComments = Song2014.ReadXmlComments(Path.Combine(BasePath, arr.SongXml.File));
+                arr.XmlComments = Song2014.ReadXmlComments(Path.Combine(basePath, arr.SongXml.File));
 
                 // apply bassfix to template info in case arrangement was changed in EOF
                 if (arr.ArrangementType == ArrangementType.Bass)
@@ -489,7 +489,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     // Fix Low Bass Tuning
                     if (bassFix && TuningFrequency.ApplyBassFix(arr, fixLowBass))
                     {
-                        arr.TuningStrings = Song2014.LoadFromFile(Path.Combine(BasePath, arr.SongXml.File)).Tuning;
+                        arr.TuningStrings = Song2014.LoadFromFile(Path.Combine(basePath, arr.SongXml.File)).Tuning;
                         arr.TuningPitch = 220.00;
                         arr.Tuning = TuningDefinitionRepository.Instance.Detect(arr.TuningStrings, GameVersion.RS2014, false).UIName;
 
@@ -501,7 +501,17 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
             }
 
-            FillPackageCreatorForm(info, templatePath);
+            try
+            {
+                FillPackageCreatorForm(info, templatePath);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("<ERROR> LoadTemplateFile Failed, Corrupt Template ..." + Environment.NewLine +
+                    Path.GetFileName(templatePath) + Environment.NewLine + Environment.NewLine +
+                    "Delete this template, and manually load the project files." + Environment.NewLine +
+                    ex.Message);
+            }
 
             // RS2014 ONLY FIELDS
             chkPlatformMAC.Enabled = CurrentGameVersion != GameVersion.RS2012;
@@ -570,27 +580,27 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             }
 
             // Make the paths relative
-            var BasePath = Path.GetDirectoryName(templatePath);
+            var basePath = Path.GetDirectoryName(templatePath);
             if (String.IsNullOrEmpty(UnpackedDir))
-                UnpackedDir = BasePath;
+                UnpackedDir = basePath;
 
             if (!String.IsNullOrEmpty(packageData.OggPath))
-                packageData.OggPath = packageData.OggPath.RelativeTo(BasePath);
+                packageData.OggPath = packageData.OggPath.RelativeTo(basePath);
             if (!String.IsNullOrEmpty(packageData.OggPreviewPath))
-                packageData.OggPreviewPath = packageData.OggPreviewPath.RelativeTo(BasePath);
+                packageData.OggPreviewPath = packageData.OggPreviewPath.RelativeTo(basePath);
             if (!string.IsNullOrEmpty(packageData.AlbumArtPath))
-                packageData.AlbumArtPath = packageData.AlbumArtPath.RelativeTo(BasePath);
+                packageData.AlbumArtPath = packageData.AlbumArtPath.RelativeTo(basePath);
 
             foreach (var arr in packageData.Arrangements)
             {
                 if (String.IsNullOrEmpty(arr.SongXml.File))
                     continue;
-                arr.SongXml.File = arr.SongXml.File.RelativeTo(BasePath);
+                arr.SongXml.File = arr.SongXml.File.RelativeTo(basePath);
                 arr.SongFile.File = "";
                 if (!String.IsNullOrEmpty(arr.LyricsArtPath))
-                    arr.LyricsArtPath = arr.LyricsArtPath.RelativeTo(BasePath);
+                    arr.LyricsArtPath = arr.LyricsArtPath.RelativeTo(basePath);
                 if (!String.IsNullOrEmpty(arr.GlyphsXmlPath))
-                    arr.GlyphsXmlPath = arr.GlyphsXmlPath.RelativeTo(BasePath);
+                    arr.GlyphsXmlPath = arr.GlyphsXmlPath.RelativeTo(basePath);
             }
 
             try
@@ -609,20 +619,20 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             // Re-Absolutize the paths
             if (!String.IsNullOrEmpty(packageData.OggPath))
-                packageData.OggPath = packageData.OggPath.AbsoluteTo(BasePath);
+                packageData.OggPath = packageData.OggPath.AbsoluteTo(basePath);
             if (!String.IsNullOrEmpty(packageData.OggPreviewPath))
-                packageData.OggPreviewPath = packageData.OggPreviewPath.AbsoluteTo(BasePath);
+                packageData.OggPreviewPath = packageData.OggPreviewPath.AbsoluteTo(basePath);
             if (!string.IsNullOrEmpty(packageData.AlbumArtPath))
-                packageData.AlbumArtPath = packageData.AlbumArtPath.AbsoluteTo(BasePath);
+                packageData.AlbumArtPath = packageData.AlbumArtPath.AbsoluteTo(basePath);
 
             foreach (var arr in packageData.Arrangements)
             {
                 if (!String.IsNullOrEmpty(arr.SongXml.File))
-                    arr.SongXml.File = arr.SongXml.File.AbsoluteTo(BasePath);
+                    arr.SongXml.File = arr.SongXml.File.AbsoluteTo(basePath);
                 if (!String.IsNullOrEmpty(arr.LyricsArtPath))
-                    arr.LyricsArtPath = arr.LyricsArtPath.AbsoluteTo(BasePath);
+                    arr.LyricsArtPath = arr.LyricsArtPath.AbsoluteTo(basePath);
                 if (!String.IsNullOrEmpty(arr.GlyphsXmlPath))
-                    arr.GlyphsXmlPath = arr.GlyphsXmlPath.AbsoluteTo(BasePath);
+                    arr.GlyphsXmlPath = arr.GlyphsXmlPath.AbsoluteTo(basePath);
             }
 
             if (String.IsNullOrEmpty(templateDir)) //if in GUI mode.
@@ -894,7 +904,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     break;
             }
 
-            var BasePath = Path.GetDirectoryName(filesBaseDir);
+            var basePath = Path.GetDirectoryName(filesBaseDir);
 
             // Song INFO
             txtDlcKey.Text = info.Name;
@@ -950,13 +960,19 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             // AlbumArtPath from template RelativeTo path must be re-converted AbsoluteTo path
             if (!String.IsNullOrEmpty(info.AlbumArtPath))
             {
-                AlbumArtPath = info.AlbumArtPath.AbsoluteTo(BasePath);
+                // remove old template relative path identifiers
+                info.AlbumArtPath = info.AlbumArtPath.Replace(@"..\..\", "").Replace(@"..\", "");
+                AlbumArtPath = info.AlbumArtPath.AbsoluteTo(basePath);
                 info.ArtFiles = null; // force ArtFiles array to be generated from the AlbumArtPath                
             }
 
-            // OggPath from template RelativeTo path must be re-converted AbsoluteTo path
+            // OggPath/WemPath from template RelativeTo path must be re-converted AbsoluteTo path
             if (!String.IsNullOrEmpty(info.OggPath))
-                AudioPath = info.OggPath.AbsoluteTo(BasePath);
+            {
+                // remove old template relative path identifiers
+                info.OggPath = info.OggPath.Replace(@"..\", "");
+                AudioPath = info.OggPath.AbsoluteTo(basePath);
+            }
 
             numVolSong.Value = Decimal.Round((decimal)info.Volume, 2);
             numVolPreview.Value = info.PreviewVolume != null ? Decimal.Round((decimal)info.PreviewVolume, 2) : numVolSong.Value;
@@ -970,13 +986,15 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             for (int i = 0; i < info.Arrangements.Count; i++)
             {
                 var arrangement = info.Arrangements[i];
-
+                // remove old template relative path identifiers
+                arrangement.SongXml.File = arrangement.SongXml.File.Replace(@"..\..\", "").Replace(@"..\", "");
                 // Template RelativeTo paths must be re-converted AbsoluteTo paths
-                arrangement.SongXml.File = arrangement.SongXml.File.AbsoluteTo(BasePath);
+                arrangement.SongXml.File = arrangement.SongXml.File.AbsoluteTo(basePath);
+
                 if (!String.IsNullOrEmpty(arrangement.LyricsArtPath))
-                    arrangement.LyricsArtPath = arrangement.LyricsArtPath.AbsoluteTo(BasePath);
+                    arrangement.LyricsArtPath = arrangement.LyricsArtPath.AbsoluteTo(basePath);
                 if (!String.IsNullOrEmpty(arrangement.GlyphsXmlPath))
-                    arrangement.GlyphsXmlPath = arrangement.GlyphsXmlPath.AbsoluteTo(BasePath);
+                    arrangement.GlyphsXmlPath = arrangement.GlyphsXmlPath.AbsoluteTo(basePath);
 
                 arrangement.ClearCache();
 
@@ -1772,12 +1790,12 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 }
 
             // TODO: monitor this change
-            var invalidRepresent = packageData.Arrangements.Any(ar => ar.Represent && ar.BonusArr);
-            var hasRepresent = packageData.Arrangements.Any(ar => ar.Represent == true);
+            var invalidRepresent = packageData.Arrangements.Any(arr => arr.Represent && arr.BonusArr);
+            var hasRepresent = packageData.Arrangements.Any(arr => arr.Represent == true);
 
             if (invalidRepresent && !hasRepresent)
             {
-                var diaMsg = "Invalid Arrangement Default/Bonus/Alternate Conditon ..." + Environment.NewLine + Environment.NewLine +
+                var diaMsg = "Invalid Arrangement Default/Bonus/Alternate Represent Condition" + Environment.NewLine + Environment.NewLine +
                              "Reauthor using EOF, or open each arrangement seperately" + Environment.NewLine +
                              "using toolkit Edit Arrangement and make necessary changes.  ";
                 if (DialogResult.No == BetterDialog2.ShowDialog(diaMsg, "<WARNING> Arrangement Represent", null, "Ignore", "Abort", Bitmap.FromHicon(SystemIcons.Warning.Handle), "Warning", 150, 150))

@@ -23,7 +23,7 @@ using PackageCreator = RocksmithToolkitLib.DLCPackage.DLCPackageCreator;
 namespace RocksmithToolkitGUI.DLCPackerUnpacker
 {
     public partial class DLCPackerUnpacker : UserControl
-    {
+    {        
         private const string MESSAGEBOX_CAPTION = "CDLC Packer/Unpacker";
         private const string TKI_APPID = "(AppID by Packer/Unpacker)";
         private BackgroundWorker bwRepack = new BackgroundWorker();
@@ -682,7 +682,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Restart();
-                archivePath = Packer.Pack(srcPath, destPath, updateSng:UpdateSng, updateManifest:UpdateManifest);
+                archivePath = Packer.Pack(srcPath, destPath, updateSng: UpdateSng, updateManifest: UpdateManifest);
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
             }
