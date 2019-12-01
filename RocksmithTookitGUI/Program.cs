@@ -92,7 +92,9 @@ namespace RocksmithToolkitGUI
                     var exception = e.ExceptionObject as Exception;
                     GlobalsConfig.Log.Error(" - Unhandled.Exception:\n\nSource: {0}\nTarget: {1}\n{2}", exception.Source, exception.TargetSite, exception.ToString());
 
-                    if (MessageBox.Show(String.Format("Unhandled.Exception:\n\n{0}\nPlease send us the {1} file if you need help.  Open log file now?", exception.Message.ToString(), Path.GetFileName(logPath)), "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    if (MessageBox.Show(String.Format("Unhandled.Exception:\n\n{0}\nPlease send us the {1} file if you need help.  Open log file now?", 
+                        exception.Message.ToString(), Path.GetFileName(logPath)), 
+                        "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
                         Process.Start(logPath);
                     }
@@ -113,13 +115,15 @@ namespace RocksmithToolkitGUI
 
                     if (exception.Message != null && exception.Message.Contains("expired"))
                     {
-                        MessageBox.Show(String.Format("Activation.ThreadException:\n\n{0}", exception.Message), "Please Read This Important Message Completely ...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(String.Format("Activation.ThreadException:\n\n{0}", exception.Message), 
+                            "Please Read This Important Message Completely ...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         Application.Exit();
                     }
                     else
                     {
                         var exMessage = String.IsNullOrEmpty(packerErrMsg) ? exception.Message : String.Format("{0}\nPacker.ThreadException (Corrupt CDLC):\n{1}\n", exception.Message, packerErrMsg.Trim());
-                        if (MessageBox.Show(String.Format("Application.ThreadException:\n\n{0}\n\nPlease send us the {1} file if you need help.  Open log file now?", exMessage, Path.GetFileName(logPath)), "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        if (MessageBox.Show(String.Format("Application.ThreadException:\n\n{0}\n\nPlease send us the {1} file if you need help.  Open log file now?", exMessage, Path.GetFileName(logPath)), 
+                            "Please Read This Important Message Completely ...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                         {
                             Process.Start(logPath);
                         }

@@ -729,6 +729,19 @@ namespace RocksmithToolkitLib.Extensions
             return finalString;
         }
 
+        /// <summary>
+        /// Split contiguous string on caps and insert spaces
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static string SplitCamelCase(string source)
+        {
+            string[] resultArray = Regex.Split(source, @"(?<!^)(?=[A-Z])");
+            var result = String.Join(" ", resultArray).Trim();
+
+            return result;
+        }
+
         #endregion
     }
 }

@@ -23,7 +23,7 @@ using PackageCreator = RocksmithToolkitLib.DLCPackage.DLCPackageCreator;
 namespace RocksmithToolkitGUI.DLCPackerUnpacker
 {
     public partial class DLCPackerUnpacker : UserControl
-    {        
+    {
         private const string MESSAGEBOX_CAPTION = "CDLC Packer/Unpacker";
         private const string TKI_APPID = "(AppID by Packer/Unpacker)";
         private BackgroundWorker bwRepack = new BackgroundWorker();
@@ -124,7 +124,7 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
 
             errMsg += "Would you like to open the destination path?  ";
 
-            if (MessageBox.Show(new Form { TopMost = true }, errMsg, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+            if (MessageBox.Show(errMsg, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                 Process.Start(destDirPath);
         }
 

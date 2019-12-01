@@ -186,6 +186,9 @@ namespace RocksmithToolkitLib.DLCPackage
 
                     foreach (var sngFile in sngFiles)
                     {
+                        // prevent ContextSwitchDeadlock exceptions in long processes
+                        Application.DoEvents();
+
                         var xmlEofFile = Path.Combine(Path.GetDirectoryName(sngFile), String.Format("{0}.xml", Path.GetFileNameWithoutExtension(sngFile)));
                         xmlEofFile = xmlEofFile.Replace(String.Format("bin{0}{1}", Path.DirectorySeparatorChar, srcPlatform.GetPathName()[1].ToLower()), "arr");
                         var xmlSngFile = xmlEofFile.Replace(".xml", ".sng.xml");
@@ -693,6 +696,9 @@ namespace RocksmithToolkitLib.DLCPackage
                 // InflateEntries - compatible with RS1 and RS2014 files
                 foreach (var entry in psarc.TOC)
                 {
+                    // prevent ContextSwitchDeadlock exceptions in long processes
+                    Application.DoEvents();
+
                     // remove invalid characters from entry.Name so CDLC can be unpacked
                     var validEntryName = entry.Name.Replace("?", "~");
                     var inputPath = Path.Combine(destPath, validEntryName);
@@ -706,9 +712,6 @@ namespace RocksmithToolkitLib.DLCPackage
                     else
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(inputPath));
-                        if (entry.Name.Contains("man_lead.xml"))
-                            Debug.WriteLine("Found it.");
-
                         psarc.InflateEntry(entry, inputPath);
                         // Close
                         if (entry.Data != null)
@@ -1184,6 +1187,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 }
             }
 
+            // system archive file handling
+            if (fnameWithoutExt.EndsWith(".psarc"))
+                fnameWithoutExt = fnameWithoutExt.Replace(".psarc", "_psarc");
+
             var unpackedDir = String.Format("{0}_{1}", fnameWithoutExt, targetPlatform);
 
             if (!String.IsNullOrEmpty(destPath))
@@ -1266,6 +1273,10 @@ namespace RocksmithToolkitLib.DLCPackage
                         }
                     }
 
+                    // special handling of system archive files
+                    if (srcPath.Contains("_psarc"))
+                        fileExtension = ".psarc";
+
                     versionPlatformExtension.Add(versionPlatform, fileExtension);
                 }
             }
@@ -1277,6 +1288,8 @@ namespace RocksmithToolkitLib.DLCPackage
                 {
                     var vpIndex = srcPath.LastIndexOf(item.Key, StringComparison.Ordinal);
                     var pathWoVP = srcPath.Substring(0, vpIndex);
+                    // special handling of system archives
+                    pathWoVP = pathWoVP.Replace("_psarc", "");
                     destPath = String.Format("{0}{1}", pathWoVP, item.Value);
                     break;
                 }

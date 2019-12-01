@@ -612,9 +612,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                     IsDirty = false;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // DO NOTHING //
+                throw new Exception("<ERROR> SaveTemplateFile Failed ..." + Environment.NewLine + ex.Message);
             }
 
             // Re-Absolutize the paths
@@ -2412,11 +2412,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
                     message += String.Format("{0}Would you like to open the folder where the package was generated?{0}", Environment.NewLine);
                     if (MessageBox.Show(message, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                    {
                         Process.Start(Path.GetDirectoryName(DestPath));
-                    }
-                    break;
 
+                    break;
                 case "error":
                     var message2 = String.Format("Package generation {2} failed.  See below: {0}{1}{0}", Environment.NewLine, errorsFound, ToolkitVersion.RSTKGuiVersion);
                     MessageBox.Show(message2, MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2603,10 +2601,16 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         /// </summary>
         private void btnDevUse_Click(object sender, EventArgs e)
         {
-            PackageRating = "4";
-            return;
+            //PackageRating = "4";
+            //return;
 
-            IOExtension.DeleteDirectory(null);
+            //IOExtension.DeleteDirectory(null);
+
+            var l = DateTime.Parse("2019/10/22").Ticks;
+            var dateTime = new DateTime(l);
+            var degugMe = Application.LocalUserAppDataPath;
+  
+            return;
 
             string srcPath;
             string destPath;
@@ -2638,8 +2642,6 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
             var recycleDir = Packer.RecycleUnpackedDir(unpackedDir);
             var recycleFolder = Packer.RecycleUnpackedDir(unpackedFolder);
-
-
         }
 
         private void btnTemplateSave_Click(object sender, EventArgs e)
