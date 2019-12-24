@@ -111,10 +111,10 @@ namespace RocksmithToolkitLib.DLCPackage
                 case GamePlatform.Pc:
                 case GamePlatform.Mac:
                     if (srcPlatform.version == GameVersion.RS2014)
+                    {
                         using (var inputStream = File.OpenRead(srcPath))
-                        {
                             unpackedDir = ExtractPSARC(srcPath, destDirPath, inputStream, srcPlatform);
-                        }
+                    }
                     else
                     {
                         using (var inputFileStream = File.OpenRead(srcPath))

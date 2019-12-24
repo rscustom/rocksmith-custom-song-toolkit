@@ -39,7 +39,7 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnRestore = new System.Windows.Forms.Button();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.picPedals = new System.Windows.Forms.PictureBox();
             this.picTitle = new System.Windows.Forms.PictureBox();
             this.picLightspeed = new System.Windows.Forms.PictureBox();
@@ -81,7 +81,7 @@
             this.btnGenerate.Size = new System.Drawing.Size(159, 29);
             this.btnGenerate.TabIndex = 10;
             this.btnGenerate.Text = "Generate";
-            this.toolTip1.SetToolTip(this.btnGenerate, "Create your custom intro screen\r\nsequence for use in the game.");
+            this.toolTip.SetToolTip(this.btnGenerate, "Create your custom intro screen\r\nsequence for use in the game.");
             this.btnGenerate.UseVisualStyleBackColor = false;
             this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
             // 
@@ -172,8 +172,8 @@
             this.btnSave.Size = new System.Drawing.Size(94, 29);
             this.btnSave.TabIndex = 8;
             this.btnSave.Text = "Save Template";
-            this.toolTip1.SetToolTip(this.btnSave, "Save your intro screen sequence as a\r\ntemplate.  Templates can be shared \r\nwith o" +
-        "ther users.   Click on Help for\r\nadditional information.");
+            this.toolTip.SetToolTip(this.btnSave, "Save your intro screen sequence as a\r\ntemplate.  Templates can be shared \r\nwith o" +
+                    "ther users.   Click on Help for\r\nadditional information.");
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
@@ -187,8 +187,8 @@
             this.btnLoad.Size = new System.Drawing.Size(94, 29);
             this.btnLoad.TabIndex = 0;
             this.btnLoad.Text = "Load Template";
-            this.toolTip1.SetToolTip(this.btnLoad, "Load an intro screen sequence template.  \r\nAdditional shared templates can found " +
-        "on \r\nthe website.  Click on Help for additional \r\ninformation.");
+            this.toolTip.SetToolTip(this.btnLoad, "Load an intro screen sequence template.  \r\nAdditional shared templates can found " +
+                    "on \r\nthe website.  Click on Help for additional \r\ninformation.");
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
@@ -201,16 +201,17 @@
             this.btnRestore.Size = new System.Drawing.Size(67, 29);
             this.btnRestore.TabIndex = 9;
             this.btnRestore.Text = "Restore";
-            this.toolTip1.SetToolTip(this.btnRestore, "Restore the intro screens to the original content.\r\nWARNING ... this will overwri" +
-        "te any user changes!");
+            this.toolTip.SetToolTip(this.btnRestore, "Restore the intro screens to the original content.\r\nWARNING ... this will overwri" +
+                    "te any user changes!");
             this.btnRestore.UseVisualStyleBackColor = true;
             this.btnRestore.Click += new System.EventHandler(this.btnRestore_Click);
             // 
-            // toolTip1
+            // toolTip
             // 
-            this.toolTip1.AutoPopDelay = 25000;
-            this.toolTip1.InitialDelay = 500;
-            this.toolTip1.ReshowDelay = 100;
+            this.toolTip.AutoPopDelay = 25000;
+            this.toolTip.InitialDelay = 500;
+            this.toolTip.IsBalloon = true;
+            this.toolTip.ReshowDelay = 100;
             // 
             // picPedals
             // 
@@ -484,6 +485,9 @@
             this.Controls.Add(this.btnGenerate);
             this.Name = "IntroScreensCreator";
             this.Size = new System.Drawing.Size(506, 450);
+            this.toolTip.SetToolTip(this, "ReadMe: \r\nThis toolkit feature is no longer maintained or updated.\r\nPlease use th" +
+                    "e latestest version of Custom Game Toolkit\r\nto create custom game intro screens " +
+                    "and other mods.");
             this.Disposed += new System.EventHandler(this.IntroScreensCreator_Dispose);
             ((System.ComponentModel.ISupportInitialize)(this.picPedals)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTitle)).EndInit();
@@ -518,7 +522,7 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Button btnRestore;
-        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.GroupBox groupBox1;
         public CueTextBox txtSeqName;
         private System.Windows.Forms.Label label5;

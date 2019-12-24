@@ -2609,7 +2609,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             var l = DateTime.Parse("2019/10/22").Ticks;
             var dateTime = new DateTime(l);
             var degugMe = Application.LocalUserAppDataPath;
-  
+
             return;
 
             string srcPath;

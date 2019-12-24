@@ -31,6 +31,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.appIdCombo = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.chkFlipX = new System.Windows.Forms.CheckBox();
@@ -39,7 +40,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.Frets24Checkbox = new System.Windows.Forms.CheckBox();
             this.gbInfo = new System.Windows.Forms.GroupBox();
             this.keyboardDescArrLabel = new System.Windows.Forms.Label();
-            this.authorTextbox = new RocksmithToolkitGUI.CueTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -49,7 +49,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.inlayTemplateCombo = new System.Windows.Forms.ComboBox();
             this.picInlay = new System.Windows.Forms.PictureBox();
             this.picIcon = new System.Windows.Forms.PictureBox();
-            this.inlayNameTextbox = new RocksmithToolkitGUI.CueTextBox();
             this.picFlipX = new System.Windows.Forms.PictureBox();
             this.picFlipY = new System.Windows.Forms.PictureBox();
             this.picColored = new System.Windows.Forms.PictureBox();
@@ -72,7 +71,10 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.rbXbox360 = new System.Windows.Forms.RadioButton();
             this.rbMac = new System.Windows.Forms.RadioButton();
             this.rbPc = new System.Windows.Forms.RadioButton();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.introScreensCreator1 = new RocksmithToolkitGUI.DLCInlayCreator.IntroScreensCreator();
+            this.authorTextbox = new RocksmithToolkitGUI.CueTextBox();
+            this.inlayNameTextbox = new RocksmithToolkitGUI.CueTextBox();
             this.gbInfo.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInlay)).BeginInit();
@@ -176,16 +178,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.keyboardDescArrLabel.Size = new System.Drawing.Size(166, 13);
             this.keyboardDescArrLabel.TabIndex = 74;
             this.keyboardDescArrLabel.Text = "Will be written inside the package";
-            // 
-            // authorTextbox
-            // 
-            this.authorTextbox.Cue = "Author";
-            this.authorTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.authorTextbox.ForeColor = System.Drawing.Color.Gray;
-            this.authorTextbox.Location = new System.Drawing.Point(10, 31);
-            this.authorTextbox.Name = "authorTextbox";
-            this.authorTextbox.Size = new System.Drawing.Size(188, 20);
-            this.authorTextbox.TabIndex = 6;
             // 
             // label1
             // 
@@ -300,17 +292,6 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.picIcon.TabIndex = 67;
             this.picIcon.TabStop = false;
             this.picIcon.Click += new System.EventHandler(this.picIcon_Click);
-            // 
-            // inlayNameTextbox
-            // 
-            this.inlayNameTextbox.Cue = "Inlay Name";
-            this.inlayNameTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.inlayNameTextbox.ForeColor = System.Drawing.Color.Gray;
-            this.inlayNameTextbox.Location = new System.Drawing.Point(51, 63);
-            this.inlayNameTextbox.Name = "inlayNameTextbox";
-            this.inlayNameTextbox.Size = new System.Drawing.Size(147, 20);
-            this.inlayNameTextbox.TabIndex = 9;
-            this.inlayNameTextbox.Leave += new System.EventHandler(this.inlayNameTextbox_Leave);
             // 
             // picFlipX
             // 
@@ -586,12 +567,40 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.rbPc.UseVisualStyleBackColor = true;
             this.rbPc.CheckedChanged += new System.EventHandler(this.radioPlatform_CheckedChanged);
             // 
+            // toolTip
+            // 
+            this.toolTip.AutoPopDelay = 25000;
+            this.toolTip.InitialDelay = 500;
+            this.toolTip.IsBalloon = true;
+            this.toolTip.ReshowDelay = 100;
+            // 
             // introScreensCreator1
             // 
             this.introScreensCreator1.Location = new System.Drawing.Point(209, 399);
             this.introScreensCreator1.Name = "introScreensCreator1";
             this.introScreensCreator1.Size = new System.Drawing.Size(166, 52);
             this.introScreensCreator1.TabIndex = 91;
+            // 
+            // authorTextbox
+            // 
+            this.authorTextbox.Cue = "Author";
+            this.authorTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.authorTextbox.ForeColor = System.Drawing.Color.Gray;
+            this.authorTextbox.Location = new System.Drawing.Point(10, 31);
+            this.authorTextbox.Name = "authorTextbox";
+            this.authorTextbox.Size = new System.Drawing.Size(188, 20);
+            this.authorTextbox.TabIndex = 6;
+            // 
+            // inlayNameTextbox
+            // 
+            this.inlayNameTextbox.Cue = "Inlay Name";
+            this.inlayNameTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.inlayNameTextbox.ForeColor = System.Drawing.Color.Gray;
+            this.inlayNameTextbox.Location = new System.Drawing.Point(51, 63);
+            this.inlayNameTextbox.Name = "inlayNameTextbox";
+            this.inlayNameTextbox.Size = new System.Drawing.Size(147, 20);
+            this.inlayNameTextbox.TabIndex = 9;
+            this.inlayNameTextbox.Leave += new System.EventHandler(this.inlayNameTextbox_Leave);
             // 
             // DLCInlayCreator
             // 
@@ -612,6 +621,9 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
             this.Controls.Add(this.groupBox2);
             this.Name = "DLCInlayCreator";
             this.Size = new System.Drawing.Size(507, 520);
+            this.toolTip.SetToolTip(this, "ReadMe: \r\nThis toolkit feature is no longer maintained or updated.\r\nPlease use th" +
+                    "e latestest version of Custom Game Toolkit\r\nto create custom guitar inlays and o" +
+                    "ther mods.");
             this.Load += new System.EventHandler(this.DLCInlayCreator_Load);
             this.Disposed += new System.EventHandler(this.DLCInlayCreator_Dispose);
             this.gbInfo.ResumeLayout(false);
@@ -677,6 +689,7 @@ namespace RocksmithToolkitGUI.DLCInlayCreator
         public RadioButton rbXbox360;
         public RadioButton rbMac;
         public RadioButton rbPc;
+        private ToolTip toolTip;
 
     }
 }

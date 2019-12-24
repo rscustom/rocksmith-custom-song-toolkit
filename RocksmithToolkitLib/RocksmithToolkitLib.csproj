@@ -334,7 +334,9 @@ rem )
 rem there are some hidden prebuild commands for OSX and Linux in the RocksmithToolkitLib.csproj these call the 'prebuild.sh' file
 
 :End
-echo That's All Folks!</PreBuildEvent>
+echo ------------------
+echo That's All Folks!
+echo ------------------</PreBuildEvent>
   </PropertyGroup>
   <!-- BEGIN CUSTOM PREBUILD EVENT - DO NOT MODIFY -->
   <PropertyGroup>
