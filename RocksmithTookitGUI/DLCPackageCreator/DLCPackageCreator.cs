@@ -2482,9 +2482,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Control control = (Control)sender;
             string name = control.Name;
             if (name == "numVolSong")
-                tt.SetToolTip(numVolSong, "Softer 0, -1, -2 ... Default -7 ... -18, -19, -20 Louder" + Environment.NewLine + "LF (Loudness Factor)");
+                tt.SetToolTip(numVolSong, "Soft 0.0 ... -7.0 (default) ... -30.0 Loud" + Environment.NewLine + "LF (Loudness Factor)");
             else // preview audio volume is normally softer than the main audio
-                tt.SetToolTip(numVolPreview, "Softer 0, -1, -2 ... Default -5 ... -18, -19, -20 Louder" + Environment.NewLine + "LF (Loudness Factor)");
+                tt.SetToolTip(numVolPreview, "Soft 0.0 ... -5.0 (default) ... -30.0 Loud" + Environment.NewLine + "LF (Loudness Factor)");
         }
 
         private void btnAlbumArt_Click(object sender, EventArgs e)

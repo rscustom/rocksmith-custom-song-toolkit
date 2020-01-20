@@ -1,5 +1,6 @@
 Rocksmith Toolkit Release Notes
 
+- volume ranges settable from 0 to -30 with better defaults
 - fixed packer/unpacker PromptComplete now comes to front
 - autoconvert old template relative path format to the new format
 - added additional exception handling for corrupt '*.dlc.xml' templates

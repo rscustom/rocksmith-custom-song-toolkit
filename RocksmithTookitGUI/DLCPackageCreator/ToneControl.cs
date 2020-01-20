@@ -157,7 +157,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tvt.IsBalloon = true;
             tvt.InitialDelay = 0;
             tvt.ShowAlways = true;
-            tvt.SetToolTip(volumeBox, "LOWEST 0,-1,-2,-3,..., AVERAGE -12 ,...,-20,-21 HIGHER");
+            tvt.SetToolTip(volumeBox, "Soft 0.0 ... -20.0 (default) ... -30.0 Loud");
         }
 
         private void UpdateToneDescription(ComboBox combo)
@@ -340,6 +340,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 tt.Show("", this, 20000); // show for 20 seconds
             }
         }
+
 
     }
 }

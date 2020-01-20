@@ -95,7 +95,7 @@ namespace RocksmithToolkitLib
             DateTime dtuAssemblyConfig = DateTime.Parse(assemblyConfiguration, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
             var dtuNow = DateTime.UtcNow;
 
-            if (dtuNow > dtuAssemblyConfig.AddDays(60))
+            if (dtuNow > dtuAssemblyConfig.AddDays(180))
                 return false;
 
             return true;

@@ -300,9 +300,9 @@
             this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label5.Location = new System.Drawing.Point(227, 23);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(20, 13);
+            this.label5.Size = new System.Drawing.Size(19, 13);
             this.label5.TabIndex = 5;
-            this.label5.Text = "dB";
+            this.label5.Text = "LF";
             this.label5.Visible = false;
             // 
             // loopPedalRack4Box
@@ -489,12 +489,12 @@
             65536});
             this.volumeBox.Location = new System.Drawing.Point(180, 19);
             this.volumeBox.Maximum = new decimal(new int[] {
-            0,
+            30,
             0,
             0,
             0});
             this.volumeBox.Minimum = new decimal(new int[] {
-            100,
+            30,
             0,
             0,
             -2147483648});

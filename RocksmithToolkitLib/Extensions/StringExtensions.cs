@@ -309,7 +309,7 @@ namespace RocksmithToolkitLib.Extensions
 
             // check for valid volume
             float volume = (float)Math.Round((double)value, 1);
-            if (volume > -30.0F && volume < 30.0F)
+            if (volume >= -30.0F && volume <= 30.0F)
                 return volume;
 
             // use default volume
