@@ -29,5 +29,5 @@ using RocksmithToolkitLib;
 //
 // THESE VALUES ARE PROGRAMMATICALLY GENERATED - DO NOT EDIT
 [assembly: AssemblyVersion("2.9.2.1")]
-[assembly: AssemblyInformationalVersion("226274f6")]
-[assembly: AssemblyConfiguration("2020-01-20T01:57:48")]
+[assembly: AssemblyInformationalVersion("f9511285")]
+[assembly: AssemblyConfiguration("2020-01-20T21:07:37")]
