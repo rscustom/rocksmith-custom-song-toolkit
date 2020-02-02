@@ -6,6 +6,7 @@ using System.Security.Authentication;
 using RocksmithToolkitLib.Extensions;
 using System.Diagnostics;
 using System.Globalization;
+using System.Drawing;
 
 
 namespace RocksmithToolkitLib
@@ -79,10 +80,9 @@ namespace RocksmithToolkitLib
 
             return String.Format("{0}-{1}", assemblyVersion, assemblyInformationVersion).Trim();
         }
-
-        public static bool IsRSTKLibValid()
+        
+        public static bool IsRSTKLibValid(double shelfLifeDays = 180)
         {
-            // return false;
             var assembly = Assembly.LoadFile(typeof(RocksmithToolkitLib.ToolkitVersion).Assembly.Location);
             var assemblyConfiguration = assembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false).Cast<AssemblyConfigurationAttribute>().FirstOrDefault().Configuration.ToString() ?? "";
 
@@ -94,8 +94,9 @@ namespace RocksmithToolkitLib
             // working with UTC to avoid regional DateTime issues
             DateTime dtuAssemblyConfig = DateTime.Parse(assemblyConfiguration, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
             var dtuNow = DateTime.UtcNow;
+            var dtuRemaining = dtuAssemblyConfig.AddDays(shelfLifeDays) - dtuNow;
 
-            if (dtuNow > dtuAssemblyConfig.AddDays(180))
+            if (dtuRemaining.Days < 0)
                 return false;
 
             return true;
@@ -108,8 +109,14 @@ namespace RocksmithToolkitLib
         public static void Start()
         {
             if (!ToolkitVersion.IsRSTKLibValid())
-                throw new ApplicationException("This version of RocksmithToolkitLib.dll has expired.  " + Environment.NewLine +
-                                               "Please download and install the latest toolkit library.  " + Environment.NewLine);
+            {
+                // throw new ApplicationException("This version of RocksmithToolkitLib.dll has expired.  " + Environment.NewLine +
+                //    "Please download and install the latest toolkit library.  " + Environment.NewLine);
+
+                var diaMsg = "This version of RocksmithToolkitLib.dll is no longer supported." + Environment.NewLine +
+                             "Please download and install the latest version of the toolkit.";
+                BetterDialog2.ShowDialog(diaMsg, "Time To Update ...", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Warning.Handle), "WARNING ...", 0, 150);
+            }
         }
     }
 
