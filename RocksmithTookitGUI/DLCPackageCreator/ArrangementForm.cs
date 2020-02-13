@@ -389,13 +389,14 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                 // Detect Arrangement XML Version
                 var xmlVersion = GameVersion.None;
                 var verAttrib = Convert.ToInt32(_song2014.Version);
-                if (verAttrib < 7) // RS1 format
+
+                if (verAttrib == 0 || verAttrib == 4) // RS1 is null (0) or 4
                 {
                     xmlVersion = GameVersion.RS2012;
                 }
-                else if (verAttrib > 6) // RS2014 format 
+                else if (verAttrib >= 7) // RS2014 is 7 or above
                 {
-                    // CAUTION newer RS1 use RS2014 XML Arrangement format
+                    // CAUTION newer RS1 may use RS2014 XML Arrangement format
                     xmlVersion = GameVersion.RS2014;
                 }
                 else

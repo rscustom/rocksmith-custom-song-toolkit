@@ -72,10 +72,17 @@ namespace RocksmithToolkitLib.Extensions
         }
 
         public static string GetValidAppIdSixDigits(this string value)
-        {
+        {            
             value = value.Trim();
+            
+            // social engineering code
+            if (value.Equals("221680"))
+                throw new InvalidDataException("<WARNING> Sentinel has detected futile human resistance ..." + Environment.NewLine +
+                    "Buy Cherub Rock and you wont have to mess around changing AppId's.");
+
             // simple six digit number validation, eg. 248750
-            if (Regex.IsMatch(value, ("^([0-9]{6})$")))
+            // can be seven digits too eg. 1089163
+            if (Regex.IsMatch(value, ("^([0-9]{6}|[0-9]{7})$")))
                 return value;
 
             return "";
@@ -322,7 +329,7 @@ namespace RocksmithToolkitLib.Extensions
                 return String.Empty;
 
             // check for valid four digit song year 
-            if (!Regex.IsMatch(value, "^(15[0-9][0-9]|16[0-9][0-9]|17[0-9][0-9]|18[0-9][0-9]|19[0-9][0-9]|20[0-2][0-9])"))
+            if (!Regex.IsMatch(value, "^(15[0-9][0-9]|16[0-9][0-9]|17[0-9][0-9]|18[0-9][0-9]|19[0-9][0-9]|20[0-3][0-9])"))
                 value = ""; // clear if not valid
 
             return value;

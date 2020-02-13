@@ -121,7 +121,7 @@ namespace RocksmithToolkitLib.DLCPackage
             this.TuningStrings = attr.Tuning;
             this.Id = Guid.Parse(attr.PersistentID);
             this.MasterId = attr.MasterID_RDV;
- 
+
             // Save xml comments
             this.XmlComments = Song2014.ReadXmlComments(xmlSongFile);
 
@@ -184,16 +184,27 @@ namespace RocksmithToolkitLib.DLCPackage
                     if (song.Tones != null)
                         foreach (var xmlTone in song.Tones)
                         {
-                            // fix some old toolkit behavior
-                            if (xmlTone.Name == "ToneA")
+                            // auto fix some old toolkit behavior that causes multitone exceptions
+                            if (xmlTone.Name == "ToneA"  || xmlTone.Name == "tone_a")
+                            {
                                 xmlTone.Name = attr.Tone_A;
-                            if (xmlTone.Name == "ToneB")
+                                xmlTone.Id = 0;
+                            }
+                            if (xmlTone.Name == "ToneB" || xmlTone.Name == "tone_b")
+                            {
                                 xmlTone.Name = attr.Tone_B;
-                            if (xmlTone.Name == "ToneC")
+                                xmlTone.Id = 1; 
+                            }
+                            if (xmlTone.Name == "ToneC" || xmlTone.Name == "tone_c")
+                            {
                                 xmlTone.Name = attr.Tone_C;
-                            if (xmlTone.Name == "ToneD")
+                                xmlTone.Id = 2;
+                            }
+                            if (xmlTone.Name == "ToneD" || xmlTone.Name == "tone_d")
+                            {
                                 xmlTone.Name = attr.Tone_D;
-
+                                xmlTone.Id = 3;
+                            }
                             if (xmlTone.Name.ToLower() == jsonTone.Name.ToLower() || jsonTone.Name.ToLower().EndsWith(xmlTone.Name.ToLower())) //todo: SAMENAME tone fix?
                             {
                                 xmlTone.Name = jsonTone.Name;

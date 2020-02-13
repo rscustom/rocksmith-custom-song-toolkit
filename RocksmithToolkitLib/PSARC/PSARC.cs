@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MiscUtil.Conversion;
 using RocksmithToolkitLib.DLCPackage;
 using RocksmithToolkitLib.Extensions;
 using zlib;
+using Newtonsoft.Json;
+using System.Threading;
 
 namespace RocksmithToolkitLib.PSARC
 {
@@ -237,25 +241,28 @@ namespace RocksmithToolkitLib.PSARC
                 {
                     var array_i = new byte[blockSize];
                     var array_o = new byte[blockSize * 2];
-                    var memoryStream = new MemoryStream(array_o);
 
-                    int plain_len = entry.Data.Read(array_i, 0, array_i.Length);
-                    int packed_len = (int)RijndaelEncryptor.Zip(array_i, memoryStream, plain_len, false);
+                    using (var memoryStream = new MemoryStream(array_o))
+                    {
+                        int plain_len = entry.Data.Read(array_i, 0, array_i.Length);
+                        int packed_len = (int)RijndaelEncryptor.Zip(array_i, memoryStream, plain_len, false);
 
-                    // If packed data "worse" than plain (i.e. already packed) z = 0
-                    if (packed_len >= plain_len)
-                    {
-                        zList.Add(new Tuple<byte[], int>(array_i, plain_len));
-                    }
-                    else // If packed data is good
-                    {
-                        if (packed_len < (blockSize - 1))
-                        {// If packed data fits maximum packed block size z = packed_len
-                            zList.Add(new Tuple<byte[], int>(array_o, packed_len));
-                        }
-                        else // Write plain. z = 0
+                        // If packed data "worse" than plain (i.e. already packed) z = 0
+                        if (packed_len >= plain_len)
                         {
                             zList.Add(new Tuple<byte[], int>(array_i, plain_len));
+                        }
+                        else // If packed data is good
+                        {
+                            if (packed_len < (blockSize - 1))
+                            {
+                                // If packed data fits maximum packed block size z = packed_len
+                                zList.Add(new Tuple<byte[], int>(array_o, packed_len));
+                            }
+                            else // Write plain. z = 0
+                            {
+                                zList.Add(new Tuple<byte[], int>(array_i, plain_len));
+                            }
                         }
                     }
                 }
@@ -268,16 +275,16 @@ namespace RocksmithToolkitLib.PSARC
                 }
 
                 var array3 = new byte[zSisesSum];
-                var memoryStream2 = new MemoryStream(array3);
-                foreach (var entryblock in zList)
+                using (var memoryStream2 = new MemoryStream(array3))
                 {
-                    memoryStream2.Write(entryblock.Item1, 0, entryblock.Item2);
+                    foreach (var entryblock in zList)
+                        memoryStream2.Write(entryblock.Item1, 0, entryblock.Item2);
                 }
 
                 entryDeflatedData.Add(entry, array3);
                 progress += step;
                 GlobalExtension.UpdateProgress.Value = (int)progress;
-                Console.WriteLine("Deflating: " + ndx++);
+                Console.WriteLine("Deflating Entries: " + ndx++);
             }
         }
 
@@ -529,54 +536,109 @@ namespace RocksmithToolkitLib.PSARC
             _writer.Write(_header.BlockSizeAlloc);
             _writer.Write(_header.ArchiveFlags);
 
+            var step = Math.Round(1D / (this.TOC.Count + 2) * 100, 3);
+            double progress = 0;
+            GlobalExtension.ShowProgress("Writing tocData ...");
+
             //Write Table of contents
-            foreach (Entry current in _toc)
+            foreach (Entry entry in _toc)
             {
-                current.UpdateNameMD5();
-                _writer.Write(current.MD5);
-                _writer.Write(current.zIndexBegin);
-                _writer.WriteUInt40((ulong)current.Data.Length);//current.Length
-                _writer.WriteUInt40(current.Offset);
+                entry.UpdateNameMD5();
+                _writer.Write(entry.MD5);
+                _writer.Write(entry.zIndexBegin);
+                _writer.WriteUInt40((ulong)entry.Data.Length);
+                _writer.WriteUInt40(entry.Offset);
+
+                progress += step;
+                GlobalExtension.UpdateProgress.Value = (int)progress;
+                Console.WriteLine("Writing tocData: " + entry.Id);
             }
 
             foreach (uint zLen in zLengths)
             {
                 switch (bNum)
                 {
-                    case 2://16bit
+                    case 2: //16bit
                         _writer.Write((ushort)zLen);
                         break;
-                    case 3://24bit
+                    case 3: //24bit
                         _writer.WriteUInt24(zLen);
                         break;
-                    case 4://32bit
+                    case 4: //32bit
                         _writer.Write(zLen);
                         break;
                 }
             }
+
             zLengths = null;
+            progress = 0;
+            GlobalExtension.ShowProgress("Writing zData ...");
 
             // Write zData
-            var ndx = 0; // for debugging
-            var step = Math.Round(1D / (this.TOC.Count + 2) * 100, 3);
-            double progress = 0;
-            GlobalExtension.ShowProgress("Writing Zipped Data ...");
-
-            foreach (Entry current in _toc)
+            foreach (Entry entry in _toc)
             {
-                _writer.Write(zStreams[current]);
+                // skip NamesBlock.bin
+                //if (current.Name == "NamesBlock.bin")
+                //    continue;
+
+                try
+                {
+                    // use chunk write method to avoid OOM Exceptions
+                    //var z = zStreams[entry];
+                    //var len = z.Length;
+                    //if (len > 4096)
+                    //{
+                    //    using (var msInput = new MemoryStream(z))
+                    //    using (var msExt = new MemoryStreamExtension())
+                    //    using (var _writer2 = new BigEndianBinaryWriter(msExt))
+                    //    {
+                    //        int bytesRead;
+                    //        int totalBytesRead = 0;
+                    //        var buffer = new byte[4096];
+                    //        while ((bytesRead = msInput.Read(buffer, 0, buffer.Length)) > 0)
+                    //        {
+                    //            totalBytesRead += bytesRead;
+                    //            if (totalBytesRead > len)
+                    //                bytesRead = len - (totalBytesRead - bytesRead);
+
+                    //            using (var msOutput = new MemoryStream())
+                    //            {
+                    //                msOutput.Write(buffer, 0, bytesRead);
+                    //                _writer2.Write(msOutput.ToArray());
+                    //            }
+                    //        }
+
+                    //        _writer.Write(msExt.ToArray());
+                    //    }
+                    //}
+                    //else
+                    {
+                        _writer.Write(zStreams[entry]);
+                    }
+                }
+                catch //(Exception ex)
+                {
+                    //Console.WriteLine("<ERROR> _writer.Write: " + ex.Message);
+                    _writer.Flush();
+                }
+                finally
+                {
+                    if (entry.Data != null)
+                        entry.Data.Close();
+                }
+
                 progress += step;
                 GlobalExtension.UpdateProgress.Value = (int)progress;
-                Console.WriteLine("Zipped: " + ndx++);
-                current.Data.Close();
+                Console.WriteLine("Writing zData: " + entry.Id);
             }
+
             zStreams = null;
 
             if (encrypt) // Encrypt TOC
             {
                 using (var outputStream = new MemoryStreamExtension())
+                using (var encStream = new MemoryStreamExtension())
                 {
-                    var encStream = new MemoryStreamExtension();
                     inputStream.Position = 32L;
                     RijndaelEncryptor.EncryptPSARC(inputStream, outputStream, _header.TotalTOCSize);
                     inputStream.Position = 0L;
@@ -591,10 +653,10 @@ namespace RocksmithToolkitLib.PSARC
                     int decSize = 0;
                     buffer = new byte[1024 * 16]; // more efficient use of memory
 
-                    ndx = 0; // for debugging
+                    var ndx = 0; // for debugging
                     step = Math.Round(1D / (((double)tocSize / buffer.Length) + 2) * 100, 3);
                     progress = 0;
-                    GlobalExtension.ShowProgress("Writing Encrypted Data ...");
+                    GlobalExtension.ShowProgress("Writing encryptedData ...");
 
                     int bytesRead;
                     while ((bytesRead = outputStream.Read(buffer, 0, buffer.Length)) > 0)
@@ -607,7 +669,7 @@ namespace RocksmithToolkitLib.PSARC
 
                         progress += step;
                         GlobalExtension.UpdateProgress.Value = (int)progress;
-                        Console.WriteLine("Encrypted: " + ndx++);
+                        Console.WriteLine("Writing encryptedData: " + ndx++);
                     }
 
                     inputStream.Position = 0;

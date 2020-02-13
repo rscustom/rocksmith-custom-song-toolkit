@@ -1470,17 +1470,30 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void PopulateAppIdCombo()
         {
+            var i = 0;
             var currentGameVersion = CurrentGameVersion;
             if (rbConvert.Checked)
                 currentGameVersion = GameVersion.RS2014;
 
             cmbAppIds.Items.Clear();
+            
             foreach (var song in SongAppIdRepository.Instance().Select(currentGameVersion))
-                cmbAppIds.Items.Add(song);
+            {
+                var delimiters = new[] { "-" };
+                var songSplit = song.Name.Split(delimiters, StringSplitOptions.None);
+                if (songSplit.Length != 2)
+                {
+                    i++;
+                    throw new DataException("<ERROR> Invalid RocksmithToolkitLib.SongAppId.xml entry.  Found too many dashes '-' in: " + song.Name);
+                }
 
+                cmbAppIds.Items.Add(song);
+            }
+            
             var songAppId = SongAppIdRepository.Instance().Select((currentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], currentGameVersion);
             cmbAppIds.SelectedItem = songAppId;
             AppId = songAppId.AppId;
+            Debug.WriteLine("<DebugMe> RocksmithToolkitLib.SongAppId.xml contains (" + i + ") invalid entries ...");
         }
 
         private void PopulateArrangements(GameVersion oldGameVersion)
@@ -1671,6 +1684,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
         private void btnPackageGenerate_Click(object sender, EventArgs e)
         {
             // perform an intial check of Wwise configuration before attempting PackageGeneration
+
             if (CurrentGameVersion == GameVersion.RS2014 &&
                 Path.GetExtension(AudioPath) == ".wem" &&
                 File.Exists(String.Format(Path.Combine(Path.GetDirectoryName(AudioPath), Path.GetFileNameWithoutExtension(AudioPath)) + "_preview.wem")))

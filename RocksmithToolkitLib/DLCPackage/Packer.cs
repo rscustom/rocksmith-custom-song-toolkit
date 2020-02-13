@@ -11,6 +11,7 @@ using RocksmithToolkitLib.DLCPackage.AggregateGraph;
 using RocksmithToolkitLib.DLCPackage.Manifest.Functions;
 using RocksmithToolkitLib.DLCPackage.Manifest2014;
 using RocksmithToolkitLib.DLCPackage.Manifest2014.Header;
+using RocksmithToolkitLib.PSARC;
 using RocksmithToolkitLib.XML;
 using X360.STFS;
 using X360.Other;

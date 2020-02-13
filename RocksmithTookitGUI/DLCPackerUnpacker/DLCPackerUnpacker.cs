@@ -689,7 +689,8 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             catch (Exception ex)
             {
                 errMsg = String.Format("{0}\n{1}", ex.Message, ex.InnerException) + Environment.NewLine + Environment.NewLine +
-                "Confirm GamePlatform and GameVersion are set correctly for desired destination in GeneraConfig";
+                "Confirm GamePlatform and GameVersion are set correctly for" + Environment.NewLine +
+                "the desired destination in the toolkit Configuration settings." + Environment.NewLine + Environment.NewLine;
             }
 
             if (!GlobalsLib.IsUnitTest)

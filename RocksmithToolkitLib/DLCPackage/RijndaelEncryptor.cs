@@ -309,6 +309,7 @@ namespace RocksmithToolkitLib.DLCPackage
                 input.Read(buffer, 0, size);
                 coder.Write(buffer, 0, size);
             }
+            
             if (pad > 0)
                 coder.Write(new byte[pad], 0, pad);
 

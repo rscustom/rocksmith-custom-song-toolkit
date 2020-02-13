@@ -310,7 +310,7 @@ namespace RocksmithToolkitLib.PSARC
 
 
     /// <summary>
-    /// Useful when some other class(StreamReader/StreamReader...) tries to close the stream before it's supposed to be closed.
+    /// Useful when some other class(StreamReader/StreamWriter...) tries to close the stream before it's supposed to be closed.
     /// </summary>
     public class NoCloseStream : MemoryStream
     {

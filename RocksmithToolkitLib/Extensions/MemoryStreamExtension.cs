@@ -90,6 +90,7 @@ namespace RocksmithToolkitLib.Extensions
             {
                 while (blocks.Count <= blockId)
                     blocks.Add(new byte[blockSize]);
+
                 return blocks[(int)blockId];
             }
         }
@@ -137,13 +138,13 @@ namespace RocksmithToolkitLib.Extensions
             }
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException("offset",offset,"Destination offset cannot be negative.");
+                throw new ArgumentOutOfRangeException("offset", offset, "Destination offset cannot be negative.");
             }
 
             int read = 0;
             long copysize = 0;
             do
-	        {
+            {
                 copysize = Math.Min(lcount, (blockSize - blockOffset));
                 Buffer.BlockCopy(block, (int)blockOffset, buffer, offset, (int)copysize);
                 lcount -= copysize;
@@ -152,10 +153,10 @@ namespace RocksmithToolkitLib.Extensions
                 read += (int)copysize;
                 Position += copysize;
 
-	        } while (lcount > 0);
+            } while (lcount > 0);
 
             return read;
-               
+
         }
 
         public override long Seek(long offset, SeekOrigin origin)

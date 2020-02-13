@@ -105,7 +105,7 @@ namespace RocksmithToolkitLib
 
     public static class Startup
     {
-        //  hackery used as class library entry point
+        //  hackery used to create class library entry point
         public static void Start()
         {
             if (!ToolkitVersion.IsRSTKLibValid())

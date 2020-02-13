@@ -51,6 +51,7 @@ namespace RocksmithToolkitLib.PSARC
                 ms.Position = 0;
                 return ms;
             }
+
             return null;
         }
 

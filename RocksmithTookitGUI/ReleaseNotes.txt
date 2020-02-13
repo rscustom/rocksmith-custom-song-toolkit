@@ -1,5 +1,8 @@
 Rocksmith Toolkit Release Notes
 
+- added RocksmithToolkitLib.SongAppId.xml validation 
+- updated RocksmithToolkitLib.SongAppId.xml dlc AppIDs
+- improved auto repair of some old toolkit multitone exceptions
 - volume ranges settable from 0 to -30 with better defaults
 - fixed packer/unpacker PromptComplete now comes to front
 - autoconvert old template relative path format to the new format
