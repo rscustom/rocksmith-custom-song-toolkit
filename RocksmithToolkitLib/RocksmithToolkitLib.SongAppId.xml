@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ArrayOfSongAppId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-<!-- Rocksmith 2012 -->
-<!-- READ THIS ... Name element must contain ONLY a single '-' dash between the artist and title names to be valid -->
+  
+  <!-- Ampersand usage must be escaped ==> &amp; -->
+  <!-- Rocksmith 1 APP ID -->
   <SongAppId Version="RS2012" AppId="206103" Name="FREE Holiday Song Pack - (EU)" />
   <SongAppId Version="RS2012" AppId="206102" Name="FREE Holiday Song Pack - (US)" />
   <SongAppId Version="RS2012" AppId="222122" Name="Blondie - Call Me" />
   <SongAppId Version="RS2012" AppId="222120" Name="Rick Springfield - Jessie's Girl" />
-  <SongAppId Version="RS2012" AppId="222121" Name="Tommy Tutone - 867 5309 (Jenny)" />
+  <SongAppId Version="RS2012" AppId="222121" Name="Tommy Tutone - 867-5309/Jenny" />
   <SongAppId Version="RS2012" AppId="222118" Name="Maroon 5 - Harder to Breathe" />
   <SongAppId Version="RS2012" AppId="222116" Name="Maroon 5 - Misery" />
   <SongAppId Version="RS2012" AppId="222117" Name="Maroon 5 - She Will Be Loved" />
@@ -85,7 +86,7 @@
   <SongAppId Version="RS2012" AppId="206163" Name="Mountain - Mississippi Queen" />
   <SongAppId Version="RS2012" AppId="206160" Name="The Allman Brothers Band - Whipping Post" />
   <SongAppId Version="RS2012" AppId="206158" Name="Creedence Clearwater Revival - Born on the Bayou" />
-  <SongAppId Version="RS2012" AppId="206159" Name="Iron Butterfly - In A Gadda Da Vida" />
+  <SongAppId Version="RS2012" AppId="206159" Name="Iron Butterfly - In-A-Gadda-Da-Vida" />
   <SongAppId Version="RS2012" AppId="206156" Name="Marvin Gaye - What's Going On" />
   <SongAppId Version="RS2012" AppId="206157" Name="Otis Redding - (Sittin' On) The Dock of the Bay" />
   <SongAppId Version="RS2012" AppId="206155" Name="The Temptations - My Girl" />
@@ -121,9 +122,9 @@
   <SongAppId Version="RS2012" AppId="206118" Name="3 Doors Down - Kryptonite" />
   <SongAppId Version="RS2012" AppId="206119" Name="3 Doors Down - Loser" />
   <SongAppId Version="RS2012" AppId="206120" Name="3 Doors Down - When I'm Gone" />
-  <SongAppId Version="RS2012" AppId="206114" Name="blink 182 - All the Small Things" />
-  <SongAppId Version="RS2012" AppId="206113" Name="blink 182 - Dammit" />
-  <SongAppId Version="RS2012" AppId="206115" Name="blink 182 - What's My Age Again?" />
+  <SongAppId Version="RS2012" AppId="206114" Name="blink-182 - All the Small Things" />
+  <SongAppId Version="RS2012" AppId="206113" Name="blink-182 - Dammit" />
+  <SongAppId Version="RS2012" AppId="206115" Name="blink-182 - What's My Age Again?" />
   <SongAppId Version="RS2012" AppId="206111" Name="Pearl Jam - Black" />
   <SongAppId Version="RS2012" AppId="206112" Name="Pearl Jam - Jeremy" />
   <SongAppId Version="RS2012" AppId="206108" Name="Blue Öyster Cult - (Don't Fear) The Reaper" />
@@ -145,9 +146,12 @@
   <SongAppId Version="RS2012" AppId="206091" Name="Radiohead - Bodysnatchers" />
   <SongAppId Version="RS2012" AppId="206090" Name="The Black Keys - Tighten Up" />
 
-<!-- Rocksmith 2014 -->
-<!-- READ THIS ... Name element must contain ONLY a single '-' dash between the artist and title names to be valid -->
+  <!-- Ampersand usage must be escaped ==> &amp; -->
+  <!-- Rocksmith 2014 APP ID -->
   <SongAppId Version="RS2014" AppId="248750" Name="The Smashing Pumpkins - Cherub Rock" />
+  <SongAppId Version="RS2014" AppId="1122635" Name="Green Day - Father of All..." />
+  <SongAppId Version="RS2014" AppId="1122636" Name="Green Day - Fire, Ready, Aim" />
+  <SongAppId Version="RS2014" AppId="1122634" Name="Green Day - Brain Stew" />
   <SongAppId Version="RS2014" AppId="1122632" Name="Stevie Wonder - I Wish" />
   <SongAppId Version="RS2014" AppId="1122631" Name="Stevie Wonder - Signed, Sealed, and Delivered I'm Yours" />
   <SongAppId Version="RS2014" AppId="1122630" Name="Stevie Wonder - Superstition" />
@@ -164,7 +168,7 @@
   <SongAppId Version="RS2014" AppId="1122614" Name="Chris Stapleton - Tennessee Whiskey" />
   <SongAppId Version="RS2014" AppId="1122616" Name="Chris Stapleton - Nobody to Blame" />
   <SongAppId Version="RS2014" AppId="1122611" Name="Aerosmith - Love in an Elevator" />
-  <SongAppId Version="RS2014" AppId="1122612" Name="Aerosmith - Train Kept A Rollin" />
+  <SongAppId Version="RS2014" AppId="1122612" Name="Aerosmith - Train Kept A-Rollin" />
   <SongAppId Version="RS2014" AppId="1122610" Name="Aerosmith - Crazy" />
   <SongAppId Version="RS2014" AppId="1122607" Name="ABBA - Fernando" />
   <SongAppId Version="RS2014" AppId="1122608" Name="ABBA - Mamma Mia" />
@@ -181,16 +185,16 @@
   <SongAppId Version="RS2014" AppId="1122586" Name="Daughtry - Feels Like Tonight" />
   <SongAppId Version="RS2014" AppId="1122588" Name="Daughtry - Home" />
   <SongAppId Version="RS2014" AppId="1122587" Name="Daughtry - Over You" />
-  <SongAppId Version="RS2014" AppId="1122581" Name="The Notetrackers - Bass, Advanced String Switching Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122584" Name="The Notetrackers - Bass, Advanced String Skipping Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122583" Name="The Notetrackers - Bass, Advanced PullOff/HammerOn Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122580" Name="The Notetrackers - Bass, Advanced Linear Playing Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122582" Name="The Notetrackers - Bass, Advanced Hammeron/PullOff Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122576" Name="The Notetrackers - Guitar, Advanced String Switching Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122579" Name="The Notetrackers - Guitar, Advanced String Skipping Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122578" Name="The Notetrackers - Guitar, Advanced PullOff/HammerOn Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122575" Name="The Notetrackers - Guitar, Advanced Linear Playing Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122577" Name="The Notetrackers - Guitar, Advanced HammerOn/PullOff Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122581" Name="The Notetrackers - Bass - Advanced String Switching Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122584" Name="The Notetrackers - Bass - Advanced String Skipping Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122583" Name="The Notetrackers - Bass - Advanced Pull-off/Hammer-on Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122580" Name="The Notetrackers - Bass - Advanced Linear Playing Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122582" Name="The Notetrackers - Bass - Advanced Hammer-on/Pull-off Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122576" Name="The Notetrackers - Guitar - Advanced String Switching Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122579" Name="The Notetrackers - Guitar - Advanced String Skipping Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122578" Name="The Notetrackers - Guitar - Advanced Pull-off/Hammer-on Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122575" Name="The Notetrackers - Guitar - Advanced Linear Playing Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122577" Name="The Notetrackers - Guitar - Advanced Hammer-on/Pull-off Exercise 2" />
   <SongAppId Version="RS2014" AppId="1122572" Name="The Zombies - She's Not There" />
   <SongAppId Version="RS2014" AppId="1122571" Name="The Zombies - Time of the Season" />
   <SongAppId Version="RS2014" AppId="1122573" Name="The Zombies - Tell Her No" />
@@ -200,38 +204,38 @@
   <SongAppId Version="RS2014" AppId="1122563" Name="Children of Bodom - Are You Dead Yet?" />
   <SongAppId Version="RS2014" AppId="1122565" Name="Death - Crystal Mountain" />
   <SongAppId Version="RS2014" AppId="1122564" Name="Machine Head - Davidian" />
-  <SongAppId Version="RS2014" AppId="1122553" Name="The Notetrackers - Guitar, Intermediate String Switching Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122556" Name="The Notetrackers - Guitar, Intermediate String Skipping Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122555" Name="The Notetrackers - Guitar, Intermediate PullOff/HammerOn Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122554" Name="The Notetrackers - Guitar, Intermediate HammerOn/PullOff Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122552" Name="The Notetrackers - Guitar, Intermediate Linear Playing Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122558" Name="The Notetrackers - Bass, Intermediate String Switching Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122561" Name="The Notetrackers - Bass, Intermediate String Skipping Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122559" Name="The Notetrackers - Bass, Intermediate HammerOn/PullOff Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122557" Name="The Notetrackers - Bass, Intermediate Linear Playing Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1122560" Name="The Notetrackers - Bass, Intermediate PullOff/HammerOn Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122553" Name="The Notetrackers - Guitar - Intermediate String Switching Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122556" Name="The Notetrackers - Guitar - Intermediate String Skipping Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122555" Name="The Notetrackers - Guitar - Intermediate Pull-off/Hammer-on Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122554" Name="The Notetrackers - Guitar - Intermediate Hammer-on/Pull-off Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122552" Name="The Notetrackers - Guitar - Intermediate Linear Playing Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122558" Name="The Notetrackers - Bass - Intermediate String Switching Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122561" Name="The Notetrackers - Bass - Intermediate String Skipping Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122559" Name="The Notetrackers - Bass - Intermediate Hammer-on/Pull-off Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122557" Name="The Notetrackers - Bass - Intermediate Linear Playing Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1122560" Name="The Notetrackers - Bass - Intermediate Pull-off/Hammer-on Exercise 2" />
   <SongAppId Version="RS2014" AppId="1089244" Name="Amaranthe - Amaranthine" />
   <SongAppId Version="RS2014" AppId="1089245" Name="Amaranthe - Drop Dead Cynical" />
   <SongAppId Version="RS2014" AppId="1089243" Name="Amaranthe - The Nexus" />
   <SongAppId Version="RS2014" AppId="1089241" Name="DragonForce - Highway to Oblivion" />
   <SongAppId Version="RS2014" AppId="1089239" Name="Set The Charge - Everything But Me" />
-  <SongAppId Version="RS2014" AppId="1089238" Name="The Dooo - Guitar Solos with Dooo #2, Ascend" />
+  <SongAppId Version="RS2014" AppId="1089238" Name="The Dooo - Guitar Solos with Dooo #2 – Ascend" />
   <SongAppId Version="RS2014" AppId="1089240" Name="Audrey and Kate - No Reason" />
   <SongAppId Version="RS2014" AppId="1089236" Name="Kaleo - All The Pretty Girls" />
   <SongAppId Version="RS2014" AppId="1089234" Name="Kaleo - No Good" />
   <SongAppId Version="RS2014" AppId="1089235" Name="Kaleo - Way Down We Go" />
-  <SongAppId Version="RS2014" AppId="1089227" Name="The Notetrackers - Guitar, Easy String Switching Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1089225" Name="The Notetrackers - Guitar, Easy HammerOn Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1089223" Name="The Notetrackers - Guitar, Easy Linear Playing Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1089246" Name="The Notetrackers - Guitar, Easy String Skipping Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1089226" Name="The Notetrackers - Guitar, Easy PullOff Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1089228" Name="The Notetrackers - Bass, Easy Linear Playing Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1089231" Name="The Notetrackers - Bass, Easy PullOff Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1089232" Name="The Notetrackers - Bass, Easy String Skipping Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1089229" Name="The Notetrackers - Bass, Easy String Switching Exercise 2" />
-  <SongAppId Version="RS2014" AppId="1089230" Name="The Notetrackers - Bass, Easy HammerOn Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1089227" Name="The Notetrackers - Guitar - Easy String Switching Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1089225" Name="The Notetrackers - Guitar - Easy Hammer-On Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1089223" Name="The Notetrackers - Guitar - Easy Linear Playing Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1089246" Name="The Notetrackers - Guitar - Easy String Skipping Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1089226" Name="The Notetrackers - Guitar - Easy Pull-Off Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1089228" Name="The Notetrackers - Bass - Easy Linear Playing Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1089231" Name="The Notetrackers - Bass - Easy Pull-Off Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1089232" Name="The Notetrackers - Bass - Easy String Skipping Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1089229" Name="The Notetrackers - Bass - Easy String Switching Exercise 2" />
+  <SongAppId Version="RS2014" AppId="1089230" Name="The Notetrackers - Bass - Easy Hammer-On Exercise 2" />
   <SongAppId Version="RS2014" AppId="1089221" Name="Orianthi - According to You" />
-  <SongAppId Version="RS2014" AppId="1089219" Name="The GoGo's - We Got the Beat" />
+  <SongAppId Version="RS2014" AppId="1089219" Name="The Go-Go's - We Got the Beat" />
   <SongAppId Version="RS2014" AppId="1089220" Name="Veruca Salt - Seether" />
   <SongAppId Version="RS2014" AppId="1089215" Name="Bloodhound Gang - The Bad Touch" />
   <SongAppId Version="RS2014" AppId="1089217" Name="Bloodhound Gang - The Ballad Of Chasey Lain" />
@@ -242,16 +246,16 @@
   <SongAppId Version="RS2014" AppId="1089211" Name="Jim Johnston - I Won’t Do What You Tell Me (Stone Cold Steve Austin)" />
   <SongAppId Version="RS2014" AppId="1089212" Name="Jim Johnston - Electrifying (The Rock)" />
   <SongAppId Version="RS2014" AppId="1089213" Name="Jim Johnston - Break The Walls Down (Chris Jericho)" />
-  <SongAppId Version="RS2014" AppId="1089200" Name="The Notetrackers - Guitar, Advanced Linear Playing Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089208" Name="The Notetrackers - Bass, Advanced PullOff/HammerOn Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089209" Name="The Notetrackers - Bass, Advanced String Skipping Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089206" Name="The Notetrackers - Bass, Advanced String Switching Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089205" Name="The Notetrackers - Bass, Advanced Linear Playing Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089207" Name="The Notetrackers - Bass, Advanced HammerOn/PullOff Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089202" Name="The Notetrackers - Guitar, Advanced HammerOn/PullOff Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089204" Name="The Notetrackers - Guitar, Advanced String Skipping Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089201" Name="The Notetrackers - Guitar, Advanced String Switching Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089203" Name="The Notetrackers - Guitar, Advanced PullOff/HammerOn Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089200" Name="The Notetrackers - Guitar – Advanced Linear Playing Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089208" Name="The Notetrackers - Bass – Advanced Pull-Off/Hammer-On Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089209" Name="The Notetrackers - Bass - Advanced String Skipping Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089206" Name="The Notetrackers - Bass - Advanced String Switching Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089205" Name="The Notetrackers - Bass – Advanced Linear Playing Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089207" Name="The Notetrackers - Bass - Advanced Hammer-On/Pull-Off Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089202" Name="The Notetrackers - Guitar – Advanced Hammer-On/Pull-Off Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089204" Name="The Notetrackers - Guitar – Advanced String Skipping Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089201" Name="The Notetrackers - Guitar – Advanced String Switching Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089203" Name="The Notetrackers - Guitar – Advanced Pull-Off/Hammer-On Exercise 1" />
   <SongAppId Version="RS2014" AppId="1089193" Name="Manic Street Preachers - A Design For Life" />
   <SongAppId Version="RS2014" AppId="1089194" Name="Manic Street Preachers - If You Tolerate This Your Children Will Be Next" />
   <SongAppId Version="RS2014" AppId="1089190" Name="Manic Street Preachers - Motorcycle Emptiness" />
@@ -261,16 +265,16 @@
   <SongAppId Version="RS2014" AppId="1089185" Name="The Pretty Reckless - Make Me Wanna Die" />
   <SongAppId Version="RS2014" AppId="1089186" Name="The Pretty Reckless - My Medicine" />
   <SongAppId Version="RS2014" AppId="1089184" Name="The Pretty Reckless - Going to Hell" />
-  <SongAppId Version="RS2014" AppId="1089175" Name="The Notetrackers - Guitar, Intermediate HammerOn/PullOff Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089179" Name="The Notetrackers - Bass, Intermediate String Switching Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089181" Name="The Notetrackers - Bass, Intermediate PullOff/HammerOn Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089178" Name="The Notetrackers - Bass, Intermediate Linear Playing Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089180" Name="The Notetrackers - Bass, Intermediate HammerOn/PullOff Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089182" Name="The Notetrackers - Bass, Intermediate String Skipping Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089177" Name="The Notetrackers - Guitar, Intermediate String Skipping Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089176" Name="The Notetrackers - Guitar, Intermediate PullOff/HammerOn Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089173" Name="The Notetrackers - Guitar, Intermediate Linear Playing Exercise 1" />
-  <SongAppId Version="RS2014" AppId="1089174" Name="The Notetrackers - Guitar, Intermediate String Switching Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089175" Name="The Notetrackers - Guitar - Intermediate Hammer-On/Pull-Off Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089179" Name="The Notetrackers - Bass - Intermediate String Switching Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089181" Name="The Notetrackers - Bass - Intermediate Pull-Off/Hammer-On Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089178" Name="The Notetrackers - Bass - Intermediate Linear Playing Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089180" Name="The Notetrackers - Bass - Intermediate Hammer-On/Pull-Off Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089182" Name="The Notetrackers - Bass - Intermediate String Skipping Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089177" Name="The Notetrackers - Guitar - Intermediate String Skipping Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089176" Name="The Notetrackers - Guitar - Intermediate Pull-Off/Hammer-On Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089173" Name="The Notetrackers - Guitar - Intermediate Linear Playing Exercise 1" />
+  <SongAppId Version="RS2014" AppId="1089174" Name="The Notetrackers - Guitar - Intermediate String Switching Exercise 1" />
   <SongAppId Version="RS2014" AppId="1089171" Name="Tegan and Sara - Call It Off" />
   <SongAppId Version="RS2014" AppId="1089169" Name="Tegan and Sara - The Con" />
   <SongAppId Version="RS2014" AppId="1089170" Name="Tegan and Sara - Walking With A Ghost" />
@@ -280,16 +284,16 @@
   <SongAppId Version="RS2014" AppId="1089162" Name="Trivium - Dying In Your Arms" />
   <SongAppId Version="RS2014" AppId="1089161" Name="Trivium - Pull Harder On The Strings Of Your Martyr" />
   <SongAppId Version="RS2014" AppId="1089163" Name="Trivium - A Gunshot To The Head of Trepidation" />
-  <SongAppId Version="RS2014" AppId="899903" Name="The Notetrackers - Guitar, Easy HammerOn Exercise 1" />
-  <SongAppId Version="RS2014" AppId="899907" Name="The Notetrackers - Bass, Easy String Switching Exercise 1" />
-  <SongAppId Version="RS2014" AppId="899909" Name="The Notetrackers - Bass, Easy PullOff Exercise 1" />
-  <SongAppId Version="RS2014" AppId="899906" Name="The Notetrackers - Bass, Easy Linear Playing Exercise 1" />
-  <SongAppId Version="RS2014" AppId="899908" Name="The Notetrackers - Bass, Easy HammerOn Exercise 1" />
-  <SongAppId Version="RS2014" AppId="899910" Name="The Notetrackers - Bass, Easy String Skipping Exercise 1" />
-  <SongAppId Version="RS2014" AppId="899905" Name="The Notetrackers - Guitar, Easy String Skipping Exercise 1" />
-  <SongAppId Version="RS2014" AppId="899904" Name="The Notetrackers - Guitar, Easy PullOff Exercise 1" />
-  <SongAppId Version="RS2014" AppId="899901" Name="The Notetrackers - Guitar, Easy Linear Playing Exercise 1" />
-  <SongAppId Version="RS2014" AppId="899902" Name="The Notetrackers - Guitar, Easy String Switching Exercise 1" />
+  <SongAppId Version="RS2014" AppId="899903" Name="The Notetrackers - Guitar - Easy Hammer-On Exercise 1" />
+  <SongAppId Version="RS2014" AppId="899907" Name="The Notetrackers - Bass - Easy String Switching Exercise 1" />
+  <SongAppId Version="RS2014" AppId="899909" Name="The Notetrackers - Bass - Easy Pull-Off Exercise 1" />
+  <SongAppId Version="RS2014" AppId="899906" Name="The Notetrackers - Bass - Easy Linear Playing Exercise 1" />
+  <SongAppId Version="RS2014" AppId="899908" Name="The Notetrackers - Bass - Easy Hammer-On Exercise 1" />
+  <SongAppId Version="RS2014" AppId="899910" Name="The Notetrackers - Bass - Easy String Skipping Exercise 1" />
+  <SongAppId Version="RS2014" AppId="899905" Name="The Notetrackers - Guitar - Easy String Skipping Exercise 1" />
+  <SongAppId Version="RS2014" AppId="899904" Name="The Notetrackers - Guitar - Easy Pull-Off Exercise 1" />
+  <SongAppId Version="RS2014" AppId="899901" Name="The Notetrackers - Guitar - Easy Linear Playing Exercise 1" />
+  <SongAppId Version="RS2014" AppId="899902" Name="The Notetrackers - Guitar - Easy String Switching Exercise 1" />
   <SongAppId Version="RS2014" AppId="899897" Name="5 Seconds of Summer - Amnesia" />
   <SongAppId Version="RS2014" AppId="899898" Name="5 Seconds of Summer - She Looks So Perfect" />
   <SongAppId Version="RS2014" AppId="899899" Name="5 Seconds of Summer - She's Kinda Hot" />
@@ -334,7 +338,7 @@
   <SongAppId Version="RS2014" AppId="899843" Name="Gin Blossoms - Found Out About You" />
   <SongAppId Version="RS2014" AppId="899846" Name="Clutch - The Regulator" />
   <SongAppId Version="RS2014" AppId="899845" Name="Fuel - Shimmer" />
-  <SongAppId Version="RS2014" AppId="899841" Name="blink 182 - Always" />
+  <SongAppId Version="RS2014" AppId="899841" Name="blink-182 - Always" />
   <SongAppId Version="RS2014" AppId="899839" Name="Drowning Pool - Bodies" />
   <SongAppId Version="RS2014" AppId="899840" Name="Fountains of Wayne - Stacy's Mom" />
   <SongAppId Version="RS2014" AppId="899836" Name="Sabaton - Ghost Division" />
@@ -352,7 +356,7 @@
   <SongAppId Version="RS2014" AppId="899824" Name="Les Paul &amp; Mary Ford - On The Sunny Side Of The Street" />
   <SongAppId Version="RS2014" AppId="899818" Name="Paramore - Ignorance" />
   <SongAppId Version="RS2014" AppId="899819" Name="Paramore - Misery Business" />
-  <SongAppId Version="RS2014" AppId="899820" Name="Paramore - Rose Colored Boy" />
+  <SongAppId Version="RS2014" AppId="899820" Name="Paramore - Rose-Colored Boy" />
   <SongAppId Version="RS2014" AppId="899814" Name="Chuck Berry - Johnny B. Goode" />
   <SongAppId Version="RS2014" AppId="899815" Name="Chuck Berry - School Day (Ring Ring Goes The Bell)" />
   <SongAppId Version="RS2014" AppId="899816" Name="Chuck Berry - You Never Can Tell" />
@@ -369,7 +373,7 @@
   <SongAppId Version="RS2014" AppId="899797" Name="Jimmy Eat World - Bleed American" />
   <SongAppId Version="RS2014" AppId="899798" Name="Jimmy Eat World - The Middle" />
   <SongAppId Version="RS2014" AppId="899799" Name="Jimmy Eat World - Sweetness" />
-  <SongAppId Version="RS2014" AppId="899795" Name="Gene Autry - Rudolph the Red Nosed Reindeer" />
+  <SongAppId Version="RS2014" AppId="899795" Name="Gene Autry - Rudolph the Red-Nosed Reindeer" />
   <SongAppId Version="RS2014" AppId="899792" Name="Elvis Presley - Blue Christmas" />
   <SongAppId Version="RS2014" AppId="899794" Name="Brenda Lee - Rockin' Around the Christmas Tree" />
   <SongAppId Version="RS2014" AppId="899793" Name="Chuck Berry - Run, Rudolph, Run" />
@@ -385,14 +389,14 @@
   <SongAppId Version="RS2014" AppId="753894" Name="Ghost - Cirice" />
   <SongAppId Version="RS2014" AppId="753896" Name="Ghost - He Is" />
   <SongAppId Version="RS2014" AppId="753895" Name="Ghost - Ritual" />
-  <SongAppId Version="RS2014" AppId="753890" Name="a ha - Take On Me" />
+  <SongAppId Version="RS2014" AppId="753890" Name="a-ha - Take On Me" />
   <SongAppId Version="RS2014" AppId="753891" Name="Georgia Satellites - Keep Your Hands to Yourself" />
   <SongAppId Version="RS2014" AppId="753889" Name="Poison - Fallen Angel" />
   <SongAppId Version="RS2014" AppId="753887" Name="Brad Paisley Feat. Alison Krauss - Whiskey Lullaby" />
   <SongAppId Version="RS2014" AppId="753885" Name="Brad Paisley - Mud on the Tires" />
   <SongAppId Version="RS2014" AppId="753886" Name="Brad Paisley - Ticks" />
   <SongAppId Version="RS2014" AppId="753881" Name="Beastie Boys - Gratitude" />
-  <SongAppId Version="RS2014" AppId="753882" Name="blink 182 - Stay Together For The Kids" />
+  <SongAppId Version="RS2014" AppId="753882" Name="blink-182 - Stay Together For The Kids" />
   <SongAppId Version="RS2014" AppId="753883" Name="The Beach Boys - Surfin' Safari" />
   <SongAppId Version="RS2014" AppId="753740" Name="The Outlaws - Green Grass &amp; High Tides" />
   <SongAppId Version="RS2014" AppId="753879" Name="Joy Division - Transmission" />
@@ -436,9 +440,9 @@
   <SongAppId Version="RS2014" AppId="753831" Name="Nina Simone - Feeling Good" />
   <SongAppId Version="RS2014" AppId="753829" Name="Pantera - This Love" />
   <SongAppId Version="RS2014" AppId="753830" Name="The Proclaimers - I'm Gonna Be (500 Miles)" />
-  <SongAppId Version="RS2014" AppId="753826" Name="Run D.M.C. - Rock Box" />
-  <SongAppId Version="RS2014" AppId="753824" Name="Run D.M.C. - King of Rock" />
-  <SongAppId Version="RS2014" AppId="753825" Name="Run D.M.C. - It's Tricky" />
+  <SongAppId Version="RS2014" AppId="753826" Name="Run-D.M.C. - Rock Box" />
+  <SongAppId Version="RS2014" AppId="753824" Name="Run-D.M.C. - King of Rock" />
+  <SongAppId Version="RS2014" AppId="753825" Name="Run-D.M.C. - It's Tricky" />
   <SongAppId Version="RS2014" AppId="753821" Name="Steve Miller Band - Jungle Love" />
   <SongAppId Version="RS2014" AppId="753822" Name="Buzzcocks - Ever Fallen in Love (With Someone You Shouldn’t’ve)" />
   <SongAppId Version="RS2014" AppId="753820" Name="George Thorogood - Who Do You Love?" />
@@ -547,11 +551,11 @@
   <SongAppId Version="RS2014" AppId="637797" Name="Steve Miller Band - The Joker" />
   <SongAppId Version="RS2014" AppId="637795" Name="Steve Miller Band - Rock'n Me" />
   <SongAppId Version="RS2014" AppId="637796" Name="Steve Miller Band - Take the Money and Run" />
-  <SongAppId Version="RS2014" AppId="637791" Name="Trans Siberian Orchestra - A Mad Russian's Christmas" />
-  <SongAppId Version="RS2014" AppId="637792" Name="Trans Siberian Orchestra - Christmas Canon Rock" />
-  <SongAppId Version="RS2014" AppId="637788" Name="Trans Siberian Orchestra - Christmas Eve / Sarajevo 12/24" />
-  <SongAppId Version="RS2014" AppId="637790" Name="Trans Siberian Orchestra - O Come All Ye Faithful / O Holy Night" />
-  <SongAppId Version="RS2014" AppId="637789" Name="Trans Siberian Orchestra - Wizards in Winter" />
+  <SongAppId Version="RS2014" AppId="637791" Name="Trans-Siberian Orchestra - A Mad Russian's Christmas" />
+  <SongAppId Version="RS2014" AppId="637792" Name="Trans-Siberian Orchestra - Christmas Canon Rock" />
+  <SongAppId Version="RS2014" AppId="637788" Name="Trans-Siberian Orchestra - Christmas Eve / Sarajevo 12/24" />
+  <SongAppId Version="RS2014" AppId="637790" Name="Trans-Siberian Orchestra - O Come All Ye Faithful / O Holy Night" />
+  <SongAppId Version="RS2014" AppId="637789" Name="Trans-Siberian Orchestra - Wizards in Winter" />
   <SongAppId Version="RS2014" AppId="637785" Name="Halestorm - I Get Off" />
   <SongAppId Version="RS2014" AppId="637786" Name="Halestorm - Mz. Hyde" />
   <SongAppId Version="RS2014" AppId="637784" Name="Halestorm - I Miss the Misery" />
@@ -573,9 +577,9 @@
   <SongAppId Version="RS2014" AppId="637763" Name="Elton John - Saturday Night's Alright (For Fighting)" />
   <SongAppId Version="RS2014" AppId="637765" Name="Rusted Root - Send Me On My Way" />
   <SongAppId Version="RS2014" AppId="637764" Name="Colin Hay of Men At Work - Down Under (2012)" />
-  <SongAppId Version="RS2014" AppId="637758" Name="Bachman Turner Overdrive - Takin' Care of Business" />
-  <SongAppId Version="RS2014" AppId="637759" Name="Bachman Turner Overdrive - You Ain't Seen Nothing Yet" />
-  <SongAppId Version="RS2014" AppId="637760" Name="Bachman Turner Overdrive - Let It Ride" />
+  <SongAppId Version="RS2014" AppId="637758" Name="Bachman-Turner Overdrive - Takin' Care of Business" />
+  <SongAppId Version="RS2014" AppId="637759" Name="Bachman-Turner Overdrive - You Ain't Seen Nothing Yet" />
+  <SongAppId Version="RS2014" AppId="637760" Name="Bachman-Turner Overdrive - Let It Ride" />
   <SongAppId Version="RS2014" AppId="637756" Name="Kelly Clarkson - Breakaway" />
   <SongAppId Version="RS2014" AppId="637754" Name="Hinder - Lips of an Angel" />
   <SongAppId Version="RS2014" AppId="637755" Name="Band of Horses - The Funeral" />
@@ -722,11 +726,11 @@
   <SongAppId Version="RS2014" AppId="509705" Name="OneRepublic - Counting Stars" />
   <SongAppId Version="RS2014" AppId="509708" Name="Rage Against The Machine - Take The Power Back" />
   <SongAppId Version="RS2014" AppId="509706" Name="The Calling - Wherever You WIll Go" />
-  <SongAppId Version="RS2014" AppId="509703" Name="blink 182 - Feeling This" />
-  <SongAppId Version="RS2014" AppId="509701" Name="blink 182 - The Rock Show" />
-  <SongAppId Version="RS2014" AppId="509699" Name="blink 182 - I Miss You" />
-  <SongAppId Version="RS2014" AppId="509702" Name="blink 182 - First Date" />
-  <SongAppId Version="RS2014" AppId="509700" Name="blink 182 - Adam's Song" />
+  <SongAppId Version="RS2014" AppId="509703" Name="blink-182 - Feeling This" />
+  <SongAppId Version="RS2014" AppId="509701" Name="blink-182 - The Rock Show" />
+  <SongAppId Version="RS2014" AppId="509699" Name="blink-182 - I Miss You" />
+  <SongAppId Version="RS2014" AppId="509702" Name="blink-182 - First Date" />
+  <SongAppId Version="RS2014" AppId="509700" Name="blink-182 - Adam's Song" />
   <SongAppId Version="RS2014" AppId="509696" Name="Booker T. &amp; The M.G.'s - Green Onions" />
   <SongAppId Version="RS2014" AppId="509695" Name="Jefferson Airplane - Somebody To Love" />
   <SongAppId Version="RS2014" AppId="509697" Name="The Mamas &amp; the Papas - California Dreamin'" />
@@ -750,7 +754,7 @@
   <SongAppId Version="RS2014" AppId="509671" Name="Third Eye Blind - How's It Going To Be" />
   <SongAppId Version="RS2014" AppId="509672" Name="Third Eye Blind - Never Let You Go" />
   <SongAppId Version="RS2014" AppId="509669" Name="Third Eye Blind - Jumper" />
-  <SongAppId Version="RS2014" AppId="509670" Name="Third Eye Blind - Semi Charmed Life" />
+  <SongAppId Version="RS2014" AppId="509670" Name="Third Eye Blind - Semi-Charmed Life" />
   <SongAppId Version="RS2014" AppId="509667" Name="Black Veil Brides - In The End" />
   <SongAppId Version="RS2014" AppId="509666" Name="WALK THE MOON - Shut Up and Dance" />
   <SongAppId Version="RS2014" AppId="509665" Name="AWOLNATION - Sail" />
@@ -836,15 +840,15 @@
   <SongAppId Version="RS2014" AppId="436654" Name="James Brown - Living In America" />
   <SongAppId Version="RS2014" AppId="436651" Name="Don McLean - American Pie" />
   <SongAppId Version="RS2014" AppId="436653" Name="Brooks &amp; Dunn - Only In America" />
-  <SongAppId Version="RS2014" AppId="436652" Name="Boston - The Star Spangled Banner/4th of July Reprise" />
+  <SongAppId Version="RS2014" AppId="436652" Name="Boston - The Star-Spangled Banner/4th of July Reprise" />
   <SongAppId Version="RS2014" AppId="436649" Name="Incubus - Drive" />
   <SongAppId Version="RS2014" AppId="436646" Name="Incubus - Pardon Me" />
   <SongAppId Version="RS2014" AppId="436647" Name="Incubus - Stellar" />
   <SongAppId Version="RS2014" AppId="436648" Name="Incubus - Megalomaniac" />
-  <SongAppId Version="RS2014" AppId="436641" Name="Eagle Eye Cherry - Save Tonight" />
+  <SongAppId Version="RS2014" AppId="436641" Name="Eagle-Eye Cherry - Save Tonight" />
   <SongAppId Version="RS2014" AppId="436643" Name="Kenny Rogers - The Gambler" />
   <SongAppId Version="RS2014" AppId="436644" Name="Queen and David Bowie - Under Pressure" />
-  <SongAppId Version="RS2014" AppId="436642" Name="SR 71 - Right Now" />
+  <SongAppId Version="RS2014" AppId="436642" Name="SR-71 - Right Now" />
   <SongAppId Version="RS2014" AppId="436638" Name="Good Charlotte - Girls &amp; Boys" />
   <SongAppId Version="RS2014" AppId="436635" Name="Good Charlotte - The Anthem" />
   <SongAppId Version="RS2014" AppId="436636" Name="Good Charlotte - Lifestyles Of The Rich And Famous" />
@@ -866,7 +870,7 @@
   <SongAppId Version="RS2014" AppId="436616" Name="Rise Against - Paper Wings" />
   <SongAppId Version="RS2014" AppId="436615" Name="Rise Against - Ready To Fall" />
   <SongAppId Version="RS2014" AppId="436613" Name="Rise Against - Help Is on The Way" />
-  <SongAppId Version="RS2014" AppId="436612" Name="Rise Against - ReEducation (Through Labor)" />
+  <SongAppId Version="RS2014" AppId="436612" Name="Rise Against - Re-Education (Through Labor)" />
   <SongAppId Version="RS2014" AppId="436614" Name="Rise Against - Audience of One" />
   <SongAppId Version="RS2014" AppId="436608" Name="Crobot - Nowhere to Hide" />
   <SongAppId Version="RS2014" AppId="436610" Name="Crobot - Fly On The Wall" />
@@ -899,11 +903,11 @@
   <SongAppId Version="RS2014" AppId="436576" Name="The Donnas - Take It Off" />
   <SongAppId Version="RS2014" AppId="436573" Name="The Pretty Reckless - Heaven Knows" />
   <SongAppId Version="RS2014" AppId="436577" Name="The Runaways - Cherry Bomb" />
-  <SongAppId Version="RS2014" AppId="436572" Name="The Notetrackers - Superman, Main Title" />
-  <SongAppId Version="RS2014" AppId="436572" Name="The Notetrackers - Jurassic Park, Theme" />
+  <SongAppId Version="RS2014" AppId="436572" Name="The Notetrackers - Superman - Main Title" />
+  <SongAppId Version="RS2014" AppId="436572" Name="The Notetrackers - Jurassic Park - Theme" />
   <SongAppId Version="RS2014" AppId="436572" Name="The Notetrackers - A Knife In The Dark" />
   <SongAppId Version="RS2014" AppId="436572" Name="The Notetrackers - Back to the Future" />
-  <SongAppId Version="RS2014" AppId="436572" Name="The Notetrackers - Batman, Theme" />
+  <SongAppId Version="RS2014" AppId="436572" Name="The Notetrackers - Batman - Theme" />
   <SongAppId Version="RS2014" AppId="390459" Name="My Chemical Romance - Teenagers" />
   <SongAppId Version="RS2014" AppId="436570" Name="My Chemical Romance - Dead!" />
   <SongAppId Version="RS2014" AppId="390456" Name="My Chemical Romance - Helena" />
@@ -964,7 +968,7 @@
   <SongAppId Version="RS2014" AppId="390393" Name="The Black Keys - Your Touch" />
   <SongAppId Version="RS2014" AppId="390391" Name="Black Keys - Little Black Submarine" />
   <SongAppId Version="RS2014" AppId="390389" Name="Frédéric Chopin - Funeral March" />
-  <SongAppId Version="RS2014" AppId="390389" Name="Jacques Offenbach - The Can Can" />
+  <SongAppId Version="RS2014" AppId="390389" Name="Jacques Offenbach - The Can-Can" />
   <SongAppId Version="RS2014" AppId="390389" Name="Pyotr Ilyich Tchaikovsky - Notecracker Medley" />
   <SongAppId Version="RS2014" AppId="390389" Name="Wolfgang Amadeus Mozart - Symphony No. 40" />
   <SongAppId Version="RS2014" AppId="390389" Name="Ludwig van Beethoven - Ode to Joy" />
@@ -1001,9 +1005,9 @@
   <SongAppId Version="RS2014" AppId="369821" Name="The Doors - Break On Through (To the Other Side)" />
   <SongAppId Version="RS2014" AppId="369820" Name="The Doors - People Are Strange" />
   <SongAppId Version="RS2014" AppId="369822" Name="The Doors - L.A. Woman" />
-  <SongAppId Version="RS2014" AppId="369817" Name="The All American Rejects - Move Along" />
-  <SongAppId Version="RS2014" AppId="369818" Name="The All American Rejects - Gives You Hell" />
-  <SongAppId Version="RS2014" AppId="369816" Name="The All American Rejects - Dirty Little Secret" />
+  <SongAppId Version="RS2014" AppId="369817" Name="The All-American Rejects - Move Along" />
+  <SongAppId Version="RS2014" AppId="369818" Name="The All-American Rejects - Gives You Hell" />
+  <SongAppId Version="RS2014" AppId="369816" Name="The All-American Rejects - Dirty Little Secret" />
   <SongAppId Version="RS2014" AppId="369812" Name="Earth, Wind &amp; Fire - September" />
   <SongAppId Version="RS2014" AppId="369814" Name="Earth, Wind &amp; Fire - Sing A Song" />
   <SongAppId Version="RS2014" AppId="369813" Name="Earth, Wind &amp; Fire - Shining Star" />
@@ -1048,7 +1052,7 @@
   <SongAppId Version="RS2014" AppId="369760" Name="Tesla - Modern Day Cowboy" />
   <SongAppId Version="RS2014" AppId="369761" Name="The Edgar Winter Group - Frankenstein" />
   <SongAppId Version="RS2014" AppId="342853" Name="Queen - Crazy Little Thing Called Love" />
-  <SongAppId Version="RS2014" AppId="342855" Name="Gene Vincent and His Blue Caps - Be Bop A Lula" />
+  <SongAppId Version="RS2014" AppId="342855" Name="Gene Vincent and His Blue Caps - Be-Bop-A-Lula" />
   <SongAppId Version="RS2014" AppId="342856" Name="Ricky Nelson - Hello Mary Lou (Goodbye Heart)" />
   <SongAppId Version="RS2014" AppId="342852" Name="Brian Setzer - Rock This Town" />
   <SongAppId Version="RS2014" AppId="342854" Name="Carl Perkins - Blue Suede Shoes" />
@@ -1241,7 +1245,7 @@
   <SongAppId Version="RS2014" AppId="294984" Name="Duran Duran - Rio" />
   <SongAppId Version="RS2014" AppId="294982" Name="Duran Duran - Ordinary World" />
   <SongAppId Version="RS2014" AppId="294978" Name="No Doubt - Don’t Speak" />
-  <SongAppId Version="RS2014" AppId="294979" Name="No Doubt - Ex Girlfriend" />
+  <SongAppId Version="RS2014" AppId="294979" Name="No Doubt - Ex-Girlfriend" />
   <SongAppId Version="RS2014" AppId="294980" Name="No Doubt - Spiderwebs" />
   <SongAppId Version="RS2014" AppId="294975" Name="Biffy Clyro - Mountains" />
   <SongAppId Version="RS2014" AppId="294976" Name="Biffy Clyro - Stingin’ Belle" />
@@ -1269,9 +1273,9 @@
   <SongAppId Version="RS2014" AppId="294945" Name="Billy Talent - Red Flag" />
   <SongAppId Version="RS2014" AppId="294944" Name="Billy Talent - Fallen Leaves" />
   <SongAppId Version="RS2014" AppId="294941" Name="The Ventures - Walk Don’t Run" />
-  <SongAppId Version="RS2014" AppId="294942" Name="Dick Dale and His Del Tones - Misirlou" />
+  <SongAppId Version="RS2014" AppId="294942" Name="Dick Dale and His Del-Tones - Misirlou" />
   <SongAppId Version="RS2014" AppId="294940" Name="The Surfaris - Wipe Out" />
-  <SongAppId Version="RS2014" AppId="294937" Name="Godsmack - Love Hate Sex Pain" />
+  <SongAppId Version="RS2014" AppId="294937" Name="Godsmack - Love-Hate-Sex-Pain" />
   <SongAppId Version="RS2014" AppId="294935" Name="Godsmack - Cryin’ Like a Bitch" />
   <SongAppId Version="RS2014" AppId="294938" Name="Godsmack - Voodoo" />
   <SongAppId Version="RS2014" AppId="294936" Name="Godsmack - I Stand Alone" />

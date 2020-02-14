@@ -1470,30 +1470,18 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
 
         private void PopulateAppIdCombo()
         {
-            var i = 0;
             var currentGameVersion = CurrentGameVersion;
             if (rbConvert.Checked)
                 currentGameVersion = GameVersion.RS2014;
 
             cmbAppIds.Items.Clear();
-            
-            foreach (var song in SongAppIdRepository.Instance().Select(currentGameVersion))
-            {
-                var delimiters = new[] { "-" };
-                var songSplit = song.Name.Split(delimiters, StringSplitOptions.None);
-                if (songSplit.Length != 2)
-                {
-                    i++;
-                    throw new DataException("<ERROR> Invalid RocksmithToolkitLib.SongAppId.xml entry.  Found too many dashes '-' in: " + song.Name);
-                }
 
+            foreach (var song in SongAppIdRepository.Instance().Select(currentGameVersion))
                 cmbAppIds.Items.Add(song);
-            }
-            
+
             var songAppId = SongAppIdRepository.Instance().Select((currentGameVersion == GameVersion.RS2014) ? ConfigRepository.Instance()["general_defaultappid_RS2014"] : ConfigRepository.Instance()["general_defaultappid_RS2012"], currentGameVersion);
             cmbAppIds.SelectedItem = songAppId;
             AppId = songAppId.AppId;
-            Debug.WriteLine("<DebugMe> RocksmithToolkitLib.SongAppId.xml contains (" + i + ") invalid entries ...");
         }
 
         private void PopulateArrangements(GameVersion oldGameVersion)
@@ -1617,7 +1605,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             else
             {
                 if (!appId.IsAppIdSixDigits())
-                    MessageBox.Show("Please enter a valid six digit  " + Environment.NewLine + "App ID before continuing.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBox.Show("Please enter a valid six or seven digit  " + Environment.NewLine + "App ID before continuing.", MESSAGEBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 else
                 {
                     cmbAppIds.Items.Insert(0, new SongAppId() { Name = "Unknown AppID", AppId = appId });
