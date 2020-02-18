@@ -296,14 +296,14 @@ namespace RocksmithToolkitLib.Extensions
             return "";
         }
 
-        public static bool IsVolumeValid(this float? value, float defaultVolume = -7.0F)
+        public static bool IsVolumeValid(this float? value)
         {
             if (value == null)
                 return false;
 
             // check for valid volume
             float volume = (float)Math.Round((double)value, 1);
-            if (volume > -30.0F && volume < 30.0F)
+            if (volume >= -45.0F && volume <= 45.0F)
                 return true;
 
             return false;
@@ -316,7 +316,7 @@ namespace RocksmithToolkitLib.Extensions
 
             // check for valid volume
             float volume = (float)Math.Round((double)value, 1);
-            if (volume >= -30.0F && volume <= 30.0F)
+            if (volume >= -45.0F && volume <= 45.0F)
                 return volume;
 
             // use default volume

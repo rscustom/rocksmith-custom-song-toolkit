@@ -1,6 +1,8 @@
 Rocksmith Toolkit Release Notes
 
-- updated RocksmithToolkitLib.SongAppId.xml dlc AppIDs
+- based on feedback changed audio/tone volume (LF) min/max range (45 to -45) 
+- fixed update Arrangement Identification bug
+- updated RocksmithToolkitLib.SongAppId.xml dlc AppIds
 - improved auto repair of some old toolkit multitone exceptions
 - volume ranges settable from 0 to -30 with better defaults
 - fixed packer/unpacker PromptComplete now comes to front

@@ -716,8 +716,8 @@ namespace RocksmithToolkitLib.DLCPackage
                     bnkPreviewVolume = bnkWemList.Where(fn => fn.BnkFileName.EndsWith("_preview.bnk")).Select(vf => vf.VolumeFactor).FirstOrDefault();
 
                 // validate bnk volumes
-                var isAudioVolValid = bnkAudioVolume.IsVolumeValid(DEFAULT_AUDIO_VOLUME);
-                var isPreviewVolValid = bnkPreviewVolume.IsVolumeValid(DEFAULT_PREVIEW_VOLUME);
+                var isAudioVolValid = bnkAudioVolume.IsVolumeValid();
+                var isPreviewVolValid = bnkPreviewVolume.IsVolumeValid();
 
                 // use default volumes
                 if (!isAudioVolValid || !isPreviewVolValid)

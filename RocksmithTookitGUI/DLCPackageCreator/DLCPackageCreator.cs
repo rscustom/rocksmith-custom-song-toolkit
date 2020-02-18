@@ -1829,10 +1829,10 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
                              "hanging and the song stats will be reset to zero.";
                 var result = BetterDialog2.ShowDialog(diaMsg, MESSAGEBOX_CAPTION, "Yes", "No", "Abort", Bitmap.FromHicon(SystemIcons.Hand.Handle), "ReadMe ...", 150, 150);
 
-                if (result == DialogResult.Cancel)
+                if (result == DialogResult.Cancel || result == DialogResult.Abort)
                     return null;
 
-                if (result == DialogResult.OK)
+                if (result == DialogResult.Yes)
                 {
 
                     updateArrangmentID = true;
@@ -2484,9 +2484,9 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             Control control = (Control)sender;
             string name = control.Name;
             if (name == "numVolSong")
-                tt.SetToolTip(numVolSong, "Soft 0.0 ... -7.0 (default) ... -30.0 Loud" + Environment.NewLine + "LF (Loudness Factor)");
+                tt.SetToolTip(numVolSong, "0.0 Soft, -7.0 (Default), -30.0 Loud" + Environment.NewLine + "LF (Loudness Factor)");
             else // preview audio volume is normally softer than the main audio
-                tt.SetToolTip(numVolPreview, "Soft 0.0 ... -5.0 (default) ... -30.0 Loud" + Environment.NewLine + "LF (Loudness Factor)");
+                tt.SetToolTip(numVolPreview, "0.0 Soft, -5.0 (Default), -30.0 Loud" + Environment.NewLine + "LF (Loudness Factor)");
         }
 
         private void btnAlbumArt_Click(object sender, EventArgs e)

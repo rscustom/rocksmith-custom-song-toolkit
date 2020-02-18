@@ -489,12 +489,12 @@
             65536});
             this.volumeBox.Location = new System.Drawing.Point(180, 19);
             this.volumeBox.Maximum = new decimal(new int[] {
-            30,
+            45,
             0,
             0,
             0});
             this.volumeBox.Minimum = new decimal(new int[] {
-            30,
+            45,
             0,
             0,
             -2147483648});

@@ -157,7 +157,7 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             tvt.IsBalloon = true;
             tvt.InitialDelay = 0;
             tvt.ShowAlways = true;
-            tvt.SetToolTip(volumeBox, "Soft 0.0 ... -20.0 (default) ... -30.0 Loud");
+            tvt.SetToolTip(volumeBox, "0.0 Soft, -20.0 (Default), -30.0 Loud");
         }
 
         private void UpdateToneDescription(ComboBox combo)

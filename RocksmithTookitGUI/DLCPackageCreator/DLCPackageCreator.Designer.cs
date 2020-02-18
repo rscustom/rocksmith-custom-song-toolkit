@@ -703,12 +703,12 @@
             65536});
             this.numVolPreview.Location = new System.Drawing.Point(72, 69);
             this.numVolPreview.Maximum = new decimal(new int[] {
-            30,
+            45,
             0,
             0,
             0});
             this.numVolPreview.Minimum = new decimal(new int[] {
-            30,
+            45,
             0,
             0,
             -2147483648});
@@ -788,12 +788,12 @@
             65536});
             this.numVolSong.Location = new System.Drawing.Point(8, 69);
             this.numVolSong.Maximum = new decimal(new int[] {
-            30,
+            45,
             0,
             0,
             0});
             this.numVolSong.Minimum = new decimal(new int[] {
-            30,
+            45,
             0,
             0,
             -2147483648});
