@@ -28,17 +28,17 @@ namespace RocksmithToolkitLib.PSARC
 
         public void Write(byte v)
         {
-            try
-            {
-                this.BaseStream.WriteByte(v);
-            }
-            catch (Exception ex)
-            {
-                // little fish
-                Console.WriteLine("<ERROR> Little Fish: " + ex.Message);
-                this.Flush();
-                Thread.Sleep(200);
-            }
+            //try
+            //{
+            this.BaseStream.WriteByte(v);
+            //}
+            //catch (Exception ex)
+            //{
+            //    // little fish
+            //    Console.WriteLine("<ERROR> Little Fish: " + ex.Message);
+            //    this.Flush();
+            //    Thread.Sleep(200);
+            //}
         }
 
         public void Write(short v)
@@ -124,21 +124,21 @@ namespace RocksmithToolkitLib.PSARC
 
         public void Write(byte[] val)
         {
-            try
+            //try
+            //{
+            for (int i = 0; i < val.Length; i++)
             {
-                for (int i = 0; i < val.Length; i++)
-                {
-                    byte v = val[i];
-                    this.Write(v);
-                }
+                byte v = val[i];
+                this.Write(v);
             }
-            catch (Exception ex)
-            {
-                // big fish
-                Console.WriteLine("<ERROR> Big Fish: " + ex.Message);
-                this.Flush();
-                Thread.Sleep(200);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    // big fish
+            //    Console.WriteLine("<ERROR> Big Fish: " + ex.Message);
+            //    this.Flush();
+            //    Thread.Sleep(200);
+            //}
         }
 
         public static void CopyStream(Stream input, Stream output)

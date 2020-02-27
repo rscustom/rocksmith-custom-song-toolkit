@@ -581,51 +581,51 @@ namespace RocksmithToolkitLib.PSARC
                 //if (current.Name == "NamesBlock.bin")
                 //    continue;
 
-                try
+                //try
+                //{
+                // use chunk write method to avoid OOM Exceptions
+                var z = zStreams[entry];
+                var len = z.Length;
+                if (len > _header.BlockSizeAlloc)
                 {
-                    // use chunk write method to avoid OOM Exceptions
-                    //var z = zStreams[entry];
-                    //var len = z.Length;
-                    //if (len > 4096)
-                    //{
-                    //    using (var msInput = new MemoryStream(z))
-                    //    using (var msExt = new MemoryStreamExtension())
-                    //    using (var _writer2 = new BigEndianBinaryWriter(msExt))
-                    //    {
-                    //        int bytesRead;
-                    //        int totalBytesRead = 0;
-                    //        var buffer = new byte[4096];
-                    //        while ((bytesRead = msInput.Read(buffer, 0, buffer.Length)) > 0)
-                    //        {
-                    //            totalBytesRead += bytesRead;
-                    //            if (totalBytesRead > len)
-                    //                bytesRead = len - (totalBytesRead - bytesRead);
-
-                    //            using (var msOutput = new MemoryStream())
-                    //            {
-                    //                msOutput.Write(buffer, 0, bytesRead);
-                    //                _writer2.Write(msOutput.ToArray());
-                    //            }
-                    //        }
-
-                    //        _writer.Write(msExt.ToArray());
-                    //    }
-                    //}
-                    //else
+                    using (var msInput = new MemoryStreamExtension(z))
+                    using (var msExt = new MemoryStreamExtension())
+                    using (var _writer2 = new BigEndianBinaryWriter(msExt))
                     {
-                        _writer.Write(zStreams[entry]);
+                        int bytesRead;
+                        int totalBytesRead = 0;
+                        var buffer = new byte[_header.BlockSizeAlloc];
+                        while ((bytesRead = msInput.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            totalBytesRead += bytesRead;
+                            if (totalBytesRead > len)
+                                bytesRead = len - (totalBytesRead - bytesRead);
+
+                            using (var msOutput = new MemoryStreamExtension())
+                            {
+                                msOutput.Write(buffer, 0, bytesRead);
+                                _writer2.Write(msOutput.ToArray());
+                            }
+                        }
+
+                        _writer.Write(msExt.ToArray());
                     }
                 }
-                catch //(Exception ex)
+                else
                 {
-                    //Console.WriteLine("<ERROR> _writer.Write: " + ex.Message);
-                    _writer.Flush();
+                    _writer.Write(zStreams[entry]);
                 }
-                finally
-                {
-                    if (entry.Data != null)
-                        entry.Data.Close();
-                }
+
+                if (entry.Data != null)
+                    entry.Data.Close();
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine("<ERROR> _writer.Write: " + ex.Message);
+                //    _writer.Flush();
+                //    _writer.Dispose();
+                //    break;
+                //}
 
                 progress += step;
                 GlobalExtension.UpdateProgress.Value = (int)progress;

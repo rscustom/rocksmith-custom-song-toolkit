@@ -112,19 +112,19 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
             if (actionPacking)
                 destDirPath = Path.GetDirectoryName(destDirPath);
 
-            var actionMsg = "Packing";
+            var diaMsg = "Packing";
             if (!actionPacking)
-                actionMsg = "Unpacking";
+                diaMsg = "Unpacking";
 
             if (String.IsNullOrEmpty(errMsg))
-                errMsg = actionMsg + " is complete." + Environment.NewLine + Environment.NewLine;
+                diaMsg = diaMsg + " is complete.";
             else
-                errMsg = actionMsg + " is complete with the following errors:" + Environment.NewLine + Environment.NewLine +
+                diaMsg = diaMsg + " is complete with the following errors:" + Environment.NewLine +
                          errMsg;
 
-            errMsg += "Would you like to open the destination path?  ";
-
-            if (MessageBox.Show(errMsg, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+            diaMsg = diaMsg + Environment.NewLine + Environment.NewLine + "Would you like to open the destination path?  ";
+            
+            if (MessageBox.Show(diaMsg, MESSAGEBOX_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                 Process.Start(destDirPath);
         }
 
@@ -686,11 +686,17 @@ namespace RocksmithToolkitGUI.DLCPackerUnpacker
                 sw.Stop();
                 GlobalExtension.ShowProgress("Finished packing archive (elapsed time): " + sw.Elapsed, 100);
             }
+            catch (OutOfMemoryException ex)
+            {
+                errMsg = String.Format("{0}\n{1}", ex.Message, ex.InnerException) + Environment.NewLine +
+                "Toolkit is not capable of repacking some large system artifact files.   " + Environment.NewLine +
+                "Defragging the hard drive and clearing the 'pagefile.sys' may help.";
+            }
             catch (Exception ex)
             {
-                errMsg = String.Format("{0}\n{1}", ex.Message, ex.InnerException) + Environment.NewLine + Environment.NewLine +
+                errMsg = String.Format("{0}\n{1}", ex.Message, ex.InnerException) + Environment.NewLine +
                 "Confirm GamePlatform and GameVersion are set correctly for" + Environment.NewLine +
-                "the desired destination in the toolkit Configuration settings." + Environment.NewLine + Environment.NewLine;
+                "the desired destination in the toolkit Configuration settings.";
             }
 
             if (!GlobalsLib.IsUnitTest)
