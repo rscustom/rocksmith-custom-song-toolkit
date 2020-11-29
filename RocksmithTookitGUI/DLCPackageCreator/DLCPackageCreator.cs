@@ -30,6 +30,9 @@ using ProgressBarStyle = System.Windows.Forms.ProgressBarStyle;
 using RocksmithToolkitGUI.Config;
 using RocksmithToolkitLib.Conversion;
 using Newtonsoft.Json;
+
+using RocksmithToolkitLib.AudioUtils;
+
 using Formatting = Newtonsoft.Json.Formatting;
 using RocksmithToolkitLib.ToolkitTone;
 using MakePedalSetting = RocksmithToolkitLib.ToolkitTone.ToolkitPedal;
@@ -2593,8 +2596,11 @@ namespace RocksmithToolkitGUI.DLCPackageCreator
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Filter = CurrentOFDAudioFileFilter;
-                if (ofd.ShowDialog() == DialogResult.OK)
+                if (ofd.ShowDialog() == DialogResult.OK) {
+                    numVolSong.Value = AudioUtilities.GetLoudness(ofd.FileName);
+                    
                     AudioPath = ofd.FileName;
+                }
             }
         }
 
