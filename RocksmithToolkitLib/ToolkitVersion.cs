@@ -108,15 +108,16 @@ namespace RocksmithToolkitLib
         //  hackery used to create class library entry point
         public static void Start()
         {
-            if (!ToolkitVersion.IsRSTKLibValid())
-            {
+            // Disabled this check because of the complaints on the forum, the falsenss of the claim and confusion. The 180 day has expired
+            //if (!ToolkitVersion.IsRSTKLibValid())
+            //{
                 // throw new ApplicationException("This version of RocksmithToolkitLib.dll has expired.  " + Environment.NewLine +
                 //    "Please download and install the latest toolkit library.  " + Environment.NewLine);
 
-                var diaMsg = "This version of RocksmithToolkitLib.dll is no longer supported." + Environment.NewLine +
-                             "Please download and install the latest version of the toolkit.";
-                BetterDialog2.ShowDialog(diaMsg, "Time To Update ...", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Warning.Handle), "WARNING ...", 0, 150);
-            }
+             //   var diaMsg = "This version of RocksmithToolkitLib.dll is no longer supported." + Environment.NewLine +
+             //                "Please download and install the latest version of the toolkit.";
+             //   BetterDialog2.ShowDialog(diaMsg, "Time To Update ...", null, null, "Ok", Bitmap.FromHicon(SystemIcons.Warning.Handle), "WARNING ...", 0, 150);
+           // }
         }
     }
 
