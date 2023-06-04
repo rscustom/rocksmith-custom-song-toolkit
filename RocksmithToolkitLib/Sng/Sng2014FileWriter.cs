@@ -1047,7 +1047,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                     // need to be sorted before anchor note times are updated
                     notes.Sort((x, y) => x.Time.CompareTo(y.Time));
 
-                    // check for RS1 CDLC note time errors 
+                    // check for RS1 CDLC note time errors
                     // if (notes.Count > 0) // alt method to deal with the exception
                     if ((int)first_note_time == 0 || first_note_time > notes[0].Time)
                         first_note_time = notes[0].Time;
@@ -1078,8 +1078,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
                                 // There may be single notes before the first chord so can't use fp1[id].StartTime == n.Time
                                 if (!chordInHandshape.ContainsKey(id))
                                 {
-                                    n.NoteMask |= CON.NOTE_MASK_STRUM;
-                                    chordInHandshape.Add(id, n.ChordId);
+                                    bool isMuteWithoutChordNotes = (n.NoteMask & CON.NOTE_MASK_FRETHANDMUTE) != 0 && n.ChordNotesId == -1;
+                                    if (!isMuteWithoutChordNotes)
+                                    {
+                                        n.NoteMask |= CON.NOTE_MASK_STRUM;
+                                        chordInHandshape.Add(id, n.ChordId);
+                                    }
                                 }
                                 else if (chordInHandshape[id] != n.ChordId)
                                 {
@@ -1116,8 +1120,12 @@ namespace RocksmithToolkitLib.Sng2014HSL
                             {
                                 if (!chordInArpeggio.ContainsKey(id))
                                 {
-                                    n.NoteMask |= CON.NOTE_MASK_STRUM;
-                                    chordInArpeggio.Add(id, n.ChordId);
+                                    bool isMuteWithoutChordNotes = (n.NoteMask & CON.NOTE_MASK_FRETHANDMUTE) != 0 && n.ChordNotesId == -1;
+                                    if (!isMuteWithoutChordNotes)
+                                    {
+                                        n.NoteMask |= CON.NOTE_MASK_STRUM;
+                                        chordInArpeggio.Add(id, n.ChordId);
+                                    }
                                 }
                                 else if (chordInArpeggio[id] != n.ChordId)
                                 {
@@ -1330,7 +1338,7 @@ namespace RocksmithToolkitLib.Sng2014HSL
                 }
                 catch
                 {
-                    // workaround for rare conversion exception 'Index was outside the bounds of the array' 
+                    // workaround for rare conversion exception 'Index was outside the bounds of the array'
                     continue;
                 }
 
